@@ -2,7 +2,7 @@
 
 Advance the Barghsa build/review loop by one useful, bounded step.
 
-The working directory and full protocol come from this repository's `AGENTS.md`. Read `AGENTS.md`, `kanban/loop-state.json`, and `kanban/task-queue.json`, then reconcile the state with git and GitHub before acting.
+The working directory and full protocol come from this repository's `AGENTS.md`. First run `python3 kanban/scripts/build_backlog.py --check`; if it fails, set state to `blocked` with the exact validator error and stop. Then read `AGENTS.md`, `kanban/loop-state.json`, and `kanban/task-queue.json`, and reconcile the state with git and GitHub before acting.
 
 Requirements:
 

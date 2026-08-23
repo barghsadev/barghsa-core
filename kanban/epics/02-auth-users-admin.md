@@ -76,7 +76,7 @@
 
 **T-01.02.03 — OTP verification and user creation**
 
-- Description: POST `/api/auth/register/verify` with `{ challengeId, otp }`. Server verifies OTP hash, checks expiry, checks attempt count. On success: creates user record, creates session, sets session cookie (HttpOnly, Secure, SameSite=Strict), rotates CSRF token. On failure: increment attempts, return error.
+- Description: POST `/api/auth/register/verify` with `{ challengeId, otp }`. Server verifies OTP hash, checks expiry, checks attempt count. On success: creates user record, creates session, sets a session cookie (HttpOnly, Secure in production, and the centralized SameSite policy from E-06), then rotates the CSRF token. On failure: increment attempts, return error.
 - Technical notes: User creation and OTP consumption are atomic (same transaction). Default session: idle timeout 30 min, absolute timeout 24h. If user has no profile, redirect to `/onboarding` (handled at app-level redirect, T-03.01.01). Session identifier rotated after OTP verification. Audit: user_created event recorded.
 - UI/UX: Redirect to `/app` (which checks for profiles).
 - Dependencies: T-01.02.01, T-01.02.02
@@ -124,8 +124,8 @@
 
 **T-02.02.01 — Session creation and cookie management**
 
-- Description: On successful authentication, create server-side session. Store session data in PostgreSQL (or encrypted cookie with server-side revocation). Set HttpOnly, Secure, SameSite=Strict cookies. Rotate session identifier on login, MFA, password change, privilege change, and account recovery.
-- Technical notes: Opaque or signed session identifiers. Production cookies: Secure, SameSite=Strict, narrow Path. Non-TLS dev may disable Secure through explicit dev setting. Refresh tokens rotate on use; reuse revokes token family and alerts user. Absolute session timeout (24h default), idle timeout (30 min default).
+- Description: On successful authentication, create server-side session. Store session data in PostgreSQL (or encrypted cookie with server-side revocation). Set HttpOnly and production-Secure cookies using the centralized SameSite policy owned by E-06. Rotate session identifier on login, MFA, password change, privilege change, and account recovery.
+- Technical notes: Opaque or signed session identifiers. Production cookies: Secure, narrow Path, and the centralized SameSite policy from E-06. Non-TLS dev may disable Secure through explicit dev setting. Refresh tokens rotate on use; reuse revokes token family and alerts user. Absolute session timeout (24h default), idle timeout (30 min default).
 - UI/UX: N/A (backend)
 - Dependencies: T-02.01.02
 - Complexity: L
@@ -456,7 +456,7 @@
 - Description: Staff users can hold multiple roles. Roles determine permissions across CRM, finance, legal, operations, etc.
 - Technical notes: Roles: Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations, Admin. Permissions are deny-by-default, additive by role. PUT `/api/admin/users/:userId/roles` replaces role set (idempotent). Audit: role_change with before/after, actor, reason.
 - UI/UX: Multi-select dropdown with role descriptions. Current roles shown as badges. Change requires step-up auth.
-- Dependencies: T-05.03.01, T-10.02.01 (role management)
+- Dependencies: T-05.03.01, T-09.05.01 (role management)
 - Complexity: M
 
 ### S-05.04 Agent management
@@ -560,7 +560,7 @@
   - Resolved → Closed (timeout or staff action)
   - Any → Open (reopen)
 - UI/UX: Staff ticket list: more columns (assigned to, customer, SLA target). Assignment dropdown. Internal notes toggle. Ticket detail with customer info panel + profile quick-links. Internal note styling distinct from public comments.
-- Dependencies: T-06.01.02, T-10.03.01 (teams and assignment)
+- Dependencies: T-06.01.02, T-09.08.02 (teams and assignment)
 - Complexity: L
 
 ---
@@ -954,35 +954,62 @@
 | **S** | Small (hours to 1 day) |
 | **M** | Medium (2–4 days) |
 | **L** | Large (~1 week) |
-|| **XL** | Extra large (multi-week, consider splitting) |
+| **XL** | Extra large (multi-week, consider splitting) |
 
 ---
 
-## Gap Remediation
+---
 
-The following gaps were identified during the cross-audit of this epic against `README.md` (1260 lines) and `architecture.md` (177 lines).
+## E-11: Account Lifecycle & Dual-Role Context Safety
 
-### G-02.01 — Staff profile auto-creation: address-not-required + verified-by-default
-- **Source:** README.md §User base (line 25)
-- **Gap:** T-05.03.01 mentions staff profile is auto-created as verified/individual, but there is no explicit task for the separation between staff profile creation and the regular onboarding flow, handling the "address not required" exception, or ensuring the auto-verification bypasses the normal verification check.
-- **Suggested Task:** Add task to `S-05.03` for staff profile creation logic: skip address validation, mark as verified (regardless of verification mode), create the profile atomically with the user record, and ensure staff profiles don't trigger onboarding redirect.
+### S-11.01 Customer account/profile export and closure
 
-### G-02.02 — Customer account closure/export workflow
-- **Source:** README.md §General rules (line 1156)
-- **Gap:** No task anywhere in any epic covers the customer-initiated account closure or data export workflow, the blocker-checking logic (legal, financial, active-contract checks), or the retention/anonymization rules after closure.
-- **Suggested Task:** Add new story `S-05.06` to Epic 02: "Account Closure & Data Export". Tasks: closure request form, blocker checker (unpaid invoices, active contracts, wallet balance), closure verification, data export (GDPR-style), retention hold after closure, and support queue for closure requests.
+**T-11.01.01 — Account/profile closure request and blocker evaluation**
 
-### G-02.03 — Dual-role user: staff + customer context separation
-- **Source:** README.md §User base (line 707)
-- **Gap:** No task covers the scenario where a user is both Barghsa staff AND a customer/agent. The requirement states staff and customer contexts must be visibly separated, staff actions cannot be performed in customer context, and customer actions cannot inherit staff permissions.
-- **Suggested Task:** Add story on context separation: (a) session attribute that tracks active context (staff vs. customer), (b) UI badge showing current context, (c) middleware that blocks staff-only actions in customer context, (d) middleware that prevents customer actions from using staff permissions, (e) audit events for context switches.
+- Description: Customers request export or closure through support. Evaluate and display each legal, financial, security, wallet, and active-contract blocker with an owner and resolution path.
+- Technical notes: Closure never silently deletes financial/audit evidence. The request is profile-scoped, audited, idempotent, and routed to an authorized support/privacy queue.
+- UI/UX: Show export and closure as distinct actions, every blocker, current owner, next step, and support thread.
+- Dependencies: T-06.01.01, E-04 financial obligations
+- Complexity: L
 
-### G-02.04 — Cross-cutting Draft/Active/Superseded lifecycle for ALL admin settings
-- **Source:** README.md §Configuration safety (lines 192–195)
-- **Gap:** Epic 01 T-07.02.01 and Epic 02 admin tasks mention versioned config for some settings, but there is no cross-cutting task ensuring ALL admin settings follow Draft/Active/Superseded lifecycle. The "fail closed on invalid config" requirement is only enforced for electricity products.
-- **Suggested Task:** Add a cross-cutting story "Unified Config Lifecycle" ensuring every admin setting (branding, geography, TOS, templates, roles, thresholds, limits, AI settings) uses the Draft → Active → Superseded pattern with validation before activation. Add a "fail closed" rule: any config that makes a required feature unconfigured must display an admin alert and prevent customer-facing breakage.
+**T-11.01.02 — Portable customer data export**
 
-### G-02.05 — Customer-facing device trust management page
-- **Source:** README.md §Authentication (line 577)
-- **Gap:** T-06.01.03.04 covers "trust this device for N days" flow, but there is no explicit task for the customer-facing device management page where users can view trusted devices, see trust expiry, and revoke individual devices.
-- **Suggested Task:** Add task to `S-02.02`: device management UI page under Settings → Security showing list of trusted devices (name/browser, IP/city, last active, trust expiry). Actions: "Remove trust" per device, "Remove all trusted devices" (requires step-up auth).
+- Description: Generate an asynchronous, access-controlled export of the customer's/profile's eligible data and documents.
+- Technical notes: Use the generic async job/progress framework in E-05, redact protected internal/security data, enforce active-profile ownership, expire the download, and audit generation/download.
+- UI/UX: Visible queued/processing/completed/failed progress with retry/support actions.
+- Dependencies: T-11.01.01, E-05 async jobs and storage
+- Complexity: L
+
+**T-11.01.03 — Closure execution, revocation, retention and anonymization**
+
+- Description: After approval and blocker resolution, revoke access/sessions, close eligible profiles, anonymize data when allowed, and retain records under legal/financial/audit holds.
+- Technical notes: Use one auditable workflow with explicit dry-run/preview, step-up authentication for staff approval, idempotency, and rollback/compensation for partial failure.
+- UI/UX: Final review explains consequences and retained records; completion provides support access and export reference.
+- Dependencies: T-11.01.01, T-11.01.02, T-02.02.02
+- Complexity: L
+
+### S-11.02 Staff/customer context separation
+
+**T-11.02.01 — Explicit operating context in session and authorization policy**
+
+- Description: Users who are both staff and customers/agents operate in an explicit `staff` or `customer` context. Customer context never inherits staff capabilities; staff context never acts as an active customer profile.
+- Technical notes: Central authorization policy evaluates context, capability, active profile, and object ownership for HTTP, workers, exports, files, and AI tools. Context switching rotates relevant CSRF/session claims and is audited.
+- UI/UX: A persistent, unmistakable context indicator and deliberate switch action prevent accidental privilege use.
+- Dependencies: T-02.02.01, E-06 authorization policy
+- Complexity: L
+
+**T-11.02.02 — Context-isolation integration and E2E tests**
+
+- Description: Prove staff-only commands fail in customer context, customer commands cannot use staff permissions, profile switching cannot cross ownership, and history preserves the real acting context.
+- Technical notes: Include direct API attempts, stale tabs/tokens, workers, file URLs, exports, and AI tool calls.
+- Dependencies: T-11.02.01
+- Complexity: M
+
+### S-11.03 Staff-profile onboarding exception
+
+**T-11.03.01 — Atomic staff user/profile creation without customer onboarding**
+
+- Description: Extend `T-05.03.01` so staff creation atomically creates exactly one Individual profile, verified regardless of customer verification mode, without requiring an address, and never redirects staff into customer onboarding.
+- Technical notes: Enforce the one-profile restriction and preserve historical authorship if staff later becomes disabled.
+- Dependencies: T-05.03.01
+- Complexity: M

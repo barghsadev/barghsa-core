@@ -1,7 +1,7 @@
 # Epic 03 — Core Business: Products, Electricity, Saving, Solar, Consultation
 
 > **Domain:** Products, Electricity Supply, Power Saving, Solar Power Station Construction, Consultation
-> **Status:** ⏳ Being drafted
+> **Status:** ✅ Drafted + remediated
 > **Dependencies:** Epic 01 (Platform & Infrastructure), Epic 02 (Auth, Users, CRM & Admin)
 > **Cross-references:** Epic 04 (Invoices, Wallet, Payments & Contracts), Epic 05 (Notifications, Documents & AI Orchestration)
 
@@ -99,6 +99,10 @@
 | **T-03.01.04.02** | Admin API: `PATCH /admin/products/saving-plans/:id` — update title, description, price, agreement, hardware associations | M |
 | **T-03.01.04.03** | Admin API: `DELETE /admin/products/saving-plans/:id` — archive. Reject if referenced by active/paid orders. | S |
 | **T-03.01.04.04** | ⚠️ Saving plan agreement is admin-editable. Changes must be versioned. Orders snapshot the accepted agreement version at time of submission. | M |
+| **T-03.01.04.05** | 🔧 Create `saving_plan_agreement_versions` table: `id`, `saving_plan_id` (FK), `title` (text), `body` (text), `status` (enum: `draft`, `active`, `superseded`), `effective_from` (timestamptz), `created_by` (FK to users). Enforce at most one active version per plan at any time. | M |
+| **T-03.01.04.06** | 🔧 Implement Draft → Active → Superseded lifecycle for saving plan agreement versions. When admin edits agreement via T-03.01.04.02, the edit creates a new draft version; admin explicitly activates it with a separate action. | M |
+| **T-03.01.04.07** | ⚠️ On order submission (T-03.09.03.04), snapshot the full rendered agreement text (title + body) into the `agreement_snapshot` field, not just a version ID. The snapshot must be the exact verbatim text the customer accepted. | M |
+| **T-03.01.04.08** | 📋 Customer order detail page displays the accepted agreement snapshot verbatim. Show notice if agreement has been updated since acceptance. | S |
 
 ### S-03.01.05: Consultation Product Configuration
 
@@ -254,6 +258,8 @@
 | **T-03.04.01.05** | ⚠️ Prices snapshot at submission time: capture unit prices, VAT rates, gift code discount rate. Store in order/contract snapshot JSON. | M |
 
 ### S-03.04.02: Admin Settings for Electricity Ordering
+
+> **Ownership note:** This epic (E-03) owns the `electricity_settings` schema, service-layer validation, and API endpoints for green-rule and electricity ordering settings. Epic 02 (S-09.10, Admin — Electricity ordering settings) owns the admin UI screens that consume this API. Epic 02's tasks are UI-only; all backend schema, validation, and business logic reside here.
 
 | ID | Task | Complexity |
 |----|------|------------|
@@ -563,6 +569,9 @@
 | **T-03.09.02.03** | 📋 Step 3: Electricity bill identifier input — single text field. Local format validation. Optional backend verification when provider configured. | M |
 | **T-03.09.02.04** | ⚠️ Bill identifier local validation (format regex). If provider configured, async verification call. Provider failure does not erase draft — retry or submit for manual staff review. | M |
 | **T-03.09.02.05** | ⚠️ Duplicate detection: admin can prevent duplicate active saving orders for same bill identifier + plan. If detected, link customer to existing order or support — do not silently allow a second order. | M |
+| **T-03.09.02.06** | 🔧 Create `BillVerificationProvider` abstraction with adapter interface for Iranian bill-data APIs: `verify(billIdentifier) → { verified: boolean, data?: object, error?: string }`. Include timeout, bounded retry with jitter, and circuit breaker. | L |
+| **T-03.09.02.07** | 🔧 Add `verification_result` JSONB column to `saving_orders` table to persist verification attempt metadata: source provider, timestamp, verification status, raw result, error details. | S |
+| **T-03.09.02.08** | ⚠️ Bill verification provider failure (timeout, auth error, provider unavailable) must not erase the draft. Customer can retry or submit for manual staff review. Failed verification state is persisted in `verification_result`; explicit "submit for staff review" action advances the order. | M |
 
 ### S-03.09.03: Order Wizard — Steps 4–6
 
@@ -783,56 +792,64 @@
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.01.01** | Configure default contract template for electricity orders in admin settings. The template is used when creating the preliminary contract at order submission. | M |
+| **T-03.90.01** | Configure default contract template for electricity orders in admin settings. The template is used when creating the preliminary contract at order submission. | M |
 
 ### C-03.02: Wallet Balance Display on Order Review
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.02.01** | All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt). | L |
+| **T-03.90.02** | All order review/submission pages must display current wallet balance. Payment is through wallet. If insufficient, show top-up option (online or bank receipt). | L |
 
 ### C-03.03: Audit Trail for All Core Business Actions
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.03.01** | Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata. | L |
-| **T-CC-03.03.02** | Customer-facing history uses understandable labels. Internal notes and customer-visible comments are separate. Staff must choose visibility. | M |
+| **T-03.90.03** | Audit every: order submission, status change, contract approval/rejection/cancellation, price change, fee setting, gift code redemption, document review decision, postal confirmation. Record: entity, previous/new state, actor, timestamp, reason, correlation ID, metadata. | L |
+| **T-03.90.04** | Customer-facing history uses understandable labels. Internal notes and customer-visible comments are separate. Staff must choose visibility. | M |
 
 ### C-03.04: Rate Limiting
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.04.01** | Rate limit order/consultation submission: 5 per profile per minute, plus duplicate/idempotency protection. | S |
-| **T-CC-03.04.02** | Rate limit gift code validation: reasonable limit to prevent brute-force guessing. | S |
+| **T-03.90.05** | Rate limit order/consultation submission: 5 per profile per minute, plus duplicate/idempotency protection. | S |
+| **T-03.90.06** | Rate limit gift code validation: reasonable limit to prevent brute-force guessing. | S |
 
 ### C-03.05: Configuration Safety
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.05.01** | ⚠️ An electricity product required by an ordering rule cannot be sold if inactive or has no price. Customers see "ordering temporarily unavailable" + contact support rather than broken checkout. | M |
-| **T-CC-03.05.02** | ⚠️ Price/VAT/limit changes are versioned with effective dates. Existing orders keep snapshot from submission time. Admin changes never silently retroactive. | M |
+| **T-03.90.07** | ⚠️ An electricity product required by an ordering rule cannot be sold if inactive or has no price. Customers see "ordering temporarily unavailable" + contact support rather than broken checkout. | M |
+| **T-03.90.08** | ⚠️ Price/VAT/limit changes are versioned with effective dates. Existing orders keep snapshot from submission time. Admin changes never silently retroactive. | M |
 
 ### C-03.06: Admin Dashboard Widgets
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.06.01** | 📊 Admin dashboard: widget for pending consultation requests count, pending electricity orders count, pending solar construction requests count, pending document reviews. | M |
-| **T-CC-03.06.02** | 📊 Admin dashboard: refund obligations queue, failed refund obligations alert. | S |
+| **T-03.90.09** | 📊 Admin dashboard: widget for pending consultation requests count, pending electricity orders count, pending solar construction requests count, pending document reviews. | M |
+| **T-03.90.10** | 📊 Admin dashboard: refund obligations queue, failed refund obligations alert. | S |
 
 ### C-03.07: Test Coverage Requirements
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.07.01** | Unit tests: state machine transitions for all electricity/saving/solar/consultation states | M |
-| **T-CC-03.07.02** | Unit tests: Jalali period calculations, green rule composition, price calculation, gift code validation | M |
-| **T-CC-03.07.03** | Integration tests: order submission with idempotency, concurrent wallet operations, gift code atomic redemption, automatic refund obligation creation | L |
-| **T-CC-03.07.04** | E2E tests: simple electricity order → review → payment → contract lifecycle. Saving plan order wizard → fulfillment stages. Solar construction request → document upload → postal. | L |
+| **T-03.90.11** | Unit tests: state machine transitions for all electricity/saving/solar/consultation states | M |
+| **T-03.90.12** | Unit tests: Jalali period calculations, green rule composition, price calculation, gift code validation | M |
+| **T-03.90.13** | Integration tests: order submission with idempotency, concurrent wallet operations, gift code atomic redemption, automatic refund obligation creation | L |
+| **T-03.90.14** | E2E tests: simple electricity order → review → payment → contract lifecycle. Saving plan order wizard → fulfillment stages. Solar construction request → document upload → postal. | L |
 
 ### C-03.08: State Machine Transition Enforcement
 
 | ID | Task | Complexity |
 |----|------|------------|
-| **T-CC-03.08.01** | Implement a state machine engine (or use a library) that enforces allowed transitions, guards, side effects, and notification behavior. Used across all core business entities. | L |
+| **T-03.90.15** | Implement a state machine engine (or use a library) that enforces allowed transitions, guards, side effects, and notification behavior. Used across all core business entities. | L |
+
+### C-03.09: Cross-Cutting "No Dead Ends" Workflow Principle
+
+| ID | Task | Complexity |
+|----|------|------------|
+| **T-03.90.16** | 📋 Create reusable `<WorkflowStatusBanner>` component that renders entity status, what happened, next available action, responsible party (customer/staff), and support contact for any business entity (order, contract, solar request, consultation, etc.). | M |
+| **T-03.90.17** | 🔧 Create `useFormDraft(key, schema)` hook that auto-saves multi-step form progress to backend after each completed step. Supports resume from interruption, error recovery, and validates that prior input is not cleared on error. | M |
+| **T-03.90.18** | ⚠️ Add architectural checklist item (or automated test) verifying every customer-facing workflow displays: current state, what happened, next available action, who is responsible, and how to get help. | M |
 
 ---
 
@@ -863,46 +880,20 @@ E-01 (Platform & Infrastructure)
 
 | Epic | Stories | Tasks | Complexity |
 |------|---------|-------|------------|
-| E-03.01 Product Catalog | 5 | 24 | L |
-| E-03.02 Gift Code System | 5 | 16 | L |
-| E-03.03 Consultation | 3 | 15 | L |
+| E-03.01 Product Catalog | 5 | 30 | L |
+| E-03.02 Gift Code System | 5 | 22 | L |
+| E-03.03 Consultation | 3 | 16 | L |
 | E-03.04 Electricity Shared | 4 | 17 | L |
-| E-03.05 Simple Ordering | 4 | 20 | XL |
-| E-03.06 Advanced Ordering | 4 | 14 | XL |
-| E-03.07 Contract/Invoice/Status | 4 | 18 | XL |
+| E-03.05 Simple Ordering | 4 | 24 | XL |
+| E-03.06 Advanced Ordering | 4 | 16 | XL |
+| E-03.07 Contract/Invoice/Status | 4 | 19 | XL |
 | E-03.08 Contract Changes | 2 | 12 | L |
-| E-03.09 Power Saving Order | 5 | 21 | XL |
-| E-03.10 Saving Fulfillment | 3 | 10 | L |
-| E-03.11 Solar Construction Request | 4 | 14 | XL |
-| E-03.12 Solar Document/Postal | 3 | 12 | L |
+| E-03.09 Power Saving Order | 5 | 27 | XL |
+| E-03.10 Saving Fulfillment | 3 | 11 | L |
+| E-03.11 Solar Construction Request | 4 | 15 | XL |
+| E-03.12 Solar Document/Postal | 3 | 16 | L |
 | E-03.13 Solar Contract Creation | 2 | 7 | L |
-| Cross-cutting | 8 | 10 | — |
-| **Total** | **52** | **210** | — |
+| Cross-cutting | 9 | 18 | — |
+| **Total** | **57** | **250** | — |
 
 > **Next:** Epic 04 — Invoices, Wallet, Payments & Contracts
-
----
-
-## Gap Remediation
-
-The following gaps were identified during the cross-audit of this epic against `README.md` (1260 lines) and `architecture.md` (177 lines).
-
-### G-03.01 — Cross-cutting "No Dead Ends" principle enforcement
-- **Source:** README.md §Product-wide operating principles (lines 143–153)
-- **Gap:** T-03.07.04.03 mentions "no dead ends" for one screen, but there is no cross-cutting task ensuring EVERY workflow implements the principle: always show current state, what happened, next action, responsible party, and support path. Multi-step form draft auto-save is mentioned for electricity (T-03.05.04.07) but not generalized.
-- **Suggested Task:** Add cross-cutting story `C-03.09`: Create `<WorkflowStatusBanner>` component that renders state/next-action/support-contact for any business entity. Create `useFormDraft(key, schema)` hook for auto-saving multi-step form progress server-side after each step. Add an architectural test/checklist item verifying every customer-facing workflow has status, next-action, and support-contact displayed.
-
-### G-03.02 — Power-saving ordering: billing provider integration for bill identifier verification
-- **Source:** README.md §Power saving (lines 860–861)
-- **Gap:** T-03.09.02.04 mentions "optional backend verification when provider configured" but there is no task for building a provider abstraction for bill-data verification (similar to how bill-data is fetched for electricity orders). The provider failure and retry logic for bill verification are not defined.
-- **Suggested Task:** Add task to S-03.09.02: create `BillVerificationProvider` abstraction with adapter for official Iranian bill-data APIs. Include timeout, retry, circuit breaker, and `verification_result` field on saving orders. Provider failure must not erase the draft.
-
-### G-03.03 — Gift code: percentage discount max-cap validation at admin entry
-- **Source:** README.md §Gift codes (line 975)
-- **Gap:** T-03.02.01.01 includes `max_discount` field but there is no task for admin-side validation that a percentage code MUST have a max_discount cap, and that the cap cannot be lower than the calculated percentage of a reference order amount.
-- **Suggested Task:** Add validation task: when admin creates/edits a percentage-type gift code, `max_discount` is required (not optional). Validate the cap is reasonable (>= 1 IRR). Add UI hint: "Percentage codes require a maximum discount cap to limit financial exposure."
-
-### G-03.04 — Saving plan agreement versioning and snapshots
-- **Source:** README.md §Power saving (line 858, 969)
-- **Gap:** T-03.01.04.04 mentions "changes must be versioned" and T-03.09.03.02 records the accepted version. But there is no task for building the versioning system for saving-plan agreements (title + body) with Draft/Active/Superseded lifecycle, storing the snapshot on order submission, and displaying the agreement the customer accepted.
-- **Suggested Task:** Add task to S-03.01.04: create `saving_plan_agreement_versions` table, implement Draft → Active → Superseded lifecycle for agreement title/body, store the agreement version snapshot on order submission (T-03.09.01.01's `agreement_snapshot` field should capture the full rendered agreement text, not just the version ID).

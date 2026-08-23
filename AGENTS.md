@@ -26,6 +26,16 @@ Keep only one active task and one open loop-owned PR at a time.
 - `kanban/loop-state.json` — durable state
 - `kanban/epics/<file>` — full task context and acceptance criteria
 - `kanban/index.md` — phase ordering
+- `kanban/requirements-traceability.json` — generated source-section coverage ledger
+- `kanban/scripts/build_backlog.py` — deterministic queue/ledger generator and validator
+
+Before selecting work, run:
+
+```bash
+python3 kanban/scripts/build_backlog.py --check
+```
+
+If validation fails, set the loop to `blocked` with the validator output. Never build from a stale or incomplete queue.
 
 ## Stable Task Keys
 

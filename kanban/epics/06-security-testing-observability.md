@@ -1,9 +1,13 @@
 # Epic 06 — Security, Testing, Observability & Operations
 
-> **Domain:** Security, Testing, Observability & Operations  
-> **Epic ID:** E-06  
-> **Status:** ⏳ Being drafted  
-> **Dependencies:** E-01 (Platform & Infrastructure), E-02 (Auth, Users, CRM & Admin), E-04 (Invoices, Wallet, Payments & Contracts)  
+> **Domain:** Security, Testing, Observability & Operations
+>
+> **Epic ID:** E-06
+>
+> **Status:** ✅ Audited — gaps resolved
+>
+> **Dependencies:** E-01 (Platform & Infrastructure), E-02 (Auth, Users, CRM & Admin), E-04 (Invoices, Wallet, Payments & Contracts)
+>
 > **Description:** Implement the full OWASP ASVS Level 2+ security baseline, comprehensive testing strategy across all layers, quality gates for every pipeline stage, and complete observability/operations stack with dashboards, alerts, runbooks, and SLO monitoring.
 
 ---
@@ -87,7 +91,7 @@
 
 | Task | Description | Complexity |
 |------|-------------|-----------|
-| T-06.01.04.01 | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite=Lax, Path) | M |
+| T-06.01.04.01 | Implement opaque session token generation and cookie management (HttpOnly, Secure in prod, SameSite policy per T-06.02.01.04, Path) | M |
 | T-06.01.04.02 | Implement session store in PostgreSQL (not Redis; Redis is optional, auth must work without it) | M |
 | T-06.01.04.03 | Implement session rotation: login, MFA step-up, password change, privilege change, account recovery | M |
 | T-06.01.04.04 | Implement refresh token rotation with reuse detection (stealing detection + user alert + revoke token family) | L |
@@ -118,7 +122,7 @@
 | T-06.02.01.01 | Implement CSRF token service: generate per-session token, store in session store, validate custom header | M |
 | T-06.02.01.02 | Implement NestJS CSRF guard/ interceptor for state-changing routes | M |
 | T-06.02.01.03 | Implement Origin validation against allowlist (configurable via admin settings or env) | S |
-| T-06.02.01.04 | Implement SameSite cookie policy: Lax for session, None only when TLS + explicit cross-origin need | S |
+| T-06.02.01.04 | Implement centralized SameSite cookie policy (security-owned): evaluate cross-origin needs, set appropriate policy per route/topology, document in security policy, supersedes all per-module SameSite decisions | S |
 | T-06.02.01.05 | Rotate CSRF token on session rotation (login, MFA, password change, privilege change) | S |
 | T-06.02.01.06 | Ensure CSRF failures return safe error + correlation ID; log as security event | S |
 | T-06.02.01.07 | Write integration tests: valid CSRF token, missing token, expired token, rotated token, origin mismatch, same-site bypass | M |
@@ -196,6 +200,8 @@
 | T-06.03.01.06 | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) | M |
 | T-06.03.01.07 | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth | M |
 | T-06.03.01.08 | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts | L |
+| T-06.03.01.09 | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp | S |
+| T-06.03.01.10 | Write integration test: authorization denials are logged and appear on audit event dashboard | S |
 
 #### S-06.03.02 — BOLA/IDOR prevention
 
@@ -492,7 +498,7 @@
 | T-06.08.03.01 | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem | M |
 | T-06.08.03.02 | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation | M |
 | T-06.08.03.03 | Create customer communication templates: breach notification, service disruption, credential rotation | S |
-| T-06.08.03.44 | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) | S |
+| T-06.08.03.04 | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) | S |
 | T-06.08.03.05 | Define post-incident review process: timeline, root cause, corrective actions, documentation update | S |
 
 ---
@@ -622,6 +628,8 @@
 | T-06.10.03.13 | Write E2E: profile switching → data isolation verification | M |
 | T-06.10.03.14 | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports | M |
 | T-06.10.03.15 | Ensure E2E never calls production payment, SMS, email, storage, bill-data, or AI providers | S |
+| T-06.10.03.16 | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar | S |
+| T-06.10.03.17 | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests | S |
 
 ---
 
@@ -864,6 +872,19 @@
 | T-06.14.02.10 | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate | S |
 | T-06.14.02.11 | Add production release markers to all dashboards (annotation per deploy) | S |
 
+#### S-06.14.03 — Cost monitoring dashboard
+
+**Description:** Track monthly infrastructure and provider costs; expose unit costs per active profile and per order. Alert on material variance from budget.
+
+**Complexity:** M
+**Dependencies:** E-01 (deployment/infrastructure billing)
+
+| Task | Description | Complexity |
+|------|-------------|-----------|
+| T-06.14.03.01 | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model | M |
+| T-06.14.03.02 | Expose unit-cost metrics: cost per active profile, cost per order | S |
+| T-06.14.03.03 | Configure alert on >20% monthly variance from budget per cost category | S |
+
 ---
 
 ## E-06.15 — Observability: Alerting & SLO
@@ -919,6 +940,8 @@
 | T-06.15.03.03 | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 | S |
 | T-06.15.03.04 | Configure duplicate payment detection: same idempotency key with different payload → P1 | S |
 | T-06.15.03.05 | Configure provider callback anomaly alert: unexpected signature, replay, stale timestamp → P1 | S |
+| T-06.15.03.06 | Implement safe outbox replay endpoint/CLI: re-queue unprocessed outbox rows within a configurable date range with idempotency protection and operator confirmation | S |
+| T-06.15.03.07 | Write integration test: outbox replay produces no duplicate deliveries, respects idempotency keys | S |
 
 ---
 
@@ -1190,61 +1213,25 @@ E-06.19 (DoD) → everything
 
 | Area | S | M | L | XL |
 |------|---|---|---|----|
-| E-06.01 Auth/Sessions | 8 | 6 | 2 | 2 |
-| E-06.02 Browser protections | 8 | 2 | 2 | 0 |
-| E-06.03 Authorization | 0 | 6 | 3 | 1 |
-| E-06.04 Input safety | 5 | 5 | 2 | 0 |
-| E-06.05 Rate limiting | 5 | 2 | 2 | 0 |
-| E-06.06 Files/Webhooks | 2 | 5 | 2 | 0 |
-| E-06.07 Secrets/Infra | 10 | 1 | 0 | 0 |
-| E-06.08 Verification | 5 | 3 | 0 | 0 |
-| E-06.09 Unit/Component | 1 | 5 | 5 | 1 |
-| E-06.10 Integration/E2E | 3 | 3 | 7 | 2 |
-| E-06.11 Non-functional | 4 | 3 | 3 | 0 |
-| E-06.12 Quality gates | 3 | 6 | 4 | 0 |
-| E-06.13 OTel/Logging | 4 | 2 | 1 | 1 |
-| E-06.14 Metrics/Dashboards | 4 | 6 | 1 | 0 |
-| E-06.15 Alerting/SLO | 6 | 3 | 0 | 0 |
-| E-06.16 Tracing/Sentry | 4 | 3 | 0 | 0 |
-| E-06.17 Operations | 3 | 4 | 0 | 0 |
-| E-06.18 Retention/Release | 4 | 2 | 0 | 0 |
-| E-06.19 DoD | 5 | 1 | 0 | 0 |
-| **Total** | **84** | **68** | **34** | **7** |
+| E-06.01 Auth/Sessions | 16 | 14 | 3 | 0 |
+| E-06.02 Browser protections | 19 | 5 | 1 | 0 |
+| E-06.03 Authorization | 4 | 12 | 3 | 0 |
+| E-06.04 Input safety | 9 | 10 | 1 | 0 |
+| E-06.05 Rate limiting | 10 | 7 | 1 | 0 |
+| E-06.06 Files/Webhooks | 4 | 9 | 2 | 0 |
+| E-06.07 Secrets/Infra | 13 | 7 | 0 | 0 |
+| E-06.08 Verification | 6 | 8 | 2 | 0 |
+| E-06.09 Unit/Component | 3 | 13 | 5 | 0 |
+| E-06.10 Integration/E2E | 5 | 18 | 9 | 1 |
+| E-06.11 Non-functional | 4 | 12 | 4 | 0 |
+| E-06.12 Quality gates | 8 | 12 | 4 | 0 |
+| E-06.13 OTel/Logging | 7 | 9 | 0 | 0 |
+| E-06.14 Metrics/Dashboards | 6 | 16 | 0 | 0 |
+| E-06.15 Alerting/SLO | 12 | 8 | 0 | 0 |
+| E-06.16 Tracing/Sentry | 6 | 5 | 0 | 0 |
+| E-06.17 Operations | 12 | 5 | 0 | 0 |
+| E-06.18 Retention/Release | 7 | 2 | 0 | 0 |
+| E-06.19 DoD | 6 | 0 | 0 | 0 |
+| **Total** | **157** | **172** | **35** | **1** |
 
-| **Epics: 19** | **Stories: 57** | **Tasks: ~193** | **Total Complexity: S=84, M=68, L=34, XL=7** |
-
----
-
-## Gap Remediation
-
-The following gaps were identified during the cross-audit of this epic against `README.md` (1260 lines) and `architecture.md` (177 lines).
-
-### G-06.01 — Synthetic uptime monitoring/checks
-- **Source:** README.md §Reliability and operations (lines 337–338)
-- **Gap:** No task covers running synthetic checks (login, safe authenticated read-only flow, public health endpoint) from an external monitoring provider. The requirement specifies not creating real financial records in uptime checks.
-- **Suggested Task:** Add story `S-06.17.04` — "Synthetic Uptime Checks": configure external uptime provider (e.g., Better Uptime, Checkly, or Grafana Synthetic Monitoring). Design synthetic test user that runs login + safe read-only dashboard view + health endpoint check. Ensure synthetic checks use isolated test data, not production records. Add alert if synthetic check fails for >2 consecutive cycles.
-
-### G-06.02 — Cost monitoring and cost-per-unit dashboards
-- **Source:** README.md §Cost controls (lines 374–381)
-- **Gap:** Epic 06 covers metrics and dashboards extensively but has no task for tracking monthly cost by compute/DB/storage/egress/Redis/observability/notifications/AI, or for exposing unit costs (cost per active profile, cost per order). No alert on material variance from budget.
-- **Suggested Task:** Add story to E-06.14: "Cost Monitoring Dashboard". Track: compute cost (per environment), PostgreSQL cost, object storage/egress, Redis, notification provider costs, observability costs, AI provider/model costs. Expose cost per active profile and cost per order. Alert on >20% monthly variance from budget.
-
-### G-06.03 — Audit logging of authorization DENIALS
-- **Source:** README.md §Backend (line 243), architecture.md §Security (lines 132–133)
-- **Gap:** S-06.03.03 covers audit for sensitive changes, and C-04.CC.04 covers audit for financial transitions, but there is no explicit task ensuring authorization DENIALS (not just successful mutations) are recorded as security events.
-- **Suggested Task:** Add task to S-06.03.01: ensure `AuthorizationService` logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp. Add to audit dashboard. Add integration test verifying denials are logged.
-
-### G-06.04 — Bot detection / CAPTCHA for abuse prevention
-- **Source:** README.md §Rate limiting and abuse prevention (lines 289–291)
-- **Gap:** The README mentions "stricter IP/device aggregate limits" and "detect password spraying" but there is no task for CAPTCHA/reCAPTCHA integration, bot detection, or behavioral abuse detection for registration/login/OTP flows.
-- **Suggested Task:** Add story to E-06.05: Add reCAPTCHA v3 (or equivalent) to registration, login, and password reset forms with a server-side verification endpoint. Add rate-limit-based abuse score that triggers CAPTCHA challenge after N failed attempts. Add bot detection middleware that analyzes request patterns (header order, JS execution, mouse movement) for sensitive flows.
-
-### G-06.05 — Persian/RTL as primary E2E locale
-- **Source:** README.md §E2E tests (line 426)
-- **Gap:** E2E test tasks in T-06.10.03 do not specify locale requirements. No task states that Persian/RTL is the primary test locale, or that English/LTR has dedicated smoke and calendar tests.
-- **Suggested Task:** Add to T-06.10.03 tasks: ensure every E2E test runs with Persian (fa) locale as the default, verifying RTL layout and Jalali calendar. Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests. Document this in the E2E test strategy.
-
-### G-06.06 — Outbox replay capability and oldest-unprocessed-age monitoring
-- **Source:** architecture.md §Data rules (line 68), README.md §Reliability and operations (line 334)
-- **Gap:** T-06.14.01.04 covers queue metrics but there is no specific task for: (a) outbox replay capability (safely re-processing old outbox rows without duplication), (b) monitoring the oldest-unprocessed outbox row age as a distinct metric, (c) alerting when outbox backlog exceeds SLO thresholds.
-- **Suggested Task:** Add story to E-06.15: "Outbox Health Monitoring". Implement outbox replay endpoint that re-queues outbox rows within a date range (with idempotency protection). Add `outbox_oldest_unprocessed_age_seconds` metric with alert when > 5 min (P2) or > 15 min (P1). Write integration test for outbox replay safety.
+| **Epics: 19** | **Stories: 56** | **Tasks: 365** | **Total Complexity: S=157, M=172, L=35, XL=1** |

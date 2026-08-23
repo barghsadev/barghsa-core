@@ -1,7 +1,7 @@
 # Epic 07 — UI/UX Foundation & Design System
 
 > **Domain:** Shared UI Components, Theming, Accessibility, Layout & Design Patterns
-> **Status:** ⏳ Being drafted
+> **Status:** ✅ Ready — audited, gaps remediated, and cross-checked against `README.md` & `architecture.md`
 > **Dependencies:** E-01 (Platform & Infrastructure — monorepo, shared packages), E-02 (Auth, Users, CRM & Admin — user-facing pages)
 > **Cross-references:** E-05 (Notifications, Documents & AI Orchestration — notification center, AI chat UI), E-03 (Core Business — order/consultation forms), E-04 (Invoices, Wallet, Payments & Contracts — financial data display)
 
@@ -69,7 +69,7 @@
 
 ### S-07.01.01 — shadcn/ui scaffold & Base UI configuration
 
-**Description:** Initialize shadcn/ui within `packages/ui` with Tailwind CSS v4, Radix UI primitives, and class-variance-authority for component variants. Configure Base UI (React Aria Components or Base UI by MUI) as the supplementary headless layer for complex widgets (comboboxes, date pickers, number input with locale formatting).
+**Description:** Initialize shadcn/ui within `packages/ui` with Tailwind CSS v4, Radix UI primitives, and class-variance-authority for component variants. Configure Base UI (the actual Base UI package by MUI — `@mui/base` / `@mui/base-ui`) as the supplementary headless layer for complex widgets (comboboxes, date pickers, number input with locale formatting). Radix is the shadcn dependency only; Base UI is the sole supplementary headless library. No MUI Core, React Aria Components, or other interchangeable headless libraries.
 
 **Tasks:**
 
@@ -77,7 +77,7 @@
 |----|------|------------|
 | **T-07.01.01.01** | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. | M |
 | **T-07.01.01.02** | Install and configure shadcn/ui CLI: set `style: "new-york"`, `baseColor: "zinc"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). | L |
-| **T-07.01.01.03** | Install and configure Base UI (from MUI or React Aria Components) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). | L |
+| **T-07.01.01.03** | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). | L |
 | **T-07.01.01.04** | Configure `cva` (class-variance-authority) or `tailwind-variants` for all components: define `buttonVariants`, `inputVariants`, `cardVariants`, `badgeVariants` as exportable variant objects. | M |
 | **T-07.01.01.05** | Set up Storybook or Ladle in `packages/ui` for visual component documentation. Add stories for each component showing all variants, RTL mode, dark mode, and interactive states. | L |
 | **T-07.01.01.06** | Create a `packages/ui/src/index.ts` barrel export. Verify tree-shaking: importing only Button should not pull in Dialog or DatePicker. | M |
@@ -132,7 +132,24 @@
 | **T-07.01.03.20** | **Separator** — horizontal and vertical. Used in dropdowns, sidebars, form sections. | S |
 | **T-07.01.03.21** | — **Pagination** compound component: Previous/Next buttons, page number buttons, ellipsis for large ranges, page size selector (10/20/50/100), total count display ("Showing 1–20 of 154"). Compatible with both cursor and offset pagination. | M |
 
----
+|---
+
+### S-07.01.04 — Server-state foundation (TanStack Query)
+
+**Description:** Set up TanStack Query as the server-state layer for all data fetching. Provides shared QueryClient configuration, default stale/retry/cache policies, query key conventions, and targeted invalidation patterns. Every list page, detail view, and dashboard widget uses TanStack Query for deduplication, caching, background refetch, and optimistic updates (low-risk only). This is the foundation consumed by every feature page in Epics 02–05.
+
+**Tasks:**
+
+| ID | Task | Complexity |
+|----|------|------------|
+| **T-07.01.04.01** | Install `@tanstack/react-query` and configure `QueryClient` in the app root with production defaults: `staleTime: 30_000` (30s for non-financial reads), `gcTime: 5 * 60_000` (5 min cache), `retry: 2` with exponential backoff, `refetchOnWindowFocus: true` for list pages, `refetchOnMount: true`. Create `QueryProvider` wrapper component. | M |
+| **T-07.01.04.02** | Define shared query key factory conventions: `queryKeys.profiles.all`, `queryKeys.orders.list(filters)`, `queryKeys.orders.detail(id)`, `queryKeys.invoices.list(filters)`, `queryKeys.wallet.balance`, etc. All list and detail queries use the factory pattern for consistent invalidation. Document in `packages/ui` README. | M |
+| **T-07.01.04.03** | Create `useServerListQuery` hook: wraps `useQuery` with cursor/offset pagination params, filter/sort/search serialization, and `keepPreviousData: true` to prevent layout shift during pagination. Shared by all list pages. Create `useServerDetailQuery(id)` for single-entity fetches. | M |
+| **T-07.01.04.04** | Create `useServerMutation` hook: wraps `useMutation` with automatic toast on success/error, `onSettled` invalidation via query key factory, and optimistic updates only for low-risk actions (mark notification read, toggle boolean preference). Never optimistic for payments, wallet, orders, contracts. | M |
+| **T-07.01.04.05** | ⚠️ Set up query cancellation: abort in-flight queries on unmount (via `AbortController`). Ensure financial/wallet queries have `refetchInterval: false` or long intervals — never auto-refresh balance without user action. | M |
+| **T-07.01.04.06** | ⚠️ Configure `@tanstack/react-query-devtools` in development mode only. Never expose query cache, stale data, or retry attempts in production. Devtools toggle bound to `process.env.NODE_ENV`. | S |
+
+|---
 
 ## E-07.02: Theming & CSS Custom Properties
 
@@ -537,7 +554,7 @@
 
 ### S-07.12.01 — State pattern utilities
 
-**Description:** Build reusable components and hooks for consistent loading, empty, and error states.
+**Description:** Build reusable components and hooks for consistent loading, empty, and error states. Includes the **Waiting-for-Barghsa** pattern and **no-dead-end** state guarantees — every customer-facing workflow shows current state, what happened, next action, who is responsible, and how to get help.
 
 **Tasks:**
 
@@ -548,8 +565,10 @@
 | **T-07.12.01.03** | Create `EmptyState` component: icon (empty box, search icon, document icon), title ("No items yet", "No results found"), description (helpful message), action button ("Create first order", "Clear filters", "Browse products"), optional illustration. | M |
 | **T-07.12.01.04** | Create `LoadingSkeleton` variants for common patterns: `PageSkeleton` (full page shimmer), `TableSkeleton` (5 row shimmer), `CardGridSkeleton` (6 card shimmers in grid), `FormSkeleton` (input + button shimmers), `DetailSkeleton` (header + body shimmers). | M |
 | **T-07.12.01.05** | Create `useAsyncData<T>(fetcher, deps)` hook: returns `{ data, loading, error, refetch }`. Handles: initial fetch, re-fetch on dependency change, abort on unmount, error transform (localized message + code). | M |
-| **T-07.12.01.06** | ⚠️ Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner. | L |
-| **T-07.12.01.07** | ⚠️ Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry. | M |
+| **T-07.12.01.06** | ⚠️ Build `WaitingForBarghsa` state component: shown when an action is awaiting Barghsa staff. Displays: "Waiting for Barghsa", submission timestamp, latest update/status, expected response time, related ticket/comment link. Used on: order pages awaiting review, verification pending, contract awaiting signature, document awaiting review. See README no-dead-end principle. | M |
+| **T-07.12.01.07** | ⚠️ Build `NoDeadEndBanner` component: appears on any page whose underlying data cannot be loaded or written due to dependency/service failure. Shows: current state, what happened, next available action (Retry / Contact support), responsible team, help link. Applied to: external-provider outages, missing prerequisite data, admin-disabled features. Never leaves a customer on a disabled screen without explanation. | M |
+| **T-07.12.01.08** | ⚠️ Every list page, detail page, dashboard widget, and admin page must implement the loading/empty/error pattern. No view renders a blank white page or infinite spinner. | L |
+| **T-07.12.01.09** | ⚠️ Error boundaries per route: React Error Boundary catches unhandled render errors. Shows `ErrorState` with "Something went wrong" + reload button. Logs error to Sentry. | M |
 
 ---
 
@@ -574,8 +593,9 @@
 | **T-07.13.01.02** | Build `DestructiveConfirmDialog`: confirm button is red/destructive. User must type a confirmation phrase (e.g. "DELETE") to enable the button. Used for: deleting resources, removing agents, cancelling contracts. | M |
 | **T-07.13.01.03** | Build `FinancialConfirmDialog`: shows structured financial preview before user can confirm. Displays: amounts in IRR and toman, what will happen, what the consequences are, refund policy. User must check "I understand" checkbox to enable confirm button. Used for: wallet payments, order submissions, contract acceptance, gift code redemption. | L |
 | **T-07.13.01.04** | Create `useConfirm()` hook: `const confirm = useConfirm()` → `await confirm({ title, description, variant })`. Returns `true` if user confirmed, `false` if cancelled. Promise-based API for inline use. | M |
-| **T-07.13.01.05** | ⚠️ All destructive UI actions (delete, cancel, remove, revoke, disable) must use `DestructiveConfirmDialog`. No one-click delete for any resource. Financial actions use `FinancialConfirmDialog`. | M |
-| **T-07.13.01.06** | ⚠️ Confirmation dialogs maintain focus trap, close on Escape, and have a clear "Cancel" button. The destructive action button is never the default/auto-focused button. | S |
+| **T-07.13.01.05** | ⚠️ Build `FinancialReviewSummary` component: structured read-only preview of all financial fields before an irreversible action. Fields: profile info, service type, quantities, unit prices, discounts, VAT, total (IRR), payment source, contract implications, cancellation/refund rules. Backend generates authoritative snapshot. Used in: order review step, contract acceptance, payment confirmation. See README lines 177–181. | M |
+| **T-07.13.01.06** | ⚠️ All destructive UI actions (delete, cancel, remove, revoke, disable) must use `DestructiveConfirmDialog`. No one-click delete for any resource. Financial actions use `FinancialConfirmDialog` with `FinancialReviewSummary`. | M |
+| **T-07.13.01.07** | ⚠️ Confirmation dialogs maintain focus trap, close on Escape, and have a clear "Cancel" button. The destructive action button is never the default/auto-focused button. | S |
 
 ---
 
@@ -752,6 +772,22 @@
 | **T-07.18.02.03** | `TextFilter`: single search input with debounce. `NumberFilter`: min/max range inputs. `SelectFilter`: single-select dropdown with search. `MultiSelectFilter`: combobox with chips. | M |
 | **T-07.18.02.04** | ⚠️ All filter state serialized to URL search params so filters survive page refresh and are shareable. | S |
 | **T-07.18.02.05** | ⚠️ "Clear all filters" button shown only when filters are active. Active filter count badge on filter button. | S |
+
+---
+
+### S-07.18.03 — Domain-specific list & detail page patterns
+
+**Description:** Define reusable list and detail page compositions for key domain entities. Each entry specifies the list page columns, detail page sections, and filter patterns. These are UI page definitions, not domain business logic — they compose the shared components from S-07.18.01 and S-07.18.02.
+
+**Tasks:**
+
+| ID | Task | Complexity |
+|----|------|------------|
+| **T-07.18.03.01** | **Contract list/detail page pattern**: List columns (contract number, type, status badge, legal entity, start date, end date, amount). Detail sections (header with status, parties, terms, schedule, version timeline, amendment history, download links). Prerequisite display: show linked order, invoice, and document statuses. Contract detail page owned by E-04; this pattern defines the UI composition. | L |
+| **T-07.18.03.02** | **Invoice list/detail page pattern**: List columns (invoice number, type, status badge, period, amount, due date, payment status). Detail sections (header with status + amount, line items table, VAT breakdown, payment timeline, bank receipt attachment, payment method). Invoice detail page owned by E-04. | L |
+| **T-07.18.03.03** | **Bank receipt list/detail page pattern**: List columns (receipt ID, invoice reference, amount, bank name, deposit date, verification status). Detail sections (receipt image, deposit metadata, matched invoice, verification timeline). Bank receipt page owned by E-04. | M |
+| **T-07.18.03.04** | **Electricity order detail page pattern**: Detail sections (header with dual status badge, period, bundle/quantity breakdown, green composition, price preview, gift code used, payment status, contract link, timeline, document requirements). Uses `DualStatusDisplay` from T-07.27.01.04. Owned by E-03. | M |
+| **T-07.18.03.05** | **Solar postal tracking page pattern**: Detail sections (header with stage status, current postal stage, estimated delivery, tracking number link, document checklist, construction stage progress stepper). Uses `ProgressStepper` from T-07.27.01.03. Owned by E-03. | M |
 
 ---
 
@@ -1013,7 +1049,9 @@
 | **T-07.27.01.02** | Build `StatusTimeline` component: vertical timeline showing state transitions. Each entry: dot (colored by state), date (localized), state label (i18n), actor name, reason/note. Used in: order detail, contract detail, invoice detail, consultation detail. | M |
 | **T-07.27.01.03** | Build `ProgressStepper` component: horizontal step indicator (used for solar construction stages, saving plan fulfillment). Steps: completed (green check), current (blue circle + pulse), pending (gray circle). Connector lines between steps. | M |
 | **T-07.27.01.04** | Build `DualStatusDisplay` for electricity orders: shows commercial status (e.g. "Active") AND financial status (e.g. "Paid") as two separate labeled badges side by side. Never combine into one. | M |
-| **T-07.27.01.05** | ⚠️ All status labels are i18n. Persian labels match the product's business language (e.g. `در انتظار بررسی` not `Pending`). | M |
+| **T-07.27.01.05** | Build `NotificationStatusBadge` component: maps notification classification (security, payment, contract, order, system, document) to icon + color. Used in notification center and notification dropdown. Customer-visible notification types always show a label and icon. | M |
+| **T-07.27.01.06** | Build `SolarStageProgress` component: horizontal progress stepper specific to solar construction postal stages — Document review, Contract signing, Postal submission, In-progress, Delivered, Installed. Each stage shows status (pending/current/completed), date, and detail. Composes `ProgressStepper` from T-07.27.01.03. Owned by E-03. | M |
+| **T-07.27.01.07** | ⚠️ All status labels are i18n. Persian labels match the product's business language (e.g. `در انتظار بررسی` not `Pending`). | M |
 
 ---
 
@@ -1114,6 +1152,10 @@
 | **T-07.30.02.11** | **GiftCodesPage**: codes list with search/filter, create/edit form, usage statistics per code, active/inactive toggle. | M |
 | **T-07.30.02.12** | **UploadPoliciesPage**: table (category, allowed formats, max size), edit modal per category. Deployment-safe boundary warnings. | M |
 | **T-07.30.02.13** | **DualApprovalPage**: threshold input (IRR) with large number format, description of affected actions. Step-up required to change. Emergency override section. | M |
+| **T-07.30.02.14** | **VerificationSettingsPage**: identity verification requirements per profile type (Individual/Legal), required document types, verification expiry, auto-verification for staff profiles, manual verification override. Versioned settings with Draft → Active lifecycle. | M |
+| **T-07.30.02.15** | **ServiceTargetsPage**: admin page for configuring service-level targets — max response time per ticket priority, max order fulfillment time, max contract review time, max verification time. Each target: service type, threshold (hours/days), escalation rule, notification trigger. | M |
+| **T-07.30.02.16** | **TeamAssignmentPage**: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. | M |
+| **T-07.30.02.17** | **EscalationRulesPage**: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. | M |
 
 ---
 
@@ -1135,6 +1177,7 @@
 - Date pickers: locale data lazy-loaded per language
 - Chat UI: virtualized message list for conversations > 50 messages
 - Skeleton loading prevents layout shift (CLS budget: < 0.1)
+- **Core Web Vitals:** CI regression checks (LCP, FID, CLS) are owned by **Epic 06** (`T-06.11.03.05`). This Epic provides the rendering foundation (skeletons, minimal layout shift, code splitting) that makes CWV targets achievable. CWV ownership is not duplicated here.
 
 ### Testing
 
@@ -1169,6 +1212,27 @@
 - Confirmation dialogs for destructive actions — never one-click delete
 - Step-up auth gate for sensitive admin actions
 - No secrets in rendered HTML, component props, or data attributes
+
+---
+
+## Coverage Resolved: Gaps Remediated in This Epic
+
+The following gaps identified during the cross-audit of `README.md` (1,260 lines) and `architecture.md` (177 lines) have been addressed in this document:
+
+| Gap | Source | Remediation | Location |
+|-----|--------|-------------|----------|
+| **UI library ambiguity** — README says shadcn + Base UI; document allowed Radix, React Aria, or MUI interchangeably | README line 211, coverage-audit §4.2 | Fixed description and T-07.01.01.03 to specify Base UI by MUI (`@mui/base` / `@mui/base-ui`) as the sole supplementary library. Radix is shadcn dependency only. | S-07.01.01 description, T-07.01.01.03 |
+| **TanStack Query/server-state foundation** — no concrete task for QueryClient, query key conventions, or invalidation | README line 215, coverage-audit §2.17 | Added S-07.01.04 with 6 tasks: QueryClient setup, query key factory, `useServerListQuery`, `useServerMutation`, query cancellation, devtools config. | S-07.01.04 |
+| **No-dead-end / Waiting-for-Barghsa pattern** — no concrete UI components for stalled/pending states | README lines 145–153, coverage-audit §2.18 | Added `WaitingForBarghsa` component (T-07.12.01.06) and `NoDeadEndBanner` component (T-07.12.01.07). | S-07.12.01 |
+| **Financial review fields** — no shared authoritative preview component for irreversible actions | README lines 177–181, coverage-audit §2.10 | Added `FinancialReviewSummary` component (T-07.13.01.05) with full field list. | S-07.13.01 |
+| **Contract prerequisites/detail, invoice/bank-receipt list/detail** — no concrete UI composition for these domain pages | coverage-audit §2.18 | Added S-07.18.03 with 5 tasks: contract list/detail, invoice list/detail, bank receipt list/detail, electricity order detail, solar postal tracking. | S-07.18.03 |
+| **Notification classification status** — customer-visible notification types missing icon + color mapping | coverage-audit §2.18 | Added `NotificationStatusBadge` component (T-07.27.01.05). | S-07.27.01 |
+| **Solar postal tracking** — no concrete UI for solar construction postal stages | coverage-audit §2.18 | Added `SolarStageProgress` component (T-07.27.01.06). | S-07.27.01 |
+| **Verification settings UI** — admin page for identity verification requirements | coverage-audit §2.18 | Added `VerificationSettingsPage` (T-07.30.02.14). | S-07.30.02 |
+| **Service targets, team assignment, escalation admin UI** — no concrete admin pages for operations configuration | coverage-audit §2.18 | Added `ServiceTargetsPage` (T-07.30.02.15), `TeamAssignmentPage` (T-07.30.02.16), `EscalationRulesPage` (T-07.30.02.17). | S-07.30.02 |
+| **Core Web Vitals** — CWV regression handling not owned here | README line 229, coverage-audit §3 | Added explicit dependency reference to Epic 06 (`T-06.11.03.05`). CWV CI regression checks are not duplicated here. | Cross-Cutting: Performance |
+
+**Principles:** Domain business logic (order processing, invoice calculation, contract state machines) is not duplicated in this Epic. All domain-specific page patterns reference the owning Epic (E-03, E-04, E-05). All existing task IDs and complexities are preserved.
 
 ---
 

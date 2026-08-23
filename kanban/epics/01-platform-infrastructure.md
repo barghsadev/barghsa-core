@@ -202,6 +202,25 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 
 ---
 
+#### S-01.05: Global exception handling & correlation ID middleware
+
+**Description:** As a developer, I want a global NestJS exception filter and correlation ID middleware so that every error response returns a stable machine-readable code, localized message, and correlation ID without exposing stack traces or raw database errors.
+
+**Acceptance Criteria:**
+- Global `HttpExceptionFilter` catches all unhandled exceptions and maps them to stable error codes from `packages/shared`
+- Errors return `{ error: { code, message (localized via i18n), correlationId } }` — never expose stack traces, raw DB errors, or provider internal details
+- Middleware generates `X-Correlation-ID` per request, propagates to downstream calls (outbox events, worker jobs), and includes it in all responses and logs
+- Integration test verifies filter catches known exception types (validation, auth, not-found, rate-limit, provider, internal) and returns the expected shape
+
+**Tasks:**
+
+- **T-01.05.01:** Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware`
+  - **Notes:** Filter catches `HttpException`, `ZodError` (validation), and unhandled `Error`. Maps to codes from `@barghsa/shared/errors`. Resolves localized messages via i18n service. Logs the error with correlation ID and request metadata at appropriate severity (debug for 4xx, error for 5xx). Middleware generates UUIDv7 correlation ID on every request, stores in `cls-rtracer` or `AsyncLocalStorage`, and sets `X-Correlation-ID` response header. Backend services log correlation ID for traceability.
+  - **Dependencies:** T-06.01.04 (error codes), S-06.02 (i18n)
+  - **Complexity:** M
+
+---
+
 ### E-02: Database Schema, Migrations & Seed (Drizzle/PostgreSQL)
 
 **Description:** Establish Drizzle ORM as the database layer with a structured schema, migration pipeline (expand/migrate/contract), seed data for default entities, and PostgreSQL connection management. Enforce all data rules from the specification: UUIDv7, `timestamptz` with timezone metadata, half-open intervals, integer IRR financials, unique constraints, row-level locking, and transactional outbox.
@@ -564,6 +583,11 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Complexity:** L
   - **UI/UX:** N/A
 
+- **T-04.01.07:** Encrypted off-server backup of config, secrets, and critical application files
+  - **Notes:** Extend the backup regime from PostgreSQL-only to include: application `.env` files, admin config snapshots (JSON export of all `active` config versions), encryption keys (wrapped copies), Docker Compose / deploy scripts, and TLS certificates. Backups are encrypted (GPG or envelope encryption) and stored off-server (same S3 target as DB backups or separate secure location). Add a quarterly restore test that verifies config rehydration and documents measured RPO/RTO for non-DB assets. Include a section in the restore runbook (T-04.01.03) covering config-and-file rehydration.
+  - **Dependencies:** T-04.01.02
+  - **Complexity:** M
+
 ---
 
 #### S-04.02: Redis for caching and rate limiting
@@ -692,6 +716,11 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
   - **Dependencies:** T-04.04.01
   - **Complexity:** S
   - **UI/UX:** N/A
+
+- **T-04.04.05:** Implement ETag support for safe metadata endpoints
+  - **Notes:** Add NestJS interceptor or middleware that computes ETags (SHA-256 of response body) for safe read-only metadata endpoints: product lists, province/city data, static reference data. Return `304 Not Modified` when `If-None-Match` matches. Never apply ETag to authenticated profile-scoped, financial, or rapidly changing data. Document that ETags are for bandwidth reduction on safe data, not for cache correctness of stateful resources.
+  - **Dependencies:** T-04.04.04
+  - **Complexity:** S
 
 ---
 
@@ -1086,6 +1115,27 @@ The PR gate MUST check all of the following, failing the PR if any fails:
 
 ---
 
+#### S-06.04: Privacy-safe analytics abstraction (`packages/shared/analytics`)
+
+**Description:** As a platform engineer, I want a provider-abstraction analytics layer with a typed event interface, PII redaction, and a consent gate so that product analytics respect user consent and never leak passwords, OTPs, tokens, national identifiers, bank data, or file contents.
+
+**Acceptance Criteria:**
+- Typed analytics event interface shared by the frontend so events are consistent across providers
+- Provider adapters for Google Analytics and Barghsa's own backend; Google Analytics is enabled only with the appropriate consent
+- PII/secret redaction applied before an event leaves the client; secrets never placed in analytics
+- Consent gate blocks analytics until the user has opted in
+- Operational product events that correctness requires are sent to Barghsa's own backend regardless of third-party analytics consent
+
+**Tasks:**
+
+- **T-06.04.01:** Create privacy-safe analytics abstraction with consent gate and redaction
+  - **Notes:** Add `packages/shared/analytics` with a typed `AnalyticsEvent` interface, `track(event)` API, provider adapters (Google Analytics gtag, self-hosted backend endpoint), a `useAnalyticsConsent()` gate, and a redaction utility that strips credentials, OTPs, tokens, national IDs, bank data, file contents, and raw free-text before forwarding. Consent state persists per user. Operational product events required for correctness are sent to Barghsa's backend independent of third-party consent. Never include the values listed in the source's prohibited-data filter in any analytics payload.
+  - **Dependencies:** T-06.01.01 (shared package)
+  - **Complexity:** M
+  - **UI/UX:** Analytics is invisible to users apart from a consent prompt on first visit; no user-visible component.
+
+---
+
 ### E-07: Developer Experience, Configuration & Environment
 
 **Description:** Establish a smooth local development experience, secure configuration management (environment variables, secrets, admin config lifecycle), code quality tooling (lint-staged, commit hooks, editor config), and operational documentation (runbooks, deployment guides, incident response). Configuration safety ensures every setting has Draft, Active, and Superseded versions with rollback capability.
@@ -1327,71 +1377,36 @@ E-07 (DevExp) ◄─────────────────────
 
 ---
 
-## Gap Remediation
+---
 
-The following gaps were identified during the cross-audit of this epic against `README.md` (1260 lines) and `architecture.md` (177 lines). Each gap includes a suggested new task to be added. Mark each task as **Planned** and assign when the corresponding story is being implemented.
+#### S-07.05: Architecture guardrails and generated API clients
 
-### G-01.01 — Global exception filter & error response format
-- **Source:** README.md §Backend (lines 240–242), §General rules (line 1152)
-- **Gap:** No task covers a global NestJS exception filter that catches ALL unhandled errors and returns: `{ error: { code, message (localized), correlationId } }`. No task for correlation ID generation/propagation middleware.
-- **Suggested Task:** Implement `HttpExceptionFilter` (global NestJS filter) that catches all exceptions, maps them to stable error codes from `packages/shared`, resolves localized messages from i18n, generates correlation IDs, and ensures stack traces / raw DB errors are never exposed. Add middleware that generates/propagates `X-Correlation-ID` across requests.
+**Description:** Enforce the architecture rules that keep the modular monolith safe and the external API contract consumable without duplicating business logic.
 
-### G-01.02 — Analytics abstraction layer (privacy-safe)
-- **Source:** README.md §UI and frontend (line 219), §General rules (line 1153–1154)
-- **Gap:** No task for building an analytics abstraction, privacy-safe event pipeline, consent-gated analytics, or the restriction that analytics must not contain PII/secrets.
-- **Suggested Task:** Create `packages/shared/analytics` provider abstraction with a typed event interface, PII-redaction utility, consent gate, and adapters for Google Analytics / self-hosted backend. Events must exclude passwords, OTPs, tokens, national IDs, bank data, and file contents.
+**Acceptance Criteria:**
+- CI rejects external/provider calls made while a database transaction is open
+- OpenAPI generates a checked TypeScript client package and enforces the documented compatibility policy
+- Health endpoints are explicitly public and excluded from rate-limit and audit noise, with integration tests
+- Module extraction requires measured justification and preserves API, ownership, idempotency, audit, and observability contracts
 
-### G-01.03 — Mobile-first responsive design framework
-- **Source:** README.md §UI and frontend (lines 207–208)
-- **Gap:** No explicit task establishes a mobile-first responsive design system: breakpoint definitions, responsive layout primitives, mobile navigation patterns, and responsive testing strategy.
-- **Suggested Task:** Define responsive breakpoints (`sm: 640px, md: 768px, lg: 1024px, xl: 1280px`), create responsive layout primitives (stack, grid, sidebar), define mobile navigation patterns (bottom nav / hamburger), and add responsive visual regression tests.
+**Tasks:**
 
-### G-01.04 — Core Web Vitals CI regression checks
-- **Source:** README.md §UI and frontend (line 229)
-- **Gap:** Bundle budget checking (T-01.03.04) is covered, but Core Web Vitals (LCP, FID, CLS) CI regression checks are not.
-- **Suggested Task:** Integrate Lighthouse CI or Web Vitals library into the CI pipeline to measure LCP, TBT/ FID, and CLS on critical mobile flows. Fail the PR if regression exceeds a configurable threshold.
+- **T-07.05.01:** Enforce “no external call inside a database transaction”
+  - **Notes:** Add a Semgrep/custom static-analysis rule for Drizzle transaction callbacks and provider/network calls. Add representative positive/negative fixtures, run it in the PR gate, and document the persist-intent → commit → call asynchronously → apply idempotent result pattern.
+  - **Dependencies:** T-05.03.04
+  - **Complexity:** M
 
-### G-01.05 — Standard form library setup (react-hook-form + zod)
-- **Source:** README.md §UI and frontend (line 220)
-- **Gap:** No task establishes react-hook-form as the standard form library, creates shared form hooks, or defines the pattern for form validation.
-- **Suggested Task:** Install `react-hook-form` + `@hookform/resolvers/zod`, create shared `useFormWithZod(schema)` hook, create `FormField`, `FormError`, and `SubmitButton` components, and document the form pattern. Add a lint rule enforcing form validation on every form component.
+- **T-07.05.02:** Generate and verify TypeScript API client contracts from OpenAPI
+  - **Notes:** Generate `packages/api-client` from the committed OpenAPI document, fail CI on generated drift, and document that removals/type changes require a new API version or backward-compatible migration window.
+  - **Dependencies:** T-05.03.03
+  - **Complexity:** M
 
-### G-01.06 — Global animation system with reduced-motion support
-- **Source:** README.md §UI and frontend (lines 221–222)
-- **Gap:** `prefers-reduced-motion` is covered at component level (T-06.03.03), but no task defines the global animation library, micro-interaction guidelines, or utility to ensure all animations respect reduced-motion.
-- **Suggested Task:** Choose animation approach (CSS transitions + Tailwind vs. framer-motion), create `useReducedMotion()` hook, create `AnimatedPresence` / `FadeIn` / `SlideIn` utilities that respect `prefers-reduced-motion`, and add an animation design guidelines doc.
+- **T-07.05.03:** Verify health-endpoint middleware exclusions
+  - **Notes:** Integration tests prove `/api/health/live` and `/api/health/ready` require no session, bypass application rate limits, and do not create ordinary audit entries while still emitting operational metrics.
+  - **Dependencies:** T-03.03.01
+  - **Complexity:** S
 
-### G-01.07 — Cache-Control for authenticated API responses + ETags
-- **Source:** README.md §Performance engineering (line 371)
-- **Gap:** Static asset caching is covered (T-04.04.04), but authenticated API responses must set `Cache-Control: private, no-cache, no-store, must-revalidate` at the application level. ETags for safe metadata are not covered.
-- **Suggested Task:** Add NestJS interceptor that sets `Cache-Control: private, no-cache, no-store, must-revalidate` on all authenticated API responses. Implement ETag support for safe metadata endpoints (product lists, province/city data) with conditional requests.
-
-### G-01.08 — Encrypted off-server backup of config + critical files
-- **Source:** README.md §Backend (line 247)
-- **Gap:** PostgreSQL backup is covered (T-04.01.02), but no task covers encrypted off-server backup of application-level config, .env files, secrets, or quarterly restore tests for these.
-- **Suggested Task:** Add task for encrypted off-server backup of configuration, secrets, and critical application files. Include quarterly restore test that verifies config rehydration and documents measured RPO/RTO.
-
-### G-01.09 — Architectural rule enforcement: no DB transaction across external calls
-- **Source:** architecture.md §Background processing (line 85), README.md §Backend (line 244)
-- **Gap:** This is a critical architectural invariant but no task enforces it. No lint rule, code review check, or architectural test detects the anti-pattern.
-- **Suggested Task:** Add a Semgrep / custom lint rule that flags any `await externalCall()` inside a Drizzle/PostgreSQL transaction scope. Document the rule in ADR and add to PR gate security scans.
-
-### G-01.10 — OpenAPI client contract generation + breaking-change policy
-- **Source:** README.md §Backend (line 239)
-- **Gap:** Drift check is covered (T-05.03.03) but auto-generating TypeScript client contracts from OpenAPI and the breaking-change version negotiation policy are not.
-- **Suggested Task:** Add CI step that auto-generates TypeScript client types from the OpenAPI spec into `packages/api-client`. Document the breaking-change policy: non-breaking additions are allowed, but field removal/type changes require a new API version with a backward-compatible migration period.
-
-### G-01.11 — Health endpoints exclusion from auth/rate-limiting/audit
-- **Source:** architecture.md §Security (line 485)
-- **Gap:** T-03.03.01 covers health endpoints but doesn't explicitly state exclusion from auth, rate limiting, and audit.
-- **Suggested Task:** Add explicit tasks to (a) exclude `/api/health/live` and `/api/health/ready` from authentication middleware, (b) exclude from rate-limit middleware, (c) exclude from audit logging, and (d) verify these exclusions in integration tests.
-
-### G-01.12 — Per-capability maintenance mode admin UI + auto-trigger
-- **Source:** README.md §Reliability and operations (line 336)
-- **Gap:** T-05.02.04 covers per-capability maintenance mode but doesn't include admin UI, automated trigger via circuit-breaker, or customer-facing banner system.
-- **Suggested Task:** Add admin settings UI for per-capability maintenance toggles (with optional reason message). Add automatic maintenance-mode trigger when an external provider circuit-breaker opens. Create `<ServiceUnavailableBanner>` component that reads capability status and displays recovery/support info.
-
-### G-01.13 — Module extraction documentation & preservation contracts
-- **Source:** architecture.md §Domain modules (lines 50–51)
-- **Gap:** No task covers the documented criteria for extracting a module into a separate service, or the preservation contracts (API, idempotency, audit, ownership) that must be maintained during extraction.
-- **Suggested Task:** Create `docs/adr/007-module-extraction-criteria.md` documenting extraction triggers (proven independent scaling/security/availability need), the required preservation contracts, and the extraction checklist. Update the PR template to reference this when creating a new service package.
+- **T-07.05.04:** Document and gate module extraction criteria
+  - **Notes:** Create an ADR covering measured scaling/security/availability/deployment triggers, alternatives, consequences, owner, review trigger, and preservation of API, ownership, idempotency, audit, and observability. Add the extraction checklist to the PR template.
+  - **Dependencies:** T-07.04.02
+  - **Complexity:** S

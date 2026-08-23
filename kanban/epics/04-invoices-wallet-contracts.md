@@ -1,7 +1,7 @@
 # Epic E-04: Invoices, Wallet, Payments & Contracts
 
 > **Domain:** Financial & Contractual Operations
-> **Audit status:** Cross-referenced against README.md and architecture.md — exhaustive
+> **Status:** ✅ Audited — source gaps resolved as executable tasks
 > **Dependencies:** E-01 (Platform), E-02 (Auth/Users/CRM), E-03 (Core Business — Products, Orders)
 > **Depended by:** E-05 (Notifications, Documents)
 
@@ -77,6 +77,7 @@ This epic covers everything related to **money and legal commitments**:
 - `Partially funded` applies when `0 < confirmed_amount < total_amount`
 - No transition from a terminal state (`Paid`, `Cancelled`, `Refunded`) except `Partially refunded` from `Paid`
 - `Payment under review` is a transient holding state per bank receipt submission, not a stored invoice state — reconsider if multiple receipts overlap
+- **`Refund pending` is NOT an invoice state** — it is a derived/composite order-level financial state (README.md §Electricity orders). When an order has one or more invoices in `Refunded` or `Partially refunded` states, the order-level financial status reflects `Refund pending` or `Refunded`. The invoice state machine above (9 states) is the complete, authoritative set.
 
 #### Tasks
 
@@ -116,6 +117,9 @@ This epic covers everything related to **money and legal commitments**:
 | T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |
 | T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |
 | T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |
+| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |
+| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |
+| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |
 
 ---
 
@@ -221,13 +225,13 @@ This epic covers everything related to **money and legal commitments**:
 
 | ID | Task | Complexity |
 |----|------|------------|
-| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt` | M |
+| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |
 | T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |
 | T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |
 | T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |
 | T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |
 | T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |
-| T-04.2.01.07 | Add DB constraint: `CHECK (availableBalance >= 0)` via generated column or trigger | M |
+| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |
 | T-04.2.01.08 | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue | M |
 
 ---
@@ -561,20 +565,22 @@ Draft → Awaiting staff review → Awaiting customer acceptance → Accepted �
 
 | ID | Story | Complexity | Dependencies |
 |----|-------|------------|-------------|
-| S-04.5.04 | Contracts link to documents (generated PDFs, signed uploads, amendments); document state machine integrates with contract workflow | L | S-04.5.01, E-05 (Documents) |
+| S-04.5.04 | Contracts link to documents (generated PDFs, signed uploads, amendments); document state machine is defined by E-05 task `T-05.11.01`; this story covers contract-to-document linking and contract-specific rules | L | S-04.5.01, E-05 (Documents) |
 
 #### Document lifecycle for contracts
-- Contract created → document generated from template → Uploading → Pending scan → Available → Submitted for review → Approved / Rejected
-- Customer uploads signed version → same lifecycle
-- Staff uploads signed copy received through approved channel → record identifying uploader
-- Amendments → new document version linked to superseded document
+- **Document state machine is owned by E-05 (`T-05.11.01`):** `Uploading → Pending scan → Available → Submitted for review → Approved | Rejected → Superseded → Removed`, with `Quarantined` for malware.
+- Contract-specific rules applied on top of E-05's base lifecycle:
+  - Contract created → document generated from template enters `Uploading` state
+  - Customer uploads signed version → enters same lifecycle
+  - Staff uploads signed copy received through approved channel → record identifying uploader
+  - Amendments → new document version linked to superseded document via `supersedes_document_id`
 
 #### Tasks
 
 | ID | Task | Complexity |
 |----|------|------------|
 | T-04.5.04.01 | Create `contract_documents` link table: `contractVersionId`, `documentId`, `role` (original, signed, amendment, superseded) | S |
-| T-04.5.04.02 | Document state machine for contract docs: Pending scan → Available → Submitted → Approved/Rejected | M |
+| T-04.5.04.02 | Document state machine integration: wire contract documents into E-05's state machine (`T-05.11.01`); contract-specific guards (e.g., signed contracts cannot be replaced) enforced via policy on top of the base lifecycle | M |
 | T-04.5.04.03 | Replacement rule: new document linked to superseded doc; rejection requires reason + Replace action | M |
 | T-04.5.04.04 | Immutable signed docs: once Signed state reached, no replacement; new version for amendments | M |
 | T-04.5.04.05 | UI: contract detail shows all linked docs with states and version history | M |
@@ -720,6 +726,15 @@ Draft → Awaiting staff review → Awaiting customer acceptance → Accepted �
 
 **Reporting:** Mismatches logged to finance exception queue with severity. Staff can investigate and resolve.
 
+### C-04.CC.07 — Authoritative pre-action financial review
+
+| ID | Task | Complexity |
+|----|------|------------|
+| T-04.CC.07.01 | Implement `ReviewSnapshotService` that calculates and returns the authoritative pre-action snapshot for every irreversible or financial command: active profile, service, quantities, dates, unit prices, discounts, VAT, total, payment source, contract implications, and cancellation/refund rules | L |
+| T-04.CC.07.02 | Require the client to confirm the exact snapshot identifier/hash before executing the command; reject stale or altered snapshots and regenerate current values | M |
+| T-04.CC.07.03 | Integrate the shared UI `FinancialReviewSummary` from E-07 into order submission, wallet payment, bank confirmation, contract acceptance/signature, refunds, and financial adjustments | M |
+| T-04.CC.07.04 | Add integration/E2E tests proving displayed values equal committed snapshots and that changed prices/rules invalidate stale confirmation | M |
+
 ---
 
 ## Dependency Graph
@@ -780,22 +795,3 @@ E-01 (Platform & Infrastructure)
 4. **Phase 4 (Changes):** S-04.6.01, S-04.6.02, S-04.2.04, S-04.4.02, S-04.3.02
 
 ---
-
-## Gap Remediation
-
-The following gaps were identified during the cross-audit of this epic against `README.md` (1260 lines) and `architecture.md` (177 lines).
-
-### G-04.01 — Pre-action review page: authoritative backend snapshot + shared component
-- **Source:** README.md §Customer transparency (lines 177–178)
-- **Gap:** While order-type review pages are described individually, there is no shared review-page component pattern, no utility for backend-authoritative snapshot generation, and no cross-cutting task ensuring EVERY irreversible/financial action follows the same review pattern (profile, service, quantities, dates, unit prices, discounts, VAT, total, payment source, contract implications, refund rules).
-- **Suggested Task:** Add cross-cutting story `C-04.CC.07`: Create `<FinancialReviewCard>` component and server-side `ReviewSnapshotService` that generates an authoritative JSON snapshot. Add a PR checklist item: any new financial/irreversible action must include a review step using the shared pattern.
-
-### G-04.02 — Invoice calculation reproducibility: half-up rounding specification
-- **Source:** README.md §Customer transparency (line 181)
-- **Gap:** T-04.1.02.04 covers VAT calculation but does not explicitly specify the half-up rounding rule (round half-up to nearest IRR) or the reproducibility requirement (invoice stores inputs, rounding results, and totals).
-- **Suggested Task:** Add task to S-04.1.02: implement `RoundingService.roundHalfUp(value: bigint, precision: number)` that uses banker's rounding or half-up as specified. Add an `invoice_calculation_snapshot` JSONB column on invoices that stores all calculation inputs, intermediate rounding steps, and final totals for reproducibility. Add table-driven unit tests with financial examples from the product requirements.
-
-### G-04.03 — Wallet availableBalance as derived value (not stored)
-- **Source:** README.md §Wallet (line 1104)
-- **Gap:** T-04.2.01.01 creates `postedBalance` and `reservedBalance` columns, but the task does not explicitly state that `availableBalance` is a DERIVED value (`postedBalance - reservedBalance`) computed at query time, not a stored column. There is no DB constraint preventing negative available balance.
-- **Suggested Task:** Add task: ensure `availableBalance` is computed in application code (not stored). Add DB-level CHECK constraint or generated column that ensures `(postedBalance - reservedBalance) >= 0`. Add integration test that verifies the constraint prevents over-draft.
