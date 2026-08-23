@@ -82,10 +82,34 @@ Ordered by logical dependency — later phases depend on earlier ones being subs
 
 ---
 
-## Coverage
+## Loop Automation Preparation
 
-- **7 domain epics** covering the entire specification
-- **~250+ stories** across all domains
-- **~900+ tasks** with full details (descriptions, technical notes, UI/UX requirements, dependencies, complexity)
-- **33 gaps identified and remediated** during cross-audit
-- Cross-cutting concerns documented: i18n, accessibility, security, performance, cost policy
+The kanban is ready for the autonomous build loop with these artifacts:
+
+| File | Purpose |
+|------|---------|
+| `kanban/task-queue.json` | Flat ordered queue of **873 tasks** with IDs, titles, complexity, source file |
+| `kanban/loop-state.json` | Persistent state tracker — orchestrator reads/writes here |
+| `AGENTS.md` | Protocol playbook for Builder and Reviewer agents |
+| `kanban/index.md` | Overall execution order and phase breakdown |
+
+### Model Assignment
+
+| Role | Model |
+|------|-------|
+| **Builder** | DeepSeek V4 Flash (Max) |
+| **Reviewer** | GPT-5.6 Sol |
+| **Orchestrator** | DeepSeek V4 Flash (via charteron job) |
+
+### Loop flow
+
+1. Orchestrator picks next task from queue → dispatches **Builder**
+2. Builder codes, tests, pushes, creates PR
+3. Orchestrator dispatches **Reviewer**
+4. Reviewer checks code → either approves+merges or requests changes
+5. Loop back to step 2 if changes needed, else step 1 for next task
+
+### Next Step
+
+Start the loop by enabling the charteron job.
+> **Note:** File 05-notifications-documents-ai.md uses story-level organization without per-task IDs. Its stories will be treated as work units during the loop.
