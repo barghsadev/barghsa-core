@@ -1,13 +1,15 @@
 {
   "status": "idle",
+  "current_task_key": null,
   "current_task_id": null,
+  "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "builder_subagent_id": null,
-  "reviewer_subagent_id": null,
   "loop_iteration": 0,
+  "fix_attempts": 0,
   "build_completed_tasks": [],
   "status_history": [],
   "last_updated": null,
-  "notes": ""
+  "last_error": null,
+  "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }

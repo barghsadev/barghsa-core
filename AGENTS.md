@@ -1,269 +1,208 @@
-# Barghsa — Autonomous Development Loop Protocol
+# Barghsa — Autonomous Build and Review Loop
 
-> **Builder model:** DeepSeek V4 / Flash (Max) — via `delegate_task` subagent
-> **Reviewer model:** GPT-5.6 Sol — invoked by orchestrator via OpenRouter API for code review
-> **Orchestrator:** Hermes cron job — state management, dispatching, git operations
+> **Builder/orchestrator:** `deepseek/deepseek-v4-flash` on OpenRouter
+>
+> **Reviewer:** `openai/gpt-5.6-sol` on OpenRouter
+>
+> **Scheduler:** paused Hermes cron job `d09ad66fea0b`
 
-## How the Loop Works
+## Goal
 
+Process one small kanban task at a time:
+
+1. select the next task;
+2. build it on a dedicated branch;
+3. run the repository's available checks;
+4. open a pull request;
+5. review it with GPT-5.6 Sol;
+6. fix blocking findings or squash-merge it;
+7. continue with the next task.
+
+Keep only one active task and one open loop-owned PR at a time.
+
+## Files
+
+- `kanban/task-queue.json` — ordered task queue
+- `kanban/loop-state.json` — durable state
+- `kanban/epics/<file>` — full task context and acceptance criteria
+- `kanban/index.md` — phase ordering
+
+## Stable Task Keys
+
+Task IDs repeat between epic files, so bare IDs are not unique. Everywhere the loop stores or compares a task, use:
+
+```text
+<fname>#<id>
 ```
-┌──────────────────────────────────────────────────────────┐
-│  Orchestrator (cron job, runs every 15 min)              │
-│  → Reads loop-state.json                                 │
-│  → Decides action based on state                         │
-│  → Runs on DeepSeek V4 Flash (default session model)     │
-└──────────────────┬───────────────────────────────────────┘
-                   │
-    ┌──────────────┴──────────────┐
-    ▼                              ▼
-┌──────────────┐          ┌──────────────────┐
-│ STATE        │          │ STATE            │
-│ idle         │          │ in_review        │
-│              │          │ (PR open)        │
-│ Pick next    │          │                  │
-│ task from    │          │ Orchestrator:    │
-│ queue        │          │ 1. gh pr diff    │
-│              │          │ 2. Send diff to  │
-│ Dispatch     │          │    GPT-5.6 Sol   │
-│ Builder via  │          │    via API call  │
-│ delegate_task│          │ 3. Apply review  │
-│ (DS V4 Flash)│          │    decision via  │
-│              │          │    gh CLI        │
-└──────┬───────┘          └────────┬─────────┘
-       │                    ┌──────┴──────┐
-       ▼                    ▼             ▼
-┌──────────────┐    ┌───────────┐  ┌──────────────┐
-│ STATE        │    │ GPT-5.6   │  │ GPT-5.6 Sol │
-│ building     │    │ Sol says  │  │ says changes │
-│              │    │ ✅ Approve│  │ ❌ needed    │
-│ Wait for     │    │ → merge   │  │              │
-│ builder to   │    │ → mark    │  │ Set state    │
-│ push PR      │    │   done    │  │ → fixing     │
-│              │    │ → pick    │  │              │
-│              │    │   next    │  └──────┬───────┘
-└──────────────┘    └───────────┘         │
-                                          ▼
-                                   ┌──────────────┐
-                                   │ STATE        │
-                                   │ fixing       │
-                                   │              │
-                                   │ Re-dispatch  │
-                                   │ Builder to   │
-                                   │ fix, loop    │
-                                   │ back to      │
-                                   │ in_review    │
-                                   └──────────────┘
+
+Example:
+
+```text
+01-platform-infrastructure.md#T-01.01.01
+```
+
+`build_completed_tasks` stores these keys. Branch names also include the epic number:
+
+```text
+feat/e01-t-01-01-01--pnpm-workspace
 ```
 
 ## State Machine
 
-| State | Meaning | Next Action |
-|-------|---------|-------------|
-| `idle` | No active task | Pick next task from queue, dispatch Builder |
-| `building` | Builder is implementing | Wait, check for new branch/PR |
-| `in_review` | PR is open, awaiting review | Dispatch Reviewer |
-| `fixing` | Reviewer requested changes | Dispatch Builder to fix |
-| `merging` | Reviewer approved, merging | Merge PR, mark task done |
+| State | Meaning | Next action |
+|---|---|---|
+| `idle` | No active task | Select and start the next task |
+| `building` | Builder owns the current task | Continue implementation or recover the existing branch/PR |
+| `in_review` | PR is ready | Run automated checks, then GPT-5.6 Sol review |
+| `fixing` | Review found blocking issues | Fix the same PR and return to review |
+| `blocked` | Manual intervention is needed | Stop; do not select another task |
+| `complete` | Queue exhausted | Stop |
 
-## Branch Naming Convention
+`current_task_key`, `current_task_id`, `current_task_file`, `current_branch`, and `current_pr_url` must describe the same task. Update state after every transition.
 
-```
-feat/<task-id>--<kebab-case-description>
-```
+## Orchestrator Procedure
 
-Examples:
-- `feat/T-01.01.01--pnpm-workspace-setup`
-- `feat/T-02.01.01--login-page-ui`
+### 1. Reconcile reality first
 
-## Builder Agent Protocol
+Before acting, inspect:
 
-### When dispatched (state = idle or fixing):
-
-1. **Read** `kanban/task-queue.json` to find the next pending task
-2. **Read** the relevant epic file for full task details (epics/0X-*.md)
-3. **Create branch** from latest `main`:
-   ```bash
-   git checkout main && git pull
-   git checkout -b feat/<task-id>--<short-name>
-   ```
-4. **Implement** the task — write code, DB migrations, tests, etc.
-5. **Run tests** — at minimum:
-   ```bash
-   pnpm typecheck
-   pnpm lint
-   pnpm test -- --changed          # affected tests
-   pnpm build
-   ```
-6. **Commit and push**:
-   ```bash
-   git add -A
-   git commit -m "feat(<scope>): <task-id> — <short description>"
-   git push origin feat/<task-id>--<short-name>
-   ```
-7. **Create pull request** via `gh` CLI:
-   ```bash
-   gh pr create \
-     --title "feat(<scope>): <task-id> — <short description>" \
-     --body "Implements **<task-id>** from the kanban.
-
-   ## What
-   <implemented features>
-
-   ## Checklist
-   - [ ] Code implements all acceptance criteria
-   - [ ] Tests pass (typecheck, lint, unit, integration)
-   - [ ] Migration is backward-compatible (expand)
-   - [ ] No debug endpoints, secrets, or TODOs remain
-   - [ ] Relevant PR gate checks pass
-
-   Closes #<will be created>"
-   ```
-8. **Update state** in `kanban/loop-state.json`:
-   - Set `status` to `in_review`
-   - Record `current_task_id`, `current_branch`, `current_pr_url`
-   - Increment `loop_iteration`
-   - Add entry to `status_history`
-
-### When fixing review comments (state = fixing):
-
-1. **Checkout** the existing branch
-2. **Read** reviewer comments from the PR (via `gh pr view <url>`)
-3. **Fix all issues** identified by reviewer
-4. **Re-run tests**, **amend repo**:
-   ```bash
-   git add -A
-   git commit -m "fix: address review comments"
-   git push
-   ```
-5. **Comment** on the PR: `Addressed all review comments. Ready for re-review.`
-6. **Update state** to `in_review`
-
-## Reviewer Agent Protocol (GPT-5.6 Sol)
-
-The orchestrator invokes GPT-5.6 Sol via OpenRouter API when a PR needs review.
-
-### When state = in_review:
-
-The orchestrator does the following:
-
-1. **Read** `kanban/loop-state.json` to get `current_pr_url`
-2. **Fetch PR diff** and context:
-   ```bash
-   gh pr diff <pr-url> > /tmp/pr-diff.txt
-   gh pr view <pr-url> --json title,body,files,additions,deletions
-   ```
-3. **Send to GPT-5.6 Sol** via OpenRouter API:
-   ```bash
-   REVIEW_RESPONSE=$(curl -s https://openrouter.ai/api/v1/chat/completions \
-     -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "model": "openai/gpt-5.6-sol",
-       "messages": [
-         {"role": "system", "content": "You are a code reviewer for the Barghsa energy platform project. Review the PR diff against these criteria and respond with ONLY valid JSON in this exact format, no other text:\n
-   {
-     \"decision\": \"approve\" | \"request_changes\",
-     \"summary\": \"<one-line summary>\",
-     \"issues\": [
-       {
-         \"severity\": \"critical\" | \"major\" | \"minor\",
-         \"file\": \"<file-path>\",
-         \"line\": <line-number>,
-         \"description\": \"<whats-wrong>\",
-         \"suggestion\": \"<how-to-fix>\"
-       }
-     ]
-   }\n
-   Criteria:
-   - Acceptance criteria met from task description
-   - No secrets, hardcoded credentials, SQL injection, XSS
-   - Adequate test coverage for the change
-   - Proper error handling (no uncaught rejections)
-   - i18n/l10n where user-facing strings are involved
-   - Backward-compatible database migrations (expand/migrate/contract)
-   - No console.log in production code
-   - Edge cases handled (error, loading, empty states)
-   - Persistent valid input on error (forms don't clear on validation error)
-   - No dead ends for users"},
-         {"role": "user", "content": "Task: '$(cat /tmp/task-context.txt)'\n\nPR Title: <pr-title>\n\nDiff:\n$(cat /tmp/pr-diff.txt)"}
-       ]
-     }')
-   ```
-4. **Parse the JSON response** to get decision and issues
-5. **Apply the review decision** via `gh` CLI:
-   - **Approve**: `gh pr review <pr-url> --approve --body "✅ GPT-5.6 Sol approved. <summary>"`
-     - Then: `gh pr merge <pr-url> --squash --delete-branch`
-     - Update state: mark task done, set status to `idle`
-   - **Request changes**: `gh pr review <pr-url> --request-changes --body "<issues from GPT-5.6 Sol>"`
-     - Update state: set status to `fixing`
-6. **Update** `kanban/loop-state.json` with new state
-
-## Orchestrator Protocol — Full Logic
-
-The orchestrator runs on DeepSeek V4 Flash (default cron model). It reads `loop-state.json` and branches based on state:
-
-```python
-if state.status == "idle":
-    # Pick next task from queue (not in completed list)
-    # Read epic file for full task details
-    # Dispatch Builder agent via delegate_task
-    # Set status to "building"
-
-elif state.status == "building":
-    # Check if enough time has passed (last_updated > 5 min ago)
-    # If so, check git for PR:
-    #   gh pr list --head feat/<task-id>--*
-    # If PR found, transition to in_review
-    # If no branch yet, do nothing
-
-elif state.status == "in_review":
-    # ════════════════════════════════════
-    # GPT-5.6 Sol does the review
-    # ════════════════════════════════════
-    # Follow Reviewer Agent Protocol above:
-    # 1. gh pr diff <url> > /tmp/pr-diff.txt
-    # 2. curl to OpenRouter with model=openai/gpt-5.6-sol
-    # 3. Parse JSON response
-    # 4. APPROVE: gh pr review + gh pr merge, mark done
-    # 5. CHANGES: gh pr review --request-changes, set fixing
-
-elif state.status == "fixing":
-    # Builder will fix issues
-    # Set status back to "idle" — the task will be re-picked
-    # Increment fix_attempts in state history
-    # If fix_attempts > 3: flag as "blocked" for manual intervention
-
-elif state.status == "complete":
-    # All tasks done — notify
-    pass
+```bash
+git status --short --branch
+gh pr list --state open --json number,title,headRefName,isDraft,url
 ```
 
-## Task Selection Order
+- If the recorded PR exists, trust GitHub and resume it.
+- If the recorded branch exists but no PR exists, resume that branch.
+- If state says `idle` but a loop-owned PR is open, recover that PR instead of starting another task.
+- Never reset an active task merely because no branch appeared within a few minutes. A cron tick is short; implementation may take longer.
 
-Follow the implementation order from `kanban/index.md`:
+### 2. Select a task (`idle`)
 
-1. **Phase 0:** E-01 (Platform) → E-07 (UI/UX) → E-06 (Security)
-2. **Phase 1:** E-02 (Auth/Users)
-3. **Phase 2:** E-04 (Invoices/Wallet) → E-03 (Core Business)
-4. **Phase 3:** E-05 (Notifications/Docs/AI)
-5. **Phase 4:** E-06 advanced (Security hardening, Observability)
+Pick the first queue entry whose `<fname>#<id>` is not in `build_completed_tasks`.
 
-Within each epic, follow the task ordering in `task-queue.json`.
-Tasks with complexity S or M should be preferred early; L and XL tasks may be split.
+Read its exact task block from `kanban/epics/<fname>` including notes, dependencies, and acceptance criteria. If a required dependency is visibly absent, set `blocked` with a concise reason instead of guessing.
 
-## Convention Reminders
+Set the current task fields, create its branch from current `origin/main`, set `status` to `building`, and implement the task in the same run. Do not stop after merely writing a task brief.
 
-- All commits use conventional commits format
-- All code is TypeScript with strict mode
-- All user-facing strings are in i18n dictionaries (Persian + English)
-- All state changes are audited
-- No temporary secrets, debug endpoints, or Console.log in committed code
-- Migration files use expand/migrate/contract pattern
-- PR description links to the kanban task
+Prefer S/M tasks. Split L/XL work into a reviewable prerequisite slice when necessary; do not create oversized PRs.
 
-## Failure Recovery
+### 3. Build (`building`)
 
-- **If a subagent crashes/times out:** Orchestrator sets state back to `idle` and retries with a fresh agent
-- **If tests fail persistently:** Builder comments on the PR with the failure and sets state to `blocked` — orchestrator notifies the user
-- **If merge conflicts:** Builder rebases on latest main and resolves
-- **If builder creates a broken PR (empty, wrong branch, etc.):** Reviewer rejects with reason, state goes back to idle
+Use the current branch. Implement only the selected task and directly required scaffolding. Do not modify product requirements, the queue, or unrelated epic documents.
+
+Tests are progressive because early foundation tasks may not yet define every root script:
+
+1. run the checks explicitly required by the task;
+2. run each relevant root script that currently exists (`typecheck`, `lint`, `test`, `build`);
+3. record exact commands and outcomes in the PR body;
+4. never claim an unavailable check passed.
+
+Commit and push with a conventional message, then open a **draft PR**. When implementation and available checks are ready, mark it ready and set state to `in_review`.
+
+PR body:
+
+```markdown
+Implements `<task-key>`.
+
+## What
+- concise change summary
+
+## Acceptance criteria
+- [x] criterion actually verified
+- [ ] criterion not yet verified (explain why)
+
+## Validation
+- `command` — pass/fail/not available
+```
+
+Do not include a fake `Closes #...` reference.
+
+### 4. Review (`in_review`)
+
+First read the task context, PR metadata, changed files, diff, and check status. Do not merge a draft PR, a PR with merge conflicts, or a PR whose available required checks fail.
+
+Invoke the reviewer through Hermes so credentials stay in the configured provider path:
+
+```bash
+hermes chat \
+  --query-file /tmp/barghsa-review-prompt.txt \
+  --model openai/gpt-5.6-sol \
+  --provider openrouter \
+  --reasoning high \
+  --max-turns 1 \
+  --quiet
+```
+
+Build `/tmp/barghsa-review-prompt.txt` safely as a file; do not interpolate a diff into shell JSON. Ask for exactly:
+
+```json
+{
+  "decision": "approve",
+  "summary": "one line",
+  "issues": [
+    {
+      "severity": "critical",
+      "file": "path",
+      "line": 1,
+      "description": "problem",
+      "suggestion": "specific fix"
+    }
+  ]
+}
+```
+
+Allowed decisions: `approve`, `request_changes`. Allowed severities: `critical`, `major`, `minor`. Parse the final non-empty JSON line. If parsing fails, retry once with a shorter prompt; then set `blocked` rather than merging without a valid review.
+
+The review must check:
+
+- selected task acceptance criteria and dependencies;
+- correctness and edge cases;
+- security and secret exposure;
+- adequate tests for changed behavior;
+- error handling;
+- i18n/RTL/accessibility for user-facing work;
+- backward-compatible migrations;
+- no unrelated scope or debug residue.
+
+`critical` or `major` findings require changes. Minor findings may be left as follow-up only when the reviewer still returns `approve`.
+
+Post the review summary and issue list as a normal PR comment. The repository owner cannot submit a formal approval/request-changes review on their own PR, so comments are the durable review record.
+
+### 5. Fix (`fixing`)
+
+Stay on the same task, branch, and PR. Fix all critical/major findings, rerun relevant checks, push a new commit, and return to `in_review`.
+
+Increment `fix_attempts`. After three unsuccessful review rounds, set `blocked` with the remaining findings. Do not re-enter `idle` and do not create a new branch.
+
+### 6. Merge
+
+Merge only when all are true:
+
+- the PR is not draft and is mergeable;
+- available required checks pass;
+- reviewer decision is `approve`;
+- no critical/major issue remains.
+
+Then:
+
+```bash
+gh pr merge <url> --squash --delete-branch
+```
+
+Verify the PR reports `MERGED`. Only then append `current_task_key` to `build_completed_tasks`, clear current task fields, reset `fix_attempts`, and return to `idle`.
+
+## Failure Rules
+
+- Transient provider/GitHub/network failure: keep the current state and record the error; retry on the next tick.
+- Ambiguous, destructive, credential, payment, or production operation: set `blocked` for manual review.
+- Never force-push `main`, bypass failing checks, expose secrets, or merge on an invalid/missing reviewer response.
+- Never mark a task completed before the PR is verified merged.
+- Keep `status_history` bounded to the latest 100 transitions.
+
+## Project Conventions
+
+- Conventional commits; strict TypeScript when TypeScript exists.
+- Persian and English dictionaries for user-facing strings.
+- RTL and accessibility are part of acceptance, not optional polish.
+- Audit state changes and use expand/migrate/contract for migrations.
+- No committed secrets, debug endpoints, or production `console.log` residue.

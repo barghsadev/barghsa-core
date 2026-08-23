@@ -111,5 +111,8 @@ The kanban is ready for the autonomous build loop with these artifacts:
 
 ### Next Step
 
-Start the loop by enabling the charteron job.
-> **Note:** File 05-notifications-documents-ai.md uses story-level organization without per-task IDs. Its stories will be treated as work units during the loop.
+Start the loop by resuming cron job `d09ad66fea0b` when you want autonomous development to begin.
+
+> **Task identity:** Bare task IDs repeat across epic files. The loop uses `<fname>#<id>` as the stable key (for example, `01-platform-infrastructure.md#T-01.01.01`).
+>
+> **Note:** File `05-notifications-documents-ai.md` uses story-level organization without per-task IDs. Its stories are treated as work units during the loop.
