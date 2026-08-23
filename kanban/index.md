@@ -97,9 +97,9 @@ The kanban is ready for the autonomous build loop with these artifacts:
 
 | Role | Model | How |
 |------|-------|-----|
-| **Builder** | DeepSeek V4 Flash | via `delegate_task` subagent |
-| **Reviewer** | DeepSeek V4 Flash (same as orchestrator) | Orchestrator self-reviews via `gh pr` CLI — no separate agent needed |
-| **Orchestrator** | DeepSeek V4 Flash | Cron job session model |
+| **Builder** | DeepSeek V4 Flash (Max) | via `delegate_task` subagent |
+| **Reviewer** | GPT-5.6 Sol | invoked by orchestrator via OpenRouter API |
+| **Orchestrator** | DeepSeek V4 Flash | Cron job — state mgmt + gh CLI operations |
 
 ### Loop flow
 

@@ -1,44 +1,47 @@
 # Barghsa — Autonomous Development Loop Protocol
 
-> **Builder model:** DeepSeek V4 Flash (via OpenRouter, delegate_task subagent)
-> **Reviewer model:** DeepSeek V4 Flash (orchestrator self-review — no model switching)
-> **Orchestrator:** Hermes cron job (does all state management + code review directly)
+> **Builder model:** DeepSeek V4 / Flash (Max) — via `delegate_task` subagent
+> **Reviewer model:** GPT-5.6 Sol — invoked by orchestrator via OpenRouter API for code review
+> **Orchestrator:** Hermes cron job — state management, dispatching, git operations
 
 ## How the Loop Works
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Orchestrator (cron job, runs every 15 min)         │
-│  → Reads loop-state.json                            │
-│  → All logic runs in ONE session (no model switch)   │
-└──────────────────┬──────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Orchestrator (cron job, runs every 15 min)              │
+│  → Reads loop-state.json                                 │
+│  → Decides action based on state                         │
+│  → Runs on DeepSeek V4 Flash (default session model)     │
+└──────────────────┬───────────────────────────────────────┘
                    │
     ┌──────────────┴──────────────┐
     ▼                              ▼
 ┌──────────────┐          ┌──────────────────┐
 │ STATE        │          │ STATE            │
 │ idle         │          │ in_review        │
-│              │          │ (PR exists)      │
+│              │          │ (PR open)        │
 │ Pick next    │          │                  │
 │ task from    │          │ Orchestrator:    │
 │ queue        │          │ 1. gh pr diff    │
-│              │          │ 2. Review code   │
-│ Dispatch     │          │ 3. Approve/merge │
-│ Builder via  │          │    or request    │
-│ delegate_task│          │    changes       │
-│ (DS V4)      │          └────────┬─────────┘
-└──────┬───────┘                   │
+│              │          │ 2. Send diff to  │
+│ Dispatch     │          │    GPT-5.6 Sol   │
+│ Builder via  │          │    via API call  │
+│ delegate_task│          │ 3. Apply review  │
+│ (DS V4 Flash)│          │    decision via  │
+│              │          │    gh CLI        │
+└──────┬───────┘          └────────┬─────────┘
        │                    ┌──────┴──────┐
        ▼                    ▼             ▼
 ┌──────────────┐    ┌───────────┐  ┌──────────────┐
-│ STATE        │    │ Approved  │  │ Changes      │
-│ building     │    │ → merge   │  │ requested    │
-│              │    │ → mark    │  │              │
-│ Wait for     │    │   done    │  │ Set state    │
-│ builder to   │    │ → pick    │  │ → fixing     │
-│ push PR      │    │   next    │  │              │
-└──────────────┘    └───────────┘  └──────────────┘
-                                          │
+│ STATE        │    │ GPT-5.6   │  │ GPT-5.6 Sol │
+│ building     │    │ Sol says  │  │ says changes │
+│              │    │ ✅ Approve│  │ ❌ needed    │
+│ Wait for     │    │ → merge   │  │              │
+│ builder to   │    │ → mark    │  │ Set state    │
+│ push PR      │    │   done    │  │ → fixing     │
+│              │    │ → pick    │  │              │
+│              │    │   next    │  └──────┬───────┘
+└──────────────┘    └───────────┘         │
                                           ▼
                                    ┌──────────────┐
                                    │ STATE        │
@@ -135,9 +138,69 @@ Examples:
 5. **Comment** on the PR: `Addressed all review comments. Ready for re-review.`
 6. **Update state** to `in_review`
 
-## Orchestrator Protocol — Full Logic (covers both build and review)
+## Reviewer Agent Protocol (GPT-5.6 Sol)
 
-The orchestrator does everything in one session. It reads `loop-state.json` and branches based on state:
+The orchestrator invokes GPT-5.6 Sol via OpenRouter API when a PR needs review.
+
+### When state = in_review:
+
+The orchestrator does the following:
+
+1. **Read** `kanban/loop-state.json` to get `current_pr_url`
+2. **Fetch PR diff** and context:
+   ```bash
+   gh pr diff <pr-url> > /tmp/pr-diff.txt
+   gh pr view <pr-url> --json title,body,files,additions,deletions
+   ```
+3. **Send to GPT-5.6 Sol** via OpenRouter API:
+   ```bash
+   REVIEW_RESPONSE=$(curl -s https://openrouter.ai/api/v1/chat/completions \
+     -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "model": "openai/gpt-5.6-sol",
+       "messages": [
+         {"role": "system", "content": "You are a code reviewer for the Barghsa energy platform project. Review the PR diff against these criteria and respond with ONLY valid JSON in this exact format, no other text:\n
+   {
+     \"decision\": \"approve\" | \"request_changes\",
+     \"summary\": \"<one-line summary>\",
+     \"issues\": [
+       {
+         \"severity\": \"critical\" | \"major\" | \"minor\",
+         \"file\": \"<file-path>\",
+         \"line\": <line-number>,
+         \"description\": \"<whats-wrong>\",
+         \"suggestion\": \"<how-to-fix>\"
+       }
+     ]
+   }\n
+   Criteria:
+   - Acceptance criteria met from task description
+   - No secrets, hardcoded credentials, SQL injection, XSS
+   - Adequate test coverage for the change
+   - Proper error handling (no uncaught rejections)
+   - i18n/l10n where user-facing strings are involved
+   - Backward-compatible database migrations (expand/migrate/contract)
+   - No console.log in production code
+   - Edge cases handled (error, loading, empty states)
+   - Persistent valid input on error (forms don't clear on validation error)
+   - No dead ends for users"},
+         {"role": "user", "content": "Task: '$(cat /tmp/task-context.txt)'\n\nPR Title: <pr-title>\n\nDiff:\n$(cat /tmp/pr-diff.txt)"}
+       ]
+     }')
+   ```
+4. **Parse the JSON response** to get decision and issues
+5. **Apply the review decision** via `gh` CLI:
+   - **Approve**: `gh pr review <pr-url> --approve --body "✅ GPT-5.6 Sol approved. <summary>"`
+     - Then: `gh pr merge <pr-url> --squash --delete-branch`
+     - Update state: mark task done, set status to `idle`
+   - **Request changes**: `gh pr review <pr-url> --request-changes --body "<issues from GPT-5.6 Sol>"`
+     - Update state: set status to `fixing`
+6. **Update** `kanban/loop-state.json` with new state
+
+## Orchestrator Protocol — Full Logic
+
+The orchestrator runs on DeepSeek V4 Flash (default cron model). It reads `loop-state.json` and branches based on state:
 
 ```python
 if state.status == "idle":
@@ -155,29 +218,18 @@ elif state.status == "building":
 
 elif state.status == "in_review":
     # ════════════════════════════════════
-    # Self-review — no separate agent needed
+    # GPT-5.6 Sol does the review
     # ════════════════════════════════════
-    # 1. Fetch PR diff:  gh pr diff <url>
-    # 2. Fetch PR details: gh pr view <url> --json files,additions,deletions
-    # 3. Review against these criteria:
-    #    - Acceptance criteria met from epic/story description
-    #    - No secrets, SQL injection, XSS, hardcoded credentials
-    #    - Adequate test coverage
-    #    - No dead code, proper error handling
-    #    - i18n/l10n where needed
-    #    - Backward-compatible migrations
-    #    - Edge cases handled (error/loading/empty states)
-    # 4. Decision:
-    #    - APPROVE: gh pr review <url> --approve
-    #              gh pr merge <url> --squash --delete-branch
-    #              → add task to build_completed_tasks, status = "idle"
-    #    - CHANGES: gh pr review <url> --request-changes --body "<issues>"
-    #              → status = "fixing"
-    # 5. Update loop-state.json
+    # Follow Reviewer Agent Protocol above:
+    # 1. gh pr diff <url> > /tmp/pr-diff.txt
+    # 2. curl to OpenRouter with model=openai/gpt-5.6-sol
+    # 3. Parse JSON response
+    # 4. APPROVE: gh pr review + gh pr merge, mark done
+    # 5. CHANGES: gh pr review --request-changes, set fixing
 
 elif state.status == "fixing":
     # Builder will fix issues
-    # Set status back to "idle" — the task will be picked up again
+    # Set status back to "idle" — the task will be re-picked
     # Increment fix_attempts in state history
     # If fix_attempts > 3: flag as "blocked" for manual intervention
 
