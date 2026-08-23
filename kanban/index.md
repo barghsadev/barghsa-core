@@ -95,11 +95,11 @@ The kanban is ready for the autonomous build loop with these artifacts:
 
 ### Model Assignment
 
-| Role | Model |
-|------|-------|
-| **Builder** | DeepSeek V4 Flash (Max) |
-| **Reviewer** | GPT-5.6 Sol |
-| **Orchestrator** | DeepSeek V4 Flash (via charteron job) |
+| Role | Model | How |
+|------|-------|-----|
+| **Builder** | DeepSeek V4 Flash | via `delegate_task` subagent |
+| **Reviewer** | DeepSeek V4 Flash (same as orchestrator) | Orchestrator self-reviews via `gh pr` CLI — no separate agent needed |
+| **Orchestrator** | DeepSeek V4 Flash | Cron job session model |
 
 ### Loop flow
 

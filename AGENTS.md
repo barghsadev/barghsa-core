@@ -1,47 +1,55 @@
 # Barghsa — Autonomous Development Loop Protocol
 
-> **Builder model:** DeepSeek V4 Flash (via OpenRouter)
-> **Reviewer model:** GPT-5.6 Sol (via OpenRouter)
-> **Orchestrator:** Hermes cron job (this profile)
+> **Builder model:** DeepSeek V4 Flash (via OpenRouter, delegate_task subagent)
+> **Reviewer model:** DeepSeek V4 Flash (orchestrator self-review — no model switching)
+> **Orchestrator:** Hermes cron job (does all state management + code review directly)
 
 ## How the Loop Works
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  Cron fires every 15 min                                │
-│  → Reads loop-state.json                                │
-│  → Decides action based on state                        │
-└──────────────────┬──────────────────────────────────────┘
+┌─────────────────────────────────────────────────────┐
+│  Orchestrator (cron job, runs every 15 min)         │
+│  → Reads loop-state.json                            │
+│  → All logic runs in ONE session (no model switch)   │
+└──────────────────┬──────────────────────────────────┘
                    │
     ┌──────────────┴──────────────┐
-    │                              │
     ▼                              ▼
 ┌──────────────┐          ┌──────────────────┐
 │ STATE        │          │ STATE            │
 │ idle         │          │ in_review        │
-│              │          │ (PR open)        │
+│              │          │ (PR exists)      │
 │ Pick next    │          │                  │
-│ task from    │          │ Dispatch         │
-│ queue        │          │ Reviewer Agent   │
-│              │          │ → review MR      │
-│ Dispatch     │          │ → approve/       │
-│ Builder      │          │   request changes│
-│ Agent        │          └────────┬─────────┘
+│ task from    │          │ Orchestrator:    │
+│ queue        │          │ 1. gh pr diff    │
+│              │          │ 2. Review code   │
+│ Dispatch     │          │ 3. Approve/merge │
+│ Builder via  │          │    or request    │
+│ delegate_task│          │    changes       │
+│ (DS V4)      │          └────────┬─────────┘
 └──────┬───────┘                   │
        │                    ┌──────┴──────┐
        ▼                    ▼             ▼
 ┌──────────────┐    ┌───────────┐  ┌──────────────┐
-│ STATE        │    │ Reviewer  │  │ Reviewer     │
-│ building     │    │ approved  │  │ requested    │
-│              │    │ → merge   │  │ changes       │
-│ Builder:     │    │ → mark    │  │              │
-│ 1. Create    │    │   done    │  │ Set state    │
-│    branch    │    │ → pick    │  │ → fixing     │
-│ 2. Implement │    │   next    │  │ Dispatch     │
-│ 3. Test      │    └───────────┘  │ Builder      │
-│ 4. Push      │                   │ to fix       │
-│ 5. Create PR │                   └──────────────┘
-└──────────────┘
+│ STATE        │    │ Approved  │  │ Changes      │
+│ building     │    │ → merge   │  │ requested    │
+│              │    │ → mark    │  │              │
+│ Wait for     │    │   done    │  │ Set state    │
+│ builder to   │    │ → pick    │  │ → fixing     │
+│ push PR      │    │   next    │  │              │
+└──────────────┘    └───────────┘  └──────────────┘
+                                          │
+                                          ▼
+                                   ┌──────────────┐
+                                   │ STATE        │
+                                   │ fixing       │
+                                   │              │
+                                   │ Re-dispatch  │
+                                   │ Builder to   │
+                                   │ fix, loop    │
+                                   │ back to      │
+                                   │ in_review    │
+                                   └──────────────┘
 ```
 
 ## State Machine
@@ -127,56 +135,55 @@ Examples:
 5. **Comment** on the PR: `Addressed all review comments. Ready for re-review.`
 6. **Update state** to `in_review`
 
-## Reviewer Agent Protocol
+## Orchestrator Protocol — Full Logic (covers both build and review)
 
-### When dispatched (state = in_review):
-
-1. **Read** `kanban/loop-state.json` to get `current_pr_url`
-2. **Fetch PR details**:
-   ```bash
-   gh pr view <pr-url> --json title,body,files,additions,deletions,comments
-   gh pr diff
-   ```
-3. **Review code** against these criteria:
-   - **Acceptance criteria met?** Check against the epic story description
-   - **Security?** No secrets, SQL injection, XSS, hardcoded credentials
-   - **Tests?** Adequate coverage for the change
-   - **Quality?** No dead code, proper error handling, i18n/l10n where needed
-   - **Conventions?** Follows monorepo conventions, proper types
-   - **Migrations?** Backward-compatible (expand/migrate/contract)
-   - **Edge cases?** Error states, loading states, empty states handled
-4. **Decision:**
-   - **Approve**: If all criteria pass
-     ```bash
-     gh pr review <pr-url> --approve --body "✅ Approved. <brief reason>"
-     gh pr merge <pr-url> --squash --delete-branch
-     ```
-   - **Request changes**: If issues found
-     ```bash
-     gh pr review <pr-url> --request-changes --body "<detailed list of issues>"
-     ```
-5. **Update state**:
-   - If **approved & merged**: set `status` to `idle`, mark task done in history, add to `build_completed_tasks`
-   - If **changes requested**: set `status` to `fixing`
-
-## Orchestrator (Cron Job) Protocol
-
-The cron job runs periodically and reads `loop-state.json`:
+The orchestrator does everything in one session. It reads `loop-state.json` and branches based on state:
 
 ```python
 if state.status == "idle":
     # Pick next task from queue (not in completed list)
-    # Dispatch Builder agent
+    # Read epic file for full task details
+    # Dispatch Builder agent via delegate_task
+    # Set status to "building"
+
 elif state.status == "building":
-    # Check if enough time has passed - if so, check git for PR
-    # gh pr list --head <branch>
+    # Check if enough time has passed (last_updated > 5 min ago)
+    # If so, check git for PR:
+    #   gh pr list --head feat/<task-id>--*
     # If PR found, transition to in_review
+    # If no branch yet, do nothing
+
 elif state.status == "in_review":
-    # Dispatch Reviewer agent
+    # ════════════════════════════════════
+    # Self-review — no separate agent needed
+    # ════════════════════════════════════
+    # 1. Fetch PR diff:  gh pr diff <url>
+    # 2. Fetch PR details: gh pr view <url> --json files,additions,deletions
+    # 3. Review against these criteria:
+    #    - Acceptance criteria met from epic/story description
+    #    - No secrets, SQL injection, XSS, hardcoded credentials
+    #    - Adequate test coverage
+    #    - No dead code, proper error handling
+    #    - i18n/l10n where needed
+    #    - Backward-compatible migrations
+    #    - Edge cases handled (error/loading/empty states)
+    # 4. Decision:
+    #    - APPROVE: gh pr review <url> --approve
+    #              gh pr merge <url> --squash --delete-branch
+    #              → add task to build_completed_tasks, status = "idle"
+    #    - CHANGES: gh pr review <url> --request-changes --body "<issues>"
+    #              → status = "fixing"
+    # 5. Update loop-state.json
+
 elif state.status == "fixing":
-    # Dispatch Builder agent (to fix)
-elif state.status == "idle" and no more tasks:
-    # ALL DONE — send completion notification
+    # Builder will fix issues
+    # Set status back to "idle" — the task will be picked up again
+    # Increment fix_attempts in state history
+    # If fix_attempts > 3: flag as "blocked" for manual intervention
+
+elif state.status == "complete":
+    # All tasks done — notify
+    pass
 ```
 
 ## Task Selection Order
