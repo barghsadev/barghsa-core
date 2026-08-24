@@ -3,11 +3,12 @@ import { AppController } from './app.controller.js'
 import { CorrelationIdMiddleware, CorrelationIdProvider, ShutdownService } from './common/index.js'
 import { HealthModule } from './health/health.module.js'
 import { MetricsModule } from './metrics/metrics.module.js'
+import { ConfigCacheModule } from './config-cache/index.js'
 import { RedisModule } from './redis/index.js'
 import { RateLimitModule } from './rate-limit/index.js'
 
 @Module({
-  imports: [RedisModule, HealthModule, MetricsModule, RateLimitModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })

@@ -9,6 +9,7 @@
         "./errors": "./dist/errors/index.js",
         "./redis": "./dist/redis/index.js",
         "./rate-limit": "./dist/rate-limit/index.js",
+        "./config-cache": "./dist/config-cache/index.js",
         "./package.json": "./package.json"
     },
     "scripts": {
