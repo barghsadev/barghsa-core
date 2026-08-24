@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-02.02.03",
   "current_task_id": "T-02.02.03",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e02-t-02-02-03--uuidv7-migration",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/24",
   "loop_iteration": 37,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -86,5 +86,5 @@
   ],
   "last_updated": "2026-08-24T09:38:00",
   "last_error": null,
-  "notes": "T-02.02.02 completed and merged (PR #23). Next: T-02.02.03 (M — UUIDv7 generation function migration) or T-02.02.04 (S — document column conventions in ADR)."
+  "notes": "T-02.02.03 built and in review (PR #24). Migration + integration tests pass."
 }
