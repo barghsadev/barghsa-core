@@ -13,12 +13,14 @@ export class CspReportController {
    * switched to enforce mode by changing `Content-Security-Policy-Report-Only`
    * to `Content-Security-Policy` in the reverse proxy.
    *
-   * Excluded from rate limiting and authentication.
+   * Not rate-limited — routes without @RateLimit() decorator pass through
+   * the guard with no limit applied. Excluded from authentication.
    */
   @Post()
   @HttpCode(HttpStatus.NO_CONTENT)
-  report(@Body() body: CspReportPayload): void {
-    const report: CspReportDetail = body?.['csp-report'] ?? (body as CspReportDetail);
+  report(@Body() body: CspReportPayload | null): void {
+    if (!body) return;
+    const report: CspReportDetail = body['csp-report'] ?? (body as CspReportDetail);
     this.logger.warn({
       msg: 'CSP violation',
       'blocked-uri': report['blocked-uri'],
