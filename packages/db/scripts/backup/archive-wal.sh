@@ -57,12 +57,15 @@ S3_PATH="wal/${WAL_DATE}/${WAL_FILENAME}"
 resource="/${BACKUP_S3_BUCKET}/${S3_PATH}"
 host=$(echo "$BACKUP_S3_ENDPOINT" | sed -E 's|https?://||')
 
-curl -s -X PUT \
+if ! curl -sS -f -X PUT \
   "${BACKUP_S3_ENDPOINT}${resource}" \
   -H "Host: ${host}" \
   -H "Content-Type: application/octet-stream" \
   -T "$WAL_FILEPATH" \
-  --user "${BACKUP_S3_ACCESS_KEY}:${BACKUP_S3_SECRET_KEY}"
+  --user "${BACKUP_S3_ACCESS_KEY}:${BACKUP_S3_SECRET_KEY}"; then
+  echo "ERROR: Failed to archive WAL: ${WAL_FILENAME} (curl exit $?)" >&2
+  exit 1
+fi
 
 echo "[$(date -u +%H:%M:%S)] Archived WAL: ${WAL_FILENAME} → ${S3_PATH}" >&2
 

@@ -125,7 +125,7 @@ services:
     container_name: barghsa-minio-init
     entrypoint: >
       /bin/sh -c "
-        until (/usr/bin/mc config host add local http://minio:9000 minioadmin minioadmin-dev) 2>/dev/null; do
+        until (/usr/bin/mc config host add local http://minio:9000 minioadmin minioadmin) 2>/dev/null; do
           echo 'Waiting for MinIO...';
           sleep 1;
         done;

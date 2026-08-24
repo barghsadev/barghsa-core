@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.02",
   "current_task_id": "T-04.01.02",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-04-01-02--backup-infra",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/44",
   "loop_iteration": 64,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -63,8 +63,8 @@
     "01-platform-infrastructure.md#T-04.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T12:42:30",
-  "notes": "Started T-04.01.02 (automated backups with WAL/PITR). First slice: backup scripts, MinIO bucket init, WAL archiving config, env vars.",
+  "last_updated": "2026-08-24T12:45:00",
+  "notes": "T-04.01.02 slice 1 (backup infra: scripts, WAL archiving, MinIO init) PR #44 opened and ready for review.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-45"},
     {"from": "fixing", "to": "idle", "at": "tick-46"},
@@ -115,6 +115,7 @@
     {"from": "idle", "to": "building", "at": "tick-63"},
     {"from": "building", "to": "in_review", "at": "tick-63"},
     {"from": "in_review", "to": "idle", "at": "tick-64"},
-    {"from": "idle", "to": "building", "at": "tick-64"}
+    {"from": "idle", "to": "building", "at": "tick-64"},
+    {"from": "building", "to": "in_review", "at": "tick-64"}
   ]
 }
