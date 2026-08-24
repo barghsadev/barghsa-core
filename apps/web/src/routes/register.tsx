@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
-import { Button, Input, Label } from '@barghsa/ui'
+import { Button, Checkbox, Input, Label } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
 import { PasswordField } from '../components/PasswordField.js'
 
@@ -73,6 +73,8 @@ function RegisterPage() {
   const [usernameType, setUsernameType] = useState<UsernameType>(null)
   const [formattedHint, setFormattedHint] = useState<string | null>(null)
   const [touched, setTouched] = useState(false)
+  const [tosAccepted, setTosAccepted] = useState(false)
+  const [tosSubmittedError, setTosSubmittedError] = useState<string | null>(null)
 
   const isUsernameValid = touched && usernameError === null && usernameType !== null
 
@@ -130,6 +132,26 @@ function RegisterPage() {
     }
   }, [touched, locale])
 
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    if (!tosAccepted) {
+      setTosSubmittedError(t('auth.register.tosRequired', locale))
+      return
+    }
+    setTosSubmittedError(null)
+    // TODO: Submit registration (T-01.01.06)
+  }, [tosAccepted, locale])
+
+  const handleTosChange = useCallback((checked: boolean | string) => {
+    const isChecked = checked === true
+    setTosAccepted(isChecked)
+    if (isChecked) {
+      setTosSubmittedError(null)
+    }
+  }, [])
+
+  const isFormReady = isUsernameValid && tosAccepted
+
   return (
     <AuthLayout
       locale={locale}
@@ -154,7 +176,7 @@ function RegisterPage() {
         </div>
 
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit}
           className="space-y-4"
           noValidate
         >
@@ -213,16 +235,51 @@ function RegisterPage() {
             />
           )}
 
+          {/* TOS acceptance checkbox (T-01.01.04) */}
+          <div className="space-y-2">
+            <div className="flex items-start gap-3">
+              <Checkbox
+                id="tos"
+                checked={tosAccepted}
+                onCheckedChange={handleTosChange}
+                aria-invalid={!!tosSubmittedError}
+                aria-describedby={tosSubmittedError ? 'tos-error' : undefined}
+                className="mt-0.5"
+              />
+              <Label htmlFor="tos" className="text-sm font-normal leading-relaxed">
+                {t('auth.register.tosPrefix', locale)}{' '}
+                <Link
+                  to="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                  aria-label={t('auth.register.tosLinkText', locale)}
+                >
+                  {t('auth.register.tosLinkText', locale)}
+                </Link>{' '}
+                {t('auth.register.tosSuffix', locale)}
+              </Label>
+            </div>
+            {tosSubmittedError && (
+              <p
+                id="tos-error"
+                className="text-sm text-destructive"
+                role="alert"
+              >
+                {tosSubmittedError}
+              </p>
+            )}
+          </div>
+
           <Button
             type="submit"
             className="w-full"
-            disabled={!isUsernameValid}
+            disabled={!isFormReady}
           >
             {t('auth.register.submit', locale)}
           </Button>
         </form>
 
-        {/* Placeholder for TOS checkbox (T-01.01.04) */}
         {/* Placeholder for OTP step (T-01.02.02) */}
       </div>
     </AuthLayout>
