@@ -17,7 +17,6 @@
 #   ./restore-pg.sh --help                       # Show this message
 #
 # Required environment variables:
-#   PGDIRECT_URL      — PostgreSQL connection string (bypasses PgBouncer)
 #   BACKUP_S3_ENDPOINT — S3-compatible endpoint (e.g., http://minio:9000)
 #   BACKUP_S3_BUCKET  — S3 bucket for backups
 #   BACKUP_S3_ACCESS_KEY
@@ -250,20 +249,6 @@ extract_backup() {
   done
 }
 
-# ─── Check for PostgreSQL tools ───────────────────────────────────────────────
-
-find_pg_tools() {
-  if [[ -n "$PG_BIN" ]]; then
-    PG_RECOVERYSET="${PG_BIN}/pg_checksums"
-    PG_CTL="${PG_BIN}/pg_ctl"
-    PG_ISREADY="${PG_BIN}/pg_isready"
-    PG_RECOVERYSET="${PG_BIN}/pg_checksums"
-  else
-    PG_CTL="pg_ctl"
-    PG_ISREADY="pg_isready"
-  fi
-}
-
 # ─── Configure recovery.conf / postgresql.conf ───────────────────────────────
 
 write_recovery_conf() {
@@ -284,6 +269,8 @@ write_recovery_conf() {
         echo "recovery_target_time = '${PITR_TARGET}'"
         echo "recovery_target_action = 'promote'"
       } >> "$recovery_conf"
+      # PostgreSQL 12+ requires recovery.signal to enter recovery mode
+      touch "${data_dir}/recovery.signal"
     fi
   else
     echo "Performing full restore (no PITR) — replaying all available WAL" >&2
@@ -293,6 +280,8 @@ write_recovery_conf() {
         echo "restore_command = 'cp ${RESTORE_DIR}/wal_archives/%f %p'"
         echo "recovery_target_action = 'promote'"
       } >> "$recovery_conf"
+      # PostgreSQL 12+ requires recovery.signal to enter recovery mode
+      touch "${data_dir}/recovery.signal"
     fi
   fi
 }
@@ -326,7 +315,7 @@ verify_restore() {
 
 # ─── Measure RTO ──────────────────────────────────────────────────────────────
 
-measure_rto() {
+measure_prep_time() {
   START_TS="${START_TS:-$(date -u +%s)}"
   END_TS=$(date -u +%s)
   local elapsed=$((END_TS - START_TS))
@@ -334,21 +323,34 @@ measure_rto() {
   local minutes=$((elapsed / 60))
   local seconds=$((elapsed % 60))
 
-  echo "RTO: ${minutes}m ${seconds}s (${elapsed}s total)" >&2
+  echo ""
+  echo "Data preparation time: ${minutes}m ${seconds}s (${elapsed}s total)"
+  echo "Note: This measures download+extract+verify only — true RTO includes"
+  echo "      WAL replay time and PostgreSQL startup, which require a running"
+  echo "      postmaster. Actual RTO for this restore will be longer."
+  echo "" >&2
 
   if [[ $elapsed -gt 3600 ]]; then
-    echo "WARNING: RTO exceeds 60-minute target (${minutes}m ${seconds}s)" >&2
+    echo "WARNING: Data preparation exceeds 60-minute target (${minutes}m ${seconds}s)" >&2
   else
-    echo "RTO within target: ≤ 60 minutes." >&2
+    echo "Data preparation within 60-minute target." >&2
   fi
 }
 
 # ─── Cleanup handler ──────────────────────────────────────────────────────────
 
 cleanup() {
-  if [[ "$RESTORE_IN_PLACE" != true ]]; then
+  local exit_code=$?
+  # When --target-dir was used, only clean up download artifacts, never the
+  # restored data directory the user explicitly requested.
+  if [[ "$RESTORE_IN_PLACE" == true ]]; then
+    # In-place restore: clean up temp working directory
     rm -rf "$RESTORE_DIR"
+  else
+    # Isolated restore: clean up only downloads, keep the restored data dir
+    rm -rf "${RESTORE_DIR}/downloads" "${RESTORE_DIR}/wal_archives" 2>/dev/null || true
   fi
+  exit "$exit_code"
 }
 trap cleanup EXIT
 
@@ -390,9 +392,9 @@ echo ""
 echo "Verifying restore..." >&2
 verify_restore "${RESTORE_DIR}/data"
 
-# Step 8: Measure RTO
+# Step 8: Measure data preparation time
 echo ""
-measure_rto
+measure_prep_time
 
 # Step 9: Summary
 echo ""
@@ -404,16 +406,12 @@ echo "WAL archives: ${RESTORE_DIR}/wal_archives"
 echo "In-place:     ${RESTORE_IN_PLACE}"
 echo ""
 
-if [[ "$RESTORE_IN_PLACE" == true ]]; then
-  echo "To start the restored database:"
-  echo "  pg_ctl -D ${RESTORE_DIR}/data start"
-  echo ""
-  echo "To promote (if in recovery mode):"
-  echo "  pg_ctl -D ${RESTORE_DIR}/data promote"
-else
-  echo "Isolated restore to: ${RESTORE_DIR}/data"
-  echo "Verify with: pg_isready -d '${PGDIRECT_URL}'"
-  echo "Cleanup: rm -rf ${RESTORE_DIR}"
+echo "To start the restored database:"
+echo "  pg_ctl -D ${RESTORE_DIR}/data start"
+echo ""
+if [[ "$RESTORE_IN_PLACE" != true ]]; then
+  echo "The restored data is in: ${RESTORE_DIR}/data"
+  echo "No automatic cleanup — data is preserved at the requested path."
 fi
 
 exit 0
