@@ -1,4 +1,5 @@
 import { pgTable } from 'drizzle-orm/pg-core'
+import type { PgColumnBuilderBase } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from './types'
 
 /**
@@ -43,10 +44,9 @@ export const baseColumns = {
  * @param columns  Domain-specific column definitions (without base columns).
  * @returns A `PgTableWithColumns` instance ready for use with Drizzle ORM.
  */
-export function createTable(
+export function createTable<TColumns extends Record<string, PgColumnBuilderBase>>(
   name: string,
-  columns: Record<string, unknown>,
+  columns: TColumns,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return pgTable(name, { ...baseColumns, ...columns } as any)
+  return pgTable(name, { ...baseColumns, ...columns })
 }
