@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery } from './index'
+import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHealth } from './index'
 
 /**
  * Build a minimal mock pg Client that mirrors the real client's internal
@@ -221,6 +221,74 @@ describe('@barghsa/db', () => {
       const cb = vi.fn()
       wrapped('SELECT 1', cb)
       expect(runQuery).toHaveBeenCalled()
+    })
+  })
+
+  describe('dbHealth', () => {
+    beforeEach(() => {
+      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
+    })
+
+    afterEach(() => {
+      delete process.env.DATABASE_URL
+    })
+
+    it('returns ok:true with poolStats when query succeeds', async () => {
+      const p = createDbPool({ queryTimeout: 0 })
+      // Stub the pool's query to avoid a real DB connection.
+      vi.spyOn(p, 'query').mockResolvedValue({ rows: [{ '?column?': 1 }], rowCount: 1, command: 'SELECT' } as never)
+
+      const result = await dbHealth()
+
+      expect(result.ok).toBe(true)
+      expect(typeof result.latencyMs).toBe('number')
+      expect(result.latencyMs).toBeGreaterThanOrEqual(0)
+      expect(result.poolStats).toBeDefined()
+      expect(typeof result.poolStats.totalCount).toBe('number')
+      expect(typeof result.poolStats.idleCount).toBe('number')
+      expect(typeof result.poolStats.waitingCount).toBe('number')
+
+      vi.mocked(p.query).mockRestore()
+      await p.end().catch(() => {})
+    })
+
+    it('returns ok:false when query fails', async () => {
+      const p = createDbPool({ queryTimeout: 0 })
+      vi.spyOn(p, 'query').mockRejectedValue(new Error('Connection refused'))
+
+      const result = await dbHealth()
+
+      expect(result.ok).toBe(false)
+      expect(typeof result.latencyMs).toBe('number')
+      expect(result.poolStats).toBeDefined()
+
+      vi.mocked(p.query).mockRestore()
+      await p.end().catch(() => {})
+    })
+
+    it('returns ok:false on timeout and cleans up timer', async () => {
+      const p = createDbPool({ queryTimeout: 0 })
+      // Never- resolving query so the timeout fires first.
+      vi.spyOn(p, 'query').mockReturnValue(new Promise<never>(() => {}) as never)
+
+      vi.useFakeTimers()
+
+      const healthPromise = dbHealth()
+
+      // Advance past the 5s threshold.
+      await vi.advanceTimersByTimeAsync(5_100)
+
+      const result = await healthPromise
+
+      expect(result.ok).toBe(false)
+      expect(result.latencyMs).toBeGreaterThanOrEqual(5_000)
+
+      // Verify no timers remain after the timeout resolves.
+      expect(vi.getTimerCount()).toBe(0)
+
+      vi.useRealTimers()
+      vi.mocked(p.query).mockRestore()
+      await p.end().catch(() => {})
     })
   })
 })

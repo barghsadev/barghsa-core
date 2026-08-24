@@ -205,4 +205,72 @@ export function createDbInstance(config: DbPoolConfig = {}, schema?: Record<stri
 
 export type DbInstance = ReturnType<typeof createDbInstance>
 
+export interface HealthCheckResult {
+  ok: boolean
+  latencyMs: number
+  poolStats: {
+    totalCount: number
+    idleCount: number
+    waitingCount: number
+  }
+}
+
+const HEALTH_CHECK_TIMEOUT_MS = 5_000
+
+/**
+ * Run a database health check that executes `SELECT 1` with a 5-second
+ * timeout and returns connection status, latency, and pool statistics.
+ *
+ * Used by the NestJS health controller for liveness/readiness probes.
+ * Never throws — returns `{ ok: false }` on any error or timeout.
+ */
+export async function dbHealth(): Promise<HealthCheckResult> {
+  const startedAt = Date.now()
+
+  let p: Pool
+  try {
+    p = getDbPool()
+  } catch {
+    return {
+      ok: false,
+      latencyMs: Date.now() - startedAt,
+      poolStats: { totalCount: 0, idleCount: 0, waitingCount: 0 },
+    }
+  }
+
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+  try {
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error('Health check query timed out')), HEALTH_CHECK_TIMEOUT_MS)
+    })
+
+    await Promise.race([p.query('SELECT 1'), timeout])
+
+    const latencyMs = Date.now() - startedAt
+    return {
+      ok: true,
+      latencyMs,
+      poolStats: {
+        totalCount: p.totalCount,
+        idleCount: p.idleCount,
+        waitingCount: p.waitingCount,
+      },
+    }
+  } catch {
+    const latencyMs = Date.now() - startedAt
+    return {
+      ok: false,
+      latencyMs,
+      poolStats: {
+        totalCount: p.totalCount,
+        idleCount: p.idleCount,
+        waitingCount: p.waitingCount,
+      },
+    }
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId)
+  }
+}
+
 export * from 'drizzle-orm'
