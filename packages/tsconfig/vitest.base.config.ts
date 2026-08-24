@@ -69,6 +69,9 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
       globals: false,
       typecheck: { enabled: false },
       environment: 'node',
+      // Vitest 4.x defaultExclude is only node_modules and .git.
+      // Explicitly exclude dist/ to avoid picking up compiled CJS .test.js files.
+      exclude: ['dist/**', 'node_modules/**', '**/.git/**'],
       // Per-package overrides (e.g. environment, setupFiles)
       ...overrideTest,
       // Coverage always merges into base with floor enforcement
