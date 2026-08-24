@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "01-platform-infrastructure.md#T-03.01.01",
   "current_task_id": "T-03.01.01",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-03-01-01--dockerfile-web",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/30",
   "loop_iteration": 46,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -49,8 +49,8 @@
     "01-platform-infrastructure.md#T-01.05.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T12:18:00",
-  "notes": "T-03.01.01: PR #30 opened, checks pass, invoking stealth/ox-alpha reviewer.",
+  "last_updated": "2026-08-24T12:25:00",
+  "notes": "T-03.01.01: stealth/ox-alpha returned request_changes — 1 critical (ESM need pkg.json), 3 major (engine-strict, prod install, tests). All fixed. Re-invoking reviewer.",
   "status_history": [
     {
       "from": "in_review",
@@ -70,6 +70,11 @@
     {
       "from": "building",
       "to": "in_review",
+      "at": "tick-46"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
       "at": "tick-46"
     }
   ]

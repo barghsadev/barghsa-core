@@ -117,4 +117,10 @@ describe('static server', () => {
     expect(res.status).toBe(200);
     expect(res.body).toBe('');
   });
+
+  it('handles malformed URI without crashing', async () => {
+    const res = await fetch(server, '/%ZZ');
+    expect(res.status).toBe(200);
+    expect(res.body).toContain('Home');
+  });
 });

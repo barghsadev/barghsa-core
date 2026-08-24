@@ -51,7 +51,12 @@ const MIME_TYPES = {
  * directory (defends against directory traversal).
  */
 function resolveDistPath(distDir, urlPath) {
-  const decoded = decodeURIComponent(urlPath.split('?')[0].split('#')[0]);
+  let decoded;
+  try {
+    decoded = decodeURIComponent(urlPath.split('?')[0].split('#')[0]);
+  } catch {
+    return null;
+  }
   const filePath = resolve(distDir, '.' + decoded);
   // Ensure the resolved path stays within the dist directory
   if (filePath !== distDir && !filePath.startsWith(distDir + sep)) {
