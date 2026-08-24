@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-01.04.06",
   "current_task_id": "T-01.04.06",
   "current_task_file": "01-platform-infrastructure.md",
@@ -37,11 +37,6 @@
     "01-platform-infrastructure.md#T-02.02.04"
   ],
   "status_history": [
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-8"
-    },
     {
       "from": "in_review",
       "to": "fixing",
@@ -536,9 +531,14 @@
       "from": "in_review",
       "to": "fixing",
       "at": "tick-42"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-42"
     }
   ],
-  "last_updated": "2026-08-24T11:02:20",
+  "last_updated": "2026-08-24T11:03:00",
   "last_error": null,
-  "notes": "T-01.04.06: reviewer found major issue (doc refs nonexistent gate). Fixing on same branch/PR."
+  "notes": "T-01.04.06: review findings fixed in fdf9755. PR #28 back in review. Next tick: re-invoke reviewer."
 }
