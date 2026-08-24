@@ -59,28 +59,48 @@ export function buildConnectionString(
 /**
  * Wrap each pooled client's query so that in production we can measure
  * execution duration and emit a structured JSON warning for slow queries.
+ * Supports both Promise and callback invocation patterns.
  */
 function attachSlowQueryLogging(pool: Pool): void {
   if (process.env.NODE_ENV !== 'production') return
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool.on('connect', (client: Client) => {
     const originalQuery = client.query.bind(client)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    client.query = ((config: any, values?: any[], cb?: any) => {
+    client.query = ((...args: any[]) => {
       const startedAt = Date.now()
-      const text = typeof config === 'string' ? config : config.text
-      const queryParams = Array.isArray(values) ? values : (typeof config === 'object' && config !== null ? config.values : undefined)
+      const first = args[0]
+      const text = typeof first === 'string' ? first : first?.text
 
-      const result: any = originalQuery(config, values ?? [], cb)
+      // Detect callback-passing usage (last arg is a function).
+      const cbIndex = args.findIndex((a: any) => typeof a === 'function')
+      const hasCallback = cbIndex !== -1
 
+      if (hasCallback) {
+        const originalCb = args[cbIndex]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const wrappedCb: typeof originalCb = (err: any, res: any) => {
+          const durationMs = Date.now() - startedAt
+          if (!err && durationMs > SLOW_QUERY_THRESHOLD_MS) {
+            structuredLog('warn', 'slow_query', { query: text, durationMs })
+          }
+          originalCb(err, res)
+        }
+        // Swap the callback with our wrapped version.
+        const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
+        return (originalQuery as Function)(...instrumentedArgs)
+      }
+
+      // Promise-based invocation.
+      const result = (originalQuery as Function)(...args)
       if (result && typeof result.then === 'function') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return result.then((rows: any) => {
           const durationMs = Date.now() - startedAt
           if (durationMs > SLOW_QUERY_THRESHOLD_MS) {
-            const logEntry: Record<string, unknown> = { query: text, durationMs }
-            if (queryParams) logEntry.params = queryParams
-            structuredLog('warn', 'slow_query', logEntry)
+            structuredLog('warn', 'slow_query', { query: text, durationMs })
           }
           return rows
         })
