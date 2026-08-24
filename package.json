@@ -17,6 +17,7 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "check:suppressed-errors": "./scripts/check-suppressed-errors.sh",
+    "setup:bucket": "ts-node scripts/setup-bucket.ts",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write",
     "check:bundle": "size-limit"
