@@ -19,7 +19,7 @@ All primary keys use **UUIDv7** (RFC 9562) via a custom `uuidv7` column type bac
 
 | Aspect | UUIDv4 | UUIDv7 |
 |---|---|---|
-| Sort order | Random | Time-ordered (monotonic) |
+| Sort order | Random | Time-ordered (by ms) |
 | B-tree index locality | Poor — random inserts fragment pages | Good — new values cluster in time order |
 | Index page splits | Frequent | Minimal |
 | Sequential scan performance | No ordering benefit | Roughly insert-order |
@@ -30,7 +30,7 @@ UUIDv7 provides the distribution benefits of UUIDs (no central coordinator, safe
 
 **Implementation:** `packages/db/src/types.ts` — `uuidv7()` column builder with `DEFAULT uuid_generate_v7()`.
 
-**Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` for monotonicity across concurrent calls within the same transaction.
+**Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` so each concurrent call within the same transaction receives a distinct timestamp. Values from different milliseconds are time-ordered; values within the same millisecond carry random bits and are not guaranteed monotonic.
 
 ### 2. UTC Timestamps with `timestamptz`
 
