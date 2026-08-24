@@ -227,13 +227,10 @@ export function createStaticServer(options = {}) {
       process.exit(0);
     });
 
-    // If the server never had a listener, close completes synchronously
-    // but the callback may not fire — handle that edge case.
-    if (!server.listening) {
-      clearTimeout(forceExitTimer);
-      log('Server was not listening — exiting cleanly');
-      process.exit(0);
-    }
+    // Note: server.close() sets listening=false synchronously, so we
+    // must NOT check !server.listening here — the close callback
+    // handles all cases, including ERR_SERVER_NOT_RUNNING for servers
+    // that were never started.
   };
 
   return /** @type {import('node:http').Server & { shutdown: (signal?: string) => void }} */ (server);
