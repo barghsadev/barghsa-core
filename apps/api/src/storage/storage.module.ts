@@ -1,5 +1,6 @@
 import { Global, Logger, Module } from '@nestjs/common';
 import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { StorageAdminController } from './storage-admin.controller.js';
 
 /**
  * NestJS injection token for the StorageProvider instance.
@@ -9,6 +10,7 @@ export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
 
 @Global()
 @Module({
+  controllers: [StorageAdminController],
   providers: [
     {
       provide: STORAGE_PROVIDER,
