@@ -156,16 +156,27 @@ function RegisterPage() {
     <AuthLayout
       locale={locale}
       footer={
-        <p className="text-center text-sm text-muted-foreground">
-          {t('auth.register.loginLink', locale)}{' '}
-          <Link
-            to="/login"
-            className="font-medium text-primary underline-offset-4 hover:underline"
-            aria-label={t('auth.register.loginLinkLabel', locale)}
-          >
-            {t('auth.register.loginLinkLabel', locale)}
-          </Link>
-        </p>
+        <div className="space-y-2">
+          <p className="text-center text-sm text-muted-foreground">
+            {t('auth.register.loginLink', locale)}{' '}
+            <Link
+              to="/login"
+              className="font-medium text-primary underline-offset-4 hover:underline"
+              aria-label={t('auth.register.loginLinkLabel', locale)}
+            >
+              {t('auth.register.loginLinkLabel', locale)}
+            </Link>
+          </p>
+          <p className="text-center text-sm">
+            <Link
+              to="/forgot-password"
+              className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+              aria-label={t('auth.register.forgotPasswordLabel', locale)}
+            >
+              {t('auth.register.forgotPasswordLink', locale)}
+            </Link>
+          </p>
+        </div>
       }
     >
       <div className="space-y-6">

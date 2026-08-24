@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-01.01.05",
+  "current_task_id": "T-01.01.05",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-01-01-05--back-to-login-forgot-pw-links",
   "current_pr_url": null,
-  "loop_iteration": 116,
+  "loop_iteration": 117,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -148,208 +148,13 @@
     "02-auth-users-admin.md#T-01.01.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T01:01:00",
-  "notes": "Tick-116: T-01.01.04 (TOS checkbox) merged as PR #71. Reviewed by z-ai/glm-5.2 (approve). Loop idle.",
+  "last_updated": "2026-08-25T01:04:00",
+  "notes": "Tick-117: Building T-01.01.05 (Back to login + Forgot password links) on register page.",
   "status_history": [
     {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-115"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-114"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-114"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-96"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-97"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-97"
-    },
-    {
       "from": "idle",
       "to": "building",
-      "at": "tick-98"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-98"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-98"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-98"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-99"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-100"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-100"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-100"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-103"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-103"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-103"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-103"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-104"
-    },
-    {
-      "from": "idle",
-      "to": "blocked",
-      "at": "tick-105"
-    },
-    {
-      "from": "blocked",
-      "to": "idle",
-      "at": "tick-106"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-106"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-106"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-107"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-107"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-108"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-109"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-110"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-111"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-111"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-111"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-111"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-112"
-    },
-    {
-      "from": "idle",
-      "to": "uilding",
-      "at": "tick-113"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-113"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-113"
-    },
-    {
-      "from": "idle",
-      "to": "uilding",
-      "at": "tick-114"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-116"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-116"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-116"
+      "at": "tick-117"
     }
   ]
 }
