@@ -5,8 +5,8 @@
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-04-02-03--config-caching",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/53",
-  "loop_iteration": 82,
-  "fix_attempts": 1,
+  "loop_iteration": 83,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -71,12 +71,14 @@
     "01-platform-infrastructure.md#T-04.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T19:31:00",
-  "notes": "Tick-82: built T-04.02.03 (config caching). GLM-5.2 found major version-comparison bug — fixed in b2961cc (cachedAtGlobalVersion). Re-submitting for review.",
+  "last_updated": "2026-08-24T19:40:00",
+  "notes": "Tick-83: GLM-5.2 review found 2 major + 1 minor. Fixed: global version counter TTL/NX monotonicity (removed NX+EX, use fetchGlobalVersion for staleness), added 24 unit tests for ConfigCache, removed unused unique import. Ready for re-review.",
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-82"},
     {"from": "building", "to": "in_review", "at": "tick-82"},
     {"from": "in_review", "to": "fixing", "at": "tick-82"},
-    {"from": "fixing", "to": "in_review", "at": "tick-82"}
+    {"from": "fixing", "to": "in_review", "at": "tick-82"},
+    {"from": "in_review", "to": "fixing", "at": "tick-83"},
+    {"from": "fixing", "to": "in_review", "at": "tick-83"}
   ]
 }
