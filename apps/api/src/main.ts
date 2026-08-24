@@ -18,4 +18,7 @@ async function bootstrap(): Promise<void> {
   await app.listen(port);
 }
 
-bootstrap();
+void bootstrap().catch((err) => {
+  console.error('Failed to start API server:', err);
+  process.exitCode = 1;
+});

@@ -5,6 +5,7 @@
   "compilerOptions": {
     "builder": "swc",
     "typeCheck": false,
+    "preserveSymlinks": false,
     "tsConfigPath": "tsconfig.json",
     "plugins": [
       {
