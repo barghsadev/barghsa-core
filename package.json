@@ -23,7 +23,7 @@
     "@size-limit/preset-app": "13.0.3",
     "@types/node": "26.2.0",
     "@vitest/coverage-v8": "4.1.11",
-    "jsdom": "30.0.1",
+    "jsdom": "28.1.0",
     "size-limit": "13.0.3",
     "turbo": "2.10.11",
     "typescript": "7.0.2",
