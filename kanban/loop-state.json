@@ -1,18 +1,18 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-02.01.03",
-  "current_task_id": "T-02.01.03",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e02-t-02-01-03--query-timeout-cancellation",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/19",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 31,
-  "fix_attempts": 1,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01","01-platform-infrastructure.md#T-01.01.02","01-platform-infrastructure.md#T-01.01.03","01-platform-infrastructure.md#T-01.01.04","01-platform-infrastructure.md#T-01.01.05",
     "01-platform-infrastructure.md#T-01.02.01","01-platform-infrastructure.md#T-01.02.02","01-platform-infrastructure.md#T-01.02.03","01-platform-infrastructure.md#T-01.02.04",
     "01-platform-infrastructure.md#T-01.03.01","01-platform-infrastructure.md#T-01.03.02","01-platform-infrastructure.md#T-01.03.03","01-platform-infrastructure.md#T-01.03.04","01-platform-infrastructure.md#T-01.03.05",
     "01-platform-infrastructure.md#T-01.04.01","01-platform-infrastructure.md#T-01.04.02",
-    "01-platform-infrastructure.md#T-02.01.01","01-platform-infrastructure.md#T-02.01.02"
+    "01-platform-infrastructure.md#T-02.01.01","01-platform-infrastructure.md#T-02.01.02","01-platform-infrastructure.md#T-02.01.03"
   ],
   "status_history": [
     {"from":"idle","to":"building","at":"tick-1"},{"from":"building","to":"in_review","at":"tick-1"},{"from":"in_review","to":"idle","at":"tick-1"},
@@ -42,9 +42,13 @@
     {"from":"in_review","to":"fixing","at":"tick-30"},
     {"from":"fixing","to":"in_review","at":"tick-30"},
     {"from":"in_review","to":"idle","at":"tick-30"},
-    {"from":"idle","to":"building","at":"tick-31"}
+    {"from":"idle","to":"building","at":"tick-31"},
+    {"from":"building","to":"in_review","at":"tick-31"},
+    {"from":"in_review","to":"fixing","at":"tick-31"},
+    {"from":"fixing","to":"in_review","at":"tick-31"},
+    {"from":"in_review","to":"idle","at":"tick-31"}
   ],
-  "last_updated": "2026-08-24T08:14:00",
+  "last_updated": "2026-08-24T08:33:00",
   "last_error": null,
-  "notes": "Working on T-02.01.03 (S — query timeout and cancellation via Drizzle configuration)."
+  "notes": "T-02.01.03 completed and merged (PR #19). Next: T-02.01.04 (S — database health check endpoint for readiness probes)."
 }
