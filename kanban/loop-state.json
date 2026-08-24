@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-01.04.06",
-  "current_task_id": "T-01.04.06",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-04-06--flaky-test-quarantine",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/28",
-  "loop_iteration": 42,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 44,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -34,7 +34,8 @@
     "01-platform-infrastructure.md#T-02.02.01",
     "01-platform-infrastructure.md#T-02.02.02",
     "01-platform-infrastructure.md#T-02.02.03",
-    "01-platform-infrastructure.md#T-02.02.04"
+    "01-platform-infrastructure.md#T-02.02.04",
+    "01-platform-infrastructure.md#T-01.04.06"
   ],
   "status_history": [
     {
@@ -536,9 +537,14 @@
       "from": "fixing",
       "to": "in_review",
       "at": "tick-42"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-43"
     }
   ],
-  "last_updated": "2026-08-24T11:03:00",
+  "last_updated": "2026-08-24T11:24:00",
   "last_error": null,
-  "notes": "T-01.04.06: review findings fixed in fdf9755. PR #28 back in review. Next tick: re-invoke reviewer."
+  "notes": "T-01.04.06 completed and merged (PR #28). Reviewer approved with 2 minor follow-ups. Next in queue: T-01.05.01 (M - HttpExceptionFilter & CorrelationIdMiddleware)."
 }
