@@ -31,9 +31,6 @@ function RegisterPage() {
           <h1 className="text-xl font-semibold tracking-tight">
             {t('auth.register.title', locale)}
           </h1>
-          <p className="text-sm text-muted-foreground">
-            {/* Subtitle — actual username/password fields come in subsequent tasks */}
-          </p>
         </div>
 
         {/* Registration form shell — fields will be added in T-01.01.02+ */}
@@ -44,20 +41,21 @@ function RegisterPage() {
         >
           <div className="space-y-2">
             <Label htmlFor="username">
-              {/* Placeholder label — replaced in T-01.01.02 */}
-              Email or Mobile number
+              {t('auth.register.emailLabel', locale)}
             </Label>
             <Input
               id="username"
               type="text"
-              placeholder="example@email.com"
+              placeholder={t('auth.register.emailPlaceholder', locale)}
               autoComplete="username"
               disabled
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">
+              {t('auth.register.passwordLabel', locale)}
+            </Label>
             <Input
               id="password"
               type="password"

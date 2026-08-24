@@ -40,6 +40,9 @@ export const fa: I18nDictionary = {
   'auth.register.submit': 'ثبت‌نام',
   'auth.register.loginLink': 'قبلاً ثبت‌نام کرده‌اید؟ وارد شوید',
   'auth.register.loginLinkLabel': 'ورود به حساب کاربری',
+  'auth.register.emailLabel': 'ایمیل یا شماره موبایل',
+  'auth.register.passwordLabel': 'رمز عبور',
+  'auth.register.emailPlaceholder': 'example@email.com',
 
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
@@ -103,6 +106,9 @@ export const en: I18nDictionary = {
   'auth.register.submit': 'Register',
   'auth.register.loginLink': 'Already have an account? Log in',
   'auth.register.loginLinkLabel': 'Log in to your account',
+  'auth.register.emailLabel': 'Email or Mobile number',
+  'auth.register.passwordLabel': 'Password',
+  'auth.register.emailPlaceholder': 'example@email.com',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
