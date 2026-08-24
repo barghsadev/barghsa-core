@@ -12,7 +12,16 @@ importers:
         specifier: 2.10.11
         version: 2.10.11
 
+  packages/tsconfig:
+    dependencies:
+      '@tsconfig/node20':
+        specifier: ^20.1.0
+        version: 20.1.10
+
 packages:
+
+  '@tsconfig/node20@20.1.10':
+    resolution: {integrity: sha512-5OZgdnxbFuvwm05iVwPXMU5/7iPuVDDZzAnxPDLj+kjN7fwQZSSVgHQhKTNkBPOO6Qef2D5MxPAoPLCGqE2VuQ==}
 
   '@turbo/darwin-64@2.10.11':
     resolution: {integrity: sha512-v3R+1R/Ysozyo+p7Ri8MCIbndOvYt3DgPFrGLhrhQHfvyvbxyH3WyJj+A/2JTNmNleuAlh3JUyCV0iSVHIONTA==}
@@ -49,6 +58,8 @@ packages:
     hasBin: true
 
 snapshots:
+
+  '@tsconfig/node20@20.1.10': {}
 
   '@turbo/darwin-64@2.10.11':
     optional: true

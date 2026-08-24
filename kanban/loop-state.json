@@ -1,17 +1,18 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 6,
-  "fix_attempts": 0,
+  "status": "fixing",
+  "current_task_key": "01-platform-infrastructure.md#T-01.02.01",
+  "current_task_id": "T-01.02.01",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e01-t-01-02-01--tsconfig-base",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/6",
+  "loop_iteration": 8,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
     "01-platform-infrastructure.md#T-01.01.03",
-    "01-platform-infrastructure.md#T-01.01.04"
+    "01-platform-infrastructure.md#T-01.01.04",
+    "01-platform-infrastructure.md#T-01.01.05"
   ],
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-1"},
@@ -28,9 +29,15 @@
     {"from": "idle", "to": "building", "at": "tick-5"},
     {"from": "building", "to": "in_review", "at": "tick-5"},
     {"from": "in_review", "to": "idle", "at": "tick-5"},
-    {"from": "idle", "to": "blocked", "at": "tick-6"}
+    {"from": "idle", "to": "blocked", "at": "tick-6"},
+    {"from": "idle", "to": "building", "at": "tick-7"},
+    {"from": "building", "to": "in_review", "at": "tick-7"},
+    {"from": "in_review", "to": "idle", "at": "tick-7"},
+    {"from": "idle", "to": "building", "at": "tick-8"},
+    {"from": "building", "to": "in_review", "at": "tick-8"},
+    {"from": "in_review", "to": "fixing", "at": "tick-8"}
   ],
-  "last_updated": "tick-6",
+  "last_updated": "tick-8",
   "last_error": null,
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
