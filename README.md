@@ -1254,6 +1254,26 @@ Local development may create a seeded admin using credentials supplied through d
 
 In development, OTP codes are printed to the API console.
 
+### Docker-for-Mac file-watch polling
+
+When running the dev servers inside a Docker container on macOS (e.g. via Docker Compose), native file-system events don't propagate through bind mounts. File watchers used by hot-reload tools (Vite, NestJS `--watch`, `tsc --watch`) will not detect source changes unless polling is enabled.
+
+Replace `pnpm dev` with `pnpm dev:docker` to enable polling-based file watching:
+
+```bash
+pnpm dev:docker
+```
+
+This sets the following environment variables:
+
+| Variable | Effect |
+|---|---|
+| `CHOKIDAR_USEPOLLING=true` | Enables polling for chokidar-based watchers (Vite dev server, NestJS `--watch` via SWC) |
+| `TSC_WATCHFILE=UseFsEventsWithPolling` | Tries native FS events, falls back to polling for `tsc --watch` (packages/ui, shared, i18n) |
+| `TURBO_DAEMON=false` | Disables Turborepo daemon — the daemon's file watcher is unnecessary for persistent `dev` tasks and may interfere with polling mode |
+
+> **Note:** On native macOS (outside Docker), `pnpm dev` runs without polling and provides faster hot reload. The `dev:docker` script is only needed when the apps are running inside Docker containers on macOS.
+
 ### Build
 
 ```bash
