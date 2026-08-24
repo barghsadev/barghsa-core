@@ -5,9 +5,17 @@
     "outDir": "dist",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/routeTree.gen.ts"
+  ],
   "references": [
     {"path": "../../packages/shared"},
     {"path": "../../packages/i18n"},
