@@ -108,6 +108,43 @@ barghsa.example.com {
 	}
 
 	# ──────────────────────────────────────────────
+	# Static asset caching — hashed filenames under /assets/
+	# Cache: public, immutable, 1 year
+	# ──────────────────────────────────────────────
+	handle /assets/* {
+		reverse_proxy 127.0.0.1:3000 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+		header {
+			Cache-Control "public, immutable, max-age=31536000"
+			Vary "Accept-Encoding"
+		}
+	}
+
+	# ──────────────────────────────────────────────
+	# Other static files (non-hashed) — 1-day cache
+	# ──────────────────────────────────────────────
+	@non_asset_static {
+		path_regexp \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot|webp|avif)$
+		not path /assets/*
+	}
+	handle @non_asset_static {
+		reverse_proxy 127.0.0.1:3000 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+		header {
+			Cache-Control "public, max-age=86400"
+			Vary "Accept-Encoding"
+		}
+	}
+
+	# ──────────────────────────────────────────────
 	# Web upstream  —  /*  →  TanStack SPA on :3000
 	# ──────────────────────────────────────────────
 	handle {
