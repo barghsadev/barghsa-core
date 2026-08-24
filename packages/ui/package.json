@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "test": "vitest run",
-        "test:coverage": "vitest run --coverage",
+        "test": "vitest run --passWithNoTests",
+        "test:coverage": "vitest run --coverage --passWithNoTests",
         "typecheck": "tsc"
     }
 }

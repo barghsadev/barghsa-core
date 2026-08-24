@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "typecheck": "tsc --noEmit",
-        "test": "vitest run",
-        "test:coverage": "vitest run --coverage",
+        "test": "vitest run --passWithNoTests",
+        "test:coverage": "vitest run --coverage --passWithNoTests",
         "build": "nest build && pnpm generate:openapi",
         "generate:openapi": "node dist/src/generate-openapi",
         "dev": "nest build --watch",

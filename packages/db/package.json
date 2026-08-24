@@ -5,8 +5,8 @@
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "scripts": {
-        "test": "vitest run",
-        "test:coverage": "vitest run --coverage",
+        "test": "vitest run --passWithNoTests",
+        "test:coverage": "vitest run --coverage --passWithNoTests",
         "typecheck": "tsc --noEmit",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",

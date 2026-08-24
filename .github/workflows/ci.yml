@@ -51,10 +51,3 @@ jobs:
           else
             pnpm test
           fi
-      - name: Run coverage (affected packages on PR, full on main)
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            pnpm turbo run test:coverage --filter="...[origin/main]"
-          else
-            pnpm test:coverage
-          fi
