@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-01.02.04",
+  "current_task_id": "T-01.02.04",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e01-t-01-02-04--ci-typecheck",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/9",
   "loop_iteration": 11,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -46,7 +46,9 @@
     {"from": "in_review", "to": "idle", "at": "tick-9"},
     {"from": "idle", "to": "building", "at": "tick-10"},
     {"from": "building", "to": "in_review", "at": "tick-10"},
-    {"from": "in_review", "to": "idle", "at": "tick-11"}
+    {"from": "in_review", "to": "idle", "at": "tick-11"},
+    {"from": "idle", "to": "building", "at": "tick-11"},
+    {"from": "building", "to": "in_review", "at": "tick-11"}
   ],
   "last_updated": "tick-11",
   "last_error": null,
