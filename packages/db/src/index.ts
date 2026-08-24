@@ -237,7 +237,7 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-    ssl: resolveSslConfig(config.ssl) || undefined,
+    ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig)
 
   pool.on('error', (err) => {
@@ -281,7 +281,7 @@ export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-    ssl: resolveSslConfig(config.ssl) || undefined,
+    ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig)
 
   attachClientQueryHooks(directPool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
