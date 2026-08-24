@@ -5,8 +5,12 @@
   "description": "Shared TypeScript configuration for Barghsa monorepo",
   "files": [
     "base.json",
-    "tsconfig.test.json"
+    "tsconfig.test.json",
+    "vitest.base.config.ts"
   ],
+  "exports": {
+    "./*": "./*.ts"
+  },
   "dependencies": {
     "@tsconfig/node20": "^20.1.0"
   }
