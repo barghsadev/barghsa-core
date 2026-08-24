@@ -32,7 +32,8 @@
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
-      "outputLogs": "new-only"
+      "outputLogs": "new-only",
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
     },
     "format:check": {
       "dependsOn": [],

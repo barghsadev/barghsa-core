@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_key": "01-platform-infrastructure.md#T-01.04.04",
-  "current_task_id": "T-01.04.04",
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-01.04.05",
+  "current_task_id": "T-01.04.05",
   "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-04-04--playwright-e2e",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/25",
-  "loop_iteration": 38,
-  "fix_attempts": 1,
+  "current_branch": "feat/e01-t-01-04-05--wire-test-tasks",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/26",
+  "loop_iteration": 39,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -25,6 +25,7 @@
     "01-platform-infrastructure.md#T-01.04.01",
     "01-platform-infrastructure.md#T-01.04.02",
     "01-platform-infrastructure.md#T-01.04.03",
+    "01-platform-infrastructure.md#T-01.04.04",
     "01-platform-infrastructure.md#T-02.01.01",
     "01-platform-infrastructure.md#T-02.01.02",
     "01-platform-infrastructure.md#T-02.01.03",
@@ -91,9 +92,13 @@
     {"from": "in_review", "to": "idle", "at": "tick-37"},
     {"from": "idle", "to": "building", "at": "tick-38"},
     {"from": "building", "to": "in_review", "at": "tick-38"},
-    {"from": "in_review", "to": "fixing", "at": "tick-38"}
+    {"from": "in_review", "to": "fixing", "at": "tick-38"},
+    {"from": "fixing", "to": "in_review", "at": "tick-38"},
+    {"from": "in_review", "to": "idle", "at": "tick-38"},
+    {"from": "idle", "to": "building", "at": "tick-39"},
+    {"from": "building", "to": "in_review", "at": "tick-39"}
   ],
-  "last_updated": "2026-08-24T09:47:00",
+  "last_updated": "2026-08-24T10:16:00",
   "last_error": null,
-  "notes": "T-01.04.04 (Configure Playwright for E2E testing) selected. Creating Playwright config scaffold with Chromium/Firefox/WebKit/mobile projects, base URL, trace-on-failure, and smoke test."
+  "notes": "T-01.04.05 (wire test/test:coverage tasks in turbo.json) built and PR #26 open, in review. Available checks pass (typecheck, build; test runs infra-correct with packages/tsconfig+to-be tests empty)."
 }
