@@ -1,6 +1,6 @@
 [
   {
-    "name": "Main bundle (login, register, dashboard, electricity ordering)",
+    "name": "Main app shell (login/register ≤150KB, dashboard ≤300KB, electricity ≤250KB)",
     "path": "apps/web/dist/assets/index-*.js",
     "limit": "700 KB",
     "gzip": true,
