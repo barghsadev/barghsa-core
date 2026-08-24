@@ -23,15 +23,15 @@ Every quarantined test MUST have a durable record containing:
 A quarantined **critical** test (a test covering a P0/P1 business flow) **must not silently allow production promotion**:
 
 - The CI pipeline must fail or block the release gate if any critical test is in quarantine and the expiry has passed.
-- The release-candidate gate (see `README.md` — Release-candidate gate) checks for quarantined critical tests and blocks promotion if any are found without a current, valid quarantine record.
+- The production promotion gate (see `README.md` — Production promotion gate) checks for quarantined critical tests and blocks promotion if any are found without a current, valid quarantine record. This enforcement is policy-defined; the automated gate implementation is tracked in T-05.04.01.
 
 ### 3. CI Flaky Report
 
 Every CI run produces a flaky-test report:
 
 - The total number of known flaky tests (active quarantine records) is reported as a CI annotation.
-- The report is displayed in the CI run summary but does not block the PR pipeline by itself — blocking is handled by the release-candidate gate.
-- A nightly CI run (see `README.md` — Scheduled quality gates) includes a dedicated flaky-test report job.
+- The report is displayed in the CI run summary but does not block the PR pipeline by itself — blocking is handled by the production promotion gate.
+- The README's Scheduled quality gates define a nightly flaky-test report job. The CI schedule trigger for nightly runs is tracked in T-05.05.01.
 
 ### 4. Quarantine Lifecycle
 

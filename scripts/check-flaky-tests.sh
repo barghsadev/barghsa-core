@@ -14,6 +14,6 @@
 set -euo pipefail
 
 echo "::notice::Flaky test check: report placeholder"
-echo "flaky_count=0" >> "$GITHUB_OUTPUT"
+[ -n "${GITHUB_OUTPUT:-}" ] && echo "flaky_count=0" >> "$GITHUB_OUTPUT"
 echo "Total flaky tests: 0 (detection not yet configured for this runner)"
 exit 0

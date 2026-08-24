@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 40,
-  "fix_attempts": 0,
+  "status": "fixing",
+  "current_task_key": "01-platform-infrastructure.md#T-01.04.06",
+  "current_task_id": "T-01.04.06",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e01-t-01-04-06--flaky-test-quarantine",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/28",
+  "loop_iteration": 42,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -37,21 +37,6 @@
     "01-platform-infrastructure.md#T-02.02.04"
   ],
   "status_history": [
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-7"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-7"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-8"
-    },
     {
       "from": "building",
       "to": "in_review",
@@ -536,9 +521,24 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-40"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-41"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-41"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-42"
     }
   ],
-  "last_updated": "2026-08-24T10:40:00",
+  "last_updated": "2026-08-24T11:02:20",
   "last_error": null,
-  "notes": "T-02.02.04 completed and merged (PR #27). ADR-001 documenting column conventions. Next in queue: T-02.03.01 (S - configure drizzle.config.ts)."
+  "notes": "T-01.04.06: reviewer found major issue (doc refs nonexistent gate). Fixing on same branch/PR."
 }
