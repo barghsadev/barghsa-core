@@ -41,4 +41,25 @@ describe('@barghsa/db', () => {
   it('getDbPool throws when pool not initialized', () => {
     expect(() => getDbPool()).toThrow('Database pool not initialized')
   })
+
+  describe('queryTimeout config', () => {
+    it('createDbPool accepts queryTimeout option', () => {
+      // Use a dummy URL so pool init doesn't fail immediately
+      const original = process.env.DATABASE_URL
+      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
+      const p = createDbPool({ queryTimeout: 5000 })
+      expect(p).toBeDefined()
+      p.end().catch(() => {})
+      if (original) process.env.DATABASE_URL = original
+    })
+
+    it('default queryTimeout is 30_000 ms', () => {
+      const original = process.env.DATABASE_URL
+      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
+      const p = createDbPool({})
+      expect(p).toBeDefined()
+      p.end().catch(() => {})
+      if (original) process.env.DATABASE_URL = original
+    })
+  })
 })

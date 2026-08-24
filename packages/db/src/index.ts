@@ -12,12 +12,14 @@ export interface DbPoolConfig {
   statementTimeout?: string
   lockTimeout?: string
   idleTransactionTimeout?: string
+  queryTimeout?: number
 }
 
 const DEFAULT_STATEMENT_TIMEOUT = '30s'
 const DEFAULT_LOCK_TIMEOUT = '5s'
 const DEFAULT_IDLE_TX_TIMEOUT = '60s'
 const SLOW_QUERY_THRESHOLD_MS = 200
+const DEFAULT_QUERY_TIMEOUT = 30_000
 
 /**
  * Emit a structured (single-line JSON) log entry. Development keeps plain
@@ -58,11 +60,13 @@ export function buildConnectionString(
 
 /**
  * Wrap each pooled client's query so that in production we can measure
- * execution duration and emit a structured JSON warning for slow queries.
+ * execution duration and emit a structured JSON warning for slow queries,
+ * and in any environment enforce a client-side query timeout that cancels
+ * the query server-side via the PostgreSQL cancel protocol.
  * Supports both Promise and callback invocation patterns.
  */
-function attachSlowQueryLogging(pool: Pool): void {
-  if (process.env.NODE_ENV !== 'production') return
+function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
+  if (process.env.NODE_ENV !== 'production' && queryTimeoutMs <= 0) return
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool.on('connect', (client: Client) => {
@@ -74,6 +78,30 @@ function attachSlowQueryLogging(pool: Pool): void {
       const first = args[0]
       const text = typeof first === 'string' ? first : first?.text
 
+      // Client-side query timeout guard
+      let timedOut = false
+      let timeoutId: ReturnType<typeof setTimeout> | null = null
+      if (queryTimeoutMs > 0) {
+        timeoutId = setTimeout(() => {
+          timedOut = true
+          structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
+          // Send PostgreSQL cancel request on a separate connection
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ;(client as any).cancel((err: Error | undefined) => {
+            if (err) {
+              structuredLog('warn', 'query_cancel_error', { error: err.message })
+            }
+          })
+        }, queryTimeoutMs)
+      }
+
+      const cleanup = (): void => {
+        if (!timedOut && timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+      }
+
       // Detect callback-passing usage (last arg is a function).
       const cbIndex = args.findIndex((a: any) => typeof a === 'function')
       const hasCallback = cbIndex !== -1
@@ -82,8 +110,9 @@ function attachSlowQueryLogging(pool: Pool): void {
         const originalCb = args[cbIndex]
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const wrappedCb: typeof originalCb = (err: any, res: any) => {
+          cleanup()
           const durationMs = Date.now() - startedAt
-          if (!err && durationMs > SLOW_QUERY_THRESHOLD_MS) {
+          if (!err && process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
             structuredLog('warn', 'slow_query', { query: text, durationMs })
           }
           originalCb(err, res)
@@ -96,13 +125,12 @@ function attachSlowQueryLogging(pool: Pool): void {
       // Promise-based invocation.
       const result = (originalQuery as Function)(...args)
       if (result && typeof result.then === 'function') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return result.then((rows: any) => {
+        return result.finally(() => {
+          cleanup()
           const durationMs = Date.now() - startedAt
-          if (durationMs > SLOW_QUERY_THRESHOLD_MS) {
+          if (process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
             structuredLog('warn', 'slow_query', { query: text, durationMs })
           }
-          return rows
         })
       }
       return result
@@ -126,7 +154,7 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     structuredLog('error', 'pool_error', { message: err.message })
   })
 
-  attachSlowQueryLogging(pool)
+  attachClientQueryHooks(pool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
 
   return pool
 }

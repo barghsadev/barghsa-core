@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "01-platform-infrastructure.md#T-02.01.03",
+  "current_task_id": "T-02.01.03",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e02-t-02-01-03--query-timeout-cancellation",
   "current_pr_url": null,
-  "loop_iteration": 30,
+  "loop_iteration": 31,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01","01-platform-infrastructure.md#T-01.01.02","01-platform-infrastructure.md#T-01.01.03","01-platform-infrastructure.md#T-01.01.04","01-platform-infrastructure.md#T-01.01.05",
@@ -41,9 +41,10 @@
     {"from":"building","to":"in_review","at":"tick-30"},
     {"from":"in_review","to":"fixing","at":"tick-30"},
     {"from":"fixing","to":"in_review","at":"tick-30"},
-    {"from":"in_review","to":"idle","at":"tick-30"}
+    {"from":"in_review","to":"idle","at":"tick-30"},
+    {"from":"idle","to":"building","at":"tick-31"}
   ],
-  "last_updated": "2026-08-24T08:08:00",
+  "last_updated": "2026-08-24T08:14:00",
   "last_error": null,
-  "notes": "T-02.01.02 completed and merged (PR #18). Next: T-02.01.03 (S — query timeout and cancellation)."
+  "notes": "Working on T-02.01.03 (S — query timeout and cancellation via Drizzle configuration)."
 }
