@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 110,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-01.01.01",
+  "current_task_id": "T-01.01.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-01-01-01--register-route-auth-layout",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/68",
+  "loop_iteration": 111,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -144,8 +144,8 @@
     "07-ui-ux-design.md#T-07.01.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T01:05:00",
-  "notes": "Tick-110: T-07.01.01.03 (Base UI widgets) reviewed and merged (PR #67). All 5 components implemented, GLM 5.2 approved with minor RTL/Polish issues. Next: T-07.01.01.04 (CVA configuration).",
+  "last_updated": "2026-08-25T00:10:00",
+  "notes": "Tick-111: T-01.01.01 (Register route and shared auth layout) built (PR #68), reviewed by GLM 5.2, 2 major i18n findings fixed and pushed. Back in review.",
   "status_history": [
     { "from": "building", "to": "in_review", "at": "tick-96" },
     { "from": "in_review", "to": "fixing", "at": "tick-97" },
@@ -171,6 +171,10 @@
     { "from": "in_review", "to": "idle", "at": "tick-107" },
     { "from": "idle", "to": "building", "at": "tick-108" },
     { "from": "building", "to": "in_review", "at": "tick-109" },
-    { "from": "in_review", "to": "idle", "at": "tick-110" }
+    { "from": "in_review", "to": "idle", "at": "tick-110" },
+    { "from": "idle", "to": "building", "at": "tick-111" },
+    { "from": "building", "to": "in_review", "at": "tick-111" },
+    { "from": "in_review", "to": "fixing", "at": "tick-111" },
+    { "from": "fixing", "to": "in_review", "at": "tick-111" }
   ]
 }

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as ChartsRouteImport } from './routes/charts'
@@ -27,6 +28,11 @@ import { Route as ElectricityOrderRouteImport } from './routes/electricity/order
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -97,6 +103,7 @@ const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/register': typeof RegisterRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/register': typeof RegisterRoute
   '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
@@ -128,6 +136,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/register': typeof RegisterRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/register'
     | '/admin'
     | '/admin/storage'
     | '/ai'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/register'
     | '/admin/storage'
     | '/ai'
     | '/charts'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/register'
     | '/admin'
     | '/admin/storage'
     | '/ai'
@@ -193,6 +205,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RegisterRoute: typeof RegisterRoute
   AdminRoute: typeof AdminRouteWithChildren
   AiRoute: typeof AiRoute
   ChartsRoute: typeof ChartsRoute
@@ -210,6 +223,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -336,6 +356,7 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RegisterRoute: RegisterRoute,
   AdminRoute: AdminRouteWithChildren,
   AiRoute: AiRoute,
   ChartsRoute: ChartsRoute,
