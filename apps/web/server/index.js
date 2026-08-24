@@ -16,8 +16,7 @@ import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
-const DIST_DIR = resolve(__dirname, '..', 'dist');
-const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
+const DEFAULT_DIST_DIR = resolve(__dirname, '..', 'dist');
 
 /** Content-hashed asset pattern matching vite.config.ts */
 const IMMUTABLE_PATTERN = /\/assets\/.+-[a-zA-Z0-9_-]{8,}\./;
@@ -48,14 +47,14 @@ const MIME_TYPES = {
 
 /**
  * Resolve and validate a URL path against the dist directory.
- * Returns the absolute file path, or null if the request escapes DIST_DIR
- * (defends against directory traversal).
+ * Returns the absolute file path, or null if the request escapes the dist
+ * directory (defends against directory traversal).
  */
-function resolveDistPath(urlPath) {
+function resolveDistPath(distDir, urlPath) {
   const decoded = decodeURIComponent(urlPath.split('?')[0].split('#')[0]);
-  const filePath = resolve(DIST_DIR, '.' + decoded);
+  const filePath = resolve(distDir, '.' + decoded);
   // Ensure the resolved path stays within the dist directory
-  if (filePath !== DIST_DIR && !filePath.startsWith(DIST_DIR + sep)) {
+  if (filePath !== distDir && !filePath.startsWith(distDir + sep)) {
     return null;
   }
   return filePath;
@@ -65,8 +64,8 @@ function resolveDistPath(urlPath) {
  * Try to serve a static file from dist.
  * Returns the file content and MIME type, or null if not found.
  */
-async function serveFile(urlPath) {
-  const filePath = resolveDistPath(urlPath);
+async function serveFile(distDir, urlPath) {
+  const filePath = resolveDistPath(distDir, urlPath);
   if (!filePath) return null;
 
   try {
@@ -81,60 +80,75 @@ async function serveFile(urlPath) {
   }
 }
 
-const server = createServer(async (req, res) => {
-  const url = req.url ?? '/';
+/**
+ * Create a configured HTTP server.
+ * @param {object} [options]
+ * @param {string} [options.distDir] Directory to serve (defaults to ../dist)
+ * @returns {import('node:http').Server}
+ */
+export function createStaticServer(options = {}) {
+  const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
 
-  // Only handle GET and HEAD
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
-    res.writeHead(405, { Allow: 'GET, HEAD' });
-    res.end();
-    return;
-  }
+  return createServer(async (req, res) => {
+    const url = req.url ?? '/';
 
-  // Try to serve the exact file
-  const file = await serveFile(url);
-
-  if (file) {
-    const cacheControl = IMMUTABLE_PATTERN.test(url)
-      ? 'public, immutable, max-age=31536000'
-      : 'no-cache, must-revalidate';
-
-    res.writeHead(200, {
-      'Content-Type': file.contentType,
-      'Content-Length': file.content.length,
-      'Cache-Control': cacheControl,
-    });
-
-    if (req.method === 'GET') {
-      res.end(file.content);
-    } else {
+    // Only handle GET and HEAD
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      res.writeHead(405, { Allow: 'GET, HEAD' });
       res.end();
+      return;
     }
-    return;
-  }
 
-  // SPA fallback — serve index.html for client-side routing
-  const index = await serveFile('/index.html');
-  if (index) {
-    res.writeHead(200, {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Content-Length': index.content.length,
-      'Cache-Control': 'no-cache, must-revalidate',
-    });
+    // Try to serve the exact file
+    const file = await serveFile(distDir, url);
 
-    if (req.method === 'GET') {
-      res.end(index.content);
-    } else {
-      res.end();
+    if (file) {
+      const cacheControl = IMMUTABLE_PATTERN.test(url)
+        ? 'public, immutable, max-age=31536000'
+        : 'no-cache, must-revalidate';
+
+      res.writeHead(200, {
+        'Content-Type': file.contentType,
+        'Content-Length': file.content.length,
+        'Cache-Control': cacheControl,
+      });
+
+      if (req.method === 'GET') {
+        res.end(file.content);
+      } else {
+        res.end();
+      }
+      return;
     }
-    return;
-  }
 
-  // 404 — nothing at all
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Not Found');
-});
+    // SPA fallback — serve index.html for client-side routing
+    const index = await serveFile(distDir, '/index.html');
+    if (index) {
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Content-Length': index.content.length,
+        'Cache-Control': 'no-cache, must-revalidate',
+      });
 
-server.listen(PORT, () => {
-  process.stderr.write(`Barghsa web server listening on http://0.0.0.0:${PORT}\n`);
-});
+      if (req.method === 'GET') {
+        res.end(index.content);
+      } else {
+        res.end();
+      }
+      return;
+    }
+
+    // 404 — nothing at all
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  });
+}
+
+// ── Auto-start when run directly (Docker CMD) ─────────────
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
+  const server = createStaticServer();
+  server.listen(PORT, () => {
+    process.stderr.write(`Barghsa web server listening on http://0.0.0.0:${PORT}\n`);
+  });
+}
