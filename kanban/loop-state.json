@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-01-02-01--otp-backend",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/74",
-  "loop_iteration": 122,
-  "fix_attempts": 1,
+  "loop_iteration": 123,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -150,53 +150,19 @@
     "02-auth-users-admin.md#T-01.01.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T02:04:00",
-  "notes": "Tick-122: Fix round 1 — addressed all 3 critical + 3 major findings from z-ai/glm-5.2 review. Timing-safe compare, atomic consume, no attempts reset on resend, decrement guard, console.log→logger.debug, more resend tests. 67/68 tests pass (pre-existing http-exception-filter mismatch). Pushed commit. Back in_review.",
+  "last_updated": "2026-08-25T02:12:00",
+  "notes": "Tick-123: Fixed error code ordering (RATE_LIMIT:EXCEEDED as default 429). Invoked z-ai/glm-5.2 review \u2192 request_changes (1 major: OTP debug log gating, 3 minor: updated_at on resend, semicolons/dto, trailing newlines). Addressed all findings, pushed. 68/68 pass. Back in_review.",
   "status_history": [
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-119"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-119"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-118"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-118"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-118"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-120"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-121"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-122"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-122"
-    }
+    {"from": "in_review", "to": "fixing", "at": "tick-119"},
+    {"from": "fixing", "to": "in_review", "at": "tick-119"},
+    {"from": "idle", "to": "building", "at": "tick-118"},
+    {"from": "building", "to": "in_review", "at": "tick-118"},
+    {"from": "in_review", "to": "fixing", "at": "tick-118"},
+    {"from": "in_review", "to": "idle", "at": "tick-120"},
+    {"from": "idle", "to": "building", "at": "tick-121"},
+    {"from": "in_review", "to": "fixing", "at": "tick-122"},
+    {"from": "fixing", "to": "in_review", "at": "tick-122"},
+    {"from": "in_review", "to": "fixing", "at": "tick-123"},
+    {"from": "fixing", "to": "in_review", "at": "tick-123"}
   ]
 }
