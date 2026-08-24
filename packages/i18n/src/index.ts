@@ -74,6 +74,17 @@ export const fa: I18nDictionary = {
   'error.provider.timeout': 'مدت زمان انتظار برای سرویس خارجی به پایان رسید',
   'error.provider.rate_limited': 'سرویس خارجی محدودیت نرخ دارد',
 
+  // ── Auth Pages — Register (submission errors) ───────────
+  'auth.register.submitting': 'در حال ثبت‌نام…',
+  'auth.register.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
+  'auth.register.error.usernameTaken': 'این نام کاربری قبلاً ثبت شده است',
+  'auth.register.error.invalidUsername': 'نام کاربری نامعتبر است',
+  'auth.register.error.weakPassword': 'رمز عبور الزامات امنیتی را ندارد',
+  'auth.register.error.tosNotAccepted': 'باید قوانین استفاده را بپذیرید',
+  'auth.register.error.rateLimited': 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید',
+  'auth.register.error.internal': 'خطای داخلی سرور رخ داده است. لطفاً بعداً تلاش کنید',
+  'auth.register.otpSent': 'کد تأیید برای شما ارسال شد',
+
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'خطای داخلی سرور',
   'error.internal.database': 'خطای پایگاه داده',
@@ -151,6 +162,17 @@ export const en: I18nDictionary = {
   'error.provider.downstream': 'External service error',
   'error.provider.timeout': 'External service timed out',
   'error.provider.rate_limited': 'External service is rate-limited',
+
+  // ── Auth Pages — Register (submission errors) ───────────
+  'auth.register.submitting': 'Registering…',
+  'auth.register.error.generic': 'An error occurred. Please try again',
+  'auth.register.error.usernameTaken': 'This username is already registered',
+  'auth.register.error.invalidUsername': 'Invalid username',
+  'auth.register.error.weakPassword': 'Password does not meet security requirements',
+  'auth.register.error.tosNotAccepted': 'You must accept the terms of service',
+  'auth.register.error.rateLimited': 'Too many attempts. Please try again later',
+  'auth.register.error.internal': 'An internal server error occurred. Please try again later',
+  'auth.register.otpSent': 'Verification code has been sent',
 
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'Internal server error',

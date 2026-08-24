@@ -85,8 +85,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const responseBody = exception.getResponse();
 
-      // Extract the raw message from the exception response if it's a string
+      // Extract the raw message and error code from the exception response
       let rawMessage: string | undefined;
+      let customErrorCode: string | undefined;
       if (typeof responseBody === 'string') {
         rawMessage = responseBody;
       } else if (typeof responseBody === 'object' && responseBody !== null) {
@@ -96,11 +97,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
         } else if (Array.isArray(body.message)) {
           rawMessage = (body.message as string[]).join('; ');
         }
+        // Extract a custom error code from the body if present
+        if (typeof body.error === 'string') {
+          customErrorCode = body.error;
+        }
       }
 
       return {
         httpStatus: status,
-        errorCode: defaultErrorCode(status),
+        errorCode: customErrorCode ?? defaultErrorCode(status),
         rawMessage,
       };
     }

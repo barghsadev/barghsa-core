@@ -86,6 +86,30 @@ export const ErrorCodes = {
     messageKey: 'error.auth.mfa.invalid',
     severity: 'info' as ErrorSeverity,
   },
+  AUTH_REGISTER_USERNAME_TAKEN: {
+    code: 'AUTH:REGISTER:USERNAME_TAKEN',
+    httpStatus: 409,
+    messageKey: 'auth.register.error.usernameTaken',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_REGISTER_INVALID_USERNAME: {
+    code: 'AUTH:REGISTER:INVALID_USERNAME',
+    httpStatus: 400,
+    messageKey: 'auth.register.error.invalidUsername',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_REGISTER_WEAK_PASSWORD: {
+    code: 'AUTH:REGISTER:WEAK_PASSWORD',
+    httpStatus: 422,
+    messageKey: 'auth.register.error.weakPassword',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_REGISTER_TOS_NOT_ACCEPTED: {
+    code: 'AUTH:REGISTER:TOS_NOT_ACCEPTED',
+    httpStatus: 400,
+    messageKey: 'auth.register.error.tosNotAccepted',
+    severity: 'debug' as ErrorSeverity,
+  },
 
   // ── Authorization ───────────────────────────────────────
   AUTHZ_FORBIDDEN: {

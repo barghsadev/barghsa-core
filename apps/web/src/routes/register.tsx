@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
-import { Button, Checkbox, Input, Label } from '@barghsa/ui'
+import { Loader2Icon } from 'lucide-react'
+import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
 import { PasswordField } from '../components/PasswordField.js'
 
@@ -37,7 +39,7 @@ interface NormalizationResult {
 function normalizeUsername(raw: string): NormalizationResult {
   const trimmed = raw.trim()
 
-  // Iranian mobile: 09121234567 → +989121234567
+  // Iranian mobile: 09121234567 → +989****4567
   if (IRANIAN_MOBILE_RE.test(trimmed)) {
     const e164 = `+98${trimmed.slice(1)}` // 09XXXXXXXXX → +989XXXXXXXX
     const groups = e164.match(/^(\+\d{2})(\d{3})(\d{3})(\d{4})$/)
@@ -63,6 +65,29 @@ function normalizeUsername(raw: string): NormalizationResult {
   return { type: null, normalized: trimmed, formatted: null }
 }
 
+// ─── Error code → i18n key mapping ────────────────────────────────────
+
+/**
+ * Maps backend error codes to frontend i18n message keys.
+ * Falls through to a generic error key if unknown.
+ */
+const ERROR_CODE_I18N_MAP: Record<string, string> = {
+  'AUTH:REGISTER:USERNAME_TAKEN': 'auth.register.error.usernameTaken',
+  'AUTH:REGISTER:INVALID_USERNAME': 'auth.register.error.invalidUsername',
+  'AUTH:REGISTER:WEAK_PASSWORD': 'auth.register.error.weakPassword',
+  'AUTH:REGISTER:TOS_NOT_ACCEPTED': 'auth.register.error.tosNotAccepted',
+  'RATE_LIMIT:EXCEEDED': 'auth.register.error.rateLimited',
+  'INTERNAL:UNEXPECTED': 'auth.register.error.internal',
+  'INTERNAL:SERVER_ERROR': 'auth.register.error.internal',
+}
+
+function resolveErrorMessage(errorCode: string | undefined, locale: Locale): string {
+  if (errorCode && ERROR_CODE_I18N_MAP[errorCode]) {
+    return t(ERROR_CODE_I18N_MAP[errorCode], locale)
+  }
+  return t('auth.register.error.generic', locale)
+}
+
 // ─── Page component ──────────────────────────────────────────────────────
 
 function RegisterPage() {
@@ -75,6 +100,11 @@ function RegisterPage() {
   const [touched, setTouched] = useState(false)
   const [tosAccepted, setTosAccepted] = useState(false)
   const [tosSubmittedError, setTosSubmittedError] = useState<string | null>(null)
+
+  // Submission state
+  const [password, setPassword] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
 
   const isUsernameValid = touched && usernameError === null && usernameType !== null
 
@@ -132,15 +162,75 @@ function RegisterPage() {
     }
   }, [touched, locale])
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
+    setFormError(null)
+
     if (!tosAccepted) {
       setTosSubmittedError(t('auth.register.tosRequired', locale))
       return
     }
     setTosSubmittedError(null)
-    // TODO: Submit registration (T-01.01.06)
-  }, [tosAccepted, locale])
+
+    // ── Normalize username for the API ───────────────────────────────
+    const normalized = normalizeUsername(username)
+    if (!normalized.type) {
+      setFormError(t('auth.register.error.invalidUsername', locale))
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      // TODO: Replace with actual TOS version fetch once E-04 (TOS) is implemented
+      const tosVersionId = 'current'
+
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: normalized.normalized,
+          password,
+          tosVersionId,
+        }),
+      })
+
+      const body: Record<string, unknown> =
+        await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        const rawError = body?.error
+        const errorCode = typeof rawError === 'string' ? rawError : (rawError as Record<string, unknown>)?.code as string | undefined
+        const msg = resolveErrorMessage(errorCode, locale)
+        setFormError(msg)
+        toast.error(msg)
+        return
+      }
+
+      // ── Success — received challengeId ─────────────────────────────
+      const challengeId = body?.challengeId
+      if (!challengeId) {
+        const msg = t('auth.register.error.generic', locale)
+        setFormError(msg)
+        toast.error(msg)
+        return
+      }
+
+      // Redirect to OTP verification (route to be implemented in T-01.02.02)
+      // For now, show success toast
+      toast.success(t('auth.register.otpSent', locale))
+
+      // TODO: Navigate to OTP verification page with challengeId
+      // router.navigate({ to: '/register/verify', params: { challengeId } })
+    } catch (_err) {
+      // Network error or unexpected failure
+      const msg = t('auth.register.error.generic', locale)
+      setFormError(msg)
+      toast.error(msg)
+    } finally {
+      setSubmitting(false)
+    }
+  }, [username, password, tosAccepted, locale])
 
   const handleTosChange = useCallback((checked: boolean | string) => {
     const isChecked = checked === true
@@ -150,7 +240,7 @@ function RegisterPage() {
     }
   }, [])
 
-  const isFormReady = isUsernameValid && tosAccepted
+  const isFormReady = isUsernameValid && password.length >= 8 && tosAccepted && !submitting
 
   return (
     <AuthLayout
@@ -191,6 +281,14 @@ function RegisterPage() {
           className="space-y-4"
           noValidate
         >
+          {/* Form-level alert for server errors */}
+          {formError && (
+            <Alert variant="destructive" role="alert">
+              <AlertTitle className="sr-only">Error</AlertTitle>
+              <AlertDescription>{formError}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Unified username field */}
           <div className="space-y-2">
             <Label htmlFor="username">
@@ -206,6 +304,7 @@ function RegisterPage() {
               value={username}
               onChange={handleChange}
               onBlur={handleBlur}
+              disabled={submitting}
               aria-invalid={touched && usernameError !== null}
               aria-describedby={
                 usernameError
@@ -243,6 +342,9 @@ function RegisterPage() {
               label={t('auth.register.passwordLabel', locale)}
               locale={locale}
               autoFocus={false}
+              value={password}
+              onChange={setPassword}
+              disabled={submitting}
             />
           )}
 
@@ -253,6 +355,7 @@ function RegisterPage() {
                 id="tos"
                 checked={tosAccepted}
                 onCheckedChange={handleTosChange}
+                disabled={submitting}
                 aria-invalid={!!tosSubmittedError}
                 aria-describedby={tosSubmittedError ? 'tos-error' : undefined}
                 className="mt-0.5"
@@ -287,7 +390,14 @@ function RegisterPage() {
             className="w-full"
             disabled={!isFormReady}
           >
-            {t('auth.register.submit', locale)}
+            {submitting ? (
+              <>
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                {t('auth.register.submitting', locale)}
+              </>
+            ) : (
+              t('auth.register.submit', locale)
+            )}
           </Button>
         </form>
 
