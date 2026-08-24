@@ -78,21 +78,23 @@ function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
       const first = args[0]
       const text = typeof first === 'string' ? first : first?.text
 
-      // Client-side query timeout guard
       let timedOut = false
       let timeoutId: ReturnType<typeof setTimeout> | null = null
-      if (queryTimeoutMs > 0) {
-        timeoutId = setTimeout(() => {
-          timedOut = true
-          structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
-          // Send PostgreSQL cancel request on a separate connection
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(client as any).cancel((err: Error | undefined) => {
-            if (err) {
-              structuredLog('warn', 'query_cancel_error', { error: err.message })
-            }
-          })
-        }, queryTimeoutMs)
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const setupTimeout = (queryResult: any): void => {
+        if (queryTimeoutMs > 0 && queryResult) {
+          timeoutId = setTimeout(() => {
+            timedOut = true
+            structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
+            // pg Client.cancel(client, query) sends a PostgreSQL cancel request
+            // on a separate ephemeral connection. The first argument is the
+            // client instance (for processID / secretKey), the second is the
+            // Query object returned by client.query().
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ;(client as any).cancel(client, queryResult)
+          }, queryTimeoutMs)
+        }
       }
 
       const cleanup = (): void => {
@@ -117,13 +119,15 @@ function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
           }
           originalCb(err, res)
         }
-        // Swap the callback with our wrapped version.
         const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
-        return (originalQuery as Function)(...instrumentedArgs)
+        const cbResult = (originalQuery as Function)(...instrumentedArgs)
+        setupTimeout(cbResult)
+        return cbResult
       }
 
       // Promise-based invocation.
       const result = (originalQuery as Function)(...args)
+      setupTimeout(result)
       if (result && typeof result.then === 'function') {
         return result.finally(() => {
           cleanup()

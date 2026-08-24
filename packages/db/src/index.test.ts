@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createDbPool, getDbPool, buildConnectionString } from './index'
 
 describe('@barghsa/db', () => {
@@ -43,23 +43,33 @@ describe('@barghsa/db', () => {
   })
 
   describe('queryTimeout config', () => {
-    it('createDbPool accepts queryTimeout option', () => {
-      // Use a dummy URL so pool init doesn't fail immediately
-      const original = process.env.DATABASE_URL
+    beforeEach(() => {
       process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
+    })
+
+    afterEach(() => {
+      delete process.env.DATABASE_URL
+    })
+
+    it('createDbPool accepts queryTimeout option', () => {
       const p = createDbPool({ queryTimeout: 5000 })
       expect(p).toBeDefined()
       p.end().catch(() => {})
-      if (original) process.env.DATABASE_URL = original
     })
 
     it('default queryTimeout is 30_000 ms', () => {
-      const original = process.env.DATABASE_URL
-      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
       const p = createDbPool({})
       expect(p).toBeDefined()
       p.end().catch(() => {})
-      if (original) process.env.DATABASE_URL = original
+    })
+
+    it('attaches client query hooks with timeout guard', () => {
+      // Verify the pool's event emitter is wired up correctly by checking
+      // that the internal pool object has the expected listener count.
+      const p = createDbPool({ queryTimeout: 100 })
+      expect(p.listeners('connect').length).toBe(1)
+      expect(p.listeners('error').length).toBe(1)
+      p.end().catch(() => {})
     })
   })
 })
