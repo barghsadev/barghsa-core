@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-01.02.01",
   "current_task_id": "T-01.02.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-01-02-01--otp-backend",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/74",
   "loop_iteration": 121,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -151,7 +151,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T02:00:00",
-  "notes": "Tick-121: Starting T-01.02.01 (OTP backend). Branch feat/e02-t-01-02-01--otp-backend recovered with DB schema, DTOs, OtpService, OTP endpoints.",
+  "notes": "Tick-121: PR #74 (T-01.02.01) opened and marked ready. OtpService with create/verify/resend + rate limits. 64/65 tests pass. Loop in_review.",
   "status_history": [
     {
       "from": "in_review",
