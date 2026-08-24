@@ -1,5 +1,8 @@
 {
-  "name": "@barghsa/api",
-  "version": "0.0.0",
-  "private": true
+    "name": "@barghsa/api",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "typecheck": "tsc"
+    }
 }

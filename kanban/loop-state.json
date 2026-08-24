@@ -5,8 +5,8 @@
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-01-02-04--ci-typecheck",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/9",
-  "loop_iteration": 11,
-  "fix_attempts": 0,
+  "loop_iteration": 12,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -48,9 +48,11 @@
     {"from": "building", "to": "in_review", "at": "tick-10"},
     {"from": "in_review", "to": "idle", "at": "tick-11"},
     {"from": "idle", "to": "building", "at": "tick-11"},
-    {"from": "building", "to": "in_review", "at": "tick-11"}
+    {"from": "building", "to": "in_review", "at": "tick-11"},
+    {"from": "in_review", "to": "fixing", "at": "tick-13"},
+    {"from": "fixing", "to": "in_review", "at": "tick-13"}
   ],
-  "last_updated": "tick-12",
-  "last_error": "Reviewer transient: OpenRouter in_flight_budget_exhausted (402). Retry after 120s.",
+  "last_updated": "tick-13",
+  "last_error": null,
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
