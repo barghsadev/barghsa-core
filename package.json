@@ -3,5 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "description": "Barghsa — Iranian electricity market intelligence platform",
-  "packageManager": "pnpm@10.8.1"
+  "packageManager": "pnpm@10.8.1",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format:check": "turbo format:check",
+    "format:write": "turbo format:write"
+  },
+  "devDependencies": {
+    "turbo": "2.10.11"
+  }
 }

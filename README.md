@@ -1226,8 +1226,13 @@ Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
 ### Prerequisites
 
-- Node.js 20+
-- pnpm 10+
+- Node.js 20+ (via Corepack for automatic pnpm version management:
+  ```bash
+  corepack enable
+  corepack prepare pnpm@10.8.1 --activate
+  ```
+  )
+- pnpm 10+ (managed automatically by Corepack when enabled above)
 - Docker (Postgres, Redis, optional MinIO)
 
 ### Local setup
