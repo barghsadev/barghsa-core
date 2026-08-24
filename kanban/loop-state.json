@@ -1,9 +1,9 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-01.01.05",
-  "current_task_id": "T-01.01.05",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-01-01-05--back-to-login-forgot-pw-links",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 117,
   "fix_attempts": 0,
@@ -145,15 +145,26 @@
     "02-auth-users-admin.md#T-01.01.01",
     "02-auth-users-admin.md#T-01.01.02",
     "02-auth-users-admin.md#T-01.01.03",
-    "02-auth-users-admin.md#T-01.01.04"
+    "02-auth-users-admin.md#T-01.01.04",
+    "02-auth-users-admin.md#T-01.01.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T01:04:00",
-  "notes": "Tick-117: Building T-01.01.05 (Back to login + Forgot password links) on register page.",
+  "last_updated": "2026-08-25T01:09:00",
+  "notes": "Tick-117: T-01.01.05 (Back to login + Forgot password links) merged as PR #72. Reviewed by z-ai/glm-5.2 (approve). Loop idle.",
   "status_history": [
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-117"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-117"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
       "at": "tick-117"
     }
   ]
