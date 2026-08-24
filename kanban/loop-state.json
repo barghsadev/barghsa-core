@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "01-platform-infrastructure.md#T-04.04.01",
+  "current_task_id": "T-04.04.01",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e04-t-04-04-01--pilot-proxy-config",
   "current_pr_url": null,
-  "loop_iteration": 95,
+  "loop_iteration": 96,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -78,9 +78,14 @@
     "01-platform-infrastructure.md#T-04.03.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T21:35:00",
-  "notes": "Tick-95: T-04.03.05 completed (PR #59 merged). Fixed upload.controller.spec.ts (missing IMMUTABLE_STORAGE_SERVICE provider). State → idle. Next: pick next queue task.",
+  "last_updated": "2026-08-24T21:36:30",
+  "notes": "Tick-96: Building T-04.04.01 (pilot proxy config). Created deploy/pilot/Caddyfile + deploy/pilot/nginx.conf. Committing and opening PR.",
   "status_history": [
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-96"
+    },
     {
       "from": "idle",
       "to": "building",
