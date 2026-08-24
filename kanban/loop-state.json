@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-04.01.04",
-  "current_task_id": "T-04.01.04",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e04-t-04-01-04--pg-performance-monitoring",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/46",
-  "loop_iteration": 70,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 71,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -62,15 +62,17 @@
     "01-platform-infrastructure.md#T-03.03.04",
     "01-platform-infrastructure.md#T-04.01.01",
     "01-platform-infrastructure.md#T-04.01.02",
-    "01-platform-infrastructure.md#T-04.01.03"
+    "01-platform-infrastructure.md#T-04.01.03",
+    "01-platform-infrastructure.md#T-04.01.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T17:13:00",
-  "notes": "CI failed: build error missing maxConnections field in return object (e61d79e). Fix pushed to branch. CI re-triggered. Next tick: check CI status, re-run GLM 5.2 review since code changed, then merge if green.",
+  "last_updated": "2026-08-24T17:22:30",
+  "notes": "PR #46 merged — T-04.01.04 (PG performance baseline) completed. Next tick: select next task from queue.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-67"},
     {"from": "fixing", "to": "in_review", "at": "tick-67"},
     {"from": "in_review", "to": "blocked", "at": "tick-68"},
-    {"from": "blocked", "to": "in_review", "at": "tick-69"}
+    {"from": "blocked", "to": "in_review", "at": "tick-69"},
+    {"from": "in_review", "to": "idle", "at": "tick-70"}
   ]
 }
