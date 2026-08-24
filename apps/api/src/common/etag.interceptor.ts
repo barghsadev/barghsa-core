@@ -82,17 +82,29 @@ export class EtagInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((body) => {
-        const payload = JSON.stringify(body);
-        const hash = createHash('sha256').update(payload).digest('base64');
-        const etag = `"${hash}"`;
+        let etag: string | null = null;
 
-        response.setHeader('ETag', etag);
+        try {
+          const payload = JSON.stringify(body);
+          const hash = createHash('sha256').update(payload).digest('base64');
+          etag = `"${hash}"`;
+          response.setHeader('ETag', etag);
+        } catch {
+          // If serialization fails (e.g. circular references), skip ETag
+          return body;
+        }
 
         const ifNoneMatch = request.headers['if-none-match'];
 
-        if (ifNoneMatch === etag) {
-          response.status(304);
-          return null;
+        if (ifNoneMatch !== undefined && ifNoneMatch !== null) {
+          const matches = String(ifNoneMatch)
+            .split(',')
+            .map((v) => v.trim());
+
+          if (matches.includes(etag) || matches.includes('*')) {
+            response.status(304);
+            return null;
+          }
         }
 
         return body;
