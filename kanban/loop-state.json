@@ -1,5 +1,5 @@
 {
-  "status": "in_review",
+  "status": "blocked",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.05",
   "current_task_id": "T-04.01.05",
   "current_task_file": "01-platform-infrastructure.md",
@@ -65,9 +65,9 @@
     "01-platform-infrastructure.md#T-04.01.03",
     "01-platform-infrastructure.md#T-04.01.04"
   ],
-  "last_error": null,
-  "last_updated": "2026-08-24T18:02:00",
-  "notes": "Review round 3 (tick-74): GLM 5.2 found 2 critical, 2 major issues. All fixed and pushed (b7a3174). Checks pass. Returning to in_review.",
+  "last_error": "GLM 5.2 approved PR #48 (minor issues only), but CI \"Run tests\" check fails with pre-existing CJS Vitest issue affecting all branches. Cannot merge per AGENTS.md: available required checks must pass. Need to fix test infrastructure (CJS import issue) before merge.",
+  "last_updated": "2026-08-24T18:03:00",
+  "notes": "Tick-75: GLM 5.2 review round 4 — approve (3 minor findings). Pre-existing CI test failure blocks merge. Setting blocked.",
   "status_history": [
     {"from": "idle", "to": "in_review", "at": "tick-72"},
     {"from": "in_review", "to": "fixing", "at": "tick-72"},
@@ -78,6 +78,7 @@
     {"from": "fixing", "to": "in_review", "at": "tick-67"},
     {"from": "in_review", "to": "blocked", "at": "tick-68"},
     {"from": "blocked", "to": "in_review", "at": "tick-69"},
-    {"from": "in_review", "to": "idle", "at": "tick-70"}
+    {"from": "in_review", "to": "idle", "at": "tick-70"},
+    {"from": "in_review", "to": "blocked", "at": "tick-75"}
   ]
 }
