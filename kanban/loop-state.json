@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-04.04.05",
-  "current_task_id": "T-04.04.05",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e04-t-04-04-05--etag-support",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/64",
-  "loop_iteration": 103,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 104,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -79,11 +79,12 @@
     "01-platform-infrastructure.md#T-04.04.01",
     "01-platform-infrastructure.md#T-04.04.02",
     "01-platform-infrastructure.md#T-04.04.03",
-    "01-platform-infrastructure.md#T-04.04.04"
+    "01-platform-infrastructure.md#T-04.04.04",
+    "01-platform-infrastructure.md#T-04.04.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T22:27:00",
-  "notes": "Tick-103: T-04.04.05 building — ETag interceptor created, decorated @AppController root, all checks pass. Next: open draft PR → in_review.",
+  "last_updated": "2026-08-24T22:37:00",
+  "notes": "Tick-104: T-04.04.05 merged (PR #64). ETag interceptor with 9 tests, RFC 7232 If-None-Match parsing, circular-reference guard. 1 review round (approve). State → idle. Next: T-04.04.06 or next epic.",
   "status_history": [
     { "from": "building", "to": "in_review", "at": "tick-96" },
     { "from": "in_review", "to": "fixing", "at": "tick-97" },
@@ -96,6 +97,10 @@
     { "from": "idle", "to": "building", "at": "tick-100" },
     { "from": "building", "to": "in_review", "at": "tick-100" },
     { "from": "in_review", "to": "idle", "at": "tick-100" },
-    { "from": "idle", "to": "building", "at": "tick-103" }
+    { "from": "idle", "to": "building", "at": "tick-103" },
+    { "from": "building", "to": "in_review", "at": "tick-103" },
+    { "from": "in_review", "to": "fixing", "at": "tick-103" },
+    { "from": "fixing", "to": "in_review", "at": "tick-103" },
+    { "from": "in_review", "to": "idle", "at": "tick-104" }
   ]
 }
