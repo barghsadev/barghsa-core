@@ -80,7 +80,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-24T21:51:00",
-  "notes": "Tick-98: T-04.04.02 built — CSP Report-Only headers in Caddyfile + nginx.conf, CSP report endpoint in API. Typecheck + build pass. Opening PR.",
+  "notes": "Tick-98: T-04.04.02 built — CSP Report-Only headers in Caddyfile + nginx.conf, CSP report endpoint in API. Review found 1 major + 2 minor issues. All fixed in fa57982. Returned to in_review.",
   "status_history": [
     {
       "from": "building",
@@ -104,6 +104,16 @@
     },
     {
       "from": "building",
+      "to": "in_review",
+      "at": "tick-98"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-98"
+    },
+    {
+      "from": "fixing",
       "to": "in_review",
       "at": "tick-98"
     }
