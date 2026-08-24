@@ -1,0 +1,82 @@
+# syntax=docker/dockerfile:1
+# Barghsa API & Worker — shared multi-stage Dockerfile
+#
+# Builds the NestJS API and its workspace dependencies (db, shared, i18n).
+# The final image supports both `docker run` CMD override and Docker Compose
+# `command` override, allowing the same image to serve as either the API server
+# or a background worker.
+
+# ─────────────────────────────────────────────────────────────
+# Stage 1 — Install production + dev dependencies
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+# Node.js >=20 ships with corepack; enable pnpm
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile --prod=false
+
+# ─────────────────────────────────────────────────────────────
+# Stage 2 — Build the application
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS build
+
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+# Reuse the dependency layer
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .npmrc ./
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy workspace packages needed by @barghsa/api
+COPY packages/db ./packages/db
+COPY packages/shared ./packages/shared
+COPY packages/i18n ./packages/i18n
+COPY packages/ui ./packages/ui
+COPY apps/api ./apps/api
+
+# Build the API app and its transitively referenced packages
+RUN pnpm build --filter @barghsa/api
+
+# ─────────────────────────────────────────────────────────────
+# Stage 3 — Production image
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS production
+
+ENV NODE_ENV=production \
+    PORT=4000
+
+WORKDIR /app
+
+# Security: run as non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Install production dependencies
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN corepack enable && corepack prepare pnpm@10 --activate && \
+    pnpm install --frozen-lockfile --prod && \
+    rm -rf /root/.local/share/pnpm
+
+# Copy the API app's package.json so the "type": "module" (or "commonjs")
+# field from the workspace context applies to any ESM imports at startup
+COPY --from=build /app/apps/api/package.json ./package.json
+
+# Copy build artifacts
+COPY --from=build /app/apps/api/dist ./dist
+
+# Verify the entrypoint exists
+RUN test -f ./dist/src/main.js
+
+EXPOSE 4000
+
+USER appuser
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4000/api/health || exit 1
+
+# Default CMD — run the API server
+# Override for worker: CMD ["node", "dist/src/worker.js"]
+CMD ["node", "dist/src/main.js"]
