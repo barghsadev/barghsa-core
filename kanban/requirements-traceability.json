@@ -10,7 +10,7 @@
       "requirement_id": "README-001",
       "source": "README.md",
       "start_line": 1,
-      "end_line": 1260,
+      "end_line": 1265,
       "heading": "Intro",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -65282,7 +65282,7 @@
       "requirement_id": "README-095",
       "source": "README.md",
       "start_line": 1214,
-      "end_line": 1260,
+      "end_line": 1265,
       "heading": "Development (monorepo)",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -65800,7 +65800,7 @@
       "requirement_id": "README-096",
       "source": "README.md",
       "start_line": 1227,
-      "end_line": 1232,
+      "end_line": 1237,
       "heading": "Prerequisites",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -66317,8 +66317,8 @@
     {
       "requirement_id": "README-097",
       "source": "README.md",
-      "start_line": 1233,
-      "end_line": 1251,
+      "start_line": 1238,
+      "end_line": 1256,
       "heading": "Local setup",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -66835,8 +66835,8 @@
     {
       "requirement_id": "README-098",
       "source": "README.md",
-      "start_line": 1252,
-      "end_line": 1257,
+      "start_line": 1257,
+      "end_line": 1262,
       "heading": "Build",
       "owner_files": [
         "01-platform-infrastructure.md",
@@ -67353,8 +67353,8 @@
     {
       "requirement_id": "README-099",
       "source": "README.md",
-      "start_line": 1258,
-      "end_line": 1260,
+      "start_line": 1263,
+      "end_line": 1265,
       "heading": "Architecture notes",
       "owner_files": [
         "01-platform-infrastructure.md",
