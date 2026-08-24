@@ -1,4 +1,4 @@
-import { Global, Inject, Injectable, Logger, Optional } from '@nestjs/common'
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common'
 import type { Redis } from 'ioredis'
 import { ConfigCache, type ConfigCacheLogger } from '@barghsa/shared/config-cache'
 import { getDbPool } from '@barghsa/db'
@@ -63,6 +63,33 @@ export class ConfigCacheService {
           value: result.rows[0]['value'],
           version: Number(result.rows[0]['version']),
         }
+      },
+      // fetchGlobalVersion — reads the global config version from Redis,
+      // or falls back to PG, or returns 0 if neither is available
+      async () => {
+        // When Redis is available, read the global version from Redis
+        if (this.redis) {
+          try {
+            const raw = await this.redis.get(ConfigCache.GLOBAL_VERSION_KEY)
+            if (raw) return Number(raw)
+          } catch {
+            // Fall through to PG below
+          }
+        }
+        // Read from PostgreSQL as fallback
+        try {
+          const pool = getDbPool()
+          const result = await pool.query(
+            "SELECT version FROM config_version WHERE id = 'global'",
+          )
+          if (result.rows.length > 0) {
+            return Number(result.rows[0]['version'])
+          }
+        } catch {
+          // If PG is also unavailable, return 0 — all cached entries will be
+          // considered stale, forcing PG reads.  Degraded but correct.
+        }
+        return 0
       },
       this.redis,
       cacheLogger,
