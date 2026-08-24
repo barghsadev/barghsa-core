@@ -54,6 +54,10 @@ export const fa: I18nDictionary = {
   'auth.register.invalidEmail': 'ایمیل نامعتبر است',
   'auth.register.invalidMobile': 'شماره موبایل نامعتبر است',
   'auth.register.invalidUsername': 'نام کاربری نامعتبر است',
+  'auth.register.tosLinkText': 'قوانین استفاده',
+  'auth.register.tosRequired': 'برای ثبت‌نام باید قوانین را بپذیرید',
+  'auth.register.tosPrefix': 'با ثبت‌نام،',
+  'auth.register.tosSuffix': 'و سیاست‌های حریم خصوصی را می‌پذیرم',
 
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
@@ -131,6 +135,10 @@ export const en: I18nDictionary = {
   'auth.register.invalidEmail': 'Invalid email address',
   'auth.register.invalidMobile': 'Invalid mobile number',
   'auth.register.invalidUsername': 'Invalid username',
+  'auth.register.tosLinkText': 'terms of use',
+  'auth.register.tosRequired': 'You must accept the terms before registering',
+  'auth.register.tosPrefix': 'By registering, I accept the',
+  'auth.register.tosSuffix': 'and privacy policy',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
