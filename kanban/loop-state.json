@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.05",
   "current_task_id": "T-04.01.05",
   "current_task_file": "01-platform-infrastructure.md",
@@ -67,7 +67,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-24T18:00:00",
-  "notes": "Review round 2 (tick-73): GLM 5.2 found 2 critical, 4 major issues. All fixed and pushed. Re-entering in_review.",
+  "notes": "Review round 2 (tick-73): GLM 5.2 found 2 critical, 4 major issues. All fixed, checks pass. Returning to in_review.",
   "status_history": [
     {"from": "idle", "to": "in_review", "at": "tick-72"},
     {"from": "in_review", "to": "fixing", "at": "tick-72"},
