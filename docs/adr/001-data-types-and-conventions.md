@@ -30,7 +30,7 @@ UUIDv7 provides the distribution benefits of UUIDs (no central coordinator, safe
 
 **Implementation:** `packages/db/src/types.ts` — `uuidv7()` column builder with `DEFAULT uuid_generate_v7()`.
 
-**Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` so each concurrent call within the same transaction receives a distinct timestamp. Values from different milliseconds are time-ordered; values within the same millisecond carry random bits and are not guaranteed monotonic.
+**Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` to obtain the current wall-clock time on each invocation. Multiple calls may share the same millisecond (depending on clock resolution); uniqueness is provided probabilistically by the random bits, and values from different milliseconds are time-ordered.
 
 ### 2. UTC Timestamps with `timestamptz`
 
@@ -72,7 +72,7 @@ Rates, percentages, coefficients, and non-currency quantities use **`numeric(20,
 
 - **Column type:** `numeric(20, 6)` via `fixedDecimal()` in `packages/db/src/types.ts`.
 - **JavaScript type:** Returns a **string** to preserve full precision (no floating-point rounding).
-- **Precision rationale:** 20 digits with 6 decimal places accommodates rates like 0.000001 (0.0001%) up to 999,999,999,999.999999, covering all practical billing and metering scenarios.
+- **Precision rationale:** 20 digits with 6 decimal places accommodates tiny rates like 0.000001 (0.0001%) up to 14 integer digits (99,999,999,999,999.999999), covering all practical billing and metering scenarios.
 - **Scale rationale:** 6 decimal places matches the finest granularity needed for kWh metering (watt-hour resolution) and percentage calculations.
 
 ### 6. Prohibition of Floating-Point in Financial Contexts
