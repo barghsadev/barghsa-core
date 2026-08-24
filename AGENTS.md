@@ -138,7 +138,7 @@ hermes chat \
   --query-file /tmp/barghsa-review-prompt.txt \
   --model openai/gpt-5.6-sol \
   --provider openrouter \
-  --reasoning high \
+  --reasoning low \
   --max-turns 1 \
   --quiet
 ```
