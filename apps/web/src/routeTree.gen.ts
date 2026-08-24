@@ -10,18 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as ElectricityRouteImport } from './routes/electricity'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SavingsRouteImport } from './routes/savings'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
 import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 
@@ -30,20 +30,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AdminStorageRoute = AdminStorageRouteImport.update({
-  id: '/storage',
-  path: '/storage',
-  getParentRoute: () => AdminRoute,
 } as any)
 const AiRoute = AiRouteImport.update({
   id: '/ai',
@@ -63,6 +53,11 @@ const DocumentsRoute = DocumentsRouteImport.update({
 const ElectricityRoute = ElectricityRouteImport.update({
   id: '/electricity',
   path: '/electricity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SavingsRoute = SavingsRouteImport.update({
@@ -85,6 +80,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminStorageRoute = AdminStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -103,16 +103,16 @@ const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/register': typeof RegisterRoute
   '/admin': typeof AdminRouteWithChildren
-  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/register': typeof RegisterRoute
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/admin/': typeof AdminIndexRoute
@@ -120,14 +120,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/register': typeof RegisterRoute
-  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
+  '/register': typeof RegisterRoute
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/admin': typeof AdminIndexRoute
@@ -136,16 +136,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/register': typeof RegisterRoute
   '/admin': typeof AdminRouteWithChildren
-  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/register': typeof RegisterRoute
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/admin/': typeof AdminIndexRoute
@@ -155,16 +155,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/register'
     | '/admin'
-    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/register'
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
     | '/admin/'
@@ -172,14 +172,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/register'
-    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
+    | '/register'
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
     | '/admin'
@@ -187,16 +187,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/register'
     | '/admin'
-    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/register'
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
     | '/admin/'
@@ -205,12 +205,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RegisterRoute: typeof RegisterRoute
   AdminRoute: typeof AdminRouteWithChildren
   AiRoute: typeof AiRoute
   ChartsRoute: typeof ChartsRoute
   DocumentsRoute: typeof DocumentsRoute
   ElectricityRoute: typeof ElectricityRouteWithChildren
+  RegisterRoute: typeof RegisterRoute
   SavingsRoute: typeof SavingsRoute
   VideosRoute: typeof VideosRoute
   WalletRoute: typeof WalletRoute
@@ -225,26 +225,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/admin/storage': {
-      id: '/admin/storage'
-      path: '/storage'
-      fullPath: '/admin/storage'
-      preLoaderRoute: typeof AdminStorageRouteImport
-      parentRoute: typeof AdminRoute
     }
     '/ai': {
       id: '/ai'
@@ -274,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ElectricityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/savings': {
       id: '/savings'
       path: '/savings'
@@ -300,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/storage': {
+      id: '/admin/storage'
+      path: '/storage'
+      fullPath: '/admin/storage'
+      preLoaderRoute: typeof AdminStorageRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/users': {
@@ -356,12 +356,12 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RegisterRoute: RegisterRoute,
   AdminRoute: AdminRouteWithChildren,
   AiRoute: AiRoute,
   ChartsRoute: ChartsRoute,
   DocumentsRoute: DocumentsRoute,
   ElectricityRoute: ElectricityRouteWithChildren,
+  RegisterRoute: RegisterRoute,
   SavingsRoute: SavingsRoute,
   VideosRoute: VideosRoute,
   WalletRoute: WalletRoute,
