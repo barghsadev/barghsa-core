@@ -2,7 +2,7 @@
 
 > **Builder/orchestrator:** `deepseek/deepseek-v4-flash` on OpenRouter
 >
-> **Reviewer:** `openai/gpt-5.6-sol` on OpenRouter
+> **Reviewer:** `z-ai/glm-5.2` on OpenRouter
 >
 > **Scheduler:** paused Hermes cron job `d09ad66fea0b`
 
@@ -136,7 +136,7 @@ Invoke the reviewer through Hermes so credentials stay in the configured provide
 ```bash
 hermes chat \
   --query-file /tmp/barghsa-review-prompt.txt \
-  --model openai/gpt-5.6-sol \
+  --model z-ai/glm-5.2 \
   --provider openrouter \
   --reasoning high \
   --max-turns 1 \
