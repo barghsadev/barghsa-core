@@ -5,11 +5,17 @@
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 0,
+  "loop_iteration": 1,
   "fix_attempts": 0,
-  "build_completed_tasks": [],
-  "status_history": [],
-  "last_updated": null,
+  "build_completed_tasks": [
+    "01-platform-infrastructure.md#T-01.01.01"
+  ],
+  "status_history": [
+    {"from": "idle", "to": "building", "at": "tick-1"},
+    {"from": "building", "to": "in_review", "at": "tick-1"},
+    {"from": "in_review", "to": "idle", "at": "tick-1"}
+  ],
+  "last_updated": "tick-1",
   "last_error": null,
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
