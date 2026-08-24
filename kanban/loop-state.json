@@ -6,7 +6,7 @@
   "current_branch": "feat/e01-t-01-03-05--cdn-asset-output",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/14",
   "loop_iteration": 22,
-  "fix_attempts": 0,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -80,7 +80,9 @@
     {"from": "fixing", "to": "in_review", "at": "tick-20"},
     {"from": "in_review", "to": "idle", "at": "tick-20"},
     {"from": "idle", "to": "building", "at": "tick-22"},
-    {"from": "building", "to": "in_review", "at": "tick-22"}
+    {"from": "building", "to": "in_review", "at": "tick-22"},
+    {"from": "in_review", "to": "fixing", "at": "tick-22"},
+    {"from": "fixing", "to": "in_review", "at": "tick-22"}
   ],
   "last_updated": "tick-22",
   "last_error": null,
