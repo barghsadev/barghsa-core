@@ -36,6 +36,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(200)
   @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000 })
+  @RateLimit({ namespace: 'registration:ip-hourly', limit: 10, windowMs: 3_600_000 })
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: 200,
@@ -65,20 +66,20 @@ export class AuthController {
 
       if (message === ErrorCodes.AUTH_REGISTER_INVALID_USERNAME.code) {
         throw new HttpException(
-          { statusCode: 400, error: message, message },
+          { statusCode: 400, error: message },
           HttpStatus.BAD_REQUEST,
         );
       }
       if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
         throw new HttpException(
-          { statusCode: 422, error: message, message },
+          { statusCode: 422, error: message },
           422,
         );
       }
 
       // Generic validation failure
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message },
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         HttpStatus.BAD_REQUEST,
       );
     }
