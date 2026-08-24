@@ -3,7 +3,8 @@
 # Spins up all backing services required for local development:
 #   - PostgreSQL 16 with PostGIS (primary database)
 #   - Redis 7 (caching, rate limiting, session store)
-#   - MinIO (S3-compatible object storage)
+#   - MinIO (S3-compatible object storage for file uploads & backups)
+#   - MinIO bucket initialisation for backups
 #
 # Application containers (api, web) are built using ./Dockerfile.base
 # and ./Dockerfile.web respectively and managed separately. The Docker
@@ -30,8 +31,15 @@ services:
       POSTGRES_DB: barghsa
       POSTGRES_USER: barghsa
       POSTGRES_PASSWORD: barghsa-dev-password
+      # WAL archiving and backup environment
+      BACKUP_S3_ENDPOINT: http://minio:9000
+      BACKUP_S3_BUCKET: barghsa-backups
+      BACKUP_S3_ACCESS_KEY: minioadmin
+      BACKUP_S3_SECRET_KEY: minioadmin
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgres-config/barghsa-postgres.conf:/etc/postgresql/postgresql.conf.d/99-barghsa.conf:ro
+      - ./packages/db/scripts/backup/archive-wal.sh:/usr/local/bin/archive-wal.sh:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U barghsa"]
       interval: 5s
@@ -108,6 +116,26 @@ services:
       retries: 5
       start_period: 10s
     restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────
+  # MinIO Bucket Init — creates required buckets on startup
+  # ─────────────────────────────────────────────────────────────
+  minio-init:
+    image: minio/mc
+    container_name: barghsa-minio-init
+    entrypoint: >
+      /bin/sh -c "
+        until (/usr/bin/mc config host add local http://minio:9000 minioadmin minioadmin-dev) 2>/dev/null; do
+          echo 'Waiting for MinIO...';
+          sleep 1;
+        done;
+        /usr/bin/mc mb local/barghsa-backups 2>/dev/null || echo 'Bucket already exists';
+        /usr/bin/mc anonymous set public local/barghsa-backups 2>/dev/null || true;
+        echo 'MinIO buckets initialised.';
+      "
+    depends_on:
+      minio:
+        condition: service_healthy
 
 volumes:
   pgdata:
