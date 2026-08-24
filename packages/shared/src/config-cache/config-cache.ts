@@ -83,9 +83,6 @@ export class ConfigCache {
   /** TTL for cached config entries (5 minutes in seconds). */
   static readonly ENTRY_TTL_SEC = 300
 
-  /** TTL for the global version counter (1 hour — only used for staleness). */
-  static readonly GLOBAL_VERSION_TTL_SEC = 3600
-
   // -----------------------------------------------------------------------
   // Constructor
   // -----------------------------------------------------------------------
@@ -142,14 +139,11 @@ export class ConfigCache {
     // --- Try Redis -----------------------------------------------------------
     if (this.redis) {
       try {
-        const [entryRaw, globalVersionRaw] = await Promise.all([
-          this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`),
-          this.redis.get(ConfigCache.GLOBAL_VERSION_KEY),
-        ])
+        const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`)
 
         if (entryRaw) {
           const entry: CachedConfigEntry<T> = JSON.parse(entryRaw)
-          const globalVersion = globalVersionRaw ? Number(globalVersionRaw) : 0
+          const globalVersion = await this.fetchGlobalVersion()
 
           // Compare the global version stored at cache time against the
           // current global version.  If cachedAtGlobalVersion >= current,
@@ -160,6 +154,14 @@ export class ConfigCache {
           // global version observed at that moment.  After a PG re-read
           // the cached entry gets a fresh cachedAtGlobalVersion, so it
           // passes the check until the next write.
+          //
+          // Using fetchGlobalVersion() here ensures that even if the
+          // global version key has expired from Redis (TTL expiry, flush),
+          // the fallback chain (PG read → 0) provides a correct value.
+          // Without this fallback, an expired global version key would
+          // yield globalVersion=0, making every cached entry appear fresh
+          // (cachedAtGlobalVersion >= 0 is always true), which would
+          // serve stale config to financial calculations.
           if (entry.cachedAtGlobalVersion >= globalVersion) {
             return { value: entry.value, fresh: true, version: entry.version }
           }
@@ -188,26 +190,26 @@ export class ConfigCache {
         // with the cached entry so future staleness checks are correct.
         const currentGlobalVersion = await this.fetchGlobalVersion()
 
-        await Promise.all([
-          this.redis.setex(
-            `${ConfigCache.ENTRY_PREFIX}${key}`,
-            ConfigCache.ENTRY_TTL_SEC,
-            JSON.stringify({
-              value: row.value,
-              version: row.version,
-              cachedAtGlobalVersion: currentGlobalVersion,
-            } satisfies CachedConfigEntry),
-          ),
-          // Ensure the global version key exists with a TTL (may be missing
-          // after a Redis flush or on first invocation)
-          this.redis.set(
-            ConfigCache.GLOBAL_VERSION_KEY,
-            String(currentGlobalVersion),
-            'EX',
-            ConfigCache.GLOBAL_VERSION_TTL_SEC,
-            'NX',
-          ),
-        ])
+        await this.redis.setex(
+          `${ConfigCache.ENTRY_PREFIX}${key}`,
+          ConfigCache.ENTRY_TTL_SEC,
+          JSON.stringify({
+            value: row.value,
+            version: row.version,
+            cachedAtGlobalVersion: currentGlobalVersion,
+          } satisfies CachedConfigEntry),
+        )
+        // The global version key (config:global:version) is NOT explicitly
+        // set with a TTL here — it is a permanent counter managed by INCR
+        // in invalidate()/invalidateAll().  This avoids the NX+EX race
+        // where the global version key would expire after 1 hour, causing
+        // INCR to reset the counter to 1 and making old cached entries
+        // appear fresh (cachedAtGlobalVersion >= 1).
+        //
+        // fetchGlobalVersion() is used for staleness checks and has a
+        // PG fallback, so even if the global version key is missing from
+        // Redis (flush, restart), the correct version is read from the
+        // config_version table.
       } catch (err) {
         this.logger?.warn(
           '[config-cache] Redis write failed (non-fatal):',
@@ -294,15 +296,12 @@ export class ConfigCache {
     if (!this.redis) return null
 
     try {
-      const [entryRaw, globalVersionRaw] = await Promise.all([
-        this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`),
-        this.redis.get(ConfigCache.GLOBAL_VERSION_KEY),
-      ])
+      const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`)
 
       if (!entryRaw) return null
 
       const entry: CachedConfigEntry<T> = JSON.parse(entryRaw)
-      const globalVersion = globalVersionRaw ? Number(globalVersionRaw) : 0
+      const globalVersion = await this.fetchGlobalVersion()
 
       return entry.cachedAtGlobalVersion >= globalVersion ? entry : null
     } catch {

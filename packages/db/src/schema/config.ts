@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { integer, jsonb, pgTable, text, timestamp, unique } from 'drizzle-orm/pg-core'
+import { integer, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 /**
  * Application configuration table.
