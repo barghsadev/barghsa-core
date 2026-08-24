@@ -44,7 +44,7 @@ services:
   # PgBouncer — PostgreSQL connection pooler
   # ─────────────────────────────────────────────────────────────
   pgbouncer:
-    image: bitnami/pgbouncer:latest
+    image: bitnami/pgbouncer:1.23
     container_name: barghsa-pgbouncer
     ports:
       - "6432:6432"
@@ -62,7 +62,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "pgbouncer -u pgbouncer -q 'SHOW POOLS;' 2>/dev/null || exit 1"]
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 6432 -U barghsa 2>/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5

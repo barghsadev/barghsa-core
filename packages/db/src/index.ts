@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool, type Client } from 'pg'
 
 let pool: Pool | null = null
+let directPool: Pool | null = null
 
 export interface DbPoolConfig {
   databaseUrl?: string
@@ -214,15 +215,20 @@ export function getDbPool(): Pool {
  * Use this for admin operations, migrations, and any operation that
  * requires session-level features (prepared statements, LISTEN/NOTIFY).
  *
- * Falls back to the main pool if PGDIRECT_URL is not configured.
+ * The pool is cached as a singleton — subsequent calls return the same
+ * instance.  Call `directPool.end()` to close it when no longer needed.
+ *
+ * Falls back to DATABASE_URL when PGDIRECT_URL is not configured.
  */
 export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
+  if (directPool) return directPool
+
   const directUrl =
     config.pgdirectUrl ??
     process.env['PGDIRECT_URL'] ??
     process.env['DATABASE_URL']
 
-  return new Pool({
+  directPool = new Pool({
     connectionString: buildConnectionString(directUrl, config),
     min: config.poolMin ?? 1,
     max: config.poolMax ?? 5,
@@ -230,6 +236,10 @@ export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
   })
+
+  attachClientQueryHooks(directPool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
+
+  return directPool
 }
 
 export function createDbInstance(config: DbPoolConfig = {}, schema?: Record<string, unknown>) {
