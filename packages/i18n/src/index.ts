@@ -27,6 +27,20 @@ export const fa: I18nDictionary = {
   'error.not_found.resource': 'منبع درخواستی یافت نشد',
   'error.not_found.route': 'مسیر درخواستی یافت نشد',
 
+  // ── Auth Pages — Brand ───────────────────────────────────
+  'auth.brand.title': 'برگشا',
+  'auth.brand.slogan': 'پلتفرم هوشمند بازار برق ایران',
+  'auth.brand.value1': 'مقایسه و خرید بسته‌های برق با بهترین قیمت',
+  'auth.brand.value2': 'مدیریت هوشمند مصرف و قبض‌های خود',
+  'auth.brand.value3': 'دسترسی به طرح‌های پس‌انداز و انرژی خورشیدی',
+  'auth.brand.logo.alt': 'لوگوی برگشا',
+
+  // ── Auth Pages — Register ────────────────────────────────
+  'auth.register.title': 'ایجاد حساب کاربری',
+  'auth.register.submit': 'ثبت‌نام',
+  'auth.register.loginLink': 'قبلاً ثبت‌نام کرده‌اید؟ وارد شوید',
+  'auth.register.loginLinkLabel': 'ورود به حساب کاربری',
+
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
   'error.conflict.state': 'وضعیت فعلی امکان انجام این عملیات را نمی‌دهد',
@@ -75,6 +89,20 @@ export const en: I18nDictionary = {
   'error.conflict.duplicate': 'This entry already exists',
   'error.conflict.state': 'Current state does not allow this operation',
   'error.conflict.version': 'Concurrent modification conflict detected',
+
+  // ── Auth Pages — Brand ───────────────────────────────────
+  'auth.brand.title': 'Barghsa',
+  'auth.brand.slogan': 'Iranian electricity market intelligence platform',
+  'auth.brand.value1': 'Compare and purchase electricity packages at the best price',
+  'auth.brand.value2': 'Smart consumption and bill management',
+  'auth.brand.value3': 'Access to savings plans and solar energy',
+  'auth.brand.logo.alt': 'Barghsa logo',
+
+  // ── Auth Pages — Register ────────────────────────────────
+  'auth.register.title': 'Create an account',
+  'auth.register.submit': 'Register',
+  'auth.register.loginLink': 'Already have an account? Log in',
+  'auth.register.loginLinkLabel': 'Log in to your account',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
