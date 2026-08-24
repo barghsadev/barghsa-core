@@ -19,6 +19,8 @@ export default defineConfig({
     // Content-hash filenames for CDN immutability (CDN-ready)
     assetsDir: 'assets',
     cssCodeSplit: true,
+    // Generate build manifest for CDN cache invalidation
+    manifest: true,
     rollupOptions: {
       output: {
         manualChunks: undefined, // let TanStack Router handle route-based splitting
@@ -27,6 +29,8 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
+    // CDN base URL — set CDN_URL for production builds
+    base: process.env['CDN_URL'] ? process.env['CDN_URL'] : '/',
     // Output directory
     outDir: 'dist',
     sourcemap: false,
