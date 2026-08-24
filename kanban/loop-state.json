@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 93,
-  "fix_attempts": 0,
+  "status": "fixing",
+  "current_task_key": "01-platform-infrastructure.md#T-04.03.05",
+  "current_task_id": "T-04.03.05",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e04-t-04-03-05--immutable-storage",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/59",
+  "loop_iteration": 94,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -77,103 +77,18 @@
     "01-platform-infrastructure.md#T-04.03.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T21:12:00",
-  "notes": "Tick-93: T-04.03.04 completed (PR #58 merged). Admin storage config UI with API controller + form page. Next queue: T-04.03.05 (enforce immutability for signed contracts). Review: 4 minor findings deferred.",
+  "last_updated": "2026-08-24T21:27:00",
+  "notes": "Tick-94: built T-04.03.05 (immutable storage). PR #59 — review found CI failure (circular TDZ). Fix pushed (extracted symbols to constants file). State → fixing (attempt 1).",
   "status_history": [
     {
       "from": "idle",
       "to": "building",
-      "at": "tick-82"
+      "at": "tick-94"
     },
     {
       "from": "building",
       "to": "in_review",
-      "at": "tick-82"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-82"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-82"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-83"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-83"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-84"
-    },
-    {
-      "from": "idle",
-      "to": "in_review",
-      "at": "tick-85"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-85"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-86"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-88"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-89"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-90"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-90"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-91"
-    },
-    {
-      "from": "idle",
-      "to": "in_review",
-      "at": "tick-92"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-92"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-93"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-93"
+      "at": "tick-94"
     },
     {
       "from": "in_review",

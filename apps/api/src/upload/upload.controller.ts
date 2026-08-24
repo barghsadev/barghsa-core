@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { StorageProvider } from '@barghsa/shared/storage';
-import { StorageObjectNotFound } from '@barghsa/shared/storage';
-import { STORAGE_PROVIDER } from '../storage/index.js';
+import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
 import {
   PresignedUrlRequestSchema,
   type PresignedUrlRequest,
@@ -36,6 +36,8 @@ export class UploadController {
   constructor(
     @Inject(STORAGE_PROVIDER)
     private readonly storage: StorageProvider | null,
+    @Inject(IMMUTABLE_STORAGE_SERVICE)
+    private readonly immutableStorageService: ImmutableStorageRecordService | null,
   ) {}
 
   /**
@@ -154,6 +156,37 @@ export class UploadController {
     }
   }
 
+  /**
+   * Record a completed upload in the storage_records table for immutability tracking.
+   *
+   * Should be called after upload is complete and verified. Creates a
+   * `storage_records` entry with status `active` so the object can
+   * later be signed/approved (marked immutable) or deleted.
+   */
+  @Post(':key/record')
+  @HttpCode(HttpStatus.OK)
+  async recordUpload(
+    @Param('key') key: string,
+    @Body() body: { fileName?: string; contentType?: string; fileSize?: number; category?: string },
+  ): Promise<{ key: string; status: string }> {
+    this.ensureStorageReady();
+    this.ensureImmutableServiceReady();
+
+    if (!key.startsWith(UPLOAD_PREFIX) || key.includes('..')) {
+      throw new BadRequestException('Invalid upload key');
+    }
+
+    await this.immutableStorageService!.createRecord({
+      storageKey: key,
+      fileName: body.fileName,
+      contentType: body.contentType,
+      fileSize: body.fileSize,
+      category: body.category ?? resolveCategory(body.fileName) ?? 'general',
+    });
+
+    return { key, status: 'recorded' };
+  }
+
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------
@@ -162,6 +195,14 @@ export class UploadController {
     if (!this.storage) {
       throw new ServiceUnavailableException(
         'Storage service is not configured. Set S3_BUCKET and S3_REGION environment variables.',
+      );
+    }
+  }
+
+  private ensureImmutableServiceReady(): void {
+    if (!this.immutableStorageService) {
+      throw new ServiceUnavailableException(
+        'Immutable storage service is not configured. Storage provider must be enabled.',
       );
     }
   }

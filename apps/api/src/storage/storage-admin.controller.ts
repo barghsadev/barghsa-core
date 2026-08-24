@@ -9,7 +9,7 @@ import {
   Inject,
   Logger,
 } from '@nestjs/common';
-import { STORAGE_PROVIDER } from './storage.module.js';
+import { STORAGE_PROVIDER } from './storage.constants.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { createStorageProvider } from '@barghsa/shared/storage';
 

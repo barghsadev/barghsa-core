@@ -7,6 +7,7 @@
     "exports": {
         ".": "./dist/index.js",
         "./config": "./dist/schema/config.js",
+        "./schema/storage-record": "./dist/schema/storage-record.js",
         "./package.json": "./package.json"
     },
     "scripts": {

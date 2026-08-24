@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound } from '@barghsa/shared/storage';
-import { STORAGE_PROVIDER } from '../src/storage/index.js';
+import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
 import { UploadController } from '../src/upload/upload.controller.js';
 
 // ---------------------------------------------------------------------------
@@ -28,6 +28,7 @@ function mockStorageProvider(): StorageProvider {
 describe('UploadController', () => {
   let controller: UploadController;
   let storage: StorageProvider;
+  const mockImmutableService = { createRecord: vi.fn() };
 
   beforeEach(async () => {
     storage = mockStorageProvider();
@@ -38,6 +39,10 @@ describe('UploadController', () => {
         {
           provide: STORAGE_PROVIDER,
           useValue: storage,
+        },
+        {
+          provide: IMMUTABLE_STORAGE_SERVICE,
+          useValue: mockImmutableService,
         },
       ],
     }).compile();
@@ -53,7 +58,10 @@ describe('UploadController', () => {
     it('returns 503 when storage is null', async () => {
       const module: TestingModule = await Test.createTestingModule({
         controllers: [UploadController],
-        providers: [{ provide: STORAGE_PROVIDER, useValue: null }],
+        providers: [
+          { provide: STORAGE_PROVIDER, useValue: null },
+          { provide: IMMUTABLE_STORAGE_SERVICE, useValue: mockImmutableService },
+        ],
       }).compile();
       const ctrl = module.get(UploadController);
 
@@ -229,7 +237,10 @@ describe('UploadController', () => {
     it('returns 503 when storage is null', async () => {
       const module: TestingModule = await Test.createTestingModule({
         controllers: [UploadController],
-        providers: [{ provide: STORAGE_PROVIDER, useValue: null }],
+        providers: [
+          { provide: STORAGE_PROVIDER, useValue: null },
+          { provide: IMMUTABLE_STORAGE_SERVICE, useValue: mockImmutableService },
+        ],
       }).compile();
       const ctrl = module.get(UploadController);
 

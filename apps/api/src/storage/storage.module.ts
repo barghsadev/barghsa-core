@@ -1,16 +1,15 @@
 import { Global, Logger, Module } from '@nestjs/common';
-import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { createDbInstance, type DbInstance } from '@barghsa/db';
+import { storageRecords } from '@barghsa/db/schema/storage-record';
+import { createStorageProvider, type StorageProvider, ImmutableStorageRecordService } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from './storage.constants.js';
 import { StorageAdminController } from './storage-admin.controller.js';
-
-/**
- * NestJS injection token for the StorageProvider instance.
- * Inject with `@Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null`.
- */
-export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
+import { StorageRecordDbAdapter } from './storage-record-db-adapter.js';
+import { StorageRecordsController } from './storage-records.controller.js';
 
 @Global()
 @Module({
-  controllers: [StorageAdminController],
+  controllers: [StorageAdminController, StorageRecordsController],
   providers: [
     {
       provide: STORAGE_PROVIDER,
@@ -44,7 +43,25 @@ export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
         });
       },
     },
+    {
+      provide: 'DB_INSTANCE',
+      useFactory: (): DbInstance => {
+        return createDbInstance(undefined, { storageRecords });
+      },
+    },
+    StorageRecordDbAdapter,
+    {
+      provide: IMMUTABLE_STORAGE_SERVICE,
+      useFactory: (
+        storageProvider: StorageProvider | null,
+        dbAdapter: StorageRecordDbAdapter,
+      ): ImmutableStorageRecordService | null => {
+        if (!storageProvider) return null;
+        return new ImmutableStorageRecordService(storageProvider, dbAdapter);
+      },
+      inject: [STORAGE_PROVIDER, StorageRecordDbAdapter],
+    },
   ],
-  exports: [STORAGE_PROVIDER],
+  exports: [STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE],
 })
 export class StorageModule {}
