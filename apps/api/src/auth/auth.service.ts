@@ -1,40 +1,33 @@
-import {
-  Injectable,
-  Logger,
-  HttpException,
-} from '@nestjs/common';
-import { ErrorCodes } from '@barghsa/shared/errors';
-import type { RegisterInput, RegisterResponse } from './dto/register.dto.js';
+import { HttpException, Injectable, Logger } from '@nestjs/common'
+import { ErrorCodes } from '@barghsa/shared/errors'
+import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
+import { OtpService } from './otp.service.js'
 
 /**
  * Service handling registration business logic.
  *
- * At this stage (T-01.01.06), the service validates the input, checks for
- * duplicate usernames (stub), and returns a mock challengeId.
- * The actual user creation and OTP storage will be implemented
- * in T-01.02.01 / T-01.02.03.
+ * At this stage (T-01.02.01), the service validates the input, checks for
+ * duplicate usernames (stub), creates an OTP challenge via OtpService,
+ * and returns the challengeId so the client can proceed to OTP verification.
  */
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+  private readonly logger = new Logger(AuthService.name)
+
+  constructor(private readonly otpService: OtpService) {}
 
   /**
    * Attempt to register a new user.
    *
    * Returns a `challengeId` for the next step (OTP verification).
-   *
-   * Throws `HttpException` with the appropriate error code for:
-   * - DUPLICATE username (USERNAME_TAKEN)
-   * - Invalid TOS version (TOS_NOT_ACCEPTED)
-   * - Generic / internal errors (INTERNAL_ERROR)
    */
   async register(
     input: RegisterInput,
-    _ip: string,
+    ip: string,
   ): Promise<RegisterResponse> {
     // ── Check username availability (stub until DB wiring) ──────────
-    // TODO: Replace with real DB query (T-01.01.06 → user table creation)
-    const usernameTaken = false;
+    // TODO: Replace with real DB query when user table is created
+    const usernameTaken = false
     if (usernameTaken) {
       throw new HttpException(
         {
@@ -42,12 +35,11 @@ export class AuthService {
           error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code,
         },
         ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
-      );
+      )
     }
 
     // ── Validate TOS version (stub until E-04 TOS admin is implemented) ──
-    // TODO: Replace with real TOS version lookup (E-04)
-    const validTosVersions = new Set(['current']);
+    const validTosVersions = new Set(['current'])
     if (!validTosVersions.has(input.tosVersionId)) {
       throw new HttpException(
         {
@@ -55,14 +47,15 @@ export class AuthService {
           error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code,
         },
         ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
-      );
+      )
     }
 
-    // ── Generate challenge ID (placeholder) ─────────────────────────
-    // TODO: Create actual OTP challenge and store it (T-01.02.01)
-    const { randomUUID } = await import('node:crypto');
-    const challengeId = randomUUID();
+    // ── Create OTP challenge ────────────────────────────────────────
+    const { challengeId } = await this.otpService.createChallenge(
+      input.username,
+      ip,
+    )
 
-    return { challengeId };
+    return { challengeId }
   }
 }
