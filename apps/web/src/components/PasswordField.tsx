@@ -125,6 +125,12 @@ export interface PasswordFieldProps {
   locale?: Locale
   error?: string | null
   autoFocus?: boolean
+  /** Input name attribute (native form submission) */
+  name?: string
+  /** Controlled value; omit for uncontrolled */
+  value?: string
+  /** Called when value changes (required when value is provided) */
+  onChange?: (value: string) => void
 }
 
 // ─── Component ───────────────────────────────────────────────────────────
@@ -135,27 +141,36 @@ export function PasswordField({
   locale = 'fa',
   error,
   autoFocus = false,
+  name,
+  value: externalValue,
+  onChange: externalOnChange,
 }: PasswordFieldProps) {
-  const [value, setValue] = useState('')
+  const [internalValue, setInternalValue] = useState('')
   const [visible, setVisible] = useState(false)
   const [focused, setFocused] = useState(false)
-  const [touched, setTouched] = useState(false)
+
+  // Controlled or uncontrolled
+  const isControlled = externalValue !== undefined
+  const value = isControlled ? (externalValue ?? '') : internalValue
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newVal = e.target.value
+      if (isControlled) {
+        externalOnChange?.(newVal)
+      } else {
+        setInternalValue(newVal)
+      }
+    },
+    [isControlled, externalOnChange],
+  )
 
   const strength = evaluateStrength(value)
-  const touchedOrFocused = focused || (touched && value.length > 0)
+  const showStrength = focused && value.length > 0
   const meetsReq = meetsMinimumRequirements(value)
-  const showStrength = touchedOrFocused && value.length > 0
 
   const handleToggle = useCallback(() => {
     setVisible((v) => !v)
   }, [])
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.target.value)
-    },
-    [],
-  )
 
   const handleFocus = useCallback(() => {
     setFocused(true)
@@ -163,7 +178,6 @@ export function PasswordField({
 
   const handleBlur = useCallback(() => {
     setFocused(false)
-    setTouched(true)
   }, [])
 
   const strengthLabel = t(STRENGTH_LABEL_KEYS[strength.level], locale)
@@ -174,6 +188,7 @@ export function PasswordField({
       <div className="relative">
         <Input
           id={id}
+          name={name}
           type={visible ? 'text' : 'password'}
           placeholder={t('auth.register.passwordPlaceholder', locale)}
           autoComplete="new-password"
@@ -182,7 +197,7 @@ export function PasswordField({
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          aria-invalid={touched && !!error}
+          aria-invalid={!!error}
           aria-describedby={
             error
               ? `${id}-error`
@@ -190,15 +205,14 @@ export function PasswordField({
                 ? `${id}-strength`
                 : undefined
           }
-          className="pr-9"
+          className="pe-9"
         />
         {value.length > 0 && (
           <button
             type="button"
             onClick={handleToggle}
-            className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-muted-foreground hover:text-foreground"
+            className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-muted-foreground hover:text-foreground"
             aria-label={t('auth.register.passwordVisibilityLabel', locale)}
-            tabIndex={-1}
           >
             {visible ? (
               <EyeOffIcon className="h-4 w-4" />
@@ -209,14 +223,14 @@ export function PasswordField({
         )}
       </div>
 
-      {touched && error && (
+      {!!error && (
         <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
           {error}
         </p>
       )}
 
       {showStrength && (
-        <div id={`${id}-strength`} className="space-y-1">
+        <div id={`${id}-strength`} className="space-y-1" aria-live="polite">
           <Progress value={strength.score}>
             <ProgressTrack>
               <ProgressIndicator
