@@ -9,6 +9,6 @@ import { CorrelationIdMiddleware, CorrelationIdProvider } from './common/correla
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+    consumer.apply(CorrelationIdMiddleware).forRoutes('/*');
   }
 }
