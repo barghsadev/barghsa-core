@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-02.01.04",
   "current_task_id": "T-02.01.04",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-02-01-04--db-health-check",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/20",
   "loop_iteration": 32,
   "fix_attempts": 0,
   "build_completed_tasks": [

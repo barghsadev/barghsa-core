@@ -265,5 +265,27 @@ describe('@barghsa/db', () => {
       vi.mocked(p.query).mockRestore()
       await p.end().catch(() => {})
     })
+
+    it('returns ok:false on timeout and cleans up timer', async () => {
+      const p = createDbPool({ queryTimeout: 0 })
+      // Never- resolving query so the timeout fires first.
+      vi.spyOn(p, 'query').mockReturnValue(new Promise<never>(() => {}) as never)
+
+      vi.useFakeTimers()
+
+      const healthPromise = dbHealth()
+
+      // Advance past the 5s threshold.
+      await vi.advanceTimersByTimeAsync(5_100)
+
+      const result = await healthPromise
+
+      expect(result.ok).toBe(false)
+      expect(result.latencyMs).toBeGreaterThanOrEqual(5_000)
+
+      vi.useRealTimers()
+      vi.mocked(p.query).mockRestore()
+      await p.end().catch(() => {})
+    })
   })
 })
