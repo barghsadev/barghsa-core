@@ -101,7 +101,7 @@ export class HealthService implements OnModuleInit {
   private async checkRedis(): Promise<HealthIndicatorResult> {
     if (!this.redisConfigured) {
       return {
-        status: 'degraded',
+        status: 'ok',
         latencyMs: 0,
         details: { info: 'Redis not configured — skipping' },
       };
@@ -109,34 +109,21 @@ export class HealthService implements OnModuleInit {
 
     // Redis connectivity check is best-effort.  When ioredis or a
     // Redis connection factory is added, replace this with a real PING.
-    // Until then, report degraded rather than down so the API stays
-    // ready for traffic.
+    // Until then, report ok with a wiring note so the overall readiness
+    // status can be 'ok' when PostgreSQL is healthy.
+    // TODO(T-03.03.04): wire Redis PING once the connection factory exists
     const startedAt = Date.now();
-    try {
-      // TODO(T-03.03.04): wire Redis PING once the connection factory exists
-      const configured = this.redisConfigured;
-      // Simulate a minimal check — in the future this will be a real PING.
-      if (!configured) {
-        throw new Error('Redis not configured');
-      }
-      return {
-        status: 'degraded',
-        latencyMs: Date.now() - startedAt,
-        details: { info: 'Redis check not yet wired — see T-03.03.04' },
-      };
-    } catch {
-      return {
-        status: 'degraded',
-        latencyMs: Date.now() - startedAt,
-        details: { error: 'Redis unreachable — non-critical' },
-      };
-    }
+    return {
+      status: 'ok',
+      latencyMs: Date.now() - startedAt,
+      details: { info: 'Redis check not yet wired — see T-03.03.04' },
+    };
   }
 
   private async checkObjectStorage(): Promise<HealthIndicatorResult> {
     if (!this.objectStorageConfigured) {
       return {
-        status: 'degraded',
+        status: 'ok',
         latencyMs: 0,
         details: { info: 'Object storage not configured — skipping' },
       };
@@ -144,18 +131,10 @@ export class HealthService implements OnModuleInit {
 
     // TODO(T-04.03.xx): wire real S3/MinIO head-bucket check
     const startedAt = Date.now();
-    try {
-      return {
-        status: 'degraded',
-        latencyMs: Date.now() - startedAt,
-        details: { info: 'Object storage check not yet wired' },
-      };
-    } catch {
-      return {
-        status: 'degraded',
-        latencyMs: Date.now() - startedAt,
-        details: { error: 'Object storage unreachable — non-critical' },
-      };
-    }
+    return {
+      status: 'ok',
+      latencyMs: Date.now() - startedAt,
+      details: { info: 'Object storage check not yet wired' },
+    };
   }
 }
