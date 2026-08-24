@@ -3,6 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 import { CacheControlInterceptor } from './common/cache-control.interceptor.js';
 import { HttpExceptionFilter } from './common/http-exception.filter.js';
+import { EtagInterceptor } from './common/etag.interceptor.js';
+import { Reflector } from '@nestjs/core';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,9 @@ async function bootstrap(): Promise<void> {
 
   // Global cache control — authenticated API responses use private, no-cache
   app.useGlobalInterceptors(new CacheControlInterceptor());
+
+  // Global ETag interceptor — only activates for @Etag()-decorated routes
+  app.useGlobalInterceptors(new EtagInterceptor(app.get(Reflector)));
 
   // Global exception filter — stable error codes, localized messages, no stack traces
   app.useGlobalFilters(new HttpExceptionFilter());
