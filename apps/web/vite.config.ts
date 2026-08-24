@@ -12,6 +12,8 @@ export default defineConfig({
     }),
     react(),
   ],
+  // CDN base URL — set CDN_URL for production builds so assets resolve via CDN
+  base: process.env['CDN_URL'] ? process.env['CDN_URL'] : '/',
   build: {
     // Route-level CSS/JS splitting — each route gets its own chunk
     // autoCodeSplitting in TanStack Router handles actual per-route lazy loading
@@ -29,12 +31,16 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
-    // CDN base URL — set CDN_URL for production builds
-    base: process.env['CDN_URL'] ? process.env['CDN_URL'] : '/',
     // Output directory
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
+  },
+  preview: {
+    // Preview server: verify that hashed static assets serve with immutable caching
+    headers: {
+      'Cache-Control': 'public, immutable, max-age=31536000',
+    },
   },
   ssr: {
     // NoExternal for monorepo workspace packages so they're bundled correctly
