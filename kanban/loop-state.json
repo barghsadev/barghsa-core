@@ -6,7 +6,7 @@
   "current_branch": "feat/e01-t-04-01-02--backup-infra",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/44",
   "loop_iteration": 64,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -63,8 +63,8 @@
     "01-platform-infrastructure.md#T-04.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T12:45:00",
-  "notes": "T-04.01.02 slice 1 (backup infra: scripts, WAL archiving, MinIO init) PR #44 opened and ready for review.",
+  "last_updated": "2026-08-24T12:48:00",
+  "notes": "T-04.01.02 PR #44 — GLM 5.2 review found 2 critical + 2 major issues. All fixed in follow-up commit. Returning to review on next tick.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-45"},
     {"from": "fixing", "to": "idle", "at": "tick-46"},
@@ -116,6 +116,8 @@
     {"from": "building", "to": "in_review", "at": "tick-63"},
     {"from": "in_review", "to": "idle", "at": "tick-64"},
     {"from": "idle", "to": "building", "at": "tick-64"},
-    {"from": "building", "to": "in_review", "at": "tick-64"}
+    {"from": "building", "to": "in_review", "at": "tick-64"},
+    {"from": "in_review", "to": "fixing", "at": "tick-64"},
+    {"from": "fixing", "to": "in_review", "at": "tick-64"}
   ]
 }
