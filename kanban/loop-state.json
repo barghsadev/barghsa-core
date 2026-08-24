@@ -6,7 +6,7 @@
   "current_branch": "feat/e01-t-01-05-01--http-exception-filter-correlation-id",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/29",
   "loop_iteration": 44,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -48,11 +48,11 @@
     "01-platform-infrastructure.md#T-01.04.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T11:24:00",
-  "notes": "T-01.05.01 built and ready for review (PR #29).",
+  "last_updated": "2026-08-24T11:40:00",
+  "notes": "T-01.05.01 review round 2: addressed all critical/major findings from stealth/ox-alpha. PR #29 ready for re-review.",
   "status_history": [
     {
-      "from": "building",
+      "from": "fixing",
       "to": "in_review",
       "at": "tick-44"
     }
