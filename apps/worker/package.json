@@ -1,0 +1,20 @@
+{
+  "name": "@barghsa/worker",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start:prod": "node dist/src/main"
+  },
+  "dependencies": {
+    "@barghsa/db": "workspace:*",
+    "@barghsa/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

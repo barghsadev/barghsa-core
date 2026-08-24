@@ -7,6 +7,11 @@ import { HttpExceptionFilter } from './common/http-exception.filter.js';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
+  // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
+  // NestJS will call OnApplicationShutdown lifecycle hooks on all registered
+  // providers when a termination signal is received.
+  app.enableShutdownHooks();
+
   // Global cache control — authenticated API responses use private, no-cache
   app.useGlobalInterceptors(new CacheControlInterceptor());
 
