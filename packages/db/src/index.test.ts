@@ -34,8 +34,10 @@ function makeMockClient(): {
     const seenCallback = args.find((a: any) => typeof a === 'function')
     if (seenCallback) {
       queryObj.callback = seenCallback
-      // Callback path: return the Query object (matches real pg).
-      return queryObj
+      // Callback path: matches real pg which returns undefined for
+      // callback-style calls (result stays undefined, return result || query
+      // returns query but the wrapped function discards the return value).
+      return undefined
     }
 
     // Promise path: return a Promise that stays pending until resolved.
@@ -166,19 +168,19 @@ describe('@barghsa/db', () => {
     })
 
     it('cancels the correct query object when timeout elapses (callback path)', () => {
-      const { client, cancel, runQuery } = makeMockClient()
+      const { client, cancel } = makeMockClient()
       const wrapped = wrapClientQuery(client, 100) as typeof client.query
       const cb = vi.fn()
       wrapped('SELECT pg_sleep(5)', cb)
 
-      // Callback path: client.query() returns the Query object.
-      const callbackResult = runQuery.mock.results[0]?.value
-      expect(callbackResult).toBeDefined()
+      // The captured query should be the one from the internal state.
+      const captured = (client as any)._activeQuery
+      expect(captured).toBeDefined()
 
       vi.advanceTimersByTime(100)
       expect(cancel).toHaveBeenCalledTimes(1)
       const call = cancel.mock.calls[0]!
-      expect(call[1]).toBe(callbackResult)
+      expect(call[1]).toBe(captured)
     })
 
     it('does not cancel when the query completes before the timeout', async () => {

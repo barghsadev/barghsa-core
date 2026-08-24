@@ -91,15 +91,12 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     let capturedQuery: any = null
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const captureQuery = (result: any, c: any): void => {
-      // Callback path: client.query() returns the Query object itself.
-      if (hasCallback) {
-        capturedQuery = result
-        return
-      }
-      // Promise path: the Query is in the client's internal state.
-      // _activeQuery is set when the query starts executing immediately;
-      // _queryQueue holds queries waiting for a previous query to finish.
+    const captureQuery = (c: any): void => {
+      // Peek at the client's internal state right after the call to find
+      // the pg Query object that was just created.  This works for both
+      // callback and Promise paths because pg synchronously pushes the
+      // Query to _queryQueue (or sets it as _activeQuery) inside
+      // client.query() before returning.
       capturedQuery = c._activeQuery ?? c._queryQueue?.[c._queryQueue.length - 1]
     }
 
@@ -135,7 +132,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
       const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
       const result = (originalQuery as Function)(...instrumentedArgs)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      captureQuery(result, client as any)
+      captureQuery(client as any)
       scheduleTimeout()
       return result
     }
@@ -143,7 +140,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     // Promise-based invocation.
     const result = (originalQuery as Function)(...args)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    captureQuery(result, client as any)
+    captureQuery(client as any)
     scheduleTimeout()
     if (result && typeof result.then === 'function') {
       return result.finally(() => {
