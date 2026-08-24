@@ -1,0 +1,66 @@
+# syntax=docker/dockerfile:1
+# Barghsa Web Application — multi-stage Dockerfile
+#
+# Builds the Vite SPA and serves it via a minimal Node static server
+# that respects the immutable asset cache headers configured in vite.config.ts.
+
+# ─────────────────────────────────────────────────────────────
+# Stage 1 — Install production + dev dependencies
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+# Node.js >=20 ships with corepack; enable pnpm
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile --prod=false
+
+# ─────────────────────────────────────────────────────────────
+# Stage 2 — Build the application
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS build
+
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+# Reuse the dependency layer
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .npmrc ./
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy only the packages and apps needed for @barghsa/web
+COPY packages ./packages
+COPY apps/web ./apps/web
+
+# Build the web app and its workspace dependencies
+RUN pnpm build --filter @barghsa/web
+
+# ─────────────────────────────────────────────────────────────
+# Stage 3 — Production image
+# ─────────────────────────────────────────────────────────────
+FROM node:20-alpine AS production
+
+ENV NODE_ENV=production \
+    PORT=3000
+
+WORKDIR /app
+
+# Security: run as non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Copy build artifacts and the static server
+COPY --from=build /app/apps/web/dist ./dist
+COPY --from=build /app/apps/web/server ./server
+
+# Verify the entrypoint exists
+RUN test -f ./server/index.js
+
+EXPOSE 3000
+
+USER appuser
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+
+CMD ["node", "server/index.js"]
