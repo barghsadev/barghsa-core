@@ -3,7 +3,6 @@ import { HttpException } from '@nestjs/common'
 import { OtpService } from './otp.service.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
 
-// ── Mock dependencies ──────────────────────────────────────────────
 const mockRateLimitService = {
   checkSecurityRateLimit: vi.fn(),
 }
@@ -21,11 +20,8 @@ describe('OtpService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-
-    // By default, all rate limits pass
     mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
-    mockPool.query.mockResolvedValue({ rows: [] })
-
+    mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
     service = new OtpService(mockRateLimitService as any)
   })
 
@@ -38,21 +34,18 @@ describe('OtpService', () => {
 
       expect(result).toHaveProperty('challengeId')
       expect(result).toHaveProperty('destination', destination)
-      expect(result.challengeId).toBeTruthy()
       expect(typeof result.challengeId).toBe('string')
-
-      // Verify all four rate limit checks were made
       expect(mockRateLimitService.checkSecurityRateLimit).toHaveBeenCalledTimes(4)
-
-      // Verify DB insert was called
       expect(mockPool.query).toHaveBeenCalledTimes(1)
-      const [sql, params] = mockPool.query.mock.calls[0]
+      const firstCall = mockPool.query.mock.calls[0]!
+      const sql = firstCall[0] as string
+      const params = firstCall[1] as unknown[]
       expect(sql).toContain('INSERT INTO otp_challenges')
-      expect(params[1]).toBe(destination) // destination in params
-      expect(typeof params[0]).toBe('string') // challengeId is a UUID
-      expect(typeof params[2]).toBe('string') // otp_hash is a hex string
-      expect(params[3]).toBe(OtpService.MAX_ATTEMPTS) // attempts_remaining
-      expect(params[4]).toBeInstanceOf(Date) // expires_at
+      expect(params[1]).toBe(destination)
+      expect(typeof params[0]).toBe('string')
+      expect(typeof params[2]).toBe('string')
+      expect(params[3]).toBe(OtpService.MAX_ATTEMPTS)
+      expect(params[4]).toBeInstanceOf(Date)
     })
 
     it('throws rate-limited when per-minute limit is hit', async () => {
@@ -62,34 +55,31 @@ describe('OtpService', () => {
 
       try {
         await service.createChallenge(destination, ip)
-        // Should not reach here — rate-limited
-        expect(true).toBe(false)
+        expect.unreachable()
       } catch (err) {
-        expect(err).toBeInstanceOf(HttpException)
-        expect((err as HttpException).getResponse()).toHaveProperty('error', ErrorCodes.AUTH_OTP_RATE_LIMITED.code)
-        expect((err as HttpException).getStatus()).toBe(429)
+        const httpErr = err as HttpException
+        expect(httpErr.getResponse()).toHaveProperty('error', ErrorCodes.AUTH_OTP_RATE_LIMITED.code)
+        expect(httpErr.getStatus()).toBe(429)
       }
     })
 
     it('throws rate-limited when IP aggregate limit is hit', async () => {
-      // First three pass, fourth (IP) fails
       mockRateLimitService.checkSecurityRateLimit
         .mockReset()
-        .mockResolvedValueOnce({ allowed: true })  // 60s
-        .mockResolvedValueOnce({ allowed: true })  // 3600s
-        .mockResolvedValueOnce({ allowed: true })  // 86400s
-        .mockResolvedValueOnce({ allowed: false }) // IP
+        .mockResolvedValueOnce({ allowed: true })
+        .mockResolvedValueOnce({ allowed: true })
+        .mockResolvedValueOnce({ allowed: true })
+        .mockResolvedValueOnce({ allowed: false })
 
       try {
         await service.createChallenge(destination, ip)
-        expect(true).toBe(false)
+        expect.unreachable()
       } catch (err) {
         expect(err).toBeInstanceOf(HttpException)
       }
     })
 
     it('generates a 6-digit OTP', () => {
-      // Access private method via prototype for testing
       const otp = (OtpService.prototype as any).generateOtp()
       expect(otp).toMatch(/^\d{6}$/)
       const num = parseInt(otp, 10)
@@ -99,12 +89,12 @@ describe('OtpService', () => {
 
     it('produces a SHA-256 hex hash', () => {
       const hash = (OtpService.prototype as any).hashOtp('123456')
-      expect(hash).toMatch(/^[a-f0-9]{64}$/) // SHA-256 hex length
+      expect(hash).toMatch(/^[a-f0-9]{64}$/)
     })
   })
 
   describe('verifyChallenge', () => {
-    const challengeId = '0000-000-00000'
+    const challengeId = '00000000-0000-0000-0000-000000000000'
     const destination = 'user@example.com'
 
     beforeEach(() => {
@@ -114,20 +104,21 @@ describe('OtpService', () => {
           destination,
           otp_hash: (OtpService.prototype as any).hashOtp('123456'),
           attempts_remaining: 5,
-          expires_at: new Date(Date.now() + 60_000), // not expired
+          expires_at: new Date(Date.now() + 60_000),
           consumed_at: null,
         }],
+        rowCount: 1,
       })
     })
 
     it('verifies a correct OTP', async () => {
       const result = await service.verifyChallenge(challengeId, '123456', '127.0.0.1')
-
       expect(result).toEqual({ verified: true, challengeId })
 
-      // Should have consumed the challenge
-      const lastCall = mockPool.query.mock.calls[mockPool.query.mock.calls.length - 1]
-      expect(lastCall[0]).toContain('consumed_at')
+      const calls = mockPool.query.mock.calls
+      expect(calls).toHaveLength(2)
+      const consumeSql = calls[1]![0] as string
+      expect(consumeSql).toContain('consumed_at IS NULL')
     })
 
     it('rejects an incorrect OTP and decrements attempts', async () => {
@@ -135,11 +126,12 @@ describe('OtpService', () => {
         service.verifyChallenge(challengeId, '654321', '127.0.0.1'),
       ).rejects.toThrow(HttpException)
 
-      // Should have decremented attempts
-      const updateCall = mockPool.query.mock.calls.find(
-        (c: any) => (c[0] as string).includes('attempts_remaining = attempts_remaining - 1'),
+      const calls = mockPool.query.mock.calls
+      const decCall = calls.find(
+        (c) => (c![0] as string).includes('attempts_remaining = attempts_remaining - 1'),
       )
-      expect(updateCall).toBeTruthy()
+      expect(decCall).toBeDefined()
+      expect((decCall![0] as string)).toContain('attempts_remaining > 0')
     })
 
     it('rejects a consumed challenge', async () => {
@@ -150,8 +142,9 @@ describe('OtpService', () => {
           otp_hash: 'abc',
           attempts_remaining: 0,
           expires_at: new Date(Date.now() + 60_000),
-          consumed_at: new Date(), // consumed!
+          consumed_at: new Date(),
         }],
+        rowCount: 1,
       })
 
       await expect(
@@ -166,9 +159,10 @@ describe('OtpService', () => {
           destination,
           otp_hash: 'abc',
           attempts_remaining: 5,
-          expires_at: new Date(Date.now() - 60_000), // expired!
+          expires_at: new Date(Date.now() - 60_000),
           consumed_at: null,
         }],
+        rowCount: 1,
       })
 
       await expect(
@@ -186,6 +180,7 @@ describe('OtpService', () => {
           expires_at: new Date(Date.now() + 60_000),
           consumed_at: null,
         }],
+        rowCount: 1,
       })
 
       await expect(
@@ -195,7 +190,7 @@ describe('OtpService', () => {
   })
 
   describe('resendChallenge', () => {
-    const challengeId = '0000-000-00000'
+    const challengeId = '00000000-0000-0000-0000-000000000000'
     const destination = 'user@example.com'
 
     beforeEach(() => {
@@ -207,19 +202,82 @@ describe('OtpService', () => {
           expires_at: new Date(Date.now() + 60_000),
           resend_count: 0,
         }],
+        rowCount: 1,
       })
     })
 
     it('resends successfully', async () => {
-      const result = await service.resendChallenge(challengeId, '127.0.0.1')
+      mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 1 })
 
+      const result = await service.resendChallenge(challengeId, '127.0.0.1')
       expect(result).toEqual({ challengeId })
 
-      // Should have done SELECT + UPDATE
-      expect(mockPool.query).toHaveBeenCalledTimes(2)
-      const updateSql = mockPool.query.mock.calls[1][0] as string
+      expect(mockPool.query.mock.calls).toHaveLength(2)
+      const updateSql = mockPool.query.mock.calls[1]![0] as string
       expect(updateSql).toContain('UPDATE otp_challenges')
       expect(updateSql).toContain('otp_hash')
+      expect(updateSql).not.toContain('attempts_remaining =')
+    })
+
+    it('throws 404 when challenge not found', async () => {
+      mockPool.query.mockReset()
+      mockPool.query.mockResolvedValue({ rows: [], rowCount: 0 })
+      mockRateLimitService.checkSecurityRateLimit.mockReset()
+      mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
+
+      await expect(
+        service.resendChallenge(challengeId, '127.0.0.1'),
+      ).rejects.toThrow(HttpException)
+    })
+
+    it('rejects consumed challenge', async () => {
+      mockPool.query.mockReset()
+      mockPool.query.mockResolvedValue({
+        rows: [{
+          challenge_id: challengeId,
+          destination,
+          consumed_at: new Date(),
+          expires_at: new Date(Date.now() + 60_000),
+          resend_count: 0,
+        }],
+        rowCount: 1,
+      })
+      mockRateLimitService.checkSecurityRateLimit.mockReset()
+      mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
+
+      try {
+        await service.resendChallenge(challengeId, '127.0.0.1')
+        expect.unreachable()
+      } catch (err) {
+        const httpErr = err as any
+        expect(httpErr.status).toBe(409)
+        expect(httpErr.response).toHaveProperty('error', ErrorCodes.AUTH_OTP_CONSUMED.code)
+      }
+    })
+
+    it('rejects expired challenge', async () => {
+      mockPool.query.mockReset()
+      mockPool.query.mockResolvedValue({
+        rows: [{
+          challenge_id: challengeId,
+          destination,
+          consumed_at: null,
+          expires_at: new Date(Date.now() - 60_000),
+          resend_count: 0,
+        }],
+        rowCount: 1,
+      })
+      mockRateLimitService.checkSecurityRateLimit.mockReset()
+      mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
+
+      try {
+        await service.resendChallenge(challengeId, '127.0.0.1')
+        expect.unreachable()
+      } catch (err) {
+        const httpErr = err as any
+        expect(httpErr.status).toBe(401)
+        expect(httpErr.response).toHaveProperty('error', ErrorCodes.AUTH_OTP_EXPIRED.code)
+      }
     })
   })
 })

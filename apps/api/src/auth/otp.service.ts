@@ -1,5 +1,5 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { randomInt, randomUUID, createHash } from 'node:crypto'
+import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
@@ -24,6 +24,16 @@ export class OtpService {
 
   private hashOtp(otp: string): string {
     return createHash('sha256').update(otp).digest('hex')
+  }
+
+  private compareOtpHashes(hashedInput: string, storedHash: string): boolean {
+    try {
+      const inputBuf = Buffer.from(hashedInput, 'hex')
+      const storedBuf = Buffer.from(storedHash, 'hex')
+      return inputBuf.length === storedBuf.length && timingSafeEqual(inputBuf, storedBuf)
+    } catch {
+      return false
+    }
   }
 
   private static throwRateLimited(): never {
@@ -51,7 +61,6 @@ export class OtpService {
       [challengeId, destination, otpHash, OtpService.MAX_ATTEMPTS, expiresAt],
     )
 
-    this.logDevOtp(destination, otp)
     this.logger.debug(`OTP challenge created for ${destination} (${challengeId})`)
 
     return { challengeId, destination }
@@ -110,12 +119,12 @@ export class OtpService {
 
     await pool.query(
       `UPDATE otp_challenges
-       SET otp_hash = $1, expires_at = $2, attempts_remaining = $3, resend_count = resend_count + 1
-       WHERE challenge_id = $4`,
-      [otpHash, newExpiresAt, OtpService.MAX_ATTEMPTS, challengeId],
+       SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1
+       WHERE challenge_id = $3`,
+      [otpHash, newExpiresAt, challengeId],
     )
 
-    this.logDevOtp(destination, otp)
+    this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`)
     this.logger.debug(`OTP resend for ${destination} (${challengeId})`)
 
     return { challengeId }
@@ -166,11 +175,11 @@ export class OtpService {
     }
 
     const submittedHash = this.hashOtp(otp)
-    if (submittedHash !== row.otp_hash) {
+    if (!this.compareOtpHashes(submittedHash, row.otp_hash)) {
       await pool.query(
         `UPDATE otp_challenges
          SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
-         WHERE challenge_id = $1`,
+         WHERE challenge_id = $1 AND attempts_remaining > 0`,
         [challengeId],
       )
 
@@ -180,23 +189,23 @@ export class OtpService {
       )
     }
 
-    await pool.query(
+    const consumeResult = await pool.query(
       `UPDATE otp_challenges
        SET consumed_at = NOW(), attempts_remaining = 0, updated_at = NOW()
-       WHERE challenge_id = $1`,
+       WHERE challenge_id = $1 AND consumed_at IS NULL`,
       [challengeId],
     )
+
+    if (consumeResult.rowCount === 0) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+        409,
+      )
+    }
 
     this.logger.debug(`OTP verified for challenge ${challengeId}`)
 
     return { verified: true, challengeId }
-  }
-
-  private logDevOtp(destination: string, otp: string): void {
-    if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
-      console.log(`[DEV] OTP for ${destination}: ${otp}`)
-    }
   }
 
   private async enforceSendRateLimits(destination: string, ip: string): Promise<void> {
