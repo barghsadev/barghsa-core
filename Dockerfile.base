@@ -35,7 +35,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY packages/db ./packages/db
 COPY packages/shared ./packages/shared
 COPY packages/i18n ./packages/i18n
-COPY packages/ui ./packages/ui
 COPY apps/api ./apps/api
 
 # Build the API app and its transitively referenced packages
