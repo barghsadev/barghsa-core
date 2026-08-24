@@ -327,6 +327,7 @@ export async function collectPerformanceMetrics(
         temp_files: Number(dbRow?.temp_files ?? 0),
         temp_bytes: Number(dbRow?.temp_bytes ?? 0),
       },
+      maxConnections,
       cacheHitRatio,
       connectionSaturation,
       activeConnections: Number(actRow?.active_connections ?? 0),
