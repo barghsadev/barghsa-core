@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-01.04.01",
-  "current_task_id": "T-01.04.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-04-01--vitest-workspace",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/15",
-  "loop_iteration": 24,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 25,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -21,7 +21,8 @@
     "01-platform-infrastructure.md#T-01.03.02",
     "01-platform-infrastructure.md#T-01.03.03",
     "01-platform-infrastructure.md#T-01.03.04",
-    "01-platform-infrastructure.md#T-01.03.05"
+    "01-platform-infrastructure.md#T-01.03.05",
+    "01-platform-infrastructure.md#T-01.04.01"
   ],
   "status_history": [
     {
@@ -333,9 +334,14 @@
       "from": "idle",
       "to": "in_review",
       "at": "2026-08-24T07:00:54"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "2026-08-24T07:06:48"
     }
   ],
-  "last_updated": "2026-08-24T07:00:54",
+  "last_updated": "2026-08-24T07:06:48",
   "last_error": null,
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
