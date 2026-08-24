@@ -121,6 +121,11 @@ barghsa.example.com {
 		header {
 			Cache-Control "public, immutable, max-age=31536000"
 			Vary "Accept-Encoding"
+			X-Content-Type-Options "nosniff"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			Permissions-Policy "camera=(), microphone=(), geolocation=()"
+			X-Frame-Options "DENY"
+			Content-Security-Policy-Report-Only "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-{http.request.header.csp-nonce}' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
 		}
 	}
 
@@ -141,6 +146,11 @@ barghsa.example.com {
 		header {
 			Cache-Control "public, max-age=86400"
 			Vary "Accept-Encoding"
+			X-Content-Type-Options "nosniff"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			Permissions-Policy "camera=(), microphone=(), geolocation=()"
+			X-Frame-Options "DENY"
+			Content-Security-Policy-Report-Only "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-{http.request.header.csp-nonce}' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
 		}
 	}
 
