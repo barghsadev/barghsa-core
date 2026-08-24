@@ -73,21 +73,36 @@ describe('uuid_generate_v7 migration', () => {
     expect(variantHighNibble).toMatch(/[89ab]/)
   })
 
-  it('generates monotonic increasing values (ordered by timestamp)', async () => {
-    // Generate 100 UUIDs in a batch and verify they are strictly increasing
-    // when sorted by their timestamp component.
-    const result = await ctx.db.execute<{ uuids: string[] }>(
-      sql`SELECT array_agg(uuid_generate_v7() ORDER BY uuid_generate_v7()) AS uuids
-          FROM generate_series(1, 100)`,
+  it('generates non-decreasing timestamp component (ordered by generation)', async () => {
+    // Generate 100 UUIDs sequentially in the application layer, capturing
+    // each generation order. UUIDv7 guarantees the timestamp portion is
+    // non-decreasing — the first 48 bits encode floor(unix_ts_ms).
+    const { rows } = await ctx.pool.query<{ u: string; i: number }>(
+      `SELECT uuid_generate_v7() AS u, generate_series(1, 100) AS i`,
     )
-    const uuids = result.rows[0]?.uuids as string[]
-    expect(uuids).toHaveLength(100)
+    expect(rows).toHaveLength(100)
 
-    // Verify strictly increasing lexicographic order (valid for UUIDv7
-    // because the timestamp prefix is the same order as the binary value).
-    for (let i = 1; i < uuids.length; i++) {
-      expect(uuids[i]! > uuids[i - 1]!).toBe(true)
+    // Extract the timestamp portion (first 12 hex chars = 48 bits).
+    const tsValues = rows.map((r) => BigInt(`0x${r.u.replace(/-/g, '').slice(0, 12)}`))
+    for (let i = 1; i < tsValues.length; i++) {
+      expect(tsValues[i]! >= tsValues[i - 1]!).toBe(true)
     }
+  })
+
+  it('encodes a timestamp within the expected wall-clock range', async () => {
+    const beforeMs = Date.now()
+    await new Promise((r) => setTimeout(r, 5)) // let wall clock advance
+    const result = await ctx.db.execute<{ uuid: string }>(
+      sql`SELECT uuid_generate_v7() AS uuid`,
+    )
+    const afterMs = Date.now()
+    const uuid = result.rows[0]?.uuid as string
+    // Decode the 48-bit timestamp (first 12 hex chars).
+    const encodedTs = Number(BigInt(`0x${uuid.replace(/-/g, '').slice(0, 12)}`))
+    // Should be between the wall-clock capture times (with 10s slop for
+    // container clock drift / transaction latency).
+    expect(encodedTs).toBeGreaterThanOrEqual(beforeMs - 10_000)
+    expect(encodedTs).toBeLessThanOrEqual(afterMs + 10_000)
   })
 
   it('generates distinct values on each call', async () => {

@@ -40,7 +40,7 @@ DECLARE
 BEGIN
   -- Use clock_timestamp() so concurrent calls in the same transaction
   -- each get a distinct timestamp, preserving monotonic ordering.
-  ms := (EXTRACT(EPOCH FROM clock_timestamp()) * 1000)::BIGINT;
+  ms := floor(EXTRACT(EPOCH FROM clock_timestamp()) * 1000)::BIGINT;
 
   -- Convert the 48-bit timestamp to 6 bytes (big-endian).
   -- int8send returns 8 bytes; take the last 6 (low 48 bits).
