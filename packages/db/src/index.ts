@@ -59,86 +59,99 @@ export function buildConnectionString(
 }
 
 /**
- * Wrap each pooled client's query so that in production we can measure
- * execution duration and emit a structured JSON warning for slow queries,
- * and in any environment enforce a client-side query timeout that cancels
- * the query server-side via the PostgreSQL cancel protocol.
- * Supports both Promise and callback invocation patterns.
+ * Wrap a client's query method so that in production we measure execution
+ * duration and emit a structured JSON warning for slow queries, and in any
+ * environment enforce a client-side query timeout that cancels the query
+ * server-side via the PostgreSQL cancel protocol.
+ *
+ * `client.query()` returns a Promise for async calls (or undefined for
+ * callback calls), not the internal pg `Query` object. pg's
+ * `Client.cancel(client, query)` requires that `Query` object, so we recover
+ * it at timeout time from the client's internal active-query slot.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof client.query {
+  const originalQuery = client.query.bind(client)
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const wrapped: any = (...args: any[]) => {
+    const startedAt = Date.now()
+    const first = args[0]
+    const text = typeof first === 'string' ? first : first?.text
+
+    let timedOut = false
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+    const cleanup = (): void => {
+      if (!timedOut && timeoutId) {
+        clearTimeout(timeoutId)
+        timeoutId = null
+      }
+    }
+
+    const scheduleTimeout = (): void => {
+      if (queryTimeoutMs <= 0) return
+      timeoutId = setTimeout(() => {
+        timedOut = true
+        structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const c = client as any
+        const activeQuery = c._getActiveQuery?.() ?? c._activeQuery
+        if (activeQuery) {
+          c.cancel(c, activeQuery)
+        }
+      }, queryTimeoutMs)
+    }
+
+    // Detect callback-passing usage (last arg is a function).
+    const cbIndex = args.findIndex((a: any) => typeof a === 'function')
+    const hasCallback = cbIndex !== -1
+
+    if (hasCallback) {
+      const originalCb = args[cbIndex]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const wrappedCb: typeof originalCb = (err: any, res: any) => {
+        cleanup()
+        const durationMs = Date.now() - startedAt
+        if (!err && process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
+          structuredLog('warn', 'slow_query', { query: text, durationMs })
+        }
+        originalCb(err, res)
+      }
+      const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
+      const result = (originalQuery as Function)(...instrumentedArgs)
+      scheduleTimeout()
+      return result
+    }
+
+    // Promise-based invocation.
+    const result = (originalQuery as Function)(...args)
+    scheduleTimeout()
+    if (result && typeof result.then === 'function') {
+      return result.finally(() => {
+        cleanup()
+        const durationMs = Date.now() - startedAt
+        if (process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
+          structuredLog('warn', 'slow_query', { query: text, durationMs })
+        }
+      })
+    }
+    return result
+  }
+
+  return wrapped
+}
+
+/**
+ * Attach the slow-query logging and query-timeout guard to a pool. Registered
+ * per-client via the pool's `connect` event.
  */
 function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
   if (process.env.NODE_ENV !== 'production' && queryTimeoutMs <= 0) return
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool.on('connect', (client: Client) => {
-    const originalQuery = client.query.bind(client)
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    client.query = ((...args: any[]) => {
-      const startedAt = Date.now()
-      const first = args[0]
-      const text = typeof first === 'string' ? first : first?.text
-
-      let timedOut = false
-      let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const setupTimeout = (queryResult: any): void => {
-        if (queryTimeoutMs > 0 && queryResult) {
-          timeoutId = setTimeout(() => {
-            timedOut = true
-            structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
-            // pg Client.cancel(client, query) sends a PostgreSQL cancel request
-            // on a separate ephemeral connection. The first argument is the
-            // client instance (for processID / secretKey), the second is the
-            // Query object returned by client.query().
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ;(client as any).cancel(client, queryResult)
-          }, queryTimeoutMs)
-        }
-      }
-
-      const cleanup = (): void => {
-        if (!timedOut && timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = null
-        }
-      }
-
-      // Detect callback-passing usage (last arg is a function).
-      const cbIndex = args.findIndex((a: any) => typeof a === 'function')
-      const hasCallback = cbIndex !== -1
-
-      if (hasCallback) {
-        const originalCb = args[cbIndex]
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const wrappedCb: typeof originalCb = (err: any, res: any) => {
-          cleanup()
-          const durationMs = Date.now() - startedAt
-          if (!err && process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
-            structuredLog('warn', 'slow_query', { query: text, durationMs })
-          }
-          originalCb(err, res)
-        }
-        const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
-        const cbResult = (originalQuery as Function)(...instrumentedArgs)
-        setupTimeout(cbResult)
-        return cbResult
-      }
-
-      // Promise-based invocation.
-      const result = (originalQuery as Function)(...args)
-      setupTimeout(result)
-      if (result && typeof result.then === 'function') {
-        return result.finally(() => {
-          cleanup()
-          const durationMs = Date.now() - startedAt
-          if (process.env.NODE_ENV === 'production' && durationMs > SLOW_QUERY_THRESHOLD_MS) {
-            structuredLog('warn', 'slow_query', { query: text, durationMs })
-          }
-        })
-      }
-      return result
-    }) as typeof client.query
+    client.query = wrapClientQuery(client, queryTimeoutMs)
   })
 }
 
