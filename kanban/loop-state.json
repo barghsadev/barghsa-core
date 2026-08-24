@@ -1,10 +1,10 @@
 {
-  "status": "fixing",
-  "current_task_key": "01-platform-infrastructure.md#T-01.03.01",
-  "current_task_id": "T-01.03.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-03-01--tanstack-start-build",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/10",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 16,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -16,7 +16,8 @@
     "01-platform-infrastructure.md#T-01.02.01",
     "01-platform-infrastructure.md#T-01.02.02",
     "01-platform-infrastructure.md#T-01.02.03",
-    "01-platform-infrastructure.md#T-01.02.04"
+    "01-platform-infrastructure.md#T-01.02.04",
+    "01-platform-infrastructure.md#T-01.03.01"
   ],
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-1"},
@@ -55,7 +56,11 @@
     {"from": "in_review", "to": "blocked", "at": "tick-13"},
     {"from": "blocked", "to": "in_review", "at": "tick-14"},
     {"from": "in_review", "to": "idle", "at": "tick-15"},
-    {"from": "idle", "to": "building", "at": "tick-16"}
+    {"from": "idle", "to": "building", "at": "tick-16"},
+    {"from": "building", "to": "in_review", "at": "tick-16"},
+    {"from": "in_review", "to": "fixing", "at": "tick-16"},
+    {"from": "fixing", "to": "in_review", "at": "tick-16"},
+    {"from": "in_review", "to": "idle", "at": "tick-16"}
   ],
   "last_updated": "tick-16",
   "last_error": null,
