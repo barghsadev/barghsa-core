@@ -11,16 +11,32 @@ import { getDbPool } from '@barghsa/db';
  * 3. Closes the database connection pool.
  * 4. If the grace period expires, forces the process to exit with code 1.
  *
+ * The grace period is configurable via `SHUTDOWN_GRACE_PERIOD_MS` env var
+ * (default 30_000).
+ *
  * Registered via `app.enableShutdownHooks()` in `main.ts`.
  * NestJS resolves `OnApplicationShutdown` hooks automatically when the
  * application receives the shutdown signal.
+ *
+ * ## Deferred shutdown items
+ *
+ * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
+ *   add `redis.quit()` here.
+ * - **Object storage:** no client exists yet. When wired (T-04.03.xx),
+ *   add `s3Client.destroy()` here.
+ * - **Lease release:** lease infrastructure doesn't exist yet.
+ *   When wired, add lease release before closing the pool.
  */
 @Injectable()
 export class ShutdownService implements OnApplicationShutdown {
   private readonly logger = new Logger(ShutdownService.name);
-  private readonly gracePeriodMs = 30_000;
+  private readonly gracePeriodMs: number;
 
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  constructor(private readonly httpAdapterHost: HttpAdapterHost) {
+    const raw = process.env['SHUTDOWN_GRACE_PERIOD_MS'] ?? '30000';
+    const parsed = Number.parseInt(raw, 10);
+    this.gracePeriodMs = Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
+  }
 
   async onApplicationShutdown(signal?: string): Promise<void> {
     this.logger.warn(
@@ -38,12 +54,18 @@ export class ShutdownService implements OnApplicationShutdown {
 
     try {
       // 1. Stop accepting new HTTP requests and drain in-flight connections.
+      //    NestJS's app.close() also closes the HTTP adapter internally,
+      //    so the manual close is best-effort. We guard against
+      //    ERR_SERVER_NOT_RUNNING with a catch.
       const httpServer = this.httpAdapterHost.httpAdapter?.getHttpServer();
-      if (httpServer) {
+      if (httpServer?.listening) {
         await new Promise<void>((resolve, reject) => {
           httpServer.close((err?: Error) => {
-            if (err) reject(err);
-            else resolve();
+            if (err && (err as NodeJS.ErrnoException).code !== 'ERR_SERVER_NOT_RUNNING') {
+              reject(err);
+            } else {
+              resolve();
+            }
           });
         });
         this.logger.log('HTTP server closed — no longer accepting requests');
@@ -61,5 +83,8 @@ export class ShutdownService implements OnApplicationShutdown {
       clearTimeout(forceExitTimer);
       this.logger.log('Graceful shutdown complete');
     }
+
+    // Explicitly exit cleanly so no lingering handles keep the process alive.
+    process.exit(0);
   }
 }

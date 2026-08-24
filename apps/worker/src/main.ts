@@ -1,7 +1,15 @@
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
 
-const GRACE_PERIOD_MS = 30_000;
+/**
+ * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
+ * env var (default 30000 / 30s).
+ */
+const GRACE_PERIOD_MS = (() => {
+  const raw = process.env['SHUTDOWN_GRACE_PERIOD_MS'] ?? '30000';
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
+})();
 
 const logger = {
   info: (msg: string): void => console.log(`[worker] ${msg}`),
@@ -20,6 +28,13 @@ const logger = {
  * 2. Wait for the currently running job to finish (or timeout).
  * 3. Close the database connection pool.
  * 4. Exit cleanly with code 0, or code 1 if the grace period expires.
+ *
+ * ## Deferred shutdown items
+ *
+ * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
+ *   add `redis.quit()` before pool.end().
+ * - **Lease release:** lease infrastructure doesn't exist yet.
+ *   When wired, add lease release before closing the pool.
  */
 async function main(): Promise<void> {
   logger.info('Worker starting');
@@ -61,16 +76,19 @@ async function main(): Promise<void> {
     }, GRACE_PERIOD_MS);
     forceExitTimer.unref();
 
-    // 1. Stop accepting new jobs / health-check requests.
-    server.close(() => {
-      logger.info('Health server closed — no longer accepting requests');
+    // 1. Stop accepting new jobs / health-check requests — drain connections.
+    const closeServer = new Promise<void>((resolve) => {
+      server.close(() => {
+        logger.info('Health server closed — no longer accepting requests');
+        resolve();
+      });
     });
 
     // 2. Wait for the in-flight job to finish.
     const waitForJob = currentJob ?? Promise.resolve();
 
-    // 3. Close database pool and exit.
-    void waitForJob
+    // 3. Drain server, close pool, then exit.
+    void Promise.all([closeServer, waitForJob])
       .then(() => {
         const p = getDbPool();
         return p.end();
@@ -93,7 +111,7 @@ async function main(): Promise<void> {
   // Prevent uncaught exceptions from silently killing the process.
   process.on('uncaughtException', (err) => {
     logger.error(`Uncaught exception: ${err.message}`);
-    process.exitCode = 1;
+    process.exit(1);
   });
 
   process.on('unhandledRejection', (reason) => {
