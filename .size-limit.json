@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Main entry (dashboard, electricity ordering, login/register when added)",
+    "path": "apps/web/dist/assets/index-*.js",
+    "limit": "700 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Admin pages (layout + dashboard + users)",
+    "path": [
+      "apps/web/dist/assets/AdminLayout-*.js",
+      "apps/web/dist/assets/AdminDashboard-*.js"
+    ],
+    "limit": "500 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "AI Chat",
+    "path": "apps/web/dist/assets/AIChat-*.js",
+    "limit": "150 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Charts page",
+    "path": "apps/web/dist/assets/ChartsPage-*.js",
+    "limit": "300 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Documents page",
+    "path": "apps/web/dist/assets/DocumentsPage-*.js",
+    "limit": "300 KB",
+    "gzip": true,
+    "running": false
+  },
+  {
+    "name": "Videos page",
+    "path": "apps/web/dist/assets/VideosPage-*.js",
+    "limit": "500 KB",
+    "gzip": true,
+    "running": false
+  }
+]

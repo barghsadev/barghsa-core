@@ -16,15 +16,21 @@
     "typecheck": "turbo typecheck",
     "check:suppressed-errors": "./scripts/check-suppressed-errors.sh",
     "format:check": "turbo format:check",
-    "format:write": "turbo format:write"
+    "format:write": "turbo format:write",
+    "check:bundle": "size-limit"
   },
   "devDependencies": {
+    "@size-limit/preset-app": "13.0.3",
     "@types/node": "26.2.0",
+    "size-limit": "13.0.3",
     "turbo": "2.10.11",
     "typescript": "7.0.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "@parcel/watcher"],
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@parcel/watcher"
+    ],
     "overrides": {}
   }
 }
