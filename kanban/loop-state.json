@@ -6,7 +6,7 @@
   "current_branch": "feat/e04-t-04-02-02--rate-limiter-pg",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/52",
   "loop_iteration": 80,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -70,10 +70,12 @@
     "01-platform-infrastructure.md#T-04.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T19:06:00",
-  "notes": "Tick-80: built T-04.02.02 first slice (RateLimiter abstraction + PG store + NestJS integration) on feat/e04-t-04-02-02--rate-limiter-pg. PR #52 open and ready. All monorepo checks pass (build, typecheck, 80 tests). Next: in_review — invoke z-ai/glm-5.2 reviewer.",
+  "last_updated": "2026-08-24T19:12:00",
+  "notes": "Tick-80: GLM-5.2 review found 2 major + 3 minor issues. Fixed: reset windowStart bug, cleanup SQL multiplier, CompositeRateLimiterStore tests (11 added), OnModuleDestroy lifecycle. All checks pass. PR #52 back in review.",
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-80"},
-    {"from": "building", "to": "in_review", "at": "tick-80"}
+    {"from": "building", "to": "in_review", "at": "tick-80"},
+    {"from": "in_review", "to": "fixing", "at": "tick-80"},
+    {"from": "fixing", "to": "in_review", "at": "tick-80"}
   ]
 }
