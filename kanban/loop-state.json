@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-01-01-03--password-field",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/70",
   "loop_iteration": 114,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -147,8 +147,10 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T00:30:00",
-  "notes": "Tick-114: T-01.01.03 (Password field with visibility toggle and strength meter) built, committed, pushed as PR #70. State set to in_review. Next: invoke GLM 5.2 reviewer.",
+  "notes": "Tick-114: T-01.01.03 built, reviewed by GLM 5.2 (request_changes), re-review comment posted, fixes applied (value exposure, RTL, keyboard, strength persistence, aria-live), pushed. State set to in_review for next tick.",
   "status_history": [
+    { "from": "in_review", "to": "fixing", "at": "tick-114" },
+    { "from": "fixing", "to": "in_review", "at": "tick-114" },
     { "from": "building", "to": "in_review", "at": "tick-96" },
     { "from": "in_review", "to": "fixing", "at": "tick-97" },
     { "from": "fixing", "to": "in_review", "at": "tick-97" },
