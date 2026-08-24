@@ -84,6 +84,24 @@ export const fa: I18nDictionary = {
   'auth.register.error.rateLimited': 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید',
   'auth.register.error.internal': 'خطای داخلی سرور رخ داده است. لطفاً بعداً تلاش کنید',
   'auth.register.otpSent': 'کد تأیید برای شما ارسال شد',
+  'auth.register.success': 'حساب شما با موفقیت ایجاد شد',
+
+  // ── Auth Pages — OTP Verification ────────────────────────────
+  'auth.otp.title': 'تأیید شماره موبایل / ایمیل',
+  'auth.otp.sentTo': 'کد تأیید به {destination} ارسال شد',
+  'auth.otp.digitLabel': 'رقم',
+  'auth.otp.inputLabel': 'کد تأیید ۶ رقمی',
+  'auth.otp.resend': 'ارسال مجدد',
+  'auth.otp.resendTimer': 'ارسال مجدد در {seconds} ثانیه',
+  'auth.otp.resending': 'در حال ارسال مجدد…',
+  'auth.otp.verifying': 'در حال تأیید…',
+  'auth.otp.expired': 'کد تأیید منقضی شده است. لطفاً دوباره ثبت‌نام کنید',
+  'auth.otp.error.invalid': 'کد تأیید نامعتبر است',
+  'auth.otp.error.expired': 'کد تأیید منقضی شده است',
+  'auth.otp.error.maxAttempts': 'تعداد تلاش‌های ناموفق بیش از حد مجاز است',
+  'auth.otp.error.resend': 'خطا در ارسال مجدد کد',
+  'auth.otp.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
+  'auth.otp.backToRegister': 'بازگشت به فرم ثبت‌نام',
 
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'خطای داخلی سرور',
@@ -173,6 +191,24 @@ export const en: I18nDictionary = {
   'auth.register.error.rateLimited': 'Too many attempts. Please try again later',
   'auth.register.error.internal': 'An internal server error occurred. Please try again later',
   'auth.register.otpSent': 'Verification code has been sent',
+  'auth.register.success': 'Account created successfully',
+
+  // ── Auth Pages — OTP Verification ────────────────────────────
+  'auth.otp.title': 'Verify Mobile / Email',
+  'auth.otp.sentTo': 'A verification code was sent to {destination}',
+  'auth.otp.digitLabel': 'Digit',
+  'auth.otp.inputLabel': '6-digit verification code',
+  'auth.otp.resend': 'Resend code',
+  'auth.otp.resendTimer': 'Resend in {seconds}s',
+  'auth.otp.resending': 'Resending…',
+  'auth.otp.verifying': 'Verifying…',
+  'auth.otp.expired': 'The verification code has expired. Please register again',
+  'auth.otp.error.invalid': 'Invalid verification code',
+  'auth.otp.error.expired': 'Verification code has expired',
+  'auth.otp.error.maxAttempts': 'Too many failed attempts',
+  'auth.otp.error.resend': 'Failed to resend code',
+  'auth.otp.error.generic': 'An error occurred. Please try again',
+  'auth.otp.backToRegister': 'Back to registration',
 
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'Internal server error',
