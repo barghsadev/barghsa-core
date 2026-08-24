@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { createRedisClient, RedisConfigSchema, type RedisConfig } from '@barghsa/shared/redis';
 
 /**
@@ -12,7 +12,7 @@ export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
   providers: [
     {
       provide: REDIS_CLIENT,
-      useFactory: (): ReturnType<typeof createRedisClient> => {
+      useFactory: async (): Promise<ReturnType<typeof createRedisClient>> => {
         const rawUrl = process.env['REDIS_URL'];
         const rawHost = process.env['REDIS_HOST'];
 
@@ -32,7 +32,11 @@ export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
           return null;
         }
 
-        return createRedisClient(parsed.data, console);
+        const logger = new Logger('RedisModule');
+        return createRedisClient(parsed.data, {
+          warn: (msg, ...meta) => logger.warn(msg, ...meta),
+          error: (msg, ...meta) => logger.error(msg, ...meta),
+        });
       },
     },
   ],

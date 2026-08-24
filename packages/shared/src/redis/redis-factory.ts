@@ -29,25 +29,26 @@ export interface PingResult {
  *
  * Returns `null` when:
  * - No `REDIS_URL` (or equivalent config) is set — Redis is intentionally absent.
- * - A connection error occurs during initial setup — a warning is logged and
+ * - Config validation fails — logged and skipped.
+ * - The initial connection attempt fails — a warning is logged and
  *   the app proceeds without Redis.
  *
- * All Consumers **must** guard every Redis call with `if (redis)` to ensure
+ * All consumers **must** guard every Redis call with `if (redis)` to ensure
  * graceful degradation.
  *
  * @example
  * ```ts
- * const redis = createRedisClient({ url: process.env['REDIS_URL'] });
+ * const redis = await createRedisClient({ url: process.env['REDIS_URL'] });
  * // … later:
  * if (redis) {
  *   await redis.set('key', 'value');
  * }
  * ```
  */
-export function createRedisClient(
+export async function createRedisClient(
   config: RedisConfig,
   logger?: Logger,
-): Redis | null {
+): Promise<Redis | null> {
   // --- Resolve config -------------------------------------------------------
   const merged: RedisConfig = { ...DEFAULT_REDIS_CONFIG, ...config };
 
@@ -69,7 +70,7 @@ export function createRedisClient(
   const opts: import('ioredis').RedisOptions = {
     maxRetriesPerRequest: parsed.data.maxRetriesPerRequest ?? null,
     enableReadyCheck: parsed.data.enableReadyCheck ?? true,
-    lazyConnect: parsed.data.lazyConnect ?? false,
+    lazyConnect: true, // Defer so we can attempt initial connection with null-on-failure
     connectTimeout: parsed.data.connectTimeout ?? 10_000,
     retryStrategy(times: number): number | null {
       // Fail fast: on initial connection, give up after 3 quick retries
@@ -83,6 +84,11 @@ export function createRedisClient(
   }
   if (parsed.data.keyPrefix) {
     opts.keyPrefix = parsed.data.keyPrefix;
+  }
+
+  // Apply TLS configuration
+  if (parsed.data.tls) {
+    opts.tls = parsed.data.tls === true ? {} : parsed.data.tls;
   }
 
   let client: Redis;
@@ -102,11 +108,18 @@ export function createRedisClient(
     logger?.warn('[redis] Connection error (degraded):', err.message);
   });
 
-  // --- Connection guard: catch early connect failures ----------------------
-  // ioredis queues commands even when disconnected by default.
-  // With maxRetriesPerRequest=null, a disconnected client will reject commands
-  // immediately — callers must check `client.status === 'ready'` or use the
-  // guard helper below.
+  // --- Connection guard: attempt initial connect ---------------------------
+  try {
+    await client.connect();
+  } catch (err) {
+    logger?.warn(
+      '[redis-factory] Initial connection failed, returning null (degraded):',
+      err instanceof Error ? err.message : String(err),
+    );
+    client.disconnect();
+    return null;
+  }
+
   return client;
 }
 

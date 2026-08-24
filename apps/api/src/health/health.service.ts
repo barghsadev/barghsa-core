@@ -70,7 +70,7 @@ export class HealthService implements OnModuleInit {
 
     // Collect non-critical warnings for the `X-Health-Warning` header.
     const warnings: string[] = [];
-    if (redis.status === 'down') {
+    if (redis.details?.degraded) {
       warnings.push('redis-unavailable');
     }
 
@@ -127,9 +127,9 @@ export class HealthService implements OnModuleInit {
     const ping = await pingRedis(this.redis);
     if (!ping.ok) {
       return {
-        status: 'down',
+        status: 'ok',
         latencyMs: ping.latencyMs,
-        details: { error: ping.error },
+        details: { error: ping.error, degraded: true },
       };
     }
 
