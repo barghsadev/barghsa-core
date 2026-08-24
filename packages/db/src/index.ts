@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { Pool, type Client } from 'pg'
+import { Pool, type Client, type PoolConfig } from 'pg'
+import * as fs from 'node:fs'
 
 let pool: Pool | null = null
 let directPool: Pool | null = null
@@ -16,6 +17,8 @@ export interface DbPoolConfig {
   lockTimeout?: string
   idleTransactionTimeout?: string
   queryTimeout?: number
+  /** Enable TLS for the PostgreSQL connection. Overrides any sslmode in the URL. */
+  ssl?: boolean | { rejectUnauthorized: boolean; ca?: string }
 }
 
 const DEFAULT_STATEMENT_TIMEOUT = '30s'
@@ -172,6 +175,48 @@ function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
   })
 }
 
+/**
+ * Resolve the SSL configuration for a PostgreSQL connection.
+ *
+ * Priority:
+ * 1. Explicit `ssl` config parameter (highest precedence).
+ * 2. `DATABASE_SSL_ENABLED=true` env var.
+ * 3. `DATABASE_CA_PATH` env var — read the CA bundle file.
+ * 4. `DATABASE_SSL_REJECT_UNAUTHORIZED` env var (default true).
+ *
+ * Returns `undefined` when TLS is not explicitly requested, letting the
+ * `pg` library fall back to its own connection-string parsing (e.g.,
+ * `?sslmode=require` in the URL).
+ */
+function resolveSslConfig(
+  sslOverride: DbPoolConfig['ssl'],
+): boolean | { rejectUnauthorized: boolean; ca?: string } | undefined {
+  if (sslOverride !== undefined) return sslOverride
+
+  const sslEnabled =
+    process.env['DATABASE_SSL_ENABLED'] === 'true' ||
+    process.env['DATABASE_SSL_ENABLED'] === '1'
+
+  if (!sslEnabled) return undefined
+
+  const rejectUnauthorized =
+    process.env['DATABASE_SSL_REJECT_UNAUTHORIZED'] !== 'false' &&
+    process.env['DATABASE_SSL_REJECT_UNAUTHORIZED'] !== '0'
+
+  const caPath = process.env['DATABASE_CA_PATH']
+  if (caPath) {
+    try {
+      const ca = fs.readFileSync(caPath, 'utf-8')
+      return { rejectUnauthorized, ca }
+    } catch {
+      structuredLog('error', 'ssl_ca_read_error', { path: caPath })
+      return { rejectUnauthorized }
+    }
+  }
+
+  return { rejectUnauthorized }
+}
+
 export function createDbPool(config: DbPoolConfig = {}): Pool {
   if (pool) return pool
 
@@ -192,7 +237,8 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-  })
+    ssl: resolveSslConfig(config.ssl) || undefined,
+  } satisfies PoolConfig)
 
   pool.on('error', (err) => {
     structuredLog('error', 'pool_error', { message: err.message })
@@ -235,7 +281,8 @@ export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
     connectionTimeoutMillis:
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
-  })
+    ssl: resolveSslConfig(config.ssl) || undefined,
+  } satisfies PoolConfig)
 
   attachClientQueryHooks(directPool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
 
