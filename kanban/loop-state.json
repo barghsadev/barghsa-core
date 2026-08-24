@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.03.02",
   "current_task_id": "T-04.03.02",
   "current_task_file": "01-platform-infrastructure.md",
@@ -74,8 +74,8 @@
     "01-platform-infrastructure.md#T-04.03.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T20:42:00",
-  "notes": "Tick-90: Reviewer flagged 2 major findings (both incorrect per code review). Posted rebuttal comment on PR. Transitioning to fixing to address.",
+  "last_updated": "2026-08-24T20:43:30",
+  "notes": "Tick-90: GLM 5.2 review returned request_changes with 2 major findings (both incorrect — existing code already has Zod validation and ensureStorageReady on verify). Posted review + rebuttal comments on PR. Fixed minor extension-lowercasing inconsistency. Force-pushed amended commit (cleaned exported session file). Re-entering in_review.",
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-82"},
     {"from": "building", "to": "in_review", "at": "tick-82"},
@@ -89,6 +89,7 @@
     {"from": "building", "to": "in_review", "at": "tick-86"},
     {"from": "in_review", "to": "fixing", "at": "tick-88"},
     {"from": "fixing", "to": "in_review", "at": "tick-89"},
-    {"from": "in_review", "to": "fixing", "at": "tick-90"}
+    {"from": "in_review", "to": "fixing", "at": "tick-90"},
+    {"from": "fixing", "to": "in_review", "at": "tick-90"}
   ]
 }
