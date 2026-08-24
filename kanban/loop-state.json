@@ -1,16 +1,17 @@
 {
-  "status": "building",
-  "current_task_key": "01-platform-infrastructure.md#T-01.01.04",
-  "current_task_id": "T-01.01.04",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-01-04--root-package-json-scripts",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 5,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
-    "01-platform-infrastructure.md#T-01.01.03"
+    "01-platform-infrastructure.md#T-01.01.03",
+    "01-platform-infrastructure.md#T-01.01.04"
   ],
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-1"},
@@ -23,9 +24,12 @@
     {"from": "in_review", "to": "idle", "at": "tick-3"},
     {"from": "idle", "to": "building", "at": "tick-4"},
     {"from": "building", "to": "in_review", "at": "tick-4"},
-    {"from": "in_review", "to": "idle", "at": "tick-4"}
+    {"from": "in_review", "to": "idle", "at": "tick-4"},
+    {"from": "idle", "to": "building", "at": "tick-5"},
+    {"from": "building", "to": "in_review", "at": "tick-5"},
+    {"from": "in_review", "to": "idle", "at": "tick-5"}
   ],
-  "last_updated": "tick-4",
+  "last_updated": "tick-5",
   "last_error": null,
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
