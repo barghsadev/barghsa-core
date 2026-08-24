@@ -2,6 +2,9 @@
 # Barghsa API & Worker — shared multi-stage Dockerfile
 #
 # Builds the NestJS API and its workspace dependencies (db, shared, i18n).
+# Uses `pnpm deploy` to produce a self-contained production bundle where
+# all `workspace:*` dependencies are resolved into real package directories.
+#
 # The final image supports both `docker run` CMD override and Docker Compose
 # `command` override, allowing the same image to serve as either the API server
 # or a background worker.
@@ -20,7 +23,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile --prod=false
 
 # ─────────────────────────────────────────────────────────────
-# Stage 2 — Build the application
+# Stage 2 — Build and deploy
 # ─────────────────────────────────────────────────────────────
 FROM node:20-alpine AS build
 
@@ -40,6 +43,10 @@ COPY apps/api ./apps/api
 # Build the API app and its transitively referenced packages
 RUN pnpm build --filter @barghsa/api
 
+# Produce a self-contained production bundle with all workspace deps resolved
+# into real directories (pnpm v10 requires --legacy for non-injected deploy)
+RUN pnpm deploy --filter @barghsa/api --prod --legacy /app/prod
+
 # ─────────────────────────────────────────────────────────────
 # Stage 3 — Production image
 # ─────────────────────────────────────────────────────────────
@@ -53,18 +60,8 @@ WORKDIR /app
 # Security: run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Install production dependencies
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-RUN corepack enable && corepack prepare pnpm@10 --activate && \
-    pnpm install --frozen-lockfile --prod && \
-    rm -rf /root/.local/share/pnpm
-
-# Copy the API app's package.json so the "type": "module" (or "commonjs")
-# field from the workspace context applies to any ESM imports at startup
-COPY --from=build /app/apps/api/package.json ./package.json
-
-# Copy build artifacts
-COPY --from=build /app/apps/api/dist ./dist
+# Copy the self-contained production bundle
+COPY --from=build /app/prod ./
 
 # Verify the entrypoint exists
 RUN test -f ./dist/src/main.js
