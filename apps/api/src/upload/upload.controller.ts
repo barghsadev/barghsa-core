@@ -93,9 +93,9 @@ export class UploadController {
     }
 
     // Generate a unique key
-    const ext = req.fileName.includes('.')
-      ? req.fileName.slice(req.fileName.lastIndexOf('.'))
-      : '';
+    const ext = (req.fileName.includes('.')
+      ? req.fileName.slice(req.fileName.lastIndexOf('.')).toLowerCase()
+      : '');
     const uniqueKey = `${UPLOAD_PREFIX}${randomUUID()}${ext}`;
 
     try {
