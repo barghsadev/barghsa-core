@@ -10,33 +10,185 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AiRouteImport } from './routes/ai'
+import { Route as ChartsRouteImport } from './routes/charts'
+import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as ElectricityRouteImport } from './routes/electricity'
+import { Route as SavingsRouteImport } from './routes/savings'
+import { Route as VideosRouteImport } from './routes/videos'
+import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
+import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiRoute = AiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartsRoute = ChartsRouteImport.update({
+  id: '/charts',
+  path: '/charts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentsRoute = DocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElectricityRoute = ElectricityRouteImport.update({
+  id: '/electricity',
+  path: '/electricity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavingsRoute = SavingsRouteImport.update({
+  id: '/savings',
+  path: '/savings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ElectricityIndexRoute = ElectricityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ElectricityRoute,
+} as any)
+const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
+  id: '/order',
+  path: '/order',
+  getParentRoute: () => ElectricityRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/ai': typeof AiRoute
+  '/charts': typeof ChartsRoute
+  '/documents': typeof DocumentsRoute
+  '/electricity': typeof ElectricityRouteWithChildren
+  '/savings': typeof SavingsRoute
+  '/videos': typeof VideosRoute
+  '/wallet': typeof WalletRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/electricity/order': typeof ElectricityOrderRoute
+  '/admin/': typeof AdminIndexRoute
+  '/electricity/': typeof ElectricityIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai': typeof AiRoute
+  '/charts': typeof ChartsRoute
+  '/documents': typeof DocumentsRoute
+  '/savings': typeof SavingsRoute
+  '/videos': typeof VideosRoute
+  '/wallet': typeof WalletRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/electricity/order': typeof ElectricityOrderRoute
+  '/admin': typeof AdminIndexRoute
+  '/electricity': typeof ElectricityIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/ai': typeof AiRoute
+  '/charts': typeof ChartsRoute
+  '/documents': typeof DocumentsRoute
+  '/electricity': typeof ElectricityRouteWithChildren
+  '/savings': typeof SavingsRoute
+  '/videos': typeof VideosRoute
+  '/wallet': typeof WalletRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/electricity/order': typeof ElectricityOrderRoute
+  '/admin/': typeof AdminIndexRoute
+  '/electricity/': typeof ElectricityIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/ai'
+    | '/charts'
+    | '/documents'
+    | '/electricity'
+    | '/savings'
+    | '/videos'
+    | '/wallet'
+    | '/admin/users'
+    | '/electricity/order'
+    | '/admin/'
+    | '/electricity/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ai'
+    | '/charts'
+    | '/documents'
+    | '/savings'
+    | '/videos'
+    | '/wallet'
+    | '/admin/users'
+    | '/electricity/order'
+    | '/admin'
+    | '/electricity'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/ai'
+    | '/charts'
+    | '/documents'
+    | '/electricity'
+    | '/savings'
+    | '/videos'
+    | '/wallet'
+    | '/admin/users'
+    | '/electricity/order'
+    | '/admin/'
+    | '/electricity/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AiRoute: typeof AiRoute
+  ChartsRoute: typeof ChartsRoute
+  DocumentsRoute: typeof DocumentsRoute
+  ElectricityRoute: typeof ElectricityRouteWithChildren
+  SavingsRoute: typeof SavingsRoute
+  VideosRoute: typeof VideosRoute
+  WalletRoute: typeof WalletRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +200,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai': {
+      id: '/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/charts': {
+      id: '/charts'
+      path: '/charts'
+      fullPath: '/charts'
+      preLoaderRoute: typeof ChartsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents': {
+      id: '/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof DocumentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/electricity': {
+      id: '/electricity'
+      path: '/electricity'
+      fullPath: '/electricity'
+      preLoaderRoute: typeof ElectricityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/savings': {
+      id: '/savings'
+      path: '/savings'
+      fullPath: '/savings'
+      preLoaderRoute: typeof SavingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/electricity/': {
+      id: '/electricity/'
+      path: '/'
+      fullPath: '/electricity/'
+      preLoaderRoute: typeof ElectricityIndexRouteImport
+      parentRoute: typeof ElectricityRoute
+    }
+    '/electricity/order': {
+      id: '/electricity/order'
+      path: '/order'
+      fullPath: '/electricity/order'
+      preLoaderRoute: typeof ElectricityOrderRouteImport
+      parentRoute: typeof ElectricityRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface ElectricityRouteChildren {
+  ElectricityOrderRoute: typeof ElectricityOrderRoute
+  ElectricityIndexRoute: typeof ElectricityIndexRoute
+}
+
+const ElectricityRouteChildren: ElectricityRouteChildren = {
+  ElectricityOrderRoute: ElectricityOrderRoute,
+  ElectricityIndexRoute: ElectricityIndexRoute,
+}
+
+const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
+  ElectricityRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AiRoute: AiRoute,
+  ChartsRoute: ChartsRoute,
+  DocumentsRoute: DocumentsRoute,
+  ElectricityRoute: ElectricityRouteWithChildren,
+  SavingsRoute: SavingsRoute,
+  VideosRoute: VideosRoute,
+  WalletRoute: WalletRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

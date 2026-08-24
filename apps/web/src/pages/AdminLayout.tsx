@@ -1,0 +1,25 @@
+import { Outlet } from '@tanstack/react-router'
+
+/**
+ * Admin layout with sidebar — renders lazy child routes via Outlet.
+ */
+export default function AdminLayout() {
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-inset-end border-gray-200 p-4 shrink-0">
+        <nav>
+          <h2 className="text-lg font-semibold mb-4">Admin</h2>
+          <ul className="space-y-2">
+            <li><a href="/admin" className="text-blue-600 hover:underline">Dashboard</a></li>
+            <li><a href="/admin/users" className="text-blue-600 hover:underline">Users</a></li>
+          </ul>
+        </nav>
+      </aside>
+      {/* Main content */}
+      <main className="flex-1 p-8 overflow-auto">
+        <Outlet />
+      </main>
+    </div>
+  )
+}
