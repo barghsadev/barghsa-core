@@ -61,6 +61,10 @@ export class OtpService {
       [challengeId, destination, otpHash, OtpService.MAX_ATTEMPTS, expiresAt],
     )
 
+    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
+    if (process.env.NODE_ENV === 'development') {
+      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`)
+    }
     this.logger.debug(`OTP challenge created for ${destination} (${challengeId})`)
 
     return { challengeId, destination }
@@ -117,14 +121,19 @@ export class OtpService {
     const otpHash = this.hashOtp(otp)
     const newExpiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS)
 
+    // NOTE: Intentionally do NOT reset attempts_remaining on resend —
+    // prevents brute-force bypass via resend cycling (new OTP, same attempts budget)
     await pool.query(
       `UPDATE otp_challenges
-       SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1
+       SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1, updated_at = NOW()
        WHERE challenge_id = $3`,
       [otpHash, newExpiresAt, challengeId],
     )
 
-    this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`)
+    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
+    if (process.env.NODE_ENV === 'development') {
+      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`)
+    }
     this.logger.debug(`OTP resend for ${destination} (${challengeId})`)
 
     return { challengeId }
