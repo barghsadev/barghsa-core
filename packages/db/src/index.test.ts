@@ -283,6 +283,9 @@ describe('@barghsa/db', () => {
       expect(result.ok).toBe(false)
       expect(result.latencyMs).toBeGreaterThanOrEqual(5_000)
 
+      // Verify no timers remain after the timeout resolves.
+      expect(vi.getTimerCount()).toBe(0)
+
       vi.useRealTimers()
       vi.mocked(p.query).mockRestore()
       await p.end().catch(() => {})
