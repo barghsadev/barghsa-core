@@ -1,12 +1,13 @@
 -- Migration: 0000_init_uuidv7_function
 -- Version: 1 (up)
 -- Description: Create uuid_generate_v7() PostgreSQL function for
---              UUIDv7 primary keys with monotonic ordering.
+--              UUIDv7 primary keys with time-sortable values.
 --
 -- UUIDv7 (RFC 9562) encodes the current Unix timestamp in milliseconds
--- (48 bits) followed by random bits (74 bits), providing monotonic
--- ordering and index locality. This reduces B-tree index fragmentation
--- compared to UUIDv4 and eliminates the need for sequence-based IDs.
+-- (48 bits) followed by random bits (74 bits), providing time-sortable
+-- values that cluster well in B-tree indexes. This reduces index
+-- fragmentation compared to UUIDv4 and eliminates the need for
+-- sequence-based IDs.
 --
 -- Layout:
 --   0                   1                   2                   3

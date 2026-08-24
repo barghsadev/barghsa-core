@@ -77,6 +77,8 @@ describe('uuid_generate_v7 migration', () => {
     // Generate 100 UUIDs sequentially in the application layer, capturing
     // each generation order. UUIDv7 guarantees the timestamp portion is
     // non-decreasing — the first 48 bits encode floor(unix_ts_ms).
+    // UUIDs within the same millisecond are not strictly ordered (random
+    // payload bits), but are time-sortable by their prefix.
     const { rows } = await ctx.pool.query<{ u: string; i: number }>(
       `SELECT uuid_generate_v7() AS u, generate_series(1, 100) AS i`,
     )
