@@ -1,5 +1,8 @@
-import { Injectable, type OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, type OnModuleInit } from '@nestjs/common';
 import { dbHealth } from '@barghsa/db';
+import { pingRedis } from '@barghsa/shared/redis';
+import type { Redis } from 'ioredis';
+import { REDIS_CLIENT } from '../redis/index.js';
 
 /**
  * Service-level health status returned by the ready endpoint.
@@ -29,16 +32,17 @@ export interface ReadinessResult {
 
 @Injectable()
 export class HealthService implements OnModuleInit {
-  private redisConfigured = false;
   private objectStorageConfigured = false;
 
+  constructor(
+    @Inject(REDIS_CLIENT)
+    private readonly redis: Redis | null,
+  ) {}
+
   onModuleInit(): void {
-    // Detect whether Redis and object storage are configured by checking
+    // Detect whether object storage is configured by checking
     // environment variables. These services are optional — the API remains
     // ready without them, but degraded-route indicators are emitted.
-    this.redisConfigured = !!(
-      process.env['REDIS_URL'] ?? process.env['REDIS_HOST']
-    );
     this.objectStorageConfigured = !!(
       process.env['S3_ENDPOINT'] ?? process.env['MINIO_ENDPOINT']
     );
@@ -112,7 +116,7 @@ export class HealthService implements OnModuleInit {
   }
 
   private async checkRedis(): Promise<HealthIndicatorResult> {
-    if (!this.redisConfigured) {
+    if (!this.redis) {
       return {
         status: 'ok',
         latencyMs: 0,
@@ -120,16 +124,18 @@ export class HealthService implements OnModuleInit {
       };
     }
 
-    // Redis connectivity check is best-effort.  When ioredis or a
-    // Redis connection factory is added, replace this with a real PING.
-    // Until then, report ok with a wiring note so the overall readiness
-    // status can be 'ok' when PostgreSQL is healthy.
-    // TODO(T-04.02.01): wire Redis PING once the connection factory exists
-    const startedAt = Date.now();
+    const ping = await pingRedis(this.redis);
+    if (!ping.ok) {
+      return {
+        status: 'down',
+        latencyMs: ping.latencyMs,
+        details: { error: ping.error },
+      };
+    }
+
     return {
       status: 'ok',
-      latencyMs: Date.now() - startedAt,
-      details: { info: 'Redis check not yet wired — see T-03.03.04' },
+      latencyMs: ping.latencyMs,
     };
   }
 
