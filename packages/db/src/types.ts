@@ -42,9 +42,10 @@ export const timestamptz = (name?: string) =>
  * 64-bit signed integer (`bigint`) for IRR amounts.
  *
  * Max value ~9.22e18, sufficient for large IRR amounts stored as
- * the smallest denomination (Rials). Returns a JavaScript `number`
- * (53-bit safe integer, ~9e15) — sufficient for all practical IRR
- * amounts.
+ * the smallest denomination (Rials). Returns a JavaScript `bigint`
+ * to preserve full 64-bit precision — values above
+ * `Number.MAX_SAFE_INTEGER` (9,007,199,254,740,991) are not silently
+ * truncated.
  *
  * Usage:
  * ```ts
@@ -52,7 +53,7 @@ export const timestamptz = (name?: string) =>
  * ```
  */
 export const irrAmount = (name?: string) =>
-  name ? bigint(name, { mode: 'number' }) : bigint({ mode: 'number' })
+  name ? bigint(name, { mode: 'bigint' }) : bigint({ mode: 'bigint' })
 
 /**
  * Fixed-precision decimal (`numeric(20, 6)`) for rates and quantities.
@@ -71,8 +72,12 @@ export const fixedDecimal = (name?: string) =>
 /**
  * PostgreSQL `tstzrange` — half-open range `[start, end)`.
  *
- * Enforces timezone-aware range semantics at the schema level.
- * Stored as the native PostgreSQL `tstzrange` type.
+ * Stored as the native PostgreSQL `tstzrange` type. Enforce `[start, end)`
+ * semantics at the database level with a CHECK constraint:
+ *
+ * ```sql
+ * CHECK (lower_inc(validity_period) AND NOT upper_inc(validity_period))
+ * ```
  *
  * Usage:
  * ```ts
@@ -84,6 +89,20 @@ export const halfOpenRange = customType<{ data: string; driverData: string }>({
     return 'tstzrange'
   },
 })
+
+/**
+ * Build a PostgreSQL tstzrange literal string with `[start, end)` bounds.
+ *
+ * Use this helper when constructing range values in application code or
+ * seed scripts to ensure consistent half-open semantics.
+ *
+ * @param start ISO 8601 start timestamp (inclusive)
+ * @param end   ISO 8601 end timestamp (exclusive)
+ * @returns A PostgreSQL tstzrange literal, e.g. `'[2026-01-01T00:00:00Z,2027-01-01T00:00:00Z)'`
+ */
+export function halfOpenRangeValue(start: string, end: string): string {
+  return `[${start},${end})`
+}
 
 // Re-export drizzle-orm pgEnum for enum-like status fields
 export { pgEnum } from 'drizzle-orm/pg-core'
