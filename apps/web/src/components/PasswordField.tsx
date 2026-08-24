@@ -125,6 +125,8 @@ export interface PasswordFieldProps {
   locale?: Locale
   error?: string | null
   autoFocus?: boolean
+  /** Disable the input (loading / submission in progress) */
+  disabled?: boolean
   /** Input name attribute (native form submission) */
   name?: string
   /** Controlled value; omit for uncontrolled */
@@ -141,6 +143,7 @@ export function PasswordField({
   locale = 'fa',
   error,
   autoFocus = false,
+  disabled = false,
   name,
   value: externalValue,
   onChange: externalOnChange,
@@ -193,6 +196,7 @@ export function PasswordField({
           placeholder={t('auth.register.passwordPlaceholder', locale)}
           autoComplete="new-password"
           autoFocus={autoFocus}
+          disabled={disabled}
           value={value}
           onChange={handleChange}
           onFocus={handleFocus}

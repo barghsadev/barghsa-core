@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-01.01.06",
+  "current_task_id": "T-01.01.06",
+  "current_task_file": "02-auth-users-admin.md",
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 117,
+  "loop_iteration": 118,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -36,8 +36,7 @@
     "01-platform-infrastructure.md#T-02.02.01",
     "01-platform-infrastructure.md#T-02.02.02",
     "01-platform-infrastructure.md#T-02.02.03",
-    "01-platform-infrastructure.md#T-02.02.04",
-    "01-platform-infrastructure.md#T-02.03.01",
+    "01-platform-infrastructure.md#T-02.02.04",    "01-platform-infrastructure.md#T-02.03.01",
     "01-platform-infrastructure.md#T-02.03.02",
     "01-platform-infrastructure.md#T-02.03.03",
     "01-platform-infrastructure.md#T-02.03.04",
@@ -80,10 +79,10 @@
     "01-platform-infrastructure.md#T-04.04.02",
     "01-platform-infrastructure.md#T-04.04.03",
     "01-platform-infrastructure.md#T-04.04.04",
-    "01-platform-infrastructure.md#T-04.04.05",
-    "01-platform-infrastructure.md#T-05.01.01",
-    "01-platform-infrastructure.md#T-05.01.02",
-    "01-platform-infrastructure.md#T-05.01.03",
+    "01-platform-infrastructure.md#T04.04.05",
+    "01-platform-infrastructure.md#T05.01.01",
+    "01-platform-infrastructure.md#T05.01.02",
+    "01-platform-infrastructure.md#T05.01.03",
     "01-platform-infrastructure.md#T-05.02.01",
     "01-platform-infrastructure.md#T-05.02.02",
     "01-platform-infrastructure.md#T-05.02.03",
@@ -107,10 +106,10 @@
     "01-platform-infrastructure.md#T-06.01.04",
     "01-platform-infrastructure.md#T-06.01.05",
     "01-platform-infrastructure.md#T-06.02.01",
-    "01-platform-infrastructure.md#T-06.02.02",
+    "01-platform-infrastructure.md#T06.02.02",
     "01-platform-infrastructure.md#T-06.02.03",
     "01-platform-infrastructure.md#T-06.02.04",
-    "01-platform-infrastructure.md#T-06.02.05",
+    "01-platform-infrastructure.md#T06.02.05",
     "01-platform-infrastructure.md#T-06.03.01",
     "01-platform-infrastructure.md#T-06.03.02",
     "01-platform-infrastructure.md#T-06.03.03",
@@ -123,7 +122,7 @@
     "01-platform-infrastructure.md#T-07.01.03",
     "01-platform-infrastructure.md#T-07.01.04",
     "01-platform-infrastructure.md#T-07.02.01",
-    "01-platform-infrastructure.md#T-07.02.02",
+    "01-platform-infrastructure.md#T08.02.02",
     "01-platform-infrastructure.md#T-07.02.03",
     "01-platform-infrastructure.md#T-07.02.04",
     "01-platform-infrastructure.md#T-07.02.05",
@@ -149,23 +148,13 @@
     "02-auth-users-admin.md#T-01.01.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T01:09:00",
-  "notes": "Tick-117: T-01.01.05 (Back to login + Forgot password links) merged as PR #72. Reviewed by z-ai/glm-5.2 (approve). Loop idle.",
+  "last_updated": "2026-08-25T01:10:00",
+  "notes": "Tick-118: Building T-01.01.06 (Registration form submission and error handling). Creating backend auth module + frontend submit wiring.",
   "status_history": [
     {
       "from": "idle",
       "to": "building",
-      "at": "tick-117"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-117"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-117"
+      "at": "tick-118"
     }
   ]
 }
