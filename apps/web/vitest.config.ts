@@ -1,20 +1,10 @@
-import { defineConfig } from 'vitest/config'
+import { createVitestConfig } from '../../packages/tsconfig/vitest.base.config'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
-/**
- * @barghsa/web Vitest config
- *
- * - jsdom environment for React component tests
- * - Aliases match the Vite runtime config
- * - A global setup file at src/test/setup.ts can be populated per-project
- */
-export default defineConfig({
+export default createVitestConfig({
   plugins: [react()],
   test: {
-    globals: false,
-    typecheck: { enabled: false },
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
   },

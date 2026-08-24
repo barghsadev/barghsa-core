@@ -1,9 +1,7 @@
-import { defineConfig } from 'vitest/config'
+import { createVitestConfig } from '../tsconfig/vitest.base.config'
 
-export default defineConfig({
+export default createVitestConfig({
   test: {
-    globals: false,
-    typecheck: { enabled: false },
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    environment: 'jsdom',
   },
 })
