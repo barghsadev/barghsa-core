@@ -1,0 +1,88 @@
+# syntax: docker/compose:1
+# Barghsa Development Infrastructure
+#
+# Spins up all backing services required for local development:
+#   - PostgreSQL 16 with PostGIS (primary database)
+#   - Redis 7 (caching, rate limiting, session store)
+#   - MinIO (S3-compatible object storage)
+#
+# Application containers (api, web) are built using ./Dockerfile.base
+# and ./Dockerfile.web respectively and managed separately. The Docker
+# Compose setup in this file is the backing infrastructure ONLY.
+#
+# Usage:
+#   docker compose up -d            # Start all services
+#   docker compose down -v          # Tear down (removes volumes)
+#   docker compose ps               # Check health status
+
+name: barghsa-dev
+
+services:
+
+  # ─────────────────────────────────────────────────────────────
+  # PostgreSQL 16 with PostGIS
+  # ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgis/postgres:16
+    container_name: barghsa-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: barghsa
+      POSTGRES_USER: barghsa
+      POSTGRES_PASSWORD: &db_password barghsa-dev-password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U barghsa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────
+  # Redis 7 — caching, rate limiting, session store
+  # ─────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: barghsa-redis
+    ports:
+      - "6379:6379"
+    # No persistent volume — Redis is a cache; loss is acceptable in dev.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────────────────────
+  # MinIO — S3-compatible object storage
+  # ─────────────────────────────────────────────────────────────
+  minio:
+    image: minio/minio
+    container_name: barghsa-minio
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: &minio_password minioadmin-dev
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+    name: barghsa-pgdata
+  minio-data:
+    name: barghsa-minio-data
