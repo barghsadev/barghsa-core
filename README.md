@@ -488,7 +488,7 @@ Use canary or gradual flag rollout for high-risk payment, wallet, authorization,
 - Weekly: representative load/performance regression, critical-domain mutation testing where useful, and dependency update review.
 - Quarterly: PostgreSQL/object restore exercise, disaster-recovery rehearsal, access review, threat-model review, and incident/runbook exercise.
 
-A flaky test is treated as a defect. Quarantine requires an owner, issue, expiry, and equivalent temporary coverage; quarantined critical tests cannot silently allow production promotion.
+A flaky test is treated as a defect. See [`docs/flaky-test-quarantine.md`](docs/flaky-test-quarantine.md) for the full quarantine process: owner, issue link, expiry, and equivalent temporary coverage. Quarantined critical tests cannot silently allow production promotion.
 
 ### Definition of Done
 
