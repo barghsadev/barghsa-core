@@ -21,14 +21,14 @@ All primary keys use **UUIDv7** (RFC 9562) via a custom `uuidv7` column type bac
 |---|---|---|
 | Sort order | Random | Time-ordered (by ms) |
 | B-tree index locality | Poor — random inserts fragment pages | Good — new values cluster in time order |
-| Index page splits | Frequent | Minimal |
+| Index page splits | Frequent | Reduced |
 | Sequential scan performance | No ordering benefit | Roughly insert-order |
 | Collision resistance | 122 random bits | 74 random bits (sufficient) |
 | Timestamp extraction | Not possible | 48-bit ms timestamp embedded |
 
-UUIDv7 provides the distribution benefits of UUIDs (no central coordinator, safe to generate offline, no sequential leak) while avoiding the B-tree index fragmentation that plagues UUIDv4 in large tables.
+UUIDv7 provides the distribution benefits of UUIDs (not trivially enumerable like sequential integers, avoids B-tree index fragmentation that plagues UUIDv4 in large tables) while exposing approximate creation time through the embedded timestamp — a trade-off accepted for index locality.
 
-**Implementation:** `packages/db/src/types.ts` — `uuidv7()` column builder with `DEFAULT uuid_generate_v7()`.
+**Implementation:** `packages/db/src/types.ts` — `uuidv7()` column builder with `DEFAULT uuid_generate_v7()`. The default is generated inside PostgreSQL via the `uuid_generate_v7()` function; client-side generation is not used at this layer but could be added for offline scenarios.
 
 **Migration:** `packages/db/drizzle/0000_init_uuidv7_function.sql` creates the `uuid_generate_v7()` PL/pgSQL function using `clock_timestamp()` to obtain the current wall-clock time on each invocation. Multiple calls may share the same millisecond (depending on clock resolution); uniqueness is provided probabilistically by the random bits, and values from different milliseconds are time-ordered.
 
@@ -53,8 +53,9 @@ Temporal validity ranges use PostgreSQL `tstzrange` with **half-open semantics**
   ```sql
   CHECK (lower_inc(column_name) AND NOT upper_inc(column_name))
   ```
+  The `halfOpenRange()` type builder and `halfOpenRangeValue()` helper only represent and format the range type; half-open semantics must be enforced per-column via the CHECK constraint. Empty, unbounded, and reversed ranges are permitted by the type but should be rejected at the application layer.
 - **Helper:** `halfOpenRangeValue(start, end)` produces literal range strings.
-- **Rationale:** Half-open ranges are the standard temporal model in database theory (Allen's interval algebra) and avoid ambiguity at boundary points. Two ranges `[A, B)` and `[B, C)` are adjacent without overlap — a property that closed intervals lack.
+- **Rationale:** Half-open ranges avoid ambiguity at boundary points. Two ranges `[A, B)` and `[B, C)` are adjacent without overlap — a property that closed intervals lack. This makes duration queries (`end - start`), overlap detection, and temporal joins straightforward and unambiguous.
 
 ### 4. Integer IRR Amounts (`bigint`)
 
@@ -91,7 +92,7 @@ Every domain table includes these three base columns, provided automatically by 
 |---|---|---|---|
 | `id` | `uuid` (UUIDv7) | `uuid_generate_v7()` | Primary key, time-sortable |
 | `created_at` | `timestamptz` | `now()` | Set on INSERT, never updated |
-| `updated_at` | `timestamptz` | `now()` + `$onUpdate` | Updated on every row modification |
+| `updated_at` | `timestamptz` | `now()` + `$onUpdate` | Updated by Drizzle ORM on qualifying writes (not raw SQL outside the ORM) |
 
 **Implementation:** `packages/db/src/base-table.ts` — `createTable()` spreads `baseColumns` into every table definition.
 
@@ -105,7 +106,7 @@ Every domain table includes these three base columns, provided automatically by 
 
 **Positive:**
 - Consistent type system across all schemas reduces cognitive load and review effort.
-- UUIDv7 avoids both sequence-based enumeration attacks and UUIDv4 index fragmentation.
+- UUIDv7 avoids the B-tree index fragmentation that plagues UUIDv4 in large tables.
 - `bigint` for IRR avoids decimal rounding errors and is faster than `numeric`.
 - `numeric(20, 6)` for rates provides sufficient precision without floating-point pitfalls.
 - Half-open ranges eliminate temporal boundary ambiguity.
