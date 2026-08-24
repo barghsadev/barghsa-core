@@ -231,7 +231,7 @@ compute_rpo() {
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
 
 cleanup() {
-  local _exit_code=${OVERALL_EXIT:-$?}
+  local _exit_code="$OVERALL_EXIT"
   echo "" >&2
   echo "[$(date -u +%H:%M:%S)] Cleaning up..." >&2
 
@@ -255,7 +255,7 @@ cleanup() {
 
   exit "$_exit_code"
 }
-trap cleanup EXIT
+trap 'OVERALL_EXIT=${OVERALL_EXIT:-$?}; cleanup' EXIT
 
 # ─── Step 1: Restore the latest backup ────────────────────────────────────────
 
@@ -312,7 +312,7 @@ step_start_postgres() {
   # Find an available port
   local test_port="$PG_PORT"
   # Portable port-busy check: uses bash /dev/tcp (works everywhere bash does, no external deps)
-  while (: </dev/tcp/127.0.0.1/$test_port) 2>/dev/null; do
+  while [[ $test_port -le 65535 ]] && (: </dev/tcp/127.0.0.1/$test_port) 2>/dev/null; do
     test_port=$((test_port + 1))
   done
   PG_PORT="$test_port"
@@ -341,7 +341,7 @@ step_start_postgres() {
 
   # Start PostgreSQL
   echo "  Starting PostgreSQL..." >&2
-  if ! "${PG_CTL}" -D "${WORK_DIR}/data" -l "${WORK_DIR}/pg.log" start; then
+  if ! timeout 30 "${PG_CTL}" -D "${WORK_DIR}/data" -l "${WORK_DIR}/pg.log" start; then
     echo "ERROR: PostgreSQL failed to start" >&2
     if [[ -f "${WORK_DIR}/pg.log" ]]; then
       echo "  Log output:" >&2
@@ -406,7 +406,9 @@ step_system_verify() {
   recovery_status=$("${PSQL}" -h "${PG_HOST}" -p "${PG_PORT}" -d postgres \
     -c "SELECT pg_is_in_recovery()" -t -A 2>/dev/null || echo "unknown")
   if [[ "$recovery_status" == "t" ]]; then
-    echo "  [INFO] Database is still in recovery mode (WAL replay ongoing)" >&2
+    echo "  [FAIL] Database is still in recovery mode (WAL replay incomplete)" >&2
+    checks_passed=false
+    failures="${failures} wal_replay_incomplete"
   elif [[ "$recovery_status" == "f" ]]; then
     echo "  [OK] WAL replay complete — database is out of recovery" >&2
   fi
@@ -417,7 +419,9 @@ step_system_verify() {
     -c "SELECT count(*) AS corrupted_indexes FROM pg_stat_all_indexes WHERE NOT indisvalid" \
     -t -A 2>/dev/null || echo "0")
   if [[ "$index_errors" != "0" ]]; then
-    echo "  [WARN] ${index_errors} invalid indexes found" >&2
+    echo "  [FAIL] ${index_errors} invalid indexes found" >&2
+    checks_passed=false
+    failures="${failures} invalid_indexes"
   fi
 
   # Check 4: Connection to 'postgres' database works
@@ -576,8 +580,6 @@ echo "=== Barghsa Restore Verification ==="
 echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="
 echo ""
 
-OVERALL_EXIT=0
-
 mark_start
 
 # Step 1: Restore backup
@@ -602,9 +604,5 @@ else
   add_result_field "exit_code" "1"
   OVERALL_EXIT=1
 fi
-
-# Print final JSON to stdout (not stderr) for programmatic consumption
-echo ""
-echo "$RESULT_JSON" | jq '.' 2>/dev/null || echo "$RESULT_JSON"
 
 exit "$OVERALL_EXIT"

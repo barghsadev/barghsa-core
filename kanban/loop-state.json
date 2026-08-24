@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.05",
   "current_task_id": "T-04.01.05",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-01-05--quarterly-restore-verify",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/48",
-  "loop_iteration": 73,
-  "fix_attempts": 2,
+  "loop_iteration": 74,
+  "fix_attempts": 3,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -66,13 +66,15 @@
     "01-platform-infrastructure.md#T-04.01.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T18:00:00",
-  "notes": "Review round 2 (tick-73): GLM 5.2 found 2 critical, 4 major issues. All fixed, checks pass. Returning to in_review.",
+  "last_updated": "2026-08-24T18:01:00",
+  "notes": "Review round 3 (tick-74): GLM 5.2 found 2 critical, 2 major issues. Fixes applied: trap captures $? for step failures, removed double JSON output, WAL replay incomplete fails, timeout 30 on pg_ctl start, port search bounded, invalid indexes fail step. Ready for re-review.",
   "status_history": [
     {"from": "idle", "to": "in_review", "at": "tick-72"},
     {"from": "in_review", "to": "fixing", "at": "tick-72"},
     {"from": "fixing", "to": "in_review", "at": "tick-72"},
     {"from": "in_review", "to": "fixing", "at": "tick-73"},
+    {"from": "fixing", "to": "in_review", "at": "tick-74"},
+    {"from": "in_review", "to": "fixing", "at": "tick-74"},
     {"from": "fixing", "to": "in_review", "at": "tick-67"},
     {"from": "in_review", "to": "blocked", "at": "tick-68"},
     {"from": "blocked", "to": "in_review", "at": "tick-69"},
