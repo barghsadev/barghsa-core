@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_key": "01-platform-infrastructure.md#T-01.05.01",
-  "current_task_id": "T-01.05.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-05-01--http-exception-filter-correlation-id",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/29",
-  "loop_iteration": 45,
-  "fix_attempts": 2,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 46,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -45,16 +45,22 @@
     "01-platform-infrastructure.md#T-02.04.04",
     "01-platform-infrastructure.md#T-02.04.05",
     "01-platform-infrastructure.md#T-02.04.06",
-    "01-platform-infrastructure.md#T-01.04.06"
+    "01-platform-infrastructure.md#T-01.04.06",
+    "01-platform-infrastructure.md#T-01.05.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T12:00:00",
-  "notes": "T-01.05.01 review (tick-45): stealth/ox-alpha returned request_changes — 1 major (forRoutes wildcard) + 5 minor. Fixed wildcard (/*). Next tick: re-invoke reviewer.",
+  "last_updated": "2026-08-24T12:13:00",
+  "notes": null,
   "status_history": [
     {
       "from": "in_review",
       "to": "fixing",
       "at": "tick-45"
+    },
+    {
+      "from": "fixing",
+      "to": "idle",
+      "at": "tick-46"
     }
   ]
 }
