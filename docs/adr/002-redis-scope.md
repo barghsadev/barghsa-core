@@ -34,7 +34,7 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 | Area | Redis Role | Fallback | TTL | Invalidation |
 |------|-----------|----------|-----|--------------|
 | Config caching | Accelerate reads, avoid PG round-trip for every request | Direct PostgreSQL read | 300 s (5 min) | Per-key eviction + global version bump on update. See `ConfigCache.invalidate()` |
-| Rate limiting | Low-latency atomic counters | PostgreSQL `pg_advisory_lock` + row-based counting | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic |
+| Rate limiting | Low-latency atomic counters | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic |
 | Coordination locks | Distributed mutual exclusion | PG advisory locks or skip-operation | 1–30 s (depending on use case) | Automatic expiry (NX + PEXPIRE); never block on a stale lock |
 
 ### What Redis is NOT used for
@@ -67,9 +67,9 @@ No migration needed — this ADR describes existing architecture. Future introdu
 
 ## Compliance Checklist
 
-- [x] Every Redis call is guarded with `if (redis)` (or equivalent null-check).
-- [x] No Redis key is relied upon for correctness after restart.
-- [x] Every Redis key has a documented TTL.
+- [x] Every Redis call is guarded with `if (redis)` (or equivalent null-check) — verified in `redis-factory.ts`, `config-cache.ts`, and `composite-rate-limiter.ts`.
+- [x] No Redis key is relied upon for correctness after restart — proven for config caching and rate limiting; coordination locks (planned) designed with same property.
+- [x] Every existing Redis key has a documented TTL — config caching (300s), rate limiting (window duration). Coordination locks (planned) will follow the 1–30 s TTL convention.
 - [x] Every Redis key has a documented invalidation strategy.
 - [x] Financial, session, auth, and durable job logic have zero dependence on Redis availability.
 - [x] `createRedisClient()` returns `null` on connection failure — never throws or blocks startup.
