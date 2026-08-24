@@ -42,12 +42,17 @@ RUN pnpm build --filter @barghsa/web
 FROM node:20-alpine AS production
 
 ENV NODE_ENV=production \
-    PORT=3000
+    PORT=3000 \
+    NODE_OPTIONS="--max-old-space-size=512"
 
 WORKDIR /app
 
 # Security: run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Security hardening notes (applied at runtime via docker-compose or k8s):
+# - Capability drop: --cap-drop=ALL (port 3000 is non-privileged, no NET_BIND_SERVICE needed)
+# - Read-only root filesystem: --read-only (volumes for /tmp if needed)
 
 # Install production dependencies (required by acceptance criteria;
 # the static SPA runs with zero runtime deps, so this is a no-op

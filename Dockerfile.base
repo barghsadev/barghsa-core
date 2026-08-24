@@ -56,12 +56,17 @@ RUN pnpm deploy --filter @barghsa/api --prod --legacy /app/prod
 FROM node:20-alpine AS production
 
 ENV NODE_ENV=production \
-    PORT=4000
+    PORT=4000 \
+    NODE_OPTIONS="--max-old-space-size=512"
 
 WORKDIR /app
 
 # Security: run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Security hardening notes (applied at runtime via docker-compose or k8s):
+# - Capability drop: --cap-drop=ALL (ports 3000/4000 are non-privileged, no NET_BIND_SERVICE needed)
+# - Read-only root filesystem: --read-only (volumes for /tmp if needed)
 
 # Copy the self-contained production bundle
 COPY --from=build /app/prod ./
