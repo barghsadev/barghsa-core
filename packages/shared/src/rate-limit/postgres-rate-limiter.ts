@@ -117,15 +117,12 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
   }
 
   /**
-   * Manual reset — deletes the current window's counter for `key`.
+   * Manual reset — deletes all counter rows for `key`.
    */
   async reset(key: string): Promise<void> {
-    const now = Date.now();
-    const windowStart = Math.floor(now / 60_000) * 60_000; // 1-minute granularity
-
     await this.query(
-      `DELETE FROM rate_limit_counters WHERE key = $1 AND window_start >= $2`,
-      [key, windowStart],
+      `DELETE FROM rate_limit_counters WHERE key = $1`,
+      [key],
     );
   }
 
@@ -165,15 +162,12 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
   }
 
   /**
-   * Reset a security-critical counter by key.
+   * Reset a security-critical counter by key — deletes all rows for `key`.
    */
   async resetSecurity(key: string): Promise<void> {
-    const now = Date.now();
-    const windowStart = Math.floor(now / 60_000) * 60_000;
-
     await this.query(
-      `DELETE FROM security_rate_limit_counters WHERE key = $1 AND window_start >= $2`,
-      [key, windowStart],
+      `DELETE FROM security_rate_limit_counters WHERE key = $1`,
+      [key],
     );
   }
 
@@ -190,13 +184,13 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
 
     const mainResult = await this.query(
       `DELETE FROM rate_limit_counters
-       WHERE window_start + window_ms * 1000 < $1`,
+       WHERE window_start + window_ms < $1`,
       [cutoff],
     );
 
     const secResult = await this.query(
       `DELETE FROM security_rate_limit_counters
-       WHERE window_start + window_ms * 1000 < $1`,
+       WHERE window_start + window_ms < $1`,
       [cutoff],
     );
 

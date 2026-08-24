@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.02.02",
   "current_task_id": "T-04.02.02",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-02-02--rate-limiter-pg",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/52",
   "loop_iteration": 80,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -70,9 +70,10 @@
     "01-platform-infrastructure.md#T-04.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T18:59:00",
-  "notes": "Tick-80: building T-04.02.02 (distributed rate-limiting with Redis acceleration + PostgreSQL fallback) — first slice: interface + PG-backed implementation + NestJS guard on feat/e04-t-04-02-02--rate-limiter-pg",
+  "last_updated": "2026-08-24T19:06:00",
+  "notes": "Tick-80: built T-04.02.02 first slice (RateLimiter abstraction + PG store + NestJS integration) on feat/e04-t-04-02-02--rate-limiter-pg. PR #52 open and ready. All monorepo checks pass (build, typecheck, 80 tests). Next: in_review — invoke z-ai/glm-5.2 reviewer.",
   "status_history": [
-    {"from": "idle", "to": "building", "at": "tick-80"}
+    {"from": "idle", "to": "building", "at": "tick-80"},
+    {"from": "building", "to": "in_review", "at": "tick-80"}
   ]
 }

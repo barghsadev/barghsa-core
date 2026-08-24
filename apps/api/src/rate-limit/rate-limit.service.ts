@@ -1,6 +1,6 @@
 import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { CompositeRateLimiterStore } from '@barghsa/shared/rate-limit';
-import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional, type OnModuleDestroy } from '@nestjs/common';
 import type { Redis } from 'ioredis';
 import { getDbPool } from '@barghsa/db';
 import { REDIS_CLIENT } from '../redis/index.js';
@@ -17,7 +17,7 @@ import { REDIS_CLIENT } from '../redis/index.js';
  * Redis instance.
  */
 @Injectable()
-export class RateLimitService {
+export class RateLimitService implements OnModuleDestroy {
   private readonly logger = new Logger(RateLimitService.name);
   private pgStore: PostgresRateLimiterStore | null = null;
   private compositeStore: CompositeRateLimiterStore | null = null;
@@ -91,5 +91,9 @@ export class RateLimitService {
   async resetSecurityRateLimit(key: string): Promise<void> {
     this.ensureStores();
     await this.compositeStore!.resetSecurity(key);
+  }
+
+  onModuleDestroy(): void {
+    this.pgStore?.stopCleanup();
   }
 }

@@ -78,7 +78,7 @@ describe('PostgresRateLimiterStore', () => {
   });
 
   describe('reset', () => {
-    it('deletes the current window for the given key', async () => {
+    it('deletes all rows for the given key', async () => {
       mockQuery.mockResolvedValueOnce({ rowCount: 1 });
 
       await store.reset('api:127.0.0.1');
@@ -88,7 +88,8 @@ describe('PostgresRateLimiterStore', () => {
       const params = call?.[1] as unknown[] | undefined;
       expect(query).toBeDefined();
       expect(query).toContain('DELETE FROM rate_limit_counters');
-      expect(query).toContain('window_start >= $2');
+      expect(query).toContain('WHERE key = $1');
+      expect(query).not.toContain('window_start');
       expect(params?.[0]).toBe('api:127.0.0.1');
     });
   });
