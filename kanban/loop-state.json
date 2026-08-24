@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.04.03",
   "current_task_id": "T-04.04.03",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e01-t-04-04-03--edge-rate-limiting",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/62",
   "loop_iteration": 100,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -81,7 +81,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-24T21:56:00",
-  "notes": "Tick-100: Next task T-04.04.03 (edge rate limiting for auth, upload, AI endpoints). Creating branch and implementing.",
+  "notes": "Tick-100: T-04.04.03 implemented and PR #62 opened (draft → ready). Edge rate limiting for auth, upload, AI endpoints in both NGINX and Caddy configs. State → in_review. Next tick: invoke reviewer (z-ai/glm-5.2).",
   "status_history": [
     {
       "from": "building",
@@ -126,6 +126,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-100"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-100"
     }
   ]
