@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_key": "01-platform-infrastructure.md#T-04.03.05",
-  "current_task_id": "T-04.03.05",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e04-t-04-03-05--immutable-storage",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/59",
-  "loop_iteration": 94,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 95,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -74,11 +74,12 @@
     "01-platform-infrastructure.md#T-04.03.01",
     "01-platform-infrastructure.md#T-04.03.02",
     "01-platform-infrastructure.md#T-04.03.03",
-    "01-platform-infrastructure.md#T-04.03.04"
+    "01-platform-infrastructure.md#T-04.03.04",
+    "01-platform-infrastructure.md#T-04.03.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T21:27:00",
-  "notes": "Tick-94: built T-04.03.05 (immutable storage). PR #59 — review found CI failure (circular TDZ). Fix pushed (extracted symbols to constants file). State → fixing (attempt 1).",
+  "last_updated": "2026-08-24T21:35:00",
+  "notes": "Tick-95: T-04.03.05 completed (PR #59 merged). Fixed upload.controller.spec.ts (missing IMMUTABLE_STORAGE_SERVICE provider). State → idle. Next: pick next queue task.",
   "status_history": [
     {
       "from": "idle",
@@ -92,8 +93,18 @@
     },
     {
       "from": "in_review",
+      "to": "fixing",
+      "at": "tick-94"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-95"
+    },
+    {
+      "from": "in_review",
       "to": "idle",
-      "at": "tick-93"
+      "at": "tick-95"
     }
   ]
 }
