@@ -6,7 +6,7 @@
   "current_branch": "feat/e01-t-01-03-02--nestjs-build-pipeline",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/11",
   "loop_iteration": 17,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -62,7 +62,9 @@
     {"from": "fixing", "to": "in_review", "at": "tick-16"},
     {"from": "in_review", "to": "idle", "at": "tick-16"},
     {"from": "idle", "to": "building", "at": "tick-17"},
-    {"from": "building", "to": "in_review", "at": "tick-17"}
+    {"from": "building", "to": "in_review", "at": "tick-17"},
+    {"from": "in_review", "to": "fixing", "at": "tick-17"},
+    {"from": "fixing", "to": "in_review", "at": "tick-17"}
   ],
   "last_updated": "tick-17",
   "last_error": null,
