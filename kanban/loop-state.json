@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-01.04.05",
-  "current_task_id": "T-01.04.05",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-04-05--wire-test-tasks",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/26",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 39,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -26,6 +26,7 @@
     "01-platform-infrastructure.md#T-01.04.02",
     "01-platform-infrastructure.md#T-01.04.03",
     "01-platform-infrastructure.md#T-01.04.04",
+    "01-platform-infrastructure.md#T-01.04.05",
     "01-platform-infrastructure.md#T-02.01.01",
     "01-platform-infrastructure.md#T-02.01.02",
     "01-platform-infrastructure.md#T-02.01.03",
@@ -96,9 +97,12 @@
     {"from": "fixing", "to": "in_review", "at": "tick-38"},
     {"from": "in_review", "to": "idle", "at": "tick-38"},
     {"from": "idle", "to": "building", "at": "tick-39"},
-    {"from": "building", "to": "in_review", "at": "tick-39"}
+    {"from": "building", "to": "in_review", "at": "tick-39"},
+    {"from": "in_review", "to": "fixing", "at": "tick-39"},
+    {"from": "fixing", "to": "in_review", "at": "tick-39"},
+    {"from": "in_review", "to": "idle", "at": "tick-39"}
   ],
-  "last_updated": "2026-08-24T10:16:00",
+  "last_updated": "2026-08-24T10:22:00",
   "last_error": null,
-  "notes": "T-01.04.05 (wire test/test:coverage tasks in turbo.json) built and PR #26 open, in review. Available checks pass (typecheck, build; test runs infra-correct with packages/tsconfig+to-be tests empty)."
+  "notes": "T-01.04.05 completed and merged (PR #26). Test tasks wired in turbo.json, per-package test:coverage scripts, --passWithNoTests for early-stage packages, CI test job with affected-filter. Next in queue: T-01.04.06 (S — configure flaky-test quarantine process)."
 }
