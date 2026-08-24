@@ -20,6 +20,7 @@ import { Route as VideosRouteImport } from './routes/videos'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
 import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 
@@ -32,6 +33,11 @@ const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminStorageRoute = AdminStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AiRoute = AiRouteImport.update({
   id: '/ai',
@@ -92,6 +98,7 @@ const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/admin/storage': typeof AdminStorageRoute
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/admin/storage'
     | '/ai'
     | '/charts'
     | '/documents'
@@ -206,6 +218,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/storage': {
+      id: '/admin/storage'
+      path: '/storage'
+      fullPath: '/admin/storage'
+      preLoaderRoute: typeof AdminStorageRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/ai': {
       id: '/ai'
@@ -288,11 +307,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminStorageRoute: typeof AdminStorageRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminStorageRoute: AdminStorageRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
