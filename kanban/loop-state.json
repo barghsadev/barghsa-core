@@ -63,7 +63,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-24T12:29:42",
-  "notes": "In review: PR #43 — T-04.01.01 (PgBouncer pooling). ADR-002, docker-compose pgbouncer service, pool config updates. Ready for GLM 5.2 review.",
+  "notes": "PR #43 — GLM 5.2 review found 2 major + 4 minor issues, all fixed in follow-up commit. Review posted as comment. Waiting for next tick — ready for merge if all issues resolved.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-45"},
     {"from": "fixing", "to": "idle", "at": "tick-46"},
