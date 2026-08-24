@@ -9,7 +9,9 @@
     "vitest.base.config.ts"
   ],
   "exports": {
-    "./*": "./*.ts"
+    "./base.json": "./base.json",
+    "./tsconfig.test.json": "./tsconfig.test.json",
+    "./vitest.base.config": "./vitest.base.config.ts"
   },
   "dependencies": {
     "@tsconfig/node20": "^20.1.0"
