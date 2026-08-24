@@ -40,6 +40,9 @@ COPY packages/shared ./packages/shared
 COPY packages/i18n ./packages/i18n
 COPY apps/api ./apps/api
 
+# Copy healthcheck script for the shared image
+COPY scripts ./scripts
+
 # Build the API app and its transitively referenced packages
 RUN pnpm build --filter @barghsa/api
 
@@ -63,15 +66,18 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # Copy the self-contained production bundle
 COPY --from=build /app/prod ./
 
-# Verify the entrypoint exists
-RUN test -f ./dist/src/main.js
+# Copy healthcheck script (not included in pnpm deploy bundle)
+COPY --from=build /app/scripts ./scripts
+
+# Verify the entrypoint and healthcheck script exist
+RUN test -f ./dist/src/main.js && test -f ./scripts/healthcheck-base.sh
 
 EXPOSE 4000
 
 USER appuser
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:4000/api/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD sh ./scripts/healthcheck-base.sh
 
 # Default CMD — run the API server
 # Override for worker: CMD ["node", "dist/src/worker.js"]
