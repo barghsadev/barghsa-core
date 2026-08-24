@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller.js';
-import { CorrelationIdMiddleware, CorrelationIdProvider } from './common/correlation-id.middleware.js';
+import { CorrelationIdMiddleware, CorrelationIdProvider, ShutdownService } from './common/index.js';
 import { HealthModule } from './health/health.module.js';
 
 @Module({
   imports: [HealthModule],
   controllers: [AppController],
-  providers: [CorrelationIdProvider],
+  providers: [CorrelationIdProvider, ShutdownService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

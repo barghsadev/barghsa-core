@@ -140,6 +140,19 @@ importers:
         specifier: ^6.2.0
         version: 6.4.3(@types/node@26.2.0)(jiti@2.7.0)(terser@5.50.0)(yaml@2.9.0)
 
+  apps/worker:
+    dependencies:
+      '@barghsa/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@barghsa/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   packages/db:
     dependencies:
       drizzle-orm:
