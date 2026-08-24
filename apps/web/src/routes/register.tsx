@@ -3,6 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { Button, Input, Label } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
+import { PasswordField } from '../components/PasswordField.js'
 
 export const Route = createFileRoute('/register')({
   component: RegisterPage,
@@ -202,20 +203,14 @@ function RegisterPage() {
             )}
           </div>
 
-          {/* Password field — hidden until username is valid */}
+          {/* Password field with visibility toggle and strength meter */}
           {isUsernameValid && (
-            <div className="space-y-2">
-              <Label htmlFor="password">
-                {t('auth.register.passwordLabel', locale)}
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete="new-password"
-                aria-required
-              />
-            </div>
+            <PasswordField
+              id="password"
+              label={t('auth.register.passwordLabel', locale)}
+              locale={locale}
+              autoFocus={false}
+            />
           )}
 
           <Button
