@@ -64,10 +64,12 @@ export function buildConnectionString(
  * environment enforce a client-side query timeout that cancels the query
  * server-side via the PostgreSQL cancel protocol.
  *
- * `client.query()` returns a Promise for async calls (or undefined for
- * callback calls), not the internal pg `Query` object. pg's
- * `Client.cancel(client, query)` requires that `Query` object, so we recover
- * it at timeout time from the client's internal active-query slot.
+ * Identity strategy: pg's `client.query()` returns the raw `Query` object
+ * when a callback is passed, and a Promise when no callback is passed
+ * (the Promise path used by Drizzle ORM).  For callback calls we capture
+ * the Query directly from the return value.  For Promise calls we peek at
+ * the client's internal `_activeQuery` or `_queryQueue` right after the
+ * call, which is where pg stores the just-created Query.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof client.query {
@@ -79,8 +81,38 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
     const first = args[0]
     const text = typeof first === 'string' ? first : first?.text
 
+    // Detect callback-passing usage (last arg is a function).
+    const cbIndex = args.findIndex((a: any) => typeof a === 'function')
+    const hasCallback = cbIndex !== -1
+
     let timedOut = false
     let timeoutId: ReturnType<typeof setTimeout> | null = null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let capturedQuery: any = null
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const captureQuery = (result: any, c: any): void => {
+      // Callback path: client.query() returns the Query object itself.
+      if (hasCallback) {
+        capturedQuery = result
+        return
+      }
+      // Promise path: the Query is in the client's internal state.
+      // _activeQuery is set when the query starts executing immediately;
+      // _queryQueue holds queries waiting for a previous query to finish.
+      capturedQuery = c._activeQuery ?? c._queryQueue?.[c._queryQueue.length - 1]
+    }
+
+    const scheduleTimeout = (): void => {
+      if (queryTimeoutMs <= 0 || !capturedQuery) return
+      timeoutId = setTimeout(() => {
+        timedOut = true
+        structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const c = client as any
+        c.cancel(c, capturedQuery)
+      }, queryTimeoutMs)
+    }
 
     const cleanup = (): void => {
       if (!timedOut && timeoutId) {
@@ -88,24 +120,6 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
         timeoutId = null
       }
     }
-
-    const scheduleTimeout = (): void => {
-      if (queryTimeoutMs <= 0) return
-      timeoutId = setTimeout(() => {
-        timedOut = true
-        structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const c = client as any
-        const activeQuery = c._getActiveQuery?.() ?? c._activeQuery
-        if (activeQuery) {
-          c.cancel(c, activeQuery)
-        }
-      }, queryTimeoutMs)
-    }
-
-    // Detect callback-passing usage (last arg is a function).
-    const cbIndex = args.findIndex((a: any) => typeof a === 'function')
-    const hasCallback = cbIndex !== -1
 
     if (hasCallback) {
       const originalCb = args[cbIndex]
@@ -120,12 +134,16 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
       }
       const instrumentedArgs = [...args.slice(0, cbIndex), wrappedCb, ...args.slice(cbIndex + 1)]
       const result = (originalQuery as Function)(...instrumentedArgs)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      captureQuery(result, client as any)
       scheduleTimeout()
       return result
     }
 
     // Promise-based invocation.
     const result = (originalQuery as Function)(...args)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    captureQuery(result, client as any)
     scheduleTimeout()
     if (result && typeof result.then === 'function') {
       return result.finally(() => {

@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery } from './index'
 
 /**
- * Build a minimal mock pg Client with internal active-query state and a
- * controllable deferred resolve for the Promise-style query path.
+ * Build a minimal mock pg Client that mirrors the real client's internal
+ * query-queue and active-query slots so wrapClientQuery can capture the
+ * exact Query object.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makeMockClient(): {
@@ -14,34 +15,57 @@ function makeMockClient(): {
   resolvePromise: () => void
 } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activeQueryRef: { current: any } = { current: null }
-  let deferredResolve: ((v: unknown) => void) | null = null
+  const _queryQueue: any[] = []
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let _activeQuery: any = null
+  let deferredResolve: (() => void) | null = null
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const runQuery = vi.fn((...args: any[]) => {
-    // Simulate an in-flight query recorded in the internal active slot.
-    activeQueryRef.current = { text: 'SELECT pg_sleep(5)' }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const queryObj: any = { text: 'query', id: Math.random(), callback: null }
+    _queryQueue.push(queryObj)
+
+    // Simulate the real pg flow: immediately start the query if no active one.
+    if (!_activeQuery) {
+      _activeQuery = _queryQueue.shift() ?? null
+    }
+
     const seenCallback = args.find((a: any) => typeof a === 'function')
     if (seenCallback) {
-      // Callback style: leave it pending; caller fires it. Return undefined,
-      // matching real pg behavior for callback queries.
-      return undefined
+      queryObj.callback = seenCallback
+      // Callback path: return the Query object (matches real pg).
+      return queryObj
     }
-    // Promise style: return a Promise held until the test resolves it.
+
+    // Promise path: return a Promise that stays pending until resolved.
     return new Promise((resolve) => {
-      deferredResolve = resolve
+      deferredResolve = () => {
+        _activeQuery = null
+        const next = _queryQueue.shift()
+        if (next) _activeQuery = next
+        resolve({ rows: [], rowCount: 0 })
+      }
     })
   })
 
   const cancel = vi.fn()
   const client = {
     query: runQuery,
-    _getActiveQuery: () => activeQueryRef.current,
+    _queryQueue,
     cancel,
   }
+  // Use a getter for _activeQuery so wrapClientQuery reads the live value.
+  Object.defineProperty(client, '_activeQuery', {
+    get: () => _activeQuery,
+    configurable: true,
+  })
+
   const resolvePromise = (): void => {
-    activeQueryRef.current = null
-    if (deferredResolve) deferredResolve({ rows: [], rowCount: 0 })
+    deferredResolve?.()
+    deferredResolve = null
   }
+
   return { client, cancel, runQuery, resolvePromise }
 }
 
@@ -124,47 +148,52 @@ describe('@barghsa/db', () => {
       vi.useRealTimers()
     })
 
-    it('cancels an in-flight query when the timeout elapses (Promise path)', () => {
+    it('cancels the correct query object when timeout elapses (Promise path)', () => {
       const { client, cancel } = makeMockClient()
       const wrapped = wrapClientQuery(client, 100) as typeof client.query
       wrapped('SELECT pg_sleep(5)')
 
-      // Before the threshold: no cancellation yet.
-      vi.advanceTimersByTime(50)
-      expect(cancel).not.toHaveBeenCalled()
-
-      // Advance past the 100ms threshold.
-      vi.advanceTimersByTime(51)
-      expect(cancel).toHaveBeenCalledTimes(1)
-      // First arg is the client instance, second is the active query object.
-      const call = cancel.mock.calls[0]!
-      expect(call[0]).toBe(client)
-      expect(call[1]).toHaveProperty('text')
-    })
-
-    it('cancels an in-flight query when the timeout elapses (callback path)', () => {
-      const { client, cancel } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      const cb = vi.fn()
-      wrapped('SELECT pg_sleep(5)', cb)
+      // The captured query should be the one in _activeQuery.
+      const captured = (client as any)._activeQuery
+      expect(captured).toBeDefined()
 
       vi.advanceTimersByTime(100)
       expect(cancel).toHaveBeenCalledTimes(1)
       const call = cancel.mock.calls[0]!
-      expect(call[1]).toHaveProperty('text')
+      // First arg is the client instance, second is the exact captured query.
+      expect(call[0]).toBe(client)
+      expect(call[1]).toBe(captured)
     })
 
-    it('does not cancel when the query completes before the timeout', () => {
+    it('cancels the correct query object when timeout elapses (callback path)', () => {
+      const { client, cancel, runQuery } = makeMockClient()
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query
+      const cb = vi.fn()
+      wrapped('SELECT pg_sleep(5)', cb)
+
+      // Callback path: client.query() returns the Query object.
+      const callbackResult = runQuery.mock.results[0]?.value
+      expect(callbackResult).toBeDefined()
+
+      vi.advanceTimersByTime(100)
+      expect(cancel).toHaveBeenCalledTimes(1)
+      const call = cancel.mock.calls[0]!
+      expect(call[1]).toBe(callbackResult)
+    })
+
+    it('does not cancel when the query completes before the timeout', async () => {
       const { client, cancel, resolvePromise } = makeMockClient()
       const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      const result = wrapped('SELECT 1')
+      wrapped('SELECT 1')
 
-      // Complete the query well before the threshold (after 50ms).
+      // Complete the query well before the threshold.
       vi.advanceTimersByTime(50)
       resolvePromise()
+      // Flush microtasks so .finally() runs and clears the timeout.
+      await vi.advanceTimersByTimeAsync(0)
 
       // Now advance far past the threshold; timer must have been cleaned up.
-      vi.advanceTimersByTime(200)
+      await vi.advanceTimersByTimeAsync(200)
       expect(cancel).not.toHaveBeenCalled()
     })
 
