@@ -130,6 +130,10 @@ export class S3StorageProvider implements StorageProvider {
     try {
       await this.client.send(new PutObjectCommand(input));
     } catch (err) {
+      this.logger?.error(
+        `[s3-storage-provider] Failed to put object "${resolvedKey}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to put object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
         err,
@@ -161,9 +165,17 @@ export class S3StorageProvider implements StorageProvider {
         etag: response.ETag ?? undefined,
       };
     } catch (err) {
+      // Re-throw our own error type immediately — do not re-wrap.
+      if (err instanceof StorageObjectNotFound) {
+        throw err;
+      }
       if (err instanceof NoSuchKey || (err as { name?: string }).name === 'NoSuchKey') {
         throw new StorageObjectNotFound(key);
       }
+      this.logger?.error(
+        `[s3-storage-provider] Failed to get object "${resolvedKey}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to get object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
         err,
@@ -183,6 +195,10 @@ export class S3StorageProvider implements StorageProvider {
         new DeleteObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
       );
     } catch (err) {
+      this.logger?.error(
+        `[s3-storage-provider] Failed to delete object "${resolvedKey}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to delete object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
         err,
@@ -204,6 +220,10 @@ export class S3StorageProvider implements StorageProvider {
         { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
       );
     } catch (err) {
+      this.logger?.error(
+        `[s3-storage-provider] Failed to generate presigned PUT URL for "${resolvedKey}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to generate presigned PUT URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
         err,
@@ -225,6 +245,10 @@ export class S3StorageProvider implements StorageProvider {
         { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
       );
     } catch (err) {
+      this.logger?.error(
+        `[s3-storage-provider] Failed to generate presigned GET URL for "${resolvedKey}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to generate presigned GET URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
         err,
@@ -275,6 +299,10 @@ export class S3StorageProvider implements StorageProvider {
         continuationToken: response.NextContinuationToken ?? undefined,
       };
     } catch (err) {
+      this.logger?.error(
+        `[s3-storage-provider] Failed to list objects with prefix "${resolvedPrefix}":`,
+        err,
+      );
       throw new StorageProviderError(
         `Failed to list objects with prefix "${resolvedPrefix}": ${err instanceof Error ? err.message : String(err)}`,
         err,

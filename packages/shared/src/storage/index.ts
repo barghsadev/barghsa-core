@@ -13,4 +13,5 @@ export {
 export type { S3StorageProviderConfig } from './s3-storage-provider.js';
 export { S3StorageProvider } from './s3-storage-provider.js';
 
+export type { StorageProviderFactoryConfig } from './storage-factory.js';
 export { createStorageProvider } from './storage-factory.js';
