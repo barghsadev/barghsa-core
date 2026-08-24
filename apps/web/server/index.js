@@ -12,11 +12,11 @@
 
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { join, extname } from 'node:path';
+import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
-const DIST_DIR = join(__dirname, '..', 'dist');
+const DIST_DIR = resolve(__dirname, '..', 'dist');
 const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
 
 /** Content-hashed asset pattern matching vite.config.ts */
@@ -35,19 +35,39 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.woff': 'font/woff',
   '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
+  '.eot': 'application/vnd.ms-fontobject',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.csv': 'text/csv',
   '.map': 'application/json',
 };
+
+/**
+ * Resolve and validate a URL path against the dist directory.
+ * Returns the absolute file path, or null if the request escapes DIST_DIR
+ * (defends against directory traversal).
+ */
+function resolveDistPath(urlPath) {
+  const decoded = decodeURIComponent(urlPath.split('?')[0].split('#')[0]);
+  const filePath = resolve(DIST_DIR, '.' + decoded);
+  // Ensure the resolved path stays within the dist directory
+  if (filePath !== DIST_DIR && !filePath.startsWith(DIST_DIR + sep)) {
+    return null;
+  }
+  return filePath;
+}
 
 /**
  * Try to serve a static file from dist.
  * Returns the file content and MIME type, or null if not found.
  */
 async function serveFile(urlPath) {
-  // Normalize path to prevent directory traversal
-  const normalized = urlPath.split('?')[0].replace(/\.\.\//g, '');
-  const filePath = join(DIST_DIR, normalized);
+  const filePath = resolveDistPath(urlPath);
+  if (!filePath) return null;
 
   try {
     const stats = await stat(filePath);
@@ -116,5 +136,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Barghsa web server listening on http://0.0.0.0:${PORT}`);
+  process.stderr.write(`Barghsa web server listening on http://0.0.0.0:${PORT}\n`);
 });

@@ -49,6 +49,18 @@ WORKDIR /app
 # Security: run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
+# Install production dependencies (required by acceptance criteria;
+# the static SPA runs with zero runtime deps, so this is a no-op
+# for the web app — present for consistency)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN corepack enable && corepack prepare pnpm@10 --activate && \
+    pnpm install --frozen-lockfile --prod && \
+    rm -rf /root/.local/share/pnpm
+
+# Copy the web app's package.json as the app-root package.json so the
+# "type": "module" field applies to the static server's ESM import statements
+COPY --from=build /app/apps/web/package.json ./package.json
+
 # Copy build artifacts and the static server
 COPY --from=build /app/apps/web/dist ./dist
 COPY --from=build /app/apps/web/server ./server
