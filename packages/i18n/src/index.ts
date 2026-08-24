@@ -1,0 +1,1 @@
+// @barghsa/i18n
