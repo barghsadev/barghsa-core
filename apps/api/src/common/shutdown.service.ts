@@ -91,12 +91,19 @@ export class ShutdownService implements OnApplicationShutdown {
 
     clearTimeout(forceExitTimer);
 
-    if (cleanShutdown) {
-      this.logger.log('Graceful shutdown complete');
-      process.exit(0);
-    } else {
-      this.logger.error('Graceful shutdown completed with errors — exiting with code 1');
-      process.exit(1);
+    // Only force an exit when the shutdown was triggered by an OS signal
+    // (SIGTERM, SIGINT).  Programmatic close from `app.close()` (e.g. the
+    // generate-openapi script) should leave the exit code to the caller.
+    if (signal) {
+      if (cleanShutdown) {
+        this.logger.log('Graceful shutdown complete');
+        process.exit(0);
+      } else {
+        this.logger.error('Graceful shutdown completed with errors — exiting with code 1');
+        process.exit(1);
+      }
+    } else if (!cleanShutdown) {
+      this.logger.warn('Graceful shutdown completed with errors (non-signal close — errors logged above)');
     }
   }
 }

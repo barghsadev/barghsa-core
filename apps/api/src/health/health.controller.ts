@@ -1,4 +1,5 @@
-import { Controller, Get, HttpCode, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, HttpException, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { HealthService, type ReadinessResult } from './health.service.js';
 
 @Controller('api/health')
@@ -30,8 +31,11 @@ export class HealthController {
    * Excluded from authentication, rate limiting, and audit logging.
    */
   @Get('ready')
-  async readiness(): Promise<ReadinessResult> {
+  async readiness(@Res({ passthrough: true }) res: Response): Promise<ReadinessResult> {
     const result = await this.healthService.readiness();
+    if (result.warnings && result.warnings.length > 0) {
+      res.setHeader('X-Health-Warning', result.warnings.join(', '));
+    }
     if (result.status === 'down') {
       throw new HttpException(result, HttpStatus.SERVICE_UNAVAILABLE);
     }
