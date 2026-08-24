@@ -5,7 +5,7 @@
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-01-04--pg-performance-monitoring",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/46",
-  "loop_iteration": 67,
+  "loop_iteration": 69,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -65,10 +65,12 @@
     "01-platform-infrastructure.md#T-04.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T17:00:00",
-  "notes": "Fix round 1 applied: gauge gaps, allSettled, max_connections query, replication lag, status_history restored. GLM 5.2 approved (minor: seq scans gauge). CI pre-existing failure blocks merge (@barghsa/worker).",
+  "last_updated": "2026-08-24T17:12:00",
+  "notes": "PR #46 rebased on main (CI fix PR #47 merged). CI re-triggered on rebased branch. Next tick: check CI status and merge if green.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-67"},
-    {"from": "fixing", "to": "in_review", "at": "tick-67"}
+    {"from": "fixing", "to": "in_review", "at": "tick-67"},
+    {"from": "in_review", "to": "blocked", "at": "tick-68"},
+    {"from": "blocked", "to": "in_review", "at": "tick-69"}
   ]
 }
