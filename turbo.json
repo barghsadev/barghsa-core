@@ -1,0 +1,55 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env", ".env.local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", ".turbo/**"],
+      "env": ["NODE_ENV", "DATABASE_URL", "REDIS_URL", "CDN_URL"],
+      "outputLogs": "new-only"
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": [],
+      "outputs": [],
+      "outputLogs": "new-only"
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "outputLogs": "new-only"
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "outputLogs": "new-only",
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "outputLogs": "new-only"
+    },
+    "format:check": {
+      "dependsOn": [],
+      "outputs": [],
+      "outputLogs": "errors-only"
+    },
+    "format:write": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false,
+      "outputLogs": "errors-only"
+    },
+    "clean": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false,
+      "outputLogs": "errors-only"
+    }
+  }
+}
