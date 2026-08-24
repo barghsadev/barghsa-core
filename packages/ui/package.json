@@ -12,6 +12,7 @@
         "./styles.css": "./src/styles.css"
     },
     "scripts": {
+        "build": "tsc",
         "dev": "tsc --watch --noEmit",
         "test": "vitest run --passWithNoTests",
         "test:coverage": "vitest run --coverage --passWithNoTests",
