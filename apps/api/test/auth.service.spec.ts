@@ -1,18 +1,24 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { AuthService } from '../src/auth/auth.service.js';
+import { OtpService } from '../src/auth/otp.service.js';
+
+const mockCreateChallenge = vi.fn().mockResolvedValue({
+  challengeId: '0000-000-00000',
+  destination: 'user@example.com',
+});
+
+const mockOtpService = {
+  createChallenge: mockCreateChallenge,
+} as unknown as OtpService;
 
 describe('AuthService', () => {
   let service: AuthService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
-    }).compile();
-
-    service = module.get<AuthService>(AuthService);
+  beforeEach(() => {
+    vi.clearAllMocks();
+    service = new AuthService(mockOtpService);
   });
 
   describe('register', () => {
@@ -28,12 +34,11 @@ describe('AuthService', () => {
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(result.challengeId.length).toBeGreaterThan(0);
+      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1');
     });
 
     it('throws USERNAME_TAKEN when username is taken (stub)', async () => {
       // For now the stub always returns false, so this test documents the expected behavior
-      // Once the DB query is wired, change the test to mock the DB call
       const result = await service.register(
         {
           username: 'user@example.com',

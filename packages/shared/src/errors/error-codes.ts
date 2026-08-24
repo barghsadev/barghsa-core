@@ -111,6 +111,32 @@ export const ErrorCodes = {
     severity: 'debug' as ErrorSeverity,
   },
 
+  // ── OTP ────────────────────────────────────────────
+  AUTH_OTP_INVALID: {
+    code: 'AUTH:OTP:INVALID',
+    httpStatus: 401,
+    messageKey: 'auth.otp.error.invalid',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_OTP_EXPIRED: {
+    code: 'AUTH:OTP:EXPIRED',
+    httpStatus: 401,
+    messageKey: 'auth.otp.error.expired',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_OTP_MAX_ATTEMPTS: {
+    code: 'AUTH:OTP:MAX_ATTEMPTS',
+    httpStatus: 401,
+    messageKey: 'auth.otp.error.maxAttempts',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_OTP_CONSUMED: {
+    code: 'AUTH:OTP:ALREADY_CONSUMED',
+    httpStatus: 409,
+    messageKey: 'auth.otp.error.alreadyConsumed',
+    severity: 'info' as ErrorSeverity,
+  },
+
   // ── Authorization ───────────────────────────────────────
   AUTHZ_FORBIDDEN: {
     code: 'AUTHZ:FORBIDDEN',
@@ -170,6 +196,12 @@ export const ErrorCodes = {
     code: 'RATE_LIMIT:EXCEEDED',
     httpStatus: 429,
     messageKey: 'error.rate_limit.exceeded',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_OTP_RATE_LIMITED: {
+    code: 'AUTH:OTP:RATE_LIMITED',
+    httpStatus: 429,
+    messageKey: 'auth.otp.error.rateLimited',
     severity: 'info' as ErrorSeverity,
   },
 

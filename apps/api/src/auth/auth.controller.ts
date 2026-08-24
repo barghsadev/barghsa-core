@@ -16,13 +16,15 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { AuthService } from './auth.service.js';
 import { RegisterSchema } from './dto/register.dto.js';
 import type { RegisterResponse } from './dto/register.dto.js';
+import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js';
+import { OtpService } from './otp.service.js';
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly otpService: OtpService) {}
 
   /**
    * POST /api/auth/register
@@ -87,5 +89,74 @@ export class AuthController {
     // ── Delegate to service ─────────────────────────────────────────
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.authService.register(parsed.data, ip);
+  }
+
+  /**
+   * POST /api/auth/register/verify
+   *
+   * Verifies the OTP for a registration challenge.
+   *
+   * Rate limits:
+   * - 5 verification attempts per IP per 60s
+   */
+  @Post('register/verify')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Verify OTP for registration' })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP verification accepted.',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid, expired, or max attempts exceeded' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async verifyOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<{ verified: true; challengeId: string }> {
+    const parsed = VerifyOtpSchema.safeParse(rawBody);
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.otpService.verifyChallenge(parsed.data.challengeId, parsed.data.otp, ip);
+  }
+
+  /**
+   * POST /api/auth/register/resend
+   *
+   * Resends an OTP for a pending registration challenge.
+   *
+   * Rate limits:
+   * - 3 resend attempts per IP per 120s
+   */
+  @Post('register/resend')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000 })
+  @ApiOperation({ summary: 'Resend OTP for registration' })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP resent. Returns the same challengeId.',
+  })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async resendOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<{ challengeId: string }> {
+    const parsed = ResendOtpSchema.safeParse(rawBody);
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.otpService.resendChallenge(parsed.data.challengeId, ip);
   }
 }
