@@ -1,26 +1,30 @@
 import { customType, bigint, numeric, timestamp } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
 
 /**
- * PostgreSQL `uuid` column backed by `uuid_generate_v7()`.
+ * PostgreSQL `uuid` column with `uuid_generate_v7()` default.
  *
  * UUIDv7 encodes the current Unix timestamp in milliseconds (48 bits)
  * followed by random bits (74 bits), providing monotonic ordering and
- * index locality. The actual PostgreSQL function `uuid_generate_v7()`
- * is created in a migration (T-02.02.03).
+ * index locality. The PostgreSQL function `uuid_generate_v7()` is
+ * created in a migration (T-02.02.03).
+ *
+ * Columns created with this type automatically get
+ * `DEFAULT uuid_generate_v7()` — no additional `.default(...)` needed.
  *
  * Usage:
  * ```ts
- * id: uuidv7('id').primaryKey().default(sql`uuid_generate_v7()`)
+ * id: uuidv7('id').primaryKey().notNull()
  * ```
- *
- * The `uuid_generate_v7()` default is wired in the base table factory
- * (packages/db/src/schema) rather than embedded here.
  */
-export const uuidv7 = customType<{ data: string }>({
+const uuidv7Column = customType<{ data: string; default: true }>({
   dataType() {
     return 'uuid'
   },
 })
+
+export const uuidv7 = (name?: string) =>
+  (name ? uuidv7Column(name) : uuidv7Column()).default(sql`uuid_generate_v7()`)
 
 /**
  * PostgreSQL `timestamp with time zone` — always UTC.
