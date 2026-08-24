@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-01-02-01--otp-backend",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/74",
-  "loop_iteration": 121,
-  "fix_attempts": 0,
+  "loop_iteration": 122,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -150,8 +150,8 @@
     "02-auth-users-admin.md#T-01.01.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T02:00:00",
-  "notes": "Tick-121: PR #74 (T-01.02.01) opened and marked ready. OtpService with create/verify/resend + rate limits. 64/65 tests pass. Loop in_review.",
+  "last_updated": "2026-08-25T02:04:00",
+  "notes": "Tick-122: Fix round 1 — addressed all 3 critical + 3 major findings from z-ai/glm-5.2 review. Timing-safe compare, atomic consume, no attempts reset on resend, decrement guard, console.log→logger.debug, more resend tests. 67/68 tests pass (pre-existing http-exception-filter mismatch). Pushed commit. Back in_review.",
   "status_history": [
     {
       "from": "in_review",
@@ -187,6 +187,16 @@
       "from": "idle",
       "to": "building",
       "at": "tick-121"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-122"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-122"
     }
   ]
 }
