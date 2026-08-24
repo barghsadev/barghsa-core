@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 29,
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-02.01.02",
+  "current_task_id": "T-02.01.02",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e02-t-02-01-02--pool-factory",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/18",
+  "loop_iteration": 30,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01","01-platform-infrastructure.md#T-01.01.02","01-platform-infrastructure.md#T-01.01.03","01-platform-infrastructure.md#T-01.01.04","01-platform-infrastructure.md#T-01.01.05",
@@ -36,7 +36,9 @@
     {"from":"idle","to":"blocked","at":"tick-27"},
     {"from":"blocked","to":"building","at":"tick-28"},
     {"from":"building","to":"fixing","at":"tick-28"},
-    {"from":"fixing","to":"idle","at":"tick-29"}
+    {"from":"fixing","to":"idle","at":"tick-29"},
+    {"from":"idle","to":"building","at":"tick-30"},
+    {"from":"building","to":"in_review","at":"tick-30"}
   ],
   "last_updated": "2026-08-24T07:50:00",
   "last_error": null,
