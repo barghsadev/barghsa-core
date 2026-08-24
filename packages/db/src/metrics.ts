@@ -27,8 +27,10 @@ export interface DatabaseMetrics {
   }
   /** Cache hit ratio (0–1), calculated from blks_hit / (blks_hit + blks_read) */
   cacheHitRatio: number
-  /** Connection pool saturation (0–1) */
+  /** Connection pool saturation (0–1) — total client connections / PG max_connections */
   connectionSaturation: number
+  /** PostgreSQL server max_connections setting */
+  maxConnections: number
   /** Number of active connections currently executing a query */
   activeConnections: number
   /** Number of idle-in-transaction connections (potential issues) */
