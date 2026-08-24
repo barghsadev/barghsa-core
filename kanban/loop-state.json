@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-02.02.03",
-  "current_task_id": "T-02.02.03",
+  "status": "fixing",
+  "current_task_key": "01-platform-infrastructure.md#T-01.04.04",
+  "current_task_id": "T-01.04.04",
   "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e02-t-02-02-03--uuidv7-migration",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/24",
-  "loop_iteration": 37,
-  "fix_attempts": 0,
+  "current_branch": "feat/e01-t-01-04-04--playwright-e2e",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/25",
+  "loop_iteration": 38,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -30,7 +30,8 @@
     "01-platform-infrastructure.md#T-02.01.03",
     "01-platform-infrastructure.md#T-02.01.04",
     "01-platform-infrastructure.md#T-02.02.01",
-    "01-platform-infrastructure.md#T-02.02.02"
+    "01-platform-infrastructure.md#T-02.02.02",
+    "01-platform-infrastructure.md#T-02.02.03"
   ],
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-1"}, {"from": "building", "to": "in_review", "at": "tick-1"}, {"from": "in_review", "to": "idle", "at": "tick-1"},
@@ -82,9 +83,17 @@
     {"from": "building", "to": "in_review", "at": "tick-36"},
     {"from": "in_review", "to": "fixing", "at": "tick-36"},
     {"from": "fixing", "to": "in_review", "at": "tick-36"},
-    {"from": "in_review", "to": "idle", "at": "tick-36"}
+    {"from": "in_review", "to": "idle", "at": "tick-36"},
+    {"from": "idle", "to": "building", "at": "tick-37"},
+    {"from": "building", "to": "in_review", "at": "tick-37"},
+    {"from": "in_review", "to": "fixing", "at": "tick-37"},
+    {"from": "fixing", "to": "in_review", "at": "tick-37"},
+    {"from": "in_review", "to": "idle", "at": "tick-37"},
+    {"from": "idle", "to": "building", "at": "tick-38"},
+    {"from": "building", "to": "in_review", "at": "tick-38"},
+    {"from": "in_review", "to": "fixing", "at": "tick-38"}
   ],
-  "last_updated": "2026-08-24T09:38:00",
+  "last_updated": "2026-08-24T09:47:00",
   "last_error": null,
-  "notes": "T-02.02.03 built and in review (PR #24). Migration + integration tests pass."
+  "notes": "T-01.04.04 (Configure Playwright for E2E testing) selected. Creating Playwright config scaffold with Chromium/Firefox/WebKit/mobile projects, base URL, trace-on-failure, and smoke test."
 }
