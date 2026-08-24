@@ -203,22 +203,20 @@ function RegisterPage() {
           </div>
 
           {/* Password field — hidden until username is valid */}
-          <div
-            className="space-y-2"
-            style={{ opacity: isUsernameValid ? 1 : 0.4 }}
-          >
-            <Label htmlFor="password">
-              {t('auth.register.passwordLabel', locale)}
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              autoComplete="new-password"
-              disabled={!isUsernameValid}
-              aria-disabled={!isUsernameValid}
-            />
-          </div>
+          {isUsernameValid && (
+            <div className="space-y-2">
+              <Label htmlFor="password">
+                {t('auth.register.passwordLabel', locale)}
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="new-password"
+                aria-required
+              />
+            </div>
+          )}
 
           <Button
             type="submit"
