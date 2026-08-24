@@ -77,8 +77,8 @@ add_result_field() {
   local value="$2"
   local updated
   updated=$(echo "$RESULT_JSON" | jq --arg k "$key" --arg v "$value" '. + {($k): $v}' 2>/dev/null) || {
-    echo "WARN: jq failed to add field $key — preserving prior result" >&2
-    return 0
+    echo "ERROR: jq failed to add field $key" >&2
+    return 1
   }
   RESULT_JSON="$updated"
 }
@@ -88,8 +88,8 @@ add_result_field_num() {
   local value="$2"
   local updated
   updated=$(echo "$RESULT_JSON" | jq --arg k "$key" --argjson v "$value" '. + {($k): $v}' 2>/dev/null) || {
-    echo "WARN: jq failed to add numeric field $key — preserving prior result" >&2
-    return 0
+    echo "ERROR: jq failed to add numeric field $key" >&2
+    return 1
   }
   RESULT_JSON="$updated"
 }
@@ -97,7 +97,7 @@ add_result_field_num() {
 # ─── Help ─────────────────────────────────────────────────────────────────────
 
 show_help() {
-  sed -n '2,28p' "$0" | sed 's/^# //'
+  sed -n '/^# Usage:/,/^#$/p' "$0" | sed 's/^# //; s/^#$//'
   exit 0
 }
 
@@ -239,7 +239,7 @@ cleanup() {
   if [[ -f "${WORK_DIR}/data/postmaster.pid" ]]; then
     echo "  Stopping PostgreSQL..." >&2
     if [[ "$DRY_RUN" != true ]]; then
-      "${PG_CTL}" -D "${WORK_DIR}/data" stop -m fast 2>/dev/null || true
+      timeout 10 "${PG_CTL}" -D "${WORK_DIR}/data" stop -m fast 2>/dev/null || true
     fi
   fi
 
@@ -276,7 +276,8 @@ step_restore() {
   # shellcheck disable=SC2015
   RESTORE_OUTPUT=$(RESTORE_DIR="$WORK_DIR" "${RESTORE_SCRIPT}" --target-dir "$WORK_DIR" --latest 2>&1) || {
     echo "ERROR: restore-pg.sh failed" >&2
-    echo "$RESTORE_OUTPUT" >&2
+    # Sanitize: redact S3 credentials from error output before display
+    echo "$RESTORE_OUTPUT" | sed "s/${BACKUP_S3_ACCESS_KEY:-__NONE__}/***REDACTED***/g; s/${BACKUP_S3_SECRET_KEY:-__NONE__}/***REDACTED***/g" >&2
     add_result_field "step_restore" "failed"
     return 1
   }
@@ -310,12 +311,15 @@ step_start_postgres() {
 
   # Find an available port
   local test_port="$PG_PORT"
-  while lsof -i "TCP:${test_port}" &>/dev/null 2>&1; do
+  # Portable port-busy check: uses bash /dev/tcp (works everywhere bash does, no external deps)
+  while (: </dev/tcp/127.0.0.1/$test_port) 2>/dev/null; do
     test_port=$((test_port + 1))
   done
   PG_PORT="$test_port"
 
   echo "  Port: ${PG_PORT}" >&2
+
+  local conf_file="${WORK_DIR}/data/postgresql.conf"
 
   # Generate a fresh postgresql.conf for temporary instance
   # Move any existing config aside to avoid conflict with recovery settings
@@ -524,7 +528,8 @@ step_measure_performance() {
       fi
     fi
   else
-    rpo_status="unknown"
+    rpo_status="critical"
+    overall_status="critical"
   fi
 
   echo "  RTO:  ${rto_min}m ${rto_sec}s (${rto}s total)  — status: ${rto_status}" >&2

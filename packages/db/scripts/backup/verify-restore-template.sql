@@ -65,4 +65,4 @@
 -- ─── Timestamp Sanity ────────────────────────────────────────────────────────
 
 -- SELECT 'users_future_created' AS check_name, count(*) AS failures
---   FROM users WHERE created_at > now();
+--   FROM users WHERE created_at > now();\n
