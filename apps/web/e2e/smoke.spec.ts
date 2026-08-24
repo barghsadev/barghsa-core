@@ -22,9 +22,8 @@ test.describe('Application smoke tests', () => {
     await expect(root.locator('h1')).toHaveCount(1)
   })
 
-  test('fixture provides an isolated test identity', async ({ identity }) => {
-    // The identity prefix must be unique per test run (used to scope seed data)
-    expect(identity).toMatch(/^e2e-test-/)
-    expect(identity.length).toBeGreaterThan('e2e-test-'.length)
+  test('fixture provides a deterministic test identity', async ({ identity }) => {
+    expect(identity).toMatch(/^e2e-chromium-w\d+-/)
+    expect(identity.length).toBeGreaterThan('e2e-chromium-w0-'.length)
   })
 })

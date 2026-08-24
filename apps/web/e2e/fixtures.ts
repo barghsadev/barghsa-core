@@ -3,28 +3,35 @@ import { test as base, expect, type Page } from '@playwright/test'
 /**
  * Extended test fixture providing isolated test context.
  *
- * Each test gets a unique identity prefix for deterministic seed data,
- * ensuring no cross-test state pollution.
+ * Each test gets a deterministic identity derived from the test metadata
+ * so runs are reproducible and seed data can be traced back to a specific
+ * test + project + worker combination.
  */
 interface TestFixtures {
-  /** Unique identity to scope test data (e.g. seed search prefix) */
+  /** Deterministic identity to scope test data (e.g. seed search prefix).
+   *  Format: `e2e-<project>-<worker>-<sanitized-title>` */
   identity: string
 }
 
 /**
- * Creates a test-scoped identity for isolated E2E test data.
+ * Sanitize a test title to a filesystem-safe identifier.
  */
-function createTestIdentity(): string {
-  // Use performance.now + random for uniqueness without external deps
-  const ts = performance.now().toString(36).replace('.', '')
-  const rnd = Math.random().toString(36).slice(2, 8)
-  return `e2e-test-${ts}-${rnd}`
+function sanitize(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 48)
 }
 
 export const test = base.extend<TestFixtures>({
-  identity: async ({}, use) => {
-    await use(createTestIdentity())
-  },
+  identity: [
+    async ({}, use, testInfo) => {
+      const identity = `e2e-${testInfo.project.name}-w${testInfo.workerIndex}-${sanitize(testInfo.title)}`
+      await use(identity)
+    },
+    { auto: true },
+  ],
 })
 
 export { expect } from '@playwright/test'
