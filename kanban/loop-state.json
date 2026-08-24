@@ -1,9 +1,9 @@
 {
-  "status": "building",
-  "current_task_key": "01-platform-infrastructure.md#T-04.01.07",
-  "current_task_id": "T-04.01.07",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-04-01-07--encrypted-off-server-backup",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 77,
   "fix_attempts": 0,
@@ -65,12 +65,14 @@
     "01-platform-infrastructure.md#T-04.01.03",
     "01-platform-infrastructure.md#T-04.01.04",
     "01-platform-infrastructure.md#T-04.01.05",
-    "01-platform-infrastructure.md#T-04.01.06"
+    "01-platform-infrastructure.md#T-04.01.06",
+    "01-platform-infrastructure.md#T-04.01.07"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T18:20:00",
-  "notes": "Tick-76: Major progress. PR #48 merged (fixed CI blocker — dist/ exclusion in vitest base config). PR #49 merged (T-04.01.06 slice 1 — hybrid deployment ADR + TLS config). Loop idle, next task: T-04.01.07.",
+  "last_updated": "2026-08-24T18:28:00",
+  "notes": "Tick-77: T-04.01.07 complete. PR #50 merged — encrypted off-server config backup scripts (backup-config.sh, restore-config.sh, verify-restore-config.sh) + runbook. Loop idle, next task: T-04.02.01 (Redis connection factory).",
   "status_history": [
+    {"from": "in_review", "to": "idle", "at": "tick-77"},
     {"from": "blocked", "to": "in_review", "at": "tick-76"},
     {"from": "idle", "to": "in_review", "at": "tick-72"},
     {"from": "in_review", "to": "fixing", "at": "tick-72"},
