@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "01-platform-infrastructure.md#T-04.01.01",
+  "current_task_id": "T-04.01.01",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e01-t-04-01-01--pgbouncer-pooling",
   "current_pr_url": null,
-  "loop_iteration": 62,
+  "loop_iteration": 63,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -62,8 +62,8 @@
     "01-platform-infrastructure.md#T-03.03.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T12:23:33",
-  "notes": "T-03.03.04 completed and merged (PR #42). State idle. Next queue: T-03.03.04 is last completed — checking next available task.",
+  "last_updated": "2026-08-24T12:27:42",
+  "notes": "Building T-04.01.01 (PgBouncer pooling). Created ADR-002, pgbouncer service in docker-compose.yml, updated pool config with PGBOUNCER_URL/PGDIRECT_URL support, updated .env.example. Ready to open PR.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-45"},
     {"from": "fixing", "to": "idle", "at": "tick-46"},
@@ -109,6 +109,8 @@
     {"from": "building", "to": "in_review", "at": "tick-60"},
     {"from": "in_review", "to": "idle", "at": "tick-61"},
     {"from": "idle", "to": "building", "at": "tick-61"},
-    {"from": "building", "to": "in_review", "at": "tick-61"}
+    {"from": "building", "to": "in_review", "at": "tick-61"},
+    {"from": "in_review", "to": "idle", "at": "tick-62"},
+    {"from": "idle", "to": "building", "at": "tick-63"}
   ]
 }

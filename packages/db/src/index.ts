@@ -5,6 +5,8 @@ let pool: Pool | null = null
 
 export interface DbPoolConfig {
   databaseUrl?: string
+  pgbouncerUrl?: string
+  pgdirectUrl?: string
   poolMin?: number
   poolMax?: number
   idleTimeoutMillis?: number
@@ -172,8 +174,18 @@ function attachClientQueryHooks(pool: Pool, queryTimeoutMs: number): void {
 export function createDbPool(config: DbPoolConfig = {}): Pool {
   if (pool) return pool
 
+  // Connection URL priority: PgBouncer first, then direct PostgreSQL.
+  // PgBouncer is the preferred target for production deployments with
+  // multiple API replicas.  When PgBouncer is not configured (local dev,
+  // single-server), DATABASE_URL is used directly.
+  const connectionUrl =
+    config.pgbouncerUrl ??
+    config.databaseUrl ??
+    process.env['PGBOUNCER_URL'] ??
+    process.env['DATABASE_URL']
+
   pool = new Pool({
-    connectionString: buildConnectionString(config.databaseUrl, config),
+    connectionString: buildConnectionString(connectionUrl, config),
     min: config.poolMin ?? (Number(process.env.DB_POOL_MIN) || 2),
     max: config.poolMax ?? (Number(process.env.DB_POOL_MAX) || 20),
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
@@ -195,6 +207,29 @@ export function getDbPool(): Pool {
     throw new Error('Database pool not initialized. Call createDbPool() first.')
   }
   return pool
+}
+
+/**
+ * Create a direct database connection pool that bypasses PgBouncer.
+ * Use this for admin operations, migrations, and any operation that
+ * requires session-level features (prepared statements, LISTEN/NOTIFY).
+ *
+ * Falls back to the main pool if PGDIRECT_URL is not configured.
+ */
+export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
+  const directUrl =
+    config.pgdirectUrl ??
+    process.env['PGDIRECT_URL'] ??
+    process.env['DATABASE_URL']
+
+  return new Pool({
+    connectionString: buildConnectionString(directUrl, config),
+    min: config.poolMin ?? 1,
+    max: config.poolMax ?? 5,
+    idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
+    connectionTimeoutMillis:
+      config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
+  })
 }
 
 export function createDbInstance(config: DbPoolConfig = {}, schema?: Record<string, unknown>) {
