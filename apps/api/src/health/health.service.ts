@@ -59,10 +59,9 @@ export class HealthService implements OnModuleInit {
     ]);
 
     // PostgreSQL is the only critical dependency.
-    const critical = pg;
     const overall =
-      critical.status === 'down' ? 'down' as const
-      : pg.status === 'degraded' || redis.status === 'degraded' || obj.status === 'degraded'
+      pg.status === 'down' ? 'down' as const
+      : pg.status !== 'ok' || redis.status !== 'ok' || obj.status !== 'ok'
         ? 'degraded' as const
         : 'ok' as const;
 
