@@ -16,5 +16,8 @@
     "typecheck": "turbo typecheck",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write"
+  },
+  "devDependencies": {
+    "turbo": "2.10.11"
   }
 }
