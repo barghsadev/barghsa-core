@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.03",
   "current_task_id": "T-04.01.03",
   "current_task_file": "01-platform-infrastructure.md",
@@ -64,8 +64,8 @@
     "01-platform-infrastructure.md#T-04.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T16:12:00",
-  "notes": "T-04.01.03 (restore procedure, L) — slice 1 in fixing. GLM 5.2 found 2 critical + 2 major. All fixed and pushed (e392889). Returning to in_review on next tick.",
+  "last_updated": "2026-08-24T16:15:00",
+  "notes": "T-04.01.03 (restore procedure, L) — slice 1 re-review. Fixes from previous review confirmed. Invoking GLM 5.2.",
   "status_history": [
     {"from": "in_review", "to": "fixing", "at": "tick-45"},
     {"from": "fixing", "to": "idle", "at": "tick-46"},
@@ -123,6 +123,7 @@
     {"from": "in_review", "to": "idle", "at": "tick-65"},
     {"from": "idle", "to": "building", "at": "tick-65"},
     {"from": "building", "to": "in_review", "at": "tick-65"},
-    {"from": "in_review", "to": "fixing", "at": "tick-66"}
+    {"from": "in_review", "to": "fixing", "at": "tick-66"},
+    {"from": "fixing", "to": "in_review", "at": "tick-66"}
   ]
 }
