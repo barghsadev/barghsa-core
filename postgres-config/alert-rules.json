@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json.schemastore.org/prometheus/alerting_rule",
+  "groups": [
+    {
+      "name": "barghsa-postgresql",
+      "rules": [
+        {
+          "alert": "PostgresCacheHitRatioLow",
+          "expr": "pg_cache_hit_ratio < 0.95",
+          "for": "5m",
+          "labels": { "severity": "warning" },
+          "annotations": {
+            "summary": "PostgreSQL cache hit ratio below 95%",
+            "description": "Cache hit ratio is {{ $value | humanizePercentage }}. Consider increasing shared_buffers or reviewing query patterns."
+          }
+        },
+        {
+          "alert": "PostgresConnectionSaturationHigh",
+          "expr": "pg_connection_saturation > 0.8",
+          "for": "2m",
+          "labels": { "severity": "critical" },
+          "annotations": {
+            "summary": "PostgreSQL connection pool saturation exceeds 80%",
+            "description": "Connection pool is {{ $value | humanizePercentage }} saturated. Consider increasing max_connections or adding a PgBouncer connection pool."
+          }
+        },
+        {
+          "alert": "PostgresActiveConnectionsHigh",
+          "expr": "pg_active_connections > 50",
+          "for": "2m",
+          "labels": { "severity": "warning" },
+          "annotations": {
+            "summary": "High number of active PostgreSQL connections",
+            "description": "Active connections: {{ $value }}. Investigate query patterns and connection pool settings."
+          }
+        },
+        {
+          "alert": "PostgresIdleInTransaction",
+          "expr": "pg_idle_in_transaction_connections > 5",
+          "for": "1m",
+          "labels": { "severity": "warning" },
+          "annotations": {
+            "summary": "Idle-in-transaction connections detected",
+            "description": "{{ $value }} connections are idle in transaction. These may block vacuum and hold locks."
+          }
+        },
+        {
+          "alert": "PostgresLockContention",
+          "expr": "pg_waiting_connections > 3",
+          "for": "1m",
+          "labels": { "severity": "warning" },
+          "annotations": {
+            "summary": "PostgreSQL lock contention detected",
+            "description": "{{ $value }} connections waiting on locks. Investigate long-running transactions."
+          }
+        },
+        {
+          "alert": "PostgresLongRunningQueries",
+          "expr": "pg_long_running_queries > 0",
+          "for": "1m",
+          "labels": { "severity": "warning" },
+          "annotations": {
+            "summary": "Long-running PostgreSQL queries detected",
+            "description": "{{ $value }} queries running longer than 30 seconds. Review pg_top_query_duration_seconds for details."
+          }
+        },
+        {
+          "alert": "PostgresDeadlocksDetected",
+          "expr": "rate(pg_deadlocks_total[5m]) > 0",
+          "for": "1m",
+          "labels": { "severity": "critical" },
+          "annotations": {
+            "summary": "PostgreSQL deadlocks detected",
+            "description": "Deadlocks are occurring. Review application transaction ordering and lock acquisition patterns."
+          }
+        },
+        {
+          "alert": "PostgresReplicationLagHigh",
+          "expr": "pg_replication_lag_seconds > 30",
+          "for": "1m",
+          "labels": { "severity": "critical" },
+          "annotations": {
+            "summary": "PostgreSQL replication lag exceeds 30 seconds",
+            "description": "Replication lag is {{ $value }}s. Investigate WAL shipping or standby performance."
+          }
+        }
+      ]
+    }
+  ]
+}

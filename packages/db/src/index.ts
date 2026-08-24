@@ -321,3 +321,4 @@ export async function dbHealth(): Promise<HealthCheckResult> {
 export * from 'drizzle-orm'
 export * from './types'
 export * from './base-table'
+export * from './metrics'
