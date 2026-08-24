@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "01-platform-infrastructure.md#T-01.04.03",
+  "current_task_id": "T-01.04.03",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e01-t-01-04-03--integration-test-setup",
   "current_pr_url": null,
-  "loop_iteration": 32,
+  "loop_iteration": 33,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01","01-platform-infrastructure.md#T-01.01.02","01-platform-infrastructure.md#T-01.01.03","01-platform-infrastructure.md#T-01.01.04","01-platform-infrastructure.md#T-01.01.05",
@@ -52,9 +52,10 @@
     {"from":"building","to":"in_review","at":"tick-32"},
     {"from":"in_review","to":"fixing","at":"tick-32"},
     {"from":"fixing","to":"in_review","at":"tick-32"},
-    {"from":"in_review","to":"idle","at":"tick-32"}
+    {"from":"in_review","to":"idle","at":"tick-32"},
+    {"from":"idle","to":"building","at":"tick-33"}
   ],
-  "last_updated": "2026-08-24T08:45:00",
+  "last_updated": "2026-08-24T08:50:00",
   "last_error": null,
-  "notes": "T-02.01.04 completed and merged (PR #20). Next: T-01.04.03 (L — backend integration test setup with real PostgreSQL)."
+  "notes": "T-02.01.04 completed. Now building T-01.04.03 (L — integration test setup with real PostgreSQL). First slice: testcontainers infrastructure + vitest global setup."
 }
