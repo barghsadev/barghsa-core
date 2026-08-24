@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-01.03.05",
-  "current_task_id": "T-01.03.05",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-01-03-05--cdn-asset-output",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/14",
-  "loop_iteration": 22,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 23,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -20,7 +20,8 @@
     "01-platform-infrastructure.md#T-01.03.01",
     "01-platform-infrastructure.md#T-01.03.02",
     "01-platform-infrastructure.md#T-01.03.03",
-    "01-platform-infrastructure.md#T-01.03.04"
+    "01-platform-infrastructure.md#T-01.03.04",
+    "01-platform-infrastructure.md#T-01.03.05"
   ],
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-1"},
@@ -80,7 +81,10 @@
     {"from": "fixing", "to": "in_review", "at": "tick-20"},
     {"from": "in_review", "to": "idle", "at": "tick-20"},
     {"from": "idle", "to": "building", "at": "tick-22"},
-    {"from": "building", "to": "in_review", "at": "tick-22"}
+    {"from": "building", "to": "in_review", "at": "tick-22"},
+    {"from": "in_review", "to": "fixing", "at": "tick-22"},
+    {"from": "fixing", "to": "in_review", "at": "tick-22"},
+    {"from": "in_review", "to": "idle", "at": "tick-22"}
   ],
   "last_updated": "tick-22",
   "last_error": null,
