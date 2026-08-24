@@ -1,1 +1,1 @@
-export { StorageModule, STORAGE_PROVIDER } from './storage.module.js';
+export { StorageModule, STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from './storage.module.js';

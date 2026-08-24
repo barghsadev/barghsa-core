@@ -18,3 +18,11 @@ export { createStorageProvider } from './storage-factory.js';
 
 export type { BucketSetupConfig, BucketSetupResult } from './setup-bucket.js';
 export { setupBucket, getStandardLifecycleRules } from './setup-bucket.js';
+
+export type {
+  StorageRecordStatus,
+  DbAdapter,
+  CreateRecordOptions,
+  StorageRecordInfo,
+} from './immutable-storage.js';
+export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './immutable-storage.js';

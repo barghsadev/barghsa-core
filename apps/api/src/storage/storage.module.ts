@@ -1,6 +1,10 @@
 import { Global, Logger, Module } from '@nestjs/common';
-import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { createDbInstance, type DbInstance } from '@barghsa/db';
+import { storageRecords } from '@barghsa/db/schema/storage-record';
+import { createStorageProvider, type StorageProvider, ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { StorageAdminController } from './storage-admin.controller.js';
+import { StorageRecordDbAdapter } from './storage-record-db-adapter.js';
+import { StorageRecordsController } from './storage-records.controller.js';
 
 /**
  * NestJS injection token for the StorageProvider instance.
@@ -8,9 +12,14 @@ import { StorageAdminController } from './storage-admin.controller.js';
  */
 export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
 
+/**
+ * NestJS injection token for the ImmutableStorageRecordService instance.
+ */
+export const IMMUTABLE_STORAGE_SERVICE = Symbol('IMMUTABLE_STORAGE_SERVICE');
+
 @Global()
 @Module({
-  controllers: [StorageAdminController],
+  controllers: [StorageAdminController, StorageRecordsController],
   providers: [
     {
       provide: STORAGE_PROVIDER,
@@ -44,7 +53,25 @@ export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
         });
       },
     },
+    {
+      provide: 'DB_INSTANCE',
+      useFactory: (): DbInstance => {
+        return createDbInstance(undefined, { storageRecords });
+      },
+    },
+    StorageRecordDbAdapter,
+    {
+      provide: IMMUTABLE_STORAGE_SERVICE,
+      useFactory: (
+        storageProvider: StorageProvider | null,
+        dbAdapter: StorageRecordDbAdapter,
+      ): ImmutableStorageRecordService | null => {
+        if (!storageProvider) return null;
+        return new ImmutableStorageRecordService(storageProvider, dbAdapter);
+      },
+      inject: [STORAGE_PROVIDER, StorageRecordDbAdapter],
+    },
   ],
-  exports: [STORAGE_PROVIDER],
+  exports: [STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE],
 })
 export class StorageModule {}
