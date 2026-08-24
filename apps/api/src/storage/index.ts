@@ -1,0 +1,1 @@
+export { StorageModule, STORAGE_PROVIDER } from './storage.module.js';

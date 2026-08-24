@@ -6,9 +6,11 @@ import { MetricsModule } from './metrics/metrics.module.js'
 import { ConfigCacheModule } from './config-cache/index.js'
 import { RedisModule } from './redis/index.js'
 import { RateLimitModule } from './rate-limit/index.js'
+import { StorageModule } from './storage/index.js'
+import { UploadModule } from './upload/index.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
