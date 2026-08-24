@@ -58,6 +58,8 @@ export const fa: I18nDictionary = {
   'auth.register.tosRequired': 'برای ثبت‌نام باید قوانین را بپذیرید',
   'auth.register.tosPrefix': 'با ثبت‌نام،',
   'auth.register.tosSuffix': 'و سیاست‌های حریم خصوصی را می‌پذیرم',
+  'auth.register.forgotPasswordLink': 'رمز عبور را فراموش کرده‌اید؟',
+  'auth.register.forgotPasswordLabel': 'فراموشی رمز عبور',
 
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
@@ -139,6 +141,8 @@ export const en: I18nDictionary = {
   'auth.register.tosRequired': 'You must accept the terms before registering',
   'auth.register.tosPrefix': 'By registering, I accept the',
   'auth.register.tosSuffix': 'and privacy policy',
+  'auth.register.forgotPasswordLink': 'Forgot password?',
+  'auth.register.forgotPasswordLabel': 'Forgot password',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
