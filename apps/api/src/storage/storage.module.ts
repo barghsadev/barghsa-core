@@ -2,20 +2,10 @@ import { Global, Logger, Module } from '@nestjs/common';
 import { createDbInstance, type DbInstance } from '@barghsa/db';
 import { storageRecords } from '@barghsa/db/schema/storage-record';
 import { createStorageProvider, type StorageProvider, ImmutableStorageRecordService } from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from './storage.constants.js';
 import { StorageAdminController } from './storage-admin.controller.js';
 import { StorageRecordDbAdapter } from './storage-record-db-adapter.js';
 import { StorageRecordsController } from './storage-records.controller.js';
-
-/**
- * NestJS injection token for the StorageProvider instance.
- * Inject with `@Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null`.
- */
-export const STORAGE_PROVIDER = Symbol('STORAGE_PROVIDER');
-
-/**
- * NestJS injection token for the ImmutableStorageRecordService instance.
- */
-export const IMMUTABLE_STORAGE_SERVICE = Symbol('IMMUTABLE_STORAGE_SERVICE');
 
 @Global()
 @Module({

@@ -19,7 +19,7 @@ import {
   StorageObjectNotFound,
   type StorageRecordInfo,
 } from '@barghsa/shared/storage'
-import { STORAGE_PROVIDER } from './storage.module.js'
+import { STORAGE_PROVIDER } from './storage.constants.js'
 
 // ---------------------------------------------------------------------------
 // DTOs
