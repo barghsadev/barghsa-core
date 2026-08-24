@@ -48,8 +48,8 @@
     "01-platform-infrastructure.md#T-01.04.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T11:40:00",
-  "notes": "T-01.05.01 review round 2: addressed all critical/major findings from stealth/ox-alpha. PR #29 ready for re-review.",
+  "last_updated": "2026-08-24T11:51:00",
+  "notes": "T-01.05.01 review (tick-44): stealth/ox-alpha 429 rate-limited upstream. Preserved state — next tick will retry review.",
   "status_history": [
     {
       "from": "fixing",
