@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-01-01-06--register-submit",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/73",
-  "loop_iteration": 118,
-  "fix_attempts": 1,
+  "loop_iteration": 119,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -149,9 +149,19 @@
     "02-auth-users-admin.md#T-01.01.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T01:25:00",
-  "notes": "Tick-118: PR #73 review complete (request_changes). Fixed: error code routing, TOS validation, hourly rate limit, tests. Back in review.",
+  "last_updated": "2026-08-25T01:32:00",
+  "notes": "Tick-119: PR #73 re-review returned request_changes. Fixed: error code extraction (string format), spinner icon, password length guard. Back in review.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-119"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-119"
+    },
     {
       "from": "idle",
       "to": "building",
