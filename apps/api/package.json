@@ -5,6 +5,7 @@
     "scripts": {
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
         "build": "nest build && pnpm generate:openapi",
         "generate:openapi": "node dist/src/generate-openapi",
         "dev": "nest build --watch",

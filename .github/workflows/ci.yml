@@ -27,3 +27,34 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Run tests (affected on PR, full on main)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm turbo run test --filter="...[origin/main]"
+          else
+            pnpm test
+          fi
+      - name: Run coverage (affected packages on PR, full on main)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm turbo run test:coverage --filter="...[origin/main]"
+          else
+            pnpm test:coverage
+          fi

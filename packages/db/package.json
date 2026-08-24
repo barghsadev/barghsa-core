@@ -6,6 +6,7 @@
     "types": "./src/index.ts",
     "scripts": {
         "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
         "typecheck": "tsc --noEmit",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",

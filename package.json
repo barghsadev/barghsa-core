@@ -12,6 +12,7 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "test": "turbo test",
+    "test:coverage": "turbo test:coverage",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "check:suppressed-errors": "./scripts/check-suppressed-errors.sh",
