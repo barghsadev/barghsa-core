@@ -2,12 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 import { CacheControlInterceptor } from './common/cache-control.interceptor.js';
+import { HttpExceptionFilter } from './common/http-exception.filter.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
   // Global cache control — authenticated API responses use private, no-cache
   app.useGlobalInterceptors(new CacheControlInterceptor());
+
+  // Global exception filter — stable error codes, localized messages, no stack traces
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   const config = new DocumentBuilder()
     .setTitle('Barghsa API')

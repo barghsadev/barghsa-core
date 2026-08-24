@@ -9,6 +9,7 @@
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {"path": "../../packages/shared"},
-    {"path": "../../packages/db"}
+    {"path": "../../packages/db"},
+    {"path": "../../packages/i18n"}
   ]
 }
