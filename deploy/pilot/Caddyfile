@@ -2,8 +2,8 @@
 #
 # Single-node pilot configuration with automatic TLS via Let's Encrypt.
 # Use this as the primary proxy for the pilot deployment. It handles:
-#   - API routing (location /api/ → NestJS on :4000)
-#   - Web SPA routing with automatic index.html fallback
+#   - API routing (/api/ → NestJS on :4000)
+#   - Web SPA routing (/* → TanStack on :3000, SPA fallback handled by app)
 #   - SSE/AI streaming via flush_interval -1 (no buffering)
 #   - Automatic TLS certificate management
 #   - Gzip/Zstandard compression
@@ -42,7 +42,7 @@ barghsa.example.com {
 	# ──────────────────────────────────────────────
 	# API upstream  —  /api/*  →  NestJS on :4000
 	# ──────────────────────────────────────────────
-	handle_path /api/* {
+	handle /api/* {
 		reverse_proxy 127.0.0.1:4000 {
 			# SSE / AI streaming — flush immediately, no buffering
 			flush_interval -1
@@ -59,9 +59,6 @@ barghsa.example.com {
 	# Web upstream  —  /*  →  TanStack SPA on :3000
 	# ──────────────────────────────────────────────
 	handle {
-		# SPA fallback: serve index.html for any path that doesn't match a file
-		try_files {path} /index.html
-
 		reverse_proxy 127.0.0.1:3000 {
 			header_up Host {host}
 			header_up X-Real-IP {remote_host}

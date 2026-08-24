@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-04.04.01",
   "current_task_id": "T-04.04.01",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-04-01--pilot-proxy-config",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/60",
   "loop_iteration": 96,
   "fix_attempts": 0,
   "build_completed_tasks": [
