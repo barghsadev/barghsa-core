@@ -3,7 +3,7 @@ import { Pool } from 'pg'
 
 let pool: Pool | null = null
 
-export interface DbConfig {
+export interface DbPoolConfig {
   databaseUrl?: string
   poolMin?: number
   poolMax?: number
@@ -14,7 +14,7 @@ export interface DbConfig {
   idleTransactionTimeout?: string
 }
 
-const DEFAULT_STATEMENT_TIMEOUT = '10s'
+const DEFAULT_STATEMENT_TIMEOUT = '30s'
 const DEFAULT_LOCK_TIMEOUT = '5s'
 const DEFAULT_IDLE_TX_TIMEOUT = '60s'
 
@@ -44,15 +44,16 @@ export function buildConnectionString(
   return `${url}${separator}options=${encodeURIComponent(gucOptions)}`
 }
 
-export function createDbPool(config: DbConfig = {}): Pool {
+export function createDbPool(config: DbPoolConfig = {}): Pool {
   if (pool) return pool
 
   pool = new Pool({
     connectionString: buildConnectionString(config.databaseUrl, config),
-    min: config.poolMin ?? 2,
-    max: config.poolMax ?? 20,
+    min: config.poolMin ?? (Number(process.env.DB_POOL_MIN) || 2),
+    max: config.poolMax ?? (Number(process.env.DB_POOL_MAX) || 20),
     idleTimeoutMillis: config.idleTimeoutMillis ?? 30_000,
-    connectionTimeoutMillis: config.connectionTimeoutMillis ?? 5_000,
+    connectionTimeoutMillis:
+      config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
   })
 
   pool.on('error', (err) => {
@@ -69,9 +70,9 @@ export function getDbPool(): Pool {
   return pool
 }
 
-export function createDbInstance(config: DbConfig = {}) {
+export function createDbInstance(config: DbPoolConfig = {}, schema?: Record<string, unknown>) {
   const p = createDbPool(config)
-  return drizzle(p, { logger: process.env.NODE_ENV !== 'production' })
+  return drizzle(p, schema ? { schema, logger: process.env.NODE_ENV !== 'production' } : { logger: process.env.NODE_ENV !== 'production' })
 }
 
 export type DbInstance = ReturnType<typeof createDbInstance>

@@ -10,7 +10,7 @@ describe('@barghsa/db', () => {
     it('encodes GUC options in the connection string', () => {
       const result = buildConnectionString('postgresql://localhost:5432/test', {})
       expect(result).toContain('options=')
-      expect(decodeURIComponent(result)).toContain('statement_timeout=10s')
+      expect(decodeURIComponent(result)).toContain('statement_timeout=30s')
       expect(decodeURIComponent(result)).toContain('lock_timeout=5s')
       expect(decodeURIComponent(result)).toContain('idle_in_transaction_session_timeout=60s')
     })
@@ -22,10 +22,10 @@ describe('@barghsa/db', () => {
 
     it('uses custom timeout overrides', () => {
       const result = buildConnectionString('postgresql://localhost:5432/test', {
-        statementTimeout: '30s',
+        statementTimeout: '45s',
         lockTimeout: '10s',
       })
-      expect(decodeURIComponent(result)).toContain('statement_timeout=30s')
+      expect(decodeURIComponent(result)).toContain('statement_timeout=45s')
       expect(decodeURIComponent(result)).toContain('lock_timeout=10s')
     })
 
