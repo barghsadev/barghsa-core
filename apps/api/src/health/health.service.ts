@@ -19,6 +19,12 @@ export interface ReadinessResult {
     redis: HealthIndicatorResult;
     objectStorage: HealthIndicatorResult;
   };
+  /**
+   * Non-critical warnings emitted as `X-Health-Warning` headers.
+   * These do not affect the overall status — the API is ready but
+   * an optional dependency is unavailable.
+   */
+  warnings?: string[];
 }
 
 @Injectable()
@@ -58,12 +64,19 @@ export class HealthService implements OnModuleInit {
       this.checkObjectStorage(),
     ]);
 
+    // Collect non-critical warnings for the `X-Health-Warning` header.
+    const warnings: string[] = [];
+    if (redis.status === 'down') {
+      warnings.push('redis-unavailable');
+    }
+
     // PostgreSQL is the only critical dependency.
+    //   - Redis down  → overall ok (warning emitted via header)
+    //   - Object storage down → overall degraded
     const overall =
       pg.status === 'down' ? 'down' as const
-      : pg.status !== 'ok' || redis.status !== 'ok' || obj.status !== 'ok'
-        ? 'degraded' as const
-        : 'ok' as const;
+      : obj.status !== 'ok'   ? 'degraded' as const
+      : 'ok' as const;
 
     return {
       status: overall,
@@ -72,6 +85,7 @@ export class HealthService implements OnModuleInit {
         redis,
         objectStorage: obj,
       },
+      ...(warnings.length > 0 ? { warnings } : {}),
     };
   }
 
@@ -110,7 +124,7 @@ export class HealthService implements OnModuleInit {
     // Redis connection factory is added, replace this with a real PING.
     // Until then, report ok with a wiring note so the overall readiness
     // status can be 'ok' when PostgreSQL is healthy.
-    // TODO(T-03.03.04): wire Redis PING once the connection factory exists
+    // TODO(T-04.02.01): wire Redis PING once the connection factory exists
     const startedAt = Date.now();
     return {
       status: 'ok',
