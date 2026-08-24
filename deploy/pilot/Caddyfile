@@ -9,6 +9,7 @@
 #   - Gzip/Zstandard compression
 #   - Security headers
 #   - Request body size limit (10 MB)
+#   - Edge rate limiting for auth, upload, and AI endpoints
 #
 # Usage (standalone):
 #   caddy run --config deploy/pilot/Caddyfile
@@ -41,13 +42,64 @@ barghsa.example.com {
 
 	# ──────────────────────────────────────────────
 	# API upstream  —  /api/*  →  NestJS on :4000
+	# Rate-limited paths (auth, upload, AI) — defence-in-depth
+	# Application-level rate limits remain the primary control
 	# ──────────────────────────────────────────────
+
+	handle /api/auth/* {
+		rate_limit {
+			zone auth_limit {
+				key {remote_host}
+				rate 10 r/s
+				burst 5
+			}
+		}
+		reverse_proxy 127.0.0.1:4000 {
+			flush_interval -1
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	handle /api/upload/* {
+		rate_limit {
+			zone upload_limit {
+				key {remote_host}
+				rate 5 r/s
+				burst 3
+			}
+		}
+		reverse_proxy 127.0.0.1:4000 {
+			flush_interval -1
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	handle /api/ai/* {
+		rate_limit {
+			zone ai_limit {
+				key {remote_host}
+				rate 5 r/s
+				burst 2
+			}
+		}
+		reverse_proxy 127.0.0.1:4000 {
+			flush_interval -1
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
 	handle /api/* {
 		reverse_proxy 127.0.0.1:4000 {
-			# SSE / AI streaming — flush immediately, no buffering
 			flush_interval -1
-
-			# Forward original host for NestJS routing and X-Forwarded-*
 			header_up Host {host}
 			header_up X-Real-IP {remote_host}
 			header_up X-Forwarded-For {remote_host}
@@ -87,6 +139,7 @@ barghsa.example.com {
 		# Start CSP in Report-Only mode — collect violations before enforcing
 		# When all violations are resolved, change to Content-Security-Policy
 		Content-Security-Policy-Report-Only "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-{http.request.header.csp-nonce}' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
+	}
 
 	# ──────────────────────────────────────────────
 	# Request body size limit
@@ -105,5 +158,16 @@ barghsa.example.com {
 		}
 		format json
 		level INFO
+	}
+
+	# ──────────────────────────────────────────────
+	# Error responses
+	# ──────────────────────────────────────────────
+	handle_errors {
+		@429 `{http.error.status_code} == 429`
+		header @429 Retry-After "1"
+		respond @429 429 {
+			body "{\"error\":\"rate_limit_exceeded\",\"message\":\"Too many requests. Please try again later.\"}"
+		}
 	}
 }
