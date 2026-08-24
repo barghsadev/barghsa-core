@@ -1,4 +1,3 @@
-# syntax: docker/compose:1
 # Barghsa Development Infrastructure
 #
 # Spins up all backing services required for local development:
@@ -30,7 +29,7 @@ services:
     environment:
       POSTGRES_DB: barghsa
       POSTGRES_USER: barghsa
-      POSTGRES_PASSWORD: &db_password barghsa-dev-password
+      POSTGRES_PASSWORD: barghsa-dev-password
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -69,7 +68,7 @@ services:
       - "9001:9001"   # Web console
     environment:
       MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: &minio_password minioadmin-dev
+      MINIO_ROOT_PASSWORD: minioadmin-dev
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"
