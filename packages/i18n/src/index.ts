@@ -43,6 +43,10 @@ export const fa: I18nDictionary = {
   'auth.register.emailLabel': 'ایمیل یا شماره موبایل',
   'auth.register.passwordLabel': 'رمز عبور',
   'auth.register.emailPlaceholder': 'example@email.com',
+  'auth.register.usernamePlaceholder': 'ایمیل یا شماره موبایل',
+  'auth.register.invalidEmail': 'ایمیل نامعتبر است',
+  'auth.register.invalidMobile': 'شماره موبایل نامعتبر است',
+  'auth.register.invalidUsername': 'نام کاربری نامعتبر است',
 
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
@@ -109,6 +113,10 @@ export const en: I18nDictionary = {
   'auth.register.emailLabel': 'Email or Mobile number',
   'auth.register.passwordLabel': 'Password',
   'auth.register.emailPlaceholder': 'example@email.com',
+  'auth.register.usernamePlaceholder': 'Email or Mobile number',
+  'auth.register.invalidEmail': 'Invalid email address',
+  'auth.register.invalidMobile': 'Invalid mobile number',
+  'auth.register.invalidUsername': 'Invalid username',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
