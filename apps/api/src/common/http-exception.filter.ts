@@ -7,9 +7,20 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { ErrorCodes, defaultErrorCode } from '@barghsa/shared/errors';
+import { ZodError } from 'zod';
+import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
+import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
 import { correlationIdStorage } from './correlation-id.middleware.js';
+
+/**
+ * Look up the ErrorCodeDef for a given error code string, or fall back to the
+ * definition for the given HTTP status.
+ */
+function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDef {
+  const matched = Object.values(ErrorCodes).find((def) => def.code === errorCode);
+  return matched ?? errorCodeForHttpStatus(httpStatus);
+}
 
 /**
  * Global exception filter that catches all unhandled exceptions and maps them to
@@ -18,6 +29,8 @@ import { correlationIdStorage } from './correlation-id.middleware.js';
  * Response shape:  { error: { code, message, correlationId? } }
  *
  * Never exposes stack traces, raw database errors, or internal provider details.
+ * 5xx errors always use localized messages from the error code key — never
+ * forward raw exception messages to clients.
  */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -31,9 +44,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Determine HTTP status and error code
     const { httpStatus, errorCode, rawMessage } = this.resolveError(exception);
 
-    // Resolve localized message — fall back to raw message, then error code's default
+    // Resolve localized message
     const locale = this.resolveLocale(request);
-    const message = rawMessage ?? t(errorCode, locale);
+    const errorCodeDef = resolveErrorCodeDef(errorCode, httpStatus);
+    // For 5xx errors, always use the localized error-code message (never leak internals)
+    // For 4xx errors, use rawMessage if available, otherwise localized message
+    const message =
+      httpStatus < 500
+        ? rawMessage ?? t(errorCodeDef.messageKey, locale)
+        : t(errorCodeDef.messageKey, locale);
 
     // Get correlation ID from AsyncLocalStorage
     const correlationId = correlationIdStorage.getStore();
@@ -86,13 +105,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
     }
 
-    // Zod validation errors from `zod` — return 400
-    if (
-      exception !== null &&
-      typeof exception === 'object' &&
-      'name' in exception &&
-      (exception as Record<string, unknown>).name === 'ZodError'
-    ) {
+    // Zod validation errors — return 400
+    if (exception instanceof ZodError) {
       return {
         httpStatus: HttpStatus.BAD_REQUEST,
         errorCode: ErrorCodes.VALIDATION_PARSE_ZOD.code,
@@ -111,7 +125,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   /** Extract the user's preferred locale from the request */
   private resolveLocale(request: Request): 'fa' | 'en' {
     const acceptLanguage = request.headers['accept-language'];
-    if (acceptLanguage?.startsWith('fa') || acceptLanguage?.startsWith('fa-IR')) {
+    if (acceptLanguage?.toLowerCase().startsWith('fa')) {
       return 'fa';
     }
     return 'en';
@@ -125,26 +139,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     correlationId: string | undefined,
     request: Request,
   ): void {
-    const metadata = {
-      correlationId,
-      errorCode,
-      method: request.method,
-      path: request.url,
-      ip: request.ip,
-    };
-
     if (httpStatus < 500) {
       // 4xx — debug level (client errors, not actionable)
       this.logger.debug(
-        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${request.url}`,
-        metadata,
+        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`,
       );
     } else {
       // 5xx — error level (actionable)
       this.logger.error(
-        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${request.url}`,
-        exception instanceof Error ? exception.stack : exception,
-        metadata,
+        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`,
+        exception instanceof Error ? exception.stack : undefined,
       );
     }
   }

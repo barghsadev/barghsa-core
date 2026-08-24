@@ -1,7 +1,17 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { randomUUID } from 'node:crypto';
+import { v7 as uuidv7 } from 'uuid';
 import { AsyncLocalStorage } from 'node:async_hooks';
+
+/**
+ * Validates that an inbound correlation ID is a well-formed UUID.
+ * Falls back to generating a new UUIDv7 if the header value is invalid.
+ */
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function validateCorrelationId(id: string): boolean {
+  return UUID_PATTERN.test(id) && id.length <= 128;
+}
 
 /**
  * AsyncLocalStorage instance for retrieving the current request's correlation ID
@@ -21,18 +31,21 @@ export class CorrelationIdProvider {
 }
 
 /**
- * Middleware that generates or propagates a UUIDv7-style correlation ID per request.
+ * Middleware that generates or propagates a UUIDv7 correlation ID per request.
  *
- * - Reads `X-Correlation-ID` from the incoming request if present (for distributed tracing)
- * - Generates a new UUID otherwise
+ * - Reads `X-Correlation-ID` from the incoming request if present and valid
+ * - Generates a new UUIDv7 otherwise
  * - Stores in `AsyncLocalStorage` for downstream access via `CorrelationIdProvider`
  * - Sets the `X-Correlation-ID` response header
  */
 @Injectable()
 export class CorrelationIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
+    const inboundId = req.headers['x-correlation-id'] as string | undefined;
     const correlationId =
-      (req.headers['x-correlation-id'] as string) ?? randomUUID();
+      inboundId !== undefined && validateCorrelationId(inboundId)
+        ? inboundId
+        : uuidv7();
 
     // Store in AsyncLocalStorage so any downstream code can retrieve it
     correlationIdStorage.run(correlationId, () => {
