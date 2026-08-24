@@ -45,6 +45,11 @@
       "cache": false,
       "outputLogs": "errors-only"
     },
+    "check:bundle": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "outputLogs": "new-only"
+    },
     "clean": {
       "dependsOn": [],
       "outputs": [],

@@ -26,3 +26,4 @@ jobs:
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm check:suppressed-errors
+      - run: pnpm check:bundle
