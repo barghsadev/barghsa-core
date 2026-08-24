@@ -6,6 +6,7 @@
     "types": "dist/index.d.ts",
     "exports": {
         ".": "./dist/index.js",
+        "./config": "./dist/schema/config.js",
         "./package.json": "./package.json"
     },
     "scripts": {
