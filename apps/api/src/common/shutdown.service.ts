@@ -21,9 +21,9 @@ import { getDbPool } from '@barghsa/db';
  * ## Deferred shutdown items
  *
  * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
- *   add `redis.quit()` here.
+ *   add `redis.quit()` before pool.end().
  * - **Object storage:** no client exists yet. When wired (T-04.03.xx),
- *   add `s3Client.destroy()` here.
+ *   add `s3Client.destroy()` before pool.end().
  * - **Lease release:** lease infrastructure doesn't exist yet.
  *   When wired, add lease release before closing the pool.
  */
@@ -43,7 +43,7 @@ export class ShutdownService implements OnApplicationShutdown {
       `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${this.gracePeriodMs / 1_000}s deadline)`,
     );
 
-    // Force-exit timer — if graceful shutdown exceeds the deadline, exit hard.
+    // Safety-net timer — if any step hangs, force exit.
     const forceExitTimer = setTimeout(() => {
       this.logger.error(
         'Graceful shutdown deadline exceeded — forcing exit with code 1',
@@ -52,11 +52,15 @@ export class ShutdownService implements OnApplicationShutdown {
     }, this.gracePeriodMs);
     forceExitTimer.unref();
 
+    // Close each resource independently so a failure in one does not skip
+    // subsequent cleanup steps.
+    let cleanShutdown = true;
+
+    // 1. Stop accepting new HTTP requests and drain in-flight connections.
+    //    NestJS's app.close() also closes the HTTP adapter internally,
+    //    so the manual close is best-effort. Guard against
+    //    ERR_SERVER_NOT_RUNNING.
     try {
-      // 1. Stop accepting new HTTP requests and drain in-flight connections.
-      //    NestJS's app.close() also closes the HTTP adapter internally,
-      //    so the manual close is best-effort. We guard against
-      //    ERR_SERVER_NOT_RUNNING with a catch.
       const httpServer = this.httpAdapterHost.httpAdapter?.getHttpServer();
       if (httpServer?.listening) {
         await new Promise<void>((resolve, reject) => {
@@ -70,21 +74,29 @@ export class ShutdownService implements OnApplicationShutdown {
         });
         this.logger.log('HTTP server closed — no longer accepting requests');
       }
-
-      // 2. Close the database connection pool.
-      try {
-        const p = getDbPool();
-        await p.end();
-        this.logger.log('Database pool closed');
-      } catch {
-        this.logger.warn('Database pool not initialised — skipping pool close');
-      }
-    } finally {
-      clearTimeout(forceExitTimer);
-      this.logger.log('Graceful shutdown complete');
+    } catch (err: unknown) {
+      cleanShutdown = false;
+      this.logger.error(`HTTP server close error: ${String(err)}`);
     }
 
-    // Explicitly exit cleanly so no lingering handles keep the process alive.
-    process.exit(0);
+    // 2. Close the database connection pool.
+    try {
+      const p = getDbPool();
+      await p.end();
+      this.logger.log('Database pool closed');
+    } catch {
+      cleanShutdown = false;
+      this.logger.warn('Database pool not initialised — skipping pool close');
+    }
+
+    clearTimeout(forceExitTimer);
+
+    if (cleanShutdown) {
+      this.logger.log('Graceful shutdown complete');
+      process.exit(0);
+    } else {
+      this.logger.error('Graceful shutdown completed with errors — exiting with code 1');
+      process.exit(1);
+    }
   }
 }
