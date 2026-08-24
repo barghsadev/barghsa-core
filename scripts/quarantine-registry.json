@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "description": "Flaky test quarantine registry. See docs/flaky-test-quarantine.md for process.",
+  "quarantined": []
+}

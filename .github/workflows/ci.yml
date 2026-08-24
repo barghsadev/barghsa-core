@@ -51,3 +51,13 @@ jobs:
           else
             pnpm test
           fi
+      - name: Report flaky test count
+        id: flaky-check
+        run: ./scripts/check-flaky-tests.sh
+      - name: Upload flaky test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flaky-test-report
+          path: scripts/quarantine-registry.json
+          retention-days: 7
