@@ -4,9 +4,10 @@ import { CorrelationIdMiddleware, CorrelationIdProvider, ShutdownService } from 
 import { HealthModule } from './health/health.module.js'
 import { MetricsModule } from './metrics/metrics.module.js'
 import { RedisModule } from './redis/index.js'
+import { RateLimitModule } from './rate-limit/index.js'
 
 @Module({
-  imports: [RedisModule, HealthModule, MetricsModule],
+  imports: [RedisModule, HealthModule, MetricsModule, RateLimitModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
