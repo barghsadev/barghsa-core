@@ -136,12 +136,6 @@ export const ErrorCodes = {
     messageKey: 'auth.otp.error.alreadyConsumed',
     severity: 'info' as ErrorSeverity,
   },
-  AUTH_OTP_RATE_LIMITED: {
-    code: 'AUTH:OTP:RATE_LIMITED',
-    httpStatus: 429,
-    messageKey: 'auth.otp.error.rateLimited',
-    severity: 'info' as ErrorSeverity,
-  },
 
   // ── Authorization ───────────────────────────────────────
   AUTHZ_FORBIDDEN: {
@@ -202,6 +196,12 @@ export const ErrorCodes = {
     code: 'RATE_LIMIT:EXCEEDED',
     httpStatus: 429,
     messageKey: 'error.rate_limit.exceeded',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_OTP_RATE_LIMITED: {
+    code: 'AUTH:OTP:RATE_LIMITED',
+    httpStatus: 429,
+    messageKey: 'auth.otp.error.rateLimited',
     severity: 'info' as ErrorSeverity,
   },
 
