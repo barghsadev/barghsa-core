@@ -8,7 +8,7 @@
         "test:coverage": "vitest run --coverage --passWithNoTests",
         "build": "nest build && pnpm generate:openapi",
         "generate:openapi": "node dist/src/generate-openapi",
-        "dev": "nest build --watch",
+        "dev": "nest build --watch --builder swc",
         "start:prod": "node dist/src/main"
     },
     "dependencies": {
