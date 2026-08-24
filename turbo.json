@@ -27,7 +27,7 @@
       "dependsOn": ["^build"],
       "outputs": [],
       "outputLogs": "new-only",
-      "inputs": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "turbo.json"]
+      "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"]
     },
     "test:coverage": {
       "dependsOn": ["^build"],
@@ -42,6 +42,7 @@
     "format:write": {
       "dependsOn": [],
       "outputs": [],
+      "cache": false,
       "outputLogs": "errors-only"
     },
     "clean": {
