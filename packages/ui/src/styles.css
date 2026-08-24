@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+/*
+ * Barghsa Design System — Base Styles
+ *
+ * This CSS file serves as the entry point for the shared UI package.
+ * Apps within the monorepo should import this file to gain access to
+ * all design tokens defined in tailwind.config.ts.
+ *
+ * Usage in an app's CSS:
+ *   @import "@barghsa/ui/styles.css";
+ */
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-surface-50 text-surface-900 dark:bg-surface-950 dark:text-surface-50;
+  }
+
+  /* RTL-aware base styles */
+  [dir="rtl"] {
+    @apply text-right;
+  }
+
+  [dir="ltr"] {
+    @apply text-left;
+  }
+}
