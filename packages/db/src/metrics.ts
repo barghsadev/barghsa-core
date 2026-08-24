@@ -101,6 +101,33 @@ export interface MetricsResult {
 const SLOW_QUERY_THRESHOLD_SECONDS = 30
 
 /**
+ * Collect replication lag from pg_stat_replication.
+ * Returns the lag in seconds, or null if no replica is configured / not streaming.
+ * This is queried separately from the main metrics to isolate failures.
+ */
+export async function collectReplicationLag(): Promise<number | null> {
+  try {
+    const pool = getDbPool()
+    const result = await pool.query(`
+      SELECT
+        COALESCE(
+          EXTRACT(EPOCH FROM replay_lag),
+          EXTRACT(EPOCH FROM write_lag),
+          EXTRACT(EPOCH FROM flush_lag),
+          0
+        ) AS lag_seconds
+      FROM pg_stat_replication
+      WHERE state = 'streaming'
+      LIMIT 1
+    `)
+    if (result.rows.length === 0) return null
+    return Number(result.rows[0].lag_seconds)
+  } catch {
+    return null
+  }
+}
+
+/**
  * Collect all performance metrics from PostgreSQL system views.
  *
  * This queries:
@@ -109,7 +136,9 @@ const SLOW_QUERY_THRESHOLD_SECONDS = 30
  *   - pg_stat_bgwriter for checkpoint/buffer stats
  *   - pg_stat_wal for WAL write metrics
  *   - pg_stat_statements for top-N query performance
+ *   - pg_settings for server max_connections
  *
+ * Each query is isolated — a failure in one view does not block others.
  * Returns a MetricsResult with the full metric set or an error.
  */
 export async function collectPerformanceMetrics(
@@ -231,21 +260,44 @@ export async function collectPerformanceMetrics(
       LIMIT $1::integer
     `, [String(topN)])
 
-    const [
-      dbResult,
-      activityResult,
-      longRunningResult,
-      bgwriterResult,
-      walResult,
-      queryResult,
-    ] = await Promise.all([
+    // Query server max_connections from pg_settings
+    const maxConnResult = pool.query(`
+      SELECT setting::integer AS max_connections
+      FROM pg_settings
+      WHERE name = 'max_connections'
+    `)
+
+    // Use allSettled so a single failing view doesn't kill all metrics
+    const settled = await Promise.allSettled([
       dbStats, activityStats, longRunningStats,
-      bgwriterStats, walStats, queryStats,
+      bgwriterStats, walStats, queryStats, maxConnResult,
     ])
+
+    const [
+      dbResultSettled,
+      activityResultSettled,
+      longRunningResultSettled,
+      bgwriterResultSettled,
+      walResultSettled,
+      queryResultSettled,
+      maxConnResultSettled,
+    ] = settled
+
+    // Gracefully handle each query result, defaulting to empty/null on failure
+    const dbResult = dbResultSettled.status === 'fulfilled' ? dbResultSettled.value : { rows: [] }
+    const activityResult = activityResultSettled.status === 'fulfilled' ? activityResultSettled.value : { rows: [] }
+    const longRunningResult = longRunningResultSettled.status === 'fulfilled' ? longRunningResultSettled.value : { rows: [] }
+    const bgwriterResult = bgwriterResultSettled.status === 'fulfilled' ? bgwriterResultSettled.value : { rows: [] }
+    const walResult = walResultSettled.status === 'fulfilled' ? walResultSettled.value : { rows: [] }
+    const queryResult = queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : { rows: [] }
+
+    const maxConn = maxConnResultSettled.status === 'fulfilled' && maxConnResultSettled.value.rows.length > 0
+      ? Number(maxConnResultSettled.value.rows[0].max_connections)
+      : pool.options?.max ?? 100
 
     const dbRow = dbResult.rows[0] ?? null
     const actRow = activityResult.rows[0] ?? null
-    const maxConnections = pool.options?.max ?? 100
+    const maxConnections = maxConn
 
     const blksHit = Number(dbRow?.blks_hit ?? 0)
     const blksRead = Number(dbRow?.blks_read ?? 0)

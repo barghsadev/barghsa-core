@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "01-platform-infrastructure.md#T-04.01.04",
   "current_task_id": "T-04.01.04",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-01-04--pg-performance-monitoring",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/46",
   "loop_iteration": 67,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -65,6 +65,9 @@
     "01-platform-infrastructure.md#T-04.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T16:25:00",
-  "notes": "Building T-04.01.04 (PG performance baseline and monitoring, M)."
+  "last_updated": "2026-08-24T16:54:00",
+  "notes": "Fixing T-04.01.04: metrics gauge gaps, allSettled, max_connections query, replication lag gauge, status_history.",
+  "status_history": [
+    {"from": "in_review", "to": "fixing", "at": "tick-67"}
+  ]
 }

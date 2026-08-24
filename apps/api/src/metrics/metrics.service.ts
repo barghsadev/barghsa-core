@@ -1,9 +1,9 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
-import { collectPerformanceMetrics, type DatabaseMetrics } from '@barghsa/db'
+import { collectPerformanceMetrics, collectReplicationLag, type DatabaseMetrics } from '@barghsa/db'
 import promClient from 'prom-client'
 
 /**
- * NestJS service that registers and updates Prometheus metrics for PostgreSQL
+ * NestJS service that registers and updates Prometheus gauges for PostgreSQL
  * performance monitoring.  Metrics are pulled from PG system views via
  * collectPerformanceMetrics() on each scrape.
  *
@@ -24,6 +24,12 @@ import promClient from 'prom-client'
  *   - pg_checkpoints_req_total
  *   - pg_wal_bytes_total
  *   - pg_wal_records_total
+ *   - pg_tuple_returned_total
+ *   - pg_tuple_fetched_total
+ *   - pg_tuple_inserted_total
+ *   - pg_tuple_updated_total
+ *   - pg_tuple_deleted_total
+ *   - pg_replication_lag_seconds
  *   - pg_top_query_duration_seconds — labeled by queryid
  *
  * In production, scraped by the monitoring stack (Prometheus + alertmanager).
@@ -106,10 +112,34 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     name: 'pg_wal_records_total',
     help: 'Total number of WAL records generated',
   })
+  private readonly tupleReturnedTotal = new promClient.Gauge({
+    name: 'pg_tuple_returned_total',
+    help: 'Total number of tuples returned by queries',
+  })
+  private readonly tupleFetchedTotal = new promClient.Gauge({
+    name: 'pg_tuple_fetched_total',
+    help: 'Total number of tuples fetched by queries',
+  })
+  private readonly tupleInsertedTotal = new promClient.Gauge({
+    name: 'pg_tuple_inserted_total',
+    help: 'Total number of tuples inserted',
+  })
+  private readonly tupleUpdatedTotal = new promClient.Gauge({
+    name: 'pg_tuple_updated_total',
+    help: 'Total number of tuples updated',
+  })
+  private readonly tupleDeletedTotal = new promClient.Gauge({
+    name: 'pg_tuple_deleted_total',
+    help: 'Total number of tuples deleted',
+  })
+  private readonly replicationLag = new promClient.Gauge({
+    name: 'pg_replication_lag_seconds',
+    help: 'Replication lag in seconds (0 if no replica or not streaming)',
+  })
   private readonly topQueryDuration = new promClient.Gauge({
     name: 'pg_top_query_duration_seconds',
     help: 'Mean execution time in seconds for top queries (labeled by queryid)',
-    labelNames: ['queryid', 'query_preview'] as const,
+    labelNames: ['queryid'] as const,
   })
 
   constructor() {
@@ -178,6 +208,15 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       this.cacheReadTotal.set(m.database.blks_read)
       this.walBytesTotal.set(m.wal?.wal_bytes ?? 0)
       this.walRecordsTotal.set(m.wal?.wal_records ?? 0)
+      this.tupleReturnedTotal.set(m.database.tup_returned)
+      this.tupleFetchedTotal.set(m.database.tup_fetched)
+      this.tupleInsertedTotal.set(m.database.tup_inserted)
+      this.tupleUpdatedTotal.set(m.database.tup_updated)
+      this.tupleDeletedTotal.set(m.database.tup_deleted)
+
+      // Replication lag — query separately, defaults to 0 if no replica
+      const lag = await collectReplicationLag()
+      this.replicationLag.set(lag ?? 0)
 
       if (m.bgwriter) {
         this.checkpointsTimedTotal.set(m.bgwriter.checkpoints_timed)
@@ -187,9 +226,8 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       // Top queries — reset before re-labelling
       this.topQueryDuration.reset()
       for (const q of m.topQueries ?? []) {
-        const preview = q.query.length > 80 ? q.query.slice(0, 77) + '...' : q.query
         this.topQueryDuration.set(
-          { queryid: q.queryId, query_preview: preview },
+          { queryid: q.queryId },
           q.meanTimeMs / 1000,
         )
       }
