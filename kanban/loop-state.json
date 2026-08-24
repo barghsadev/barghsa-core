@@ -1,17 +1,18 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-02.01.01",
-  "current_task_id": "T-02.01.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-02-01-01--drizzle-orm",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/17",
-  "loop_iteration": 28,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 29,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01","01-platform-infrastructure.md#T-01.01.02","01-platform-infrastructure.md#T-01.01.03","01-platform-infrastructure.md#T-01.01.04","01-platform-infrastructure.md#T-01.01.05",
     "01-platform-infrastructure.md#T-01.02.01","01-platform-infrastructure.md#T-01.02.02","01-platform-infrastructure.md#T-01.02.03","01-platform-infrastructure.md#T-01.02.04",
     "01-platform-infrastructure.md#T-01.03.01","01-platform-infrastructure.md#T-01.03.02","01-platform-infrastructure.md#T-01.03.03","01-platform-infrastructure.md#T-01.03.04","01-platform-infrastructure.md#T-01.03.05",
-    "01-platform-infrastructure.md#T-01.04.01","01-platform-infrastructure.md#T-01.04.02"
+    "01-platform-infrastructure.md#T-01.04.01","01-platform-infrastructure.md#T-01.04.02",
+    "01-platform-infrastructure.md#T-02.01.01"
   ],
   "status_history": [
     {"from":"idle","to":"building","at":"tick-1"},{"from":"building","to":"in_review","at":"tick-1"},{"from":"in_review","to":"idle","at":"tick-1"},
@@ -33,9 +34,11 @@
     {"from":"idle","to":"in_review","at":"2026-08-24T07:00:54"},{"from":"in_review","to":"idle","at":"2026-08-24T07:06:48"},
     {"from":"idle","to":"building","at":"tick-26"},{"from":"building","to":"in_review","at":"tick-26"},{"from":"in_review","to":"fixing","at":"tick-26"},{"from":"fixing","to":"in_review","at":"tick-26"},{"from":"in_review","to":"idle","at":"tick-26"},
     {"from":"idle","to":"blocked","at":"tick-27"},
-    {"from":"blocked","to":"building","at":"tick-28"}
+    {"from":"blocked","to":"building","at":"tick-28"},
+    {"from":"building","to":"fixing","at":"tick-28"},
+    {"from":"fixing","to":"idle","at":"tick-29"}
   ],
-  "last_updated": "2026-08-24T07:32:00",
+  "last_updated": "2026-08-24T07:50:00",
   "last_error": null,
-  "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics. T-01.04.03 deferred — needs S-02.01 prerequisites. Started T-02.01.01 (Drizzle ORM init)."
+  "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics. T-01.04.03 deferred — needs S-02.01 prerequisites."
 }
