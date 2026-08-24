@@ -50,7 +50,7 @@
     {"from": "idle", "to": "building", "at": "tick-11"},
     {"from": "building", "to": "in_review", "at": "tick-11"}
   ],
-  "last_updated": "tick-11",
-  "last_error": null,
+  "last_updated": "tick-12",
+  "last_error": "Reviewer transient: OpenRouter in_flight_budget_exhausted (402). Retry after 120s.",
   "notes": "Task identity uses <fname>#<id> because task IDs repeat across epics."
 }
