@@ -8,9 +8,10 @@ import { RedisModule } from './redis/index.js'
 import { RateLimitModule } from './rate-limit/index.js'
 import { StorageModule } from './storage/index.js'
 import { UploadModule } from './upload/index.js'
+import { CspReportModule } from './csp-report/csp-report.module.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
