@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 95,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-04.04.01",
+  "current_task_id": "T-04.04.01",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e04-t-04-04-01--pilot-proxy-config",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/60",
+  "loop_iteration": 97,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -78,33 +78,23 @@
     "01-platform-infrastructure.md#T-04.03.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T21:35:00",
-  "notes": "Tick-95: T-04.03.05 completed (PR #59 merged). Fixed upload.controller.spec.ts (missing IMMUTABLE_STORAGE_SERVICE provider). State → idle. Next: pick next queue task.",
+  "last_updated": "2026-08-24T21:43:00",
+  "notes": "Tick-97: T-04.04.01 review round 1 — 5 findings (1 critical, 1 major, 3 minor). All fixed and pushed (0905caa). Re-running reviewer.",
   "status_history": [
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-94"
-    },
     {
       "from": "building",
       "to": "in_review",
-      "at": "tick-94"
+      "at": "tick-96"
     },
     {
       "from": "in_review",
       "to": "fixing",
-      "at": "tick-94"
+      "at": "tick-97"
     },
     {
       "from": "fixing",
       "to": "in_review",
-      "at": "tick-95"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-95"
+      "at": "tick-97"
     }
   ]
 }

@@ -1,0 +1,107 @@
+# Barghsa Pilot Topology — Caddy Reverse Proxy
+#
+# Single-node pilot configuration with automatic TLS via Let's Encrypt.
+# Use this as the primary proxy for the pilot deployment. It handles:
+#   - API routing (/api/ → NestJS on :4000)
+#   - Web SPA routing (/* → TanStack on :3000, SPA fallback handled by app)
+#   - SSE/AI streaming via flush_interval -1 (no buffering)
+#   - Automatic TLS certificate management
+#   - Gzip/Zstandard compression
+#   - Security headers
+#   - Request body size limit (10 MB)
+#
+# Usage (standalone):
+#   caddy run --config deploy/pilot/Caddyfile
+#
+# Usage (Docker Compose, with Let's Encrypt):
+#   services:
+#     caddy:
+#       image: caddy:2-alpine
+#       ports:
+#         - "80:80"
+#         - "443:443"
+#       volumes:
+#         - ./deploy/pilot/Caddyfile:/etc/caddy/Caddyfile:ro
+#         - caddy_data:/data
+#       depends_on:
+#         - web
+#         - api
+#
+# Upstreams:
+#   web  — TanStack Start SPA server   127.0.0.1:3000
+#   api  — NestJS API server            127.0.0.1:4000
+
+barghsa.example.com {
+	tls {
+		# Let's Encrypt production directory
+		# issuer acme
+		# For staging/testing, uncomment:
+		# issuer acme https://acme-staging-v02.api.letsencrypt.org/directory
+	}
+
+	# ──────────────────────────────────────────────
+	# API upstream  —  /api/*  →  NestJS on :4000
+	# ──────────────────────────────────────────────
+	handle /api/* {
+		reverse_proxy 127.0.0.1:4000 {
+			# SSE / AI streaming — flush immediately, no buffering
+			flush_interval -1
+
+			# Forward original host for NestJS routing and X-Forwarded-*
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# ──────────────────────────────────────────────
+	# Web upstream  —  /*  →  TanStack SPA on :3000
+	# ──────────────────────────────────────────────
+	handle {
+		reverse_proxy 127.0.0.1:3000 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# ──────────────────────────────────────────────
+	# Compression  —  Gzip + Zstandard
+	# ──────────────────────────────────────────────
+	encode gzip zstd
+
+	# ──────────────────────────────────────────────
+	# Security headers (every response)
+	# ──────────────────────────────────────────────
+	header {
+		# Prevent MIME-type sniffing
+		X-Content-Type-Options "nosniff"
+		# Strict referrer policy
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Block camera, microphone, geolocation access
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		# Deny framing of any page
+		X-Frame-Options "DENY"
+	}
+
+	# ──────────────────────────────────────────────
+	# Request body size limit
+	# ──────────────────────────────────────────────
+	request_body {
+		max_size 10MB
+	}
+
+	# ──────────────────────────────────────────────
+	# Structured logging
+	# ──────────────────────────────────────────────
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 100MB
+			roll_keep 5
+		}
+		format json
+		level INFO
+	}
+}
