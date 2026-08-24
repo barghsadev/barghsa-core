@@ -5,9 +5,11 @@
  * Serves the built Vite output from `dist/` with:
  * - Immutable Cache-Control for content-hashed assets (match vite.config.ts)
  * - SPA fallback: all non-file requests serve index.html (client-side routing)
+ * - Graceful shutdown on SIGTERM/SIGINT: drain active connections
  * - No external dependencies — uses only Node.js built-in modules
  *
  * Port is read from the `PORT` environment variable (default 3000).
+ * Shutdown grace period is configurable via `SHUTDOWN_GRACE_PERIOD_MS` (default 30_000).
  */
 
 import { createServer } from 'node:http';
@@ -86,15 +88,25 @@ async function serveFile(distDir, urlPath) {
 }
 
 /**
- * Create a configured HTTP server.
+ * Create a configured HTTP server with graceful shutdown support.
+ *
+ * The returned server has a `shutdown()` method that handles SIGTERM/SIGINT:
+ * 1. Stops accepting new connections.
+ * 2. Waits for in-flight requests to complete (up to the grace period).
+ * 3. Force-closes remaining keep-alive connections after the deadline.
+ * 4. Exits with code 0 on clean shutdown, or code 1 on deadline expiry.
+ *
  * @param {object} [options]
  * @param {string} [options.distDir] Directory to serve (defaults to ../dist)
- * @returns {import('node:http').Server}
+ * @returns {import('node:http').Server & { shutdown: (signal?: string) => void }}
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
 
-  return createServer(async (req, res) => {
+  /** @type {Set<import('node:net').Socket>} */
+  const activeConnections = new Set();
+
+  const server = createServer(async (req, res) => {
     const url = req.url ?? '/';
 
     // Only handle GET and HEAD
@@ -147,12 +159,95 @@ export function createStaticServer(options = {}) {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
   });
+
+  // ── Active connection tracking ────────────────────────────
+  server.on('connection', (socket) => {
+    activeConnections.add(socket);
+    socket.once('close', () => {
+      activeConnections.delete(socket);
+    });
+  });
+
+  /**
+   * Initiate graceful shutdown.
+   *
+   * 1. Stop accepting new connections.
+   * 2. Set a safety-net force-exit timer.
+   * 3. Close the HTTP server, draining in-flight requests.
+   * 4. Once the server is closed, destroy any remaining keep-alive
+   *    connections that weren't cleaned up.
+   * 5. If the grace period expires before the server closes, force
+   *    destroy all connections and exit with code 1.
+   *
+   * @param {string} [signal] Signal that triggered shutdown
+   */
+  server.shutdown = function shutdown(signal) {
+    /** Grace period in milliseconds */
+    const gracePeriodMs = (() => {
+      const raw = process.env['SHUTDOWN_GRACE_PERIOD_MS'] ?? '30000';
+      const parsed = Number.parseInt(raw, 10);
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : 30_000;
+    })();
+
+    const log = (msg) => {
+      process.stderr.write(`[web-shutdown] ${msg}\n`);
+    };
+
+    log(
+      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${gracePeriodMs / 1_000}s deadline)`,
+    );
+
+    // Safety-net timer — force exit if the deadline expires
+    const forceExitTimer = setTimeout(() => {
+      log('Graceful shutdown deadline exceeded — destroying remaining connections');
+      for (const socket of activeConnections) {
+        socket.destroy();
+      }
+      activeConnections.clear();
+      process.exit(1);
+    }, gracePeriodMs);
+    forceExitTimer.unref();
+
+    // Stop accepting new connections
+    server.close((err) => {
+      // Ignore ERR_SERVER_NOT_RUNNING — it's a no-op
+      if (err && /** @type {NodeJS.ErrnoException} */ (err).code !== 'ERR_SERVER_NOT_RUNNING') {
+        log(`Error closing HTTP server: ${err.message}`);
+      } else {
+        log('HTTP server closed — no longer accepting requests');
+      }
+
+      // Drain remaining keep-alive connections
+      for (const socket of activeConnections) {
+        socket.destroy();
+      }
+
+      clearTimeout(forceExitTimer);
+      log('Graceful shutdown complete');
+      process.exit(0);
+    });
+
+    // Note: server.close() sets listening=false synchronously, so we
+    // must NOT check !server.listening here — the close callback
+    // handles all cases, including ERR_SERVER_NOT_RUNNING for servers
+    // that were never started.
+  };
+
+  return /** @type {import('node:http').Server & { shutdown: (signal?: string) => void }} */ (server);
 }
 
 // ── Auto-start when run directly (Docker CMD) ─────────────
 if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const PORT = parseInt(process.env['PORT'] ?? '3000', 10);
   const server = createStaticServer();
+
+  // Register signal handlers for graceful shutdown
+  for (const signal of ['SIGTERM', 'SIGINT']) {
+    process.on(signal, () => {
+      server.shutdown(signal);
+    });
+  }
+
   server.listen(PORT, () => {
     process.stderr.write(`Barghsa web server listening on http://0.0.0.0:${PORT}\n`);
   });
