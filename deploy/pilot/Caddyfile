@@ -82,9 +82,11 @@ barghsa.example.com {
 		Referrer-Policy "strict-origin-when-cross-origin"
 		# Block camera, microphone, geolocation access
 		Permissions-Policy "camera=(), microphone=(), geolocation=()"
-		# Deny framing of any page
+		# Deny framing via both CSP and legacy header
 		X-Frame-Options "DENY"
-	}
+		# Start CSP in Report-Only mode — collect violations before enforcing
+		# When all violations are resolved, change to Content-Security-Policy
+		Content-Security-Policy-Report-Only "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-{http.request.header.csp-nonce}' 'unsafe-inline' https: http:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; form-action 'self'; report-uri /api/csp-report"
 
 	# ──────────────────────────────────────────────
 	# Request body size limit
