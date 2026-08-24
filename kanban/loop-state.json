@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-01.01.03",
-  "current_task_id": "T-01.01.03",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-01-01-03--password-field",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/70",
-  "loop_iteration": 114,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 115,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -143,12 +143,14 @@
     "07-ui-ux-design.md#T-07.01.01.02",
     "07-ui-ux-design.md#T-07.01.01.03",
     "02-auth-users-admin.md#T-01.01.01",
-    "02-auth-users-admin.md#T-01.01.02"
+    "02-auth-users-admin.md#T-01.01.02",
+    "02-auth-users-admin.md#T-01.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T00:30:00",
-  "notes": "Tick-114: T-01.01.03 built, reviewed by GLM 5.2 (request_changes), re-review comment posted, fixes applied (value exposure, RTL, keyboard, strength persistence, aria-live), pushed. State set to in_review for next tick.",
+  "last_updated": "2026-08-25T00:55:00",
+  "notes": "Tick-115: T-01.01.03 merged as PR #70. CI infra fixes (ui @/ → relative, i18n source exports, ui build script). Loop idle.",
   "status_history": [
+    { "from": "in_review", "to": "idle", "at": "tick-115" },
     { "from": "in_review", "to": "fixing", "at": "tick-114" },
     { "from": "fixing", "to": "in_review", "at": "tick-114" },
     { "from": "building", "to": "in_review", "at": "tick-96" },
