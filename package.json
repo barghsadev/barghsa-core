@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "turbo dev",
+    "dev:docker": "CHOKIDAR_USEPOLLING=true TURBO_DAEMON=false TSC_WATCHFILE=UseFsEventsWithPolling turbo dev",
     "build": "turbo build",
     "test": "turbo test",
     "test:coverage": "turbo test:coverage",
