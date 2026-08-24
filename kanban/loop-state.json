@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "01-platform-infrastructure.md#T-04.03.05",
   "current_task_id": "T-04.03.05",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e04-t-04-03-05--immutable-storage",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/59",
   "loop_iteration": 94,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -77,8 +77,8 @@
     "01-platform-infrastructure.md#T-04.03.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T21:23:00",
-  "notes": "Tick-94: built T-04.03.05 (immutable storage). PR #59 opened and marked ready for review.",
+  "last_updated": "2026-08-24T21:27:00",
+  "notes": "Tick-94: built T-04.03.05 (immutable storage). PR #59 — review found CI failure (circular TDZ). Fix pushed (extracted symbols to constants file). State → fixing (attempt 1).",
   "status_history": [
     {
       "from": "idle",
