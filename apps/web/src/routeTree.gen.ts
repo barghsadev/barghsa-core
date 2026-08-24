@@ -18,7 +18,9 @@ import { Route as ElectricityRouteImport } from './routes/electricity'
 import { Route as SavingsRouteImport } from './routes/savings'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
 import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 
 const IndexRoute = IndexRouteImport.update({
@@ -66,10 +68,20 @@ const WalletRoute = WalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => AdminRoute,
+} as any)
+const ElectricityIndexRoute = ElectricityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ElectricityRoute,
 } as any)
 const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
   id: '/order',
@@ -89,19 +101,21 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof WalletRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/admin/': typeof AdminIndexRoute
+  '/electricity/': typeof ElectricityIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
-  '/electricity': typeof ElectricityRouteWithChildren
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/admin': typeof AdminIndexRoute
+  '/electricity': typeof ElectricityIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +130,8 @@ export interface FileRoutesById {
   '/wallet': typeof WalletRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/admin/': typeof AdminIndexRoute
+  '/electricity/': typeof ElectricityIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,19 +147,21 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/users'
     | '/electricity/order'
+    | '/admin/'
+    | '/electricity/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/ai'
     | '/charts'
     | '/documents'
-    | '/electricity'
     | '/savings'
     | '/videos'
     | '/wallet'
     | '/admin/users'
     | '/electricity/order'
+    | '/admin'
+    | '/electricity'
   id:
     | '__root__'
     | '/'
@@ -157,6 +175,8 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/users'
     | '/electricity/order'
+    | '/admin/'
+    | '/electricity/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -236,12 +256,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/electricity/': {
+      id: '/electricity/'
+      path: '/'
+      fullPath: '/electricity/'
+      preLoaderRoute: typeof ElectricityIndexRouteImport
+      parentRoute: typeof ElectricityRoute
     }
     '/electricity/order': {
       id: '/electricity/order'
@@ -255,20 +289,24 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ElectricityRouteChildren {
   ElectricityOrderRoute: typeof ElectricityOrderRoute
+  ElectricityIndexRoute: typeof ElectricityIndexRoute
 }
 
 const ElectricityRouteChildren: ElectricityRouteChildren = {
   ElectricityOrderRoute: ElectricityOrderRoute,
+  ElectricityIndexRoute: ElectricityIndexRoute,
 }
 
 const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(

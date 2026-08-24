@@ -1,14 +1,18 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-function ElectricityPage() {
+/**
+ * Electricity layout — renders child routes (order page) via Outlet.
+ */
+function ElectricityLayout() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Electricity Products</h1>
-      <p className="text-gray-600">Browse and select electricity plans.</p>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto p-8">
+        <Outlet />
+      </div>
     </div>
   )
 }
 
 export const Route = createFileRoute('/electricity')({
-  component: ElectricityPage,
+  component: ElectricityLayout,
 })
