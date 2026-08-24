@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Git
+.git/
+.gitattributes
+.gitignore
+
+# Build output
+dist/
+.next/
+
+# Coverage
+coverage/
+
+# Turborepo cache
+.turbo/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Documentation — not needed in the image
+*.md
+**/*.md
+
+# Test directories — not needed in production images
+test/
+e2e/
+__tests__/
+__mocks__/
+
+# Database migration snapshots — not needed in final image
+drizzle/
+
+# Git hooks
+.husky/
+
+# IDE and editor config
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
