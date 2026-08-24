@@ -69,7 +69,7 @@
     "01-platform-infrastructure.md#T-04.01.07"
   ],
   "last_error": null,
-  "last_updated": "2026-08-24T18:35:00",
+  "last_updated": "2026-08-24T18:47:03",
   "notes": "Tick-78: T-04.02.01 fix attempt 1. Reviewer found 3 major issues (TLS not applied, factory not returning null on connect failure, health status:down violates criterion). All fixed: factory made async with lazyConnect + try/catch returning null, TLS mapped to opts, checkRedis returns ok+degraded instead of down, NestJS Logger adapter, ioredis version aligned. Checks pass. Back in review.",
   "status_history": [
     {"from": "idle", "to": "building", "at": "tick-78"},
