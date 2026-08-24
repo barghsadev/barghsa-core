@@ -1,8 +1,29 @@
 {
-    "name": "@barghsa/web",
-    "version": "0.0.0",
-    "private": true,
-    "scripts": {
-        "typecheck": "tsc"
-    }
+  "name": "@barghsa/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode development",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@barghsa/i18n": "workspace:*",
+    "@barghsa/shared": "workspace:*",
+    "@barghsa/ui": "workspace:*",
+    "@tanstack/react-router": "^1.114.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tanstack/router-devtools": "^1.114.0",
+    "@tanstack/router-plugin": "1.168.35",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "typescript": "^7.0.0",
+    "vite": "^6.2.0"
+  }
 }
