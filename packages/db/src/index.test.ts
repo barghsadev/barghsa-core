@@ -167,6 +167,14 @@ describe('@barghsa/db', () => {
       expect(call[1]).toBe(captured)
     })
 
+    it('does not throw when the timeout fires', () => {
+      const { client, cancel } = makeMockClient()
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query
+      wrapped('SELECT pg_sleep(5)')
+      expect(() => vi.advanceTimersByTime(100)).not.toThrow()
+      expect(cancel).toHaveBeenCalled()
+    })
+
     it('cancels the correct query object when timeout elapses (callback path)', () => {
       const { client, cancel } = makeMockClient()
       const wrapped = wrapClientQuery(client, 100) as typeof client.query

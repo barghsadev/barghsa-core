@@ -106,8 +106,7 @@ export function wrapClientQuery(client: Client, queryTimeoutMs: number): typeof 
         timedOut = true
         structuredLog('warn', 'query_timeout', { query: text, timeoutMs: queryTimeoutMs })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const c = client as any
-        c.cancel(c, capturedQuery)
+        ;(client as any).cancel(client, capturedQuery)
       }, queryTimeoutMs)
     }
 
