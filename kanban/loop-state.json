@@ -1,5 +1,5 @@
 {
-  "status": "building",
+  "status": "in_review",
     "current_task_key": "01-platform-infrastructure.md#T-03.01.03",
     "current_task_id": "T-03.01.03",
     "current_task_file": "01-platform-infrastructure.md",
@@ -107,6 +107,11 @@
       {
         "from": "idle",
         "to": "building",
+        "at": "tick-49"
+      },
+      {
+        "from": "building",
+        "to": "in_review",
         "at": "tick-49"
       }
     ]
