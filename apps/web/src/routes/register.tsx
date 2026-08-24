@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
+import { Loader2Icon } from 'lucide-react'
 import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
 import { PasswordField } from '../components/PasswordField.js'
@@ -194,11 +195,12 @@ function RegisterPage() {
         }),
       })
 
-      const body: { challengeId?: string; error?: { code?: string; message?: string } } =
+      const body: Record<string, unknown> =
         await response.json().catch(() => ({}))
 
       if (!response.ok) {
-        const errorCode = body?.error?.code
+        const rawError = body?.error
+        const errorCode = typeof rawError === 'string' ? rawError : (rawError as Record<string, unknown>)?.code as string | undefined
         const msg = resolveErrorMessage(errorCode, locale)
         setFormError(msg)
         toast.error(msg)
@@ -238,7 +240,7 @@ function RegisterPage() {
     }
   }, [])
 
-  const isFormReady = isUsernameValid && tosAccepted && !submitting
+  const isFormReady = isUsernameValid && password.length >= 8 && tosAccepted && !submitting
 
   return (
     <AuthLayout
@@ -388,9 +390,14 @@ function RegisterPage() {
             className="w-full"
             disabled={!isFormReady}
           >
-            {submitting
-              ? t('auth.register.submitting', locale)
-              : t('auth.register.submit', locale)}
+            {submitting ? (
+              <>
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                {t('auth.register.submitting', locale)}
+              </>
+            ) : (
+              t('auth.register.submit', locale)
+            )}
           </Button>
         </form>
 
