@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-02.04.01",
-  "current_task_id": "T-02.04.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-02-04-01--seed-script",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/81",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 137,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -148,12 +148,18 @@
     "02-auth-users-admin.md#T-01.02.03",
     "02-auth-users-admin.md#T-02.01.01",
     "02-auth-users-admin.md#T-02.01.02",
-    "01-platform-infrastructure.md#T-02.03.02"
+    "01-platform-infrastructure.md#T-02.03.02",
+    "01-platform-infrastructure.md#T-02.04.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T05:17:00",
-  "notes": "Tick-136: PR #80 merged (migration runner script T-02.03.02). Reviewer approved with minor findings on error-distinction (42P01), verifyMigrationVersion error logging, and pool cleanup. Loop idle; next uncompleted task: 01-platform-infrastructure.md#T-02.03.03 (migration validation test).",
+  "last_updated": "2026-08-25T05:33:00",
+  "notes": "Tick-137: PR #81 merged (seed script framework T-02.04.01). Reviewed by z-ai/glm-5.2 (approve) with minor pool.end() fix applied. Loop idle; next uncompleted task: 01-platform-infrastructure.md#T-02.04.02 (four default electricity products).",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-137"
+    },
     {
       "from": "idle",
       "to": "building",
