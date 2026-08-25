@@ -5,7 +5,7 @@
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 188,
+  "loop_iteration": 190,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -171,76 +171,27 @@
     "02-auth-users-admin.md#T-03.02.03",
     "02-auth-users-admin.md#T-03.02.04",
     "02-auth-users-admin.md#T-03.03.01",
-    "02-auth-users-admin.md#T-03.03.02"
+    "02-auth-users-admin.md#T-03.03.02",
+    "02-auth-users-admin.md#T-03.03.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T17:10:00Z",
-  "notes": "Tick-187/188: T-03.03.02 (Default profile selection) merged as PR #110 after z-ai/glm-5.2 approve (1 fix round: hardcoded locale -> useLocale() hook; review comment posted). Next: 02-auth-users-admin.md#T-03.03.03.",
+  "last_updated": "2026-08-25T17:37:00Z",
+  "notes": "Tick-190: T-03.03.03 (Profile settings page) — merged as PR #111. Reviewed by z-ai/glm-5.2 (approve, minor issues only). Loop idle.",
   "status_history": [
     {
       "from": "idle",
       "to": "building",
-      "at": "tick-182"
+      "at": "tick-189"
     },
     {
       "from": "building",
       "to": "in_review",
-      "at": "tick-183"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-184"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-184"
+      "at": "tick-189"
     },
     {
       "from": "in_review",
       "to": "idle",
-      "at": "tick-185"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-186"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-186"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-187"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-187"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-187"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-188"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-188"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-188"
+      "at": "tick-190"
     }
   ]
 }
