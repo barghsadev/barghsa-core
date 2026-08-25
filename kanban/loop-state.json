@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.02",
+  "current_task_id": "T-05.04.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-02--agent-invitation-flow",
   "current_pr_url": null,
-  "loop_iteration": 231,
+  "loop_iteration": 232,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -195,8 +195,13 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-26T02:13:00Z",
-  "notes": "Tick-231: PR #131 (T-05.04.01 - Agent list for legal entity) merged. 372/372 tests, tsc clean, GLM-5.2 approve. Back to idle.",
+  "notes": "Tick-232: Starting T-05.04.02 - Agent invitation flow (complexity L). Creating branch and implementing POST /api/profiles/:profileId/invitations.",
   "status_history": [
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-232"
+    },
     {
       "from": "in_review",
       "to": "idle",

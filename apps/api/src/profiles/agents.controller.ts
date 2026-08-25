@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -6,6 +7,7 @@ import {
   HttpException,
   Logger,
   Param,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -56,6 +58,43 @@ export class AgentsController {
 
     const result = await this.agentsService.listAgents(profileId)
     this.logger.debug(`User ${userId} listed agents for profile ${profileId}: ${result.agents.length} entries`)
+    return result
+  }
+
+  /**
+   * POST /api/profiles/:profileId/invitations
+   *
+   * Creates a new agent invitation for a legal profile.
+   * Only the profile owner or a manager can send invitations.
+   *
+   * Body: { username: string, role: 'Manager' | 'Finance' | 'Legal' }
+   *
+   * Rate-limited to 10 invitations per hour per profile.
+   */
+  @Post('invitations')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Create an agent invitation for a legal profile' })
+  @ApiResponse({ status: 201, description: 'Invitation created.' })
+  @ApiResponse({ status: 400, description: 'Invalid input (role, username, or non-legal profile).' })
+  @ApiResponse({ status: 403, description: 'Not authorized — owner or manager role required.' })
+  @ApiResponse({ status: 404, description: 'Profile not found.' })
+  @ApiResponse({ status: 409, description: 'User already an agent or has a pending invitation.' })
+  @ApiResponse({ status: 429, description: 'Rate limit exceeded.' })
+  async createInvitation(
+    @Param('profileId') profileId: string,
+    @Body() body: { username: string; role: string },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+    const result = await this.agentsService.createInvitation(
+      profileId,
+      body.username,
+      body.role,
+      userId,
+    )
+    this.logger.log(
+      `Invitation ${result.id} created for profile ${profileId} by user ${userId}`,
+    )
     return result
   }
 

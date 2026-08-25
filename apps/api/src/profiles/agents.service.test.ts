@@ -19,11 +19,19 @@ vi.mock('uuid', () => ({
   v7: () => mockUuidV7(),
 }))
 
+vi.mock('../rate-limit/rate-limit.service.js', () => ({
+  RateLimitService: vi.fn(() => ({
+    checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }),
+  })),
+}))
+
 describe('AgentsService', () => {
   let service: AgentsService
 
   beforeEach(() => {
-    service = new AgentsService()
+    service = new AgentsService(
+      { checkRateLimit: vi.fn().mockResolvedValue({ allowed: true }) } as any,
+    )
     mockPool.query.mockReset()
     mockClient.query.mockReset()
     mockClient.release.mockReset()
