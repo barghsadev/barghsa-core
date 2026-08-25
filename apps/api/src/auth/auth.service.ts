@@ -84,94 +84,93 @@ export class AuthService {
     ip: string,
   ): Promise<RegisterVerifyResponse> {
     const pool = getDbPool()
-
-    // ── Verify OTP and get stored registration data ─────────────────
-    // We query the challenge row ourselves to get password_hash and
-    // tos_version_id, then verify the OTP in the same service call.
-    const challengeRow = await pool.query(
-      `SELECT challenge_id, destination, otp_hash, attempts_remaining,
-              expires_at, consumed_at, password_hash, tos_version_id
-       FROM otp_challenges
-       WHERE challenge_id = $1`,
-      [challengeId],
-    )
-
-    if (challengeRow.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
-
-    const row = challengeRow.rows[0]
-
-    // Check consumed
-    if (row.consumed_at) {
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-        409,
-      )
-    }
-
-    // Check expiry
-    if (new Date(row.expires_at) < new Date()) {
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
-        401,
-      )
-    }
-
-    // Check attempts
-    if (row.attempts_remaining <= 0) {
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
-        401,
-      )
-    }
-
-    // Check password_hash was stored (should always be present for registration)
-    if (!row.password_hash || !row.tos_version_id) {
-      this.logger.error(`Missing registration data for challenge ${challengeId}`)
-      throw new HttpException(
-        {
-          statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-          error: ErrorCodes.AUTH_REGISTER_FAILED.code,
-        },
-        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-      )
-    }
-
-    // ── Verify OTP ─────────────────────────────────────────────────
-    const submittedHash = this.otpService.hashOtp(otp)
-    if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
-      // Decrement attempts
-      await pool.query(
-        `UPDATE otp_challenges
-         SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
-         WHERE challenge_id = $1 AND attempts_remaining > 0`,
-        [challengeId],
-      )
-
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
-        401,
-      )
-    }
-
-    // ── Atomic: create user + consume OTP + create session ─────────
-    const userId = randomUUID()
-    const sessionId = randomUUID()
-    const csrfToken = randomBytes(32).toString('hex')
-    const now = new Date()
-    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
-
     const client = await pool.connect()
 
     try {
       await client.query('BEGIN')
 
-      // 1. Consume the OTP challenge
+      // 1. Lock and fetch the challenge row
+      const challengeResult = await client.query(
+        `SELECT challenge_id, destination, otp_hash, attempts_remaining,
+                expires_at, consumed_at, password_hash, tos_version_id
+         FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const row = challengeResult.rows[0]
+
+      // Check consumed
+      if (row.consumed_at) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      // Check expiry
+      if (new Date(row.expires_at) < new Date()) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
+          401,
+        )
+      }
+
+      // Check attempts
+      if (row.attempts_remaining <= 0) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+          401,
+        )
+      }
+
+      // Check password_hash was stored (should always be present for registration)
+      if (!row.password_hash || !row.tos_version_id) {
+        this.logger.error(`Missing registration data for challenge ${challengeId}`)
+        throw new HttpException(
+          {
+            statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+            error: ErrorCodes.AUTH_REGISTER_FAILED.code,
+          },
+          ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+        )
+      }
+
+      // 2. Verify OTP inside the transaction
+      const submittedHash = this.otpService.hashOtp(otp)
+      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+        // Decrement attempts inside the transaction and commit
+        await client.query(
+          `UPDATE otp_challenges
+           SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
+           WHERE challenge_id = $1 AND attempts_remaining > 0`,
+          [challengeId],
+        )
+        await client.query('COMMIT')
+
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
+          401,
+        )
+      }
+
+      // 3. Create user + consume OTP + create session atomically
+      const userId = randomUUID()
+      const sessionId = randomUUID()
+      const csrfToken = randomBytes(32).toString('hex')
+      const now = new Date()
+      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
+      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+
+      // Consume the OTP challenge
       const consumeResult = await client.query(
         `UPDATE otp_challenges
          SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
@@ -186,7 +185,7 @@ export class AuthService {
         )
       }
 
-      // 2. Create user record
+      // Create user record
       await client.query(
         `INSERT INTO users (user_id, username, password_hash, locale,
                             last_accepted_tos_version, created_at, updated_at)
@@ -201,7 +200,7 @@ export class AuthService {
         ],
       )
 
-      // 3. Create session
+      // Create session
       await client.query(
         `INSERT INTO sessions (session_id, user_id, csrf_token,
                                expires_at, idle_deadline, created_at, updated_at)
@@ -212,8 +211,15 @@ export class AuthService {
       await client.query('COMMIT')
 
       this.logger.log(`User created: ${userId} (${row.destination})`)
+
+      return {
+        userId,
+        sessionId,
+        csrfToken,
+        expiresAt: expiresAt.toISOString(),
+      }
     } catch (err) {
-      await client.query('ROLLBACK')
+      await client.query('ROLLBACK').catch(() => {})
 
       // Re-throw HttpExceptions as-is
       if (err instanceof HttpException) throw err
@@ -228,13 +234,6 @@ export class AuthService {
       )
     } finally {
       client.release()
-    }
-
-    return {
-      userId,
-      sessionId,
-      csrfToken,
-      expiresAt: expiresAt.toISOString(),
     }
   }
 }

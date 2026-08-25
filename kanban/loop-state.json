@@ -1,12 +1,12 @@
 {
-  "status": "building",
+  "status": "fixing",
   "current_task_key": "02-auth-users-admin.md#T-01.02.03",
   "current_task_id": "T-01.02.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-01-02-03--otp-verification-and-user-creation",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/76",
   "loop_iteration": 128,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -152,8 +152,8 @@
     "02-auth-users-admin.md#T-01.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T03:10:00",
-  "notes": "Tick-128: Building T-01.02.03 (OTP verification and user creation).",
+  "last_updated": "2026-08-25T03:35:00",
+  "notes": "Tick-129: Fixing T-01.02.03 — TOCTOU race (verification outside tx) + missing completeRegistration tests. Review: request_changes.",
   "status_history": [
     {
       "from": "in_review",
@@ -239,6 +239,16 @@
       "from": "idle",
       "to": "building",
       "at": "tick-128"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-128"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-129"
     }
   ]
 }
