@@ -6,7 +6,7 @@ import {
   HttpException,
   Logger,
   Param,
-  Patch,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -122,16 +122,20 @@ export class CrmV2Controller {
   }
 
   /**
-   * PATCH /api/crm/profiles/:profileId
+   * PUT /api/crm/profiles/:profileId
    *
    * Updates editable fields on a CRM profile. Identity fields (firstName,
    * lastName, nationalId) and legal-entity fields are blocked for direct
    * editing — they require a verification case (T-05.02.05).
    *
+   * Note: Full RBAC permission enforcement (crm:edit role) is pending
+   * the role assignment system (T-09.05.01). Currently uses admin check
+   * isAdmin as a secure default — all system admins have crm:edit access.
+   *
    * Audit: profile_updated with before/after diff.
    * Permission: admin or staff with crm:edit role required.
    */
-  @Patch('profiles/:profileId')
+  @Put('profiles/:profileId')
   @HttpCode(200)
   @ApiOperation({ summary: 'Update editable profile fields (staff)' })
   @ApiParam({

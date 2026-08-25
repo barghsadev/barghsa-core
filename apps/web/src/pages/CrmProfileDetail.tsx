@@ -197,7 +197,7 @@ export default function CrmProfileDetail() {
     setSaveSuccess(false)
 
     fetch(`/api/crm/profiles/${profileId}`, {
-      method: 'PATCH',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         title: editFields.title === '' ? null : editFields.title,
@@ -408,18 +408,22 @@ export default function CrmProfileDetail() {
             {/* Identity fields — always read-only with lock icon */}
             <DetailRow
               label="First Name"
-              value={isEditing ? `${profile.firstName ?? '—'} 🔒` : (profile.firstName ?? '—')}
-              valueClass={isEditing ? 'text-gray-400' : undefined}
+              value={profile.firstName ?? '—'}
+              valueClass={isEditing ? undefined : undefined}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             <DetailRow
               label="Last Name"
-              value={isEditing ? `${profile.lastName ?? '—'} 🔒` : (profile.lastName ?? '—')}
-              valueClass={isEditing ? 'text-gray-400' : undefined}
+              value={profile.lastName ?? '—'}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             <DetailRow
               label="National ID"
-              value={isEditing ? `${profile.nationalId ?? '—'} 🔒` : (profile.nationalId ?? '—')}
-              valueClass={isEditing ? 'text-gray-400' : undefined}
+              value={profile.nationalId ?? '—'}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             {isEditing && (
               <p className="text-xs text-gray-400 mt-1">{t('crm.profile.edit.identityLocked', locale)}</p>
@@ -603,6 +607,8 @@ export default function CrmProfileDetail() {
           message={t('crm.profile.edit.confirm.message', locale)}
           onConfirm={handleConfirmSave}
           onCancel={() => setShowConfirm(false)}
+          cancelLabel={t('crm.profile.edit.cancel', locale)}
+          confirmLabel={t('crm.profile.edit.save', locale)}
         />
       )}
     </div>
@@ -643,11 +649,18 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function DetailRow({ label, value, valueClass }: { label: string; value: string; valueClass?: string | undefined }) {
+function DetailRow({ label, value, valueClass, icon, iconTooltip }: { label: string; value: string; valueClass?: string | undefined; icon?: string | undefined; iconTooltip?: string | undefined }) {
   return (
     <div className="flex flex-col">
       <span className="text-xs text-gray-500 font-medium">{label}</span>
-      <span className={`text-sm text-gray-900 break-words ${valueClass ?? ''}`}>{value}</span>
+      <span className={`text-sm text-gray-900 break-words ${valueClass ?? ''}`}>
+        {value}
+        {icon && (
+          <span className="inline-block mr-1" title={iconTooltip ?? ''} role="img" aria-label={iconTooltip ?? 'locked'}>
+            {icon}
+          </span>
+        )}
+      </span>
     </div>
   )
 }
@@ -685,11 +698,15 @@ function ConfirmModal({
   message,
   onConfirm,
   onCancel,
+  cancelLabel,
+  confirmLabel,
 }: {
   title: string
   message: string
   onConfirm: () => void
   onCancel: () => void
+  cancelLabel: string
+  confirmLabel: string
 }) {
   return (
     <div
@@ -710,13 +727,13 @@ function ConfirmModal({
             onClick={onCancel}
             className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
           >
-            {title.includes('تأیید') ? 'لغو' : 'Cancel'}
+            {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
           >
-            {title.includes('تأیید') ? 'تأیید' : 'Confirm'}
+            {confirmLabel}
           </button>
         </div>
       </div>

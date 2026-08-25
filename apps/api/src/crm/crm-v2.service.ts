@@ -3,6 +3,12 @@ import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import type { UpdateProfileDto } from './crm-v2.controller.js'
 
+/** Simple email regex for server-side validation */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Iranian mobile regex: starts with 09 followed by 9 digits */
+const MOBILE_RE = /^09\d{9}$/
+
 /**
  * Result type for profile update in CrmV2Service.
  */
@@ -289,7 +295,7 @@ export class CrmV2Service {
   }
 
   /**
-   * PATCH /api/crm/profiles/:profileId
+   * PUT /api/crm/profiles/:profileId
    *
    * Updates editable fields on a CRM profile. Identity fields are blocked
    * for direct editing. Changes to email/mobile update the users table;
@@ -315,7 +321,19 @@ export class CrmV2Service {
 
     const profileRow = profileResult.rows[0] as Record<string, unknown>
 
-    // 2. Build the changeset — only allowed fields
+    // 2. Field-level validation
+    if (dto.email !== undefined && dto.email !== null && dto.email !== '') {
+      if (!EMAIL_RE.test(dto.email)) {
+        return { error: 'Invalid email format' }
+      }
+    }
+    if (dto.mobile !== undefined && dto.mobile !== null && dto.mobile !== '') {
+      if (!MOBILE_RE.test(dto.mobile)) {
+        return { error: 'Invalid Iranian mobile number format (must be 09xxxxxxxxx)' }
+      }
+    }
+
+    // 3. Build the changeset — only allowed fields
     const profileChanges: Record<string, unknown> = {}
     const userChanges: Record<string, unknown> = {}
     const beforeDiff: Record<string, unknown> = {}
@@ -330,35 +348,34 @@ export class CrmV2Service {
       }
     }
 
+    // Always fetch the current user row (needed for username in response)
+    const userResult = await pool.query(
+      `SELECT username, email, mobile FROM users WHERE user_id = $1`,
+      [profileRow.user_id],
+    )
+    if (userResult.rows.length === 0) return null
+    const userRow = userResult.rows[0] as Record<string, unknown>
+
     // Track before values for user fields
-    if (dto.email !== undefined || dto.mobile !== undefined) {
-      const userResult = await pool.query(
-        `SELECT email, mobile FROM users WHERE user_id = $1`,
-        [profileRow.user_id],
-      )
-      if (userResult.rows.length === 0) return null
-      const userRow = userResult.rows[0] as Record<string, unknown>
-
-      if (dto.email !== undefined) {
-        const oldVal = userRow.email as string | null
-        if (oldVal !== dto.email) {
-          userChanges.email = dto.email
-          beforeDiff.email = oldVal
-          afterDiff.email = dto.email
-        }
-      }
-
-      if (dto.mobile !== undefined) {
-        const oldVal = userRow.mobile as string | null
-        if (oldVal !== dto.mobile) {
-          userChanges.mobile = dto.mobile
-          beforeDiff.mobile = oldVal
-          afterDiff.mobile = dto.mobile
-        }
+    if (dto.email !== undefined) {
+      const oldVal = userRow.email as string | null
+      if (oldVal !== dto.email) {
+        userChanges.email = dto.email
+        beforeDiff.email = oldVal
+        afterDiff.email = dto.email
       }
     }
 
-    // 3. If nothing changed, return early (no-op)
+    if (dto.mobile !== undefined) {
+      const oldVal = userRow.mobile as string | null
+      if (oldVal !== dto.mobile) {
+        userChanges.mobile = dto.mobile
+        beforeDiff.mobile = oldVal
+        afterDiff.mobile = dto.mobile
+      }
+    }
+
+    // 3. If nothing changed, return early (no-op with current data)
     if (Object.keys(profileChanges).length === 0 && Object.keys(userChanges).length === 0) {
       return {
         updated: true,
@@ -368,9 +385,9 @@ export class CrmV2Service {
           updatedAt: (profileRow.updated_at as string) ?? '',
         },
         user: {
-          username: '', // Not returned from this path, caller gets current state
-          email: null,
-          mobile: null,
+          username: (userRow.username as string) ?? '',
+          email: (userRow.email as string | null) ?? null,
+          mobile: (userRow.mobile as string | null) ?? null,
         },
       }
     }
@@ -399,6 +416,7 @@ export class CrmV2Service {
         const setClauses = Object.entries(userChanges)
           .map(([key], i) => `${key} = $${i + 1}`)
         const values = Object.values(userChanges)
+        setClauses.push(`updated_at = NOW()`)
 
         await client.query(
           `UPDATE users SET ${setClauses.join(', ')} WHERE user_id = $${values.length + 1}`,
@@ -429,9 +447,9 @@ export class CrmV2Service {
           updatedAt: now,
         },
         user: {
-          username: '',
-          email: (dto.email !== undefined ? dto.email : null) as string | null,
-          mobile: (dto.mobile !== undefined ? dto.mobile : null) as string | null,
+          username: (userRow.username as string) ?? '',
+          email: (dto.email !== undefined ? dto.email : userRow.email) as string | null,
+          mobile: (dto.mobile !== undefined ? dto.mobile : userRow.mobile) as string | null,
         },
       }
     } catch (err) {
