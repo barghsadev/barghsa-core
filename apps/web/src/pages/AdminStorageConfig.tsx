@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { withCsrf } from '../lib/csrf.js'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,7 +54,7 @@ async function fetchConfig(): Promise<StorageConfig> {
 async function saveConfig(data: StorageConfigUpdate): Promise<StorageConfig> {
   const res = await fetch(apiUrl('/config'), {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
   })
   if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`)
@@ -63,7 +64,7 @@ async function saveConfig(data: StorageConfigUpdate): Promise<StorageConfig> {
 async function testConnection(data: StorageConfigUpdate): Promise<TestConnectionResult> {
   const res = await fetch(apiUrl('/test-connection'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
   })
   if (!res.ok) throw new Error(`Connection test failed: ${res.statusText}`)

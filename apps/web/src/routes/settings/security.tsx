@@ -12,6 +12,7 @@ import {
   ShieldAlertIcon,
 } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
+import { withCsrf } from '../../lib/csrf.js'
 
 export const Route = createFileRoute('/settings/security')({
   component: SettingsSecurityPage,
@@ -180,6 +181,7 @@ function SettingsSecurityPage() {
     try {
       const response = await fetch(`/api/auth/sessions/${revokeConfirmId}`, {
         method: 'DELETE',
+        headers: withCsrf(),
       })
 
       if (!response.ok) {
@@ -213,7 +215,7 @@ function SettingsSecurityPage() {
     try {
       const response = await fetch('/api/auth/sessions/revoke-all', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ password: revokeAllPassword }),
       })
 
