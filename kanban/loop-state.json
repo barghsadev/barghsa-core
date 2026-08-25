@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-03.01.04",
+  "current_task_id": "T-03.01.04",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e03-t-03-01-04--healthcheck",
   "current_pr_url": null,
-  "loop_iteration": 160,
+  "loop_iteration": 161,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -154,8 +154,8 @@
     "01-platform-infrastructure.md#T-03.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T11:19:00",
-  "notes": "Tick-160: T-03.01.03 (.dockerignore) merged as PR #96. Reviewed by z-ai/glm-5.2 (approve, 1 minor). Loop idle; next: 01-platform-infrastructure.md#T-03.01.04 (HEALTHCHECK to all Dockerfiles).",
+  "last_updated": "2026-08-25T11:22:00",
+  "notes": "Tick-161: T-03.01.04 (HEALTHCHECK all Dockerfiles) building. Both Dockerfiles already have HEALTHCHECK; adjusting API start-period to 30s.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
@@ -182,6 +182,7 @@
     { "from": "in_review", "to": "idle", "at": "tick-159" },
     { "from": "building", "to": "in_review", "at": "tick-159" },
     { "from": "in_review", "to": "idle", "at": "tick-159" },
-    { "from": "building", "to": "in_review", "at": "tick-159" }
+    { "from": "building", "to": "in_review", "at": "tick-159" },
+    { "from": "idle", "to": "building", "at": "tick-161" }
   ]
 }
