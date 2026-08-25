@@ -9,7 +9,9 @@ import { pgTable, text, boolean, timestamp } from 'drizzle-orm/pg-core'
  * login identifier.
  *
  * - `user_id` — UUIDv7 primary key, opaque.
- * - `username` — email or E.164 phone (normalized). Unique, stable.
+ * - `username` — primary login identifier (email or E.164 phone). Normalized, unique, stable.
+ * - `email` — email address when username is a mobile (or same as username when username is email). Nullable.
+ * - `mobile` — E.164 phone number when username is email (or same as username when username is mobile). Nullable.
  * - `password_hash` — Argon2id hash. Set during registration; managed by
  *   T-02.01.02 (login) and T-02.03.02 (password reset).
  * - `locale` — preferred locale ('fa' | 'en'). Default 'fa'.
@@ -26,6 +28,12 @@ export const users = pgTable(
 
     /** Unique username: normalized email or E.164 phone. */
     username: text('username').notNull().unique(),
+
+    /** Email address. Set when username is mobile; same as username when username is email. */
+    email: text('email'),
+
+    /** E.164 phone number. Set when username is email; same as username when username is mobile. */
+    mobile: text('mobile'),
 
     /** Argon2id hash of the user's password. */
     passwordHash: text('password_hash').notNull(),
@@ -67,6 +75,8 @@ export const createUsersTable = sql`
   CREATE TABLE IF NOT EXISTS users (
     user_id TEXT PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
+    email TEXT,
+    mobile TEXT,
     password_hash TEXT NOT NULL,
     locale TEXT NOT NULL DEFAULT 'fa',
     must_change_password BOOLEAN NOT NULL DEFAULT false,
@@ -77,4 +87,20 @@ export const createUsersTable = sql`
   );
 
   CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
+
+  -- Migration: add email and mobile columns for T-03.03.04
+  DO $$ BEGIN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'email'
+    ) THEN
+      ALTER TABLE users ADD COLUMN email TEXT;
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'mobile'
+    ) THEN
+      ALTER TABLE users ADD COLUMN mobile TEXT;
+    END IF;
+  END $$;
 `

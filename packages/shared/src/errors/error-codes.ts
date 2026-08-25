@@ -296,6 +296,50 @@ export const ErrorCodes = {
     messageKey: 'auth.login.error.generic',
     severity: 'error' as ErrorSeverity,
   },
+
+  // ── Username / Contact Change ──────────────────────────
+  AUTH_CHANGE_USERNAME_INVALID: {
+    code: 'AUTH:CHANGE_USERNAME:INVALID',
+    httpStatus: 400,
+    messageKey: 'auth.changeUsername.error.invalid',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_SAME: {
+    code: 'AUTH:CHANGE_USERNAME:SAME',
+    httpStatus: 400,
+    messageKey: 'auth.changeUsername.error.same',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_TAKEN: {
+    code: 'AUTH:CHANGE_USERNAME:TAKEN',
+    httpStatus: 409,
+    messageKey: 'auth.changeUsername.error.taken',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_NO_EMAIL: {
+    code: 'AUTH:CHANGE_USERNAME:NO_EMAIL',
+    httpStatus: 400,
+    messageKey: 'auth.changeUsername.error.noEmail',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_NO_MOBILE: {
+    code: 'AUTH:CHANGE_USERNAME:NO_MOBILE',
+    httpStatus: 400,
+    messageKey: 'auth.changeUsername.error.noMobile',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL: {
+    code: 'AUTH:CHANGE_USERNAME:ALREADY_HAS_EMAIL',
+    httpStatus: 409,
+    messageKey: 'auth.changeUsername.error.alreadyHasEmail',
+    severity: 'debug' as ErrorSeverity,
+  },
+  AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE: {
+    code: 'AUTH:CHANGE_USERNAME:ALREADY_HAS_MOBILE',
+    httpStatus: 409,
+    messageKey: 'auth.changeUsername.error.alreadyHasMobile',
+    severity: 'debug' as ErrorSeverity,
+  },
 } as const satisfies Record<string, ErrorCodeDef>;
 
 /** Union type of all error code strings */

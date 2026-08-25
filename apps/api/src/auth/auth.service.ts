@@ -1083,4 +1083,429 @@ export class AuthService {
       client.release()
     }
   }
+
+  // ── Username / Contact Change (T-03.03.04) ────────────────────────
+
+  /**
+   * Get current user info (username, email, mobile).
+   */
+  async getUser(
+    userId: string,
+  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null }> {
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `SELECT user_id, username, email, mobile FROM users WHERE user_id = $1`,
+      [userId],
+    )
+
+    if (result.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const row = result.rows[0]
+    return {
+      userId: row.user_id,
+      username: row.username,
+      email: row.email ?? null,
+      mobile: row.mobile ?? null,
+    }
+  }
+
+  /**
+   * Send OTP to a new username to initiate a change.
+   *
+   * Validates the new username is not the same as the current one and is
+   * not already taken. Creates an OTP challenge sent to the new destination.
+   *
+   * Rate limits are enforced via the controller's @RateLimit decorator.
+   */
+  async sendChangeUsernameOtp(
+    userId: string,
+    newUsername: string,
+    ip: string,
+  ): Promise<{ challengeId: string; destination: string }> {
+    const pool = getDbPool()
+
+    // 1. Fetch current user
+    const userResult = await pool.query(
+      `SELECT username FROM users WHERE user_id = $1`,
+      [userId],
+    )
+
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const currentUsername = userResult.rows[0].username
+
+    // 2. Check it's not the same
+    if (currentUsername === newUsername) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_SAME.code },
+        400,
+      )
+    }
+
+    // 3. Check uniqueness
+    const takenResult = await pool.query(
+      `SELECT 1 FROM users WHERE username = $1 LIMIT 1`,
+      [newUsername],
+    )
+
+    if (takenResult.rows.length > 0) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+        409,
+      )
+    }
+
+    // 4. Create OTP challenge
+    return this.otpService.createChallenge(newUsername, ip)
+  }
+
+  /**
+   * Complete a username change after OTP verification.
+   *
+   * Atomically: verifies OTP → updates username → invalidates all other
+   * sessions (keeping the current one). Records an audit event.
+   */
+  async completeChangeUsername(
+    userId: string,
+    newUsername: string,
+    challengeId: string,
+    otp: string,
+    ip: string,
+    currentSessionId: string,
+  ): Promise<{ message: string }> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Verify the challenge was created for this destination
+      const challengeResult = await client.query(
+        `SELECT destination FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const challengeDestination = challengeResult.rows[0].destination
+
+      // Verify the challenge was created for the new username (operation scoping)
+      if (challengeDestination !== newUsername) {
+        this.logger.warn(
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${newUsername}`,
+        )
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+
+      // 2. Verify OTP (consumes the challenge atomically)
+      await this.otpService.verifyChallenge(challengeId, otp, ip)
+
+      // 3. Re-check uniqueness inside the transaction
+      const takenResult = await client.query(
+        `SELECT 1 FROM users WHERE username = $1 AND user_id != $2 LIMIT 1`,
+        [newUsername, userId],
+      )
+
+      if (takenResult.rows.length > 0) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+          409,
+        )
+      }
+
+      // 3. Determine contact columns based on username type
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      const isNewEmail = emailRe.test(newUsername)
+      const userResult = await client.query(
+        `SELECT email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
+        [userId],
+      )
+
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const currentUser = userResult.rows[0]
+      const now = new Date()
+
+      // Update username and the corresponding contact column
+      if (isNewEmail) {
+        try {
+          await client.query(
+            `UPDATE users
+             SET username = $1, email = $1, updated_at = $2
+             WHERE user_id = $3`,
+            [newUsername, now, userId],
+          )
+        } catch (err: any) {
+          if (err?.code === '23505') {
+            // Unique constraint violation — another user claimed this username
+            throw new HttpException(
+              { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+              409,
+            )
+          }
+          throw err
+        }
+      } else {
+        // It's a mobile number
+        try {
+          await client.query(
+            `UPDATE users
+             SET username = $1, mobile = $1, updated_at = $2
+             WHERE user_id = $3`,
+            [newUsername, now, userId],
+          )
+        } catch (err: any) {
+          if (err?.code === '23505') {
+            // Unique constraint violation — another user claimed this username
+            throw new HttpException(
+              { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+              409,
+            )
+          }
+          throw err
+        }
+      }
+
+      // 4. Invalidate all other sessions (keep current)
+      await client.query(
+        `UPDATE sessions
+         SET revoked_at = $1, updated_at = $1
+         WHERE user_id = $2 AND session_id != $3 AND revoked_at IS NULL`,
+        [now, userId, currentSessionId],
+      )
+
+      // 5. Record audit event
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [auditId, userId, 'username_changed', JSON.stringify({ oldUsername: currentUser.username, newUsername }), correlationId, ip, now],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Username changed: user ${userId} from ${ip} (${currentUser.username} → ${newUsername})`)
+
+      return { message: 'Username changed successfully.' }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
+      this.logger.error(`Username change failed for user ${userId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Send OTP to a new contact value (email or mobile) to add it.
+   *
+   * Validates the user doesn't already have the requested contact type.
+   * If the user was registered with email, they can add a mobile and vice versa.
+   */
+  async sendAddContactOtp(
+    userId: string,
+    contactType: 'email' | 'mobile',
+    contactValue: string,
+    ip: string,
+  ): Promise<{ challengeId: string; destination: string }> {
+    const pool = getDbPool()
+
+    // 1. Check current user's contact fields
+    const userResult = await pool.query(
+      `SELECT email, mobile FROM users WHERE user_id = $1`,
+      [userId],
+    )
+
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const user = userResult.rows[0]
+
+    // 2. Validate the user doesn't already have this contact type
+    if (contactType === 'email' && user.email) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
+        409,
+      )
+    }
+
+    if (contactType === 'mobile' && user.mobile) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
+        409,
+      )
+    }
+
+    // 3. Validate the contact value is appropriate
+    if (contactType === 'email') {
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRe.test(contactValue)) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+    } else {
+      // mobile — must be E.164
+      const e164Re = /^\+[1-9]\d{6,14}$/
+      if (!e164Re.test(contactValue)) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+    }
+
+    // 4. Create OTP challenge
+    return this.otpService.createChallenge(contactValue, ip)
+  }
+
+  /**
+   * Complete adding a contact after OTP verification.
+   *
+   * Atomically: verifies OTP → updates the contact column.
+   */
+  async completeAddContact(
+    userId: string,
+    contactType: 'email' | 'mobile',
+    contactValue: string,
+    challengeId: string,
+    otp: string,
+    ip: string,
+  ): Promise<{ message: string }> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Verify the challenge was created for this destination
+      const challengeResult = await client.query(
+        `SELECT destination FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const challengeDestination = challengeResult.rows[0].destination
+
+      // Verify the challenge was created for the contact value (operation scoping)
+      if (challengeDestination !== contactValue) {
+        this.logger.warn(
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${contactValue}`,
+        )
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+
+      // 2. Verify OTP
+      await this.otpService.verifyChallenge(challengeId, otp, ip)
+
+      // 2. Re-check user doesn't already have this contact type
+      const userResult = await client.query(
+        `SELECT email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
+        [userId],
+      )
+
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const user = userResult.rows[0]
+
+      if (contactType === 'email' && user.email) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
+          409,
+        )
+      }
+
+      if (contactType === 'mobile' && user.mobile) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
+          409,
+        )
+      }
+
+      // 3. Update the contact column
+      const now = new Date()
+      const column = contactType === 'email' ? 'email' : 'mobile'
+      await client.query(
+        `UPDATE users SET ${column} = $1, updated_at = $2 WHERE user_id = $3`,
+        [contactValue, now, userId],
+      )
+
+      // 4. Record audit event
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [auditId, userId, 'contact_added', JSON.stringify({ contactType, contactValue }), correlationId, ip, now],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Contact added: user ${userId} ${contactType}=${contactValue} from ${ip}`)
+
+      return { message: 'Contact added successfully.' }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
+      this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
 }
