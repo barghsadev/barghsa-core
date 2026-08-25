@@ -93,7 +93,7 @@ export class StepUpGuard implements CanActivate {
     const now = new Date()
     const elapsed = now.getTime() - stepUpVerifiedAt.getTime()
 
-    if (elapsed > STEP_UP_WINDOW_MS) {
+    if (elapsed >= STEP_UP_WINDOW_MS) {
       // Step-up window has expired
       this.logger.debug(
         `Step-up required for session ${authRequest.session.sessionId}: ` +

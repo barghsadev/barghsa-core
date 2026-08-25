@@ -1,11 +1,11 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-02.02.04",
   "current_task_id": "T-02.02.04",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-02-02-04--step-up-auth",
-  "current_pr_url": null,
-  "loop_iteration": 153,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/92",
+  "loop_iteration": 154,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -150,8 +150,10 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T09:32:30",
-  "notes": "Tick-153: T-02.02.03 (CSRF protection) merged as PR #91. Loop idle; next task: 02-auth-users-admin.md#T-02.02.04 (Step-up authentication).",
+  "notes": "Tick-154: T-02.02.04 (Step-up auth — Slice 1/2: backend infra) PR #92 created, ready for review.",
   "status_history": [
+    { "from": "idle", "to": "building", "at": "tick-154" },
+    { "from": "building", "to": "in_review", "at": "tick-154" },
     { "from": "in_review", "to": "idle", "at": "tick-144" },
     { "from": "building", "to": "in_review", "at": "tick-144" },
     { "from": "idle", "to": "building", "at": "tick-144" },

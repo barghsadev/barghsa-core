@@ -186,6 +186,30 @@ describe('StepUpGuard', () => {
         expect(response.error).toBe('AUTHZ:STEP_UP_REQUIRED')
       }
     })
+
+    it('rejects when step-up window exactly at boundary (15 min ago)', () => {
+      const exactlyFifteen = new Date(Date.now() - 15 * 60 * 1000)
+      const context = createMockContext({
+        method: 'POST',
+        session: {
+          sessionId: 'sid-1',
+          csrfToken: 'abc123',
+          userId: 'user-1',
+          isAdmin: false,
+          stepUpVerifiedAt: exactlyFifteen,
+        },
+        requiresStepUp: true,
+      })
+
+      try {
+        guard.canActivate(context)
+        expect.unreachable('Should have thrown')
+      } catch (e: unknown) {
+        expect(e).toBeInstanceOf(ForbiddenException)
+        const response = (e as ForbiddenException).getResponse() as Record<string, unknown>
+        expect(response.error).toBe('AUTHZ:STEP_UP_REQUIRED')
+      }
+    })
   })
 
   describe('RequiresStepUp decorator', () => {
