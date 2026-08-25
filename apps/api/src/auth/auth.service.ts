@@ -1,12 +1,12 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { randomBytes } from 'node:crypto'
+import { randomBytes, createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
-import type { LoginInput, LoginResponse } from './dto/login.dto.js'
+import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
 import { OtpService } from './otp.service.js'
 
 /** Session idle timeout: 30 minutes */
@@ -132,7 +132,7 @@ export class AuthService {
     try {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
-        `SELECT user_id, password_hash, must_change_password
+        `SELECT user_id, password_hash, must_change_password, is_admin
          FROM users
          WHERE username = $1`,
         [input.username],
@@ -171,26 +171,50 @@ export class AuthService {
         )
       }
 
-      // 3. Check if risk-based OTP enforcement is needed
-      // TODO(T-02.01.03): Evaluate device trust, IP risk, previous login patterns.
-      // For now, always skip OTP — equivalent to "known device, low risk."
-      const requiresOtp = false
+      // 3. Check if risk-based OTP enforcement is needed (T-02.01.03)
+      const isStaff = userResult.rows[0].is_admin ?? false
+      const userId = userResult.rows[0].user_id
+      const deviceFingerprint = input.deviceInfo?.fingerprint
+        ? createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')
+        : null
+
+      let requiresOtp = false
+
+      // Staff/admin: mandatory MFA on every new device
+      if (isStaff) {
+        requiresOtp = true
+      } else if (deviceFingerprint) {
+        // Customer: risk-based — check if this device is trusted
+        const trustResult = await pool.query(
+          `SELECT 1 FROM device_trusts
+           WHERE user_id = $1 AND device_fingerprint = $2
+             AND expires_at > NOW()
+           LIMIT 1`,
+          [userId, deviceFingerprint],
+        )
+        requiresOtp = trustResult.rows.length === 0
+      } else {
+        // No device info provided — always require OTP (conservative)
+        requiresOtp = true
+      }
 
       if (requiresOtp) {
-        // Future: create OTP challenge and return challengeId
-        // const { challengeId } = await this.otpService.createChallenge(
-        //   input.username,
-        //   ip,
-        // )
-        // return { requiresOtp: true, challengeId }
-        throw new HttpException(
-          { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
-          500,
+        const { challengeId } = await this.otpService.createLoginChallenge(
+          userId,
+          input.username,
+          ip,
         )
+
+        this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`)
+
+        return {
+          requiresOtp: true,
+          challengeId,
+          userIsStaff: isStaff,
+        }
       }
 
       // 4. Create session atomically
-      const userId = userResult.rows[0].user_id
       const sessionId = uuidv7()
       const csrfToken = randomBytes(32).toString('hex')
       const now = new Date()
@@ -222,6 +246,172 @@ export class AuthService {
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
         500,
       )
+    }
+  }
+
+  /**
+   * Complete login after OTP verification (T-02.01.03).
+   *
+   * Atomically: verifies the OTP challenge (linked to a user) → creates session
+   * → optionally marks device as trusted.
+   *
+   * Returns session credentials for the frontend.
+   */
+  async completeLogin(
+    challengeId: string,
+    otp: string,
+    ip: string,
+    trustDevice: boolean,
+    deviceFingerprint?: string,
+    userAgent?: string,
+  ): Promise<LoginVerifyResponse> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Lock and fetch the challenge row
+      const challengeResult = await client.query(
+        `SELECT challenge_id, destination, otp_hash, attempts_remaining,
+                expires_at, consumed_at, user_id
+         FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const row = challengeResult.rows[0]
+
+      // Check consumed
+      if (row.consumed_at) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      // Check expiry
+      if (new Date(row.expires_at) < new Date()) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
+          401,
+        )
+      }
+
+      // Check attempts
+      if (row.attempts_remaining <= 0) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+          401,
+        )
+      }
+
+      // Must have a user_id (login challenge)
+      if (!row.user_id) {
+        this.logger.error(`Login challenge ${challengeId} missing user_id`)
+        throw new HttpException(
+          { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
+          500,
+        )
+      }
+
+      // 2. Verify OTP inside the transaction
+      const submittedHash = this.otpService.hashOtp(otp)
+      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+        // Decrement attempts inside the transaction and commit
+        await client.query(
+          `UPDATE otp_challenges
+           SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
+           WHERE challenge_id = $1 AND attempts_remaining > 0`,
+          [challengeId],
+        )
+        await client.query('COMMIT')
+
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
+          401,
+        )
+      }
+
+      // 3. Consume OTP + create session atomically
+      const userId = row.user_id
+      const sessionId = uuidv7()
+      const csrfToken = randomBytes(32).toString('hex')
+      const now = new Date()
+      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
+      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+
+      // Consume the OTP challenge
+      const consumeResult = await client.query(
+        `UPDATE otp_challenges
+         SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
+         WHERE challenge_id = $2 AND consumed_at IS NULL`,
+        [now, challengeId],
+      )
+
+      if (consumeResult.rowCount === 0) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      // Create session
+      await client.query(
+        `INSERT INTO sessions (session_id, user_id, csrf_token,
+                                expires_at, idle_deadline, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
+      )
+
+      // 4. Optionally mark device as trusted
+      if (trustDevice && deviceFingerprint) {
+        const trustExpiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        const trustId = uuidv7()
+
+        // Upsert: update existing trust for this device, or insert new
+        await client.query(
+          `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
+           VALUES ($1, $2, $3, $4, $5, $6)
+           ON CONFLICT (user_id, device_fingerprint) DO UPDATE
+             SET trusted_at = $5, expires_at = $6, updated_at = NOW()`,
+          [trustId, userId, deviceFingerprint, userAgent ?? null, now, trustExpiresAt],
+        )
+
+        this.logger.log(`Device trusted for user ${userId}`)
+      }
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`)
+
+      return {
+        userId,
+        sessionId,
+        csrfToken,
+        expiresAt: expiresAt.toISOString(),
+      }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+
+      // Re-throw HttpExceptions as-is
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(`Login OTP verify failed for challenge ${challengeId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
+        500,
+      )
+    } finally {
+      client.release()
     }
   }
 

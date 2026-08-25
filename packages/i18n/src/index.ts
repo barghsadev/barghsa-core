@@ -96,6 +96,12 @@ export const fa: I18nDictionary = {
   'auth.login.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
   'auth.login.error.internal': 'خطای داخلی سرور رخ داده است. لطفاً بعداً تلاش کنید',
   'auth.login.success': 'با موفقیت وارد شدید',
+  'auth.login.otpTitle': 'تأیید ورود دو مرحله‌ای',
+  'auth.login.otpSentTo': 'کد تأیید به {destination} ارسال شد',
+  'auth.login.otpBackToLogin': 'بازگشت به فرم ورود',
+  'auth.login.trustDevice': 'این دستگاه را به خاطر بسپار',
+  'auth.login.otpSuccess': 'ورود با موفقیت تأیید شد',
+  'auth.login.otpExpired': 'کد تأیید منقضی شده است. لطفاً دوباره وارد شوید',
 
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'تأیید شماره موبایل / ایمیل',
@@ -221,6 +227,12 @@ export const en: I18nDictionary = {
   'auth.login.error.generic': 'An error occurred. Please try again',
   'auth.login.error.internal': 'An internal server error occurred. Please try again later',
   'auth.login.success': 'Logged in successfully',
+  'auth.login.otpTitle': 'Two-factor authentication required',
+  'auth.login.otpSentTo': 'A verification code has been sent to {destination}',
+  'auth.login.otpBackToLogin': 'Back to login',
+  'auth.login.trustDevice': 'Trust this device',
+  'auth.login.otpSuccess': 'Login verified successfully',
+  'auth.login.otpExpired': 'Verification code expired. Please log in again',
 
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'Verify Mobile / Email',

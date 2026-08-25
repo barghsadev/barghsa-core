@@ -72,6 +72,42 @@ export class OtpService {
     return { challengeId, destination }
   }
 
+  /**
+   * Create an OTP challenge for a login step-up flow (T-02.01.03).
+   *
+   * Links the challenge to an existing user (already authenticated via password)
+   * so the verify step knows which user's session to create.
+   *
+   * Rate limits are the same as registration OTP (enforced via enforceSendRateLimits).
+   */
+  async createLoginChallenge(
+    userId: string,
+    destination: string,
+    ip: string,
+  ): Promise<OtpChallengeResult> {
+    await this.enforceSendRateLimits(destination, ip)
+
+    const otp = this.generateOtp()
+    const otpHash = this.hashOtp(otp)
+    const challengeId = randomUUID()
+    const expiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS)
+
+    const pool = getDbPool()
+    await pool.query(
+      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt],
+    )
+
+    // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
+    if (process.env.NODE_ENV === 'development') {
+      this.logger.debug(`[DEV] OTP for ${destination}: ${otp}`)
+    }
+    this.logger.debug(`OTP login challenge created for user ${userId} (${challengeId})`)
+
+    return { challengeId, destination }
+  }
+
   async resendChallenge(
     challengeId: string,
     ip: string,
