@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-02-03-03--account-recovery-support",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/100",
   "loop_iteration": 164,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -166,7 +166,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T12:00:00",
-  "notes": "Tick-164: Starting T-02.03.03 (Account recovery support path). Changed helpLink target to /support route, created support page with contact info and recovery guidance, added i18n strings (FA/EN).",
+  "notes": "Tick-164: T-02.03.03 PR #100 in_review — review returned request_changes (2 major: non-clickable contact links, locale). Fixed clickable links, RTL arrow, back link target, trailing newline. Back in review (fix_attempts=1).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
