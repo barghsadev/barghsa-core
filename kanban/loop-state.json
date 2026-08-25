@@ -1,5 +1,5 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-03.02.02",
   "current_task_id": "T-03.02.02",
   "current_task_file": "02-auth-users-admin.md",
@@ -170,8 +170,8 @@
     "02-auth-users-admin.md#T-03.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T14:25:00",
-  "notes": "Tick-175: Building T-03.02.02 (Individual profile form, L). PR #105 created as draft. Backend: POST /api/onboarding/individual/:profileId, geography endpoints, validation. Frontend: full form with province/city cascade, RTL, field-level validation. typecheck 11/11, build 7/7, tests 225/225. CI running.",
+  "last_updated": "2026-08-25T14:36:00",
+  "notes": "Tick-175: Building T-03.02.02 (Individual profile form, L). PR #105. Fix round 1: addressed all 3 critical + 3 major review findings (migration, seed data, error codes, FKs, tests, i18n). CI re-running.",
   "status_history": [
     {
       "from": "fixing",
