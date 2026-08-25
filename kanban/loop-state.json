@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-04.01.02",
   "current_task_id": "T-04.01.02",
   "current_task_file": "02-auth-users-admin.md",
@@ -181,8 +181,8 @@
     "02-auth-users-admin.md#T-04.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T20:12:00Z",
-  "notes": "Tick-200: T-04.01.02 (TOS acceptance storage) — fixing 2 major issues: is_active check, user-agent capture. Re-review pending.",
+  "last_updated": "2026-08-25T20:14:00Z",
+  "notes": "Tick-200: T-04.01.02 (TOS acceptance storage) — 2 major issues fixed (is_active check, user-agent capture). Re-review pending.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-189" },
     { "from": "building", "to": "in_review", "at": "tick-189" },
@@ -199,6 +199,6 @@
     { "from": "fixing", "to": "in_review", "at": "tick-197" },
     { "from": "in_review", "to": "idle", "at": "tick-198" },
     { "from": "idle", "to": "building", "at": "tick-199" },
-    { "from": "building", "to": "in_review", "at": "tick-199" }
+    { "from": "fixing", "to": "in_review", "at": "tick-200" }
   ]
 }
