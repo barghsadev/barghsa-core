@@ -1,0 +1,280 @@
+import { Injectable, Logger } from '@nestjs/common'
+import { getDbPool } from '@barghsa/db'
+
+/**
+ * A single address record on a CRM profile.
+ */
+export interface CrmProfileAddress {
+  id: string
+  provinceId: string
+  cityId: string
+  fullAddress: string
+  postalCode: string
+  mainAddress: boolean
+  createdAt: string
+}
+
+/**
+ * A single session record on a CRM profile.
+ */
+export interface CrmProfileSession {
+  sessionId: string
+  createdAt: string
+  lastActive: string
+  deviceInfo: Record<string, unknown> | null
+  expiresAt: string
+  isRevoked: boolean
+}
+
+/**
+ * Legal entity data attached to a LEGAL-type profile.
+ */
+export interface CrmLegalInfo {
+  legalName: string
+  nationalIdentifier: string
+  registrationNumber: string
+  companyTypeId: string | null
+  economicCode: string | null
+  officialPhone: string | null
+  officialEmail: string | null
+  officialProvinceId: string | null
+  officialCityId: string | null
+  officialFullAddress: string | null
+  officialPostalCode: string | null
+  representativeTitle: string
+  representativeRelationship: string
+}
+
+/**
+ * A single profile on the same user (profile switcher context).
+ */
+export interface CrmSiblingProfile {
+  id: string
+  profileType: 'INDIVIDUAL' | 'LEGAL'
+  isDefault: boolean
+  status: string
+  title: string | null
+}
+
+/**
+ * Complete CRM profile detail DTO returned by the endpoint.
+ */
+export interface CrmProfileDetail {
+  profile: {
+    id: string
+    profileType: 'INDIVIDUAL' | 'LEGAL'
+    status: string
+    title: string | null
+    firstName: string | null
+    lastName: string | null
+    nationalId: string | null
+    createdAt: string
+    updatedAt: string
+  }
+  user: {
+    userId: string
+    username: string
+    email: string | null
+    mobile: string | null
+    lastLogin: string | null
+    isAdmin: boolean
+    createdAt: string
+  }
+  legalInfo: CrmLegalInfo | null
+  addresses: CrmProfileAddress[]
+  sessions: {
+    count: number
+    lastActive: string | null
+    entries: CrmProfileSession[]
+  }
+  siblingProfiles: CrmSiblingProfile[]
+}
+
+@Injectable()
+export class CrmV2Service {
+  private readonly logger = new Logger(CrmV2Service.name)
+
+  /**
+   * GET /api/crm/profiles/:profileId
+   *
+   * Returns a comprehensive profile detail view for CRM staff, including
+   * profile data, user info, verification state, session metadata,
+   * addresses, and sibling profiles.
+   */
+  async getProfileDetail(profileId: string): Promise<CrmProfileDetail | null> {
+    const pool = getDbPool()
+
+    // 1. Fetch the profile
+    const profileResult = await pool.query(
+      `SELECT id, user_id, profile_type, is_default, status, title,
+              first_name, last_name, national_id,
+              created_at AT TIME ZONE 'UTC' AS created_at,
+              updated_at AT TIME ZONE 'UTC' AS updated_at
+       FROM profiles
+       WHERE id = $1`,
+      [profileId],
+    )
+
+    if (profileResult.rows.length === 0) {
+      return null
+    }
+
+    const profileRow = profileResult.rows[0] as Record<string, unknown>
+
+    // 2. Fetch the user associated with this profile
+    const userResult = await pool.query(
+      `SELECT user_id, username, email, mobile,
+              last_login_at AT TIME ZONE 'UTC' AS last_login_at,
+              is_admin, created_at AT TIME ZONE 'UTC' AS created_at
+       FROM users
+       WHERE user_id = $1`,
+      [profileRow.user_id],
+    )
+
+    const userRow = userResult.rows[0] as Record<string, unknown> | undefined
+    if (!userRow) {
+      this.logger.warn(`Profile ${profileId} has orphaned user_id ${String(profileRow.user_id)}`)
+      return null
+    }
+
+    // 3. Fetch addresses for this profile
+    const addressResult = await pool.query(
+      `SELECT id, profile_id, province_id, city_id, full_address, postal_code, main_address,
+              created_at AT TIME ZONE 'UTC' AS created_at
+       FROM addresses
+       WHERE profile_id = $1
+       ORDER BY main_address DESC, created_at ASC`,
+      [profileId],
+    )
+
+    const addresses: CrmProfileAddress[] = addressResult.rows.map(
+      (row: Record<string, unknown>) => ({
+        id: row.id as string,
+        provinceId: row.province_id as string,
+        cityId: row.city_id as string,
+        fullAddress: row.full_address as string,
+        postalCode: row.postal_code as string,
+        mainAddress: row.main_address as boolean,
+        createdAt: (row.created_at as string) ?? '',
+      }),
+    )
+
+    // 4. Fetch session metadata for the user
+    const sessionResult = await pool.query(
+      `SELECT session_id, created_at AT TIME ZONE 'UTC' AS created_at,
+              updated_at AT TIME ZONE 'UTC' AS updated_at,
+              device_info, expires_at AT TIME ZONE 'UTC' AS expires_at,
+              revoked_at IS NOT NULL AS is_revoked
+       FROM sessions
+       WHERE user_id = $1
+       ORDER BY updated_at DESC
+       LIMIT 20`,
+      [userRow.user_id],
+    )
+
+    const sessionsList: CrmProfileSession[] = sessionResult.rows.map(
+      (row: Record<string, unknown>) => ({
+        sessionId: row.session_id as string,
+        createdAt: (row.created_at as string) ?? '',
+        lastActive: (row.updated_at as string) ?? '',
+        deviceInfo: (row.device_info as Record<string, unknown>) ?? null,
+        expiresAt: (row.expires_at as string) ?? '',
+        isRevoked: (row.is_revoked as boolean) ?? false,
+      }),
+    )
+
+    const sessionCountResult = await pool.query(
+      `SELECT COUNT(*)::int AS cnt FROM sessions WHERE user_id = $1 AND revoked_at IS NULL`,
+      [userRow.user_id],
+    )
+
+    const activeSessionCount = (sessionCountResult.rows[0] as Record<string, unknown>).cnt as number
+
+    // 5. Fetch sibling profiles (other profiles for the same user)
+    const siblingResult = await pool.query(
+      `SELECT id, profile_type, is_default, status, title
+       FROM profiles
+       WHERE user_id = $1 AND id != $2
+       ORDER BY is_default DESC, created_at ASC`,
+      [userRow.user_id, profileId],
+    )
+
+    const siblingProfiles: CrmSiblingProfile[] = siblingResult.rows.map(
+      (row: Record<string, unknown>) => ({
+        id: row.id as string,
+        profileType: row.profile_type as 'INDIVIDUAL' | 'LEGAL',
+        isDefault: row.is_default as boolean,
+        status: row.status as string,
+        title: (row.title as string) ?? null,
+      }),
+    )
+
+    // 6. Fetch legal info if this is a LEGAL profile
+    let legalInfo: CrmLegalInfo | null = null
+    if (profileRow.profile_type === 'LEGAL') {
+      const legalResult = await pool.query(
+        `SELECT legal_name, national_identifier, registration_number, company_type_id,
+                economic_code, official_phone, official_email,
+                official_province_id, official_city_id,
+                official_full_address, official_postal_code,
+                representative_title, representative_relationship
+         FROM legal_profiles
+         WHERE id = $1`,
+        [profileId],
+      )
+
+      if (legalResult.rows.length > 0) {
+        const lr = legalResult.rows[0] as Record<string, unknown>
+        legalInfo = {
+          legalName: lr.legal_name as string,
+          nationalIdentifier: lr.national_identifier as string,
+          registrationNumber: lr.registration_number as string,
+          companyTypeId: (lr.company_type_id as string) ?? null,
+          economicCode: (lr.economic_code as string) ?? null,
+          officialPhone: (lr.official_phone as string) ?? null,
+          officialEmail: (lr.official_email as string) ?? null,
+          officialProvinceId: (lr.official_province_id as string) ?? null,
+          officialCityId: (lr.official_city_id as string) ?? null,
+          officialFullAddress: (lr.official_full_address as string) ?? null,
+          officialPostalCode: (lr.official_postal_code as string) ?? null,
+          representativeTitle: lr.representative_title as string,
+          representativeRelationship: lr.representative_relationship as string,
+        }
+      }
+    }
+
+    // Determine last active session
+    const lastActive = sessionsList.length > 0 ? sessionsList[0]!.lastActive : null
+
+    return {
+      profile: {
+        id: profileRow.id as string,
+        profileType: profileRow.profile_type as 'INDIVIDUAL' | 'LEGAL',
+        status: profileRow.status as string,
+        title: (profileRow.title as string) ?? null,
+        firstName: (profileRow.first_name as string) ?? null,
+        lastName: (profileRow.last_name as string) ?? null,
+        nationalId: (profileRow.national_id as string) ?? null,
+        createdAt: (profileRow.created_at as string) ?? '',
+        updatedAt: (profileRow.updated_at as string) ?? '',
+      },
+      user: {
+        userId: userRow.user_id as string,
+        username: userRow.username as string,
+        email: (userRow.email as string) ?? null,
+        mobile: (userRow.mobile as string) ?? null,
+        lastLogin: (userRow.last_login_at as string) ?? null,
+        isAdmin: (userRow.is_admin as boolean) ?? false,
+        createdAt: (userRow.created_at as string) ?? '',
+      },
+      legalInfo,
+      addresses,
+      sessions: {
+        count: activeSessionCount,
+        lastActive,
+        entries: sessionsList,
+      },
+      siblingProfiles,
+    }
+  }
+}
