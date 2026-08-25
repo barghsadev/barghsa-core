@@ -1,4 +1,4 @@
-import { pgTable, text } from 'drizzle-orm/pg-core'
+import { pgTable, text, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { tosVersions } from './tos-versions.js'
 import { users } from './users.js'
@@ -43,4 +43,7 @@ export const tosAcceptances = pgTable(
     /** User-Agent header from the device/browser at acceptance time. */
     userAgent: text('user_agent'),
   },
+  (table) => ({
+    userIdIdx: index('idx_tos_acceptances_user_id').on(table.userId),
+  }),
 )

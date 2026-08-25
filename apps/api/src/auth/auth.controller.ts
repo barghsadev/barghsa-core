@@ -512,12 +512,14 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const userAgent = req.headers['user-agent']
 
     // Perform the complete registration: OTP verify → user create → session create
     const result = await this.authService.completeRegistration(
       parsed.data.challengeId,
       parsed.data.otp,
       ip,
+      userAgent,
     )
 
     // ── Set HttpOnly session and refresh cookies ─────────────────

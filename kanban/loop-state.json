@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "02-auth-users-admin.md#T-04.01.02",
   "current_task_id": "T-04.01.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e04-t-04-01-02--tos-acceptance-storage",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/118",
-  "loop_iteration": 199,
-  "fix_attempts": 0,
+  "loop_iteration": 200,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -181,8 +181,8 @@
     "02-auth-users-admin.md#T-04.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T20:05:30Z",
-  "notes": "Tick-199: T-04.01.02 (TOS acceptance storage) — built and opened as PR #118. In review.",
+  "last_updated": "2026-08-25T20:12:00Z",
+  "notes": "Tick-200: T-04.01.02 (TOS acceptance storage) — fixing 2 major issues: is_active check, user-agent capture. Re-review pending.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-189" },
     { "from": "building", "to": "in_review", "at": "tick-189" },

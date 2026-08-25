@@ -25,6 +25,7 @@ vi.mock('uuid', () => ({
 vi.mock('@barghsa/shared/errors', () => ({
   ErrorCodes: {
     AUTH_REGISTER_TOS_NOT_ACCEPTED: { code: 'AUTH:REGISTER:TOS_NOT_ACCEPTED' },
+    VALIDATION_INPUT_INVALID: { code: 'VALIDATION:INPUT:INVALID' },
     INTERNAL_SERVER: { code: 'INTERNAL:SERVER' },
   },
 }))
@@ -162,10 +163,10 @@ describe('TosService', () => {
       expect(mockClient.release).toHaveBeenCalled()
     })
 
-    it('throws 400 when TOS version does not exist', async () => {
+    it('throws 400 when TOS version does not exist or is not active', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
-        .mockResolvedValueOnce({ rows: [] }) // SELECT tos_versions returns empty
+        .mockResolvedValueOnce({ rows: [] }) // SELECT tos_versions returns empty (version not found or not active)
 
       const err = await service
         .recordAcceptance(userId, versionId, ip)
@@ -174,7 +175,7 @@ describe('TosService', () => {
       expect(err).toBeInstanceOf(HttpException)
       expect(err.getStatus()).toBe(400)
       expect(err.getResponse()).toMatchObject({
-        error: 'AUTH:REGISTER:TOS_NOT_ACCEPTED',
+        error: 'VALIDATION:INPUT:INVALID',
       })
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
       expect(mockClient.release).toHaveBeenCalled()

@@ -84,15 +84,15 @@ export class TosService {
     try {
       await client.query('BEGIN')
 
-      // 1. Verify the TOS version exists
+      // 1. Verify the TOS version exists and is the current active version
       const versionResult = await client.query(
-        `SELECT id FROM tos_versions WHERE id = $1 FOR UPDATE`,
+        `SELECT id FROM tos_versions WHERE id = $1 AND is_active = true FOR UPDATE`,
         [versionId],
       )
 
       if (versionResult.rows.length === 0) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code },
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
           400,
         )
       }

@@ -690,6 +690,7 @@ export class AuthService {
     challengeId: string,
     otp: string,
     ip: string,
+    userAgent?: string,
   ): Promise<RegisterVerifyResponse> {
     const pool = getDbPool()
     const client = await pool.connect()
@@ -824,7 +825,7 @@ export class AuthService {
         await client.query(
           `INSERT INTO tos_acceptances (id, user_id, version_id, accepted_at, ip_address, user_agent)
            VALUES ($1, $2, $3, $4, $5, $6)`,
-          [acceptanceId, userId, tosVersionId, now, ip, null],
+          [acceptanceId, userId, tosVersionId, now, ip, userAgent ?? null],
         )
       } else {
         this.logger.warn(
