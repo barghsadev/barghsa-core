@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-03.03.02",
-  "current_task_id": "T-03.03.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-03-03-02--default-profile-selection",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/110",
-  "loop_iteration": 187,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 188,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -170,11 +170,12 @@
     "02-auth-users-admin.md#T-03.02.02",
     "02-auth-users-admin.md#T-03.02.03",
     "02-auth-users-admin.md#T-03.02.04",
-    "02-auth-users-admin.md#T-03.03.01"
+    "02-auth-users-admin.md#T-03.03.01",
+    "02-auth-users-admin.md#T-03.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T16:59:00Z",
-  "notes": "Tick-187: idle → building → in_review — T-03.03.02 (Default profile selection) built as PR #110. Forced modal when multiple profiles && no default. typecheck ✅, test ✅ (210 passed).",
+  "last_updated": "2026-08-25T17:10:00Z",
+  "notes": "Tick-187/188: T-03.03.02 (Default profile selection) merged as PR #110 after z-ai/glm-5.2 approve (1 fix round: hardcoded locale -> useLocale() hook; review comment posted). Next: 02-auth-users-admin.md#T-03.03.03.",
   "status_history": [
     {
       "from": "idle",
@@ -220,6 +221,26 @@
       "from": "building",
       "to": "in_review",
       "at": "tick-187"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-187"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-188"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-188"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-188"
     }
   ]
 }
