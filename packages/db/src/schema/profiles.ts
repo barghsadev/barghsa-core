@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { uuidv7 } from '../types'
 import { users } from './users'
 
 /**
@@ -22,7 +23,7 @@ export const profiles = pgTable(
   'profiles',
   {
     /** UUIDv7 opaque profile identifier. */
-    id: text('id').primaryKey(),
+    id: uuidv7('id').primaryKey().notNull(),
 
     /** Foreign key to the owning user. */
     userId: text('user_id')
@@ -65,6 +66,9 @@ export const profiles = pgTable(
 
 /**
  * SQL to create the profiles table.
+ *
+ * Enforces a single default profile per user via a partial unique index
+ * (ONLY rows with is_default = true are constrained).
  */
 export const createProfilesTable = sql`
   CREATE TABLE IF NOT EXISTS profiles (
@@ -81,4 +85,5 @@ export const createProfilesTable = sql`
   );
 
   CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles (user_id);
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_default_per_user ON profiles (user_id) WHERE is_default = true;
 `

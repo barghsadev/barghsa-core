@@ -100,21 +100,46 @@ export class ProfilesService {
     return mapRow(result.rows[0])
   }
 
+  /**
+   * Set a profile as the user's default within a transaction.
+   *
+   * Two updates (clear all defaults, then set one) are wrapped in a
+   * transaction to prevent concurrent requests from leaving the user
+   * with zero or multiple default profiles.
+   */
   async setDefaultProfile(userId: string, profileId: string): Promise<void> {
     const pool = getDbPool()
+    const client = await pool.connect()
 
-    // Clear any existing default for this user
-    await pool.query(
-      `UPDATE profiles SET is_default = false WHERE user_id = $1`,
-      [userId],
-    )
+    try {
+      await client.query('BEGIN')
 
-    // Set the specified profile as default
-    await pool.query(
-      `UPDATE profiles SET is_default = true WHERE id = $1 AND user_id = $2`,
-      [profileId, userId],
-    )
+      // Clear any existing default for this user
+      await client.query(
+        `UPDATE profiles SET is_default = false, updated_at = NOW() WHERE user_id = $1`,
+        [userId],
+      )
 
-    this.logger.debug(`Default profile set to ${profileId} for user ${userId}`)
+      // Set the specified profile as default
+      const result = await client.query(
+        `UPDATE profiles SET is_default = true, updated_at = NOW() WHERE id = $1 AND user_id = $2 RETURNING id`,
+        [profileId, userId],
+      )
+
+      if (result.rows.length === 0) {
+        await client.query('ROLLBACK')
+        throw new Error(`Profile ${profileId} not found for user ${userId}`)
+      }
+
+      await client.query('COMMIT')
+      this.logger.debug(`Default profile set to ${profileId} for user ${userId}`)
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {
+        // Rollback failure is non-critical
+      })
+      throw error
+    } finally {
+      client.release()
+    }
   }
 }
