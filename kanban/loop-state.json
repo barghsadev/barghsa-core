@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-05.02.04",
-  "current_task_id": "T-05.02.04",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e05-t-05-02-04--force-password-change-session-expiry",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/126",
-  "loop_iteration": 218,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 219,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -185,16 +185,22 @@
     "02-auth-users-admin.md#T-05.01.02",
     "02-auth-users-admin.md#T-05.02.01",
     "02-auth-users-admin.md#T-05.02.02",
-    "02-auth-users-admin.md#T-05.02.03"
+    "02-auth-users-admin.md#T-05.02.03",
+    "02-auth-users-admin.md#T-05.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T00:39:00Z",
-  "notes": "Tick-218: PR #126 (T-05.02.04) — CI typecheck failure fixed (SessionService constructor param in test mocks). Reviewed by z-ai/glm-5.2 (request_changes): 2 major findings — notification deferred (no infra exists), test assertions already present (reviewer couldn't read full diff). Added rollback tests (2 new, 35/35 pass). CI re-running. State: in_review.",
+  "last_updated": "2026-08-26T00:45:27Z",
+  "notes": "Tick-219: PR #126 (T-05.02.04) merged. Re-review by z-ai/glm-5.2 (approve, 0 issues). 35/35 tests, CI SUCCESS. Review: notification deferred (no infra), rollback tests confirmed. State: idle.",
   "status_history": [
     {
       "from": "in_review",
       "to": "in_review",
       "at": "tick-218"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-219"
     },
     {
       "from": "idle",
