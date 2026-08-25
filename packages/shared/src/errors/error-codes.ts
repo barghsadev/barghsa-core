@@ -198,6 +198,12 @@ export const ErrorCodes = {
     messageKey: 'error.authz.csrf.invalid',
     severity: 'warn' as ErrorSeverity,
   },
+  AUTHZ_STEP_UP_REQUIRED: {
+    code: 'AUTHZ:STEP_UP_REQUIRED',
+    httpStatus: 403,
+    messageKey: 'error.authz.step_up.required',
+    severity: 'debug' as ErrorSeverity,
+  },
 
   // ── Rate Limit ──────────────────────────────────────────
   RATE_LIMIT_EXCEEDED: {
