@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -444,5 +445,207 @@ export class ProfilesController {
       nationalId: updated.nationalId,
       updatedAt: updated.updatedAt,
     }
+  }
+
+  /**
+   * GET /api/profiles/:profileId/addresses
+   *
+   * Returns all addresses for the specified profile. The main address
+   * is listed first. The user must own the profile.
+   */
+  @Get(':profileId/addresses')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:addresses:list:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'List addresses for a profile' })
+  @ApiResponse({ status: 200, description: 'List of addresses.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async listAddresses(
+    @Param('profileId') profileId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    const profile = await this.profilesService.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const addresses = await this.profilesService.getProfileAddresses(profileId)
+    return { addresses }
+  }
+
+  /**
+   * POST /api/profiles/:profileId/addresses
+   *
+   * Creates a new address for the profile. If the profile has no existing
+   * main address, the new address is automatically set as main.
+   */
+  @Post(':profileId/addresses')
+  @HttpCode(201)
+  @RateLimit({ namespace: 'profiles:addresses:create:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Create a new address for a profile' })
+  @ApiResponse({ status: 201, description: 'Address created.' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async createAddress(
+    @Param('profileId') profileId: string,
+    @Body() body: {
+      provinceId: string
+      cityId: string
+      fullAddress: string
+      postalCode: string
+      mainAddress?: boolean
+    },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    // Required field validation
+    if (!body.provinceId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
+        400,
+      )
+    }
+    if (!body.cityId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'City is required' },
+        400,
+      )
+    }
+    if (!body.fullAddress?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Full address is required' },
+        400,
+      )
+    }
+    if (!body.postalCode?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Postal code is required' },
+        400,
+      )
+    }
+
+    // Field length validation
+    if (body.fullAddress.length > 500) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
+        400,
+      )
+    }
+
+    const address = await this.profilesService.createAddress(userId, profileId, {
+      provinceId: body.provinceId.trim(),
+      cityId: body.cityId.trim(),
+      fullAddress: body.fullAddress.trim(),
+      postalCode: body.postalCode.trim(),
+      ...(body.mainAddress === true ? { mainAddress: true } : {}),
+    })
+
+    this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`)
+    return address
+  }
+
+  /**
+   * PUT /api/profiles/:profileId/addresses/:addressId
+   *
+   * Updates an address's fields. Only the address data fields (province,
+   * city, full address, postal code) can be updated. To change the main
+   * address flag, use POST set-main.
+   */
+  @Put(':profileId/addresses/:addressId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:addresses:update:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Update an address' })
+  @ApiResponse({ status: 200, description: 'Address updated.' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Address or profile not found' })
+  async updateAddress(
+    @Param('profileId') profileId: string,
+    @Param('addressId') addressId: string,
+    @Body() body: {
+      provinceId?: string
+      cityId?: string
+      fullAddress?: string
+      postalCode?: string
+    },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    // Field length validation
+    if (body.fullAddress !== undefined && body.fullAddress.length > 500) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
+        400,
+      )
+    }
+
+    const address = await this.profilesService.updateAddress(userId, profileId, addressId, {
+      ...(body.provinceId !== undefined ? { provinceId: body.provinceId.trim() } : {}),
+      ...(body.cityId !== undefined ? { cityId: body.cityId.trim() } : {}),
+      ...(body.fullAddress !== undefined ? { fullAddress: body.fullAddress.trim() } : {}),
+      ...(body.postalCode !== undefined ? { postalCode: body.postalCode.trim() } : {}),
+    })
+
+    this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`)
+    return address
+  }
+
+  /**
+   * DELETE /api/profiles/:profileId/addresses/:addressId
+   *
+   * Deletes an address. The main address cannot be deleted without setting
+   * a new main first. Addresses linked to orders are soft-deleted (or
+   * blocked until soft-delete is implemented).
+   */
+  @Delete(':profileId/addresses/:addressId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:addresses:delete:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Delete an address' })
+  @ApiResponse({ status: 200, description: 'Address deleted.' })
+  @ApiResponse({ status: 400, description: 'Cannot delete main address or address linked to order' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Address or profile not found' })
+  async deleteAddress(
+    @Param('profileId') profileId: string,
+    @Param('addressId') addressId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+    await this.profilesService.deleteAddress(userId, profileId, addressId)
+    this.logger.log(`Address ${addressId} deleted for profile ${profileId} by user ${userId}`)
+    return { message: 'Address deleted successfully.' }
+  }
+
+  /**
+   * POST /api/profiles/:profileId/addresses/:addressId/set-main
+   *
+   * Sets an address as the main address for the profile. Only one address
+   * can be main at a time. The previous main address is unset. Idempotent
+   * — if the address is already main, returns success.
+   */
+  @Post(':profileId/addresses/:addressId/set-main')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:addresses:set-main:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Set an address as the main address' })
+  @ApiResponse({ status: 200, description: 'Address set as main.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Address or profile not found' })
+  async setMainAddress(
+    @Param('profileId') profileId: string,
+    @Param('addressId') addressId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+    const address = await this.profilesService.setMainAddress(userId, profileId, addressId)
+    this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`)
+    return address
   }
 }
