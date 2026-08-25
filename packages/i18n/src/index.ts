@@ -429,6 +429,10 @@ export const fa: I18nDictionary = {
   'verification.order.blocked.title': 'ثبت سفارش جدید امکان‌پذیر نیست',
   'verification.order.blocked.description': 'پروفایل شما هنوز تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید.',
   'verification.order.blocked.support': 'در صورت نیاز به راهنمایی با پشتیبانی تماس بگیرید.',
+  'verification.notify.verified': 'پروفایل شما با موفقیت تأیید شد',
+  'verification.notify.unverified': 'وضعیت تأیید پروفایل شما به حالت تأیید نشده تغییر یافت',
+  'verification.notify.reverified': 'پروفایل شما برای تأیید مجدد علامت‌گذاری شد',
+  'verification.notify.reason': 'دلیل: {reason}',
 
   // ── Dashboard — Profile Switcher (T-03.03.01) ─────────────────
   'dashboard.profile.unnamed': 'پروفایل بدون نام',

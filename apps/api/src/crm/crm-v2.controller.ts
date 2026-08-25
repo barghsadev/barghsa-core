@@ -6,11 +6,12 @@ import {
   HttpException,
   Logger,
   Param,
+  Post,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiParam, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { CrmV2Service } from './crm-v2.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
@@ -27,6 +28,16 @@ export interface UpdateProfileDto {
   /** Individual profile fields (direct edit on non-identity fields only) */
   email?: string | null
   mobile?: string | null
+}
+
+/**
+ * DTO for profile verification actions.
+ */
+export interface VerifyProfileDto {
+  /** The verification action to perform. */
+  action: string
+  /** Reason for the action (required for unverify/reverify). */
+  reason?: string
 }
 
 @ApiTags('CRM V2')
@@ -208,6 +219,100 @@ export class CrmV2Controller {
         400,
       )
     }
+
+    return result
+  }
+
+  /**
+   * POST /api/crm/profiles/:profileId/verify
+   *
+   * Changes the verification state of a profile. Actions:
+   * - `verify` — marks profile as VERIFIED (from DRAFT or ACTIVE)
+   * - `unverify` — reverts to ACTIVE (from VERIFIED)
+   * - `reverify` — resets to DRAFT (from VERIFIED), flags for re-verification
+   *
+   * Reason is required for unverify/reverify.
+   * Permission: admin or staff with crm:verify role required.
+   * Audit: verification_change with before/after state, actor, reason.
+   */
+  @Post('profiles/:profileId/verify')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Change profile verification state (staff)' })
+  @ApiParam({
+    name: 'profileId',
+    required: true,
+    description: 'UUID of the profile to verify/unverify/reverify.',
+    type: String,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['action'],
+      properties: {
+        action: { type: 'string', enum: ['verify', 'unverify', 'reverify'], description: 'Verification action' },
+        reason: { type: 'string', description: 'Reason for the action (required for unverify/reverify)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Verification state changed successfully' })
+  @ApiResponse({ status: 400, description: 'Validation error — invalid action or missing reason' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Staff or admin role required' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async verifyProfile(
+    @Param('profileId') profileId: string,
+    @Body() dto: VerifyProfileDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to verify profile ${profileId}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403,
+      )
+    }
+
+    const result = await this.crmV2Service.verifyProfile(
+      profileId,
+      dto,
+      req.session.userId,
+      req.ip ?? 'unknown',
+    )
+
+    if (!result) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Profile not found',
+        },
+        404,
+      )
+    }
+
+    if ('error' in result) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: result.error,
+        },
+        400,
+      )
+    }
+
+    this.logger.debug(
+      `Verification changed: profileId=${profileId}, ${result.previousStatus} → ${result.newStatus}, ` +
+      `action=${dto.action}, actor=${req.session.userId}`,
+    )
 
     return result
   }
