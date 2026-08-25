@@ -110,7 +110,7 @@ describe('CrmService.listUsers', () => {
       username: `user${i + 1}@example.com`,
       email: `user${i + 1}@example.com`,
       mobile: null,
-      registration_date: '2026-01-15T10:00:00Z',
+      registration_date: new Date(Date.UTC(2026, 0, 15, 10, 0, i)).toISOString(),
       last_login: null,
       profile_count: 1,
       has_individual_profile: true,
@@ -127,10 +127,11 @@ describe('CrmService.listUsers', () => {
     // After hasMore detection, we get pageSize (20) rows
     expect(result.users).toHaveLength(20)
     expect(result.hasMore).toBe(true)
-    // Cursor should be the last user's ID, base64url encoded
+    // Cursor should be a base64url-encoded JSON composite cursor
     expect(result.cursor).toBeTruthy()
-    const decodedLast = Buffer.from(result.cursor!, 'base64url').toString('utf-8')
-    expect(decodedLast).toBe('00000000-0000-7000-8000-000000000020')
+    const decodedCursor = JSON.parse(Buffer.from(result.cursor!, 'base64url').toString('utf-8'))
+    expect(decodedCursor.id).toBe('00000000-0000-7000-8000-000000000020')
+    expect(decodedCursor.createdAt).toBe(rows[19]!.registration_date)
   })
 
   it('returns null cursor when end of list', async () => {
@@ -166,13 +167,14 @@ describe('CrmService.listUsers', () => {
     const { CrmService: CrmSvc } = await import('./crm.service.js')
     service = new CrmSvc()
 
-    const cursorUserId = '00000000-0000-7000-8000-000000000020'
-    const cursor = Buffer.from(cursorUserId, 'utf-8').toString('base64url')
+    // Composite cursor: { id, createdAt } base64url-encoded
+    const cursorPayload = { id: '00000000-0000-7000-8000-000000000020', createdAt: '2026-01-15T10:00:00Z' }
+    const cursor = Buffer.from(JSON.stringify(cursorPayload), 'utf-8').toString('base64url')
     await service.listUsers(cursor, 10)
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining('WHERE u.user_id > $2'),
-      expect.arrayContaining([11, cursorUserId]),
+      expect.stringContaining('WHERE (u.created_at, u.user_id) < ($2::timestamptz, $3::uuid)'),
+      expect.arrayContaining([11, cursorPayload.createdAt, cursorPayload.id]),
     )
   })
 
@@ -183,14 +185,56 @@ describe('CrmService.listUsers', () => {
     const { CrmService: CrmSvc } = await import('./crm.service.js')
     service = new CrmSvc()
 
-    // Invalid base64url — should be treated as no cursor
-    // The regex validation rejects it because it's not a UUID v7
+    // Invalid cursor — not valid JSON/not a valid composite cursor shape
     await service.listUsers('!!!invalid!!!', 10)
 
-    // Should NOT contain WHERE clause with cursor
+    // Should NOT contain WHERE clause with cursor params
     expect(pool.query).toHaveBeenCalledWith(
-      expect.not.stringContaining('WHERE u.user_id > $2'),
+      expect.not.stringContaining('WHERE'),
       expect.arrayContaining([11]),
     )
+  })
+
+  it('returns correct results across multiple pages', async () => {
+    const { pool } = mockPool()
+    // Simulate 35 users; page size 20 → page 1 has 20, hasMore=true
+    const allRows = Array.from({ length: 35 }, (_, i) => ({
+      user_id: `00000000-0000-7000-8000-${String(i + 1).padStart(12, '0')}`,
+      username: `user${i + 1}@example.com`,
+      email: `user${i + 1}@example.com`,
+      mobile: null,
+      registration_date: new Date(Date.UTC(2026, 0, 15, 10, 0, i)).toISOString(),
+      last_login: null,
+      profile_count: 1,
+      has_individual_profile: true,
+      has_legal_profile: false,
+      has_verified_profile: false,
+    }))
+    pool.query.mockResolvedValue({ rows: allRows })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    // Page 1 (no cursor)
+    const page1 = await service.listUsers(null, 20)
+
+    expect(page1.users).toHaveLength(20)
+    expect(page1.hasMore).toBe(true)
+    expect(page1.cursor).toBeTruthy()
+
+    // Verify the cursor encodes the last user's id and createdAt
+    const decodedCursor = JSON.parse(Buffer.from(page1.cursor!, 'base64url').toString('utf-8'))
+    expect(decodedCursor.id).toBe(page1.users[19]!.userId)
+    expect(decodedCursor.createdAt).toBe(page1.users[19]!.registrationDate)
+
+    // Simulate page 2 by returning only the remaining 15 rows
+    const remainingRows = allRows.slice(20)
+    pool.query.mockResolvedValue({ rows: remainingRows })
+
+    const page2 = await service.listUsers(page1.cursor, 20)
+
+    expect(page2.users).toHaveLength(15)
+    expect(page2.hasMore).toBe(false)
+    expect(page2.cursor).toBeNull()
   })
 })

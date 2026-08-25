@@ -42,7 +42,11 @@ export class CrmService {
    *   - registrationDate, lastLogin
    *   - profileCount, hasIndividualProfile, hasLegalProfile, hasVerifiedProfile
    *
-   * @param cursor  Opaque cursor from a previous page (base64-encoded userId).
+   * The cursor is a JSON object {id: string, createdAt: string} base64url-encoded.
+   * This composite cursor ensures correct multi-page results when ordering
+   * by created_at DESC — the sort column and the cursor token columns match.
+   *
+   * @param cursor  Opaque pagination cursor from a previous page.
    * @param limit   Max results per page (default 20, max 100).
    */
   async listUsers(
@@ -52,13 +56,21 @@ export class CrmService {
     const pool = getDbPool()
     const pageSize = Math.min(Math.max(1, limit), 100)
 
-    let decodedCursor: string | null = null
+    // Decode and validate the composite cursor { id, createdAt }
+    let cursorId: string | null = null
+    let cursorCreatedAt: string | null = null
     if (cursor) {
       try {
-        const decoded = Buffer.from(cursor, 'base64url').toString('utf-8')
-        // Validate: decoded cursor must be a UUID v7 (36 chars with hyphens)
-        if (/^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(decoded)) {
-          decodedCursor = decoded
+        const raw = Buffer.from(cursor, 'base64url').toString('utf-8')
+        const parsed = JSON.parse(raw) as { id?: string; createdAt?: string }
+        if (
+          typeof parsed.id === 'string' &&
+          typeof parsed.createdAt === 'string' &&
+          /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(parsed.id) &&
+          !isNaN(Date.parse(parsed.createdAt))
+        ) {
+          cursorId = parsed.id
+          cursorCreatedAt = parsed.createdAt
         }
       } catch {
         // Invalid cursor — treat as no cursor
@@ -68,6 +80,11 @@ export class CrmService {
     // Query: list users with aggregated profile data.
     // The join on profiles is a LEFT JOIN so users without profiles
     // still appear (edge case — every user should have at least one).
+    // For DESC order, the cursor filter is: (created_at, user_id) < ($createdAt, $id)
+    const cursorClause =
+      cursorCreatedAt && cursorId
+        ? 'WHERE (u.created_at, u.user_id) < ($2::timestamptz, $3::uuid)'
+        : ''
     const query = `
       SELECT
         u.user_id,
@@ -82,15 +99,15 @@ export class CrmService {
         bool_or(p.status = 'VERIFIED') AS has_verified_profile
       FROM users u
       LEFT JOIN profiles p ON p.user_id = u.user_id
-      ${decodedCursor ? 'WHERE u.user_id > $2' : ''}
+      ${cursorClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
       ORDER BY u.created_at DESC
       LIMIT $1
     `
 
     const params: unknown[] = [pageSize + 1] // +1 to detect hasMore
-    if (decodedCursor) {
-      params.push(decodedCursor)
+    if (cursorCreatedAt && cursorId) {
+      params.push(cursorCreatedAt, cursorId)
     }
 
     const result = await pool.query(query, params)
@@ -111,9 +128,16 @@ export class CrmService {
       hasVerifiedProfile: (row.has_verified_profile as boolean) ?? false,
     }))
 
+    // Encode composite cursor: { id, createdAt } base64url
     const nextCursor: string | null =
       hasMore && users.length > 0
-        ? Buffer.from(users[users.length - 1]!.userId, 'utf-8').toString('base64url')
+        ? Buffer.from(
+            JSON.stringify({
+              id: users[users.length - 1]!.userId,
+              createdAt: users[users.length - 1]!.registrationDate,
+            }),
+            'utf-8',
+          ).toString('base64url')
         : null
 
     return {

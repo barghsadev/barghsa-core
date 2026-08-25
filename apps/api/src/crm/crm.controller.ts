@@ -31,7 +31,8 @@ export class CrmController {
    * Permission is enforced inline here until a dedicated permissions
    * framework is wired. The session object carries an `isAdmin` flag;
    * a future T-09.05.01 (role management) will add granular
-   * `crm:read` permission checks.
+   * `crm:read` permission checks. For now, staff with crm:read-only
+   * roles will get 403 until the role/permission system is wired.
    */
   @Get('users')
   @HttpCode(200)
