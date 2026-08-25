@@ -46,7 +46,6 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   // Normalize URL
   let url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`)
-  let filePath = path.join(DIST_DIR, url.pathname === '/' ? 'index.html' : url.pathname)
 
   // Security headers
   res.setHeader('X-Content-Type-Options', 'nosniff')
@@ -62,10 +61,18 @@ const server = http.createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-cache, must-revalidate')
   }
 
+  // Resolve the file path and guard against path traversal
+  let resolvedPath = path.resolve(DIST_DIR, url.pathname === '/' ? 'index.html' : '.' + url.pathname)
+  if (!resolvedPath.startsWith(DIST_DIR)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' })
+    res.end('Forbidden')
+    return
+  }
+
   // Serve file or fallback to SPA index.html
-  fs.stat(filePath, (err, stats) => {
+  fs.stat(resolvedPath, (err, stats) => {
     if (!err && stats.isFile()) {
-      serveFile(filePath, res)
+      serveFile(resolvedPath, res)
     } else {
       // SPA fallback: serve index.html for client-side routing
       const indexPath = path.join(DIST_DIR, 'index.html')

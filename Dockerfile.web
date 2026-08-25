@@ -24,21 +24,15 @@ COPY . .
 RUN corepack enable && \
     NODE_ENV=production pnpm build --filter @barghsa/web
 
-# Remove devDependencies from each workspace node_modules for smaller size
-RUN find . -path '*/node_modules' -prune -o -type d -name 'node_modules' -prune | \
-    while IFS= read -r dir; do \
-      [ -d "$dir/.pnpm" ] && rm -rf "$dir/.pnpm"; \
-      rm -rf "$dir"/*/node_modules; \
-    done 2>/dev/null; true
-
 # Stage 3: Production — minimal runtime image
 FROM node:20-alpine AS production
 RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 appuser && \
-    # Drop libc6-compat — not needed at runtime
-    apk del libc6-compat 2>/dev/null; true
+    adduser --system --uid 1001 appuser
 
 WORKDIR /app
+
+# Copy package.json so the ESM "type": "module" field applies to server.js / healthcheck.js
+COPY --from=build /app/apps/web/package.json ./package.json
 
 # Copy only the built frontend assets
 COPY --from=build /app/apps/web/dist ./dist
@@ -47,14 +41,10 @@ COPY --from=build /app/apps/web/dist ./dist
 COPY apps/web/server.js ./server.js
 COPY apps/web/healthcheck.js ./healthcheck.js
 
-# Production runtime hardening
+# Production runtime hardening — single ENV to avoid overwrites
 ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=512" \
+    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation --inspect=0" \
     NODE_NO_WARNINGS=1
-
-# Disable inspector and insecure parser
-ENV NODE_OPTIONS="--max-old-space-size=512 --no-deprecation" \
-    NODE_PENDING_DEPRECATION=0
 
 EXPOSE 3000
 
