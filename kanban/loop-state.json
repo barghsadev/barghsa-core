@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-05.01.02",
-  "current_task_id": "T-05.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e05-t-05-01-02--crm-filters-search",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 210,
+  "loop_iteration": 211,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -181,12 +181,18 @@
     "02-auth-users-admin.md#T-04.01.02",
     "02-auth-users-admin.md#T-04.01.03",
     "02-auth-users-admin.md#T-05.01.01",
-    "01-platform-infrastructure.md#T-05.03.05"
+    "01-platform-infrastructure.md#T-05.03.05",
+    "02-auth-users-admin.md#T-05.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T21:54:00Z",
-  "notes": "Tick-210: Start T-05.01.02 — CRM filters and search (backend). Adding filter query params, PostgreSQL search, test coverage.",
+  "last_updated": "2026-08-25T22:12:00Z",
+  "notes": "Tick-211: PR #122 (T-05.01.02 CRM filters/search) merged. GLM 5.2 review: approve (4 minor). State idle.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-211"
+    },
     {
       "from": "building",
       "to": "idle",
