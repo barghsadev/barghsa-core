@@ -630,10 +630,6 @@ export class ProfilesService {
             404,
           )
         }
-
-        // Check for unique constraint violation on national_id (Pg code 23505)
-        const updatedRow = mapRow(profileResult.rows[0])
-        return updatedRow
       }
 
       // If address fields are provided, create a new address record

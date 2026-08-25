@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 import { withCsrf } from '../../../lib/csrf.js'
+import { useLocale } from '../../../hooks/useLocale.js'
 
 export const Route = createFileRoute('/_app/settings/profile')({
   component: SettingsProfilePage,
@@ -89,7 +90,7 @@ function getStatusBadge(status: string, locale: Locale): { label: string; varian
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsProfilePage() {
-  const locale: Locale = 'fa' // TODO: read from locale context
+  const locale = useLocale()
 
   const [profile, setProfile] = useState<ProfileDetail | null>(null)
   const [loading, setLoading] = useState(true)
