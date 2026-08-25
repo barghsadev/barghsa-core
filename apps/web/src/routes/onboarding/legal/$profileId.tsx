@@ -82,6 +82,7 @@ function LegalProfileFormPage() {
   const [loadingProvinces, setLoadingProvinces] = useState(true)
   const [loadingCities, setLoadingCities] = useState(false)
   const [loadingCompanyTypes, setLoadingCompanyTypes] = useState(true)
+  const [companyTypesError, setCompanyTypesError] = useState(false)
 
   // Submission
   const [submitting, setSubmitting] = useState(false)
@@ -116,11 +117,15 @@ function LegalProfileFormPage() {
   }, [])
 
   // Fetch company types on mount
-  useEffect(() => {
+  const fetchCompanyTypes = useCallback(() => {
     let cancelled = false
     setLoadingCompanyTypes(true)
+    setCompanyTypesError(false)
     fetch('/api/geography/company-types', { credentials: 'include' })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('HTTP error')
+        return res.json()
+      })
       .then((data: CompanyType[]) => {
         if (!cancelled) {
           setCompanyTypes(data)
@@ -130,6 +135,7 @@ function LegalProfileFormPage() {
       .catch(() => {
         if (!cancelled) {
           setLoadingCompanyTypes(false)
+          setCompanyTypesError(true)
           toast.error(
             isRtl
               ? 'بارگذاری انواع شرکت با خطا مواجه شد'
@@ -138,7 +144,11 @@ function LegalProfileFormPage() {
         }
       })
     return () => { cancelled = true }
-  }, [])
+  }, [isRtl])
+
+  useEffect(() => {
+    return fetchCompanyTypes()
+  }, [fetchCompanyTypes])
 
   // Fetch cities when province changes
   useEffect(() => {
@@ -538,6 +548,20 @@ function LegalProfileFormPage() {
                     <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
                       <Loader2Icon className="h-4 w-4 animate-spin" />
                       {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
+                    </div>
+                  ) : companyTypesError ? (
+                    <div className="flex h-10 items-center gap-2 text-sm text-destructive">
+                      <span>
+                        {isRtl ? 'خطا در بارگذاری' : 'Failed to load'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={fetchCompanyTypes}
+                        disabled={loadingCompanyTypes}
+                        className="rounded border border-input px-2 py-1 text-xs hover:bg-muted"
+                      >
+                        {isRtl ? 'تلاش مجدد' : 'Retry'}
+                      </button>
                     </div>
                   ) : (
                     <select
