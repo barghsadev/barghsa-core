@@ -587,7 +587,6 @@ export const fa: I18nDictionary = {
   // ── TOS Re-acceptance (T-04.01.03) ──────────────────────
   'tos.banner.text': 'قوانین استفاده به‌روزرسانی شده‌اند.',
   'tos.banner.review': 'مشاهده',
-  'tos.banner.dismiss': 'بعداً',
   'tos.modal.title': 'قوانین استفاده',
   'tos.modal.accept': 'می‌پذیرم',
   'tos.modal.accepting': 'در حال ثبت...',
@@ -1173,7 +1172,6 @@ export const en: I18nDictionary = {
   // ── TOS Re-acceptance (T-04.01.03) ──────────────────────
   'tos.banner.text': 'Terms of Service have been updated.',
   'tos.banner.review': 'Review',
-  'tos.banner.dismiss': 'Later',
   'tos.modal.title': 'Terms of Service',
   'tos.modal.accept': 'I Accept',
   'tos.modal.accepting': 'Accepting...',

@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@barghsa/ui'
-import { AlertCircleIcon, CheckIcon, Loader2Icon, XIcon } from 'lucide-react'
+import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react'
 import { withCsrf } from '../lib/csrf.js'
 
 // ─── Types ────────────────────────────────────────────────────────────
@@ -43,6 +43,9 @@ interface TosBannerProps {
  * Fetches the current user info and shows a sticky banner at the top of
  * dashboard pages when the user needs to re-accept updated Terms of Service.
  * The [Review] button opens a modal showing the full TOS with an accept button.
+ * The modal also opens automatically on the first non-exempt page visit when
+ * re-acceptance is required, with an explicit dismiss from the user suppressing
+ * further auto-opens within the same session.
  *
  * The banner does NOT appear on exempt pages: auth/*, account recovery,
  * support, or the TOS page itself — but since this component is rendered
@@ -57,6 +60,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   const [accepting, setAccepting] = useState(false)
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [dismissedAutoModal, setDismissedAutoModal] = useState(false)
 
   // ── Check TOS acceptance status ─────────────────────────────────
 
@@ -79,6 +83,14 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   useEffect(() => {
     checkTosStatus()
   }, [checkTosStatus])
+
+  // ── Auto-open modal on first non-exempt page visit ─────────────
+
+  useEffect(() => {
+    if (requiresAcceptance && !dismissedAutoModal) {
+      openReviewModal()
+    }
+  }, [requiresAcceptance, dismissedAutoModal, openReviewModal])
 
   // ── Fetch current TOS content for modal ─────────────────────────
 
@@ -167,7 +179,12 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       </div>
 
       {/* Review modal */}
-      <Dialog open={showModal} onOpenChange={setShowModal}>
+      <Dialog open={showModal} onOpenChange={(open) => {
+        if (!open && !accepted) {
+          setDismissedAutoModal(true)
+        }
+        setShowModal(open)
+      }}>
         <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>

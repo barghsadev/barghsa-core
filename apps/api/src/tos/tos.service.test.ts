@@ -212,4 +212,96 @@ describe('TosService', () => {
       )
     })
   })
+
+  describe('requiresReAcceptance', () => {
+    const userId = 'user-0001'
+    const activeVersionId = 'tos-ver-active'
+    const oldVersionId = 'tos-ver-old'
+
+    const activeVersionRow = { id: activeVersionId }
+    const userWithMatch = { last_accepted_tos_version: activeVersionId }
+    const userWithMismatch = { last_accepted_tos_version: oldVersionId }
+    const userWithNull = { last_accepted_tos_version: null }
+
+    it('returns true when user has never accepted TOS', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] }) // active version exists
+        .mockResolvedValueOnce({ rows: [userWithNull] })     // user has null last_accepted_tos_version
+
+      const result = await service.requiresReAcceptance(userId)
+
+      expect(result).toBe(true)
+    })
+
+    it('returns true when user accepted a different (older) version', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] }) // active version exists
+        .mockResolvedValueOnce({ rows: [userWithMismatch] }) // user has old version
+
+      const result = await service.requiresReAcceptance(userId)
+
+      expect(result).toBe(true)
+    })
+
+    it('returns false when user accepted the current active version', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] }) // active version exists
+        .mockResolvedValueOnce({ rows: [userWithMatch] })    // user has matching version
+
+      const result = await service.requiresReAcceptance(userId)
+
+      expect(result).toBe(false)
+    })
+
+    it('returns false when no active TOS version exists', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] }) // no active version
+
+      const result = await service.requiresReAcceptance(userId)
+
+      expect(result).toBe(false)
+    })
+
+    it('returns false when user is not found', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] }) // active version exists
+        .mockResolvedValueOnce({ rows: [] })                 // user not found
+
+      const result = await service.requiresReAcceptance(userId)
+
+      expect(result).toBe(false)
+    })
+
+    it('queries for active version with is_active filter', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] })
+        .mockResolvedValueOnce({ rows: [userWithMatch] })
+
+      await service.requiresReAcceptance(userId)
+
+      expect(mockPool.query).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining('WHERE is_active = true'),
+      )
+    })
+
+    it('queries user by userId', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [activeVersionRow] })
+        .mockResolvedValueOnce({ rows: [userWithMatch] })
+
+      await service.requiresReAcceptance(userId)
+
+      expect(mockPool.query).toHaveBeenNthCalledWith(
+        2,
+        expect.stringContaining('WHERE user_id = $1'),
+        [userId],
+      )
+    })
+
+    it('propagates database errors', async () => {
+      mockPool.query.mockRejectedValueOnce(new Error('DB error'))
+
+      await expect(service.requiresReAcceptance(userId)).rejects.toThrow('DB error')
+    })
+  })
 })
