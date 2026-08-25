@@ -18,6 +18,18 @@ export interface ProfileRow {
   updatedAt: Date
 }
 
+export interface AddressRow {
+  id: string
+  profileId: string
+  provinceId: string
+  cityId: string
+  fullAddress: string
+  postalCode: string
+  mainAddress: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface ProfileDto {
   id: string
   profileType: 'INDIVIDUAL' | 'LEGAL'
@@ -74,6 +86,20 @@ function mapToDto(row: ProfileRow): ProfileDto {
     nationalId: row.nationalId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+  }
+}
+
+function mapAddressRow(row: Record<string, unknown>): AddressRow {
+  return {
+    id: row.id as string,
+    profileId: row.profile_id as string,
+    provinceId: row.province_id as string,
+    cityId: row.city_id as string,
+    fullAddress: row.full_address as string,
+    postalCode: row.postal_code as string,
+    mainAddress: row.main_address as boolean,
+    createdAt: row.created_at as Date,
+    updatedAt: row.updated_at as Date,
   }
 }
 
@@ -479,6 +505,172 @@ export class ProfilesService {
             error: ErrorCodes.CONFLICT_DUPLICATE.code,
             message: 'This national ID is already registered',
           },
+          409,
+        )
+      }
+
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Get all addresses for a profile.
+   */
+  async getProfileAddresses(profileId: string): Promise<AddressRow[]> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at
+       FROM addresses
+       WHERE profile_id = $1
+       ORDER BY main_address DESC, created_at ASC`,
+      [profileId],
+    )
+    return result.rows.map(mapAddressRow)
+  }
+
+  /**
+   * Get legal profile info for a legal entity profile.
+   */
+  async getLegalProfileInfo(profileId: string): Promise<Record<string, unknown> | null> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT id, legal_name, national_identifier, registration_number,
+              company_type_id, registration_date, economic_code,
+              official_phone, official_email,
+              official_province_id, official_city_id, official_full_address, official_postal_code,
+              representative_title, representative_relationship,
+              created_at, updated_at
+       FROM legal_profiles
+       WHERE id = $1`,
+      [profileId],
+    )
+
+    if (result.rows.length === 0) return null
+
+    const row = result.rows[0]
+    return {
+      id: row.id as string,
+      legalName: row.legal_name as string,
+      nationalIdentifier: row.national_identifier as string,
+      registrationNumber: row.registration_number as string,
+      companyTypeId: (row.company_type_id as string) ?? null,
+      registrationDate: (row.registration_date as string) ?? null,
+      economicCode: (row.economic_code as string) ?? null,
+      officialPhone: (row.official_phone as string) ?? null,
+      officialEmail: (row.official_email as string) ?? null,
+      officialProvinceId: (row.official_province_id as string) ?? null,
+      officialCityId: (row.official_city_id as string) ?? null,
+      officialFullAddress: (row.official_full_address as string) ?? null,
+      officialPostalCode: (row.official_postal_code as string) ?? null,
+      representativeTitle: row.representative_title as string,
+      representativeRelationship: row.representative_relationship as string,
+    }
+  }
+
+  /**
+   * Update profile fields (T-03.03.03).
+   *
+   * Editable fields: title, first name, last name, national ID (when not verified),
+   * and address fields. Address changes create a new address record (historical
+   * addresses retained). Identity fields are protected after verification.
+   */
+  async updateProfile(
+    userId: string,
+    profileId: string,
+    data: {
+      title?: string | undefined
+      firstName?: string | undefined
+      lastName?: string | undefined
+      nationalId?: string | undefined
+      provinceId?: string | undefined
+      cityId?: string | undefined
+      fullAddress?: string | undefined
+      postalCode?: string | undefined
+    },
+  ): Promise<ProfileRow> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // Build dynamic SET clause for profile fields
+      const profileUpdates: string[] = []
+      const profileParams: unknown[] = []
+      let paramIndex = 1
+
+      if (data.title !== undefined) {
+        profileUpdates.push(`title = $${paramIndex++}`)
+        profileParams.push(data.title || null)
+      }
+      if (data.firstName !== undefined) {
+        profileUpdates.push(`first_name = $${paramIndex++}`)
+        profileParams.push(data.firstName)
+      }
+      if (data.lastName !== undefined) {
+        profileUpdates.push(`last_name = $${paramIndex++}`)
+        profileParams.push(data.lastName)
+      }
+      if (data.nationalId !== undefined) {
+        profileUpdates.push(`national_id = $${paramIndex++}`)
+        profileParams.push(data.nationalId)
+      }
+
+      if (profileUpdates.length > 0) {
+        profileUpdates.push(`updated_at = NOW()`)
+        const profileQuery = `UPDATE profiles SET ${profileUpdates.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`
+        const profileResult = await client.query(profileQuery, [...profileParams, profileId, userId])
+
+        if (profileResult.rows.length === 0) {
+          await client.query('ROLLBACK')
+          throw new HttpException(
+            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+            404,
+          )
+        }
+      }
+
+      // If address fields are provided, create a new address record
+      if (data.provinceId !== undefined || data.cityId !== undefined || data.fullAddress !== undefined || data.postalCode !== undefined) {
+        // Read current main address status
+        const existingMain = await client.query(
+          `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
+          [profileId],
+        )
+        const hasMainAddress = existingMain.rows.length > 0
+
+        if (data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
+          // If this is the first address, make it main; otherwise add as non-main
+          await client.query(
+            `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
+             VALUES ($1, $2, $3, $4, $5, $6)`,
+            [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, !hasMainAddress],
+          )
+        }
+      }
+
+      // If only profile updates were made, update_at was already set
+      if (profileUpdates.length === 0) {
+        await client.query(
+          `UPDATE profiles SET updated_at = NOW() WHERE id = $1`,
+          [profileId],
+        )
+      }
+
+      await client.query('COMMIT')
+
+      const updated = await this.getProfileById(profileId)
+      return updated ?? (() => { throw new Error('Profile not found after update') })()
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+
+      if (error instanceof HttpException) throw error
+
+      if (error instanceof Error && (error as { code?: string }).code === '23505') {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.CONFLICT_DUPLICATE.code, message: 'This national ID is already registered' },
           409,
         )
       }

@@ -32,6 +32,7 @@ import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
@@ -150,6 +151,11 @@ const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
+  id: '/settings/profile',
+  path: '/settings/profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
   id: '/settings/security',
   path: '/settings/security',
@@ -189,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
@@ -272,6 +281,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/register/'
     | '/electricity/order'
+    | '/settings/profile'
     | '/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/register'
     | '/electricity/order'
+    | '/settings/profile'
     | '/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/register/'
     | '/_app/electricity/order'
+    | '/_app/settings/profile'
     | '/_app/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
@@ -506,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/profile': {
+      id: '/_app/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AppSettingsProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/security': {
       id: '/_app/settings/security'
       path: '/settings/security'
@@ -538,6 +557,7 @@ interface AppRouteChildren {
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
@@ -551,6 +571,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
