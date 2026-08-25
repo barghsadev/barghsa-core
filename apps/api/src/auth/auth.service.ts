@@ -460,7 +460,7 @@ export class AuthService {
 
       // Always return generic success
       return {
-        sent: true,
+        sent: true as const,
         message: 'If an account exists, an OTP has been sent.',
       }
     } catch (err) {

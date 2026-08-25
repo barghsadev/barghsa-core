@@ -16,13 +16,10 @@ export const ForgotPasswordSchema = z.object({
 
 export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>
 
-/**
- * Forgot-password response.
- * Always generic — does NOT reveal whether the username is registered.
- */
+/** sent is always true — this field is for forward compatibility only */
 export interface ForgotPasswordResponse {
-  /** Always true — generic success response. */
-  sent: boolean
+  /** Always true — HTTP 200 is the real signal. */
+  sent: true
   /** Generic message shown to the user. */
   message: string
 }

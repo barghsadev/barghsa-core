@@ -264,25 +264,34 @@ function ForgotPasswordPage() {
     }
   }, [username, locale])
 
-  // ── OTP verification — navigates to reset-password page ────────────────
+  // ── OTP verification — stores code then navigates to reset-password page ─
   // The actual OTP verification (POST /api/auth/reset-password) happens
-  // in T-02.03.02. This callback passes the OTP code and username to the
-  // reset-password page via URL search params.
+  // in T-02.03.02. We store the OTP in sessionStorage (cleared on navigation)
+  // and pass only the username via URL to avoid OTP exposure in logs/history.
 
   const handleOtpComplete = useCallback(
     (code: string) => {
       setOtpCode(code)
-      router.navigate({
-        to: '/reset-password',
-        search: {
-          username: storedUsername,
-          otp: code,
-          destination: otpDestination,
-        },
-      })
     },
-    [storedUsername, otpDestination, router],
+    [],
   )
+
+  const handleVerifyClick = useCallback(() => {
+    if (!otpCode) return
+    // Store OTP in sessionStorage so the reset-password page can read it
+    // without exposing it in the URL
+    sessionStorage.setItem('resetPasswordOtp', otpCode)
+    sessionStorage.setItem('resetPasswordUsername', storedUsername)
+    sessionStorage.setItem('resetPasswordDestination', otpDestination)
+
+    router.navigate({
+      to: '/reset-password',
+      search: {
+        username: storedUsername,
+        destination: otpDestination,
+      },
+    })
+  }, [otpCode, storedUsername, otpDestination, router])
 
   const handleResend = useCallback(async () => {
     if (!canResend || resending) return
@@ -379,7 +388,7 @@ function ForgotPasswordPage() {
               type="button"
               className="w-full"
               disabled={!otpCode}
-              onClick={() => otpCode && handleOtpComplete(otpCode)}
+              onClick={handleVerifyClick}
             >
               {t('auth.otp.verifyButton', locale)}
             </Button>
