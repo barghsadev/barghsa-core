@@ -1,4 +1,4 @@
-import { randomBytes, createHash } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { Controller, Post, HttpCode, HttpStatus, HttpException, Logger, Body, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
@@ -22,21 +22,23 @@ import {
 import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js'
 import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
-
-/**
- * Session cookie configuration.
- * HttpOnly in all environments; Secure only in production (non-TLS dev exempted).
- */
-const SESSION_COOKIE_NAME = 'barghsa_session'
-const SESSION_COOKIE_PATH = '/'
-const SESSION_COOKIE_SAMESITE = 'lax' as const
+import { SessionService } from '../session/session.service.js'
+import {
+  SESSION_COOKIE_NAME,
+  setSessionCookie,
+  clearSessionCookie,
+} from '../session/cookie.helper.js'
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name)
 
-  constructor(private readonly authService: AuthService, private readonly otpService: OtpService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly otpService: OtpService,
+    private readonly sessionService: SessionService,
+  ) {}
 
   /**
    * POST /api/auth/register
@@ -170,16 +172,7 @@ export class AuthController {
 
     // If OTP is not required, set the session cookie
     if (!result.requiresOtp) {
-      const isSecure = process.env.NODE_ENV === 'production'
-      const sessionMaxAge = new Date(result.expiresAt!).getTime() - Date.now()
-
-      res.cookie(SESSION_COOKIE_NAME, result.sessionId!, {
-        httpOnly: true,
-        secure: isSecure,
-        sameSite: SESSION_COOKIE_SAMESITE,
-        path: SESSION_COOKIE_PATH,
-        maxAge: Math.max(0, sessionMaxAge),
-      })
+      setSessionCookie(res, result.sessionId!, new Date(result.expiresAt!))
 
       this.logger.log(`Session established for user ${result.userId}`)
     }
@@ -237,16 +230,7 @@ export class AuthController {
     )
 
     // ── Set HttpOnly session cookie ─────────────────────────────────
-    const isSecure = process.env.NODE_ENV === 'production'
-    const sessionMaxAge = new Date(result.expiresAt).getTime() - Date.now()
-
-    res.cookie(SESSION_COOKIE_NAME, result.sessionId, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: SESSION_COOKIE_SAMESITE,
-      path: SESSION_COOKIE_PATH,
-      maxAge: Math.max(0, sessionMaxAge),
-    })
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId} via login OTP`)
 
@@ -380,20 +364,43 @@ export class AuthController {
     )
 
     // ── Set HttpOnly session cookie ─────────────────────────────────
-    const isSecure = process.env.NODE_ENV === 'production'
-    const sessionMaxAge = new Date(result.expiresAt).getTime() - Date.now()
-
-    res.cookie(SESSION_COOKIE_NAME, result.sessionId, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: SESSION_COOKIE_SAMESITE,
-      path: SESSION_COOKIE_PATH,
-      maxAge: Math.max(0, sessionMaxAge),
-    })
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId}`)
 
     return result
+  }
+
+  /**
+   * POST /api/auth/logout
+   *
+   * Logs out the current user by revoking the session and clearing the cookie.
+   *
+   * Rate limits:
+   * - 10 logout attempts per IP per 60s
+   */
+  @Post('logout')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Log out the current user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Logged out successfully.',
+  })
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    const sessionId = req.cookies?.[SESSION_COOKIE_NAME]
+
+    if (sessionId && typeof sessionId === 'string') {
+      await this.sessionService.revokeSession(sessionId)
+      this.logger.log(`Logout: session ${sessionId} revoked`)
+    }
+
+    clearSessionCookie(res)
+
+    return { message: 'Logged out successfully.' }
   }
 
   /**

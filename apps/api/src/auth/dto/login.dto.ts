@@ -76,6 +76,8 @@ export interface LoginResponse {
   sessionId?: string
   /** CSRF token bound to the session. */
   csrfToken?: string
+  /** Refresh token for session renewal (rotated on use). */
+  refreshToken?: string
   /** ISO 8601 timestamp of session expiry. */
   expiresAt?: string
 }

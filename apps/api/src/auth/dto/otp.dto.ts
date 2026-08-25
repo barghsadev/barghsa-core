@@ -24,6 +24,8 @@ export interface RegisterVerifyResponse {
   sessionId: string
   /** CSRF token bound to the session for state-changing requests. */
   csrfToken: string
+  /** Refresh token for session renewal (rotated on use). */
+  refreshToken: string
   /** ISO 8601 timestamp of when the session expires. */
   expiresAt: string
 }
