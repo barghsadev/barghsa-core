@@ -2,6 +2,7 @@ import { Injectable, Logger, HttpException, Inject } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { rateLimitKey } from '@barghsa/shared/rate-limit'
+import { normalizeUsername } from '@barghsa/shared/validation'
 import { v7 as uuidv7 } from 'uuid'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
@@ -33,12 +34,6 @@ export class AgentsService {
 
   /** Valid agent roles for invitations. */
   private static readonly VALID_INVITE_ROLES = new Set(['Manager', 'Finance', 'Legal'])
-
-  /** Regex for Iranian mobile number 0912xxxxxxx (11 digits starting with 09). */
-  private static readonly IRANIAN_MOBILE_RE = /^09\d{9}$/
-
-  /** Regex for basic email validation. */
-  private static readonly EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   /**
    * Return a list of agents and pending invitations for a legal profile.
@@ -241,6 +236,18 @@ export class AgentsService {
   ): Promise<{ id: string }> {
     const pool = getDbPool()
 
+    // ── Permission check first: owner or manager ────────────
+    // Run before any input validation or profile lookup so that
+    // unauthorized callers always receive 403 and cannot distinguish
+    // between invalid input, missing profile, or forbidden access.
+    const permitted = await this.isOwnerOrManager(userId, profileId)
+    if (!permitted) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only owner or manager can send invitations' },
+        403,
+      )
+    }
+
     // ── Validate role ──────────────────────────────────────
     if (!AgentsService.VALID_INVITE_ROLES.has(role)) {
       throw new HttpException(
@@ -254,7 +261,7 @@ export class AgentsService {
     }
 
     // ── Normalise and validate username ────────────────────
-    const normalised = this.normaliseUsername(username.trim())
+    const normalised = normalizeUsername(username)
     if (!normalised) {
       throw new HttpException(
         {
@@ -267,8 +274,10 @@ export class AgentsService {
     }
 
     // ── Verify the profile exists and is a LEGAL profile ────
+    // (isOwnerOrManager already confirmed it's a LEGAL profile,
+    //  but we verify it explicitly for clarity and safety.)
     const profileResult = await pool.query(
-      `SELECT id, user_id, profile_type FROM profiles WHERE id = $1`,
+      `SELECT id, profile_type FROM profiles WHERE id = $1`,
       [profileId],
     )
     if (profileResult.rows.length === 0) {
@@ -282,15 +291,6 @@ export class AgentsService {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invitations are only supported for legal profiles' },
         400,
-      )
-    }
-
-    // ── Permission check: owner or manager ──────────────────
-    const permitted = await this.isOwnerOrManager(userId, profileId)
-    if (!permitted) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only owner or manager can send invitations' },
-        403,
       )
     }
 
@@ -384,31 +384,5 @@ export class AgentsService {
     )
 
     return { id: invitationId }
-  }
-
-  /**
-   * Normalise a username string.
-   *
-   * - Iranian mobile in `09xxxxxxxxx` format → E.164 (`+989xxxxxxxxx`)
-   * - Email → lowercased, trimmed
-   * - Returns `null` when the input is not a recognisable format.
-   */
-  private normaliseUsername(raw: string): string | null {
-    const mobileMatch = raw.match(AgentsService.IRANIAN_MOBILE_RE)
-    if (mobileMatch) {
-      const digits = raw.slice(1)
-      return `+98${digits}`
-    }
-
-    if (raw.startsWith('+')) {
-      if (/^\+\d{7,15}$/.test(raw)) return raw
-      return null
-    }
-
-    if (AgentsService.EMAIL_RE.test(raw)) {
-      return raw.toLowerCase().trim()
-    }
-
-    return null
   }
 }

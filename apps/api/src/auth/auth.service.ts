@@ -2,6 +2,7 @@ import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
+import { normalizeUsername } from '@barghsa/shared/validation'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { rateLimitKey } from '@barghsa/shared/rate-limit'
@@ -811,60 +812,60 @@ export class AuthService {
 
       // 4. Link any pending invitations for the new user's username
       // (T-05.04.02 — auto-link registered user to pending invitations)
-      // Normalize destination to match how createInvitation stores it
-      const inviteUsername = (() => {
-        const raw = (row.destination as string ?? '').trim()
-        // Iranian mobile 09xxxxxxxxx → +98xxxxxxxxx
-        const mobileRe = /^09\d{9}$/
-        if (mobileRe.test(raw)) return `+98${raw.slice(1)}`
-        // Already international
-        if (raw.startsWith('+') && /^\+\d{7,15}$/.test(raw)) return raw
-        // Email
-        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return raw.toLowerCase()
-        return raw
-      })()
-
-      const pendingInvites = await client.query(
-        `SELECT id, profile_id, role FROM profile_invitations
-         WHERE username = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > NOW())`,
-        [inviteUsername],
-      )
-
-      if (pendingInvites.rows.length > 0) {
-        for (const invite of pendingInvites.rows) {
-          // Add as agent
-          await client.query(
-            `INSERT INTO profile_agents (id, profile_id, user_id, role, joined_at, created_at, updated_at)
-             VALUES ($1, $2, $3, $4, $5, $5, $5)`,
-            [uuidv7(), invite.profile_id, userId, invite.role, now],
+      // Normalize destination to match how createInvitation stores it.
+      // This is best-effort — a failure logs a warning but does not
+      // block registration (the invitation can be linked later).
+      try {
+        const inviteUsername = normalizeUsername(row.destination as string ?? '')
+        if (inviteUsername) {
+          const pendingInvites = await client.query(
+            `SELECT id, profile_id, role FROM profile_invitations
+             WHERE username = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > NOW())`,
+            [inviteUsername],
           )
 
-          // Mark invitation as accepted
-          await client.query(
-            `UPDATE profile_invitations
-             SET status = 'Accepted', updated_at = $1
-             WHERE id = $2`,
-            [now, invite.id],
-          )
+          if (pendingInvites.rows.length > 0) {
+            for (const invite of pendingInvites.rows) {
+              // Add as agent
+              await client.query(
+                `INSERT INTO profile_agents (id, profile_id, user_id, role, joined_at, created_at, updated_at)
+                 VALUES ($1, $2, $3, $4, $5, $5, $5)`,
+                [uuidv7(), invite.profile_id, userId, invite.role, now],
+              )
 
-          // Audit
-          await client.query(
-            `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
-             VALUES ($1, $2, $3, $4::jsonb, $5, $6)`,
-            [
-              uuidv7(),
-              userId,
-              'invitation_accepted',
-              JSON.stringify({
-                profileId: invite.profile_id,
-                invitationId: invite.id,
-                role: invite.role,
-              }),
-              row.correlation_id,
-              now,
-            ],
-          )
+              // Mark invitation as accepted
+              await client.query(
+                `UPDATE profile_invitations
+                 SET status = 'Accepted', updated_at = $1
+                 WHERE id = $2`,
+                [now, invite.id],
+              )
+
+              // Audit
+              await client.query(
+                `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
+                 VALUES ($1, $2, $3, $4::jsonb, $5, $6)`,
+                [
+                  uuidv7(),
+                  userId,
+                  'invitation_accepted',
+                  JSON.stringify({
+                    profileId: invite.profile_id,
+                    invitationId: invite.id,
+                    role: invite.role,
+                  }),
+                  row.correlation_id,
+                  now,
+                ],
+              )
+            }
+          }
         }
+      } catch (inviteError) {
+        // Best-effort: log warning but do not block registration
+        this.logger.warn(
+          `Failed to auto-link pending invitations for user ${userId}: ${String(inviteError)}`,
+        )
       }
 
       // 5. Record TOS acceptance immutably in tos_acceptances (T-04.01.02)
