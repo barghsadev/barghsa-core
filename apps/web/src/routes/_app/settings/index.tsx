@@ -9,6 +9,9 @@ import {
   BellRingIcon,
   Loader2Icon,
   SaveIcon,
+  GlobeIcon,
+  ShieldAlertIcon,
+  UserIcon,
 } from 'lucide-react'
 import { Button, Card, CardContent } from '@barghsa/ui'
 import { withCsrf } from '../../../lib/csrf.js'
@@ -129,6 +132,46 @@ function SettingsIndexPage() {
   return (
     <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-bold mb-6">{t('dashboard.nav.settings', locale)}</h1>
+
+      {/* Settings navigation links */}
+      <Card>
+        <CardContent className="pt-6 space-y-2">
+          <div className="flex items-center gap-2 mb-2">
+            <GlobeIcon className="h-5 w-5 text-muted-foreground" />
+            <h2 className="text-lg font-semibold">{locale === 'fa' ? 'تنظیمات دیگر' : 'Other Settings'}</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <a
+              href="/settings/profile"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <UserIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.profile.title', locale)}</span>
+            </a>
+            <a
+              href="/settings/username"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <UserIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.username.title', locale)}</span>
+            </a>
+            <a
+              href="/settings/security"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <ShieldAlertIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.security.title', locale)}</span>
+            </a>
+            <a
+              href="/settings/timezone"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <GlobeIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.timezone.title', locale)}</span>
+            </a>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Notification Preferences */}
       <Card>
