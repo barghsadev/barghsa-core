@@ -1,11 +1,11 @@
 {
   "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-03.03.06",
-  "current_task_id": "T-03.03.06",
+  "current_task_key": "02-auth-users-admin.md#T-03.04.02",
+  "current_task_id": "T-03.04.02",
   "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-03-03-06--timezone-settings",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/114",
-  "loop_iteration": 194,
+  "current_branch": "feat/e02-t-03-04-02--address-in-order-flow",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/116",
+  "loop_iteration": 196,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -174,11 +174,13 @@
     "02-auth-users-admin.md#T-03.03.02",
     "02-auth-users-admin.md#T-03.03.03",
     "02-auth-users-admin.md#T-03.03.04",
-    "02-auth-users-admin.md#T-03.03.05"
+    "02-auth-users-admin.md#T-03.03.05",
+    "02-auth-users-admin.md#T-03.03.06",
+    "02-auth-users-admin.md#T-03.04.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T18:21:00Z",
-  "notes": "Tick-194: T-03.03.06 (Timezone settings) — built, PR #114 created, in_review. Typecheck pass (11/11).",
+  "last_updated": "2026-08-25T19:00:00Z",
+  "notes": "Tick-196: T-03.04.02 (Address in order flow) — building. Orders table, API module, products endpoint, frontend order page with address selector.",
   "status_history": [
     {
       "from": "idle",
@@ -219,6 +221,11 @@
       "from": "building",
       "to": "in_review",
       "at": "tick-194"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-195"
     }
   ]
 }
