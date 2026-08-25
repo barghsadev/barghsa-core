@@ -1,9 +1,9 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-03.03.01",
-  "current_task_id": "T-03.03.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-03-03-01--profile-switcher",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 186,
   "fix_attempts": 0,
@@ -169,11 +169,12 @@
     "02-auth-users-admin.md#T-03.02.01",
     "02-auth-users-admin.md#T-03.02.02",
     "02-auth-users-admin.md#T-03.02.03",
-    "02-auth-users-admin.md#T-03.02.04"
+    "02-auth-users-admin.md#T-03.02.04",
+    "02-auth-users-admin.md#T-03.03.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:15:00Z",
-  "notes": "Tick-186: idle → building — T-03.03.01 (Profile switcher in sidebar, M).",
+  "last_updated": "2026-08-25T13:47:00Z",
+  "notes": "Tick-186: in_review → idle — T-03.03.01 (Profile switcher) merged as PR #109 after z-ai/glm-5.2 approve (3 minor follow-ups). Next: 02-auth-users-admin.md#T-03.03.02.",
   "status_history": [
     {
       "from": "idle",
@@ -203,6 +204,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-186"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
       "at": "tick-186"
     }
   ]
