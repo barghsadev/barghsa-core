@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e05-t-05-01-01--crm-users-endpoint",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/120",
-  "loop_iteration": 206,
-  "fix_attempts": 1,
+  "loop_iteration": 207,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -182,8 +182,8 @@
     "02-auth-users-admin.md#T-04.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T21:30:00Z",
-  "notes": "Tick-206: PR #120 fixing. Composite cursor fix applied, pushed, posted comment. Re-entered in_review.",
+  "last_updated": "2026-08-25T21:38:00Z",
+  "notes": "Tick-207: GLM 5.2 review requested_changes — ORDER BY tiebreaker missing. Fixed in f387f33, pushed, comment posted. Re-entered in_review.",
   "status_history": [
     {
       "from": "idle",
