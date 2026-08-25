@@ -1,14 +1,23 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
+import { randomUUID, randomBytes } from 'node:crypto'
+import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
+import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import { OtpService } from './otp.service.js'
+
+/** Session idle timeout: 30 minutes */
+const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000
+/** Session absolute timeout: 24 hours */
+const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000
 
 /**
  * Service handling registration business logic.
  *
- * At this stage (T-01.02.01), the service validates the input, checks for
- * duplicate usernames (stub), creates an OTP challenge via OtpService,
- * and returns the challengeId so the client can proceed to OTP verification.
+ * At this stage (T-01.02.01 / T-01.02.03), the service validates the input,
+ * checks for duplicate usernames (stub), creates an OTP challenge via
+ * OtpService (storing password hash for atomic consumption on verify),
+ * and on OTP verify creates the user record and session atomically.
  */
 @Injectable()
 export class AuthService {
@@ -19,7 +28,9 @@ export class AuthService {
   /**
    * Attempt to register a new user.
    *
-   * Returns a `challengeId` for the next step (OTP verification).
+   * Validates input, checks username availability, creates an OTP challenge
+   * that also stores the password hash and TOS version for atomic consumption
+   * on OTP verify. Returns a `challengeId` for the next step (OTP verification).
    */
   async register(
     input: RegisterInput,
@@ -50,12 +61,180 @@ export class AuthService {
       )
     }
 
-    // ── Create OTP challenge ────────────────────────────────────────
+    // ── Create OTP challenge (storing password hash and TOS version) ──
     const { challengeId } = await this.otpService.createChallenge(
       input.username,
       ip,
+      input.password,
+      input.tosVersionId,
     )
 
     return { challengeId }
+  }
+
+  /**
+   * Complete registration after OTP verification.
+   *
+   * Atomically: verifies the OTP → creates user record → creates session.
+   * Returns session token and CSRF token for the frontend.
+   */
+  async completeRegistration(
+    challengeId: string,
+    otp: string,
+    ip: string,
+  ): Promise<RegisterVerifyResponse> {
+    const pool = getDbPool()
+
+    // ── Verify OTP and get stored registration data ─────────────────
+    // We query the challenge row ourselves to get password_hash and
+    // tos_version_id, then verify the OTP in the same service call.
+    const challengeRow = await pool.query(
+      `SELECT challenge_id, destination, otp_hash, attempts_remaining,
+              expires_at, consumed_at, password_hash, tos_version_id
+       FROM otp_challenges
+       WHERE challenge_id = $1`,
+      [challengeId],
+    )
+
+    if (challengeRow.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const row = challengeRow.rows[0]
+
+    // Check consumed
+    if (row.consumed_at) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+        409,
+      )
+    }
+
+    // Check expiry
+    if (new Date(row.expires_at) < new Date()) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
+        401,
+      )
+    }
+
+    // Check attempts
+    if (row.attempts_remaining <= 0) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+        401,
+      )
+    }
+
+    // Check password_hash was stored (should always be present for registration)
+    if (!row.password_hash || !row.tos_version_id) {
+      this.logger.error(`Missing registration data for challenge ${challengeId}`)
+      throw new HttpException(
+        {
+          statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+          error: ErrorCodes.AUTH_REGISTER_FAILED.code,
+        },
+        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+      )
+    }
+
+    // ── Verify OTP ─────────────────────────────────────────────────
+    const submittedHash = this.otpService.hashOtp(otp)
+    if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+      // Decrement attempts
+      await pool.query(
+        `UPDATE otp_challenges
+         SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
+         WHERE challenge_id = $1 AND attempts_remaining > 0`,
+        [challengeId],
+      )
+
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
+        401,
+      )
+    }
+
+    // ── Atomic: create user + consume OTP + create session ─────────
+    const userId = randomUUID()
+    const sessionId = randomUUID()
+    const csrfToken = randomBytes(32).toString('hex')
+    const now = new Date()
+    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
+    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Consume the OTP challenge
+      const consumeResult = await client.query(
+        `UPDATE otp_challenges
+         SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
+         WHERE challenge_id = $2 AND consumed_at IS NULL`,
+        [now, challengeId],
+      )
+
+      if (consumeResult.rowCount === 0) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      // 2. Create user record
+      await client.query(
+        `INSERT INTO users (user_id, username, password_hash, locale,
+                            last_accepted_tos_version, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+        [
+          userId,
+          row.destination,
+          row.password_hash,
+          'fa',
+          row.tos_version_id,
+          now,
+        ],
+      )
+
+      // 3. Create session
+      await client.query(
+        `INSERT INTO sessions (session_id, user_id, csrf_token,
+                               expires_at, idle_deadline, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`User created: ${userId} (${row.destination})`)
+    } catch (err) {
+      await client.query('ROLLBACK')
+
+      // Re-throw HttpExceptions as-is
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(`Failed to create user for challenge ${challengeId}: ${String(err)}`)
+      throw new HttpException(
+        {
+          statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+          error: ErrorCodes.AUTH_REGISTER_FAILED.code,
+        },
+        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+      )
+    } finally {
+      client.release()
+    }
+
+    return {
+      userId,
+      sessionId,
+      csrfToken,
+      expiresAt: expiresAt.toISOString(),
+    }
   }
 }

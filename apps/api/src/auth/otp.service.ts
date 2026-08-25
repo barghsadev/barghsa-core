@@ -18,15 +18,15 @@ export class OtpService {
 
   constructor(private readonly rateLimitService: RateLimitService) {}
 
-  private generateOtp(): string {
+  public generateOtp(): string {
     return String(randomInt(100_000, 1_000_000))
   }
 
-  private hashOtp(otp: string): string {
+  public hashOtp(otp: string): string {
     return createHash('sha256').update(otp).digest('hex')
   }
 
-  private compareOtpHashes(hashedInput: string, storedHash: string): boolean {
+  public compareOtpHashes(hashedInput: string, storedHash: string): boolean {
     try {
       const inputBuf = Buffer.from(hashedInput, 'hex')
       const storedBuf = Buffer.from(storedHash, 'hex')
@@ -46,6 +46,8 @@ export class OtpService {
   async createChallenge(
     destination: string,
     ip: string,
+    passwordHash?: string,
+    tosVersionId?: string,
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
 
@@ -56,9 +58,9 @@ export class OtpService {
 
     const pool = getDbPool()
     await pool.query(
-      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, attempts_remaining, expires_at)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [challengeId, destination, otpHash, OtpService.MAX_ATTEMPTS, expiresAt],
+      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure

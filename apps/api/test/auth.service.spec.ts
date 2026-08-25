@@ -34,7 +34,7 @@ describe('AuthService', () => {
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1');
+      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', 'StrongPass1', 'current');
     });
 
     it('throws USERNAME_TAKEN when username is taken (stub)', async () => {
