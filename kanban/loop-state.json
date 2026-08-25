@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.01",
+  "current_task_id": "T-05.04.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-01--agent-list-for-legal-entity",
   "current_pr_url": null,
-  "loop_iteration": 228,
+  "loop_iteration": 229,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -193,8 +193,8 @@
     "02-auth-users-admin.md#T-05.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:53:00Z",
-  "notes": "Tick-228: PR #130 (T-05.03.02 - Staff role assignment) merged. Created staff_roles/user_roles tables, PUT endpoint with step-up auth, role validation, audit logging. 359/359 tests. Back to idle.",
+  "last_updated": "2026-08-26T01:55:00Z",
+  "notes": "Tick-229: Starting T-05.04.01 — Agent list for legal entity.",
   "status_history": [
     {
       "from": "in_review",
@@ -235,6 +235,11 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-228"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-229"
     }
   ]
 }
