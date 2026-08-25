@@ -4,6 +4,7 @@ import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { rateLimitKey } from '@barghsa/shared/rate-limit'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
@@ -12,6 +13,7 @@ import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-p
 import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
 import { OtpService } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
+import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
 /**
  * Service handling registration and login business logic.
@@ -35,6 +37,7 @@ export class AuthService {
   constructor(
     private readonly otpService: OtpService,
     private readonly sessionService: SessionService,
+    private readonly rateLimitService: RateLimitService,
   ) {}
 
   /**
@@ -128,6 +131,27 @@ export class AuthService {
     // Kick off dummy hash computation if not yet ready (settles in ~200ms;
     // by the time the client types a password on the next request it's ready)
     this.ensureDummyHash()
+
+    // ── Progressive delay: slow down repeated failed attempts ─────────
+    // Before checking credentials, peek at the current rate-limit counter
+    // for this IP in the 15-minute login window.  The guard has already
+    // incremented the counter for the current request, so subtract 1 to
+    // get the number of *prior* failed attempts.  If there have been prior
+    // failures, apply an exponential back-off delay to frustrate automated
+    // brute-force scripts while keeping the UX tolerable for legitimate
+    // users who mistype their password a few times.
+    const rateLimitKeyStr = rateLimitKey('login:account-ip', ip)
+    const currentCount = await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000)
+    const priorAttempts = Math.max(0, currentCount - 1)
+    if (priorAttempts >= 1) {
+      // Progressive delay: 2^(priorAttempts - 1) * 500ms, capped at 5_000ms
+      // attempt 1: 500ms, 2: 1000ms, 3: 2000ms, 4: 4000ms, 5+: 5000ms
+      const delayMs = Math.min(Math.pow(2, priorAttempts - 1) * 500, 5_000)
+      this.logger.debug(
+        `Progressive delay for login: ${rateLimitKeyStr} (${priorAttempts} prior attempts, ${delayMs}ms)`,
+      )
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    }
 
     try {
       // 1. Look up user by normalized username
@@ -258,6 +282,11 @@ export class AuthService {
         isStaff,
         { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
       )
+
+      // Reset rate-limit counters on successful login
+      await this.rateLimitService.resetSecurityRateLimit(rateLimitKeyStr).catch(() => {
+        // Non-critical — counter will expire naturally
+      })
 
       this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`)
 

@@ -79,6 +79,14 @@ export class CompositeRateLimiterStore {
   }
 
   /**
+   * Peek at the current count for `key` without incrementing.
+   * Used by the progressive login delay in AuthService.
+   */
+  async getSecurityCount(key: string, windowMs: number): Promise<number> {
+    return this.pgStore.getCurrentCount(key, windowMs);
+  }
+
+  /**
    * Reset a general rate-limit counter.
    */
   async reset(key: string): Promise<void> {

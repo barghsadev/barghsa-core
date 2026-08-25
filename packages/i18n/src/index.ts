@@ -71,6 +71,7 @@ export const fa: I18nDictionary = {
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'تعداد درخواست‌های شما بیش از حد مجاز است',
+  'error.rate_limit.retry_after': 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً {seconds} ثانیه دیگر تلاش کنید',
 
   // ── Provider / External ─────────────────────────────────
   'error.provider.downstream': 'خطا در سرویس خارجی',
@@ -276,6 +277,7 @@ export const en: I18nDictionary = {
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
+  'error.rate_limit.retry_after': 'Too many requests – please try again in {seconds} seconds',
 
   // ── Provider / External ─────────────────────────────────
   'error.provider.downstream': 'External service error',

@@ -75,8 +75,8 @@ export class AuthController {
   @SkipCsrf()
   @Post('register')
   @HttpCode(200)
-  @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000 })
-  @RateLimit({ namespace: 'registration:ip-hourly', limit: 10, windowMs: 3_600_000 })
+  @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000, security: true })
+  @RateLimit({ namespace: 'registration:ip-hourly', limit: 10, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
     status: 200,
@@ -149,8 +149,8 @@ export class AuthController {
   @SkipCsrf()
   @Post('login')
   @HttpCode(200)
-  @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000 })
-  @RateLimit({ namespace: 'login:ip', limit: 50, windowMs: 900_000 })
+  @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000, security: true })
+  @RateLimit({ namespace: 'login:ip', limit: 50, windowMs: 900_000, security: true })
   @ApiOperation({ summary: 'Authenticate a user' })
   @ApiResponse({
     status: 200,
@@ -225,7 +225,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('login/verify')
   @HttpCode(200)
-  @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000 })
+  @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Verify OTP for login step-up' })
   @ApiResponse({
     status: 200,
@@ -287,7 +287,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('login/resend')
   @HttpCode(200)
-  @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000 })
+  @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000, security: true })
   @ApiOperation({ summary: 'Resend OTP for login' })
   @ApiResponse({
     status: 200,
@@ -326,7 +326,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('force-change-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000 })
+  @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000, security: true })
   @ApiOperation({ summary: 'Force password change after login detection' })
   @ApiResponse({
     status: 200,
@@ -376,8 +376,8 @@ export class AuthController {
   @SkipCsrf()
   @Post('forgot-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000 })
-  @RateLimit({ namespace: 'forgot-password:ip', limit: 5, windowMs: 3_600_000 })
+  @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000, security: true })
+  @RateLimit({ namespace: 'forgot-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Initiate forgot-password OTP flow' })
   @ApiResponse({
     status: 200,
@@ -427,8 +427,8 @@ export class AuthController {
   @SkipCsrf()
   @Post('reset-password')
   @HttpCode(200)
-  @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000 })
-  @RateLimit({ namespace: 'reset-password:ip', limit: 5, windowMs: 3_600_000 })
+  @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000, security: true })
+  @RateLimit({ namespace: 'reset-password:ip', limit: 5, windowMs: 3_600_000, security: true })
   @ApiOperation({ summary: 'Reset password after OTP verification' })
   @ApiResponse({
     status: 200,
@@ -484,7 +484,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('register/verify')
   @HttpCode(200)
-  @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000 })
+  @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Verify OTP for registration' })
   @ApiResponse({
     status: 200,
@@ -539,7 +539,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('logout')
   @HttpCode(200)
-  @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000 })
+  @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Log out the current user' })
   @ApiResponse({
     status: 200,
@@ -580,7 +580,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('refresh')
   @HttpCode(200)
-  @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000 })
+  @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Refresh the session' })
   @ApiResponse({
     status: 200,
@@ -653,7 +653,7 @@ export class AuthController {
   @SkipCsrf()
   @Post('register/resend')
   @HttpCode(200)
-  @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000 })
+  @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000, security: true })
   @ApiOperation({ summary: 'Resend OTP for registration' })
   @ApiResponse({
     status: 200,
@@ -697,7 +697,7 @@ export class AuthController {
   @UseGuards(SessionAuthGuard)
   @Post('step-up')
   @HttpCode(200)
-  @RateLimit({ namespace: 'step-up:ip', limit: 5, windowMs: 60_000 })
+  @RateLimit({ namespace: 'step-up:ip', limit: 5, windowMs: 60_000, security: true })
   @ApiOperation({ summary: 'Perform step-up authentication for sensitive actions' })
   @ApiResponse({
     status: 200,
