@@ -50,6 +50,9 @@ export const users = pgTable(
     /** Expiry of the password change token (default 5 min). */
     passwordChangeTokenExpiresAt: timestamp('password_change_token_expires_at', { withTimezone: true, mode: 'date' }),
 
+    /** Notification channel preferences (T-03.03.05). */
+    notificationPreferences: text('notification_preferences').notNull().default('IN_APP'),
+
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 
@@ -101,6 +104,12 @@ export const createUsersTable = sql`
       WHERE table_name = 'users' AND column_name = 'mobile'
     ) THEN
       ALTER TABLE users ADD COLUMN mobile TEXT;
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'notification_preferences'
+    ) THEN
+      ALTER TABLE users ADD COLUMN notification_preferences TEXT NOT NULL DEFAULT 'IN_APP';
     END IF;
   END $$;
 `

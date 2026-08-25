@@ -475,6 +475,19 @@ export const fa: I18nDictionary = {
   'settings.profile.legalName': 'نام حقوقی',
   'settings.profile.nationalIdentifier': 'شناسه ملی',
 
+  // ── Settings — Notification Preferences (T-03.03.05) ─────────
+  'settings.notifications.title': 'تنظیمات اعلان‌ها',
+  'settings.notifications.description': 'کانال‌های دریافت اعلان را انتخاب کنید',
+  'settings.notifications.channel.SMS': 'پیامک',
+  'settings.notifications.channel.EMAIL': 'ایمیل',
+  'settings.notifications.channel.IN_APP': 'اعلان درون برنامه‌ای',
+  'settings.notifications.hint': 'اعلان‌های امنیتی معمولاً از طریق همه کانال‌های فعال ارسال می‌شوند. اعلان درون برنامه‌ای همیشه فعال است.',
+  'settings.notifications.saving': 'در حال ذخیره…',
+  'settings.notifications.success': 'تنظیمات اعلان‌ها با موفقیت به‌روزرسانی شد',
+  'settings.notifications.error.save': 'خطا در ذخیره تنظیمات اعلان‌ها',
+  'settings.notifications.error.noEmail': 'برای این حساب ایمیلی ثبت نشده است. ابتدا ایمیل اضافه کنید',
+  'settings.notifications.error.noMobile': 'برای این حساب شماره موبایلی ثبت نشده است. ابتدا شماره موبایل اضافه کنید',
+
   'dashboard.nav.label': 'ناوبری',
   'dashboard.nav.electricity': 'برق',
   'dashboard.nav.savings': 'پس‌انداز',
@@ -950,6 +963,19 @@ export const en: I18nDictionary = {
   'settings.profile.profileType.LEGAL': 'Legal Entity',
   'settings.profile.legalName': 'Legal Name',
   'settings.profile.nationalIdentifier': 'National Identifier',
+
+  // ── Settings — Notification Preferences (T-03.03.05) ─────────
+  'settings.notifications.title': 'Notification Preferences',
+  'settings.notifications.description': 'Select your notification channels',
+  'settings.notifications.channel.SMS': 'SMS',
+  'settings.notifications.channel.EMAIL': 'Email',
+  'settings.notifications.channel.IN_APP': 'In-App',
+  'settings.notifications.hint': 'Security notifications are typically sent through all active channels. In-app notifications are always enabled.',
+  'settings.notifications.saving': 'Saving…',
+  'settings.notifications.success': 'Notification preferences updated successfully',
+  'settings.notifications.error.save': 'Failed to save notification preferences',
+  'settings.notifications.error.noEmail': 'No email registered for this account. Add an email first',
+  'settings.notifications.error.noMobile': 'No mobile number registered for this account. Add a mobile first',
 
   'dashboard.nav.label': 'Navigation',
   'dashboard.nav.electricity': 'Electricity',
