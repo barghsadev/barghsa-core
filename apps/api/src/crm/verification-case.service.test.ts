@@ -518,5 +518,95 @@ describe('VerificationCaseService', () => {
         expect(result.status).toBe('Under Review')
       }
     })
+
+    it('rejects approval with malicious field name (SQL injection prevention)', async () => {
+      const { mockQuery, pool } = mockPool()
+
+      // Simulate a case with a malformed field_name (e.g. stored via raw insert)
+      mockQuery.mockResolvedValueOnce({
+        rows: [{ id: VALID_CASE_ID, profile_id: VALID_PROFILE_ID, field_name: 'email; DROP TABLE users; --', current_value: null, requested_value: 'test@evil.com', status: 'Under Review', evidence_urls: '[]' }],
+      })
+
+      vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+
+      const { VerificationCaseService: Svc } = await import('./verification-case.service.js')
+      service = new Svc()
+
+      const result = await service.reviewCase(
+        VALID_CASE_ID,
+        { decision: 'Approved', reviewerNotes: 'Malicious' },
+        VALID_USER_ID,
+        IP,
+      )
+
+      expect(result).not.toBeNull()
+      expect(result).toHaveProperty('error')
+      expect((result as { error: string }).error).toContain('Invalid identity field')
+    })
+  })
+
+  describe('listCases - filters', () => {
+    it('filters by status filter', async () => {
+      const { mockQuery, pool } = mockPool()
+      mockQuery
+        .mockResolvedValueOnce({ rows: [{ cnt: 2 }] })
+        .mockResolvedValueOnce({
+          rows: [{
+            id: VALID_CASE_ID,
+            profile_id: VALID_PROFILE_ID,
+            field_name: 'first_name',
+            requested_value: 'Jane',
+            reason: 'Name correction',
+            status: 'Open',
+            created_by: VALID_USER_ID,
+            created_at: '2026-08-26T10:00:00.000Z',
+            updated_at: '2026-08-26T10:00:00.000Z',
+          }],
+        })
+      vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+
+      const { VerificationCaseService: Svc } = await import('./verification-case.service.js')
+      service = new Svc()
+
+      const result = await service.listCases({ status: 'Open', limit: 20, offset: 0 })
+
+      expect('error' in result).toBe(false)
+      if (!('error' in result)) {
+        expect(result.total).toBe(2)
+      }
+      // Verify WHERE clause includes status filter
+      expect(mockQuery.mock.calls[0]![0]).toContain('status = $1')
+    })
+
+    it('filters by createdBy', async () => {
+      const { mockQuery, pool } = mockPool()
+      mockQuery
+        .mockResolvedValueOnce({ rows: [{ cnt: 1 }] })
+        .mockResolvedValueOnce({
+          rows: [{
+            id: VALID_CASE_ID,
+            profile_id: VALID_PROFILE_ID,
+            field_name: 'first_name',
+            requested_value: 'Jane',
+            reason: 'Name correction',
+            status: 'Open',
+            created_by: VALID_USER_ID,
+            created_at: '2026-08-26T10:00:00.000Z',
+            updated_at: '2026-08-26T10:00:00.000Z',
+          }],
+        })
+      vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+
+      const { VerificationCaseService: Svc } = await import('./verification-case.service.js')
+      service = new Svc()
+
+      const result = await service.listCases({ createdBy: VALID_USER_ID, limit: 20, offset: 0 })
+
+      expect('error' in result).toBe(false)
+      if (!('error' in result)) {
+        expect(result.total).toBe(1)
+      }
+      expect(mockQuery.mock.calls[0]![0]).toContain('created_by = $1')
+    })
   })
 })

@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-05.02.05",
   "current_task_id": "T-05.02.05",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-02-05--identity-correction-case",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/127",
   "loop_iteration": 220,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -135,11 +135,31 @@
     "02-auth-users-admin.md#T-02.01.02",
     "02-auth-users-admin.md#T-02.01.03",
     "02-auth-users-admin.md#T-02.01.04",
+    "01-platform-infrastructure.md#T-02.03.02",
+    "01-platform-infrastructure.md#T-02.04.01",
+    "01-platform-infrastructure.md#T-02.04.02",
+    "01-platform-infrastructure.md#T-02.04.03",
+    "01-platform-infrastructure.md#T-02.04.04",
+    "01-platform-infrastructure.md#T-02.04.05",
+    "01-platform-infrastructure.md#T-02.04.06",
     "02-auth-users-admin.md#T-02.02.01",
     "02-auth-users-admin.md#T-02.02.02",
     "02-auth-users-admin.md#T-02.02.03",
     "02-auth-users-admin.md#T-02.02.04",
     "02-auth-users-admin.md#T-02.03.01",
+    "01-platform-infrastructure.md#T-03.01.01",
+    "01-platform-infrastructure.md#T-03.01.02",
+    "01-platform-infrastructure.md#T-03.01.03",
+    "01-platform-infrastructure.md#T-03.01.04",
+    "01-platform-infrastructure.md#T-03.01.05",
+    "01-platform-infrastructure.md#T-03.02.01",
+    "01-platform-infrastructure.md#T-03.02.02",
+    "01-platform-infrastructure.md#T-03.02.03",
+    "01-platform-infrastructure.md#T-03.02.04",
+    "01-platform-infrastructure.md#T-03.03.01",
+    "01-platform-infrastructure.md#T-03.03.02",
+    "01-platform-infrastructure.md#T-03.03.03",
+    "01-platform-infrastructure.md#T-03.03.04",
     "02-auth-users-admin.md#T-02.03.02",
     "02-auth-users-admin.md#T-02.03.03",
     "02-auth-users-admin.md#T-02.04.01",
@@ -161,6 +181,7 @@
     "02-auth-users-admin.md#T-04.01.02",
     "02-auth-users-admin.md#T-04.01.03",
     "02-auth-users-admin.md#T-05.01.01",
+    "01-platform-infrastructure.md#T-05.03.05",
     "02-auth-users-admin.md#T-05.01.02",
     "02-auth-users-admin.md#T-05.02.01",
     "02-auth-users-admin.md#T-05.02.02",
@@ -168,22 +189,17 @@
     "02-auth-users-admin.md#T-05.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:15:27Z",
-  "notes": "Tick-220: Starting T-05.02.05 — Identity correction through verification case (L). Creating branch.",
+  "last_updated": "2026-08-26T00:55:27Z",
+  "notes": "Tick-220: T-05.02.05 backend built. Review by z-ai/glm-5.2: request_changes. Fixing: SQL field re-validation whitelist, requestedValue notNull, test improvements.",
   "status_history": [
-    {
-      "from": "in_review",
-      "to": "in_review",
-      "at": "tick-218"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-219"
-    },
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-220"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-220"
     }
   ]

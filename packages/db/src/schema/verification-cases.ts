@@ -34,7 +34,7 @@ export const verificationCases = pgTable(
     currentValue: text('current_value'),
 
     /** The requested new value. */
-    requestedValue: text('requested_value'),
+    requestedValue: text('requested_value').notNull(),
 
     /** JSON array of evidence URLs/s3-keys (uploaded documents). */
     evidenceUrls: text('evidence_urls').notNull().default('[]'),
@@ -85,7 +85,7 @@ export const createVerificationCasesTable = sql`
     profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     field_name TEXT NOT NULL,
     current_value TEXT,
-    requested_value TEXT,
+    requested_value TEXT NOT NULL,
     evidence_urls TEXT NOT NULL DEFAULT '[]',
     reason TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'Open' CHECK (status IN ('Open', 'Under Review', 'Approved', 'Rejected')),

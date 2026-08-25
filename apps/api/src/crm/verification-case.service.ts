@@ -372,6 +372,19 @@ export class VerificationCaseService {
       return { error: 'Reviewer notes are required when rejecting a case' }
     }
 
+    const fieldName = caseRow.field_name as string
+
+    // Re-validate fieldName against allowed identity fields — security measure
+    // to prevent SQL injection via a malformed field_name stored in the DB.
+    // Must happen before pool.connect() for fail-fast behavior.
+    if (dto.decision === 'Approved') {
+      const isLegalField = IDENTITY_FIELDS_LEGAL.includes(fieldName)
+      const isIndividualField = IDENTITY_FIELDS_INDIVIDUAL.includes(fieldName)
+      if (!isLegalField && !isIndividualField) {
+        return { error: `Invalid identity field '${fieldName}' cannot be updated` }
+      }
+    }
+
     const now = new Date().toISOString()
     const correlationId = uuidv7()
     const client = await pool.connect()
@@ -390,10 +403,11 @@ export class VerificationCaseService {
 
       // If approved, apply the identity field correction to the profile or legal_profiles
       if (dto.decision === 'Approved') {
-        const fieldName = caseRow.field_name as string
         const newValue = caseRow.requested_value as string | null
         const profileId = caseRow.profile_id as string
         const oldValue = caseRow.current_value as string | null
+
+        // fieldName was already validated against the whitelist before pool.connect()
 
         if (fieldName === 'legal_name' || fieldName === 'national_identifier') {
           // Update in legal_profiles table
