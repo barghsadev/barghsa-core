@@ -317,3 +317,125 @@ describe('AdminService.createStaffUser (rollback)', () => {
     expect(mockRelease).toHaveBeenCalled()
   })
 })
+
+// ─── Tests — updateStaffRoles ──────────────────────────────────────────
+
+describe('AdminService.updateStaffRoles', () => {
+  const MOCK_ROLES = [
+    { id: 'role-customer-support' as const, name: 'Customer Support', description: '', permissions: [] },
+    { id: 'role-crm-verification' as const, name: 'CRM & Verification', description: '', permissions: [] },
+    { id: 'role-finance' as const, name: 'Finance', description: '', permissions: [] },
+    { id: 'role-legal-contracts' as const, name: 'Legal & Contracts', description: '', permissions: [] },
+    { id: 'role-operations' as const, name: 'Operations', description: '', permissions: [] },
+    { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
+  ]
+
+  it('updates roles for an existing user (replaces role set)', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    // User exists check
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target-user', is_admin: true }] })
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ role_id: 'role-customer-support' }, { role_id: 'role-finance' }] }) // current roles
+      .mockResolvedValueOnce(undefined) // DELETE old roles
+      .mockResolvedValueOnce(undefined) // INSERT new roles
+      .mockResolvedValueOnce(undefined) // audit log INSERT
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.updateStaffRoles(
+      'target-user',
+      ['role-crm-verification', 'role-operations'],
+      'actor-user',
+      '127.0.0.1',
+    )
+
+    expect(result.userId).toBe('target-user')
+    expect(result.roleIds).toEqual(['role-crm-verification', 'role-operations'])
+    expect(result.previousRoleIds).toEqual(['role-customer-support', 'role-finance'])
+    expect(mockRelease).toHaveBeenCalled()
+  })
+
+  it('allows empty role set (removes all roles)', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target-user', is_admin: true }] })
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ role_id: 'role-admin' }] }) // current roles
+      .mockResolvedValueOnce(undefined) // DELETE old roles
+      // No INSERT (empty role set)
+      .mockResolvedValueOnce(undefined) // audit log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.updateStaffRoles(
+      'target-user',
+      [],
+      'actor',
+      '10.0.0.1',
+    )
+
+    expect(result.roleIds).toEqual([])
+    expect(result.previousRoleIds).toEqual(['role-admin'])
+    expect(mockRelease).toHaveBeenCalled()
+  })
+
+  it('throws 404 when target user does not exist', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    let caught: unknown
+    try {
+      await service.updateStaffRoles('nonexistent', ['role-admin'], 'actor', '10.0.0.1')
+    } catch (e) {
+      caught = e
+    }
+
+    expect(caught).toBeInstanceOf(HttpException)
+    expect((caught as HttpException).getStatus()).toBe(404)
+  })
+
+  it('throws 500 on unexpected database error', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
+    mockConnect.mockResolvedValueOnce(client)
+    // BEGIN fails with an unexpected error
+    mockClientQuery
+      .mockRejectedValueOnce(new Error('Unexpected DB failure'))
+      .mockResolvedValueOnce(undefined) // ROLLBACK (caught with .catch)
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    let caught: unknown
+    try {
+      await service.updateStaffRoles('target', ['role-admin'], 'actor', '10.0.0.1')
+    } catch (e) {
+      caught = e
+    }
+
+    expect(caught).toBeInstanceOf(HttpException)
+    expect((caught as HttpException).getStatus()).toBe(500)
+  })
+})

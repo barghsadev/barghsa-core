@@ -4,21 +4,19 @@ import {
   HttpCode,
   HttpException,
   Logger,
+  Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { AdminService, type ActivationMethod } from './admin.service.js'
+import { AdminService, type UpdateStaffRolesResult } from './admin.service.js'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
-
-/**
- * Supported activation methods enum for the API schema.
- */
-const ACTIVATION_METHODS = ['tempPassword', 'link'] as const
 
 /**
  * Zod schema for the create-staff-user request body.
@@ -40,10 +38,18 @@ export const CreateStaffUserSchema = z.object({
   firstName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
   lastName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
   roleIds: z.array(z.string().uuid()).optional().default([]),
-  activationMethod: z.enum(ACTIVATION_METHODS),
+  activationMethod: z.enum(['tempPassword', 'link']),
 })
 
 export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
+
+/**
+ * Zod schema for the update-staff-roles request body.
+ */
+export const UpdateStaffRolesSchema = z.object({
+  roleIds: z.array(z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' })),
+  reason: z.string().max(500).optional(),
+})
 
 /**
  * API response for the create-staff-user endpoint.
@@ -51,7 +57,7 @@ export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
 export interface CreateStaffUserApiResponse {
   userId: string
   username: string
-  activationMethod: ActivationMethod
+  activationMethod: 'tempPassword' | 'link'
   temporaryPassword?: string
   activationToken?: string
   message: string
@@ -193,5 +199,98 @@ export class AdminController {
     }
 
     return response
+  }
+
+  /**
+   * PUT /api/admin/users/:userId/roles
+   *
+   * Replaces the role set for a staff user (idempotent).
+   * Requires step-up authentication.
+   *
+   * Permission: admin only (isAdmin session flag).
+   *
+   * @param userId - UUID of the target staff user
+   * @param rawBody - { roleIds: string[], reason?: string }
+   * @param req - Authenticated request with session
+   */
+  @Put('users/:userId/roles')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Update staff user roles (requires step-up)' })
+  @ApiParam({ name: 'userId', description: 'Staff user UUID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['roleIds'],
+      properties: {
+        roleIds: { type: 'array', items: { type: 'string' }, description: 'Role IDs to assign' },
+        reason: { type: 'string', description: 'Optional reason for the role change' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Roles updated successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        roleIds: { type: 'array', items: { type: 'string' } },
+        previousRoleIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid role IDs' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required or step-up needed' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async updateStaffRoles(
+    @Param('userId') userId: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<UpdateStaffRolesResult> {
+    // ── Permission check: admin only ─────────────────────────────
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to update roles for user ${userId}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required',
+        },
+        403,
+      )
+    }
+
+    // ── Validate with Zod ────────────────────────────────────────
+    const parsed = UpdateStaffRolesSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    // ── Delegate to service ──────────────────────────────────────
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const result = await this.adminService.updateStaffRoles(
+      userId,
+      parsed.data.roleIds,
+      req.session.userId,
+      ip,
+      parsed.data.reason,
+    )
+
+    this.logger.log(
+      `Roles updated for user ${userId}: [${result.previousRoleIds.join(',')}] → ` +
+      `[${result.roleIds.join(',')}], actor=${req.session.userId}`,
+    )
+
+    return result
   }
 }
