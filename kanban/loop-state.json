@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e05-t-05-01-01--crm-users-endpoint",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/120",
-  "loop_iteration": 205,
-  "fix_attempts": 0,
+  "loop_iteration": 206,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -182,35 +182,148 @@
     "02-auth-users-admin.md#T-04.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T21:20:00Z",
-  "notes": "Tick-205: PR #119 (T-04.01.03) merged. Started T-05.01.01 slice 1 (CRM users list backend endpoint). PR #120 created, ready for review.",
+  "last_updated": "2026-08-25T21:30:00Z",
+  "notes": "Tick-206: PR #120 fixing. Composite cursor fix applied, pushed, posted comment. Re-entered in_review.",
   "status_history": [
-    { "from": "idle", "to": "building", "at": "tick-189" },
-    { "from": "building", "to": "in_review", "at": "tick-189" },
-    { "from": "in_review", "to": "idle", "at": "tick-190" },
-    { "from": "idle", "to": "building", "at": "tick-193" },
-    { "from": "building", "to": "in_review", "at": "tick-193" },
-    { "from": "in_review", "to": "idle", "at": "tick-193" },
-    { "from": "idle", "to": "building", "at": "tick-194" },
-    { "from": "building", "to": "in_review", "at": "tick-194" },
-    { "from": "in_review", "to": "idle", "at": "tick-195" },
-    { "from": "idle", "to": "building", "at": "tick-197" },
-    { "from": "building", "to": "in_review", "at": "tick-197" },
-    { "from": "in_review", "to": "fixing", "at": "tick-197" },
-    { "from": "fixing", "to": "in_review", "at": "tick-197" },
-    { "from": "in_review", "to": "idle", "at": "tick-198" },
-    { "from": "idle", "to": "building", "at": "tick-199" },
-    { "from": "fixing", "to": "in_review", "at": "tick-200" },
-    { "from": "in_review", "to": "blocked", "at": "tick-201" },
-    { "from": "blocked", "to": "idle", "at": "tick-202" },
-    { "from": "idle", "to": "building", "at": "tick-202" },
-    { "from": "building", "to": "in_review", "at": "tick-202" },
-    { "from": "in_review", "to": "fixing", "at": "tick-203" },
-    { "from": "fixing", "to": "in_review", "at": "tick-203" },
-    { "from": "in_review", "to": "fixing", "at": "tick-204" },
-    { "from": "fixing", "to": "in_review", "at": "tick-204" },
-    { "from": "in_review", "to": "idle", "at": "tick-205" },
-    { "from": "idle", "to": "building", "at": "tick-205" },
-    { "from": "building", "to": "in_review", "at": "tick-205" }
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-189"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-189"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-190"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-193"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-193"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-193"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-194"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-194"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-195"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-197"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-197"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-197"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-197"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-198"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-199"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-200"
+    },
+    {
+      "from": "in_review",
+      "to": "blocked",
+      "at": "tick-201"
+    },
+    {
+      "from": "blocked",
+      "to": "idle",
+      "at": "tick-202"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-202"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-202"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-203"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-203"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-204"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-204"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-205"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-205"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-205"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-206"
+    }
   ]
 }
