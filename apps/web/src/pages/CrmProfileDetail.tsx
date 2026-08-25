@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
+import { t, type Locale } from '@barghsa/i18n'
+import { useLocale } from '../../hooks/useLocale.js'
 
 interface Profile {
   id: string
@@ -111,20 +113,21 @@ function formatDate(iso: string | null): string {
 
 interface TabDef {
   id: string
-  label: string
+  labelKey: string
 }
 
-const TABS: TabDef[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'details', label: 'Profile Details' },
-  { id: 'addresses', label: 'Addresses' },
-  { id: 'sessions', label: 'Sessions' },
-  { id: 'agent-invites', label: 'Agent Invites' },
-  { id: 'verification-history', label: 'Verification History' },
-  { id: 'profiles', label: 'Other Profiles' },
+const TAB_DEFS: TabDef[] = [
+  { id: 'overview', labelKey: 'crm.profile.tab.overview' },
+  { id: 'details', labelKey: 'crm.profile.tab.details' },
+  { id: 'addresses', labelKey: 'crm.profile.tab.addresses' },
+  { id: 'sessions', labelKey: 'crm.profile.tab.sessions' },
+  { id: 'agent-invites', labelKey: 'crm.profile.tab.agentInvites' },
+  { id: 'verification-history', labelKey: 'crm.profile.tab.verificationHistory' },
+  { id: 'profiles', labelKey: 'crm.profile.tab.otherProfiles' },
 ]
 
 export default function CrmProfileDetail() {
+  const locale: Locale = useLocale()
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' })
   const [data, setData] = useState<ProfileDetail | null>(null)
   const [loading, setLoading] = useState(true)
@@ -137,9 +140,9 @@ export default function CrmProfileDetail() {
     fetch(`/api/crm/profiles/${profileId}`)
       .then((res) => {
         if (!res.ok) {
-          if (res.status === 404) throw new Error('Profile not found')
-          if (res.status === 403) throw new Error('Access denied')
-          throw new Error('Failed to load profile')
+          if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale))
+          if (res.status === 403) throw new Error(t('crm.profile.error.accessDenied', locale))
+          throw new Error(t('crm.profile.error.generic', locale))
         }
         return res.json()
       })
@@ -156,7 +159,7 @@ export default function CrmProfileDetail() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
-        <div className="animate-pulse text-gray-400">Loading profile...</div>
+        <div className="animate-pulse text-gray-400">{t('crm.profile.loading', locale)}</div>
       </div>
     )
   }
@@ -165,13 +168,13 @@ export default function CrmProfileDetail() {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">Error</h2>
+          <h2 className="text-xl font-semibold text-red-700 mb-2">{t('crm.profile.error.title', locale)}</h2>
           <p className="text-gray-600">{error}</p>
           <Link
             to="/admin/users"
             className="text-blue-600 hover:underline mt-4 inline-block"
           >
-            Back to Users
+            {t('crm.profile.backToUsers', locale)}
           </Link>
         </div>
       </div>
@@ -182,18 +185,20 @@ export default function CrmProfileDetail() {
 
   const { profile, user, legalInfo, addresses, sessions, siblingProfiles } = data
 
+  const tabs = TAB_DEFS.map(td => ({ id: td.id, label: t(td.labelKey, locale) }))
+
   return (
-    <div>
+    <div dir={locale === 'fa' ? 'rtl' : undefined}>
       {/* Breadcrumb / Header */}
       <div className="mb-6">
         <Link
           to="/admin/users"
           className="text-blue-600 hover:underline text-sm"
         >
-          ← Back to Users
+          {t('crm.profile.backToUsers', locale)}
         </Link>
         <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
-          Profile Detail
+          {t('crm.profile.title', locale)}
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.status)}`}>
             {profile.status}
           </span>
@@ -211,16 +216,16 @@ export default function CrmProfileDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="border-inset-b border-gray-200 mb-6">
-        <nav className="flex gap-6" role="tablist" aria-label="Profile sections">
-          {TABS.map((tab) => (
+      <div className="border-b border-gray-200 mb-6">
+        <nav className="flex gap-6" role="tablist" aria-label={t('crm.profile.title', locale)}>
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               role="tab"
               aria-selected={activeTab === tab.id}
               aria-controls={`panel-${tab.id}`}
               onClick={() => setActiveTab(tab.id)}
-              className={`pb-2 text-sm font-medium border-inset-b-2 transition-colors ${
+              className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -236,12 +241,12 @@ export default function CrmProfileDetail() {
       {activeTab === 'overview' && (
         <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <SummaryCard title="Verification" value={profile.status === 'VERIFIED' ? 'Verified' : profile.status} icon="✓" colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'} />
-            <SummaryCard title="Active Sessions" value={String(sessions.count)} icon="⚡" colorClass="text-blue-600" />
-            <SummaryCard title="Last Login" value={user.lastLogin ? formatDate(user.lastLogin) : 'Never'} icon="🔑" colorClass="text-gray-600" />
-            <SummaryCard title="Addresses" value={String(addresses.length)} icon="📍" colorClass="text-purple-600" />
-            <SummaryCard title="Other Profiles" value={String(siblingProfiles.length)} icon="👤" colorClass="text-teal-600" />
-            <SummaryCard title="Last Activity" value={sessions.lastActive ? formatDate(sessions.lastActive) : '—'} icon="⏱" colorClass="text-gray-600" />
+            <SummaryCard title={t('crm.profile.summary.verification', locale)} value={profile.status === 'VERIFIED' ? t('crm.profile.verified', locale) : profile.status} icon="✓" colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'} />
+            <SummaryCard title={t('crm.profile.summary.activeSessions', locale)} value={String(sessions.count)} icon="⚡" colorClass="text-blue-600" />
+            <SummaryCard title={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin) : '—'} icon="🔑" colorClass="text-gray-600" />
+            <SummaryCard title={t('crm.profile.summary.addresses', locale)} value={String(addresses.length)} icon="📍" colorClass="text-purple-600" />
+            <SummaryCard title={t('crm.profile.summary.otherProfiles', locale)} value={String(siblingProfiles.length)} icon="👤" colorClass="text-teal-600" />
+            <SummaryCard title={t('crm.profile.summary.lastActivity', locale)} value={sessions.lastActive ? formatDate(sessions.lastActive) : '—'} icon="⏱" colorClass="text-gray-600" />
           </div>
         </div>
       )}
@@ -249,30 +254,30 @@ export default function CrmProfileDetail() {
       {/* Tab: Profile Details */}
       {activeTab === 'details' && (
         <div id="panel-details" role="tabpanel" aria-labelledby="tab-details" className="space-y-6">
-          <Section title="User Info">
+          <Section title={t('crm.profile.section.userInfo', locale)}>
             <DetailRow label="User ID" value={user.userId} />
             <DetailRow label="Username" value={user.username} />
             <DetailRow label="Email" value={user.email ?? '—'} />
             <DetailRow label="Mobile" value={user.mobile ?? '—'} />
-            <DetailRow label="Admin" value={user.isAdmin ? 'Yes' : 'No'} />
-            <DetailRow label="Registered" value={formatDate(user.createdAt)} />
-            <DetailRow label="Last Login" value={user.lastLogin ? formatDate(user.lastLogin) : 'Never'} />
+            <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
+            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt)} />
+            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin) : '—'} />
           </Section>
 
-          <Section title="Profile">
+          <Section title={t('crm.profile.section.profile', locale)}>
             <DetailRow label="Profile ID" value={profile.id} />
             <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType)} />
-            <DetailRow label="Status" value={profile.status} />
+            <DetailRow label={t('crm.profile.label.status', locale)} value={profile.status} />
             <DetailRow label="Title" value={profile.title ?? '—'} />
             <DetailRow label="First Name" value={profile.firstName ?? '—'} />
             <DetailRow label="Last Name" value={profile.lastName ?? '—'} />
             <DetailRow label="National ID" value={profile.nationalId ?? '—'} />
-            <DetailRow label="Created" value={formatDate(profile.createdAt)} />
+            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(profile.createdAt)} />
             <DetailRow label="Updated" value={formatDate(profile.updatedAt)} />
           </Section>
 
           {legalInfo && (
-            <Section title="Legal Entity Info">
+            <Section title={t('crm.profile.section.legalEntity', locale)}>
               <DetailRow label="Legal Name" value={legalInfo.legalName} />
               <DetailRow label="National Identifier" value={legalInfo.nationalIdentifier} />
               <DetailRow label="Registration Number" value={legalInfo.registrationNumber} />
@@ -292,7 +297,7 @@ export default function CrmProfileDetail() {
       {activeTab === 'addresses' && (
         <div id="panel-addresses" role="tabpanel" aria-labelledby="tab-addresses">
           {addresses.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No addresses found.</p>
+            <p className="text-gray-500 text-center py-8">{t('crm.profile.noAddresses', locale)}</p>
           ) : (
             <div className="space-y-4">
               {addresses.map((addr) => (
@@ -301,10 +306,10 @@ export default function CrmProfileDetail() {
                   className={`border rounded-lg p-4 ${addr.mainAddress ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-500">Address</span>
+                    <span className="text-sm font-medium text-gray-500">{t('crm.profile.tab.addresses', locale)}</span>
                     {addr.mainAddress && (
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-                        Main
+                        {t('crm.profile.label.main', locale)}
                       </span>
                     )}
                   </div>
@@ -313,7 +318,7 @@ export default function CrmProfileDetail() {
                     Postal code: {addr.postalCode} | Province/City: {addr.provinceId}/{addr.cityId}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    Created: {formatDate(addr.createdAt)}
+                    {t('crm.profile.label.created', locale)}: {formatDate(addr.createdAt)}
                   </p>
                 </div>
               ))}
@@ -326,21 +331,21 @@ export default function CrmProfileDetail() {
       {activeTab === 'sessions' && (
         <div id="panel-sessions" role="tabpanel" aria-labelledby="tab-sessions">
           <div className="mb-4 text-sm text-gray-500">
-            {sessions.count} active session{sessions.count !== 1 ? 's' : ''} | Last activity: {sessions.lastActive ? formatDate(sessions.lastActive) : '—'}
+            {sessions.count} {t('crm.profile.tab.sessions', locale)} | {t('crm.profile.summary.lastActivity', locale)}: {sessions.lastActive ? formatDate(sessions.lastActive) : '—'}
           </div>
           {sessions.entries.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No sessions found.</p>
+            <p className="text-gray-500 text-center py-8">{t('crm.profile.noSessions', locale)}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 text-left text-gray-500">
-                    <th className="pb-2 font-medium">Session ID</th>
-                    <th className="pb-2 font-medium">Created</th>
-                    <th className="pb-2 font-medium">Last Active</th>
-                    <th className="pb-2 font-medium">Expires</th>
-                    <th className="pb-2 font-medium">Status</th>
-                    <th className="pb-2 font-medium">Device</th>
+                  <tr className="border-b border-gray-200 text-start text-gray-500">
+                    <th className="pb-2 font-medium">{t('crm.profile.label.sessionId', locale)}</th>
+                    <th className="pb-2 font-medium">{t('crm.profile.label.created', locale)}</th>
+                    <th className="pb-2 font-medium">{t('crm.profile.label.lastActive', locale)}</th>
+                    <th className="pb-2 font-medium">{t('crm.profile.label.expires', locale)}</th>
+                    <th className="pb-2 font-medium">{t('crm.profile.label.status', locale)}</th>
+                    <th className="pb-2 font-medium">{t('crm.profile.label.device', locale)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -376,10 +381,10 @@ export default function CrmProfileDetail() {
         <div id="panel-agent-invites" role="tabpanel" aria-labelledby="tab-agent-invites">
           <div className="border border-gray-200 rounded-lg p-6 text-center">
             <p className="text-gray-500 text-sm">
-              Agent invite management is coming in a future update (T-05.04.x).
+              {t('crm.profile.agentInvites.placeholder', locale)}
             </p>
             <p className="text-gray-400 text-xs mt-2">
-              This will show pending, accepted, and declined agent invitations for legal entity profiles.
+              {t('crm.profile.agentInvites.description', locale)}
             </p>
           </div>
         </div>
@@ -390,10 +395,10 @@ export default function CrmProfileDetail() {
         <div id="panel-verification-history" role="tabpanel" aria-labelledby="tab-verification-history">
           <div className="border border-gray-200 rounded-lg p-6 text-center">
             <p className="text-gray-500 text-sm">
-              Verification history will be available once verification state management (T-05.02.03) is implemented.
+              {t('crm.profile.verificationHistory.placeholder', locale)}
             </p>
             <p className="text-gray-400 text-xs mt-2">
-              This will show the timeline of verification state changes with actor and reason.
+              {t('crm.profile.verificationHistory.description', locale)}
             </p>
           </div>
         </div>
@@ -403,7 +408,7 @@ export default function CrmProfileDetail() {
       {activeTab === 'profiles' && (
         <div id="panel-profiles" role="tabpanel" aria-labelledby="tab-profiles">
           {siblingProfiles.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No other profiles for this user.</p>
+            <p className="text-gray-500 text-center py-8">{t('crm.profile.noOtherProfiles', locale)}</p>
           ) : (
             <div className="space-y-3">
               {siblingProfiles.map((sp) => (
@@ -427,12 +432,13 @@ export default function CrmProfileDetail() {
                     </div>
                     <p className="text-sm mt-1 text-gray-600">{sp.title ?? sp.id.substring(0, 8)}</p>
                   </div>
-                  <a
-                    href={`/admin/crm/profiles/${sp.id}`}
+                  <Link
+                    to="/admin/crm/profiles/$profileId"
+                    params={{ profileId: sp.id }}
                     className="text-blue-600 hover:underline text-sm"
                   >
-                    View
-                  </a>
+                    {t('crm.profile.label.view', locale)}
+                  </Link>
                 </div>
               ))}
             </div>
