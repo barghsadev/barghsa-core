@@ -17,6 +17,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
@@ -77,6 +78,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppAiRoute = AppAiRouteImport.update({
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
   '/charts': typeof AppChartsRoute
   '/documents': typeof AppDocumentsRoute
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
   '/charts': typeof AppChartsRoute
   '/documents': typeof AppDocumentsRoute
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/_app/ai': typeof AppAiRoute
   '/_app/charts': typeof AppChartsRoute
   '/_app/documents': typeof AppDocumentsRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/support'
+    | '/terms'
     | '/ai'
     | '/charts'
     | '/documents'
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/support'
+    | '/terms'
     | '/ai'
     | '/charts'
     | '/documents'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/support'
+    | '/terms'
     | '/_app/ai'
     | '/_app/charts'
     | '/_app/documents'
@@ -389,6 +401,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRouteWithChildren
   RegisterRoute: typeof RegisterRouteWithChildren
   SupportRoute: typeof SupportRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -447,6 +460,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/ai': {
@@ -695,6 +715,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRouteWithChildren,
   RegisterRoute: RegisterRouteWithChildren,
   SupportRoute: SupportRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
