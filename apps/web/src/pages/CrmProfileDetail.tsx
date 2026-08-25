@@ -119,6 +119,8 @@ const TABS: TabDef[] = [
   { id: 'details', label: 'Profile Details' },
   { id: 'addresses', label: 'Addresses' },
   { id: 'sessions', label: 'Sessions' },
+  { id: 'agent-invites', label: 'Agent Invites' },
+  { id: 'verification-history', label: 'Verification History' },
   { id: 'profiles', label: 'Other Profiles' },
 ]
 
@@ -366,6 +368,34 @@ export default function CrmProfileDetail() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Tab: Agent Invites */}
+      {activeTab === 'agent-invites' && (
+        <div id="panel-agent-invites" role="tabpanel" aria-labelledby="tab-agent-invites">
+          <div className="border border-gray-200 rounded-lg p-6 text-center">
+            <p className="text-gray-500 text-sm">
+              Agent invite management is coming in a future update (T-05.04.x).
+            </p>
+            <p className="text-gray-400 text-xs mt-2">
+              This will show pending, accepted, and declined agent invitations for legal entity profiles.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Tab: Verification History */}
+      {activeTab === 'verification-history' && (
+        <div id="panel-verification-history" role="tabpanel" aria-labelledby="tab-verification-history">
+          <div className="border border-gray-200 rounded-lg p-6 text-center">
+            <p className="text-gray-500 text-sm">
+              Verification history will be available once verification state management (T-05.02.03) is implemented.
+            </p>
+            <p className="text-gray-400 text-xs mt-2">
+              This will show the timeline of verification state changes with actor and reason.
+            </p>
+          </div>
         </div>
       )}
 
