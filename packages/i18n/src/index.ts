@@ -119,6 +119,12 @@ export const fa: I18nDictionary = {
   'error.internal.server': 'خطای داخلی سرور',
   'error.internal.database': 'خطای پایگاه داده',
   'error.internal.unexpected': 'خطای غیرمنتظره رخ داده است',
+
+  // ── Products ────────────────────────────────────────────
+  'product.thermal': 'برق حرارتی',
+  'product.green': 'برق سبز',
+  'product.free_market': 'برق آزاد',
+  'product.energy_saving': 'برق صرفه‌جویی',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -238,6 +244,12 @@ export const en: I18nDictionary = {
   'error.internal.server': 'Internal server error',
   'error.internal.database': 'Database error',
   'error.internal.unexpected': 'An unexpected error occurred',
+
+  // ── Products ────────────────────────────────────────────
+  'product.thermal': 'Thermal Electricity',
+  'product.green': 'Green Electricity',
+  'product.free_market': 'Free Market Electricity',
+  'product.energy_saving': 'Energy Saving Electricity',
 };
 
 /** Supported locale codes */

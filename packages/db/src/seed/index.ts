@@ -97,7 +97,40 @@ function getSystemProducts(): Array<{
   minKwh: string
   maxKwh: string
 }> {
-  return []
+  return [
+    {
+      systemType: 'thermal',
+      titleFa: 'برق حرارتی',
+      productType: 'electricity',
+      isActive: false,
+      minKwh: '0',
+      maxKwh: '0',
+    },
+    {
+      systemType: 'green',
+      titleFa: 'برق سبز',
+      productType: 'electricity',
+      isActive: false,
+      minKwh: '0',
+      maxKwh: '0',
+    },
+    {
+      systemType: 'free_market',
+      titleFa: 'برق آزاد',
+      productType: 'electricity',
+      isActive: false,
+      minKwh: '0',
+      maxKwh: '0',
+    },
+    {
+      systemType: 'energy_saving',
+      titleFa: 'برق صرفه‌جویی',
+      productType: 'electricity',
+      isActive: false,
+      minKwh: '0',
+      maxKwh: '0',
+    },
+  ]
 }
 
 // ---------------------------------------------------------------------------
