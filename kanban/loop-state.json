@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-02.02.02",
-  "current_task_id": "T-02.02.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-02-02--session-revocation",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/90",
-  "loop_iteration": 151,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 152,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -157,11 +157,12 @@
     "01-platform-infrastructure.md#T-02.04.04",
     "01-platform-infrastructure.md#T-02.04.05",
     "01-platform-infrastructure.md#T-02.04.06",
-    "02-auth-users-admin.md#T-02.02.01"
+    "02-auth-users-admin.md#T-02.02.01",
+    "02-auth-users-admin.md#T-02.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T08:50:00",
-  "notes": "Tick-151: T-02.02.02 (Session revocation) built and PR #90 opened (draft). Backend: GET/DELETE/POST sessions endpoints. Frontend: /settings/security page with session list, revoke, revoke-all + password confirmation. i18n: 22 new strings (fa/en). Checks: typecheck (11/11), build (7/7), tests (53/53).",
+  "last_updated": "2026-08-25T09:07:00",
+  "notes": "Tick-152: T-02.02.02 (Session revocation) reviewed by z-ai/glm-5.2 (approve), PR #90 merged. Backend: 3 endpoints (GET/DELETE/POST sessions). Frontend: /settings/security page with session list, confirm dialog, revoke-all + password confirmation. 9 controller tests. 132 total tests pass. Loop idle; next task: 02-auth-users-admin.md#T-02.02.03 (CSRF token).",
   "status_history": [
     {
       "from": "in_review",
@@ -227,6 +228,11 @@
       "from": "idle",
       "to": "in_review",
       "at": "tick-151"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-152"
     }
   ]
 }
