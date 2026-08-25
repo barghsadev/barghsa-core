@@ -136,7 +136,7 @@ function ElectricityOrderPage() {
         const data: Product[] = await res.json()
         setProducts(data)
         if (data.length > 0) {
-          setSelectedProductId(data[0].id)
+          setSelectedProductId(data[0]!.id)
         }
       }
     } catch {
@@ -165,7 +165,7 @@ function ElectricityOrderPage() {
         if (main) {
           setSelectedAddressId(main.id)
         } else if (data.addresses.length > 0) {
-          setSelectedAddressId(data.addresses[0].id)
+          setSelectedAddressId(data.addresses[0]!.id)
         }
       }
     } catch {
@@ -296,15 +296,15 @@ function ElectricityOrderPage() {
 
   const handleSubmitOrder = useCallback(async () => {
     if (!selectedProductId) {
-      toast.error('Please select a product', locale)
+      toast.error('Please select a product')
       return
     }
     if (!selectedAddressId || !selectedAddress) {
-      toast.error('Please select an address', locale)
+      toast.error('Please select an address')
       return
     }
     if (!activeProfileId) {
-      toast.error('No active profile', locale)
+      toast.error('No active profile')
       return
     }
 
