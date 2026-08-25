@@ -86,6 +86,17 @@ export const fa: I18nDictionary = {
   'auth.register.otpSent': 'کد تأیید برای شما ارسال شد',
   'auth.register.success': 'حساب شما با موفقیت ایجاد شد',
 
+  // ── Auth Pages — Login ────────────────────────────────────────
+  'auth.login.title': 'ورود به حساب کاربری',
+  'auth.login.submit': 'ورود',
+  'auth.login.registerLink': 'حساب کاربری ندارید؟ ثبت‌نام کنید',
+  'auth.login.registerLinkLabel': 'ثبت‌نام',
+  'auth.login.submitting': 'در حال ورود…',
+  'auth.login.error.invalidCredentials': 'نام کاربری یا رمز عبور نامعتبر است',
+  'auth.login.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
+  'auth.login.error.internal': 'خطای داخلی سرور رخ داده است. لطفاً بعداً تلاش کنید',
+  'auth.login.success': 'با موفقیت وارد شدید',
+
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'تأیید شماره موبایل / ایمیل',
   'auth.otp.sentTo': 'کد تأیید به {destination} ارسال شد',
@@ -193,6 +204,17 @@ export const en: I18nDictionary = {
   'auth.register.error.internal': 'An internal server error occurred. Please try again later',
   'auth.register.otpSent': 'Verification code has been sent',
   'auth.register.success': 'Account created successfully',
+
+  // ── Auth Pages — Login ────────────────────────────────────────
+  'auth.login.title': 'Log in',
+  'auth.login.submit': 'Log in',
+  'auth.login.registerLink': 'Don\'t have an account? Register',
+  'auth.login.registerLinkLabel': 'Register',
+  'auth.login.submitting': 'Logging in…',
+  'auth.login.error.invalidCredentials': 'Invalid username or password',
+  'auth.login.error.generic': 'An error occurred. Please try again',
+  'auth.login.error.internal': 'An internal server error occurred. Please try again later',
+  'auth.login.success': 'Logged in successfully',
 
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'Verify Mobile / Email',

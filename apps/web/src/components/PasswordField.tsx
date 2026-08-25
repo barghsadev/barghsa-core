@@ -133,6 +133,10 @@ export interface PasswordFieldProps {
   value?: string
   /** Called when value changes (required when value is provided) */
   onChange?: (value: string) => void
+  /** Show strength meter (default: true for register; false for login) */
+  showStrength?: boolean
+  /** Autocomplete attribute value */
+  autoComplete?: string
 }
 
 // ─── Component ───────────────────────────────────────────────────────────
@@ -147,6 +151,8 @@ export function PasswordField({
   name,
   value: externalValue,
   onChange: externalOnChange,
+  showStrength = true,
+  autoComplete: autoCompleteProp,
 }: PasswordFieldProps) {
   const [internalValue, setInternalValue] = useState('')
   const [visible, setVisible] = useState(false)
@@ -168,7 +174,7 @@ export function PasswordField({
   )
 
   const strength = evaluateStrength(value)
-  const showStrength = focused && value.length > 0
+  const showStrengthMeter = showStrength && focused && value.length > 0
   const meetsReq = meetsMinimumRequirements(value)
 
   const handleToggle = useCallback(() => {
@@ -194,7 +200,7 @@ export function PasswordField({
           name={name}
           type={visible ? 'text' : 'password'}
           placeholder={t('auth.register.passwordPlaceholder', locale)}
-          autoComplete="new-password"
+          autoComplete={autoCompleteProp ?? 'new-password'}
           autoFocus={autoFocus}
           disabled={disabled}
           value={value}
@@ -205,7 +211,7 @@ export function PasswordField({
           aria-describedby={
             error
               ? `${id}-error`
-              : showStrength
+              : showStrengthMeter
                 ? `${id}-strength`
                 : undefined
           }
@@ -233,7 +239,7 @@ export function PasswordField({
         </p>
       )}
 
-      {showStrength && (
+      {showStrengthMeter && (
         <div id={`${id}-strength`} className="space-y-1" aria-live="polite">
           <Progress value={strength.score}>
             <ProgressTrack>

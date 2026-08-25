@@ -15,6 +15,7 @@ import { Route as AiRouteImport } from './routes/ai'
 import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as ElectricityRouteImport } from './routes/electricity'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SavingsRouteImport } from './routes/savings'
 import { Route as VideosRouteImport } from './routes/videos'
@@ -55,6 +56,11 @@ const DocumentsRoute = DocumentsRouteImport.update({
 const ElectricityRoute = ElectricityRouteImport.update({
   id: '/electricity',
   path: '/electricity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
@@ -137,7 +144,7 @@ export interface FileRoutesByTo {
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
-  '/register': typeof RegisterIndexRoute
+  '/login': typeof LoginRoute
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
   '/electricity': typeof ElectricityIndexRoute
+  '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/login'
     | '/register'
     | '/savings'
     | '/videos'
@@ -194,7 +204,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/charts'
     | '/documents'
-    | '/register'
+    | '/login'
     | '/savings'
     | '/videos'
     | '/wallet'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/register/verify'
     | '/admin'
     | '/electricity'
+    | '/register'
   id:
     | '__root__'
     | '/'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/login'
     | '/register'
     | '/savings'
     | '/videos'
@@ -232,6 +244,7 @@ export interface RootRouteChildren {
   ChartsRoute: typeof ChartsRoute
   DocumentsRoute: typeof DocumentsRoute
   ElectricityRoute: typeof ElectricityRouteWithChildren
+  LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRouteWithChildren
   SavingsRoute: typeof SavingsRoute
   VideosRoute: typeof VideosRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/electricity'
       fullPath: '/electricity'
       preLoaderRoute: typeof ElectricityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -391,13 +411,13 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
 )
 
 interface RegisterRouteChildren {
-  RegisterIndexRoute: typeof RegisterIndexRoute
   RegisterVerifyRoute: typeof RegisterVerifyRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
 const RegisterRouteChildren: RegisterRouteChildren = {
-  RegisterIndexRoute: RegisterIndexRoute,
   RegisterVerifyRoute: RegisterVerifyRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
 }
 
 const RegisterRouteWithChildren = RegisterRoute._addFileChildren(
@@ -411,6 +431,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartsRoute: ChartsRoute,
   DocumentsRoute: DocumentsRoute,
   ElectricityRoute: ElectricityRouteWithChildren,
+  LoginRoute: LoginRoute,
   RegisterRoute: RegisterRouteWithChildren,
   SavingsRoute: SavingsRoute,
   VideosRoute: VideosRoute,
