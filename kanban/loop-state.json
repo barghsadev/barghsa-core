@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-03.03.01",
   "current_task_id": "T-03.03.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-03-03-01--profile-switcher",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/109",
   "loop_iteration": 186,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -172,8 +172,8 @@
     "02-auth-users-admin.md#T-03.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:15:00Z",
-  "notes": "Tick-186: idle → building — T-03.03.01 (Profile switcher in sidebar, M).",
+  "last_updated": "2026-08-25T13:41:00Z",
+  "notes": "Tick-186: building → in_review — PR #109 (T-03.03.01 profile switcher). Backend: switch endpoint + getAccessibleProfile + tests. Frontend: ProfileSwitcher, DashboardLayout, _app route group. api tests 19/19, web tests 16/16, typecheck clean, build ok.",
   "status_history": [
     {
       "from": "idle",
@@ -203,6 +203,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-186"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-186"
     }
   ]
