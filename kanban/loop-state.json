@@ -5,7 +5,7 @@
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 192,
+  "loop_iteration": 193,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -173,11 +173,12 @@
     "02-auth-users-admin.md#T-03.03.01",
     "02-auth-users-admin.md#T-03.03.02",
     "02-auth-users-admin.md#T-03.03.03",
-    "02-auth-users-admin.md#T-03.03.04"
+    "02-auth-users-admin.md#T-03.03.04",
+    "02-auth-users-admin.md#T-03.03.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T17:54:00Z",
-  "notes": "Tick-192: T-03.03.04 (Username/contact changes) — merged as PR #112. Reviewed by z-ai/glm-5.2 (approve, 1 fix round — OTP scoping, TOCTOU). Loop idle.",
+  "last_updated": "2026-08-25T18:21:00Z",
+  "notes": "Tick-193: T-03.03.05 (Notification channel preferences) — merged as PR #113. Reviewed by z-ai/glm-5.2 (approve, 3 minor). Loop idle.",
   "status_history": [
     {
       "from": "idle",
@@ -193,6 +194,21 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-190"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-193"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-193"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-193"
     }
   ]
 }
