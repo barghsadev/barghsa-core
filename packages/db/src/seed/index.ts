@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/node-postgres'
 import { randomBytes } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
+import { Pool } from 'pg'
 import { createDirectDbPool } from '../index'
 import { products } from '../schema/products'
 import { users } from '../schema/users'
@@ -260,10 +261,26 @@ export interface SeedRunResult {
 
 /**
  * Run all registered seeders against the database.
+ *
+ * When `dbOverride` is provided the caller manages the connection lifecycle;
+ * otherwise a new direct pool is created and closed automatically.
  */
-export async function runSeed(force: boolean = false): Promise<SeedRunResult> {
-  const pool = createDirectDbPool()
-  const db = drizzle(pool)
+export async function runSeed(
+  force: boolean = false,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dbOverride?: any,
+): Promise<SeedRunResult> {
+  let pool: Pool | null = null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let db: any
+
+  if (dbOverride) {
+    db = dbOverride
+  } else {
+    pool = createDirectDbPool()
+    db = drizzle(pool)
+  }
+
   const results: SeederResult[] = []
   const errors: string[] = []
 
@@ -281,7 +298,9 @@ export async function runSeed(force: boolean = false): Promise<SeedRunResult> {
       }
     }
   } finally {
-    await pool.end()
+    if (pool) {
+      await pool.end()
+    }
   }
 
   return {
