@@ -1,7 +1,7 @@
 import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
-import { getDbPool } from '@barghsa/db'
+import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db'
 
 /**
  * Supported activation methods for new staff users.
@@ -9,6 +9,15 @@ import { getDbPool } from '@barghsa/db'
  * - `link`: generate a time-limited activation link (24h).
  */
 export type ActivationMethod = 'tempPassword' | 'link'
+
+/**
+ * Result of updating a staff user's roles.
+ */
+export interface UpdateStaffRolesResult {
+  userId: string
+  roleIds: string[]
+  previousRoleIds: string[]
+}
 
 /**
  * Input for creating a staff user.
@@ -158,6 +167,22 @@ export class AdminService {
       )
     }
 
+    // ── 1b. Validate role IDs against predefined roles ─────────────────
+    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
+    const assignedRoleIds = input.roleIds ?? []
+    const invalidRoleIds = assignedRoleIds.filter((rid) => !validRoleIds.has(rid))
+
+    if (invalidRoleIds.length > 0) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'VALIDATION_INVALID_ROLES',
+          message: `Invalid role IDs: ${invalidRoleIds.join(', ')}`,
+        },
+        400,
+      )
+    }
+
     const userId = uuidv7()
     const now = new Date()
 
@@ -223,6 +248,15 @@ export class AdminService {
          VALUES ($1, $2, 'INDIVIDUAL', true, 'VERIFIED', $3, $4, $5, $6)`,
         [profileId, userId, input.firstName, input.lastName, now, now],
       )
+
+      // ── 4b. Assign initial roles ────────────────────────────────────
+      if (assignedRoleIds.length > 0) {
+        const insertRoleValues = assignedRoleIds.map((rid) => `($1, '${rid.replace(/'/g, "''")}', $2)`).join(', ')
+        await client.query(
+          `INSERT INTO user_roles (user_id, role_id, created_at) VALUES ${insertRoleValues}`,
+          [userId, now],
+        )
+      }
 
       // ── 5. Record audit event ──────────────────────────────────────
       const auditId = uuidv7()
@@ -304,6 +338,129 @@ export class AdminService {
           error: 'INTERNAL_SERVER',
           message: 'Failed to create staff user',
         },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Update a staff user's role assignments.
+   *
+   * Replaces the current role set with the provided role IDs (idempotent).
+   * Validates that all provided role IDs reference existing predefined roles.
+   * Records an audit event with before/after role sets, actor, and reason.
+   *
+   * @param targetUserId - The staff user whose roles are being updated
+   * @param roleIds - New role IDs to assign
+   * @param actorUserId - The admin performing the action
+   * @param ip - Source IP for audit
+   * @param reason - Optional reason for the role change
+   * @returns Previous and new role IDs
+   */
+  async updateStaffRoles(
+    targetUserId: string,
+    roleIds: string[],
+    actorUserId: string,
+    ip: string,
+    reason?: string,
+  ): Promise<{ userId: string; roleIds: string[]; previousRoleIds: string[] }> {
+    const pool = getDbPool()
+
+    // ── 1. Validate that the target user exists ──────────────────────────
+    const userResult = await pool.query(
+      `SELECT user_id, is_admin FROM users WHERE user_id = $1`,
+      [targetUserId],
+    )
+
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
+        404,
+      )
+    }
+
+    // ── 2. Validate role IDs against predefined roles ────────────────────
+    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
+    const invalidRoleIds = roleIds.filter((rid) => !validRoleIds.has(rid))
+
+    if (invalidRoleIds.length > 0) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'VALIDATION_INVALID_ROLES',
+          message: `Invalid role IDs: ${invalidRoleIds.join(', ')}`,
+        },
+        400,
+      )
+    }
+
+    const client = await pool.connect()
+    const now = new Date()
+
+    try {
+      await client.query('BEGIN')
+
+      // ── 3. Fetch current role set ─────────────────────────────────────
+      const currentRolesResult = await client.query(
+        `SELECT role_id FROM user_roles WHERE user_id = $1`,
+        [targetUserId],
+      )
+      const previousRoleIds = currentRolesResult.rows.map((r: { role_id: string }) => r.role_id)
+
+      // ── 4. Replace role set (delete all, insert new) ──────────────────
+      await client.query(`DELETE FROM user_roles WHERE user_id = $1`, [targetUserId])
+
+      if (roleIds.length > 0) {
+        const insertValues = roleIds.map((rid) => `($1, '${rid.replace(/'/g, "''")}')`).join(', ')
+        await client.query(
+          `INSERT INTO user_roles (user_id, role_id, created_at) VALUES ${insertValues}`,
+          [targetUserId],
+        )
+      }
+
+      // ── 5. Record audit event ─────────────────────────────────────────
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'role_change',
+          JSON.stringify({
+            targetUserId,
+            previousRoleIds,
+            newRoleIds: roleIds,
+            reason: reason ?? null,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Roles updated for user ${targetUserId}: [${previousRoleIds.join(',')}] → [${roleIds.join(',')}], actor=${actorUserId}`,
+      )
+
+      return {
+        userId: targetUserId,
+        roleIds,
+        previousRoleIds,
+      }
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {
+        // Non-critical
+      })
+
+      this.logger.error(`Failed to update roles for user ${targetUserId}: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff roles' },
         500,
       )
     } finally {
