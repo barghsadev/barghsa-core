@@ -94,4 +94,108 @@ export class ProfilesController {
     this.logger.log(`Profile ${profileId} set as default for user ${userId}`)
     return { message: 'Profile set as default.' }
   }
+
+  /**
+   * GET /api/profiles/verification-status
+   *
+   * Returns the verification context for the authenticated user's
+   * active (default) profile. The frontend uses this to show/hide
+   * the verification banner, auto-verify button, and block new
+   * commercial orders (T-03.01.02).
+   *
+   * Response fields:
+   * - `activeProfileId` — the user's default profile ID (null if none)
+   * - `profileStatus` — profile lifecycle status (null if no profile)
+   * - `isVerified` — whether the active profile is VERIFIED
+   * - `verificationRequired` — whether the system requires verification
+   * - `verificationMethod` — configured method ('api' | 'manual')
+   * - `canAutoVerify` — true when api method is available and profile is not verified
+   */
+  @Get('verification-status')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:verification:status', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get profile verification status for the authenticated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Verification status context.',
+    schema: {
+      type: 'object',
+      properties: {
+        activeProfileId: { type: 'string', nullable: true },
+        profileStatus: { type: 'string', nullable: true },
+        isVerified: { type: 'boolean' },
+        verificationRequired: { type: 'boolean' },
+        verificationMethod: { type: 'string', enum: ['api', 'manual'] },
+        canAutoVerify: { type: 'boolean' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async getVerificationStatus(@Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId
+    const result = await this.profilesService.getVerificationStatus(userId)
+
+    this.logger.debug(
+      `User ${userId}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`,
+    )
+
+    return result
+  }
+
+  /**
+   * POST /api/profiles/:id/verify
+   *
+   * Auto-verify a profile via the API method. Only works when the
+   * system verification method is 'api' and the profile is not yet
+   * verified. This is a stub pending E-07 verification settings
+   * integration and marks the profile as VERIFIED directly.
+   */
+  @Post(':id/verify')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:verify:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Auto-verify a profile via API method' })
+  @ApiResponse({ status: 200, description: 'Profile verified successfully.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Verification not allowed' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async verifyProfile(
+    @Param('id') profileId: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ message: string }> {
+    const userId = req.session.userId
+
+    // Verify this profile belongs to the user
+    const profile = await this.profilesService.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    // Verify the profile is not already verified
+    if (profile.status === 'VERIFIED') {
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: ErrorCodes.CONFLICT_STATE.code,
+        },
+        409,
+      )
+    }
+
+    // Verify the system method is 'api' — the service handles this check
+    try {
+      await this.profilesService.verifyProfileApi(userId, profileId)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Verification failed'
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message },
+        403,
+      )
+    }
+
+    this.logger.log(`Profile ${profileId} verified for user ${userId}`)
+    return { message: 'Profile verified successfully.' }
+  }
 }

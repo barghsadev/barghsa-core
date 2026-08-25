@@ -1,6 +1,7 @@
 import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
+import { VerificationBanner } from '../components/VerificationBanner.js'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -94,6 +95,7 @@ function RootComponent() {
 
   return (
     <>
+      <VerificationBanner />
       <Outlet />
       {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
     </>

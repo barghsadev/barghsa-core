@@ -204,6 +204,12 @@ export const ErrorCodes = {
     messageKey: 'error.authz.step_up.required',
     severity: 'debug' as ErrorSeverity,
   },
+  AUTHZ_PROFILE_NOT_VERIFIED: {
+    code: 'AUTHZ:PROFILE_NOT_VERIFIED',
+    httpStatus: 403,
+    messageKey: 'error.authz.profile.not_verified',
+    severity: 'info' as ErrorSeverity,
+  },
 
   // ── Rate Limit ──────────────────────────────────────────
   RATE_LIMIT_EXCEEDED: {
