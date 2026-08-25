@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 150,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-02.02.02",
+  "current_task_id": "T-02.02.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-02-02-02--session-revocation",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/90",
+  "loop_iteration": 151,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -160,20 +160,73 @@
     "02-auth-users-admin.md#T-02.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T08:33:00",
-  "notes": "Tick-150: Fixed CI typecheck errors (refreshToken in LoginVerifyResponse, DeviceInfo undefined handling, row typo). CI passed. PR #89 merged. T-02.02.01 complete. Loop idle; next task: 02-auth-users-admin.md#T-02.02.02 (Session revocation).",
+  "last_updated": "2026-08-25T08:50:00",
+  "notes": "Tick-151: T-02.02.02 (Session revocation) built and PR #90 opened (draft). Backend: GET/DELETE/POST sessions endpoints. Frontend: /settings/security page with session list, revoke, revoke-all + password confirmation. i18n: 22 new strings (fa/en). Checks: typecheck (11/11), build (7/7), tests (53/53).",
   "status_history": [
-    { "from": "in_review", "to": "idle", "at": "tick-144" },
-    { "from": "building", "to": "in_review", "at": "tick-144" },
-    { "from": "idle", "to": "building", "at": "tick-144" },
-    { "from": "idle", "to": "building", "at": "tick-145" },
-    { "from": "in_review", "to": "fixing", "at": "tick-145" },
-    { "from": "fixing", "to": "in_review", "at": "tick-145" },
-    { "from": "building", "to": "idle", "at": "tick-145" },
-    { "from": "idle", "to": "building", "at": "tick-147" },
-    { "from": "building", "to": "in_review", "at": "tick-147" },
-    { "from": "in_review", "to": "fixing", "at": "tick-148" },
-    { "from": "fixing", "to": "in_review", "at": "tick-148" },
-    { "from": "in_review", "to": "idle", "at": "tick-150" }
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-144"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-144"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-144"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-145"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-145"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-145"
+    },
+    {
+      "from": "building",
+      "to": "idle",
+      "at": "tick-145"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-147"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-147"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-148"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-148"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-150"
+    },
+    {
+      "from": "idle",
+      "to": "in_review",
+      "at": "tick-151"
+    }
   ]
 }
