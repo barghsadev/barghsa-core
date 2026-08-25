@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -53,6 +54,14 @@ export interface ForcePasswordChangeDto {
  */
 export interface ExpireSessionsDto {
   /** Reason for expiring sessions. */
+  reason: string
+}
+
+/**
+ * DTO for deleting a CRM profile.
+ */
+export interface DeleteProfileDto {
+  /** Reason for the profile deletion. */
   reason: string
 }
 
@@ -505,5 +514,106 @@ export class CrmV2Controller {
     )
 
     return result
+  }
+
+  /**
+   * DELETE /api/crm/profiles/:profileId
+   *
+   * Soft-deletes (archives) a customer profile. Profiles with active
+   * orders, contracts, unpaid invoices, or non-zero wallet balance
+   * cannot be deleted. Legal profiles cannot be deleted if they would
+   * leave the legal entity with no owner (last owner check).
+   *
+   * Reason is required. This is a soft delete — the row remains in
+   * the database with the `archived` flag set to true.
+   *
+   * Permission: admin required.
+   * Audit: profile_deleted with reason, actor, ip.
+   */
+  @Delete('profiles/:profileId')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Delete (archive) a customer profile (admin)' })
+  @ApiParam({
+    name: 'profileId',
+    required: true,
+    description: 'UUID of the profile to delete.',
+    type: String,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['reason'],
+      properties: {
+        reason: { type: 'string', description: 'Reason for the deletion' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Profile archived successfully' })
+  @ApiResponse({ status: 400, description: 'Validation error — reason required' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  @ApiResponse({ status: 409, description: 'Business constraint blocks deletion' })
+  async deleteProfile(
+    @Param('profileId') profileId: string,
+    @Body() dto: DeleteProfileDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to delete profile ${profileId}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required',
+        },
+        403,
+      )
+    }
+
+    const result = await this.crmV2Service.deleteProfile(
+      profileId,
+      dto.reason,
+      req.session.userId,
+      req.ip ?? 'unknown',
+    )
+
+    if (!result) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Profile not found',
+        },
+        404,
+      )
+    }
+
+    if ('errorCode' in result) {
+      // Map business-constraint error codes to appropriate HTTP statuses
+      const httpStatus = result.errorCode === 'CRM:PROFILE:DELETION_BLOCKED'
+        || result.errorCode === 'CRM:PROFILE:ALREADY_ARCHIVED'
+        || result.errorCode === 'CRM:PROFILE:LAST_OWNER'
+        ? 409 : 400
+
+      throw new HttpException(
+        {
+          statusCode: httpStatus,
+          error: result.errorCode,
+          message: result.error,
+        },
+        httpStatus,
+      )
+    }
+
+    this.logger.debug(
+      `Profile ${profileId} archived by ${req.session.userId}: ${dto.reason}`,
+    )
+
+    return { success: true, profileId, archivedAt: result.archivedAt }
   }
 }

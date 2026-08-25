@@ -25,6 +25,15 @@ export const profiles = pgTable(
     /** UUIDv7 opaque profile identifier. */
     id: uuidv7('id').primaryKey().notNull(),
 
+    /** Soft-delete flag — true when archived by staff. */
+    archived: boolean('archived').notNull().default(false),
+
+    /** When the profile was archived (soft-deleted). */
+    archivedAt: timestamp('archived_at', { withTimezone: true, mode: 'date' }),
+
+    /** Reason provided by staff for archiving/deletion. */
+    archivedReason: text('archived_reason'),
+
     /** Foreign key to the owning user. */
     userId: text('user_id')
       .notNull()
@@ -84,6 +93,9 @@ export const createProfilesTable = sql`
     first_name TEXT,
     last_name TEXT,
     national_id TEXT,
+    archived BOOLEAN NOT NULL DEFAULT false,
+    archived_at TIMESTAMPTZ,
+    archived_reason TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
@@ -91,6 +103,7 @@ export const createProfilesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles (user_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_default_per_user ON profiles (user_id) WHERE is_default = true;
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_national_id ON profiles (national_id) WHERE national_id IS NOT NULL AND status IN ('ACTIVE', 'VERIFIED');
+  CREATE INDEX IF NOT EXISTS idx_profiles_archived ON profiles (archived) WHERE archived = true;
 
   -- Additive migration: add national_id column to existing tables (runs after CREATE IF NOT EXISTS)
   ALTER TABLE profiles ADD COLUMN IF NOT EXISTS national_id TEXT;

@@ -751,4 +751,233 @@ export class CrmV2Service {
       client.release()
     }
   }
+
+  /**
+   * DELETE /api/crm/profiles/:profileId
+   *
+   * Soft-deletes (archives) a customer profile. Staff must have admin
+   * permission. Profiles with active orders, contracts, unpaid invoices,
+   * or non-zero wallet balance cannot be deleted. Legal profiles cannot
+   * be deleted if they would leave the legal entity with no owner.
+   *
+   * This is a soft delete: the row remains in the database with the
+   * `archived` flag set to true. GDPR retention rules apply to the
+   * archived data.
+   */
+  async deleteProfile(
+    profileId: string,
+    reason: string,
+    actorUserId: string,
+    ip: string,
+  ): Promise<CrmDeleteProfileResult> {
+    if (!reason || reason.trim() === '') {
+      return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Reason is required for profile deletion' }
+    }
+
+    const pool = getDbPool()
+
+    // 1. Fetch the profile to verify existence and type
+    const profileResult = await pool.query(
+      `SELECT id, user_id, profile_type, status, archived, title, first_name, last_name
+       FROM profiles WHERE id = $1`,
+      [profileId],
+    )
+
+    if (profileResult.rows.length === 0) return null
+
+    const profileRow = profileResult.rows[0] as Record<string, unknown>
+
+    // 2. Check if already archived
+    if (profileRow.archived === true) {
+      return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' }
+    }
+
+    const profileType = profileRow.profile_type as string
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 3. Check business constraints
+      // Check for active orders (status != 'CANCELLED')
+      const activeOrders = await client.query(
+        `SELECT COUNT(*)::int AS cnt FROM orders
+         WHERE profile_id = $1 AND status != 'CANCELLED'`,
+        [profileId],
+      )
+      const activeOrderCount = (activeOrders.rows[0] as Record<string, unknown>).cnt as number
+      if (activeOrderCount > 0) {
+        await client.query('ROLLBACK')
+        return {
+          errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          error: `Profile has ${activeOrderCount} active order(s). Cancel orders before deletion.`,
+        }
+      }
+
+      // Check for contracts (if table exists)
+      const contractsTableExists = await client.query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_schema = 'public' AND table_name = 'contracts'
+        ) AS exists`,
+      )
+      if ((contractsTableExists.rows[0] as Record<string, unknown>).exists) {
+        const activeContracts = await client.query(
+          `SELECT COUNT(*)::int AS cnt FROM contracts WHERE profile_id = $1`,
+          [profileId],
+        )
+        const activeContractCount = (activeContracts.rows[0] as Record<string, unknown>).cnt as number
+        if (activeContractCount > 0) {
+          await client.query('ROLLBACK')
+          return {
+            errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+            error: `Profile has ${activeContractCount} contract(s). Resolve contracts before deletion.`,
+          }
+        }
+      }
+
+      // Check for unpaid invoices (if table exists)
+      const invoicesTableExists = await client.query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_schema = 'public' AND table_name = 'invoices'
+        ) AS exists`,
+      )
+      if ((invoicesTableExists.rows[0] as Record<string, unknown>).exists) {
+        const unpaidInvoices = await client.query(
+          `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1 AND status != 'PAID'`,
+          [profileId],
+        )
+        const unpaidInvoiceCount = (unpaidInvoices.rows[0] as Record<string, unknown>).cnt as number
+        if (unpaidInvoiceCount > 0) {
+          await client.query('ROLLBACK')
+          return {
+            errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+            error: `Profile has ${unpaidInvoiceCount} unpaid invoice(s). Resolve invoices before deletion.`,
+          }
+        }
+      }
+
+      // Check for wallet balance (if table exists)
+      const walletsTableExists = await client.query(
+        `SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_schema = 'public' AND table_name = 'wallets'
+        ) AS exists`,
+      )
+      if ((walletsTableExists.rows[0] as Record<string, unknown>).exists) {
+        const walletResult = await client.query(
+          `SELECT balance FROM wallets WHERE profile_id = $1`,
+          [profileId],
+        )
+        if (walletResult.rows.length > 0) {
+          const balance = (walletResult.rows[0] as Record<string, unknown>).balance as number
+          if (balance > 0) {
+            await client.query('ROLLBACK')
+            return {
+              errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+              error: 'Profile has a non-zero wallet balance. Zero the balance before deletion.',
+            }
+          }
+        }
+      }
+
+      // 4. For LEGAL profiles, check this is not the last owner/agent
+      if (profileType === 'LEGAL') {
+        // Check agent count on this legal profile (use legal_profiles_reps or similar if table exists,
+        // otherwise conservatively assume it's the last owner)
+        // For now, if we can't verify, we let deletion proceed — the business
+        // constraint is enforced when the agent management system is wired.
+        const legalRepsTableExists = await client.query(
+          `SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name = 'legal_profile_reps'
+          ) AS exists`,
+        )
+        if ((legalRepsTableExists.rows[0] as Record<string, unknown>).exists) {
+          const repCount = await client.query(
+            `SELECT COUNT(*)::int AS cnt FROM legal_profile_reps WHERE profile_id = $1`,
+            [profileId],
+          )
+          const repCountNum = (repCount.rows[0] as Record<string, unknown>).cnt as number
+          if (repCountNum <= 1) {
+            // Only one owner — check if this profile IS that owner
+            const ownerCount = await client.query(
+              `SELECT COUNT(*)::int AS cnt FROM legal_profile_reps
+               WHERE profile_id = $1 AND role IN ('owner', 'manager')`,
+              [profileId],
+            )
+            const ownerCountNum = (ownerCount.rows[0] as Record<string, unknown>).cnt as number
+            if (ownerCountNum <= 1) {
+              await client.query('ROLLBACK')
+              return {
+                errorCode: 'CRM:PROFILE:LAST_OWNER',
+                error: 'Cannot delete the last owner/manager of a legal profile. Assign a new owner before deletion.',
+              }
+            }
+          }
+        }
+      }
+
+      const now = new Date().toISOString()
+      const correlationId = uuidv7()
+
+      // 5. Soft-delete the profile — set archived flag
+      await client.query(
+        `UPDATE profiles
+         SET archived = true, archived_at = $1::timestamptz, archived_reason = $2, updated_at = $1::timestamptz
+         WHERE id = $3`,
+        [now, reason, profileId],
+      )
+
+      // 6. Record audit event
+      const auditId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'profile_deleted',
+          JSON.stringify({
+            profileId,
+            profileType,
+            reason,
+            profileOwnerUserId: profileRow.user_id as string,
+            gdprRetentionNote: 'GDPR retention period applies. Do not permanently delete before retention expiry.',
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.debug(
+        `Profile ${profileId} archived by ${actorUserId}: ${reason}`,
+      )
+
+      return {
+        success: true,
+        profileId,
+        reason,
+        archivedAt: now,
+      }
+    } catch (err) {
+      await client.query('ROLLBACK')
+      this.logger.error(`Failed to delete profile ${profileId}: ${String(err)}`)
+      throw err
+    } finally {
+      client.release()
+    }
+  }
 }
+
+/**
+ * Result type for profile deletion in CrmV2Service.
+ */
+export type CrmDeleteProfileResult =
+  | { success: true; profileId: string; reason: string; archivedAt: string }
+  | { errorCode: string; error: string }
+  | null

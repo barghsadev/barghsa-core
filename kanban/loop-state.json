@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-05.02.06",
+  "current_task_id": "T-05.02.06",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-02-06--profile-deletion",
   "current_pr_url": null,
-  "loop_iteration": 221,
+  "loop_iteration": 222,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -190,13 +190,13 @@
     "02-auth-users-admin.md#T-05.02.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:07:17Z",
-  "notes": "Tick-221: PR #127 (T-05.02.05) merged. Review by z-ai/glm-5.2 (approve, 3 minor). 75/75 tests, CI SUCCESS, typecheck clean. State: idle.",
+  "last_updated": "2026-08-26T01:15:30Z",
+  "notes": "Tick-222: Building T-05.02.06 (profile deletion by staff). Migration, error codes, controller, service, tests done. Committing and opening PR.",
   "status_history": [
     {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-221"
+      "from": "idle",
+      "to": "building",
+      "at": "tick-222"
     }
   ]
 }
