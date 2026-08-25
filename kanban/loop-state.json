@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "01-platform-infrastructure.md#T-03.01.02",
   "current_task_id": "T-03.01.02",
   "current_task_file": "01-platform-infrastructure.md",
   "current_branch": "feat/e03-t-03-01-02--dockerfile-base",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/95",
   "loop_iteration": 159,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -152,8 +152,8 @@
     "01-platform-infrastructure.md#T-03.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T10:53:00",
-  "notes": "Tick-159: T-03.01.02 (shared Dockerfile.base) building. Created Dockerfile.base and API healthcheck. Next: run checks, push, open PR.",
+  "last_updated": "2026-08-25T10:58:00",
+  "notes": "Tick-159: T-03.01.02 (shared Dockerfile.base) built and PR #95 ready for review. Checks: build pass, typecheck 11/11, test 174/174. Next: invoke z-ai/glm-5.2 reviewer.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
@@ -177,6 +177,7 @@
     { "from": "building", "to": "in_review", "at": "tick-153" },
     { "from": "in_review", "to": "idle", "at": "tick-153" },
     { "from": "in_review", "to": "idle", "at": "tick-157" },
-    { "from": "in_review", "to": "idle", "at": "tick-159" }
+    { "from": "in_review", "to": "idle", "at": "tick-159" },
+    { "from": "building", "to": "in_review", "at": "tick-159" }
   ]
 }
