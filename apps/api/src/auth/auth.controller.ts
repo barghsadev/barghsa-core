@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Logger,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common'
+import { randomBytes, createHash } from 'node:crypto'
+import { Controller, Post, HttpCode, HttpStatus, HttpException, Logger, Body, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
 import { z } from 'zod'
@@ -19,8 +10,15 @@ import { RegisterSchema } from './dto/register.dto.js'
 import type { RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js'
-import { LoginSchema } from './dto/login.dto.js'
 import type { LoginResponse } from './dto/login.dto.js'
+import { LoginSchema } from './dto/login.dto.js'
+import type { LoginVerifyResponse } from './dto/login.dto.js'
+import {
+  LoginVerifySchema,
+  LoginResendSchema,
+  type LoginVerifyInput,
+  type LoginResendInput,
+} from './dto/login.dto.js'
 import { OtpService } from './otp.service.js'
 
 /**
@@ -179,6 +177,106 @@ export class AuthController {
     }
 
     return result
+  }
+
+  /**
+   * POST /api/auth/login/verify
+   *
+   * Verifies the OTP for a login step-up challenge, creates a session,
+   * and optionally marks the device as trusted.
+   *
+   * Rate limits:
+   * - 5 verification attempts per IP per 60s
+   */
+  @Post('login/verify')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Verify OTP for login step-up' })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP verified. Session established.',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid, expired, or max attempts exceeded' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async verifyLoginOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginVerifyResponse> {
+    const parsed = LoginVerifySchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const userAgent = req.headers['user-agent'] ?? ''
+    const deviceFingerprint = parsed.data.trustDevice
+      ? createHash('sha256').update(userAgent).digest('hex')
+      : undefined
+
+    // Perform login OTP verification → session creation
+    const result = await this.authService.completeLogin(
+      parsed.data.challengeId,
+      parsed.data.otp,
+      ip,
+      parsed.data.trustDevice,
+      deviceFingerprint,
+      userAgent,
+    )
+
+    // ── Set HttpOnly session cookie ─────────────────────────────────
+    const isSecure = process.env.NODE_ENV === 'production'
+    const sessionMaxAge = new Date(result.expiresAt).getTime() - Date.now()
+
+    res.cookie(SESSION_COOKIE_NAME, result.sessionId, {
+      httpOnly: true,
+      secure: isSecure,
+      sameSite: SESSION_COOKIE_SAMESITE,
+      path: SESSION_COOKIE_PATH,
+      maxAge: Math.max(0, sessionMaxAge),
+    })
+
+    this.logger.log(`Session established for user ${result.userId} via login OTP`)
+
+    return result
+  }
+
+  /**
+   * POST /api/auth/login/resend
+   *
+   * Resends an OTP for a pending login challenge.
+   *
+   * Rate limits:
+   * - 3 resend attempts per IP per 120s
+   */
+  @Post('login/resend')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000 })
+  @ApiOperation({ summary: 'Resend OTP for login' })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP resent. Returns the same challengeId.',
+  })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async resendLoginOtp(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<{ challengeId: string }> {
+    const parsed = LoginResendSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.otpService.resendChallenge(parsed.data.challengeId, ip)
   }
 
   /**

@@ -1,53 +1,51 @@
 /**
- * Client-side CSRF token management (T-01.02.03 / T-02.02.03).
+ * CSRF token management for the frontend.
  *
- * Stores the CSRF token in memory (not localStorage) to prevent XSS-based
- * exfiltration. The token is bound to the server-side session and rotated
- * on auth events.
- *
- * All state-changing API calls should read this token and include it
- * in the X-CSRF-Token header.
+ * Stores the token in a cookie (set by the server on auth events) and
+ * provides a helper to attach it to state-changing requests.
  */
 
-let currentCsrfToken: string | null = null
+const CSRF_COOKIE_NAME = 'barghsa_csrf'
+const CSRF_HEADER_NAME = 'X-CSRF-Token'
 
 /**
- * Set the CSRF token after successful authentication.
+ * Read the CSRF token from the cookie set by the server.
  */
-export function setCsrfToken(token: string): void {
-  currentCsrfToken = token
-}
-
-/**
- * Clear the CSRF token (e.g. on logout, session expiry).
- */
-export function clearCsrfToken(): void {
-  currentCsrfToken = null
-}
-
-/**
- * Get the current CSRF token, if any.
- */
-export function getCsrfToken(): string | null {
-  return currentCsrfToken
-}
-
-/**
- * Fetch wrapper that automatically adds the CSRF token header
- * for state-changing methods.
- */
-export async function apiFetch(
-  url: string,
-  options: RequestInit = {},
-): Promise<Response> {
-  const method = (options.method ?? 'GET').toUpperCase()
-  const isStateChanging = !['GET', 'HEAD', 'OPTIONS'].includes(method)
-
-  const headers = new Headers(options.headers)
-
-  if (isStateChanging && currentCsrfToken) {
-    headers.set('X-CSRF-Token', currentCsrfToken)
+function getCsrfFromCookie(): string | null {
+  const cookies = document.cookie.split('; ')
+  for (const cookie of cookies) {
+    const [name, ...rest] = cookie.split('=')
+    if (name === CSRF_COOKIE_NAME) {
+      return decodeURIComponent(rest.join('='))
+    }
   }
+  return null
+}
 
-  return fetch(url, { ...options, headers })
+/**
+ * Store the CSRF token received from the server during auth.
+ * The server also sets it as an HttpOnly cookie, but this in-memory
+ * value serves as a fast path for the frontend.
+ */
+let csrfToken: string | null = null
+
+export function setCsrfToken(token: string): void {
+  csrfToken = token
+}
+
+export function getCsrfToken(): string | null {
+  return csrfToken ?? getCsrfFromCookie()
+}
+
+/**
+ * Attach the CSRF token as a header to a fetch request.
+ * Returns a new Headers object with the token added.
+ */
+export function withCsrf(headers?: HeadersInit): Headers {
+  const h = new Headers(headers)
+  const token = getCsrfToken()
+  if (token) {
+    h.set(CSRF_HEADER_NAME, token)
+  }
+  return h
 }

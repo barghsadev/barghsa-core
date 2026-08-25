@@ -62,6 +62,8 @@ export interface LoginResponse {
   requiresOtp: boolean
   /** Opaque challenge ID for OTP step, present when requiresOtp is true. */
   challengeId?: string
+  /** Whether the user is a staff/admin who always requires MFA. */
+  userIsStaff?: boolean
   /** UUID of the authenticated user. */
   userId?: string
   /** Opaque session identifier (stored in HttpOnly cookie). */
@@ -71,3 +73,41 @@ export interface LoginResponse {
   /** ISO 8601 timestamp of session expiry. */
   expiresAt?: string
 }
+
+/**
+ * Zod schema for login OTP verification request body.
+ */
+export const LoginVerifySchema = z.object({
+  challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
+  otp: z
+    .string()
+    .length(6, { message: 'VALIDATION:INPUT:INVALID' })
+    .regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
+  trustDevice: z.boolean().optional().default(false),
+})
+
+export type LoginVerifyInput = z.infer<typeof LoginVerifySchema>
+
+/**
+ * Successful login OTP verification response.
+ * Includes session credentials.
+ */
+export interface LoginVerifyResponse {
+  /** The authenticated user's UUID. */
+  userId: string
+  /** Opaque session identifier (stored in HttpOnly cookie). */
+  sessionId: string
+  /** CSRF token bound to the session for state-changing requests. */
+  csrfToken: string
+  /** ISO 8601 timestamp of when the session expires. */
+  expiresAt: string
+}
+
+/**
+ * Login OTP resend request body.
+ */
+export const LoginResendSchema = z.object({
+  challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
+})
+
+export type LoginResendInput = z.infer<typeof LoginResendSchema>

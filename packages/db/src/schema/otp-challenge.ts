@@ -24,6 +24,8 @@ import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
  *   Default 5 minutes from creation.
  * - `consumed_at` — set when the OTP is successfully verified (single-use).
  *   Any further verify call with this challengeId returns failure.
+ * - `user_id` — optional FK to users.user_id, set for login OTP challenges
+ *   to link the challenge to an already-authenticated user (T-02.01.03).
  * - `created_at` / `updated_at` — base audit columns.
  */
 export const otpChallenges = pgTable(
@@ -43,6 +45,9 @@ export const otpChallenges = pgTable(
 
     /** Number of resends triggered for this challenge. */
     resendCount: integer('resend_count').notNull().default(0),
+
+    /** FK to users.user_id, set for login OTP challenges (T-02.01.03). */
+    userId: text('user_id'),
 
     /** Argon2id password hash, stored during register, consumed on OTP verify. */
     passwordHash: text('password_hash'),
@@ -101,6 +106,16 @@ export const createOtpChallengesTable = sql`
       WHERE table_name = 'otp_challenges' AND column_name = 'tos_version_id'
     ) THEN
       ALTER TABLE otp_challenges ADD COLUMN tos_version_id TEXT;
+    END IF;
+  END $$;
+
+  -- Migration: add user_id column for login OTP challenges (T-02.01.03)
+  DO $$ BEGIN
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'otp_challenges' AND column_name = 'user_id'
+    ) THEN
+      ALTER TABLE otp_challenges ADD COLUMN user_id TEXT REFERENCES users(user_id);
     END IF;
   END $$;
 `

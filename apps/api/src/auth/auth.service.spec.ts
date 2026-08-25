@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { RegisterSchema } from './dto/register.dto.js';
-import { LoginSchema } from './dto/login.dto.js';
+import { LoginSchema, LoginVerifySchema, LoginResendSchema } from './dto/login.dto.js';
 
 describe('RegisterSchema', () => {
   describe('username validation', () => {
@@ -208,5 +208,71 @@ describe('LoginSchema', () => {
       });
       expect(result.success).toBe(true);
     });
+  });
+});
+
+// ── Login Verify Schema ──────────────────────────────────────────────────
+
+describe('LoginVerifySchema', () => {
+  it('accepts valid login verify input', () => {
+    const result = LoginVerifySchema.safeParse({
+      challengeId: '00000000-0000-0000-0000-000000000000',
+      otp: '123456',
+      trustDevice: true,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts login verify without trustDevice (default false)', () => {
+    const result = LoginVerifySchema.safeParse({
+      challengeId: '00000000-0000-0000-0000-000000000000',
+      otp: '123456',
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.trustDevice).toBe(false);
+    }
+  });
+
+  it('rejects non-numeric OTP', () => {
+    const result = LoginVerifySchema.safeParse({
+      challengeId: '00000000-0000-0000-0000-000000000000',
+      otp: 'abcdef',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects OTP not of length 6', () => {
+    const result = LoginVerifySchema.safeParse({
+      challengeId: '00000000-0000-0000-0000-000000000000',
+      otp: '12345',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects non-UUID challengeId', () => {
+    const result = LoginVerifySchema.safeParse({
+      challengeId: 'not-a-uuid',
+      otp: '123456',
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+// ── Login Resend Schema ──────────────────────────────────────────────────
+
+describe('LoginResendSchema', () => {
+  it('accepts valid resend input', () => {
+    const result = LoginResendSchema.safeParse({
+      challengeId: '00000000-0000-0000-0000-000000000000',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects non-UUID challengeId', () => {
+    const result = LoginResendSchema.safeParse({
+      challengeId: 'not-a-uuid',
+    });
+    expect(result.success).toBe(false);
   });
 });
