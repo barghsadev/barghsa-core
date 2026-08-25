@@ -14,6 +14,7 @@ import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-pass
 import { OtpService } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
+import { TosService } from '../tos/tos.service.js'
 
 /**
  * Service handling registration and login business logic.
@@ -38,6 +39,7 @@ export class AuthService {
     private readonly otpService: OtpService,
     private readonly sessionService: SessionService,
     private readonly rateLimitService: RateLimitService,
+    private readonly tosService: TosService,
   ) {}
 
   /**
@@ -1118,7 +1120,7 @@ export class AuthService {
    */
   async getUser(
     userId: string,
-  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null }> {
+  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null; requiresTosAcceptance: boolean }> {
     const pool = getDbPool()
 
     const result = await pool.query(
@@ -1134,11 +1136,16 @@ export class AuthService {
     }
 
     const row = result.rows[0]
+
+    // Check TOS re-acceptance status (T-04.01.03)
+    const requiresTosAcceptance = await this.tosService.requiresReAcceptance(userId)
+
     return {
       userId: row.user_id,
       username: row.username,
       email: row.email ?? null,
       mobile: row.mobile ?? null,
+      requiresTosAcceptance,
     }
   }
 

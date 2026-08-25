@@ -583,6 +583,15 @@ export const fa: I18nDictionary = {
   'tos.page.loading': 'در حال بارگذاری قوانین...',
   'tos.page.error': 'متأسفانه در بارگذاری قوانین استفاده خطایی رخ داد',
   'tos.page.backToHome': 'بازگشت به صفحه اصلی',
+
+  // ── TOS Re-acceptance (T-04.01.03) ──────────────────────
+  'tos.banner.text': 'قوانین استفاده به‌روزرسانی شده‌اند.',
+  'tos.banner.review': 'مشاهده',
+  'tos.modal.title': 'قوانین استفاده',
+  'tos.modal.accept': 'می‌پذیرم',
+  'tos.modal.accepting': 'در حال ثبت...',
+  'tos.modal.success': 'قوانین استفاده با موفقیت پذیرفته شد.',
+  'tos.modal.error': 'خطا در پذیرش قوانین. لطفاً دوباره تلاش کنید.',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1159,6 +1168,15 @@ export const en: I18nDictionary = {
   'tos.page.loading': 'Loading terms of service...',
   'tos.page.error': 'An error occurred while loading the terms of service',
   'tos.page.backToHome': 'Back to home',
+
+  // ── TOS Re-acceptance (T-04.01.03) ──────────────────────
+  'tos.banner.text': 'Terms of Service have been updated.',
+  'tos.banner.review': 'Review',
+  'tos.modal.title': 'Terms of Service',
+  'tos.modal.accept': 'I Accept',
+  'tos.modal.accepting': 'Accepting...',
+  'tos.modal.success': 'Terms of Service accepted successfully.',
+  'tos.modal.error': 'Failed to accept Terms of Service. Please try again.',
 };
 
 /** Supported locale codes */
