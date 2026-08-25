@@ -59,6 +59,12 @@ export const users = pgTable(
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 
+    /** Time-limited activation token for staff user 'link' activation method (T-05.03.01). */
+    activationToken: text('activation_token'),
+
+    /** Expiry of the activation token (24h from creation, T-05.03.01). */
+    activationTokenExpiresAt: timestamp('activation_token_expires_at', { withTimezone: true, mode: 'date' }),
+
     /** Version ID of the TOS the user last accepted (T-04.01.03). */
     lastAcceptedTosVersion: text('last_accepted_tos_version'),
 
@@ -119,6 +125,18 @@ export const createUsersTable = sql`
       WHERE table_name = 'users' AND column_name = 'timezone'
     ) THEN
       ALTER TABLE users ADD COLUMN timezone TEXT NOT NULL DEFAULT 'Asia/Tehran';
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'activation_token'
+    ) THEN
+      ALTER TABLE users ADD COLUMN activation_token TEXT;
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'activation_token_expires_at'
+    ) THEN
+      ALTER TABLE users ADD COLUMN activation_token_expires_at TIMESTAMPTZ;
     END IF;
   END $$;
 `

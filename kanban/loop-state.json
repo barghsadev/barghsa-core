@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-05.03.01",
+  "current_task_id": "T-05.03.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-03-01--create-staff-user",
   "current_pr_url": null,
-  "loop_iteration": 223,
+  "loop_iteration": 224,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -191,13 +191,18 @@
     "02-auth-users-admin.md#T-05.02.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:16:50Z",
-  "notes": "Tick-223: PR #128 (T-05.02.06) merged. Profile deletion by staff (soft-delete) implemented. 7 files, 485 additions. 343/343 tests, tsc clean. State: idle.",
+  "last_updated": "2026-08-26T01:30:00Z",
+  "notes": "Tick-224: Building T-05.03.01 — Create staff user. Admin module with POST /api/admin/users/create-staff.",
   "status_history": [
     {
       "from": "in_review",
       "to": "idle",
       "at": "tick-223"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-224"
     }
   ]
 }
