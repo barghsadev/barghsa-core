@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-05-04-02--agent-invitation-flow",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/132",
   "loop_iteration": 232,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -195,7 +195,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-26T02:13:00Z",
-  "notes": "Tick-232: T-05.04.02 built, PR #132 opened. POST /api/profiles/:profileId/invitations, registration auto-link, rate limiting. 372/372 tests, tsc clean. State: in_review.",
+  "notes": "Tick-232: Fix round 1 for T-05.04.02 (PR #132). Fixed duplicate-check gap (unregistered users) and registration hook normalization. 372/372 tests, tsc clean. Next: re-review.",
   "status_history": [
     {
       "from": "idle",
@@ -204,6 +204,16 @@
     },
     {
       "from": "building",
+      "to": "in_review",
+      "at": "tick-232"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-232"
+    },
+    {
+      "from": "fixing",
       "to": "in_review",
       "at": "tick-232"
     },
