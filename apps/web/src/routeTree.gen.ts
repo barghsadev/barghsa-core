@@ -28,6 +28,7 @@ import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
 import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
+import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
@@ -128,6 +129,11 @@ const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
   path: '/order',
   getParentRoute: () => ElectricityRoute,
 } as any)
+const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
+  id: '/complete',
+  path: '/complete',
+  getParentRoute: () => OnboardingRoute,
+} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin': typeof AdminIndexRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
+  '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
+    | '/onboarding/complete'
     | '/register/verify'
     | '/settings/security'
     | '/admin/'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
+    | '/onboarding/complete'
     | '/register/verify'
     | '/settings/security'
     | '/admin'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/electricity/order'
+    | '/onboarding/complete'
     | '/register/verify'
     | '/settings/security'
     | '/admin/'
@@ -451,6 +463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ElectricityOrderRouteImport
       parentRoute: typeof ElectricityRoute
     }
+    '/onboarding/complete': {
+      id: '/onboarding/complete'
+      path: '/complete'
+      fullPath: '/onboarding/complete'
+      preLoaderRoute: typeof OnboardingCompleteRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
     '/register/': {
       id: '/register/'
       path: '/'
@@ -511,10 +530,12 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
 )
 
 interface OnboardingRouteChildren {
+  OnboardingCompleteRoute: typeof OnboardingCompleteRoute
   OnboardingIndividualProfileIdRoute: typeof OnboardingIndividualProfileIdRoute
 }
 
 const OnboardingRouteChildren: OnboardingRouteChildren = {
+  OnboardingCompleteRoute: OnboardingCompleteRoute,
   OnboardingIndividualProfileIdRoute: OnboardingIndividualProfileIdRoute,
 }
 

@@ -309,4 +309,94 @@ describe('ProfilesService', () => {
       expect(updateCall![0]).toContain("UPDATE profiles SET status = 'VERIFIED'")
     })
   })
+
+  describe('completeOnboarding', () => {
+    const draftRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: false,
+      status: 'DRAFT',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+    const activeRow = { ...draftRow, status: 'ACTIVE' }
+
+    it('transitions DRAFT to ACTIVE when verification is not required', async () => {
+      vi.mocked(configCache.get).mockResolvedValue(false)
+      // getProfileById: returns draft profile
+      mockPool.query.mockResolvedValueOnce({ rows: [draftRow] })
+      // connect() for transaction
+      mockPool.connect.mockResolvedValue(mockClient)
+      // BEGIN
+      mockClient.query.mockResolvedValueOnce({})
+      // Check existing default profiles
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // UPDATE status to ACTIVE
+      mockClient.query.mockResolvedValueOnce({ rowCount: 1 })
+      // COMMIT
+      mockClient.query.mockResolvedValueOnce({})
+      // getProfileById (re-fetch)
+      mockPool.query.mockResolvedValueOnce({ rows: [activeRow] })
+
+      const result = await service.completeOnboarding('user-1', 'prof-1')
+
+      expect(result.status).toBe('ACTIVE')
+      expect(result.id).toBe('prof-1')
+
+      // Verify the update query uses ACTIVE
+      const updateCall = mockClient.query.mock.calls[2]
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('UPDATE profiles')
+      expect(updateCall![0]).toContain('status = $1')
+    })
+
+    it('transitions DRAFT to PENDING_VERIFICATION when verification is required', async () => {
+      vi.mocked(configCache.get).mockResolvedValue(true)
+      mockPool.query.mockResolvedValueOnce({ rows: [draftRow] })
+      mockPool.connect.mockResolvedValue(mockClient)
+      mockClient.query.mockResolvedValueOnce({}) // BEGIN
+      mockClient.query.mockResolvedValueOnce({ rows: [] }) // no existing default
+      mockClient.query.mockResolvedValueOnce({ rowCount: 1 }) // UPDATE
+      mockClient.query.mockResolvedValueOnce({}) // COMMIT
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ ...draftRow, status: 'PENDING_VERIFICATION' }],
+      })
+
+      const result = await service.completeOnboarding('user-1', 'prof-1')
+
+      expect(result.status).toBe('PENDING_VERIFICATION')
+    })
+
+    it('rejects when profile does not belong to the user', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ ...draftRow, user_id: 'other-user' }],
+      })
+
+      await expect(
+        service.completeOnboarding('user-1', 'prof-1'),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('rejects when profile does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.completeOnboarding('user-1', 'prof-1'),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('is idempotent when profile is already ACTIVE', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [activeRow] })
+
+      const result = await service.completeOnboarding('user-1', 'prof-1')
+
+      // Should return without any transaction
+      expect(mockPool.connect).not.toHaveBeenCalled()
+      expect(result.status).toBe('ACTIVE')
+    })
+  })
 })

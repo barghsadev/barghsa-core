@@ -284,6 +284,16 @@ export const fa: I18nDictionary = {
   'onboarding.individual.error.maxChars': 'حداکثر {count} کاراکتر',
   'onboarding.individual.error.maxCharsEn': 'Max {count} characters',
 
+  // ── Onboarding Completion (T-03.02.04) ────────────────────────
+  'onboarding.complete.title': 'آماده شروع!',
+  'onboarding.complete.titleEn': 'Ready to go!',
+  'onboarding.complete.subtitle': 'پروفایل شما با موفقیت ایجاد شد',
+  'onboarding.complete.subtitleEn': 'Your profile has been created successfully',
+  'onboarding.complete.addAnother': 'افزودن پروفایل دیگر',
+  'onboarding.complete.addAnotherEn': 'Add another profile',
+  'onboarding.complete.goToDashboard': 'رفتن به داشبورد',
+  'onboarding.complete.goToDashboardEn': 'Go to dashboard',
+
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'پروفایل شما تأیید نشده است',
   'verification.banner.verify': 'تأیید خودکار',
@@ -569,6 +579,16 @@ export const en: I18nDictionary = {
   'onboarding.individual.error.loadCitiesEn': 'Failed to load cities',
   'onboarding.individual.error.maxChars': 'Max {count} characters',
   'onboarding.individual.error.maxCharsEn': 'Max {count} characters',
+
+  // ── Onboarding Completion (T-03.02.04) ────────────────────────
+  'onboarding.complete.title': 'Ready to go!',
+  'onboarding.complete.titleEn': 'Ready to go!',
+  'onboarding.complete.subtitle': 'Your profile has been created successfully',
+  'onboarding.complete.subtitleEn': 'Your profile has been created successfully',
+  'onboarding.complete.addAnother': 'Add another profile',
+  'onboarding.complete.addAnotherEn': 'Add another profile',
+  'onboarding.complete.goToDashboard': 'Go to dashboard',
+  'onboarding.complete.goToDashboardEn': 'Go to dashboard',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'Your profile is not verified',
