@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-02.03.03",
   "current_task_id": "T-02.03.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-02-03-03--account-recovery-support",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/100",
   "loop_iteration": 164,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -199,6 +199,7 @@
     { "from": "in_review", "to": "idle", "at": "tick-162" },
     { "from": "idle", "to": "building", "at": "tick-163" },
     { "from": "in_review", "to": "idle", "at": "tick-163" },
-    { "from": "idle", "to": "building", "at": "tick-164" }
+    { "from": "idle", "to": "building", "at": "tick-164" },
+    { "from": "building", "to": "in_review", "at": "tick-164" }
   ]
 }

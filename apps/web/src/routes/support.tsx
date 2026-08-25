@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { Card, CardContent } from '@barghsa/ui'
-import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon } from 'lucide-react'
+import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 
 export const Route = createFileRoute('/support')({
   component: SupportPage,
@@ -10,6 +10,7 @@ export const Route = createFileRoute('/support')({
 function SupportPage() {
   const locale: Locale = 'fa' // TODO: read from user preference / locale context
   const isRtl = locale === 'fa'
+  const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon
 
   return (
     <div
@@ -97,9 +98,12 @@ function SupportPage() {
                     <p className="text-sm font-medium">
                       {t('auth.support.contactEmail', locale)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <a
+                      href="mailto:support@barghsa.com"
+                      className="text-sm text-primary underline-offset-4 hover:underline"
+                    >
                       {t('auth.support.emailAddress', locale)}
-                    </p>
+                    </a>
                   </div>
                 </div>
 
@@ -109,9 +113,12 @@ function SupportPage() {
                     <p className="text-sm font-medium">
                       {t('auth.support.contactPhone', locale)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <a
+                      href="tel:+982112345678"
+                      className="text-sm text-primary underline-offset-4 hover:underline"
+                    >
                       {t('auth.support.phoneNumber', locale)}
-                    </p>
+                    </a>
                   </div>
                 </div>
 
@@ -127,14 +134,14 @@ function SupportPage() {
             </div>
           </CardContent>
 
-          {/* Footer */ }
+          {/* Footer */}
           <div className="px-(--card-spacing) pb-(--card-spacing)">
             <Link
-              to="/forgot-password"
+              to="/login"
               className="inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
               aria-label={t('auth.support.backToLogin', locale)}
             >
-              <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <BackIcon className="h-3.5 w-3.5" aria-hidden="true" />
               {t('auth.support.backToLogin', locale)}
             </Link>
           </div>
