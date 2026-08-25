@@ -134,19 +134,21 @@ export class AuthService {
 
     // ── Progressive delay: slow down repeated failed attempts ─────────
     // Before checking credentials, peek at the current rate-limit counter
-    // for this account-and-IP in the 15-minute window.  If there have been
-    // prior failed attempts in this window, apply an exponential back-off
-    // delay to frustrate automated brute-force scripts while keeping the
-    // UX tolerable for legitimate users who mistype their password a few
-    // times.
-    const rateLimitKeyStr = rateLimitKey('login:account-ip', input.username, ip)
-    const failedAttempts = await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000)
-    if (failedAttempts >= 1) {
-      // Progressive delay: 2^(failedAttempts - 1) * 500ms, capped at 5_000ms
+    // for this IP in the 15-minute login window.  The guard has already
+    // incremented the counter for the current request, so subtract 1 to
+    // get the number of *prior* failed attempts.  If there have been prior
+    // failures, apply an exponential back-off delay to frustrate automated
+    // brute-force scripts while keeping the UX tolerable for legitimate
+    // users who mistype their password a few times.
+    const rateLimitKeyStr = rateLimitKey('login:account-ip', ip)
+    const currentCount = await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000)
+    const priorAttempts = Math.max(0, currentCount - 1)
+    if (priorAttempts >= 1) {
+      // Progressive delay: 2^(priorAttempts - 1) * 500ms, capped at 5_000ms
       // attempt 1: 500ms, 2: 1000ms, 3: 2000ms, 4: 4000ms, 5+: 5000ms
-      const delayMs = Math.min(Math.pow(2, failedAttempts - 1) * 500, 5_000)
+      const delayMs = Math.min(Math.pow(2, priorAttempts - 1) * 500, 5_000)
       this.logger.debug(
-        `Progressive delay for login: ${rateLimitKeyStr} (${failedAttempts} prior attempts, ${delayMs}ms)`,
+        `Progressive delay for login: ${rateLimitKeyStr} (${priorAttempts} prior attempts, ${delayMs}ms)`,
       )
       await new Promise((resolve) => setTimeout(resolve, delayMs))
     }

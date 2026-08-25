@@ -18,6 +18,8 @@ import { RATE_LIMIT_KEY, type RateLimitOptions } from './rate-limit.decorator.js
  * header.
  */
 const RATE_LIMIT_EXCEEDED_I18N_KEY = 'error.rate_limit.exceeded'
+/** Key with a {seconds} placeholder for the retry-after message. */
+const RATE_LIMIT_RETRY_AFTER_I18N_KEY = 'error.rate_limit.retry_after'
 
 /**
  * NestJS guard that enforces rate limits using the CompositeRateLimiterStore.
@@ -79,7 +81,7 @@ export class RateLimitGuard implements CanActivate {
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
           error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
-          message: RATE_LIMIT_EXCEEDED_I18N_KEY,
+          message: retryAfterSeconds > 0 ? RATE_LIMIT_RETRY_AFTER_I18N_KEY : RATE_LIMIT_EXCEEDED_I18N_KEY,
           retryAfterMs: result.resetMs,
           retryAfterSeconds: retryAfterSeconds,
           namespace: config.namespace,
