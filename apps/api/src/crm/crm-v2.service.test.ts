@@ -824,6 +824,27 @@ describe('CrmV2Service.forcePasswordChange', () => {
     expect(result).toHaveProperty('error')
     expect((result as { error: string }).error).toContain('Reason is required')
   })
+
+  it('rolls back transaction on DB error', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+    const ms = createMockSessionService()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE users
+      .mockRejectedValueOnce(new Error('DB insert failed')) // audit_log INSERT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(ms)
+
+    await expect(service.forcePasswordChange(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')).rejects.toThrow()
+    expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockRelease).toHaveBeenCalled()
+  })
 })
 
 describe('CrmV2Service.expireSessions', () => {
@@ -891,5 +912,25 @@ describe('CrmV2Service.expireSessions', () => {
     expect(result).toHaveProperty('error')
     expect((result as { error: string }).error).toContain('Reason is required')
     expect(ms.revokeAllUserSessions).not.toHaveBeenCalled()
+  })
+
+  it('rolls back transaction on DB error', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+    const ms = createMockSessionService()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockRejectedValueOnce(new Error('DB insert failed')) // audit_log INSERT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(ms)
+
+    await expect(service.expireSessions(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')).rejects.toThrow()
+    expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockRelease).toHaveBeenCalled()
   })
 })
