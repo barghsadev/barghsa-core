@@ -395,6 +395,13 @@ export const fa: I18nDictionary = {
   'dashboard.profile.switchLabel': 'تغییر پروفایل فعال',
   'dashboard.profile.switching': 'در حال تغییر پروفایل…',
   'dashboard.profile.switchError': 'تغییر پروفایل با خطا مواجه شد',
+
+  // ── Default Profile Selection (T-03.03.02) ─────────────────
+  'dashboard.profile.default.title': 'انتخاب پروفایل پیش‌فرض',
+  'dashboard.profile.default.description': 'شما چندین پروفایل دارید. لطفاً یک پروفایل پیش‌فرض انتخاب کنید.',
+  'dashboard.profile.default.setAsDefault': 'تعیین به عنوان پیش‌فرض',
+  'dashboard.profile.default.setting': 'در حال تنظیم پروفایل پیش‌فرض…',
+
   'dashboard.nav.label': 'ناوبری',
   'dashboard.nav.electricity': 'برق',
   'dashboard.nav.savings': 'پس‌انداز',
@@ -791,6 +798,13 @@ export const en: I18nDictionary = {
   'dashboard.profile.switchLabel': 'Switch active profile',
   'dashboard.profile.switching': 'Switching profile…',
   'dashboard.profile.switchError': 'Failed to switch profile',
+
+  // ── Default Profile Selection (T-03.03.02) ─────────────────
+  'dashboard.profile.default.title': 'Select Default Profile',
+  'dashboard.profile.default.description': 'You have multiple profiles. Please select a default profile to continue.',
+  'dashboard.profile.default.setAsDefault': 'Set as Default',
+  'dashboard.profile.default.setting': 'Setting default profile…',
+
   'dashboard.nav.label': 'Navigation',
   'dashboard.nav.electricity': 'Electricity',
   'dashboard.nav.savings': 'Savings',

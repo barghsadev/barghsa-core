@@ -2,6 +2,7 @@ import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
 import { VerificationBanner } from '../components/VerificationBanner.js'
+import { DefaultProfileModal } from '../components/DefaultProfileModal.js'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -96,6 +97,7 @@ function RootComponent() {
   return (
     <>
       <VerificationBanner />
+      <DefaultProfileModal />
       <Outlet />
       {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
     </>
