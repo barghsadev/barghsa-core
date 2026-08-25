@@ -12,6 +12,7 @@ import {
   GlobeIcon,
   ShieldAlertIcon,
   UserIcon,
+  MapPinIcon,
 } from 'lucide-react'
 import { Button, Card, CardContent } from '@barghsa/ui'
 import { withCsrf } from '../../../lib/csrf.js'
@@ -168,6 +169,13 @@ function SettingsIndexPage() {
             >
               <GlobeIcon className="h-4 w-4 text-muted-foreground" />
               <span>{t('settings.timezone.title', locale)}</span>
+            </a>
+            <a
+              href="/settings/addresses"
+              className="flex items-center gap-3 rounded-lg border p-3 text-sm hover:bg-muted/50 transition-colors"
+            >
+              <MapPinIcon className="h-4 w-4 text-muted-foreground" />
+              <span>{t('settings.addresses.title', locale)}</span>
             </a>
           </div>
         </CardContent>

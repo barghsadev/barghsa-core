@@ -440,4 +440,377 @@ describe('ProfilesService', () => {
       expect(result).toBeNull()
     })
   })
+
+  describe('createAddress', () => {
+    const addressData = {
+      provinceId: 'prov-1',
+      cityId: 'city-1',
+      fullAddress: '123 Test Street, Tehran',
+      postalCode: '1234567890',
+    }
+
+    const profileRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: true,
+      status: 'ACTIVE',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    const addressRow = {
+      id: 'addr-1',
+      profile_id: 'prof-1',
+      province_id: 'prov-1',
+      city_id: 'city-1',
+      full_address: '123 Test Street, Tehran',
+      postal_code: '1234567890',
+      main_address: true,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    it('creates an address as main when profile has no existing main address', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })   // getProfileById
+        .mockResolvedValueOnce({ rows: [] })               // no existing main address
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [] })                // check existing main
+        .mockResolvedValueOnce({ rows: [addressRow] })      // INSERT RETURNING
+        .mockResolvedValueOnce(undefined)                          // COMMIT
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      const result = await service.createAddress('user-1', 'prof-1', addressData)
+
+      expect(result.id).toBe('addr-1')
+      expect(result.mainAddress).toBe(true)
+      expect(result.profileId).toBe('prof-1')
+    })
+
+    it('creates an address as non-main when main address already exists', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })   // getProfileById
+        .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] }) // existing main exists
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] }) // check existing main
+        .mockResolvedValueOnce({ rows: [{ ...addressRow, main_address: false }] }) // INSERT
+        .mockResolvedValueOnce(undefined)                          // COMMIT
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      const result = await service.createAddress('user-1', 'prof-1', addressData)
+
+      expect(result.mainAddress).toBe(false)
+    })
+
+    it('rejects when profile does not belong to the user', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] })
+
+      await expect(
+        service.createAddress('user-1', 'prof-1', addressData),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('rejects when mainAddress=true but main address already exists', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] })
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] })
+        .mockResolvedValueOnce(undefined) // ROLLBACK (catch block)
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      await expect(
+        service.createAddress('user-1', 'prof-1', { ...addressData, mainAddress: true }),
+      ).rejects.toThrow('A main address already exists')
+    })
+
+    it('rejects invalid postal code', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{
+          id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL',
+          is_default: true, status: 'ACTIVE', title: null,
+          first_name: 'John', last_name: 'Doe',
+          created_at: new Date(), updated_at: new Date(),
+        }],
+      })
+
+      await expect(
+        service.createAddress('user-1', 'prof-1', { ...addressData, postalCode: 'invalid' }),
+      ).rejects.toThrow('Invalid postal code format')
+    })
+
+    it('handles foreign key violation on province or city', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      const fkError = new Error('insert or update on table violates foreign key')
+      ;(fkError as { code?: string }).code = '23503'
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // check existing main
+        .mockRejectedValueOnce(fkError)
+        .mockResolvedValueOnce(undefined) // ROLLBACK
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      await expect(
+        service.createAddress('user-1', 'prof-1', addressData),
+      ).rejects.toThrow('Invalid province or city reference')
+    })
+  })
+
+  describe('updateAddress', () => {
+    const profileRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: true,
+      status: 'ACTIVE',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    const addressRow = {
+      id: 'addr-1',
+      profile_id: 'prof-1',
+      province_id: 'prov-1',
+      city_id: 'city-1',
+      full_address: '123 Test Street',
+      postal_code: '1234567890',
+      main_address: true,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    it('updates address fields', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })   // getProfileById
+        .mockResolvedValueOnce({ rows: [addressRow] })    // getProfileAddresses
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [{ ...addressRow, full_address: '456 New Street' }] }) // UPDATE
+        .mockResolvedValueOnce(undefined)                          // COMMIT
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      const result = await service.updateAddress('user-1', 'prof-1', 'addr-1', {
+        fullAddress: '456 New Street',
+      })
+
+      expect(result.fullAddress).toBe('456 New Street')
+    })
+
+    it('rejects when profile does not belong to the user', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] })
+
+      await expect(
+        service.updateAddress('user-1', 'prof-1', 'addr-1', { fullAddress: '456 New Street' }),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('rejects when address does not belong to the profile', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [{ ...addressRow, id: 'other-addr' }] })
+
+      await expect(
+        service.updateAddress('user-1', 'prof-1', 'addr-1', { fullAddress: '456 New Street' }),
+      ).rejects.toThrow('Address not found')
+    })
+
+    it('rejects invalid postal code', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [addressRow] })
+
+      await expect(
+        service.updateAddress('user-1', 'prof-1', 'addr-1', { postalCode: 'invalid' }),
+      ).rejects.toThrow('Invalid postal code format')
+    })
+
+    it('rejects when no fields to update', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [addressRow] })
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce(undefined) // ROLLBACK
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      await expect(
+        service.updateAddress('user-1', 'prof-1', 'addr-1', {}),
+      ).rejects.toThrow('No fields to update')
+    })
+  })
+
+  describe('deleteAddress', () => {
+    const profileRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: true,
+      status: 'ACTIVE',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    const nonMainAddress = {
+      id: 'addr-1',
+      profile_id: 'prof-1',
+      province_id: 'prov-1',
+      city_id: 'city-1',
+      full_address: '123 Test Street',
+      postal_code: '1234567890',
+      main_address: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    const mainAddress = { ...nonMainAddress, id: 'addr-main', main_address: true }
+
+    it('deletes an address that is not linked to orders', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [nonMainAddress] })
+        .mockResolvedValueOnce({ rows: [] })              // no orders linked
+        .mockResolvedValueOnce({})                         // DELETE
+
+      await service.deleteAddress('user-1', 'prof-1', 'addr-1')
+
+      expect(mockPool.query.mock.calls[3]![0]).toContain('DELETE FROM addresses')
+    })
+
+    it('rejects deleting the main address', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [mainAddress] })
+
+      await expect(
+        service.deleteAddress('user-1', 'prof-1', 'addr-main'),
+      ).rejects.toThrow('Cannot delete the main address')
+    })
+
+    it('rejects when profile does not belong to the user', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] })
+
+      await expect(
+        service.deleteAddress('user-1', 'prof-1', 'addr-1'),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('rejects when address is not found', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.deleteAddress('user-1', 'prof-1', 'addr-1'),
+      ).rejects.toThrow('Address not found')
+    })
+  })
+
+  describe('setMainAddress', () => {
+    const profileRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: true,
+      status: 'ACTIVE',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    const nonMainAddress = {
+      id: 'addr-1',
+      profile_id: 'prof-1',
+      province_id: 'prov-1',
+      city_id: 'city-1',
+      full_address: '123 Test Street',
+      postal_code: '1234567890',
+      main_address: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    it('sets an address as main and unsets the previous main', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })   // getProfileById
+        .mockResolvedValueOnce({ rows: [nonMainAddress] }) // getProfileAddresses
+
+      mockClient.query
+        .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce(undefined)                          // unset current main
+        .mockResolvedValueOnce({ rows: [{ ...nonMainAddress, main_address: true }] }) // UPDATE
+        .mockResolvedValueOnce(undefined)                          // COMMIT
+
+      mockPool.connect.mockResolvedValue(mockClient)
+
+      const result = await service.setMainAddress('user-1', 'prof-1', 'addr-1')
+
+      expect(result.mainAddress).toBe(true)
+
+      // Verify unset call
+      expect(mockClient.query.mock.calls[1]![0]).toContain('main_address = false')
+      // Verify set call
+      expect(mockClient.query.mock.calls[2]![0]).toContain('main_address = true')
+    })
+
+    it('is a no-op when the address is already main', async () => {
+      const alreadyMain = { ...nonMainAddress, main_address: true }
+
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [alreadyMain] })
+
+      const result = await service.setMainAddress('user-1', 'prof-1', 'addr-1')
+
+      expect(result.mainAddress).toBe(true)
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects when profile does not belong to the user', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] })
+
+      await expect(
+        service.setMainAddress('user-1', 'prof-1', 'addr-1'),
+      ).rejects.toThrow('Profile not found')
+    })
+
+    it('rejects when address is not found', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.setMainAddress('user-1', 'prof-1', 'addr-1'),
+      ).rejects.toThrow('Address not found')
+    })
+  })
 })

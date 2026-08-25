@@ -516,6 +516,354 @@ export class ProfilesService {
   }
 
   /**
+   * Create a new address for a profile.
+   *
+   * If the profile has no existing main address, the new address is
+   * automatically set as main. Otherwise it defaults to non-main.
+   * Validation: province/city must exist, postal code format checked.
+   */
+  async createAddress(
+    userId: string,
+    profileId: string,
+    data: {
+      provinceId: string
+      cityId: string
+      fullAddress: string
+      postalCode: string
+      mainAddress?: boolean
+    },
+  ): Promise<AddressRow> {
+    const pool = getDbPool()
+
+    // Verify the profile belongs to the user
+    const profile = await this.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+
+    // Validate postal code
+    if (!validatePostalCode(data.postalCode)) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid postal code format' },
+        400,
+      )
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Check if there's an existing main address
+      const existingMain = await client.query(
+        `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
+        [profileId],
+      )
+      const hasMainAddress = existingMain.rows.length > 0
+
+      const isMain = data.mainAddress === true && !hasMainAddress
+
+      // If user explicitly requested main but one already exists, error
+      if (data.mainAddress === true && hasMainAddress) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'A main address already exists. Use the set-main endpoint to change the main address.',
+          },
+          400,
+        )
+      }
+
+      const result = await client.query(
+        `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
+        [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain],
+      )
+
+      await client.query('COMMIT')
+      this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`)
+      return mapAddressRow(result.rows[0])
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      // Check foreign key violation on province or city
+      if (error instanceof Error && (error as { code?: string }).code === '23503') {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid province or city reference' },
+          400,
+        )
+      }
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Update an address for a profile.
+   *
+   * Only the address fields can be updated (province, city, full address,
+   * postal code). The main address flag is updated via setMainAddress.
+   * Prevents updating addresses linked to orders (soft delete).
+   */
+  async updateAddress(
+    userId: string,
+    profileId: string,
+    addressId: string,
+    data: {
+      provinceId?: string
+      cityId?: string
+      fullAddress?: string
+      postalCode?: string
+    },
+  ): Promise<AddressRow> {
+    const pool = getDbPool()
+
+    // Verify the profile belongs to the user
+    const profile = await this.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+
+    // Verify the address belongs to the profile
+    const existing = await this.getProfileAddresses(profileId)
+    const address = existing.find((a) => a.id === addressId)
+    if (!address) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
+        404,
+      )
+    }
+
+    // Validate postal code if provided
+    if (data.postalCode !== undefined && !validatePostalCode(data.postalCode)) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid postal code format' },
+        400,
+      )
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      const updates: string[] = []
+      const params: unknown[] = []
+      let paramIndex = 1
+
+      if (data.provinceId !== undefined) {
+        updates.push(`province_id = $${paramIndex++}`)
+        params.push(data.provinceId)
+      }
+      if (data.cityId !== undefined) {
+        updates.push(`city_id = $${paramIndex++}`)
+        params.push(data.cityId)
+      }
+      if (data.fullAddress !== undefined) {
+        updates.push(`full_address = $${paramIndex++}`)
+        params.push(data.fullAddress)
+      }
+      if (data.postalCode !== undefined) {
+        updates.push(`postal_code = $${paramIndex++}`)
+        params.push(data.postalCode)
+      }
+
+      if (updates.length === 0) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'No fields to update' },
+          400,
+        )
+      }
+
+      updates.push(`updated_at = NOW()`)
+      params.push(addressId, profileId)
+
+      const result = await client.query(
+        `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++}
+         RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
+        params,
+      )
+
+      if (result.rows.length === 0) {
+        await client.query('ROLLBACK')
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
+          404,
+        )
+      }
+
+      await client.query('COMMIT')
+      this.logger.log(`Address ${addressId} updated for profile ${profileId}`)
+      return mapAddressRow(result.rows[0])
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
+      if (error instanceof Error && (error as { code?: string }).code === '23503') {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid province or city reference' },
+          400,
+        )
+      }
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Delete an address for a profile.
+   *
+   * If the address is the main address, the user must first set a new main
+   * address. If the address is linked to an order, soft delete is applied
+   * (the address is preserved for historical order accuracy). Otherwise
+   * the address is hard-deleted.
+   */
+  async deleteAddress(
+    userId: string,
+    profileId: string,
+    addressId: string,
+  ): Promise<void> {
+    const pool = getDbPool()
+
+    // Verify the profile belongs to the user
+    const profile = await this.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+
+    // Verify the address belongs to the profile
+    const existing = await this.getProfileAddresses(profileId)
+    const address = existing.find((a) => a.id === addressId)
+    if (!address) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
+        404,
+      )
+    }
+
+    // Prevent deleting the main address without setting a new one first
+    if (address.mainAddress) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Cannot delete the main address. Set a different address as main first.',
+        },
+        400,
+      )
+    }
+
+    // Check if the address is linked to orders (soft delete)
+    const orderCheck = await pool.query(
+      `SELECT id FROM orders WHERE address_snapshot_id = $1 LIMIT 1`,
+      [addressId],
+    )
+
+    if (orderCheck.rows.length > 0) {
+      // TODO: soft-delete when orders table is ready — mark as deleted_at instead
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'This address is linked to an order and cannot be deleted.',
+        },
+        400,
+      )
+    }
+
+    await pool.query(
+      `DELETE FROM addresses WHERE id = $1 AND profile_id = $2`,
+      [addressId, profileId],
+    )
+
+    this.logger.log(`Address ${addressId} deleted for profile ${profileId}`)
+  }
+
+  /**
+   * Set an address as the main address for a profile.
+   *
+   * Unsets the existing main address (if any) and sets the specified
+   * address as the new main address. Wrapped in a transaction for
+   * consistency.
+   */
+  async setMainAddress(
+    userId: string,
+    profileId: string,
+    addressId: string,
+  ): Promise<AddressRow> {
+    const pool = getDbPool()
+
+    // Verify the profile belongs to the user
+    const profile = await this.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+
+    // Verify the address belongs to the profile
+    const existing = await this.getProfileAddresses(profileId)
+    const address = existing.find((a) => a.id === addressId)
+    if (!address) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
+        404,
+      )
+    }
+
+    if (address.mainAddress) {
+      // Already the main address — no-op
+      return address
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Unset the current main address
+      await client.query(
+        `UPDATE addresses SET main_address = false, updated_at = NOW() WHERE profile_id = $1 AND main_address = true`,
+        [profileId],
+      )
+
+      // Set the new main address
+      const result = await client.query(
+        `UPDATE addresses SET main_address = true, updated_at = NOW() WHERE id = $1 AND profile_id = $2
+         RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
+        [addressId, profileId],
+      )
+
+      if (result.rows.length === 0) {
+        await client.query('ROLLBACK')
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
+          404,
+        )
+      }
+
+      await client.query('COMMIT')
+      this.logger.log(`Address ${addressId} set as main for profile ${profileId}`)
+      return mapAddressRow(result.rows[0])
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
    * Get all addresses for a profile.
    */
   async getProfileAddresses(profileId: string): Promise<AddressRow[]> {

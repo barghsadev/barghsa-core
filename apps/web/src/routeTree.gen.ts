@@ -32,10 +32,11 @@ import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
-import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/timezone'
+import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 
@@ -153,6 +154,11 @@ const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsAddressesRoute = AppSettingsAddressesRouteImport.update({
+  id: '/settings/addresses',
+  path: '/settings/addresses',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
   id: '/settings/profile',
   path: '/settings/profile',
@@ -163,14 +169,14 @@ const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
   path: '/settings/security',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSettingsUsernameRoute = AppSettingsUsernameRouteImport.update({
-  id: '/settings/username',
-  path: '/settings/username',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSettingsTimezoneRoute = AppSettingsTimezoneRouteImport.update({
   id: '/settings/timezone',
   path: '/settings/timezone',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsUsernameRoute = AppSettingsUsernameRouteImport.update({
+  id: '/settings/username',
+  path: '/settings/username',
   getParentRoute: () => AppRoute,
 } as any)
 const OnboardingIndividualProfileIdRoute =
@@ -207,10 +213,11 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
-  '/settings/username': typeof AppSettingsUsernameRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
+  '/settings/username': typeof AppSettingsUsernameRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity/': typeof AppElectricityIndexRoute
@@ -235,10 +242,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
-  '/settings/username': typeof AppSettingsUsernameRoute
   '/settings/timezone': typeof AppSettingsTimezoneRoute
+  '/settings/username': typeof AppSettingsUsernameRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity': typeof AppElectricityIndexRoute
@@ -267,10 +275,11 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/settings/addresses': typeof AppSettingsAddressesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
-  '/_app/settings/username': typeof AppSettingsUsernameRoute
   '/_app/settings/timezone': typeof AppSettingsTimezoneRoute
+  '/_app/settings/username': typeof AppSettingsUsernameRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
@@ -299,10 +308,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/register/'
     | '/electricity/order'
+    | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
-    | '/settings/username'
     | '/settings/timezone'
+    | '/settings/username'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity/'
@@ -327,10 +337,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/register'
     | '/electricity/order'
+    | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
-    | '/settings/username'
     | '/settings/timezone'
+    | '/settings/username'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity'
@@ -358,10 +369,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/register/'
     | '/_app/electricity/order'
+    | '/_app/settings/addresses'
     | '/_app/settings/profile'
     | '/_app/settings/security'
-    | '/_app/settings/username'
     | '/_app/settings/timezone'
+    | '/_app/settings/username'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/_app/electricity/'
@@ -542,6 +554,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/addresses': {
+      id: '/_app/settings/addresses'
+      path: '/settings/addresses'
+      fullPath: '/settings/addresses'
+      preLoaderRoute: typeof AppSettingsAddressesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/profile': {
       id: '/_app/settings/profile'
       path: '/settings/profile'
@@ -556,18 +575,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsSecurityRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/settings/username': {
-      id: '/_app/settings/username'
-      path: '/settings/username'
-      fullPath: '/settings/username'
-      preLoaderRoute: typeof AppSettingsUsernameRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/settings/timezone': {
       id: '/_app/settings/timezone'
       path: '/settings/timezone'
       fullPath: '/settings/timezone'
       preLoaderRoute: typeof AppSettingsTimezoneRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/username': {
+      id: '/_app/settings/username'
+      path: '/settings/username'
+      fullPath: '/settings/username'
+      preLoaderRoute: typeof AppSettingsUsernameRouteImport
       parentRoute: typeof AppRoute
     }
     '/onboarding/individual/$profileId': {
@@ -595,10 +614,11 @@ interface AppRouteChildren {
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
-  AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
   AppSettingsTimezoneRoute: typeof AppSettingsTimezoneRoute
+  AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
@@ -611,10 +631,11 @@ const AppRouteChildren: AppRouteChildren = {
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppSettingsAddressesRoute: AppSettingsAddressesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
-  AppSettingsUsernameRoute: AppSettingsUsernameRoute,
   AppSettingsTimezoneRoute: AppSettingsTimezoneRoute,
+  AppSettingsUsernameRoute: AppSettingsUsernameRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
 }
