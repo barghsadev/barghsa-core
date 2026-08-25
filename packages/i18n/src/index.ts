@@ -654,6 +654,30 @@ export const fa: I18nDictionary = {
   'crm.profile.edit.confirm.message': 'آیا از اعمال این تغییرات اطمینان دارید؟',
   'crm.profile.label.email': 'ایمیل',
   'crm.profile.label.mobile': 'شماره موبایل',
+
+  // ── CRM User Actions (within Profile Detail) ──────────────
+  'crm.profile.forcePasswordChange': 'تغییر اجباری رمز عبور',
+  'crm.profile.forcePasswordChange.confirm.title': 'تغییر اجباری رمز عبور',
+  'crm.profile.forcePasswordChange.confirm.message': 'آیا از تغییر اجباری رمز عبور کاربر اطمینان دارید؟ کاربر در ورود بعدی باید رمز عبور خود را تغییر دهد و تمام نشست‌های فعال وی پایان می‌یابد.',
+  'crm.profile.forcePasswordChange.confirm.reason': 'دلیل تغییر اجباری',
+  'crm.profile.forcePasswordChange.success': 'تغییر اجباری رمز عبور با موفقیت اعمال شد.',
+  'crm.profile.expireSessions': 'پایان تمام نشست‌ها',
+  'crm.profile.expireSessions.confirm.title': 'پایان تمام نشست‌ها',
+  'crm.profile.expireSessions.confirm.message': 'آیا از پایان تمام نشست‌های فعال کاربر اطمینان دارید؟ کاربر در تمام دستگاه‌ها از سیستم خارج می‌شود.',
+  'crm.profile.expireSessions.confirm.reason': 'دلیل پایان نشست‌ها',
+  'crm.profile.expireSessions.success': 'تمام نشست‌ها با موفقیت پایان یافت.',
+  'crm.profile.action.error': 'خطا در انجام عملیات',
+  'crm.profile.action.reason.required': 'لطفاً دلیل را وارد کنید',
+
+  // ── CRM Profile Detail Admin Actions ───────────────────────
+  'crm.profile.admin.forcePasswordChange': 'تغییر اجباری رمز عبور',
+  'crm.profile.admin.expireSessions': 'پایان تمام نشست‌ها',
+  'crm.profile.admin.forcePwChangeReason': 'دلیل تغییر اجباری رمز عبور را وارد کنید:',
+  'crm.profile.admin.expireSessionsReason': 'دلیل پایان نشست‌ها را وارد کنید:',
+  'crm.profile.admin.forcePwChangeError': 'خطا در تغییر اجباری رمز عبور',
+  'crm.profile.admin.forcePwChangeSuccess': 'تغییر اجباری رمز عبور با موفقیت اعمال شد.',
+  'crm.profile.admin.expireSessionsError': 'خطا در پایان نشست‌ها',
+  'crm.profile.admin.expireSessionsSuccess': 'تمام نشست‌ها با موفقیت پایان یافت.',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1285,6 +1309,26 @@ export const en: I18nDictionary = {
     'crm.profile.edit.confirm.message': 'Are you sure you want to apply these changes?',
     'crm.profile.label.email': 'Email',
     'crm.profile.label.mobile': 'Mobile',
+    'crm.profile.forcePasswordChange': 'Force Password Change',
+    'crm.profile.forcePasswordChange.confirm.title': 'Force Password Change',
+    'crm.profile.forcePasswordChange.confirm.message': 'Are you sure you want to force a password change for this user? The user must change their password on next login and all active sessions will be terminated.',
+    'crm.profile.forcePasswordChange.confirm.reason': 'Reason for force password change',
+    'crm.profile.forcePasswordChange.success': 'Password change forced successfully.',
+    'crm.profile.expireSessions': 'Expire All Sessions',
+    'crm.profile.expireSessions.confirm.title': 'Expire All Sessions',
+    'crm.profile.expireSessions.confirm.message': 'Are you sure you want to expire all active sessions for this user? The user will be logged out on all devices.',
+    'crm.profile.expireSessions.confirm.reason': 'Reason for expiring sessions',
+    'crm.profile.expireSessions.success': 'All sessions expired successfully.',
+    'crm.profile.action.error': 'Error performing action',
+    'crm.profile.action.reason.required': 'Please enter a reason',
+    'crm.profile.admin.forcePasswordChange': 'Force Password Change',
+    'crm.profile.admin.expireSessions': 'Expire Sessions',
+    'crm.profile.admin.forcePwChangeReason': 'Enter reason for password change:',
+    'crm.profile.admin.expireSessionsReason': 'Enter reason for expiring sessions:',
+    'crm.profile.admin.forcePwChangeError': 'Error forcing password change',
+    'crm.profile.admin.forcePwChangeSuccess': 'Password change forced successfully.',
+    'crm.profile.admin.expireSessionsError': 'Error expiring sessions',
+    'crm.profile.admin.expireSessionsSuccess': 'All sessions expired successfully.',
   };
 
 /** Supported locale codes */

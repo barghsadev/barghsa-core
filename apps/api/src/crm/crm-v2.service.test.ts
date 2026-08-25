@@ -736,3 +736,154 @@ describe('CrmV2Service.verifyProfile', () => {
     expect(mockRelease).toHaveBeenCalled()
   })
 })
+
+describe('CrmV2Service.forcePasswordChange', () => {
+  const ACTOR_USER_ID = 'admin-user-001'
+  const TARGET_USER_ID = '00000000-0000-7000-8000-000000000010'
+
+  function mockClient() {
+    const mockClientQuery = vi.fn()
+    const mockRelease = vi.fn()
+    const client = { query: mockClientQuery, release: mockRelease }
+    return { mockClientQuery, mockRelease, client }
+  }
+
+  it('forces password change and revokes sessions', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+    const mockSessionService = { revokeAllUserSessions: vi.fn().mockResolvedValue(undefined) }
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // user exists
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE users
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.forcePasswordChange(TARGET_USER_ID, 'Security incident', ACTOR_USER_ID, '10.0.0.1')
+
+    expect(result).not.toBeNull()
+    expect(result).not.toHaveProperty('error')
+    expect(mockSessionService.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID)
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns null when user does not exist', async () => {
+    const { pool } = mockPool()
+    const mockSessionService = { revokeAllUserSessions: vi.fn() }
+
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.forcePasswordChange('nonexistent-id', 'test', ACTOR_USER_ID, '')
+
+    expect(result).toBeNull()
+    expect(mockSessionService.revokeAllUserSessions).not.toHaveBeenCalled()
+  })
+
+  it('returns error when reason is empty', async () => {
+    const { pool } = mockPool()
+    const mockSessionService = { revokeAllUserSessions: vi.fn() }
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.forcePasswordChange(TARGET_USER_ID, '', ACTOR_USER_ID, '')
+
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Reason is required')
+    expect(mockSessionService.revokeAllUserSessions).not.toHaveBeenCalled()
+  })
+
+  it('returns error when reason is whitespace', async () => {
+    const { pool } = mockPool()
+    const mockSessionService = { revokeAllUserSessions: vi.fn() }
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.forcePasswordChange(TARGET_USER_ID, '   ', ACTOR_USER_ID, '')
+
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Reason is required')
+  })
+})
+
+describe('CrmV2Service.expireSessions', () => {
+  const ACTOR_USER_ID = 'admin-user-001'
+  const TARGET_USER_ID = '00000000-0000-7000-8000-000000000010'
+
+  function mockClient() {
+    const mockClientQuery = vi.fn()
+    const mockRelease = vi.fn()
+    const client = { query: mockClientQuery, release: mockRelease }
+    return { mockClientQuery, mockRelease, client }
+  }
+
+  it('expires all sessions successfully', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+    const mockSessionService = { revokeAllUserSessions: vi.fn().mockResolvedValue(undefined) }
+
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: TARGET_USER_ID }] }) // user exists
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.expireSessions(TARGET_USER_ID, 'Device lost', ACTOR_USER_ID, '10.0.0.1')
+
+    expect(result).not.toBeNull()
+    expect(result).not.toHaveProperty('error')
+    expect(mockSessionService.revokeAllUserSessions).toHaveBeenCalledWith(TARGET_USER_ID)
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns null when user does not exist', async () => {
+    const { pool } = mockPool()
+    const mockSessionService = { revokeAllUserSessions: vi.fn() }
+
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.expireSessions('nonexistent-id', 'test', ACTOR_USER_ID, '')
+
+    expect(result).toBeNull()
+    expect(mockSessionService.revokeAllUserSessions).not.toHaveBeenCalled()
+  })
+
+  it('returns error when reason is empty', async () => {
+    const { pool } = mockPool()
+    const mockSessionService = { revokeAllUserSessions: vi.fn() }
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc(mockSessionService)
+
+    const result = await service.expireSessions(TARGET_USER_ID, '', ACTOR_USER_ID, '')
+
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Reason is required')
+    expect(mockSessionService.revokeAllUserSessions).not.toHaveBeenCalled()
+  })
+})

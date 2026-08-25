@@ -40,6 +40,22 @@ export interface VerifyProfileDto {
   reason?: string
 }
 
+/**
+ * DTO for forcing a password change on a user.
+ */
+export interface ForcePasswordChangeDto {
+  /** Reason for forcing the password change. */
+  reason: string
+}
+
+/**
+ * DTO for expiring all sessions for a user.
+ */
+export interface ExpireSessionsDto {
+  /** Reason for expiring sessions. */
+  reason: string
+}
+
 @ApiTags('CRM V2')
 @Controller('api/crm')
 @UseGuards(SessionAuthGuard)
@@ -312,6 +328,180 @@ export class CrmV2Controller {
     this.logger.debug(
       `Verification changed: profileId=${profileId}, ${result.previousStatus} → ${result.newStatus}, ` +
       `action=${dto.action}, actor=${req.session.userId}`,
+    )
+
+    return result
+  }
+
+  /**
+   * POST /api/crm/users/:userId/force-password-change
+   *
+   * Forces a password change for the specified user on their next login.
+   * Permission: admin required.
+   * Audit: password_change_forced with actor, reason, ip.
+   */
+  @Post('users/:userId/force-password-change')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Force password change for a user (admin)' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'UUID of the user to force password change for.',
+    type: String,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['reason'],
+      properties: {
+        reason: { type: 'string', description: 'Reason for forcing the password change' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Password change forced successfully' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async forcePasswordChange(
+    @Param('userId') userId: string,
+    @Body() dto: ForcePasswordChangeDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to force password change for user ${userId}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required',
+        },
+        403,
+      )
+    }
+
+    const result = await this.crmV2Service.forcePasswordChange(
+      userId,
+      dto.reason,
+      req.session.userId,
+      req.ip ?? 'unknown',
+    )
+
+    if (!result) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'User not found',
+        },
+        404,
+      )
+    }
+
+    if ('error' in result) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: result.error,
+        },
+        400,
+      )
+    }
+
+    this.logger.debug(
+      `Password change forced: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`,
+    )
+
+    return result
+  }
+
+  /**
+   * POST /api/crm/users/:userId/expire-sessions
+   *
+   * Expires all active sessions for the specified user.
+   * Permission: admin required.
+   * Audit: sessions_expired with actor, reason, ip.
+   */
+  @Post('users/:userId/expire-sessions')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Expire all sessions for a user (admin)' })
+  @ApiParam({
+    name: 'userId',
+    required: true,
+    description: 'UUID of the user whose sessions should be expired.',
+    type: String,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['reason'],
+      properties: {
+        reason: { type: 'string', description: 'Reason for expiring sessions' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Sessions expired successfully' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async expireSessions(
+    @Param('userId') userId: string,
+    @Body() dto: ExpireSessionsDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to expire sessions for user ${userId}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required',
+        },
+        403,
+      )
+    }
+
+    const result = await this.crmV2Service.expireSessions(
+      userId,
+      dto.reason,
+      req.session.userId,
+      req.ip ?? 'unknown',
+    )
+
+    if (!result) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'User not found',
+        },
+        404,
+      )
+    }
+
+    if ('error' in result) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: result.error,
+        },
+        400,
+      )
+    }
+
+    this.logger.debug(
+      `Sessions expired: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`,
     )
 
     return result

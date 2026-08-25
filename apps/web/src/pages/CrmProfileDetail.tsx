@@ -146,6 +146,13 @@ export default function CrmProfileDetail() {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [showForcePwChange, setShowForcePwChange] = useState(false)
+  const [showExpireSessions, setShowExpireSessions] = useState(false)
+  const [forcePwChangeReason, setForcePwChangeReason] = useState('')
+  const [expireSessionsReason, setExpireSessionsReason] = useState('')
+  const [actionLoading, setActionLoading] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
 
   useEffect(() => {
     setLoading(true)
@@ -225,6 +232,64 @@ export default function CrmProfileDetail() {
       })
   }
 
+  /** Force a password change for this user */
+  function handleForcePasswordChange() {
+    if (!data) return
+    setShowForcePwChange(false)
+    setActionLoading(true)
+    setActionError(null)
+    setActionSuccess(null)
+
+    fetch(`/api/crm/users/${data.user.userId}/force-password-change`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason: forcePwChangeReason }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(t('crm.profile.admin.forcePwChangeError', locale))
+        return res.json()
+      })
+      .then(() => {
+        setActionSuccess(t('crm.profile.admin.forcePwChangeSuccess', locale))
+        setForcePwChangeReason('')
+        setActionLoading(false)
+        setTimeout(() => setActionSuccess(null), 4000)
+      })
+      .catch((err: Error) => {
+        setActionError(err.message)
+        setActionLoading(false)
+      })
+  }
+
+  /** Expire all sessions for this user */
+  function handleExpireSessions() {
+    if (!data) return
+    setShowExpireSessions(false)
+    setActionLoading(true)
+    setActionError(null)
+    setActionSuccess(null)
+
+    fetch(`/api/crm/users/${data.user.userId}/expire-sessions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason: expireSessionsReason }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(t('crm.profile.admin.expireSessionsError', locale))
+        return res.json()
+      })
+      .then(() => {
+        setActionSuccess(t('crm.profile.admin.expireSessionsSuccess', locale))
+        setExpireSessionsReason('')
+        setActionLoading(false)
+        setTimeout(() => setActionSuccess(null), 4000)
+      })
+      .catch((err: Error) => {
+        setActionError(err.message)
+        setActionLoading(false)
+      })
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
@@ -276,12 +341,30 @@ export default function CrmProfileDetail() {
           </span>
           <span className="ml-auto flex gap-2">
             {!isEditing ? (
-              <button
-                onClick={handleStartEdit}
-                className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-              >
-                {t('crm.profile.edit', locale)}
-              </button>
+              <>
+                <button
+                  onClick={handleStartEdit}
+                  className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                >
+                  {t('crm.profile.edit', locale)}
+                </button>
+                {user.isAdmin && (
+                  <>
+                    <button
+                      onClick={() => setShowForcePwChange(true)}
+                      className="text-sm px-3 py-1 rounded bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+                    >
+                      {t('crm.profile.admin.forcePasswordChange', locale)}
+                    </button>
+                    <button
+                      onClick={() => setShowExpireSessions(true)}
+                      className="text-sm px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
+                    >
+                      {t('crm.profile.admin.expireSessions', locale)}
+                    </button>
+                  </>
+                )}
+              </>
             ) : (
               <>
                 <button
@@ -320,6 +403,18 @@ export default function CrmProfileDetail() {
       {saveError && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm" role="alert">
           {saveError}
+        </div>
+      )}
+
+      {/* Action success / error flash messages */}
+      {actionSuccess && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">
+          {actionSuccess}
+        </div>
+      )}
+      {actionError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm" role="alert">
+          {actionError}
         </div>
       )}
 
@@ -611,6 +706,32 @@ export default function CrmProfileDetail() {
           confirmLabel={t('crm.profile.edit.save', locale)}
         />
       )}
+      {showForcePwChange && (
+        <AdminActionConfirmModal
+          title={t('crm.profile.admin.forcePasswordChange', locale)}
+          message={t('crm.profile.admin.forcePwChangeReason', locale)}
+          reason={forcePwChangeReason}
+          onReasonChange={setForcePwChangeReason}
+          onConfirm={handleForcePasswordChange}
+          onCancel={() => { setShowForcePwChange(false); setForcePwChangeReason('') }}
+          cancelLabel={t('crm.profile.edit.cancel', locale)}
+          confirmLabel={t('crm.profile.admin.forcePasswordChange', locale)}
+          loading={actionLoading}
+        />
+      )}
+      {showExpireSessions && (
+        <AdminActionConfirmModal
+          title={t('crm.profile.admin.expireSessions', locale)}
+          message={t('crm.profile.admin.expireSessionsReason', locale)}
+          reason={expireSessionsReason}
+          onReasonChange={setExpireSessionsReason}
+          onConfirm={handleExpireSessions}
+          onCancel={() => { setShowExpireSessions(false); setExpireSessionsReason('') }}
+          cancelLabel={t('crm.profile.edit.cancel', locale)}
+          confirmLabel={t('crm.profile.admin.expireSessions', locale)}
+          loading={actionLoading}
+        />
+      )}
     </div>
   )
 }
@@ -734,6 +855,71 @@ function ConfirmModal({
             className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
           >
             {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Confirm modal with a reason text input for admin actions */
+function AdminActionConfirmModal({
+  title,
+  message,
+  reason,
+  onReasonChange,
+  onConfirm,
+  onCancel,
+  cancelLabel,
+  confirmLabel,
+  loading,
+}: {
+  title: string
+  message: string
+  reason: string
+  onReasonChange: (v: string) => void
+  onConfirm: () => void
+  onCancel: () => void
+  cancelLabel: string
+  confirmLabel: string
+  loading: boolean
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-action-title"
+    >
+      <div
+        className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 id="admin-action-title" className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+        <p className="text-sm text-gray-600 mb-4">{message}</p>
+        <textarea
+          value={reason}
+          onChange={(e) => onReasonChange(e.target.value)}
+          placeholder="..."
+          rows={3}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none mb-4 resize-none"
+          dir="auto"
+        />
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
+          >
+            {cancelLabel}
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={loading || !reason.trim()}
+            className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {loading ? '...' : confirmLabel}
           </button>
         </div>
       </div>

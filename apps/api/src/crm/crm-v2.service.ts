@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
+import { SessionService } from '../session/session.service.js'
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js'
 
 /** Simple email regex for server-side validation */
@@ -39,6 +40,16 @@ export type CrmUpdateProfileResult =
  */
 export type CrmVerifyProfileResult =
   | { success: true; profileId: string; previousStatus: string; newStatus: string; reason: string | null }
+  | { error: string }
+  | null
+
+export type CrmForcePasswordChangeResult =
+  | { success: true; userId: string; reason: string }
+  | { error: string }
+  | null
+
+export type CrmExpireSessionsResult =
+  | { success: true; userId: string; reason: string }
   | { error: string }
   | null
 
@@ -134,6 +145,8 @@ export interface CrmProfileDetail {
 @Injectable()
 export class CrmV2Service {
   private readonly logger = new Logger(CrmV2Service.name)
+
+  constructor(private readonly sessionService: SessionService) {}
 
   /**
    * GET /api/crm/profiles/:profileId
@@ -603,6 +616,136 @@ export class CrmV2Service {
     } catch (err) {
       await client.query('ROLLBACK')
       this.logger.error(`Failed to verify profile ${profileId}: ${String(err)}`)
+      throw err
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Forces a password change for a user by setting must_change_password = true
+   * and revoking all their active sessions.
+   *
+   * Returns null if the user is not found.
+   */
+  async forcePasswordChange(
+    userId: string,
+    reason: string,
+    actorUserId: string,
+    ip: string,
+  ): Promise<CrmForcePasswordChangeResult> {
+    if (!reason || reason.trim() === '') {
+      return { error: 'Reason is required for force password change' }
+    }
+
+    const pool = getDbPool()
+
+    // Verify user exists
+    const userResult = await pool.query(
+      `SELECT user_id FROM users WHERE user_id = $1`,
+      [userId],
+    )
+    if (userResult.rows.length === 0) return null
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      await client.query(
+        `UPDATE users SET must_change_password = true, updated_at = NOW() WHERE user_id = $1`,
+        [userId],
+      )
+
+      await this.sessionService.revokeAllUserSessions(userId)
+
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
+        [
+          auditId,
+          actorUserId,
+          'force_password_change',
+          JSON.stringify({ targetUserId: userId, reason }),
+          correlationId,
+          ip,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.debug(
+        `Password change forced for user ${userId} by ${actorUserId}: ${reason}`,
+      )
+
+      return { success: true, userId, reason }
+    } catch (err) {
+      await client.query('ROLLBACK')
+      this.logger.error(`Failed to force password change for user ${userId}: ${String(err)}`)
+      throw err
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Expires (revokes) all active sessions for a user without forcing a
+   * password change. Use for session invalidation scenarios (e.g. security
+   * incidents, device loss) where the password is still trusted.
+   *
+   * Returns null if the user is not found.
+   */
+  async expireSessions(
+    userId: string,
+    reason: string,
+    actorUserId: string,
+    ip: string,
+  ): Promise<CrmExpireSessionsResult> {
+    if (!reason || reason.trim() === '') {
+      return { error: 'Reason is required for expire sessions' }
+    }
+
+    const pool = getDbPool()
+
+    // Verify user exists
+    const userResult = await pool.query(
+      `SELECT user_id FROM users WHERE user_id = $1`,
+      [userId],
+    )
+    if (userResult.rows.length === 0) return null
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      await this.sessionService.revokeAllUserSessions(userId)
+
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
+        [
+          auditId,
+          actorUserId,
+          'expire_sessions',
+          JSON.stringify({ targetUserId: userId, reason }),
+          correlationId,
+          ip,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.debug(
+        `Sessions expired for user ${userId} by ${actorUserId}: ${reason}`,
+      )
+
+      return { success: true, userId, reason }
+    } catch (err) {
+      await client.query('ROLLBACK')
+      this.logger.error(`Failed to expire sessions for user ${userId}: ${String(err)}`)
       throw err
     } finally {
       client.release()
