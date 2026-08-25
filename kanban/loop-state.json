@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-02.04.01",
-  "current_task_id": "T-02.04.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-04-01--auth-rate-limit",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/101",
-  "loop_iteration": 166,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 167,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -163,12 +163,14 @@
     "01-platform-infrastructure.md#T-03.03.03",
     "01-platform-infrastructure.md#T-03.03.04",
     "02-auth-users-admin.md#T-02.03.02",
-    "02-auth-users-admin.md#T-02.03.03"
+    "02-auth-users-admin.md#T-02.03.03",
+    "02-auth-users-admin.md#T-02.04.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T12:28:55",
-  "notes": "Tick-166: T-02.04.01 (Auth rate limit enforcement, L) built on feat/e02-t-02-04-01--auth-rate-limit, PR #101 ready for review. Added security:true to all 14 auth @RateLimit decorators, Retry-After header, i18n messages, progressive login delay. Typecheck + 174 tests pass.",
+  "last_updated": "2026-08-25T12:36:20",
+  "notes": "Tick-167: T-02.04.01 (Auth rate limit enforcement, L) merged as PR #101. Reviewed by z-ai/glm-5.2 (1 fix round — key mismatch, i18n wiring, first-login delay). All auth rate limits now PostgreSQL-authoritative with Retry-After header, progressive login delay. Loop idle; next: 02-auth-users-admin.md#T-03.01.01 (App-level profile check middleware).",
   "status_history": [
+    { "from": "in_review", "to": "idle", "at": "tick-167" },
     { "from": "idle", "to": "building", "at": "tick-166" },
     { "from": "building", "to": "in_review", "at": "tick-166" },
     { "from": "idle", "to": "building", "at": "tick-158" },
