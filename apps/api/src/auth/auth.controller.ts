@@ -19,6 +19,8 @@ import {
   type LoginVerifyInput,
   type LoginResendInput,
 } from './dto/login.dto.js'
+import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js'
+import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
 
 /**
@@ -160,6 +162,12 @@ export class AuthController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     const result = await this.authService.login(parsed.data, ip)
 
+    // If password change is required, return the token without setting a session
+    if (result.mustChangePassword) {
+      this.logger.log(`Password change required for user — no session established`)
+      return result
+    }
+
     // If OTP is not required, set the session cookie
     if (!result.requiresOtp) {
       const isSecure = process.env.NODE_ENV === 'production'
@@ -277,6 +285,56 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+  }
+
+  /**
+   * POST /api/auth/force-change-password
+   *
+   * Forces a password change after login detected `mustChangePassword`.
+   * Requires the short-lived password change token issued during login
+   * and the new password satisfying the same strength as registration.
+   *
+   * No session is established — the user logs in again after the change.
+   *
+   * Rate limits:
+   * - 5 attempts per IP per 300s
+   */
+  @Post('force-change-password')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000 })
+  @ApiOperation({ summary: 'Force password change after login detection' })
+  @ApiResponse({
+    status: 200,
+    description: 'Password changed successfully.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid or expired password change token' })
+  @ApiResponse({ status: 422, description: 'Password reused or too weak' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async forceChangePassword(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<{ message: string }> {
+    const parsed = ForceChangePasswordSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
+
+      if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
+        throw new HttpException(
+          { statusCode: 422, error: message },
+          422,
+        )
+      }
+
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.forceChangePassword(parsed.data, ip)
   }
 
   /**

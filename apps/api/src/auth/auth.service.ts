@@ -7,6 +7,7 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
+import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
 
 /** Session idle timeout: 30 minutes */
@@ -132,7 +133,8 @@ export class AuthService {
     try {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
-        `SELECT user_id, password_hash, must_change_password, is_admin
+        `SELECT user_id, password_hash, must_change_password,
+                password_change_token, password_change_token_expires_at, is_admin
          FROM users
          WHERE username = $1`,
         [input.username],
@@ -171,9 +173,39 @@ export class AuthService {
         )
       }
 
-      // 3. Check if risk-based OTP enforcement is needed (T-02.01.03)
-      const isStaff = userResult.rows[0].is_admin ?? false
+      // 3b. Extract user properties
       const userId = userResult.rows[0].user_id
+      const isStaff = userResult.rows[0].is_admin ?? false
+
+      // 3c. Check if user must change password (T-02.01.04)
+      // NOTE: This check intentionally precedes MFA/OTP enforcement (step 4).
+      // No session is established for the must-change-password flow, so the
+      // user must re-authenticate (with MFA if required) after the password
+      // change. MFA is therefore deferred rather than skipped.
+      const mustChangePassword = userResult.rows[0].must_change_password ?? false
+
+      if (mustChangePassword) {
+        // Generate a short-lived token to authorize the password change
+        const passwordChangeToken = uuidv7()
+        const tokenExpiry = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+
+        await pool.query(
+          `UPDATE users
+           SET password_change_token = $1, password_change_token_expires_at = $2, updated_at = NOW()
+           WHERE user_id = $3`,
+          [passwordChangeToken, tokenExpiry, userId],
+        )
+
+        this.logger.log(`Password change required for user ${userId} from ${ip}`)
+
+        return {
+          requiresOtp: false,
+          mustChangePassword: true,
+          passwordChangeToken,
+        }
+      }
+
+      // 4. Check if risk-based OTP enforcement is needed (T-02.01.03)
       const deviceFingerprint = input.deviceInfo?.fingerprint
         ? createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')
         : null
@@ -253,6 +285,144 @@ export class AuthService {
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
         500,
       )
+    }
+  }
+
+  /**
+   * Force a password change after login detection (T-02.01.04).
+   *
+   * Validates the one-time password change token issued during login,
+   * checks password history to prevent reuse of the last N passwords (default 5),
+   * and atomically: updates the password hash, clears the change token/flags,
+   * and records the old password in history.
+   *
+   * No session is established — the user must log in again after the change.
+   */
+  async forceChangePassword(
+    input: ForceChangePasswordInput,
+    ip: string,
+  ): Promise<ForceChangePasswordResponse> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Look up the user by password change token
+      const userResult = await client.query(
+        `SELECT user_id, password_hash, must_change_password,
+                password_change_token, password_change_token_expires_at
+         FROM users
+         WHERE password_change_token = $1
+         FOR UPDATE`,
+        [input.passwordChangeToken],
+      )
+
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
+          400,
+        )
+      }
+
+      const user = userResult.rows[0]
+
+      // 2. Verify the token hasn't expired
+      if (!user.must_change_password) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
+          400,
+        )
+      }
+
+      if (user.password_change_token_expires_at && new Date(user.password_change_token_expires_at) < new Date()) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
+          400,
+        )
+      }
+
+      // 3. Check password history (last 5 passwords)
+      const historyResult = await client.query(
+        `SELECT password_hash FROM password_history
+         WHERE user_id = $1
+         ORDER BY version DESC
+         LIMIT 5`,
+        [user.user_id],
+      )
+
+      const newHash = await argon2.hash(input.newPassword)
+
+      // 3a. Check against the current password (must differ from current)
+      const isSameAsCurrent = await argon2.verify(user.password_hash, input.newPassword).catch(() => false)
+      if (isSameAsCurrent) {
+        await client.query('ROLLBACK')
+        this.logger.warn(`Password reuse (same as current) detected for user ${user.user_id} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
+          422,
+        )
+      }
+
+      // 3b. Check password history (last 5 passwords)
+      for (const entry of historyResult.rows) {
+        const isReused = await argon2.verify(entry.password_hash, input.newPassword).catch(() => false)
+        if (isReused) {
+          await client.query('ROLLBACK')
+          this.logger.warn(`Password reuse detected for user ${user.user_id} from ${ip}`)
+          throw new HttpException(
+            { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
+            422,
+          )
+        }
+      }
+
+      // 4. Record current password in history, then update user
+      const version = historyResult.rows.length > 0
+        ? historyResult.rows[0].version + 1
+        : 1
+
+      const historyId = uuidv7()
+      const now = new Date()
+
+      // Insert old password into history
+      await client.query(
+        `INSERT INTO password_history (id, user_id, password_hash, version, created_at)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [historyId, user.user_id, user.password_hash, version, now],
+      )
+
+      // Update user: new password hash, clear change flag and token
+      await client.query(
+        `UPDATE users
+         SET password_hash = $1,
+             must_change_password = false,
+             password_change_token = NULL,
+             password_change_token_expires_at = NULL,
+             updated_at = $2
+         WHERE user_id = $3`,
+        [newHash, now, user.user_id],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Password changed for user ${user.user_id} from ${ip}`)
+
+      return {
+        message: 'Password changed successfully. Please log in with your new password.',
+      }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(`Force password change failed: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
+    } finally {
+      client.release()
     }
   }
 

@@ -36,6 +36,12 @@ export const users = pgTable(
     /** Staff flag — next login must change password (T-02.01.04). */
     mustChangePassword: boolean('must_change_password').notNull().default(false),
 
+    /** Short-lived token authorizing a password change after login detection (T-02.01.04). */
+    passwordChangeToken: text('password_change_token'),
+
+    /** Expiry of the password change token (default 5 min). */
+    passwordChangeTokenExpiresAt: timestamp('password_change_token_expires_at', { withTimezone: true, mode: 'date' }),
+
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 

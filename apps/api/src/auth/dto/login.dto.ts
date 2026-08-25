@@ -55,11 +55,17 @@ export interface DeviceInfoInput {
  * Successful login response.
  *
  * When `requiresOtp` is true (risk-based MFA), only `challengeId` is provided.
+ * When `mustChangePassword` is true, the user must change their password before
+ * proceeding — a `passwordChangeToken` is provided for the force-change endpoint.
  * When false, session credentials are returned directly.
  */
 export interface LoginResponse {
   /** Whether the login requires step-up OTP verification. */
   requiresOtp: boolean
+  /** Whether the user must change their password before proceeding (T-02.01.04). */
+  mustChangePassword?: boolean
+  /** Short-lived token authorizing a password change (present when mustChangePassword is true). */
+  passwordChangeToken?: string
   /** Opaque challenge ID for OTP step, present when requiresOtp is true. */
   challengeId?: string
   /** Whether the user is a staff/admin who always requires MFA. */
