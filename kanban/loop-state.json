@@ -1,12 +1,12 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-02.01.04",
-  "current_task_id": "T-02.01.04",
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-02.02.01",
+  "current_task_id": "T-02.02.01",
   "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-01-04--password-change-enforcement",
-  "current_pr_url": null,
-  "loop_iteration": 145,
-  "fix_attempts": 0,
+  "current_branch": "feat/e02-t-02-02-01--session-creation-cookie",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/89",
+  "loop_iteration": 149,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -149,6 +149,7 @@
     "02-auth-users-admin.md#T-02.01.01",
     "02-auth-users-admin.md#T-02.01.02",
     "02-auth-users-admin.md#T-02.01.03",
+    "02-auth-users-admin.md#T-02.01.04",
     "01-platform-infrastructure.md#T-02.03.02",
     "01-platform-infrastructure.md#T-02.04.01",
     "01-platform-infrastructure.md#T-02.04.02",
@@ -158,12 +159,19 @@
     "01-platform-infrastructure.md#T-02.04.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T07:08:30",
-  "notes": "Tick-145: Building T-02.01.04 — Password change enforcement on login. Backend: login detection, force-change endpoint, password history table. Frontend: password change form in auth layout.",
+  "last_updated": "2026-08-25T08:20:00",
+  "notes": "Tick-149: Fixed CI build (AuthModule missing SessionModule import), fixed pre-existing seed test (missing password_change_token columns). Pushed review to PR #89. z-ai/glm-5.2 review complete — major finding (FOR UPDATE on token lookup) already addressed by existing code. Minor items deferred. CI re-running.",
   "status_history": [
     { "from": "in_review", "to": "idle", "at": "tick-144" },
     { "from": "building", "to": "in_review", "at": "tick-144" },
     { "from": "idle", "to": "building", "at": "tick-144" },
-    { "from": "idle", "to": "building", "at": "tick-145" }
+    { "from": "idle", "to": "building", "at": "tick-145" },
+    { "from": "in_review", "to": "fixing", "at": "tick-145" },
+    { "from": "fixing", "to": "in_review", "at": "tick-145" },
+    { "from": "building", "to": "idle", "at": "tick-145" },
+    { "from": "idle", "to": "building", "at": "tick-147" },
+    { "from": "building", "to": "in_review", "at": "tick-147" },
+    { "from": "in_review", "to": "fixing", "at": "tick-148" },
+    { "from": "fixing", "to": "in_review", "at": "tick-148" }
   ]
 }

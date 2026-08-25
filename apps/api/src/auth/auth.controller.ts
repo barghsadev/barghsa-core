@@ -1,4 +1,4 @@
-import { randomBytes, createHash } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { Controller, Post, HttpCode, HttpStatus, HttpException, Logger, Body, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
@@ -22,21 +22,26 @@ import {
 import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js'
 import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
-
-/**
- * Session cookie configuration.
- * HttpOnly in all environments; Secure only in production (non-TLS dev exempted).
- */
-const SESSION_COOKIE_NAME = 'barghsa_session'
-const SESSION_COOKIE_PATH = '/'
-const SESSION_COOKIE_SAMESITE = 'lax' as const
+import { SessionService } from '../session/session.service.js'
+import {
+  SESSION_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
+  setSessionCookie,
+  setRefreshCookie,
+  clearSessionCookie,
+  clearRefreshCookie,
+} from '../session/cookie.helper.js'
 
 @ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name)
 
-  constructor(private readonly authService: AuthService, private readonly otpService: OtpService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly otpService: OtpService,
+    private readonly sessionService: SessionService,
+  ) {}
 
   /**
    * POST /api/auth/register
@@ -168,18 +173,12 @@ export class AuthController {
       return result
     }
 
-    // If OTP is not required, set the session cookie
+    // If OTP is not required, set the session and refresh cookies
     if (!result.requiresOtp) {
-      const isSecure = process.env.NODE_ENV === 'production'
-      const sessionMaxAge = new Date(result.expiresAt!).getTime() - Date.now()
-
-      res.cookie(SESSION_COOKIE_NAME, result.sessionId!, {
-        httpOnly: true,
-        secure: isSecure,
-        sameSite: SESSION_COOKIE_SAMESITE,
-        path: SESSION_COOKIE_PATH,
-        maxAge: Math.max(0, sessionMaxAge),
-      })
+      setSessionCookie(res, result.sessionId!, new Date(result.expiresAt!))
+      if (result.refreshToken) {
+        setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt!))
+      }
 
       this.logger.log(`Session established for user ${result.userId}`)
     }
@@ -236,17 +235,9 @@ export class AuthController {
       userAgent,
     )
 
-    // ── Set HttpOnly session cookie ─────────────────────────────────
-    const isSecure = process.env.NODE_ENV === 'production'
-    const sessionMaxAge = new Date(result.expiresAt).getTime() - Date.now()
-
-    res.cookie(SESSION_COOKIE_NAME, result.sessionId, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: SESSION_COOKIE_SAMESITE,
-      path: SESSION_COOKIE_PATH,
-      maxAge: Math.max(0, sessionMaxAge),
-    })
+    // ── Set HttpOnly session and refresh cookies ─────────────────
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId} via login OTP`)
 
@@ -379,21 +370,120 @@ export class AuthController {
       ip,
     )
 
-    // ── Set HttpOnly session cookie ─────────────────────────────────
-    const isSecure = process.env.NODE_ENV === 'production'
-    const sessionMaxAge = new Date(result.expiresAt).getTime() - Date.now()
-
-    res.cookie(SESSION_COOKIE_NAME, result.sessionId, {
-      httpOnly: true,
-      secure: isSecure,
-      sameSite: SESSION_COOKIE_SAMESITE,
-      path: SESSION_COOKIE_PATH,
-      maxAge: Math.max(0, sessionMaxAge),
-    })
+    // ── Set HttpOnly session and refresh cookies ─────────────────
+    setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId}`)
 
     return result
+  }
+
+  /**
+   * POST /api/auth/logout
+   *
+   * Logs out the current user by revoking the session and clearing the cookie.
+   *
+   * Rate limits:
+   * - 10 logout attempts per IP per 60s
+   */
+  @Post('logout')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Log out the current user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Logged out successfully.',
+  })
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    const sessionId = req.cookies?.[SESSION_COOKIE_NAME]
+
+    if (sessionId && typeof sessionId === 'string') {
+      await this.sessionService.revokeSession(sessionId)
+      this.logger.log(`Logout: session ${sessionId} revoked`)
+    }
+
+    clearSessionCookie(res)
+    clearRefreshCookie(res)
+
+    return { message: 'Logged out successfully.' }
+  }
+
+  /**
+   * POST /api/auth/refresh
+   *
+   * Refreshes the session using the refresh token stored in the HttpOnly
+   * refresh cookie. Implements refresh token rotation: on each use, the
+   * current refresh token is consumed and a new one is issued in the same
+   * family. If a consumed token is reused, the entire family is revoked
+   * (potential token theft detection).
+   *
+   * On success, issues new session and refresh cookies with rotated tokens.
+   *
+   * Rate limits:
+   * - 10 refresh attempts per IP per 60s
+   */
+  @Post('refresh')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Refresh the session' })
+  @ApiResponse({
+    status: 200,
+    description: 'Session refreshed. New cookies set.',
+    schema: {
+      type: 'object',
+      properties: {
+        sessionId: { type: 'string' },
+        csrfToken: { type: 'string' },
+        expiresAt: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ sessionId: string; csrfToken: string; expiresAt: string }> {
+    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME]
+
+    if (!refreshToken || typeof refreshToken !== 'string') {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
+
+    // Redeem the refresh token (rotation + family check)
+    const { sessionId, refreshToken: newRefreshToken } =
+      await this.sessionService.redeemRefreshToken(refreshToken)
+
+    // Look up the session to get its expiry and CSRF token
+    const session = await this.sessionService.getSessionById(sessionId)
+
+    if (!session) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
+
+    const expiresAt = new Date(session.expires_at)
+
+    // Set new cookies
+    setSessionCookie(res, sessionId, expiresAt)
+    setRefreshCookie(res, newRefreshToken, expiresAt)
+
+    this.logger.log(`Session refreshed: ${sessionId} for user ${session.user_id}`)
+
+    return {
+      sessionId,
+      csrfToken: session.csrf_token ?? '',
+      expiresAt: expiresAt.toISOString(),
+    }
   }
 
   /**

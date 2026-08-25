@@ -10,6 +10,15 @@ const mockCreateChallenge = vi.fn().mockResolvedValue({
   destination: 'user@example.com',
 });
 
+const mockCreateSession = vi.fn().mockImplementation(
+  async (userId: string) => ({
+    sessionId: 'mock-session-id-' + userId,
+    csrfToken: 'mock-csrf-token',
+    refreshToken: 'mock-refresh-token',
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  }),
+);
+
 vi.mock('argon2', () => ({
   hash: vi.fn().mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
 }));
@@ -40,6 +49,10 @@ const mockOtpService = {
   }),
 } as unknown as OtpService;
 
+const mockSessionService = {
+  createSession: mockCreateSession,
+} as unknown as import('../src/session/session.service.js').SessionService;
+
 function makeChallengeRow(overrides: Record<string, unknown> = {}) {
   return {
     challenge_id: 'test-challenge-id',
@@ -67,7 +80,7 @@ describe('AuthService', () => {
       return { rows: [] };
     });
     mockClient.release.mockReset();
-    service = new AuthService(mockOtpService);
+    service = new AuthService(mockOtpService, mockSessionService);
   });
 
   describe('register', () => {
@@ -140,7 +153,7 @@ describe('AuthService', () => {
         if (sql.includes('consumed_at')) {
           return { rowCount: 1 };
         }
-        if (sql.includes('INSERT INTO users') || sql.includes('INSERT INTO sessions')) {
+        if (sql.includes('INSERT INTO users')) {
           return { rows: [] };
         }
         return { rows: [] };
@@ -151,20 +164,25 @@ describe('AuthService', () => {
       expect(result).toHaveProperty('userId');
       expect(result).toHaveProperty('sessionId');
       expect(result).toHaveProperty('csrfToken');
+      expect(result).toHaveProperty('refreshToken');
       expect(result).toHaveProperty('expiresAt');
 
       expect(typeof result.userId).toBe('string');
       expect(typeof result.sessionId).toBe('string');
       expect(typeof result.csrfToken).toBe('string');
+      expect(typeof result.refreshToken).toBe('string');
       expect(typeof result.expiresAt).toBe('string');
 
-      // Verify transactional flow: BEGIN → SELECT FOR UPDATE → consume → INSERT user → INSERT session → COMMIT
+      // Verify transactional flow: BEGIN → SELECT FOR UPDATE → consume → INSERT user → COMMIT
       const calls = mockClient.query.mock.calls.map((c: [string]) => c[0]);
       const beginIdx = calls.findIndex((s: string) => s === 'BEGIN');
       const commitIdx = calls.findIndex((s: string) => s === 'COMMIT');
       expect(beginIdx).toBeGreaterThanOrEqual(0);
       expect(commitIdx).toBeGreaterThan(beginIdx);
       expect(calls.some((s: string) => s.includes('FOR UPDATE'))).toBe(true);
+
+      // Verify SessionService was called
+      expect(mockCreateSession).toHaveBeenCalledTimes(1);
     });
 
     it('throws 404 when challenge is not found', async () => {

@@ -1,5 +1,5 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { randomBytes, createHash } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool } from '@barghsa/db'
@@ -9,19 +9,13 @@ import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
 import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
-
-/** Session idle timeout: 30 minutes */
-const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000
-/** Session absolute timeout: 24 hours */
-const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000
+import { SessionService } from '../session/session.service.js'
 
 /**
- * Service handling registration business logic.
+ * Service handling registration and login business logic.
  *
- * At this stage (T-01.02.01 / T-01.02.03), the service validates the input,
- * checks for duplicate usernames (stub), creates an OTP challenge via
- * OtpService (storing password hash for atomic consumption on verify),
- * and on OTP verify creates the user record and session atomically.
+ * Creates user records, verifies credentials with Argon2id,
+ * and delegates session creation to SessionService (T-02.02.01).
  */
 @Injectable()
 export class AuthService {
@@ -36,7 +30,10 @@ export class AuthService {
   private static _dummyHash: string | null = null
   private static _dummyHashPromise: Promise<void> | null = null
 
-  constructor(private readonly otpService: OtpService) {}
+  constructor(
+    private readonly otpService: OtpService,
+    private readonly sessionService: SessionService,
+  ) {}
 
   /**
    * Kick off the dummy hash computation so it's ready by the time a login
@@ -253,18 +250,11 @@ export class AuthService {
         }
       }
 
-      // 4. Create session atomically
-      const sessionId = uuidv7()
-      const csrfToken = randomBytes(32).toString('hex')
-      const now = new Date()
-      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
-
-      await pool.query(
-        `INSERT INTO sessions (session_id, user_id, csrf_token,
-                                expires_at, idle_deadline, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
-        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
+      // 4. Create session via SessionService
+      const session = await this.sessionService.createSession(
+        userId,
+        isStaff,
+        { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
       )
 
       this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`)
@@ -272,9 +262,10 @@ export class AuthService {
       return {
         requiresOtp: false,
         userId,
-        sessionId,
-        csrfToken,
-        expiresAt: expiresAt.toISOString(),
+        sessionId: session.sessionId,
+        csrfToken: session.csrfToken,
+        refreshToken: session.refreshToken,
+        expiresAt: session.expiresAt.toISOString(),
       }
     } catch (err) {
       // Re-throw HttpExceptions as-is (safe structured errors)
@@ -444,6 +435,7 @@ export class AuthService {
   ): Promise<LoginVerifyResponse> {
     const pool = getDbPool()
     const client = await pool.connect()
+    let userId: string
 
     try {
       await client.query('BEGIN')
@@ -465,10 +457,10 @@ export class AuthService {
         )
       }
 
-      const row = challengeResult.rows[0]
+      const challengeRow = challengeResult.rows[0]
 
       // Check consumed
-      if (row.consumed_at) {
+      if (challengeRow.consumed_at) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
           409,
@@ -476,7 +468,7 @@ export class AuthService {
       }
 
       // Check expiry
-      if (new Date(row.expires_at) < new Date()) {
+      if (new Date(challengeRow.expires_at) < new Date()) {
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
           401,
@@ -484,15 +476,15 @@ export class AuthService {
       }
 
       // Check attempts
-      if (row.attempts_remaining <= 0) {
+      if (challengeRow.attempts_remaining <= 0) {
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
           401,
         )
       }
 
-      // Must have a user_id (login challenge)
-      if (!row.user_id) {
+      // Check user_id
+      if (!challengeRow.user_id) {
         this.logger.error(`Login challenge ${challengeId} missing user_id`)
         throw new HttpException(
           { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
@@ -502,7 +494,7 @@ export class AuthService {
 
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(otp)
-      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+      if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
         // Decrement attempts inside the transaction and commit
         await client.query(
           `UPDATE otp_challenges
@@ -518,13 +510,9 @@ export class AuthService {
         )
       }
 
-      // 3. Consume OTP + create session atomically
-      const userId = row.user_id
-      const sessionId = uuidv7()
-      const csrfToken = randomBytes(32).toString('hex')
+      // 3. Consume OTP (in transaction)
+      userId = challengeRow.user_id
       const now = new Date()
-      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
 
       // Consume the OTP challenge
       const consumeResult = await client.query(
@@ -541,54 +529,61 @@ export class AuthService {
         )
       }
 
-      // Create session
-      await client.query(
-        `INSERT INTO sessions (session_id, user_id, csrf_token,
-                                expires_at, idle_deadline, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
-        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
-      )
-
-      // 4. Optionally mark device as trusted
-      if (trustDevice && deviceFingerprint) {
-        const trustExpiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days
-        const trustId = uuidv7()
-
-        // Upsert: update existing trust for this device, or insert new
-        await client.query(
-          `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
-           VALUES ($1, $2, $3, $4, $5, $6)
-           ON CONFLICT (user_id, device_fingerprint) DO UPDATE
-             SET trusted_at = $5, expires_at = $6, updated_at = NOW()`,
-          [trustId, userId, deviceFingerprint, userAgent ?? null, now, trustExpiresAt],
-        )
-
-        this.logger.log(`Device trusted for user ${userId}`)
-      }
-
       await client.query('COMMIT')
-
-      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`)
-
-      return {
-        userId,
-        sessionId,
-        csrfToken,
-        expiresAt: expiresAt.toISOString(),
-      }
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {})
-
+      client.release()
       // Re-throw HttpExceptions as-is
       if (err instanceof HttpException) throw err
-
       this.logger.error(`Login OTP verify failed for challenge ${challengeId}: ${String(err)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
         500,
       )
-    } finally {
-      client.release()
+    }
+    client.release()
+
+    // ── Session creation (outside OTP transaction) ────────────
+    try {
+      const session = await this.sessionService.createSession(
+        userId,
+        false,
+        { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
+      )
+
+      // 5. Optionally mark device as trusted
+      if (trustDevice && deviceFingerprint) {
+        const trustNow = new Date()
+        const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000)
+        const trustId = uuidv7()
+
+        const pool2 = getDbPool()
+        await pool2.query(
+          `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
+           VALUES ($1, $2, $3, $4, $5, $6)
+           ON CONFLICT (user_id, device_fingerprint) DO UPDATE
+             SET trusted_at = $5, expires_at = $6, updated_at = NOW()`,
+          [trustId, userId, deviceFingerprint, userAgent ?? null, trustNow, trustExpiresAt],
+        )
+
+        this.logger.log(`Device trusted for user ${userId}`)
+      }
+
+      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`)
+
+      return {
+        userId,
+        sessionId: session.sessionId,
+        csrfToken: session.csrfToken,
+        refreshToken: session.refreshToken,
+        expiresAt: session.expiresAt.toISOString(),
+      }
+    } catch (err) {
+      this.logger.error(`Login OTP session creation failed for user ${userId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
+        500,
+      )
     }
   }
 
@@ -605,6 +600,8 @@ export class AuthService {
   ): Promise<RegisterVerifyResponse> {
     const pool = getDbPool()
     const client = await pool.connect()
+    let userId: string | undefined
+    let row: any
 
     try {
       await client.query('BEGIN')
@@ -626,7 +623,7 @@ export class AuthService {
         )
       }
 
-      const row = challengeResult.rows[0]
+      row = challengeResult.rows[0]
 
       // Check consumed
       if (row.consumed_at) {
@@ -682,13 +679,9 @@ export class AuthService {
         )
       }
 
-      // 3. Create user + consume OTP + create session atomically
-      const userId = uuidv7()
-      const sessionId = uuidv7()
-      const csrfToken = randomBytes(32).toString('hex')
+      // 3. Create user + consume OTP atomically (in transaction)
+      userId = uuidv7()
       const now = new Date()
-      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
 
       // Consume the OTP challenge
       const consumeResult = await client.query(
@@ -720,30 +713,12 @@ export class AuthService {
         ],
       )
 
-      // Create session
-      await client.query(
-        `INSERT INTO sessions (session_id, user_id, csrf_token,
-                               expires_at, idle_deadline, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
-        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
-      )
-
       await client.query('COMMIT')
-
-      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`)
-
-      return {
-        userId,
-        sessionId,
-        csrfToken,
-        expiresAt: expiresAt.toISOString(),
-      }
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {})
-
+      client.release()
       // Re-throw HttpExceptions as-is
       if (err instanceof HttpException) throw err
-
       this.logger.error(`Failed to create user for challenge ${challengeId}: ${String(err)}`)
       throw new HttpException(
         {
@@ -752,8 +727,35 @@ export class AuthService {
         },
         ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
       )
-    } finally {
-      client.release()
+    }
+    client.release()
+
+    // ── Session creation (outside transaction) ────────────
+    try {
+      const session = await this.sessionService.createSession(
+        userId,
+        false,
+        { ip },
+      )
+
+      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`)
+
+      return {
+        userId,
+        sessionId: session.sessionId,
+        csrfToken: session.csrfToken,
+        refreshToken: session.refreshToken,
+        expiresAt: session.expiresAt.toISOString(),
+      }
+    } catch (err) {
+      this.logger.error(`Registration session creation failed for user ${userId}: ${String(err)}`)
+      throw new HttpException(
+        {
+          statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+          error: ErrorCodes.AUTH_REGISTER_FAILED.code,
+        },
+        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
+      )
     }
   }
 }
