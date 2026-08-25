@@ -26,7 +26,38 @@ const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000
 export class AuthService {
   private readonly logger = new Logger(AuthService.name)
 
+  /**
+   * Pre-computed Argon2id hash of a dummy string, used to equalize response
+   * timing when the username is not found — prevents user enumeration via
+   * timing side-channel (T-02.01.02 hardening).
+   * Lazy-initialized so module load doesn't block on hashing.
+   */
+  private static _dummyHash: string | null = null
+  private static _dummyHashPromise: Promise<void> | null = null
+
   constructor(private readonly otpService: OtpService) {}
+
+  /**
+   * Kick off the dummy hash computation so it's ready by the time a login
+   * request arrives. Caches the result in _dummyHash.
+   * Errors (e.g. argon2 mock in test) are silently caught — without the
+   * dummy hash, the timing side-channel guard simply degrades gracefully.
+   */
+  private async ensureDummyHash(): Promise<void> {
+    if (AuthService._dummyHash) return
+    if (!AuthService._dummyHashPromise) {
+      AuthService._dummyHashPromise = argon2
+        .hash('__barghsa_timing_constant__')
+        .then((hash) => {
+          AuthService._dummyHash = hash
+        })
+        .catch(() => {
+          // argon2 mock or unavailability — timing guard degrades gracefully
+          AuthService._dummyHashPromise = null
+        })
+    }
+    return AuthService._dummyHashPromise
+  }
 
   /**
    * Attempt to register a new user.
@@ -94,60 +125,78 @@ export class AuthService {
   async login(input: LoginInput, ip: string): Promise<LoginResponse> {
     const pool = getDbPool()
 
-    // 1. Look up user by normalized username
-    const userResult = await pool.query(
-      `SELECT user_id, password_hash, must_change_password
-       FROM users
-       WHERE username = $1`,
-      [input.username],
-    )
-
-    if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        401,
-      )
-    }
-
-    const userRow = userResult.rows[0]
-
-    // 2. Verify password with Argon2id
-    const passwordValid = await argon2.verify(userRow.password_hash, input.password)
-
-    if (!passwordValid) {
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-        401,
-      )
-    }
-
-    // 3. Check if risk-based OTP enforcement is needed
-    // TODO(T-02.01.03): Evaluate device trust, IP risk, previous login patterns.
-    // For now, always skip OTP — equivalent to "known device, low risk."
-    const requiresOtp = false
-
-    if (requiresOtp) {
-      // Future: create OTP challenge and return challengeId
-      // const { challengeId } = await this.otpService.createChallenge(
-      //   input.username,
-      //   ip,
-      // )
-      // return { requiresOtp: true, challengeId }
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
-        500,
-      )
-    }
-
-    // 4. Create session atomically
-    const userId = userRow.user_id
-    const sessionId = uuidv7()
-    const csrfToken = randomBytes(32).toString('hex')
-    const now = new Date()
-    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+    // Kick off dummy hash computation if not yet ready (settles in ~200ms;
+    // by the time the client types a password on the next request it's ready)
+    this.ensureDummyHash()
 
     try {
+      // 1. Look up user by normalized username
+      const userResult = await pool.query(
+        `SELECT user_id, password_hash, must_change_password
+         FROM users
+         WHERE username = $1`,
+        [input.username],
+      )
+
+      const userFound = userResult.rows.length > 0
+      const dummyHash = AuthService._dummyHash
+
+      // 2. Verify password with Argon2id (falling through to dummy hash
+      //    when user not found, to equalize response timing)
+      let passwordValid = false
+
+      if (userFound) {
+        try {
+          passwordValid = await argon2.verify(
+            userResult.rows[0].password_hash,
+            input.password,
+          )
+        } catch {
+          // Corrupted or malformed password_hash — treat as invalid credential
+          // without revealing internal hash format details
+        }
+      } else if (dummyHash) {
+        try {
+          await argon2.verify(dummyHash, input.password)
+        } catch {
+          // Dummy hash not ready yet — timing inequality is acceptable on
+          // first few requests; the hash settles within ~200ms of app start
+        }
+      }
+
+      if (!userFound || !passwordValid) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
+          401,
+        )
+      }
+
+      // 3. Check if risk-based OTP enforcement is needed
+      // TODO(T-02.01.03): Evaluate device trust, IP risk, previous login patterns.
+      // For now, always skip OTP — equivalent to "known device, low risk."
+      const requiresOtp = false
+
+      if (requiresOtp) {
+        // Future: create OTP challenge and return challengeId
+        // const { challengeId } = await this.otpService.createChallenge(
+        //   input.username,
+        //   ip,
+        // )
+        // return { requiresOtp: true, challengeId }
+        throw new HttpException(
+          { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
+          500,
+        )
+      }
+
+      // 4. Create session atomically
+      const userId = userResult.rows[0].user_id
+      const sessionId = uuidv7()
+      const csrfToken = randomBytes(32).toString('hex')
+      const now = new Date()
+      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
+      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+
       await pool.query(
         `INSERT INTO sessions (session_id, user_id, csrf_token,
                                 expires_at, idle_deadline, created_at, updated_at)
@@ -165,7 +214,10 @@ export class AuthService {
         expiresAt: expiresAt.toISOString(),
       }
     } catch (err) {
-      this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`)
+      // Re-throw HttpExceptions as-is (safe structured errors)
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(`Login failed for user ${input.username}: ${String(err)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
         500,
