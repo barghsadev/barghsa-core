@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-02.02.04",
-  "current_task_id": "T-02.02.04",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-02-04--step-up-auth",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/92",
-  "loop_iteration": 154,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 155,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -146,14 +146,16 @@
     "01-platform-infrastructure.md#T-02.04.06",
     "02-auth-users-admin.md#T-02.02.01",
     "02-auth-users-admin.md#T-02.02.02",
-    "02-auth-users-admin.md#T-02.02.03"
+    "02-auth-users-admin.md#T-02.02.03",
+    "02-auth-users-admin.md#T-02.02.04"
   ],
   "last_error": null,
   "last_updated": "2026-08-25T09:32:30",
-  "notes": "Tick-154: T-02.02.04 (Step-up auth — Slice 1/2: backend infra) PR #92 created, ready for review.",
+  "notes": "Tick-155: T-02.02.04 (Step-up auth — Slice 1/2: backend infra) merged as PR #92. Reviewed by z-ai/glm-5.2 (approve, 2 minor — boundary fix applied). Loop idle; next: 02-auth-users-admin.md#T-02.02.04 (Slice 2: frontend wiring).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-154" },
     { "from": "building", "to": "in_review", "at": "tick-154" },
+    { "from": "in_review", "to": "idle", "at": "tick-155" },
     { "from": "in_review", "to": "idle", "at": "tick-144" },
     { "from": "building", "to": "in_review", "at": "tick-144" },
     { "from": "idle", "to": "building", "at": "tick-144" },
