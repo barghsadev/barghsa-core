@@ -218,6 +218,16 @@ export const fa: I18nDictionary = {
   'onboarding.profile.legal': 'حقوقی',
   'onboarding.profile.legalDesc': 'برای ثبت‌نام به عنوان شخص حقوقی',
   'onboarding.profile.legalDescEn': 'Legal entity registration',
+  'onboarding.type.prompt': 'لطفاً نوع پروفایل خود را انتخاب کنید',
+  'onboarding.type.promptEn': 'Please select your profile type',
+  'onboarding.type.continue': 'ادامه',
+  'onboarding.type.continueEn': 'Continue',
+  'onboarding.type.individualHint': 'مناسب برای استفاده‌کنندگان شخصی',
+  'onboarding.type.individualHintEn': 'For personal use',
+  'onboarding.type.legalHint': 'مناسب برای شرکت‌ها و سازمان‌ها',
+  'onboarding.type.legalHintEn': 'For companies and organizations',
+  'onboarding.type.error.required': 'لطفاً یک نوع پروفایل انتخاب کنید',
+  'onboarding.type.error.requiredEn': 'Please select a profile type',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'پروفایل شما تأیید نشده است',
@@ -444,6 +454,11 @@ export const en: I18nDictionary = {
   'onboarding.profile.individualDesc': 'Register as an individual person',
   'onboarding.profile.legal': 'Legal Entity',
   'onboarding.profile.legalDesc': 'Register as a legal entity',
+  'onboarding.type.prompt': 'Please select your profile type',
+  'onboarding.type.continue': 'Continue',
+  'onboarding.type.individualHint': 'For personal use',
+  'onboarding.type.legalHint': 'For companies and organizations',
+  'onboarding.type.error.required': 'Please select a profile type',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'Your profile is not verified',
