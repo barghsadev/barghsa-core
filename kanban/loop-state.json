@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-02.03.03",
-  "current_task_id": "T-02.03.03",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-03-03--account-recovery-support",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/100",
-  "loop_iteration": 164,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 165,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -162,11 +162,12 @@
     "01-platform-infrastructure.md#T-03.03.02",
     "01-platform-infrastructure.md#T-03.03.03",
     "01-platform-infrastructure.md#T-03.03.04",
-    "02-auth-users-admin.md#T-02.03.02"
+    "02-auth-users-admin.md#T-02.03.02",
+    "02-auth-users-admin.md#T-02.03.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T12:00:00",
-  "notes": "Tick-164: T-02.03.03 PR #100 in_review — review returned request_changes (2 major: non-clickable contact links, locale). Fixed clickable links, RTL arrow, back link target, trailing newline. Back in review (fix_attempts=1).",
+  "last_updated": "2026-08-25T12:15:00",
+  "notes": "Tick-165: T-02.03.03 (Account recovery support path) merged as PR #100. Reviewed by z-ai/glm-5.2 (approve, 1 minor — trailing newline nit). Loop idle; next: 02-auth-users-admin.md#T-02.04.01 (Auth rate limit enforcement, L complexity).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
@@ -200,6 +201,7 @@
     { "from": "idle", "to": "building", "at": "tick-163" },
     { "from": "in_review", "to": "idle", "at": "tick-163" },
     { "from": "idle", "to": "building", "at": "tick-164" },
-    { "from": "building", "to": "in_review", "at": "tick-164" }
+    { "from": "building", "to": "in_review", "at": "tick-164" },
+    { "from": "in_review", "to": "idle", "at": "tick-165" }
   ]
 }
