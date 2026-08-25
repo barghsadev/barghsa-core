@@ -19,6 +19,20 @@ function mockClient() {
   return { mockClientQuery, mockRelease, client }
 }
 
+/** Predefined roles for mocking @barghsa/db. */
+const MOCK_ROLES = [
+  { id: 'role-customer-support' as const, name: 'Customer Support', description: '', permissions: [] },
+  { id: 'role-crm-verification' as const, name: 'CRM & Verification', description: '', permissions: [] },
+  { id: 'role-finance' as const, name: 'Finance', description: '', permissions: [] },
+  { id: 'role-legal-contracts' as const, name: 'Legal & Contracts', description: '', permissions: [] },
+  { id: 'role-operations' as const, name: 'Operations', description: '', permissions: [] },
+  { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
+]
+
+function mockDbModule(pool: { query: ReturnType<typeof vi.fn>; connect: ReturnType<typeof vi.fn> }) {
+  return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }
+}
+
 let AdminService: typeof AdminServiceType
 let service: AdminServiceType
 
@@ -68,7 +82,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -99,7 +113,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -130,7 +144,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -164,7 +178,7 @@ describe('AdminService.createStaffUser (link)', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -195,7 +209,7 @@ describe('AdminService.createStaffUser (link)', () => {
       .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -221,7 +235,7 @@ describe('AdminService.createStaffUser (errors)', () => {
     const { pool } = mockPool()
     pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'existing-user' }] })
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -247,7 +261,7 @@ describe('AdminService.createStaffUser (errors)', () => {
       .mockRejectedValueOnce({ code: '23505', detail: 'Key (username)=(x) already exists.' })
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -273,7 +287,7 @@ describe('AdminService.createStaffUser (errors)', () => {
       .mockRejectedValueOnce(new Error('Connection timeout'))
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -286,6 +300,29 @@ describe('AdminService.createStaffUser (errors)', () => {
 
     expect(caught).toBeInstanceOf(HttpException)
     expect((caught as HttpException).getStatus()).toBe(500)
+  })
+
+  it('throws 400 when roleIds contain invalid role IDs', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    let caught: unknown
+    try {
+      await service.createStaffUser(
+        validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
+        'actor',
+        '10.0.0.1',
+      )
+    } catch (e) {
+      caught = e
+    }
+
+    expect(caught).toBeInstanceOf(HttpException)
+    expect((caught as HttpException).getStatus()).toBe(400)
   })
 })
 
@@ -304,7 +341,7 @@ describe('AdminService.createStaffUser (rollback)', () => {
       .mockRejectedValueOnce(new Error('DB failure'))
       .mockResolvedValueOnce(undefined)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -316,20 +353,34 @@ describe('AdminService.createStaffUser (rollback)', () => {
 
     expect(mockRelease).toHaveBeenCalled()
   })
+
+  it('throws 400 when roleIds contain invalid role IDs', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    let caught: unknown
+    try {
+      await service.createStaffUser(
+        validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
+        'actor',
+        '10.0.0.1',
+      )
+    } catch (e) {
+      caught = e
+    }
+
+    expect(caught).toBeInstanceOf(HttpException)
+    expect((caught as HttpException).getStatus()).toBe(400)
+  })
 })
 
 // ─── Tests — updateStaffRoles ──────────────────────────────────────────
 
 describe('AdminService.updateStaffRoles', () => {
-  const MOCK_ROLES = [
-    { id: 'role-customer-support' as const, name: 'Customer Support', description: '', permissions: [] },
-    { id: 'role-crm-verification' as const, name: 'CRM & Verification', description: '', permissions: [] },
-    { id: 'role-finance' as const, name: 'Finance', description: '', permissions: [] },
-    { id: 'role-legal-contracts' as const, name: 'Legal & Contracts', description: '', permissions: [] },
-    { id: 'role-operations' as const, name: 'Operations', description: '', permissions: [] },
-    { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
-  ]
-
   it('updates roles for an existing user (replaces role set)', async () => {
     const { pool, mockConnect } = mockPool()
     const { client, mockClientQuery, mockRelease } = mockClient()
@@ -346,7 +397,7 @@ describe('AdminService.updateStaffRoles', () => {
       .mockResolvedValueOnce(undefined) // audit log INSERT
       .mockResolvedValueOnce(undefined) // COMMIT
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -378,7 +429,7 @@ describe('AdminService.updateStaffRoles', () => {
       .mockResolvedValueOnce(undefined) // audit log
       .mockResolvedValueOnce(undefined) // COMMIT
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -398,7 +449,7 @@ describe('AdminService.updateStaffRoles', () => {
     const { pool } = mockPool()
     pool.query.mockResolvedValueOnce({ rows: [] })
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -424,7 +475,7 @@ describe('AdminService.updateStaffRoles', () => {
       .mockRejectedValueOnce(new Error('Unexpected DB failure'))
       .mockResolvedValueOnce(undefined) // ROLLBACK (caught with .catch)
 
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }))
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
     const { AdminService: Svc } = await import('./admin.service.js')
     service = new Svc()
 
@@ -437,5 +488,24 @@ describe('AdminService.updateStaffRoles', () => {
 
     expect(caught).toBeInstanceOf(HttpException)
     expect((caught as HttpException).getStatus()).toBe(500)
+  })
+
+  it('throws 400 when roleIds contain invalid role IDs', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    let caught: unknown
+    try {
+      await service.updateStaffRoles('target', ['nonexistent-role'], 'actor', '10.0.0.1')
+    } catch (e) {
+      caught = e
+    }
+
+    expect(caught).toBeInstanceOf(HttpException)
+    expect((caught as HttpException).getStatus()).toBe(400)
   })
 })

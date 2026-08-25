@@ -167,6 +167,22 @@ export class AdminService {
       )
     }
 
+    // ── 1b. Validate role IDs against predefined roles ─────────────────
+    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
+    const assignedRoleIds = input.roleIds ?? []
+    const invalidRoleIds = assignedRoleIds.filter((rid) => !validRoleIds.has(rid))
+
+    if (invalidRoleIds.length > 0) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'VALIDATION_INVALID_ROLES',
+          message: `Invalid role IDs: ${invalidRoleIds.join(', ')}`,
+        },
+        400,
+      )
+    }
+
     const userId = uuidv7()
     const now = new Date()
 
@@ -232,6 +248,15 @@ export class AdminService {
          VALUES ($1, $2, 'INDIVIDUAL', true, 'VERIFIED', $3, $4, $5, $6)`,
         [profileId, userId, input.firstName, input.lastName, now, now],
       )
+
+      // ── 4b. Assign initial roles ────────────────────────────────────
+      if (assignedRoleIds.length > 0) {
+        const insertRoleValues = assignedRoleIds.map((rid) => `($1, '${rid.replace(/'/g, "''")}', $2)`).join(', ')
+        await client.query(
+          `INSERT INTO user_roles (user_id, role_id, created_at) VALUES ${insertRoleValues}`,
+          [userId, now],
+        )
+      }
 
       // ── 5. Record audit event ──────────────────────────────────────
       const auditId = uuidv7()

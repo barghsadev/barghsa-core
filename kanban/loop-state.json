@@ -1,5 +1,5 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-05.03.02",
   "current_task_id": "T-05.03.02",
   "current_task_file": "02-auth-users-admin.md",
@@ -193,7 +193,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-26T01:47:00Z",
-  "notes": "Tick-227: Implemented T-05.03.02 (Staff role assignment). Created staff_roles/user_roles tables, PUT endpoint with step-up auth, audit logging. PR #130 (draft). 356/356 tests, tsc clean. Awaiting CI before marking ready for review.",
+  "notes": "Tick-227: Implemented T-05.03.02 (Staff role assignment). Created staff_roles/user_roles tables, PUT endpoint with step-up auth, audit logging. PR #130 ready for review. 356/356 tests, tsc clean, CI build passes.",
   "status_history": [
     {
       "from": "in_review",
@@ -223,6 +223,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-227"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-227"
     }
   ]
