@@ -60,6 +60,9 @@ export const fa: I18nDictionary = {
   'auth.register.tosSuffix': 'و سیاست‌های حریم خصوصی را می‌پذیرم',
   'auth.register.forgotPasswordLink': 'رمز عبور را فراموش کرده‌اید؟',
   'auth.register.forgotPasswordLabel': 'فراموشی رمز عبور',
+  'auth.register.newPasswordLabel': 'رمز عبور جدید',
+  'auth.register.confirmPasswordLabel': 'تکرار رمز عبور جدید',
+  'auth.register.error.passwordsDoNotMatch': 'رمز عبور و تکرار آن مطابقت ندارند',
 
   // ── Conflict ────────────────────────────────────────────
   'error.conflict.duplicate': 'این مورد از قبل وجود دارد',
@@ -102,6 +105,15 @@ export const fa: I18nDictionary = {
   'auth.login.trustDevice': 'این دستگاه را به خاطر بسپار',
   'auth.login.otpSuccess': 'ورود با موفقیت تأیید شد',
   'auth.login.otpExpired': 'کد تأیید منقضی شده است. لطفاً دوباره وارد شوید',
+  'auth.login.backToLogin': 'بازگشت به فرم ورود',
+  'auth.login.forceChangeTitle': 'تغییر رمز عبور الزامی است',
+  'auth.login.forceChangeDescription': 'حساب شما نیاز به تغییر رمز عبور دارد. لطفاً یک رمز عبور جدید انتخاب کنید',
+  'auth.login.changingPassword': 'در حال تغییر رمز عبور…',
+  'auth.login.changePasswordButton': 'تغییر رمز عبور',
+  'auth.login.passwordChanged': 'رمز عبور با موفقیت تغییر کرد. لطفاً با رمز جدید وارد شوید',
+  'auth.login.error.mustChangePassword': 'تغییر رمز عبور الزامی است',
+  'auth.login.error.passwordReused': 'این رمز عبور قبلاً استفاده شده است. لطفاً رمز عبور دیگری انتخاب کنید',
+  'auth.login.error.passwordChangeFailed': 'تغییر رمز عبور با خطا مواجه شد. لطفاً دوباره تلاش کنید',
 
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'تأیید شماره موبایل / ایمیل',
@@ -196,6 +208,9 @@ export const en: I18nDictionary = {
   'auth.register.tosSuffix': 'and privacy policy',
   'auth.register.forgotPasswordLink': 'Forgot password?',
   'auth.register.forgotPasswordLabel': 'Forgot password',
+  'auth.register.newPasswordLabel': 'New password',
+  'auth.register.confirmPasswordLabel': 'Confirm new password',
+  'auth.register.error.passwordsDoNotMatch': 'Passwords do not match',
 
   // ── Rate Limit ──────────────────────────────────────────
   'error.rate_limit.exceeded': 'Too many requests – please try again later',
@@ -233,6 +248,15 @@ export const en: I18nDictionary = {
   'auth.login.trustDevice': 'Trust this device',
   'auth.login.otpSuccess': 'Login verified successfully',
   'auth.login.otpExpired': 'Verification code expired. Please log in again',
+  'auth.login.backToLogin': 'Back to login',
+  'auth.login.forceChangeTitle': 'Password change required',
+  'auth.login.forceChangeDescription': 'Your account requires a password change. Please choose a new password',
+  'auth.login.changingPassword': 'Changing password…',
+  'auth.login.changePasswordButton': 'Change password',
+  'auth.login.passwordChanged': 'Password changed successfully. Please log in with your new password',
+  'auth.login.error.mustChangePassword': 'Password change is required',
+  'auth.login.error.passwordReused': 'This password was used before. Please choose a different password',
+  'auth.login.error.passwordChangeFailed': 'Password change failed. Please try again',
 
   // ── Auth Pages — OTP Verification ────────────────────────────
   'auth.otp.title': 'Verify Mobile / Email',

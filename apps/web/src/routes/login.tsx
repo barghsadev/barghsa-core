@@ -2,10 +2,10 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
-import { Loader2Icon } from 'lucide-react'
+import { Loader2Icon, CheckCircle2Icon } from 'lucide-react'
 import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
-import { PasswordField } from '../components/PasswordField.js'
+import { PasswordField, evaluateStrength } from '../components/PasswordField.js'
 import { OtpInput } from '../components/OtpInput.js'
 import { setCsrfToken } from '../lib/csrf.js'
 
@@ -113,6 +113,14 @@ function LoginPage() {
   const [resendTimer, setResendTimer] = useState(60)
   const [canResend, setCanResend] = useState(false)
   const otpRef = useRef<{ reset: () => void } | null>(null)
+
+  // ── Password change step state (T-02.01.04) ──────────────
+  const [passwordChangeStep, setPasswordChangeStep] = useState(false)
+  const [passwordChangeToken, setPasswordChangeToken] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [changingPassword, setChangingPassword] = useState(false)
+  const [changeError, setChangeError] = useState<string | null>(null)
 
   // Countdown timer for resend
   useEffect(() => {
@@ -229,6 +237,23 @@ function LoginPage() {
         return
       }
 
+      // ── Check if password change is required (T-02.01.04) ──
+      if (body?.mustChangePassword) {
+        const token = body?.passwordChangeToken as string | undefined
+        if (!token) {
+          const msg = t('auth.login.error.generic', locale)
+          setFormError(msg)
+          toast.error(msg)
+          return
+        }
+        setPasswordChangeToken(token)
+        setPasswordChangeStep(true)
+        setNewPassword('')
+        setConfirmPassword('')
+        setChangeError(null)
+        return
+      }
+
       // ── Check if OTP step-up is required ──────────────────
       if (body?.requiresOtp) {
         const cid = body?.challengeId as string | undefined
@@ -260,6 +285,64 @@ function LoginPage() {
       setSubmitting(false)
     }
   }, [username, password, locale, router])
+
+  // ── Password change handlers (T-02.01.04) ─────────────────────────────
+
+  const handleForceChange = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault()
+    setChangeError(null)
+
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setChangeError(t('auth.register.error.passwordsDoNotMatch', locale))
+      return
+    }
+
+    // Check strength
+    const strength = evaluateStrength(newPassword)
+    if (strength.score < 40) {
+      setChangeError(t('auth.register.error.weakPassword', locale))
+      return
+    }
+
+    setChangingPassword(true)
+
+    try {
+      const response = await fetch('/api/auth/force-change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          passwordChangeToken,
+          newPassword,
+        }),
+      })
+
+      if (!response.ok) {
+        const body: Record<string, unknown> =
+          await response.json().catch(() => ({}))
+        const errorCode = typeof body?.error === 'string'
+          ? body.error
+          : String(body?.error ?? '')
+
+        if (errorCode === 'AUTH:LOGIN:PASSWORD_REUSED') {
+          setChangeError(t('auth.login.error.passwordReused', locale))
+        } else {
+          setChangeError(t('auth.login.error.passwordChangeFailed', locale))
+        }
+        return
+      }
+
+      // Success — redirect back to login with message
+      toast.success(t('auth.login.passwordChanged', locale))
+      setPasswordChangeStep(false)
+      setPassword('')
+      setFormError(null)
+    } catch {
+      setChangeError(t('auth.login.error.generic', locale))
+    } finally {
+      setChangingPassword(false)
+    }
+  }, [newPassword, confirmPassword, passwordChangeToken, locale])
 
   // ── OTP verification callbacks ──────────────────────────────────────────
 
@@ -373,6 +456,13 @@ function LoginPage() {
     setFormError(null)
   }, [])
 
+  const handleBackToLoginFromChange = useCallback(() => {
+    setPasswordChangeStep(false)
+    setChangeError(null)
+    setFormError(null)
+    setPassword('')
+  }, [])
+
   const handleOtpClearError = useCallback(() => {
     setOtpError(null)
   }, [])
@@ -393,6 +483,19 @@ function LoginPage() {
                 aria-label={t('auth.login.otpBackToLogin', locale)}
               >
                 {t('auth.login.otpBackToLogin', locale)}
+              </button>
+            </p>
+          </div>
+        ) : passwordChangeStep ? (
+          <div className="space-y-2">
+            <p className="text-center text-sm">
+              <button
+                type="button"
+                onClick={handleBackToLoginFromChange}
+                className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                aria-label={t('auth.login.backToLogin', locale)}
+              >
+                {t('auth.login.backToLogin', locale)}
               </button>
             </p>
           </div>
@@ -500,6 +603,95 @@ function LoginPage() {
               )}
             </div>
           </div>
+        </div>
+      ) : passwordChangeStep ? (
+        // ── Password change form (T-02.01.04) ─────────────────
+        <div className="space-y-6">
+          <div className="space-y-1.5">
+            <h1 className="text-xl font-semibold tracking-tight">
+              {t('auth.login.forceChangeTitle', locale)}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {t('auth.login.forceChangeDescription', locale)}
+            </p>
+          </div>
+
+          <form
+            onSubmit={handleForceChange}
+            className="space-y-4"
+            noValidate
+          >
+            {/* Form-level alert for server errors */}
+            {changeError && (
+              <Alert variant="destructive" role="alert">
+                <AlertTitle className="sr-only">Error</AlertTitle>
+                <AlertDescription>{changeError}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* New password with strength meter */}
+            <PasswordField
+              id="new-password"
+              label={t('auth.register.newPasswordLabel', locale)}
+              locale={locale}
+              autoFocus={true}
+              value={newPassword}
+              onChange={setNewPassword}
+              disabled={changingPassword}
+              showStrength={true}
+              autoComplete="new-password"
+            />
+
+            {/* Confirm password */}
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">
+                {t('auth.register.confirmPasswordLabel', locale)}
+              </Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={changingPassword}
+                aria-invalid={confirmPassword.length > 0 && newPassword !== confirmPassword}
+                aria-describedby={
+                  confirmPassword.length > 0 && newPassword !== confirmPassword
+                    ? 'confirm-password-error'
+                    : undefined
+                }
+              />
+              {confirmPassword.length > 0 && newPassword !== confirmPassword && (
+                <p
+                  id="confirm-password-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
+                  {t('auth.register.error.passwordsDoNotMatch', locale)}
+                </p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={
+                !newPassword ||
+                !confirmPassword ||
+                newPassword !== confirmPassword ||
+                changingPassword
+              }
+            >
+              {changingPassword ? (
+                <>
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  {t('auth.login.changingPassword', locale)}
+                </>
+              ) : (
+                t('auth.login.changePasswordButton', locale)
+              )}
+            </Button>
+          </form>
         </div>
       ) : (
         // ── Login form ────────────────────────────────────────

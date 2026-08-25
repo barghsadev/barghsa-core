@@ -258,6 +258,18 @@ export const ErrorCodes = {
     messageKey: 'auth.login.error.invalidCredentials',
     severity: 'info' as ErrorSeverity,
   },
+  AUTH_LOGIN_MUST_CHANGE_PASSWORD: {
+    code: 'AUTH:LOGIN:MUST_CHANGE_PASSWORD',
+    httpStatus: 400,
+    messageKey: 'auth.login.error.mustChangePassword',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_LOGIN_PASSWORD_REUSED: {
+    code: 'AUTH:LOGIN:PASSWORD_REUSED',
+    httpStatus: 422,
+    messageKey: 'auth.login.error.passwordReused',
+    severity: 'info' as ErrorSeverity,
+  },
   AUTH_LOGIN_FAILED: {
     code: 'AUTH:LOGIN:FAILED',
     httpStatus: 500,
