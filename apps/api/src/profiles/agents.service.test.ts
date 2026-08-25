@@ -1,8 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AgentsService } from './agents.service.js'
 
+const mockClient = {
+  query: vi.fn(),
+  release: vi.fn(),
+}
 const mockPool = {
   query: vi.fn(),
+  connect: vi.fn().mockResolvedValue(mockClient),
 }
 const mockUuidV7 = vi.fn()
 
@@ -20,6 +25,8 @@ describe('AgentsService', () => {
   beforeEach(() => {
     service = new AgentsService()
     mockPool.query.mockReset()
+    mockClient.query.mockReset()
+    mockClient.release.mockReset()
     mockUuidV7.mockReset()
     mockUuidV7.mockReturnValue('audit-id-1')
   })
@@ -121,34 +128,41 @@ describe('AgentsService', () => {
   })
 
   describe('withdrawInvitation', () => {
-    it('withdraws a pending inviation when user is owner/manager', async () => {
+    it('withdraws a pending invitation when user is owner/manager', async () => {
       // Find invitation
       mockPool.query.mockResolvedValueOnce({
         rows: [{ id: 'inv-1', status: 'Pending', invited_by: 'other-user' }],
       })
       // isOwnerOrManager returns true
       mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] })
-      // UPDATE invitation
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-      // INSERT audit log
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // Transaction: UPDATE invitation
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: INSERT audit log
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: COMMIT
+      mockClient.query.mockResolvedValueOnce(undefined)
 
       await expect(service.withdrawInvitation('prof-1', 'inv-1', 'user-1')).resolves.toBeUndefined()
 
-      expect(mockPool.query).toHaveBeenCalledWith(
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN')
+      expect(mockClient.query).toHaveBeenCalledWith(
         expect.stringContaining('UPDATE profile_invitations'),
         ['inv-1'],
       )
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(mockClient.release).toHaveBeenCalled()
     })
 
-    it('throws 404 when inviation not found', async () => {
+    it('throws 404 when invitation not found', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] })
 
       await expect(service.withdrawInvitation('prof-1', 'inv-nonexistent', 'user-1'))
         .rejects.toMatchObject({ response: { statusCode: 404 } })
     })
 
-    it('throws 400 when inviation is not in Pending status', async () => {
+    it('throws 400 when invitation is not in Pending status', async () => {
       mockPool.query.mockResolvedValueOnce({
         rows: [{ id: 'inv-1', status: 'Accepted', invited_by: 'other' }],
       })
@@ -178,10 +192,14 @@ describe('AgentsService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] })
       // isOwner check (second query in isOwnerOrManager): returns empty
       mockPool.query.mockResolvedValueOnce({ rows: [] })
-      // UPDATE
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-      // INSERT audit
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // Transaction: UPDATE
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: INSERT audit
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: COMMIT
+      mockClient.query.mockResolvedValueOnce(undefined)
 
       await expect(service.withdrawInvitation('prof-1', 'inv-1', 'user-2')).resolves.toBeUndefined()
     })

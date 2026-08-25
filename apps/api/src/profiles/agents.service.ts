@@ -169,26 +169,38 @@ export class AgentsService {
       )
     }
 
-    await pool.query(
-      `UPDATE profile_invitations
-       SET status = 'Withdrawn', updated_at = NOW()
-       WHERE id = $1`,
-      [inviteId],
-    )
+    // Wrap state change and audit log in a transaction for atomicity
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
 
-    // Audit log
-    const correlationId = uuidv7()
-    await pool.query(
-      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
-       VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
-      [
-        uuidv7(),
-        userId,
-        'invitation_withdrawn',
-        JSON.stringify({ profileId, inviteId }),
-        correlationId,
-      ],
-    )
+      await client.query(
+        `UPDATE profile_invitations
+         SET status = 'Withdrawn', updated_at = NOW()
+         WHERE id = $1`,
+        [inviteId],
+      )
+
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'invitation_withdrawn',
+          JSON.stringify({ profileId, inviteId }),
+          correlationId,
+        ],
+      )
+
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      client.release()
+    }
 
     this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`)
   }
