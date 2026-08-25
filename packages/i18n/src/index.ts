@@ -488,6 +488,18 @@ export const fa: I18nDictionary = {
   'settings.notifications.error.noEmail': 'برای این حساب ایمیلی ثبت نشده است. ابتدا ایمیل اضافه کنید',
   'settings.notifications.error.noMobile': 'برای این حساب شماره موبایلی ثبت نشده است. ابتدا شماره موبایل اضافه کنید',
 
+  // ── Settings — Timezone (T-03.03.06) ──────────────────────
+  'settings.timezone.title': 'تنظیمات منطقه زمانی',
+  'settings.timezone.description': 'منطقه زمانی خود را انتخاب کنید. تمام نمایش‌های تاریخ و ساعت بر اساس این تنظیم خواهد بود.',
+  'settings.timezone.preview': 'زمان فعلی در منطقه زمانی انتخاب شده:',
+  'settings.timezone.default': 'پیش‌فرض: ایران (UTC+3:30)',
+  'settings.timezone.saving': 'در حال ذخیره…',
+  'settings.timezone.success': 'منطقه زمانی با موفقیت به‌روزرسانی شد',
+  'settings.timezone.error.save': 'خطا در ذخیره تنظیمات منطقه زمانی',
+  'settings.timezone.error.invalid': 'منطقه زمانی نامعتبر است',
+  'settings.timezone.searchPlaceholder': 'جستجوی منطقه زمانی…',
+  'settings.timezone.showCurrentTime': 'نمایش ساعت فعلی',
+
   'dashboard.nav.label': 'ناوبری',
   'dashboard.nav.electricity': 'برق',
   'dashboard.nav.savings': 'پس‌انداز',
@@ -976,6 +988,18 @@ export const en: I18nDictionary = {
   'settings.notifications.error.save': 'Failed to save notification preferences',
   'settings.notifications.error.noEmail': 'No email registered for this account. Add an email first',
   'settings.notifications.error.noMobile': 'No mobile number registered for this account. Add a mobile first',
+
+  // ── Settings — Timezone (T-03.03.06) ──────────────────────
+  'settings.timezone.title': 'Timezone Settings',
+  'settings.timezone.description': 'Select your timezone. All date and time displays will use this setting.',
+  'settings.timezone.preview': 'Current time in selected timezone:',
+  'settings.timezone.default': 'Default: Iran (UTC+3:30)',
+  'settings.timezone.saving': 'Saving…',
+  'settings.timezone.success': 'Timezone updated successfully',
+  'settings.timezone.error.save': 'Failed to save timezone settings',
+  'settings.timezone.error.invalid': 'Invalid timezone',
+  'settings.timezone.searchPlaceholder': 'Search timezone…',
+  'settings.timezone.showCurrentTime': 'Show current time',
 
   'dashboard.nav.label': 'Navigation',
   'dashboard.nav.electricity': 'Electricity',

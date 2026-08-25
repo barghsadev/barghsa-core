@@ -35,6 +35,7 @@ import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/ind
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
 import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
+import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/timezone'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 
@@ -167,6 +168,11 @@ const AppSettingsUsernameRoute = AppSettingsUsernameRouteImport.update({
   path: '/settings/username',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsTimezoneRoute = AppSettingsTimezoneRouteImport.update({
+  id: '/settings/timezone',
+  path: '/settings/timezone',
+  getParentRoute: () => AppRoute,
+} as any)
 const OnboardingIndividualProfileIdRoute =
   OnboardingIndividualProfileIdRouteImport.update({
     id: '/individual/$profileId',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/username': typeof AppSettingsUsernameRoute
+  '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity/': typeof AppElectricityIndexRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/username': typeof AppSettingsUsernameRoute
+  '/settings/timezone': typeof AppSettingsTimezoneRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity': typeof AppElectricityIndexRoute
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/_app/settings/username': typeof AppSettingsUsernameRoute
+  '/_app/settings/timezone': typeof AppSettingsTimezoneRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
@@ -293,6 +302,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/settings/security'
     | '/settings/username'
+    | '/settings/timezone'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity/'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/settings/security'
     | '/settings/username'
+    | '/settings/timezone'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/_app/settings/profile'
     | '/_app/settings/security'
     | '/_app/settings/username'
+    | '/_app/settings/timezone'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/_app/electricity/'
@@ -551,6 +563,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsUsernameRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/timezone': {
+      id: '/_app/settings/timezone'
+      path: '/settings/timezone'
+      fullPath: '/settings/timezone'
+      preLoaderRoute: typeof AppSettingsTimezoneRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/onboarding/individual/$profileId': {
       id: '/onboarding/individual/$profileId'
       path: '/individual/$profileId'
@@ -579,6 +598,7 @@ interface AppRouteChildren {
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
+  AppSettingsTimezoneRoute: typeof AppSettingsTimezoneRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
@@ -594,6 +614,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppSettingsUsernameRoute: AppSettingsUsernameRoute,
+  AppSettingsTimezoneRoute: AppSettingsTimezoneRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
 }

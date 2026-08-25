@@ -53,6 +53,9 @@ export const users = pgTable(
     /** Notification channel preferences (T-03.03.05). */
     notificationPreferences: text('notification_preferences').notNull().default('IN_APP'),
 
+    /** IANA timezone string (T-03.03.06). Default: Iran Standard Time (UTC+3:30). */
+    timezone: text('timezone').notNull().default('Asia/Tehran'),
+
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 
@@ -110,6 +113,12 @@ export const createUsersTable = sql`
       WHERE table_name = 'users' AND column_name = 'notification_preferences'
     ) THEN
       ALTER TABLE users ADD COLUMN notification_preferences TEXT NOT NULL DEFAULT 'IN_APP';
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'timezone'
+    ) THEN
+      ALTER TABLE users ADD COLUMN timezone TEXT NOT NULL DEFAULT 'Asia/Tehran';
     END IF;
   END $$;
 `

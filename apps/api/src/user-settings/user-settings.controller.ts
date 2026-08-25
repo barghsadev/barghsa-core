@@ -169,4 +169,126 @@ export class UserSettingsController {
 
     return { channels }
   }
+
+  // ── Timezone Settings (T-03.03.06) ─────────────────────────────────────
+
+  /**
+   * Validates a timezone string against the IANA timezone database.
+   * Returns true if the timezone is valid.
+   */
+  private isValidTimezone(tz: string): boolean {
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: tz })
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  /**
+   * GET /api/user/settings/timezone
+   *
+   * Returns the current user's timezone setting.
+   */
+  @Get('timezone')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:timezone:get', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get timezone setting' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current timezone.',
+    schema: {
+      type: 'object',
+      properties: {
+        timezone: { type: 'string', example: 'Asia/Tehran' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async getTimezone(@Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `SELECT timezone FROM users WHERE user_id = $1`,
+      [userId],
+    )
+
+    if (result.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const timezone = result.rows[0].timezone as string
+    this.logger.debug(`User ${userId}: timezone = ${timezone}`)
+    return { timezone }
+  }
+
+  /**
+   * PUT /api/user/settings/timezone
+   *
+   * Updates the authenticated user's timezone setting.
+   * Accepts any valid IANA timezone string.
+   */
+  @Put('timezone')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:timezone:put', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Update timezone setting' })
+  @ApiResponse({
+    status: 200,
+    description: 'Timezone updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        timezone: { type: 'string', example: 'Asia/Tehran' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid timezone' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async updateTimezone(
+    @Body() body: { timezone: string },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    if (!body.timezone || typeof body.timezone !== 'string') {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Timezone must be a non-empty string' },
+        400,
+      )
+    }
+
+    // Validate against IANA timezone database
+    if (!this.isValidTimezone(body.timezone)) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: `Invalid timezone: "${body.timezone}". Must be a valid IANA timezone string (e.g. "Asia/Tehran", "UTC").`,
+        },
+        400,
+      )
+    }
+
+    const pool = getDbPool()
+    const result = await pool.query(
+      `UPDATE users SET timezone = $1, updated_at = NOW() WHERE user_id = $2 RETURNING timezone`,
+      [body.timezone, userId],
+    )
+
+    if (result.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const timezone = result.rows[0].timezone as string
+    this.logger.log(`User ${userId}: timezone updated to ${timezone}`)
+
+    return { timezone }
+  }
 }
