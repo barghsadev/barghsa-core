@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 174,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-03.02.02",
+  "current_task_id": "T-03.02.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-03-02-02--individual-profile-form",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/105",
+  "loop_iteration": 175,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -170,8 +170,8 @@
     "02-auth-users-admin.md#T-03.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T14:04:00",
-  "notes": "Tick-174: T-03.02.01 (Profile type selection, S) merged as PR #104. Reviewed by z-ai/glm-5.2 (approve, 1 fix round — critical route mismatch fixed via dedicated OnboardingController). New file: OnboardingController. Backend: POST /api/onboarding/start + createProfile service. Frontend: interactive cards, selection, continue, API call. Tests: 3 createProfile tests. typecheck 11/11, build 7/7, tests 172/172, CI green. Loop idle; next: queue.",
+  "last_updated": "2026-08-25T14:25:00",
+  "notes": "Tick-175: Building T-03.02.02 (Individual profile form, L). PR #105 created as draft. Backend: POST /api/onboarding/individual/:profileId, geography endpoints, validation. Frontend: full form with province/city cascade, RTL, field-level validation. typecheck 11/11, build 7/7, tests 225/225. CI running.",
   "status_history": [
     {
       "from": "fixing",
@@ -412,6 +412,11 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-165"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-175"
     }
   ]
 }

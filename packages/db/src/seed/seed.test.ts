@@ -59,6 +59,16 @@ describe('seed verification', () => {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
+
+    // Create the provinces table needed by the geography seeder (T-03.02.02).
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS provinces (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+        name_fa TEXT NOT NULL,
+        name_en TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
   })
 
   afterAll(async () => {

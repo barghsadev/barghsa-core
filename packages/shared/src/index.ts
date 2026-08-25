@@ -4,3 +4,4 @@ export * from './redis/index.js';
 export * from './config-cache/index.js';
 export * from './rate-limit/index.js';
 export * from './storage/index.js';
+export * from './validation/index.js';

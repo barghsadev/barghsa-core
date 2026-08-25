@@ -1,5 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
+import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 
 export interface ProfileRow {
@@ -11,6 +13,7 @@ export interface ProfileRow {
   title: string | null
   firstName: string | null
   lastName: string | null
+  nationalId: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -23,6 +26,7 @@ export interface ProfileDto {
   title: string | null
   firstName: string | null
   lastName: string | null
+  nationalId: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -52,6 +56,7 @@ function mapRow(row: Record<string, unknown>): ProfileRow {
     title: (row.title as string) ?? null,
     firstName: (row.first_name as string) ?? null,
     lastName: (row.last_name as string) ?? null,
+    nationalId: (row.national_id as string) ?? null,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
   }
@@ -66,6 +71,7 @@ function mapToDto(row: ProfileRow): ProfileDto {
     title: row.title,
     firstName: row.firstName,
     lastName: row.lastName,
+    nationalId: row.nationalId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   }
@@ -89,7 +95,7 @@ export class ProfilesService {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, created_at, updated_at
+      `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
        FROM profiles
        WHERE user_id = $1
        ORDER BY is_default DESC, created_at ASC`,
@@ -110,7 +116,7 @@ export class ProfilesService {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, created_at, updated_at
+      `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
        FROM profiles
        WHERE id = $1`,
       [profileId],
@@ -280,7 +286,7 @@ export class ProfilesService {
       const result = await client.query(
         `INSERT INTO profiles (user_id, profile_type, is_default, status)
          VALUES ($1, $2, $3, 'DRAFT')
-         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, created_at, updated_at`,
+         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
         [userId, profileType, becomesDefault],
       )
 
@@ -295,6 +301,169 @@ export class ProfilesService {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
       })
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Save individual profile data during onboarding (T-03.02.02).
+   *
+   * Validates and stores the individual profile fields (title, first name,
+   * last name, national ID) and the main address (province, city, full
+   * address, postal code). National ID uniqueness is enforced at the DB
+   * level via a partial unique index on active profiles.
+   *
+   * @param userId - The authenticated user's ID.
+   * @param profileId - The draft profile ID from onboarding start.
+   * @param data - Individual profile fields.
+   */
+  async saveIndividualProfile(
+    userId: string,
+    profileId: string,
+    data: {
+      title?: string | undefined
+      firstName: string
+      lastName: string
+      nationalId: string
+      provinceId: string
+      cityId: string
+      fullAddress: string
+      postalCode: string
+    },
+  ): Promise<ProfileRow> {
+    const pool = getDbPool()
+
+    // Validate the profile exists and belongs to the user
+    const profile = await this.getProfileById(profileId)
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Profile not found',
+        },
+        404,
+      )
+    }
+
+    if (profile.status !== 'DRAFT') {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Profile is not in draft state',
+        },
+        400,
+      )
+    }
+
+    // Validate national ID format and checksum
+    if (!validateNationalId(data.nationalId)) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid national ID format',
+        },
+        400,
+      )
+    }
+
+    // Validate postal code
+    if (!validatePostalCode(data.postalCode)) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid postal code format',
+        },
+        400,
+      )
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Update profile with individual fields
+      const profileResult = await client.query(
+        `UPDATE profiles
+         SET title = $1, first_name = $2, last_name = $3, national_id = $4, updated_at = NOW()
+         WHERE id = $5 AND user_id = $6
+         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
+        [
+          data.title ?? null,
+          data.firstName,
+          data.lastName,
+          data.nationalId,
+          profileId,
+          userId,
+        ],
+      )
+
+      if (profileResult.rows.length === 0) {
+        await client.query('ROLLBACK')
+        // Should not happen since we validated ownership above
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Profile not found',
+          },
+          404,
+        )
+      }
+
+      // Create the main address record
+      await client.query(
+        `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
+         VALUES ($1, $2, $3, $4, $5, true)`,
+        [
+          profileId,
+          data.provinceId,
+          data.cityId,
+          data.fullAddress,
+          data.postalCode,
+        ],
+      )
+
+      // Transition profile from DRAFT to ACTIVE
+      await client.query(
+        `UPDATE profiles SET status = 'ACTIVE', updated_at = NOW() WHERE id = $1`,
+        [profileId],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Individual profile ${profileId} saved for user ${userId}`,
+      )
+
+      // Re-fetch the profile to get the updated status (ACTIVE)
+      const updatedProfile = await this.getProfileById(profileId)
+      return updatedProfile ?? mapRow(profileResult.rows[0])
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {
+        // Rollback failure is non-critical
+      })
+
+      // Re-throw HTTP exceptions as-is
+      if (error instanceof HttpException) throw error
+
+      // Check for unique constraint violation on national_id (PostgreSQL code 23505)
+      if (error instanceof Error && (error as { code?: string }).code === '23505') {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: ErrorCodes.CONFLICT_DUPLICATE.code,
+            message: 'This national ID is already registered',
+          },
+          409,
+        )
+      }
+
       throw error
     } finally {
       client.release()

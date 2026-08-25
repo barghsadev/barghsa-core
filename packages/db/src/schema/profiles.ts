@@ -52,6 +52,9 @@ export const profiles = pgTable(
     /** Last (family) name. */
     lastName: text('last_name'),
 
+    /** Iranian national ID (10 digits, unique among active profiles). */
+    nationalId: text('national_id'),
+
     /** When the profile was created. */
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
       .defaultNow()
@@ -80,10 +83,15 @@ export const createProfilesTable = sql`
     title TEXT,
     first_name TEXT,
     last_name TEXT,
+    national_id TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
 
   CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles (user_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_default_per_user ON profiles (user_id) WHERE is_default = true;
+  CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_national_id ON profiles (national_id) WHERE national_id IS NOT NULL AND status IN ('ACTIVE', 'VERIFIED');
+
+  -- Additive migration: add national_id column to existing tables (runs after CREATE IF NOT EXISTS)
+  ALTER TABLE profiles ADD COLUMN IF NOT EXISTS national_id TEXT;
 `
