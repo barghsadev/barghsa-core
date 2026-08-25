@@ -78,6 +78,15 @@ export class RateLimitService implements OnModuleDestroy {
   }
 
   /**
+   * Peek at the current count without incrementing.
+   * Primarily used for progressive login delay in AuthService.
+   */
+  async getSecurityCount(key: string, windowMs: number): Promise<number> {
+    this.ensureStores();
+    return this.compositeStore!.getSecurityCount(key, windowMs);
+  }
+
+  /**
    * Reset a rate-limit counter (e.g., after successful login or OTP verification).
    */
   async resetRateLimit(key: string): Promise<void> {

@@ -162,6 +162,25 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
   }
 
   /**
+   * Peek at the current counter for `key` without incrementing.
+   * Returns 0 if no current window exists (no prior request in the window).
+   * Used for progressive delay computations before credential checks.
+   */
+  async getCurrentCount(key: string, windowMs: number): Promise<number> {
+    const now = Date.now();
+    const windowStart = Math.floor(now / windowMs) * windowMs;
+
+    const result = await this.query(
+      `SELECT count FROM security_rate_limit_counters
+       WHERE key = $1 AND window_start = $2`,
+      [key, windowStart],
+    );
+
+    const row = result.rows[0];
+    return row ? Number(row.count) : 0;
+  }
+
+  /**
    * Reset a security-critical counter by key — deletes all rows for `key`.
    */
   async resetSecurity(key: string): Promise<void> {
