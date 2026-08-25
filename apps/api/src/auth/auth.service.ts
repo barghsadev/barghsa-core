@@ -178,6 +178,10 @@ export class AuthService {
       const isStaff = userResult.rows[0].is_admin ?? false
 
       // 3c. Check if user must change password (T-02.01.04)
+      // NOTE: This check intentionally precedes MFA/OTP enforcement (step 4).
+      // No session is established for the must-change-password flow, so the
+      // user must re-authenticate (with MFA if required) after the password
+      // change. MFA is therefore deferred rather than skipped.
       const mustChangePassword = userResult.rows[0].must_change_password ?? false
 
       if (mustChangePassword) {
@@ -349,6 +353,18 @@ export class AuthService {
 
       const newHash = await argon2.hash(input.newPassword)
 
+      // 3a. Check against the current password (must differ from current)
+      const isSameAsCurrent = await argon2.verify(user.password_hash, input.newPassword).catch(() => false)
+      if (isSameAsCurrent) {
+        await client.query('ROLLBACK')
+        this.logger.warn(`Password reuse (same as current) detected for user ${user.user_id} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
+          422,
+        )
+      }
+
+      // 3b. Check password history (last 5 passwords)
       for (const entry of historyResult.rows) {
         const isReused = await argon2.verify(entry.password_hash, input.newPassword).catch(() => false)
         if (isReused) {
