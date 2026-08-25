@@ -181,8 +181,8 @@
     "02-auth-users-admin.md#T-04.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T20:14:00Z",
-  "notes": "Tick-200: T-04.01.02 (TOS acceptance storage) — 2 major issues fixed (is_active check, user-agent capture). Re-review pending.",
+  "last_updated": "2026-08-25T20:20:00Z",
+  "notes": "Tick-200: T-04.01.02 (TOS acceptance storage) — 2nd review approved (z-ai/glm-5.2). Pre-existing seed test failure blocking merge. Next tick: merge when CI passes or escalate.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-189" },
     { "from": "building", "to": "in_review", "at": "tick-189" },
