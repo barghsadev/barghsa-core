@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 219,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.02.05",
+  "current_task_id": "T-05.02.05",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-02-05--identity-correction-case",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/127",
+  "loop_iteration": 220,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -189,43 +189,18 @@
     "02-auth-users-admin.md#T-05.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T00:45:27Z",
-  "notes": "Tick-219: PR #126 (T-05.02.04) merged. Re-review by z-ai/glm-5.2 (approve, 0 issues). 35/35 tests, CI SUCCESS. Review: notification deferred (no infra), rollback tests confirmed. State: idle.",
+  "last_updated": "2026-08-26T01:02:27Z",
+  "notes": "Tick-220: T-05.02.05 backend built. Review by z-ai/glm-5.2 (request_changes). Fixes applied: loop-state.json data restored, SQL field re-validation whitelist, requestedValue notNull, tests improved. Awaiting re-review.",
   "status_history": [
     {
-      "from": "in_review",
-      "to": "in_review",
-      "at": "tick-218"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-219"
-    },
-    {
       "from": "idle",
       "to": "building",
-      "at": "tick-216"
+      "at": "tick-220"
     },
     {
       "from": "building",
       "to": "in_review",
-      "at": "tick-216"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-217"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-217"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-217"
+      "at": "tick-220"
     }
   ]
 }

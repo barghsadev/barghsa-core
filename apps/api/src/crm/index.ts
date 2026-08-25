@@ -1,5 +1,7 @@
 export { CrmModule } from './crm.module.js'
 export { CrmService } from './crm.service.js'
 export { CrmV2Service } from './crm-v2.service.js'
+export { VerificationCaseService } from './verification-case.service.js'
 export { CrmController } from './crm.controller.js'
 export { CrmV2Controller } from './crm-v2.controller.js'
+export { VerificationCaseController } from './verification-case.controller.js'
