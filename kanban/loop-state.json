@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 193,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-03.03.06",
+  "current_task_id": "T-03.03.06",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-03-03-06--timezone-settings",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/114",
+  "loop_iteration": 194,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -178,7 +178,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T18:21:00Z",
-  "notes": "Tick-193: T-03.03.05 (Notification channel preferences) — merged as PR #113. Reviewed by z-ai/glm-5.2 (approve, 3 minor). Loop idle.",
+  "notes": "Tick-194: T-03.03.06 (Timezone settings) — built, PR #114 created, in_review. Typecheck pass (11/11).",
   "status_history": [
     {
       "from": "idle",
@@ -209,6 +209,16 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-193"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-194"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-194"
     }
   ]
 }

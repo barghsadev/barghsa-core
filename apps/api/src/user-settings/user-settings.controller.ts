@@ -221,7 +221,7 @@ export class UserSettingsController {
       )
     }
 
-    const timezone = (result.rows[0].timezone as string) || 'Asia/Tehran'
+    const timezone = result.rows[0].timezone as string
     this.logger.debug(`User ${userId}: timezone = ${timezone}`)
     return { timezone }
   }
