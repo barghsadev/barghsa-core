@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-05-02-02--staff-profile-editing",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/124",
   "loop_iteration": 214,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -186,8 +186,8 @@
     "02-auth-users-admin.md#T-05.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T22:55:00Z",
-  "notes": "Tick-214: PR #124 (T-05.02.02) built and ready for review. PATCH endpoint, audit, frontend edit mode, i18n. Typecheck + tests pass.",
+  "last_updated": "2026-08-25T23:15:00Z",
+  "notes": "Tick-214: PR #124 (T-05.02.02) fix round 1 — PUT method, validation, tests, lock icons, no-op fix, confirm labels. CI passing (292 tests). Returned to in_review.",
   "status_history": [
     {
       "from": "idle",
@@ -386,6 +386,16 @@
     },
     {
       "from": "building",
+      "to": "in_review",
+      "at": "tick-214"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-214"
+    },
+    {
+      "from": "fixing",
       "to": "in_review",
       "at": "tick-214"
     }
