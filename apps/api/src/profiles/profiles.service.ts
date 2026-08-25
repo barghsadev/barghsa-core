@@ -253,6 +253,55 @@ export class ProfilesService {
   }
 
   /**
+   * Create a new draft profile for the user during onboarding.
+   *
+   * Used by `POST /api/onboarding/start` (T-03.02.01). The profile
+   * starts in DRAFT state. If the user has no default profile yet,
+   * the newly created profile is set as default so the app-level
+   * profile check (T-03.01.01) proceeds past onboarding.
+   */
+  async createProfile(
+    userId: string,
+    profileType: 'INDIVIDUAL' | 'LEGAL',
+  ): Promise<ProfileRow> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // If the user has no default profile yet, set this one as default.
+      const existing = await client.query(
+        `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
+        [userId],
+      )
+      const becomesDefault = existing.rows.length === 0
+
+      const result = await client.query(
+        `INSERT INTO profiles (user_id, profile_type, is_default, status)
+         VALUES ($1, $2, $3, 'DRAFT')
+         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, created_at, updated_at`,
+        [userId, profileType, becomesDefault],
+      )
+
+      const row = mapRow(result.rows[0])
+
+      await client.query('COMMIT')
+      this.logger.log(
+        `Profile ${row.id} (${profileType}) created for user ${userId}${becomesDefault ? ' as default' : ''}`,
+      )
+      return row
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {
+        // Rollback failure is non-critical
+      })
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
    * Check whether the user's active profile is allowed to place
    * commercial orders.
    *
