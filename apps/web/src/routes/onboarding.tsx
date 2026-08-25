@@ -21,7 +21,7 @@ function OnboardingPage() {
     if (!selectedType) {
       setError(
         isRtl
-          ? t('onboarding.type.error.required', 'fa')
+          ? t('onboarding.type.error.required', 'fa') ?? 'لطفاً نوع پروفایل را انتخاب کنید'
           : t('onboarding.type.error.required', 'en') ?? 'Please select a profile type',
       )
       return
@@ -43,7 +43,7 @@ function OnboardingPage() {
         throw new Error(body.message ?? `HTTP ${response.status}`)
       }
 
-      const data = await response.json()
+      await response.json()
 
       // Profile created — redirect to the app root. The app-level profile
       // check (T-03.01.01) will detect the profile and let the user proceed.

@@ -1,5 +1,6 @@
 export { ProfilesModule } from './profiles.module.js'
 export { ProfilesService } from './profiles.service.js'
 export { ProfilesController } from './profiles.controller.js'
+export { OnboardingController } from './onboarding.controller.js'
 export { ProfileVerifiedGuard } from './profiles.guard.js'
 export type { ProfileDto, ProfilesResponseDto, VerificationStatusDto } from './profiles.service.js'
