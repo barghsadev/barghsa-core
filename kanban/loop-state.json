@@ -5,7 +5,7 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e05-t-05-02-04--force-password-change-session-expiry",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/126",
-  "loop_iteration": 217,
+  "loop_iteration": 218,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -188,9 +188,14 @@
     "02-auth-users-admin.md#T-05.02.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T00:10:00Z",
-  "notes": "Tick-217: PR #126 (T-05.02.04) created — force password change and session expiry. Backend: POST /api/crm/users/:userId/force-password-change + POST /api/crm/users/:userId/expire-sessions. Both with admin guard, reason validation, session revoke, audit trail. Frontend: admin action buttons with confirm modals. 33/33 tests pass. i18n: FA+EN. PR ready for review. State: in_review.",
+  "last_updated": "2026-08-26T00:39:00Z",
+  "notes": "Tick-218: PR #126 (T-05.02.04) — CI typecheck failure fixed (SessionService constructor param in test mocks). Reviewed by z-ai/glm-5.2 (request_changes): 2 major findings — notification deferred (no infra exists), test assertions already present (reviewer couldn't read full diff). Added rollback tests (2 new, 35/35 pass). CI re-running. State: in_review.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "in_review",
+      "at": "tick-218"
+    },
     {
       "from": "idle",
       "to": "building",
