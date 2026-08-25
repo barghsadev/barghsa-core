@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-05.02.06",
-  "current_task_id": "T-05.02.06",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-05-02-06--profile-deletion",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 222,
+  "loop_iteration": 223,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -187,16 +187,17 @@
     "02-auth-users-admin.md#T-05.02.02",
     "02-auth-users-admin.md#T-05.02.03",
     "02-auth-users-admin.md#T-05.02.04",
-    "02-auth-users-admin.md#T-05.02.05"
+    "02-auth-users-admin.md#T-05.02.05",
+    "02-auth-users-admin.md#T-05.02.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:15:30Z",
-  "notes": "Tick-222: Building T-05.02.06 (profile deletion by staff). Migration, error codes, controller, service, tests done. Committing and opening PR.",
+  "last_updated": "2026-08-26T01:16:50Z",
+  "notes": "Tick-223: PR #128 (T-05.02.06) merged. Profile deletion by staff (soft-delete) implemented. 7 files, 485 additions. 343/343 tests, tsc clean. State: idle.",
   "status_history": [
     {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-222"
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-223"
     }
   ]
 }
