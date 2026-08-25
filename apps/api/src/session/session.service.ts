@@ -741,7 +741,7 @@ export class SessionService {
         [thirtyDaysAgo],
       )
 
-      if (sessionResult.rowCount > 0 || tokenResult.rowCount > 0) {
+      if ((sessionResult.rowCount ?? 0) > 0 || (tokenResult.rowCount ?? 0) > 0) {
         this.logger.log(
           `Cleanup: removed ${sessionResult.rowCount} sessions, ${tokenResult.rowCount} refresh tokens`,
         )

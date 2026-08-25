@@ -254,7 +254,7 @@ export class AuthService {
       const session = await this.sessionService.createSession(
         userId,
         isStaff,
-        { ip, userAgent: input.deviceInfo?.userAgent, fingerprint: input.deviceInfo?.fingerprint },
+        { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
       )
 
       this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`)
@@ -483,7 +483,7 @@ export class AuthService {
         )
       }
 
-      // Must have a user_id (login challenge)
+      // Check user_id
       if (!challengeRow.user_id) {
         this.logger.error(`Login challenge ${challengeId} missing user_id`)
         throw new HttpException(
@@ -494,7 +494,7 @@ export class AuthService {
 
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(otp)
-      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+      if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
         // Decrement attempts inside the transaction and commit
         await client.query(
           `UPDATE otp_challenges
@@ -548,7 +548,7 @@ export class AuthService {
       const session = await this.sessionService.createSession(
         userId,
         false,
-        { ip, userAgent: userAgent ?? undefined, fingerprint: deviceFingerprint },
+        { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
       )
 
       // 5. Optionally mark device as trusted
@@ -601,7 +601,7 @@ export class AuthService {
     const pool = getDbPool()
     const client = await pool.connect()
     let userId: string | undefined
-    let row: Record<string, unknown> | undefined
+    let row: any
 
     try {
       await client.query('BEGIN')

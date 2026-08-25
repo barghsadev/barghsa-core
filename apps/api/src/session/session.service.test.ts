@@ -130,7 +130,7 @@ describe('SessionService', () => {
       await service.validateSession('session-001', true)
 
       // Second query should be the idle_deadline update
-      const secondCall = mockQuery.mock.calls[1]
+      const secondCall = mockQuery.mock.calls[1]!
       expect(secondCall[0]).toContain('UPDATE sessions')
       expect(secondCall[0]).toContain('idle_deadline')
     })
@@ -191,9 +191,9 @@ describe('SessionService', () => {
       await service.createSession('user-001', false)
 
       // Verify that a revoke query was issued
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
       const revokeCall = calls.find(
-        (s: string) =>
+        (s: any) =>
           s.includes('UPDATE sessions') &&
           s.includes('revoked_at') &&
           s.includes('LIMIT 1'),
@@ -211,7 +211,7 @@ describe('SessionService', () => {
 
       await service.createSession('user-001', false)
 
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
       expect(calls).toContain('BEGIN')
       expect(calls).toContain('COMMIT')
     })
@@ -281,7 +281,7 @@ describe('SessionService', () => {
       ).rejects.toThrow(UnauthorizedException)
 
       // Verify family queries were issued
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
       const familyTokenUpdate = calls.filter(
         (s: string) =>
           s.includes('UPDATE refresh_tokens') && s.includes('consumed_at'),
@@ -347,7 +347,7 @@ describe('SessionService', () => {
 
       await service.revokeSession('session-001')
 
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
       expect(calls).toContain('BEGIN')
       expect(calls).toContain('COMMIT')
     })
@@ -380,7 +380,7 @@ describe('SessionService', () => {
 
       await service.revokeAllUserSessions('user-001')
 
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
       const sessionUpdate = calls.find(
         (s: string) =>
           s.includes('UPDATE sessions') && s.includes('revoked_at'),
@@ -402,12 +402,12 @@ describe('SessionService', () => {
 
       await service.revokeAllUserSessions('user-001', 'session-001')
 
-      const calls = mockClient.query.mock.calls.map((c: [string]) => c[0])
-      const excludeCall = calls.find((s: string) => s.includes('session_id !='))
+      const calls = mockClient.query.mock.calls.map((c: any[]) => c[0])
+      const excludeCall = calls.find((s: any) => s.includes('session_id !='))
       expect(excludeCall).toBeDefined()
       // Verify the parameters include the excluded session
       const excludeCallParams = mockClient.query.mock.calls.find(
-        (c: [string, unknown[]]) =>
+        (c: any[]) =>
           c[0].includes('session_id !='),
       )?.[1]
       expect(excludeCallParams).toContain('session-001')
