@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-03.02.01",
-  "current_task_id": "T-03.02.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e03-t-03-02-01--profile-type-selection",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/104",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 174,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -166,12 +166,18 @@
     "02-auth-users-admin.md#T-02.03.03",
     "02-auth-users-admin.md#T-02.04.01",
     "02-auth-users-admin.md#T-03.01.01",
-    "02-auth-users-admin.md#T-03.01.02"
+    "02-auth-users-admin.md#T-03.01.02",
+    "02-auth-users-admin.md#T-03.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:54:00",
-  "notes": "Tick-174: Building T-03.02.01 (Profile type selection, S). Backend: POST /api/onboarding/start + createProfile service method. Frontend: interactive cards with selection, continue button, API call. i18n: fa/en keys. Tests: 3 createProfile tests. typecheck 11/11, build 7/7, tests 172/172.",
+  "last_updated": "2026-08-25T14:04:00",
+  "notes": "Tick-174: T-03.02.01 (Profile type selection, S) merged as PR #104. Reviewed by z-ai/glm-5.2 (approve, 1 fix round — critical route mismatch fixed via dedicated OnboardingController). New file: OnboardingController. Backend: POST /api/onboarding/start + createProfile service. Frontend: interactive cards, selection, continue, API call. Tests: 3 createProfile tests. typecheck 11/11, build 7/7, tests 172/172, CI green. Loop idle; next: queue.",
   "status_history": [
+    {
+      "from": "fixing",
+      "to": "idle",
+      "at": "tick-174"
+    },
     {
       "from": "idle",
       "to": "building",
