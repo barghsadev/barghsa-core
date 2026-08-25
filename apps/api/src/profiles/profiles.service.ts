@@ -441,7 +441,9 @@ export class ProfilesService {
         `Individual profile ${profileId} saved for user ${userId}`,
       )
 
-      return mapRow(profileResult.rows[0])
+      // Re-fetch the profile to get the updated status (ACTIVE)
+      const updatedProfile = await this.getProfileById(profileId)
+      return updatedProfile ?? mapRow(profileResult.rows[0])
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
@@ -450,11 +452,8 @@ export class ProfilesService {
       // Re-throw HTTP exceptions as-is
       if (error instanceof HttpException) throw error
 
-      // Check for unique constraint violation on national_id
-      if (
-        error instanceof Error &&
-        error.message.includes('idx_profiles_national_id')
-      ) {
+      // Check for unique constraint violation on national_id (PostgreSQL code 23505)
+      if (error instanceof Error && (error as { code?: string }).code === '23505') {
         throw new HttpException(
           {
             statusCode: 409,

@@ -63,8 +63,8 @@ export const createAddressesTable = sql`
   CREATE TABLE IF NOT EXISTS addresses (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-    province_id TEXT NOT NULL,
-    city_id TEXT NOT NULL,
+    province_id TEXT NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
+    city_id TEXT NOT NULL REFERENCES cities(id) ON DELETE RESTRICT,
     full_address TEXT NOT NULL,
     postal_code TEXT NOT NULL,
     main_address BOOLEAN NOT NULL DEFAULT false,

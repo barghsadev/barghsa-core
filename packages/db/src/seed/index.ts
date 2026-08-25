@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { randomBytes } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
@@ -240,6 +240,82 @@ function getSystemProducts(): Array<{
   ]
 }
 
+/**
+ * Seed Iranian provinces and cities (T-03.02.02).
+ *
+ * Uses idempotent INSERT pattern — re-running the seed does not create
+ * duplicates. Only seeds the 31 Iranian provinces. Cities are added on
+ * demand by admin geography management.
+ */
+async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederResult> {
+  const result: SeederResult = {
+    entity: 'geography',
+    created: 0,
+    skipped: 0,
+    errors: [],
+  }
+
+  const iranianProvinces: Array<{ nameFa: string; nameEn: string }> = [
+    { nameFa: 'آذربایجان شرقی', nameEn: 'East Azerbaijan' },
+    { nameFa: 'آذربایجان غربی', nameEn: 'West Azerbaijan' },
+    { nameFa: 'اردبیل', nameEn: 'Ardabil' },
+    { nameFa: 'اصفهان', nameEn: 'Isfahan' },
+    { nameFa: 'البرز', nameEn: 'Alborz' },
+    { nameFa: 'ایلام', nameEn: 'Ilam' },
+    { nameFa: 'بوشهر', nameEn: 'Bushehr' },
+    { nameFa: 'تهران', nameEn: 'Tehran' },
+    { nameFa: 'چهارمحال و بختیاری', nameEn: 'Chaharmahal and Bakhtiari' },
+    { nameFa: 'خراسان جنوبی', nameEn: 'South Khorasan' },
+    { nameFa: 'خراسان رضوی', nameEn: 'Razavi Khorasan' },
+    { nameFa: 'خراسان شمالی', nameEn: 'North Khorasan' },
+    { nameFa: 'خوزستان', nameEn: 'Khuzestan' },
+    { nameFa: 'زنجان', nameEn: 'Zanjan' },
+    { nameFa: 'سمنان', nameEn: 'Semnan' },
+    { nameFa: 'سیستان و بلوچستان', nameEn: 'Sistan and Baluchestan' },
+    { nameFa: 'فارس', nameEn: 'Fars' },
+    { nameFa: 'قزوین', nameEn: 'Qazvin' },
+    { nameFa: 'قم', nameEn: 'Qom' },
+    { nameFa: 'کردستان', nameEn: 'Kurdistan' },
+    { nameFa: 'کرمان', nameEn: 'Kerman' },
+    { nameFa: 'کرمانشاه', nameEn: 'Kermanshah' },
+    { nameFa: 'کهگیلویه و بویراحمد', nameEn: 'Kohgiluyeh and Boyer-Ahmad' },
+    { nameFa: 'گلستان', nameEn: 'Golestan' },
+    { nameFa: 'گیلان', nameEn: 'Gilan' },
+    { nameFa: 'لرستان', nameEn: 'Lorestan' },
+    { nameFa: 'مازندران', nameEn: 'Mazandaran' },
+    { nameFa: 'مرکزی', nameEn: 'Markazi' },
+    { nameFa: 'هرمزگان', nameEn: 'Hormozgan' },
+    { nameFa: 'همدان', nameEn: 'Hamadan' },
+    { nameFa: 'یزد', nameEn: 'Yazd' },
+  ]
+
+  // Use raw SQL through the drizzle ORM instance to insert provinces
+  // (geography tables are not registered in the Drizzle ORM schema object).
+  for (const province of iranianProvinces) {
+    try {
+      const existing = await db.execute(
+        sql`SELECT id FROM provinces WHERE name_en = ${province.nameEn} LIMIT 1`,
+      )
+
+      if (existing.rows.length > 0) {
+        result.skipped++
+        continue
+      }
+
+      await db.execute(
+        sql`INSERT INTO provinces (id, name_fa, name_en) VALUES (gen_random_uuid(), ${province.nameFa}, ${province.nameEn})`,
+      )
+
+      result.created++
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      result.errors.push(`province[${province.nameEn}]: ${message}`)
+    }
+  }
+
+  return result
+}
+
 // ---------------------------------------------------------------------------
 // Registered seeders — add new seeders here as the schema grows.
 // ---------------------------------------------------------------------------
@@ -247,6 +323,7 @@ function getSystemProducts(): Array<{
 const seeders: Seeder[] = [
   seedProducts,
   seedAdmin,
+  seedGeography,
 ]
 
 // ---------------------------------------------------------------------------

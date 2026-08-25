@@ -91,4 +91,7 @@ export const createProfilesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_profiles_user_id ON profiles (user_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_default_per_user ON profiles (user_id) WHERE is_default = true;
   CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_national_id ON profiles (national_id) WHERE national_id IS NOT NULL AND status IN ('ACTIVE', 'VERIFIED');
+
+  -- Additive migration: add national_id column to existing tables (runs after CREATE IF NOT EXISTS)
+  ALTER TABLE profiles ADD COLUMN IF NOT EXISTS national_id TEXT;
 `

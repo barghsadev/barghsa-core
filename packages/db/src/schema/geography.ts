@@ -61,7 +61,7 @@ export const createGeographyTables = sql`
 
   CREATE TABLE IF NOT EXISTS cities (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    province_id TEXT NOT NULL,
+    province_id TEXT NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
     name_fa TEXT NOT NULL,
     name_en TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

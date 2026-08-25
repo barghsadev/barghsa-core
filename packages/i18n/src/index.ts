@@ -273,6 +273,16 @@ export const fa: I18nDictionary = {
   'onboarding.individual.error.submitEn': 'An error occurred. Please try again',
   'onboarding.individual.error.duplicateNationalId': 'این کد ملی قبلاً ثبت شده است',
   'onboarding.individual.error.duplicateNationalIdEn': 'This national ID is already registered',
+  'onboarding.individual.loading': 'در حال بارگذاری…',
+  'onboarding.individual.loadingEn': 'Loading…',
+  'onboarding.individual.saved': 'پروفایل با موفقیت ذخیره شد',
+  'onboarding.individual.savedEn': 'Profile saved successfully',
+  'onboarding.individual.error.loadProvinces': 'بارگذاری استان‌ها با خطا مواجه شد',
+  'onboarding.individual.error.loadProvincesEn': 'Failed to load provinces',
+  'onboarding.individual.error.loadCities': 'بارگذاری شهرها با خطا مواجه شد',
+  'onboarding.individual.error.loadCitiesEn': 'Failed to load cities',
+  'onboarding.individual.error.maxChars': 'حداکثر {count} کاراکتر',
+  'onboarding.individual.error.maxCharsEn': 'Max {count} characters',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'پروفایل شما تأیید نشده است',
@@ -549,6 +559,16 @@ export const en: I18nDictionary = {
   'onboarding.individual.error.submitEn': 'An error occurred. Please try again',
   'onboarding.individual.error.duplicateNationalId': 'This national ID is already registered',
   'onboarding.individual.error.duplicateNationalIdEn': 'This national ID is already registered',
+  'onboarding.individual.loading': 'Loading…',
+  'onboarding.individual.loadingEn': 'Loading…',
+  'onboarding.individual.saved': 'Profile saved successfully',
+  'onboarding.individual.savedEn': 'Profile saved successfully',
+  'onboarding.individual.error.loadProvinces': 'Failed to load provinces',
+  'onboarding.individual.error.loadProvincesEn': 'Failed to load provinces',
+  'onboarding.individual.error.loadCities': 'Failed to load cities',
+  'onboarding.individual.error.loadCitiesEn': 'Failed to load cities',
+  'onboarding.individual.error.maxChars': 'Max {count} characters',
+  'onboarding.individual.error.maxCharsEn': 'Max {count} characters',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'Your profile is not verified',

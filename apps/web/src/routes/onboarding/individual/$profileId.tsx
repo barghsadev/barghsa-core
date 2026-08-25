@@ -3,6 +3,7 @@ import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-rou
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import { Loader2Icon, ChevronRightIcon } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 
@@ -77,7 +78,7 @@ function IndividualProfileFormPage() {
       .catch(() => {
         if (!cancelled) {
           setLoadingProvinces(false)
-          toast.error('Failed to load provinces')
+          toast.error(t('onboarding.individual.error.loadProvinces', locale))
         }
       })
     return () => { cancelled = true }
@@ -104,7 +105,7 @@ function IndividualProfileFormPage() {
       .catch(() => {
         if (!cancelled) {
           setLoadingCities(false)
-          toast.error('Failed to load cities')
+          toast.error(t('onboarding.individual.error.loadCities', locale))
         }
       })
     return () => { cancelled = true }
@@ -114,13 +115,16 @@ function IndividualProfileFormPage() {
   const validateField = useCallback(
     (field: string, value: string): string | undefined => {
       switch (field) {
+        case 'title':
+          if (value.length > 50) return t('onboarding.individual.error.maxChars', locale).replace('{count}', '50')
+          return undefined
         case 'firstName':
           if (!value.trim()) return t('onboarding.individual.error.required', locale)
-          if (value.length > 100) return 'Max 100 characters'
+          if (value.length > 100) return t('onboarding.individual.error.maxChars', locale).replace('{count}', '100')
           return undefined
         case 'lastName':
           if (!value.trim()) return t('onboarding.individual.error.required', locale)
-          if (value.length > 100) return 'Max 100 characters'
+          if (value.length > 100) return t('onboarding.individual.error.maxChars', locale).replace('{count}', '100')
           return undefined
         case 'nationalId':
           if (!value.trim()) return t('onboarding.individual.error.required', locale)
@@ -134,7 +138,7 @@ function IndividualProfileFormPage() {
           return undefined
         case 'fullAddress':
           if (!value.trim()) return t('onboarding.individual.error.required', locale)
-          if (value.length > 500) return 'Max 500 characters'
+          if (value.length > 500) return t('onboarding.individual.error.maxChars', locale).replace('{count}', '500')
           return undefined
         case 'postalCode':
           if (!value.trim()) return t('onboarding.individual.error.required', locale)
@@ -150,24 +154,17 @@ function IndividualProfileFormPage() {
   const handleBlur = useCallback(
     (field: string) => {
       setTouched((prev) => ({ ...prev, [field]: true }))
-      const value =
-        field === 'title'
-          ? title
-          : field === 'firstName'
-            ? firstName
-            : field === 'lastName'
-              ? lastName
-              : field === 'nationalId'
-                ? nationalId
-                : field === 'provinceId'
-                  ? selectedProvinceId
-                  : field === 'cityId'
-                    ? selectedCityId
-                    : field === 'fullAddress'
-                      ? fullAddress
-                      : field === 'postalCode'
-                        ? postalCode
-                        : ''
+      const values: Record<string, string> = {
+        title,
+        firstName,
+        lastName,
+        nationalId,
+        provinceId: selectedProvinceId,
+        cityId: selectedCityId,
+        fullAddress,
+        postalCode,
+      }
+      const value = values[field] ?? ''
       const error = validateField(field, value)
       setErrors((prev) => ({ ...prev, [field]: error }))
     },
@@ -231,7 +228,7 @@ function IndividualProfileFormPage() {
               ? body.error
               : (body?.error as Record<string, unknown>)?.code as string | undefined
 
-          if (errorCode === 'CONFLICT:DUPLICATE_ENTRY') {
+          if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
             setSubmitError(t('onboarding.individual.error.duplicateNationalId', locale))
           } else {
             setSubmitError(t('onboarding.individual.error.submit', locale))
@@ -239,8 +236,8 @@ function IndividualProfileFormPage() {
           return
         }
 
-        toast.success('Profile saved!')
-        router.navigate({ to: '/', replace: true })
+        toast.success(t('onboarding.individual.saved', locale))
+                  router.navigate({ to: '/', replace: true })
       } catch {
         setSubmitError(t('onboarding.individual.error.submit', locale))
       } finally {
@@ -395,7 +392,7 @@ function IndividualProfileFormPage() {
               {loadingProvinces ? (
                 <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
                   <Loader2Icon className="h-4 w-4 animate-spin" />
-                  Loading...
+                  {t('onboarding.individual.loading', locale)}
                 </div>
               ) : (
                 <select
@@ -434,7 +431,7 @@ function IndividualProfileFormPage() {
               {loadingCities ? (
                 <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
                   <Loader2Icon className="h-4 w-4 animate-spin" />
-                  Loading...
+                  {t('onboarding.individual.loading', locale)}
                 </div>
               ) : (
                 <select
