@@ -155,4 +155,110 @@ describe('seed verification', () => {
     expect(adminResult!.skipped).toBe(1)
     expect(adminResult!.created).toBe(0)
   })
+
+  // -----------------------------------------------------------------------
+  // Database constraint tests (T-02.04.06)
+  // -----------------------------------------------------------------------
+
+  /**
+   * Apply the system-product protection trigger migration before constraint tests.
+   * Must run after seed since seed creates the system products.
+   */
+  describe('system product constraints', () => {
+    beforeAll(async () => {
+      // Apply constraint triggers against the products table.
+      const migrationPath = resolve(__dirname, '../../drizzle/0003_protect_system_products.sql')
+      const migrationSql = readFileSync(migrationPath, 'utf-8').trim()
+      await ctx.pool.query(migrationSql)
+    })
+
+    it('prevents deletion of system-defined electricity products', async () => {
+      // Fetch a system product.
+      const [systemProduct] = await ctx.db
+        .select({ id: products.id, systemType: products.systemType })
+        .from(products)
+        .where(sql`system_type IS NOT NULL`)
+        .limit(1)
+
+      expect(systemProduct).toBeDefined()
+
+      // Attempt to delete it — should throw.
+      await expect(
+        ctx.db.delete(products).where(eq(products.id, systemProduct!.id)),
+      ).rejects.toThrow(/cannot delete system-defined/i)
+
+      // Verify the row still exists.
+      const remaining = await ctx.db
+        .select({ id: products.id })
+        .from(products)
+        .where(eq(products.id, systemProduct!.id))
+        .limit(1)
+
+      expect(remaining).toHaveLength(1)
+    })
+
+    it('prevents changing system_type on system-defined products', async () => {
+      const [systemProduct] = await ctx.db
+        .select({ id: products.id, systemType: products.systemType })
+        .from(products)
+        .where(sql`system_type IS NOT NULL`)
+        .limit(1)
+
+      expect(systemProduct).toBeDefined()
+
+      // Attempt to change system_type — should throw.
+      await expect(
+        ctx.db
+          .update(products)
+          .set({ systemType: 'hacked_type' })
+          .where(eq(products.id, systemProduct!.id)),
+      ).rejects.toThrow(/cannot change system_type/i)
+    })
+
+    it('prevents inserting a 5th system-defined electricity product', async () => {
+      // Attempt to insert a bogus 5th system product — should throw.
+      await expect(
+        ctx.db.insert(products).values({
+          systemType: 'nuclear',
+          titleFa: 'برق هسته‌ای',
+          productType: 'electricity',
+          isActive: false,
+          minKwh: '0',
+          maxKwh: '0',
+        }),
+      ).rejects.toThrow(/cannot insert more than 4/i)
+    })
+
+    it('allows inserting admin-created products (null system_type)', async () => {
+      // Admin-created products have system_type = NULL — should succeed.
+      await expect(
+        ctx.db.insert(products).values({
+          systemType: null,
+          titleFa: 'برق سفارشی',
+          productType: 'electricity',
+          isActive: true,
+          minKwh: '0',
+          maxKwh: '0',
+        }),
+      ).resolves.not.toThrow()
+    })
+
+    it('allows updating price and is_active on system products', async () => {
+      const [systemProduct] = await ctx.db
+        .select({ id: products.id })
+        .from(products)
+        .where(sql`system_type IS NOT NULL`)
+        .limit(1)
+
+      expect(systemProduct).toBeDefined()
+
+      // Updating price and is_active must succeed.
+      await expect(
+        ctx.db
+          .update(products)
+          .set({ price: '500000', isActive: true })
+          .where(eq(products.id, systemProduct!.id)),
+      ).resolves.not.toThrow()
+    })
+  })
 })
