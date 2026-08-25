@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateNationalId, validatePostalCode } from './index.js'
+import { validateNationalId, validatePostalCode, validateLegalNationalIdentifier } from './index.js'
 
 describe('validateNationalId', () => {
   it('accepts a valid Iranian national ID', () => {
@@ -66,5 +66,38 @@ describe('validatePostalCode', () => {
   it('rejects non-numeric values', () => {
     expect(validatePostalCode('abcdefghij')).toBe(false)
     expect(validatePostalCode('12345abcde')).toBe(false)
+  })
+})
+
+describe('validateLegalNationalIdentifier', () => {
+  it('accepts a valid 11-digit legal national identifier', () => {
+    expect(validateLegalNationalIdentifier('12345678901')).toBe(true)
+    expect(validateLegalNationalIdentifier('98765432101')).toBe(true)
+  })
+
+  it('rejects non-11-digit values', () => {
+    expect(validateLegalNationalIdentifier('')).toBe(false)
+    expect(validateLegalNationalIdentifier('1234567890')).toBe(false) // 10 digits
+    expect(validateLegalNationalIdentifier('123456789012')).toBe(false) // 12 digits
+  })
+
+  it('rejects all-zeros', () => {
+    expect(validateLegalNationalIdentifier('00000000000')).toBe(false)
+  })
+
+  it('rejects all-same-digit values', () => {
+    expect(validateLegalNationalIdentifier('11111111111')).toBe(false)
+    expect(validateLegalNationalIdentifier('22222222222')).toBe(false)
+    expect(validateLegalNationalIdentifier('99999999999')).toBe(false)
+  })
+
+  it('rejects non-numeric values', () => {
+    expect(validateLegalNationalIdentifier('abcdefghijk')).toBe(false)
+    expect(validateLegalNationalIdentifier('12345abcde12')).toBe(false)
+  })
+
+  it('rejects values with leading/trailing whitespace', () => {
+    expect(validateLegalNationalIdentifier(' 12345678901')).toBe(false)
+    expect(validateLegalNationalIdentifier('12345678901 ')).toBe(false)
   })
 })

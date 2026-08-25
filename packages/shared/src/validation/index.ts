@@ -59,3 +59,26 @@ export function validateNationalId(value: string): boolean {
 export function validatePostalCode(value: string): boolean {
   return /^[1-9]\d{9}$/.test(value)
 }
+
+/**
+ * Iranian legal national identifier (شناسه ملی اشخاص حقوقی) validation.
+ *
+ * Legal entities in Iran have an 11-digit national identifier. This is a
+ * format-level validation (exactly 11 digits, not all zeros/repeating).
+ *
+ * @param value - The raw national identifier string.
+ * @returns `true` if the national identifier passes format validation.
+ */
+export function validateLegalNationalIdentifier(value: string): boolean {
+  // Must be exactly 11 digits
+  if (!/^\d{11}$/.test(value)) return false
+
+  // Must not be all zeros
+  if (/^0{11}$/.test(value)) return false
+
+  // All same digit is invalid
+  const first = value[0]
+  if (first !== undefined && [...value].every((d) => d === first)) return false
+
+  return true
+}

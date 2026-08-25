@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProfilesService } from './profiles.service.js'
+import { LegalProfilesService } from './legal-profiles.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
@@ -22,7 +23,10 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 export class OnboardingController {
   private readonly logger = new Logger(OnboardingController.name)
 
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(
+    private readonly profilesService: ProfilesService,
+    private readonly legalProfilesService: LegalProfilesService,
+  ) {}
 
   /**
    * POST /api/onboarding/start
@@ -225,6 +229,151 @@ export class OnboardingController {
       firstName: profile.firstName,
       lastName: profile.lastName,
       nationalId: profile.nationalId,
+    }
+  }
+
+  /**
+   * POST /api/onboarding/legal/:profileId
+   *
+   * Saves the legal profile fields (T-03.02.03) for a legal entity profile,
+   * including the authorized representative's fields and legal entity data.
+   * Transitions the profile from DRAFT to ACTIVE on success.
+   */
+  @Post('legal/:profileId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'onboarding:legal:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save legal profile data' })
+  @ApiResponse({
+    status: 200,
+    description: 'Legal profile saved.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        profileType: { type: 'string' },
+        isDefault: { type: 'boolean' },
+        status: { type: 'string' },
+        title: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  @ApiResponse({ status: 409, description: 'National identifier already registered' })
+  async saveLegalProfile(
+    @Param('profileId') profileId: string,
+    @Body() body: {
+      legalName: string
+      nationalIdentifier: string
+      registrationNumber: string
+      companyTypeId?: string
+      registrationDate?: string
+      economicCode?: string
+      officialPhone?: string
+      officialEmail?: string
+      officialProvinceId?: string
+      officialCityId?: string
+      officialFullAddress?: string
+      officialPostalCode?: string
+      representativeTitle: string
+      representativeRelationship: string
+    },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    // Required field validation
+    if (!body.legalName?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Legal name is required' },
+        400,
+      )
+    }
+    if (!body.nationalIdentifier?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National identifier is required' },
+        400,
+      )
+    }
+    if (!body.registrationNumber?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Registration number is required' },
+        400,
+      )
+    }
+    if (!body.representativeTitle?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative title is required' },
+        400,
+      )
+    }
+    if (!body.representativeRelationship?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative relationship is required' },
+        400,
+      )
+    }
+
+    // Field length validation
+    if (body.legalName.length > 200) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Legal name must be 200 characters or fewer' },
+        400,
+      )
+    }
+    if (body.registrationNumber.length > 50) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Registration number must be 50 characters or fewer' },
+        400,
+      )
+    }
+    if (body.representativeTitle.length > 100) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative title must be 100 characters or fewer' },
+        400,
+      )
+    }
+    if (body.representativeRelationship.length > 100) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative relationship must be 100 characters or fewer' },
+        400,
+      )
+    }
+    if (body.officialFullAddress && body.officialFullAddress.length > 500) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Official full address must be 500 characters or fewer' },
+        400,
+      )
+    }
+
+    const profile = await this.legalProfilesService.saveLegalProfile(
+      req.session.userId,
+      profileId,
+      {
+        legalName: body.legalName.trim(),
+        nationalIdentifier: body.nationalIdentifier.trim(),
+        registrationNumber: body.registrationNumber.trim(),
+        companyTypeId: body.companyTypeId?.trim() || undefined,
+        registrationDate: body.registrationDate?.trim() || undefined,
+        economicCode: body.economicCode?.trim() || undefined,
+        officialPhone: body.officialPhone?.trim() || undefined,
+        officialEmail: body.officialEmail?.trim() || undefined,
+        officialProvinceId: body.officialProvinceId?.trim() || undefined,
+        officialCityId: body.officialCityId?.trim() || undefined,
+        officialFullAddress: body.officialFullAddress?.trim() || undefined,
+        officialPostalCode: body.officialPostalCode?.trim() || undefined,
+        representativeTitle: body.representativeTitle.trim(),
+        representativeRelationship: body.representativeRelationship.trim(),
+      },
+    )
+
+    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`)
+
+    return {
+      id: profile.id,
+      profileType: profile.profileType,
+      isDefault: profile.isDefault,
+      status: 'ACTIVE',
+      title: profile.title,
     }
   }
 }
