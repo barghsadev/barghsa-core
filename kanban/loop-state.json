@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 123,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-01.02.02",
+  "current_task_id": "T-01.02.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-01-02-02--otp-input-ui",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/75",
+  "loop_iteration": 126,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -151,8 +151,8 @@
     "02-auth-users-admin.md#T-01.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T02:28:00",
-  "notes": "Tick-124: GLM-5.2 review approve (3 minor follow-up). PR #74 merged. State idle.",
+  "last_updated": "2026-08-25T02:55:00",
+  "notes": "Tick-126: Fixed reviewer findings (stale otp state, i18n verifyButton label, paste on all boxes, dead code). Returning to in_review for re-review.",
   "status_history": [
     {
       "from": "in_review",
@@ -213,6 +213,21 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-124"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-125"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-126"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-126"
     }
   ]
 }
