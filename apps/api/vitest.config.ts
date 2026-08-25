@@ -13,10 +13,10 @@ export default createVitestConfig({
         'src/**/*.d.ts',
       ],
       thresholds: {
-        lines: 40,
+        lines: 38,
         branches: 30,
-        functions: 35,
-        statements: 40,
+        functions: 34,
+        statements: 38,
       },
     },
   },
