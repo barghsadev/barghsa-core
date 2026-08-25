@@ -1,11 +1,11 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-03.02.04",
   "current_task_id": "T-03.02.04",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-03-02-04--onboarding-completion",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/107",
-  "loop_iteration": 179,
+  "loop_iteration": 180,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -171,8 +171,8 @@
     "02-auth-users-admin.md#T-03.02.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T12:33:00Z",
-  "notes": "Tick-179: fixing — PR #107 review found 2 major issues (confetti CSS class missing, i18n error key). Fixed: .animate-confetti-drop binding, removed empty useEffect, added i18n error keys, pass profileId via search params. All checks pass. Pushing fix commit.",
+  "last_updated": "2026-08-25T12:35:00Z",
+  "notes": "Tick-180: in_review — review round 2. Fixed all major issues (confetti CSS binding, i18n error key, dead code, profileId targeting). All 188 tests pass, typecheck passes. Re-invoking reviewer.",
   "status_history": [
     {
       "from": "fixing",
@@ -453,6 +453,11 @@
       "from": "in_review",
       "to": "fixing",
       "at": "tick-179"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-180"
     }
   ]
 }
