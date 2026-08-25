@@ -20,7 +20,8 @@
     "setup:bucket": "ts-node scripts/setup-bucket.ts",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write",
-    "check:bundle": "size-limit"
+    "check:bundle": "size-limit",
+    "db:seed": "pnpm --filter @barghsa/db db:seed"
   },
   "devDependencies": {
     "@size-limit/preset-app": "13.0.3",

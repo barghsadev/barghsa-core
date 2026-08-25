@@ -21,7 +21,8 @@
         "db:migrate:run": "tsx src/migrate.ts",
         "db:push": "drizzle-kit push",
         "db:studio": "drizzle-kit studio",
-        "db:verify-restore": "./scripts/backup/verify-restore.sh"
+        "db:verify-restore": "./scripts/backup/verify-restore.sh",
+        "db:seed": "tsx src/seed/index.ts"
     },
     "dependencies": {
         "argon2": "^0.41.0",
