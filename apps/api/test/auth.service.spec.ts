@@ -10,6 +10,10 @@ const mockCreateChallenge = vi.fn().mockResolvedValue({
   destination: 'user@example.com',
 });
 
+vi.mock('argon2', () => ({
+  hash: vi.fn().mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
+}));
+
 const mockQuery = vi.fn();
 const mockConnect = vi.fn();
 const mockClient = {
@@ -79,7 +83,7 @@ describe('AuthService', () => {
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', 'StrongPass1', 'current');
+      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', expect.stringContaining('$argon2id'), 'current');
     });
 
     it('throws USERNAME_TAKEN when username is taken (stub)', async () => {

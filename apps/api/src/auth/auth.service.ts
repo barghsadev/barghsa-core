@@ -1,5 +1,7 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { randomUUID, randomBytes } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
+import { v7 as uuidv7 } from 'uuid'
+import * as argon2 from 'argon2'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
@@ -62,10 +64,11 @@ export class AuthService {
     }
 
     // ── Create OTP challenge (storing password hash and TOS version) ──
+    const passwordHash = await argon2.hash(input.password)
     const { challengeId } = await this.otpService.createChallenge(
       input.username,
       ip,
-      input.password,
+      passwordHash,
       input.tosVersionId,
     )
 
@@ -163,8 +166,8 @@ export class AuthService {
       }
 
       // 3. Create user + consume OTP + create session atomically
-      const userId = randomUUID()
-      const sessionId = randomUUID()
+      const userId = uuidv7()
+      const sessionId = uuidv7()
       const csrfToken = randomBytes(32).toString('hex')
       const now = new Date()
       const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
@@ -210,7 +213,7 @@ export class AuthService {
 
       await client.query('COMMIT')
 
-      this.logger.log(`User created: ${userId} (${row.destination})`)
+      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`)
 
       return {
         userId,
