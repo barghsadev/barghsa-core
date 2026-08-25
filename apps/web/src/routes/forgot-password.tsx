@@ -118,11 +118,10 @@ function ForgotPasswordPage() {
 
   // ── OTP step state ─────────────────────────────────────
   const [otpStep, setOtpStep] = useState(false)
-  const [challengeId, setChallengeId] = useState('')
+  const [storedUsername, setStoredUsername] = useState('')
   const [otpDestination, setOtpDestination] = useState('')
   const [otpCode, setOtpCode] = useState('')
   const [otpError, setOtpError] = useState<string | null>(null)
-  const [verifying, setVerifying] = useState(false)
   const [resending, setResending] = useState(false)
   const [resendTimer, setResendTimer] = useState(60)
   const [canResend, setCanResend] = useState(false)
@@ -146,7 +145,7 @@ function ForgotPasswordPage() {
     return () => clearInterval(interval)
   }, [otpStep, canResend])
 
-  const isUsernameValid = touched && usernameError === null && usernameType !== null
+  const isUsernameValid = usernameError === null && usernameType !== null
 
   const handleBlur = useCallback(() => {
     setTouched(true)
@@ -243,11 +242,9 @@ function ForgotPasswordPage() {
 
       setOtpDestination(maskDestination(destination))
 
-      // Show OTP step — the challengeId is not returned from the
-      // forgot-password API (it's always generic), so we wait for
-      // the user to receive the OTP and then enter it.
-      // The OTP verification happens via the /register/verify or
-      // dedicated reset-password endpoint (T-02.03.02).
+      // Show OTP step — the forgot-password API always returns a generic
+      // success response, so we show the OTP input and the user can enter it.
+      // The OTP verification happens via the reset-password endpoint (T-02.03.02).
       // For T-02.03.01, we show the OTP input inline and the
       // auto-submit will navigate to the reset-password page.
       toast.success(t('auth.forgotPassword.sent', locale))
@@ -256,7 +253,7 @@ function ForgotPasswordPage() {
       setCanResend(false)
 
       // We store the normalized username to pass to the reset page
-      setChallengeId(normalized.normalized)
+      setStoredUsername(normalized.normalized)
     } catch (_err) {
       // Network error or unexpected failure
       const msg = t('auth.forgotPassword.error.generic', locale)
@@ -267,38 +264,24 @@ function ForgotPasswordPage() {
     }
   }, [username, locale])
 
-  // ── OTP verification callbacks ──────────────────────────────────────────
+  // ── OTP verification — navigates to reset-password page ────────────────
+  // The actual OTP verification (POST /api/auth/reset-password) happens
+  // in T-02.03.02. This callback passes the OTP code and username to the
+  // reset-password page via URL search params.
 
   const handleOtpComplete = useCallback(
-    async (code: string) => {
+    (code: string) => {
       setOtpCode(code)
-      setOtpError(null)
-      setVerifying(true)
-
-      try {
-        // Navigate to the reset-password page with challenge info
-        // The actual OTP verification happens in T-02.03.02
-        const destination = otpDestination
-
-        router.navigate({
-          to: '/reset-password',
-          search: {
-            username: challengeId,
-            otp: code,
-            destination,
-          },
-        })
-      } catch {
-        setOtpError(t('auth.otp.error.generic', locale))
-        setOtpCode('')
-        if (otpRef.current?.reset) {
-          otpRef.current.reset()
-        }
-      } finally {
-        setVerifying(false)
-      }
+      router.navigate({
+        to: '/reset-password',
+        search: {
+          username: storedUsername,
+          otp: code,
+          destination: otpDestination,
+        },
+      })
     },
-    [challengeId, otpDestination, locale, router],
+    [storedUsername, otpDestination, router],
   )
 
   const handleResend = useCallback(async () => {
@@ -313,7 +296,7 @@ function ForgotPasswordPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: challengeId,
+          username: storedUsername,
         }),
       })
 
@@ -329,13 +312,13 @@ function ForgotPasswordPage() {
       if (otpRef.current?.reset) {
         otpRef.current.reset()
       }
-      toast.success(t('auth.otp.sentTo', locale).replace('{destination}', otpDestination))
+      toast.success(t('auth.forgotPassword.otpSentTo', locale).replace('{destination}', otpDestination))
     } catch {
       toast.error(t('auth.otp.error.resend', locale))
     } finally {
       setResending(false)
     }
-  }, [challengeId, canResend, resending, locale, otpDestination])
+  }, [storedUsername, canResend, resending, locale, otpDestination])
 
   const handleBackToLogin = useCallback(() => {
     setOtpStep(false)
@@ -385,27 +368,20 @@ function ForgotPasswordPage() {
             <OtpInput
               ref={otpRef}
               locale={locale}
-              disabled={verifying}
+              disabled={false}
               error={otpError}
               onComplete={handleOtpComplete}
               onClearError={handleOtpClearError}
             />
 
-            {/* Verify button (disabled when OTP not yet entered) */}
+            {/* Verify button (navigates to reset-password page) */}
             <Button
               type="button"
               className="w-full"
-              disabled={!otpCode || verifying}
+              disabled={!otpCode}
               onClick={() => otpCode && handleOtpComplete(otpCode)}
             >
-              {verifying ? (
-                <>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  {t('auth.otp.verifying', locale)}
-                </>
-              ) : (
-                t('auth.otp.verifyButton', locale)
-              )}
+              {t('auth.otp.verifyButton', locale)}
             </Button>
 
             {/* Resend section */}
