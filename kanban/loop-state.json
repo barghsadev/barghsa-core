@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 205,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.01.01",
+  "current_task_id": "T-05.01.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e05-t-05-01-01--crm-users-endpoint",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/120",
+  "loop_iteration": 207,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -73,7 +73,6 @@
     "01-platform-infrastructure.md#T-05.03.02",
     "01-platform-infrastructure.md#T-05.03.03",
     "01-platform-infrastructure.md#T-05.03.04",
-    "01-platform-infrastructure.md#T-05.03.05",
     "01-platform-infrastructure.md#T-05.04.01",
     "01-platform-infrastructure.md#T-05.04.02",
     "01-platform-infrastructure.md#T-05.04.03",
@@ -183,9 +182,19 @@
     "02-auth-users-admin.md#T-04.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T21:10:00Z",
-  "notes": "Tick-205: PR #119 (T-04.01.03 TOS re-acceptance flow) merged. GLM 5.2 review: approve (3 minor). State idle.",
+  "last_updated": "2026-08-25T21:38:00Z",
+  "notes": "Tick-207: GLM 5.2 review requested_changes — ORDER BY tiebreaker missing. Fixed in f387f33, pushed, comment posted. Re-entered in_review.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-207"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-207"
+    },
     {
       "from": "idle",
       "to": "building",
@@ -310,6 +319,21 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-205"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-205"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-205"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-206"
     }
   ]
 }
