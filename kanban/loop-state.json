@@ -1,11 +1,11 @@
 {
   "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-03.02.02",
-  "current_task_id": "T-03.02.02",
+  "current_task_key": "02-auth-users-admin.md#T-03.02.03",
+  "current_task_id": "T-03.02.03",
   "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-03-02-02--individual-profile-form",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/105",
-  "loop_iteration": 175,
+  "current_branch": "feat/e02-t-03-02-03--legal-profiles-backend",
+  "current_pr_url": null,
+  "loop_iteration": 176,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -116,7 +116,6 @@
     "01-platform-infrastructure.md#T-07.04.02",
     "01-platform-infrastructure.md#T-07.04.03",
     "01-platform-infrastructure.md#T-07.04.04",
-    "01-platform-infrastructure.md#T-07.04.05",
     "01-platform-infrastructure.md#T-07.05.01",
     "01-platform-infrastructure.md#T-07.05.02",
     "01-platform-infrastructure.md#T-07.05.03",
@@ -167,11 +166,12 @@
     "02-auth-users-admin.md#T-02.04.01",
     "02-auth-users-admin.md#T-03.01.01",
     "02-auth-users-admin.md#T-03.01.02",
-    "02-auth-users-admin.md#T-03.02.01"
+    "02-auth-users-admin.md#T-03.02.01",
+    "02-auth-users-admin.md#T-03.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T14:25:00",
-  "notes": "Tick-175: Building T-03.02.02 (Individual profile form, L). PR #105 created as draft. Backend: POST /api/onboarding/individual/:profileId, geography endpoints, validation. Frontend: full form with province/city cascade, RTL, field-level validation. typecheck 11/11, build 7/7, tests 225/225. CI running.",
+  "last_updated": "2026-08-25T15:00:00",
+  "notes": "Tick-176: Building T-03.02.03 (Legal profile form, XL) — backend slice: legal_profiles table, company_types ref, national_identifier validation, service, onboarding endpoint.",
   "status_history": [
     {
       "from": "fixing",
@@ -417,6 +417,16 @@
       "from": "idle",
       "to": "building",
       "at": "tick-175"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-175"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-176"
     }
   ]
 }
