@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { CrmService, type CrmUsersResponse } from './crm.service.js'
+import { CrmService } from './crm.service.js'
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -9,21 +9,6 @@ function mockPool() {
   return { mockQuery, pool }
 }
 
-function makeService(pool: ReturnType<typeof mockPool>['pool']) {
-  // Mock getDbPool to return our test pool
-  vi.doMock('@barghsa/db', () => ({
-    getDbPool: () => pool,
-  }))
-
-  // Dynamic import so the mock is applied
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { CrmService: CrmSvc } = require('./crm.service.js')
-  return new CrmSvc()
-}
-
-// We import the real CrmService after resetting modules so the
-// @barghsa/db mock takes effect.  Each test file gets its own
-// module registry to avoid cross-test pollution.
 let service: CrmService
 
 beforeEach(() => {
@@ -236,5 +221,193 @@ describe('CrmService.listUsers', () => {
     expect(page2.users).toHaveLength(15)
     expect(page2.hasMore).toBe(false)
     expect(page2.cursor).toBeNull()
+  })
+})
+
+describe('CrmService.listUsers — profile type filter', () => {
+  it('filters by INDIVIDUAL profile type', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { type: 'INDIVIDUAL' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("p.profile_type = $2"),
+      expect.arrayContaining([11, 'INDIVIDUAL']),
+    )
+  })
+
+  it('filters by LEGAL profile type', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { type: 'LEGAL' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("p.profile_type = $2"),
+      expect.arrayContaining([11, 'LEGAL']),
+    )
+  })
+})
+
+describe('CrmService.listUsers — verification status filter', () => {
+  it('filters by VERIFIED', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { verification: 'VERIFIED' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("bool_or(p.status = 'VERIFIED') = true"),
+      expect.arrayContaining([11]),
+    )
+  })
+
+  it('filters by PENDING', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { verification: 'PENDING' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("bool_or(p.status = 'PENDING')"),
+      expect.arrayContaining([11]),
+    )
+  })
+
+  it('filters by DISABLED', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { verification: 'DISABLED' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining("bool_or(p.status = 'DISABLED')"),
+      expect.arrayContaining([11]),
+    )
+  })
+})
+
+describe('CrmService.listUsers — search filter', () => {
+  it('includes search terms in the query', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { search: 'john' })
+
+    // Should contain both full-text and ILIKE search patterns
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('to_tsvector'),
+      expect.any(Array),
+    )
+    // The params should include the search term and ILIKE patterns
+    const callArgs = (pool.query as ReturnType<typeof vi.fn>).mock.calls[0]!
+    const params = callArgs[1] as unknown[]
+    expect(params).toContain('john')
+    expect(params).toContain('%john%')
+  })
+})
+
+describe('CrmService.listUsers — date range filter', () => {
+  it('applies dateFrom filter', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { dateFrom: '2026-06-01T00:00:00Z' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('u.created_at >= $2::timestamptz'),
+      expect.arrayContaining([11, '2026-06-01T00:00:00Z']),
+    )
+  })
+
+  it('applies dateTo filter', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { dateTo: '2026-12-31T23:59:59Z' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('u.created_at <= $2::timestamptz'),
+      expect.arrayContaining([11, '2026-12-31T23:59:59Z']),
+    )
+  })
+
+  it('applies both dateFrom and dateTo', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, {
+      dateFrom: '2026-06-01T00:00:00Z',
+      dateTo: '2026-12-31T23:59:59Z',
+    })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('u.created_at >= $2::timestamptz'),
+      expect.any(Array),
+    )
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('u.created_at <= $3::timestamptz'),
+      expect.any(Array),
+    )
+  })
+})
+
+describe('CrmService.listUsers — sort order', () => {
+  it('defaults to DESC when no order specified', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10)
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('ORDER BY u.created_at DESC'),
+      expect.any(Array),
+    )
+  })
+
+  it('respects ASC order', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmService: CrmSvc } = await import('./crm.service.js')
+    service = new CrmSvc()
+
+    await service.listUsers(null, 10, { order: 'asc' })
+
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('ORDER BY u.created_at ASC'),
+      expect.any(Array),
+    )
   })
 })
