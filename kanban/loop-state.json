@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 157,
+  "status": "in_review",
+  "current_task_key": "01-platform-infrastructure.md#T-03.01.01",
+  "current_task_id": "T-03.01.01",
+  "current_task_file": "01-platform-infrastructure.md",
+  "current_branch": "feat/e03-t-03-01-01--dockerfile-web",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/94",
+  "loop_iteration": 158,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -151,9 +151,10 @@
     "02-auth-users-admin.md#T-02.03.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T10:28:00",
-  "notes": "Tick-157: T-02.03.01 (Forgot password request UI) merged as PR #93. Reviewed by z-ai/glm-5.2 (approve, 3 minor — non-blocking). Loop idle; next: 02-auth-users-admin.md#T-02.03.02 (OTP verification and password reset).",
+  "last_updated": "2026-08-25T10:43:00",
+  "notes": "Tick-158: Building T-03.01.01 (Dockerfile.web). Moved to in_review. Review found critical (missing package.json for ESM) + major (duplicate ENV) + 4 minor. Fixed all findings; PR #94 ready for re-review.",
   "status_history": [
+    { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
     { "from": "building", "to": "in_review", "at": "tick-154" },
     { "from": "in_review", "to": "idle", "at": "tick-155" },

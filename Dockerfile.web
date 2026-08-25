@@ -1,83 +1,56 @@
-# syntax=docker/dockerfile:1
-# Barghsa Web Application — multi-stage Dockerfile
-#
-# Builds the Vite SPA and serves it via a minimal Node static server
-# that respects the immutable asset cache headers configured in vite.config.ts.
-
-# ─────────────────────────────────────────────────────────────
-# Stage 1 — Install production + dev dependencies
-# ─────────────────────────────────────────────────────────────
+# Stage 1: Dependencies — install all deps (dev + prod) needed for build
 FROM node:20-alpine AS deps
-
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Node.js >=20 ships with corepack; enable pnpm
-RUN corepack enable && corepack prepare pnpm@10 --activate
-
+# Copy package manager manifests first for layer caching
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-RUN pnpm install --frozen-lockfile --prod=false
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
+COPY packages/shared/package.json ./packages/shared/package.json
+COPY packages/i18n/package.json ./packages/i18n/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/db/package.json ./packages/db/package.json
 
-# ─────────────────────────────────────────────────────────────
-# Stage 2 — Build the application
-# ─────────────────────────────────────────────────────────────
+RUN corepack enable && pnpm install --frozen-lockfile --prod=false
+
+# Stage 2: Build — compile the web frontend
 FROM node:20-alpine AS build
-
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10 --activate
 
-# Reuse the dependency layer
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json .npmrc ./
 COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Copy only the packages and apps needed for @barghsa/web
-COPY packages ./packages
-COPY apps/web ./apps/web
+RUN corepack enable && \
+    NODE_ENV=production pnpm build --filter @barghsa/web
 
-# Build the web app and its workspace dependencies
-RUN pnpm build --filter @barghsa/web
-
-# ─────────────────────────────────────────────────────────────
-# Stage 3 — Production image
-# ─────────────────────────────────────────────────────────────
+# Stage 3: Production — minimal runtime image
 FROM node:20-alpine AS production
-
-ENV NODE_ENV=production \
-    PORT=3000 \
-    NODE_OPTIONS="--max-old-space-size=512"
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 appuser
 
 WORKDIR /app
 
-# Security: run as non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Security hardening notes (applied at runtime via docker-compose or k8s):
-# - Capability drop: --cap-drop=ALL (port 3000 is non-privileged, no NET_BIND_SERVICE needed)
-# - Read-only root filesystem: --read-only (volumes for /tmp if needed)
-
-# Install production dependencies (required by acceptance criteria;
-# the static SPA runs with zero runtime deps, so this is a no-op
-# for the web app — present for consistency)
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-RUN corepack enable && corepack prepare pnpm@10 --activate && \
-    pnpm install --frozen-lockfile --prod && \
-    rm -rf /root/.local/share/pnpm
-
-# Copy the web app's package.json as the app-root package.json so the
-# "type": "module" field applies to the static server's ESM import statements
+# Copy package.json so the ESM "type": "module" field applies to server.js / healthcheck.js
 COPY --from=build /app/apps/web/package.json ./package.json
 
-# Copy build artifacts and the static server
+# Copy only the built frontend assets
 COPY --from=build /app/apps/web/dist ./dist
-COPY --from=build /app/apps/web/server ./server
 
-# Verify the entrypoint exists
-RUN test -f ./server/index.js
+# Copy production static server
+COPY apps/web/server.js ./server.js
+COPY apps/web/healthcheck.js ./healthcheck.js
+
+# Production runtime hardening — single ENV to avoid overwrites
+ENV NODE_ENV=production \
+    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation --inspect=0" \
+    NODE_NO_WARNINGS=1
 
 EXPOSE 3000
 
 USER appuser
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node healthcheck.js
 
-CMD ["node", "server/index.js"]
+CMD ["node", "server.js"]
