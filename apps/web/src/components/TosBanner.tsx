@@ -84,14 +84,6 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
     checkTosStatus()
   }, [checkTosStatus])
 
-  // ── Auto-open modal on first non-exempt page visit ─────────────
-
-  useEffect(() => {
-    if (requiresAcceptance && !dismissedAutoModal) {
-      openReviewModal()
-    }
-  }, [requiresAcceptance, dismissedAutoModal, openReviewModal])
-
   // ── Fetch current TOS content for modal ─────────────────────────
 
   const openReviewModal = useCallback(async () => {
@@ -113,6 +105,14 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       setLoadingTos(false)
     }
   }, [locale])
+
+  // ── Auto-open modal on first non-exempt page visit ─────────────
+
+  useEffect(() => {
+    if (requiresAcceptance && !dismissedAutoModal) {
+      openReviewModal()
+    }
+  }, [requiresAcceptance, dismissedAutoModal, openReviewModal])
 
   // ── Accept TOS ──────────────────────────────────────────────────
 
