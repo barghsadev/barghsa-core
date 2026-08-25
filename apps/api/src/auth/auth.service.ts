@@ -1190,10 +1190,38 @@ export class AuthService {
     try {
       await client.query('BEGIN')
 
-      // 1. Verify OTP (reuse atomic OTP verification in transcation)
+      // 1. Verify the challenge was created for this destination
+      const challengeResult = await client.query(
+        `SELECT destination FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const challengeDestination = challengeResult.rows[0].destination
+
+      // Verify the challenge was created for the new username (operation scoping)
+      if (challengeDestination !== newUsername) {
+        this.logger.warn(
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${newUsername}`,
+        )
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+
+      // 2. Verify OTP (consumes the challenge atomically)
       await this.otpService.verifyChallenge(challengeId, otp, ip)
 
-      // 2. Re-check uniqueness inside the transaction
+      // 3. Re-check uniqueness inside the transaction
       const takenResult = await client.query(
         `SELECT 1 FROM users WHERE username = $1 AND user_id != $2 LIMIT 1`,
         [newUsername, userId],
@@ -1226,20 +1254,42 @@ export class AuthService {
 
       // Update username and the corresponding contact column
       if (isNewEmail) {
-        await client.query(
-          `UPDATE users
-           SET username = $1, email = $1, updated_at = $2
-           WHERE user_id = $3`,
-          [newUsername, now, userId],
-        )
+        try {
+          await client.query(
+            `UPDATE users
+             SET username = $1, email = $1, updated_at = $2
+             WHERE user_id = $3`,
+            [newUsername, now, userId],
+          )
+        } catch (err: any) {
+          if (err?.code === '23505') {
+            // Unique constraint violation — another user claimed this username
+            throw new HttpException(
+              { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+              409,
+            )
+          }
+          throw err
+        }
       } else {
         // It's a mobile number
-        await client.query(
-          `UPDATE users
-           SET username = $1, mobile = $1, updated_at = $2
-           WHERE user_id = $3`,
-          [newUsername, now, userId],
-        )
+        try {
+          await client.query(
+            `UPDATE users
+             SET username = $1, mobile = $1, updated_at = $2
+             WHERE user_id = $3`,
+            [newUsername, now, userId],
+          )
+        } catch (err: any) {
+          if (err?.code === '23505') {
+            // Unique constraint violation — another user claimed this username
+            throw new HttpException(
+              { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+              409,
+            )
+          }
+          throw err
+        }
       }
 
       // 4. Invalidate all other sessions (keep current)
@@ -1364,7 +1414,35 @@ export class AuthService {
     try {
       await client.query('BEGIN')
 
-      // 1. Verify OTP
+      // 1. Verify the challenge was created for this destination
+      const challengeResult = await client.query(
+        `SELECT destination FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const challengeDestination = challengeResult.rows[0].destination
+
+      // Verify the challenge was created for the contact value (operation scoping)
+      if (challengeDestination !== contactValue) {
+        this.logger.warn(
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${contactValue}`,
+        )
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400,
+        )
+      }
+
+      // 2. Verify OTP
       await this.otpService.verifyChallenge(challengeId, otp, ip)
 
       // 2. Re-check user doesn't already have this contact type
