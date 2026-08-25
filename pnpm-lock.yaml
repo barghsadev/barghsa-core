@@ -170,12 +170,18 @@ importers:
 
   packages/db:
     dependencies:
+      argon2:
+        specifier: ^0.41.0
+        version: 0.41.1
       drizzle-orm:
         specifier: ^0.40.0
         version: 0.40.1(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(gel@2.2.0)(pg@8.23.0)
       pg:
         specifier: ^8.14.0
         version: 8.23.0
+      uuid:
+        specifier: ^14.0.0
+        version: 14.0.2
     devDependencies:
       '@testcontainers/postgresql':
         specifier: 12.1.0
@@ -183,6 +189,9 @@ importers:
       '@types/pg':
         specifier: ^8.11.0
         version: 8.23.1
+      '@types/uuid':
+        specifier: 11.0.0
+        version: 11.0.0
       drizzle-kit:
         specifier: ^0.30.0
         version: 0.30.6
@@ -2795,6 +2804,10 @@ packages:
   archiver@7.0.1:
     resolution: {integrity: sha512-ZcbTaIqJOfCc03QwD468Unz/5Ir8ATtvAHsK+FdXbDIbGfihqh9mrvdcYunQzqn4HrvWWaFyaxJhGZagaJJpPQ==}
     engines: {node: '>= 14'}
+
+  argon2@0.41.1:
+    resolution: {integrity: sha512-dqCW8kJXke8Ik+McUcMDltrbuAWETPyU6iq+4AhxqKphWi7pChB/Zgd/Tp/o8xRLbg8ksMj46F/vph9wnxpTzQ==}
+    engines: {node: '>=16.17.0'}
 
   argon2@0.45.1:
     resolution: {integrity: sha512-skm+/WCjkGqCQxF7FG1LuZXM5yvbFjgbfiCGsud2oLgaDhh6b6dbH0b1EkghbM+xx4Bj8Ape+KKgixoIlWZicQ==}
@@ -5478,6 +5491,11 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+    hasBin: true
+
   uuid@14.0.2:
     resolution: {integrity: sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ==}
     hasBin: true
@@ -7737,7 +7755,7 @@ snapshots:
 
   '@types/uuid@11.0.0':
     dependencies:
-      uuid: 14.0.2
+      uuid: 10.0.0
 
   '@types/validate-npm-package-name@4.0.2': {}
 
@@ -8152,6 +8170,12 @@ snapshots:
       - bare-abort-controller
       - bare-buffer
       - react-native-b4a
+
+  argon2@0.41.1:
+    dependencies:
+      '@phc/format': 1.0.0
+      node-addon-api: 8.9.2
+      node-gyp-build: 4.8.4
 
   argon2@0.45.1:
     dependencies:
@@ -10880,6 +10904,8 @@ snapshots:
       react: 19.2.8
 
   util-deprecate@1.0.2: {}
+
+  uuid@10.0.0: {}
 
   uuid@14.0.2: {}
 

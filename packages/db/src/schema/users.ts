@@ -14,6 +14,7 @@ import { pgTable, text, boolean, timestamp } from 'drizzle-orm/pg-core'
  *   T-02.01.02 (login) and T-02.03.02 (password reset).
  * - `locale` — preferred locale ('fa' | 'en'). Default 'fa'.
  * - `must_change_password` — staff-enforced flag (T-02.01.04).
+ * - `is_admin` — admin flag for bootstrap and initial admin user (T-02.04.03).
  * - `last_accepted_tos_version` — current accepted TOS version (T-04.01.03).
  * - `created_at` / `updated_at` — audit columns.
  */
@@ -34,6 +35,9 @@ export const users = pgTable(
 
     /** Staff flag — next login must change password (T-02.01.04). */
     mustChangePassword: boolean('must_change_password').notNull().default(false),
+
+    /** Admin flag — set for bootstrap admin user (T-02.04.03). */
+    isAdmin: boolean('is_admin').notNull().default(false),
 
     /** Version ID of the TOS the user last accepted (T-04.01.03). */
     lastAcceptedTosVersion: text('last_accepted_tos_version'),
@@ -60,6 +64,7 @@ export const createUsersTable = sql`
     password_hash TEXT NOT NULL,
     locale TEXT NOT NULL DEFAULT 'fa',
     must_change_password BOOLEAN NOT NULL DEFAULT false,
+    is_admin BOOLEAN NOT NULL DEFAULT false,
     last_accepted_tos_version TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

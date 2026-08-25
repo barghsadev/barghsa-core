@@ -1,7 +1,11 @@
 import { eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
+import { randomBytes } from 'node:crypto'
+import { v7 as uuidv7 } from 'uuid'
+import * as argon2 from 'argon2'
 import { createDirectDbPool } from '../index'
 import { products } from '../schema/products'
+import { users } from '../schema/users'
 import type { DbInstance } from '../index'
 
 // ---------------------------------------------------------------------------
@@ -28,6 +32,108 @@ export type Seeder = (db: DbInstance, force: boolean) => Promise<SeederResult>
 // ---------------------------------------------------------------------------
 // Seeders
 // ---------------------------------------------------------------------------
+
+/**
+ * Admin bootstrap seeder (T-02.04.03).
+ *
+ * Creates an initial admin user when the following environment variables are
+ * set:
+ *
+ *   ADMIN_BOOTSTRAP_SECRET — authorization secret (must be non-empty)
+ *   ADMIN_BOOTSTRAP_EMAIL — email or E.164 phone for the admin account
+ *   ADMIN_BOOTSTRAP_PASSWORD — (optional) temporary password; if omitted a
+ *     random 32-character password is generated and printed to stderr
+ *
+ * The bootstrap runs only once: if any admin user already exists in the
+ * database (checked by username), subsequent seed runs skip it.
+ *
+ * The admin user is created with `must_change_password: true` so the first
+ * login forces a password change.  MFA enrollment is also enforced on first
+ * login (the frontend checks the session state for unenrolled MFA).
+ */
+async function seedAdmin(db: DbInstance, _force: boolean): Promise<SeederResult> {
+  const result: SeederResult = {
+    entity: 'admin_bootstrap',
+    created: 0,
+    skipped: 0,
+    errors: [],
+  }
+
+  const secret = process.env['ADMIN_BOOTSTRAP_SECRET']
+  const email = process.env['ADMIN_BOOTSTRAP_EMAIL']
+
+  // Guard: both SECRET and EMAIL must be set for bootstrap to run.
+  if (!secret || !email) {
+    result.skipped++
+    return result
+  }
+
+  // Check if this admin user already exists.
+  try {
+    const existing = await db
+      .select({ id: users.userId })
+      .from(users)
+      .where(eq(users.username, email))
+      .limit(1)
+
+    if (existing.length > 0) {
+      result.skipped++
+      return result
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    result.errors.push(`check_existing: ${message}`)
+    return result
+  }
+
+  // Determine the temporary password.
+  const tempPassword = process.env['ADMIN_BOOTSTRAP_PASSWORD'] ?? randomBytes(16).toString('hex')
+
+  // Hash with the same Argon2id settings used by the API auth service.
+  let passwordHash: string
+  try {
+    passwordHash = await argon2.hash(tempPassword)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    result.errors.push(`hash_password: ${message}`)
+    return result
+  }
+
+  const userId = uuidv7()
+  const now = new Date()
+
+  try {
+    await db.insert(users).values({
+      userId,
+      username: email,
+      passwordHash,
+      locale: 'fa',
+      mustChangePassword: true,
+      isAdmin: true,
+      createdAt: now,
+      updatedAt: now,
+    })
+
+    result.created++
+
+    // Log the temporary password to stderr (visible in seed output but not
+    // in stdout-based CI dashboards).  In production the operator sets a
+    // known ADMIN_BOOTSTRAP_PASSWORD and the temp password is never logged.
+    if (!process.env['ADMIN_BOOTSTRAP_PASSWORD']) {
+      process.stderr.write(
+        `[seed:admin_bootstrap] Temporary admin password for ${email}: ${tempPassword}\n`,
+      )
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(`[seed:admin_bootstrap] Admin user created: ${userId} (${email})`)
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    result.errors.push(`insert_admin: ${message}`)
+  }
+
+  return result
+}
 
 /**
  * Seed default electricity products.
@@ -139,6 +245,7 @@ function getSystemProducts(): Array<{
 
 const seeders: Seeder[] = [
   seedProducts,
+  seedAdmin,
 ]
 
 // ---------------------------------------------------------------------------
