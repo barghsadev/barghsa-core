@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-03-01--create-staff-user",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/129",
-  "loop_iteration": 224,
-  "fix_attempts": 1,
+  "loop_iteration": 225,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -191,16 +191,11 @@
     "02-auth-users-admin.md#T-05.02.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:30:00Z",
-  "notes": "Tick-224: Fixing round 1 complete for PR #129 (T-05.03.01). Fixed: link message accuracy + activation token returned, TOCTOU guard, password entropy, unused imports. Added: 9 new admin service tests. 352/352 tests pass, tsc clean.",
+  "last_updated": "2026-08-26T01:40:00Z",
+  "notes": "Tick-225: Fixing round 2 for PR #129 (T-05.03.01). Fixed: added SessionModule import to AdminModule (CI build was failing). Replaced Math.random() with crypto.getRandomValues in password generation (reviewer major finding). 352/352 tests pass, tsc clean. CI build check now passes; test check fails only due to pre-existing seed test (needs DB). Next: re-invoke reviewer with fixed findings.",
   "status_history": [
     {
       "from": "in_review",
-      "to": "idle",
-      "at": "tick-223"
-    },
-    {
-      "from": "idle",
       "to": "building",
       "at": "tick-224"
     },
@@ -208,6 +203,16 @@
       "from": "fixing",
       "to": "in_review",
       "at": "tick-224"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-225"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-225"
     }
   ]
 }
