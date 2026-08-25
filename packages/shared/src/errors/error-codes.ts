@@ -250,6 +250,20 @@ export const ErrorCodes = {
     messageKey: 'auth.register.error.generic',
     severity: 'error' as ErrorSeverity,
   },
+
+  // ── Login ─────────────────────────────────────
+  AUTH_LOGIN_INVALID_CREDENTIALS: {
+    code: 'AUTH:LOGIN:INVALID_CREDENTIALS',
+    httpStatus: 401,
+    messageKey: 'auth.login.error.invalidCredentials',
+    severity: 'info' as ErrorSeverity,
+  },
+  AUTH_LOGIN_FAILED: {
+    code: 'AUTH:LOGIN:FAILED',
+    httpStatus: 500,
+    messageKey: 'auth.login.error.generic',
+    severity: 'error' as ErrorSeverity,
+  },
 } as const satisfies Record<string, ErrorCodeDef>;
 
 /** Union type of all error code strings */

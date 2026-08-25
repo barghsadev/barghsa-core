@@ -19,6 +19,8 @@ import { RegisterSchema } from './dto/register.dto.js'
 import type { RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import { VerifyOtpSchema, ResendOtpSchema } from './dto/otp.dto.js'
+import { LoginSchema } from './dto/login.dto.js'
+import type { LoginResponse } from './dto/login.dto.js'
 import { OtpService } from './otp.service.js'
 
 /**
@@ -99,6 +101,84 @@ export class AuthController {
     // ── Delegate to service ─────────────────────────────────────────
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.authService.register(parsed.data, ip)
+  }
+
+  /**
+   * POST /api/auth/login
+   *
+   * Authenticates a user with username (email or E.164 phone) and password.
+   * Uses Argon2id for password verification.
+   *
+   * On success:
+   * - If risk-based OTP is not required → creates a session and sets HttpOnly cookie.
+   * - If OTP is required → returns `{ requiresOtp: true, challengeId }` for step-up.
+   *
+   * Rate limits (security-critical, PostgreSQL-backend):
+   * - 5 attempts per account-and-IP per 15 minutes
+   * - 50 attempts per IP per 15 minutes (broad spraying mitigation)
+   *
+   * Error response is always generic ("Invalid username or password")
+   * to avoid revealing whether the username exists.
+   */
+  @Post('login')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000 })
+  @RateLimit({ namespace: 'login:ip', limit: 50, windowMs: 900_000 })
+  @ApiOperation({ summary: 'Authenticate a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login result. May return session credentials or require OTP step-up.',
+    schema: {
+      type: 'object',
+      properties: {
+        requiresOtp: { type: 'boolean', description: 'Whether step-up OTP is needed' },
+        challengeId: { type: 'string', description: 'Challenge ID for OTP step (when requiresOtp is true)' },
+        userId: { type: 'string', description: 'User UUID (when requiresOtp is false)' },
+        sessionId: { type: 'string', description: 'Session identifier (when requiresOtp is false)' },
+        csrfToken: { type: 'string', description: 'CSRF token (when requiresOtp is false)' },
+        expiresAt: { type: 'string', description: 'Session expiry timestamp (when requiresOtp is false)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Invalid username or password (generic)' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async login(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<LoginResponse> {
+    // ── Validate with Zod ───────────────────────────────────────────
+    const parsed = LoginSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      // Generic credential error — never reveal which field is invalid
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
+
+    // ── Delegate to service ─────────────────────────────────────────
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const result = await this.authService.login(parsed.data, ip)
+
+    // If OTP is not required, set the session cookie
+    if (!result.requiresOtp) {
+      const isSecure = process.env.NODE_ENV === 'production'
+      const sessionMaxAge = new Date(result.expiresAt!).getTime() - Date.now()
+
+      res.cookie(SESSION_COOKIE_NAME, result.sessionId!, {
+        httpOnly: true,
+        secure: isSecure,
+        sameSite: SESSION_COOKIE_SAMESITE,
+        path: SESSION_COOKIE_PATH,
+        maxAge: Math.max(0, sessionMaxAge),
+      })
+
+      this.logger.log(`Session established for user ${result.userId}`)
+    }
+
+    return result
   }
 
   /**

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { RegisterSchema } from './dto/register.dto.js';
+import { LoginSchema } from './dto/login.dto.js';
 
 describe('RegisterSchema', () => {
   describe('username validation', () => {
@@ -122,6 +123,90 @@ describe('RegisterSchema', () => {
         tosVersionId: '',
       });
       expect(result.success).toBe(false);
+    });
+  });
+});
+
+describe('LoginSchema', () => {
+  describe('username validation', () => {
+    it('accepts a valid email', () => {
+      const result = LoginSchema.safeParse({
+        username: 'user@example.com',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('normalizes Iranian mobile to E.164', () => {
+      const result = LoginSchema.safeParse({
+        username: '09121234567',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.username).toBe('+989121234567');
+      }
+    });
+
+    it('accepts international E.164 number', () => {
+      const result = LoginSchema.safeParse({
+        username: '+447911123456',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects empty username', () => {
+      const result = LoginSchema.safeParse({
+        username: '',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it('rejects malformed input', () => {
+      const result = LoginSchema.safeParse({
+        username: 'not-email-or-phone',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('password validation', () => {
+    it('accepts any non-empty password (strength checked at registration)', () => {
+      const result = LoginSchema.safeParse({
+        username: 'user@example.com',
+        password: 'any',
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects empty password', () => {
+      const result = LoginSchema.safeParse({
+        username: 'user@example.com',
+        password: '',
+      });
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('deviceInfo (optional)', () => {
+    it('accepts login without deviceInfo', () => {
+      const result = LoginSchema.safeParse({
+        username: 'user@example.com',
+        password: 'anypassword',
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it('accepts login with deviceInfo', () => {
+      const result = LoginSchema.safeParse({
+        username: 'user@example.com',
+        password: 'anypassword',
+        deviceInfo: { userAgent: 'Mozilla/5.0', fingerprint: 'abc123' },
+      });
+      expect(result.success).toBe(true);
     });
   });
 });
