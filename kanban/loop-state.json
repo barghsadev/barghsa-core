@@ -152,7 +152,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T10:33:00",
-  "notes": "Tick-158: Building T-03.01.01 (Dockerfile.web with multi-stage build).",
+  "notes": "Tick-158: Building T-03.01.01 (Dockerfile.web). Moved to in_review. Review found critical (missing package.json for ESM) + major (duplicate ENV) + 4 minor. Fixed all findings; PR #94 ready for re-review.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
