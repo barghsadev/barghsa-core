@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 186,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-03.03.02",
+  "current_task_id": "T-03.03.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-03-03-02--default-profile-selection",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/110",
+  "loop_iteration": 187,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -173,8 +173,8 @@
     "02-auth-users-admin.md#T-03.03.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:47:00Z",
-  "notes": "Tick-186: in_review → idle — T-03.03.01 (Profile switcher) merged as PR #109 after z-ai/glm-5.2 approve (3 minor follow-ups). Next: 02-auth-users-admin.md#T-03.03.02.",
+  "last_updated": "2026-08-25T16:59:00Z",
+  "notes": "Tick-187: idle → building → in_review — T-03.03.02 (Default profile selection) built as PR #110. Forced modal when multiple profiles && no default. typecheck ✅, test ✅ (210 passed).",
   "status_history": [
     {
       "from": "idle",
@@ -210,6 +210,16 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-186"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-187"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-187"
     }
   ]
 }

@@ -115,8 +115,11 @@ export function DefaultProfileModal() {
       })
 
       if (response.ok) {
-        // Invalidate the router so the app-level profile check re-evaluates
-        // and the user proceeds to the dashboard.
+        // Update local state so the modal hides immediately, then
+        // invalidate the router so the app-level profile check
+        // (T-03.01.01) re-evaluates and proceeds to the dashboard.
+        setHasDefault(true)
+        setSetting(false)
         router.invalidate()
       } else {
         setSetting(false)
