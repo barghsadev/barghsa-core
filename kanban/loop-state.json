@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-05-02-05--identity-correction-case",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/127",
   "loop_iteration": 220,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -189,8 +189,8 @@
     "02-auth-users-admin.md#T-05.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T00:55:27Z",
-  "notes": "Tick-220: T-05.02.05 backend built. Review by z-ai/glm-5.2: request_changes. Fixing: SQL field re-validation whitelist, requestedValue notNull, test improvements.",
+  "last_updated": "2026-08-26T01:02:27Z",
+  "notes": "Tick-220: T-05.02.05 backend built. Review by z-ai/glm-5.2 (request_changes). Fixes applied: loop-state.json data restored, SQL field re-validation whitelist, requestedValue notNull, tests improved. Awaiting re-review.",
   "status_history": [
     {
       "from": "idle",
