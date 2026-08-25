@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-01.02.03",
   "current_task_id": "T-01.02.03",
   "current_task_file": "02-auth-users-admin.md",
@@ -152,8 +152,8 @@
     "02-auth-users-admin.md#T-01.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T03:35:00",
-  "notes": "Tick-129: Fixing T-01.02.03 — TOCTOU race (verification outside tx) + missing completeRegistration tests. Review: request_changes.",
+  "last_updated": "2026-08-25T03:43:00",
+  "notes": "Tick-129: Fixed TOCTOU race + added completeRegistration tests. PR #76 returned to review.",
   "status_history": [
     {
       "from": "in_review",
@@ -248,6 +248,11 @@
     {
       "from": "in_review",
       "to": "fixing",
+      "at": "tick-129"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
       "at": "tick-129"
     }
   ]
