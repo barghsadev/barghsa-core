@@ -13,9 +13,6 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { createHash } from 'node:crypto'
-import * as argon2 from 'argon2'
-import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { SessionService } from './session.service.js'
 import { SessionAuthGuard } from './session.guard.js'
@@ -118,17 +115,10 @@ export class SessionController {
     // Verify the session belongs to this user before revoking
     const session = await this.sessionService.getSessionById(sessionId)
 
-    if (!session) {
+    if (!session || session.user_id !== userId) {
       throw new HttpException(
         { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
         404,
-      )
-    }
-
-    if (session.user_id !== userId) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code },
-        403,
       )
     }
 
@@ -170,26 +160,11 @@ export class SessionController {
     const userId = req.session.userId
     const currentSessionId = req.session.sessionId
 
-    // ── Verify password ──────────────────────────────────────
-    const pool = getDbPool()
-    let passwordValid = false
-
-    try {
-      const userResult = await pool.query(
-        `SELECT password_hash FROM users WHERE user_id = $1 LIMIT 1`,
-        [userId],
-      )
-
-      if (userResult.rows.length > 0) {
-        passwordValid = await argon2
-          .verify(userResult.rows[0].password_hash, parsed.data.password)
-          .catch(() => false)
-      }
-    } catch (err) {
-      this.logger.error(
-        `Password verification failed for revoke-all (user ${userId}): ${String(err)}`,
-      )
-    }
+    // ── Verify password via SessionService ─────────────────
+    const passwordValid = await this.sessionService.verifyUserPassword(
+      userId,
+      parsed.data.password,
+    )
 
     if (!passwordValid) {
       throw new HttpException(

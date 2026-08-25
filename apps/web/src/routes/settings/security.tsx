@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
@@ -35,7 +35,37 @@ interface SessionItem {
   isCurrentSession: boolean
 }
 
+type DeviceType = 'ios' | 'mac' | 'androidPhone' | 'androidTablet' | 'windows' | 'linux' | 'unknown'
+
 // ─── Helpers ──────────────────────────────────────────────────────────
+
+/**
+ * Detect device type from user-agent string.
+ */
+function detectDeviceType(userAgent: string | undefined): DeviceType {
+  if (!userAgent) return 'unknown'
+
+  const ua = userAgent.toLowerCase()
+
+  if (ua.includes('iphone') || ua.includes('ipad')) return 'ios'
+  if (ua.includes('macintosh') || ua.includes('mac os')) return 'mac'
+  if (ua.includes('android') && ua.includes('mobile')) return 'androidPhone'
+  if (ua.includes('android')) return 'androidTablet'
+  if (ua.includes('windows')) return 'windows'
+  if (ua.includes('linux')) return 'linux'
+
+  return 'unknown'
+}
+
+/**
+ * Get the device icon component based on device type.
+ */
+function DeviceIcon({ deviceType }: { deviceType: DeviceType }) {
+  if (deviceType === 'ios' || deviceType === 'androidPhone') {
+    return <SmartphoneIcon className="h-4 w-4 text-muted-foreground" />
+  }
+  return <MonitorIcon className="h-4 w-4 text-muted-foreground" />
+}
 
 /**
  * Extract a friendly device name from a user-agent string.
@@ -45,12 +75,12 @@ function getDeviceName(userAgent: string | undefined, locale: Locale): string {
 
   const ua = userAgent.toLowerCase()
 
-  if (ua.includes('iphone') || ua.includes('ipad')) return 'Apple iOS'
-  if (ua.includes('macintosh') || ua.includes('mac os')) return 'Apple Mac'
-  if (ua.includes('android') && ua.includes('mobile')) return 'Android Phone'
-  if (ua.includes('android')) return 'Android Tablet'
-  if (ua.includes('windows')) return 'Windows PC'
-  if (ua.includes('linux')) return 'Linux'
+  if (ua.includes('iphone') || ua.includes('ipad')) return t('settings.security.device.ios', locale)
+  if (ua.includes('macintosh') || ua.includes('mac os')) return t('settings.security.device.mac', locale)
+  if (ua.includes('android') && ua.includes('mobile')) return t('settings.security.device.androidPhone', locale)
+  if (ua.includes('android')) return t('settings.security.device.androidTablet', locale)
+  if (ua.includes('windows')) return t('settings.security.device.windows', locale)
+  if (ua.includes('linux')) return t('settings.security.device.linux', locale)
 
   return t('settings.security.deviceUnknown', locale)
 }
@@ -107,10 +137,6 @@ function SettingsSecurityPage() {
   const [revokeAllPassword, setRevokeAllPassword] = useState('')
   const [revokingAll, setRevokingAll] = useState(false)
   const [revokeAllError, setRevokeAllError] = useState<string | null>(null)
-
-  // Refs for focus trapping
-  const revokeConfirmRef = useRef<HTMLDivElement>(null)
-  const revokeAllRef = useRef<HTMLDivElement>(null)
 
   // ── Fetch sessions ──────────────────────────────────────────────────
 
@@ -269,9 +295,7 @@ function SettingsSecurityPage() {
         {!loading && error && (
           <Alert variant="destructive">
             <AlertCircleIcon className="h-4 w-4" />
-            <AlertTitle>
-              {locale === 'fa' ? 'خطا' : 'Error'}
-            </AlertTitle>
+            <AlertTitle>{t('settings.security.error.title', locale)}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -314,7 +338,7 @@ function SettingsSecurityPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <SmartphoneIcon className="h-4 w-4 text-muted-foreground" />
+                    <DeviceIcon deviceType={detectDeviceType(session.deviceInfo?.userAgent)} />
                     <span className="text-sm font-medium">
                       {getDeviceName(session.deviceInfo?.userAgent, locale)}
                     </span>
@@ -368,14 +392,16 @@ function SettingsSecurityPage() {
       {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
       {revokeConfirmId && revokeConfirmSession && (
         <div
-          ref={revokeConfirmRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="revoke-dialog-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
           onKeyDown={(e) => handleKeyDown(e, handleCancelRevokeConfirm)}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCancelRevokeConfirm()
+          }}
         >
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg mx-4 space-y-4">
+          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
               <ShieldAlertIcon className="h-5 w-5 text-destructive" />
               <h3 id="revoke-dialog-title" className="text-lg font-semibold">
@@ -426,11 +452,10 @@ function SettingsSecurityPage() {
       {/* ── Revoke All Confirmation Dialog ───────────────────────── */}
       {showRevokeAll && (
         <div
-          ref={revokeAllRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="revoke-all-dialog-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
           onKeyDown={(e) =>
             handleKeyDown(e, () => {
               setShowRevokeAll(false)
@@ -438,8 +463,15 @@ function SettingsSecurityPage() {
               setRevokeAllError(null)
             })
           }
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowRevokeAll(false)
+              setRevokeAllPassword('')
+              setRevokeAllError(null)
+            }
+          }}
         >
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg mx-4 space-y-4">
+          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg space-y-4">
             <div className="flex items-center gap-2">
               <ShieldAlertIcon className="h-5 w-5 text-destructive" />
               <h3 id="revoke-all-dialog-title" className="text-lg font-semibold">
@@ -510,11 +542,12 @@ function SessionDetails({
 }) {
   const ip = session.deviceInfo?.ip ?? t('settings.security.ipUnknown', locale)
   const userAgent = session.deviceInfo?.userAgent
+  const deviceType = detectDeviceType(userAgent)
 
   return (
     <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
       <div className="flex items-center gap-1">
-        <GlobeIcon className="h-3 w-3" />
+        <DeviceIcon deviceType={deviceType} />
         <span>{ip}</span>
       </div>
       <div className="flex items-center gap-1">

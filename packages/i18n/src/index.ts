@@ -175,6 +175,13 @@ export const fa: I18nDictionary = {
   'settings.security.noSessions': 'هیچ نشست فعالی یافت نشد',
   'settings.security.cancel': 'انصراف',
   'settings.security.revoking': 'در حال قطع دسترسی…',
+  'settings.security.error.title': 'خطا',
+  'settings.security.device.ios': 'Apple iOS',
+  'settings.security.device.mac': 'Apple Mac',
+  'settings.security.device.androidPhone': 'اندروید',
+  'settings.security.device.androidTablet': 'تبلت اندروید',
+  'settings.security.device.windows': 'Windows PC',
+  'settings.security.device.linux': 'لینوکس',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -350,6 +357,13 @@ export const en: I18nDictionary = {
   'settings.security.noSessions': 'No active sessions found',
   'settings.security.cancel': 'Cancel',
   'settings.security.revoking': 'Revoking…',
+  'settings.security.error.title': 'Error',
+  'settings.security.device.ios': 'Apple iOS',
+  'settings.security.device.mac': 'Apple Mac',
+  'settings.security.device.androidPhone': 'Android Phone',
+  'settings.security.device.androidTablet': 'Android Tablet',
+  'settings.security.device.windows': 'Windows PC',
+  'settings.security.device.linux': 'Linux',
 };
 
 /** Supported locale codes */

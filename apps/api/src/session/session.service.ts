@@ -709,6 +709,33 @@ export class SessionService {
   }
 
   /**
+   * Verify a user's password by checking the Argon2id hash.
+   *
+   * Used by SessionController for revoke-all password confirmation (T-02.02.02).
+   * Returns true if the password matches, false on any error (no timing leakage).
+   */
+  async verifyUserPassword(userId: string, password: string): Promise<boolean> {
+    const pool = getDbPool()
+
+    try {
+      const userResult = await pool.query(
+        `SELECT password_hash FROM users WHERE user_id = $1 LIMIT 1`,
+        [userId],
+      )
+
+      if (userResult.rows.length === 0) {
+        return false
+      }
+
+      const { verify } = await import('argon2')
+      return await verify(userResult.rows[0].password_hash, password).catch(() => false)
+    } catch (err) {
+      this.logger.error(`Password verification failed for user ${userId}: ${String(err)}`)
+      return false
+    }
+  }
+
+  /**
    * Clean up expired and idle-expired sessions.
    *
    * Removes sessions where the absolute expiry or idle deadline has passed,
