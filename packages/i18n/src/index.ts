@@ -576,6 +576,13 @@ export const fa: I18nDictionary = {
   'dashboard.nav.documents': 'اسناد',
   'dashboard.nav.videos': 'ویدئوها',
   'dashboard.nav.settings': 'تنظیمات',
+
+  // ── TOS Page ─────────────────────────────────────────────
+  'tos.page.title': 'قوانین استفاده',
+  'tos.page.lastUpdated': 'آخرین به‌روزرسانی: {date}',
+  'tos.page.loading': 'در حال بارگذاری قوانین...',
+  'tos.page.error': 'متأسفانه در بارگذاری قوانین استفاده خطایی رخ داد',
+  'tos.page.backToHome': 'بازگشت به صفحه اصلی',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1145,6 +1152,13 @@ export const en: I18nDictionary = {
   'dashboard.nav.documents': 'Documents',
   'dashboard.nav.videos': 'Videos',
   'dashboard.nav.settings': 'Settings',
+
+  // ── TOS Page ─────────────────────────────────────────────
+  'tos.page.title': 'Terms of Service',
+  'tos.page.lastUpdated': 'Last updated: {date}',
+  'tos.page.loading': 'Loading terms of service...',
+  'tos.page.error': 'An error occurred while loading the terms of service',
+  'tos.page.backToHome': 'Back to home',
 };
 
 /** Supported locale codes */
