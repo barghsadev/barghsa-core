@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
-import type { UpdateProfileDto } from './crm-v2.controller.js'
+import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js'
 
 /** Simple email regex for server-side validation */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -9,11 +9,36 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 /** Iranian mobile regex: starts with 09 followed by 9 digits */
 const MOBILE_RE = /^09\d{9}$/
 
+/** Allowed verification actions */
+const VERIFY_ACTIONS = ['verify', 'unverify', 'reverify'] as const
+type VerifyAction = (typeof VERIFY_ACTIONS)[number]
+
+/**
+ * Maps a verification action to the resulting profile status,
+ * and returns the set of source states that permit the transition.
+ */
+const VERIFY_TRANSITIONS: Record<
+  VerifyAction,
+  { targetStatus: string; allowedFrom: string[] }
+> = {
+  verify: { targetStatus: 'VERIFIED', allowedFrom: ['DRAFT', 'ACTIVE'] },
+  unverify: { targetStatus: 'ACTIVE', allowedFrom: ['VERIFIED'] },
+  reverify: { targetStatus: 'DRAFT', allowedFrom: ['VERIFIED'] },
+}
+
 /**
  * Result type for profile update in CrmV2Service.
  */
 export type CrmUpdateProfileResult =
   | { updated: true; profile: { id: string; title: string | null; updatedAt: string }; user: { username: string; email: string | null; mobile: string | null } }
+  | { error: string }
+  | null
+
+/**
+ * Result type for profile verification in CrmV2Service.
+ */
+export type CrmVerifyProfileResult =
+  | { success: true; profileId: string; previousStatus: string; newStatus: string; reason: string | null }
   | { error: string }
   | null
 
@@ -455,6 +480,129 @@ export class CrmV2Service {
     } catch (err) {
       await client.query('ROLLBACK')
       this.logger.error(`Failed to update profile ${profileId}: ${String(err)}`)
+      throw err
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * POST /api/crm/profiles/:profileId/verify
+   *
+   * Changes the verification state of a profile. Actions:
+   * - `verify` — marks profile as VERIFIED (from DRAFT or ACTIVE)
+   * - `unverify` — reverts to ACTIVE (from VERIFIED)
+   * - `reverify` — resets to DRAFT (from VERIFIED), flags for re-verification
+   *
+   * Permission: admin or staff with crm:verify role required.
+   * Audit: verification_change with before/after state, actor, reason.
+   * Notification context is included in audit metadata for downstream
+   * delivery to the profile owner.
+   */
+  async verifyProfile(
+    profileId: string,
+    dto: VerifyProfileDto,
+    actorUserId: string,
+    ip: string,
+  ): Promise<CrmVerifyProfileResult> {
+    if (!VERIFY_ACTIONS.includes(dto.action as VerifyAction)) {
+      return { error: `Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}` }
+    }
+
+    const action = dto.action as VerifyAction
+    const transition = VERIFY_TRANSITIONS[action]
+
+    const pool = getDbPool()
+
+    // 1. Fetch the profile to verify existence and current status
+    const profileResult = await pool.query(
+      `SELECT id, user_id, status FROM profiles WHERE id = $1`,
+      [profileId],
+    )
+
+    if (profileResult.rows.length === 0) return null
+
+    const profileRow = profileResult.rows[0] as Record<string, unknown>
+    const currentStatus = profileRow.status as string
+    const targetStatus = transition.targetStatus
+
+    // 2. If the profile is already in the target state, return no-op success
+    if (currentStatus === targetStatus) {
+      return {
+        success: true,
+        profileId,
+        previousStatus: currentStatus,
+        newStatus: targetStatus,
+        reason: dto.reason ?? null,
+      }
+    }
+
+    // 3. Validate state transition
+    if (!transition.allowedFrom.includes(currentStatus)) {
+      return {
+        error: `Cannot ${action} a profile with status '${currentStatus}'. ` +
+          `Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
+      }
+    }
+
+    // 4. Reason is required for unverify and reverify
+    if ((action === 'unverify' || action === 'reverify') && (!dto.reason || dto.reason.trim() === '')) {
+      return { error: `Reason is required for '${action}' action` }
+    }
+
+    const now = new Date().toISOString()
+    const correlationId = uuidv7()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // Update profile status
+      await client.query(
+        `UPDATE profiles SET status = $1, updated_at = $2::timestamptz WHERE id = $3`,
+        [targetStatus, now, profileId],
+      )
+
+      // Record audit event
+      const auditId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'verification_change',
+          JSON.stringify({
+            profileId,
+            previousStatus: currentStatus,
+            newStatus: targetStatus,
+            action,
+            reason: dto.reason ?? null,
+            profileOwnerUserId: profileRow.user_id as string,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.debug(
+        `Profile ${profileId} verification changed: ${currentStatus} → ${targetStatus} ` +
+        `(action: ${action}, actor: ${actorUserId})`,
+      )
+
+      return {
+        success: true,
+        profileId,
+        previousStatus: currentStatus,
+        newStatus: targetStatus,
+        reason: dto.reason ?? null,
+      }
+    } catch (err) {
+      await client.query('ROLLBACK')
+      this.logger.error(`Failed to verify profile ${profileId}: ${String(err)}`)
       throw err
     } finally {
       client.release()

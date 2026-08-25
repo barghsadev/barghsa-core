@@ -474,3 +474,265 @@ describe('CrmV2Service.updateProfile', () => {
     expect(mockRelease).toHaveBeenCalled()
   })
 })
+
+describe('CrmV2Service.verifyProfile', () => {
+  const ACTOR_USER_ID = 'admin-user-001'
+  const VALID_PROFILE_ID = '00000000-0000-7000-8000-000000000001'
+
+  function mockClient() {
+    const mockClientQuery = vi.fn()
+    const mockRelease = vi.fn()
+    const client = { query: mockClientQuery, release: mockRelease }
+    return { mockClientQuery, mockRelease, client }
+  }
+
+  it('verifies a DRAFT profile successfully', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'DRAFT' }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE profiles
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(
+      VALID_PROFILE_ID,
+      { action: 'verify' },
+      ACTOR_USER_ID,
+      '10.0.0.1',
+    )
+
+    expect(result).not.toBeNull()
+    expect(result).not.toHaveProperty('error')
+    const success = result as { success: true; profileId: string; previousStatus: string; newStatus: string }
+    expect(success.success).toBe(true)
+    expect(success.previousStatus).toBe('DRAFT')
+    expect(success.newStatus).toBe('VERIFIED')
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('verifies an ACTIVE profile successfully', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'ACTIVE' }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE profiles
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(
+      VALID_PROFILE_ID,
+      { action: 'verify' },
+      ACTOR_USER_ID,
+      '',
+    )
+
+    expect(result).not.toBeNull()
+    const success = result as { success: true; newStatus: string }
+    expect(success.newStatus).toBe('VERIFIED')
+  })
+
+  it('unverifies a VERIFIED profile', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'VERIFIED' }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE profiles
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(
+      VALID_PROFILE_ID,
+      { action: 'unverify', reason: 'Profile information needs review' },
+      ACTOR_USER_ID,
+      '10.0.0.1',
+    )
+
+    expect(result).not.toBeNull()
+    const success = result as { success: true; previousStatus: string; newStatus: string }
+    expect(success.previousStatus).toBe('VERIFIED')
+    expect(success.newStatus).toBe('ACTIVE')
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('reverifies a VERIFIED profile', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'VERIFIED' }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE profiles
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(
+      VALID_PROFILE_ID,
+      { action: 'reverify', reason: 'Documents expired' },
+      ACTOR_USER_ID,
+      '',
+    )
+
+    expect(result).not.toBeNull()
+    const success = result as { success: true; newStatus: string }
+    expect(success.newStatus).toBe('DRAFT')
+  })
+
+  it('returns null when profile does not exist', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile('nonexistent-id', { action: 'verify' }, ACTOR_USER_ID, '')
+    expect(result).toBeNull()
+  })
+
+  it('rejects invalid action', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'DRAFT' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'invalid-action' }, ACTOR_USER_ID, '')
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+  })
+
+  it('rejects transition from DRAFT to unverify', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'DRAFT' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'unverify', reason: 'test' }, ACTOR_USER_ID, '')
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Cannot unverify')
+  })
+
+  it('rejects unverify without reason', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'VERIFIED' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'unverify' }, ACTOR_USER_ID, '')
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Reason is required')
+  })
+
+  it('rejects reverify without reason', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'VERIFIED' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'reverify', reason: '' }, ACTOR_USER_ID, '')
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Reason is required')
+  })
+
+  it('rejects verify on SUSPENDED profile', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'SUSPENDED' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'verify' }, ACTOR_USER_ID, '')
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Cannot verify')
+  })
+
+  it('returns success for no-op (already VERIFIED)', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'VERIFIED' }] })
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'verify' }, ACTOR_USER_ID, '')
+    expect(result).not.toBeNull()
+    const success = result as { success: true; previousStatus: string; newStatus: string }
+    expect(success.success).toBe(true)
+    expect(success.previousStatus).toBe('VERIFIED')
+    expect(success.newStatus).toBe('VERIFIED')
+  })
+
+  it('records audit event with correct metadata', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query.mockResolvedValueOnce({ rows: [{ id: VALID_PROFILE_ID, user_id: 'user-001', status: 'DRAFT' }] })
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce(undefined) // UPDATE profiles
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    const service = new Svc()
+
+    await service.verifyProfile(
+      VALID_PROFILE_ID,
+      { action: 'verify' },
+      ACTOR_USER_ID,
+      '10.0.0.1',
+    )
+
+    const auditCall = mockClientQuery.mock.calls.find(
+      (call: unknown[]) => (call[0] as string).includes('INSERT INTO audit_log'),
+    )
+    expect(auditCall).toBeDefined()
+    const auditParams = auditCall![1] as unknown[]
+    const metadataStr = auditParams[3] as string
+    const metadata = JSON.parse(metadataStr)
+    expect(metadata.profileId).toBe(VALID_PROFILE_ID)
+    expect(metadata.previousStatus).toBe('DRAFT')
+    expect(metadata.newStatus).toBe('VERIFIED')
+    expect(metadata.action).toBe('verify')
+    expect(metadata.profileOwnerUserId).toBe('user-001')
+    expect(mockRelease).toHaveBeenCalled()
+  })
+})
