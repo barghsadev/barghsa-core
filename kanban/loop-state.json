@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-03.02.03",
   "current_task_id": "T-03.02.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-03-02-03--legal-profiles-backend",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/106",
   "loop_iteration": 176,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -171,7 +171,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T15:00:00",
-  "notes": "Tick-176: Building T-03.02.03 (Legal profile form, XL) — backend slice: legal_profiles table, company_types ref, national_identifier validation, service, onboarding endpoint.",
+  "notes": "Tick-176: PR #106 ready for review — legal profiles backend (T-03.02.03 slice 1). Backend: legal_profiles table, company_types ref, national_identifier validation, onboarding endpoint. All 25 API tests pass.",
   "status_history": [
     {
       "from": "fixing",
@@ -426,6 +426,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-176"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-176"
     }
   ]
