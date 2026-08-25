@@ -1,4 +1,4 @@
-# Stage 1: Dependencies — install all deps (dev + prod) needed for build
+# Stage 1: Dependencies — install all deps (dev + prod) for build
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -36,15 +36,24 @@ COPY . .
 RUN corepack enable && \
     NODE_ENV=production pnpm build --filter @barghsa/api
 
-# Stage 3: Production — minimal runtime image
+# Stage 3: Production — minimal runtime image with only production deps
 FROM node:20-alpine AS production
-RUN addgroup --system --gid 1001 nodejs && \
+RUN apk add --no-cache libc6-compat && \
+    addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 appuser
 
 WORKDIR /app
 
-# Copy production dependencies
+# Copy production dependencies (pnpm workspace symlinks need packages/ dirs to resolve)
 COPY --from=prod-deps /app/node_modules ./node_modules
+
+# Copy built workspace package artifacts so pnpm workspace symlinks resolve at runtime
+COPY --from=build /app/packages/db/package.json ./packages/db/package.json
+COPY --from=build /app/packages/db/dist ./packages/db/dist
+COPY --from=build /app/packages/shared/package.json ./packages/shared/package.json
+COPY --from=build /app/packages/shared/dist ./packages/shared/dist
+COPY --from=build /app/packages/i18n/package.json ./packages/i18n/package.json
+COPY --from=build /app/packages/i18n/dist ./packages/i18n/dist
 
 # Copy package.json for CommonJS compatibility
 COPY --from=build /app/apps/api/package.json ./package.json
