@@ -206,6 +206,17 @@ export const fa: I18nDictionary = {
   'settings.security.device.androidTablet': 'تبلت اندروید',
   'settings.security.device.windows': 'Windows PC',
   'settings.security.device.linux': 'لینوکس',
+
+  // ── Onboarding ───────────────────────────────────────────
+  'onboarding.welcome.title': 'خوش آمدید به بارگشا',
+  'onboarding.welcome.subtitle': 'برای شروع، لطفاً پروفایل خود را ایجاد کنید.',
+  'onboarding.welcome.subtitleEn': 'Please create your profile to get started.',
+  'onboarding.profile.individual': 'حقیقی',
+  'onboarding.profile.individualDesc': 'برای ثبت‌نام به عنوان شخص حقیقی',
+  'onboarding.profile.individualDescEn': 'Individual registration',
+  'onboarding.profile.legal': 'حقوقی',
+  'onboarding.profile.legalDesc': 'برای ثبت‌نام به عنوان شخص حقوقی',
+  'onboarding.profile.legalDescEn': 'Legal entity registration',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -412,6 +423,14 @@ export const en: I18nDictionary = {
   'settings.security.device.androidTablet': 'Android Tablet',
   'settings.security.device.windows': 'Windows PC',
   'settings.security.device.linux': 'Linux',
+
+  // ── Onboarding ───────────────────────────────────────────
+  'onboarding.welcome.title': 'Welcome to Barghsa',
+  'onboarding.welcome.subtitle': 'Please create your profile to get started.',
+  'onboarding.profile.individual': 'Individual',
+  'onboarding.profile.individualDesc': 'Register as an individual person',
+  'onboarding.profile.legal': 'Legal Entity',
+  'onboarding.profile.legalDesc': 'Register as a legal entity',
 };
 
 /** Supported locale codes */

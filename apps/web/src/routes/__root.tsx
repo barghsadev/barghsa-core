@@ -1,6 +1,6 @@
-import { createRootRoute, Outlet, useRouter } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -20,6 +20,9 @@ const EXCLUDED_ROUTES = new Set(['/', '/onboarding'])
  * Client-side profile check (T-03.01.01).
  *
  * After authentication, checks if the user has at least one profile.
+ * Re-evaluates on every navigation so the guard catches post-onboarding
+ * returns (user creates a profile in /onboarding, then navigates back).
+ *
  * Routes the three cases:
  *
  * 1. No profiles → redirect to /onboarding
@@ -43,7 +46,10 @@ async function runProfileCheck(
 
     // Not authenticated — no redirect needed
     if (response.status === 401) return
-    if (!response.ok) return
+    if (!response.ok) {
+      console.warn('[profile guard] non-401 response', response.status)
+      return
+    }
 
     const data: {
       profiles: Array<{ id: string; isDefault: boolean }>
@@ -73,22 +79,18 @@ async function runProfileCheck(
     }
 
     // Multiple profiles — proceed normally
-  } catch {
-    // Network error — guard is non-blocking
+  } catch (error) {
+    console.warn('[profile guard] network error', error)
   }
 }
 
 function RootComponent() {
   const router = useRouter()
-  const checked = useRef(false)
+  const { pathname } = useLocation()
 
   useEffect(() => {
-    if (checked.current) return
-    checked.current = true
-
-    const pathname = window.location.pathname
     runProfileCheck(pathname, router)
-  }, [router])
+  }, [pathname, router])
 
   return (
     <>
