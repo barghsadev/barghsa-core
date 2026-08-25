@@ -1,12 +1,12 @@
 {
-  "status": "blocked",
-  "current_task_key": "02-auth-users-admin.md#T-04.01.02",
-  "current_task_id": "T-04.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e04-t-04-01-02--tos-acceptance-storage",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/118",
-  "loop_iteration": 201,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 202,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -178,11 +178,12 @@
     "02-auth-users-admin.md#T-03.03.06",
     "02-auth-users-admin.md#T-03.04.01",
     "02-auth-users-admin.md#T-03.04.02",
-    "02-auth-users-admin.md#T-04.01.01"
+    "02-auth-users-admin.md#T-04.01.01",
+    "02-auth-users-admin.md#T-04.01.02"
   ],
-  "last_error": "CI seed test failure on main blocks PR #118 merge. PR has reviewer approval (z-ai/glm-5.2), no conflicts, no code issues. Tests fail on main too (pre-existing DB-dependent seed test). Needs manual decision: fix seed test or acknowledge as known failure and bypass.",
-  "last_updated": "2026-08-25T20:22:00Z",
-  "notes": "Tick-201: Blocked. PR #118 (T-04.01.02 TOS acceptance) approved by reviewer, mergeable, no code issues. CI 'Run tests' fails on main (pre-existing seed test requiring DB). Manual intervention needed to resolve seed test or unblock merging.",
+  "last_error": null,
+  "last_updated": "2026-08-25T17:41:00Z",
+  "notes": "Tick-202: PR #118 (T-04.01.02 TOS acceptance storage) merged. Fixed pre-existing seed test failure: users table CREATE TABLE in seed test was missing email/mobile/notification_preferences/timezone columns added by later migrations (T-03.03.04 through T-03.03.06). Drizzle schema had these columns so INSERT failed. Added missing columns to test's CREATE TABLE. Loop idle.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-189" },
     { "from": "building", "to": "in_review", "at": "tick-189" },
@@ -200,6 +201,7 @@
     { "from": "in_review", "to": "idle", "at": "tick-198" },
     { "from": "idle", "to": "building", "at": "tick-199" },
     { "from": "fixing", "to": "in_review", "at": "tick-200" },
-    { "from": "in_review", "to": "blocked", "at": "tick-201" }
+    { "from": "in_review", "to": "blocked", "at": "tick-201" },
+    { "from": "blocked", "to": "idle", "at": "tick-202" }
   ]
 }
