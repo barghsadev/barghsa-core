@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CrmService } from './crm.service.js'
+import { CrmService, type CrmListUsersFilters } from './crm.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -27,12 +27,6 @@ export class CrmController {
    *
    * Returns a paginated list of all registered users with profile
    * summaries. Staff (crm:read) and admin only.
-   *
-   * Permission is enforced inline here until a dedicated permissions
-   * framework is wired. The session object carries an `isAdmin` flag;
-   * a future T-09.05.01 (role management) will add granular
-   * `crm:read` permission checks. For now, staff with crm:read-only
-   * roles will get 403 until the role/permission system is wired.
    */
   @Get('users')
   @HttpCode(200)
@@ -48,6 +42,48 @@ export class CrmController {
     required: false,
     description: 'Max results per page (1–100, default 20).',
     type: Number,
+  })
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    description: 'Filter by profile type: INDIVIDUAL or LEGAL.',
+    enum: ['INDIVIDUAL', 'LEGAL'],
+  })
+  @ApiQuery({
+    name: 'verification',
+    required: false,
+    description: 'Filter by verification status: VERIFIED, UNVERIFIED, PENDING, or DISABLED.',
+    enum: ['VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED'],
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Free-text search across username, individual name, and legal name.',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'dateFrom',
+    required: false,
+    description: 'Earliest registration date (inclusive). ISO 8601 format.',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'dateTo',
+    required: false,
+    description: 'Latest registration date (inclusive). ISO 8601 format.',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'sort',
+    required: false,
+    description: 'Sort column. Default: createdAt.',
+    enum: ['createdAt'],
+  })
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    description: 'Sort order. Default: desc.',
+    enum: ['asc', 'desc'],
   })
   @ApiResponse({
     status: 200,
@@ -83,6 +119,13 @@ export class CrmController {
   async listUsers(
     @Query('cursor') cursor: string | undefined,
     @Query('limit') limit: string | undefined,
+    @Query('type') type: string | undefined,
+    @Query('verification') verification: string | undefined,
+    @Query('search') search: string | undefined,
+    @Query('dateFrom') dateFrom: string | undefined,
+    @Query('dateTo') dateTo: string | undefined,
+    @Query('sort') sort: string | undefined,
+    @Query('order') order: string | undefined,
     @Req() req: AuthenticatedRequest,
   ) {
     const isAdmin = req.session.isAdmin ?? false
@@ -101,10 +144,35 @@ export class CrmController {
       )
     }
 
+    // Build filters object from query params
+    const filters: CrmListUsersFilters = {}
+    if (type === 'INDIVIDUAL' || type === 'LEGAL') {
+      filters.type = type
+    }
+    if (verification === 'VERIFIED' || verification === 'UNVERIFIED' || verification === 'PENDING' || verification === 'DISABLED') {
+      filters.verification = verification
+    }
+    if (search) {
+      filters.search = search
+    }
+    if (dateFrom) {
+      filters.dateFrom = dateFrom
+    }
+    if (dateTo) {
+      filters.dateTo = dateTo
+    }
+    if (sort === 'createdAt') {
+      filters.sort = sort
+    }
+    if (order === 'asc' || order === 'desc') {
+      filters.order = order
+    }
+
     const parsedLimit = limit ? parseInt(limit, 10) : 20
     const result = await this.crmService.listUsers(
       cursor ?? null,
       isNaN(parsedLimit) ? 20 : parsedLimit,
+      filters,
     )
 
     this.logger.debug(

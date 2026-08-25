@@ -26,6 +26,26 @@ export interface CrmUsersResponse {
   hasMore: boolean
 }
 
+/**
+ * Filters accepted by the CRM users list endpoint.
+ */
+export interface CrmListUsersFilters {
+  /** Profile type filter: INDIVIDUAL or LEGAL. */
+  type?: 'INDIVIDUAL' | 'LEGAL' | null
+  /** Verification status filter. */
+  verification?: 'VERIFIED' | 'UNVERIFIED' | 'PENDING' | 'DISABLED' | null
+  /** Free-text search across username, individual name, and legal name. */
+  search?: string | null
+  /** Earliest registration date (inclusive). */
+  dateFrom?: string | null
+  /** Latest registration date (inclusive). */
+  dateTo?: string | null
+  /** Sort column. Default: createdAt. */
+  sort?: 'createdAt' | null
+  /** Sort order. Default: desc. */
+  order?: 'asc' | 'desc' | null
+}
+
 @Injectable()
 export class CrmService {
   private readonly logger = new Logger(CrmService.name)
@@ -34,24 +54,19 @@ export class CrmService {
    * GET /api/crm/users
    *
    * Returns a cursor-paginated list of all registered users with their
-   * profile summary. Staff and admin only (permission enforced at the
-   * controller guard level).
-   *
-   * Columns returned per user:
-   *   - userId, username, email, mobile
-   *   - registrationDate, lastLogin
-   *   - profileCount, hasIndividualProfile, hasLegalProfile, hasVerifiedProfile
+   * profile summary. Supports filtering by profile type, verification
+   * status, date range, and free-text search.
    *
    * The cursor is a JSON object {id: string, createdAt: string} base64url-encoded.
-   * This composite cursor ensures correct multi-page results when ordering
-   * by created_at DESC — the sort column and the cursor token columns match.
    *
    * @param cursor  Opaque pagination cursor from a previous page.
    * @param limit   Max results per page (default 20, max 100).
+   * @param filters Optional filters and search criteria.
    */
   async listUsers(
     cursor?: string | null,
     limit: number = 20,
+    filters?: CrmListUsersFilters,
   ): Promise<CrmUsersResponse> {
     const pool = getDbPool()
     const pageSize = Math.min(Math.max(1, limit), 100)
@@ -77,14 +92,89 @@ export class CrmService {
       }
     }
 
-    // Query: list users with aggregated profile data.
-    // The join on profiles is a LEFT JOIN so users without profiles
-    // still appear (edge case — every user should have at least one).
-    // For DESC order, the cursor filter is: (created_at, user_id) < ($createdAt, $id)
-    const cursorClause =
-      cursorCreatedAt && cursorId
-        ? 'WHERE (u.created_at, u.user_id) < ($2::timestamptz, $3::uuid)'
-        : ''
+    // Build WHERE clauses dynamically
+    const whereClauses: string[] = []
+    const params: unknown[] = [pageSize + 1] // $1 = limit (+1 for hasMore)
+    let paramIndex = 2
+
+    // Cursor-based pagination
+    if (cursorCreatedAt && cursorId) {
+      whereClauses.push(`(u.created_at, u.user_id) < ($${paramIndex}::timestamptz, $${paramIndex + 1}::uuid)`)
+      params.push(cursorCreatedAt, cursorId)
+      paramIndex += 2
+    }
+
+    // Profile type filter — applied as WHERE on profiles join
+    if (filters?.type) {
+      whereClauses.push(`p.profile_type = $${paramIndex}`)
+      params.push(filters.type)
+      paramIndex++
+    }
+
+    // Verification status filter — applied as HAVING after GROUP BY
+    let havingClause = ''
+    if (filters?.verification) {
+      switch (filters.verification) {
+        case 'VERIFIED':
+          havingClause = ` HAVING bool_or(p.status = 'VERIFIED') = true`
+          break
+        case 'UNVERIFIED':
+          // Status is not null and never VERIFIED
+          havingClause = ` HAVING EVERY(p.status IS NULL OR p.status IS NOT NULL) AND NOT bool_or(p.status = 'VERIFIED' OR p.status IS NULL)`
+          break
+        case 'PENDING':
+          havingClause = ` HAVING bool_or(p.status = 'PENDING') = true AND NOT bool_or(p.status = 'VERIFIED') = true`
+          break
+        case 'DISABLED':
+          havingClause = ` HAVING bool_or(p.status = 'DISABLED') = true`
+          break
+      }
+    }
+
+    // Date range filter
+    if (filters?.dateFrom) {
+      whereClauses.push(`u.created_at >= $${paramIndex}::timestamptz`)
+      params.push(filters.dateFrom)
+      paramIndex++
+    }
+    if (filters?.dateTo) {
+      whereClauses.push(`u.created_at <= $${paramIndex}::timestamptz`)
+      params.push(filters.dateTo)
+      paramIndex++
+    }
+
+    // Search — full-text search across username, individual name, legal name
+    let searchJoin = ''
+    if (filters?.search) {
+      // Join legal_profiles for legal_name search
+      searchJoin = ` LEFT JOIN legal_profiles lp ON lp.id = p.id AND p.profile_type = 'LEGAL'`
+
+      // Use PostgreSQL full-text search for structured fields
+      // Combined with ILIKE for fallback/partial matching
+      const searchTerm = filters.search.trim()
+      whereClauses.push(`(
+        to_tsvector('simple', u.username) @@ plainto_tsquery('simple', $${paramIndex})
+        OR u.username ILIKE $${paramIndex + 1}
+        OR to_tsvector('simple', COALESCE(p.first_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 2})
+        OR p.first_name ILIKE $${paramIndex + 3}
+        OR to_tsvector('simple', COALESCE(p.last_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 4})
+        OR p.last_name ILIKE $${paramIndex + 5}
+        OR COALESCE(lp.legal_name, '') ILIKE $${paramIndex + 6}
+      )`)
+      const ilikePattern = `%${searchTerm}%`
+      for (let i = 0; i < 7; i++) {
+        params.push(i < 4 && i % 2 === 0 ? searchTerm : ilikePattern)
+      }
+      paramIndex += 7
+    }
+
+    // Sort and order
+    const sortColumn = filters?.sort === 'createdAt' || !filters?.sort ? 'u.created_at' : 'u.created_at'
+    const sortOrder = filters?.order === 'asc' ? 'ASC' : 'DESC'
+    const tiebreakerOrder = sortOrder === 'ASC' ? 'ASC' : 'DESC'
+
+    const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : ''
+
     const query = `
       SELECT
         u.user_id,
@@ -99,16 +189,13 @@ export class CrmService {
         bool_or(p.status = 'VERIFIED') AS has_verified_profile
       FROM users u
       LEFT JOIN profiles p ON p.user_id = u.user_id
-      ${cursorClause}
+      ${searchJoin}
+      ${whereClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
-      ORDER BY u.created_at DESC, u.user_id DESC
+      ${havingClause}
+      ORDER BY ${sortColumn} ${sortOrder}, u.user_id ${tiebreakerOrder}
       LIMIT $1
     `
-
-    const params: unknown[] = [pageSize + 1] // +1 to detect hasMore
-    if (cursorCreatedAt && cursorId) {
-      params.push(cursorCreatedAt, cursorId)
-    }
 
     const result = await pool.query(query, params)
 
