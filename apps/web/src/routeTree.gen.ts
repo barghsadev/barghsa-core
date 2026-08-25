@@ -19,6 +19,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SavingsRouteImport } from './routes/savings'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -78,6 +79,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const SavingsRoute = SavingsRouteImport.update({
   id: '/savings',
   path: '/savings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VideosRoute = VideosRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
+  '/support': typeof SupportRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/savings': typeof SavingsRoute
+  '/support': typeof SupportRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
+  '/support': typeof SupportRoute
   '/videos': typeof VideosRoute
   '/wallet': typeof WalletRoute
   '/admin/storage': typeof AdminStorageRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/savings'
+    | '/support'
     | '/videos'
     | '/wallet'
     | '/admin/storage'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/savings'
+    | '/support'
     | '/videos'
     | '/wallet'
     | '/admin/storage'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/savings'
+    | '/support'
     | '/videos'
     | '/wallet'
     | '/admin/storage'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRouteWithChildren
   SavingsRoute: typeof SavingsRoute
+  SupportRoute: typeof SupportRoute
   VideosRoute: typeof VideosRoute
   WalletRoute: typeof WalletRoute
   SettingsSecurityRoute: typeof SettingsSecurityRoute
@@ -347,6 +360,13 @@ declare module '@tanstack/react-router' {
       path: '/savings'
       fullPath: '/savings'
       preLoaderRoute: typeof SavingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/videos': {
@@ -475,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRouteWithChildren,
   SavingsRoute: SavingsRoute,
+  SupportRoute: SupportRoute,
   VideosRoute: VideosRoute,
   WalletRoute: WalletRoute,
   SettingsSecurityRoute: SettingsSecurityRoute,

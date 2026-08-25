@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-02.03.03",
+  "current_task_id": "T-02.03.03",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-02-03-03--account-recovery-support",
   "current_pr_url": null,
-  "loop_iteration": 163,
+  "loop_iteration": 164,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -165,8 +165,8 @@
     "02-auth-users-admin.md#T-02.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T11:55:01",
-  "notes": "Tick-163: T-02.03.02 (OTP verification and password reset) merged as PR #99. Reviewed by z-ai/glm-5.2 (approve, 2 minor — OTP decrement already present in code; IP rate limit kept as defense-in-depth). Loop idle; next: 02-auth-users-admin.md#T-02.03.03 (Account recovery support path).",
+  "last_updated": "2026-08-25T12:00:00",
+  "notes": "Tick-164: Starting T-02.03.03 (Account recovery support path). Changed helpLink target to /support route, created support page with contact info and recovery guidance, added i18n strings (FA/EN).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
@@ -198,6 +198,7 @@
     { "from": "building", "to": "in_review", "at": "tick-162" },
     { "from": "in_review", "to": "idle", "at": "tick-162" },
     { "from": "idle", "to": "building", "at": "tick-163" },
-    { "from": "in_review", "to": "idle", "at": "tick-163" }
+    { "from": "in_review", "to": "idle", "at": "tick-163" },
+    { "from": "idle", "to": "building", "at": "tick-164" }
   ]
 }

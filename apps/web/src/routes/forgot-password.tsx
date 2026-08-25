@@ -442,7 +442,7 @@ function ForgotPasswordPage() {
           </p>
           <p className="text-center text-sm">
             <Link
-              to="/"
+              to="/support"
               className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
               aria-label={t('auth.forgotPassword.helpLink', locale)}
             >
