@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-03-02-03--legal-profile-form",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/108",
-  "loop_iteration": 183,
-  "fix_attempts": 0,
+  "loop_iteration": 184,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -172,8 +172,8 @@
     "02-auth-users-admin.md#T-03.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T12:53:00Z",
-  "notes": "Tick-183: building → in_review — T-03.02.03 (Legal profile form). Frontend form created, PR #108 ready for review. All checks pass.",
+  "last_updated": "2026-08-25T13:01:00Z",
+  "notes": "Tick-184: in_review → fixing → in_review — T-03.02.03 (Legal profile form). PR #108 review found issues: addressed company-types fetch error handling (retry button), added geography.service.test.ts for getCompanyTypes(). Backend POST endpoint and DB schema already exist from prior tasks. Remaining follow-up: auto-save and document upload API deferred. Returning to review.",
   "status_history": [
     {
       "from": "idle",
@@ -184,6 +184,16 @@
       "from": "building",
       "to": "in_review",
       "at": "tick-183"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-184"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-184"
     }
   ]
 }
