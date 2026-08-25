@@ -221,15 +221,14 @@ export const fa: I18nDictionary = {
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'پروفایل شما تأیید نشده است',
-  'verification.banner.verifyNow': 'تأیید کن',
-  'verification.banner.learnMore': 'بیشتر بدانید',
   'verification.banner.verify': 'تأیید خودکار',
   'verification.banner.verifying': 'در حال تأیید…',
   'verification.banner.verified': 'پروفایل شما با موفقیت تأیید شد',
+  'verification.banner.dismiss': 'بستن',
+  'verification.banner.error': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
   'verification.order.blocked.title': 'ثبت سفارش جدید امکان‌پذیر نیست',
   'verification.order.blocked.description': 'پروفایل شما هنوز تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید.',
   'verification.order.blocked.support': 'در صورت نیاز به راهنمایی با پشتیبانی تماس بگیرید.',
-  'verification.status.unverified': 'تأیید نشده',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -448,15 +447,14 @@ export const en: I18nDictionary = {
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'Your profile is not verified',
-  'verification.banner.verifyNow': 'Verify now',
-  'verification.banner.learnMore': 'Learn more',
   'verification.banner.verify': 'Auto-verify',
   'verification.banner.verifying': 'Verifying…',
   'verification.banner.verified': 'Your profile has been verified successfully',
+  'verification.banner.dismiss': 'Dismiss',
+  'verification.banner.error': 'An error occurred. Please try again',
   'verification.order.blocked.title': 'New orders are not available',
   'verification.order.blocked.description': 'Your profile has not been verified yet. Please verify your profile before placing a new order.',
   'verification.order.blocked.support': 'Contact support for assistance.',
-  'verification.status.unverified': 'Unverified',
 };
 
 /** Supported locale codes */

@@ -30,9 +30,11 @@ export function VerificationBanner() {
   const [verifying, setVerifying] = useState(false)
   const [verified, setVerified] = useState(false)
   const [dismissed, setDismissed] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   const locale: Locale = 'fa' // TODO: read from locale context
+  const isRtl = locale === 'fa'
 
   useEffect(() => {
     let cancelled = false
@@ -88,6 +90,7 @@ export function VerificationBanner() {
   async function handleAutoVerify() {
     if (!currentStatus.activeProfileId) return
     setVerifying(true)
+    setError(null)
 
     try {
       const response = await fetch(`/api/profiles/${currentStatus.activeProfileId}/verify`, {
@@ -104,9 +107,11 @@ export function VerificationBanner() {
         }, 1500)
       } else {
         setVerifying(false)
+        setError(t('verification.banner.error', locale))
       }
     } catch {
       setVerifying(false)
+      setError(t('verification.banner.error', locale))
     }
   }
 
@@ -115,6 +120,7 @@ export function VerificationBanner() {
       <div
         className="bg-green-50 border-green-200 border px-4 py-3 text-sm text-green-800"
         role="alert"
+        dir={isRtl ? 'rtl' : 'ltr'}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <span>{t('verification.banner.verified', locale)}</span>
@@ -127,9 +133,13 @@ export function VerificationBanner() {
     <div
       className="bg-amber-50 border-amber-200 border-b px-4 py-3 text-sm text-amber-800"
       role="alert"
+      dir={isRtl ? 'rtl' : 'ltr'}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
-        <span>{t('verification.banner.title', locale)}</span>
+        <div className="flex flex-col gap-1">
+          <span>{t('verification.banner.title', locale)}</span>
+          {error && <span className="text-xs text-red-600">{error}</span>}
+        </div>
         <div className="flex items-center gap-3">
           {currentStatus.canAutoVerify && (
             <button
@@ -145,7 +155,7 @@ export function VerificationBanner() {
           <button
             onClick={() => setDismissed(true)}
             className="text-amber-600 hover:text-amber-800"
-            aria-label="Dismiss"
+            aria-label={t('verification.banner.dismiss', locale)}
           >
             ✕
           </button>

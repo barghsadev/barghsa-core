@@ -237,9 +237,10 @@ export class ProfilesService {
 
     // Verify the system method is 'api'
     const method = await this.configCache.get<string>(VERIFICATION_METHOD_KEY)
-    if (method && method !== 'api') {
+    const resolvedMethod = method ?? 'manual'
+    if (resolvedMethod !== 'api') {
       throw new Error(
-        `Cannot auto-verify: verification method is '${method}', not 'api'`,
+        `Cannot auto-verify: verification method is '${resolvedMethod}', not 'api'`,
       )
     }
 

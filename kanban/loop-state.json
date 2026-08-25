@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 170,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-03.01.02",
+  "current_task_id": "T-03.01.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-03-01-02--profile-verification-check",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/103",
+  "loop_iteration": 171,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -168,51 +168,233 @@
     "02-auth-users-admin.md#T-03.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:23:00",
-  "notes": "Tick-170: T-03.01.01 (App-level profile check middleware, M) merged as PR #102. Reviewed by z-ai/glm-5.2 (approve, 3 review rounds — 2 fix rounds, then approved). 12 files, 548/+14. Created profiles table, GET /api/profiles, frontend guard. Loop idle; next: 02-auth-users-admin.md#T-03.01.02 (Profile verification check after login).",
+  "last_updated": "2026-08-25T13:40:00",
+  "notes": "Tick-171: T-03.01.02 (Profile verification check after login, M) built as PR #103, ready for review. Backend verification-status endpoint + auto-verify + ProfileVerifiedGuard; frontend banner + order block; i18n; guard tests (3). turbo typecheck 11/11, tests 161 pass. CI in progress. Reviewed by z-ai/glm-5.2 next.",
   "status_history": [
-    { "from": "in_review", "to": "idle", "at": "tick-170" },
-    { "from": "in_review", "to": "fixing", "at": "tick-169" },
-    { "from": "fixing", "to": "in_review", "at": "tick-169" },
-    { "from": "idle", "to": "building", "at": "tick-168" },
-    { "from": "building", "to": "in_review", "at": "tick-168" },
-    { "from": "in_review", "to": "fixing", "at": "tick-168" },
-    { "from": "fixing", "to": "in_review", "at": "tick-168" },
-    { "from": "idle", "to": "building", "at": "tick-166" },
-    { "from": "building", "to": "in_review", "at": "tick-166" },
-    { "from": "idle", "to": "building", "at": "tick-158" },
-    { "from": "idle", "to": "building", "at": "tick-154" },
-    { "from": "building", "to": "in_review", "at": "tick-154" },
-    { "from": "in_review", "to": "idle", "at": "tick-155" },
-    { "from": "in_review", "to": "idle", "at": "tick-144" },
-    { "from": "building", "to": "in_review", "at": "tick-144" },
-    { "from": "idle", "to": "building", "at": "tick-144" },
-    { "from": "idle", "to": "building", "at": "tick-145" },
-    { "from": "in_review", "to": "fixing", "at": "tick-145" },
-    { "from": "fixing", "to": "in_review", "at": "tick-145" },
-    { "from": "building", "to": "idle", "at": "tick-145" },
-    { "from": "idle", "to": "building", "at": "tick-147" },
-    { "from": "building", "to": "in_review", "at": "tick-147" },
-    { "from": "in_review", "to": "fixing", "at": "tick-148" },
-    { "from": "fixing", "to": "in_review", "at": "tick-148" },
-    { "from": "in_review", "to": "idle", "at": "tick-150" },
-    { "from": "idle", "to": "in_review", "at": "tick-151" },
-    { "from": "in_review", "to": "idle", "at": "tick-152" },
-    { "from": "idle", "to": "building", "at": "tick-153" },
-    { "from": "building", "to": "in_review", "at": "tick-153" },
-    { "from": "in_review", "to": "idle", "at": "tick-153" },
-    { "from": "in_review", "to": "idle", "at": "tick-157" },
-    { "from": "in_review", "to": "idle", "at": "tick-159" },
-    { "from": "building", "to": "in_review", "at": "tick-159" },
-    { "from": "in_review", "to": "idle", "at": "tick-159" },
-    { "from": "building", "to": "in_review", "at": "tick-159" },
-    { "from": "idle", "to": "building", "at": "tick-161" },
-    { "from": "building", "to": "in_review", "at": "tick-162" },
-    { "from": "in_review", "to": "idle", "at": "tick-162" },
-    { "from": "idle", "to": "building", "at": "tick-163" },
-    { "from": "in_review", "to": "idle", "at": "tick-163" },
-    { "from": "idle", "to": "building", "at": "tick-164" },
-    { "from": "building", "to": "in_review", "at": "tick-164" },
-    { "from": "in_review", "to": "idle", "at": "tick-165" }
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-171"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-171"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-170"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-169"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-169"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-168"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-168"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-168"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-168"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-166"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-166"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-158"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-154"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-154"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-155"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-144"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-144"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-144"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-145"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-145"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-145"
+    },
+    {
+      "from": "building",
+      "to": "idle",
+      "at": "tick-145"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-147"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-147"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-148"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-148"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-150"
+    },
+    {
+      "from": "idle",
+      "to": "in_review",
+      "at": "tick-151"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-152"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-153"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-153"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-153"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-157"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-159"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-159"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-159"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-159"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-161"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-162"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-162"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-163"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-163"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-164"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-164"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-165"
+    }
   ]
 }
