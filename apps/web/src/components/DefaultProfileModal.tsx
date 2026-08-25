@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { t } from '@barghsa/i18n'
+import { useLocale } from '../hooks/useLocale.js'
 import {
   Dialog,
   DialogContent,
@@ -53,7 +54,7 @@ export function DefaultProfileModal() {
   const [setting, setSetting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const locale: Locale = 'fa' // TODO: read from locale context
+  const locale = useLocale()
   const isRtl = locale === 'fa'
 
   useEffect(() => {
