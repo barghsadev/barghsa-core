@@ -13,6 +13,19 @@ COPY packages/db/package.json ./packages/db/package.json
 
 RUN corepack enable && pnpm install --frozen-lockfile --prod=false
 
+# Stage 1b: Production dependencies — install only production deps
+FROM node:20-alpine AS prod-deps
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
+COPY packages/shared/package.json ./packages/shared/package.json
+COPY packages/i18n/package.json ./packages/i18n/package.json
+COPY packages/db/package.json ./packages/db/package.json
+
+RUN corepack enable && pnpm install --frozen-lockfile --prod
+
 # Stage 2: Build — compile the NestJS API
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -30,7 +43,10 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 WORKDIR /app
 
-# Copy package.json so the ESM "type": "module" field applies to server.js / healthcheck.js
+# Copy production dependencies
+COPY --from=prod-deps /app/node_modules ./node_modules
+
+# Copy package.json for CommonJS compatibility
 COPY --from=build /app/apps/api/package.json ./package.json
 
 # Copy build artifacts

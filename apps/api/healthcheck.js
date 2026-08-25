@@ -20,7 +20,7 @@ const req = http.get(`http://${HOST}:${PORT}/api/health/live`, (res) => {
         const body = JSON.parse(data)
         process.exit(body.status === 'ok' ? 0 : 1)
       } catch {
-        process.exit(0)
+        process.exit(1)
       }
     } else {
       process.exit(1)
