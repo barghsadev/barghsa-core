@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_key": "01-platform-infrastructure.md#T-02.03.01",
-  "current_task_id": "T-02.03.01",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-02-03-01--drizzle-config",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/79",
-  "loop_iteration": 134,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 135,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -37,6 +37,7 @@
     "01-platform-infrastructure.md#T-02.02.02",
     "01-platform-infrastructure.md#T-02.02.03",
     "01-platform-infrastructure.md#T-02.02.04",
+    "01-platform-infrastructure.md#T-02.03.01",
     "01-platform-infrastructure.md#T-03.01.01",
     "01-platform-infrastructure.md#T-03.01.02",
     "01-platform-infrastructure.md#T-03.01.03",
@@ -145,9 +146,14 @@
     "02-auth-users-admin.md#T-02.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T05:00:00",
-  "notes": "Tick-134: PR #78 merged (login backend T-02.01.02). Selected next: T-02.03.01 (drizzle.config.ts). PR #79 opened, in_review.",
+  "last_updated": "2026-08-25T05:03:00",
+  "notes": "Tick-135: PR #79 merged (drizzle.config.ts T-02.03.01). Reviewer approved with no issues. Loop idle; next uncompleted task: 01-platform-infrastructure.md#T-02.03.02 (migration runner script).",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-135"
+    },
     {
       "from": "in_review",
       "to": "idle",
