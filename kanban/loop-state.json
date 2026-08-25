@@ -154,9 +154,14 @@
     "02-auth-users-admin.md#T-02.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T04:35:00",
-  "notes": "Tick-133: PR #78 ready for review (T-02.01.02 Slice 1 \u2014 login backend).",
+  "last_updated": "2026-08-25T04:42:00",
+  "notes": "Tick-133: Fixed 2 major reviewer findings (timing side-channel, unhandled exceptions). PR #78 back in review.",
   "status_history": [
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-133"
+    },
     {
       "from": "building",
       "to": "in_review",
