@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.02.02",
+  "current_task_id": "T-05.02.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-02-02--staff-profile-editing",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/124",
   "loop_iteration": 214,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -186,8 +186,8 @@
     "02-auth-users-admin.md#T-05.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T22:52:00Z",
-  "notes": "Tick-214: PR #123 (T-05.02.01) verified merged. State reset to idle. Next: T-05.02.02 (Staff profile editing, L).",
+  "last_updated": "2026-08-25T22:55:00Z",
+  "notes": "Tick-214: PR #124 (T-05.02.02) built and ready for review. PATCH endpoint, audit, frontend edit mode, i18n. Typecheck + tests pass.",
   "status_history": [
     {
       "from": "idle",
@@ -377,6 +377,16 @@
     {
       "from": "in_review",
       "to": "idle",
+      "at": "tick-214"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-214"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "tick-214"
     }
   ]
