@@ -6,6 +6,7 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
+import type { LoginInput, LoginResponse } from './dto/login.dto.js'
 import { OtpService } from './otp.service.js'
 
 /** Session idle timeout: 30 minutes */
@@ -73,6 +74,103 @@ export class AuthService {
     )
 
     return { challengeId }
+  }
+
+  /**
+   * Authenticate a user with username + password credentials.
+   *
+   * Uses Argon2id for password verification (mem=37MiB, t=3, p=1).
+   *
+   * Steps:
+   * 1. Look up user by normalized username
+   * 2. Verify password hash with Argon2id
+   * 3. Check whether risk-based OTP enforcement is needed (stub: always false for now)
+   * 4. If no OTP needed → create session atomically
+   * 5. If OTP needed → create OTP challenge (future: T-02.01.03)
+   *
+   * Error is always a generic "invalid credentials" — never distinguishes
+   * between "user not found" and "wrong password" to prevent enumeration.
+   */
+  async login(input: LoginInput, ip: string): Promise<LoginResponse> {
+    const pool = getDbPool()
+
+    // 1. Look up user by normalized username
+    const userResult = await pool.query(
+      `SELECT user_id, password_hash, must_change_password
+       FROM users
+       WHERE username = $1`,
+      [input.username],
+    )
+
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
+        401,
+      )
+    }
+
+    const userRow = userResult.rows[0]
+
+    // 2. Verify password with Argon2id
+    const passwordValid = await argon2.verify(userRow.password_hash, input.password)
+
+    if (!passwordValid) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
+        401,
+      )
+    }
+
+    // 3. Check if risk-based OTP enforcement is needed
+    // TODO(T-02.01.03): Evaluate device trust, IP risk, previous login patterns.
+    // For now, always skip OTP — equivalent to "known device, low risk."
+    const requiresOtp = false
+
+    if (requiresOtp) {
+      // Future: create OTP challenge and return challengeId
+      // const { challengeId } = await this.otpService.createChallenge(
+      //   input.username,
+      //   ip,
+      // )
+      // return { requiresOtp: true, challengeId }
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
+        500,
+      )
+    }
+
+    // 4. Create session atomically
+    const userId = userRow.user_id
+    const sessionId = uuidv7()
+    const csrfToken = randomBytes(32).toString('hex')
+    const now = new Date()
+    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
+    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+
+    try {
+      await pool.query(
+        `INSERT INTO sessions (session_id, user_id, csrf_token,
+                                expires_at, idle_deadline, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+        [sessionId, userId, csrfToken, expiresAt, idleDeadline, now],
+      )
+
+      this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`)
+
+      return {
+        requiresOtp: false,
+        userId,
+        sessionId,
+        csrfToken,
+        expiresAt: expiresAt.toISOString(),
+      }
+    } catch (err) {
+      this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
+        500,
+      )
+    }
   }
 
   /**
