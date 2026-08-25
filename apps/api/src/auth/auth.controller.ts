@@ -25,8 +25,11 @@ import { OtpService } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
 import {
   SESSION_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
   setSessionCookie,
+  setRefreshCookie,
   clearSessionCookie,
+  clearRefreshCookie,
 } from '../session/cookie.helper.js'
 
 @ApiTags('Auth')
@@ -170,9 +173,12 @@ export class AuthController {
       return result
     }
 
-    // If OTP is not required, set the session cookie
+    // If OTP is not required, set the session and refresh cookies
     if (!result.requiresOtp) {
       setSessionCookie(res, result.sessionId!, new Date(result.expiresAt!))
+      if (result.refreshToken) {
+        setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt!))
+      }
 
       this.logger.log(`Session established for user ${result.userId}`)
     }
@@ -229,8 +235,9 @@ export class AuthController {
       userAgent,
     )
 
-    // ── Set HttpOnly session cookie ─────────────────────────────────
+    // ── Set HttpOnly session and refresh cookies ─────────────────
     setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId} via login OTP`)
 
@@ -363,8 +370,9 @@ export class AuthController {
       ip,
     )
 
-    // ── Set HttpOnly session cookie ─────────────────────────────────
+    // ── Set HttpOnly session and refresh cookies ─────────────────
     setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
+    setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
 
     this.logger.log(`Session established for user ${result.userId}`)
 
@@ -399,8 +407,83 @@ export class AuthController {
     }
 
     clearSessionCookie(res)
+    clearRefreshCookie(res)
 
     return { message: 'Logged out successfully.' }
+  }
+
+  /**
+   * POST /api/auth/refresh
+   *
+   * Refreshes the session using the refresh token stored in the HttpOnly
+   * refresh cookie. Implements refresh token rotation: on each use, the
+   * current refresh token is consumed and a new one is issued in the same
+   * family. If a consumed token is reused, the entire family is revoked
+   * (potential token theft detection).
+   *
+   * On success, issues new session and refresh cookies with rotated tokens.
+   *
+   * Rate limits:
+   * - 10 refresh attempts per IP per 60s
+   */
+  @Post('refresh')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Refresh the session' })
+  @ApiResponse({
+    status: 200,
+    description: 'Session refreshed. New cookies set.',
+    schema: {
+      type: 'object',
+      properties: {
+        sessionId: { type: 'string' },
+        csrfToken: { type: 'string' },
+        expiresAt: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ sessionId: string; csrfToken: string; expiresAt: string }> {
+    const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME]
+
+    if (!refreshToken || typeof refreshToken !== 'string') {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
+
+    // Redeem the refresh token (rotation + family check)
+    const { sessionId, refreshToken: newRefreshToken } =
+      await this.sessionService.redeemRefreshToken(refreshToken)
+
+    // Look up the session to get its expiry and CSRF token
+    const session = await this.sessionService.getSessionById(sessionId)
+
+    if (!session) {
+      throw new HttpException(
+        { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
+        HttpStatus.UNAUTHORIZED,
+      )
+    }
+
+    const expiresAt = new Date(session.expires_at)
+
+    // Set new cookies
+    setSessionCookie(res, sessionId, expiresAt)
+    setRefreshCookie(res, newRefreshToken, expiresAt)
+
+    this.logger.log(`Session refreshed: ${sessionId} for user ${session.user_id}`)
+
+    return {
+      sessionId,
+      csrfToken: session.csrf_token ?? '',
+      expiresAt: expiresAt.toISOString(),
+    }
   }
 
   /**

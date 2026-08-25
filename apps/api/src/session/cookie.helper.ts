@@ -7,6 +7,12 @@ import type { Response } from 'express'
 export const SESSION_COOKIE_NAME = 'barghsa_session'
 
 /**
+ * Refresh token cookie name.
+ * Separate HttpOnly cookie so JS cannot access the long-lived credential.
+ */
+export const REFRESH_COOKIE_NAME = 'barghsa_refresh'
+
+/**
  * Centralized SameSite policy (owned by E-06).
  *
  * Until E-06 (06-security-testing-observability.md#T-06.02.01.04) is
@@ -54,6 +60,31 @@ export function setSessionCookie(
 }
 
 /**
+ * Set the refresh token cookie on the response.
+ *
+ * Separate HttpOnly cookie to prevent XSS access while still allowing
+ * automatic submission to the /api/auth/refresh endpoint.
+ *
+ * Has a longer maxAge than the session cookie (matches refresh token lifespan).
+ */
+export function setRefreshCookie(
+  res: Response,
+  refreshToken: string,
+  expiresAt: Date,
+): void {
+  const isSecure = process.env.NODE_ENV === 'production'
+  const maxAge = Math.max(0, expiresAt.getTime() - Date.now())
+
+  res.cookie(REFRESH_COOKIE_NAME, refreshToken, {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite: SESSION_COOKIE_SAMESITE,
+    path: '/api/auth/refresh',
+    maxAge,
+  })
+}
+
+/**
  * Clear the session cookie on the response (logout).
  *
  * Sets maxAge to 0, which tells the browser to immediately delete the cookie.
@@ -64,5 +95,17 @@ export function clearSessionCookie(res: Response): void {
     secure: process.env.NODE_ENV === 'production',
     sameSite: SESSION_COOKIE_SAMESITE,
     path: SESSION_COOKIE_PATH,
+  })
+}
+
+/**
+ * Clear the refresh token cookie.
+ */
+export function clearRefreshCookie(res: Response): void {
+  res.clearCookie(REFRESH_COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: SESSION_COOKIE_SAMESITE,
+    path: '/api/auth/refresh',
   })
 }

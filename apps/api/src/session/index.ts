@@ -5,7 +5,10 @@ export type { AuthenticatedRequest } from './session.guard.js'
 export {
   setSessionCookie,
   clearSessionCookie,
+  setRefreshCookie,
+  clearRefreshCookie,
   SESSION_COOKIE_NAME,
+  REFRESH_COOKIE_NAME,
   SESSION_COOKIE_SAMESITE,
   SESSION_COOKIE_PATH,
 } from './cookie.helper.js'
