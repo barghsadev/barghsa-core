@@ -15,9 +15,10 @@ import { SessionModule } from './session/index.js'
 import { ProfilesModule } from './profiles/index.js'
 import { GeographyModule } from './geography/geography.module.js'
 import { UserSettingsModule } from './user-settings/index.js'
+import { OrdersModule } from './orders/index.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
