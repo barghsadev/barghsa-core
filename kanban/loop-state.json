@@ -1,12 +1,12 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-02.02.01",
   "current_task_id": "T-02.02.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-02-02-01--session-creation-cookie",
-  "current_pr_url": null,
-  "loop_iteration": 147,
-  "fix_attempts": 0,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/89",
+  "loop_iteration": 148,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -159,8 +159,8 @@
     "01-platform-infrastructure.md#T-02.04.06"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T07:41:00",
-  "notes": "Tick-147: Building T-02.02.01 (session creation and cookie management). SessionService, refresh tokens, auth guard, cookie helper, logout endpoint implemented. AuthService refactored to use SessionService. Tests passing.",
+  "last_updated": "2026-08-25T07:58:00",
+  "notes": "Tick-148: Fixing round for PR #89 (T-02.02.01). Addressed review findings: added session.service.test.ts (21 tests covering service core logic), fixed createSession race condition (FOR UPDATE lock). Returned to in_review.",
   "status_history": [
     { "from": "in_review", "to": "idle", "at": "tick-144" },
     { "from": "building", "to": "in_review", "at": "tick-144" },
@@ -169,6 +169,9 @@
     { "from": "in_review", "to": "fixing", "at": "tick-145" },
     { "from": "fixing", "to": "in_review", "at": "tick-145" },
     { "from": "building", "to": "idle", "at": "tick-145" },
-    { "from": "idle", "to": "building", "at": "tick-147" }
+    { "from": "idle", "to": "building", "at": "tick-147" },
+    { "from": "building", "to": "in_review", "at": "tick-147" },
+    { "from": "in_review", "to": "fixing", "at": "tick-148" },
+    { "from": "fixing", "to": "in_review", "at": "tick-148" }
   ]
 }
