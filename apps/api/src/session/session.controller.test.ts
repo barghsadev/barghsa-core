@@ -127,14 +127,18 @@ describe('SessionController', () => {
         session: { userId: 'user-001', sessionId: 'session-001' },
       } as any
 
+      let thrown = false
       try {
         await controller.revokeSession('session-003', req)
       } catch (e: any) {
+        thrown = true
         expect(e.getStatus()).toBe(404)
         // Should NOT reveal it's a different user's session
         expect(e.message).not.toContain('forbidden')
         expect(e.message).not.toContain('belongs')
       }
+      expect(thrown).toBe(true)
+      expect(mockSessionService.revokeSession).not.toHaveBeenCalled()
     })
   })
 
