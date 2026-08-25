@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 152,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-02.02.03",
+  "current_task_id": "T-02.02.03",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-02-02-03--csrf-protection",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/91",
+  "loop_iteration": 153,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -161,8 +161,8 @@
     "02-auth-users-admin.md#T-02.02.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T09:07:00",
-  "notes": "Tick-152: T-02.02.02 (Session revocation) reviewed by z-ai/glm-5.2 (approve), PR #90 merged. Backend: 3 endpoints (GET/DELETE/POST sessions). Frontend: /settings/security page with session list, confirm dialog, revoke-all + password confirmation. 9 controller tests. 132 total tests pass. Loop idle; next task: 02-auth-users-admin.md#T-02.02.03 (CSRF token).",
+  "last_updated": "2026-08-25T09:19:30",
+  "notes": "Tick-153: T-02.02.03 (CSRF protection) built, PR #91 opened. Backend: CsrfGuard with @SkipCsrf() decorator, barghsa_csrf cookie, AUTHZ:CSRF_TOKEN_INVALID error code. Frontend: withCsrf() wired into state-changing API calls, setCsrfToken on login success. 16 new tests; 148 total API tests pass. In review.",
   "status_history": [
     {
       "from": "in_review",
@@ -233,6 +233,16 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-152"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-153"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-153"
     }
   ]
 }

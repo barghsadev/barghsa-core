@@ -12,7 +12,7 @@ import {
   ShieldAlertIcon,
 } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
-import { withCsrf } from '../lib/csrf.js'
+import { withCsrf } from '../../lib/csrf.js'
 
 export const Route = createFileRoute('/settings/security')({
   component: SettingsSecurityPage,
