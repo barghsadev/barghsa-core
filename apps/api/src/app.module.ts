@@ -17,10 +17,11 @@ import { GeographyModule } from './geography/geography.module.js'
 import { UserSettingsModule } from './user-settings/index.js'
 import { OrdersModule } from './orders/index.js'
 import { TosModule } from './tos/tos.module.js'
+import { AdminModule } from './admin/index.js'
 import { CrmModule } from './crm/index.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
