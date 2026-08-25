@@ -690,6 +690,7 @@ export class AuthService {
     challengeId: string,
     otp: string,
     ip: string,
+    userAgent?: string,
   ): Promise<RegisterVerifyResponse> {
     const pool = getDbPool()
     const client = await pool.connect()
@@ -805,6 +806,32 @@ export class AuthService {
           now,
         ],
       )
+
+      // 4. Record TOS acceptance immutably in tos_acceptances (T-04.01.02)
+      // Look up the current active TOS version UUID for the acceptance record
+      const tosResult = await client.query(
+        `SELECT id FROM tos_versions
+         WHERE is_active = true
+         ORDER BY published_at DESC
+         LIMIT 1`,
+      )
+
+      const tosVersionId = tosResult.rows.length > 0
+        ? tosResult.rows[0].id
+        : null
+
+      if (tosVersionId) {
+        const acceptanceId = uuidv7()
+        await client.query(
+          `INSERT INTO tos_acceptances (id, user_id, version_id, accepted_at, ip_address, user_agent)
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [acceptanceId, userId, tosVersionId, now, ip, userAgent ?? null],
+        )
+      } else {
+        this.logger.warn(
+          `No active TOS version found during registration for user ${userId} — acceptance not recorded`,
+        )
+      }
 
       await client.query('COMMIT')
     } catch (err) {

@@ -48,12 +48,16 @@ describe('seed verification', () => {
       CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY,
         username TEXT NOT NULL UNIQUE,
+        email TEXT,
+        mobile TEXT,
         password_hash TEXT NOT NULL,
         locale TEXT NOT NULL DEFAULT 'fa',
         must_change_password BOOLEAN NOT NULL DEFAULT false,
         is_admin BOOLEAN NOT NULL DEFAULT false,
         password_change_token TEXT,
         password_change_token_expires_at TIMESTAMPTZ,
+        notification_preferences TEXT NOT NULL DEFAULT 'IN_APP',
+        timezone TEXT NOT NULL DEFAULT 'Asia/Tehran',
         last_accepted_tos_version TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
