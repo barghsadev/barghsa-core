@@ -1,9 +1,9 @@
 {
-  "status": "building",
-  "current_task_key": "01-platform-infrastructure.md#T-03.01.03",
-  "current_task_id": "T-03.01.03",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e03-t-03-01-03--dockerignore",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 160,
   "fix_attempts": 0,
@@ -150,11 +150,12 @@
     "02-auth-users-admin.md#T-02.02.04",
     "02-auth-users-admin.md#T-02.03.01",
     "01-platform-infrastructure.md#T-03.01.01",
-    "01-platform-infrastructure.md#T-03.01.02"
+    "01-platform-infrastructure.md#T-03.01.02",
+    "01-platform-infrastructure.md#T-03.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T11:14:00",
-  "notes": "Tick-160: T-03.01.03 (Create .dockerignore) building. Creating .dockerignore file.",
+  "last_updated": "2026-08-25T11:19:00",
+  "notes": "Tick-160: T-03.01.03 (.dockerignore) merged as PR #96. Reviewed by z-ai/glm-5.2 (approve, 1 minor). Loop idle; next: 01-platform-infrastructure.md#T-03.01.04 (HEALTHCHECK to all Dockerfiles).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
