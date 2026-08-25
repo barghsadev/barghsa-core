@@ -143,6 +143,31 @@ export const fa: I18nDictionary = {
   'product.green': 'برق سبز',
   'product.free_market': 'برق آزاد',
   'product.energy_saving': 'برق صرفه‌جویی',
+
+  // ── Settings — Security / Sessions ──────────────────────
+  'settings.security.title': 'امنیت و نشست‌ها',
+  'settings.security.sessionsTitle': 'نشست‌های فعال',
+  'settings.security.sessionsDescription': 'دستگاه‌هایی که با حساب شما متصل هستند',
+  'settings.security.currentSession': 'نشست فعلی',
+  'settings.security.revoke': 'قطع دسترسی',
+  'settings.security.revokeConfirm': 'آیا از قطع دسترسی این نشست اطمینان دارید؟',
+  'settings.security.revokeAll': 'قطع دسترسی همه نشست‌های دیگر',
+  'settings.security.revokeAllDescription': 'با این کار از همه دستگاه‌های دیگر خارج می‌شوید',
+  'settings.security.revokeAllConfirm': 'برای قطع دسترسی همه نشست‌های دیگر، رمز عبور خود را وارد کنید',
+  'settings.security.passwordLabel': 'رمز عبور',
+  'settings.security.passwordPlaceholder': 'رمز عبور خود را وارد کنید',
+  'settings.security.confirmButton': 'تأیید و قطع دسترسی',
+  'settings.security.revoked': 'دسترسی با موفقیت قطع شد',
+  'settings.security.revokeAllSuccess': 'دسترسی همه نشست‌های دیگر با موفقیت قطع شد',
+  'settings.security.noOtherSessions': 'نشست فعال دیگری وجود ندارد',
+  'settings.security.deviceUnknown': 'دستگاه ناشناخته',
+  'settings.security.ipUnknown': 'نامشخص',
+  'settings.security.lastActive': 'آخرین فعالیت',
+  'settings.security.createdAt': 'ایجاد شده در',
+  'settings.security.expiresAt': 'انقضا',
+  'settings.security.error.revoke': 'خطا در قطع دسترسی نشست',
+  'settings.security.error.revokeAll': 'خطا در قطع دسترسی همه نشست‌ها',
+  'settings.security.error.invalidPassword': 'رمز عبور نامعتبر است',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -286,6 +311,31 @@ export const en: I18nDictionary = {
   'product.green': 'Green Electricity',
   'product.free_market': 'Free Market Electricity',
   'product.energy_saving': 'Energy Saving Electricity',
+
+  // ── Settings — Security / Sessions ──────────────────────
+  'settings.security.title': 'Security & Sessions',
+  'settings.security.sessionsTitle': 'Active Sessions',
+  'settings.security.sessionsDescription': 'Devices connected to your account',
+  'settings.security.currentSession': 'Current session',
+  'settings.security.revoke': 'Revoke',
+  'settings.security.revokeConfirm': 'Are you sure you want to revoke this session?',
+  'settings.security.revokeAll': 'Revoke all other sessions',
+  'settings.security.revokeAllDescription': 'This will sign you out from all other devices',
+  'settings.security.revokeAllConfirm': 'Enter your password to revoke all other sessions',
+  'settings.security.passwordLabel': 'Password',
+  'settings.security.passwordPlaceholder': 'Enter your password',
+  'settings.security.confirmButton': 'Confirm & revoke',
+  'settings.security.revoked': 'Session revoked successfully',
+  'settings.security.revokeAllSuccess': 'All other sessions revoked successfully',
+  'settings.security.noOtherSessions': 'No other active sessions',
+  'settings.security.deviceUnknown': 'Unknown device',
+  'settings.security.ipUnknown': 'Unknown',
+  'settings.security.lastActive': 'Last active',
+  'settings.security.createdAt': 'Created',
+  'settings.security.expiresAt': 'Expires',
+  'settings.security.error.revoke': 'Failed to revoke session',
+  'settings.security.error.revokeAll': 'Failed to revoke all sessions',
+  'settings.security.error.invalidPassword': 'Invalid password',
 };
 
 /** Supported locale codes */

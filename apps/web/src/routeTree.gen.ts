@@ -27,6 +27,7 @@ import { Route as ElectricityIndexRouteImport } from './routes/electricity/index
 import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
+import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -118,6 +119,11 @@ const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => RegisterRoute,
 } as any)
+const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
+  id: '/settings/security',
+  path: '/settings/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin': typeof AdminIndexRoute
   '/electricity': typeof ElectricityIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/electricity/order': typeof ElectricityOrderRoute
   '/register/verify': typeof RegisterVerifyRoute
+  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/electricity/order'
     | '/register/verify'
+    | '/settings/security'
     | '/admin/'
     | '/electricity/'
     | '/register/'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/electricity/order'
     | '/register/verify'
+    | '/settings/security'
     | '/admin'
     | '/electricity'
     | '/register'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/electricity/order'
     | '/register/verify'
+    | '/settings/security'
     | '/admin/'
     | '/electricity/'
     | '/register/'
@@ -249,6 +261,7 @@ export interface RootRouteChildren {
   SavingsRoute: typeof SavingsRoute
   VideosRoute: typeof VideosRoute
   WalletRoute: typeof WalletRoute
+  SettingsSecurityRoute: typeof SettingsSecurityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -379,6 +392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVerifyRouteImport
       parentRoute: typeof RegisterRoute
     }
+    '/settings/security': {
+      id: '/settings/security'
+      path: '/settings/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof SettingsSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -436,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   SavingsRoute: SavingsRoute,
   VideosRoute: VideosRoute,
   WalletRoute: WalletRoute,
+  SettingsSecurityRoute: SettingsSecurityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
