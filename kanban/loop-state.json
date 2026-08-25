@@ -5,7 +5,7 @@
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 162,
+  "loop_iteration": 163,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -161,11 +161,12 @@
     "01-platform-infrastructure.md#T-03.03.01",
     "01-platform-infrastructure.md#T-03.03.02",
     "01-platform-infrastructure.md#T-03.03.03",
-    "01-platform-infrastructure.md#T-03.03.04"
+    "01-platform-infrastructure.md#T-03.03.04",
+    "02-auth-users-admin.md#T-02.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T11:33:01",
-  "notes": "Tick-162: T-03.01.05 (security hardening in Docker images) merged as PR #98. Reviewed by z-ai/glm-5.2 (approve, 1 minor). Also added T-03.02.01-04 and T-03.03.01-04 to completed (pre-existing on main). Loop idle; next: 02-auth-users-admin.md#T-02.03.02 (OTP verification and password reset).",
+  "last_updated": "2026-08-25T11:55:01",
+  "notes": "Tick-163: T-02.03.02 (OTP verification and password reset) merged as PR #99. Reviewed by z-ai/glm-5.2 (approve, 2 minor — OTP decrement already present in code; IP rate limit kept as defense-in-depth). Loop idle; next: 02-auth-users-admin.md#T-02.03.03 (Account recovery support path).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },
@@ -195,6 +196,8 @@
     { "from": "building", "to": "in_review", "at": "tick-159" },
     { "from": "idle", "to": "building", "at": "tick-161" },
     { "from": "building", "to": "in_review", "at": "tick-162" },
-    { "from": "in_review", "to": "idle", "at": "tick-162" }
+    { "from": "in_review", "to": "idle", "at": "tick-162" },
+    { "from": "idle", "to": "building", "at": "tick-163" },
+    { "from": "in_review", "to": "idle", "at": "tick-163" }
   ]
 }
