@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-03.01.01",
-  "current_task_id": "T-03.01.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-03-01-01--profile-check-middleware",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/102",
-  "loop_iteration": 169,
-  "fix_attempts": 2,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 170,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -164,12 +164,14 @@
     "01-platform-infrastructure.md#T-03.03.04",
     "02-auth-users-admin.md#T-02.03.02",
     "02-auth-users-admin.md#T-02.03.03",
-    "02-auth-users-admin.md#T-02.04.01"
+    "02-auth-users-admin.md#T-02.04.01",
+    "02-auth-users-admin.md#T-03.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:10:00",
-  "notes": "Tick-169: T-03.01.01 (App-level profile check middleware, M) fixing (round 2). GLM 5.2 found 2 major issues: (1) frontend guard fires only once via useRef, missing post-onboarding re-check; (2) /onboarding page lacked i18n/RTL. Fixed: guard re-evaluates on every navigation via useLocation; onboarding + i18n dictionary keys added. Pushed back to PR #102.",
+  "last_updated": "2026-08-25T13:23:00",
+  "notes": "Tick-170: T-03.01.01 (App-level profile check middleware, M) merged as PR #102. Reviewed by z-ai/glm-5.2 (approve, 3 review rounds — 2 fix rounds, then approved). 12 files, 548/+14. Created profiles table, GET /api/profiles, frontend guard. Loop idle; next: 02-auth-users-admin.md#T-03.01.02 (Profile verification check after login).",
   "status_history": [
+    { "from": "in_review", "to": "idle", "at": "tick-170" },
     { "from": "in_review", "to": "fixing", "at": "tick-169" },
     { "from": "fixing", "to": "in_review", "at": "tick-169" },
     { "from": "idle", "to": "building", "at": "tick-168" },
