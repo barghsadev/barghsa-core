@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 228,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.01",
+  "current_task_id": "T-05.04.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-01--agent-list-for-legal-entity",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/131",
+  "loop_iteration": 230,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -193,9 +193,29 @@
     "02-auth-users-admin.md#T-05.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:53:00Z",
-  "notes": "Tick-228: PR #130 (T-05.03.02 - Staff role assignment) merged. Created staff_roles/user_roles tables, PUT endpoint with step-up auth, role validation, audit logging. 359/359 tests. Back to idle.",
+  "last_updated": "2026-08-26T02:10:00Z",
+  "notes": "Tick-230: Fixed review findings (transaction wrapper for withdrawInvitation, typos). 372/372 tests pass. Re-submitted for review.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-230"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-230"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-229"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-229"
+    },
     {
       "from": "in_review",
       "to": "building",
@@ -235,6 +255,11 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-228"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-229"
     }
   ]
 }
