@@ -385,4 +385,294 @@ export class AgentsService {
 
     return { id: invitationId }
   }
+
+  /**
+   * Return pending invitations for the currently authenticated user.
+   *
+   * Finds the user's username, then returns all pending invitations
+   * matching that username, joined with profile info (legal entity name)
+   * and inviter info.
+   */
+  async listPendingInvitations(userId: string): Promise<{
+    invitations: Array<{
+      id: string
+      profileId: string
+      profileName: string
+      role: string
+      invitedBy: string
+      inviterName: string | null
+      createdAt: string
+      expiresAt: string | null
+    }>
+  }> {
+    const pool = getDbPool()
+
+    // Look up the user's username
+    const userResult = await pool.query(
+      `SELECT username FROM users WHERE user_id = $1`,
+      [userId],
+    )
+    if (userResult.rows.length === 0) {
+      return { invitations: [] }
+    }
+    const username = userResult.rows[0].username as string
+
+    // Query pending invitations matching this username, joined with profile and inviter info
+    const result = await pool.query(
+      `SELECT pi.id, pi.profile_id,
+              COALESCE(p.first_name || ' ' || p.last_name, p.id) AS profile_name,
+              pi.role, pi.invited_by,
+              COALESCE(u.first_name || ' ' || u.last_name, u.username) AS inviter_name,
+              pi.created_at, pi.expires_at
+       FROM profile_invitations pi
+       JOIN profiles p ON p.id = pi.profile_id
+       LEFT JOIN users u ON u.user_id = pi.invited_by
+       WHERE pi.username = $1 AND pi.status = 'Pending' AND pi.expires_at > NOW()
+       ORDER BY pi.created_at DESC`,
+      [username],
+    )
+
+    const invitations = result.rows.map((row: any) => ({
+      id: row.id as string,
+      profileId: row.profile_id as string,
+      profileName: row.profile_name as string,
+      role: row.role as string,
+      invitedBy: row.invited_by as string,
+      inviterName: (row.inviter_name as string) ?? null,
+      createdAt: new Date(row.created_at as Date).toISOString(),
+      expiresAt: row.expires_at ? new Date(row.expires_at as Date).toISOString() : null,
+    }))
+
+    return { invitations }
+  }
+
+  /**
+   * Accept a pending invitation.
+   *
+   * The invitation must:
+   * - Be in 'Pending' status
+   * - Belong to the current user (by username match)
+   * - Not be expired
+   *
+   * On success: creates a profile_agents record and marks the invitation as Accepted.
+   */
+  async acceptInvitation(inviteId: string, userId: string): Promise<void> {
+    const pool = getDbPool()
+
+    // Look up the user's username
+    const userResult = await pool.query(
+      `SELECT username FROM users WHERE user_id = $1`,
+      [userId],
+    )
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'User not found' },
+        404,
+      )
+    }
+    const username = userResult.rows[0].username as string
+
+    // Verify the invitation exists, is Pending, belongs to this user, and is not expired
+    const inviteResult = await pool.query(
+      `SELECT id, profile_id, username, role, status, expires_at
+       FROM profile_invitations
+       WHERE id = $1`,
+      [inviteId],
+    )
+
+    if (inviteResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
+    const invite = inviteResult.rows[0]
+
+    if (invite.status !== 'Pending') {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: `Cannot accept invitation in '${invite.status as string}' status`,
+        },
+        400,
+      )
+    }
+
+    // Check the invitation belongs to this user (by username match)
+    if ((invite.username as string) !== username) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
+    // Check expiry
+    if (invite.expires_at && new Date(invite.expires_at as Date) < new Date()) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'This invitation has expired',
+        },
+        400,
+      )
+    }
+
+    const profileId = invite.profile_id as string
+    const role = invite.role as string
+
+    // Check the user isn't already an agent of this profile
+    const existingAgent = await pool.query(
+      `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+      [profileId, userId],
+    )
+    if (existingAgent.rows.length > 0) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'You are already an agent of this profile' },
+        409,
+      )
+    }
+
+    // Wrap state change, profile_agents insert, and audit log in a transaction
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Insert into profile_agents
+      await client.query(
+        `INSERT INTO profile_agents (id, profile_id, user_id, role, joined_at, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, NOW(), NOW(), NOW())`,
+        [uuidv7(), profileId, userId, role],
+      )
+
+      // Update invitation status
+      await client.query(
+        `UPDATE profile_invitations
+         SET status = 'Accepted', updated_at = NOW()
+         WHERE id = $1`,
+        [inviteId],
+      )
+
+      // Audit log
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'invitation_accepted',
+          JSON.stringify({ profileId, inviteId, role }),
+          correlationId,
+        ],
+      )
+
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      client.release()
+    }
+
+    this.logger.log(`Invitation ${inviteId} accepted by user ${userId} for profile ${profileId} as ${role}`)
+  }
+
+  /**
+   * Decline a pending invitation.
+   *
+   * The invitation must:
+   * - Be in 'Pending' status
+   * - Belong to the current user (by username match)
+   * - Not be expired
+   */
+  async declineInvitation(inviteId: string, userId: string): Promise<void> {
+    const pool = getDbPool()
+
+    // Look up the user's username
+    const userResult = await pool.query(
+      `SELECT username FROM users WHERE user_id = $1`,
+      [userId],
+    )
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'User not found' },
+        404,
+      )
+    }
+    const username = userResult.rows[0].username as string
+
+    // Verify the invitation exists, is Pending, and belongs to this user
+    const inviteResult = await pool.query(
+      `SELECT id, username, status, expires_at
+       FROM profile_invitations
+       WHERE id = $1`,
+      [inviteId],
+    )
+
+    if (inviteResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
+    const invite = inviteResult.rows[0]
+
+    if (invite.status !== 'Pending') {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: `Cannot decline invitation in '${invite.status as string}' status`,
+        },
+        400,
+      )
+    }
+
+    // Check the invitation belongs to this user (by username match)
+    if ((invite.username as string) !== username) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
+    // Wrap state change and audit log in a transaction
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      await client.query(
+        `UPDATE profile_invitations
+         SET status = 'Declined', updated_at = NOW()
+         WHERE id = $1`,
+        [inviteId],
+      )
+
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'invitation_declined',
+          JSON.stringify({ inviteId }),
+          correlationId,
+        ],
+      )
+
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      client.release()
+    }
+
+    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`)
+  }
 }
