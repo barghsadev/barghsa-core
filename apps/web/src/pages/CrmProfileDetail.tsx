@@ -81,6 +81,13 @@ interface ProfileDetail {
   siblingProfiles: SiblingProfile[]
 }
 
+/** Editable fields (non-identity) */
+interface EditableFields {
+  title: string
+  email: string
+  mobile: string
+}
+
 function getStatusBadgeClass(status: string): string {
   switch (status) {
     case 'VERIFIED':
@@ -133,6 +140,12 @@ export default function CrmProfileDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState('overview')
+  const [isEditing, setIsEditing] = useState(false)
+  const [editFields, setEditFields] = useState<EditableFields>({ title: '', email: '', mobile: '' })
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [saveSuccess, setSaveSuccess] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -155,6 +168,62 @@ export default function CrmProfileDetail() {
         setLoading(false)
       })
   }, [profileId])
+
+  /** Enter edit mode, pre-filling form fields from current data */
+  function handleStartEdit() {
+    if (!data) return
+    setEditFields({
+      title: data.profile.title ?? '',
+      email: data.user.email ?? '',
+      mobile: data.user.mobile ?? '',
+    })
+    setIsEditing(true)
+    setSaveError(null)
+    setSaveSuccess(false)
+  }
+
+  /** Cancel editing without saving */
+  function handleCancelEdit() {
+    setIsEditing(false)
+    setSaveError(null)
+    setSaveSuccess(false)
+  }
+
+  /** Show confirmation then save */
+  function handleConfirmSave() {
+    setShowConfirm(false)
+    setSaving(true)
+    setSaveError(null)
+    setSaveSuccess(false)
+
+    fetch(`/api/crm/profiles/${profileId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: editFields.title === '' ? null : editFields.title,
+        email: editFields.email === '' ? null : editFields.email,
+        mobile: editFields.mobile === '' ? null : editFields.mobile,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 400) return res.json().then((j: { message?: string }) => { throw new Error(j.message ?? t('crm.profile.edit.error', locale)) })
+          throw new Error(t('crm.profile.edit.error', locale))
+        }
+        return res.json()
+      })
+      .then((json: ProfileDetail) => {
+        setData(json)
+        setIsEditing(false)
+        setSaveSuccess(true)
+        setSaving(false)
+        setTimeout(() => setSaveSuccess(false), 4000)
+      })
+      .catch((err: Error) => {
+        setSaveError(err.message)
+        setSaving(false)
+      })
+  }
 
   if (loading) {
     return (
@@ -205,6 +274,33 @@ export default function CrmProfileDetail() {
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
             {getProfileTypeLabel(profile.profileType)}
           </span>
+          <span className="ml-auto flex gap-2">
+            {!isEditing ? (
+              <button
+                onClick={handleStartEdit}
+                className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+              >
+                {t('crm.profile.edit', locale)}
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => setShowConfirm(true)}
+                  disabled={saving}
+                  className="text-sm px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
+                >
+                  {saving ? '...' : t('crm.profile.edit.save', locale)}
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  disabled={saving}
+                  className="text-sm px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
+                >
+                  {t('crm.profile.edit.cancel', locale)}
+                </button>
+              </>
+            )}
+          </span>
         </h1>
         <p className="text-gray-500 text-sm mt-1">
           {profile.firstName && profile.lastName
@@ -214,6 +310,18 @@ export default function CrmProfileDetail() {
           {user.username}
         </p>
       </div>
+
+      {/* Save success / error flash messages */}
+      {saveSuccess && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">
+          {t('crm.profile.edit.saved', locale)}
+        </div>
+      )}
+      {saveError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm" role="alert">
+          {saveError}
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-6">
@@ -257,8 +365,27 @@ export default function CrmProfileDetail() {
           <Section title={t('crm.profile.section.userInfo', locale)}>
             <DetailRow label="User ID" value={user.userId} />
             <DetailRow label="Username" value={user.username} />
-            <DetailRow label="Email" value={user.email ?? '—'} />
-            <DetailRow label="Mobile" value={user.mobile ?? '—'} />
+            {isEditing ? (
+              <>
+                <EditRow
+                  label={t('crm.profile.label.email', locale)}
+                  value={editFields.email}
+                  onChange={(v) => setEditFields((prev) => ({ ...prev, email: v }))}
+                  placeholder={user.email ?? t('crm.profile.edit.noChanges', locale)}
+                />
+                <EditRow
+                  label={t('crm.profile.label.mobile', locale)}
+                  value={editFields.mobile}
+                  onChange={(v) => setEditFields((prev) => ({ ...prev, mobile: v }))}
+                  placeholder={user.mobile ?? t('crm.profile.edit.noChanges', locale)}
+                />
+              </>
+            ) : (
+              <>
+                <DetailRow label={t('crm.profile.label.email', locale)} value={user.email ?? '—'} />
+                <DetailRow label={t('crm.profile.label.mobile', locale)} value={user.mobile ?? '—'} />
+              </>
+            )}
             <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
             <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt)} />
             <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin) : '—'} />
@@ -268,10 +395,39 @@ export default function CrmProfileDetail() {
             <DetailRow label="Profile ID" value={profile.id} />
             <DetailRow label="Type" value={getProfileTypeLabel(profile.profileType)} />
             <DetailRow label={t('crm.profile.label.status', locale)} value={profile.status} />
-            <DetailRow label="Title" value={profile.title ?? '—'} />
-            <DetailRow label="First Name" value={profile.firstName ?? '—'} />
-            <DetailRow label="Last Name" value={profile.lastName ?? '—'} />
-            <DetailRow label="National ID" value={profile.nationalId ?? '—'} />
+            {isEditing ? (
+              <EditRow
+                label="Title"
+                value={editFields.title}
+                onChange={(v) => setEditFields((prev) => ({ ...prev, title: v }))}
+                placeholder={profile.title ?? t('crm.profile.edit.noChanges', locale)}
+              />
+            ) : (
+              <DetailRow label="Title" value={profile.title ?? '—'} />
+            )}
+            {/* Identity fields — always read-only with lock icon */}
+            <DetailRow
+              label="First Name"
+              value={profile.firstName ?? '—'}
+              valueClass={isEditing ? undefined : undefined}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+            />
+            <DetailRow
+              label="Last Name"
+              value={profile.lastName ?? '—'}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+            />
+            <DetailRow
+              label="National ID"
+              value={profile.nationalId ?? '—'}
+              icon={isEditing ? '🔒' : undefined}
+              iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
+            />
+            {isEditing && (
+              <p className="text-xs text-gray-400 mt-1">{t('crm.profile.edit.identityLocked', locale)}</p>
+            )}
             <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(profile.createdAt)} />
             <DetailRow label="Updated" value={formatDate(profile.updatedAt)} />
           </Section>
@@ -445,6 +601,16 @@ export default function CrmProfileDetail() {
           )}
         </div>
       )}
+      {showConfirm && (
+        <ConfirmModal
+          title={t('crm.profile.edit.confirm.title', locale)}
+          message={t('crm.profile.edit.confirm.message', locale)}
+          onConfirm={handleConfirmSave}
+          onCancel={() => setShowConfirm(false)}
+          cancelLabel={t('crm.profile.edit.cancel', locale)}
+          confirmLabel={t('crm.profile.edit.save', locale)}
+        />
+      )}
     </div>
   )
 }
@@ -483,11 +649,94 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+function DetailRow({ label, value, valueClass, icon, iconTooltip }: { label: string; value: string; valueClass?: string | undefined; icon?: string | undefined; iconTooltip?: string | undefined }) {
   return (
     <div className="flex flex-col">
       <span className="text-xs text-gray-500 font-medium">{label}</span>
-      <span className="text-sm text-gray-900 break-words">{value}</span>
+      <span className={`text-sm text-gray-900 break-words ${valueClass ?? ''}`}>
+        {value}
+        {icon && (
+          <span className="inline-block mr-1" title={iconTooltip ?? ''} role="img" aria-label={iconTooltip ?? 'locked'}>
+            {icon}
+          </span>
+        )}
+      </span>
+    </div>
+  )
+}
+
+/** Editable text input row used in edit mode */
+function EditRow({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string
+  value: string
+  onChange: (v: string) => void
+  placeholder?: string
+}) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-xs text-gray-500 font-medium">{label}</span>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder ?? ''}
+        dir="auto"
+        className="mt-1 w-full border border-gray-300 rounded px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+      />
+    </div>
+  )
+}
+
+/** Simple confirmation modal overlay */
+function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  cancelLabel,
+  confirmLabel,
+}: {
+  title: string
+  message: string
+  onConfirm: () => void
+  onCancel: () => void
+  cancelLabel: string
+  confirmLabel: string
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-title"
+    >
+      <div
+        className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 id="confirm-title" className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+        <p className="text-sm text-gray-600 mb-6">{message}</p>
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+          >
+            {cancelLabel}
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

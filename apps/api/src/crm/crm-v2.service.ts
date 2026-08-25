@@ -1,5 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common'
+import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
+import type { UpdateProfileDto } from './crm-v2.controller.js'
+
+/** Simple email regex for server-side validation */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Iranian mobile regex: starts with 09 followed by 9 digits */
+const MOBILE_RE = /^09\d{9}$/
+
+/**
+ * Result type for profile update in CrmV2Service.
+ */
+export type CrmUpdateProfileResult =
+  | { updated: true; profile: { id: string; title: string | null; updatedAt: string }; user: { username: string; email: string | null; mobile: string | null } }
+  | { error: string }
+  | null
 
 /**
  * A single address record on a CRM profile.
@@ -275,6 +291,173 @@ export class CrmV2Service {
         entries: sessionsList,
       },
       siblingProfiles,
+    }
+  }
+
+  /**
+   * PUT /api/crm/profiles/:profileId
+   *
+   * Updates editable fields on a CRM profile. Identity fields are blocked
+   * for direct editing. Changes to email/mobile update the users table;
+   * title updates the profiles table. Records a profile_updated audit event.
+   */
+  async updateProfile(
+    profileId: string,
+    dto: UpdateProfileDto,
+    actorUserId: string,
+    ip: string,
+  ): Promise<CrmUpdateProfileResult> {
+    const pool = getDbPool()
+
+    // 1. Fetch the profile to verify it exists and get current values
+    const profileResult = await pool.query(
+      `SELECT id, user_id, title, status, profile_type
+       FROM profiles
+       WHERE id = $1`,
+      [profileId],
+    )
+
+    if (profileResult.rows.length === 0) return null
+
+    const profileRow = profileResult.rows[0] as Record<string, unknown>
+
+    // 2. Field-level validation
+    if (dto.email !== undefined && dto.email !== null && dto.email !== '') {
+      if (!EMAIL_RE.test(dto.email)) {
+        return { error: 'Invalid email format' }
+      }
+    }
+    if (dto.mobile !== undefined && dto.mobile !== null && dto.mobile !== '') {
+      if (!MOBILE_RE.test(dto.mobile)) {
+        return { error: 'Invalid Iranian mobile number format (must be 09xxxxxxxxx)' }
+      }
+    }
+
+    // 3. Build the changeset — only allowed fields
+    const profileChanges: Record<string, unknown> = {}
+    const userChanges: Record<string, unknown> = {}
+    const beforeDiff: Record<string, unknown> = {}
+    const afterDiff: Record<string, unknown> = {}
+
+    if (dto.title !== undefined) {
+      const oldVal = profileRow.title as string | null
+      if (oldVal !== dto.title) {
+        profileChanges.title = dto.title
+        beforeDiff.title = oldVal
+        afterDiff.title = dto.title
+      }
+    }
+
+    // Always fetch the current user row (needed for username in response)
+    const userResult = await pool.query(
+      `SELECT username, email, mobile FROM users WHERE user_id = $1`,
+      [profileRow.user_id],
+    )
+    if (userResult.rows.length === 0) return null
+    const userRow = userResult.rows[0] as Record<string, unknown>
+
+    // Track before values for user fields
+    if (dto.email !== undefined) {
+      const oldVal = userRow.email as string | null
+      if (oldVal !== dto.email) {
+        userChanges.email = dto.email
+        beforeDiff.email = oldVal
+        afterDiff.email = dto.email
+      }
+    }
+
+    if (dto.mobile !== undefined) {
+      const oldVal = userRow.mobile as string | null
+      if (oldVal !== dto.mobile) {
+        userChanges.mobile = dto.mobile
+        beforeDiff.mobile = oldVal
+        afterDiff.mobile = dto.mobile
+      }
+    }
+
+    // 3. If nothing changed, return early (no-op with current data)
+    if (Object.keys(profileChanges).length === 0 && Object.keys(userChanges).length === 0) {
+      return {
+        updated: true,
+        profile: {
+          id: profileId,
+          title: (profileRow.title as string) ?? null,
+          updatedAt: (profileRow.updated_at as string) ?? '',
+        },
+        user: {
+          username: (userRow.username as string) ?? '',
+          email: (userRow.email as string | null) ?? null,
+          mobile: (userRow.mobile as string | null) ?? null,
+        },
+      }
+    }
+
+    // 4. Apply changes in a transaction
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      const now = new Date().toISOString()
+
+      if (Object.keys(profileChanges).length > 0) {
+        const setClauses = Object.entries(profileChanges)
+          .map(([key], i) => `${key} = $${i + 1}`)
+        const values = Object.values(profileChanges)
+        setClauses.push(`updated_at = $${values.length + 1}::timestamptz`)
+        values.push(now)
+
+        await client.query(
+          `UPDATE profiles SET ${setClauses.join(', ')} WHERE id = $${values.length + 1}`,
+          [...values, profileId],
+        )
+      }
+
+      if (Object.keys(userChanges).length > 0) {
+        const setClauses = Object.entries(userChanges)
+          .map(([key], i) => `${key} = $${i + 1}`)
+        const values = Object.values(userChanges)
+        setClauses.push(`updated_at = NOW()`)
+
+        await client.query(
+          `UPDATE users SET ${setClauses.join(', ')} WHERE user_id = $${values.length + 1}`,
+          [...values, profileRow.user_id as string],
+        )
+      }
+
+      // 5. Record audit event
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [auditId, actorUserId, 'profile_updated', JSON.stringify({ profileId, before: beforeDiff, after: afterDiff }), correlationId, ip, now],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.debug(
+        `Profile ${profileId} updated by ${actorUserId}: ${JSON.stringify(beforeDiff)} → ${JSON.stringify(afterDiff)}`,
+      )
+
+      return {
+        updated: true,
+        profile: {
+          id: profileId,
+          title: (dto.title !== undefined ? dto.title : profileRow.title) as string | null,
+          updatedAt: now,
+        },
+        user: {
+          username: (userRow.username as string) ?? '',
+          email: (dto.email !== undefined ? dto.email : userRow.email) as string | null,
+          mobile: (dto.mobile !== undefined ? dto.mobile : userRow.mobile) as string | null,
+        },
+      }
+    } catch (err) {
+      await client.query('ROLLBACK')
+      this.logger.error(`Failed to update profile ${profileId}: ${String(err)}`)
+      throw err
+    } finally {
+      client.release()
     }
   }
 }

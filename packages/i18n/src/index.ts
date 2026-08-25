@@ -638,6 +638,18 @@ export const fa: I18nDictionary = {
   'crm.profile.label.device': 'دستگاه',
   'crm.profile.label.main': 'اصلی',
   'crm.profile.label.view': 'مشاهده',
+  'crm.profile.edit': 'ویرایش',
+  'crm.profile.edit.title': 'ویرایش پروفایل',
+  'crm.profile.edit.save': 'ذخیره تغییرات',
+  'crm.profile.edit.cancel': 'لغو',
+  'crm.profile.edit.saved': 'تغییرات با موفقیت ذخیره شد',
+  'crm.profile.edit.error': 'خطا در ذخیره تغییرات',
+  'crm.profile.edit.noChanges': 'تغییری ایجاد نشده است',
+  'crm.profile.edit.identityLocked': 'این فیلد هویتی است و نیاز به ثبت درخواست تصحیح دارد (T-05.02.05)',
+  'crm.profile.edit.confirm.title': 'تأیید تغییرات',
+  'crm.profile.edit.confirm.message': 'آیا از اعمال این تغییرات اطمینان دارید؟',
+  'crm.profile.label.email': 'ایمیل',
+  'crm.profile.label.mobile': 'شماره موبایل',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1257,6 +1269,18 @@ export const en: I18nDictionary = {
     'crm.profile.verificationHistory.description': 'This will show the timeline of verification state changes with actor and reason.',
     'crm.profile.label.yes': 'Yes',
     'crm.profile.label.no': 'No',
+    'crm.profile.edit': 'Edit',
+    'crm.profile.edit.title': 'Edit Profile',
+    'crm.profile.edit.save': 'Save Changes',
+    'crm.profile.edit.cancel': 'Cancel',
+    'crm.profile.edit.saved': 'Changes saved successfully',
+    'crm.profile.edit.error': 'Error saving changes',
+    'crm.profile.edit.noChanges': 'No changes were made',
+    'crm.profile.edit.identityLocked': 'This is an identity field and requires a verification case (T-05.02.05)',
+    'crm.profile.edit.confirm.title': 'Confirm Changes',
+    'crm.profile.edit.confirm.message': 'Are you sure you want to apply these changes?',
+    'crm.profile.label.email': 'Email',
+    'crm.profile.label.mobile': 'Mobile',
   };
 
 /** Supported locale codes */

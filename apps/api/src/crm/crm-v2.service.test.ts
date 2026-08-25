@@ -5,8 +5,9 @@ import { CrmV2Service } from './crm-v2.service.js'
 
 function mockPool() {
   const mockQuery = vi.fn()
-  const pool = { query: mockQuery }
-  return { mockQuery, pool }
+  const mockConnect = vi.fn()
+  const pool = { query: mockQuery, connect: mockConnect }
+  return { mockQuery, mockConnect, pool }
 }
 
 let service: CrmV2Service
@@ -271,5 +272,205 @@ describe('CrmV2Service.getProfileDetail', () => {
     // Verify the profileId was actually passed as a parameter
     const allParams = mockQuery.mock.calls.flatMap((call: unknown[]) => call[1] as unknown[])
     expect(allParams).toContain(VALID_PROFILE_ID)
+  })
+})
+
+describe('CrmV2Service.updateProfile', () => {
+  const UPDATED_USER_ID = 'admin-user-001'
+
+  function mockClient() {
+    const mockClientQuery = vi.fn()
+    const mockRelease = vi.fn()
+    const client = { query: mockClientQuery, release: mockRelease }
+    return { mockClientQuery, mockRelease, client }
+  }
+
+  it('updates title successfully', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow()] })           // profile
+      .mockResolvedValueOnce({ rows: [fakeUserRow()] })               // user
+    mockConnect
+      .mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined)                                // BEGIN
+      .mockResolvedValueOnce(undefined)                                // UPDATE profiles
+      .mockResolvedValueOnce(undefined)                                // INSERT audit_log
+      .mockResolvedValueOnce(undefined)                                // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile(
+      VALID_PROFILE_ID,
+      { title: 'New Profile Title' },
+      UPDATED_USER_ID,
+      '127.0.0.1',
+    )
+
+    expect(result).not.toBeNull()
+    expect(result).not.toHaveProperty('error')
+    const success = result as { updated: true; profile: { id: string; title: string | null } }
+    expect(success.updated).toBe(true)
+    expect(success.profile.title).toBe('New Profile Title')
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('updates email and mobile successfully', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow()] })           // profile
+      .mockResolvedValueOnce({ rows: [fakeUserRow({ email: 'old@test.com', mobile: null })] }) // user
+    mockConnect
+      .mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined)                                // BEGIN
+      .mockResolvedValueOnce(undefined)                                // UPDATE users
+      .mockResolvedValueOnce(undefined)                                // INSERT audit_log
+      .mockResolvedValueOnce(undefined)                                // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile(
+      VALID_PROFILE_ID,
+      { email: 'new@test.com', mobile: '09123456789' },
+      UPDATED_USER_ID,
+      '127.0.0.1',
+    )
+
+    expect(result).not.toBeNull()
+    const success = result as { updated: true; user: { email: string | null; mobile: string | null } }
+    expect(success.updated).toBe(true)
+    expect(success.user.email).toBe('new@test.com')
+    expect(success.user.mobile).toBe('09123456789')
+    expect(mockRelease).toHaveBeenCalledTimes(1)
+  })
+
+  it('returns no error for no-op (same values)', async () => {
+    const { pool } = mockPool()
+
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow({ title: 'Same Title' })] }) // profile
+      .mockResolvedValueOnce({ rows: [fakeUserRow()] })              // user
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile(
+      VALID_PROFILE_ID,
+      { title: 'Same Title' },
+      UPDATED_USER_ID,
+      '127.0.0.1',
+    )
+
+    expect(result).not.toBeNull()
+    expect(result).not.toHaveProperty('error')
+    const success = result as { updated: true; profile: { title: string | null } }
+    expect(success.updated).toBe(true)
+    expect(success.profile.title).toBe('Same Title')
+  })
+
+  it('returns null when profile does not exist', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })                    // profile not found
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile('nonexistent-id', { title: 'X' }, UPDATED_USER_ID, '')
+    expect(result).toBeNull()
+  })
+
+  it('rejects invalid email format', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow()] })           // profile found (stopped by validation before user query)
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile(
+      VALID_PROFILE_ID,
+      { email: 'not-an-email' },
+      UPDATED_USER_ID,
+      '',
+    )
+
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Invalid email')
+  })
+
+  it('rejects invalid Iranian mobile format', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow()] })           // profile found
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    const result = await service.updateProfile(
+      VALID_PROFILE_ID,
+      { mobile: '12345' },
+      UPDATED_USER_ID,
+      '',
+    )
+
+    expect(result).not.toBeNull()
+    expect(result).toHaveProperty('error')
+    expect((result as { error: string }).error).toContain('Invalid Iranian mobile')
+  })
+
+  it('records audit event with before/after diff', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    pool.query
+      .mockResolvedValueOnce({ rows: [fakeProfileRow({ title: null })] })  // profile
+      .mockResolvedValueOnce({ rows: [fakeUserRow()] })                     // user
+    mockConnect
+      .mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined)                                      // BEGIN
+      .mockResolvedValueOnce(undefined)                                      // UPDATE profiles
+      .mockResolvedValueOnce(undefined)                                      // INSERT audit_log
+      .mockResolvedValueOnce(undefined)                                      // COMMIT
+
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
+    const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
+    service = new Svc()
+
+    await service.updateProfile(
+      VALID_PROFILE_ID,
+      { title: 'Updated Title' },
+      UPDATED_USER_ID,
+      '10.0.0.1',
+    )
+
+    // Find the audit INSERT call
+    const auditCall = mockClientQuery.mock.calls.find(
+      (call: unknown[]) => (call[0] as string).includes('INSERT INTO audit_log'),
+    )
+    expect(auditCall).toBeDefined()
+    // auditCall[1] is the params array; index 3 is the JSON metadata (4th param)
+    const auditParams = auditCall![1] as unknown[]
+    const metadataStr = auditParams[3] as string
+    const metadata = JSON.parse(metadataStr)
+    expect(metadata.profileId).toBe(VALID_PROFILE_ID)
+    expect(metadata.before).toHaveProperty('title')
+    expect(metadata.before.title).toBeNull()
+    expect(metadata.after.title).toBe('Updated Title')
+    expect(mockRelease).toHaveBeenCalled()
   })
 })
