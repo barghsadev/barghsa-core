@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "02-auth-users-admin.md#T-03.02.01",
   "current_task_id": "T-03.02.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e03-t-03-02-01--profile-type-selection",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/104",
   "loop_iteration": 174,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
