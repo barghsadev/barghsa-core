@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
+import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { Button } from '@barghsa/ui'
 
 export const Route = createFileRoute('/onboarding/complete')({
   component: OnboardingCompletePage,
+  validateSearch: (search: Record<string, string | undefined>) => ({
+    profileId: search.profileId as string | undefined,
+  }),
 })
 
 /**
@@ -12,10 +15,6 @@ export const Route = createFileRoute('/onboarding/complete')({
  * Spawns colourful squares that drift and fade out.
  */
 function Confetti() {
-  useEffect(() => {
-    // Confetti is purely decorative — no interaction needed
-  }, [])
-
   const particles = Array.from({ length: 40 }, (_, i) => {
     const hue = (i * 37 + 180) % 360
     const left = `${(i / 40) * 100}%`
@@ -56,6 +55,7 @@ function OnboardingCompletePage() {
   const locale: Locale = 'fa'
   const isRtl = locale === 'fa'
   const router = useRouter()
+  const { profileId: searchProfileId } = useSearch({ from: Route.id })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -68,24 +68,27 @@ function OnboardingCompletePage() {
     setError(null)
 
     try {
-      // Call the complete endpoint to finalize onboarding if not already done.
-      // The individual/legal save endpoints already transition profiles to
-      // ACTIVE, so this is idempotent. We also try the first ACTIVE profile
-      // visible to the user.
-      const profilesRes = await fetch('/api/profiles', { credentials: 'include' })
-      if (profilesRes.ok) {
-        const profilesData = await profilesRes.json() as { profiles: Array<{ id: string; status: string }> }
-        const activeProfile = profilesData.profiles?.find(
-          (p: { status: string }) => p.status === 'ACTIVE' || p.status === 'DRAFT',
-        )
-        if (activeProfile) {
-          await fetch(`/api/onboarding/complete/${activeProfile.id}`, {
-            method: 'POST',
-            credentials: 'include',
-          }).catch(() => {
-            // Idempotent — failure is non-blocking
-          })
-        }
+      // If we have a profileId from search params, complete that one.
+      // Otherwise (e.g. direct URL access), try the first ACTIVE/DRAFT profile.
+      const profileId = searchProfileId
+        ? searchProfileId
+        : await (async () => {
+            const profilesRes = await fetch('/api/profiles', { credentials: 'include' })
+            if (!profilesRes.ok) return null
+            const profilesData = await profilesRes.json() as { profiles: Array<{ id: string; status: string }> }
+            const p = profilesData.profiles?.find(
+              (p: { status: string }) => p.status === 'ACTIVE' || p.status === 'DRAFT',
+            )
+            return p?.id ?? null
+          })()
+
+      if (profileId) {
+        await fetch(`/api/onboarding/complete/${profileId}`, {
+          method: 'POST',
+          credentials: 'include',
+        }).catch(() => {
+          // Idempotent — failure is non-blocking
+        })
       }
 
       router.navigate({ to: '/app', replace: true })
@@ -168,6 +171,9 @@ function OnboardingCompletePage() {
             transform: translateY(100vh) rotate(720deg);
             opacity: 0;
           }
+        }
+        .animate-confetti-drop {
+          animation: confetti-drop ease-in forwards;
         }
         @keyframes bounce-once {
           0% { transform: scale(0.3); opacity: 0; }

@@ -293,6 +293,8 @@ export const fa: I18nDictionary = {
   'onboarding.complete.addAnotherEn': 'Add another profile',
   'onboarding.complete.goToDashboard': 'رفتن به داشبورد',
   'onboarding.complete.goToDashboardEn': 'Go to dashboard',
+  'onboarding.complete.error': 'خطایی رخ داد',
+  'onboarding.complete.errorEn': 'An error occurred',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'پروفایل شما تأیید نشده است',
@@ -589,6 +591,8 @@ export const en: I18nDictionary = {
   'onboarding.complete.addAnotherEn': 'Add another profile',
   'onboarding.complete.goToDashboard': 'Go to dashboard',
   'onboarding.complete.goToDashboardEn': 'Go to dashboard',
+  'onboarding.complete.error': 'An error occurred',
+  'onboarding.complete.errorEn': 'An error occurred',
 
   // ── Verification ───────────────────────────────────────────
   'verification.banner.title': 'Your profile is not verified',
