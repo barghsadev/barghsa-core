@@ -471,6 +471,77 @@ export class ProfilesService {
   }
 
   /**
+   * Complete onboarding for a profile — transitions from DRAFT to
+   * ACTIVE or PENDING_VERIFICATION depending on system settings.
+   *
+   * Used by `POST /api/onboarding/complete/:profileId` (T-03.02.04).
+   * If the user has no default profile yet, this one is set as default.
+   * Idempotent: if already ACTIVE (e.g. saved by an earlier direct
+   * save endpoint), returns success without changes.
+   */
+  async completeOnboarding(
+    userId: string,
+    profileId: string,
+  ): Promise<ProfileRow> {
+    const pool = getDbPool()
+    const profile = await this.getProfileById(profileId)
+
+    if (!profile || profile.userId !== userId) {
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Profile not found',
+        },
+        404,
+      )
+    }
+
+    // Idempotent — if already active/verified, just return
+    if (profile.status !== 'DRAFT') {
+      return profile
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Determine target status based on verification settings
+      const verificationRequired =
+        (await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY)) ?? false
+      const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE'
+
+      // Set as default if user has no default profile yet
+      const existing = await client.query(
+        `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
+        [userId],
+      )
+      const becomesDefault = existing.rows.length === 0
+
+      await client.query(
+        `UPDATE profiles
+         SET status = $1, is_default = $2, updated_at = NOW()
+         WHERE id = $3`,
+        [targetStatus, becomesDefault, profileId],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Onboarding completed for profile ${profileId} (${targetStatus})${becomesDefault ? ' as default' : ''}`,
+      )
+
+      const updated = await this.getProfileById(profileId)
+      return updated ?? profile
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
    * Check whether the user's active profile is allowed to place
    * commercial orders.
    *

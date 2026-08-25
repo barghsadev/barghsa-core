@@ -237,7 +237,11 @@ function IndividualProfileFormPage() {
         }
 
         toast.success(t('onboarding.individual.saved', locale))
-                  router.navigate({ to: '/', replace: true })
+                  router.navigate({
+                    to: '/onboarding/complete',
+                    search: { profileId },
+                    replace: true,
+                  })
       } catch {
         setSubmitError(t('onboarding.individual.error.submit', locale))
       } finally {

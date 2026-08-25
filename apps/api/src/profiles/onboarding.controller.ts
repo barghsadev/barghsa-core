@@ -376,4 +376,55 @@ export class OnboardingController {
       title: profile.title,
     }
   }
+
+  /**
+   * POST /api/onboarding/complete/:profileId
+   *
+   * Finalizes the onboarding for a profile (T-03.02.04). Transitions
+   * the profile from DRAFT to ACTIVE or PENDING_VERIFICATION depending
+   * on system verification settings. Sets the profile as default if
+   * the user has no default profile yet. Idempotent — safe to call
+   * even after the profile is already ACTIVE.
+   */
+  @Post('complete/:profileId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'onboarding:complete:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Complete onboarding — finalize profile' })
+  @ApiResponse({
+    status: 200,
+    description: 'Onboarding completed.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        profileType: { type: 'string' },
+        isDefault: { type: 'boolean' },
+        status: { type: 'string' },
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async completeOnboarding(
+    @Param('profileId') profileId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const profile = await this.profilesService.completeOnboarding(
+      req.session.userId,
+      profileId,
+    )
+
+    this.logger.log(
+      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`,
+    )
+
+    return {
+      id: profile.id,
+      profileType: profile.profileType,
+      isDefault: profile.isDefault,
+      status: profile.status,
+      message: 'Onboarding completed successfully',
+    }
+  }
 }
