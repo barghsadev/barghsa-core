@@ -2,7 +2,6 @@ import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
 
 /**
  * Supported activation methods for new staff users.
@@ -24,34 +23,79 @@ export interface CreateStaffUserInput {
 
 /**
  * Result of creating a staff user.
- * Depending on activationMethod, either a temporary password or a confirmation.
+ * Depending on activationMethod, either a temporary password or an activation token.
  */
 export type CreateStaffUserResult = {
   userId: string
   username: string
   activationMethod: ActivationMethod
 } & (
-  | { temporaryPassword: string; message: string }
-  | { message: string }
+  | { temporaryPassword: string; activationToken?: never; message: string }
+  | { activationToken: string; temporaryPassword?: never; message: string }
 )
 
 /**
- * Generates a cryptographically random temporary password.
- * Format: prefix + 16 alphanumeric chars, e.g. "Bg7aK2xR9mQp3WnV".
+ * Character set for generating temporary passwords.
+ * Ambiguous characters (0/O, 1/l/I) are excluded to avoid confusion.
+ */
+const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+
+/**
+ * Generates a cryptographically random password that satisfies the
+ * project's password strength policy (min 8 chars, at least one
+ * uppercase, one lowercase, one digit).
+ *
+ * Generates a full random string of 12 chars, then ensures character
+ * class coverage by injecting random characters at random positions
+ * rather than at fixed offsets.
  */
 function generateTemporaryPassword(): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
-  let result = ''
-  const array = new Uint8Array(16)
   const crypto = globalThis.crypto
+  const length = 12
+  const array = new Uint8Array(length)
   crypto.getRandomValues(array)
-  const arr = array
-  for (let i = 0; i < 16; i++) {
-    result += chars[arr[i]! % chars.length]
+
+  // Build a random string from the character set
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += PASSWORD_CHARS[array[i]! % PASSWORD_CHARS.length]
   }
-  // Ensure at least one uppercase, one lowercase, one digit
-  return 'A' + result.slice(1, 8) + '9' + result.slice(9)
+
+  // Ensure at least one uppercase, one lowercase, one digit by
+  // replacing characters at random positions if the character class
+  // is missing from the generated result.
+  const upperRe = /[A-Z]/
+  const lowerRe = /[a-z]/
+  const digitRe = /[2-9]/
+
+  if (!upperRe.test(result)) {
+    const pos = Math.floor(Math.random() * length)
+    const upperChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+    const replacement = upperChars[Math.floor(Math.random() * upperChars.length)]
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+  }
+
+  if (!lowerRe.test(result)) {
+    const pos = Math.floor(Math.random() * length)
+    const lowerChars = 'abcdefghjkmnpqrstuvwxyz'
+    const replacement = lowerChars[Math.floor(Math.random() * lowerChars.length)]
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+  }
+
+  if (!digitRe.test(result)) {
+    const pos = Math.floor(Math.random() * length)
+    const digits = '23456789'
+    const replacement = digits[Math.floor(Math.random() * digits.length)]
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+  }
+
+  return result
 }
+
+/**
+ * PostgreSQL error code for unique constraint violation.
+ */
+const PG_UNIQUE_VIOLATION = '23505'
 
 /**
  * Admin service: staff user creation, role assignment, and user management.
@@ -67,10 +111,11 @@ export class AdminService {
    * Create a new staff user.
    *
    * Steps:
-   * 1. Validate username uniqueness
+   * 1. Validate username uniqueness (optimistic pre-check + transaction guard)
    * 2. Generate password (tempPassword) or activation token (link)
    * 3. Hash password with Argon2id
-   * 4. Create user record with is_admin = true
+   * 4. Create user record with is_admin = true (in transaction — catches
+   *    unique violation as a TOCTOU safety net)
    * 5. Auto-create an individual, verified profile (no address needed)
    * 6. Record audit event
    *
@@ -86,7 +131,7 @@ export class AdminService {
   ): Promise<CreateStaffUserResult> {
     const pool = getDbPool()
 
-    // ── 1. Check username uniqueness ──────────────────────────────────
+    // ── 1. Optimistic uniqueness pre-check (fast-fail) ────────────────
     const existing = await pool.query(
       `SELECT user_id FROM users WHERE username = $1`,
       [input.username],
@@ -119,7 +164,7 @@ export class AdminService {
       mustChangePassword = true
     } else {
       // Generate a strong random password for the user (they'll set their own via link)
-      const strongPassword = generateTemporaryPassword() + 'Xx1'
+      const strongPassword = generateTemporaryPassword()
       passwordHash = await argon2.hash(strongPassword)
       mustChangePassword = true
       activationToken = uuidv7()
@@ -214,12 +259,31 @@ export class AdminService {
         userId,
         username: input.username,
         activationMethod: 'link',
-        message: 'Staff user created. An activation link has been sent.',
+        activationToken: activationToken!,
+        message: 'Staff user created with activation token. Email delivery is not yet configured — use the activation token to construct the activation link.',
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Non-critical
       })
+
+      // Handle unique constraint violation as a TOCTOU safety net:
+      // the pre-check raced with another concurrent creation.
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code: string }).code === PG_UNIQUE_VIOLATION
+      ) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'AUTH:REGISTER:USERNAME_TAKEN',
+            message: 'Username is already taken',
+          },
+          409,
+        )
+      }
 
       if (error instanceof HttpException) throw error
 

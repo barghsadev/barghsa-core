@@ -8,10 +8,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { v7 as uuidv7 } from 'uuid'
-import { AdminService, type ActivationMethod, type CreateStaffUserResult } from './admin.service.js'
+import { AdminService, type ActivationMethod } from './admin.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -54,6 +53,7 @@ export interface CreateStaffUserApiResponse {
   username: string
   activationMethod: ActivationMethod
   temporaryPassword?: string
+  activationToken?: string
   message: string
 }
 
@@ -113,6 +113,7 @@ export class AdminController {
         username: { type: 'string', description: 'Normalized username' },
         activationMethod: { type: 'string', enum: ['tempPassword', 'link'] },
         temporaryPassword: { type: 'string', description: 'Temporary password (shown once, only for tempPassword method)' },
+        activationToken: { type: 'string', description: 'Activation token for constructing the activation link (only for link method)' },
         message: { type: 'string', description: 'Human-readable success message' },
       },
     },
@@ -175,7 +176,7 @@ export class AdminController {
       `method=${result.activationMethod}, actor=${req.session.userId}`,
     )
 
-    // Build response — only include temporaryPassword for tempPassword method
+    // Build response — include activation-specific fields
     const response: CreateStaffUserApiResponse = {
       userId: result.userId,
       username: result.username,
@@ -185,6 +186,10 @@ export class AdminController {
 
     if (result.activationMethod === 'tempPassword' && 'temporaryPassword' in result) {
       response.temporaryPassword = result.temporaryPassword
+    }
+
+    if (result.activationMethod === 'link' && 'activationToken' in result) {
+      response.activationToken = result.activationToken
     }
 
     return response

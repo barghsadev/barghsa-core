@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-05-03-01--create-staff-user",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/129",
   "loop_iteration": 224,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -192,7 +192,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-26T01:30:00Z",
-  "notes": "Tick-224: Building T-05.03.01 — Create staff user. Admin module with POST /api/admin/users/create-staff.",
+  "notes": "Tick-224: Fixing round 1 complete for PR #129 (T-05.03.01). Fixed: link message accuracy + activation token returned, TOCTOU guard, password entropy, unused imports. Added: 9 new admin service tests. 352/352 tests pass, tsc clean.",
   "status_history": [
     {
       "from": "in_review",
@@ -202,6 +202,11 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "tick-224"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
       "at": "tick-224"
     }
   ]
