@@ -153,11 +153,19 @@
     "01-platform-infrastructure.md#T-03.01.02",
     "01-platform-infrastructure.md#T-03.01.03",
     "01-platform-infrastructure.md#T-03.01.04",
-    "01-platform-infrastructure.md#T-03.01.05"
+    "01-platform-infrastructure.md#T-03.01.05",
+    "01-platform-infrastructure.md#T-03.02.01",
+    "01-platform-infrastructure.md#T-03.02.02",
+    "01-platform-infrastructure.md#T-03.02.03",
+    "01-platform-infrastructure.md#T-03.02.04",
+    "01-platform-infrastructure.md#T-03.03.01",
+    "01-platform-infrastructure.md#T-03.03.02",
+    "01-platform-infrastructure.md#T-03.03.03",
+    "01-platform-infrastructure.md#T-03.03.04"
   ],
   "last_error": null,
   "last_updated": "2026-08-25T11:33:01",
-  "notes": "Tick-162: T-03.01.05 (security hardening in Docker images) merged as PR #98. Reviewed by z-ai/glm-5.2 (approve, 1 minor — --inspect=0 residue in Dockerfile.base, fixed). Loop idle; next: 01-platform-infrastructure.md#T-03.02.01 (docker-compose.yml with PostgreSQL, Redis, MinIO).",
+  "notes": "Tick-162: T-03.01.05 (security hardening in Docker images) merged as PR #98. Reviewed by z-ai/glm-5.2 (approve, 1 minor). Also added T-03.02.01-04 and T-03.03.01-04 to completed (pre-existing on main). Loop idle; next: 02-auth-users-admin.md#T-02.03.02 (OTP verification and password reset).",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-158" },
     { "from": "idle", "to": "building", "at": "tick-154" },

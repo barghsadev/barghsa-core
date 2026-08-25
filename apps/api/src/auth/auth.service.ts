@@ -9,6 +9,7 @@ import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
 import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
 import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
+import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
 import { OtpService } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
 
@@ -819,6 +820,238 @@ export class AuthService {
         },
         ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
       )
+    }
+  }
+
+  /**
+   * Reset password after OTP verification (T-02.03.02).
+   *
+   * Accepts a verified OTP challenge (from the forgot-password flow) and a
+   * new password. Atomically:
+   * 1. Verifies the OTP challenge (consumed, expired, attempts check).
+   * 2. Checks password history to prevent reuse of the last 5 passwords.
+   * 3. Records the current password in history.
+   * 4. Updates the user's password hash.
+   * 5. Invalidates ALL existing sessions and refresh tokens.
+   * 6. Records a password_reset audit event.
+   *
+   * No session is established — the user must log in again with the new
+   * password.
+   *
+   * Rate limits: 5 reset attempts per hour per destination (enforced by
+   * the controller via @RateLimit).
+   */
+  async resetPassword(
+    input: ResetPasswordInput,
+    ip: string,
+  ): Promise<ResetPasswordResponse> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+
+    try {
+      await client.query('BEGIN')
+
+      // 1. Lock and fetch the challenge row
+      const challengeResult = await client.query(
+        `SELECT challenge_id, destination, otp_hash, attempts_remaining,
+                expires_at, consumed_at, user_id
+         FROM otp_challenges
+         WHERE challenge_id = $1
+         FOR UPDATE`,
+        [input.challengeId],
+      )
+
+      if (challengeResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const row = challengeResult.rows[0]
+
+      // Check consumed
+      if (row.consumed_at) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      // Check expiry
+      if (new Date(row.expires_at) < new Date()) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
+          401,
+        )
+      }
+
+      // Check attempts remaining
+      if (row.attempts_remaining <= 0) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
+          401,
+        )
+      }
+
+      // Check user_id is set (forgot-password challenges set user_id)
+      if (!row.user_id) {
+        this.logger.error(`Reset-password challenge ${input.challengeId} missing user_id`)
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+          400,
+        )
+      }
+
+      // 2. Verify OTP inside the transaction
+      const submittedHash = this.otpService.hashOtp(input.otp)
+      if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
+        // Decrement attempts and commit the transaction
+        await client.query(
+          `UPDATE otp_challenges
+           SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
+           WHERE challenge_id = $1 AND attempts_remaining > 0`,
+          [input.challengeId],
+        )
+        await client.query('COMMIT')
+
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
+          401,
+        )
+      }
+
+      // 3. Consume OTP
+      const now = new Date()
+      const consumeResult = await client.query(
+        `UPDATE otp_challenges
+         SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
+         WHERE challenge_id = $2 AND consumed_at IS NULL`,
+        [now, input.challengeId],
+      )
+
+      if (consumeResult.rowCount === 0) {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
+          409,
+        )
+      }
+
+      const userId = row.user_id
+
+      // 4. Check password history (last 5 passwords)
+      const historyResult = await client.query(
+        `SELECT password_hash FROM password_history
+         WHERE user_id = $1
+         ORDER BY version DESC
+         LIMIT 5`,
+        [userId],
+      )
+
+      // Fetch current password hash
+      const userResult = await client.query(
+        `SELECT password_hash FROM users WHERE user_id = $1 FOR UPDATE`,
+        [userId],
+      )
+
+      if (userResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const currentHash = userResult.rows[0].password_hash
+      const newHash = await argon2.hash(input.newPassword)
+
+      // 4a. Check against current password
+      const isSameAsCurrent = await argon2.verify(currentHash, input.newPassword).catch(() => false)
+      if (isSameAsCurrent) {
+        await client.query('ROLLBACK')
+        this.logger.warn(`Password reuse (same as current) detected for user ${userId} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
+          422,
+        )
+      }
+
+      // 4b. Check password history
+      for (const entry of historyResult.rows) {
+        const isReused = await argon2.verify(entry.password_hash, input.newPassword).catch(() => false)
+        if (isReused) {
+          await client.query('ROLLBACK')
+          this.logger.warn(`Password reuse detected for user ${userId} from ${ip}`)
+          throw new HttpException(
+            { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
+            422,
+          )
+        }
+      }
+
+      // 5. Record current password in history
+      const version = historyResult.rows.length > 0
+        ? historyResult.rows[0].version + 1
+        : 1
+
+      const historyId = uuidv7()
+
+      await client.query(
+        `INSERT INTO password_history (id, user_id, password_hash, version, created_at)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [historyId, userId, currentHash, version, now],
+      )
+
+      // 6. Update user's password hash
+      await client.query(
+        `UPDATE users
+         SET password_hash = $1, updated_at = $2
+         WHERE user_id = $3`,
+        [newHash, now, userId],
+      )
+
+      // 7. Invalidate ALL existing sessions and refresh tokens
+      await client.query(
+        `UPDATE sessions
+         SET revoked_at = $1, updated_at = $1
+         WHERE user_id = $2 AND revoked_at IS NULL`,
+        [now, userId],
+      )
+
+      await client.query(
+        `UPDATE refresh_tokens
+         SET consumed_at = $1
+         WHERE user_id = $2 AND consumed_at IS NULL`,
+        [now, userId],
+      )
+
+      // 8. Record audit event
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [auditId, userId, 'password_reset', null, correlationId, ip, now],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Password reset for user ${userId} from ${ip}`)
+
+      return {
+        message: 'Your password has been reset. Please log in with your new password.',
+      }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(`Password reset failed: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
+    } finally {
+      client.release()
     }
   }
 }
