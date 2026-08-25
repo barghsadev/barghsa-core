@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-03-01-02--profile-verification-check",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/103",
-  "loop_iteration": 171,
-  "fix_attempts": 0,
+  "loop_iteration": 172,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -168,9 +168,19 @@
     "02-auth-users-admin.md#T-03.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:40:00",
-  "notes": "Tick-171: T-03.01.02 (Profile verification check after login, M) built as PR #103, ready for review. Backend verification-status endpoint + auto-verify + ProfileVerifiedGuard; frontend banner + order block; i18n; guard tests (3). turbo typecheck 11/11, tests 161 pass. CI in progress. Reviewed by z-ai/glm-5.2 next.",
+  "last_updated": "2026-08-25T13:43:00",
+  "notes": "Tick-172: T-03.01.02 (Profile verification check after login, M) \u2014 review round 1: request_changes (2 major: method default inconsistency, missing service tests; 4 minor: i18n, RTL, error feedback, unused keys). All fixed and pushed (d19aeb3). PR #103 ready for re-review. 169 tests pass, typecheck 11/11.",
   "status_history": [
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-172"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-171"
+    },
     {
       "from": "building",
       "to": "in_review",
