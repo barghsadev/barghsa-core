@@ -168,6 +168,13 @@ export const fa: I18nDictionary = {
   'settings.security.error.revoke': 'خطا در قطع دسترسی نشست',
   'settings.security.error.revokeAll': 'خطا در قطع دسترسی همه نشست‌ها',
   'settings.security.error.invalidPassword': 'رمز عبور نامعتبر است',
+  'settings.security.loading': 'در حال بارگذاری…',
+  'settings.security.error.load': 'خطا در بارگذاری نشست‌ها',
+  'settings.security.error.auth': 'احراز هویت نشده‌اید',
+  'settings.security.error.loadRetry': 'خطا در بارگذاری نشست‌ها. لطفاً دوباره تلاش کنید',
+  'settings.security.noSessions': 'هیچ نشست فعالی یافت نشد',
+  'settings.security.cancel': 'انصراف',
+  'settings.security.revoking': 'در حال قطع دسترسی…',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -336,6 +343,13 @@ export const en: I18nDictionary = {
   'settings.security.error.revoke': 'Failed to revoke session',
   'settings.security.error.revokeAll': 'Failed to revoke all sessions',
   'settings.security.error.invalidPassword': 'Invalid password',
+  'settings.security.loading': 'Loading…',
+  'settings.security.error.load': 'Failed to load sessions',
+  'settings.security.error.auth': 'Not authenticated',
+  'settings.security.error.loadRetry': 'Failed to load sessions. Please try again.',
+  'settings.security.noSessions': 'No active sessions found',
+  'settings.security.cancel': 'Cancel',
+  'settings.security.revoking': 'Revoking…',
 };
 
 /** Supported locale codes */

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
 import {
@@ -10,7 +10,6 @@ import {
   AlertCircleIcon,
   Trash2Icon,
   ShieldAlertIcon,
-  KeyIcon,
 } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 
@@ -20,13 +19,15 @@ export const Route = createFileRoute('/settings/security')({
 
 // ─── Types ────────────────────────────────────────────────────────────
 
+interface DeviceInfo {
+  ip?: string
+  userAgent?: string
+  fingerprint?: string
+}
+
 interface SessionItem {
   sessionId: string
-  deviceInfo: {
-    ip?: string
-    userAgent?: string
-    fingerprint?: string
-  } | null
+  deviceInfo: DeviceInfo | null
   createdAt: string
   updatedAt: string
   expiresAt: string
@@ -39,8 +40,8 @@ interface SessionItem {
 /**
  * Extract a friendly device name from a user-agent string.
  */
-function getDeviceName(userAgent?: string): string {
-  if (!userAgent) return 'Unknown device'
+function getDeviceName(userAgent: string | undefined, locale: Locale): string {
+  if (!userAgent) return t('settings.security.deviceUnknown', locale)
 
   const ua = userAgent.toLowerCase()
 
@@ -51,7 +52,7 @@ function getDeviceName(userAgent?: string): string {
   if (ua.includes('windows')) return 'Windows PC'
   if (ua.includes('linux')) return 'Linux'
 
-  return 'Unknown device'
+  return t('settings.security.deviceUnknown', locale)
 }
 
 /**
@@ -91,14 +92,14 @@ function formatDate(dateStr: string, locale: Locale): string {
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsSecurityPage() {
-  const router = useRouter()
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const locale: Locale = 'fa' // TODO: read from user preference / locale context (project-wide)
 
   const [sessions, setSessions] = useState<SessionItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Revoke per session
+  // Revoke per session — confirm dialog state
+  const [revokeConfirmId, setRevokeConfirmId] = useState<string | null>(null)
   const [revokingId, setRevokingId] = useState<string | null>(null)
 
   // Revoke-all dialog
@@ -106,6 +107,10 @@ function SettingsSecurityPage() {
   const [revokeAllPassword, setRevokeAllPassword] = useState('')
   const [revokingAll, setRevokingAll] = useState(false)
   const [revokeAllError, setRevokeAllError] = useState<string | null>(null)
+
+  // Refs for focus trapping
+  const revokeConfirmRef = useRef<HTMLDivElement>(null)
+  const revokeAllRef = useRef<HTMLDivElement>(null)
 
   // ── Fetch sessions ──────────────────────────────────────────────────
 
@@ -118,52 +123,58 @@ function SettingsSecurityPage() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          setError('Not authenticated')
+          setError(t('settings.security.error.auth', locale))
           return
         }
-        setError('Failed to load sessions')
+        setError(t('settings.security.error.load', locale))
         return
       }
 
       const data: SessionItem[] = await response.json()
       setSessions(data)
     } catch {
-      setError('Failed to load sessions. Please try again.')
+      setError(t('settings.security.error.loadRetry', locale))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [locale])
 
   useEffect(() => {
     fetchSessions()
   }, [fetchSessions])
 
-  // ── Revoke a single session ─────────────────────────────────────────
+  // ── Revoke a single session (with confirmation) ────────────────────
 
-  const handleRevoke = useCallback(
-    async (sessionId: string) => {
-      setRevokingId(sessionId)
+  const handleConfirmRevoke = useCallback(async () => {
+    if (!revokeConfirmId) return
 
-      try {
-        const response = await fetch(`/api/auth/sessions/${sessionId}`, {
-          method: 'DELETE',
-        })
+    setRevokingId(revokeConfirmId)
+    setRevokeConfirmId(null)
 
-        if (!response.ok) {
-          toast.error(t('settings.security.error.revoke', locale))
-          return
-        }
+    try {
+      const response = await fetch(`/api/auth/sessions/${revokeConfirmId}`, {
+        method: 'DELETE',
+      })
 
-        toast.success(t('settings.security.revoked', locale))
-        setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId))
-      } catch {
+      if (!response.ok) {
         toast.error(t('settings.security.error.revoke', locale))
-      } finally {
-        setRevokingId(null)
+        return
       }
-    },
-    [locale],
-  )
+
+      toast.success(t('settings.security.revoked', locale))
+      setSessions((prev) =>
+        prev.filter((s) => s.sessionId !== revokeConfirmId),
+      )
+    } catch {
+      toast.error(t('settings.security.error.revoke', locale))
+    } finally {
+      setRevokingId(null)
+    }
+  }, [revokeConfirmId, locale])
+
+  const handleCancelRevokeConfirm = useCallback(() => {
+    setRevokeConfirmId(null)
+  }, [])
 
   // ── Revoke all other sessions ───────────────────────────────────────
 
@@ -206,10 +217,24 @@ function SettingsSecurityPage() {
     }
   }, [revokeAllPassword, locale, fetchSessions])
 
+  // ── Escape-to-close handler ────────────────────────────────────────
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, close: () => void) => {
+      if (e.key === 'Escape') {
+        close()
+      }
+    },
+    [],
+  )
+
   // ── Current session and other sessions ──────────────────────────────
 
   const currentSession = sessions.find((s) => s.isCurrentSession)
   const otherSessions = sessions.filter((s) => !s.isCurrentSession)
+  const revokeConfirmSession = revokeConfirmId
+    ? sessions.find((s) => s.sessionId === revokeConfirmId)
+    : null
 
   // ── Render ──────────────────────────────────────────────────────────
 
@@ -236,7 +261,7 @@ function SettingsSecurityPage() {
         {loading && (
           <div className="text-center py-8 text-muted-foreground">
             <ClockIcon className="mx-auto h-6 w-6 animate-pulse mb-2" />
-            <p className="text-sm">Loading...</p>
+            <p className="text-sm">{t('settings.security.loading', locale)}</p>
           </div>
         )}
 
@@ -256,7 +281,7 @@ function SettingsSecurityPage() {
           <div className="text-center py-8 text-muted-foreground">
             <ShieldAlertIcon className="mx-auto h-8 w-8 mb-2" />
             <p className="text-sm">
-              {locale === 'fa' ? 'هیچ نشست فعالی یافت نشد' : 'No active sessions found'}
+              {t('settings.security.noSessions', locale)}
             </p>
           </div>
         )}
@@ -268,7 +293,7 @@ function SettingsSecurityPage() {
               <div className="flex items-center gap-2">
                 <MonitorIcon className="h-4 w-4 text-primary" />
                 <span className="text-sm font-medium">
-                  {getDeviceName(currentSession.deviceInfo?.userAgent)}
+                  {getDeviceName(currentSession.deviceInfo?.userAgent, locale)}
                 </span>
                 <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   {t('settings.security.currentSession', locale)}
@@ -291,19 +316,19 @@ function SettingsSecurityPage() {
                   <div className="flex items-center gap-2">
                     <SmartphoneIcon className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">
-                      {getDeviceName(session.deviceInfo?.userAgent)}
+                      {getDeviceName(session.deviceInfo?.userAgent, locale)}
                     </span>
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
                     disabled={revokingId === session.sessionId}
-                    onClick={() => handleRevoke(session.sessionId)}
+                    onClick={() => setRevokeConfirmId(session.sessionId)}
                     className="gap-1"
                   >
                     <Trash2Icon className="h-3.5 w-3.5" />
                     {revokingId === session.sessionId
-                      ? '...'
+                      ? t('settings.security.revoking', locale)
                       : t('settings.security.revoke', locale)}
                   </Button>
                 </div>
@@ -340,13 +365,84 @@ function SettingsSecurityPage() {
         )}
       </div>
 
-      {/* Revoke All Confirmation Dialog */}
-      {showRevokeAll && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
+      {revokeConfirmId && revokeConfirmSession && (
+        <div
+          ref={revokeConfirmRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="revoke-dialog-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onKeyDown={(e) => handleKeyDown(e, handleCancelRevokeConfirm)}
+        >
           <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg mx-4 space-y-4">
             <div className="flex items-center gap-2">
               <ShieldAlertIcon className="h-5 w-5 text-destructive" />
-              <h3 className="text-lg font-semibold">
+              <h3 id="revoke-dialog-title" className="text-lg font-semibold">
+                {t('settings.security.revoke', locale)}
+              </h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {t('settings.security.revokeConfirm', locale)}
+            </p>
+            <div className="text-sm border rounded p-3 bg-muted/20 space-y-1">
+              <p className="font-medium">
+                {getDeviceName(revokeConfirmSession.deviceInfo?.userAgent, locale)}
+              </p>
+              {revokeConfirmSession.deviceInfo?.ip && (
+                <p className="text-muted-foreground">
+                  <GlobeIcon className="h-3 w-3 inline mr-1" />
+                  {revokeConfirmSession.deviceInfo.ip}
+                </p>
+              )}
+              <p className="text-muted-foreground">
+                {t('settings.security.createdAt', locale)}:{' '}
+                {formatDate(revokeConfirmSession.createdAt, locale)}
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={handleCancelRevokeConfirm}
+                autoFocus
+              >
+                {t('settings.security.cancel', locale)}
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={revokingId === revokeConfirmId}
+                onClick={handleConfirmRevoke}
+              >
+                {revokingId === revokeConfirmId
+                  ? t('settings.security.revoking', locale)
+                  : t('settings.security.revoke', locale)}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Revoke All Confirmation Dialog ───────────────────────── */}
+      {showRevokeAll && (
+        <div
+          ref={revokeAllRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="revoke-all-dialog-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onKeyDown={(e) =>
+            handleKeyDown(e, () => {
+              setShowRevokeAll(false)
+              setRevokeAllPassword('')
+              setRevokeAllError(null)
+            })
+          }
+        >
+          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg mx-4 space-y-4">
+            <div className="flex items-center gap-2">
+              <ShieldAlertIcon className="h-5 w-5 text-destructive" />
+              <h3 id="revoke-all-dialog-title" className="text-lg font-semibold">
                 {t('settings.security.revokeAll', locale)}
               </h3>
             </div>
@@ -384,7 +480,7 @@ function SettingsSecurityPage() {
                   setRevokeAllError(null)
                 }}
               >
-                {locale === 'fa' ? 'انصراف' : 'Cancel'}
+                {t('settings.security.cancel', locale)}
               </Button>
               <Button
                 variant="destructive"
@@ -392,7 +488,7 @@ function SettingsSecurityPage() {
                 onClick={handleRevokeAll}
               >
                 {revokingAll
-                  ? '...'
+                  ? t('settings.security.revoking', locale)
                   : t('settings.security.confirmButton', locale)}
               </Button>
             </div>
@@ -432,6 +528,12 @@ function SessionDetails({
         <span>
           {t('settings.security.createdAt', locale)}:{' '}
           {formatDate(session.createdAt, locale)}
+        </span>
+      </div>
+      <div className="flex items-center gap-1 col-span-2">
+        <span>
+          {t('settings.security.expiresAt', locale)}:{' '}
+          {formatDate(session.expiresAt, locale)}
         </span>
       </div>
       {userAgent && (
