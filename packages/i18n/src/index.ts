@@ -560,6 +560,14 @@ export const fa: I18nDictionary = {
   'electricity.order.submitting': 'در حال ثبت سفارش…',
   'electricity.order.submit': 'ثبت سفارش',
 
+  'electricity.order.error.noProduct': 'لطفاً یک محصول را انتخاب کنید',
+  'electricity.order.error.noAddress': 'لطفاً یک آدرس را انتخاب کنید',
+  'electricity.order.error.noProfile': 'پروفایل فعالی یافت نشد',
+  'electricity.order.error.create': 'ایجاد سفارش با خطا مواجه شد',
+  'electricity.order.success.create': 'سفارش با موفقیت ثبت شد!',
+  'electricity.order.success.title': 'سفارش ثبت شد',
+  'electricity.order.success.description': 'سفارش برق شما با موفقیت ایجاد شد. می‌توانید وضعیت آن را از صفحه سفارش‌های خود پیگیری کنید.',
+
   'dashboard.nav.label': 'ناوبری',
   'dashboard.nav.electricity': 'برق',
   'dashboard.nav.savings': 'پس‌انداز',
@@ -1120,6 +1128,14 @@ export const en: I18nDictionary = {
   'electricity.order.deliveryAddress': 'Delivery Address',
   'electricity.order.submitting': 'Submitting order…',
   'electricity.order.submit': 'Submit Order',
+
+  'electricity.order.error.noProduct': 'Please select a product',
+  'electricity.order.error.noAddress': 'Please select an address',
+  'electricity.order.error.noProfile': 'No active profile found',
+  'electricity.order.error.create': 'Failed to create order',
+  'electricity.order.success.create': 'Order created successfully!',
+  'electricity.order.success.title': 'Order Submitted',
+  'electricity.order.success.description': 'Your electricity order has been successfully created. You can track its status from your orders page.',
 
   'dashboard.nav.label': 'Navigation',
   'dashboard.nav.electricity': 'Electricity',

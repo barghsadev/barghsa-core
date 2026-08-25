@@ -78,6 +78,8 @@ function ElectricityOrderPage() {
   const [loadingAddresses, setLoadingAddresses] = useState(true)
   const [provinces, setProvinces] = useState<Province[]>([])
   const [cities, setCities] = useState<City[]>([])
+  /** City name lookup map: cityId -> { nameFa, nameEn } */
+  const [cityMap, setCityMap] = useState<Record<string, { nameFa: string; nameEn: string }>>({})
 
   // New address form
   const [showNewAddressForm, setShowNewAddressForm] = useState(false)
@@ -197,6 +199,14 @@ function ElectricityOrderPage() {
       if (res.ok) {
         const data: City[] = await res.json()
         setCities(data)
+        // Add to city name lookup map
+        setCityMap((prev) => {
+          const next = { ...prev }
+          for (const city of data) {
+            next[city.id] = { nameFa: city.nameFa, nameEn: city.nameEn }
+          }
+          return next
+        })
       }
     } catch {
       // Silently fail
@@ -226,6 +236,14 @@ function ElectricityOrderPage() {
     }
   }, [formProvinceId, fetchCities])
 
+  // Fetch cities for each unique province referenced by existing addresses
+  useEffect(() => {
+    const uniqueProvinceIds = [...new Set(addresses.map((a) => a.provinceId))]
+    for (const pid of uniqueProvinceIds) {
+      fetchCities(pid)
+    }
+  }, [addresses, fetchCities])
+
   // ── Helpers ─────────────────────────────────────────────────────────
 
   const getProvinceName = (provinceId: string): string => {
@@ -235,9 +253,13 @@ function ElectricityOrderPage() {
   }
 
   const getCityName = (cityId: string): string => {
+    // First try the current form cities list
     const city = cities.find((c) => c.id === cityId)
-    if (!city) return cityId
-    return locale === 'fa' ? city.nameFa : city.nameEn
+    if (city) return locale === 'fa' ? city.nameFa : city.nameEn
+    // Fall back to the accumulated city map
+    const mapped = cityMap[cityId]
+    if (mapped) return locale === 'fa' ? mapped.nameFa : mapped.nameEn
+    return cityId
   }
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId)
@@ -296,15 +318,15 @@ function ElectricityOrderPage() {
 
   const handleSubmitOrder = useCallback(async () => {
     if (!selectedProductId) {
-      toast.error('Please select a product')
+      toast.error(t('electricity.order.error.noProduct', locale))
       return
     }
     if (!selectedAddressId || !selectedAddress) {
-      toast.error('Please select an address')
+      toast.error(t('electricity.order.error.noAddress', locale))
       return
     }
     if (!activeProfileId) {
-      toast.error('No active profile')
+      toast.error(t('electricity.order.error.noProfile', locale))
       return
     }
 
@@ -329,14 +351,14 @@ function ElectricityOrderPage() {
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({}))
         const message = (errBody as { message?: string }).message
-        toast.error(message || 'Failed to create order')
+        toast.error(message || t('electricity.order.error.create', locale))
         return
       }
 
       setOrderCreated(true)
-      toast.success('Order created successfully!')
+      toast.success(t('electricity.order.success.create', locale))
     } catch {
-      toast.error('Failed to create order')
+      toast.error(t('electricity.order.error.create', locale))
     } finally {
       setSubmitting(false)
     }
@@ -388,10 +410,11 @@ function ElectricityOrderPage() {
           <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
             <CheckIcon className="h-8 w-8" />
           </div>
-          <h1 className="mb-4 text-2xl font-bold">Order Submitted</h1>
+          <h1 className="mb-4 text-2xl font-bold">
+            {t('electricity.order.success.title', locale)}
+          </h1>
           <p className="mb-6 text-muted-foreground">
-            Your electricity order has been successfully created. You can track
-            its status from your orders page.
+            {t('electricity.order.success.description', locale)}
           </p>
         </div>
       </div>

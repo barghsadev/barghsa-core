@@ -54,41 +54,15 @@ export class OrdersService {
   /**
    * Create a new order with an address snapshot.
    *
-   * Validates the profile belongs to the user, the product exists and
-   * is active, and creates the order record with the address values
-   * copied directly (not via FK) to ensure historical accuracy.
+   * Validates address fields first (cheap), then checks profile ownership
+   * and product availability, and creates the order record with the address
+   * values copied directly (not via FK) to ensure historical accuracy.
    */
   async createOrder(
     userId: string,
     dto: CreateOrderDto,
   ): Promise<OrderRow> {
-    const pool = getDbPool()
-
-    // Validate the profile belongs to the user
-    const profileResult = await pool.query(
-      `SELECT id FROM profiles WHERE id = $1 AND user_id = $2`,
-      [dto.profileId, userId],
-    )
-    if (profileResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
-    }
-
-    // Validate the product exists and is active
-    const productResult = await pool.query(
-      `SELECT id FROM products WHERE id = $1 AND is_active = true`,
-      [dto.productId],
-    )
-    if (productResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Product not found or not active' },
-        404,
-      )
-    }
-
-    // Validate address fields
+    // ── Address field validation (fast-path, no DB) ────────────────
     if (!dto.address.provinceId?.trim()) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
@@ -117,6 +91,32 @@ export class OrdersService {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
         400,
+      )
+    }
+
+    const pool = getDbPool()
+
+    // Validate the profile belongs to the user
+    const profileResult = await pool.query(
+      `SELECT id FROM profiles WHERE id = $1 AND user_id = $2`,
+      [dto.profileId, userId],
+    )
+    if (profileResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+
+    // Validate the product exists and is active
+    const productResult = await pool.query(
+      `SELECT id FROM products WHERE id = $1 AND is_active = true`,
+      [dto.productId],
+    )
+    if (productResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Product not found or not active' },
+        404,
       )
     }
 
