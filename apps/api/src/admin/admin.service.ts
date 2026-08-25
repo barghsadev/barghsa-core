@@ -68,24 +68,34 @@ function generateTemporaryPassword(): string {
   const lowerRe = /[a-z]/
   const digitRe = /[2-9]/
 
+  const UPPER_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+  const LOWER_CHARS = 'abcdefghjkmnpqrstuvwxyz'
+  const DIGITS = '23456789'
+
+  const posBuf = new Uint8Array(1)
+  const selBuf = new Uint8Array(1)
+
   if (!upperRe.test(result)) {
-    const pos = Math.floor(Math.random() * length)
-    const upperChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-    const replacement = upperChars[Math.floor(Math.random() * upperChars.length)]
+    crypto.getRandomValues(posBuf)
+    const pos = posBuf[0]! % length
+    crypto.getRandomValues(selBuf)
+    const replacement = UPPER_CHARS[selBuf[0]! % UPPER_CHARS.length]
     result = result.slice(0, pos) + replacement + result.slice(pos + 1)
   }
 
   if (!lowerRe.test(result)) {
-    const pos = Math.floor(Math.random() * length)
-    const lowerChars = 'abcdefghjkmnpqrstuvwxyz'
-    const replacement = lowerChars[Math.floor(Math.random() * lowerChars.length)]
+    crypto.getRandomValues(posBuf)
+    const pos = posBuf[0]! % length
+    crypto.getRandomValues(selBuf)
+    const replacement = LOWER_CHARS[selBuf[0]! % LOWER_CHARS.length]
     result = result.slice(0, pos) + replacement + result.slice(pos + 1)
   }
 
   if (!digitRe.test(result)) {
-    const pos = Math.floor(Math.random() * length)
-    const digits = '23456789'
-    const replacement = digits[Math.floor(Math.random() * digits.length)]
+    crypto.getRandomValues(posBuf)
+    const pos = posBuf[0]! % length
+    crypto.getRandomValues(selBuf)
+    const replacement = DIGITS[selBuf[0]! % DIGITS.length]
     result = result.slice(0, pos) + replacement + result.slice(pos + 1)
   }
 
