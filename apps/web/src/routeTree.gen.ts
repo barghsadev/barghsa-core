@@ -25,6 +25,7 @@ import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
@@ -40,6 +41,7 @@ import { Route as AppSettingsTimezoneRouteImport } from './routes/_app/settings/
 import { Route as AppSettingsUsernameRouteImport } from './routes/_app/settings/username'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
+import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -120,6 +122,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminCrmRoute = AdminCrmRouteImport.update({
+  id: '/crm',
+  path: '/crm',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
@@ -197,6 +204,12 @@ const OnboardingLegalProfileIdRoute =
     path: '/legal/$profileId',
     getParentRoute: () => OnboardingRoute,
   } as any)
+const AdminCrmProfilesProfileIdRoute =
+  AdminCrmProfilesProfileIdRouteImport.update({
+    id: '/profiles/$profileId',
+    path: '/profiles/$profileId',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -213,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
@@ -229,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity/': typeof AppElectricityIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
+  '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -243,6 +258,7 @@ export interface FileRoutesByTo {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
@@ -259,6 +275,7 @@ export interface FileRoutesByTo {
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity': typeof AppElectricityIndexRoute
   '/settings': typeof AppSettingsIndexRoute
+  '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -277,6 +294,7 @@ export interface FileRoutesById {
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
+  '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
@@ -293,6 +311,7 @@ export interface FileRoutesById {
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
+  '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -311,6 +330,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/crm'
     | '/admin/storage'
     | '/admin/users'
     | '/onboarding/complete'
@@ -327,6 +347,7 @@ export interface FileRouteTypes {
     | '/onboarding/legal/$profileId'
     | '/electricity/'
     | '/settings/'
+    | '/admin/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -341,6 +362,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/crm'
     | '/admin/storage'
     | '/admin/users'
     | '/onboarding/complete'
@@ -357,6 +379,7 @@ export interface FileRouteTypes {
     | '/onboarding/legal/$profileId'
     | '/electricity'
     | '/settings'
+    | '/admin/crm/profiles/$profileId'
   id:
     | '__root__'
     | '/'
@@ -374,6 +397,7 @@ export interface FileRouteTypes {
     | '/_app/savings'
     | '/_app/videos'
     | '/_app/wallet'
+    | '/admin/crm'
     | '/admin/storage'
     | '/admin/users'
     | '/onboarding/complete'
@@ -390,6 +414,7 @@ export interface FileRouteTypes {
     | '/onboarding/legal/$profileId'
     | '/_app/electricity/'
     | '/_app/settings/'
+    | '/admin/crm/profiles/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -518,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/crm': {
+      id: '/admin/crm'
+      path: '/crm'
+      fullPath: '/admin/crm'
+      preLoaderRoute: typeof AdminCrmRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/storage': {
       id: '/admin/storage'
       path: '/storage'
@@ -623,6 +655,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingLegalProfileIdRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/admin/crm/profiles/$profileId': {
+      id: '/admin/crm/profiles/$profileId'
+      path: '/profiles/$profileId'
+      fullPath: '/admin/crm/profiles/$profileId'
+      preLoaderRoute: typeof AdminCrmProfilesProfileIdRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
   }
 }
 
@@ -662,13 +701,27 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface AdminCrmRouteChildren {
+  AdminCrmProfilesProfileIdRoute: typeof AdminCrmProfilesProfileIdRoute
+}
+
+const AdminCrmRouteChildren: AdminCrmRouteChildren = {
+  AdminCrmProfilesProfileIdRoute: AdminCrmProfilesProfileIdRoute,
+}
+
+const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
+  AdminCrmRouteChildren,
+)
+
 interface AdminRouteChildren {
+  AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminStorageRoute: typeof AdminStorageRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminStorageRoute: AdminStorageRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
