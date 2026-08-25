@@ -127,20 +127,22 @@ export async function runSeed(force: boolean = false): Promise<SeedRunResult> {
   const results: SeederResult[] = []
   const errors: string[] = []
 
-  for (const seeder of seeders) {
-    try {
-      const result = await seeder(db, force)
-      results.push(result)
-      if (result.errors.length > 0) {
-        errors.push(...result.errors.map((e) => `[${result.entity}] ${e}`))
+  try {
+    for (const seeder of seeders) {
+      try {
+        const result = await seeder(db, force)
+        results.push(result)
+        if (result.errors.length > 0) {
+          errors.push(...result.errors.map((e) => `[${result.entity}] ${e}`))
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err)
+        errors.push(message)
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      errors.push(message)
     }
+  } finally {
+    await pool.end()
   }
-
-  await pool.end()
 
   return {
     ok: errors.length === 0,
