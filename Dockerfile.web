@@ -26,8 +26,6 @@ RUN corepack enable && \
 
 # Stage 3: Production — minimal runtime image
 FROM node:20-alpine AS production
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 appuser
 
 WORKDIR /app
 
@@ -43,12 +41,13 @@ COPY apps/web/healthcheck.js ./healthcheck.js
 
 # Production runtime hardening — single ENV to avoid overwrites
 ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation --inspect=0" \
+    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation" \
     NODE_NO_WARNINGS=1
 
 EXPOSE 3000
 
-USER appuser
+# Use the built-in node user — no custom user creation needed
+USER node
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node healthcheck.js

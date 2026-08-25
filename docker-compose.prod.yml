@@ -1,0 +1,75 @@
+# Barghsa Production Infrastructure
+#
+# Production deployment of all application and backing services.
+# Extends the dev compose with app services, security hardening,
+# and production-grade configuration.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+name: barghsa-prod
+
+services:
+
+  # ─────────────────────────────────────────────────────────────
+  # API Server (NestJS)
+  # ─────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    container_name: barghsa-api
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: "--max-old-space-size=512"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+    # Security hardening
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+  # ─────────────────────────────────────────────────────────────
+  # Web Frontend (TanStack Start)
+  # ─────────────────────────────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: barghsa-web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: "--max-old-space-size=512"
+    depends_on:
+      - api
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      start_period: 5s
+      retries: 3
+    restart: unless-stopped
+    # Security hardening
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true

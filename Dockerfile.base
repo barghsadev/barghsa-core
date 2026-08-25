@@ -38,9 +38,7 @@ RUN corepack enable && \
 
 # Stage 3: Production — minimal runtime image with only production deps
 FROM node:20-alpine AS production
-RUN apk add --no-cache libc6-compat && \
-    addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 appuser
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
@@ -66,12 +64,12 @@ COPY apps/api/healthcheck.js ./healthcheck.js
 
 # Production runtime hardening — single ENV to avoid overwrites
 ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation --inspect=0" \
+    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation" \
     NODE_NO_WARNINGS=1
 
 EXPOSE 4000
 
-USER appuser
+USER node
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD node healthcheck.js
