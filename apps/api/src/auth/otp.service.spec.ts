@@ -44,8 +44,10 @@ describe('OtpService', () => {
       expect(params[1]).toBe(destination)
       expect(typeof params[0]).toBe('string')
       expect(typeof params[2]).toBe('string')
-      expect(params[3]).toBe(OtpService.MAX_ATTEMPTS)
-      expect(params[4]).toBeInstanceOf(Date)
+      expect(params[3]).toBeNull() // password_hash (null when not provided)
+      expect(params[4]).toBeNull() // tos_version_id (null when not provided)
+      expect(params[5]).toBe(OtpService.MAX_ATTEMPTS)
+      expect(params[6]).toBeInstanceOf(Date)
     })
 
     it('throws rate-limited when per-minute limit is hit', async () => {

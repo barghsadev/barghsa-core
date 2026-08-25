@@ -244,6 +244,12 @@ export const ErrorCodes = {
     messageKey: 'error.internal.unexpected',
     severity: 'critical' as ErrorSeverity,
   },
+  AUTH_REGISTER_FAILED: {
+    code: 'AUTH:REGISTER:FAILED',
+    httpStatus: 500,
+    messageKey: 'auth.register.error.generic',
+    severity: 'error' as ErrorSeverity,
+  },
 } as const satisfies Record<string, ErrorCodeDef>;
 
 /** Union type of all error code strings */
