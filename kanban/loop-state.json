@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-03.03.01",
+  "current_task_id": "T-03.03.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-03-03-01--profile-switcher",
   "current_pr_url": null,
-  "loop_iteration": 185,
+  "loop_iteration": 186,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -172,8 +172,8 @@
     "02-auth-users-admin.md#T-03.02.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T13:09:00Z",
-  "notes": "Tick-185: in_review → idle — T-03.02.03 (Legal profile form) merged as PR #108 (squash db70d71) after 1 fix round. Fixes: company-types fetch retry UI, geography.service.test.ts. Reviewer z-ai/glm-5.2 approved round 2 (minor follow-ups: provinces/cities retry consistency, migrate inline ternaries to t()). Next: 02-auth-users-admin.md#T-03.02.05.",
+  "last_updated": "2026-08-25T13:15:00Z",
+  "notes": "Tick-186: idle → building — T-03.03.01 (Profile switcher in sidebar, M).",
   "status_history": [
     {
       "from": "idle",
@@ -199,6 +199,11 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-185"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-186"
     }
   ]
 }

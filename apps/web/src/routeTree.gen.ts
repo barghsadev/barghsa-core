@@ -10,28 +10,29 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AiRouteImport } from './routes/ai'
-import { Route as ChartsRouteImport } from './routes/charts'
-import { Route as DocumentsRouteImport } from './routes/documents'
-import { Route as ElectricityRouteImport } from './routes/electricity'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RegisterRouteImport } from './routes/register'
-import { Route as SavingsRouteImport } from './routes/savings'
 import { Route as SupportRouteImport } from './routes/support'
-import { Route as VideosRouteImport } from './routes/videos'
-import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as AppAiRouteImport } from './routes/_app/ai'
+import { Route as AppChartsRouteImport } from './routes/_app/charts'
+import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
+import { Route as AppSavingsRouteImport } from './routes/_app/savings'
+import { Route as AppVideosRouteImport } from './routes/_app/videos'
+import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
-import { Route as ElectricityIndexRouteImport } from './routes/electricity/index'
-import { Route as ElectricityOrderRouteImport } from './routes/electricity/order'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
-import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
+import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
+import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSettingsSecurityRouteImport } from './routes/_app/settings/security'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 
@@ -40,29 +41,13 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiRoute = AiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChartsRoute = ChartsRouteImport.update({
-  id: '/charts',
-  path: '/charts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsRoute = DocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ElectricityRoute = ElectricityRouteImport.update({
-  id: '/electricity',
-  path: '/electricity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -85,25 +70,40 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SavingsRoute = SavingsRouteImport.update({
-  id: '/savings',
-  path: '/savings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VideosRoute = VideosRouteImport.update({
+const AppAiRoute = AppAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChartsRoute = AppChartsRouteImport.update({
+  id: '/charts',
+  path: '/charts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsRoute = AppDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSavingsRoute = AppSavingsRouteImport.update({
+  id: '/savings',
+  path: '/savings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVideosRoute = AppVideosRouteImport.update({
   id: '/videos',
   path: '/videos',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const WalletRoute = WalletRouteImport.update({
+const AppWalletRoute = AppWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -120,16 +120,6 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
-const ElectricityIndexRoute = ElectricityIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ElectricityRoute,
-} as any)
-const ElectricityOrderRoute = ElectricityOrderRouteImport.update({
-  id: '/order',
-  path: '/order',
-  getParentRoute: () => ElectricityRoute,
-} as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/complete',
   path: '/complete',
@@ -145,10 +135,25 @@ const RegisterVerifyRoute = RegisterVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => RegisterRoute,
 } as any)
-const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
+const AppElectricityIndexRoute = AppElectricityIndexRouteImport.update({
+  id: '/electricity/',
+  path: '/electricity/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppElectricityOrderRoute = AppElectricityOrderRouteImport.update({
+  id: '/electricity/order',
+  path: '/electricity/order',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
   id: '/settings/security',
   path: '/settings/security',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 const OnboardingIndividualProfileIdRoute =
   OnboardingIndividualProfileIdRouteImport.update({
@@ -166,179 +171,176 @@ const OnboardingLegalProfileIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/ai': typeof AiRoute
-  '/charts': typeof ChartsRoute
-  '/documents': typeof DocumentsRoute
-  '/electricity': typeof ElectricityRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
-  '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
-  '/videos': typeof VideosRoute
-  '/wallet': typeof WalletRoute
+  '/ai': typeof AppAiRoute
+  '/charts': typeof AppChartsRoute
+  '/documents': typeof AppDocumentsRoute
+  '/savings': typeof AppSavingsRoute
+  '/videos': typeof AppVideosRoute
+  '/wallet': typeof AppWalletRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
-  '/electricity/order': typeof ElectricityOrderRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
-  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
-  '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/electricity/': typeof AppElectricityIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ai': typeof AiRoute
-  '/charts': typeof ChartsRoute
-  '/documents': typeof DocumentsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
-  '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
-  '/videos': typeof VideosRoute
-  '/wallet': typeof WalletRoute
+  '/ai': typeof AppAiRoute
+  '/charts': typeof AppChartsRoute
+  '/documents': typeof AppDocumentsRoute
+  '/savings': typeof AppSavingsRoute
+  '/videos': typeof AppVideosRoute
+  '/wallet': typeof AppWalletRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
-  '/electricity/order': typeof ElectricityOrderRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
-  '/settings/security': typeof SettingsSecurityRoute
   '/admin': typeof AdminIndexRoute
-  '/electricity': typeof ElectricityIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/electricity/order': typeof AppElectricityOrderRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/electricity': typeof AppElectricityIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
-  '/ai': typeof AiRoute
-  '/charts': typeof ChartsRoute
-  '/documents': typeof DocumentsRoute
-  '/electricity': typeof ElectricityRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
-  '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
-  '/videos': typeof VideosRoute
-  '/wallet': typeof WalletRoute
+  '/_app/ai': typeof AppAiRoute
+  '/_app/charts': typeof AppChartsRoute
+  '/_app/documents': typeof AppDocumentsRoute
+  '/_app/savings': typeof AppSavingsRoute
+  '/_app/videos': typeof AppVideosRoute
+  '/_app/wallet': typeof AppWalletRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
-  '/electricity/order': typeof ElectricityOrderRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
-  '/settings/security': typeof SettingsSecurityRoute
   '/admin/': typeof AdminIndexRoute
-  '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
+  '/_app/electricity/': typeof AppElectricityIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
-    | '/ai'
-    | '/charts'
-    | '/documents'
-    | '/electricity'
     | '/forgot-password'
     | '/login'
     | '/onboarding'
     | '/register'
-    | '/savings'
     | '/support'
+    | '/ai'
+    | '/charts'
+    | '/documents'
+    | '/savings'
     | '/videos'
     | '/wallet'
     | '/admin/storage'
     | '/admin/users'
-    | '/electricity/order'
     | '/onboarding/complete'
     | '/register/verify'
-    | '/settings/security'
     | '/admin/'
-    | '/electricity/'
     | '/register/'
+    | '/electricity/order'
+    | '/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/electricity/'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/ai'
-    | '/charts'
-    | '/documents'
     | '/forgot-password'
     | '/login'
     | '/onboarding'
-    | '/savings'
     | '/support'
+    | '/ai'
+    | '/charts'
+    | '/documents'
+    | '/savings'
     | '/videos'
     | '/wallet'
     | '/admin/storage'
     | '/admin/users'
-    | '/electricity/order'
     | '/onboarding/complete'
     | '/register/verify'
-    | '/settings/security'
     | '/admin'
-    | '/electricity'
     | '/register'
+    | '/electricity/order'
+    | '/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/electricity'
+    | '/settings'
   id:
     | '__root__'
     | '/'
+    | '/_app'
     | '/admin'
-    | '/ai'
-    | '/charts'
-    | '/documents'
-    | '/electricity'
     | '/forgot-password'
     | '/login'
     | '/onboarding'
     | '/register'
-    | '/savings'
     | '/support'
-    | '/videos'
-    | '/wallet'
+    | '/_app/ai'
+    | '/_app/charts'
+    | '/_app/documents'
+    | '/_app/savings'
+    | '/_app/videos'
+    | '/_app/wallet'
     | '/admin/storage'
     | '/admin/users'
-    | '/electricity/order'
     | '/onboarding/complete'
     | '/register/verify'
-    | '/settings/security'
     | '/admin/'
-    | '/electricity/'
     | '/register/'
+    | '/_app/electricity/order'
+    | '/_app/settings/security'
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
+    | '/_app/electricity/'
+    | '/_app/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
-  AiRoute: typeof AiRoute
-  ChartsRoute: typeof ChartsRoute
-  DocumentsRoute: typeof DocumentsRoute
-  ElectricityRoute: typeof ElectricityRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRouteWithChildren
   RegisterRoute: typeof RegisterRouteWithChildren
-  SavingsRoute: typeof SavingsRoute
   SupportRoute: typeof SupportRoute
-  VideosRoute: typeof VideosRoute
-  WalletRoute: typeof WalletRoute
-  SettingsSecurityRoute: typeof SettingsSecurityRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -350,39 +352,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai': {
-      id: '/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/charts': {
-      id: '/charts'
-      path: '/charts'
-      fullPath: '/charts'
-      preLoaderRoute: typeof ChartsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents': {
-      id: '/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof DocumentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/electricity': {
-      id: '/electricity'
-      path: '/electricity'
-      fullPath: '/electricity'
-      preLoaderRoute: typeof ElectricityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -413,13 +394,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/savings': {
-      id: '/savings'
-      path: '/savings'
-      fullPath: '/savings'
-      preLoaderRoute: typeof SavingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -427,19 +401,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/videos': {
-      id: '/videos'
+    '/_app/ai': {
+      id: '/_app/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AppAiRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/charts': {
+      id: '/_app/charts'
+      path: '/charts'
+      fullPath: '/charts'
+      preLoaderRoute: typeof AppChartsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents': {
+      id: '/_app/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AppDocumentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/savings': {
+      id: '/_app/savings'
+      path: '/savings'
+      fullPath: '/savings'
+      preLoaderRoute: typeof AppSavingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/videos': {
+      id: '/_app/videos'
       path: '/videos'
       fullPath: '/videos'
-      preLoaderRoute: typeof VideosRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppVideosRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/wallet': {
-      id: '/wallet'
+    '/_app/wallet': {
+      id: '/_app/wallet'
       path: '/wallet'
       fullPath: '/wallet'
-      preLoaderRoute: typeof WalletRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppWalletRouteImport
+      parentRoute: typeof AppRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -462,20 +464,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/electricity/': {
-      id: '/electricity/'
-      path: '/'
-      fullPath: '/electricity/'
-      preLoaderRoute: typeof ElectricityIndexRouteImport
-      parentRoute: typeof ElectricityRoute
-    }
-    '/electricity/order': {
-      id: '/electricity/order'
-      path: '/order'
-      fullPath: '/electricity/order'
-      preLoaderRoute: typeof ElectricityOrderRouteImport
-      parentRoute: typeof ElectricityRoute
-    }
     '/onboarding/complete': {
       id: '/onboarding/complete'
       path: '/complete'
@@ -497,12 +485,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVerifyRouteImport
       parentRoute: typeof RegisterRoute
     }
-    '/settings/security': {
-      id: '/settings/security'
+    '/_app/electricity/': {
+      id: '/_app/electricity/'
+      path: '/electricity'
+      fullPath: '/electricity/'
+      preLoaderRoute: typeof AppElectricityIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/electricity/order': {
+      id: '/_app/electricity/order'
+      path: '/electricity/order'
+      fullPath: '/electricity/order'
+      preLoaderRoute: typeof AppElectricityOrderRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/security': {
+      id: '/_app/settings/security'
       path: '/settings/security'
       fullPath: '/settings/security'
-      preLoaderRoute: typeof SettingsSecurityRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppSettingsSecurityRouteImport
+      parentRoute: typeof AppRoute
     }
     '/onboarding/individual/$profileId': {
       id: '/onboarding/individual/$profileId'
@@ -521,6 +530,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteChildren {
+  AppAiRoute: typeof AppAiRoute
+  AppChartsRoute: typeof AppChartsRoute
+  AppDocumentsRoute: typeof AppDocumentsRoute
+  AppSavingsRoute: typeof AppSavingsRoute
+  AppVideosRoute: typeof AppVideosRoute
+  AppWalletRoute: typeof AppWalletRoute
+  AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppElectricityIndexRoute: typeof AppElectricityIndexRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAiRoute: AppAiRoute,
+  AppChartsRoute: AppChartsRoute,
+  AppDocumentsRoute: AppDocumentsRoute,
+  AppSavingsRoute: AppSavingsRoute,
+  AppVideosRoute: AppVideosRoute,
+  AppWalletRoute: AppWalletRoute,
+  AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppElectricityIndexRoute: AppElectricityIndexRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 interface AdminRouteChildren {
   AdminStorageRoute: typeof AdminStorageRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -534,20 +571,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-interface ElectricityRouteChildren {
-  ElectricityOrderRoute: typeof ElectricityOrderRoute
-  ElectricityIndexRoute: typeof ElectricityIndexRoute
-}
-
-const ElectricityRouteChildren: ElectricityRouteChildren = {
-  ElectricityOrderRoute: ElectricityOrderRoute,
-  ElectricityIndexRoute: ElectricityIndexRoute,
-}
-
-const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
-  ElectricityRouteChildren,
-)
 
 interface OnboardingRouteChildren {
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
@@ -581,20 +604,13 @@ const RegisterRouteWithChildren = RegisterRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
-  AiRoute: AiRoute,
-  ChartsRoute: ChartsRoute,
-  DocumentsRoute: DocumentsRoute,
-  ElectricityRoute: ElectricityRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRouteWithChildren,
   RegisterRoute: RegisterRouteWithChildren,
-  SavingsRoute: SavingsRoute,
   SupportRoute: SupportRoute,
-  VideosRoute: VideosRoute,
-  WalletRoute: WalletRoute,
-  SettingsSecurityRoute: SettingsSecurityRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -9,6 +9,6 @@ function WalletPage() {
   )
 }
 
-export const Route = createFileRoute('/wallet')({
+export const Route = createFileRoute('/_app/wallet')({
   component: WalletPage,
 })

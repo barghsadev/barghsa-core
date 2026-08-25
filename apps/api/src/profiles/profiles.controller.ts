@@ -61,6 +61,49 @@ export class ProfilesController {
   }
 
   /**
+   * POST /api/profiles/switch/:profileId
+   *
+   * Switches the user's active profile. The active profile is the one whose
+   * data the app dashboard displays. Used by the sidebar profile switcher
+   * (T-03.03.01).
+   *
+   * Enforcement: the user must have access to the target profile — either as
+   * the owner (`userId` matches) or as an active agent. Agent membership is
+   * tracked by a future profile-agents ledger; until that exists only the
+   * owner-access path is active, but the check is centralized here so the
+   * agent path can be added without touching callers or the frontend.
+   */
+  @Post('switch/:profileId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'profiles:switch:user', limit: 30, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Switch the active profile' })
+  @ApiResponse({ status: 200, description: 'Active profile switched.', schema: { type: 'object', properties: { activeProfileId: { type: 'string', nullable: true } } } })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'User does not have access to the profile' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  async switchProfile(
+    @Param('profileId') profileId: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ activeProfileId: string | null }> {
+    const userId = req.session.userId
+
+    // Verify this profile belongs to the user (or they are an active agent).
+    const profile = await this.profilesService.getAccessibleProfile(userId, profileId)
+    if (!profile) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    // Clear any existing default for this user, set this one as default.
+    await this.profilesService.setDefaultProfile(userId, profileId)
+
+    this.logger.log(`User ${userId} switched active profile to ${profileId}`)
+    return { activeProfileId: profileId }
+  }
+
+  /**
    * POST /api/profiles/:id/set-default
    *
    * Sets a specific profile as the user's default. Only the profile
