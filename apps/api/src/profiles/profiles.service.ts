@@ -127,6 +127,25 @@ export class ProfilesService {
   }
 
   /**
+   * Return a profile the user may activate as their active profile.
+   *
+   * A user may switch to a profile when they own it (`user_id` matches), or
+   * when they are an active agent on it. Agent membership currently has no
+   * persistence layer (it arrives with the future profile-access epic), so
+   * this defaults to owner-only and returns `null` otherwise. Centralizing
+   * the check here keeps the controller and frontend unchanged when agent
+   * access is introduced.
+   */
+  async getAccessibleProfile(userId: string, profileId: string): Promise<ProfileRow | null> {
+    const profile = await this.getProfileById(profileId)
+    if (!profile) return null
+    // Owner access only for now; agent membership is a future extension.
+    const isOwner = profile.userId === userId
+    if (!isOwner) return null
+    return profile
+  }
+
+  /**
    * Set a profile as the user's default within a transaction.
    *
    * Two updates (clear all defaults, then set one) are wrapped in a

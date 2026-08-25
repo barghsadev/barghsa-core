@@ -9,6 +9,6 @@ function ElectricityIndexPage() {
   )
 }
 
-export const Route = createFileRoute('/electricity/')({
+export const Route = createFileRoute('/_app/electricity/')({
   component: ElectricityIndexPage,
 })

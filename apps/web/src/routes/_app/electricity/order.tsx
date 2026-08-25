@@ -98,6 +98,6 @@ function ElectricityOrderPage() {
   )
 }
 
-export const Route = createFileRoute('/electricity/order')({
+export const Route = createFileRoute('/_app/electricity/order')({
   component: ElectricityOrderPage,
 })

@@ -399,4 +399,45 @@ describe('ProfilesService', () => {
       expect(result.status).toBe('ACTIVE')
     })
   })
+
+  describe('getAccessibleProfile', () => {
+    const profileRow = {
+      id: 'prof-1',
+      user_id: 'user-1',
+      profile_type: 'INDIVIDUAL',
+      is_default: true,
+      status: 'ACTIVE',
+      title: null,
+      first_name: 'John',
+      last_name: 'Doe',
+      created_at: new Date(),
+      updated_at: new Date(),
+    }
+
+    it('returns the profile when the user is the owner', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [profileRow] })
+
+      const result = await service.getAccessibleProfile('user-1', 'prof-1')
+
+      expect(result).not.toBeNull()
+      expect(result?.id).toBe('prof-1')
+      expect(result?.userId).toBe('user-1')
+    })
+
+    it('returns null when the profile does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      const result = await service.getAccessibleProfile('user-1', 'missing')
+
+      expect(result).toBeNull()
+    })
+
+    it('returns null when the user is not the owner (no agent access yet)', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ ...profileRow, user_id: 'other-user' }] })
+
+      const result = await service.getAccessibleProfile('user-1', 'prof-1')
+
+      expect(result).toBeNull()
+    })
+  })
 })

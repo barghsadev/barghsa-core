@@ -9,6 +9,6 @@ function SavingsPage() {
   )
 }
 
-export const Route = createFileRoute('/savings')({
+export const Route = createFileRoute('/_app/savings')({
   component: SavingsPage,
 })

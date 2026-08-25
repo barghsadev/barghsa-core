@@ -387,6 +387,22 @@ export const fa: I18nDictionary = {
   'verification.order.blocked.title': 'ثبت سفارش جدید امکان‌پذیر نیست',
   'verification.order.blocked.description': 'پروفایل شما هنوز تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید.',
   'verification.order.blocked.support': 'در صورت نیاز به راهنمایی با پشتیبانی تماس بگیرید.',
+
+  // ── Dashboard — Profile Switcher (T-03.03.01) ─────────────────
+  'dashboard.profile.unnamed': 'پروفایل بدون نام',
+  'dashboard.profile.typeIndividual': 'حقیقی',
+  'dashboard.profile.typeLegal': 'حقوقی',
+  'dashboard.profile.switchLabel': 'تغییر پروفایل فعال',
+  'dashboard.profile.switching': 'در حال تغییر پروفایل…',
+  'dashboard.profile.switchError': 'تغییر پروفایل با خطا مواجه شد',
+  'dashboard.nav.label': 'ناوبری',
+  'dashboard.nav.electricity': 'برق',
+  'dashboard.nav.savings': 'پس‌انداز',
+  'dashboard.nav.wallet': 'کیف پول',
+  'dashboard.nav.ai': 'دستیار هوشمند',
+  'dashboard.nav.documents': 'اسناد',
+  'dashboard.nav.videos': 'ویدئوها',
+  'dashboard.nav.settings': 'تنظیمات',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -767,6 +783,22 @@ export const en: I18nDictionary = {
   'verification.order.blocked.title': 'New orders are not available',
   'verification.order.blocked.description': 'Your profile has not been verified yet. Please verify your profile before placing a new order.',
   'verification.order.blocked.support': 'Contact support for assistance.',
+
+  // ── Dashboard — Profile Switcher (T-03.03.01) ─────────────────
+  'dashboard.profile.unnamed': 'Unnamed profile',
+  'dashboard.profile.typeIndividual': 'Individual',
+  'dashboard.profile.typeLegal': 'Legal',
+  'dashboard.profile.switchLabel': 'Switch active profile',
+  'dashboard.profile.switching': 'Switching profile…',
+  'dashboard.profile.switchError': 'Failed to switch profile',
+  'dashboard.nav.label': 'Navigation',
+  'dashboard.nav.electricity': 'Electricity',
+  'dashboard.nav.savings': 'Savings',
+  'dashboard.nav.wallet': 'Wallet',
+  'dashboard.nav.ai': 'AI Assistant',
+  'dashboard.nav.documents': 'Documents',
+  'dashboard.nav.videos': 'Videos',
+  'dashboard.nav.settings': 'Settings',
 };
 
 /** Supported locale codes */

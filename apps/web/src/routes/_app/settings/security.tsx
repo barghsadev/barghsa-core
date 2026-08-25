@@ -12,9 +12,9 @@ import {
   ShieldAlertIcon,
 } from 'lucide-react'
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
-import { withCsrf } from '../../lib/csrf.js'
+import { withCsrf } from '../../../lib/csrf.js'
 
-export const Route = createFileRoute('/settings/security')({
+export const Route = createFileRoute('/_app/settings/security')({
   component: SettingsSecurityPage,
 })
 
@@ -118,6 +118,34 @@ function formatDate(dateStr: string, locale: Locale): string {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+/**
+ * Small component that renders session details (IP, created/updated/expires/idle).
+ */
+function SessionDetails({ session, locale }: { session: SessionItem; locale: Locale }) {
+  return (
+    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+      {session.deviceInfo?.ip && (
+        <span className="inline-flex items-center gap-1">
+          <GlobeIcon className="h-3 w-3" />
+          {session.deviceInfo.ip}
+        </span>
+      )}
+      <span>
+        {t('settings.security.createdAt', locale)}: {formatDate(session.createdAt, locale)}
+      </span>
+      <span>
+        {t('settings.security.updatedAt', locale)}: {formatDate(session.updatedAt, locale)}
+      </span>
+      <span>
+        {t('settings.security.expiresAt', locale)}: {formatDate(session.expiresAt, locale)}
+      </span>
+      <span>
+        {t('settings.security.idleDeadline', locale)}: {formatDate(session.idleDeadline, locale)}
+      </span>
+    </div>
+  )
 }
 
 // ─── Page Component ────────────────────────────────────────────────────
@@ -499,11 +527,12 @@ function SettingsSecurityPage() {
                 }}
                 autoFocus
               />
+              {revokeAllError && (
+                <p className="text-sm text-destructive" role="alert">
+                  {revokeAllError}
+                </p>
+              )}
             </div>
-
-            {revokeAllError && (
-              <p className="text-sm text-destructive">{revokeAllError}</p>
-            )}
 
             <div className="flex justify-end gap-3">
               <Button
@@ -522,58 +551,11 @@ function SettingsSecurityPage() {
                 onClick={handleRevokeAll}
               >
                 {revokingAll
-                  ? t('settings.security.revoking', locale)
-                  : t('settings.security.confirmButton', locale)}
+                  ? t('settings.security.revokingAll', locale)
+                  : t('settings.security.revokeAll', locale)}
               </Button>
             </div>
           </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─── Session Details Sub-component ────────────────────────────────────
-
-function SessionDetails({
-  session,
-  locale,
-}: {
-  session: SessionItem
-  locale: Locale
-}) {
-  const ip = session.deviceInfo?.ip ?? t('settings.security.ipUnknown', locale)
-  const userAgent = session.deviceInfo?.userAgent
-  const deviceType = detectDeviceType(userAgent)
-
-  return (
-    <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-      <div className="flex items-center gap-1">
-        <DeviceIcon deviceType={deviceType} />
-        <span>{ip}</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <ClockIcon className="h-3 w-3" />
-        <span>
-          {t('settings.security.lastActive', locale)}:{' '}
-          {formatDate(session.updatedAt, locale)}
-        </span>
-      </div>
-      <div className="flex items-center gap-1 col-span-2">
-        <span>
-          {t('settings.security.createdAt', locale)}:{' '}
-          {formatDate(session.createdAt, locale)}
-        </span>
-      </div>
-      <div className="flex items-center gap-1 col-span-2">
-        <span>
-          {t('settings.security.expiresAt', locale)}:{' '}
-          {formatDate(session.expiresAt, locale)}
-        </span>
-      </div>
-      {userAgent && (
-        <div className="col-span-2 truncate" title={userAgent}>
-          <span className="opacity-60">UA: {userAgent}</span>
         </div>
       )}
     </div>
