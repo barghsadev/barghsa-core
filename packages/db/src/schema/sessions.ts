@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm'
 import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core'
 
 /**
- * Sessions table (T-01.02.03 / T-02.02.01).
+ * Sessions table (T-01.02.03 / T-02.02.01 / T-02.02.04).
  *
  * Created on successful authentication (registration OTP verify, login).
  * Stores server-side session state with refresh token support.
@@ -13,6 +13,7 @@ import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core'
  * - `refresh_token_hash` — SHA-256 hash of the current refresh token (rotation on use).
  * - `family_id` — UUIDv7 grouping refresh tokens into families (reuse revokes family).
  * - `device_info` — JSON metadata about the client device (fingerprint, user-agent).
+ * - `step_up_verified_at` — timestamp of last step-up authentication (T-02.02.04).
  * - `expires_at` — absolute session expiry (default 24h from creation).
  * - `idle_deadline` — idle timeout deadline (default 30min from last activity).
  * - `revoked_at` — set when the session is revoked (T-02.02.02).
@@ -39,6 +40,9 @@ export const sessions = pgTable(
 
     /** JSON metadata about the device (fingerprint, user agent, IP hint). */
     deviceInfo: jsonb('device_info'),
+
+    /** Timestamp of last step-up authentication (T-02.02.04). Null until first step-up. */
+    stepUpVerifiedAt: timestamp('step_up_verified_at', { withTimezone: true, mode: 'date' }),
 
     /** Absolute session expiry (default 24h from creation). */
     expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
@@ -74,6 +78,7 @@ export const createSessionsTable = sql`
     refresh_token_hash TEXT,
     family_id TEXT,
     device_info JSONB,
+    step_up_verified_at TIMESTAMPTZ,
     expires_at TIMESTAMPTZ NOT NULL,
     idle_deadline TIMESTAMPTZ NOT NULL,
     revoked_at TIMESTAMPTZ,
@@ -101,6 +106,9 @@ export const migrateSessionsTable = sql`
     END IF;
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'sessions' AND column_name = 'device_info') THEN
       ALTER TABLE sessions ADD COLUMN device_info JSONB;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'sessions' AND column_name = 'step_up_verified_at') THEN
+      ALTER TABLE sessions ADD COLUMN step_up_verified_at TIMESTAMPTZ;
     END IF;
   END $$;
 `

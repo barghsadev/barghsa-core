@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 153,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-02.02.04",
+  "current_task_id": "T-02.02.04",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-02-02-04--step-up-auth",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/92",
+  "loop_iteration": 154,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -41,19 +41,6 @@
     "01-platform-infrastructure.md#T-02.03.02",
     "01-platform-infrastructure.md#T-02.03.03",
     "01-platform-infrastructure.md#T-02.03.04",
-    "01-platform-infrastructure.md#T-03.01.01",
-    "01-platform-infrastructure.md#T-03.01.02",
-    "01-platform-infrastructure.md#T-03.01.03",
-    "01-platform-infrastructure.md#T-03.01.04",
-    "01-platform-infrastructure.md#T-03.01.05",
-    "01-platform-infrastructure.md#T-03.02.01",
-    "01-platform-infrastructure.md#T-03.02.02",
-    "01-platform-infrastructure.md#T-03.02.03",
-    "01-platform-infrastructure.md#T-03.02.04",
-    "01-platform-infrastructure.md#T-03.03.01",
-    "01-platform-infrastructure.md#T-03.03.02",
-    "01-platform-infrastructure.md#T-03.03.03",
-    "01-platform-infrastructure.md#T-03.03.04",
     "01-platform-infrastructure.md#T-04.01.01",
     "01-platform-infrastructure.md#T-04.01.02",
     "01-platform-infrastructure.md#T-04.01.03",
@@ -163,92 +150,26 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-25T09:32:30",
-  "notes": "Tick-153: T-02.02.03 (CSRF protection) merged as PR #91. CsrfGuard with @SkipCsrf() decorator, barghsa_csrf cookie set on all auth success, AUTHZ:CSRF_TOKEN_INVALID error code. Frontend withCsrf() in AdminStorageConfig/security, setCsrfToken on direct login. 16 new tests. CI: all checks pass. Reviewed by z-ai/glm-5.2 (request_changes → approve, import path fix applied). Loop idle; next task: 02-auth-users-admin.md#T-02.02.04 (Step-up authentication).",
+  "notes": "Tick-154: T-02.02.04 (Step-up auth — Slice 1/2: backend infra) PR #92 created, ready for review.",
   "status_history": [
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-144"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-144"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-144"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-145"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-145"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-145"
-    },
-    {
-      "from": "building",
-      "to": "idle",
-      "at": "tick-145"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-147"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-147"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-148"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-148"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-150"
-    },
-    {
-      "from": "idle",
-      "to": "in_review",
-      "at": "tick-151"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-152"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-153"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-153"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-153"
-    }
+    { "from": "idle", "to": "building", "at": "tick-154" },
+    { "from": "building", "to": "in_review", "at": "tick-154" },
+    { "from": "in_review", "to": "idle", "at": "tick-144" },
+    { "from": "building", "to": "in_review", "at": "tick-144" },
+    { "from": "idle", "to": "building", "at": "tick-144" },
+    { "from": "idle", "to": "building", "at": "tick-145" },
+    { "from": "in_review", "to": "fixing", "at": "tick-145" },
+    { "from": "fixing", "to": "in_review", "at": "tick-145" },
+    { "from": "building", "to": "idle", "at": "tick-145" },
+    { "from": "idle", "to": "building", "at": "tick-147" },
+    { "from": "building", "to": "in_review", "at": "tick-147" },
+    { "from": "in_review", "to": "fixing", "at": "tick-148" },
+    { "from": "fixing", "to": "in_review", "at": "tick-148" },
+    { "from": "in_review", "to": "idle", "at": "tick-150" },
+    { "from": "idle", "to": "in_review", "at": "tick-151" },
+    { "from": "in_review", "to": "idle", "at": "tick-152" },
+    { "from": "idle", "to": "building", "at": "tick-153" },
+    { "from": "building", "to": "in_review", "at": "tick-153" },
+    { "from": "in_review", "to": "idle", "at": "tick-153" }
   ]
 }

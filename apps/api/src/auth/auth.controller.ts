@@ -9,6 +9,7 @@ import {
   Body,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
@@ -44,6 +45,8 @@ import {
   clearCsrfCookie,
 } from '../session/cookie.helper.js'
 import { SkipCsrf } from '../session/csrf.guard.js'
+import { SessionAuthGuard } from '../session/session.guard.js'
+import type { AuthenticatedRequest } from '../session/session.guard.js'
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -558,5 +561,84 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+  }
+
+  /**
+   * POST /api/auth/step-up
+   *
+   * Performs step-up authentication for sensitive actions (T-02.02.04).
+   *
+   * Requires the authenticated session (session cookie) and the user's
+   * current password. On success, updates the session's
+   * `step_up_verified_at` timestamp, which the StepUpGuard checks
+   * against the configured window (default 15 minutes).
+   *
+   * The frontend should call this endpoint when the API returns a
+   * `requiresStepUp` flag (403 with AUTHZ:STEP_UP_REQUIRED), then
+   * retry the original sensitive request.
+   *
+   * Rate limits:
+   * - 5 attempts per IP per 60s
+   */
+  @UseGuards(SessionAuthGuard)
+  @Post('step-up')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'step-up:ip', limit: 5, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Perform step-up authentication for sensitive actions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Step-up verified. The caller can now retry the original request.',
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 422, description: 'Invalid password' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async stepUp(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ message: string; stepUpVerifiedAt: string }> {
+    const StepUpSchema = z
+      .object({
+        /** Current password to verify identity. */
+        password: z.string().min(1, ErrorCodes.VALIDATION_INPUT_MISSING.code),
+      })
+      .strict()
+
+    const parsed = StepUpSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const userId = req.session.userId
+    const sessionId = req.session.sessionId
+
+    // ── Verify password ────────────────────────────────────────
+    const passwordValid = await this.sessionService.verifyUserPassword(
+      userId,
+      parsed.data.password,
+    )
+
+    if (!passwordValid) {
+      throw new HttpException(
+        { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
+        422,
+      )
+    }
+
+    // ── Set step-up timestamp ──────────────────────────────────
+    await this.sessionService.setStepUpVerifiedTimestamp(sessionId)
+
+    const now = new Date()
+    this.logger.log(
+      `Step-up verified for user ${userId}, session ${sessionId} at ${now.toISOString()}`,
+    )
+
+    return {
+      message: 'Step-up authentication successful.',
+      stepUpVerifiedAt: now.toISOString(),
+    }
   }
 }

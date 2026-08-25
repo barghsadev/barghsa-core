@@ -3,6 +3,7 @@ export { SessionModule } from './session.module.js'
 export { SessionAuthGuard, SessionOptionalGuard } from './session.guard.js'
 export type { AuthenticatedRequest } from './session.guard.js'
 export { CsrfGuard, SkipCsrf } from './csrf.guard.js'
+export { StepUpGuard, RequiresStepUp } from './step-up.guard.js'
 export {
   setSessionCookie,
   clearSessionCookie,

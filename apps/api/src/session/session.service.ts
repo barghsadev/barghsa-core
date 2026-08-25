@@ -28,6 +28,7 @@ export interface ValidatedSession {
   isAdmin: boolean
   expiresAt: Date
   idleDeadline: Date
+  stepUpVerifiedAt: Date | null
 }
 
 /** Device info metadata stored with the session. */
@@ -205,7 +206,8 @@ export class SessionService {
       const result = await pool.query(
         `SELECT s.session_id, s.user_id, s.csrf_token,
                 u.is_admin,
-                s.expires_at, s.idle_deadline, s.revoked_at
+                s.expires_at, s.idle_deadline, s.revoked_at,
+                s.step_up_verified_at
          FROM sessions s
          JOIN users u ON u.user_id = s.user_id
          WHERE s.session_id = $1
@@ -252,6 +254,7 @@ export class SessionService {
         isAdmin: row.is_admin ?? false,
         expiresAt: row.expires_at,
         idleDeadline: row.idle_deadline,
+        stepUpVerifiedAt: row.step_up_verified_at ?? null,
       }
     } catch (err) {
       this.logger.error(`Failed to validate session ${sessionId}: ${String(err)}`)
@@ -544,6 +547,49 @@ export class SessionService {
       )
     } finally {
       client.release()
+    }
+  }
+
+  /**
+   * Step-up authentication window (default: 15 minutes).
+   * Configurable via STEP_UP_WINDOW_MS env var.
+   */
+  static readonly STEP_UP_WINDOW_MS = (() => {
+    const fromEnv = process.env['STEP_UP_WINDOW_MS']
+    if (fromEnv) {
+      const parsed = Number(fromEnv)
+      if (!Number.isNaN(parsed) && parsed > 0) return parsed
+    }
+    return 15 * 60 * 1000 // 15 minutes
+  })()
+
+  /**
+   * Set the step_up_verified_at timestamp on a session.
+   *
+   * Called after successful step-up authentication (T-02.02.04).
+   * Records the current time as the last step-up verification,
+   * which the StepUpGuard checks against the configured window.
+   */
+  async setStepUpVerifiedTimestamp(sessionId: string): Promise<void> {
+    const pool = getDbPool()
+    const now = new Date()
+
+    try {
+      await pool.query(
+        `UPDATE sessions
+         SET step_up_verified_at = $1, updated_at = $1
+         WHERE session_id = $2`,
+        [now, sessionId],
+      )
+      this.logger.log(`Step-up verified for session ${sessionId}`)
+    } catch (err) {
+      this.logger.error(
+        `Failed to set step_up_verified_at for session ${sessionId}: ${String(err)}`,
+      )
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
     }
   }
 
