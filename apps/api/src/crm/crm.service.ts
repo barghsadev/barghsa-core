@@ -101,7 +101,7 @@ export class CrmService {
       LEFT JOIN profiles p ON p.user_id = u.user_id
       ${cursorClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
-      ORDER BY u.created_at DESC
+      ORDER BY u.created_at DESC, u.user_id DESC
       LIMIT $1
     `
 
