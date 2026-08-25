@@ -186,6 +186,16 @@
   "notes": "Tick-207: GLM 5.2 review requested_changes — ORDER BY tiebreaker missing. Fixed in f387f33, pushed, comment posted. Re-entered in_review.",
   "status_history": [
     {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-207"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-207"
+    },
+    {
       "from": "idle",
       "to": "building",
       "at": "tick-189"
