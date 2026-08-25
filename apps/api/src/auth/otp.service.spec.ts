@@ -282,4 +282,35 @@ describe('OtpService', () => {
       }
     })
   })
+
+  describe('createLoginChallenge', () => {
+    const userId = 'user-uuid-v7'
+    const destination = '+989****4567'
+    const ip = '192.168.1.1'
+
+    beforeEach(() => {
+      vi.clearAllMocks()
+      mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
+      mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
+    })
+
+    it('creates a login OTP challenge with user_id', async () => {
+      const result = await service.createLoginChallenge(userId, destination, ip)
+
+      expect(result).toHaveProperty('challengeId')
+      expect(result).toHaveProperty('destination', destination)
+      expect(mockRateLimitService.checkSecurityRateLimit).toHaveBeenCalled()
+      expect(mockPool.query).toHaveBeenCalledTimes(1)
+
+      const sql = mockPool.query.mock.calls[0]![0] as string
+      const params = mockPool.query.mock.calls[0]![1] as unknown[]
+      expect(sql).toContain('INSERT INTO otp_challenges')
+      expect(sql).toContain('user_id')
+      expect(params[3]).toBe(userId) // user_id in 4th position
+      expect(params[1]).toBe(destination)
+      expect(typeof params[0]).toBe('string')
+      expect(typeof params[2]).toBe('string')
+      expect(params[4]).toBe(OtpService.MAX_ATTEMPTS)
+    })
+  })
 })
