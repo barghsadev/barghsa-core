@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
-import { useLocale } from '../../hooks/useLocale.js'
+import { useLocale } from '../hooks/useLocale.js'
 
 interface Profile {
   id: string
