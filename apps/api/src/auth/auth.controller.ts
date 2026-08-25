@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Logger,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common'
+import { randomBytes, createHash } from 'node:crypto'
+import { Controller, Post, HttpCode, HttpStatus, HttpException, Logger, Body, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
 import { z } from 'zod'
@@ -222,8 +213,9 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const userAgent = req.headers['user-agent'] ?? ''
     const deviceFingerprint = parsed.data.trustDevice
-      ? req.headers['user-agent']
+      ? createHash('sha256').update(userAgent).digest('hex')
       : undefined
 
     // Perform login OTP verification → session creation
@@ -233,7 +225,7 @@ export class AuthController {
       ip,
       parsed.data.trustDevice,
       deviceFingerprint,
-      req.headers['user-agent'],
+      userAgent,
     )
 
     // ── Set HttpOnly session cookie ─────────────────────────────────

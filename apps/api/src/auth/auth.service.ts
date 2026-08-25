@@ -180,11 +180,8 @@ export class AuthService {
 
       let requiresOtp = false
 
-      // Staff/admin: mandatory MFA on every new device
-      if (isStaff) {
-        requiresOtp = true
-      } else if (deviceFingerprint) {
-        // Customer: risk-based — check if this device is trusted
+      // Check device trust for all users
+      if (deviceFingerprint) {
         const trustResult = await pool.query(
           `SELECT 1 FROM device_trusts
            WHERE user_id = $1 AND device_fingerprint = $2
@@ -192,7 +189,17 @@ export class AuthService {
            LIMIT 1`,
           [userId, deviceFingerprint],
         )
-        requiresOtp = trustResult.rows.length === 0
+
+        if (trustResult.rows.length > 0) {
+          // Trusted device found — skip OTP for customers
+          requiresOtp = false
+        } else if (isStaff) {
+          // Staff on an untrusted device: mandatory MFA
+          requiresOtp = true
+        } else {
+          // Customer on an untrusted device: risk-based MFA
+          requiresOtp = true
+        }
       } else {
         // No device info provided — always require OTP (conservative)
         requiresOtp = true
