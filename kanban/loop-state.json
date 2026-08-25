@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e04-t-04-01-03--tos-re-acceptance-flow",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/119",
-  "loop_iteration": 203,
-  "fix_attempts": 1,
+  "loop_iteration": 204,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -182,8 +182,8 @@
     "02-auth-users-admin.md#T-04.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T20:57:00Z",
-  "notes": "Tick-203: FIX round 1 for PR #119 (T-04.01.03). Added auto-modal on first non-exempt action, 7 tests for requiresReAcceptance(), removed unused i18n key + import. z-ai/glm-5.2 flagged 2 real majors (no auto-modal, no tests) + 1 false positive (body-vs-path param — backend uses body versionId). CI pass (259 tests). PR comment posted. Re-entering review.",
+  "last_updated": "2026-08-25T21:15:00Z",
+  "notes": "Tick-204: FIX round 2 for PR #119 (T-04.01.03). CI typecheck failed: TS2448 — openReviewModal used before declaration in TosBanner.tsx. Reordered useEffect and useCallback so openReviewModal is defined before the auto-open useEffect. Full local typecheck passes (11/11). Push triggers CI re-run. State remains in_review.",
   "status_history": [
     { "from": "idle", "to": "building", "at": "tick-189" },
     { "from": "building", "to": "in_review", "at": "tick-189" },
@@ -206,6 +206,8 @@
     { "from": "idle", "to": "building", "at": "tick-202" },
     { "from": "building", "to": "in_review", "at": "tick-202" },
     { "from": "in_review", "to": "fixing", "at": "tick-203" },
-    { "from": "fixing", "to": "in_review", "at": "tick-203" }
+    { "from": "fixing", "to": "in_review", "at": "tick-203" },
+    { "from": "in_review", "to": "fixing", "at": "tick-204" },
+    { "from": "fixing", "to": "in_review", "at": "tick-204" }
   ]
 }
