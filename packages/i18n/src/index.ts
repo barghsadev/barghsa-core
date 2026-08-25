@@ -22,6 +22,7 @@ export const fa: I18nDictionary = {
   'error.authz.forbidden': 'دسترسی غیرمجاز',
   'error.authz.insufficient.role': 'نقش کاربری شما مجاز به انجام این عملیات نیست',
   'error.authz.not.resource.owner': 'شما مالک این منبع نیستید',
+  'error.authz.profile.not_verified': 'پروفایل شما تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید',
 
   // ── Not Found ───────────────────────────────────────────
   'error.not_found.resource': 'منبع درخواستی یافت نشد',
@@ -217,6 +218,18 @@ export const fa: I18nDictionary = {
   'onboarding.profile.legal': 'حقوقی',
   'onboarding.profile.legalDesc': 'برای ثبت‌نام به عنوان شخص حقوقی',
   'onboarding.profile.legalDescEn': 'Legal entity registration',
+
+  // ── Verification ───────────────────────────────────────────
+  'verification.banner.title': 'پروفایل شما تأیید نشده است',
+  'verification.banner.verifyNow': 'تأیید کن',
+  'verification.banner.learnMore': 'بیشتر بدانید',
+  'verification.banner.verify': 'تأیید خودکار',
+  'verification.banner.verifying': 'در حال تأیید…',
+  'verification.banner.verified': 'پروفایل شما با موفقیت تأیید شد',
+  'verification.order.blocked.title': 'ثبت سفارش جدید امکان‌پذیر نیست',
+  'verification.order.blocked.description': 'پروفایل شما هنوز تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید.',
+  'verification.order.blocked.support': 'در صورت نیاز به راهنمایی با پشتیبانی تماس بگیرید.',
+  'verification.status.unverified': 'تأیید نشده',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -239,6 +252,7 @@ export const en: I18nDictionary = {
   'error.authz.forbidden': 'Access denied',
   'error.authz.insufficient.role': 'Your role does not have permission for this action',
   'error.authz.not.resource.owner': 'You are not the owner of this resource',
+  'error.authz.profile.not_verified': 'Your profile is not verified. Please verify your profile before placing an order',
 
   // ── Not Found ───────────────────────────────────────────
   'error.not_found.resource': 'Requested resource was not found',
@@ -431,6 +445,18 @@ export const en: I18nDictionary = {
   'onboarding.profile.individualDesc': 'Register as an individual person',
   'onboarding.profile.legal': 'Legal Entity',
   'onboarding.profile.legalDesc': 'Register as a legal entity',
+
+  // ── Verification ───────────────────────────────────────────
+  'verification.banner.title': 'Your profile is not verified',
+  'verification.banner.verifyNow': 'Verify now',
+  'verification.banner.learnMore': 'Learn more',
+  'verification.banner.verify': 'Auto-verify',
+  'verification.banner.verifying': 'Verifying…',
+  'verification.banner.verified': 'Your profile has been verified successfully',
+  'verification.order.blocked.title': 'New orders are not available',
+  'verification.order.blocked.description': 'Your profile has not been verified yet. Please verify your profile before placing a new order.',
+  'verification.order.blocked.support': 'Contact support for assistance.',
+  'verification.status.unverified': 'Unverified',
 };
 
 /** Supported locale codes */
