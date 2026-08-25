@@ -811,10 +811,23 @@ export class AuthService {
 
       // 4. Link any pending invitations for the new user's username
       // (T-05.04.02 — auto-link registered user to pending invitations)
+      // Normalize destination to match how createInvitation stores it
+      const inviteUsername = (() => {
+        const raw = (row.destination as string ?? '').trim()
+        // Iranian mobile 09xxxxxxxxx → +98xxxxxxxxx
+        const mobileRe = /^09\d{9}$/
+        if (mobileRe.test(raw)) return `+98${raw.slice(1)}`
+        // Already international
+        if (raw.startsWith('+') && /^\+\d{7,15}$/.test(raw)) return raw
+        // Email
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) return raw.toLowerCase()
+        return raw
+      })()
+
       const pendingInvites = await client.query(
         `SELECT id, profile_id, role FROM profile_invitations
          WHERE username = $1 AND status = 'Pending' AND (expires_at IS NULL OR expires_at > NOW())`,
-        [row.destination],
+        [inviteUsername],
       )
 
       if (pendingInvites.rows.length > 0) {

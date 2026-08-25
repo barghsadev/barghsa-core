@@ -312,14 +312,27 @@ export class AgentsService {
       )
     }
 
-    // ── Check: invitee must not already be an agent ─────────
-    let inviteeUserId: string | null = null
+    // ── Check: invitee must not already be a pending invite ──
+    // Check runs for both registered and unregistered users
+    const pendingInvite = await pool.query(
+      `SELECT id FROM profile_invitations
+       WHERE profile_id = $1 AND username = $2 AND status = 'Pending'`,
+      [profileId, normalised],
+    )
+    if (pendingInvite.rows.length > 0) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'A pending invitation already exists for this user' },
+        409,
+      )
+    }
+
+    // ── Check: invitee must not already be an agent (only if registered) ──
     const userResult = await pool.query(
       `SELECT user_id FROM users WHERE username = $1`,
       [normalised],
     )
     if (userResult.rows.length > 0) {
-      inviteeUserId = userResult.rows[0].user_id as string
+      const inviteeUserId = userResult.rows[0].user_id as string
 
       const existingAgent = await pool.query(
         `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
@@ -328,18 +341,6 @@ export class AgentsService {
       if (existingAgent.rows.length > 0) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'This user is already an agent of this profile' },
-          409,
-        )
-      }
-
-      const pendingInvite = await pool.query(
-        `SELECT id FROM profile_invitations
-         WHERE profile_id = $1 AND username = $2 AND status = 'Pending'`,
-        [profileId, normalised],
-      )
-      if (pendingInvite.rows.length > 0) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'A pending invitation already exists for this user' },
           409,
         )
       }
