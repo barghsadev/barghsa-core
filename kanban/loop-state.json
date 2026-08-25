@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-05.04.01",
   "current_task_id": "T-05.04.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-04-01--agent-list-for-legal-entity",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/131",
   "loop_iteration": 229,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -193,9 +193,19 @@
     "02-auth-users-admin.md#T-05.03.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:55:00Z",
-  "notes": "Tick-229: Starting T-05.04.01 — Agent list for legal entity.",
+  "last_updated": "2026-08-26T02:01:00Z",
+  "notes": "Tick-229: Built and opened PR #131 for T-05.04.01 — Agent list for legal entity. 372/372 tests, tsc clean. Waiting for review.",
   "status_history": [
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-229"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-229"
+    },
     {
       "from": "in_review",
       "to": "building",
