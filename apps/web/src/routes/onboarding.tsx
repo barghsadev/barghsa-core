@@ -53,8 +53,11 @@ function OnboardingPage() {
           replace: true,
         })
       } else {
-        // Legal profile — will be handled in T-03.02.03
-        router.navigate({ to: '/', replace: true })
+        router.navigate({
+          to: '/onboarding/legal/$profileId',
+          params: { profileId: body.profileId },
+          replace: true,
+        })
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'

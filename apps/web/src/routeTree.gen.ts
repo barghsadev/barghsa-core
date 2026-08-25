@@ -33,6 +33,7 @@ import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
 import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
+import { Route as OnboardingLegalProfileIdRouteImport } from './routes/onboarding/legal/$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -155,6 +156,12 @@ const OnboardingIndividualProfileIdRoute =
     path: '/individual/$profileId',
     getParentRoute: () => OnboardingRoute,
   } as any)
+const OnboardingLegalProfileIdRoute =
+  OnboardingLegalProfileIdRouteImport.update({
+    id: '/legal/$profileId',
+    path: '/legal/$profileId',
+    getParentRoute: () => OnboardingRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
+  '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -204,6 +212,7 @@ export interface FileRoutesByTo {
   '/electricity': typeof ElectricityIndexRoute
   '/register': typeof RegisterIndexRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
+  '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
+  '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/electricity/'
     | '/register/'
     | '/onboarding/individual/$profileId'
+    | '/onboarding/legal/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/electricity'
     | '/register'
     | '/onboarding/individual/$profileId'
+    | '/onboarding/legal/$profileId'
   id:
     | '__root__'
     | '/'
@@ -308,6 +320,7 @@ export interface FileRouteTypes {
     | '/electricity/'
     | '/register/'
     | '/onboarding/individual/$profileId'
+    | '/onboarding/legal/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -498,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingIndividualProfileIdRouteImport
       parentRoute: typeof OnboardingRoute
     }
+    '/onboarding/legal/$profileId': {
+      id: '/onboarding/legal/$profileId'
+      path: '/legal/$profileId'
+      fullPath: '/onboarding/legal/$profileId'
+      preLoaderRoute: typeof OnboardingLegalProfileIdRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
   }
 }
 
@@ -532,11 +552,13 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
 interface OnboardingRouteChildren {
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
   OnboardingIndividualProfileIdRoute: typeof OnboardingIndividualProfileIdRoute
+  OnboardingLegalProfileIdRoute: typeof OnboardingLegalProfileIdRoute
 }
 
 const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingCompleteRoute: OnboardingCompleteRoute,
   OnboardingIndividualProfileIdRoute: OnboardingIndividualProfileIdRoute,
+  OnboardingLegalProfileIdRoute: OnboardingLegalProfileIdRoute,
 }
 
 const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(

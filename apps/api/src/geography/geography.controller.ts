@@ -70,4 +70,32 @@ export class GeographyController {
   async getCities(@Param('id') provinceId: string) {
     return this.geographyService.getCitiesByProvince(provinceId)
   }
+
+  /**
+   * GET /api/geography/company-types
+   *
+   * Returns all company/entity types ordered by Persian name
+   * (T-03.02.03 — Legal profile form).
+   */
+  @Get('company-types')
+  @ApiOperation({ summary: 'List all company types' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of company types.',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          nameEn: { type: 'string' },
+          nameFa: { type: 'string' },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async getCompanyTypes() {
+    return this.geographyService.getCompanyTypes()
+  }
 }
