@@ -104,13 +104,16 @@ export class SessionService {
       await client.query('BEGIN')
 
       // 1. Enforce session limit per user
-      const countResult = await client.query(
-        `SELECT COUNT(*) AS cnt
+      // Lock all active sessions for this user to prevent concurrent
+      // createSession calls from racing past the limit check.
+      const lockResult = await client.query(
+        `SELECT session_id
          FROM sessions
-         WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()`,
+         WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()
+         FOR UPDATE`,
         [userId],
       )
-      const currentCount = Number(countResult.rows[0]?.cnt ?? 0)
+      const currentCount = lockResult.rows.length
       if (currentCount >= MAX_SESSIONS_PER_USER) {
         // Revoke the oldest active session to make room
         await client.query(
