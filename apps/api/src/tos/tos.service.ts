@@ -34,6 +34,7 @@ export class TosService {
       `SELECT id, version_id, content_fa, content_en, is_active, published_at, created_at, updated_at
        FROM tos_versions
        WHERE is_active = true
+       ORDER BY published_at DESC
        LIMIT 1`,
     )
 

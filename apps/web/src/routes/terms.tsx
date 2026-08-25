@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { t, type Locale } from '@barghsa/i18n'
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
@@ -12,10 +12,14 @@ interface CurrentTosResponse {
 
 export const Route = createFileRoute('/terms')({
   component: TermsPage,
+  validateSearch: (search: Record<string, unknown>): { lang?: 'fa' | 'en' } => ({
+    ...(search.lang === 'en' ? { lang: 'en' as const } : {}),
+  }),
 })
 
 function TermsPage() {
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const { lang } = useSearch({ from: '/terms' })
+  const locale: Locale = lang ?? 'fa'
   const isRtl = locale === 'fa'
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon
 
