@@ -35,6 +35,8 @@ import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
 import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
 import { ForgotPasswordSchema } from './dto/forgot-password.dto.js'
+import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
+import { ResetPasswordSchema } from './dto/reset-password.dto.js'
 import { SessionService } from '../session/session.service.js'
 import {
   SESSION_COOKIE_NAME,
@@ -405,6 +407,69 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.authService.forgotPassword(parsed.data, ip)
+  }
+
+  /**
+   * POST /api/auth/reset-password
+   *
+   * Verifies the OTP from the forgot-password flow and resets the user's
+   * password. On success, all existing sessions and refresh tokens are
+   * invalidated — the user must log in again with the new password.
+   *
+   * The OTP challenge must have a `user_id` set (forgot-password challenges
+   * link to the user). Challenges created during registration or login step-up
+   * are rejected.
+   *
+   * Rate limits:
+   * - 5 reset attempts per destination per hour
+   * - 5 reset attempts per IP per hour
+   */
+  @SkipCsrf()
+  @Post('reset-password')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000 })
+  @RateLimit({ namespace: 'reset-password:ip', limit: 5, windowMs: 3_600_000 })
+  @ApiOperation({ summary: 'Reset password after OTP verification' })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', description: 'Success message for the frontend toast.' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Invalid, expired, or max OTP attempts exceeded' })
+  @ApiResponse({ status: 409, description: 'OTP already consumed' })
+  @ApiResponse({ status: 422, description: 'Weak password or password reused' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async resetPassword(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<ResetPasswordResponse> {
+    const parsed = ResetPasswordSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
+
+      if (message === ErrorCodes.AUTH_REGISTER_WEAK_PASSWORD.code) {
+        throw new HttpException(
+          { statusCode: 422, error: message },
+          422,
+        )
+      }
+
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.resetPassword(parsed.data, ip)
   }
 
   /**
