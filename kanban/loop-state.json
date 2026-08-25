@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-02.02.01",
-  "current_task_id": "T-02.02.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-02-02-01--session-creation-cookie",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/89",
-  "loop_iteration": 149,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 150,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -156,11 +156,12 @@
     "01-platform-infrastructure.md#T-02.04.03",
     "01-platform-infrastructure.md#T-02.04.04",
     "01-platform-infrastructure.md#T-02.04.05",
-    "01-platform-infrastructure.md#T-02.04.06"
+    "01-platform-infrastructure.md#T-02.04.06",
+    "02-auth-users-admin.md#T-02.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T08:20:00",
-  "notes": "Tick-149: Fixed CI build (AuthModule missing SessionModule import), fixed pre-existing seed test (missing password_change_token columns). Pushed review to PR #89. z-ai/glm-5.2 review complete — major finding (FOR UPDATE on token lookup) already addressed by existing code. Minor items deferred. CI re-running.",
+  "last_updated": "2026-08-25T08:33:00",
+  "notes": "Tick-150: Fixed CI typecheck errors (refreshToken in LoginVerifyResponse, DeviceInfo undefined handling, row typo). CI passed. PR #89 merged. T-02.02.01 complete. Loop idle; next task: 02-auth-users-admin.md#T-02.02.02 (Session revocation).",
   "status_history": [
     { "from": "in_review", "to": "idle", "at": "tick-144" },
     { "from": "building", "to": "in_review", "at": "tick-144" },
@@ -172,6 +173,7 @@
     { "from": "idle", "to": "building", "at": "tick-147" },
     { "from": "building", "to": "in_review", "at": "tick-147" },
     { "from": "in_review", "to": "fixing", "at": "tick-148" },
-    { "from": "fixing", "to": "in_review", "at": "tick-148" }
+    { "from": "fixing", "to": "in_review", "at": "tick-148" },
+    { "from": "in_review", "to": "idle", "at": "tick-150" }
   ]
 }
