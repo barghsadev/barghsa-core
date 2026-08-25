@@ -6,7 +6,7 @@
   "current_branch": "feat/e02-t-05-02-01--crm-profile-detail",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/123",
   "loop_iteration": 212,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -185,8 +185,8 @@
     "02-auth-users-admin.md#T-05.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T22:50:00Z",
-  "notes": "Tick-212: PR #123 (T-05.02.01 CRM profile detail) open and ready. Backend API + frontend tabbed page. in_review.",
+  "last_updated": "2026-08-25T22:26:00Z",
+  "notes": "Tick-212: PR #123 (T-05.02.01) fixed — added tests, Agent Invites/Verification History tabs. GLM 5.2 major findings addressed. Back in in_review.",
   "status_history": [
     {
       "from": "idle",
@@ -195,6 +195,16 @@
     },
     {
       "from": "building",
+      "to": "in_review",
+      "at": "tick-212"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-212"
+    },
+    {
+      "from": "fixing",
       "to": "in_review",
       "at": "tick-212"
     },
