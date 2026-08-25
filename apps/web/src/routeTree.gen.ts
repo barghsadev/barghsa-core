@@ -31,6 +31,7 @@ import { Route as ElectricityOrderRouteImport } from './routes/electricity/order
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as SettingsSecurityRouteImport } from './routes/settings/security'
+import { Route as OnboardingIndividualProfileIdRouteImport } from './routes/onboarding/individual/$profileId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -142,6 +143,12 @@ const SettingsSecurityRoute = SettingsSecurityRouteImport.update({
   path: '/settings/security',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingIndividualProfileIdRoute =
+  OnboardingIndividualProfileIdRouteImport.update({
+    id: '/individual/$profileId',
+    path: '/individual/$profileId',
+    getParentRoute: () => OnboardingRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -152,7 +159,7 @@ export interface FileRoutesByFullPath {
   '/electricity': typeof ElectricityRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -174,7 +182,7 @@ export interface FileRoutesByTo {
   '/documents': typeof DocumentsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
   '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
   '/videos': typeof VideosRoute
@@ -187,6 +195,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/electricity': typeof ElectricityIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -198,7 +207,7 @@ export interface FileRoutesById {
   '/electricity': typeof ElectricityRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRoute
+  '/onboarding': typeof OnboardingRouteWithChildren
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
   '/support': typeof SupportRoute
@@ -212,6 +221,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/electricity/': typeof ElectricityIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/electricity/'
     | '/register/'
+    | '/onboarding/individual/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/electricity'
     | '/register'
+    | '/onboarding/individual/$profileId'
   id:
     | '__root__'
     | '/'
@@ -283,6 +295,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/electricity/'
     | '/register/'
+    | '/onboarding/individual/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -294,7 +307,7 @@ export interface RootRouteChildren {
   ElectricityRoute: typeof ElectricityRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
-  OnboardingRoute: typeof OnboardingRoute
+  OnboardingRoute: typeof OnboardingRouteWithChildren
   RegisterRoute: typeof RegisterRouteWithChildren
   SavingsRoute: typeof SavingsRoute
   SupportRoute: typeof SupportRoute
@@ -459,6 +472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsSecurityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/individual/$profileId': {
+      id: '/onboarding/individual/$profileId'
+      path: '/individual/$profileId'
+      fullPath: '/onboarding/individual/$profileId'
+      preLoaderRoute: typeof OnboardingIndividualProfileIdRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
   }
 }
 
@@ -490,6 +510,18 @@ const ElectricityRouteWithChildren = ElectricityRoute._addFileChildren(
   ElectricityRouteChildren,
 )
 
+interface OnboardingRouteChildren {
+  OnboardingIndividualProfileIdRoute: typeof OnboardingIndividualProfileIdRoute
+}
+
+const OnboardingRouteChildren: OnboardingRouteChildren = {
+  OnboardingIndividualProfileIdRoute: OnboardingIndividualProfileIdRoute,
+}
+
+const OnboardingRouteWithChildren = OnboardingRoute._addFileChildren(
+  OnboardingRouteChildren,
+)
+
 interface RegisterRouteChildren {
   RegisterVerifyRoute: typeof RegisterVerifyRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
@@ -513,7 +545,7 @@ const rootRouteChildren: RootRouteChildren = {
   ElectricityRoute: ElectricityRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
-  OnboardingRoute: OnboardingRoute,
+  OnboardingRoute: OnboardingRouteWithChildren,
   RegisterRoute: RegisterRouteWithChildren,
   SavingsRoute: SavingsRoute,
   SupportRoute: SupportRoute,

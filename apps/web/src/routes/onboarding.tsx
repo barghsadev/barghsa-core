@@ -43,13 +43,19 @@ function OnboardingPage() {
         throw new Error(body.message ?? `HTTP ${response.status}`)
       }
 
-      await response.json()
+      const body = await response.json() as { profileId: string }
 
-      // Profile created — redirect to the app root. The app-level profile
-      // check (T-03.01.01) will detect the profile and let the user proceed.
-      // Future tasks (T-03.02.02, T-03.02.03) will add the dedicated profile
-      // form pages and redirect there instead.
-      router.navigate({ to: '/', replace: true })
+      // Navigate to the appropriate profile form
+      if (selectedType === 'INDIVIDUAL') {
+        router.navigate({
+          to: '/onboarding/individual/$profileId',
+          params: { profileId: body.profileId },
+          replace: true,
+        })
+      } else {
+        // Legal profile — will be handled in T-03.02.03
+        router.navigate({ to: '/', replace: true })
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(message)

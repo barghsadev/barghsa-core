@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Body,
+  Param,
   HttpCode,
   HttpException,
   Logger,
@@ -79,6 +80,151 @@ export class OnboardingController {
       profileId: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
+    }
+  }
+
+  /**
+   * POST /api/onboarding/individual/:profileId
+   *
+   * Saves the individual profile fields (T-03.02.02). Expects the full
+   * individual profile form data including the main address. Transitions
+   * the profile from DRAFT to ACTIVE on success.
+   */
+  @Post('individual/:profileId')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'onboarding:individual:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Save individual profile data' })
+  @ApiResponse({
+    status: 200,
+    description: 'Individual profile saved.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        profileType: { type: 'string' },
+        isDefault: { type: 'boolean' },
+        status: { type: 'string' },
+        title: { type: 'string' },
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+        nationalId: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  @ApiResponse({ status: 409, description: 'National ID already registered' })
+  async saveIndividualProfile(
+    @Param('profileId') profileId: string,
+    @Body() body: {
+      title?: string
+      firstName: string
+      lastName: string
+      nationalId: string
+      provinceId: string
+      cityId: string
+      fullAddress: string
+      postalCode: string
+    },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    // Required field validation
+    if (!body.firstName?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'First name is required' },
+        400,
+      )
+    }
+    if (!body.lastName?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Last name is required' },
+        400,
+      )
+    }
+    if (!body.nationalId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National ID is required' },
+        400,
+      )
+    }
+    if (!body.provinceId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
+        400,
+      )
+    }
+    if (!body.cityId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'City is required' },
+        400,
+      )
+    }
+    if (!body.fullAddress?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Full address is required' },
+        400,
+      )
+    }
+    if (!body.postalCode?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Postal code is required' },
+        400,
+      )
+    }
+
+    // Field length validation
+    if (body.firstName.length > 100) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'First name must be 100 characters or fewer' },
+        400,
+      )
+    }
+    if (body.lastName.length > 100) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Last name must be 100 characters or fewer' },
+        400,
+      )
+    }
+    if (body.fullAddress.length > 500) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
+        400,
+      )
+    }
+    if (body.title && body.title.length > 50) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Title must be 50 characters or fewer' },
+        400,
+      )
+    }
+
+    const profile = await this.profilesService.saveIndividualProfile(
+      req.session.userId,
+      profileId,
+      {
+        title: body.title?.trim() || undefined,
+        firstName: body.firstName.trim(),
+        lastName: body.lastName.trim(),
+        nationalId: body.nationalId.trim(),
+        provinceId: body.provinceId.trim(),
+        cityId: body.cityId.trim(),
+        fullAddress: body.fullAddress.trim(),
+        postalCode: body.postalCode.trim(),
+      },
+    )
+
+    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`)
+
+    return {
+      id: profile.id,
+      profileType: profile.profileType,
+      isDefault: profile.isDefault,
+      status: 'ACTIVE',
+      title: profile.title,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      nationalId: profile.nationalId,
     }
   }
 }

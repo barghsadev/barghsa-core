@@ -13,9 +13,10 @@ import { CspReportModule } from './csp-report/csp-report.module.js'
 import { AuthModule } from './auth/index.js'
 import { SessionModule } from './session/index.js'
 import { ProfilesModule } from './profiles/index.js'
+import { GeographyModule } from './geography/geography.module.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
