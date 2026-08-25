@@ -145,6 +145,17 @@ export const fa: I18nDictionary = {
   'auth.forgotPassword.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
   'auth.forgotPassword.error.rateLimited': 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید',
 
+  // ── Auth Pages — Account Recovery Support ────────────────
+  'auth.support.title': 'پشتیبانی بازیابی حساب',
+  'auth.support.subtitle': 'اگر دیگر به ایمیل یا شماره تلفن ثبت‌نامی خود دسترسی ندارید، ما اینجا هستیم تا کمک کنیم.',
+  'auth.support.steps': 'بازیابی حساب نیاز به تأیید هویت و بررسی کامل تاریخچه حساب دارد. تیم پشتیبانی شما را در این فرآیند راهنمایی خواهد کرد.',
+  'auth.support.contactEmail': 'با ما تماس بگیرید:',
+  'auth.support.emailAddress': 'support@barghsa.com',
+  'auth.support.contactPhone': 'یا با شماره زیر تماس بگیرید:',
+  'auth.support.phoneNumber': '۰۲۱-۱۲۳۴۵۶۷۸',
+  'auth.support.responseTime': 'زمان پاسخگویی: حداکثر ۲۴ ساعت',
+  'auth.support.backToLogin': 'بازگشت به فرم ورود',
+
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'خطای داخلی سرور',
   'error.internal.database': 'خطای پایگاه داده',
@@ -338,6 +349,17 @@ export const en: I18nDictionary = {
   'auth.forgotPassword.helpLink': 'Having trouble? Contact support',
   'auth.forgotPassword.error.generic': 'An error occurred. Please try again',
   'auth.forgotPassword.error.rateLimited': 'Too many attempts. Please try again later',
+
+  // ── Auth Pages — Account Recovery Support ────────────────
+  'auth.support.title': 'Account Recovery Support',
+  'auth.support.subtitle': "If you no longer have access to your registered email or phone number, we're here to help.",
+  'auth.support.steps': 'Account recovery requires identity verification and a full audit history. Our support team will guide you through the process.',
+  'auth.support.contactEmail': 'Contact us at:',
+  'auth.support.emailAddress': 'support@barghsa.com',
+  'auth.support.contactPhone': 'Or call us:',
+  'auth.support.phoneNumber': '+98 21 1234 5678',
+  'auth.support.responseTime': 'Response time: within 24 hours',
+  'auth.support.backToLogin': 'Back to login',
 
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'Internal server error',
