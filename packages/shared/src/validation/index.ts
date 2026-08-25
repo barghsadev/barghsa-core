@@ -82,3 +82,5 @@ export function validateLegalNationalIdentifier(value: string): boolean {
 
   return true
 }
+
+export { normalizeUsername } from './normalize-username.js'

@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 231,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.02",
+  "current_task_id": "T-05.04.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-02--agent-invitation-flow",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/132",
+  "loop_iteration": 233,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -194,9 +194,29 @@
     "02-auth-users-admin.md#T-05.04.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T02:13:00Z",
-  "notes": "Tick-231: PR #131 (T-05.04.01 - Agent list for legal entity) merged. 372/372 tests, tsc clean, GLM-5.2 approve. Back to idle.",
+  "last_updated": "2026-08-26T02:39:00Z",
+  "notes": "Tick-233: Fix round 2 for T-05.04.02 (PR #132). Extracted normalizeUsername to shared, reordered permission check, wrapped registration hook in try/catch, added tests. 381/381 tests, tsc clean. Next: re-review.",
   "status_history": [
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "tick-232"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "tick-232"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "tick-232"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-232"
+    },
     {
       "from": "in_review",
       "to": "idle",
@@ -266,6 +286,11 @@
       "from": "idle",
       "to": "building",
       "at": "tick-229"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-233"
     }
   ]
 }

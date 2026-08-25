@@ -1,5 +1,54 @@
-import { describe, it, expect } from 'vitest'
-import { validateNationalId, validatePostalCode, validateLegalNationalIdentifier } from './index.js'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { validateNationalId, validatePostalCode, validateLegalNationalIdentifier, normalizeUsername } from './index.js'
+
+describe('normalizeUsername', () => {
+  it('converts Iranian mobile 09xxxxxxxxx to E.164', () => {
+    expect(normalizeUsername('09121234567')).toBe('+989121234567')
+  })
+
+  it('converts Iranian mobile 00989xxxxxxxxx to E.164', () => {
+    expect(normalizeUsername('00989121234567')).toBe('+989121234567')
+  })
+
+  it('converts Iranian mobile 989xxxxxxxxx to E.164', () => {
+    expect(normalizeUsername('989121234567')).toBe('+989121234567')
+  })
+
+  it('passes through already E.164 Iranian mobile', () => {
+    expect(normalizeUsername('+989121234567')).toBe('+989121234567')
+  })
+
+  it('lowercases email', () => {
+    expect(normalizeUsername('User@Example.COM')).toBe('user@example.com')
+  })
+
+  it('passes through already lowercase email', () => {
+    expect(normalizeUsername('user@example.com')).toBe('user@example.com')
+  })
+
+  it('passes through international numbers starting with +', () => {
+    expect(normalizeUsername('+447911123456')).toBe('+447911123456')
+  })
+
+  it('returns null for empty string', () => {
+    expect(normalizeUsername('')).toBe(null)
+  })
+
+  it('returns null for whitespace-only string', () => {
+    expect(normalizeUsername('   ')).toBe(null)
+  })
+
+  it('returns null for unrecognisable input', () => {
+    expect(normalizeUsername('not-a-phone-or-email')).toBe(null)
+    expect(normalizeUsername('@')).toBe(null)
+    expect(normalizeUsername('123')).toBe(null)
+  })
+
+  it('trims whitespace before normalizing', () => {
+    expect(normalizeUsername('  09121234567  ')).toBe('+989121234567')
+    expect(normalizeUsername('  User@Example.COM  ')).toBe('user@example.com')
+  })
+})
 
 describe('validateNationalId', () => {
   it('accepts a valid Iranian national ID', () => {
