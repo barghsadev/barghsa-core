@@ -137,6 +137,14 @@ export const ErrorCodes = {
     severity: 'info' as ErrorSeverity,
   },
 
+  // ── Forgot Password ─────────────────────────────────
+  AUTH_FORGOT_PASSWORD_SENT: {
+    code: 'AUTH:FORGOT_PASSWORD:SENT',
+    httpStatus: 200,
+    messageKey: 'auth.forgotPassword.sent',
+    severity: 'info' as ErrorSeverity,
+  },
+
   // ── Authorization ───────────────────────────────────────
   AUTHZ_FORBIDDEN: {
     code: 'AUTHZ:FORBIDDEN',

@@ -8,6 +8,7 @@ import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
 import type { RegisterVerifyResponse } from './dto/otp.dto.js'
 import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
 import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
+import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
 import { OtpService } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
 
@@ -414,6 +415,68 @@ export class AuthService {
       )
     } finally {
       client.release()
+    }
+  }
+
+  /**
+   * Initiate a forgot-password flow (T-02.03.01).
+   *
+   * Accepts a normalized username (email or E.164 phone). Looks up the user
+   * and, if found, creates an OTP challenge. The response is always generic
+   * ("If an account exists, an OTP has been sent") to prevent user enumeration.
+   *
+   * Rate limits are enforced per-destination and per-IP (5 starts per hour).
+   */
+  async forgotPassword(
+    input: ForgotPasswordInput,
+    ip: string,
+  ): Promise<ForgotPasswordResponse> {
+    const pool = getDbPool()
+
+    try {
+      // Look up user by normalized username
+      const userResult = await pool.query(
+        `SELECT user_id, username FROM users WHERE username = $1`,
+        [input.username],
+      )
+
+      if (userResult.rows.length > 0) {
+        // User found — create OTP challenge linked to the user
+        const userId = userResult.rows[0].user_id
+
+        await this.otpService.createLoginChallenge(
+          userId,
+          input.username,
+          ip,
+        )
+
+        this.logger.log(`Forgot-password OTP sent for user ${userId} from ${ip}`)
+      } else {
+        // User not found — still return generic success (no enumeration)
+        this.logger.log(
+          `Forgot-password requested for unknown username ${input.username} from ${ip}`,
+        )
+      }
+
+      // Always return generic success
+      return {
+        sent: true,
+        message: 'If an account exists, an OTP has been sent.',
+      }
+    } catch (err) {
+      // Re-throw rate-limit HttpExceptions
+      if (err instanceof HttpException) throw err
+
+      this.logger.error(
+        `Forgot-password failed for ${input.username}: ${String(err)}`,
+      )
+      throw new HttpException(
+        {
+          statusCode: ErrorCodes.INTERNAL_SERVER.httpStatus,
+          error: ErrorCodes.INTERNAL_SERVER.code,
+        },
+        ErrorCodes.INTERNAL_SERVER.httpStatus,
+      )
     }
   }
 

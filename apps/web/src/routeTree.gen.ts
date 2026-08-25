@@ -15,6 +15,7 @@ import { Route as AiRouteImport } from './routes/ai'
 import { Route as ChartsRouteImport } from './routes/charts'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as ElectricityRouteImport } from './routes/electricity'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SavingsRouteImport } from './routes/savings'
@@ -57,6 +58,11 @@ const DocumentsRoute = DocumentsRouteImport.update({
 const ElectricityRoute = ElectricityRouteImport.update({
   id: '/electricity',
   path: '/electricity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/ai': typeof AiRoute
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/savings': typeof SavingsRoute
   '/videos': typeof VideosRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/charts': typeof ChartsRoute
   '/documents': typeof DocumentsRoute
   '/electricity': typeof ElectricityRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRouteWithChildren
   '/savings': typeof SavingsRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/forgot-password'
     | '/login'
     | '/register'
     | '/savings'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/ai'
     | '/charts'
     | '/documents'
+    | '/forgot-password'
     | '/login'
     | '/savings'
     | '/videos'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/documents'
     | '/electricity'
+    | '/forgot-password'
     | '/login'
     | '/register'
     | '/savings'
@@ -256,6 +268,7 @@ export interface RootRouteChildren {
   ChartsRoute: typeof ChartsRoute
   DocumentsRoute: typeof DocumentsRoute
   ElectricityRoute: typeof ElectricityRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRouteWithChildren
   SavingsRoute: typeof SavingsRoute
@@ -306,6 +319,13 @@ declare module '@tanstack/react-router' {
       path: '/electricity'
       fullPath: '/electricity'
       preLoaderRoute: typeof ElectricityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChartsRoute: ChartsRoute,
   DocumentsRoute: DocumentsRoute,
   ElectricityRoute: ElectricityRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRouteWithChildren,
   SavingsRoute: SavingsRoute,

@@ -33,6 +33,8 @@ import {
 import type { ForceChangePasswordInput } from './dto/force-change-password.dto.js'
 import { ForceChangePasswordSchema } from './dto/force-change-password.dto.js'
 import { OtpService } from './otp.service.js'
+import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
+import { ForgotPasswordSchema } from './dto/forgot-password.dto.js'
 import { SessionService } from '../session/session.service.js'
 import {
   SESSION_COOKIE_NAME,
@@ -356,6 +358,53 @@ export class AuthController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.authService.forceChangePassword(parsed.data, ip)
+  }
+
+  /**
+   * POST /api/auth/forgot-password
+   *
+   * Initiates the forgot-password flow by sending an OTP to the user's
+   * registered destination, if the username exists. Response is always
+   * generic to prevent user enumeration.
+   *
+   * Rate limits:
+   * - 5 attempts per destination per hour
+   * - 5 attempts per IP per hour
+   */
+  @SkipCsrf()
+  @Post('forgot-password')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000 })
+  @RateLimit({ namespace: 'forgot-password:ip', limit: 5, windowMs: 3_600_000 })
+  @ApiOperation({ summary: 'Initiate forgot-password OTP flow' })
+  @ApiResponse({
+    status: 200,
+    description: 'Always returns generic success.',
+    schema: {
+      type: 'object',
+      properties: {
+        sent: { type: 'boolean' },
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async forgotPassword(
+    @Body() rawBody: unknown,
+    @Req() req: Request,
+  ): Promise<ForgotPasswordResponse> {
+    const parsed = ForgotPasswordSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      // Always return generic success — never reveal invalid input
+      return {
+        sent: true,
+        message: 'If an account exists, an OTP has been sent.',
+      }
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.forgotPassword(parsed.data, ip)
   }
 
   /**
