@@ -565,6 +565,18 @@ export class ProfilesService {
 
       const isMain = data.mainAddress === true && !hasMainAddress
 
+      // If user explicitly requested main but one already exists, error
+      if (data.mainAddress === true && hasMainAddress) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'A main address already exists. Use the set-main endpoint to change the main address.',
+          },
+          400,
+        )
+      }
+
       const result = await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
          VALUES ($1, $2, $3, $4, $5, $6)
@@ -663,7 +675,6 @@ export class ProfilesService {
       }
 
       if (updates.length === 0) {
-        await client.query('ROLLBACK')
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'No fields to update' },
           400,
