@@ -191,6 +191,26 @@ export const ErrorCodes = {
     severity: 'debug' as ErrorSeverity,
   },
 
+  // ── CRM / Business Constraints ──────────────────────────
+  CRM_PROFILE_DELETION_BLOCKED: {
+    code: 'CRM:PROFILE:DELETION_BLOCKED',
+    httpStatus: 409,
+    messageKey: 'crm.profile.deletion.blocked',
+    severity: 'info' as ErrorSeverity,
+  },
+  CRM_PROFILE_ALREADY_ARCHIVED: {
+    code: 'CRM:PROFILE:ALREADY_ARCHIVED',
+    httpStatus: 409,
+    messageKey: 'crm.profile.already_archived',
+    severity: 'info' as ErrorSeverity,
+  },
+  CRM_PROFILE_LAST_OWNER: {
+    code: 'CRM:PROFILE:LAST_OWNER',
+    httpStatus: 409,
+    messageKey: 'crm.profile.last_owner',
+    severity: 'info' as ErrorSeverity,
+  },
+
   // ── CSRF ─────────────────────────────────────────────────
   AUTHZ_CSRF_INVALID: {
     code: 'AUTHZ:CSRF_TOKEN_INVALID',
