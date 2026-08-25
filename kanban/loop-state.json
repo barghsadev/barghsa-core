@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-05.02.01",
-  "current_task_id": "T-05.02.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-05-02-01--crm-profile-detail",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/123",
-  "loop_iteration": 213,
-  "fix_attempts": 2,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 214,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -182,11 +182,12 @@
     "02-auth-users-admin.md#T-04.01.03",
     "02-auth-users-admin.md#T-05.01.01",
     "01-platform-infrastructure.md#T-05.03.05",
-    "02-auth-users-admin.md#T-05.01.02"
+    "02-auth-users-admin.md#T-05.01.02",
+    "02-auth-users-admin.md#T-05.02.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T22:47:00Z",
-  "notes": "Tick-213: PR #123 (T-05.02.01) fix round 2 — nav link fixed, border-inset-b fixed, i18n/RTL wired. CI triggered; awaiting review.",
+  "last_updated": "2026-08-25T22:52:00Z",
+  "notes": "Tick-214: PR #123 (T-05.02.01) verified merged. State reset to idle. Next: T-05.02.02 (Staff profile editing, L).",
   "status_history": [
     {
       "from": "idle",
@@ -372,6 +373,11 @@
       "from": "fixing",
       "to": "in_review",
       "at": "tick-206"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "tick-214"
     }
   ]
 }
