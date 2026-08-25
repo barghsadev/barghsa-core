@@ -51,6 +51,20 @@ jobs:
           else
             pnpm test
           fi
+      - name: Run coverage with threshold enforcement
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm turbo run test:coverage --filter="...[origin/main]"
+          else
+            pnpm test:coverage
+          fi
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 14
       - name: Report flaky test count
         id: flaky-check
         run: ./scripts/check-flaky-tests.sh
