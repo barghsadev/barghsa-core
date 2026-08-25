@@ -32,6 +32,50 @@ export const SESSION_COOKIE_SAMESITE = 'lax' as const
 export const SESSION_COOKIE_PATH = '/'
 
 /**
+ * CSRF token cookie name.
+ * Non-HttpOnly so JavaScript can read it and send as X-CSRF-Token header.
+ * SameSite=Strict provides browser-level CSRF defense as secondary layer.
+ */
+export const CSRF_COOKIE_NAME = 'barghsa_csrf'
+
+/**
+ * Set the CSRF token cookie on the response.
+ *
+ * Unlike the session and refresh cookies, this one is NOT HttpOnly so the
+ * frontend can read it via document.cookie and include it in the
+ * X-CSRF-Token header. SameSite=Strict provides browser-level protection.
+ *
+ * The CSRF token is the same value stored server-side in the session record.
+ * Server-side validation compares the header value against the session's
+ * csrfToken — the cookie is just a transport mechanism for the frontend.
+ */
+export function setCsrfCookie(res: Response, csrfToken: string): void {
+  const isSecure = process.env.NODE_ENV === 'production'
+  // Max age matches absolute session timeout (24h)
+  const maxAge = 24 * 60 * 60
+
+  res.cookie(CSRF_COOKIE_NAME, csrfToken, {
+    httpOnly: false,
+    secure: isSecure,
+    sameSite: 'strict',
+    path: '/',
+    maxAge,
+  })
+}
+
+/**
+ * Clear the CSRF token cookie on logout.
+ */
+export function clearCsrfCookie(res: Response): void {
+  res.clearCookie(CSRF_COOKIE_NAME, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+  })
+}
+
+/**
  * Set the session cookie on the response.
  *
  * Centralizes all cookie configuration so every auth endpoint uses

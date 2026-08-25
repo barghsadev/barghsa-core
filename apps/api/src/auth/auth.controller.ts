@@ -1,5 +1,15 @@
 import { createHash } from 'node:crypto'
-import { Controller, Post, HttpCode, HttpStatus, HttpException, Logger, Body, Req, Res } from '@nestjs/common'
+import {
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  HttpException,
+  Logger,
+  Body,
+  Req,
+  Res,
+} from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import type { Request, Response } from 'express'
 import { z } from 'zod'
@@ -30,7 +40,10 @@ import {
   setRefreshCookie,
   clearSessionCookie,
   clearRefreshCookie,
+  setCsrfCookie,
+  clearCsrfCookie,
 } from '../session/cookie.helper.js'
+import { SkipCsrf } from '../session/csrf.guard.js'
 
 @ApiTags('Auth')
 @Controller('api/auth')
@@ -52,6 +65,7 @@ export class AuthController {
    * - 3 attempts per IP per 60s
    * - 10 attempts per IP per 3600s (1h)
    */
+  @SkipCsrf()
   @Post('register')
   @HttpCode(200)
   @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000 })
@@ -125,6 +139,7 @@ export class AuthController {
    * Error response is always generic ("Invalid username or password")
    * to avoid revealing whether the username exists.
    */
+  @SkipCsrf()
   @Post('login')
   @HttpCode(200)
   @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000 })
@@ -180,6 +195,11 @@ export class AuthController {
         setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt!))
       }
 
+      // Set CSRF cookie for frontend access
+      if (result.csrfToken) {
+        setCsrfCookie(res, result.csrfToken)
+      }
+
       this.logger.log(`Session established for user ${result.userId}`)
     }
 
@@ -195,6 +215,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
+  @SkipCsrf()
   @Post('login/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000 })
@@ -238,6 +259,10 @@ export class AuthController {
     // ── Set HttpOnly session and refresh cookies ─────────────────
     setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
     setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
+    // Set CSRF cookie for frontend access
+    if (result.csrfToken) {
+      setCsrfCookie(res, result.csrfToken)
+    }
 
     this.logger.log(`Session established for user ${result.userId} via login OTP`)
 
@@ -252,6 +277,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
+  @SkipCsrf()
   @Post('login/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000 })
@@ -290,6 +316,7 @@ export class AuthController {
    * Rate limits:
    * - 5 attempts per IP per 300s
    */
+  @SkipCsrf()
   @Post('force-change-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000 })
@@ -337,6 +364,7 @@ export class AuthController {
    * Rate limits:
    * - 5 verification attempts per IP per 60s
    */
+  @SkipCsrf()
   @Post('register/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000 })
@@ -373,6 +401,10 @@ export class AuthController {
     // ── Set HttpOnly session and refresh cookies ─────────────────
     setSessionCookie(res, result.sessionId, new Date(result.expiresAt))
     setRefreshCookie(res, result.refreshToken, new Date(result.expiresAt))
+    // Set CSRF cookie for frontend access
+    if (result.csrfToken) {
+      setCsrfCookie(res, result.csrfToken)
+    }
 
     this.logger.log(`Session established for user ${result.userId}`)
 
@@ -387,6 +419,7 @@ export class AuthController {
    * Rate limits:
    * - 10 logout attempts per IP per 60s
    */
+  @SkipCsrf()
   @Post('logout')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000 })
@@ -408,6 +441,7 @@ export class AuthController {
 
     clearSessionCookie(res)
     clearRefreshCookie(res)
+    clearCsrfCookie(res)
 
     return { message: 'Logged out successfully.' }
   }
@@ -426,6 +460,7 @@ export class AuthController {
    * Rate limits:
    * - 10 refresh attempts per IP per 60s
    */
+  @SkipCsrf()
   @Post('refresh')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000 })
@@ -476,6 +511,10 @@ export class AuthController {
     // Set new cookies
     setSessionCookie(res, sessionId, expiresAt)
     setRefreshCookie(res, newRefreshToken, expiresAt)
+    // Set CSRF cookie for frontend access
+    if (session.csrf_token) {
+      setCsrfCookie(res, session.csrf_token)
+    }
 
     this.logger.log(`Session refreshed: ${sessionId} for user ${session.user_id}`)
 
@@ -494,6 +533,7 @@ export class AuthController {
    * Rate limits:
    * - 3 resend attempts per IP per 120s
    */
+  @SkipCsrf()
   @Post('register/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000 })

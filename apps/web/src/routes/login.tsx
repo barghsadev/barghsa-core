@@ -272,6 +272,11 @@ function LoginPage() {
       }
 
       // ── Success (direct login) ────────────────────────────
+      const csrfToken = body?.csrfToken as string | undefined
+      if (csrfToken) {
+        setCsrfToken(csrfToken)
+      }
+
       const msg = t('auth.login.success', locale)
       toast.success(msg)
 

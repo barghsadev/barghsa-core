@@ -191,6 +191,14 @@ export const ErrorCodes = {
     severity: 'debug' as ErrorSeverity,
   },
 
+  // ── CSRF ─────────────────────────────────────────────────
+  AUTHZ_CSRF_INVALID: {
+    code: 'AUTHZ:CSRF_TOKEN_INVALID',
+    httpStatus: 403,
+    messageKey: 'error.authz.csrf.invalid',
+    severity: 'warn' as ErrorSeverity,
+  },
+
   // ── Rate Limit ──────────────────────────────────────────
   RATE_LIMIT_EXCEEDED: {
     code: 'RATE_LIMIT:EXCEEDED',
