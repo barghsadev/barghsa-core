@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import {
   Controller,
   Post,
+  Get,
   HttpCode,
   HttpStatus,
   HttpException,
@@ -37,6 +38,10 @@ import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-p
 import { ForgotPasswordSchema } from './dto/forgot-password.dto.js'
 import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
 import { ResetPasswordSchema } from './dto/reset-password.dto.js'
+import type { ChangeUsernameSendOtpResponse, ChangeUsernameVerifyResponse } from './dto/change-username.dto.js'
+import { ChangeUsernameSendOtpSchema, ChangeUsernameVerifySchema } from './dto/change-username.dto.js'
+import type { AddContactSendOtpResponse, AddContactVerifyResponse } from './dto/add-contact.dto.js'
+import { AddContactSendOtpSchema, AddContactVerifySchema } from './dto/add-contact.dto.js'
 import { SessionService } from '../session/session.service.js'
 import {
   SESSION_COOKIE_NAME,
@@ -754,5 +759,200 @@ export class AuthController {
       message: 'Step-up authentication successful.',
       stepUpVerifiedAt: now.toISOString(),
     }
+  }
+
+  // ── Username / Contact Change (T-03.03.04) ────────────────────────
+
+  /**
+   * GET /api/auth/user
+   *
+   * Returns the current user's profile information (username, email, mobile).
+   * Requires an authenticated session.
+   */
+  @UseGuards(SessionAuthGuard)
+  @Get('user')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get current user info' })
+  @ApiResponse({ status: 200, description: 'User info returned.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async getUser(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null }> {
+    return this.authService.getUser(req.session.userId)
+  }
+
+  /**
+   * POST /api/auth/change-username/send-otp
+   *
+   * Initiates a username change by sending an OTP to the new username.
+   * Requires an authenticated session.
+   *
+   * Checks: new username is not the same as current, not already taken.
+   *
+   * Rate limits:
+   * - 3 attempts per user per 300s
+   * - 5 attempts per IP per 300s
+   */
+  @UseGuards(SessionAuthGuard)
+  @Post('change-username/send-otp')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'change-username:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({ namespace: 'change-username:ip', limit: 5, windowMs: 300_000, security: true })
+  @ApiOperation({ summary: 'Send OTP to initiate username change' })
+  @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })
+  @ApiResponse({ status: 400, description: 'Same username or invalid input' })
+  @ApiResponse({ status: 409, description: 'Username already taken' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async sendChangeUsernameOtp(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<ChangeUsernameSendOtpResponse> {
+    const parsed = ChangeUsernameSendOtpSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.sendChangeUsernameOtp(req.session.userId, parsed.data.newUsername, ip)
+  }
+
+  /**
+   * POST /api/auth/change-username
+   *
+   * Completes a username change by verifying the OTP.
+   * Requires an authenticated session.
+   *
+   * On success: username updated, all other sessions revoked (current kept).
+   *
+   * Rate limits:
+   * - 5 verification attempts per IP per 60s
+   */
+  @UseGuards(SessionAuthGuard)
+  @Post('change-username')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'change-username:verify:ip', limit: 5, windowMs: 60_000, security: true })
+  @ApiOperation({ summary: 'Verify OTP and complete username change' })
+  @ApiResponse({ status: 200, description: 'Username changed successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Invalid, expired, or max OTP attempts exceeded' })
+  @ApiResponse({ status: 409, description: 'OTP consumed or username taken' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async changeUsername(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<ChangeUsernameVerifyResponse> {
+    const parsed = ChangeUsernameVerifySchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.completeChangeUsername(
+      req.session.userId,
+      parsed.data.newUsername,
+      parsed.data.otpChallengeId,
+      parsed.data.otp,
+      ip,
+      req.session.sessionId,
+    )
+  }
+
+  /**
+   * POST /api/auth/add-contact/send-otp
+   *
+   * Initiates adding a contact (email or mobile) by sending an OTP.
+   * Requires an authenticated session.
+   *
+   * Validates: user doesn't already have the requested contact type.
+   *
+   * Rate limits:
+   * - 3 attempts per user per 300s
+   * - 5 attempts per IP per 300s
+   */
+  @UseGuards(SessionAuthGuard)
+  @Post('add-contact/send-otp')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'add-contact:user', limit: 3, windowMs: 300_000, security: true })
+  @RateLimit({ namespace: 'add-contact:ip', limit: 5, windowMs: 300_000, security: true })
+  @ApiOperation({ summary: 'Send OTP to add a new contact' })
+  @ApiResponse({ status: 200, description: 'OTP sent. Returns challengeId.' })
+  @ApiResponse({ status: 400, description: 'Invalid contact type or value' })
+  @ApiResponse({ status: 409, description: 'User already has this contact type' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async sendAddContactOtp(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<AddContactSendOtpResponse> {
+    const parsed = AddContactSendOtpSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.sendAddContactOtp(
+      req.session.userId,
+      parsed.data.contactType,
+      parsed.data.contactValue,
+      ip,
+    )
+  }
+
+  /**
+   * POST /api/auth/add-contact
+   *
+   * Completes adding a contact by verifying the OTP.
+   * Requires an authenticated session.
+   *
+   * Rate limits:
+   * - 5 verification attempts per IP per 60s
+   */
+  @UseGuards(SessionAuthGuard)
+  @Post('add-contact')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'add-contact:verify:ip', limit: 5, windowMs: 60_000, security: true })
+  @ApiOperation({ summary: 'Verify OTP and add contact' })
+  @ApiResponse({ status: 200, description: 'Contact added successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiResponse({ status: 401, description: 'Invalid, expired, or max OTP attempts exceeded' })
+  @ApiResponse({ status: 409, description: 'OTP consumed or already has contact' })
+  @ApiResponse({ status: 429, description: 'Rate limited' })
+  async addContact(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<AddContactVerifyResponse> {
+    const parsed = AddContactVerifySchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.authService.completeAddContact(
+      req.session.userId,
+      parsed.data.contactType,
+      parsed.data.contactValue,
+      parsed.data.otpChallengeId,
+      parsed.data.otp,
+      ip,
+    )
   }
 }
