@@ -17,8 +17,6 @@ export const Route = createFileRoute('/register/verify')({
 
 /** Resend countdown in seconds */
 const RESEND_COOLDOWN = 60
-/** Maximum resend attempts before blocking */
-// const MAX_RESENDS = 3
 
 function OtpVerifyPage() {
   const router = useRouter()
@@ -100,6 +98,7 @@ function OtpVerifyPage() {
           }
 
           setOtpError(msg)
+          setOtp('')
           // Clear OTP input on error and shake
           if (otpRef.current?.reset) {
             otpRef.current.reset()
@@ -113,6 +112,7 @@ function OtpVerifyPage() {
         router.navigate({ to: '/' })
       } catch {
         setOtpError(t('auth.otp.error.generic', locale))
+        setOtp('')
         if (otpRef.current?.reset) {
           otpRef.current.reset()
         }
@@ -211,7 +211,7 @@ function OtpVerifyPage() {
                 {t('auth.otp.verifying', locale)}
               </>
             ) : (
-              t('auth.otp.title', locale)
+              t('auth.otp.verifyButton', locale)
             )}
           </Button>
 

@@ -197,7 +197,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
             value={digit}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
-            onPaste={i === 0 ? handlePaste : undefined}
+            onPaste={handlePaste}
             onFocus={(e) => e.target.setSelectionRange(0, e.target.value.length)}
             disabled={disabled}
             aria-label={`${t('auth.otp.digitLabel', locale)} ${i + 1}`}
