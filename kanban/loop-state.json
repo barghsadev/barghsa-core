@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_key": "01-platform-infrastructure.md#T-05.03.05",
-  "current_task_id": "T-05.03.05",
-  "current_task_file": "01-platform-infrastructure.md",
-  "current_branch": "feat/e01-t-05-03-05--coverage-threshold",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 208,
+  "loop_iteration": 209,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -180,12 +180,18 @@
     "02-auth-users-admin.md#T-04.01.01",
     "02-auth-users-admin.md#T-04.01.02",
     "02-auth-users-admin.md#T-04.01.03",
-    "02-auth-users-admin.md#T-05.01.01"
+    "02-auth-users-admin.md#T-05.01.01",
+    "01-platform-infrastructure.md#T-05.03.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-25T21:47:00Z",
-  "notes": "Tick-208: PR #120 (T-05.01.01 CRM users endpoint) merged. GLM 5.2 review: approve (2 minor). State idle. Next: 01-platform-infrastructure.md#T-05.03.05 (Coverage threshold enforcement).",
+  "last_updated": "2026-08-25T21:53:00Z",
+  "notes": "Tick-209: PR #121 (T-05.03.05 coverage threshold enforcement) merged. GLM 5.2 review: approve (no issues). State idle.",
   "status_history": [
+    {
+      "from": "building",
+      "to": "idle",
+      "at": "tick-209"
+    },
     {
       "from": "in_review",
       "to": "idle",
