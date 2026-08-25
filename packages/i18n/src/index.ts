@@ -133,6 +133,18 @@ export const fa: I18nDictionary = {
   'auth.otp.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
   'auth.otp.backToRegister': 'بازگشت به فرم ثبت‌نام',
 
+  // ── Auth Pages — Forgot Password ─────────────────────────
+  'auth.forgotPassword.title': 'فراموشی رمز عبور',
+  'auth.forgotPassword.submit': 'ارسال کد تأیید',
+  'auth.forgotPassword.submitting': 'در حال ارسال…',
+  'auth.forgotPassword.sent': 'اگر حساب کاربری با این اطلاعات وجود داشته باشد، کد تأیید برای شما ارسال شده است',
+  'auth.forgotPassword.otpTitle': 'کد تأیید بازیابی رمز عبور',
+  'auth.forgotPassword.otpSentTo': 'کد تأیید به {destination} ارسال شد',
+  'auth.forgotPassword.backToLogin': 'بازگشت به فرم ورود',
+  'auth.forgotPassword.helpLink': 'مشکل دارید؟ با پشتیبانی تماس بگیرید',
+  'auth.forgotPassword.error.generic': 'خطایی رخ داده است. لطفاً دوباره تلاش کنید',
+  'auth.forgotPassword.error.rateLimited': 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید',
+
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'خطای داخلی سرور',
   'error.internal.database': 'خطای پایگاه داده',
@@ -314,6 +326,18 @@ export const en: I18nDictionary = {
   'auth.otp.error.resend': 'Failed to resend code',
   'auth.otp.error.generic': 'An error occurred. Please try again',
   'auth.otp.backToRegister': 'Back to registration',
+
+  // ── Auth Pages — Forgot Password ─────────────────────────
+  'auth.forgotPassword.title': 'Forgot Password',
+  'auth.forgotPassword.submit': 'Send verification code',
+  'auth.forgotPassword.submitting': 'Sending…',
+  'auth.forgotPassword.sent': 'If an account exists with this information, a verification code has been sent',
+  'auth.forgotPassword.otpTitle': 'Password Reset Verification',
+  'auth.forgotPassword.otpSentTo': 'A verification code has been sent to {destination}',
+  'auth.forgotPassword.backToLogin': 'Back to login',
+  'auth.forgotPassword.helpLink': 'Having trouble? Contact support',
+  'auth.forgotPassword.error.generic': 'An error occurred. Please try again',
+  'auth.forgotPassword.error.rateLimited': 'Too many attempts. Please try again later',
 
   // ── Internal ────────────────────────────────────────────
   'error.internal.server': 'Internal server error',
