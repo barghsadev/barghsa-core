@@ -58,6 +58,51 @@ export class TosService {
   }
 
   /**
+   * Check if a user needs to re-accept the Terms of Service (T-04.01.03).
+   *
+   * Returns `true` when the user's `last_accepted_tos_version` is behind the
+   * currently active TOS version (or when they have never accepted).
+   *
+   * Exempt routes where TOS check does NOT apply:
+   *   auth/*, account-recovery, support, legal/*, tos/*
+   *
+   * @param userId - The UUID of the user to check.
+   */
+  async requiresReAcceptance(userId: string): Promise<boolean> {
+    const pool = getDbPool()
+
+    // Get the current active TOS version id
+    const activeResult = await pool.query<{ id: string }>(
+      `SELECT id FROM tos_versions
+       WHERE is_active = true
+       ORDER BY published_at DESC
+       LIMIT 1`,
+    )
+
+    if (activeResult.rows.length === 0) {
+      // No active TOS version — nothing to accept
+      return false
+    }
+
+    const activeVersionId = activeResult.rows[0]!.id
+
+    // Get the user's last accepted version
+    const userResult = await pool.query<{ last_accepted_tos_version: string | null }>(
+      `SELECT last_accepted_tos_version FROM users WHERE user_id = $1`,
+      [userId],
+    )
+
+    if (userResult.rows.length === 0) {
+      return false
+    }
+
+    const userAccepted = userResult.rows[0]!.last_accepted_tos_version
+
+    // If never accepted, or accepted a different version, re-acceptance is needed
+    return userAccepted !== activeVersionId
+  }
+
+  /**
    * Record a TOS acceptance (T-04.01.02).
    *
    * Atomically:
