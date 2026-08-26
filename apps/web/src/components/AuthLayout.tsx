@@ -63,7 +63,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
                 <rect width="32" height="32" rx="8" fill="currentColor" />
                 <path
                   d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-                  fill="var(--primary-foreground)"
+                  fill="var(--brand-primary-foreground)"
                 />
               </svg>
             )}
@@ -129,12 +129,12 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
               <rect width="32" height="32" rx="8" fill="currentColor" />
               <path
                 d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-                fill="var(--primary-foreground)"
+                fill="var(--brand-primary-foreground)"
               />
             </svg>
-          )}
-          <span>{appTitle}</span>
-        </Link>
+            )}
+            <span>{appTitle}</span>
+          </Link>
         <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
           {slogan}
         </p>

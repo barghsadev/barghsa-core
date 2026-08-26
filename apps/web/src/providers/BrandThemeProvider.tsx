@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,14 +53,6 @@ export function useBrandConfig(): BrandThemeContextValue {
 // ---------------------------------------------------------------------------
 
 /**
- * Convert a hex color (e.g. #2563eb) to a CSS usage-appropriate format.
- * Currently returns the hex as-is; extend this for HSL/OKLCH conversion if needed.
- */
-function hexToCssValue(hex: string): string {
-  return hex
-}
-
-/**
  * Set CSS custom properties on the document root element.
  * Removes previously set brand properties first to avoid stale variables.
  */
@@ -81,9 +73,9 @@ function applyBrandCssVars(config: BrandConfig): void {
   }
 
   // Set new brand CSS vars
-  root.style.setProperty('--brand-primary', hexToCssValue(config.primaryColor))
-  root.style.setProperty('--brand-secondary', hexToCssValue(config.secondaryColor))
-  root.style.setProperty('--brand-accent', hexToCssValue(config.accentColor))
+  root.style.setProperty('--brand-primary', config.primaryColor)
+  root.style.setProperty('--brand-secondary', config.secondaryColor)
+  root.style.setProperty('--brand-accent', config.accentColor)
 
   // Compute foreground colors based on luminance for readable text on brand colors
   root.style.setProperty('--brand-primary-foreground', getContrastForeground(config.primaryColor))
@@ -196,7 +188,7 @@ export function BrandThemeProvider({ children }: BrandThemeProviderProps) {
   }, [fetchConfig])
 
   return (
-    <BrandThemeContext.Provider value={{ brandConfig, loading }}>
+    <BrandThemeContext.Provider value={useMemo(() => ({ brandConfig, loading }), [brandConfig, loading])}>
       {children}
     </BrandThemeContext.Provider>
   )
