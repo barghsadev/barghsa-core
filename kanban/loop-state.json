@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-09.01.02",
   "current_task_id": "T-09.01.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e09-t-09-01-02--theme-application",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/156",
   "loop_iteration": 290,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
