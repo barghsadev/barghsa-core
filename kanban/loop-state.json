@@ -1,11 +1,11 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-05.05.01",
   "current_task_id": "T-05.05.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-05-01--pending-verification-widget",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/136",
-  "loop_iteration": 242,
+  "loop_iteration": 243,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -204,8 +204,8 @@
     "02-auth-users-admin.md#T-05.04.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T04:02:00Z",
-  "notes": "Iteration-242: Fixing T-05.05.01 — reviewer found 2 major (i18n/RTL, dead link) + 3 minor issues. Applied i18n keys, aria labels, CRM index route, TODO comments for backend gaps.",
+  "last_updated": "2026-08-26T04:10:00Z",
+  "notes": "Iteration-243: Fixes applied and pushed. All checks pass (typecheck 11/11, build 7/7, API tests 412/412). PR #136 updated with review comment. Returned to in_review.",
   "status_history": [
     {
       "from": "idle",
@@ -221,6 +221,11 @@
       "from": "in_review",
       "to": "fixing",
       "at": "iteration-242"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "iteration-243"
     }
   ]
 }
