@@ -146,9 +146,9 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
       </div>
 
       {/* Wallet balance card — dedicated prominent display */}
-      {data && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          {data ? (
             <WalletBalanceCard
               balance={data.wallet.balance}
               currency={data.wallet.currency}
@@ -156,10 +156,18 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
               pendingInvoices={data.pendingInvoices}
               locale={locale}
             />
-          </div>
+          ) : (
+            <div className="bg-white rounded-lg shadow-sm p-6 animate-pulse">
+              <div className="h-4 w-24 bg-gray-200 rounded mb-4" />
+              <div className="h-8 w-32 bg-gray-200 rounded mb-2" />
+              <div className="h-5 w-28 bg-gray-200 rounded mb-4" />
+              <div className="h-10 w-full bg-gray-200 rounded" />
+            </div>
+          )}
+        </div>
 
-          {/* Summary cards in responsive grid */}
-          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Summary cards in responsive grid */}
+        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {cards.map((card) => (
           <Link
             key={card.key}
@@ -171,9 +179,8 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
             <span className="text-xs text-primary font-medium">{card.actionLabel} →</span>
           </Link>
         ))}
-          </div>
         </div>
-      )}
+      </div>
 
       {/* Quick actions section */}
       <section>
