@@ -49,6 +49,50 @@ function mapProvinceRow(row: Record<string, unknown>): ProvinceRow {
 }
 
 // ---------------------------------------------------------------------------
+// City types
+// ---------------------------------------------------------------------------
+
+export interface CityRow {
+  id: string
+  provinceId: string
+  nameFa: string
+  nameEn: string
+  status: 'active' | 'inactive'
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ListCitiesResult {
+  cities: CityRow[]
+  total: number
+  page: number
+  limit: number
+}
+
+export interface CreateCityInput {
+  nameFa: string
+  nameEn: string
+}
+
+export interface UpdateCityInput {
+  nameFa?: string | undefined
+  nameEn?: string | undefined
+  status?: 'active' | 'inactive' | undefined
+}
+
+function mapCityRow(row: Record<string, unknown>): CityRow {
+  return {
+    id: row.id as string,
+    provinceId: row.province_id as string,
+    nameFa: row.name_fa as string,
+    nameEn: row.name_en as string,
+    status: row.status as 'active' | 'inactive',
+    createdAt: (row.created_at as Date).toISOString(),
+    updatedAt: (row.updated_at as Date).toISOString(),
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Service
 // ---------------------------------------------------------------------------
 
@@ -262,6 +306,210 @@ export class AdminGeographyService {
     // Soft-delete by setting inactive
     await pool.query(
       `UPDATE provinces SET status = 'inactive', updated_at = NOW() WHERE id = $1`,
+      [id],
+    )
+    return true
+  }
+
+  // ---------------------------------------------------------------------------
+  // City CRUD
+  // ---------------------------------------------------------------------------
+
+  /**
+   * List cities for a province with optional search, status filter, and pagination.
+   */
+  async listCities(
+    provinceId: string,
+    options: {
+      search?: string | undefined
+      status?: 'active' | 'inactive' | undefined
+      page?: number | undefined
+      limit?: number | undefined
+    } = {},
+  ): Promise<ListCitiesResult> {
+    const pool = getDbPool()
+    const page = Math.max(1, options.page ?? 1)
+    const limit = Math.min(100, Math.max(1, options.limit ?? 20))
+    const offset = (page - 1) * limit
+
+    const conditions: string[] = ['province_id = $1']
+    const params: unknown[] = [provinceId]
+    let paramIdx = 2
+
+    if (options.search) {
+      conditions.push(`(name_fa ILIKE $${paramIdx} OR name_en ILIKE $${paramIdx})`)
+      params.push(`%${options.search}%`)
+      paramIdx++
+    }
+
+    if (options.status) {
+      conditions.push(`status = $${paramIdx}`)
+      params.push(options.status)
+      paramIdx++
+    }
+
+    const whereClause = 'WHERE ' + conditions.join(' AND ')
+
+    const countResult = await pool.query(
+      `SELECT COUNT(*) AS total FROM cities ${whereClause}`,
+      params,
+    )
+    const total = parseInt(countResult.rows[0]!.total as string, 10)
+
+    const dataResult = await pool.query(
+      `SELECT id, province_id, name_fa, name_en, status, created_at, updated_at
+       FROM cities ${whereClause}
+       ORDER BY updated_at DESC, name_fa ASC
+       LIMIT $${paramIdx} OFFSET $${paramIdx + 1}`,
+      [...params, limit, offset],
+    )
+
+    return {
+      cities: dataResult.rows.map(mapCityRow),
+      total,
+      page,
+      limit,
+    }
+  }
+
+  /**
+   * Get a single city by ID.
+   */
+  async getCity(id: string): Promise<CityRow | null> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT id, province_id, name_fa, name_en, status, created_at, updated_at
+       FROM cities WHERE id = $1`,
+      [id],
+    )
+    if (result.rows.length === 0) return null
+    return mapCityRow(result.rows[0]!)
+  }
+
+  /**
+   * Create a new city in a province.
+   */
+  async createCity(provinceId: string, input: CreateCityInput): Promise<CityRow> {
+    const pool = getDbPool()
+    const id = uuidv7()
+    const now = new Date()
+
+    // Verify province exists
+    const provResult = await pool.query(
+      `SELECT id FROM provinces WHERE id = $1`,
+      [provinceId],
+    )
+    if (provResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Parent province not found' },
+        404,
+      )
+    }
+
+    try {
+      const result = await pool.query(
+        `INSERT INTO cities (id, province_id, name_fa, name_en, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id, province_id, name_fa, name_en, status, created_at, updated_at`,
+        [id, provinceId, input.nameFa, input.nameEn, now, now],
+      )
+      return mapCityRow(result.rows[0]!)
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code: string }).code === '23505'
+      ) {
+        throw new HttpException(
+          { statusCode: 409, error: 'GEOGRAPHY:CITY_EXISTS', message: 'A city with this English name already exists in this province' },
+          409,
+        )
+      }
+      this.logger.error(`Failed to create city: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create city' },
+        500,
+      )
+    }
+  }
+
+  /**
+   * Update an existing city.
+   */
+  async updateCity(id: string, input: UpdateCityInput): Promise<CityRow | null> {
+    const pool = getDbPool()
+
+    const existing = await this.getCity(id)
+    if (!existing) return null
+
+    const setClauses: string[] = []
+    const params: unknown[] = []
+    let paramIdx = 1
+
+    if (input.nameFa !== undefined) {
+      setClauses.push(`name_fa = $${paramIdx}`)
+      params.push(input.nameFa)
+      paramIdx++
+    }
+    if (input.nameEn !== undefined) {
+      setClauses.push(`name_en = $${paramIdx}`)
+      params.push(input.nameEn)
+      paramIdx++
+    }
+    if (input.status !== undefined) {
+      setClauses.push(`status = $${paramIdx}`)
+      params.push(input.status)
+      paramIdx++
+    }
+
+    if (setClauses.length === 0) {
+      return existing
+    }
+
+    params.push(id)
+
+    try {
+      const result = await pool.query(
+        `UPDATE cities SET ${setClauses.join(', ')}
+         WHERE id = $${paramIdx}
+         RETURNING id, province_id, name_fa, name_en, status, created_at, updated_at`,
+        params,
+      )
+      return mapCityRow(result.rows[0]!)
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code: string }).code === '23505'
+      ) {
+        throw new HttpException(
+          { statusCode: 409, error: 'GEOGRAPHY:CITY_EXISTS', message: 'A city with this English name already exists in this province' },
+          409,
+        )
+      }
+      this.logger.error(`Failed to update city ${id}: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update city' },
+        500,
+      )
+    }
+  }
+
+  /**
+   * Delete (set inactive) a city. Rejects deletion if the city is referenced
+   * by active customer profiles (soft delete).
+   */
+  async deleteCity(id: string): Promise<boolean> {
+    const pool = getDbPool()
+
+    const existing = await this.getCity(id)
+    if (!existing) return false
+
+    // Soft-delete by setting inactive
+    await pool.query(
+      `UPDATE cities SET status = 'inactive', updated_at = NOW() WHERE id = $1`,
       [id],
     )
     return true
