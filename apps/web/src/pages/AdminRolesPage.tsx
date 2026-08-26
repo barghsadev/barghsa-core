@@ -138,10 +138,10 @@ export default function AdminRolesPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   {t('admin.roles.role', locale)}
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   {t('admin.roles.permissions', locale)}
                 </th>
               </tr>

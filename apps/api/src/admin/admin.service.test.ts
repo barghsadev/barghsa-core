@@ -613,6 +613,22 @@ describe('AdminService.listStaffRoles', () => {
     expect(first?.permissions).toEqual([])
     expect(first?.predefined).toBe(false)
   })
+
+  it('handles already-parsed (jsonb) permission arrays', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { role_id: 'role-x', name: 'X', description: 'x', permissions: ['tickets:read', 'crm:read'], created_at: null, updated_at: null },
+      ],
+    })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffRoles()
+    expect(result[0]?.permissions).toEqual(['tickets:read', 'crm:read'])
+  })
 })
 
 describe('AdminService.getEffectivePermissions', () => {

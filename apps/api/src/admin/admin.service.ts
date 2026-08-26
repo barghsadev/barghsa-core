@@ -88,6 +88,26 @@ export type CreateStaffUserResult = {
 const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
 
 /**
+ * Parse a stored permission set defensively. Handles both a JSON string
+ * (TEXT column as written today) and an already-parsed JS array (if the
+ * column is ever migrated to jsonb and node-postgres auto-parses it).
+ * Invalid input degrades to an empty set.
+ */
+function parsePermissionsStored(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((p): p is string => typeof p === 'string')
+  }
+  if (typeof raw !== 'string') return []
+  try {
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed)) return parsed.filter((p): p is string => typeof p === 'string')
+    return []
+  } catch {
+    return []
+  }
+}
+
+/**
  * Generates a cryptographically random password that satisfies the
  * project's password strength policy (min 8 chars, at least one
  * uppercase, one lowercase, one digit).
@@ -523,18 +543,12 @@ export class AdminService {
     const predefinedIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
 
     return result.rows.map((row) => {
-      let permissions: string[] = []
-      try {
-        const parsed = JSON.parse(row.permissions ?? '[]')
-        if (Array.isArray(parsed)) permissions = parsed.filter((p) => typeof p === 'string')
-      } catch {
-        permissions = []
-      }
+      const permissions = parsePermissionsStored(row.permissions)
 
       return {
         roleId: row.role_id,
         name: row.name,
-        description: row.description,
+        description: row.description ?? '',
         permissions,
         predefined: predefinedIds.has(row.role_id),
         createdAt: row.created_at ? new Date(row.created_at).toISOString() : '',
@@ -583,14 +597,7 @@ export class AdminService {
     for (const row of rolesResult.rows) {
       roleIds.push(row.role_id)
       roleNames.push(row.name)
-      let permissions: string[] = []
-      try {
-        const parsed = JSON.parse(row.permissions ?? '[]')
-        if (Array.isArray(parsed)) permissions = parsed.filter((p) => typeof p === 'string')
-      } catch {
-        permissions = []
-      }
-      for (const p of permissions) permissionSet.add(p)
+      for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p)
     }
 
     if (isAdmin) {
