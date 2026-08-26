@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { WalletBalanceCard } from '../components/WalletBalanceCard.js'
+import { QuickStatusCards } from '../components/QuickStatusCards.js'
 
 interface DashboardData {
   wallet: { balance: number; currency: string; lowBalanceWarning: boolean }
@@ -9,6 +10,12 @@ interface DashboardData {
   pendingInvoices: number
   openTickets: number
   contracts: { active: number; total: number }
+  quickStatus: {
+    activeContracts: number
+    pendingOrders: number
+    openTickets: number
+    unpaidInvoices: number
+  }
 }
 
 function formatRial(amount: number, locale: Locale): string {
@@ -22,11 +29,14 @@ function formatRial(amount: number, locale: Locale): string {
 }
 
 /**
- * Dashboard overview page (T-08.01.01).
+ * Dashboard overview page (T-08.01.01, T-08.01.02, T-08.01.03).
  *
- * Shows summary cards for wallet balance, active orders, pending invoices,
- * open tickets, and contract status. Cards are in a responsive grid. Each
- * card is clickable and navigates to the relevant section.
+ * Shows:
+ *   - A welcome message with profile name.
+ *   - Wallet balance card (T-08.01.02).
+ *   - Quick status cards (T-08.01.03) with icon+count+label and colour
+ *     coding, replacing the previous inline summary cards.
+ *   - Quick actions section.
  */
 export function DashboardPage({ locale = 'fa' as Locale }) {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -78,58 +88,31 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
       <div className="space-y-6">
         {/* Welcome skeleton */}
         <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
-        {/* Card grid skeleton */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-32 bg-gray-200 rounded-lg animate-pulse" />
-          ))}
+        {/* Wallet card skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 h-32 bg-gray-200 rounded-lg animate-pulse" />
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded-lg animate-pulse" />
+            ))}
+          </div>
         </div>
       </div>
     )
   }
-
-  const cards = [
-    {
-      key: 'orders',
-      href: '/electricity',
-      label: t('dashboard.overview.activeOrders', locale),
-      value: data?.activeOrders != null ? String(data.activeOrders) : '—',
-      color: 'border-l-4 border-blue-500',
-      actionLabel: t('dashboard.overview.viewOrders', locale),
-    },
-    {
-      key: 'invoices',
-      href: '/wallet',
-      label: t('dashboard.overview.pendingInvoices', locale),
-      value: data?.pendingInvoices != null ? String(data.pendingInvoices) : '—',
-      color: data && data.pendingInvoices > 0 ? 'border-l-4 border-red-500' : 'border-l-4 border-gray-400',
-      actionLabel: t('dashboard.overview.viewInvoices', locale),
-    },
-    {
-      key: 'tickets',
-      href: '/support',
-      label: t('dashboard.overview.openTickets', locale),
-      value: data?.openTickets != null ? String(data.openTickets) : '—',
-      color: data && data.openTickets > 0 ? 'border-l-4 border-amber-500' : 'border-l-4 border-gray-400',
-      actionLabel: t('dashboard.overview.viewTickets', locale),
-    },
-    {
-      key: 'contracts',
-      href: '/electricity',
-      label: t('dashboard.overview.contractStatus', locale),
-      value: data
-        ? `${data.contracts.active} / ${data.contracts.total}`
-        : '—',
-      color: 'border-l-4 border-purple-500',
-      actionLabel: t('dashboard.overview.viewContracts', locale),
-    },
-  ]
 
   const quickActions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
     { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
     { label: t('dashboard.overview.supportTicket', locale), href: '/support' },
   ]
+
+  const qs = data?.quickStatus ?? {
+    activeContracts: data?.contracts?.active ?? 0,
+    pendingOrders: data?.activeOrders ?? 0,
+    openTickets: data?.openTickets ?? 0,
+    unpaidInvoices: data?.pendingInvoices ?? 0,
+  }
 
   return (
     <div className="space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -145,7 +128,7 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
         </div>
       </div>
 
-      {/* Wallet balance card — dedicated prominent display */}
+      {/* Wallet balance + Quick status cards side‑by‑side */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
           {data ? (
@@ -166,19 +149,15 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
           )}
         </div>
 
-        {/* Summary cards in responsive grid */}
-        <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {cards.map((card) => (
-          <Link
-            key={card.key}
-            to={card.href}
-            className={`block bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${card.color}`}
-          >
-            <p className="text-sm text-gray-500 mb-1">{card.label}</p>
-            <p className="text-2xl font-semibold text-gray-900 mb-2">{card.value}</p>
-            <span className="text-xs text-primary font-medium">{card.actionLabel} →</span>
-          </Link>
-        ))}
+        {/* Quick status cards — replaces the previous inline cards */}
+        <div className="lg:col-span-2">
+          <QuickStatusCards
+            activeContracts={qs.activeContracts}
+            pendingOrders={qs.pendingOrders}
+            openTickets={qs.openTickets}
+            unpaidInvoices={qs.unpaidInvoices}
+            locale={locale}
+          />
         </div>
       </div>
 
