@@ -1,8 +1,8 @@
 {
-  "status": "blocked",
-  "current_task_key": "02-auth-users-admin.md#T-09.06.01",
-  "current_task_id": "T-09.06.01",
-  "current_task_file": "02-auth-users-admin.md",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 301,
@@ -245,8 +245,8 @@
     "02-auth-users-admin.md#T-09.04.01",
     "02-auth-users-admin.md#T-09.05.01"
   ],
-  "last_error": "Blocked at T-09.06.01 (Email transport config, XL): requires E-05 notification service (email/SMS transport, outbox, worker). Current NotificationsService is an in-app stub; no SMTP/Resend library present; zero E-05 tasks completed. Manual: build E-05 email transport infrastructure before this task.",
-  "notes": "Iter-confirm: Loop remains BLOCKED at T-09.06.01 (Email transport config, XL). Dependency on E-05 notification service is absent (0/7 E-05 tasks done; NotificationsService is an in-app stub). Queue order places 02-auth T-09.06+ ahead of 05-notifications tasks, so the loop cannot reach E-05 organically. Manual decision required: (a) reorder E-05 tasks ahead of T-09.06 in the queue, or (b) permit building E-05 out of order.",
+  "last_error": null,
+  "notes": "Reordered queue: moved 29 E-05 notification tasks (T-05.01.x to T-05.06.x) ahead of T-09.06.x to satisfy dependency chain.",
   "last_updated": "2026-08-26T19:32:19Z",
   "status_history": [
     {
