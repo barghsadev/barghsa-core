@@ -692,6 +692,17 @@ export const fa: I18nDictionary = {
   'invitation.banner.declined': 'دعوتنامه رد شد',
   'invitation.banner.error': 'خطا در پردازش دعوتنامه',
   'invitation.banner.noInvitations': 'هیچ دعوتنامه‌ای ندارید',
+
+  // ── Admin Dashboard ─────────────────────────────────────────
+  'dashboard.admin.title': 'داشبورد مدیریت',
+  'dashboard.admin.description': 'مدیریت و نظارت بر پلتفرم',
+  'dashboard.admin.pendingVerification.label': 'پروفایل‌های منتظر تأیید',
+  'dashboard.admin.pendingVerification.showAll': 'نمایش همه ←',
+  'dashboard.admin.pendingVerification.error': 'خطا در بارگذاری',
+  'dashboard.admin.pendingVerification.aria.widget': 'ویجت پروفایل‌های منتظر تأیید',
+  'dashboard.admin.pendingVerification.aria.count': 'تعداد پروفایل‌های منتظر تأیید',
+  'dashboard.admin.pendingVerification.aria.showAll': 'نمایش همه پروفایل‌های منتظر تأیید',
+  'dashboard.admin.pendingVerification.loading': 'در حال بارگذاری…',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1357,6 +1368,17 @@ export const en: I18nDictionary = {
     'invitation.banner.declined': 'Invitation declined',
     'invitation.banner.error': 'Error processing invitation',
     'invitation.banner.noInvitations': 'No pending invitations',
+
+    // ── Admin Dashboard ─────────────────────────────────────────
+    'dashboard.admin.title': 'Admin Dashboard',
+    'dashboard.admin.description': 'Platform administration and monitoring.',
+    'dashboard.admin.pendingVerification.label': 'Profiles awaiting verification',
+    'dashboard.admin.pendingVerification.showAll': 'Show all →',
+    'dashboard.admin.pendingVerification.error': 'Failed to load',
+    'dashboard.admin.pendingVerification.aria.widget': 'Profiles awaiting verification widget',
+    'dashboard.admin.pendingVerification.aria.count': 'Number of profiles awaiting verification',
+    'dashboard.admin.pendingVerification.aria.showAll': 'Show all profiles awaiting verification',
+    'dashboard.admin.pendingVerification.loading': 'Loading…',
   };
 
 /** Supported locale codes */

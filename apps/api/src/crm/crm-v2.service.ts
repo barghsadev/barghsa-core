@@ -54,6 +54,18 @@ export type CrmExpireSessionsResult =
   | null
 
 /**
+ * A single profile entry in the pending verification dashboard widget.
+ */
+export interface PendingVerificationProfile {
+  id: string
+  profileType: 'INDIVIDUAL' | 'LEGAL'
+  firstName: string | null
+  lastName: string | null
+  legalName: string | null
+  createdAt: string
+}
+
+/**
  * A single address record on a CRM profile.
  */
 export interface CrmProfileAddress {
@@ -971,6 +983,53 @@ export class CrmV2Service {
     } finally {
       client.release()
     }
+  }
+
+  /**
+   * GET /api/crm/dashboard/pending-verification
+   *
+   * Returns the count and last 5 profiles whose status is PENDING_VERIFICATION
+   * (i.e. onboarding completed but awaiting staff verification).
+   * Used by the staff dashboard widget.
+   * Only returns non-archived profiles.
+   */
+  async getPendingVerification(): Promise<{
+    count: number
+    profiles: PendingVerificationProfile[]
+  }> {
+    // TODO(E-07): check verification-settings toggle before returning data
+    const pool = getDbPool()
+
+    const countResult = await pool.query(
+      `SELECT COUNT(*)::int AS cnt
+       FROM profiles
+       WHERE status = 'PENDING_VERIFICATION' AND archived = false`,
+    )
+    const count = (countResult.rows[0] as Record<string, unknown>).cnt as number
+
+    const profileResult = await pool.query(
+      `SELECT p.id, p.profile_type, p.first_name, p.last_name,
+              lp.legal_name,
+              p.created_at AT TIME ZONE 'UTC' AS created_at
+       FROM profiles p
+       LEFT JOIN legal_profiles lp ON lp.id = p.id
+       WHERE p.status = 'PENDING_VERIFICATION' AND p.archived = false
+       ORDER BY p.created_at DESC
+       LIMIT 5`,
+    )
+
+    const profiles: PendingVerificationProfile[] = profileResult.rows.map(
+      (row: Record<string, unknown>) => ({
+        id: row.id as string,
+        profileType: row.profile_type as 'INDIVIDUAL' | 'LEGAL',
+        firstName: (row.first_name as string) ?? null,
+        lastName: (row.last_name as string) ?? null,
+        legalName: (row.legal_name as string) ?? null,
+        createdAt: (row.created_at as string) ?? '',
+      }),
+    )
+
+    return { count, profiles }
   }
 }
 
