@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "05-notifications-documents-ai.md#T-05.01.01",
   "current_task_id": "T-05.01.01",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-01-01--notification-scaffold",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/163",
   "loop_iteration": 301,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -246,9 +246,14 @@
     "02-auth-users-admin.md#T-09.05.01"
   ],
   "last_error": null,
-  "notes": "Reordered queue: moved 29 E-05 notification tasks (T-05.01.x to T-05.06.x) ahead of T-09.06.x to satisfy dependency chain.",
-  "last_updated": "2026-08-26T22:49:03Z",
+  "notes": "T-05.01.01 built and pushed; PR #163 ready for review.",
+  "last_updated": "2026-08-26T22:54:27Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.01",
+      "at": "2026-08-26T22:54:27Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.01.01",
