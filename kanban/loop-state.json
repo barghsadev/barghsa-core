@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
   "current_task_id": "T-04.1.01.03",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-1-01-03--invoice-state-machine",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/152",
   "loop_iteration": 281,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -237,6 +237,6 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.02"
   ],
   "last_error": null,
-  "notes": "Iter-281: T-04.1.01.03 (InvoiceStateMachine service) — built, tests pass, typecheck/build clean. Branch pushed. Opening draft PR.",
-  "last_updated": "2026-08-26T12:41:30Z"
+  "notes": "Iter-281: T-04.1.01.03 (InvoiceStateMachine service) — built, 66/66 tests pass, typecheck + build clean. PR #152 ready for review.",
+  "last_updated": "2026-08-26T12:42:00Z"
 }
