@@ -1,5 +1,4 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
-import { Test, type TestingModule } from '@nestjs/testing'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { PublicBrandingController } from './branding.controller.js'
 import { BrandConfigService } from '../admin/brand-config.service.js'
 
@@ -7,25 +6,15 @@ import { BrandConfigService } from '../admin/brand-config.service.js'
 
 const mockGetActiveConfig = vi.fn()
 
-vi.mock('../admin/brand-config.service.js', () => ({
-  BrandConfigService: vi.fn().mockImplementation(() => ({
-    getActiveConfig: mockGetActiveConfig,
-  })),
-}))
-
 // ─── Suite ───────────────────────────────────────────────────────────────
 
 describe('PublicBrandingController', () => {
   let controller: PublicBrandingController
 
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks()
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [PublicBrandingController],
-      providers: [BrandConfigService],
-    }).compile()
-
-    controller = module.get<PublicBrandingController>(PublicBrandingController)
+    const mockService = { getActiveConfig: mockGetActiveConfig } as unknown as BrandConfigService
+    controller = new PublicBrandingController(mockService)
   })
 
   describe('GET /api/public/branding/config', () => {
