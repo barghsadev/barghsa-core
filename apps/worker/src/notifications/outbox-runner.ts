@@ -8,27 +8,57 @@ import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions }
  * Ties the durable write pipeline together on the consuming side:
  * each poll leases due outbox rows (`leaseOutbox`), marks them `sending`,
  * dispatches every requested channel through the registered transports
- * (`dispatchOutbox`), then records the aggregate outcome back on the outbox
- * row and its per-channel `notification_job` rows.
+ * (`dispatchOutbox`), then records the outcome on each per-channel
+ * `notification_job` row and the aggregate outcome on the outbox row.
  *
  * Lifecycle handled here:
- *   queued/scheduled → sending (leased) → delivered | failed
+ *   queued/scheduled → sending (leased) → delivered | queued(retry) | failed
  *
- * Retry scheduling with backoff+jitter and dead-letter transitions are the
- * concern of T-05.01.03/T-05.01.06; this runner faithfully records the last
- * outcome and per-attempt `last_error` so those layers can build on it.
+ * - A retry-eligible row (attempts < maxAttempts) is returned to `queued` with
+ *   a short `locked_until` back-off so it is not re-leased on the very next
+ *   poll tick. Full exponential backoff+jitter belongs to T-05.01.03.
+ * - A row whose attempts reach `max_attempts` is marked `failed` permanently.
+ * - `last_error` is sanitized before persistence so provider messages can
+ *   never leak credentials or connection strings.
  */
 export interface OutboxRunResult {
   /** Number of outbox rows claimed in this poll. */
   leased: number
   /** Number of rows whose channels all delivered. */
   delivered: number
-  /** Number of rows that failed at least one channel. */
+  /** Number of rows that failed (or are retrying) at least one channel. */
   failed: number
 }
 
 /** How long a dispatched-but-unconfirmed row stays `sending` before re-claim. */
 const SENDING_LEASE_MS = 30_000
+/** Back-off placed on a retry-eligible row before the next claim. */
+const RETRY_BACKOFF_MS = 30_000
+/** Maximum length of a persisted `last_error`. */
+const LAST_ERROR_MAX_LEN = 500
+
+/**
+ * Redact likely secret material from an error message and cap its length, so
+ * transport errors (SMTP/SMS/Gateway) can never leak credentials into
+ * `last_error`. Matches common patterns: bearer tokens, api keys, passwords,
+ * and credentials embedded in URLs.
+ */
+export function sanitizeLastError(message: string): string {
+  const SECRET_PATTERNS: Array<{ re: RegExp; replacement: string }> = [
+    { re: /(bearer\s+)[A-Za-z0-9._~+/=-]+/gi, replacement: '$1[REDACTED]' },
+    { re: /(api[_-]?key\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
+    { re: /(password\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
+    { re: /(secret\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
+    { re: /(token\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
+    { re: /([a-z][a-z0-9+.-]*:\/\/)[^/\s:@]+(:[^@\s/]*)?@/gi, replacement: '$1[REDACTED]@' },
+    { re: /([A-Za-z0-9]{20,})/g, replacement: '[REDACTED]' },
+  ]
+  let out = message
+  for (const p of SECRET_PATTERNS) {
+    out = out.replace(p.re, p.replacement)
+  }
+  return out.slice(0, LAST_ERROR_MAX_LEN)
+}
 
 export async function runOutboxPoll(
   options?: OutboxReaderOptions & {
@@ -54,18 +84,17 @@ export async function runOutboxPoll(
 
     try {
       const outcomes = await dispatchOutbox(row, options?.transports ?? {})
-      // Any per-channel failure fails the row; in-app failure throws above.
+      await persistOutcomes(pool, row, outcomes)
+      // A row is "delivered" only when every requested channel delivered.
       const anyFailed = outcomes.some((o) => o.result.status === 'failed')
-
       if (anyFailed) {
-        await failRow(pool, row)
         result.failed += 1
       } else {
-        await succeedRow(pool, row)
         result.delivered += 1
       }
     } catch (err) {
-      await failRow(pool, row, err)
+      const message = sanitizeLastError(err instanceof Error ? err.message : String(err))
+      await failRow(pool, row, message)
       result.failed += 1
     }
   }
@@ -73,50 +102,81 @@ export async function runOutboxPoll(
   return result
 }
 
-/** Record a fully-delivered row and mark its jobs done. */
-async function succeedRow(
+interface DispatchOutcome {
+  channel: NotificationChannel
+  result: { providerRef: string; status: 'delivered' | 'failed' }
+}
+
+/**
+ * Persist per-channel outcomes to each notification_job and derive the
+ * outbox row's aggregate state. A successfully delivered job stores the real
+ * provider ref returned by the transport (no synthetic values).
+ */
+async function persistOutcomes(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool: any,
   row: OutboxRow,
+  outcomes: DispatchOutcome[],
 ): Promise<void> {
-  await pool.query(
-    `UPDATE notification_outbox
-        SET status = 'delivered', locked_until = NULL, provider_ref = $2,
-            updated_at = NOW()
-      WHERE id = $1`,
-    [row.id, `delivered:${row.id}`],
-  )
-  await pool.query(
-    `UPDATE notification_job
-        SET status = 'done', updated_at = NOW()
-      WHERE outbox_id = $1`,
-    [row.id],
-  )
+  let anyFailed = false
+  for (const outcome of outcomes) {
+    const ok = outcome.result.status === 'delivered'
+    if (!ok) anyFailed = true
+    const attempts = row.attempts + 1
+    const exhausted = attempts >= row.maxAttempts
+    await pool.query(
+      `UPDATE notification_job
+          SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
+              updated_at = NOW()
+        WHERE outbox_id = $1 AND channel = $6`,
+      [
+        row.id,
+        ok ? 'done' : exhausted ? 'failed' : 'retrying',
+        ok ? outcome.result.providerRef : null,
+        attempts,
+        ok ? null : 'delivery failed',
+        outcome.channel,
+      ],
+    )
+  }
+
+  if (!anyFailed) {
+    await pool.query(
+      `UPDATE notification_outbox
+          SET status = 'delivered', locked_until = NULL, updated_at = NOW()
+        WHERE id = $1`,
+      [row.id],
+    )
+  } else {
+    await failRow(pool, row, 'delivery failed on one or more channels')
+  }
 }
 
-/** Record a failed row, incrementing its attempt count and stashing last_error. */
+/**
+ * Mark a row as failed. Retry-eligible rows return to `queued` with a
+ * `locked_until` back-off; only exhausted rows become `failed` permanently.
+ */
 async function failRow(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool: any,
   row: OutboxRow,
-  err?: unknown,
+  safeMessage: string,
 ): Promise<void> {
-  const safeMessage = err instanceof Error ? err.message : String(err)
   const attempts = row.attempts + 1
-  const failed = attempts >= row.maxAttempts
+  const exhausted = attempts >= row.maxAttempts
 
   await pool.query(
     `UPDATE notification_outbox
-        SET status = $2, attempts = $3, last_error = $4, locked_until = NULL,
+        SET status = $2, attempts = $3, last_error = $4, locked_until = $5,
             updated_at = NOW()
       WHERE id = $1`,
-    [row.id, failed ? 'failed' : 'sending', attempts, safeMessage || null],
-  )
-  await pool.query(
-    `UPDATE notification_job
-        SET status = 'failed', attempts = $2, last_error = $3, updated_at = NOW()
-      WHERE outbox_id = $1`,
-    [row.id, attempts, safeMessage || null],
+    [
+      row.id,
+      exhausted ? 'failed' : 'queued',
+      attempts,
+      safeMessage || null,
+      exhausted ? null : new Date(Date.now() + RETRY_BACKOFF_MS),
+    ],
   )
 }
 
