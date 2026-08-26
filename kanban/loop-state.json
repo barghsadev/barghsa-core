@@ -6,7 +6,7 @@
   "current_branch": "feat/e06-t-06-01-02-s1--ticket-list-api",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/139",
   "loop_iteration": 247,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -208,8 +208,8 @@
     "02-auth-users-admin.md#T-06.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:43:00Z",
-  "notes": "Iteration-247: Starting T-06.01.02 (Slice 1: backend API for ticket list, detail, and comments). Split from L task.",
+  "last_updated": "2026-08-26T05:02:00Z",
+  "notes": "Iteration-247: Review requested changes — added admin gate on status update, 403 on internal notes for non-admin, NaN fix, status filter validation. All 30 tests pass. Re-requesting review on next tick.",
   "status_history": [
     {
       "from": "in_review",
@@ -229,6 +229,16 @@
     {
       "from": "idle",
       "to": "building",
+      "at": "iteration-247"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-247"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
       "at": "iteration-247"
     }
   ]
