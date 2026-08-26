@@ -16,6 +16,7 @@ export default function AdminLayout() {
               <li><a href="/admin" className="text-blue-600 hover:underline">Dashboard</a></li>
               <li><a href="/admin/users" className="text-blue-600 hover:underline">Users</a></li>
               <li><a href="/admin/storage" className="text-blue-600 hover:underline">Storage</a></li>
+              <li><a href="/admin/verification" className="text-blue-600 hover:underline">Verification</a></li>
               <li className="pt-2 mt-2 border-t border-gray-100">
                 <span className="text-xs text-gray-400 uppercase tracking-wide">CRM</span>
               </li>
