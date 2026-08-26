@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body, Req, UseGuards, Logger, HttpException, NotFoundException } from '@nestjs/common'
+import { Controller, Get, Post, Param, Req, UseGuards, Logger, NotFoundException } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import { WalletService } from './wallet.service.js'

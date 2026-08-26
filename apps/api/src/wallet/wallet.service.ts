@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 
 export interface WalletRow {
@@ -60,7 +60,7 @@ export class WalletService {
     if (result.rows.length === 0) {
       // Another request created the wallet first — return that one
       const existing = await this.getWallet(profileId)
-      if (!existing) throw new Error('Wallet creation failed despite insert attempt')
+      if (!existing) throw new NotFoundException('Wallet creation failed despite insert attempt')
       return existing
     }
 
@@ -87,7 +87,7 @@ export class WalletService {
         [walletId],
       )
       if (walletResult.rows.length === 0) {
-        throw new Error(`Wallet not found: ${walletId}`)
+        throw new NotFoundException(`Wallet not found: ${walletId}`)
       }
 
       // Check idempotency INSIDE the transaction (after FOR UPDATE lock)
@@ -97,7 +97,7 @@ export class WalletService {
       )
       if (idemResult.rows.length > 0) {
         await client.query('COMMIT')
-        return idemResult.rows[0] as unknown as T
+        return mapTransaction(idemResult.rows[0]) as unknown as T
       }
 
       const result = await fn(client, walletResult.rows[0])
@@ -120,7 +120,7 @@ export class WalletService {
     amount: bigint,
     ref: { idempotencyKey: string; type: string; refId?: string; description?: string },
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new Error('Credit amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Credit amount must be positive')
 
     return this.executeWalletTx(walletId, ref.idempotencyKey, async (client, wallet) => {
       const updateResult = await client.query(
@@ -133,12 +133,12 @@ export class WalletService {
         [amount, walletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new Error('Concurrent wallet modification detected')
+        throw new ConflictException('Concurrent wallet modification detected')
       }
 
       const txResult = await client.query(
         `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key, ref_id, description)
-         VALUES ($1, $2, $3, 'Completed', $4, $5, $6)
+         VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6)
          RETURNING *`,
         [walletId, ref.type, amount, ref.idempotencyKey, ref.refId ?? null, ref.description ?? null],
       )
@@ -155,12 +155,12 @@ export class WalletService {
     amount: bigint,
     ref: { idempotencyKey: string; type: string; refId?: string; description?: string },
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new Error('Debit amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Debit amount must be positive')
 
     return this.executeWalletTx(walletId, ref.idempotencyKey, async (client, wallet) => {
       const available = wallet.posted_balance - wallet.reserved_balance
       if (available < amount) {
-        throw new Error(
+        throw new BadRequestException(
           `Insufficient balance: available=${available.toString()}, required=${amount.toString()}`,
         )
       }
@@ -175,7 +175,7 @@ export class WalletService {
         [amount, walletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new Error('Concurrent wallet modification detected')
+        throw new ConflictException('Concurrent wallet modification detected')
       }
 
       const txResult = await client.query(
@@ -198,12 +198,12 @@ export class WalletService {
     idempotencyKey: string,
     ref?: { refId?: string; description?: string },
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new Error('Reserve amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Reserve amount must be positive')
 
     return this.executeWalletTx(walletId, idempotencyKey, async (client, wallet) => {
       const available = wallet.posted_balance - wallet.reserved_balance
       if (available < amount) {
-        throw new Error(
+        throw new BadRequestException(
           `Insufficient balance for reservation: available=${available.toString()}, required=${amount.toString()}`,
         )
       }
@@ -218,12 +218,12 @@ export class WalletService {
         [amount, walletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new Error('Concurrent wallet modification detected')
+        throw new ConflictException('Concurrent wallet modification detected during reserve')
       }
 
       const txResult = await client.query(
         `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key, ref_id, description)
-         VALUES ($1, 'reservation', $2, 'Reserved', $3, $4, $5)
+         VALUES ($1, 'reservation', $2::bigint, 'Reserved', $3, $4, $5)
          RETURNING *`,
         [walletId, amount, idempotencyKey, ref?.refId ?? null, ref?.description ?? null],
       )
@@ -238,21 +238,25 @@ export class WalletService {
   async release(reservationId: string): Promise<{ released: boolean; walletId: string; amount: bigint }> {
     const pool = getDbPool()
 
-    const reservationResult = await pool.query(
-      `SELECT * FROM wallet_transactions WHERE id = $1`,
-      [reservationId],
-    )
-    if (reservationResult.rows.length === 0) {
-      throw new Error(`Reservation not found: ${reservationId}`)
-    }
-    const reservation = reservationResult.rows[0]!
-    if (reservation.state !== 'Reserved') {
-      throw new Error(`Reservation ${reservationId} is not in Reserved state`)
-    }
-
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+
+      // Lock and re-check the reservation inside the transaction
+      const reservationResult = await client.query(
+        `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
+        [reservationId],
+      )
+      if (reservationResult.rows.length === 0) {
+        await client.query('COMMIT')
+        throw new NotFoundException(`Reservation not found: ${reservationId}`)
+      }
+      const reservation = reservationResult.rows[0]!
+      if (reservation.state !== 'Reserved') {
+        await client.query('COMMIT')
+        // Already released — return idempotent success
+        return { released: false, walletId: reservation.wallet_id, amount: BigInt(reservation.amount) }
+      }
 
       const walletResult = await client.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
@@ -270,7 +274,7 @@ export class WalletService {
         [reservation.amount, reservation.wallet_id, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new Error('Concurrent wallet modification detected during release')
+        throw new ConflictException('Concurrent wallet modification detected during release')
       }
 
       await client.query(

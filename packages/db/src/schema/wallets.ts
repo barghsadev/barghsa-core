@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, boolean, jsonb, integer, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
+import { text, jsonb, integer, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
 import { uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 
