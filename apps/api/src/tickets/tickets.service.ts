@@ -12,6 +12,7 @@ export interface TicketRow {
   relatedEntityId: string | null
   priority: 'normal' | 'high'
   status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed'
+  assignedTo: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -65,6 +66,7 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     relatedEntityId: (row.related_entity_id as string) ?? null,
     priority: (row.priority as 'normal' | 'high') ?? 'normal',
     status: (row.status as 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed') ?? 'open',
+    assignedTo: (row.assigned_to as string) ?? null,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
   }
@@ -372,6 +374,235 @@ export class TicketsService {
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
       [ticketId, userId, body.trim(), visibility],
+    )
+
+    return mapCommentRow(result.rows[0]!)
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────────
+  //  Staff methods (T-06.01.03)
+  // ──────────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Staff list all tickets with pagination, filters, and search.
+   * Unlike the user-scoped listTickets, this returns tickets across all users.
+   * Supports additional filter: assignedTo (staff user ID).
+   */
+  async staffListTickets(
+    options: Partial<ListTicketsOptions & { assignedTo?: string }> = {},
+  ): Promise<PaginatedResult<TicketRow>> {
+    const pool = getDbPool()
+    const page = Math.max(1, options.page ?? 1)
+    const limit = Math.min(100, Math.max(1, options.limit ?? 20))
+    const offset = (page - 1) * limit
+
+    const conditions: string[] = []
+    const params: unknown[] = []
+    let paramIndex = 1
+
+    if (options.status) {
+      const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
+      if (!validStatuses.includes(options.status)) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status filter: ${options.status}. Allowed: ${validStatuses.join(', ')}` },
+          400,
+        )
+      }
+      conditions.push(`t.status = $${paramIndex}`)
+      params.push(options.status)
+      paramIndex++
+    }
+
+    if (options.search?.trim()) {
+      conditions.push(`(t.subject ILIKE $${paramIndex} OR t.body ILIKE $${paramIndex})`)
+      params.push(`%${options.search.trim()}%`)
+      paramIndex++
+    }
+
+    if (options.assignedTo) {
+      conditions.push(`t.assigned_to = $${paramIndex}`)
+      params.push(options.assignedTo)
+      paramIndex++
+    }
+
+    // If no conditions, select all tickets
+    const whereClause = conditions.length > 0 ? conditions.join(' AND ') : 'TRUE'
+
+    // Validate sort column (whitelist to prevent injection)
+    const allowedSortColumns = ['created_at', 'updated_at', 'subject', 'status', 'priority']
+    const sortBy = allowedSortColumns.includes(options.sortBy ?? '') ? options.sortBy! : 'updated_at'
+    const sortOrder = options.sortOrder === 'asc' ? 'ASC' : 'DESC'
+
+    // Count total
+    const countResult = await pool.query(
+      `SELECT COUNT(*) AS total FROM tickets t WHERE ${whereClause}`,
+      params,
+    )
+    const total = Number(countResult.rows[0]!.total)
+
+    // Fetch page
+    const dataResult = await pool.query(
+      `SELECT t.* FROM tickets t WHERE ${whereClause}
+       ORDER BY t.${sortBy} ${sortOrder}
+       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
+      [...params, limit, offset],
+    )
+
+    const data = dataResult.rows.map(mapRow)
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    }
+  }
+
+  /**
+   * Staff get any ticket by ID (no user_id scoping).
+   */
+  async staffGetTicket(ticketId: string): Promise<TicketRow> {
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `SELECT * FROM tickets WHERE id = $1`,
+      [ticketId],
+    )
+
+    if (result.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
+        404,
+      )
+    }
+
+    return mapRow(result.rows[0]!)
+  }
+
+  /**
+   * Staff assign a ticket to themselves (or another staff member).
+   * Validates the target user exists and has staff role.
+   */
+  async staffAssignTicket(
+    ticketId: string,
+    assigneeUserId: string,
+  ): Promise<TicketRow> {
+    const pool = getDbPool()
+
+    // Verify ticket exists
+    const ticketResult = await pool.query(
+      `SELECT * FROM tickets WHERE id = $1`,
+      [ticketId],
+    )
+    if (ticketResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
+        404,
+      )
+    }
+
+    // If ticket is still 'open', transition to 'in_progress' on assignment
+    const currentStatus = ticketResult.rows[0]!.status as string
+    const newStatus = currentStatus === 'open' ? 'in_progress' : currentStatus
+
+    const result = await pool.query(
+      `UPDATE tickets SET assigned_to = $1, status = $2, updated_at = NOW()
+       WHERE id = $3
+       RETURNING *`,
+      [assigneeUserId, newStatus, ticketId],
+    )
+
+    this.logger.log(`Ticket ${ticketId} assigned to staff ${assigneeUserId}`)
+    return mapRow(result.rows[0]!)
+  }
+
+  /**
+   * Staff update the status of any ticket (no user_id scoping).
+   * Staff can also reopen tickets.
+   */
+  async staffUpdateTicketStatus(
+    ticketId: string,
+    status: string,
+  ): Promise<TicketRow> {
+    const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
+    if (!validStatuses.includes(status)) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status: ${status}. Allowed: ${validStatuses.join(', ')}` },
+        400,
+      )
+    }
+
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `UPDATE tickets SET status = $1, updated_at = NOW()
+       WHERE id = $2
+       RETURNING *`,
+      [status, ticketId],
+    )
+
+    if (result.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
+        404,
+      )
+    }
+
+    return mapRow(result.rows[0]!)
+  }
+
+  /**
+   * Staff list comments on any ticket (all visibility levels).
+   * No user_id scoping — staff can see all comments including internal.
+   */
+  async staffListComments(ticketId: string): Promise<TicketCommentRow[]> {
+    // Verify the ticket exists
+    await this.staffGetTicket(ticketId)
+
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `SELECT * FROM ticket_comments WHERE ticket_id = $1 ORDER BY created_at ASC`,
+      [ticketId],
+    )
+
+    return result.rows.map(mapCommentRow)
+  }
+
+  /**
+   * Staff add a comment to any ticket (public or internal).
+   * No user_id scoping — staff can comment on any ticket.
+   */
+  async staffAddComment(
+    ticketId: string,
+    staffUserId: string,
+    body: string,
+    visibility: 'public' | 'internal' = 'public',
+  ): Promise<TicketCommentRow> {
+    if (!body?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Comment body is required' },
+        400,
+      )
+    }
+    if (body.trim().length > 10000) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Comment body must be 10,000 characters or fewer' },
+        400,
+      )
+    }
+
+    // Verify the ticket exists
+    await this.staffGetTicket(ticketId)
+
+    const pool = getDbPool()
+
+    const result = await pool.query(
+      `INSERT INTO ticket_comments (ticket_id, author_id, body, visibility)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [ticketId, staffUserId, body.trim(), visibility],
     )
 
     return mapCommentRow(result.rows[0]!)
