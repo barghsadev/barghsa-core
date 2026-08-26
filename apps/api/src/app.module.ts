@@ -20,9 +20,10 @@ import { TosModule } from './tos/tos.module.js'
 import { AdminModule } from './admin/index.js'
 import { CrmModule } from './crm/index.js'
 import { TicketsModule } from './tickets/index.js'
+import { VerificationModule } from './verification/verification.module.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
