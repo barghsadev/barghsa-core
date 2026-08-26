@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ProfilesService } from './profiles.service.js'
+import { NotificationsService } from '../notifications/notifications.service.js'
 import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 
 // Shared mock pool so all calls to getDbPool() return the same instance
@@ -25,7 +26,7 @@ describe('ProfilesService', () => {
       get: vi.fn(),
     } as unknown as ConfigCacheService
 
-    service = new ProfilesService(configCache)
+    service = new ProfilesService(configCache, { create: vi.fn().mockResolvedValue(undefined) } as unknown as NotificationsService)
     mockPool.query.mockReset()
     mockPool.connect.mockReset()
     mockClient.query.mockReset()

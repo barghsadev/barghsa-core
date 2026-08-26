@@ -121,7 +121,7 @@ describe('CrmV2Service.getProfileDetail', () => {
     pool.query.mockResolvedValue({ rows: [] })
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail('nonexistent-id')
     expect(result).toBeNull()
@@ -147,7 +147,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail(VALID_PROFILE_ID)
 
@@ -182,7 +182,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail(VALID_PROFILE_ID)
 
@@ -202,7 +202,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail(VALID_PROFILE_ID)
     expect(result).toBeNull()
@@ -220,7 +220,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail(VALID_PROFILE_ID)
 
@@ -242,7 +242,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.getProfileDetail(VALID_PROFILE_ID)
 
@@ -262,7 +262,7 @@ describe('CrmV2Service.getProfileDetail', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     await service.getProfileDetail(VALID_PROFILE_ID)
 
@@ -308,7 +308,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile(
       VALID_PROFILE_ID,
@@ -342,7 +342,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile(
       VALID_PROFILE_ID,
@@ -368,7 +368,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile(
       VALID_PROFILE_ID,
@@ -390,7 +390,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile('nonexistent-id', { title: 'X' }, UPDATED_USER_ID, '')
     expect(result).toBeNull()
@@ -403,7 +403,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile(
       VALID_PROFILE_ID,
@@ -424,7 +424,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.updateProfile(
       VALID_PROFILE_ID,
@@ -455,7 +455,7 @@ describe('CrmV2Service.updateProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    service = new Svc(createMockSessionService())
+    service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     await service.updateProfile(
       VALID_PROFILE_ID,
@@ -506,7 +506,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(
       VALID_PROFILE_ID,
@@ -538,7 +538,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(
       VALID_PROFILE_ID,
@@ -566,7 +566,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(
       VALID_PROFILE_ID,
@@ -596,7 +596,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(
       VALID_PROFILE_ID,
@@ -616,7 +616,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile('nonexistent-id', { action: 'verify' }, ACTOR_USER_ID, '')
     expect(result).toBeNull()
@@ -628,7 +628,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'invalid-action' }, ACTOR_USER_ID, '')
     expect(result).not.toBeNull()
@@ -641,7 +641,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'unverify', reason: 'test' }, ACTOR_USER_ID, '')
     expect(result).not.toBeNull()
@@ -655,7 +655,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'unverify' }, ACTOR_USER_ID, '')
     expect(result).toHaveProperty('error')
@@ -668,7 +668,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'reverify', reason: '' }, ACTOR_USER_ID, '')
     expect(result).toHaveProperty('error')
@@ -681,7 +681,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'verify' }, ACTOR_USER_ID, '')
     expect(result).toHaveProperty('error')
@@ -694,7 +694,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.verifyProfile(VALID_PROFILE_ID, { action: 'verify' }, ACTOR_USER_ID, '')
     expect(result).not.toBeNull()
@@ -718,7 +718,7 @@ describe('CrmV2Service.verifyProfile', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(createMockSessionService())
+    const service = new Svc(createMockSessionService(), { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     await service.verifyProfile(
       VALID_PROFILE_ID,
@@ -769,7 +769,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.forcePasswordChange(TARGET_USER_ID, 'Security incident', ACTOR_USER_ID, '10.0.0.1')
 
@@ -787,7 +787,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.forcePasswordChange('nonexistent-id', 'test', ACTOR_USER_ID, '')
 
@@ -801,7 +801,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.forcePasswordChange(TARGET_USER_ID, '', ACTOR_USER_ID, '')
 
@@ -817,7 +817,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.forcePasswordChange(TARGET_USER_ID, '   ', ACTOR_USER_ID, '')
 
@@ -839,7 +839,7 @@ describe('CrmV2Service.forcePasswordChange', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     await expect(service.forcePasswordChange(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')).rejects.toThrow()
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK')
@@ -872,7 +872,7 @@ describe('CrmV2Service.expireSessions', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.expireSessions(TARGET_USER_ID, 'Device lost', ACTOR_USER_ID, '10.0.0.1')
 
@@ -890,7 +890,7 @@ describe('CrmV2Service.expireSessions', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.expireSessions('nonexistent-id', 'test', ACTOR_USER_ID, '')
 
@@ -904,7 +904,7 @@ describe('CrmV2Service.expireSessions', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     const result = await service.expireSessions(TARGET_USER_ID, '', ACTOR_USER_ID, '')
 
@@ -927,7 +927,7 @@ describe('CrmV2Service.expireSessions', () => {
 
     vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
     const { CrmV2Service: Svc } = await import('./crm-v2.service.js')
-    const service = new Svc(ms)
+    const service = new Svc(ms, { create: vi.fn().mockResolvedValue(undefined) } as unknown as any)
 
     await expect(service.expireSessions(TARGET_USER_ID, 'test', ACTOR_USER_ID, '10.0.0.1')).rejects.toThrow()
     expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK')
