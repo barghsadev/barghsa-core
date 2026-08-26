@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 250,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-07.01.01",
+  "current_task_id": "T-07.01.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-07-01-01--verification-mode-setting",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/141",
+  "loop_iteration": 251,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -223,8 +223,8 @@
     "02-auth-users-admin.md#T-06.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T05:42:00Z",
-  "notes": "Iteration-251: PR #140 merged (T-06.01.03 staff ticket management). GLM-5.2 approved. Returned to idle. Next: 02-auth-users-admin.md#T-07.01.01 (Verification mode setting, S).",
+  "last_updated": "2026-08-26T05:53:00Z",
+  "notes": "Iteration-251: PR #141 created (T-07.01.01 verification mode setting). Building complete — in review.",
   "status_history": [
     {
       "from": "in_review",
@@ -270,6 +270,11 @@
       "from": "blocked",
       "to": "building",
       "at": "iteration-250"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "iteration-251"
     }
   ]
 }
