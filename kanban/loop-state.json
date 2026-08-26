@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-07.01.02",
   "current_task_id": "T-07.01.02",
   "current_task_file": "02-auth-users-admin.md",
@@ -225,7 +225,7 @@
   ],
   "last_error": null,
   "last_updated": "2026-08-26T06:25:00Z",
-  "notes": "Iteration-253: PR #142 created for T-07.01.02 slice 1 (verification provider adapter framework). Typecheck and tests pass. Marked ready for review.",
+  "notes": "Iteration-253: PR #142 — review fixes applied (timeout leak, resetCircuitBreaker, NaN handling, constants). Back in review.",
   "status_history": [
     {
       "from": "idle",
