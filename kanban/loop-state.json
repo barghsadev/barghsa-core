@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-09.01.01",
   "current_task_id": "T-09.01.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-01-01--branding-settings",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/155",
   "loop_iteration": 288,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -240,6 +240,6 @@
     "02-auth-users-admin.md#T-08.01.03"
   ],
   "last_error": null,
-  "notes": "Iter-288: Started T-09.01.01 (branding settings page). Creating branch, DB migration, API, and UI.",
-  "last_updated": "2026-08-26T13:50:00Z"
+  "notes": "Iter-288: Started T-09.01.01. Built branch, DB migration (0020), API (BrandConfigService), UI (AdminBrandingConfig), 10 tests, opened PR #155 (draft→ready). Setting in_review.",
+  "last_updated": "2026-08-26T13:53:00Z"
 }
