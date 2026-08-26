@@ -173,6 +173,43 @@ export class VerificationProviderController {
   }
 
   /**
+   * POST /api/admin/verification/providers/:providerId/reset-circuit-breaker
+   *
+   * Reset the circuit breaker for a provider back to CLOSED state.
+   * Useful after a provider has recovered from an outage.
+   */
+  @Post('providers/:providerId/reset-circuit-breaker')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Reset circuit breaker for a provider' })
+  @ApiParam({ name: 'providerId', description: 'Provider identifier' })
+  @ApiResponse({ status: 200, description: 'Circuit breaker reset.' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Provider not found' })
+  async resetCircuitBreaker(
+    @Param('providerId') providerId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const isAdmin = req.session.isAdmin ?? false
+    if (!isAdmin) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const reset = this.verificationProviderService.resetCircuitBreaker(providerId)
+    if (!reset) {
+      throw new HttpException(
+        { statusCode: 404, error: VerificationErrorCodes.PROVIDER_NOT_FOUND, message: 'Provider not found' },
+        404,
+      )
+    }
+
+    this.logger.log(`Circuit breaker reset for provider: ${providerId} by ${req.session.userId}`)
+    return { providerId, message: 'Circuit breaker reset' }
+  }
+
+  /**
    * POST /api/admin/verification/verify
    *
    * Run a verification through the specified provider.

@@ -36,6 +36,17 @@ export class VerificationProviderRegistry {
     return this.providers.delete(providerId)
   }
 
+  /** Reset the circuit breaker for a provider back to CLOSED state. */
+  resetCircuitBreaker(providerId: string): boolean {
+    const entry = this.providers.get(providerId)
+    if (!entry) {
+      return false
+    }
+    entry.breaker.reset()
+    this.logger.log(`Circuit breaker reset for provider: ${providerId}`)
+    return true
+  }
+
   /** Get a registered adapter by ID. */
   getAdapter(providerId: string): VerificationProviderAdapter | undefined {
     return this.providers.get(providerId)?.adapter
@@ -109,8 +120,10 @@ export class VerificationProviderRegistry {
     }
 
     // Execute with timeout and retry
-    const timeoutMs = config?.settings?.['timeoutMs'] ? Number(config.settings['timeoutMs']) : 10_000
-    const maxRetries = config?.settings?.['maxRetries'] ? Number(config.settings['maxRetries']) : DEFAULT_RETRY_CONFIG.maxRetries
+    const rawTimeoutMs = config?.settings?.['timeoutMs']
+    const timeoutMs = rawTimeoutMs !== undefined && Number.isFinite(Number(rawTimeoutMs)) ? Number(rawTimeoutMs) : 10_000
+    const rawMaxRetries = config?.settings?.['maxRetries']
+    const maxRetries = rawMaxRetries !== undefined && Number.isFinite(Number(rawMaxRetries)) ? Number(rawMaxRetries) : DEFAULT_RETRY_CONFIG.maxRetries
 
     let lastError: unknown
     const startTime = Date.now()
@@ -118,13 +131,20 @@ export class VerificationProviderRegistry {
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const result = await entry.breaker.call(async () => {
-          // Timeout race
-          const timeoutPromise = new Promise<never>((_, reject) => {
-            setTimeout(() => reject(new Error('Provider timeout')), timeoutMs)
-          })
+          // Timeout race with proper cleanup
+          let timeoutId: ReturnType<typeof setTimeout> | undefined
+          try {
+            const timeoutPromise = new Promise<never>((_, reject) => {
+              timeoutId = setTimeout(() => reject(new Error('Provider timeout')), timeoutMs)
+            })
 
-          const verifyPromise = entry.adapter.verify(input)
-          return await Promise.race([verifyPromise, timeoutPromise])
+            const verifyPromise = entry.adapter.verify(input)
+            return await Promise.race([verifyPromise, timeoutPromise])
+          } finally {
+            if (timeoutId !== undefined) {
+              clearTimeout(timeoutId)
+            }
+          }
         })
 
         // On success, return the result with duration
@@ -135,8 +155,8 @@ export class VerificationProviderRegistry {
       } catch (error) {
         lastError = error
         if (attempt < maxRetries) {
-          // Exponential backoff
-          const delay = Math.min(200 * 2 ** attempt, 5_000)
+          // Exponential backoff using config defaults
+          const delay = Math.min(DEFAULT_RETRY_CONFIG.baseDelayMs * 2 ** attempt, DEFAULT_RETRY_CONFIG.maxDelayMs)
           this.logger.warn(`Verification attempt ${attempt + 1} failed for provider "${providerId}": ${String(error)}. Retrying in ${delay}ms`)
           await new Promise((resolve) => setTimeout(resolve, delay))
         }

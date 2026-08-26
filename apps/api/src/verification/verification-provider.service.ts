@@ -103,12 +103,6 @@ export class VerificationProviderService implements OnModuleInit {
    * Reset the circuit breaker for a specific provider.
    */
   resetCircuitBreaker(providerId: string): boolean {
-    const adapter = this.registry.getAdapter(providerId)
-    if (!adapter) {
-      return false
-    }
-    // The registry doesn't expose reset directly, so we re-register
-    this.registry.unregister(providerId)
-    return true
+    return this.registry.resetCircuitBreaker(providerId)
   }
 }
