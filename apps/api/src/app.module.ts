@@ -19,9 +19,10 @@ import { OrdersModule } from './orders/index.js'
 import { TosModule } from './tos/tos.module.js'
 import { AdminModule } from './admin/index.js'
 import { CrmModule } from './crm/index.js'
+import { TicketsModule } from './tickets/index.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
