@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-05.04.04",
-  "current_task_id": "T-05.04.04",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-05-04-04--agent-role-permissions",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 236,
+  "loop_iteration": 237,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -193,11 +193,12 @@
     "02-auth-users-admin.md#T-05.03.02",
     "02-auth-users-admin.md#T-05.04.01",
     "02-auth-users-admin.md#T-05.04.02",
-    "02-auth-users-admin.md#T-05.04.03"
+    "02-auth-users-admin.md#T-05.04.03",
+    "02-auth-users-admin.md#T-05.04.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T00:15:00Z",
-  "notes": "Iteration-236: Merged PR #133 (T-05.04.03 accept/decline invitation). Starting T-05.04.04 first slice: permission matrix + role guard (authorization framework prerequisite).",
+  "last_updated": "2026-08-26T03:21:00Z",
+  "notes": "Iteration-237: Merged PR #134 (T-05.04.04 first slice — permission matrix + AgentRoleGuard). GLM-5.2 approved. 405/405 tests pass. Next: select next task from queue.",
   "status_history": [
     {
       "from": "fixing",
@@ -318,6 +319,16 @@
       "from": "idle",
       "to": "building",
       "at": "iteration-236"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "iteration-236"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-237"
     }
   ]
 }
