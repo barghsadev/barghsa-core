@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-07.01.02",
-  "current_task_id": "T-07.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-07-01-02--api-verification-provider",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/142",
-  "loop_iteration": 253,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 254,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -221,12 +221,18 @@
     "02-auth-users-admin.md#T-06.01.01",
     "02-auth-users-admin.md#T-06.01.02",
     "02-auth-users-admin.md#T-06.01.03",
-    "02-auth-users-admin.md#T-07.01.01"
+    "02-auth-users-admin.md#T-07.01.01",
+    "02-auth-users-admin.md#T-07.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T06:25:00Z",
-  "notes": "Iteration-253: PR #142 — review fixes applied (timeout leak, resetCircuitBreaker, NaN handling, constants). Back in review.",
+  "last_updated": "2026-08-26T06:35:00Z",
+  "notes": "Iteration-254: PR #142 merged (T-07.01.02 verification provider adapter framework). Back to idle.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-254"
+    },
     {
       "from": "idle",
       "to": "building",
