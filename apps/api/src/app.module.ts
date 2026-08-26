@@ -23,9 +23,10 @@ import { TicketsModule } from './tickets/index.js'
 import { VerificationModule } from './verification/verification.module.js'
 import { DashboardModule } from './dashboard/dashboard.module.js'
 import { NotificationsModule } from './notifications/index.js'
+import { WalletModule } from './wallet/index.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule, WalletModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
