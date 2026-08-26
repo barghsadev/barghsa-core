@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest'
 import { getTableColumns } from 'drizzle-orm'
-import { productCategories } from './product-categories'
+import { productCategories, productCategoryEnum } from './product-categories'
 
 describe('product_categories schema', () => {
   it('has the expected columns', () => {
@@ -42,5 +42,17 @@ describe('product_categories schema', () => {
     const columns = getTableColumns(productCategories)
     expect(columns['productId']?.notNull).toBe(true)
     expect(columns['category']?.notNull).toBe(true)
+  })
+
+  it('product_category enum has the expected values', () => {
+    const expected = [
+      'electricity_generation_station_consultation',
+      'electricity_saving_certificate_consultation',
+      'thermal_electricity',
+      'green_electricity',
+      'free_market_electricity',
+      'energy_saving_electricity',
+    ]
+    expect(productCategoryEnum.enumValues).toEqual(expected)
   })
 })
