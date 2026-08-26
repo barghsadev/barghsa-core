@@ -3,6 +3,7 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { rateLimitKey } from '@barghsa/shared/rate-limit'
 import { normalizeUsername } from '@barghsa/shared/validation'
+import type { AgentRole } from '@barghsa/shared/agent-permissions'
 import { v7 as uuidv7 } from 'uuid'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
@@ -686,5 +687,19 @@ export class AgentsService {
     }
 
     this.logger.log(`Invitation ${inviteId} declined by user ${userId}`)
+  }
+
+  /**
+   * Return the agent roles (from profile_agents) for a given user in a
+   * given profile. Returns an empty array when the user is not an agent.
+   * Used by the AgentRoleGuard to enforce role-based permissions.
+   */
+  async getAgentRoles(profileId: string, userId: string): Promise<AgentRole[]> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT role FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+      [profileId, userId],
+    )
+    return result.rows.map((row) => row.role as AgentRole)
   }
 }

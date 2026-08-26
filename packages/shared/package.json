@@ -13,6 +13,7 @@
         "./config-cache": "./dist/config-cache/index.js",
         "./storage": "./dist/storage/index.js",
         "./validation": "./dist/validation/index.js",
+        "./agent-permissions": "./dist/agent-permissions/index.js",
         "./package.json": "./package.json"
     },
     "scripts": {

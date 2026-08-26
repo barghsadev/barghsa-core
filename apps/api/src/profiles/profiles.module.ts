@@ -7,12 +7,13 @@ import { ProfilesService } from './profiles.service.js'
 import { LegalProfilesService } from './legal-profiles.service.js'
 import { AgentsService } from './agents.service.js'
 import { ProfileVerifiedGuard } from './profiles.guard.js'
+import { AgentRoleGuard } from './agent-role.guard.js'
 import { SessionModule } from '../session/session.module.js'
 
 @Module({
   imports: [SessionModule],
   controllers: [ProfilesController, OnboardingController, AgentsController, InvitationsController],
-  providers: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard],
-  exports: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard],
+  providers: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard, AgentRoleGuard],
+  exports: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard, AgentRoleGuard],
 })
 export class ProfilesModule {}
