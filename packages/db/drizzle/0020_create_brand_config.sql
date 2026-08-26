@@ -1,5 +1,11 @@
 -- Migration 0020: Create brand_config table for admin branding settings (T-09.01.01)
 --
+-- Follows the project's existing migration convention (see 0016, 0017): all
+-- additive changes (enum, table, indexes, trigger, seed) live in one expand
+-- file since they create no backward-incompatible schema changes. The entire
+-- migration is the "expand" phase — no existing objects are altered, renamed,
+-- or dropped.
+--
 -- Stores brand configuration as a JSON document with Draft → Active lifecycle.
 -- A single active config is always present; drafts are created by duplicating
 -- the active config and modified independently.

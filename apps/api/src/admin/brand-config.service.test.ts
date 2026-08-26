@@ -147,6 +147,7 @@ describe('BrandConfigService', () => {
       // Transaction queries
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ id: 'draft-1' }, { id: 'active-1' }] }) // SELECT ... FOR UPDATE
         .mockResolvedValueOnce(undefined) // deactivate active
         .mockResolvedValueOnce({ rows: [makeRow({ id: 'draft-1', status: 'active', version: 2 })] }) // activate draft
         .mockResolvedValueOnce(undefined) // COMMIT

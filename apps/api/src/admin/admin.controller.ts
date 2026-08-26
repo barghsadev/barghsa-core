@@ -46,8 +46,24 @@ export const CreateStaffUserSchema = z.object({
 export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
 
 /**
- * Brand configuration DTO returned by the admin API.
+ * Zod schema for brand config body (T-09.01.01).
+ *
+ * Validates the config JSON for the PUT /api/admin/branding/config endpoint.
  */
+const hexColorRe = /^#[0-9a-fA-F]{6}$/
+
+export const UpsertBrandConfigSchema = z.object({
+  config: z.object({
+    appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
+    slogan: z.string().max(200).optional().default(''),
+    primaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#2563eb'),
+    secondaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#64748b'),
+    accentColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#f59e0b'),
+    logoUrl: z.string().url().nullable().optional().default(null),
+    faviconUrl: z.string().url().nullable().optional().default(null),
+    darkMode: z.boolean().optional().default(false),
+  }),
+})
 export interface BrandConfigDto {
   id: string
   config: Record<string, unknown>
@@ -458,7 +474,7 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async upsertBrandConfig(
-    @Body() rawBody: { config?: Record<string, unknown> },
+    @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<BrandConfigDto> {
     if (!(req.session.isAdmin ?? false)) {
@@ -468,8 +484,23 @@ export class AdminController {
         403,
       )
     }
-    const config = rawBody.config ?? {}
-    return this.brandConfigService.upsertDraft(config, req.session.userId)
+
+    // Validate with Zod
+    const parsed = UpsertBrandConfigSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: firstIssue?.message ?? 'Invalid brand config',
+        },
+        400,
+      )
+    }
+
+    return this.brandConfigService.upsertDraft(parsed.data.config, req.session.userId)
   }
 
   /**

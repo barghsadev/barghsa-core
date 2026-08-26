@@ -11,6 +11,11 @@ import type { BrandConfigDto } from './admin.controller.js'
  *   - Active: the currently published config, at most one at a time.
  *
  * The config is stored as a JSONB blob in the brand_config table.
+ *
+ * Note: Uses raw pg pool queries (via getDbPool()) rather than Drizzle ORM
+ * query builder for JSONB upserts with RETURNING, consistent with the
+ * project's established data-access pattern (see config-cache, crm, otp,
+ * health, and other services in apps/api/src/).
  */
 @Injectable()
 export class BrandConfigService {
@@ -177,6 +182,14 @@ export class BrandConfigService {
 
     try {
       await client.query('BEGIN')
+
+      // Lock the brand_config rows to serialize concurrent activations.
+      // This prevents a race where two activations could both deactivate the
+      // active config and both promote their draft, which would violate the
+      // unique partial index uq_brand_config_active.
+      await client.query(
+        `SELECT id FROM brand_config WHERE status IN ('active', 'draft') FOR UPDATE`,
+      )
 
       // Deactivate active config (set to draft to preserve history)
       await client.query(
