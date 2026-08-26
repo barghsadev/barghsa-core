@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-04-05--ownership-transfer",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/135",
-  "loop_iteration": 238,
-  "fix_attempts": 0,
+  "loop_iteration": 239,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -203,8 +203,8 @@
     "02-auth-users-admin.md#T-05.04.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T03:30:30Z",
-  "notes": "Iteration-238: Built T-05.04.05 first slice (ownership transfer initiation). PR #135 ready for review. 411/411 tests pass.",
+  "last_updated": "2026-08-26T03:42:00Z",
+  "notes": "Iteration-239: Fixed review findings (23505 race, reorder authz, self-transfer guard, FK). Fix attempts: 1. PR #135 back in_review. 412/412 tests pass.",
   "status_history": [
     {
       "from": "fixing",
@@ -345,6 +345,16 @@
       "from": "building",
       "to": "in_review",
       "at": "iteration-238"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-239"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "iteration-239"
     }
   ]
 }
