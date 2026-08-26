@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-06.01.02",
-  "current_task_id": "T-06.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e06-t-06-01-02-s1--ticket-list-api",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/139",
-  "loop_iteration": 247,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 248,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -205,11 +205,12 @@
     "02-auth-users-admin.md#T-05.04.05",
     "02-auth-users-admin.md#T-05.05.01",
     "02-auth-users-admin.md#T-05.05.02",
-    "02-auth-users-admin.md#T-06.01.01"
+    "02-auth-users-admin.md#T-06.01.01",
+    "02-auth-users-admin.md#T-06.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T05:02:00Z",
-  "notes": "Iteration-247: Review requested changes — added admin gate on status update, 403 on internal notes for non-admin, NaN fix, status filter validation. All 30 tests pass. Re-requesting review on next tick.",
+  "last_updated": "2026-08-26T02:09:28Z",
+  "notes": "Iteration-248: PR #139 merged (T-06.01.02 ticket list/detail/comments API). GLM-5.2 approved. Returned to idle.",
   "status_history": [
     {
       "from": "in_review",
@@ -240,6 +241,11 @@
       "from": "fixing",
       "to": "in_review",
       "at": "iteration-247"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-248"
     }
   ]
 }
