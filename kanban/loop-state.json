@@ -6,7 +6,7 @@
   "current_branch": "feat/e04-t-04-2-01-01--wallets-table",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/149",
   "loop_iteration": 275,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -234,6 +234,6 @@
     "03-core-business.md#T-03.01.01.04"
   ],
   "last_error": null,
-  "notes": "Iter-275: UNBLOCKED — Loop was stuck at 02-auth-users-admin.md#T-08.01.02 (wallet balance card) for 5 iterations because wallet module (E-04) doesn't exist. Per index.md implementation order, E-04 should precede remaining E-02 admin tasks. Transitioned from blocked to building E-04 (Invoices, Wallet, Payments & Contracts). Starting with T-04.2.01.01 (Create wallets table) + T-04.2.01.02 (wallet_transactions table) + WalletService with credit/debit/reserve/release. Branch: feat/e04-t-04-2-01-01--wallets-table.",
-  "last_updated": "2026-08-26T07:23:00Z"
+  "notes": "Iter-275: UNBLOCKED — Loop was stuck at 02-auth-users-admin.md#T-08.01.02 (wallet balance card) for 5 iterations because wallet module (E-04) doesn't exist. Per index.md implementation order, E-04 should precede remaining E-02 admin tasks. Transitioned from blocked to building E-04 (Invoices, Wallet, Payments & Contracts). Starting with T-04.2.01.01 (Create wallets table) + T-04.2.01.02 (wallet_transactions table) + WalletService with credit/debit/reserve/release. Branch: feat/e04-t-04-2-01-01--wallets-table. | Fix round 1: addressed 6/8 review findings (auth, idempotency TOCTOU, release concurrency check, createWallet race, tests, reserve params). 2 noted as intentional. Returned to in_review. Typecheck: 11/11 ✓. Tests: 12/12 ✓.",
+  "last_updated": "2026-08-26T11:11:00Z"
 }
