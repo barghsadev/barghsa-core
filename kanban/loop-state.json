@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 277,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.01",
+  "current_task_id": "T-04.1.01.01",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-01-01--invoice-table",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/150",
+  "loop_iteration": 278,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -235,6 +235,6 @@
     "04-invoices-wallet-contracts.md#T-04.2.01.01"
   ],
   "last_error": null,
-  "notes": "Iter-276/277: PR #149 (T-04.2.01.01 wallet foundation) merged. Round 2 review fixes: idempotency return mapTransaction, proper NestJS HttpExceptions, release() TOCTU fix, ::bigint cast consistency, unused imports. Seed test fixed (activation_token columns). Now idle — next task: T-04.2.01.02 (wallet_transactions table, already partially delivered) or remaining E-04 tasks.",
-  "last_updated": "2026-08-26T11:45:00Z"
+  "notes": "Iter-278: Review found critical type mismatch (text vs uuid FK) and missing Drizzle CHECK constraints. Fix applied: profileId/orderId changed to uuidv7(), Drizzle check() constraints added. Fix attempt 1. Next tick: re-run review.",
+  "last_updated": "2026-08-26T12:08:00Z"
 }
