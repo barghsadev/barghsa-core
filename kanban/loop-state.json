@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "03-core-business.md#T-03.01.01.03",
   "current_task_id": "T-03.01.01.03",
   "current_task_file": "03-core-business.md",
   "current_branch": "feat/e03-t-03-01-01-03--product-categories",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/147",
   "loop_iteration": 266,
   "fix_attempts": 0,
   "build_completed_tasks": [
