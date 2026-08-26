@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 261,
+  "status": "in_review",
+  "current_task_key": "03-core-business.md#T-03.01.01.02",
+  "current_task_id": "T-03.01.01.02",
+  "current_task_file": "03-core-business.md",
+  "current_branch": "feat/e03-t-03-01-01-02--product-price-versions",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/145",
+  "loop_iteration": 262,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
