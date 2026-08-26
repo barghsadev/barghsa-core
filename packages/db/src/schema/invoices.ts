@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, jsonb, pgTable } from 'drizzle-orm/pg-core'
+import { check, text, jsonb, pgTable } from 'drizzle-orm/pg-core'
 import { uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 import { orders } from './orders'
@@ -37,12 +37,12 @@ export const invoices = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** Foreign key to the customer profile. */
-    profileId: text('profile_id')
+    profileId: uuidv7('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
     /** Optional foreign key to the originating order. */
-    orderId: text('order_id')
+    orderId: uuidv7('order_id')
       .references(() => orders.id, { onDelete: 'set null' }),
 
     /**
@@ -109,15 +109,30 @@ export const invoices = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
+  (table) => ({
+    /** paidAmount must not exceed the invoice total. */
+    paidNotExceedsTotal: check(
+      'ck_paid_not_exceeds_total',
+      sql`${table.paidAmount} <= ${table.totalAmount}`,
+    ),
+    /** refundedAmount must not exceed the cumulative paid amount. */
+    refundNotExceedsPaid: check(
+      'ck_refund_not_exceeds_paid',
+      sql`${table.refundedAmount} <= ${table.paidAmount}`,
+    ),
+  }),
 )
 
 /**
  * SQL to create the invoices table with CHECK constraints.
  *
+ * This is the migration source of truth. The Drizzle pgTable above
+ * mirrors these constraints for ORM query type safety; the raw SQL
+ * is what actually runs against PostgreSQL.
+ *
  * Constraints enforced at the database level:
  *   - paidAmount <= totalAmount
  *   - refundedAmount <= paidAmount
- *   - availableBalance = totalAmount - paidAmount (derived, not stored)
  */
 export const createInvoicesTable = sql`
   CREATE TABLE IF NOT EXISTS invoices (
