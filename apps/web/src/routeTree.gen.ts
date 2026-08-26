@@ -31,6 +31,7 @@ import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
+import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
@@ -156,6 +157,11 @@ const AdminVerificationRoute = AdminVerificationRouteImport.update({
   path: '/verification',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGeographyRoute = AdminGeographyRouteImport.update({
+  id: '/geography',
+  path: '/geography',
+  getParentRoute: () => AdminRoute,
+} as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/complete',
   path: '/complete',
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
@@ -331,6 +339,7 @@ export interface FileRoutesById {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
@@ -406,6 +416,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin'
@@ -445,6 +456,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
@@ -631,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVerificationRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/geography': {
+      id: '/admin/geography'
+      path: '/geography'
+      fullPath: '/admin/geography'
+      preLoaderRoute: typeof AdminGeographyRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/onboarding/complete': {
       id: '/onboarding/complete'
       path: '/complete'
@@ -797,6 +816,7 @@ interface AdminRouteChildren {
   AdminStorageRoute: typeof AdminStorageRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
+  AdminGeographyRoute: typeof AdminGeographyRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -806,6 +826,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminStorageRoute: AdminStorageRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
+  AdminGeographyRoute: AdminGeographyRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
