@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-08.01.03",
   "current_task_id": "T-08.01.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-08-01-03--quick-status-cards",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/154",
   "loop_iteration": 286,
   "fix_attempts": 0,
   "build_completed_tasks": [

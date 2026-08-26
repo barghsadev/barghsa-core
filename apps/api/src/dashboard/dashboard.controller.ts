@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common'
+import { Controller, Get, Logger, Req, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
@@ -9,6 +9,8 @@ import { DashboardService } from './dashboard.service.js'
 @UseGuards(SessionAuthGuard)
 @Controller('api/dashboard')
 export class DashboardController {
+  private readonly logger = new Logger(DashboardController.name)
+
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Get()
@@ -20,8 +22,9 @@ export class DashboardController {
 
     try {
       quickStatus = await this.dashboardService.getQuickStatusCounts(userId)
-    } catch {
-      // Non-critical — return zeros rather than breaking the dashboard.
+    } catch (err) {
+      // Non-critical — return zeros rather than breaking the dashboard page.
+      this.logger.warn(`Failed to fetch quick status counts for user ${userId}: ${(err as Error).message}`)
     }
 
     return {
@@ -30,6 +33,9 @@ export class DashboardController {
         currency: 'IRR',
         lowBalanceWarning: false,
       },
+      // Map quickStatus.pendingOrders → activeOrders for backward compat
+      // with the existing DashboardData interface. A future cleanup can
+      // rename the field.
       activeOrders: quickStatus.pendingOrders,
       pendingInvoices: quickStatus.unpaidInvoices,
       openTickets: quickStatus.openTickets,

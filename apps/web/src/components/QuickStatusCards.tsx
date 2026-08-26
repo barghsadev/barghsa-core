@@ -100,6 +100,43 @@ function InvoiceIcon({ className }: { className?: string }) {
   )
 }
 
+/** ─── Per-card colour helpers ────────────────────────────────────────── */
+
+/**
+ * Active contracts: any count is a positive signal → green always.
+ */
+function contractColor(count: number): string {
+  if (count === 0) return 'border-l-4 border-gray-400 bg-white'
+  return 'border-l-4 border-green-500 bg-green-50'
+}
+
+/**
+ * Pending orders: 0 = nothing to do (green), 1-2 = attention (yellow), 3+ = action (red).
+ */
+function orderColor(count: number): string {
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
+  return 'border-l-4 border-red-500 bg-red-50'
+}
+
+/**
+ * Open tickets: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
+ */
+function ticketColor(count: number): string {
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
+  return 'border-l-4 border-red-500 bg-red-50'
+}
+
+/**
+ * Unpaid invoices: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
+ */
+function invoiceColor(count: number): string {
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
+  return 'border-l-4 border-red-500 bg-red-50'
+}
+
 /** ─── Card definitions ─────────────────────────────────────────────── */
 
 interface CardDef {
@@ -107,26 +144,16 @@ interface CardDef {
   icon: (props: { className?: string }) => JSX.Element
   labelKey: string
   href: string
+  search?: Record<string, string>
   count: number
-}
-
-/**
- * Determine the colour class for a status card based on its count.
- * - 0 → green (good / nothing to do)
- * - 1–2 → amber (attention)
- * - 3+ → red (action needed)
- */
-function cardColorClass(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
-  return 'border-l-4 border-red-500 bg-red-50'
+  colorFn: (count: number) => string
 }
 
 /**
  * Quick status cards (T-08.01.03).
  *
- * Shows four summary cards with icons, colour-coded counts, and links to
- * filtered list pages. Intended for the dashboard overview.
+ * Shows four summary cards with icons, per-card colour coding, and links
+ * to filtered list pages. Intended for the dashboard overview.
  */
 export function QuickStatusCards({
   activeContracts,
@@ -143,28 +170,36 @@ export function QuickStatusCards({
       icon: ContractIcon,
       labelKey: 'dashboard.overview.contractStatus',
       href: isRtl ? '/برق' : '/electricity',
+      search: { status: 'CONFIRMED' },
       count: activeContracts,
+      colorFn: contractColor,
     },
     {
       key: 'orders',
       icon: OrderIcon,
       labelKey: 'dashboard.overview.activeOrders',
       href: isRtl ? '/برق' : '/electricity',
+      search: { status: 'PENDING' },
       count: pendingOrders,
+      colorFn: orderColor,
     },
     {
       key: 'tickets',
       icon: TicketIcon,
       labelKey: 'dashboard.overview.openTickets',
       href: '/support',
+      search: { tab: 'open' },
       count: openTickets,
+      colorFn: ticketColor,
     },
     {
       key: 'invoices',
       icon: InvoiceIcon,
       labelKey: 'dashboard.overview.pendingInvoices',
       href: '/wallet',
+      search: { state: 'Unpaid,Overdue' },
       count: unpaidInvoices,
+      colorFn: invoiceColor,
     },
   ]
 
@@ -175,12 +210,13 @@ export function QuickStatusCards({
     >
       {cards.map((card) => {
         const Icon = card.icon
-        const colorClass = cardColorClass(card.count)
+        const colorClass = card.colorFn(card.count)
 
         return (
           <Link
             key={card.key}
             to={card.href}
+            search={card.search}
             className={`block rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow ${colorClass}`}
           >
             <div className={`flex items-start gap-3 ${isRtl ? 'flex-row-reverse' : ''}`}>

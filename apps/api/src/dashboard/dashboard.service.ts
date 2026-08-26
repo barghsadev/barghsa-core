@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 
 export interface QuickStatusCounts {
@@ -18,7 +18,6 @@ export interface QuickStatusCounts {
  */
 @Injectable()
 export class DashboardService {
-  private readonly logger = new Logger(DashboardService.name)
 
   /**
    * Resolve the user's default profile ID, or null if they have none.
