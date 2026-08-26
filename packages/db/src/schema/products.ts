@@ -1,73 +1,72 @@
-import { sql } from 'drizzle-orm'
-import { text, boolean, numeric } from 'drizzle-orm/pg-core'
+import { jsonb, text } from 'drizzle-orm/pg-core'
 import { createTable } from '../base-table'
+import { pgEnum, irrAmount } from '../types'
+
+/**
+ * Product type discriminator.
+ *
+ * - `consultation` — Consultation products (electricity generation station, saving certificate)
+ * - `electricity` — Electricity supply products (thermal, green, free market, energy saving)
+ * - `hardware` — Physical hardware products for power saving plans
+ * - `saving_plan` — Power saving plan products (separate from hardware, linked M:N)
+ */
+export const productTypeEnum = pgEnum('product_type', [
+  'consultation',
+  'electricity',
+  'hardware',
+  'saving_plan',
+])
+
+/**
+ * Product lifecycle status.
+ *
+ * - `active` — Visible and orderable
+ * - `inactive` — Hidden from ordering but not deleted; admin can reactivate
+ * - `archived` — No longer in use; preserved for historical reference
+ */
+export const productStatusEnum = pgEnum('product_status', [
+  'active',
+  'inactive',
+  'archived',
+])
 
 /**
  * Products table.
  *
- * Stores product definitions — system-defined electricity types and potentially
- * future product categories. System products (those with a non-null `systemType`)
- * are immutable via seed and protected by database-level constraints from
- * deletion or duplication (see T-02.04.06).
+ * Central catalog for all product types. System products (electricity types)
+ * are identified by a non-null `system_key` and are immutable — they cannot
+ * be deleted, have their `system_key` or `type` changed, and no additional
+ * electricity-type products can be created. This is enforced at both the
+ * API and DB level (see migration T-03.01.02.04).
  *
- * - `id` — UUIDv7 primary key.
- * - `product_type` — product category, e.g. `'electricity'`. Default `'electricity'`.
- * - `system_type` — immutable system identifier for default products
- *   (`thermal`, `green`, `free_market`, `energy_saving`). Null for
- *   admin-created products. Unique.
- * - `title_fa` — Persian display name.
- * - `price` — current price in IRR (smallest denomination / Rials).
- *   Null until an admin sets a price. Once set, updating the price creates
- *   a new price record; existing subscriptions are not retroactively changed.
- * - `is_active` — whether the product is currently orderable.
- * - `min_kwh` — minimum kWh per billing period (0 = no minimum).
- * - `max_kwh` — maximum kWh per billing period (0 = no maximum).
- * - `created_at` / `updated_at` — audit columns.
+ * - `id` — UUIDv7 primary key (from base columns).
+ * - `type` — Product category discriminator (pgEnum).
+ * - `system_key` — Immutable system identifier for default products (e.g.
+ *   `thermal_electricity`). Null for admin-created products. Unique.
+ * - `title` — Localized JSONB object, e.g. `{"fa": "برق حرارتی", "en": "Thermal Electricity"}`.
+ * - `description` — Localized JSONB object, nullable.
+ * - `price` — Current price in IRR (smallest denomination / Rials) as bigint.
+ *   Null until an admin sets a price. Price changes create a versioned record
+ *   in `product_price_versions` (T-03.01.01.02).
+ * - `status` — Product lifecycle status (pgEnum). Default `inactive`.
+ * - `created_at` / `updated_at` — audit columns (from base).
  */
 export const products = createTable('products', {
-  /** Product category discriminator, e.g. `'electricity'`. */
-  productType: text('product_type').notNull().default('electricity'),
+  /** Product category discriminator. */
+  type: productTypeEnum('type').notNull().default('electricity'),
 
-  /** Immutable system identifier for default products. Unique. */
-  systemType: text('system_type').unique(),
+  /** Immutable system identifier for default products. Unique, nullable for admin-created products. */
+  systemKey: text('system_key').unique(),
 
-  /** Persian display name. */
-  titleFa: text('title_fa').notNull(),
+  /** Localized title (JSONB: { "fa": "...", "en": "..." }). */
+  title: jsonb('title').notNull(),
 
-  /** Current price in IRR (Rials). Null until admin sets a price. */
-  price: numeric('price', { precision: 20, scale: 0 }),
+  /** Localized description (JSONB, nullable). */
+  description: jsonb('description'),
 
-  /** Whether the product is orderable. Default false. */
-  isActive: boolean('is_active').notNull().default(false),
+  /** Current price in IRR (bigint). Null until admin sets a price. */
+  price: irrAmount('price'),
 
-  /** Minimum kWh per billing period (0 = no minimum). */
-  minKwh: numeric('min_kwh', { precision: 20, scale: 6 })
-    .notNull()
-    .default('0'),
-
-  /** Maximum kWh per billing period (0 = no maximum). */
-  maxKwh: numeric('max_kwh', { precision: 20, scale: 6 })
-    .notNull()
-    .default('0'),
+  /** Product lifecycle status: active, inactive, archived. Default: inactive. */
+  status: productStatusEnum('status').notNull().default('inactive'),
 })
-
-/**
- * SQL to create the products table.
- */
-export const createProductsTable = sql`
-  CREATE TABLE IF NOT EXISTS products (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    product_type TEXT NOT NULL DEFAULT 'electricity',
-    system_type TEXT UNIQUE,
-    title_fa TEXT NOT NULL,
-    price NUMERIC(20, 0),
-    is_active BOOLEAN NOT NULL DEFAULT false,
-    min_kwh NUMERIC(20, 6) NOT NULL DEFAULT 0,
-    max_kwh NUMERIC(20, 6) NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_products_system_type ON products (system_type);
-  CREATE INDEX IF NOT EXISTS idx_products_product_type ON products (product_type);
-`

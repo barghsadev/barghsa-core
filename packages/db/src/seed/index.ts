@@ -139,12 +139,11 @@ async function seedAdmin(db: DbInstance, _force: boolean): Promise<SeederResult>
 /**
  * Seed default electricity products.
  *
- * Uses `ON CONFLICT (system_type) DO NOTHING` for idempotency — re-running
- * the seed multiple times does not create duplicates.  System-type products
+ * Uses the `systemKey` unique constraint for idempotency — re-running
+ * the seed multiple times does not create duplicates. System-type products
  * are immutable (not affected by `--force`).
  *
- * Extended by T-02.04.02 to add the four default electricity products with
- * their Persian titles and metadata.
+ * Creates the four default electricity products with localized JSONB titles.
  */
 async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResult> {
   const result: SeederResult = {
@@ -161,7 +160,7 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
       const existing = await db
         .select({ id: products.id })
         .from(products)
-        .where(eq(products.systemType, product.systemType))
+        .where(eq(products.systemKey, product.systemKey))
         .limit(1)
 
       if (existing.length > 0) {
@@ -170,13 +169,13 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
       }
 
       await db.insert(products).values(product).onConflictDoNothing({
-        target: products.systemType,
+        target: products.systemKey,
       })
 
       result.created++
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      result.errors.push(`product[${product.systemType}]: ${message}`)
+      result.errors.push(`product[${product.systemKey}]: ${message}`)
     }
   }
 
@@ -186,56 +185,42 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
 /**
  * Return the system-defined electricity products.
  *
- * T-02.04.02 fills this with the four specific products (thermal, green,
- * free_market, energy_saving) and their Persian titles.
- *
  * Each product:
- *   systemType — unique system identifier
- *   titleFa   — Persian display name
- *   productType — always 'electricity'
- *   isActive  — false (admin must activate)
- *   minKwh, maxKwh — '0' (no limit)
+ *   systemKey — unique immutable system identifier
+ *   title     — localized JSONB title
+ *   type      — always 'electricity'
+ *   status    — 'inactive' (admin must activate)
  */
 function getSystemProducts(): Array<{
-  systemType: string
-  titleFa: string
-  productType: string
-  isActive: boolean
-  minKwh: string
-  maxKwh: string
+  systemKey: string
+  title: { fa: string; en: string }
+  type: 'electricity'
+  status: 'inactive'
 }> {
   return [
     {
-      systemType: 'thermal',
-      titleFa: 'برق حرارتی',
-      productType: 'electricity',
-      isActive: false,
-      minKwh: '0',
-      maxKwh: '0',
+      systemKey: 'thermal',
+      title: { fa: 'برق حرارتی', en: 'Thermal Electricity' },
+      type: 'electricity',
+      status: 'inactive',
     },
     {
-      systemType: 'green',
-      titleFa: 'برق سبز',
-      productType: 'electricity',
-      isActive: false,
-      minKwh: '0',
-      maxKwh: '0',
+      systemKey: 'green',
+      title: { fa: 'برق سبز', en: 'Green Electricity' },
+      type: 'electricity',
+      status: 'inactive',
     },
     {
-      systemType: 'free_market',
-      titleFa: 'برق آزاد',
-      productType: 'electricity',
-      isActive: false,
-      minKwh: '0',
-      maxKwh: '0',
+      systemKey: 'free_market',
+      title: { fa: 'برق آزاد', en: 'Free Market Electricity' },
+      type: 'electricity',
+      status: 'inactive',
     },
     {
-      systemType: 'energy_saving',
-      titleFa: 'برق صرفه‌جویی',
-      productType: 'electricity',
-      isActive: false,
-      minKwh: '0',
-      maxKwh: '0',
+      systemKey: 'energy_saving',
+      title: { fa: 'برق صرفه‌جویی', en: 'Energy Saving Electricity' },
+      type: 'electricity',
+      status: 'inactive',
     },
   ]
 }

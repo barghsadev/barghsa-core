@@ -13,7 +13,7 @@ export class ProductsController {
   /**
    * GET /api/products
    *
-   * Returns all active products, ordered by system type.
+   * Returns all active products, ordered by system key.
    * Public endpoint — no authentication required.
    */
   @Get()
@@ -28,13 +28,12 @@ export class ProductsController {
         type: 'object',
         properties: {
           id: { type: 'string' },
-          productType: { type: 'string' },
-          systemType: { type: 'string', nullable: true },
-          titleFa: { type: 'string' },
+          type: { type: 'string' },
+          systemKey: { type: 'string', nullable: true },
+          title: { type: 'object' },
+          description: { type: 'object', nullable: true },
           price: { type: 'string', nullable: true },
-          isActive: { type: 'boolean' },
-          minKwh: { type: 'string' },
-          maxKwh: { type: 'string' },
+          status: { type: 'string' },
         },
       },
     },
@@ -42,17 +41,18 @@ export class ProductsController {
   async getActiveProducts() {
     const pool = getDbPool()
     const result = await pool.query(
-      `SELECT * FROM products WHERE is_active = true ORDER BY system_type NULLS LAST`,
+      `SELECT id, type, system_key, title, description, price, status
+       FROM products WHERE status = 'active'
+       ORDER BY system_key NULLS LAST`,
     )
     return result.rows.map((row: Record<string, unknown>) => ({
       id: row.id as string,
-      productType: row.product_type as string,
-      systemType: row.system_type as string | null,
-      titleFa: row.title_fa as string,
-      price: row.price as string | null,
-      isActive: row.is_active as boolean,
-      minKwh: row.min_kwh as string,
-      maxKwh: row.max_kwh as string,
+      type: row.type as string,
+      systemKey: row.system_key as string | null,
+      title: row.title as Record<string, string>,
+      description: row.description as Record<string, string> | null,
+      price: row.price ? String(row.price) : null,
+      status: row.status as string,
     }))
   }
 }
