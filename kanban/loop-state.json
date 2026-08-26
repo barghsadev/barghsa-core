@@ -5,7 +5,7 @@
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 291,
+  "loop_iteration": 293,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -71,8 +71,6 @@
     "01-platform-infrastructure.md#T-04.02.02",
     "01-platform-infrastructure.md#T-04.02.03",
     "01-platform-infrastructure.md#T-04.02.04",
-    "01-platform-infrastructure.md#T-04.02.05",
-    "01-platform-infrastructure.md#T-04.02.06",
     "01-platform-infrastructure.md#T-04.03.01",
     "01-platform-infrastructure.md#T-04.03.02",
     "01-platform-infrastructure.md#T-04.03.03",
@@ -239,9 +237,10 @@
     "02-auth-users-admin.md#T-08.01.02",
     "02-auth-users-admin.md#T-08.01.03",
     "02-auth-users-admin.md#T-09.01.01",
-    "02-auth-users-admin.md#T-09.01.02"
+    "02-auth-users-admin.md#T-09.01.02",
+    "02-auth-users-admin.md#T-09.02.01"
   ],
   "last_error": null,
-  "notes": "Iter-291: PR #156 (T-09.01.02 theme application) MERGED via squash after GLM-5.2 round-2 approve. Fix round: SVG foreground, tests, dead code removal, useMemo. Email/notification template branding documented as follow-up. Returned to idle.",
-  "last_updated": "2026-08-26T14:31:00Z"
+  "notes": "Iter-293: PR #157 (T-09.02.01 Province CRUD) merged. GLM-5.2 approved round 2 with 0 issues. State reset to idle. Next: T-09.02.02 (City CRUD).",
+  "last_updated": "2026-08-26T15:16:00Z"
 }
