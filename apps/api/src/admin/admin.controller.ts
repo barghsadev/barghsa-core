@@ -122,6 +122,24 @@ export interface CreateStaffUserApiResponse {
 export class AdminController {
   private readonly logger = new Logger(AdminController.name)
 
+  /**
+   * Permission gate for notification-template admin operations.
+   *
+   * The acceptance criteria for T-09.04.01 require the `admin:notifications:edit`
+   * capability. Today the session model exposes only `isAdmin` (platform admin);
+   * granular staff-role permissions arrive with the role system (T-09.05).
+   * Until then, `admin:notifications:edit` maps to a platform admin session.
+   * Centralized here so the capability check is a single enforcement point.
+   */
+  private assertNotificationPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+  }
+
   constructor(
     private readonly adminService: AdminService,
     private readonly brandConfigService: BrandConfigService,
@@ -785,7 +803,7 @@ export class AdminController {
    *
    * Lists all notification templates with optional filtering by
    * locale, channel, or status.
-   * Permission: admin or staff with admin:notifications:edit role.
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
    */
   @Get('notifications/templates')
   @ApiOperation({ summary: 'List notification templates' })
@@ -797,13 +815,7 @@ export class AdminController {
     @Query('status') status: string | undefined,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult[]> {
-    if (!(req.session.isAdmin ?? false)) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list notification templates`)
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
 
     const options: PageTemplatesOptions = {}
     if (locale === 'fa' || locale === 'en') options.locale = locale
@@ -827,12 +839,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
     return this.notificationTemplateService.getById(id)
   }
 
@@ -868,12 +875,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
 
     const schema = z.object({
       eventKey: z.string().min(1).max(100),
@@ -932,12 +934,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
 
     const schema = z.object({
       subject: z.string().max(200).nullable().optional(),
@@ -992,12 +989,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
     return this.notificationTemplateService.publish(id, req.session.userId)
   }
 
@@ -1019,12 +1011,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<NotificationTemplateResult> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
     return this.notificationTemplateService.unpublish(id, req.session.userId)
   }
 
@@ -1047,12 +1034,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<void> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
     await this.notificationTemplateService.delete(id, req.session.userId)
   }
 
@@ -1061,7 +1043,7 @@ export class AdminController {
    *
    * Renders a template body against allow-listed variables with sample data,
    * without persisting anything. Used by the frontend preview pane.
-   * Permission: admin or staff with admin:notifications:edit role.
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
    */
   @Post('notifications/templates/preview')
   @UseGuards(StepUpGuard)
@@ -1085,12 +1067,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<{ subject: string | null; body: string; variables: string[] }> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
 
     const schema = z.object({
       bodyTemplate: z.string().min(1),
@@ -1118,7 +1095,7 @@ export class AdminController {
    *
    * Renders a template and delivers it to the admin's own verified
    * destination (in-app notification today; email/SMS transport pending E-05).
-   * Permission: admin or staff with admin:notifications:edit role.
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
    */
   @Post('notifications/templates/:id/test-send')
   @HttpCode(200)
@@ -1133,12 +1110,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<{ ok: boolean; destination: 'in_app' }> {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertNotificationPermission(req)
     return this.notificationTemplateService.testSend(id, req.session.userId)
   }
 }

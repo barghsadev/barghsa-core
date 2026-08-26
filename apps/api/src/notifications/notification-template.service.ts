@@ -267,51 +267,56 @@ export class NotificationTemplateService {
     // Validate template variables against the allow-list before persisting.
     this.validateVariables(input.bodyTemplate, input.variables ?? [])
 
+    // Enforce at most one draft/active template per event+channel+locale.
+    // The DB partial unique index (uq_notification_templates_active) only
+    // covers active rows (is_active=true), so duplicate-draft prevention must
+    // be app-level. Archived history does not block a new draft.
+    const existing = await pool.query(
+      `SELECT 1 FROM notification_templates
+       WHERE event_key = $1 AND channel = $2 AND locale = $3
+         AND status IN ('draft', 'active')
+       LIMIT 1`,
+      [input.eventKey, input.channel, input.locale],
+    )
+    if (existing.rows.length > 0) {
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: 'NOTIFICATION_TEMPLATE_EXISTS',
+          message: `A template already exists for event "${input.eventKey}" (${input.channel}/${input.locale})`,
+        },
+        409,
+      )
+    }
+
     const id = uuidv7()
     const now = new Date()
 
-    try {
-      const result = await pool.query<Record<string, unknown>>(
-        `INSERT INTO notification_templates
-         (id, event_key, channel, locale, subject, body_template, variables,
-          status, is_active, version, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, 'draft', false, 1, $8, $9, $9)
-         RETURNING ${this.SELECT_COLUMNS}`,
-        [
-          id,
-          input.eventKey,
-          input.channel,
-          input.locale,
-          input.subject ?? null,
-          input.bodyTemplate,
-          JSON.stringify(input.variables),
-          actorUserId,
-          now,
-        ],
-      )
+    const result = await pool.query<Record<string, unknown>>(
+      `INSERT INTO notification_templates
+       (id, event_key, channel, locale, subject, body_template, variables,
+        status, is_active, version, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, 'draft', false, 1, $8, $9, $9)
+       RETURNING ${this.SELECT_COLUMNS}`,
+      [
+        id,
+        input.eventKey,
+        input.channel,
+        input.locale,
+        input.subject ?? null,
+        input.bodyTemplate,
+        JSON.stringify(input.variables),
+        actorUserId,
+        now,
+      ],
+    )
 
-      this.logger.log(
-        `Notification template created: id=${id} event=${input.eventKey} ` +
+    this.logger.log(
+      `Notification template created: id=${id} event=${input.eventKey} ` +
         `channel=${input.channel} locale=${input.locale} by ${actorUserId}`,
-      )
+    )
 
-      return this.mapRow(result.rows[0]!)
-    } catch (err) {
-      // 23505 = unique_violation for uq_notification_templates_active (draft insert
-      // with is_active=false is not covered by that partial index, so an existing
-      // live row surfaces as a duplicate only via the app-level check below).
-      if ((err as { code?: string }).code === '23505') {
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'NOTIFICATION_TEMPLATE_EXISTS',
-            message: `A template already exists for event "${input.eventKey}" (${input.channel}/${input.locale})`,
-          },
-          409,
-        )
-      }
-      throw err
-    }
+    return this.mapRow(result.rows[0]!)
   }
 
   /**

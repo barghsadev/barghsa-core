@@ -81,7 +81,9 @@ function buildSampleData(variables: string[]): Record<string, string> {
   return data
 }
 
-/** Substitute {{variable}} placeholders with escaped sample values. */
+/** Substitute {{variable}} placeholders with escaped sample values.
+ * MUST mirror NotificationTemplateService.render() (apps/api) so the client
+ * preview matches what the server validates on save — keep in lockstep. */
 function renderTemplate(
   template: string,
   variables: string[],
@@ -256,11 +258,13 @@ export default function AdminNotificationsPage() {
 
     try {
       if (editId) {
-        // Update existing draft
-        const updateBody: Record<string, unknown> = {}
-        if (subject) updateBody.subject = subject
-        updateBody.bodyTemplate = bodyTemplate
-        updateBody.variables = variables
+        // Update existing draft; always send subject so an empty subject
+        // (cleared by the admin) is persisted as null server-side.
+        const updateBody: Record<string, unknown> = {
+          subject: subject || null,
+          bodyTemplate,
+          variables,
+        }
 
         const res = await fetch(`/api/admin/notifications/templates/${editId}`, {
           method: 'PUT',
