@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-05.05.02",
   "current_task_id": "T-05.05.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-05-02--agent-invitation-widget",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/137",
   "loop_iteration": 244,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -205,8 +205,8 @@
     "02-auth-users-admin.md#T-05.05.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T04:15:00Z",
-  "notes": "Iteration-244: PR #136 merged (T-05.05.01 pending verification widget). Reviewer z-ai/glm-5.2 approved. Returned to idle.",
+  "last_updated": "2026-08-26T04:20:00Z",
+  "notes": "Iteration-244: PR #137 opened for T-05.05.02 (agent invitation dashboard widget). Enhanced InvitationBanner card styling. Checks pass. Setting to in_review.",
   "status_history": [
     {
       "from": "idle",
@@ -231,6 +231,16 @@
     {
       "from": "in_review",
       "to": "idle",
+      "at": "iteration-244"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "iteration-244"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
       "at": "iteration-244"
     }
   ]
