@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.01.01",
-  "current_task_id": "T-05.01.01",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-01-01--notification-scaffold",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/163",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 301,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -243,12 +243,18 @@
     "02-auth-users-admin.md#T-09.03.01",
     "02-auth-users-admin.md#T-09.03.02",
     "02-auth-users-admin.md#T-09.04.01",
-    "02-auth-users-admin.md#T-09.05.01"
+    "02-auth-users-admin.md#T-09.05.01",
+    "05-notifications-documents-ai.md#T-05.01.01"
   ],
   "last_error": null,
-  "notes": "T-05.01.01 built and pushed; PR #163 ready for review.",
-  "last_updated": "2026-08-26T22:54:27Z",
+  "notes": "T-05.01.01 (notification scaffold) merged via PR #163; reset to idle.",
+  "last_updated": "2026-08-26T22:58:55Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.01",
+      "at": "2026-08-26T22:58:55Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.01.01",
