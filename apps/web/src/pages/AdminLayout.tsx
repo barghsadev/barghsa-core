@@ -20,6 +20,7 @@ export default function AdminLayout() {
               <li><a href="/admin/branding" className="text-blue-600 hover:underline">Branding</a></li>
               <li><a href="/admin/geography" className="text-blue-600 hover:underline">Geography</a></li>
               <li><a href="/admin/tos" className="text-blue-600 hover:underline">Terms of Service</a></li>
+              <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
               <li className="pt-2 mt-2 border-t border-gray-100">
                 <span className="text-xs text-gray-400 uppercase tracking-wide">CRM</span>
               </li>
