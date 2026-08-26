@@ -86,7 +86,7 @@ async function deleteProvince(id: string): Promise<void> {
 // Helpers
 // ---------------------------------------------------------------------------
 
-const PERSIAN_ALPHABET = /^[\u0600-\u06FF\s]+$/
+const PERSIAN_ALPHABET = /^[\u0600-\u06FF\u200C\s]+$/
 const ENGLISH_ALPHABET = /^[a-zA-Z\s]+$/
 
 // ---------------------------------------------------------------------------

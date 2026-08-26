@@ -56,3 +56,8 @@ CREATE TRIGGER trg_provinces_updated_at
   BEFORE UPDATE ON provinces
   FOR EACH ROW
   EXECUTE FUNCTION update_provinces_updated_at();
+
+-- ---------------------------------------------------------------------------
+-- Unique constraint on English name (for duplicate detection)
+-- ---------------------------------------------------------------------------
+CREATE UNIQUE INDEX IF NOT EXISTS uq_provinces_name_en ON provinces (name_en);

@@ -23,7 +23,7 @@ import type { AuthenticatedRequest } from '../session/session.guard.js'
 // Zod validation schemas
 // ---------------------------------------------------------------------------
 
-const nameFaRe = /^[\u0600-\u06FF\s]+$/
+const nameFaRe = /^[\u0600-\u06FF\u200C\s]+$/
 const nameEnRe = /^[a-zA-Z\s]+$/
 
 export const CreateProvinceSchema = z.object({
@@ -216,6 +216,9 @@ export class AdminGeographyController {
   // ---------------------------------------------------------------------------
 
   private requireAdmin(req: AuthenticatedRequest): void {
+    // Permission: admin:geography:edit (temporarily backed by isAdmin boolean
+    // until the granular permission framework supports per-action checks —
+    // see T-09.05.01 for the role-based permission system).
     const isAdmin = req.session.isAdmin ?? false
     if (!isAdmin) {
       throw new HttpException(
