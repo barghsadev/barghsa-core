@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 279,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
+  "current_task_id": "T-04.1.01.03",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-01-03--invoice-state-machine",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/152",
+  "loop_iteration": 282,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -233,9 +233,10 @@
     "03-core-business.md#T-03.01.01.03",
     "03-core-business.md#T-03.01.01.04",
     "04-invoices-wallet-contracts.md#T-04.2.01.01",
-    "04-invoices-wallet-contracts.md#T-04.1.01.01"
+    "04-invoices-wallet-contracts.md#T-04.1.01.01",
+    "04-invoices-wallet-contracts.md#T-04.1.01.02"
   ],
   "last_error": null,
-  "notes": "Iter-279: PR #150 (T-04.1.01.01 invoices table schema) reviewed by GLM 5.2 — approve (1 minor: Drizzle schema lacks 3 non-negativity CHECKs present in raw SQL; deferred as follow-up). Squash-merged, PR reports MERGED. Back to idle.",
-  "last_updated": "2026-08-26T12:15:30Z"
+  "notes": "Iter-282: fix-attempt-1 applied — paid_at/overdue_at side-effects added, STATE_ORDER removed, error classification fixed. 66/66 tests pass. PR #152 back for review.",
+  "last_updated": "2026-08-26T12:52:30Z"
 }
