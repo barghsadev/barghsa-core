@@ -680,6 +680,15 @@ describe('AgentsService', () => {
         .rejects.toMatchObject({ response: { statusCode: 403 } })
     })
 
+    it('throws 400 when target is the caller (self-transfer)', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],
+      })
+
+      await expect(service.initiateOwnershipTransfer(profileId, userId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
     it('throws 400 when target user is not an existing agent', async () => {
       mockPool.query.mockResolvedValueOnce({
         rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],

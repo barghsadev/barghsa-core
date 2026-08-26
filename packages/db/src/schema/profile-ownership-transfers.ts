@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm'
 import { text, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { profiles } from './profiles'
+import { users } from './users'
 
 /**
  * Profile ownership transfers table (T-05.04.05).
@@ -35,10 +36,14 @@ export const profileOwnershipTransfers = pgTable(
       .references(() => profiles.id, { onDelete: 'cascade' }),
 
     /** The current profile owner initiating the transfer. */
-    fromUserId: text('from_user_id').notNull(),
+    fromUserId: text('from_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
 
     /** The target user (must be an existing agent of the profile). */
-    toUserId: text('to_user_id').notNull(),
+    toUserId: text('to_user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'restrict' }),
 
     /** Transfer status. */
     status: text('status', {
@@ -82,8 +87,8 @@ export const createProfileOwnershipTransfersTable = sql`
   CREATE TABLE IF NOT EXISTS profile_ownership_transfers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-    from_user_id TEXT NOT NULL,
-    to_user_id TEXT NOT NULL,
+    from_user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
+    to_user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Declined', 'Expired', 'Cancelled')),
     expires_at TIMESTAMPTZ NOT NULL,
     completed_at TIMESTAMPTZ,

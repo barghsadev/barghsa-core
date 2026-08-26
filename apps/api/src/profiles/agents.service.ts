@@ -716,6 +716,7 @@ export class AgentsService {
    * @throws {HttpException} 400 — target is not an agent of the profile
    * @throws {HttpException} 400 — caller is not the profile owner
    * @throws {HttpException} 400 — profile is not a LEGAL profile
+   * @throws {HttpException} 400 — cannot transfer ownership to yourself
    * @throws {HttpException} 404 — profile not found
    * @throws {HttpException} 409 — a pending transfer already exists
    */
@@ -726,7 +727,7 @@ export class AgentsService {
   ): Promise<{ id: string }> {
     const pool = getDbPool()
 
-    // ── Verify the profile exists and is a LEGAL profile ──────────
+    // ── Verify the profile exists ───────────────────────────────
     const profileResult = await pool.query(
       `SELECT id, user_id, profile_type FROM profiles WHERE id = $1`,
       [profileId],
@@ -739,6 +740,15 @@ export class AgentsService {
     }
     const profile = profileResult.rows[0]
 
+    // ── Verify the caller is the profile owner (before type check — 403 blanket) ──
+    if (profile.user_id !== userId) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only the profile owner can initiate an ownership transfer' },
+        403,
+      )
+    }
+
+    // ── Verify the profile is a LEGAL profile ───────────────────
     if (profile.profile_type !== 'LEGAL') {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Ownership transfer is only supported for legal profiles' },
@@ -746,11 +756,11 @@ export class AgentsService {
       )
     }
 
-    // ── Verify the caller is the profile owner ───────────────────
-    if (profile.user_id !== userId) {
+    // ── Guard: self-transfer ────────────────────────────────────
+    if (newOwnerUserId === userId) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only the profile owner can initiate an ownership transfer' },
-        403,
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Cannot transfer ownership to yourself' },
+        400,
       )
     }
 
@@ -811,6 +821,16 @@ export class AgentsService {
     } catch (error) {
       if (transactionStarted) {
         try { await client.query('ROLLBACK') } catch { /* ignore rollback failure */ }
+      }
+      // A concurrent double-submit may pass the pre-check and hit the partial
+      // unique index here. Convert the PG unique_violation to a proper 409
+      // instead of surfacing a raw 500.
+      const pgError = error as { code?: string }
+      if (pgError.code === '23505') {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'A pending ownership transfer already exists for this profile' },
+          409,
+        )
       }
       throw error
     } finally {
