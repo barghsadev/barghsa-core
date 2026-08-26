@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-09.02.02",
-  "current_task_id": "T-09.02.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e09-t-09-02-02--city-crud",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/158",
-  "loop_iteration": 293,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 295,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -238,9 +238,10 @@
     "02-auth-users-admin.md#T-08.01.03",
     "02-auth-users-admin.md#T-09.01.01",
     "02-auth-users-admin.md#T-09.01.02",
-    "02-auth-users-admin.md#T-09.02.01"
+    "02-auth-users-admin.md#T-09.02.01",
+    "02-auth-users-admin.md#T-09.02.02"
   ],
   "last_error": null,
-  "notes": "Iter-293: PR #158 (T-09.02.02 City CRUD) backend complete with migration, service, controller, 17 tests. Draft PR opened. Next: mark ready and request review when frontend city expansion is added.",
-  "last_updated": "2026-08-26T15:26:00Z"
+  "notes": "Iter-295: PR #158 (T-09.02.02 City CRUD) backend merged. GLM-5.2 approved with 3 minor issues (follow-up). State reset to idle. Next: T-09.02.03 (Frontend city expansion) or next queue task.",
+  "last_updated": "2026-08-26T15:45:00Z"
 }
