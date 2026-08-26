@@ -616,4 +616,62 @@ export class CrmV2Controller {
 
     return { success: true, profileId, archivedAt: result.archivedAt }
   }
+
+  /**
+   * GET /api/crm/dashboard/pending-verification
+   *
+   * Returns the count and last 5 profiles pending verification for the
+   * staff dashboard widget. Applies the same permission check as other
+   * CRM endpoints.
+   *
+   * Permission: admin or staff with crm:verify role required.
+   */
+  @Get('dashboard/pending-verification')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get pending verification profile count and last 5 entries for dashboard widget' })
+  @ApiResponse({
+    status: 200,
+    description: 'Pending verification widget data.',
+    schema: {
+      type: 'object',
+      properties: {
+        count: { type: 'integer' },
+        profiles: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              profileType: { type: 'string' },
+              firstName: { type: 'string', nullable: true },
+              lastName: { type: 'string', nullable: true },
+              legalName: { type: 'string', nullable: true },
+              createdAt: { type: 'string' },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Staff or admin role required' })
+  async getPendingVerification(@Req() req: AuthenticatedRequest) {
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`,
+      )
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Staff or admin role required',
+        },
+        403,
+      )
+    }
+
+    return this.crmV2Service.getPendingVerification()
+  }
 }
