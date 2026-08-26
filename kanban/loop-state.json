@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
   "current_task_id": "T-04.2.01.01",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-2-01-01--wallets-table",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/149",
   "loop_iteration": 275,
   "fix_attempts": 0,
   "build_completed_tasks": [
