@@ -223,12 +223,26 @@ describe('TicketsService', () => {
   })
 
   describe('updateTicketStatus', () => {
-    it('updates the ticket status', async () => {
+    it('updates the ticket status (admin)', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'in_progress' })] })
 
-      const result = await service.updateTicketStatus('tkt-001', 'user-1', 'in_progress')
+      const result = await service.updateTicketStatus('tkt-001', 'user-1', 'in_progress', true)
 
       expect(result.status).toBe('in_progress')
+    })
+
+    it('allows non-admin to reopen (set open)', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'open' })] })
+
+      const result = await service.updateTicketStatus('tkt-001', 'user-1', 'open', false)
+
+      expect(result.status).toBe('open')
+    })
+
+    it('throws 403 when non-admin tries to change status to non-open', async () => {
+      await expect(
+        service.updateTicketStatus('tkt-001', 'user-1', 'resolved'),
+      ).rejects.toThrow(/Only staff can change ticket status/)
     })
 
     it('throws 400 for invalid status', async () => {
@@ -241,7 +255,7 @@ describe('TicketsService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] })
 
       await expect(
-        service.updateTicketStatus('tkt-999', 'user-1', 'resolved'),
+        service.updateTicketStatus('tkt-999', 'user-1', 'resolved', true),
       ).rejects.toThrow(/Ticket not found/)
     })
   })
@@ -313,15 +327,21 @@ describe('TicketsService', () => {
       expect(result.visibility).toBe('public')
     })
 
-    it('adds an internal note', async () => {
+    it('adds an internal note (admin)', async () => {
       // getTicket check
       mockPool.query.mockResolvedValueOnce({ rows: [makeRow()] })
       // insert
       mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ visibility: 'internal' })] })
 
-      const result = await service.addComment('tkt-001', 'user-1', 'Internal staff note', 'internal')
+      const result = await service.addComment('tkt-001', 'user-1', 'Internal staff note', 'internal', true)
 
       expect(result.visibility).toBe('internal')
+    })
+
+    it('throws 403 when non-admin adds internal note', async () => {
+      await expect(
+        service.addComment('tkt-001', 'user-1', 'Staff note', 'internal'),
+      ).rejects.toThrow(/Only staff can add internal notes/)
     })
 
     it('throws 400 when comment body is empty', async () => {

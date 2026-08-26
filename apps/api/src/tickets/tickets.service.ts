@@ -183,6 +183,13 @@ export class TicketsService {
     let paramIndex = 2
 
     if (options.status) {
+      const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
+      if (!validStatuses.includes(options.status)) {
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status filter: ${options.status}. Allowed: ${validStatuses.join(', ')}` },
+          400,
+        )
+      }
       conditions.push(`t.status = $${paramIndex}`)
       params.push(options.status)
       paramIndex++
@@ -256,12 +263,21 @@ export class TicketsService {
     ticketId: string,
     userId: string,
     status: string,
+    isAdmin: boolean = false,
   ): Promise<TicketRow> {
     const validStatuses = ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed']
     if (!validStatuses.includes(status)) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: `Invalid status: ${status}. Allowed: ${validStatuses.join(', ')}` },
         400,
+      )
+    }
+
+    // Non-admin users can only reopen their tickets (any → open)
+    if (!isAdmin && status !== 'open') {
+      throw new HttpException(
+        { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can change ticket status' },
+        403,
       )
     }
 
@@ -323,6 +339,7 @@ export class TicketsService {
     userId: string,
     body: string,
     visibility: 'public' | 'internal' = 'public',
+    isAdmin: boolean = false,
   ): Promise<TicketCommentRow> {
     if (!body?.trim()) {
       throw new HttpException(
@@ -334,6 +351,14 @@ export class TicketsService {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Comment body must be 10,000 characters or fewer' },
         400,
+      )
+    }
+
+    // Non-admin users cannot add internal notes
+    if (visibility === 'internal' && !isAdmin) {
+      throw new HttpException(
+        { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
+        403,
       )
     }
 

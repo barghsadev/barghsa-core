@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   HttpCode,
+  HttpException,
   Logger,
   Req,
   UseGuards,
@@ -95,8 +96,14 @@ export class TicketsController {
     @Req() req?: AuthenticatedRequest,
   ) {
     const options: Partial<ListTicketsOptions> = {}
-    if (page !== undefined) options.page = Number(page)
-    if (limit !== undefined) options.limit = Number(limit)
+    if (page !== undefined) {
+      const parsed = Number(page)
+      if (Number.isFinite(parsed)) options.page = parsed
+    }
+    if (limit !== undefined) {
+      const parsed = Number(limit)
+      if (Number.isFinite(parsed)) options.limit = parsed
+    }
     if (status !== undefined) options.status = status
     if (search !== undefined) options.search = search
     if (sortBy !== undefined) options.sortBy = sortBy
@@ -137,7 +144,7 @@ export class TicketsController {
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    return this.ticketsService.updateTicketStatus(id, req.session.userId, body.status)
+    return this.ticketsService.updateTicketStatus(id, req.session.userId, body.status, req.session.isAdmin)
   }
 
   /**
@@ -183,9 +190,11 @@ export class TicketsController {
     // Non-admin users cannot add internal notes
     const visibility = body.visibility ?? 'public'
     if (visibility === 'internal' && !req.session.isAdmin) {
-      // Silently default to public for non-admin users
-      return this.ticketsService.addComment(id, req.session.userId, body.body, 'public')
+      throw new HttpException(
+        { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
+        403,
+      )
     }
-    return this.ticketsService.addComment(id, req.session.userId, body.body, visibility)
+    return this.ticketsService.addComment(id, req.session.userId, body.body, visibility, req.session.isAdmin)
   }
 }
