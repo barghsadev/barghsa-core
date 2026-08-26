@@ -604,4 +604,114 @@ describe('AgentsService', () => {
         .rejects.toMatchObject({ response: { statusCode: 404 } })
     })
   })
+
+  describe('initiateOwnershipTransfer', () => {
+    const profileId = 'prof-1'
+    const userId = 'user-owner'
+    const newOwnerUserId = 'user-agent'
+    const transferId = 'transfer-1'
+
+    beforeEach(() => {
+      mockPool.query.mockReset()
+      mockClient.query.mockReset()
+      mockClient.release.mockReset()
+      mockUuidV7.mockReset()
+      mockUuidV7.mockReturnValue(transferId)
+    })
+
+    it('creates a pending transfer with audit log', async () => {
+      // Profile lookup
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],
+      })
+      // Agent check
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: 'agent-1', role: 'Manager' }],
+      })
+      // Pending transfer check
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // INSERT transfer
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // INSERT audit log
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // COMMIT
+      mockClient.query.mockResolvedValueOnce(undefined)
+
+      const result = await service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId)
+
+      expect(result).toEqual({ id: transferId })
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN')
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO profile_ownership_transfers'),
+        expect.arrayContaining([transferId, profileId, userId, newOwnerUserId]),
+      )
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO audit_log'),
+        expect.arrayContaining([expect.any(String), userId, 'ownership_transfer_initiated']),
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(mockClient.release).toHaveBeenCalled()
+    })
+
+    it('throws 404 when profile not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 400 when profile is not LEGAL', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'INDIVIDUAL' }],
+      })
+
+      await expect(service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 403 when caller is not the profile owner', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: 'other-owner', profile_type: 'LEGAL' }],
+      })
+
+      await expect(service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 403 } })
+    })
+
+    it('throws 400 when target is the caller (self-transfer)', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],
+      })
+
+      await expect(service.initiateOwnershipTransfer(profileId, userId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 400 when target user is not an existing agent', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],
+      })
+      // Agent check returns empty
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 409 when a pending transfer already exists', async () => {
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: profileId, user_id: userId, profile_type: 'LEGAL' }],
+      })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: 'agent-1', role: 'Manager' }],
+      })
+      // Pending transfer check returns existing
+      mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'existing-transfer' }] })
+
+      await expect(service.initiateOwnershipTransfer(profileId, newOwnerUserId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 409 } })
+    })
+  })
 })

@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 237,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.05",
+  "current_task_id": "T-05.04.05",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-05--ownership-transfer",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/135",
+  "loop_iteration": 239,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -41,6 +41,12 @@
     "01-platform-infrastructure.md#T-02.03.02",
     "01-platform-infrastructure.md#T-02.03.03",
     "01-platform-infrastructure.md#T-02.03.04",
+    "01-platform-infrastructure.md#T-02.04.01",
+    "01-platform-infrastructure.md#T-02.04.02",
+    "01-platform-infrastructure.md#T-02.04.03",
+    "01-platform-infrastructure.md#T-02.04.04",
+    "01-platform-infrastructure.md#T-02.04.05",
+    "01-platform-infrastructure.md#T-02.04.06",
     "01-platform-infrastructure.md#T-04.01.01",
     "01-platform-infrastructure.md#T-04.01.02",
     "01-platform-infrastructure.md#T-04.01.03",
@@ -197,8 +203,8 @@
     "02-auth-users-admin.md#T-05.04.04"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T03:21:00Z",
-  "notes": "Iteration-237: Merged PR #134 (T-05.04.04 first slice — permission matrix + AgentRoleGuard). GLM-5.2 approved. 405/405 tests pass. Next: select next task from queue.",
+  "last_updated": "2026-08-26T03:42:00Z",
+  "notes": "Iteration-239: Fixed review findings (23505 race, reorder authz, self-transfer guard, FK). Fix attempts: 1. PR #135 back in_review. 412/412 tests pass.",
   "status_history": [
     {
       "from": "fixing",
@@ -329,6 +335,26 @@
       "from": "in_review",
       "to": "idle",
       "at": "iteration-237"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "iteration-238"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "iteration-238"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-239"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "iteration-239"
     }
   ]
 }

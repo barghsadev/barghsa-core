@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProfilesService } from './profiles.service.js'
+import { AgentsService } from './agents.service.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
@@ -26,7 +27,10 @@ import { validateNationalId, validatePostalCode } from '@barghsa/shared/validati
 export class ProfilesController {
   private readonly logger = new Logger(ProfilesController.name)
 
-  constructor(private readonly profilesService: ProfilesService) {}
+  constructor(
+    private readonly profilesService: ProfilesService,
+    private readonly agentsService: AgentsService,
+  ) {}
 
   /**
    * GET /api/profiles
@@ -647,5 +651,53 @@ export class ProfilesController {
     const address = await this.profilesService.setMainAddress(userId, profileId, addressId)
     this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`)
     return address
+  }
+
+  /**
+   * POST /api/profiles/:profileId/transfer-ownership
+   *
+   * Initiates an ownership transfer for a legal profile. The caller must
+   * be the current profile owner (profiles.user_id). The target user
+   * must be an existing agent of the profile. Creates a pending transfer
+   * record that the new owner must accept.
+   *
+   * Only one pending transfer per profile is allowed at a time.
+   * Transfers expire after 7 days if not accepted.
+   */
+  @Post(':profileId/transfer-ownership')
+  @HttpCode(201)
+  @RateLimit({ namespace: 'profiles:transfer-ownership:initiate', limit: 5, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Initiate ownership transfer for a legal profile' })
+  @ApiResponse({ status: 201, description: 'Ownership transfer initiated.' })
+  @ApiResponse({ status: 400, description: 'Validation error — target not an agent, or not a legal profile.' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Only the profile owner can initiate transfer' })
+  @ApiResponse({ status: 404, description: 'Profile not found' })
+  @ApiResponse({ status: 409, description: 'A pending transfer already exists' })
+  async initiateOwnershipTransfer(
+    @Param('profileId') profileId: string,
+    @Body() body: { newOwnerUserId: string },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    if (!body.newOwnerUserId?.trim()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'newOwnerUserId is required' },
+        400,
+      )
+    }
+
+    const result = await this.agentsService.initiateOwnershipTransfer(
+      profileId,
+      body.newOwnerUserId.trim(),
+      userId,
+    )
+
+    this.logger.log(
+      `Ownership transfer ${result.id} initiated for profile ${profileId} by user ${userId}`,
+    )
+
+    return result
   }
 }

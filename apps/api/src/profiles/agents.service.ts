@@ -702,4 +702,145 @@ export class AgentsService {
     )
     return result.rows.map((row) => row.role as AgentRole)
   }
+
+  /**
+   * Initiate an ownership transfer for a legal profile.
+   *
+   * The caller must be the current profile owner (profiles.user_id). The
+   * target user must be an existing agent (profile_agents) of the profile.
+   * Only one pending transfer per profile is allowed at a time.
+   *
+   * Creates a pending ownership_transfer record and an audit event.
+   * The transfer expires after 7 days if not accepted.
+   *
+   * @throws {HttpException} 400 — target is not an agent of the profile
+   * @throws {HttpException} 400 — caller is not the profile owner
+   * @throws {HttpException} 400 — profile is not a LEGAL profile
+   * @throws {HttpException} 400 — cannot transfer ownership to yourself
+   * @throws {HttpException} 404 — profile not found
+   * @throws {HttpException} 409 — a pending transfer already exists
+   */
+  async initiateOwnershipTransfer(
+    profileId: string,
+    newOwnerUserId: string,
+    userId: string,
+  ): Promise<{ id: string }> {
+    const pool = getDbPool()
+
+    // ── Verify the profile exists ───────────────────────────────
+    const profileResult = await pool.query(
+      `SELECT id, user_id, profile_type FROM profiles WHERE id = $1`,
+      [profileId],
+    )
+    if (profileResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+        404,
+      )
+    }
+    const profile = profileResult.rows[0]
+
+    // ── Verify the caller is the profile owner (before type check — 403 blanket) ──
+    if (profile.user_id !== userId) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only the profile owner can initiate an ownership transfer' },
+        403,
+      )
+    }
+
+    // ── Verify the profile is a LEGAL profile ───────────────────
+    if (profile.profile_type !== 'LEGAL') {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Ownership transfer is only supported for legal profiles' },
+        400,
+      )
+    }
+
+    // ── Guard: self-transfer ────────────────────────────────────
+    if (newOwnerUserId === userId) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Cannot transfer ownership to yourself' },
+        400,
+      )
+    }
+
+    // ── Verify the target user is an existing agent of the profile ──
+    const agentResult = await pool.query(
+      `SELECT id, role FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+      [profileId, newOwnerUserId],
+    )
+    if (agentResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'The new owner must be an existing agent of this profile' },
+        400,
+      )
+    }
+
+    // ── Check: no pending transfer already exists ────────────────
+    const pendingResult = await pool.query(
+      `SELECT id FROM profile_ownership_transfers
+       WHERE profile_id = $1 AND status = 'Pending'`,
+      [profileId],
+    )
+    if (pendingResult.rows.length > 0) {
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'A pending ownership transfer already exists for this profile' },
+        409,
+      )
+    }
+
+    // ── Wrap creation and audit log in a transaction ──────────────
+    const transferId = uuidv7()
+    const correlationId = uuidv7()
+    const client = await pool.connect()
+    let transactionStarted = false
+    try {
+      await client.query('BEGIN')
+      transactionStarted = true
+
+      await client.query(
+        `INSERT INTO profile_ownership_transfers (id, profile_id, from_user_id, to_user_id, status, expires_at, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, 'Pending', NOW() + INTERVAL '7 days', NOW(), NOW())`,
+        [transferId, profileId, userId, newOwnerUserId],
+      )
+
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'ownership_transfer_initiated',
+          JSON.stringify({ profileId, transferId, toUserId: newOwnerUserId }),
+          correlationId,
+        ],
+      )
+
+      await client.query('COMMIT')
+      transactionStarted = false
+    } catch (error) {
+      if (transactionStarted) {
+        try { await client.query('ROLLBACK') } catch { /* ignore rollback failure */ }
+      }
+      // A concurrent double-submit may pass the pre-check and hit the partial
+      // unique index here. Convert the PG unique_violation to a proper 409
+      // instead of surfacing a raw 500.
+      const pgError = error as { code?: string }
+      if (pgError.code === '23505') {
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'A pending ownership transfer already exists for this profile' },
+          409,
+        )
+      }
+      throw error
+    } finally {
+      client.release()
+    }
+
+    this.logger.log(
+      `Ownership transfer ${transferId} initiated for profile ${profileId} from user ${userId} to ${newOwnerUserId}`,
+    )
+
+    return { id: transferId }
+  }
 }
