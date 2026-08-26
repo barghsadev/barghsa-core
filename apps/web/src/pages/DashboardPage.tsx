@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
+import { WalletBalanceCard } from '../components/WalletBalanceCard.js'
 
 interface DashboardData {
   wallet: { balance: number; currency: string; lowBalanceWarning: boolean }
@@ -89,16 +90,6 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
 
   const cards = [
     {
-      key: 'wallet',
-      href: '/wallet',
-      label: t('dashboard.overview.walletBalance', locale),
-      value: data
-        ? `${formatRial(data.wallet.balance, locale)} ${data.wallet.currency}`
-        : '—',
-      color: data?.wallet.lowBalanceWarning ? 'border-l-4 border-yellow-500' : 'border-l-4 border-green-500',
-      actionLabel: t('dashboard.overview.chargeWallet', locale),
-    },
-    {
       key: 'orders',
       href: '/electricity',
       label: t('dashboard.overview.activeOrders', locale),
@@ -154,8 +145,21 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
         </div>
       </div>
 
-      {/* Summary cards in responsive grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Wallet balance card — dedicated prominent display */}
+      {data && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <WalletBalanceCard
+              balance={data.wallet.balance}
+              currency={data.wallet.currency}
+              lowBalanceWarning={data.wallet.lowBalanceWarning}
+              pendingInvoices={data.pendingInvoices}
+              locale={locale}
+            />
+          </div>
+
+          {/* Summary cards in responsive grid */}
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {cards.map((card) => (
           <Link
             key={card.key}
@@ -167,7 +171,9 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
             <span className="text-xs text-primary font-medium">{card.actionLabel} →</span>
           </Link>
         ))}
-      </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick actions section */}
       <section>

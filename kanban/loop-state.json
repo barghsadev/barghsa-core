@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
-  "current_task_id": "T-04.1.01.03",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-1-01-03--invoice-state-machine",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/152",
-  "loop_iteration": 282,
-  "fix_attempts": 1,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-08.01.02",
+  "current_task_id": "T-08.01.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-08-01-02--wallet-balance-card",
+  "current_pr_url": "",
+  "loop_iteration": 283,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -234,9 +234,10 @@
     "03-core-business.md#T-03.01.01.04",
     "04-invoices-wallet-contracts.md#T-04.2.01.01",
     "04-invoices-wallet-contracts.md#T-04.1.01.01",
-    "04-invoices-wallet-contracts.md#T-04.1.01.02"
+    "04-invoices-wallet-contracts.md#T-04.1.01.02",
+    "04-invoices-wallet-contracts.md#T-04.1.01.03"
   ],
   "last_error": null,
-  "notes": "Iter-282: fix-attempt-1 applied — paid_at/overdue_at side-effects added, STATE_ORDER removed, error classification fixed. 66/66 tests pass. PR #152 back for review.",
-  "last_updated": "2026-08-26T12:52:30Z"
+  "notes": "Iter-283: PR #152 merged (T-04.1.01.03). Started T-08.01.02 — WalletBalanceCard component with IRR+Toman display, low-balance warning, charge wallet button. Committed and pushed.",
+  "last_updated": "2026-08-26T13:02:00Z"
 }

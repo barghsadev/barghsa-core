@@ -599,6 +599,8 @@ export const fa: I18nDictionary = {
   'dashboard.overview.viewDashboard': 'مشاهده داشبورد',
   'dashboard.overview.supportTicket': 'تیکت پشتیبانی',
   'dashboard.overview.profileBadge': 'پروفایل: {name}',
+  'dashboard.overview.balanceInToman': '≈ {amount} تومان',
+  'dashboard.overview.lowBalanceWarning': 'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
 
   // ── TOS Page ─────────────────────────────────────────────
   'tos.page.title': 'قوانین استفاده',
@@ -1307,6 +1309,8 @@ export const en: I18nDictionary = {
   'dashboard.overview.quickActions': 'Quick Actions',
   'dashboard.overview.newOrder': 'New Order',
   'dashboard.overview.topUpWallet': 'Top Up Wallet',
+  'dashboard.overview.balanceInToman': '≈ {amount} Toman',
+  'dashboard.overview.lowBalanceWarning': 'Your wallet balance is too low to cover pending invoices',
   'dashboard.overview.viewDashboard': 'View Dashboard',
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
