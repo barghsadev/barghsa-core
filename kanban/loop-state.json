@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-05.04.04",
+  "current_task_id": "T-05.04.04",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-05-04-04--agent-role-permissions",
   "current_pr_url": null,
-  "loop_iteration": 234,
+  "loop_iteration": 236,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -192,12 +192,23 @@
     "02-auth-users-admin.md#T-05.03.01",
     "02-auth-users-admin.md#T-05.03.02",
     "02-auth-users-admin.md#T-05.04.01",
-    "02-auth-users-admin.md#T-05.04.02"
+    "02-auth-users-admin.md#T-05.04.02",
+    "02-auth-users-admin.md#T-05.04.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T02:44:00Z",
-  "notes": "Tick-234: PR #132 (T-05.04.02 - Agent invitation flow) merged. GLM-5.2 approve. 578 additions, 8 files. Back to idle.",
+  "last_updated": "2026-08-26T00:15:00Z",
+  "notes": "Iteration-236: Merged PR #133 (T-05.04.03 accept/decline invitation). Starting T-05.04.04 first slice: permission matrix + role guard (authorization framework prerequisite).",
   "status_history": [
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "tick-235"
+    },
+    {
+      "from": "idle",
+      "to": "in_review",
+      "at": "tick-235"
+    },
     {
       "from": "idle",
       "to": "building",
@@ -297,6 +308,16 @@
       "from": "in_review",
       "to": "idle",
       "at": "tick-234"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-236"
+    },
+    {
+      "from": "idle",
+      "to": "building",
+      "at": "iteration-236"
     }
   ]
 }
