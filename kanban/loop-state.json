@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-06.01.01",
-  "current_task_id": "T-06.01.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-06-01-01--ticket-creation",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/138",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 246,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -204,12 +204,18 @@
     "02-auth-users-admin.md#T-05.04.04",
     "02-auth-users-admin.md#T-05.04.05",
     "02-auth-users-admin.md#T-05.05.01",
-    "02-auth-users-admin.md#T-05.05.02"
+    "02-auth-users-admin.md#T-05.05.02",
+    "02-auth-users-admin.md#T-06.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T04:25:00Z",
-  "notes": "Iteration-246: Built T-06.01.01 ticket creation. PR #138 open, in_review. Branch: feat/e02-t-06-01-01--ticket-creation.",
+  "last_updated": "2026-08-26T01:38:41Z",
+  "notes": "Iteration-246: PR #138 merged (T-06.01.01 ticket creation). GLM-5.2 approved. Returned to idle.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-246"
+    },
     {
       "from": "building",
       "to": "in_review",
