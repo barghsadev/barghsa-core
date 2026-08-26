@@ -16,9 +16,10 @@ interface TosVersion {
 }
 
 /**
- * Admin TOS editor page (T-09.03.01).
+ * Admin TOS editor page (T-09.03.01) with version history (T-09.03.02).
  *
- * Lists all TOS versions with create, edit, publish, and discard actions.
+ * Lists all TOS versions with create, edit, publish, view, and discard actions.
+ * Read-only version detail view shows full Persian and English content.
  */
 export default function AdminTosPage() {
   const [versions, setVersions] = useState<TosVersion[]>([])
@@ -37,6 +38,10 @@ export default function AdminTosPage() {
   const [publishId, setPublishId] = useState<string | null>(null)
   const [changeType, setChangeType] = useState<'major' | 'minor'>('minor')
   const [publishing, setPublishing] = useState(false)
+
+  // Version detail view state (T-09.03.02)
+  const [viewVersion, setViewVersion] = useState<TosVersion | null>(null)
+  const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa')
 
   const fetchVersions = useCallback(async () => {
     try {
@@ -73,6 +78,15 @@ export default function AdminTosPage() {
     setContentFa(v.contentFa)
     setContentEn(v.contentEn)
     setShowEditor(true)
+  }
+
+  function openView(v: TosVersion) {
+    setViewVersion(v)
+    setDetailLocale('fa')
+  }
+
+  function closeView() {
+    setViewVersion(null)
   }
 
   async function handleSave(e: FormEvent) {
@@ -302,6 +316,116 @@ export default function AdminTosPage() {
         </div>
       )}
 
+      {/* Version detail modal (T-09.03.02) */}
+      {viewVersion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={closeView}>
+          <div
+            className="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <div>
+                <h2 className="text-lg font-semibold">
+                  TOS Version: {viewVersion.versionId}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {viewVersion.status === 'published' ? 'Published' : 'Draft'} ·
+                  {viewVersion.changeType && (
+                    <span
+                      className={`ml-1 inline-block px-2 py-0.5 text-xs rounded ${
+                        viewVersion.changeType === 'major'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {viewVersion.changeType}
+                    </span>
+                  )}
+                  {viewVersion.isActive && (
+                    <span className="ml-2 text-green-600 text-sm font-medium">✓ Active</span>
+                  )}
+                </p>
+              </div>
+              <button
+                onClick={closeView}
+                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Metadata */}
+            <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-500">Version ID:</span>{' '}
+                <span className="font-medium">{viewVersion.versionId}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Author:</span>{' '}
+                <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">Published:</span>{' '}
+                <span className="font-medium">
+                  {viewVersion.publishedAt
+                    ? new Date(viewVersion.publishedAt).toLocaleDateString('fa-IR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })
+                    : '—'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500">Created:</span>{' '}
+                <span className="font-medium">
+                  {new Date(viewVersion.createdAt).toLocaleDateString('fa-IR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </span>
+              </div>
+            </div>
+
+            {/* Locale toggle */}
+            <div className="px-6 py-3 border-b border-gray-200 flex gap-2">
+              <button
+                onClick={() => setDetailLocale('fa')}
+                className={`px-3 py-1 text-sm rounded ${
+                  detailLocale === 'fa'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                فارسی
+              </button>
+              <button
+                onClick={() => setDetailLocale('en')}
+                className={`px-3 py-1 text-sm rounded ${
+                  detailLocale === 'en'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                English
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="px-6 py-4 overflow-y-auto flex-1">
+              <pre
+                className="whitespace-pre-wrap font-mono text-sm leading-relaxed"
+                dir={detailLocale === 'fa' ? 'rtl' : 'ltr'}
+              >
+                {detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
+              </pre>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Version list */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -312,13 +436,14 @@ export default function AdminTosPage() {
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Change</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Active</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Published</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {versions.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                   No TOS versions yet. Create a draft to get started.
                 </td>
               </tr>
@@ -362,7 +487,22 @@ export default function AdminTosPage() {
                 <td className="px-4 py-3 text-sm text-gray-500">
                   {v.publishedAt ? new Date(v.publishedAt).toLocaleDateString() : '—'}
                 </td>
+                <td className="px-4 py-3 text-sm text-gray-500">
+                  {v.createdBy ? (
+                    <span className="font-mono text-xs" title={v.createdBy}>
+                      {v.createdBy.substring(0, 8)}…
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-right text-sm space-x-2">
+                  <button
+                    onClick={() => openView(v)}
+                    className="text-indigo-600 hover:text-indigo-800"
+                  >
+                    View
+                  </button>
                   {v.status === 'draft' && (
                     <>
                       <button
@@ -384,9 +524,6 @@ export default function AdminTosPage() {
                         Discard
                       </button>
                     </>
-                  )}
-                  {v.status === 'published' && (
-                    <span className="text-gray-400 text-xs">Read-only</span>
                   )}
                 </td>
               </tr>
