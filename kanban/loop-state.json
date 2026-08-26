@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
+  "status": "blocked",
+  "current_task_key": "02-auth-users-admin.md#T-09.06.01",
+  "current_task_id": "T-09.06.01",
+  "current_task_file": "02-auth-users-admin.md",
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 300,
+  "loop_iteration": 301,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -245,10 +245,15 @@
     "02-auth-users-admin.md#T-09.04.01",
     "02-auth-users-admin.md#T-09.05.01"
   ],
-  "last_error": null,
-  "notes": "Iter-300: T-09.05.01 (Staff role management) MERGED via PR #162 after 1 review round (1 major + 2 minor findings fixed). State reset to idle. Next: T-09.06.01 (Email transport config, XL — E-05 notification service dependent).",
-  "last_updated": "2026-08-26T16:22:00Z",
+  "last_error": "Blocked at T-09.06.01 (Email transport config, XL): requires E-05 notification service (email/SMS transport, outbox, worker). Current NotificationsService is an in-app stub; no SMTP/Resend library present; zero E-05 tasks completed. Manual: build E-05 email transport infrastructure before this task.",
+  "notes": "Iter-301: Loop reached T-09.06.01 (Email transport config, XL) and set BLOCKED — depends on E-05 notification service which is not built (in-app stub only, docstring says email/SMS transport belongs to E-05; zero E-05 tasks completed). Manual intervention required before this task can proceed.",
+  "last_updated": "2026-08-26T16:23:00Z",
   "status_history": [
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.06.01",
+      "at": "2026-08-26T16:23:00Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.05.01",
