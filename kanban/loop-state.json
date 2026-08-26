@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-06.01.02",
+  "current_task_id": "T-06.01.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e06-t-06-01-02-s1--ticket-list-api",
   "current_pr_url": null,
-  "loop_iteration": 246,
+  "loop_iteration": 247,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -208,8 +208,8 @@
     "02-auth-users-admin.md#T-06.01.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T01:38:41Z",
-  "notes": "Iteration-246: PR #138 merged (T-06.01.01 ticket creation). GLM-5.2 approved. Returned to idle.",
+  "last_updated": "2026-08-26T01:43:00Z",
+  "notes": "Iteration-247: Starting T-06.01.02 (Slice 1: backend API for ticket list, detail, and comments). Split from L task.",
   "status_history": [
     {
       "from": "in_review",
@@ -228,8 +228,8 @@
     },
     {
       "from": "idle",
-      "to": "idle",
-      "at": "iteration-245"
+      "to": "building",
+      "at": "iteration-247"
     }
   ]
 }
