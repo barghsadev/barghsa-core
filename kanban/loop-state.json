@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-05.05.01",
-  "current_task_id": "T-05.05.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-05-05-01--pending-verification-widget",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/136",
-  "loop_iteration": 243,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 244,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -201,11 +201,12 @@
     "02-auth-users-admin.md#T-05.04.02",
     "02-auth-users-admin.md#T-05.04.03",
     "02-auth-users-admin.md#T-05.04.04",
-    "02-auth-users-admin.md#T-05.04.05"
+    "02-auth-users-admin.md#T-05.04.05",
+    "02-auth-users-admin.md#T-05.05.01"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T04:10:00Z",
-  "notes": "Iteration-243: Fixes applied and pushed. All checks pass (typecheck 11/11, build 7/7, API tests 412/412). PR #136 updated with review comment. Returned to in_review.",
+  "last_updated": "2026-08-26T04:15:00Z",
+  "notes": "Iteration-244: PR #136 merged (T-05.05.01 pending verification widget). Reviewer z-ai/glm-5.2 approved. Returned to idle.",
   "status_history": [
     {
       "from": "idle",
@@ -226,6 +227,11 @@
       "from": "fixing",
       "to": "in_review",
       "at": "iteration-243"
+    },
+    {
+      "from": "in_review",
+      "to": "idle",
+      "at": "iteration-244"
     }
   ]
 }
