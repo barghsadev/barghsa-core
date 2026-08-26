@@ -364,4 +364,219 @@ describe('TicketsService', () => {
       ).rejects.toThrow(/Ticket not found/)
     })
   })
+
+  describe('staffListTickets', () => {
+    it('returns all tickets without user_id filter', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [{ total: 2 }] })
+        .mockResolvedValueOnce({ rows: [makeRow({ id: 'tkt-001' }), makeRow({ id: 'tkt-002', user_id: 'user-2' })] })
+
+      const result = await service.staffListTickets()
+
+      expect(result.data).toHaveLength(2)
+      expect(result.total).toBe(2)
+    })
+
+    it('filters by assignedTo', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+        .mockResolvedValueOnce({ rows: [makeRow({ assigned_to: 'staff-1' })] })
+
+      const result = await service.staffListTickets({ assignedTo: 'staff-1' })
+
+      expect(result.data).toHaveLength(1)
+      const countCall = mockPool.query.mock.calls[0]!
+      expect(countCall[1]![0]).toBe('staff-1')
+    })
+
+    it('filters by status', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+        .mockResolvedValueOnce({ rows: [makeRow({ status: 'resolved' })] })
+
+      const result = await service.staffListTickets({ status: 'resolved' })
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0]!.status).toBe('resolved')
+    })
+
+    it('supports search', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+        .mockResolvedValueOnce({ rows: [makeRow({ subject: 'Billing issue' })] })
+
+      const result = await service.staffListTickets({ search: 'billing' })
+
+      expect(result.data).toHaveLength(1)
+      const countCall = mockPool.query.mock.calls[0]!
+      expect(countCall[1]![0]).toBe('%billing%')
+    })
+
+    it('returns empty list when no tickets', async () => {
+      mockPool.query
+        .mockResolvedValueOnce({ rows: [{ total: 0 }] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      const result = await service.staffListTickets()
+
+      expect(result.data).toHaveLength(0)
+      expect(result.total).toBe(0)
+    })
+
+    it('invalid status throws 400', async () => {
+      await expect(
+        service.staffListTickets({ status: 'invalid' }),
+      ).rejects.toThrow(/Invalid status/)
+    })
+  })
+
+  describe('staffGetTicket', () => {
+    it('returns any ticket by ID', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
+
+      const result = await service.staffGetTicket('tkt-001')
+
+      expect(result.id).toBe('tkt-001')
+      expect(result.userId).toBe('user-other')
+    })
+
+    it('throws 404 when ticket does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.staffGetTicket('tkt-999'),
+      ).rejects.toThrow(/Ticket not found/)
+    })
+  })
+
+  describe('staffAssignTicket', () => {
+    it('assigns a ticket and transitions open to in_progress', async () => {
+      // getTicket check
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'open' })] })
+      // update
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ assigned_to: 'staff-1', status: 'in_progress' })] })
+
+      const result = await service.staffAssignTicket('tkt-001', 'staff-1')
+
+      expect(result.assignedTo).toBe('staff-1')
+      expect(result.status).toBe('in_progress')
+    })
+
+    it('assigns a ticket without changing non-open status', async () => {
+      // getTicket check
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'resolved' })] })
+      // update
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ assigned_to: 'staff-1', status: 'resolved' })] })
+
+      const result = await service.staffAssignTicket('tkt-001', 'staff-1')
+
+      expect(result.assignedTo).toBe('staff-1')
+      expect(result.status).toBe('resolved')
+    })
+
+    it('throws 404 when ticket does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.staffAssignTicket('tkt-999', 'staff-1'),
+      ).rejects.toThrow(/Ticket not found/)
+    })
+  })
+
+  describe('staffUpdateTicketStatus', () => {
+    it('updates status of any ticket', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'closed' })] })
+
+      const result = await service.staffUpdateTicketStatus('tkt-001', 'closed')
+
+      expect(result.status).toBe('closed')
+    })
+
+    it('throws 400 for invalid status', async () => {
+      await expect(
+        service.staffUpdateTicketStatus('tkt-001', 'invalid'),
+      ).rejects.toThrow(/Invalid status/)
+    })
+
+    it('throws 404 when ticket does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.staffUpdateTicketStatus('tkt-999', 'resolved'),
+      ).rejects.toThrow(/Ticket not found/)
+    })
+  })
+
+  describe('staffListComments', () => {
+    it('returns all comments including internal', async () => {
+      // staffGetTicket check
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
+      // comments
+      mockPool.query.mockResolvedValueOnce({
+        rows: [
+          makeCommentRow({ id: 'cmt-001', visibility: 'public' }),
+          makeCommentRow({ id: 'cmt-002', visibility: 'internal', body: 'Staff note' }),
+        ],
+      })
+
+      const result = await service.staffListComments('tkt-001')
+
+      expect(result).toHaveLength(2)
+      expect(result[0]!.visibility).toBe('public')
+      expect(result[1]!.visibility).toBe('internal')
+    })
+
+    it('throws 404 when ticket does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.staffListComments('tkt-999'),
+      ).rejects.toThrow(/Ticket not found/)
+    })
+  })
+
+  describe('staffAddComment', () => {
+    it('adds a public comment to any ticket', async () => {
+      // staffGetTicket check
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
+      // insert
+      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ author_id: 'staff-1' })] })
+
+      const result = await service.staffAddComment('tkt-001', 'staff-1', 'Staff comment')
+
+      expect(result.id).toBe('cmt-001')
+      expect(result.authorId).toBe('staff-1')
+    })
+
+    it('adds an internal note', async () => {
+      // staffGetTicket check
+      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ user_id: 'user-other' })] })
+      // insert
+      mockPool.query.mockResolvedValueOnce({ rows: [makeCommentRow({ visibility: 'internal', author_id: 'staff-1' })] })
+
+      const result = await service.staffAddComment('tkt-001', 'staff-1', 'Internal note', 'internal')
+
+      expect(result.visibility).toBe('internal')
+    })
+
+    it('throws 400 when comment body is empty', async () => {
+      await expect(
+        service.staffAddComment('tkt-001', 'staff-1', ''),
+      ).rejects.toThrow(/Comment body is required/)
+    })
+
+    it('throws 400 when comment body exceeds 10000 characters', async () => {
+      await expect(
+        service.staffAddComment('tkt-001', 'staff-1', 'x'.repeat(10001)),
+      ).rejects.toThrow(/Comment body must be 10,000 characters or fewer/)
+    })
+
+    it('throws 404 when ticket does not exist', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.staffAddComment('tkt-999', 'staff-1', 'Comment on missing ticket'),
+      ).rejects.toThrow(/Ticket not found/)
+    })
+  })
 })

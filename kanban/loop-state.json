@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 248,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-06.01.03",
+  "current_task_id": "T-06.01.03",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-06-01-03--staff-ticket-management",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/140",
+  "loop_iteration": 250,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -47,6 +47,19 @@
     "01-platform-infrastructure.md#T-02.04.04",
     "01-platform-infrastructure.md#T-02.04.05",
     "01-platform-infrastructure.md#T-02.04.06",
+    "01-platform-infrastructure.md#T-03.01.01",
+    "01-platform-infrastructure.md#T-03.01.02",
+    "01-platform-infrastructure.md#T-03.01.03",
+    "01-platform-infrastructure.md#T-03.01.04",
+    "01-platform-infrastructure.md#T-03.01.05",
+    "01-platform-infrastructure.md#T-03.02.01",
+    "01-platform-infrastructure.md#T-03.02.02",
+    "01-platform-infrastructure.md#T-03.02.03",
+    "01-platform-infrastructure.md#T-03.02.04",
+    "01-platform-infrastructure.md#T-03.03.01",
+    "01-platform-infrastructure.md#T-03.03.02",
+    "01-platform-infrastructure.md#T-03.03.03",
+    "01-platform-infrastructure.md#T-03.03.04",
     "01-platform-infrastructure.md#T-04.01.01",
     "01-platform-infrastructure.md#T-04.01.02",
     "01-platform-infrastructure.md#T-04.01.03",
@@ -209,8 +222,8 @@
     "02-auth-users-admin.md#T-06.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T02:09:28Z",
-  "notes": "Iteration-248: PR #139 merged (T-06.01.02 ticket list/detail/comments API). GLM-5.2 approved. Returned to idle.",
+  "last_updated": "2026-08-26T05:41:00Z",
+  "notes": "Iteration-251: PR #140 in review. GLM-5.2 approved with minor notes. Merging.",
   "status_history": [
     {
       "from": "in_review",
@@ -246,6 +259,16 @@
       "from": "in_review",
       "to": "idle",
       "at": "iteration-248"
+    },
+    {
+      "from": "idle",
+      "to": "blocked",
+      "at": "iteration-249"
+    },
+    {
+      "from": "blocked",
+      "to": "building",
+      "at": "iteration-250"
     }
   ]
 }

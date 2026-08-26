@@ -59,6 +59,10 @@ export const tickets = pgTable(
       .notNull()
       .default('normal'),
 
+    /** Which staff member is assigned to this ticket (nullable). */
+    assignedTo: text('assigned_to')
+      .references(() => users.userId, { onDelete: 'set null' }),
+
     /** Ticket lifecycle status. */
     status: text('status', {
       enum: ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'],
@@ -92,6 +96,7 @@ export const createTicketsTable = sql`
     related_entity_id TEXT,
     priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'high')),
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed')),
+    assigned_to UUID REFERENCES users(user_id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
