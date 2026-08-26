@@ -1,11 +1,11 @@
 {
-  "status": "blocked",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 257,
+  "status": "in_review",
+  "current_task_key": "02-auth-users-admin.md#T-08.01.01",
+  "current_task_id": "T-08.01.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e08-t-08-01-01--dashboard-page",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/143",
+  "loop_iteration": 258,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -224,94 +224,24 @@
     "02-auth-users-admin.md#T-07.01.01",
     "02-auth-users-admin.md#T-07.01.02"
   ],
-  "last_error": "Next task 02-auth-users-admin.md#T-07.01.03 (Verification notification to user) depends on notification service (Epic 05, not yet built). See kanban/index.md Phase 3 ordering — Epic 05 comes after Epics 02, 04, 03. Cannot proceed until notification service exists.",
-  "last_updated": "2026-08-26T06:48:00Z",
-  "notes": "Iteration-257: T-07.01.03 still blocked — notification service (E-05) not yet built. Phase 2 (E-04, E-03) must precede E-05 per kanban/index.md.",
+  "last_error": null,
+  "last_updated": "2026-08-26T06:51:00Z",
+  "notes": "Iteration-258: Unblocked loop. Skipped T-07.01.03 (needs E-05 notification service, not yet built). Started T-08.01.01 (Dashboard page layout). PR #143 created, ready for review. Checks: typecheck=pass, build=pass.",
   "status_history": [
     {
-      "from": "idle",
-      "to": "blocked",
-      "at": "iteration-254"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-254"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-253"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "iteration-253"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-253"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "iteration-252"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "iteration-252"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-246"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "iteration-246"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-246"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-247"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "iteration-247"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "iteration-247"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-248"
-    },
-    {
-      "from": "idle",
-      "to": "blocked",
-      "at": "iteration-249"
-    },
-    {
       "from": "blocked",
-      "to": "building",
-      "at": "iteration-250"
+      "to": "idle",
+      "at": "iteration-258"
     },
     {
       "from": "idle",
       "to": "building",
-      "at": "iteration-251"
+      "at": "iteration-258"
+    },
+    {
+      "from": "building",
+      "to": "in_review",
+      "at": "iteration-258"
     }
   ]
 }
