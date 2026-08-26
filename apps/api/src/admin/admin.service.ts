@@ -467,4 +467,88 @@ export class AdminService {
       client.release()
     }
   }
+
+  /**
+   * Get the current profile verification mode from app_config.
+   * Defaults to 'DISABLED' if the key is not set.
+   */
+  async getProfileVerificationMode(): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = 'profile_verification_mode'`,
+    )
+
+    if (result.rows.length === 0) {
+      return { mode: 'DISABLED' }
+    }
+
+    const mode = result.rows[0]!.value as 'DISABLED' | 'MANUAL' | 'API'
+    return { mode }
+  }
+
+  /**
+   * Set the profile verification mode.
+   * Bumps the global config version for cache invalidation.
+   */
+  async setProfileVerificationMode(
+    mode: 'DISABLED' | 'MANUAL' | 'API',
+    actorUserId: string,
+    ip: string,
+  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+    const pool = getDbPool()
+    const now = new Date()
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Upsert the config value
+      await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ('profile_verification_mode', $1::jsonb, 1, $2)
+         ON CONFLICT (key) DO UPDATE SET value = $1::jsonb, version = app_config.version + 1, updated_at = $2`,
+        [JSON.stringify(mode), now],
+      )
+
+      // Bump global config version for cache invalidation
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      // Record audit event
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: 'profile_verification_mode',
+            newValue: mode,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Profile verification mode set to ${mode} by ${actorUserId}`)
+      return { mode }
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set profile verification mode: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
 }

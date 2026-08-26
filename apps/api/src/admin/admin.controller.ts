@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   Logger,
@@ -17,6 +18,7 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { getDbPool } from '@barghsa/db'
 
 /**
  * Zod schema for the create-staff-user request body.
@@ -42,6 +44,15 @@ export const CreateStaffUserSchema = z.object({
 })
 
 export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
+
+/**
+ * Zod schema for the profile-verification-mode request body.
+ */
+export const SetProfileVerificationModeSchema = z.object({
+  mode: z.enum(['DISABLED', 'MANUAL', 'API']),
+})
+
+export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificationModeSchema>
 
 /**
  * Zod schema for the update-staff-roles request body.
@@ -292,5 +303,72 @@ export class AdminController {
     )
 
     return result
+  }
+
+  /**
+   * GET /api/admin/config/profile-verification-mode
+   *
+   * Returns the current profile verification mode.
+   * Values: 'DISABLED' | 'MANUAL' | 'API'
+   */
+  @Get('config/profile-verification-mode')
+  @ApiOperation({ summary: 'Get profile verification mode' })
+  @ApiResponse({ status: 200, description: 'Current verification mode.', schema: { type: 'object', properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } } } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getProfileVerificationMode(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+    const isAdmin = req.session.isAdmin ?? false
+    if (!isAdmin) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read profile verification mode`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.adminService.getProfileVerificationMode()
+  }
+
+  /**
+   * PUT /api/admin/config/profile-verification-mode
+   *
+   * Sets the profile verification mode. Changing it affects all profiles.
+   * Values: 'DISABLED' | 'MANUAL' | 'API'
+   */
+  @Put('config/profile-verification-mode')
+  @ApiOperation({ summary: 'Set profile verification mode' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['mode'],
+      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Verification mode updated.', schema: { type: 'object', properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } } } })
+  @ApiResponse({ status: 400, description: 'Invalid mode' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setProfileVerificationMode(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
+    const isAdmin = req.session.isAdmin ?? false
+    if (!isAdmin) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to set profile verification mode`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const parsed = SetProfileVerificationModeSchema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Mode must be one of: DISABLED, MANUAL, API' },
+        400,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setProfileVerificationMode(parsed.data.mode, req.session.userId, ip)
   }
 }

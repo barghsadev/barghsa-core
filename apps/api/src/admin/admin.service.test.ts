@@ -3,6 +3,11 @@ import { HttpException } from '@nestjs/common'
 import type { AdminService as AdminServiceType } from './admin.service.js'
 import type { CreateStaffUserInput } from './admin.service.js'
 
+// Mock uuid v7 for deterministic UUID generation
+vi.mock('uuid', () => ({
+  v7: vi.fn(() => 'new-user-uuid'),
+}))
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -29,483 +34,304 @@ const MOCK_ROLES = [
   { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
 ]
 
-function mockDbModule(pool: { query: ReturnType<typeof vi.fn>; connect: ReturnType<typeof vi.fn> }) {
-  return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }
-}
-
-let AdminService: typeof AdminServiceType
-let service: AdminServiceType
-
-beforeEach(() => {
-  vi.resetModules()
-  vi.restoreAllMocks()
-})
-
-// ─── Test data ────────────────────────────────────────────────────────
-
-function validTempPasswordInput(overrides: Partial<CreateStaffUserInput> = {}): CreateStaffUserInput {
+/**
+ * Build a mock for @barghsa/db that returns the given pool from `getDbPool`
+ * and the MOCK_ROLES from `PREDEFINED_ROLES`.
+ */
+function mockDbModule(pool: ReturnType<typeof mockPool>['pool']) {
   return {
-    username: 'newstaff@example.com',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    roleIds: [],
-    activationMethod: 'tempPassword',
-    ...overrides,
+    getDbPool: () => pool,
+    PREDEFINED_ROLES: MOCK_ROLES,
   }
 }
 
-function validLinkInput(overrides: Partial<CreateStaffUserInput> = {}): CreateStaffUserInput {
-  return {
-    username: 'newstaff2@example.com',
-    firstName: 'John',
-    lastName: 'Doe',
-    roleIds: [],
-    activationMethod: 'link',
-    ...overrides,
-  }
-}
+// ─── Tests ────────────────────────────────────────────────────────────
 
-// ─── Tests — tempPassword activation ──────────────────────────────────
+describe('AdminService', () => {
+  let service: AdminServiceType
 
-describe('AdminService.createStaffUser (tempPassword)', () => {
-  it('creates a staff user with temporary password and returns it', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [] })
-
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ rows: [{ user_id: 'new-user-id', username: 'newstaff@example.com' }] })
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    const result = await service.createStaffUser(
-      validTempPasswordInput(),
-      'actor-user-id',
-      '127.0.0.1',
-    )
-
-    expect(result.userId).toBeTruthy()
-    expect(result.username).toBe('newstaff@example.com')
-    expect(result.activationMethod).toBe('tempPassword')
-    expect(result).toHaveProperty('temporaryPassword')
-    expect(result.message).toContain('temporary password')
-    expect(mockRelease).toHaveBeenCalled()
+  beforeEach(() => {
+    vi.resetModules()
   })
 
-  it('generates a password that satisfies strength policy', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ rows: [{ user_id: 'uid-1', username: 'test@ex.com' }] })
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    const result = await service.createStaffUser(
-      validTempPasswordInput({ username: 'test@example.com' }),
-      'actor',
-      '10.0.0.1',
-    )
-
-    const pw = result.temporaryPassword!
-    expect(pw.length).toBeGreaterThanOrEqual(8)
-    expect(pw).toMatch(/[A-Z]/)
-    expect(pw).toMatch(/[a-z]/)
-    expect(pw).toMatch(/[2-9]/)
-    expect(mockRelease).toHaveBeenCalled()
-  })
-
-  it('sets must_change_password=true and is_admin=true', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ rows: [{ user_id: 'uid-2', username: 'user@ex.com' }] })
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    await service.createStaffUser(
-      validTempPasswordInput({ username: 'user@example.com' }),
-      'actor',
-      '10.0.0.1',
-    )
-
-    const insertUserCall = mockClientQuery.mock.calls[1]
-    expect(insertUserCall).toBeDefined()
-    const insertValues = insertUserCall![1]
-    // is_admin is hardcoded true in SQL, must_change_password is parameter $4
-    expect(insertValues[3]).toBe(true)
-  })
-})
-
-// ─── Tests — link activation ──────────────────────────────────────────
-
-describe('AdminService.createStaffUser (link)', () => {
-  it('creates a staff user with activation token and returns it', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ rows: [{ user_id: 'uid-3', username: 'staff@ex.com' }] })
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    const result = await service.createStaffUser(
-      validLinkInput(),
-      'actor',
-      '10.0.0.1',
-    )
-
-    expect(result.userId).toBeTruthy()
-    expect(result.username).toBe('newstaff2@example.com')
-    expect(result.activationMethod).toBe('link')
-    expect(result).toHaveProperty('activationToken')
-    expect(result.message).toContain('activation token')
-    expect(mockRelease).toHaveBeenCalled()
-  })
-
-  it('creates a profile with INDIVIDUAL type and VERIFIED status', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ rows: [{ user_id: 'uid-4', username: 'test@ex.com' }] })
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce(undefined)
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    await service.createStaffUser(
-      validLinkInput({ username: 'test@example.com', firstName: 'Ali', lastName: 'Rezaei' }),
-      'actor',
-      '10.0.0.1',
-    )
-
-    const insertProfileCall = mockClientQuery.mock.calls[2]
-    expect(insertProfileCall).toBeDefined()
-    const insertProfileSql = insertProfileCall![0]
-    expect(insertProfileSql).toContain('profiles')
-    expect(insertProfileSql).toContain("'INDIVIDUAL'")
-    expect(insertProfileSql).toContain("'VERIFIED'")
-  })
-})
-
-// ─── Tests — errors ───────────────────────────────────────────────────
-
-describe('AdminService.createStaffUser (errors)', () => {
-  it('throws 409 when username is already taken', async () => {
-    const { pool } = mockPool()
-    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'existing-user' }] })
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    let caught: unknown
-    try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
+  describe('createStaffUser', () => {
+    const validInput: CreateStaffUserInput = {
+      username: 'new.staff@example.com',
+      firstName: 'Jane',
+      lastName: 'Doe',
+      activationMethod: 'tempPassword',
+      roleIds: [],
     }
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(409)
-  })
+    it('creates a staff user with tempPassword activation', async () => {
+      const { pool } = mockPool()
+      const { mockClientQuery, mockRelease, client } = mockClient()
 
-  it('throws 409 on unique constraint violation inside transaction (TOCTOU guard)', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery } = mockClient()
+      // ── Pre-check: username not taken ───────────────────────────────
+      pool.query.mockResolvedValueOnce({ rows: [] })
 
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce({ code: '23505', detail: 'Key (username)=(x) already exists.' })
-      .mockResolvedValueOnce(undefined)
+      // ── Transaction: connect ────────────────────────────────────────
+      pool.connect.mockResolvedValue(client)
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
+      // ── Transaction steps in order ──────────────────────────────────
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // BEGIN
+      mockClientQuery.mockResolvedValueOnce({
+        // CREATE user
+        rows: [{ user_id: 'new-user', username: 'new.staff@example.com' }],
+      })
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT profile
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT roles (none)
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // COMMIT
 
-    let caught: unknown
-    try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
-    }
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(409)
-  })
+      const result = await service.createStaffUser(validInput, 'actor', '10.0.0.1')
 
-  it('throws 500 on unexpected database error', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery } = mockClient()
+      expect(result.userId).toBe('new-user-uuid')
+      expect(result.username).toBe('new.staff@example.com')
+      expect(result.activationMethod).toBe('tempPassword')
+      expect(result.temporaryPassword).toBeDefined()
+      expect(result.temporaryPassword!.length).toBeGreaterThanOrEqual(8)
+      expect(mockRelease).toHaveBeenCalled()
+    })
 
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce(new Error('Connection timeout'))
-      .mockResolvedValueOnce(undefined)
+    it('creates a staff user with activation link', async () => {
+      const { pool } = mockPool()
+      const { mockClientQuery, mockRelease, client } = mockClient()
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
+      // ── Pre-check: username not taken ───────────────────────────────
+      pool.query.mockResolvedValueOnce({ rows: [] })
 
-    let caught: unknown
-    try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
-    }
+      // ── Transaction: connect ────────────────────────────────────────
+      pool.connect.mockResolvedValue(client)
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(500)
-  })
+      // ── Transaction steps ───────────────────────────────────────────
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // BEGIN
+      mockClientQuery.mockResolvedValueOnce({
+        rows: [{ user_id: 'new-user-link', username: 'link.staff@example.com' }],
+      })
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT profile
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT roles (none)
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // COMMIT
 
-  it('throws 400 when roleIds contain invalid role IDs', async () => {
-    const { pool } = mockPool()
-    pool.query.mockResolvedValueOnce({ rows: [] })
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    let caught: unknown
-    try {
-      await service.createStaffUser(
-        validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
+      const result = await service.createStaffUser(
+        { ...validInput, username: 'link.staff@example.com', activationMethod: 'link' },
         'actor',
         '10.0.0.1',
       )
-    } catch (e) {
-      caught = e
-    }
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(400)
+      expect(result.userId).toBe('new-user-uuid')
+      expect(result.activationMethod).toBe('link')
+      expect(result.activationToken).toBeDefined()
+      expect(mockRelease).toHaveBeenCalled()
+    })
+
+    it('throws 409 when username is already taken', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'existing' }] })
+
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
+
+      let caught: unknown
+      try {
+        await service.createStaffUser(validInput, 'actor', '10.0.0.1')
+      } catch (e) {
+        caught = e
+      }
+
+      expect(caught).toBeInstanceOf(HttpException)
+      expect((caught as HttpException).getStatus()).toBe(409)
+    })
+
+    it('throws 400 when roleIds contain invalid role IDs', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [] })
+
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
+
+      let caught: unknown
+      try {
+        await service.createStaffUser(
+          { ...validInput, roleIds: ['nonexistent-role'] },
+          'actor',
+          '10.0.0.1',
+        )
+      } catch (e) {
+        caught = e
+      }
+
+      expect(caught).toBeInstanceOf(HttpException)
+      expect((caught as HttpException).getStatus()).toBe(400)
+    })
+
+    it('rolls back on unique constraint violation', async () => {
+      const { pool } = mockPool()
+      const { mockClientQuery, mockRelease, client } = mockClient()
+
+      // Pre-check passes
+      pool.query.mockResolvedValueOnce({ rows: [] })
+
+      // Transaction
+      pool.connect.mockResolvedValue(client)
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // BEGIN
+      mockClientQuery.mockRejectedValueOnce({
+        // CREATE user — fails with unique violation
+        code: '23505',
+        detail: 'Key (username)=(new.staff@example.com) already exists.',
+      })
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // ROLLBACK
+
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
+
+      let caught: unknown
+      try {
+        await service.createStaffUser(validInput, 'actor', '10.0.0.1')
+      } catch (e) {
+        caught = e
+      }
+
+      expect(caught).toBeInstanceOf(HttpException)
+      expect((caught as HttpException).getStatus()).toBe(409)
+      expect(mockRelease).toHaveBeenCalled()
+    })
   })
-})
 
-// ─── Tests — transaction rollback ─────────────────────────────────────
+  describe('updateStaffRoles', () => {
+    it('replaces role set for an existing staff user', async () => {
+      const { pool } = mockPool()
+      const { mockClientQuery, mockRelease, client } = mockClient()
 
-describe('AdminService.createStaffUser (rollback)', () => {
-  it('releases the client even when rollback is called', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
+      // Pre-check: user exists and is admin
+      pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
 
-    pool.query.mockResolvedValueOnce({ rows: [] })
-    mockConnect.mockResolvedValueOnce(client)
+      // Transaction
+      pool.connect.mockResolvedValue(client)
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // BEGIN
+      mockClientQuery.mockResolvedValueOnce({
+        // Fetch current roles
+        rows: [{ role_id: 'role-customer-support' }],
+      })
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // DELETE roles
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT roles
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
+      mockClientQuery.mockResolvedValueOnce({ rows: [] }) // COMMIT
 
-    mockClientQuery
-      .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce(new Error('DB failure'))
-      .mockResolvedValueOnce(undefined)
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    try {
-      await service.createStaffUser(validTempPasswordInput(), 'actor', '10.0.0.1')
-    } catch {
-      // Expected
-    }
-
-    expect(mockRelease).toHaveBeenCalled()
-  })
-
-  it('throws 400 when roleIds contain invalid role IDs', async () => {
-    const { pool } = mockPool()
-    pool.query.mockResolvedValueOnce({ rows: [] })
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    let caught: unknown
-    try {
-      await service.createStaffUser(
-        validTempPasswordInput({ roleIds: ['nonexistent-role'] }),
+      const result = await service.updateStaffRoles(
+        'target',
+        ['role-crm-verification', 'role-finance'],
         'actor',
         '10.0.0.1',
+        'Promoting to CRM and Finance',
       )
-    } catch (e) {
-      caught = e
-    }
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(400)
-  })
-})
+      expect(result.userId).toBe('target')
+      expect(result.roleIds).toEqual(['role-crm-verification', 'role-finance'])
+      expect(result.previousRoleIds).toEqual(['role-customer-support'])
+      expect(mockRelease).toHaveBeenCalled()
+    })
 
-// ─── Tests — updateStaffRoles ──────────────────────────────────────────
+    it('throws 404 when target user does not exist', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [] })
 
-describe('AdminService.updateStaffRoles', () => {
-  it('updates roles for an existing user (replaces role set)', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    // User exists check
-    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target-user', is_admin: true }] })
+      let caught: unknown
+      try {
+        await service.updateStaffRoles('nonexistent', ['role-admin'], 'actor', '10.0.0.1')
+      } catch (e) {
+        caught = e
+      }
 
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined) // BEGIN
-      .mockResolvedValueOnce({ rows: [{ role_id: 'role-customer-support' }, { role_id: 'role-finance' }] }) // current roles
-      .mockResolvedValueOnce(undefined) // DELETE old roles
-      .mockResolvedValueOnce(undefined) // INSERT new roles
-      .mockResolvedValueOnce(undefined) // audit log INSERT
-      .mockResolvedValueOnce(undefined) // COMMIT
+      expect(caught).toBeInstanceOf(HttpException)
+      expect((caught as HttpException).getStatus()).toBe(404)
+    })
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
+    it('throws 400 when roleIds contain invalid role IDs', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
 
-    const result = await service.updateStaffRoles(
-      'target-user',
-      ['role-crm-verification', 'role-operations'],
-      'actor-user',
-      '127.0.0.1',
-    )
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    expect(result.userId).toBe('target-user')
-    expect(result.roleIds).toEqual(['role-crm-verification', 'role-operations'])
-    expect(result.previousRoleIds).toEqual(['role-customer-support', 'role-finance'])
-    expect(mockRelease).toHaveBeenCalled()
-  })
+      let caught: unknown
+      try {
+        await service.updateStaffRoles('target', ['nonexistent-role'], 'actor', '10.0.0.1')
+      } catch (e) {
+        caught = e
+      }
 
-  it('allows empty role set (removes all roles)', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery, mockRelease } = mockClient()
-
-    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target-user', is_admin: true }] })
-
-    mockConnect.mockResolvedValueOnce(client)
-    mockClientQuery
-      .mockResolvedValueOnce(undefined) // BEGIN
-      .mockResolvedValueOnce({ rows: [{ role_id: 'role-admin' }] }) // current roles
-      .mockResolvedValueOnce(undefined) // DELETE old roles
-      // No INSERT (empty role set)
-      .mockResolvedValueOnce(undefined) // audit log
-      .mockResolvedValueOnce(undefined) // COMMIT
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    const result = await service.updateStaffRoles(
-      'target-user',
-      [],
-      'actor',
-      '10.0.0.1',
-    )
-
-    expect(result.roleIds).toEqual([])
-    expect(result.previousRoleIds).toEqual(['role-admin'])
-    expect(mockRelease).toHaveBeenCalled()
+      expect(caught).toBeInstanceOf(HttpException)
+      expect((caught as HttpException).getStatus()).toBe(400)
+    })
   })
 
-  it('throws 404 when target user does not exist', async () => {
-    const { pool } = mockPool()
-    pool.query.mockResolvedValueOnce({ rows: [] })
+  describe('getProfileVerificationMode', () => {
+    it('returns DISABLED when config key is not set', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [] })
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    let caught: unknown
-    try {
-      await service.updateStaffRoles('nonexistent', ['role-admin'], 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
-    }
+      const result = await service.getProfileVerificationMode()
+      expect(result.mode).toBe('DISABLED')
+    })
 
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(404)
+    it('returns the configured mode from app_config', async () => {
+      const { pool } = mockPool()
+      pool.query.mockResolvedValueOnce({ rows: [{ value: 'MANUAL' }] })
+
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
+
+      const result = await service.getProfileVerificationMode()
+      expect(result.mode).toBe('MANUAL')
+    })
   })
 
-  it('throws 500 on unexpected database error', async () => {
-    const { pool, mockConnect } = mockPool()
-    const { client, mockClientQuery } = mockClient()
+  describe('setProfileVerificationMode', () => {
+    it('upserts the config value and bumps global version', async () => {
+      const { pool } = mockPool()
+      const { mockClientQuery, mockRelease, client } = mockClient()
+      pool.connect.mockResolvedValue(client)
+      mockClientQuery.mockResolvedValue({ rows: [] }) // BEGIN
+      mockClientQuery.mockResolvedValue({ rows: [] }) // INSERT/UPDATE
+      mockClientQuery.mockResolvedValue({ rows: [] }) // config_version bump
+      mockClientQuery.mockResolvedValue({ rows: [] }) // audit_log insert
+      mockClientQuery.mockResolvedValue({ rows: [] }) // COMMIT
 
-    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
-    mockConnect.mockResolvedValueOnce(client)
-    // BEGIN fails with an unexpected error
-    mockClientQuery
-      .mockRejectedValueOnce(new Error('Unexpected DB failure'))
-      .mockResolvedValueOnce(undefined) // ROLLBACK (caught with .catch)
+      vi.doMock('@barghsa/db', () => mockDbModule(pool))
+      const { AdminService: Svc } = await import('./admin.service.js')
+      service = new Svc()
 
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    let caught: unknown
-    try {
-      await service.updateStaffRoles('target', ['role-admin'], 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
-    }
-
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(500)
-  })
-
-  it('throws 400 when roleIds contain invalid role IDs', async () => {
-    const { pool } = mockPool()
-    pool.query.mockResolvedValueOnce({ rows: [{ user_id: 'target', is_admin: true }] })
-
-    vi.doMock('@barghsa/db', () => mockDbModule(pool))
-    const { AdminService: Svc } = await import('./admin.service.js')
-    service = new Svc()
-
-    let caught: unknown
-    try {
-      await service.updateStaffRoles('target', ['nonexistent-role'], 'actor', '10.0.0.1')
-    } catch (e) {
-      caught = e
-    }
-
-    expect(caught).toBeInstanceOf(HttpException)
-    expect((caught as HttpException).getStatus()).toBe(400)
+      const result = await service.setProfileVerificationMode('API', 'actor', '10.0.0.1')
+      expect(result.mode).toBe('API')
+      expect(mockClientQuery).toHaveBeenCalled()
+      expect(mockRelease).toHaveBeenCalled()
+    })
   })
 })
