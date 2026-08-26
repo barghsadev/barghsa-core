@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { ProfilesController } from './profiles.controller.js'
 import { OnboardingController } from './onboarding.controller.js'
 import { AgentsController } from './agents.controller.js'
+import { InvitationsController } from './invitations.controller.js'
 import { ProfilesService } from './profiles.service.js'
 import { LegalProfilesService } from './legal-profiles.service.js'
 import { AgentsService } from './agents.service.js'
@@ -10,7 +11,7 @@ import { SessionModule } from '../session/session.module.js'
 
 @Module({
   imports: [SessionModule],
-  controllers: [ProfilesController, OnboardingController, AgentsController],
+  controllers: [ProfilesController, OnboardingController, AgentsController, InvitationsController],
   providers: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard],
   exports: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard],
 })

@@ -678,6 +678,20 @@ export const fa: I18nDictionary = {
   'crm.profile.admin.forcePwChangeSuccess': 'تغییر اجباری رمز عبور با موفقیت اعمال شد.',
   'crm.profile.admin.expireSessionsError': 'خطا در پایان نشست‌ها',
   'crm.profile.admin.expireSessionsSuccess': 'تمام نشست‌ها با موفقیت پایان یافت.',
+
+  // ── Invitations ──────────────────────────────────────────
+  'invitation.banner.title': '{entity} شما را به عنوان {role} دعوت کرده است',
+  'invitation.banner.role': 'نقش: {role}',
+  'invitation.banner.invitedBy': 'توسط: {name}',
+  'invitation.banner.date': 'تاریخ دعوت: {date}',
+  'invitation.banner.accept': 'پذیرفتن',
+  'invitation.banner.accepting': 'در حال پذیرش…',
+  'invitation.banner.decline': 'رد کردن',
+  'invitation.banner.declining': 'در حال رد…',
+  'invitation.banner.accepted': 'دعوتنامه با موفقیت پذیرفته شد',
+  'invitation.banner.declined': 'دعوتنامه رد شد',
+  'invitation.banner.error': 'خطا در پردازش دعوتنامه',
+  'invitation.banner.noInvitations': 'هیچ دعوتنامه‌ای ندارید',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1329,6 +1343,20 @@ export const en: I18nDictionary = {
     'crm.profile.admin.forcePwChangeSuccess': 'Password change forced successfully.',
     'crm.profile.admin.expireSessionsError': 'Error expiring sessions',
     'crm.profile.admin.expireSessionsSuccess': 'All sessions expired successfully.',
+
+    // ── Invitations ──────────────────────────────────────────
+    'invitation.banner.title': '{entity} has invited you as {role}',
+    'invitation.banner.role': 'Role: {role}',
+    'invitation.banner.invitedBy': 'By: {name}',
+    'invitation.banner.date': 'Invited on: {date}',
+    'invitation.banner.accept': 'Accept',
+    'invitation.banner.accepting': 'Accepting…',
+    'invitation.banner.decline': 'Decline',
+    'invitation.banner.declining': 'Declining…',
+    'invitation.banner.accepted': 'Invitation accepted successfully',
+    'invitation.banner.declined': 'Invitation declined',
+    'invitation.banner.error': 'Error processing invitation',
+    'invitation.banner.noInvitations': 'No pending invitations',
   };
 
 /** Supported locale codes */

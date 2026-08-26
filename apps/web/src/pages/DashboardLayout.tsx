@@ -2,6 +2,7 @@ import { Link, Outlet } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js'
 import { TosBanner } from '../components/TosBanner.js'
+import { InvitationBanner } from '../components/InvitationBanner.js'
 
 interface DashboardLayoutProps {
   locale?: Locale
@@ -34,6 +35,9 @@ export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
     <div className="min-h-dvh flex flex-col bg-gray-50" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* TOS re-acceptance banner — shown on top of the dashboard when needed */}
       <TosBanner locale={locale} />
+
+      {/* Invitation banner — shows pending agent invitations */}
+      <InvitationBanner locale={locale} />
 
       {/* Main layout: sidebar + content */}
       <div className="flex flex-1">
