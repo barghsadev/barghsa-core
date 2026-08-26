@@ -28,10 +28,11 @@ import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
+import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
+import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
-import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
@@ -142,9 +143,19 @@ const AdminCrmRoute = AdminCrmRouteImport.update({
   path: '/crm',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGeographyRoute = AdminGeographyRouteImport.update({
+  id: '/geography',
+  path: '/geography',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTosRoute = AdminTosRouteImport.update({
+  id: '/tos',
+  path: '/tos',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
@@ -155,11 +166,6 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
 const AdminVerificationRoute = AdminVerificationRouteImport.update({
   id: '/verification',
   path: '/verification',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminGeographyRoute = AdminGeographyRouteImport.update({
-  id: '/geography',
-  path: '/geography',
   getParentRoute: () => AdminRoute,
 } as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
@@ -259,10 +265,11 @@ export interface FileRoutesByFullPath {
   '/wallet': typeof AppWalletRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/geography': typeof AdminGeographyRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
@@ -295,10 +302,11 @@ export interface FileRoutesByTo {
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/geography': typeof AdminGeographyRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
@@ -336,10 +344,11 @@ export interface FileRoutesById {
   '/_app/wallet': typeof AppWalletRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/geography': typeof AdminGeographyRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
-  '/admin/geography': typeof AdminGeographyRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
@@ -377,10 +386,11 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/geography'
     | '/admin/storage'
+    | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
-    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
@@ -413,10 +423,11 @@ export interface FileRouteTypes {
     | '/videos'
     | '/wallet'
     | '/admin/branding'
+    | '/admin/geography'
     | '/admin/storage'
+    | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
-    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin'
@@ -453,10 +464,11 @@ export interface FileRouteTypes {
     | '/_app/wallet'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/geography'
     | '/admin/storage'
+    | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
-    | '/admin/geography'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
@@ -622,11 +634,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/geography': {
+      id: '/admin/geography'
+      path: '/geography'
+      fullPath: '/admin/geography'
+      preLoaderRoute: typeof AdminGeographyRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/storage': {
       id: '/admin/storage'
       path: '/storage'
       fullPath: '/admin/storage'
       preLoaderRoute: typeof AdminStorageRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tos': {
+      id: '/admin/tos'
+      path: '/tos'
+      fullPath: '/admin/tos'
+      preLoaderRoute: typeof AdminTosRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/users': {
@@ -641,13 +667,6 @@ declare module '@tanstack/react-router' {
       path: '/verification'
       fullPath: '/admin/verification'
       preLoaderRoute: typeof AdminVerificationRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/geography': {
-      id: '/admin/geography'
-      path: '/geography'
-      fullPath: '/admin/geography'
-      preLoaderRoute: typeof AdminGeographyRouteImport
       parentRoute: typeof AdminRoute
     }
     '/onboarding/complete': {
@@ -813,20 +832,22 @@ const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
+  AdminGeographyRoute: typeof AdminGeographyRoute
   AdminStorageRoute: typeof AdminStorageRoute
+  AdminTosRoute: typeof AdminTosRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
-  AdminGeographyRoute: typeof AdminGeographyRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
+  AdminGeographyRoute: AdminGeographyRoute,
   AdminStorageRoute: AdminStorageRoute,
+  AdminTosRoute: AdminTosRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
-  AdminGeographyRoute: AdminGeographyRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

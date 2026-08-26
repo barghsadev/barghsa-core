@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -15,6 +16,8 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/s
 import { z } from 'zod'
 import { AdminService, type UpdateStaffRolesResult } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
+import { TosService } from '../tos/tos.service.js'
+import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
@@ -120,6 +123,7 @@ export class AdminController {
   constructor(
     private readonly adminService: AdminService,
     private readonly brandConfigService: BrandConfigService,
+    private readonly tosService: TosService,
   ) {}
 
   /**
@@ -526,5 +530,246 @@ export class AdminController {
       )
     }
     return this.brandConfigService.activateDraft(req.session.userId)
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Admin: TOS management (T-09.03.01)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * GET /api/admin/tos/versions
+   *
+   * Lists all TOS versions (draft + published).
+   * Permission: admin or staff with admin:tos:edit role (currently admin only).
+   */
+  @Get('tos/versions')
+  @ApiOperation({ summary: 'List all TOS versions' })
+  @ApiResponse({ status: 200, description: 'List of TOS versions.' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listTosVersions(
+    @Req() req: AuthenticatedRequest,
+  ) {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list TOS versions`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.tosService.listVersions()
+  }
+
+  /**
+   * GET /api/admin/tos/versions/:id
+   *
+   * Get a specific TOS version by ID.
+   */
+  @Get('tos/versions/:id')
+  @ApiOperation({ summary: 'Get a TOS version by ID' })
+  @ApiParam({ name: 'id', description: 'TOS version UUID' })
+  @ApiResponse({ status: 200, description: 'TOS version details.' })
+  @ApiResponse({ status: 404, description: 'Version not found' })
+  async getTosVersion(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<TosVersionDetail> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.tosService.getVersion(id)
+  }
+
+  /**
+   * POST /api/admin/tos/versions
+   *
+   * Creates a new draft TOS version.
+   * Only one draft can exist at a time.
+   */
+  @Post('tos/versions')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Create a new draft TOS version' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['versionId', 'contentFa', 'contentEn'],
+      properties: {
+        versionId: { type: 'string', description: 'Human-readable version ID, e.g. "v2"' },
+        contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
+        contentEn: { type: 'string', description: 'English TOS content (Markdown)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Draft TOS version created.' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 409, description: 'Draft or version ID already exists' })
+  async createTosVersion(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<TosVersionDetail> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const schema = z.object({
+      versionId: z.string().min(1).max(50),
+      contentFa: z.string().min(1),
+      contentEn: z.string().min(1),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    return this.tosService.createVersion(parsed.data, req.session.userId)
+  }
+
+  /**
+   * PUT /api/admin/tos/versions/:id
+   *
+   * Updates a draft TOS version. Only draft versions can be updated.
+   */
+  @Put('tos/versions/:id')
+  @ApiOperation({ summary: 'Update a draft TOS version' })
+  @ApiParam({ name: 'id', description: 'TOS version UUID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        versionId: { type: 'string', description: 'Human-readable version ID' },
+        contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
+        contentEn: { type: 'string', description: 'English TOS content (Markdown)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Draft TOS version updated.' })
+  @ApiResponse({ status: 400, description: 'Version is not a draft' })
+  @ApiResponse({ status: 404, description: 'Version not found' })
+  async updateTosVersion(
+    @Param('id') id: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<TosVersionDetail> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const schema = z.object({
+      versionId: z.string().min(1).max(50).optional(),
+      contentFa: z.string().min(1).optional(),
+      contentEn: z.string().min(1).optional(),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    // Filter to only defined fields for the service call
+    const updateFields: Record<string, unknown> = {}
+    if (parsed.data.versionId !== undefined) updateFields.versionId = parsed.data.versionId
+    if (parsed.data.contentFa !== undefined) updateFields.contentFa = parsed.data.contentFa
+    if (parsed.data.contentEn !== undefined) updateFields.contentEn = parsed.data.contentEn
+
+    // At least one field must be provided
+    if (Object.keys(updateFields).length === 0) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'At least one field must be provided' },
+        400,
+      )
+    }
+
+    return this.tosService.updateVersion(id, updateFields as UpdateTosVersionFields, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/tos/versions/:id/publish
+   *
+   * Publishes a draft TOS version.
+   * If changeType is 'major', the new version becomes active and users must re-accept.
+   * If changeType is 'minor', the current active version stays active.
+   */
+  @Post('tos/versions/:id/publish')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Publish a draft TOS version' })
+  @ApiParam({ name: 'id', description: 'TOS version UUID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['changeType'],
+      properties: {
+        changeType: { type: 'string', enum: ['major', 'minor'], description: 'Material change (major) → triggers re-acceptance' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'TOS version published.' })
+  @ApiResponse({ status: 400, description: 'Version is not a draft' })
+  @ApiResponse({ status: 404, description: 'Version not found' })
+  async publishTosVersion(
+    @Param('id') id: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<TosVersionDetail> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const schema = z.object({
+      changeType: z.enum(['major', 'minor']),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    return this.tosService.publishVersion(id, parsed.data, req.session.userId)
+  }
+
+  /**
+   * DELETE /api/admin/tos/versions/:id
+   *
+   * Discards a draft TOS version. Published versions cannot be deleted.
+   */
+  @Delete('tos/versions/:id')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete (discard) a draft TOS version' })
+  @ApiParam({ name: 'id', description: 'TOS version UUID' })
+  @ApiResponse({ status: 204, description: 'Draft discarded.' })
+  @ApiResponse({ status: 400, description: 'Version is published and cannot be deleted' })
+  @ApiResponse({ status: 404, description: 'Version not found' })
+  async deleteTosVersion(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<void> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    await this.tosService.deleteVersion(id)
   }
 }
