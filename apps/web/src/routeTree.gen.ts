@@ -30,6 +30,7 @@ import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -154,6 +155,11 @@ const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRolesRoute = AdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
@@ -273,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -311,6 +318,7 @@ export interface FileRoutesByTo {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -354,6 +362,7 @@ export interface FileRoutesById {
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -397,6 +406,7 @@ export interface FileRouteTypes {
     | '/admin/crm'
     | '/admin/geography'
     | '/admin/notifications'
+    | '/admin/roles'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -435,6 +445,7 @@ export interface FileRouteTypes {
     | '/admin/branding'
     | '/admin/geography'
     | '/admin/notifications'
+    | '/admin/roles'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -477,6 +488,7 @@ export interface FileRouteTypes {
     | '/admin/crm'
     | '/admin/geography'
     | '/admin/notifications'
+    | '/admin/roles'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -658,6 +670,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/admin/notifications'
       preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles': {
+      id: '/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminRolesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/storage': {
@@ -853,6 +872,7 @@ interface AdminRouteChildren {
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminGeographyRoute: typeof AdminGeographyRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminRolesRoute: typeof AdminRolesRoute
   AdminStorageRoute: typeof AdminStorageRoute
   AdminTosRoute: typeof AdminTosRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -865,6 +885,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminGeographyRoute: AdminGeographyRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminRolesRoute: AdminRolesRoute,
   AdminStorageRoute: AdminStorageRoute,
   AdminTosRoute: AdminTosRoute,
   AdminUsersRoute: AdminUsersRoute,

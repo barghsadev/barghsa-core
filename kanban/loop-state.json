@@ -1,9 +1,9 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-09.05.01",
+  "current_task_id": "T-09.05.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-05-01--staff-role-management",
   "current_pr_url": null,
   "loop_iteration": 300,
   "fix_attempts": 0,
@@ -245,9 +245,14 @@
     "02-auth-users-admin.md#T-09.04.01"
   ],
   "last_error": null,
-  "notes": "Iter-300: T-09.04.01 (Notification template editor) MERGED via PR #161 after 2 review rounds. State reset to idle. Remaining minor follow-ups noted on PR: transactional draft-uniqueness (partial unique idx draft/active), version column in list table, read vs edit permission split (T-09.05), unpublish restore semantics.",
-  "last_updated": "2026-08-26T15:51:07Z",
+  "notes": "Iter-300: selected T-09.05.01 (Staff role management). Implemented: GET /api/admin/roles, GET /api/admin/users/:userId/effective-permissions, web /admin/roles page. Checks run: api typecheck p0, api tests 638p, web typecheck p0, web build p0, i18n typecheck p0.",
+  "last_updated": "2026-08-26T19:16:00Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.05.01",
+      "at": "2026-08-26T19:16:00Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.04.01",

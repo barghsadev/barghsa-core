@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { AdminService, type UpdateStaffRolesResult } from './admin.service.js'
+import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
 import { NotificationTemplateService, type NotificationTemplateResult, type CreateNotificationTemplateInput, type PageTemplatesOptions } from '../notifications/notification-template.service.js'
@@ -360,6 +360,65 @@ export class AdminController {
     )
 
     return result
+  }
+
+  /**
+   * GET /api/admin/roles
+   *
+   * Lists all staff roles with their permission sets (T-09.05.01).
+   * Roles are grouped by module on the client. Predefined roles are
+   * shown read-only; custom role creation is a future extension.
+   * Permission: admin or staff with `admin:roles:edit` (currently admin only).
+   */
+  @Get('roles')
+  @ApiOperation({ summary: 'List staff roles and their permissions' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of staff roles with permissions.',
+    schema: { type: 'array', items: { type: 'object' } },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listRoles(@Req() req: AuthenticatedRequest): Promise<StaffRoleDto[]> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff roles`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.adminService.listStaffRoles()
+  }
+
+  /**
+   * GET /api/admin/users/:userId/effective-permissions
+   *
+   * Resolves the effective permission set for a staff user by taking the union
+   * of permissions across their assigned roles (deny-by-default, additive).
+   * Platform admins resolve to the wildcard set.
+   * Permission: admin or with `staff:roles:view` (currently: admin only).
+   */
+  @Get('users/:userId/effective-permissions')
+  @ApiOperation({ summary: 'Get effective permissions for a staff user' })
+  @ApiParam({ name: 'userId', description: 'Staff user UUID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Effective permissions for the user.',
+    schema: { type: 'object' },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getEffectivePermissions(
+    @Param('userId') userId: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<EffectivePermissionsResult> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read effective permissions`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.adminService.getEffectivePermissions(userId)
   }
 
   /**
