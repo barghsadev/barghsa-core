@@ -1,15 +1,32 @@
 import { sql } from 'drizzle-orm'
-import { check, text, jsonb, pgTable } from 'drizzle-orm/pg-core'
-import { uuidv7, irrAmount, timestamptz } from '../types'
+import { check, jsonb, text, pgTable } from 'drizzle-orm/pg-core'
+import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 import { orders } from './orders'
 
 /**
- * Invoice table (T-04.1.01.01).
+ * Invoice state enum (T-04.1.01.02).
  *
- * Tracks the complete lifecycle of every invoice through 9 states:
+ * Nine states covering the complete invoice lifecycle:
  *   Draft → Unpaid → Payment under review → Partially funded → Paid →
  *   Overdue → Cancelled → Partially refunded → Refunded
+ */
+export const invoiceStateEnum = pgEnum('invoice_state', [
+  'Draft',
+  'Unpaid',
+  'PaymentUnderReview',
+  'PartiallyFunded',
+  'Paid',
+  'Overdue',
+  'Cancelled',
+  'PartiallyRefunded',
+  'Refunded',
+])
+
+/**
+ * Invoice table (T-04.1.01.01).
+ *
+ * Tracks the complete lifecycle of every invoice through 9 states.
  *
  * All monetary amounts are stored as signed 64-bit integers (IRR, Rials).
  * Floating-point arithmetic is strictly forbidden.
@@ -19,7 +36,7 @@ import { orders } from './orders'
  *   - `profileId` — FK → profiles.id (the customer).
  *   - `orderId?` — optional FK → orders.id.
  *   - `contractId?` — optional text reference (contracts table TBD).
- *   - `state` — current invoice state (9-state enum).
+ *   - `state` — current invoice state (invoice_state enum).
  *   - `totalAmount` — int8; invoice total in IRR.
  *   - `paidAmount` — int8, default 0; cumulative confirmed payments.
  *   - `refundedAmount` — int8, default 0; cumulative refunds.
@@ -51,28 +68,8 @@ export const invoices = pgTable(
      */
     contractId: text('contract_id'),
 
-    /**
-     * Current invoice state.
-     *
-     * Nine states covering the full lifecycle:
-     *   Draft, Unpaid, PaymentUnderReview, PartiallyFunded, Paid,
-     *   Overdue, Cancelled, PartiallyRefunded, Refunded
-     */
-    state: text('state', {
-      enum: [
-        'Draft',
-        'Unpaid',
-        'PaymentUnderReview',
-        'PartiallyFunded',
-        'Paid',
-        'Overdue',
-        'Cancelled',
-        'PartiallyRefunded',
-        'Refunded',
-      ],
-    })
-      .notNull()
-      .default('Draft'),
+    /** Current invoice state (invoice_state enum). */
+    state: invoiceStateEnum('state').notNull().default('Draft'),
 
     /** Invoice total amount in IRR (int8). Never negative. */
     totalAmount: irrAmount('total_amount').notNull(),
@@ -140,10 +137,7 @@ export const createInvoicesTable = sql`
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
     contract_id TEXT,
-    state TEXT NOT NULL DEFAULT 'Draft' CHECK (state IN (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded',
-      'Paid', 'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )),
+    state invoice_state NOT NULL DEFAULT 'Draft',
     total_amount BIGINT NOT NULL CHECK (total_amount >= 0),
     paid_amount BIGINT NOT NULL DEFAULT 0 CHECK (paid_amount >= 0),
     refunded_amount BIGINT NOT NULL DEFAULT 0 CHECK (refunded_amount >= 0),
