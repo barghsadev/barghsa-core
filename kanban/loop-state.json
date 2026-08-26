@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-06.01.03",
   "current_task_id": "T-06.01.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-06-01-03--staff-ticket-management",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/140",
   "loop_iteration": 250,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -222,8 +222,8 @@
     "02-auth-users-admin.md#T-06.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T02:11:00Z",
-  "notes": "Iteration-250: Unblocked from dependency ordering issue. Building T-06.01.03 as a prerequisite slice (staff ticket management without teams/auto-assignment, deferred to T-09.08.02).",
+  "last_updated": "2026-08-26T05:41:00Z",
+  "notes": "Iteration-251: PR #140 in review. GLM-5.2 approved with minor notes. Merging.",
   "status_history": [
     {
       "from": "in_review",
