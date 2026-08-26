@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-08.01.02",
-  "current_task_id": "T-08.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-08-01-02--wallet-balance-card",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/153",
-  "loop_iteration": 284,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 285,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -235,9 +235,10 @@
     "04-invoices-wallet-contracts.md#T-04.2.01.01",
     "04-invoices-wallet-contracts.md#T-04.1.01.01",
     "04-invoices-wallet-contracts.md#T-04.1.01.02",
-    "04-invoices-wallet-contracts.md#T-04.1.01.03"
+    "04-invoices-wallet-contracts.md#T-04.1.01.03",
+    "02-auth-users-admin.md#T-08.01.02"
   ],
   "last_error": null,
-  "notes": "Iter-284: fix-attempt-1 applied — summary cards grid now renders unconditionally during loading (only WalletBalanceCard gated on data). Added skeleton placeholder for wallet card. Build/typecheck/16 tests pass. PR #153 back for review.",
-  "last_updated": "2026-08-26T13:10:00Z"
+  "notes": "Iter-285: PR #153 merged (T-08.01.02 ✅). Reviewer approved with minor a11y/test suggestions. Next: T-08.01.03 (Quick status cards).",
+  "last_updated": "2026-08-26T13:15:30Z"
 }
