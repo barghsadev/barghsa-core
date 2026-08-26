@@ -18,7 +18,6 @@ import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { getDbPool } from '@barghsa/db'
 
 /**
  * Zod schema for the create-staff-user request body.
