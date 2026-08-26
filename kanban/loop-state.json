@@ -5,8 +5,8 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-07-01-01--verification-mode-setting",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/141",
-  "loop_iteration": 251,
-  "fix_attempts": 0,
+  "loop_iteration": 252,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -223,9 +223,19 @@
     "02-auth-users-admin.md#T-06.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T05:53:00Z",
-  "notes": "Iteration-251: PR #141 created (T-07.01.01 verification mode setting). Building complete — in review.",
+  "last_updated": "2026-08-26T06:02:00Z",
+  "notes": "Iteration-252: PR #141 review fixes applied (restored test coverage, removed unused import). Back in review.",
   "status_history": [
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-252"
+    },
+    {
+      "from": "fixing",
+      "to": "in_review",
+      "at": "iteration-252"
+    },
     {
       "from": "in_review",
       "to": "idle",
