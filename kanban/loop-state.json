@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "02-auth-users-admin.md#T-08.01.02",
   "current_task_id": "T-08.01.02",
   "current_task_file": "02-auth-users-admin.md",
@@ -238,6 +238,6 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.03"
   ],
   "last_error": null,
-  "notes": "Iter-283: PR #152 merged (T-04.1.01.03). Started T-08.01.02 — WalletBalanceCard component with IRR+Toman display, low-balance warning, charge wallet button. Committed and pushed.",
-  "last_updated": "2026-08-26T13:02:00Z"
+  "notes": "Iter-284: fix-attempt-1 applied — summary cards grid now renders unconditionally during loading (only WalletBalanceCard gated on data). Added skeleton placeholder for wallet card. Build/typecheck/16 tests pass. PR #153 back for review.",
+  "last_updated": "2026-08-26T13:10:00Z"
 }
