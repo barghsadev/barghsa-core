@@ -15,7 +15,7 @@
  * money-moving operations that call this service).
  */
 
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
+import { Injectable, InternalServerErrorException, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import {
@@ -128,6 +128,12 @@ export class InvoiceStateMachineService {
       if (transition === 'Cancel') {
         sideEffects.push({ column: 'cancelled_at', value: now })
       }
+      if (transition === 'PayFromWallet' || to === 'Paid') {
+        sideEffects.push({ column: 'paid_at', value: now })
+      }
+      if (transition === 'MarkOverdue') {
+        sideEffects.push({ column: 'overdue_at', value: now })
+      }
 
       // --- 4. Update invoice state ---
       const setClauses = [`state = $2`]
@@ -192,7 +198,7 @@ export class InvoiceStateMachineService {
         throw error
       }
       this.logger.error(`Invoice transition failed: ${String(error)}`)
-      throw new BadRequestException(
+      throw new InternalServerErrorException(
         `Invoice transition failed: ${String(error)}`,
       )
     } finally {

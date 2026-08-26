@@ -157,19 +157,6 @@ export function isInvoiceState(value: string): value is InvoiceState {
   return (INVOICE_STATES as readonly string[]).includes(value)
 }
 
-/** Monotonic numeric rank for partial-order comparison of terminal states. */
-const STATE_ORDER: Record<InvoiceState, number> = {
-  Draft: 0,
-  Unpaid: 1,
-  PaymentUnderReview: 2,
-  PartiallyFunded: 3,
-  Paid: 4,
-  Overdue: 5,
-  Cancelled: 6,
-  PartiallyRefunded: 7,
-  Refunded: 8,
-}
-
 /** Is `from` a state from which `to` may be reached? Pure structural check. */
 export function canTransition(from: InvoiceState, to: InvoiceState): boolean {
   return ALLOWED_TRANSITIONS[from].includes(to)

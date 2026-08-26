@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { BadRequestException, NotFoundException } from '@nestjs/common'
+import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 
 // ---- Mocks ----
@@ -214,7 +214,7 @@ describe('InvoiceStateMachineService', () => {
         service.transition('inv-001', 'Draft', 'Unpaid', {
           actorUserId: 'user-001',
         }),
-      ).rejects.toThrow(BadRequestException)
+      ).rejects.toThrow(InternalServerErrorException)
 
       expect(mockClient.query.mock.calls.some((c: unknown[]) => (c[0] as string) === 'ROLLBACK')).toBe(true)
       expect(mockClient.release).toHaveBeenCalled()
