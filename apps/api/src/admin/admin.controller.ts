@@ -14,6 +14,7 @@ import {
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 import { AdminService, type UpdateStaffRolesResult } from './admin.service.js'
+import { BrandConfigService } from './brand-config.service.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
@@ -43,6 +44,35 @@ export const CreateStaffUserSchema = z.object({
 })
 
 export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
+
+/**
+ * Zod schema for brand config body (T-09.01.01).
+ *
+ * Validates the config JSON for the PUT /api/admin/branding/config endpoint.
+ */
+const hexColorRe = /^#[0-9a-fA-F]{6}$/
+
+export const UpsertBrandConfigSchema = z.object({
+  config: z.object({
+    appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
+    slogan: z.string().max(200).optional().default(''),
+    primaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#2563eb'),
+    secondaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#64748b'),
+    accentColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#f59e0b'),
+    logoUrl: z.string().url().nullable().optional().default(null),
+    faviconUrl: z.string().url().nullable().optional().default(null),
+    darkMode: z.boolean().optional().default(false),
+  }),
+})
+export interface BrandConfigDto {
+  id: string
+  config: Record<string, unknown>
+  version: number
+  status: 'draft' | 'active'
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
 
 /**
  * Zod schema for the profile-verification-mode request body.
@@ -87,7 +117,10 @@ export interface CreateStaffUserApiResponse {
 export class AdminController {
   private readonly logger = new Logger(AdminController.name)
 
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly brandConfigService: BrandConfigService,
+  ) {}
 
   /**
    * POST /api/admin/users/create-staff
@@ -369,5 +402,129 @@ export class AdminController {
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setProfileVerificationMode(parsed.data.mode, req.session.userId, ip)
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Brand Config (T-09.01.01)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * GET /api/admin/branding/config
+   *
+   * Returns the active brand configuration for the public-facing UI.
+   * Permission: admin or staff with admin:branding:read role.
+   */
+  @Get('branding/config')
+  @ApiOperation({ summary: 'Get active brand configuration' })
+  @ApiResponse({ status: 200, description: 'Active brand configuration.', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getActiveBrandConfig(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<BrandConfigDto> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read brand config`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.brandConfigService.getActiveConfig()
+  }
+
+  /**
+   * GET /api/admin/branding/configs
+   *
+   * Lists all brand config versions (draft + active).
+   * Permission: admin or staff with admin:branding:read role.
+   */
+  @Get('branding/configs')
+  @ApiOperation({ summary: 'List all brand config versions' })
+  @ApiResponse({ status: 200, description: 'List of brand configs.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listBrandConfigs(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<BrandConfigDto[]> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list brand configs`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.brandConfigService.listConfigs()
+  }
+
+  /**
+   * PUT /api/admin/branding/config
+   *
+   * Creates or updates a draft brand config. If no draft exists, creates a new
+   * draft version based on the active config. Permission: admin only.
+   */
+  @Put('branding/config')
+  @ApiOperation({ summary: 'Upsert draft brand configuration' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        config: { type: 'object', description: 'Brand config JSON (appTitle, colors, etc.)' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Draft config updated.', schema: { type: 'object' } })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async upsertBrandConfig(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<BrandConfigDto> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to update brand config`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    // Validate with Zod
+    const parsed = UpsertBrandConfigSchema.safeParse(rawBody)
+
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: firstIssue?.message ?? 'Invalid brand config',
+        },
+        400,
+      )
+    }
+
+    return this.brandConfigService.upsertDraft(parsed.data.config, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/branding/activate
+   *
+   * Activates the current draft config. The previous active config is
+   * deactivated and the draft becomes the new active config. Permission: admin only.
+   */
+  @Post('branding/activate')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Activate draft brand configuration' })
+  @ApiResponse({ status: 200, description: 'Draft config activated.', schema: { type: 'object' } })
+  @ApiResponse({ status: 400, description: 'No draft config to activate' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async activateBrandConfig(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<BrandConfigDto> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.brandConfigService.activateDraft(req.session.userId)
   }
 }
