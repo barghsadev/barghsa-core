@@ -1,11 +1,11 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
   "current_task_id": "T-04.1.01.03",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-1-01-03--invoice-state-machine",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/152",
-  "loop_iteration": 281,
+  "loop_iteration": 282,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -237,6 +237,6 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.02"
   ],
   "last_error": null,
-  "notes": "Iter-281: fix-attempt-1 — Adding paid_at/overdue_at side-effects, STATE_ORDER cleanup, error classification.",
-  "last_updated": "2026-08-26T12:42:00Z"
+  "notes": "Iter-282: fix-attempt-1 applied — paid_at/overdue_at side-effects added, STATE_ORDER removed, error classification fixed. 66/66 tests pass. PR #152 back for review.",
+  "last_updated": "2026-08-26T12:52:30Z"
 }
