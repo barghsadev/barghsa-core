@@ -9,9 +9,10 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 const MIGRATION_PATH = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
+const PRODUCTS_MIGRATION_PATH = resolve(__dirname, '../../drizzle/0014_recreate_products_schema.sql')
 
 /**
- * Integration tests for the seed runner (T-02.04.05).
+ * Integration tests for the seed runner (T-02.04.05, updated for T-03.01.01.01).
  *
  * Each test runs against an isolated PostgreSQL schema (via Testcontainers)
  * so no test state leaks between runs.
@@ -27,21 +28,9 @@ describe('seed verification', () => {
     const migrationSql = readFileSync(MIGRATION_PATH, 'utf-8').trim()
     await ctx.pool.query(migrationSql)
 
-    // Create the products table matching the schema definition.
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS products (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        product_type TEXT NOT NULL DEFAULT 'electricity',
-        system_type TEXT UNIQUE,
-        title_fa TEXT NOT NULL,
-        price NUMERIC(20, 0),
-        is_active BOOLEAN NOT NULL DEFAULT false,
-        min_kwh NUMERIC(20, 6) NOT NULL DEFAULT '0',
-        max_kwh NUMERIC(20, 6) NOT NULL DEFAULT '0',
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
+    // Create the products table using the new schema migration.
+    const productsMigrationSql = readFileSync(PRODUCTS_MIGRATION_PATH, 'utf-8').trim()
+    await ctx.pool.query(productsMigrationSql)
 
     // Create the users table matching the schema definition.
     await ctx.db.execute(sql`
@@ -80,25 +69,28 @@ describe('seed verification', () => {
     await dropTestSchema(ctx.schemaName)
   })
 
-  it('creates 4 default electricity products with correct systemType and null price', async () => {
+  it('creates 4 default electricity products with correct systemKey and null price', async () => {
     const result = await runSeed(false, ctx.db)
     expect(result.ok).toBe(true)
 
     const allProducts = await ctx.db
       .select()
       .from(products)
-      .where(sql`system_type IS NOT NULL`)
-      .orderBy(products.systemType)
+      .where(sql`system_key IS NOT NULL`)
+      .orderBy(products.systemKey)
 
     expect(allProducts).toHaveLength(4)
 
-    const expectedTypes = ['thermal', 'green', 'free_market', 'energy_saving']
-    for (const expected of expectedTypes) {
-      const product = allProducts.find((p) => p.systemType === expected)
+    const expectedKeys = ['thermal', 'green', 'free_market', 'energy_saving']
+    for (const expectedKey of expectedKeys) {
+      const product = allProducts.find((p) => p.systemKey === expectedKey)
       expect(product).toBeDefined()
       expect(product!.price).toBeNull()
-      expect(product!.productType).toBe('electricity')
-      expect(product!.isActive).toBe(false)
+      expect(product!.type).toBe('electricity')
+      expect(product!.status).toBe('inactive')
+      expect(product!.title).toEqual(
+        expect.objectContaining({ fa: expect.any(String), en: expect.any(String) })
+      )
     }
   })
 
@@ -114,7 +106,7 @@ describe('seed verification', () => {
 
     // Database still has exactly 4 system products.
     const countResult = await ctx.db.execute<{ count: number }>(
-      sql`SELECT count(*)::int AS count FROM products WHERE system_type IS NOT NULL`,
+      sql`SELECT count(*)::int AS count FROM products WHERE system_key IS NOT NULL`,
     )
     expect(countResult.rows[0]?.count).toBe(4)
   })
@@ -173,27 +165,20 @@ describe('seed verification', () => {
   })
 
   // -----------------------------------------------------------------------
-  // Database constraint tests (T-02.04.06)
+  // Database constraint tests (T-02.04.06, updated for T-03.01.01.01)
   // -----------------------------------------------------------------------
 
   /**
-   * Apply the system-product protection trigger migration before constraint tests.
-   * Must run after seed since seed creates the system products.
+   * System product constraint triggers are already applied via the
+   * 0014_recreate_products_schema.sql migration.
    */
   describe('system product constraints', () => {
-    beforeAll(async () => {
-      // Apply constraint triggers against the products table.
-      const migrationPath = resolve(__dirname, '../../drizzle/0003_protect_system_products.sql')
-      const migrationSql = readFileSync(migrationPath, 'utf-8').trim()
-      await ctx.pool.query(migrationSql)
-    })
-
     it('prevents deletion of system-defined electricity products', async () => {
       // Fetch a system product.
       const [systemProduct] = await ctx.db
-        .select({ id: products.id, systemType: products.systemType })
+        .select({ id: products.id, systemKey: products.systemKey })
         .from(products)
-        .where(sql`system_type IS NOT NULL`)
+        .where(sql`system_key IS NOT NULL`)
         .limit(1)
 
       expect(systemProduct).toBeDefined()
@@ -213,66 +198,62 @@ describe('seed verification', () => {
       expect(remaining).toHaveLength(1)
     })
 
-    it('prevents changing system_type on system-defined products', async () => {
+    it('prevents changing system_key on system-defined products', async () => {
       const [systemProduct] = await ctx.db
-        .select({ id: products.id, systemType: products.systemType })
+        .select({ id: products.id, systemKey: products.systemKey })
         .from(products)
-        .where(sql`system_type IS NOT NULL`)
+        .where(sql`system_key IS NOT NULL`)
         .limit(1)
 
       expect(systemProduct).toBeDefined()
 
-      // Attempt to change system_type — should throw.
+      // Attempt to change system_key — should throw.
       await expect(
         ctx.db
           .update(products)
-          .set({ systemType: 'hacked_type' })
+          .set({ systemKey: 'hacked_type' })
           .where(eq(products.id, systemProduct!.id)),
-      ).rejects.toThrow(/cannot change system_type/i)
+      ).rejects.toThrow(/cannot change system_key/i)
     })
 
     it('prevents inserting a 5th system-defined electricity product', async () => {
       // Attempt to insert a bogus 5th system product — should throw.
       await expect(
         ctx.db.insert(products).values({
-          systemType: 'nuclear',
-          titleFa: 'برق هسته‌ای',
-          productType: 'electricity',
-          isActive: false,
-          minKwh: '0',
-          maxKwh: '0',
+          systemKey: 'nuclear',
+          title: { fa: 'برق هسته‌ای', en: 'Nuclear Electricity' },
+          type: 'electricity',
+          status: 'inactive',
         }),
       ).rejects.toThrow(/cannot insert more than 4/i)
     })
 
-    it('allows inserting admin-created products (null system_type)', async () => {
-      // Admin-created products have system_type = NULL — should succeed.
+    it('allows inserting admin-created products (null system_key)', async () => {
+      // Admin-created products have system_key = NULL — should succeed.
       await expect(
         ctx.db.insert(products).values({
-          systemType: null,
-          titleFa: 'برق سفارشی',
-          productType: 'electricity',
-          isActive: true,
-          minKwh: '0',
-          maxKwh: '0',
+          systemKey: null,
+          title: { fa: 'برق سفارشی', en: 'Custom Electricity' },
+          type: 'electricity',
+          status: 'active',
         }),
       ).resolves.not.toThrow()
     })
 
-    it('allows updating price and is_active on system products', async () => {
+    it('allows updating price and status on system products', async () => {
       const [systemProduct] = await ctx.db
         .select({ id: products.id })
         .from(products)
-        .where(sql`system_type IS NOT NULL`)
+        .where(sql`system_key IS NOT NULL`)
         .limit(1)
 
       expect(systemProduct).toBeDefined()
 
-      // Updating price and is_active must succeed.
+      // Updating price and status must succeed.
       await expect(
         ctx.db
           .update(products)
-          .set({ price: '500000', isActive: true })
+          .set({ price: BigInt(500000), status: 'active' })
           .where(eq(products.id, systemProduct!.id)),
       ).resolves.not.toThrow()
     })

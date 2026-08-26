@@ -1,11 +1,11 @@
 {
-  "status": "blocked",
+  "status": "idle",
   "current_task_key": null,
   "current_task_id": null,
   "current_task_file": null,
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 260,
+  "loop_iteration": 261,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -225,44 +225,7 @@
     "02-auth-users-admin.md#T-07.01.02",
     "02-auth-users-admin.md#T-08.01.01"
   ],
-  "last_error": "Next task 02-auth-users-admin.md#T-07.01.03 (Verification notification to user) depends on notification service (Epic 05, not yet built). See kanban/index.md Phase 3 ordering — Epic 05 comes after Epics 02, 04, 03. Cannot proceed until notification service exists.",
-  "last_updated": "2026-08-26T07:55:00Z",
-  "notes": "Iteration-260: PR #143 (T-08.01.01 Dashboard) merged. CI checks all passed. GLM 5.2 approved (minor findings only). Next task T-07.01.03 blocked — needs E-05 notification service. Loop paused.",
-  "status_history": [
-    {
-      "from": "blocked",
-      "to": "idle",
-      "at": "iteration-258"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-258"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "iteration-258"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "iteration-259"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "iteration-259"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-260"
-    },
-    {
-      "from": "idle",
-      "to": "blocked",
-      "at": "iteration-260"
-    }
-  ]
+  "last_error": null,
+  "notes": "Iteration-261: Unblocking loop. T-07.01.03 blocked by E-05 notification service (not yet buildable — Phase 3). Routing to E-03 (Core Business) which depends on E-01+E-02 — both complete. Selected 03-core-business.md#T-03.01.01.01 as next task.",
+  "last_updated": "2026-08-26T05:11:00Z"
 }
