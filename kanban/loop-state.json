@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "03-core-business.md#T-03.01.01.01",
-  "current_task_id": "T-03.01.01.01",
-  "current_task_file": "03-core-business.md",
-  "current_branch": "feat/e03-t-03-01-01-01--products-table",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/144",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 261,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -224,9 +224,10 @@
     "02-auth-users-admin.md#T-06.01.03",
     "02-auth-users-admin.md#T-07.01.01",
     "02-auth-users-admin.md#T-07.01.02",
-    "02-auth-users-admin.md#T-08.01.01"
+    "02-auth-users-admin.md#T-08.01.01",
+    "03-core-business.md#T-03.01.01.01"
   ],
   "last_error": null,
-  "notes": "Iteration-261: Unblocked loop from E-05 dependency. Started E-03 (Core Business) Phase 2. PR #144 for T-03.01.01.01 (Products table) created, checks pass, ready for review.",
-  "last_updated": "2026-08-26T05:25:00Z"
+  "notes": "Iteration-261: Unblocked loop from E-05 dependency. Started E-03 (Core Business) Phase 2. PR #144 for T-03.01.01.01 merged. GLM 5.2 approved (minor findings only). Next: pick next task from E-03 queue.",
+  "last_updated": "2026-08-26T05:27:00Z"
 }
