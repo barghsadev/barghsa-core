@@ -29,6 +29,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
+import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -146,6 +147,11 @@ const AdminCrmRoute = AdminCrmRouteImport.update({
 const AdminGeographyRoute = AdminGeographyRouteImport.update({
   id: '/geography',
   path: '/geography',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminStorageRoute = AdminStorageRouteImport.update({
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -303,6 +310,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
+    | '/admin/notifications'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -424,6 +434,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/branding'
     | '/admin/geography'
+    | '/admin/notifications'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -465,6 +476,7 @@ export interface FileRouteTypes {
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
+    | '/admin/notifications'
     | '/admin/storage'
     | '/admin/tos'
     | '/admin/users'
@@ -639,6 +651,13 @@ declare module '@tanstack/react-router' {
       path: '/geography'
       fullPath: '/admin/geography'
       preLoaderRoute: typeof AdminGeographyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/storage': {
@@ -833,6 +852,7 @@ interface AdminRouteChildren {
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminGeographyRoute: typeof AdminGeographyRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminStorageRoute: typeof AdminStorageRoute
   AdminTosRoute: typeof AdminTosRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -844,6 +864,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminGeographyRoute: AdminGeographyRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminStorageRoute: AdminStorageRoute,
   AdminTosRoute: AdminTosRoute,
   AdminUsersRoute: AdminUsersRoute,

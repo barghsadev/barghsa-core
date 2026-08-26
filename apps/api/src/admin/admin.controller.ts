@@ -9,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -17,6 +18,7 @@ import { z } from 'zod'
 import { AdminService, type UpdateStaffRolesResult } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
+import { NotificationTemplateService, type NotificationTemplateResult, type CreateNotificationTemplateInput, type PageTemplatesOptions } from '../notifications/notification-template.service.js'
 import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
@@ -120,10 +122,29 @@ export interface CreateStaffUserApiResponse {
 export class AdminController {
   private readonly logger = new Logger(AdminController.name)
 
+  /**
+   * Permission gate for notification-template admin operations.
+   *
+   * The acceptance criteria for T-09.04.01 require the `admin:notifications:edit`
+   * capability. Today the session model exposes only `isAdmin` (platform admin);
+   * granular staff-role permissions arrive with the role system (T-09.05).
+   * Until then, `admin:notifications:edit` maps to a platform admin session.
+   * Centralized here so the capability check is a single enforcement point.
+   */
+  private assertNotificationPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+  }
+
   constructor(
     private readonly adminService: AdminService,
     private readonly brandConfigService: BrandConfigService,
     private readonly tosService: TosService,
+    private readonly notificationTemplateService: NotificationTemplateService,
   ) {}
 
   /**
@@ -771,5 +792,325 @@ export class AdminController {
     }
 
     await this.tosService.deleteVersion(id)
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Admin: Notification Templates (T-09.04.01)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * GET /api/admin/notifications/templates
+   *
+   * Lists all notification templates with optional filtering by
+   * locale, channel, or status.
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   */
+  @Get('notifications/templates')
+  @ApiOperation({ summary: 'List notification templates' })
+  @ApiResponse({ status: 200, description: 'List of notification templates.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listNotificationTemplates(
+    @Query('locale') locale: string | undefined,
+    @Query('channel') channel: string | undefined,
+    @Query('status') status: string | undefined,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult[]> {
+    this.assertNotificationPermission(req)
+
+    const options: PageTemplatesOptions = {}
+    if (locale === 'fa' || locale === 'en') options.locale = locale
+    if (channel === 'email' || channel === 'sms' || channel === 'in_app') options.channel = channel
+    if (status === 'draft' || status === 'active') options.status = status
+
+    return this.notificationTemplateService.list(options)
+  }
+
+  /**
+   * GET /api/admin/notifications/templates/:id
+   *
+   * Get a specific notification template by ID.
+   */
+  @Get('notifications/templates/:id')
+  @ApiOperation({ summary: 'Get a notification template by ID' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 200, description: 'Notification template details.', schema: { type: 'object' } })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  async getNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult> {
+    this.assertNotificationPermission(req)
+    return this.notificationTemplateService.getById(id)
+  }
+
+  /**
+   * POST /api/admin/notifications/templates
+   *
+   * Creates a new draft notification template.
+   * Each event_key+channel+locale combination can have at most one template.
+   */
+  @Post('notifications/templates')
+  @HttpCode(201)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Create a new draft notification template' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['eventKey', 'channel', 'locale', 'bodyTemplate', 'variables'],
+      properties: {
+        eventKey: { type: 'string', description: 'Event key, e.g. "profile_verified"' },
+        channel: { type: 'string', enum: ['email', 'sms', 'in_app'] },
+        locale: { type: 'string', enum: ['fa', 'en'] },
+        subject: { type: 'string', description: 'Email subject (email channel only)' },
+        bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
+        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Draft template created.' })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 409, description: 'Template already exists for this event+channel+locale' })
+  async createNotificationTemplate(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult> {
+    this.assertNotificationPermission(req)
+
+    const schema = z.object({
+      eventKey: z.string().min(1).max(100),
+      channel: z.enum(['email', 'sms', 'in_app']),
+      locale: z.enum(['fa', 'en']),
+      subject: z.string().max(200).nullable().optional(),
+      bodyTemplate: z.string().min(1),
+      variables: z.array(z.string().min(1)).default([]),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    const input: CreateNotificationTemplateInput = {
+      eventKey: parsed.data.eventKey,
+      channel: parsed.data.channel,
+      locale: parsed.data.locale,
+      subject: parsed.data.subject ?? null,
+      bodyTemplate: parsed.data.bodyTemplate,
+      variables: parsed.data.variables,
+    }
+
+    return this.notificationTemplateService.create(input, req.session.userId)
+  }
+
+  /**
+   * PUT /api/admin/notifications/templates/:id
+   *
+   * Updates a draft notification template. Only draft templates can be updated.
+   */
+  @Put('notifications/templates/:id')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Update a draft notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        subject: { type: 'string', description: 'Email subject' },
+        bodyTemplate: { type: 'string', description: 'Template body' },
+        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Draft template updated.' })
+  @ApiResponse({ status: 400, description: 'Template is not a draft' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  async updateNotificationTemplate(
+    @Param('id') id: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult> {
+    this.assertNotificationPermission(req)
+
+    const schema = z.object({
+      subject: z.string().max(200).nullable().optional(),
+      bodyTemplate: z.string().min(1).optional(),
+      variables: z.array(z.string().min(1)).optional(),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    // At least one field must be provided
+    const hasChanges = parsed.data.subject !== undefined ||
+      parsed.data.bodyTemplate !== undefined ||
+      parsed.data.variables !== undefined
+
+    if (!hasChanges) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'At least one field must be provided' },
+        400,
+      )
+    }
+
+    const input: Record<string, unknown> = {}
+    if (parsed.data.subject !== undefined) input.subject = parsed.data.subject
+    if (parsed.data.bodyTemplate !== undefined) input.bodyTemplate = parsed.data.bodyTemplate
+    if (parsed.data.variables !== undefined) input.variables = parsed.data.variables
+
+    return this.notificationTemplateService.update(id, input, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/:id/publish
+   *
+   * Publishes a draft notification template, making it the active template
+   * for its event_key+channel+locale combination.
+   */
+  @Post('notifications/templates/:id/publish')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Publish a draft notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 200, description: 'Template published.' })
+  @ApiResponse({ status: 400, description: 'Template is not a draft' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  async publishNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult> {
+    this.assertNotificationPermission(req)
+    return this.notificationTemplateService.publish(id, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/:id/unpublish
+   *
+   * Unpublishes an active notification template, reverting it to draft.
+   */
+  @Post('notifications/templates/:id/unpublish')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Unpublish an active notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 200, description: 'Template unpublished.' })
+  @ApiResponse({ status: 400, description: 'Template is not active' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  async unpublishNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<NotificationTemplateResult> {
+    this.assertNotificationPermission(req)
+    return this.notificationTemplateService.unpublish(id, req.session.userId)
+  }
+
+  /**
+   * DELETE /api/admin/notifications/templates/:id
+   *
+   * Deletes a draft notification template. Active templates must be
+   * unpublished first.
+   */
+  @Delete('notifications/templates/:id')
+  @HttpCode(204)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Delete a draft notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 204, description: 'Template deleted.' })
+  @ApiResponse({ status: 400, description: 'Template is active' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  async deleteNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<void> {
+    this.assertNotificationPermission(req)
+    await this.notificationTemplateService.delete(id, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/preview
+   *
+   * Renders a template body against allow-listed variables with sample data,
+   * without persisting anything. Used by the frontend preview pane.
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   */
+  @Post('notifications/templates/preview')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Preview a rendered notification template body' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['bodyTemplate', 'variables'],
+      properties: {
+        bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
+        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+        sampleData: { type: 'object', description: 'Optional sample values keyed by variable name' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Rendered template body.' })
+  @ApiResponse({ status: 400, description: 'Template validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async previewNotificationTemplateBody(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ subject: string | null; body: string; variables: string[] }> {
+    this.assertNotificationPermission(req)
+
+    const schema = z.object({
+      bodyTemplate: z.string().min(1),
+      variables: z.array(z.string().min(1)).default([]),
+      sampleData: z.record(z.string(), z.string()).optional(),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    return this.notificationTemplateService.previewFromBody(
+      parsed.data.bodyTemplate,
+      parsed.data.variables,
+      parsed.data.sampleData,
+    )
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/:id/test-send
+   *
+   * Renders a template and delivers it to the admin's own verified
+   * destination (in-app notification today; email/SMS transport pending E-05).
+   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   */
+  @Post('notifications/templates/:id/test-send')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Test-send a rendered notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 200, description: 'Test message delivered.' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async testSendNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ ok: boolean; destination: 'in_app' }> {
+    this.assertNotificationPermission(req)
+    return this.notificationTemplateService.testSend(id, req.session.userId)
   }
 }

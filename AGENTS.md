@@ -1,6 +1,6 @@
 # Barghsa — Autonomous Build and Review Loop
 
-> **Builder/orchestrator:** `deepseek/deepseek-v4-flash` on OpenRouter
+> **Builder/orchestrator:** `deepseek/deepseek-v4-flash-0731` on OpenRouter
 >
 > **Reviewer:** `z-ai/glm-5.2` on OpenRouter
 >
