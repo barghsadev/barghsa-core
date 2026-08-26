@@ -22,6 +22,7 @@ export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
   const isRtl = locale === 'fa'
 
   const navItems: Array<{ to: string; label: string }> = [
+    { to: '/dashboard', label: t('dashboard.nav.overview', locale) },
     { to: '/electricity', label: t('dashboard.nav.electricity', locale) },
     { to: '/savings', label: t('dashboard.nav.savings', locale) },
     { to: '/wallet', label: t('dashboard.nav.wallet', locale) },
