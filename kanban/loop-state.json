@@ -1,11 +1,11 @@
 {
-  "status": "fixing",
-  "current_task_key": "02-auth-users-admin.md#T-09.01.02",
-  "current_task_id": "T-09.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e09-t-09-01-02--theme-application",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/156",
-  "loop_iteration": 290,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 291,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -238,9 +238,10 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.03",
     "02-auth-users-admin.md#T-08.01.02",
     "02-auth-users-admin.md#T-08.01.03",
-    "02-auth-users-admin.md#T-09.01.01"
+    "02-auth-users-admin.md#T-09.01.01",
+    "02-auth-users-admin.md#T-09.01.02"
   ],
   "last_error": null,
-  "notes": "Iter-290: PR #155 (T-09.01.01 branding settings) MERGED via squash after GLM-5.2 round-2 approve (1 minor non-blocking: getActiveConfig falls back to draft). Posted review comment. Returned to idle.",
-  "last_updated": "2026-08-26T14:11:00Z"
+  "notes": "Iter-291: PR #156 (T-09.01.02 theme application) MERGED via squash after GLM-5.2 round-2 approve. Fix round: SVG foreground, tests, dead code removal, useMemo. Email/notification template branding documented as follow-up. Returned to idle.",
+  "last_updated": "2026-08-26T14:31:00Z"
 }
