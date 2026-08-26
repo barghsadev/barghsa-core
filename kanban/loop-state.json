@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "02-auth-users-admin.md#T-08.01.01",
   "current_task_id": "T-08.01.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e08-t-08-01-01--dashboard-page",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/143",
-  "loop_iteration": 258,
+  "loop_iteration": 259,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -225,8 +225,8 @@
     "02-auth-users-admin.md#T-07.01.02"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T06:51:00Z",
-  "notes": "Iteration-258: Unblocked loop. Skipped T-07.01.03 (needs E-05 notification service, not yet built). Started T-08.01.01 (Dashboard page layout). PR #143 created, ready for review. Checks: typecheck=pass, build=pass.",
+  "last_updated": "2026-08-26T07:50:00Z",
+  "notes": "Iteration-259: Fixing PR #143. CI build failed - SessionAuthGuard needs SessionService in DashboardModule and VerificationModule. Added SessionModule imports to both. Build and typecheck pass locally. Committed fe06ca4. Next tick: check CI status.",
   "status_history": [
     {
       "from": "blocked",
@@ -242,6 +242,11 @@
       "from": "building",
       "to": "in_review",
       "at": "iteration-258"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-259"
     }
   ]
 }
