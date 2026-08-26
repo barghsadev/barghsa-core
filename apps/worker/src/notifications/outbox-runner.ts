@@ -51,7 +51,15 @@ export function sanitizeLastError(message: string): string {
     { re: /(secret\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
     { re: /(token\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
     { re: /([a-z][a-z0-9+.-]*:\/\/)[^/\s:@]+(:[^@\s/]*)?@/gi, replacement: '$1[REDACTED]@' },
-    { re: /([A-Za-z0-9]{20,})/g, replacement: '[REDACTED]' },
+    // Known provider/token shapes (AWS, OpenAI, GitHub, Slack, Stripe).
+    { re: /\bAKIA[0-9A-Z]{16}\b/g, replacement: '[REDACTED]' },
+    { re: /\bsk-[A-Za-z0-9_-]{20,}\b/g, replacement: '[REDACTED]' },
+    { re: /\b(ghp|gho|ghu|github_pat)_[A-Za-z0-9_]{20,}\b/g, replacement: '[REDACTED]' },
+    { re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/g, replacement: '[REDACTED]' },
+    { re: /\bsk_live_[A-Za-z0-9]{20,}\b/g, replacement: '[REDACTED]' },
+    // Generic long alphanumeric run — high threshold to avoid scrubbing UUIDs
+    // and short transaction/hash identifiers while still catching raw keys.
+    { re: /([A-Za-z0-9]{48,})/g, replacement: '[REDACTED]' },
   ]
   let out = message
   for (const p of SECRET_PATTERNS) {
@@ -95,6 +103,10 @@ export async function runOutboxPoll(
     } catch (err) {
       const message = sanitizeLastError(err instanceof Error ? err.message : String(err))
       await failRow(pool, row, message)
+      // dispatchOutbox threw before any per-channel outcome was recorded, so
+      // mark every requested job consistently with the outbox row (retrying or
+      // failed once attempts are exhausted).
+      await failAllJobs(pool, row, message)
       result.failed += 1
     }
   }
@@ -150,6 +162,27 @@ async function persistOutcomes(
   } else {
     await failRow(pool, row, 'delivery failed on one or more channels')
   }
+}
+
+/**
+ * Mark every notification_job row for an outbox row as retrying/failed.
+ * Used on the exception path where dispatchOutbox threw before per-channel
+ * outcomes could be recorded, so job rows stay consistent with the outbox row.
+ */
+async function failAllJobs(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pool: any,
+  row: OutboxRow,
+  safeMessage: string,
+): Promise<void> {
+  const attempts = row.attempts + 1
+  const exhausted = attempts >= row.maxAttempts
+  await pool.query(
+    `UPDATE notification_job
+        SET status = $2, attempts = $3, last_error = $4, updated_at = NOW()
+      WHERE outbox_id = $1`,
+    [row.id, exhausted ? 'failed' : 'retrying', attempts, safeMessage || null],
+  )
 }
 
 /**

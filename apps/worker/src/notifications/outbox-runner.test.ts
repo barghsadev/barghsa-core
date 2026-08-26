@@ -118,7 +118,7 @@ describe('runOutboxPoll', () => {
     expect(emailJob!.params[1]).toBe('failed')
   })
 
-  it('propagates a throwing dispatch into a failed row with sanitized error', async () => {
+  it('propagates a throwing dispatch into a failed row with sanitized error and job bookkeeping', async () => {
     const { pool, updates } = makePool()
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
     vi.spyOn(await import('./outbox-reader.js'), 'dispatchOutbox').mockRejectedValue(
@@ -129,6 +129,11 @@ describe('runOutboxPoll', () => {
     expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 })
     const errCol = updates.find((u) => u.sql.includes('last_error'))
     expect(String(errCol?.params[3])).not.toContain('AKIAIOSFODNN7EXAMPLE')
+    // Exception path must keep per-channel jobs consistent with the outbox row.
+    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
+    expect(jobUpdates.length).toBeGreaterThan(0)
+    expect(jobUpdates.every((u) => u.params[1] === 'retrying')).toBe(true)
+    expect(jobUpdates[0]!.params[2]).toBe(1) // attempts incremented
   })
 
   it('returns zeroed results when no rows are due', async () => {
@@ -162,5 +167,17 @@ describe('sanitizeLastError', () => {
   it('keeps benign messages unchanged', () => {
     const s = sanitizeLastError('provider unavailable (timeout)')
     expect(s).toContain('provider unavailable')
+  })
+
+  it('does not scrub UUIDs or short identifiers', () => {
+    const s = sanitizeLastError('row 550e8400-e29b-41d4-a716-446655440000 not found (tx 12345)')
+    expect(s).toContain('550e8400-e29b-41d4-a716-446655440000')
+    expect(s).toContain('12345')
+  })
+
+  it('redacts AWS access key ids and stripe sk_live tokens', () => {
+    const s = sanitizeLastError('denied AKIAIOSFODNN7EXAMPLE sk_live_aaaaaaaaaaaaaaaaaaaaaaaa')
+    expect(s).not.toContain('AKIAIOSFODNN7EXAMPLE')
+    expect(s).not.toContain('sk_live_aaaaaaaaaaaaaaaaaaaaaaaa')
   })
 })
