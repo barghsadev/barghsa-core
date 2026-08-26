@@ -360,4 +360,248 @@ describe('AgentsService', () => {
         .rejects.toMatchObject({ response: { statusCode: 400 } })
     })
   })
+
+  describe('listPendingInvitations', () => {
+    const userId = 'user-1'
+    const username = 'test@example.com'
+
+    beforeEach(() => {
+      mockPool.query.mockReset()
+      mockClient.query.mockReset()
+      mockClient.release.mockReset()
+      mockUuidV7.mockReset()
+    })
+
+    it('returns pending invitations for the current user', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'inv-1',
+            profile_id: 'prof-1',
+            profile_name: 'Acme Corp',
+            role: 'Manager',
+            invited_by: 'inviter-1',
+            inviter_name: 'John Doe',
+            created_at: new Date('2026-08-20T00:00:00Z'),
+            expires_at: new Date('2026-09-20T00:00:00Z'),
+          },
+        ],
+      })
+
+      const result = await service.listPendingInvitations(userId)
+      expect(result.invitations).toHaveLength(1)
+      expect(result.invitations[0]).toMatchObject({
+        id: 'inv-1',
+        profileId: 'prof-1',
+        profileName: 'Acme Corp',
+        role: 'Manager',
+        invitedBy: 'inviter-1',
+        inviterName: 'John Doe',
+      })
+    })
+
+    it('returns empty when user not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      const result = await service.listPendingInvitations('nonexistent-user')
+      expect(result.invitations).toHaveLength(0)
+    })
+
+    it('returns empty when no pending invitations', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      const result = await service.listPendingInvitations(userId)
+      expect(result.invitations).toHaveLength(0)
+    })
+  })
+
+  describe('acceptInvitation', () => {
+    const userId = 'user-1'
+    const inviteId = 'inv-1'
+    const username = 'test@example.com'
+    const profileId = 'prof-1'
+
+    beforeEach(() => {
+      mockPool.query.mockReset()
+      mockClient.query.mockReset()
+      mockClient.release.mockReset()
+      mockUuidV7.mockReset()
+      mockUuidV7.mockReturnValue('uuid-1')
+    })
+
+    it('accepts a pending invitation and creates profile_agents record', async () => {
+      // Lookup username
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      // Fetch invitation
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, profile_id: profileId, username, role: 'Manager', status: 'Pending', expires_at: new Date('2026-09-20T00:00:00Z') }],
+      })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // Duplicate agent check (inside transaction)
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      // INSERT profile_agents
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // UPDATE invitation
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // INSERT audit log
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // COMMIT
+      mockClient.query.mockResolvedValueOnce(undefined)
+
+      await expect(service.acceptInvitation(inviteId, userId)).resolves.toBeUndefined()
+
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN')
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('SELECT id FROM profile_agents'),
+        [profileId, userId],
+      )
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO profile_agents'),
+        expect.any(Array),
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(mockClient.release).toHaveBeenCalled()
+    })
+
+    it('throws 404 when user not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.acceptInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 404 when invitation not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.acceptInvitation('nonexistent-invite', userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 400 when invitation is not in Pending status', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, profile_id: profileId, username, role: 'Manager', status: 'Accepted', expires_at: null }],
+      })
+
+      await expect(service.acceptInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 404 when invitation belongs to a different user (username mismatch)', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, profile_id: profileId, username: 'other@example.com', role: 'Manager', status: 'Pending', expires_at: null }],
+      })
+
+      await expect(service.acceptInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 400 when invitation has expired', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, profile_id: profileId, username, role: 'Manager', status: 'Pending', expires_at: new Date('2020-01-01T00:00:00Z') }],
+      })
+
+      await expect(service.acceptInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 409 when user is already an agent of the profile', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, profile_id: profileId, username, role: 'Manager', status: 'Pending', expires_at: new Date('2026-09-20T00:00:00Z') }],
+      })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // Duplicate agent check (inside transaction): already exists
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'existing-agent' }] })
+      // ROLLBACK from conflict handler
+      mockClient.query.mockResolvedValueOnce(undefined)
+
+      await expect(service.acceptInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 409 } })
+      expect(mockClient.release).toHaveBeenCalled()
+    })
+  })
+
+  describe('declineInvitation', () => {
+    const userId = 'user-1'
+    const inviteId = 'inv-1'
+    const username = 'test@example.com'
+
+    beforeEach(() => {
+      mockPool.query.mockReset()
+      mockClient.query.mockReset()
+      mockClient.release.mockReset()
+      mockUuidV7.mockReset()
+      mockUuidV7.mockReturnValue('uuid-1')
+    })
+
+    it('declines a pending invitation with audit log', async () => {
+      // Lookup username
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      // Fetch invitation
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, username, status: 'Pending', expires_at: null }],
+      })
+      // Transaction: BEGIN
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // UPDATE invitation
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // INSERT audit log
+      mockClient.query.mockResolvedValueOnce(undefined)
+      // COMMIT
+      mockClient.query.mockResolvedValueOnce(undefined)
+
+      await expect(service.declineInvitation(inviteId, userId)).resolves.toBeUndefined()
+
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN')
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('UPDATE profile_invitations'),
+        [inviteId],
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(mockClient.release).toHaveBeenCalled()
+    })
+
+    it('throws 404 when user not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.declineInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 404 when invitation not found', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.declineInvitation('nonexistent', userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+
+    it('throws 400 when invitation is not in Pending status', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, username, status: 'Accepted', expires_at: null }],
+      })
+
+      await expect(service.declineInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 400 } })
+    })
+
+    it('throws 404 when invitation belongs to a different user (username mismatch)', async () => {
+      mockPool.query.mockResolvedValueOnce({ rows: [{ username }] })
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: inviteId, username: 'other@example.com', status: 'Pending', expires_at: null }],
+      })
+
+      await expect(service.declineInvitation(inviteId, userId))
+        .rejects.toMatchObject({ response: { statusCode: 404 } })
+    })
+  })
 })

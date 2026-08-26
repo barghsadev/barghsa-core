@@ -523,22 +523,26 @@ export class AgentsService {
     const profileId = invite.profile_id as string
     const role = invite.role as string
 
-    // Check the user isn't already an agent of this profile
-    const existingAgent = await pool.query(
-      `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
-      [profileId, userId],
-    )
-    if (existingAgent.rows.length > 0) {
-      throw new HttpException(
-        { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'You are already an agent of this profile' },
-        409,
-      )
-    }
-
     // Wrap state change, profile_agents insert, and audit log in a transaction
     const client = await pool.connect()
+    let transactionStarted = false
     try {
       await client.query('BEGIN')
+      transactionStarted = true
+
+      // Check the user isn't already an agent of this profile (inside transaction to prevent TOCTOU race)
+      const existingAgent = await client.query(
+        `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2 FOR UPDATE`,
+        [profileId, userId],
+      )
+      if (existingAgent.rows.length > 0) {
+        await client.query('ROLLBACK')
+        transactionStarted = false
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code, message: 'You are already an agent of this profile' },
+          409,
+        )
+      }
 
       // Insert into profile_agents
       await client.query(
@@ -570,8 +574,11 @@ export class AgentsService {
       )
 
       await client.query('COMMIT')
+      transactionStarted = false
     } catch (error) {
-      await client.query('ROLLBACK')
+      if (transactionStarted) {
+        try { await client.query('ROLLBACK') } catch { /* ignore rollback failure */ }
+      }
       throw error
     } finally {
       client.release()
@@ -642,8 +649,10 @@ export class AgentsService {
 
     // Wrap state change and audit log in a transaction
     const client = await pool.connect()
+    let transactionStarted = false
     try {
       await client.query('BEGIN')
+      transactionStarted = true
 
       await client.query(
         `UPDATE profile_invitations
@@ -666,8 +675,11 @@ export class AgentsService {
       )
 
       await client.query('COMMIT')
+      transactionStarted = false
     } catch (error) {
-      await client.query('ROLLBACK')
+      if (transactionStarted) {
+        try { await client.query('ROLLBACK') } catch { /* ignore rollback failure */ }
+      }
       throw error
     } finally {
       client.release()
