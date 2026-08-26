@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
-  "current_task_id": "T-04.2.01.01",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-2-01-01--wallets-table",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/149",
-  "loop_iteration": 276,
-  "fix_attempts": 2,
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
+  "loop_iteration": 277,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -231,9 +231,10 @@
     "03-core-business.md#T-03.01.01.01",
     "03-core-business.md#T-03.01.01.02",
     "03-core-business.md#T-03.01.01.03",
-    "03-core-business.md#T-03.01.01.04"
+    "03-core-business.md#T-03.01.01.04",
+    "04-invoices-wallet-contracts.md#T-04.2.01.01"
   ],
   "last_error": null,
-  "notes": "Iter-275: UNBLOCKED — Loop was stuck at 02-auth-users-admin.md#T-08.01.02 (wallet balance card) for 5 iterations because wallet module (E-04) doesn't exist. Per index.md implementation order, E-04 should precede remaining E-02 admin tasks. Transitioned from blocked to building E-04 (Invoices, Wallet, Payments & Contracts). Starting with T-04.2.01.01 (Create wallets table) + T-04.2.01.02 (wallet_transactions table) + WalletService with credit/debit/reserve/release. Branch: feat/e04-t-04-2-01-01--wallets-table. | Fix round 1: addressed 6/8 review findings (auth, idempotency TOCTOU, release concurrency check, createWallet race, tests, reserve params). 2 noted as intentional. Returned to in_review. Typecheck: 11/11 ✓. Tests: 12/12 ✓.",
-  "last_updated": "2026-08-26T11:11:00Z"
+  "notes": "Iter-276/277: PR #149 (T-04.2.01.01 wallet foundation) merged. Round 2 review fixes: idempotency return mapTransaction, proper NestJS HttpExceptions, release() TOCTU fix, ::bigint cast consistency, unused imports. Seed test fixed (activation_token columns). Now idle — next task: T-04.2.01.02 (wallet_transactions table, already partially delivered) or remaining E-04 tasks.",
+  "last_updated": "2026-08-26T11:45:00Z"
 }
