@@ -659,6 +659,7 @@ export class CrmV2Controller {
     const isAdmin = req.session.isAdmin ?? false
 
     if (!isAdmin) {
+      // TODO(T-09.05.01): replace isAdmin check with crm:verify role check
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`,
       )

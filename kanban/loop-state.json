@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "02-auth-users-admin.md#T-05.05.01",
   "current_task_id": "T-05.05.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-05-05-01--pending-verification-widget",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/136",
-  "loop_iteration": 241,
-  "fix_attempts": 0,
+  "loop_iteration": 242,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -204,8 +204,8 @@
     "02-auth-users-admin.md#T-05.04.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T03:57:00Z",
-  "notes": "Iteration-241: Implemented T-05.05.01 — Profiles awaiting verification widget. Backend endpoint + dashboard widget. PR #136 open. typecheck+lint+build+API tests pass. Next: review.",
+  "last_updated": "2026-08-26T04:02:00Z",
+  "notes": "Iteration-242: Fixing T-05.05.01 — reviewer found 2 major (i18n/RTL, dead link) + 3 minor issues. Applied i18n keys, aria labels, CRM index route, TODO comments for backend gaps.",
   "status_history": [
     {
       "from": "idle",
@@ -216,6 +216,11 @@
       "from": "building",
       "to": "in_review",
       "at": "iteration-241"
+    },
+    {
+      "from": "in_review",
+      "to": "fixing",
+      "at": "iteration-242"
     }
   ]
 }

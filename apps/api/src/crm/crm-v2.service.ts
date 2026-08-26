@@ -997,6 +997,7 @@ export class CrmV2Service {
     count: number
     profiles: PendingVerificationProfile[]
   }> {
+    // TODO(E-07): check verification-settings toggle before returning data
     const pool = getDbPool()
 
     const countResult = await pool.query(
