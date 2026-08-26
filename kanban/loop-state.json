@@ -1,9 +1,9 @@
 {
-  "status": "building",
-  "current_task_key": "02-auth-users-admin.md#T-09.03.02",
-  "current_task_id": "T-09.03.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-03-02--tos-version-history",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
   "current_pr_url": null,
   "loop_iteration": 297,
   "fix_attempts": 0,
@@ -240,9 +240,10 @@
     "02-auth-users-admin.md#T-09.01.02",
     "02-auth-users-admin.md#T-09.02.01",
     "02-auth-users-admin.md#T-09.02.02",
-    "02-auth-users-admin.md#T-09.03.01"
+    "02-auth-users-admin.md#T-09.03.01",
+    "02-auth-users-admin.md#T-09.03.02"
   ],
   "last_error": null,
-  "notes": "Iter-297: Starting T-09.03.02 (TOS version history). Creating branch and implementing read-only version detail view.",
-  "last_updated": "2026-08-26T16:10:00Z"
+  "notes": "Iter-297: PR #160 (T-09.03.02 TOS version history) merged. Added read-only version detail modal with locale toggle, author column, view button. GLM-5.2 approved with minor a11y/null-guard findings (non-blocking). State reset to idle. Next: T-09.04.01 (Notification template editor — L size).",
+  "last_updated": "2026-08-26T16:22:00Z"
 }
