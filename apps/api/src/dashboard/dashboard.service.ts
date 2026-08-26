@@ -34,6 +34,16 @@ export class DashboardService {
   /**
    * Return the four quick-status counts for a given user's default profile.
    *
+   * In the current system a user has exactly one active profile, which is
+   * always their `is_default` profile, so resolving the default profile here
+   * satisfies the "scoped to active profile" acceptance criterion. If
+   * multi-active-profile support is added later, this should accept an
+   * explicit `profileId` from the request context instead.
+   *
+   * The orders query returns both the active-contract and pending-order
+   * counts in a single `GROUP BY status` pass; `activeContracts` is derived
+   * from the `CONFIRMED` row and `pendingOrders` from the `PENDING` row.
+   *
    * - **Active contracts:** orders with `status = 'CONFIRMED'` (electricity
    *   subscription contracts).  Once a dedicated `contracts` table is
    *   added, this query should switch to it.

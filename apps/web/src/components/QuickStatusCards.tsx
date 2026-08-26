@@ -112,6 +112,11 @@ function contractColor(count: number): string {
 
 /**
  * Pending orders: 0 = nothing to do (green), 1-2 = attention (yellow), 3+ = action (red).
+ *
+ * Thresholds are product-defined placeholders: 0 is a clean slate, 1-2 is a
+ * manageable queue that may warrant a glance, and 3+ indicates a backlog the
+ * user should act on. They can be revisited once real operations data
+ * exists; see T-08.01.03.
  */
 function orderColor(count: number): string {
   if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
@@ -121,6 +126,9 @@ function orderColor(count: number): string {
 
 /**
  * Open tickets: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
+ *
+ * Same product-defined thresholds as orders — any open tickets warrant
+ * attention, and a growing backlog (3+) signals the customer needs to act.
  */
 function ticketColor(count: number): string {
   if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
@@ -130,6 +138,10 @@ function ticketColor(count: number): string {
 
 /**
  * Unpaid invoices: 0 = good (green), 1-2 = attention (yellow), 3+ = action (red).
+ *
+ * Unpaid invoices directly affect service continuity, so even one is worth
+ * flagging; 3+ is treated as requiring immediate action. Thresholds are
+ * placeholders pending operational data.
  */
 function invoiceColor(count: number): string {
   if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
