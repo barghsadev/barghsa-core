@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-09.05.01",
-  "current_task_id": "T-09.05.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-05-01--staff-role-management",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/162",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 300,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -242,12 +242,18 @@
     "02-auth-users-admin.md#T-09.02.02",
     "02-auth-users-admin.md#T-09.03.01",
     "02-auth-users-admin.md#T-09.03.02",
-    "02-auth-users-admin.md#T-09.04.01"
+    "02-auth-users-admin.md#T-09.04.01",
+    "02-auth-users-admin.md#T-09.05.01"
   ],
   "last_error": null,
-  "notes": "Iter-300: T-09.05.01 built and PR #162 opened (ready). Backend list/effective-permissions endpoints + web /admin/roles page. Checking: api tc/tests/web tc/build pass. Awaiting GLM review.",
-  "last_updated": "2026-08-26T19:18:00Z",
+  "notes": "Iter-300: T-09.05.01 (Staff role management) MERGED via PR #162 after 1 review round (1 major + 2 minor findings fixed). State reset to idle. Next: T-09.06.01 (Email transport config, XL — E-05 notification service dependent).",
+  "last_updated": "2026-08-26T16:22:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.05.01",
+      "at": "2026-08-26T16:22:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.05.01",
