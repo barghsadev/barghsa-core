@@ -59,6 +59,42 @@ export type CreateProvinceDto = z.infer<typeof CreateProvinceSchema>
 export type UpdateProvinceDto = z.infer<typeof UpdateProvinceSchema>
 
 // ---------------------------------------------------------------------------
+// City Zod validation schemas
+// ---------------------------------------------------------------------------
+
+export const CreateCitySchema = z.object({
+  nameFa: z
+    .string()
+    .min(1, { message: 'VALIDATION:INPUT:MISSING' })
+    .max(100)
+    .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' }),
+  nameEn: z
+    .string()
+    .min(1, { message: 'VALIDATION:INPUT:MISSING' })
+    .max(100)
+    .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
+})
+
+export const UpdateCitySchema = z.object({
+  nameFa: z
+    .string()
+    .min(1, { message: 'VALIDATION:INPUT:MISSING' })
+    .max(100)
+    .regex(nameFaRe, { message: 'VALIDATION:INVALID_PERSIAN_NAME' })
+    .optional(),
+  nameEn: z
+    .string()
+    .min(1, { message: 'VALIDATION:INPUT:MISSING' })
+    .max(100)
+    .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' })
+    .optional(),
+  status: z.enum(['active', 'inactive']).optional(),
+})
+
+export type CreateCityDto = z.infer<typeof CreateCitySchema>
+export type UpdateCityDto = z.infer<typeof UpdateCitySchema>
+
+// ---------------------------------------------------------------------------
 // Controller
 // ---------------------------------------------------------------------------
 
@@ -205,6 +241,152 @@ export class AdminGeographyController {
     if (!deleted) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Province not found' },
+        404,
+      )
+    }
+    return { success: true }
+  }
+
+  // ---------------------------------------------------------------------------
+  // City endpoints
+  // ---------------------------------------------------------------------------
+
+  /**
+   * GET /api/admin/geography/provinces/:provinceId/cities
+   *
+   * List cities for a province with optional search, status filter, and pagination.
+   */
+  @Get('provinces/:provinceId/cities')
+  @ApiOperation({ summary: 'List cities for a province (admin)' })
+  @ApiQuery({ name: 'search', required: false, description: 'Search in Persian/English name' })
+  @ApiQuery({ name: 'status', required: false, description: 'Filter by status (active/inactive)' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20, max: 100)' })
+  @ApiResponse({ status: 200, description: 'Paginated city list.' })
+  @ApiResponse({ status: 403, description: 'Not admin.' })
+  async listCities(
+    @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
+    @Query('search') search?: string,
+    @Query('status') status?: 'active' | 'inactive',
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    this.requireAdmin(req)
+    return this.adminGeographyService.listCities(provinceId, {
+      search,
+      status,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
+    })
+  }
+
+  /**
+   * GET /api/admin/geography/provinces/:provinceId/cities/:id
+   *
+   * Get a single city by ID.
+   */
+  @Get('provinces/:provinceId/cities/:id')
+  @ApiOperation({ summary: 'Get city by ID (admin)' })
+  @ApiResponse({ status: 200, description: 'City details.' })
+  @ApiResponse({ status: 404, description: 'City not found.' })
+  async getCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    this.requireAdmin(req)
+    const city = await this.adminGeographyService.getCity(id)
+    if (!city) {
+      throw new HttpException(
+        { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
+        404,
+      )
+    }
+    return city
+  }
+
+  /**
+   * POST /api/admin/geography/provinces/:provinceId/cities
+   *
+   * Create a new city in a province.
+   */
+  @Post('provinces/:provinceId/cities')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Create city (admin)' })
+  @ApiResponse({ status: 201, description: 'City created.' })
+  @ApiResponse({ status: 400, description: 'Validation error.' })
+  @ApiResponse({ status: 404, description: 'Parent province not found.' })
+  @ApiResponse({ status: 409, description: 'City already exists.' })
+  async createCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
+    @Body() body: unknown,
+  ) {
+    this.requireAdmin(req)
+    const parsed = CreateCitySchema.safeParse(body)
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
+        400,
+      )
+    }
+    return this.adminGeographyService.createCity(provinceId, parsed.data)
+  }
+
+  /**
+   * PATCH /api/admin/geography/provinces/:provinceId/cities/:id
+   *
+   * Update an existing city.
+   */
+  @Patch('provinces/:provinceId/cities/:id')
+  @ApiOperation({ summary: 'Update city (admin)' })
+  @ApiResponse({ status: 200, description: 'City updated.' })
+  @ApiResponse({ status: 404, description: 'City not found.' })
+  @ApiResponse({ status: 409, description: 'City name conflict.' })
+  async updateCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: unknown,
+  ) {
+    this.requireAdmin(req)
+    const parsed = UpdateCitySchema.safeParse(body)
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]
+      throw new HttpException(
+        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
+        400,
+      )
+    }
+    const city = await this.adminGeographyService.updateCity(id, parsed.data as UpdateCityDto)
+    if (!city) {
+      throw new HttpException(
+        { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
+        404,
+      )
+    }
+    return city
+  }
+
+  /**
+   * DELETE /api/admin/geography/provinces/:provinceId/cities/:id
+   *
+   * Soft-delete (set inactive) a city.
+   */
+  @Delete('provinces/:provinceId/cities/:id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Delete (deactivate) city (admin)' })
+  @ApiResponse({ status: 200, description: 'City deactivated.' })
+  @ApiResponse({ status: 404, description: 'City not found.' })
+  async deleteCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    this.requireAdmin(req)
+    const deleted = await this.adminGeographyService.deleteCity(id)
+    if (!deleted) {
+      throw new HttpException(
+        { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
         404,
       )
     }

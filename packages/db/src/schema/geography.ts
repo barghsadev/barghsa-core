@@ -44,6 +44,14 @@ export const provinces = pgTable('provinces', {
  *
  * Each city belongs to a province. Pre-seeded with major Iranian cities.
  */
+export const cityStatus = pgEnum('city_status', ['active', 'inactive'])
+
+/**
+ * Iranian cities table (T-03.02.02, T-09.02.02).
+ *
+ * Each city belongs to a province. Pre-seeded with major Iranian cities.
+ * Admin can manage cities via nested CRUD endpoints under provinces.
+ */
 export const cities = pgTable('cities', {
   /** UUIDv7 city identifier. */
   id: uuidv7('id').primaryKey().notNull(),
@@ -57,8 +65,16 @@ export const cities = pgTable('cities', {
   /** City name in English. */
   nameEn: text('name_en').notNull(),
 
+  /** Whether the city is active and selectable. */
+  status: cityStatus('status').notNull().default('active'),
+
   /** When the city was created. */
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
+    .defaultNow()
+    .notNull(),
+
+  /** When the city was last updated (maintained by trigger). */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
     .defaultNow()
     .notNull(),
 })
