@@ -47,6 +47,8 @@ describe('seed verification', () => {
         password_change_token_expires_at TIMESTAMPTZ,
         notification_preferences TEXT NOT NULL DEFAULT 'IN_APP',
         timezone TEXT NOT NULL DEFAULT 'Asia/Tehran',
+        activation_token TEXT,
+        activation_token_expires_at TIMESTAMPTZ,
         last_accepted_tos_version TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
