@@ -186,7 +186,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
   }
 
   return (
-    <div dir={isRtl ? 'rtl' : 'ltr'} className="mx-auto max-w-7xl">
+    <div dir={isRtl ? 'rtl' : 'ltr'}>
       {error && (
         <div
           className="bg-red-50 border border-red-200 shadow-sm rounded-lg px-4 py-2 text-sm text-red-700 mb-2"
