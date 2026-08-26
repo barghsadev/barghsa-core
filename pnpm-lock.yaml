@@ -163,7 +163,13 @@ importers:
       '@barghsa/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      pg:
+        specifier: ^8.14.0
+        version: 8.23.0
     devDependencies:
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.23.1
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
