@@ -776,6 +776,26 @@ export const fa: I18nDictionary = {
   'admin.notifications.error.unpublish': 'خطا در غیرفعال‌سازی قالب',
   'admin.notifications.error.delete': 'خطا در حذف قالب',
   'admin.notifications.error.testSend': 'خطا در ارسال آزمایشی',
+
+  // ── Admin — Staff Roles (T-09.05.01) ───────────────────
+  'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
+  'admin.roles.subtitle': 'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
+  'admin.roles.role': 'نقش',
+  'admin.roles.permissions': 'دسترسی‌ها',
+  'admin.roles.predefined': 'از پیش‌تعریف‌شده',
+  'admin.roles.no.permissions': 'بدون دسترسی',
+  'admin.roles.load.failed': 'خطا در بارگذاری نقش‌ها',
+  'admin.roles.effective.title': 'دسترسی‌های موثر یک کاربر',
+  'admin.roles.effective.subtitle': 'شناسه کاربر کارکن را وارد کنید تا مجموعه دسترسی‌های مؤثر (اجتماع دسترسی‌های همه نقش‌های او) نمایش داده شود.',
+  'admin.roles.effective.userId': 'شناسه کاربر',
+  'admin.roles.effective.userId.placeholder': 'شناسه کاربر (UUID)',
+  'admin.roles.effective.lookup': 'نمایش دسترسی‌ها',
+  'admin.roles.effective.admin': 'ادمین',
+  'admin.roles.effective.roles': 'نقش‌ها',
+  'admin.roles.effective.wildcard': 'این کاربر ادمین است و به همه دسترسی‌ها اجازه دارد.',
+  'admin.roles.effective.none': 'این کاربر هیچ دسترسی موثری ندارد.',
+  'admin.roles.user.notfound': 'کاربر یافت نشد',
+  'admin.roles.user.lookup.failed': 'خطا در دریافت دسترسی‌های کاربر',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1525,6 +1545,26 @@ export const en: I18nDictionary = {
     'admin.notifications.error.unpublish': 'Failed to unpublish template',
     'admin.notifications.error.delete': 'Failed to delete template',
     'admin.notifications.error.testSend': 'Failed to send test',
+
+    // ── Admin — Staff Roles (T-09.05.01) ───────────────────
+    'admin.roles.title': 'Roles & Permissions',
+    'admin.roles.subtitle': 'Staff roles and the permission set of each role. Predefined roles are read-only.',
+    'admin.roles.role': 'Role',
+    'admin.roles.permissions': 'Permissions',
+    'admin.roles.predefined': 'Predefined',
+    'admin.roles.no.permissions': 'No permissions',
+    'admin.roles.load.failed': 'Failed to load roles',
+    'admin.roles.effective.title': 'Effective permissions',
+    'admin.roles.effective.subtitle': 'Enter a staff user ID to view the effective permission set (union of their roles).',
+    'admin.roles.effective.userId': 'User ID',
+    'admin.roles.effective.userId.placeholder': 'User ID (UUID)',
+    'admin.roles.effective.lookup': 'View permissions',
+    'admin.roles.effective.admin': 'Admin',
+    'admin.roles.effective.roles': 'Roles',
+    'admin.roles.effective.wildcard': 'This user is an admin and is granted every permission.',
+    'admin.roles.effective.none': 'This user has no effective permissions.',
+    'admin.roles.user.notfound': 'User not found',
+    'admin.roles.user.lookup.failed': 'Failed to look up user permissions',
   };
 
 /** Supported locale codes */

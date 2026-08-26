@@ -20,6 +20,44 @@ export interface UpdateStaffRolesResult {
 }
 
 /**
+ * A staff role with its permission set (T-09.05.01).
+ */
+export interface StaffRoleDto {
+  roleId: string
+  name: string
+  description: string
+  permissions: string[]
+  predefined: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * A single permission with a human-readable, grouped representation.
+ */
+export interface PermissionDescriptor {
+  /** Canonical permission string, e.g. `tickets:read`. */
+  permission: string
+  /** Group label derived from the permission prefix (e.g. `tickets`). */
+  group: string
+}
+
+/**
+ * Effective permission resolution for a staff user (T-09.05.01).
+ *
+ * The union of permissions across all roles held by the user, deny-by-default.
+ * A platform admin (`is_admin`) resolves to the wildcard `*` set.
+ */
+export interface EffectivePermissionsResult {
+  userId: string
+  isAdmin: boolean
+  roleIds: string[]
+  roleNames: string[]
+  permissions: PermissionDescriptor[]
+  isWildcard: boolean
+}
+
+/**
  * Input for creating a staff user.
  */
 export interface CreateStaffUserInput {
@@ -48,6 +86,26 @@ export type CreateStaffUserResult = {
  * Ambiguous characters (0/O, 1/l/I) are excluded to avoid confusion.
  */
 const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+
+/**
+ * Parse a stored permission set defensively. Handles both a JSON string
+ * (TEXT column as written today) and an already-parsed JS array (if the
+ * column is ever migrated to jsonb and node-postgres auto-parses it).
+ * Invalid input degrades to an empty set.
+ */
+function parsePermissionsStored(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((p): p is string => typeof p === 'string')
+  }
+  if (typeof raw !== 'string') return []
+  try {
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed)) return parsed.filter((p): p is string => typeof p === 'string')
+    return []
+  } catch {
+    return []
+  }
+}
 
 /**
  * Generates a cryptographically random password that satisfies the
@@ -465,6 +523,105 @@ export class AdminService {
       )
     } finally {
       client.release()
+    }
+  }
+
+  /**
+   * List all staff roles with their permission sets (T-09.05.01).
+   *
+   * Reads the `staff_roles` table (seeded from PREDEFINED_ROLES) and marks each
+   * role as predefined based on the canonical role IDs.
+   */
+  async listStaffRoles(): Promise<StaffRoleDto[]> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT role_id, name, description, permissions, created_at, updated_at
+       FROM staff_roles
+       ORDER BY name ASC`,
+    )
+
+    const predefinedIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
+
+    return result.rows.map((row) => {
+      const permissions = parsePermissionsStored(row.permissions)
+
+      return {
+        roleId: row.role_id,
+        name: row.name,
+        description: row.description ?? '',
+        permissions,
+        predefined: predefinedIds.has(row.role_id),
+        createdAt: row.created_at ? new Date(row.created_at).toISOString() : '',
+        updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : '',
+      }
+    })
+  }
+
+  /**
+   * Resolve the effective permission set for a staff user (T-09.05.01).
+   *
+   * The union of permissions across all roles held by the user (deny-by-default,
+   * additive by role). A platform admin (`is_admin`) resolves to the wildcard
+   * set (`isWildcard: true`) — an admin implicitly holds every permission.
+   *
+   * @param targetUserId - The staff user whose effective permissions to resolve
+   * @throws 404 when the user does not exist
+   */
+  async getEffectivePermissions(targetUserId: string): Promise<EffectivePermissionsResult> {
+    const pool = getDbPool()
+
+    const userResult = await pool.query(
+      `SELECT user_id, is_admin FROM users WHERE user_id = $1`,
+      [targetUserId],
+    )
+    if (userResult.rows.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
+        404,
+      )
+    }
+    const isAdmin = userResult.rows[0]!.is_admin === true
+
+    const rolesResult = await pool.query(
+      `SELECT r.role_id, r.name, r.permissions
+       FROM user_roles ur
+       JOIN staff_roles r ON r.role_id = ur.role_id
+       WHERE ur.user_id = $1`,
+      [targetUserId],
+    )
+
+    const roleIds: string[] = []
+    const roleNames: string[] = []
+    const permissionSet = new Set<string>()
+
+    for (const row of rolesResult.rows) {
+      roleIds.push(row.role_id)
+      roleNames.push(row.name)
+      for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p)
+    }
+
+    if (isAdmin) {
+      return {
+        userId: targetUserId,
+        isAdmin: true,
+        roleIds,
+        roleNames,
+        permissions: [{ permission: '*', group: 'admin' }],
+        isWildcard: true,
+      }
+    }
+
+    const permissions = [...permissionSet]
+      .sort()
+      .map((permission) => ({ permission, group: permission.split(':')[0] ?? 'other' }))
+
+    return {
+      userId: targetUserId,
+      isAdmin,
+      roleIds,
+      roleNames,
+      permissions,
+      isWildcard: false,
     }
   }
 

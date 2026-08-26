@@ -559,3 +559,130 @@ describe('AdminService.setProfileVerificationMode', () => {
     expect(mockRelease).toHaveBeenCalled()
   })
 })
+
+describe('AdminService.listStaffRoles', () => {
+  it('maps role rows to DTOs and marks predefined roles', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        {
+          role_id: 'role-admin',
+          name: 'Admin',
+          description: 'Full access',
+          permissions: JSON.stringify(['*']),
+          created_at: new Date('2026-01-01T00:00:00Z'),
+          updated_at: new Date('2026-01-01T00:00:00Z'),
+        },
+        {
+          role_id: 'role-custom',
+          name: 'Custom Role',
+          description: 'Custom',
+          permissions: JSON.stringify(['tickets:read']),
+          created_at: new Date('2026-01-02T00:00:00Z'),
+          updated_at: new Date('2026-01-02T00:00:00Z'),
+        },
+      ],
+    })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffRoles()
+    expect(result).toHaveLength(2)
+    const adm = result[0]
+    const custom = result[1]
+    expect(adm).toMatchObject({ roleId: 'role-admin', predefined: true, permissions: ['*'] })
+    expect(custom).toMatchObject({ roleId: 'role-custom', predefined: false, permissions: ['tickets:read'] })
+  })
+
+  it('tolerates malformed permissions JSON', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { role_id: 'role-x', name: 'X', description: 'x', permissions: 'not-json', created_at: null, updated_at: null },
+      ],
+    })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffRoles()
+    const first = result[0]
+    expect(first?.permissions).toEqual([])
+    expect(first?.predefined).toBe(false)
+  })
+
+  it('handles already-parsed (jsonb) permission arrays', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({
+      rows: [
+        { role_id: 'role-x', name: 'X', description: 'x', permissions: ['tickets:read', 'crm:read'], created_at: null, updated_at: null },
+      ],
+    })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffRoles()
+    expect(result[0]?.permissions).toEqual(['tickets:read', 'crm:read'])
+  })
+})
+
+describe('AdminService.getEffectivePermissions', () => {
+  it('returns the union of permissions across roles for a non-admin', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: false }] }) // user lookup
+      .mockResolvedValueOnce({
+        // roles lookup
+        rows: [
+          { role_id: 'role-crm', name: 'CRM & Verification', permissions: JSON.stringify(['crm:read', 'profiles:read']) },
+          { role_id: 'role-support', name: 'Customer Support', permissions: JSON.stringify(['tickets:read']) },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.getEffectivePermissions('u1')
+    expect(result.isAdmin).toBe(false)
+    expect(result.isWildcard).toBe(false)
+    expect(result.roleIds).toEqual(['role-crm', 'role-support'])
+    expect(result.roleNames).toEqual(['CRM & Verification', 'Customer Support'])
+    const perms = result.permissions.map((p) => p.permission)
+    expect(perms).toContain('tickets:read')
+    expect(perms).toContain('crm:read')
+    expect(perms).toContain('profiles:read')
+  })
+
+  it('returns the wildcard set for an admin user', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ user_id: 'u1', is_admin: true }] })
+      .mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.getEffectivePermissions('u1')
+    expect(result.isAdmin).toBe(true)
+    expect(result.isWildcard).toBe(true)
+    expect(result.permissions[0]?.permission).toBe('*')
+  })
+
+  it('throws 404 for an unknown user', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await expect(service.getEffectivePermissions('missing')).rejects.toMatchObject({ status: 404 })
+  })
+})

@@ -1,6 +1,14 @@
 export { AdminModule } from './admin.module.js'
 export { AdminService } from './admin.service.js'
-export type { ActivationMethod, CreateStaffUserInput, CreateStaffUserResult, UpdateStaffRolesResult } from './admin.service.js'
+export type {
+  ActivationMethod,
+  CreateStaffUserInput,
+  CreateStaffUserResult,
+  EffectivePermissionsResult,
+  PermissionDescriptor,
+  StaffRoleDto,
+  UpdateStaffRolesResult,
+} from './admin.service.js'
 export { AdminController, CreateStaffUserSchema, type CreateStaffUserDto } from './admin.controller.js'
 
 /**
