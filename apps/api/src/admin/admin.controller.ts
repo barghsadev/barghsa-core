@@ -844,6 +844,8 @@ export class AdminController {
    */
   @Post('notifications/templates')
   @HttpCode(201)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Create a new draft notification template' })
   @ApiBody({
     schema: {
@@ -908,6 +910,8 @@ export class AdminController {
    * Updates a draft notification template. Only draft templates can be updated.
    */
   @Put('notifications/templates/:id')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update a draft notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
   @ApiBody({
@@ -977,6 +981,8 @@ export class AdminController {
    */
   @Post('notifications/templates/:id/publish')
   @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Publish a draft notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
   @ApiResponse({ status: 200, description: 'Template published.' })
@@ -1002,6 +1008,8 @@ export class AdminController {
    */
   @Post('notifications/templates/:id/unpublish')
   @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Unpublish an active notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
   @ApiResponse({ status: 200, description: 'Template unpublished.' })
@@ -1028,6 +1036,8 @@ export class AdminController {
    */
   @Delete('notifications/templates/:id')
   @HttpCode(204)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a draft notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
   @ApiResponse({ status: 204, description: 'Template deleted.' })
@@ -1044,5 +1054,91 @@ export class AdminController {
       )
     }
     await this.notificationTemplateService.delete(id, req.session.userId)
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/preview
+   *
+   * Renders a template body against allow-listed variables with sample data,
+   * without persisting anything. Used by the frontend preview pane.
+   * Permission: admin or staff with admin:notifications:edit role.
+   */
+  @Post('notifications/templates/preview')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Preview a rendered notification template body' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['bodyTemplate', 'variables'],
+      properties: {
+        bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
+        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+        sampleData: { type: 'object', description: 'Optional sample values keyed by variable name' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Rendered template body.' })
+  @ApiResponse({ status: 400, description: 'Template validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async previewNotificationTemplateBody(
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ subject: string | null; body: string; variables: string[] }> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const schema = z.object({
+      bodyTemplate: z.string().min(1),
+      variables: z.array(z.string().min(1)).default([]),
+      sampleData: z.record(z.string(), z.string()).optional(),
+    })
+
+    const parsed = schema.safeParse(rawBody)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    return this.notificationTemplateService.previewFromBody(
+      parsed.data.bodyTemplate,
+      parsed.data.variables,
+      parsed.data.sampleData,
+    )
+  }
+
+  /**
+   * POST /api/admin/notifications/templates/:id/test-send
+   *
+   * Renders a template and delivers it to the admin's own verified
+   * destination (in-app notification today; email/SMS transport pending E-05).
+   * Permission: admin or staff with admin:notifications:edit role.
+   */
+  @Post('notifications/templates/:id/test-send')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Test-send a rendered notification template' })
+  @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiResponse({ status: 200, description: 'Test message delivered.' })
+  @ApiResponse({ status: 404, description: 'Template not found' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async testSendNotificationTemplate(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ ok: boolean; destination: 'in_app' }> {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.notificationTemplateService.testSend(id, req.session.userId)
   }
 }

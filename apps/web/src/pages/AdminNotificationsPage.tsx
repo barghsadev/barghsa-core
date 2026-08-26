@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { FormEvent } from 'react'
+import { t } from '@barghsa/i18n'
+import { useLocale } from '../hooks/useLocale.js'
 
 interface NotificationTemplate {
   id: string
@@ -9,8 +11,9 @@ interface NotificationTemplate {
   subject: string | null
   bodyTemplate: string
   variables: string[]
-  status: 'draft' | 'active'
+  status: 'draft' | 'active' | 'archived'
   isActive: boolean
+  version: number
   publishedAt: string | null
   createdBy: string | null
   createdAt: string
@@ -58,6 +61,42 @@ const KNOWN_EVENT_KEYS = [
 const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app']
 const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en']
 
+/** HTML-escape a value for safe display in a rendered template (mirrors server). */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+/** Neutral sample values for each allow-listed variable (preview / test-send). */
+function buildSampleData(variables: string[]): Record<string, string> {
+  const data: Record<string, string> = {}
+  for (const v of variables) {
+    const key = v.trim()
+    if (key) data[key] = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase()
+  }
+  return data
+}
+
+/** Substitute {{variable}} placeholders with escaped sample values. */
+function renderTemplate(
+  template: string,
+  variables: string[],
+  data?: Record<string, string>,
+): string {
+  const allowed = new Set(variables)
+  const ctx = data ?? buildSampleData(variables)
+  return template.replace(/{{([^{}]+)}}/g, (match, raw: string) => {
+    const name = raw.trim()
+    if (!allowed.has(name)) return escapeHtml(match)
+    const value = ctx[name]
+    return escapeHtml(value === undefined ? '' : value)
+  })
+}
+
 /**
  * Admin notification template editor page (T-09.04.01).
  *
@@ -65,6 +104,7 @@ const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en']
  * publishing active templates, and unpublishing.
  */
 export default function AdminNotificationsPage() {
+  const uiLocale = useLocale()
   const [templates, setTemplates] = useState<NotificationTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -89,6 +129,16 @@ export default function AdminNotificationsPage() {
   const [publishId, setPublishId] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
 
+  // Test-send state
+  const [testSending, setTestSending] = useState(false)
+  const [testSendMsg, setTestSendMsg] = useState<string | null>(null)
+  const bodyRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const parsedVariables = variablesStr
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean)
+
   const fetchTemplates = useCallback(async () => {
     try {
       setLoading(true)
@@ -102,11 +152,11 @@ export default function AdminNotificationsPage() {
       const data = await res.json()
       setTemplates(data ?? [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load notification templates')
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.load', uiLocale))
     } finally {
       setLoading(false)
     }
-  }, [filterLocale, filterChannel, filterStatus])
+  }, [filterLocale, filterChannel, filterStatus, uiLocale])
 
   useEffect(() => {
     fetchTemplates()
@@ -120,23 +170,70 @@ export default function AdminNotificationsPage() {
     setSubject('')
     setBodyTemplate('')
     setVariablesStr('')
+    setTestSendMsg(null)
     setShowEditor(true)
   }
 
-  function openEdit(t: NotificationTemplate) {
-    setEditId(t.id)
-    setEventKey(t.eventKey)
-    setChannel(t.channel)
-    setLocale(t.locale)
-    setSubject(t.subject ?? '')
-    setBodyTemplate(t.bodyTemplate)
-    setVariablesStr(t.variables.join(', '))
+  function openEdit(template: NotificationTemplate) {
+    setEditId(template.id)
+    setEventKey(template.eventKey)
+    setChannel(template.channel)
+    setLocale(template.locale)
+    setSubject(template.subject ?? '')
+    setBodyTemplate(template.bodyTemplate)
+    setVariablesStr(template.variables.join(', '))
+    setTestSendMsg(null)
     setShowEditor(true)
   }
 
   function closeEditor() {
     setShowEditor(false)
     setEditId(null)
+  }
+
+  /** Insert a {{variable}} placeholder at the caret position in the body. */
+  function insertVariable(variable: string) {
+    const el = bodyRef.current
+    if (!el) {
+      setBodyTemplate((prev) => `${prev}{{${variable}}}`)
+      return
+    }
+    const start = el.selectionStart ?? bodyTemplate.length
+    const end = el.selectionEnd ?? bodyTemplate.length
+    const insert = `{{${variable}}}`
+    const next = bodyTemplate.slice(0, start) + insert + bodyTemplate.slice(end)
+    setBodyTemplate(next)
+    requestAnimationFrame(() => {
+      if (el) {
+        const pos = start + insert.length
+        el.focus()
+        el.setSelectionRange(pos, pos)
+      }
+    })
+  }
+
+  async function handleTestSend() {
+    if (!editId) {
+      setTestSendMsg(null)
+      return
+    }
+    setTestSending(true)
+    setTestSendMsg(null)
+    try {
+      const res = await fetch(`/api/admin/notifications/templates/${editId}/test-send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+      }
+      setTestSendMsg(t('admin.notifications.testSent', uiLocale))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale))
+    } finally {
+      setTestSending(false)
+    }
   }
 
   async function handleSave(e: FormEvent) {
@@ -190,7 +287,7 @@ export default function AdminNotificationsPage() {
       closeEditor()
       await fetchTemplates()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save template')
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.save', uiLocale))
     } finally {
       setSaving(false)
     }
@@ -212,14 +309,14 @@ export default function AdminNotificationsPage() {
       setPublishId(null)
       await fetchTemplates()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to publish template')
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.publish', uiLocale))
     } finally {
       setPublishing(false)
     }
   }
 
   async function handleUnpublish(id: string) {
-    if (!window.confirm('Unpublish this template? Active notifications will stop using it until a new version is published.')) return
+    if (!window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))) return
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}/unpublish`, {
@@ -231,12 +328,12 @@ export default function AdminNotificationsPage() {
       }
       await fetchTemplates()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to unpublish template')
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.unpublish', uiLocale))
     }
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm('Delete this draft? This cannot be undone.')) return
+    if (!window.confirm(t('admin.notifications.deleteConfirm', uiLocale))) return
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}`, {
@@ -248,24 +345,24 @@ export default function AdminNotificationsPage() {
       }
       await fetchTemplates()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete template')
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.delete', uiLocale))
     }
   }
 
   if (loading && templates.length === 0) {
-    return <div className="p-4 text-gray-500">Loading notification templates...</div>
+    return <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Notification Templates</h1>
+        <h1 className="text-2xl font-bold">{t('admin.notifications.title', uiLocale)}</h1>
         {!showEditor && (
           <button
             onClick={openCreate}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            New Template
+            {t('admin.notifications.newTemplate', uiLocale)}
           </button>
         )}
       </div>
@@ -289,7 +386,7 @@ export default function AdminNotificationsPage() {
           onChange={(e) => setFilterLocale(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
         >
-          <option value="">All Locales</option>
+          <option value="">{t('admin.notifications.allLocales', uiLocale)}</option>
           <option value="fa">فارسی</option>
           <option value="en">English</option>
         </select>
@@ -298,7 +395,7 @@ export default function AdminNotificationsPage() {
           onChange={(e) => setFilterChannel(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
         >
-          <option value="">All Channels</option>
+          <option value="">{t('admin.notifications.allChannels', uiLocale)}</option>
           <option value="email">Email</option>
           <option value="sms">SMS</option>
           <option value="in_app">In-App</option>
@@ -308,7 +405,7 @@ export default function AdminNotificationsPage() {
           onChange={(e) => setFilterStatus(e.target.value)}
           className="border border-gray-300 rounded px-3 py-1.5 text-sm"
         >
-          <option value="">All Status</option>
+          <option value="">{t('admin.notifications.allStatus', uiLocale)}</option>
           <option value="draft">Draft</option>
           <option value="active">Active</option>
         </select>
@@ -318,13 +415,15 @@ export default function AdminNotificationsPage() {
       {showEditor && (
         <form onSubmit={handleSave} className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
           <h2 className="text-lg font-semibold">
-            {editId ? 'Edit Template' : 'Create New Template'}
+            {editId
+              ? t('admin.notifications.editTitle', uiLocale)
+              : t('admin.notifications.createTitle', uiLocale)}
           </h2>
 
           {/* Event key */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Event Key <span className="text-red-500">*</span>
+              {t('admin.notifications.eventKey', uiLocale)} <span className="text-red-500">*</span>
             </label>
             {editId ? (
               <p className="text-sm text-gray-500 py-2">{eventKey}</p>
@@ -348,7 +447,7 @@ export default function AdminNotificationsPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Channel <span className="text-red-500">*</span>
+                {t('admin.notifications.channel', uiLocale)} <span className="text-red-500">*</span>
               </label>
               {editId ? (
                 <p className="text-sm text-gray-500 py-2">
@@ -371,7 +470,7 @@ export default function AdminNotificationsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Locale <span className="text-red-500">*</span>
+                {t('admin.notifications.locale', uiLocale)} <span className="text-red-500">*</span>
               </label>
               {editId ? (
                 <p className="text-sm text-gray-500 py-2">
@@ -398,7 +497,7 @@ export default function AdminNotificationsPage() {
           {channel === 'email' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subject Line
+                {t('admin.notifications.subject', uiLocale)}
               </label>
               <input
                 type="text"
@@ -411,31 +510,77 @@ export default function AdminNotificationsPage() {
             </div>
           )}
 
-          {/* Body template */}
+          {/* Body template + variable sidebar + preview */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Body Template <span className="text-red-500">*</span>
+              {t('admin.notifications.bodyTemplate', uiLocale)} <span className="text-red-500">*</span>
             </label>
-            <p className="text-xs text-gray-400 mb-1">
-              Use {'{{variableName}}'} for variables. The available variables depend on the event.
-            </p>
-            <textarea
-              value={bodyTemplate}
-              onChange={(e) => setBodyTemplate(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
-              rows={8}
-              required
-              dir={locale === 'fa' ? 'rtl' : 'ltr'}
-            />
+            <p className="text-xs text-gray-400 mb-1">{t('admin.notifications.bodyHint', uiLocale)}</p>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <textarea
+                  ref={bodyRef}
+                  value={bodyTemplate}
+                  onChange={(e) => setBodyTemplate(e.target.value)}
+                  className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                  rows={8}
+                  required
+                  dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                />
+              </div>
+              {parsedVariables.length > 0 && (
+                <aside className="w-48 shrink-0 border border-gray-200 rounded-lg p-3 bg-gray-50">
+                  <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+                    {t('admin.notifications.variables', uiLocale)}
+                  </h4>
+                  <p className="text-[11px] text-gray-400 mb-2">
+                    {t('admin.notifications.insertHint', uiLocale)}
+                  </p>
+                  <ul className="space-y-1">
+                    {parsedVariables.map((v) => (
+                      <li key={v}>
+                        <button
+                          type="button"
+                          onClick={() => insertVariable(v)}
+                          className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
+                        >
+                          {'{{'}
+                          {v}
+                          {'}}'}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </aside>
+              )}
+            </div>
+            {/* Live preview pane */}
+            <div className="mt-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <h4 className="text-xs font-semibold text-gray-600 mb-2 uppercase">
+                {t('admin.notifications.preview', uiLocale)}
+              </h4>
+              {channel === 'email' && subject.trim() !== '' && (
+                <p className="text-sm text-gray-700 mb-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+                  <span className="font-semibold">{t('admin.notifications.subjectLabel', uiLocale)}</span>{' '}
+                  {renderTemplate(subject, parsedVariables)}
+                </p>
+              )}
+              <pre
+                className="text-sm whitespace-pre-wrap font-sans text-gray-800"
+                dir={locale === 'fa' ? 'rtl' : 'ltr'}
+              >
+                {renderTemplate(bodyTemplate, parsedVariables)}
+              </pre>
+            </div>
           </div>
 
-          {/* Variables */}
+          {/* Variables (allow-list) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Variables (comma-separated)
+              {t('admin.notifications.variablesLabel', uiLocale)}
             </label>
             <p className="text-xs text-gray-400 mb-1">
-              Allow-listed variable names that can be used in the template
+              {t('admin.notifications.variablesHint', uiLocale)}
             </p>
             <input
               type="text"
@@ -447,20 +592,41 @@ export default function AdminNotificationsPage() {
           </div>
 
           {/* Save / Cancel */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+            {editId && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleTestSend}
+                  disabled={testSending || saving}
+                  className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
+                >
+                  {testSending
+                    ? t('admin.notifications.sending', uiLocale)
+                    : t('admin.notifications.testSend', uiLocale)}
+                </button>
+                {testSendMsg && (
+                  <span className="text-sm text-green-600">{testSendMsg}</span>
+                )}
+              </>
+            )}
             <button
               type="submit"
               disabled={saving}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              {saving ? 'Saving...' : editId ? 'Update Template' : 'Create Template'}
+              {saving
+                ? t('admin.notifications.saving', uiLocale)
+                : editId
+                  ? t('admin.notifications.update', uiLocale)
+                  : t('admin.notifications.create', uiLocale)}
             </button>
             <button
               type="button"
               onClick={closeEditor}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
-              Cancel
+              {t('admin.notifications.cancel', uiLocale)}
             </button>
           </div>
         </form>
@@ -469,24 +635,23 @@ export default function AdminNotificationsPage() {
       {/* Publish confirm dialog */}
       {publishId && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 space-y-3">
-          <h3 className="font-semibold">Publish Template</h3>
-          <p className="text-sm text-gray-600">
-            Publishing will make this template active for the event+channel+locale combination.
-            Any previously active template for this combination will be deactivated.
-          </p>
+          <h3 className="font-semibold">{t('admin.notifications.publishTitle', uiLocale)}</h3>
+          <p className="text-sm text-gray-600">{t('admin.notifications.publishDesc', uiLocale)}</p>
           <div className="flex gap-3">
             <button
               onClick={handlePublish}
               disabled={publishing}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
             >
-              {publishing ? 'Publishing...' : 'Publish'}
+              {publishing
+                ? t('admin.notifications.publishing', uiLocale)
+                : t('admin.notifications.publish', uiLocale)}
             </button>
             <button
               onClick={() => setPublishId(null)}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
             >
-              Cancel
+              {t('admin.notifications.cancel', uiLocale)}
             </button>
           </div>
         </div>
@@ -497,101 +662,101 @@ export default function AdminNotificationsPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Locale</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Active</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.event', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.channel', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.locale', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.status', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.subject', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.active', uiLocale)}</th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.actions', uiLocale)}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {templates.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
-                  No notification templates yet. Create one to get started.
+                  {t('admin.notifications.empty', uiLocale)}
                 </td>
               </tr>
             )}
-            {templates.map((t) => (
-              <tr key={t.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 text-sm font-mono">{t.eventKey}</td>
+            {templates.map((template) => (
+              <tr key={template.id} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-sm font-mono">{template.eventKey}</td>
                 <td className="px-4 py-3 text-sm">
                   <span
                     className={`inline-block px-2 py-0.5 text-xs rounded ${
-                      t.channel === 'email'
+                      template.channel === 'email'
                         ? 'bg-blue-100 text-blue-800'
-                        : t.channel === 'sms'
+                        : template.channel === 'sms'
                           ? 'bg-purple-100 text-purple-800'
                           : 'bg-gray-100 text-gray-800'
                     }`}
                   >
-                    {CHANNEL_LABELS[t.channel]}
+                    {CHANNEL_LABELS[template.channel]}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm">
-                  <span className={t.locale === 'fa' ? 'font-medium' : ''}>
-                    {LOCALE_LABELS[t.locale]}
+                  <span className={template.locale === 'fa' ? 'font-medium' : ''}>
+                    {LOCALE_LABELS[template.locale]}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <span
                     className={`inline-block px-2 py-0.5 text-xs rounded ${
-                      t.status === 'draft'
+                      template.status === 'draft'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-green-100 text-green-800'
                     }`}
                   >
-                    {t.status}
+                    {template.status}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600 max-w-[200px] truncate">
-                  {t.subject ?? '—'}
+                  {template.subject ?? '—'}
                 </td>
                 <td className="px-4 py-3">
-                  {t.isActive ? (
-                    <span className="text-green-600 text-sm font-medium">✓ Active</span>
+                  {template.isActive ? (
+                    <span className="text-green-600 text-sm font-medium">✓ {t('admin.notifications.active', uiLocale)}</span>
                   ) : (
                     <span className="text-gray-400 text-sm">—</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-right text-sm space-x-2">
-                  {t.status === 'draft' && (
+                  {template.status === 'draft' && (
                     <>
                       <button
-                        onClick={() => openEdit(t)}
+                        onClick={() => openEdit(template)}
                         className="text-blue-600 hover:underline"
                       >
-                        Edit
+                        {t('admin.notifications.edit', uiLocale)}
                       </button>
                       <button
-                        onClick={() => setPublishId(t.id)}
+                        onClick={() => setPublishId(template.id)}
                         className="text-green-600 hover:underline"
                       >
-                        Publish
+                        {t('admin.notifications.publish', uiLocale)}
                       </button>
                       <button
-                        onClick={() => handleDelete(t.id)}
+                        onClick={() => handleDelete(template.id)}
                         className="text-red-600 hover:underline"
                       >
-                        Delete
+                        {t('admin.notifications.delete', uiLocale)}
                       </button>
                     </>
                   )}
-                  {t.status === 'active' && (
+                  {template.status === 'active' && (
                     <>
                       <button
-                        onClick={() => openEdit(t)}
+                        onClick={() => openEdit(template)}
                         className="text-blue-600 hover:underline"
                       >
-                        View
+                        {t('admin.notifications.view', uiLocale)}
                       </button>
                       <button
-                        onClick={() => handleUnpublish(t.id)}
+                        onClick={() => handleUnpublish(template.id)}
                         className="text-orange-600 hover:underline"
                       >
-                        Unpublish
+                        {t('admin.notifications.unpublish', uiLocale)}
                       </button>
                     </>
                   )}

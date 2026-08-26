@@ -1,13 +1,19 @@
-import { boolean, pgTable, text, jsonb } from 'drizzle-orm/pg-core'
+import { boolean, pgTable, text, jsonb, integer, uniqueIndex } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
 import { uuidv7, timestamptz } from '../types.js'
 import { users } from './users.js'
 
 /**
  * Notification templates table (T-09.04.01).
  *
- * Stores editable notification templates for each event key,
- * channel, and locale combination. Admins can create, edit,
- * preview, and publish notification templates.
+ * Stores editable notification templates for each event key, channel, and
+ * locale combination. Admins can create, edit, preview, and publish
+ * notification templates.
+ *
+ * Versioning (mirrors brand_config): each publish increments `version` and the
+ * previously-active template is demoted to `archived` (is_active=false) so
+ * published history is retained. A partial unique index guarantees at most one
+ * ACTIVE template per (event_key, channel, locale).
  *
  * - `event_key` — The event that triggers this notification, e.g.
  *   'profile_verified', 'welcome_email', 'invoice_available'.
@@ -16,10 +22,12 @@ import { users } from './users.js'
  * - `subject` — Email subject line (used only for email channel).
  * - `body_template` — The template body with {{variable}} placeholders.
  * - `variables` — Allow-listed variable names as JSON array.
- * - `status` — 'draft' (editable, not used in delivery) or 'active'
- *   (used by the notification engine for real deliveries).
- * - `is_active` — Whether this template is the currently active one
- *   for the event+channel+locale combination.
+ * - `status` — 'draft' (editable, not used in delivery), 'active' (used by the
+ *   notification engine), or 'archived' (a superseded published version kept
+ *   for history).
+ * - `version` — Monotonically increasing per publish for this combo.
+ * - `is_active` — Whether this template is the currently active one for the
+ *   event+channel+locale combination.
  * - `published_at` — When this template was last published to active.
  * - `created_by` — FK to users (last editor).
  */
@@ -51,12 +59,16 @@ export const notificationTemplates = pgTable(
     variables: jsonb('variables').notNull().default([]),
 
     /**
-     * Lifecycle status: 'draft' (editable, not used in delivery)
-     * or 'active' (used by the notification engine).
+     * Lifecycle status: 'draft' (editable, not used in delivery),
+     * 'active' (used by the notification engine), or 'archived'
+     * (superseded published version retained for history).
      */
-    status: text('status', { enum: ['draft', 'active'] })
+    status: text('status', { enum: ['draft', 'active', 'archived'] })
       .notNull()
       .default('draft'),
+
+    /** Monotonically increasing per publish for this event+channel+locale. */
+    version: integer('version').notNull().default(1),
 
     /** Whether this template is currently active for its event+channel+locale. */
     isActive: boolean('is_active').notNull().default(false),
@@ -77,15 +89,14 @@ export const notificationTemplates = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  /**
-   * Unique constraint: one template per event+channel+locale combination.
-   * This ensures there is exactly one row (which toggles between draft/active
-   * states) per unique notification definition.
-   */
-  (table) => ({
-    eventChannelLocaleUnique: {
-      name: 'uq_notification_templates_event_channel_locale',
-      columns: [table.eventKey, table.channel, table.locale],
-    },
-  }),
+  (table) => [
+    /**
+     * Partial unique index: at most ONE active template per
+     * (event_key, channel, locale). Inactive draft/archived versions
+     * are allowed, enabling version history.
+     */
+    uniqueIndex('uq_notification_templates_active')
+      .on(table.eventKey, table.channel, table.locale)
+      .where(sql`is_active = true`),
+  ],
 )
