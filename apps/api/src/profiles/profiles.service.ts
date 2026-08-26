@@ -3,6 +3,7 @@ import { getDbPool } from '@barghsa/db'
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { ConfigCacheService } from '../config-cache/config-cache.service.js'
+import { NotificationsService } from '../notifications/notifications.service.js'
 
 export interface ProfileRow {
   id: string
@@ -115,6 +116,7 @@ export class ProfilesService {
 
   constructor(
     private readonly configCache: ConfigCacheService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async getProfilesByUserId(userId: string): Promise<ProfilesResponseDto> {
@@ -301,6 +303,18 @@ export class ProfilesService {
     )
 
     this.logger.log(`Profile ${profileId} auto-verified for user ${userId}`)
+
+    // T-07.01.03: Send in-app verification notification
+    await this.notificationsService.create({
+      userId,
+      profileId,
+      type: 'profile_verified',
+      title: 'پروفایل شما تأیید شد',
+      body: `پروفایل شما با موفقیت تأیید شد. اکنون می‌توانید از تمام خدمات استفاده کنید.`,
+      link: '/app/settings/profile',
+    }).catch((err: Error) => {
+      this.logger.error(`Failed to send verification notification for user ${userId}: ${String(err)}`)
+    })
   }
 
   /**

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
+import { NotificationsService } from '../notifications/notifications.service.js'
 import { SessionService } from '../session/session.service.js'
 import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js'
 
@@ -158,7 +159,10 @@ export interface CrmProfileDetail {
 export class CrmV2Service {
   private readonly logger = new Logger(CrmV2Service.name)
 
-  constructor(private readonly sessionService: SessionService) {}
+  constructor(
+    private readonly sessionService: SessionService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   /**
    * GET /api/crm/profiles/:profileId
@@ -617,6 +621,43 @@ export class CrmV2Service {
         `Profile ${profileId} verification changed: ${currentStatus} → ${targetStatus} ` +
         `(action: ${action}, actor: ${actorUserId})`,
       )
+
+      // T-07.01.03: Send in-app verification notification
+      const profileOwnerUserId = profileRow.user_id as string
+      if (action === 'verify') {
+        await this.notificationsService.create({
+          userId: profileOwnerUserId,
+          profileId,
+          type: 'profile_verified',
+          title: 'پروفایل شما تأیید شد',
+          body: 'پروفایل شما توسط کارشناس تأیید شد. اکنون می‌توانید از تمام خدمات استفاده کنید.',
+          link: '/app/settings/profile',
+        }).catch((err: Error) => {
+          this.logger.error(`Failed to send verification notification for user ${profileOwnerUserId}: ${String(err)}`)
+        })
+      } else if (action === 'unverify') {
+        await this.notificationsService.create({
+          userId: profileOwnerUserId,
+          profileId,
+          type: 'profile_unverified',
+          title: 'تأیید پروفایل لغو شد',
+          body: `تأیید پروفایل شما لغو شد. دلیل: ${dto.reason ?? 'نامشخص'}`,
+          link: '/app/settings/profile',
+        }).catch((err: Error) => {
+          this.logger.error(`Failed to send unverify notification for user ${profileOwnerUserId}: ${String(err)}`)
+        })
+      } else if (action === 'reverify') {
+        await this.notificationsService.create({
+          userId: profileOwnerUserId,
+          profileId,
+          type: 'profile_pending',
+          title: 'پروفایل نیاز به تأیید مجدد دارد',
+          body: `پروفایل شما نیاز به تأیید مجدد دارد. دلیل: ${dto.reason ?? 'نامشخص'}`,
+          link: '/app/settings/profile',
+        }).catch((err: Error) => {
+          this.logger.error(`Failed to send reverify notification for user ${profileOwnerUserId}: ${String(err)}`)
+        })
+      }
 
       return {
         success: true,

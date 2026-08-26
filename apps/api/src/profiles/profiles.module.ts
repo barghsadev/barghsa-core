@@ -9,9 +9,10 @@ import { AgentsService } from './agents.service.js'
 import { ProfileVerifiedGuard } from './profiles.guard.js'
 import { AgentRoleGuard } from './agent-role.guard.js'
 import { SessionModule } from '../session/session.module.js'
+import { NotificationsModule } from '../notifications/index.js'
 
 @Module({
-  imports: [SessionModule],
+  imports: [SessionModule, NotificationsModule],
   controllers: [ProfilesController, OnboardingController, AgentsController, InvitationsController],
   providers: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard, AgentRoleGuard],
   exports: [ProfilesService, LegalProfilesService, AgentsService, ProfileVerifiedGuard, AgentRoleGuard],

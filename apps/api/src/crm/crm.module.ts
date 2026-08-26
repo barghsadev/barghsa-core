@@ -6,9 +6,10 @@ import { CrmService } from './crm.service.js'
 import { CrmV2Service } from './crm-v2.service.js'
 import { VerificationCaseService } from './verification-case.service.js'
 import { SessionModule } from '../session/session.module.js'
+import { NotificationsModule } from '../notifications/index.js'
 
 @Module({
-  imports: [SessionModule],
+  imports: [SessionModule, NotificationsModule],
   controllers: [CrmController, CrmV2Controller, VerificationCaseController],
   providers: [CrmService, CrmV2Service, VerificationCaseService],
   exports: [CrmService, CrmV2Service, VerificationCaseService],
