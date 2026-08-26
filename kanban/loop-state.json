@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "02-auth-users-admin.md#T-09.04.01",
+  "current_task_id": "T-09.04.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e09-t-09-04-01--notification-template-editor",
   "current_pr_url": null,
-  "loop_iteration": 297,
+  "loop_iteration": 298,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -244,6 +244,6 @@
     "02-auth-users-admin.md#T-09.03.02"
   ],
   "last_error": null,
-  "notes": "Iter-297: PR #160 (T-09.03.02 TOS version history) merged. Added read-only version detail modal with locale toggle, author column, view button. GLM-5.2 approved with minor a11y/null-guard findings (non-blocking). State reset to idle. Next: T-09.04.01 (Notification template editor — L size).",
-  "last_updated": "2026-08-26T16:22:00Z"
+  "notes": "Iter-298: Starting T-09.04.01 (Notification template editor — L size). Backend: DB schema (notification_templates), service (NotificationTemplateService), admin API endpoints (CRUD + publish/unpublish) implemented. Typecheck passes. Next: commit, push, open draft PR, then frontend editor.",
+  "last_updated": "2026-08-26T16:50:00Z"
 }
