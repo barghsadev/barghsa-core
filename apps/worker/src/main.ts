@@ -1,5 +1,6 @@
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
+import { runOutboxPoll } from './notifications/outbox-runner.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -118,20 +119,30 @@ async function main(): Promise<void> {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
 
-  // ── Worker loop placeholder ────────────────────────────────────
-  // TODO(T-04.xx.xx): Wire actual job leasing and execution here.
-  //
-  // Example:
-  //   while (!draining) {
-  //     const job = await leaseJob(db);
-  //     if (!job) { await sleep(1_000); continue; }
-  //     currentJob = executeJob(job);
-  //     try { await currentJob; } catch (e) { ... }
-  //     await releaseJob(job);
-  //     currentJob = null;
-  //   }
+  // ── Notification outbox poll loop (E-05, T-05.01.02) ───────────────
+  // Poll for due outbox rows, dispatch channels, and record outcomes.
+  // The loop captures `draining` by reference so a graceful shutdown stops
+  // leasing new work. Sending-only at this stage; retry/backoff scheduling
+  // (T-05.01.03) later extends the poll cadence.
+  const OUTBOX_POLL_MS = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
+  const outboxPoller = setInterval(async () => {
+    if (draining) return;
+    try {
+      const r = await runOutboxPoll();
+      if (r.leased > 0) {
+        logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
+      }
+    } catch (err) {
+      logger.error(`Outbox poll failed: ${(err as Error)?.message ?? String(err)}`);
+    }
+  }, OUTBOX_POLL_MS);
+  outboxPoller.unref();
 
-  logger.info('Worker initialised — awaiting job loop setup');
+  // Stop the poller during graceful shutdown.
+  process.on('SIGTERM', () => clearInterval(outboxPoller));
+  process.on('SIGINT', () => clearInterval(outboxPoller));
+
+  logger.info('Worker initialised — outbox poll loop active');
 }
 
 void main().catch((err: unknown) => {

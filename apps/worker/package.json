@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@barghsa/db": "workspace:*",
-    "@barghsa/shared": "workspace:*"
+    "@barghsa/shared": "workspace:*",
+    "pg": "^8.14.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "@types/pg": "^8.11.0"
   }
 }

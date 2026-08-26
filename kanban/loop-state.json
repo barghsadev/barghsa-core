@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
+  "status": "in_review",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.01.02",
+  "current_task_id": "T-05.01.02",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-01-02--outbox-write-pipeline",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/164",
   "loop_iteration": 301,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -247,9 +247,19 @@
     "05-notifications-documents-ai.md#T-05.01.01"
   ],
   "last_error": null,
-  "notes": "T-05.01.01 (notification scaffold) merged via PR #163; reset to idle.",
-  "last_updated": "2026-08-26T22:58:55Z",
+  "notes": "T-05.01.02 (outbox write pipeline) PR #164 ready for review.",
+  "last_updated": "2026-08-26T23:13:21Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.02",
+      "at": "2026-08-26T23:13:21Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.02",
+      "at": "2026-08-26T23:12:25Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.01.01",
