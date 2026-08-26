@@ -6,7 +6,7 @@
   "current_branch": "feat/e04-t-04-1-01-01--invoice-table",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/150",
   "loop_iteration": 278,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -235,6 +235,6 @@
     "04-invoices-wallet-contracts.md#T-04.2.01.01"
   ],
   "last_error": null,
-  "notes": "Iter-278: PR #150 (T-04.1.01.01 invoice table) created and marked ready. Queue order: first uncompleted task was T-04.1.01.01 (invoice DB table). Next tick: run review.",
-  "last_updated": "2026-08-26T11:58:00Z"
+  "notes": "Iter-278: Review found critical type mismatch (text vs uuid FK) and missing Drizzle CHECK constraints. Fix applied: profileId/orderId changed to uuidv7(), Drizzle check() constraints added. Fix attempt 1. Next tick: re-run review.",
+  "last_updated": "2026-08-26T12:08:00Z"
 }
