@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-06.01.03",
-  "current_task_id": "T-06.01.03",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-06-01-03--staff-ticket-management",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/140",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 250,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -219,11 +219,12 @@
     "02-auth-users-admin.md#T-05.05.01",
     "02-auth-users-admin.md#T-05.05.02",
     "02-auth-users-admin.md#T-06.01.01",
-    "02-auth-users-admin.md#T-06.01.02"
+    "02-auth-users-admin.md#T-06.01.02",
+    "02-auth-users-admin.md#T-06.01.03"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T05:41:00Z",
-  "notes": "Iteration-251: PR #140 in review. GLM-5.2 approved with minor notes. Merging.",
+  "last_updated": "2026-08-26T05:42:00Z",
+  "notes": "Iteration-251: PR #140 merged (T-06.01.03 staff ticket management). GLM-5.2 approved. Returned to idle. Next: 02-auth-users-admin.md#T-07.01.01 (Verification mode setting, S).",
   "status_history": [
     {
       "from": "in_review",
