@@ -5,7 +5,7 @@
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": null,
   "current_pr_url": null,
-  "loop_iteration": 269,
+  "loop_iteration": 271,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -203,8 +203,8 @@
     "02-auth-users-admin.md#T-04.01.01",
     "02-auth-users-admin.md#T-04.01.02",
     "02-auth-users-admin.md#T-04.01.03",
-    "02-auth-users-admin.md#T-05.01.01",
     "01-platform-infrastructure.md#T-05.03.05",
+    "02-auth-users-admin.md#T-05.01.01",
     "02-auth-users-admin.md#T-05.01.02",
     "02-auth-users-admin.md#T-05.02.01",
     "02-auth-users-admin.md#T-05.02.02",
@@ -234,6 +234,6 @@
     "03-core-business.md#T-03.01.01.04"
   ],
   "last_error": "Dependency absent: T-08.01.02 (Wallet balance card) requires 'wallet module' which does not exist — no wallet/ledger DB schema, no API module, no service. Wallet module belongs to E-04 (Invoices, Wallet, Payments & Contracts) which hasn't been started. Blocked until E-04 wallet infrastructure is built.",
-  "notes": "Iteration-269: Backlog validated. State idle→blocked. T-08.01.02 (Wallet balance card) blocked because its dependency 'wallet module' (E-04) does not exist in the codebase — no DB schema, no API service, no module. Need to build E-04 wallet foundation before this dashboard card can query real balance data.",
-  "last_updated": "2026-08-26T09:45:00Z"
+  "notes": "Iteration-269: Backlog validated. State idle→blocked. T-08.01.02 (Wallet balance card) blocked because its dependency 'wallet module' (E-04) does not exist in the codebase — no DB schema, no API service, no module. Need to build E-04 wallet foundation before this dashboard card can query real balance data. | Iter-270: Still blocked. No change. | Iter-271: Still blocked. No change.",
+  "last_updated": "2026-08-26T07:04:00Z"
 }
