@@ -32,14 +32,10 @@ CREATE TABLE IF NOT EXISTS electricity_product_limits (
 -- ---------------------------------------------------------------------------
 
 -- Ensure min_kwh <= max_kwh when both are non-zero
+-- Covers: max_kwh = 0 (no upper limit, any min is valid) or min_kwh <= max_kwh
 ALTER TABLE electricity_product_limits
   ADD CONSTRAINT chk_electricity_product_limits_range
-  CHECK (
-    (min_kwh = 0 AND max_kwh = 0)
-    OR (min_kwh = 0 AND max_kwh > 0)
-    OR (min_kwh > 0 AND max_kwh = 0)
-    OR (min_kwh <= max_kwh)
-  );
+  CHECK (max_kwh = 0 OR min_kwh <= max_kwh);
 
 -- Require at least one limit to be set (min > 0 or max > 0)
 ALTER TABLE electricity_product_limits
