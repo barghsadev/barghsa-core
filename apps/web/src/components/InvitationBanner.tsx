@@ -189,7 +189,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
     <div dir={isRtl ? 'rtl' : 'ltr'}>
       {error && (
         <div
-          className="bg-red-50 border-b border-red-200 px-4 py-2 text-sm text-red-700"
+          className="bg-red-50 border border-red-200 shadow-sm rounded-lg px-4 py-2 text-sm text-red-700 mb-2"
           role="alert"
         >
           {error}
@@ -203,7 +203,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
           return (
             <div
               key={inv.id}
-              className="bg-green-50 border-b border-green-200 px-4 py-3 text-sm text-green-800"
+              className="bg-green-50 border border-green-200 shadow-sm rounded-lg px-4 py-3 text-sm text-green-800"
               role="alert"
             >
               {state.doneAction === 'accept'
@@ -220,7 +220,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
         return (
           <div
             key={inv.id}
-            className="bg-blue-50 border-b border-blue-200 px-4 py-3 text-sm"
+            className="bg-blue-50 border border-blue-200 shadow-sm rounded-lg px-4 py-3 text-sm"
             role="alert"
           >
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
