@@ -1,12 +1,12 @@
 {
   "status": "in_review",
-  "current_task_key": "02-auth-users-admin.md#T-05.04.05",
-  "current_task_id": "T-05.04.05",
+  "current_task_key": "02-auth-users-admin.md#T-05.05.01",
+  "current_task_id": "T-05.05.01",
   "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-05-04-05--ownership-transfer",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/135",
-  "loop_iteration": 239,
-  "fix_attempts": 1,
+  "current_branch": "feat/e02-t-05-05-01--pending-verification-widget",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/136",
+  "loop_iteration": 241,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -200,161 +200,22 @@
     "02-auth-users-admin.md#T-05.04.01",
     "02-auth-users-admin.md#T-05.04.02",
     "02-auth-users-admin.md#T-05.04.03",
-    "02-auth-users-admin.md#T-05.04.04"
+    "02-auth-users-admin.md#T-05.04.04",
+    "02-auth-users-admin.md#T-05.04.05"
   ],
   "last_error": null,
-  "last_updated": "2026-08-26T03:42:00Z",
-  "notes": "Iteration-239: Fixed review findings (23505 race, reorder authz, self-transfer guard, FK). Fix attempts: 1. PR #135 back in_review. 412/412 tests pass.",
+  "last_updated": "2026-08-26T03:57:00Z",
+  "notes": "Iteration-241: Implemented T-05.05.01 — Profiles awaiting verification widget. Backend endpoint + dashboard widget. PR #136 open. typecheck+lint+build+API tests pass. Next: review.",
   "status_history": [
     {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-235"
-    },
-    {
-      "from": "idle",
-      "to": "in_review",
-      "at": "tick-235"
-    },
-    {
       "from": "idle",
       "to": "building",
-      "at": "tick-232"
+      "at": "iteration-241"
     },
     {
       "from": "building",
       "to": "in_review",
-      "at": "tick-232"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-232"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-232"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-231"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-230"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-230"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-229"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-229"
-    },
-    {
-      "from": "in_review",
-      "to": "building",
-      "at": "tick-224"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-224"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "tick-225"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-225"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-226"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-227"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "tick-227"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-228"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "tick-229"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "tick-233"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "tick-234"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-236"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-236"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "iteration-236"
-    },
-    {
-      "from": "in_review",
-      "to": "idle",
-      "at": "iteration-237"
-    },
-    {
-      "from": "idle",
-      "to": "building",
-      "at": "iteration-238"
-    },
-    {
-      "from": "building",
-      "to": "in_review",
-      "at": "iteration-238"
-    },
-    {
-      "from": "in_review",
-      "to": "fixing",
-      "at": "iteration-239"
-    },
-    {
-      "from": "fixing",
-      "to": "in_review",
-      "at": "iteration-239"
+      "at": "iteration-241"
     }
   ]
 }
