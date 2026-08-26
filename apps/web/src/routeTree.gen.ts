@@ -20,6 +20,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
@@ -97,6 +98,11 @@ const AppAiRoute = AppAiRouteImport.update({
 const AppChartsRoute = AppChartsRouteImport.update({
   id: '/charts',
   path: '/charts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
   '/charts': typeof AppChartsRoute
+  '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
   '/charts': typeof AppChartsRoute
+  '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_app/ai': typeof AppAiRoute
   '/_app/charts': typeof AppChartsRoute
+  '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/ai'
     | '/charts'
+    | '/dashboard'
     | '/documents'
     | '/savings'
     | '/videos'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/ai'
     | '/charts'
+    | '/dashboard'
     | '/documents'
     | '/savings'
     | '/videos'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_app/ai'
     | '/_app/charts'
+    | '/_app/dashboard'
     | '/_app/documents'
     | '/_app/savings'
     | '/_app/videos'
@@ -528,6 +540,13 @@ declare module '@tanstack/react-router' {
       path: '/charts'
       fullPath: '/charts'
       preLoaderRoute: typeof AppChartsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/documents': {
@@ -704,6 +723,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAiRoute: typeof AppAiRoute
   AppChartsRoute: typeof AppChartsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppSavingsRoute: typeof AppSavingsRoute
   AppVideosRoute: typeof AppVideosRoute
@@ -721,6 +741,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAiRoute: AppAiRoute,
   AppChartsRoute: AppChartsRoute,
+  AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
   AppSavingsRoute: AppSavingsRoute,
   AppVideosRoute: AppVideosRoute,
