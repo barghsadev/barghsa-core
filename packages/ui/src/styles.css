@@ -39,6 +39,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Brand theme CSS custom properties (T-09.01.02) */
+  /* Set dynamically by BrandThemeProvider; these are fallback defaults */
+  --brand-primary: #2563eb;
+  --brand-secondary: #64748b;
+  --brand-accent: #f59e0b;
+  --brand-primary-foreground: #ffffff;
+  --brand-secondary-foreground: #ffffff;
+  --brand-accent-foreground: #000000;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-shake: shake 0.5s ease-in-out;

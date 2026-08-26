@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { Card, CardContent } from '@barghsa/ui'
+import { useBrandConfig } from '../providers/BrandThemeProvider.js'
 
 export interface AuthLayoutProps {
   /** The locale for i18n text (fa or en) */
@@ -17,11 +18,20 @@ export interface AuthLayoutProps {
  * Left column: brand details (logo, title, slogan, value propositions).
  * Right column: form content passed as children.
  *
+ * Dynamically applies brand config (T-09.01.02) — app title, slogan, colors,
+ * and logo are fetched from the active brand config and injected via
+ * BrandThemeProvider CSS custom properties.
+ *
  * Responsive: stacks vertically on mobile (single column).
  * Full RTL/LTR support through dir attribute and logical CSS properties.
  * Does NOT render the default app sidebar or navbar.
  */
 export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps) {
+  const { brandConfig } = useBrandConfig()
+
+  const appTitle = brandConfig.appTitle || t('auth.brand.title', locale)
+  const slogan = brandConfig.slogan || t('auth.brand.slogan', locale)
+  const logoUrl = brandConfig.logoUrl
   return (
     <div
       className="flex min-h-dvh flex-col md:flex-row"
@@ -33,31 +43,36 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
           {/* Logo placeholder */}
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-2xl font-bold text-primary no-underline hover:opacity-80 transition-opacity"
+            className="inline-flex items-center gap-2 text-2xl font-bold no-underline hover:opacity-80 transition-opacity"
+            style={{ color: 'var(--brand-primary)' }}
             aria-label={t('auth.brand.logo.alt', locale)}
           >
-            {/* Simple SVG logo mark — Barghsa bolt icon */}
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              className="shrink-0"
-            >
-              <rect width="32" height="32" rx="8" fill="currentColor" />
-              <path
-                d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-                fill="var(--primary-foreground)"
-              />
-            </svg>
-            <span>{t('auth.brand.title', locale)}</span>
+            {logoUrl ? (
+              <img src={logoUrl} alt={appTitle} className="h-8 w-auto" />
+            ) : (
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                className="shrink-0"
+                style={{ color: 'var(--brand-primary)' }}
+              >
+                <rect width="32" height="32" rx="8" fill="currentColor" />
+                <path
+                  d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
+                  fill="var(--brand-primary-foreground)"
+                />
+              </svg>
+            )}
+            <span>{appTitle}</span>
           </Link>
 
           {/* Slogan */}
           <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">
-            {t('auth.brand.slogan', locale)}
+            {slogan}
           </p>
 
           {/* Value propositions */}
@@ -86,7 +101,7 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
 
         {/* Bottom brand area */}
         <div className="text-xs text-muted-foreground/60">
-          &copy; {new Date().getFullYear()} {t('auth.brand.title', locale)}
+          &copy; {new Date().getFullYear()} {appTitle}
         </div>
       </aside>
 
@@ -94,28 +109,34 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
       <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-xl font-bold text-primary no-underline"
+          className="inline-flex items-center gap-2 text-xl font-bold no-underline"
+          style={{ color: 'var(--brand-primary)' }}
           aria-label={t('auth.brand.logo.alt', locale)}
         >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <rect width="32" height="32" rx="8" fill="currentColor" />
-            <path
-              d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-              fill="var(--primary-foreground)"
-            />
-          </svg>
-          <span>{t('auth.brand.title', locale)}</span>
-        </Link>
+          {logoUrl ? (
+            <img src={logoUrl} alt={appTitle} className="h-7 w-auto" />
+          ) : (
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 32 32"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              className="shrink-0"
+              style={{ color: 'var(--brand-primary)' }}
+            >
+              <rect width="32" height="32" rx="8" fill="currentColor" />
+              <path
+                d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
+                fill="var(--brand-primary-foreground)"
+              />
+            </svg>
+            )}
+            <span>{appTitle}</span>
+          </Link>
         <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
-          {t('auth.brand.slogan', locale)}
+          {slogan}
         </p>
       </div>
 

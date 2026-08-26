@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
 import { VerificationBanner } from '../components/VerificationBanner.js'
 import { DefaultProfileModal } from '../components/DefaultProfileModal.js'
+import { BrandThemeProvider } from '../providers/BrandThemeProvider.js'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -96,10 +97,12 @@ function RootComponent() {
 
   return (
     <>
-      <VerificationBanner />
-      <DefaultProfileModal />
-      <Outlet />
-      {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
+      <BrandThemeProvider>
+        <VerificationBanner />
+        <DefaultProfileModal />
+        <Outlet />
+        {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
+      </BrandThemeProvider>
     </>
   )
 }
