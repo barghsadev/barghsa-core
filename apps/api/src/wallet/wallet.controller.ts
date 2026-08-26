@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Param, Body, Req, UseGuards, Logger } from '@nestjs/common'
+import { Controller, Get, Post, Param, Body, Req, UseGuards, Logger, HttpException, NotFoundException } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import { WalletService } from './wallet.service.js'
+import { ProfilesService } from '../profiles/profiles.service.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 
 @ApiTags('Wallet')
@@ -11,7 +12,21 @@ import type { AuthenticatedRequest } from '../session/session.guard.js'
 export class WalletController {
   private readonly logger = new Logger(WalletController.name)
 
-  constructor(private readonly walletService: WalletService) {}
+  constructor(
+    private readonly walletService: WalletService,
+    private readonly profilesService: ProfilesService,
+  ) {}
+
+  /**
+   * Verify that the authenticated user has access to the given profile.
+   * Throws NotFoundException if the profile doesn't belong to the user.
+   */
+  private async assertProfileAccess(req: AuthenticatedRequest, profileId: string): Promise<void> {
+    const profile = await this.profilesService.getAccessibleProfile(req.session.userId, profileId)
+    if (!profile) {
+      throw new NotFoundException(`Profile ${profileId} not found or not accessible`)
+    }
+  }
 
   @Get(':profileId')
   @ApiOperation({ summary: 'Get wallet balance for a profile' })
@@ -19,6 +34,7 @@ export class WalletController {
     @Param('profileId') profileId: string,
     @Req() req: AuthenticatedRequest,
   ) {
+    await this.assertProfileAccess(req, profileId)
     this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`)
     const wallet = await this.walletService.getWallet(profileId)
     if (!wallet) return { balance: 0, currency: 'IRR' }
@@ -36,6 +52,7 @@ export class WalletController {
     @Param('profileId') profileId: string,
     @Req() req: AuthenticatedRequest,
   ) {
+    await this.assertProfileAccess(req, profileId)
     this.logger.debug(`Wallet creation: user=${req.session.userId} profile=${profileId}`)
     const wallet = await this.walletService.createWallet(profileId)
     return {
@@ -51,6 +68,7 @@ export class WalletController {
     @Param('profileId') profileId: string,
     @Req() req: AuthenticatedRequest,
   ) {
+    await this.assertProfileAccess(req, profileId)
     this.logger.debug(`Wallet transactions: user=${req.session.userId} profile=${profileId}`)
     const transactions = await this.walletService.getTransactions(profileId)
     return {

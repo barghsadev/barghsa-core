@@ -47,10 +47,9 @@ export class WalletService {
    * Create a wallet for a profile. Idempotent — returns existing if present.
    */
   async createWallet(profileId: string): Promise<WalletRow> {
-    const existing = await this.getWallet(profileId)
-    if (existing) return existing
-
     const pool = getDbPool()
+
+    // Try INSERT; if concurrent insert won the race, fall back to SELECT
     const result = await pool.query(
       `INSERT INTO wallets (profile_id) VALUES ($1)
        ON CONFLICT (profile_id) DO NOTHING
@@ -58,11 +57,63 @@ export class WalletService {
       [profileId],
     )
 
+    if (result.rows.length === 0) {
+      // Another request created the wallet first — return that one
+      const existing = await this.getWallet(profileId)
+      if (!existing) throw new Error('Wallet creation failed despite insert attempt')
+      return existing
+    }
+
     return mapWallet(result.rows[0])
   }
 
   /**
-   * Credit a wallet (money in). Uses optimistic locking and atomic transaction.
+   * Execute a money-mutating operation inside an atomic transaction.
+   * Handles idempotency, optimistic locking, and error recovery.
+   */
+  private async executeWalletTx<T>(
+    walletId: string,
+    idempotencyKey: string,
+    fn: (client: any, wallet: any) => Promise<T>,
+  ): Promise<T> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Lock the wallet row
+      const walletResult = await client.query(
+        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
+        [walletId],
+      )
+      if (walletResult.rows.length === 0) {
+        throw new Error(`Wallet not found: ${walletId}`)
+      }
+
+      // Check idempotency INSIDE the transaction (after FOR UPDATE lock)
+      const idemResult = await client.query(
+        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+        [idempotencyKey],
+      )
+      if (idemResult.rows.length > 0) {
+        await client.query('COMMIT')
+        return idemResult.rows[0] as unknown as T
+      }
+
+      const result = await fn(client, walletResult.rows[0])
+
+      await client.query('COMMIT')
+      return result
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Credit a wallet (money in). Uses atomic transaction with FOR UPDATE locking.
    */
   async credit(
     walletId: string,
@@ -71,30 +122,7 @@ export class WalletService {
   ): Promise<TransactionRow> {
     if (amount <= 0n) throw new Error('Credit amount must be positive')
 
-    const pool = getDbPool()
-
-    // Check idempotency first
-    const existing = await pool.query(
-      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [ref.idempotencyKey],
-    )
-    if (existing.rows.length > 0) {
-      return mapTransaction(existing.rows[0])
-    }
-
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-
-      const walletResult = await client.query(
-        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
-      if (walletResult.rows.length === 0) {
-        throw new Error(`Wallet not found: ${walletId}`)
-      }
-      const wallet = walletResult.rows[0]
-
+    return this.executeWalletTx(walletId, ref.idempotencyKey, async (client, wallet) => {
       const updateResult = await client.query(
         `UPDATE wallets
          SET posted_balance = posted_balance + $1,
@@ -115,15 +143,8 @@ export class WalletService {
         [walletId, ref.type, amount, ref.idempotencyKey, ref.refId ?? null, ref.description ?? null],
       )
 
-      await client.query('COMMIT')
       return mapTransaction(txResult.rows[0])
-    } catch (error) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Credit failed: ${error}`)
-      throw error
-    } finally {
-      client.release()
-    }
+    })
   }
 
   /**
@@ -136,29 +157,7 @@ export class WalletService {
   ): Promise<TransactionRow> {
     if (amount <= 0n) throw new Error('Debit amount must be positive')
 
-    const pool = getDbPool()
-
-    const existing = await pool.query(
-      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [ref.idempotencyKey],
-    )
-    if (existing.rows.length > 0) {
-      return mapTransaction(existing.rows[0])
-    }
-
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-
-      const walletResult = await client.query(
-        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
-      if (walletResult.rows.length === 0) {
-        throw new Error(`Wallet not found: ${walletId}`)
-      }
-      const wallet = walletResult.rows[0]
-
+    return this.executeWalletTx(walletId, ref.idempotencyKey, async (client, wallet) => {
       const available = wallet.posted_balance - wallet.reserved_balance
       if (available < amount) {
         throw new Error(
@@ -186,44 +185,22 @@ export class WalletService {
         [walletId, ref.type, -amount, ref.idempotencyKey, ref.refId ?? null, ref.description ?? null],
       )
 
-      await client.query('COMMIT')
       return mapTransaction(txResult.rows[0])
-    } catch (error) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Debit failed: ${error}`)
-      throw error
-    } finally {
-      client.release()
-    }
+    })
   }
 
   /**
    * Reserve amount in wallet for pending payment. Reduces available balance.
    */
-  async reserve(walletId: string, amount: bigint, idempotencyKey: string): Promise<TransactionRow> {
+  async reserve(
+    walletId: string,
+    amount: bigint,
+    idempotencyKey: string,
+    ref?: { refId?: string; description?: string },
+  ): Promise<TransactionRow> {
     if (amount <= 0n) throw new Error('Reserve amount must be positive')
 
-    const pool = getDbPool()
-
-    const existing = await pool.query(
-      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [idempotencyKey],
-    )
-    if (existing.rows.length > 0) return mapTransaction(existing.rows[0])
-
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-
-      const walletResult = await client.query(
-        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
-      if (walletResult.rows.length === 0) {
-        throw new Error(`Wallet not found: ${walletId}`)
-      }
-      const wallet = walletResult.rows[0]
-
+    return this.executeWalletTx(walletId, idempotencyKey, async (client, wallet) => {
       const available = wallet.posted_balance - wallet.reserved_balance
       if (available < amount) {
         throw new Error(
@@ -245,21 +222,14 @@ export class WalletService {
       }
 
       const txResult = await client.query(
-        `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key)
-         VALUES ($1, 'reservation', $2, 'Reserved', $3)
+        `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key, ref_id, description)
+         VALUES ($1, 'reservation', $2, 'Reserved', $3, $4, $5)
          RETURNING *`,
-        [walletId, amount, idempotencyKey],
+        [walletId, amount, idempotencyKey, ref?.refId ?? null, ref?.description ?? null],
       )
 
-      await client.query('COMMIT')
       return mapTransaction(txResult.rows[0])
-    } catch (error) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Reserve failed: ${error}`)
-      throw error
-    } finally {
-      client.release()
-    }
+    })
   }
 
   /**
@@ -290,14 +260,18 @@ export class WalletService {
       )
       const wallet = walletResult.rows[0]
 
-      await client.query(
+      const updateResult = await client.query(
         `UPDATE wallets
          SET reserved_balance = reserved_balance - $1,
              version = version + 1,
              updated_at = NOW()
-         WHERE profile_id = $2 AND version = $3`,
+         WHERE profile_id = $2 AND version = $3
+         RETURNING *`,
         [reservation.amount, reservation.wallet_id, wallet.version],
       )
+      if (updateResult.rows.length === 0) {
+        throw new Error('Concurrent wallet modification detected during release')
+      }
 
       await client.query(
         `UPDATE wallet_transactions SET state = 'Released' WHERE id = $1`,
@@ -305,7 +279,7 @@ export class WalletService {
       )
 
       await client.query('COMMIT')
-      return { released: true, walletId: reservation.wallet_id, amount: reservation.amount }
+      return { released: true, walletId: reservation.wallet_id, amount: BigInt(reservation.amount) }
     } catch (error) {
       await client.query('ROLLBACK')
       this.logger.error(`Release failed: ${error}`)
