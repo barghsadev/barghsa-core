@@ -7,3 +7,4 @@ export * from './storage/index.js';
 export * from './validation/index.js';
 export * from './agent-permissions/index.js';
 export * from './verification/index.js';
+export * from './notifications/index.js';

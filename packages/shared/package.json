@@ -15,6 +15,7 @@
         "./validation": "./dist/validation/index.js",
         "./agent-permissions": "./dist/agent-permissions/index.js",
         "./verification": "./dist/verification/index.js",
+        "./notifications": "./dist/notifications/index.js",
         "./package.json": "./package.json"
     },
     "scripts": {
