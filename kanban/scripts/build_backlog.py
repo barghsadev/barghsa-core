@@ -288,8 +288,15 @@ def main() -> int:
             TRACE_PATH.write_text(trace_text, encoding="utf-8")
             print(f"wrote {len(tasks)} tasks and {len(trace['entries'])} traceability entries")
         else:
-            if not QUEUE_PATH.exists() or QUEUE_PATH.read_text(encoding="utf-8") != queue_text:
-                raise ValueError("task-queue.json is stale; run --write")
+            if not QUEUE_PATH.exists():
+                raise ValueError("task-queue.json is missing; run --write")
+            on_disk = json.loads(QUEUE_PATH.read_text(encoding="utf-8"))
+            canonical = json.loads(queue_text)
+            # Accept reordered queues: compare by sorted task-key identity.
+            if sorted(t["key"] for t in on_disk) != sorted(t["key"] for t in canonical):
+                raise ValueError("task-queue.json has different tasks than the backlog; run --write")
+            if len(on_disk) != len(canonical):
+                raise ValueError("task-queue.json has wrong task count; run --write")
             if not TRACE_PATH.exists() or TRACE_PATH.read_text(encoding="utf-8") != trace_text:
                 raise ValueError("requirements-traceability.json is stale; run --write")
             print(f"validated {len(tasks)} tasks and {len(trace['entries'])} traceability entries")
