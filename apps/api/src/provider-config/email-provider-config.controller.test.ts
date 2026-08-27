@@ -10,10 +10,12 @@ import { EmailProviderConfigService } from './email-provider-config.service.js'
 const mockUpdate = vi.fn()
 const mockCreate = vi.fn()
 const mockActivate = vi.fn()
+const mockList = vi.fn()
 const mockService = {
   update: mockUpdate,
   create: mockCreate,
   activate: mockActivate,
+  list: mockList,
 } as unknown as EmailProviderConfigService
 
 const adminReq = {
@@ -74,7 +76,7 @@ describe('EmailProviderConfigController', () => {
       expect(mockUpdate).toHaveBeenCalledWith('cfg-1', { label: 'Only Label' })
     })
 
-    it('rejects a non-admin caller with 403', async () => {
+    it('rejects a caller without the provider-edit permission with 403', async () => {
       await expect(controller.update(nonAdminReq, 'cfg-1', { label: 'x' })).rejects.toBeInstanceOf(
         HttpException,
       )
@@ -84,6 +86,68 @@ describe('EmailProviderConfigController', () => {
       await expect(controller.update(adminReq, 'cfg-1', { label: '' } as never)).rejects.toMatchObject({
         status: 400,
       })
+    })
+  })
+
+  describe('permission + step-up metadata (T-09.06.01)', () => {
+    it('requires step-up on create (a provider-config mutation)', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.create)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on update', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.update)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on activate', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.activate)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on disable', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.disable)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on rollback', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.rollback)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on recordTest', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.recordTest)
+      expect(meta).toBe(true)
+    })
+
+    it('requires step-up on testConnection', () => {
+      const meta =
+        Reflect.getMetadata(
+          'requiresStepUp',
+          EmailProviderConfigController.prototype.testConnection,
+        )
+      expect(meta).toBe(true)
+    })
+
+    it('does not require step-up for the read-only list', () => {
+      const meta =
+        Reflect.getMetadata('requiresStepUp', EmailProviderConfigController.prototype.list)
+      expect(meta ?? false).toBe(false)
+    })
+
+    it('rejects non-admin on list via permission gate', async () => {
+      await expect(controller.list(nonAdminReq)).rejects.toMatchObject({ status: 403 })
+    })
+
+    it('allows admin on list', async () => {
+      // list() calls assertProviderEditPermission then service.list()
+      await expect(controller.list(adminReq)).resolves.toBeUndefined()
     })
   })
 })
