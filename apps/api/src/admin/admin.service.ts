@@ -2,6 +2,14 @@ import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db'
+import {
+  DELIVERY_WINDOW_CONFIG_KEY,
+  DEFAULT_DELIVERY_WINDOW,
+  toDeliveryWindowConfig,
+  validateWindowConfig,
+  type DeliveryWindowConfig,
+} from '@barghsa/shared/notifications'
+import { ErrorCodes } from '@barghsa/shared/errors'
 
 /**
  * Supported activation methods for new staff users.
@@ -700,6 +708,131 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to set profile verification mode: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Delivery-window config (E-05, T-05.03.03)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * Get the current admin-configurable delivery window from `app_config`.
+   *
+   * Returns the default 09:00–21:00 Asia/Tehran window when no admin value has
+   * been persisted yet. Does **not** validate/normalize the stored value here —
+   * the worker's `normalizeWindowConfig` applies a safe per-field fallback at
+   * read time, so a corrupt value can never break delivery.
+   *
+   * The response uses the camelCase shape the UI form consumes
+   * (`{ timezone, startHour, endHour }`).
+   */
+  async getDeliveryWindowConfig(): Promise<DeliveryWindowConfig> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [DELIVERY_WINDOW_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) return { ...DEFAULT_DELIVERY_WINDOW }
+    // Persisted value is stored snake_case ({ timezone, start_hour, end_hour }).
+    return toDeliveryWindowConfig(result.rows[0]!.value)
+  }
+
+  /**
+   * Persist a new admin-configurable delivery window.
+   *
+   * Validates the proposal against the T-05.03.03 rules (start < end, length ≥
+   * {@link MIN_WINDOW_HOURS}, valid IANA timezone) before writing. A failing
+   * validation throws a 400 with the collected issue list so the client can
+   * surface them. On success it upserts `app_config` and bumps the global
+   * config version so the worker's config cache invalidates and picks up the
+   * new window on its next wake-up.
+   *
+   * @param input - raw request body ({ timezone, start_hour, end_hour })
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the persisted (camelCase) window config
+   */
+  async setDeliveryWindowConfig(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<DeliveryWindowConfig> {
+    const validation = validateWindowConfig(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const config = toDeliveryWindowConfig(input)
+    const pool = getDbPool()
+    const now = new Date()
+
+    // Persist in the snake_case shape `loadDeliveryWindowConfig` (worker) and
+    // `normalizeWindowConfig` consume.
+    const stored = {
+      timezone: config.timezone,
+      start_hour: config.startHour,
+      end_hour: config.endHour,
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ($1, $2::jsonb, 1, $3)
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3`,
+        [DELIVERY_WINDOW_CONFIG_KEY, JSON.stringify(stored), now],
+      )
+
+      // Bump global config version for cache invalidation (worker wake-up).
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      // Record audit event (T-05.03.03: changes take effect for new schedules).
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: DELIVERY_WINDOW_CONFIG_KEY,
+            newValue: stored,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Delivery window set to ${config.timezone} ${config.startHour}:00–${config.endHour}:00 by ${actorUserId}`,
+      )
+      return config
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set delivery window config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500,

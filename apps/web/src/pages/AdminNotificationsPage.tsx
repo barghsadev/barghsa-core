@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
 import DeadLetterPanel from '../components/DeadLetterPanel.js'
+import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js'
 
 interface NotificationTemplate {
   id: string
@@ -383,6 +384,9 @@ export default function AdminNotificationsPage() {
           </button>
         </div>
       )}
+
+      {/* Delivery-window config (T-05.03.03) */}
+      <DeliveryWindowConfigPanel uiLocale={uiLocale} />
 
       {/* Dead-letter queue (T-05.01.06) */}
       <DeadLetterPanel uiLocale={uiLocale} />
