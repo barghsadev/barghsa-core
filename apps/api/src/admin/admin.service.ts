@@ -869,7 +869,22 @@ export class AdminService {
       [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY],
     )
     if (result.rows.length === 0) return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
-    return toDualApprovalConfig(result.rows[0]!.value)
+    const config = toDualApprovalConfig(result.rows[0]!.value)
+    // A persisted row that does not normalize to a *valid* config means the
+    // stored value is corrupt; fail open to the disabled default but make the
+    // corruption observable so it cannot silently disable dual approval.
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const persistedValue = persisted?.threshold_irr ?? persisted?.thresholdIrR
+    const persistedIsValid =
+      typeof persistedValue === 'number' &&
+      Number.isSafeInteger(persistedValue) &&
+      persistedValue >= 0
+    if (!persistedIsValid) {
+      this.logger.warn(
+        `Dual-approval threshold config row for key ${DUAL_APPROVAL_THRESHOLD_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving disabled default`,
+      )
+    }
+    return config
   }
 
   /**
@@ -917,12 +932,27 @@ export class AdminService {
     try {
       await client.query('BEGIN')
 
-      await client.query(
+      // Lock the existing row (if any) so the previous value recorded in the
+      // audit trail is the true value that is being replaced — read it before
+      // the upsert mutates it. Concurrent writers serialize on this row lock,
+      // so no threshold change can be dropped from the audit trail.
+      const prevResult = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY],
+      )
+      const previousValue =
+        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersion =
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+
+      const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
-         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3`,
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+         RETURNING version`,
         [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY, JSON.stringify(stored), now],
       )
+      const newVersion = upsertResult.rows[0]!.version as number
 
       // Bump global config version for cache invalidation.
       await client.query(
@@ -931,6 +961,9 @@ export class AdminService {
       )
 
       // Record audit event (config_change, matching other admin configs).
+      // The audit trail captures the previous value and both version numbers
+      // so a threshold change (e.g. lowering it to 0 and disabling dual
+      // approval entirely) can be reconstructed end-to-end later.
       const auditId = uuidv7()
       const correlationId = uuidv7()
       await client.query(
@@ -942,7 +975,10 @@ export class AdminService {
           'config_change',
           JSON.stringify({
             key: DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+            previousValue,
+            previousVersion,
             newValue: stored,
+            version: newVersion,
           }),
           correlationId,
           ip,

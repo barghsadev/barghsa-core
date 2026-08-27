@@ -61,6 +61,17 @@ describe('validateDualApprovalConfig (T-09.07.01)', () => {
     expect(validateDualApprovalConfig({ threshold_irr: 'abc' }).ok).toBe(false)
   })
 
+  it('rejects coercible non-number payloads instead of silently accepting them', () => {
+    // Number(true) === 1, Number([]) === 0, Number(['5']) === 5,
+    // Number('500000000') === 500000000 — none of these may pass.
+    expect(validateDualApprovalConfig({ threshold_irr: true }).ok).toBe(false)
+    expect(validateDualApprovalConfig({ threshold_irr: false }).ok).toBe(false)
+    expect(validateDualApprovalConfig({ threshold_irr: [] }).ok).toBe(false)
+    expect(validateDualApprovalConfig({ threshold_irr: ['5'] }).ok).toBe(false)
+    expect(validateDualApprovalConfig({ threshold_irr: '500000000' }).ok).toBe(false)
+    expect(validateDualApprovalConfig({ threshold_irr: {} }).ok).toBe(false)
+  })
+
   it('rejects a threshold above Number.MAX_SAFE_INTEGER', () => {
     expect(validateDualApprovalConfig({ threshold_irr: Number.MAX_SAFE_INTEGER + 1 }).ok).toBe(
       false,
@@ -81,5 +92,9 @@ describe('toDualApprovalConfig (T-09.07.01)', () => {
     expect(toDualApprovalConfig(null)).toEqual(DEFAULT_DUAL_APPROVAL_CONFIG)
     expect(toDualApprovalConfig({ threshold_irr: 'nope' })).toEqual(DEFAULT_DUAL_APPROVAL_CONFIG)
     expect(toDualApprovalConfig({ threshold_irr: -5 })).toEqual(DEFAULT_DUAL_APPROVAL_CONFIG)
+    expect(toDualApprovalConfig({ threshold_irr: true })).toEqual(DEFAULT_DUAL_APPROVAL_CONFIG)
+    expect(toDualApprovalConfig({ threshold_irr: ['500000000'] })).toEqual(
+      DEFAULT_DUAL_APPROVAL_CONFIG,
+    )
   })
 })

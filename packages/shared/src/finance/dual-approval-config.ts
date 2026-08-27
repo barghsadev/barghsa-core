@@ -48,16 +48,15 @@ export interface DualApprovalValidationResult {
   issues: string[]
 }
 
-/** Largest integer representable exactly as a JSON number (2^53 − 1). */
-const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER
-
 /**
  * Validate a proposed dual-approval threshold.
  *
- * Rules: `thresholdIrR` (or snake_case `threshold_irr`) must be an integer
- * between ʻ0` (disabled) and {@link MAX_SAFE_INTEGER} (the largest integer
- * representable exactly in JSON numbers, so the persisted value round-trips
- * losslessly).
+ * Rules: `thresholdIrR` (or snake_case `threshold_irr`) must be a **number**
+ * (strictly typed — booleans, arrays, and strings are rejected rather than
+ * coerced, since a coercion like `Number(true) === 1` would silently enable
+ * dual approval at an unintended threshold) that is an integer between `0`
+ * (disabled) and `Number.MAX_SAFE_INTEGER` (the largest integer representable
+ * exactly in JSON numbers, so the persisted value round-trips losslessly).
  */
 export function validateDualApprovalConfig(input: unknown): DualApprovalValidationResult {
   const issues: string[] = []
@@ -74,12 +73,15 @@ export function validateDualApprovalConfig(input: unknown): DualApprovalValidati
     return { ok: false, issues }
   }
 
-  const value = Number(raw)
+  if (typeof raw !== 'number') {
+    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
+    return { ok: false, issues }
+  }
 
-  if (!Number.isInteger(value) || !Number.isSafeInteger(value)) {
-    issues.push(`threshold_irr must be an integer between 0 and ${MAX_SAFE_INTEGER}`)
-  } else if (value < 0 || value > MAX_SAFE_INTEGER) {
-    issues.push(`threshold_irr must be between 0 and ${MAX_SAFE_INTEGER}`)
+  if (!Number.isInteger(raw) || !Number.isSafeInteger(raw)) {
+    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
+  } else if (raw < 0 || raw > Number.MAX_SAFE_INTEGER) {
+    issues.push(`threshold_irr must be between 0 and ${Number.MAX_SAFE_INTEGER}`)
   }
 
   return { ok: issues.length === 0, issues }
@@ -95,9 +97,13 @@ export function toDualApprovalConfig(input: unknown): DualApprovalConfig {
   if (!input || typeof input !== 'object') return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
   const o = input as Record<string, unknown>
   const raw = o.threshold_irr ?? o.thresholdIrR
-  const value = Number(raw)
-  if (Number.isSafeInteger(value) && value >= 0 && value <= MAX_SAFE_INTEGER) {
-    return { thresholdIrR: value }
+  if (
+    typeof raw === 'number' &&
+    Number.isSafeInteger(raw) &&
+    raw >= 0 &&
+    raw <= Number.MAX_SAFE_INTEGER
+  ) {
+    return { thresholdIrR: raw }
   }
   return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
 }
