@@ -30,6 +30,7 @@ interface SuppressionRow {
   address: string
   reason: string
   profileId: string | null
+  sourceEventId: string | null
 }
 interface DeliveryLogRow {
   notificationId: string
@@ -40,36 +41,78 @@ interface DeliveryLogRow {
   errorDetail: string | null
 }
 
+interface EventRow {
+  id: string
+  eventType: string
+  messageId: string | null
+  toAddress: string | null
+  outboxId: string | null
+  status: string | null
+}
+
+interface Harness {
+  pool: ProviderPool
+  queries: string[]
+  eventsByToken: Map<string, EventRow>
+  outboxRows: Map<string, OutboxRow>
+  suppressions: SuppressionRow[]
+  deliveryLogs: DeliveryLogRow[]
+  failOnDeliveredUpdate: { value: boolean }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildHarness(overrides: { activeConfig?: boolean } = {}) {
-  const eventsByToken = new Map<
-    string,
-    {
-      id: string
-      eventType: string
-      messageId: string | null
-      toAddress: string | null
-      outboxId: string | null
-      status: string | null
-    }
-  >()
+function buildHarness(overrides: { activeConfig?: boolean; failOnDeliveredUpdate?: boolean } = {}): Harness {
+  const eventsByToken = new Map<string, EventRow>()
   const outboxRows = new Map<string, OutboxRow>()
   const suppressions: SuppressionRow[] = []
   const deliveryLogs: DeliveryLogRow[] = []
   const queries: string[] = []
   const activeConfig = overrides.activeConfig ?? true
+  const failFlag = { value: overrides.failOnDeliveredUpdate ?? false }
+
+  let txSnapshot: {
+    events: Map<string, EventRow>
+    suppressions: SuppressionRow[]
+    logs: DeliveryLogRow[]
+    outbox: Map<string, OutboxRow>
+  } | null = null
 
   const outboxByRef = (ref: string): OutboxRow | undefined =>
     [...outboxRows.values()].find((r) => r.providerRef === ref)
+
+  const takeSnapshot = () => ({
+    events: new Map(eventsByToken),
+    suppressions: [...suppressions],
+    logs: [...deliveryLogs],
+    outbox: new Map([...outboxRows].map(([k, v]) => [k, { ...v }])),
+  })
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const exec = async (text: string, params?: unknown[]): Promise<any> => {
     queries.push(text.replace(/\s+/g, ' ').trim())
     const lower = text.toLowerCase()
-
     const q = text.replace(/\s+/g, ' ').trim().toLowerCase()
 
-    if (lower.startsWith('begin') || lower.startsWith('commit') || lower.startsWith('rollback')) {
+    if (lower.startsWith('begin')) {
+      txSnapshot = takeSnapshot()
+      return { rows: [] }
+    }
+    if (lower.startsWith('commit')) {
+      txSnapshot = null
+      return { rows: [] }
+    }
+    if (lower.startsWith('rollback')) {
+      if (txSnapshot) {
+        eventsByToken.clear()
+        for (const [k, v] of txSnapshot.events) eventsByToken.set(k, v)
+        suppressions.length = 0
+        suppressions.push(...txSnapshot.suppressions)
+        deliveryLogs.length = 0
+        deliveryLogs.push(...txSnapshot.logs)
+        outboxRows.clear()
+        for (const [k, v] of txSnapshot.outbox) outboxRows.set(k, v)
+        txSnapshot = null
+      }
       return { rows: [] }
     }
 
@@ -89,11 +132,6 @@ function buildHarness(overrides: { activeConfig?: boolean } = {}) {
         : { rows: [] }
     }
 
-    // resolveOutboxByMessageId: SELECT id FROM notification_outbox WHERE provider_ref = $1
-    if (q.startsWith('select id from notification_outbox')) {
-      const outbox = outboxByRef(String(params![0]))
-      return { rows: outbox ? [{ id: outbox.id }] : [] }
-    }
     // lookupOutbox (in-tx): SELECT id, profile_id AS "profileId" FROM ...
     if (q.startsWith('select id, profile_id')) {
       const outbox = outboxByRef(String(params![0]))
@@ -122,6 +160,9 @@ function buildHarness(overrides: { activeConfig?: boolean } = {}) {
     }
 
     if (lower.includes("set status = 'delivered'") && lower.includes('notification_outbox')) {
+      // Simulate a transient DB failure mid-processing (ledger insert already
+      // happened inside the transaction — it must be rolled back with it).
+      if (failFlag.value) throw new Error('simulated db failure')
       const row = outboxRows.get(String(params![0]))
       if (row) row.status = 'delivered'
       return { rows: [], rowCount: row ? 1 : 0 }
@@ -162,6 +203,7 @@ function buildHarness(overrides: { activeConfig?: boolean } = {}) {
         address: String(params![1]),
         reason: String(params![2]),
         profileId: (params![3] as string | null) ?? null,
+        sourceEventId: (params![4] as string | null) ?? null,
       })
       return { rows: [], rowCount: 1 }
     }
@@ -185,6 +227,7 @@ function buildHarness(overrides: { activeConfig?: boolean } = {}) {
     outboxRows,
     suppressions,
     deliveryLogs,
+    failOnDeliveredUpdate: failFlag,
   }
 }
 
@@ -262,7 +305,12 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     expect(outcome.processed).toBe(true)
     expect(h.suppressions).toEqual([
-      { address: 'nobody@example.com', reason: 'hard_bounce', profileId: PROFILE_ID },
+      {
+        address: 'nobody@example.com',
+        reason: 'hard_bounce',
+        profileId: PROFILE_ID,
+        sourceEventId: expect.any(String) as unknown as string,
+      },
     ])
     expect(h.outboxRows.get(OUTBOX_ID)!.status).toBe('failed')
     expect(h.deliveryLogs).toHaveLength(1)
@@ -288,6 +336,8 @@ describe('EmailWebhookService (T-05.06.07)', () => {
     expect(outcome.processed).toBe(true)
     expect(h.suppressions).toHaveLength(0)
     expect(h.outboxRows.get(OUTBOX_ID)!.status).toBe('failed')
+    // Soft bounces are transient/retryable — never classified as permanent.
+    expect(h.deliveryLogs[0]).toMatchObject({ status: 'failed', errorCategory: 'transient' })
   })
 
   it('complaint suppresses the address as a corrective record', async () => {
@@ -308,7 +358,12 @@ describe('EmailWebhookService (T-05.06.07)', () => {
 
     expect(outcome.processed).toBe(true)
     expect(h.suppressions).toEqual([
-      { address: 'complainer@example.com', reason: 'complaint', profileId: PROFILE_ID },
+      {
+        address: 'complainer@example.com',
+        reason: 'complaint',
+        profileId: PROFILE_ID,
+        sourceEventId: expect.any(String) as unknown as string,
+      },
     ])
     // A complaint does not rewrite the transport outcome.
     expect(h.outboxRows.get(OUTBOX_ID)!.status).toBe('delivered')
@@ -336,6 +391,40 @@ describe('EmailWebhookService (T-05.06.07)', () => {
     expect(first.processed).toBe(true)
     expect(second.processed).toBe(false)
     expect(h.deliveryLogs).toHaveLength(1) // side effects ran exactly once
+  })
+
+  it('rolls back the ledger row when side effects fail so the retry re-runs', async () => {
+    const h = buildHarness({ failOnDeliveredUpdate: true })
+    h.outboxRows.set(OUTBOX_ID, {
+      id: OUTBOX_ID,
+      profileId: PROFILE_ID,
+      providerRef: 'msg_resend_6',
+      status: 'sending',
+    })
+    const svc = new EmailWebhookService(h.pool, new ProviderSecretsService())
+
+    const payload = JSON.stringify({
+      type: 'email.delivered',
+      data: { email_id: 'msg_resend_6', to: 'a3@example.com' },
+    })
+    const headers = makeHeaders('msg_svix_fail_then_retry', payload)
+
+    // First delivery: apply() fails mid-transaction → 500, and the ledger
+    // insert must roll back with the side effects (no half-applied state).
+    const err = (await svc.handle(headers, payload).catch((e: unknown) => e)) as {
+      getStatus?: () => number
+    }
+    expect(err.getStatus?.()).toBe(500)
+    expect(h.eventsByToken.size).toBe(0)
+    expect(h.deliveryLogs).toHaveLength(0)
+    expect(h.outboxRows.get(OUTBOX_ID)!.status).toBe('sending')
+
+    // Resend retries the same svix-id: the event must now process fully.
+    h.failOnDeliveredUpdate.value = false
+    const retry = await svc.handle(headers, payload)
+    expect(retry.processed).toBe(true)
+    expect(h.outboxRows.get(OUTBOX_ID)!.status).toBe('delivered')
+    expect(h.deliveryLogs).toHaveLength(1)
   })
 
   it('rejects an invalid signature with 401', async () => {

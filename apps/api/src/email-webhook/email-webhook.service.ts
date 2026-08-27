@@ -12,6 +12,7 @@ import type { ProviderPool, PoolClient } from '../provider-config/provider-confi
 import { ProviderSecretsService } from '../provider-config/provider-secrets.service'
 import { parseResendConfig } from '../provider-config/resend-config.schema'
 import { verifySvixSignature } from './svix-verifier'
+import { EVENT_STATUS } from './email-webhook.types'
 import type {
   ResendWebhookEvent,
   ResendWebhookHeaders,
@@ -43,15 +44,17 @@ interface OutboxRow {
  *   its `provider_ref` = the message id) `delivered` when it is not already
  *   terminal, and appends a provider-confirmed row to `notification_delivery_log`.
  * - **hard bounce** — suppresses the recipient (future non-essential email is
- *   skipped) and marks the outbox row `failed`.
+ *   skipped) and marks the outbox row `failed`. Soft bounces are transient and
+ *   are recorded as such (no suppression — the outbox retry ladder may recover).
  * - **complaint** — suppresses the recipient as a corrective-action record.
  * - **open / click / delayed / sent** — recorded for audit only; no terminal
  *   state change.
  *
- * Replay-safety: `event_token` (`svix-id`) is UNIQUE in `email_webhook_events`,
- * and we perform side effects only when the insert lands — so provider retries
- * or captured replays are exact no-ops. Idempotency is enforced at the DB
- * conflict, not defensively in code.
+ * Replay-safety: the idempotent ledger INSERT (`event_token` = `svix-id`,
+ * UNIQUE) and all side effects run inside ONE transaction. A duplicate event
+ * inserts nothing and commits a no-op; a processing failure rolls EVERYTHING
+ * back, so the provider's retry re-runs the event with full effect. Side
+ * effects can never be half-applied or silently skipped.
  *
  * Secrets (webhook signing secret) are decrypted transiently for signature
  * verification and never logged or returned.
@@ -124,25 +127,18 @@ export class EmailWebhookService {
       throw badPayload()
     }
 
-    // 4. Idempotent record — inserts only when `event_token` is unseen.
-    const eventId = await this.recordEvent(event, headers)
-    if (!eventId) {
-      // Duplicate / replay already processed — acknowledge without side effects.
-      return { processed: false }
-    }
-
-    // 5. Apply side effects atomically.
+    // 4. Record + apply atomically. Domain errors propagate unchanged; only
+    //    unexpected failures become 500s.
     try {
-      await this.apply(eventId, event)
+      return await this.processEvent(event, headers)
     } catch (err) {
+      if (err instanceof HttpException) throw err
       this.logger.error(`Resend webhook processing failed: ${(err as Error).message}`)
       throw new HttpException(
         { statusCode: 500, error: 'webhook_process_failed', message: 'Failed to process webhook' },
         500,
       )
     }
-
-    return { processed: true, eventId }
   }
 
   /* --------------------------- config -------------------------------- */
@@ -169,62 +165,51 @@ export class EmailWebhookService {
     }
   }
 
-  /* ------------------------ persistence ------------------------------ */
+  /* ---------------------- idempotent processing ---------------------- */
 
   /**
-   * Insert a ledger row for the event. Returns the event row id when the event
-   * is new, or when the supplied `svix-id` is a duplicate returns `null`.
+   * Insert the event ledger row and apply side effects in one transaction.
+   * Returns `processed: false` (no-op) when the `svix-id` was already seen.
    */
-  private async recordEvent(
+  private async processEvent(
     event: ResendWebhookEvent,
     headers: ResendWebhookHeaders,
-  ): Promise<string | null> {
-    const id = uuidv7()
+  ): Promise<DispatchOutcome> {
     const token = headers.id
-    if (!token) throw new HttpException({ statusCode: 400, error: 'invalid_payload', message: 'Missing svix-id header' }, 400)
+    if (!token) throw badPayload()
 
-    const outbox = await this.resolveOutboxByMessageId(event.data.email_id)
-    const result = await this.db.query(
-      `INSERT INTO email_webhook_events
-         (id, event_token, event_type, message_id, to_address, from_address,
-          outbox_id, status, raw)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       ON CONFLICT (event_token) DO NOTHING`,
-      [
-        id,
-        token,
-        event.type,
-        event.data.email_id ?? null,
-        event.data.to ?? null,
-        event.data.from ?? null,
-        outbox ?? null,
-        eventStatus(event.type),
-        event,
-      ],
-    )
-    return (result.rowCount ?? 0) > 0 ? id : null
-  }
-
-  private async resolveOutboxByMessageId(messageId: string | undefined): Promise<string | null> {
-    if (!messageId) return null
-    const result = await this.db.query(
-      `SELECT id FROM notification_outbox WHERE provider_ref = $1 LIMIT 1`,
-      [messageId],
-    )
-    return (result.rows[0] as { id?: string } | undefined)?.id ?? null
-  }
-
-  /* ----------------------- side effects ------------------------------ */
-
-  /** Apply the event's side effects in a single transaction. */
-  private async apply(eventId: string, event: ResendWebhookEvent): Promise<void> {
+    const eventId = uuidv7()
     const client = await this.db.connect()
     try {
       await client.query('BEGIN')
+
+      const insert = await client.query(
+        `INSERT INTO email_webhook_events
+           (id, event_token, event_type, message_id, to_address, from_address,
+            outbox_id, status, raw)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (event_token) DO NOTHING`,
+        [
+          eventId,
+          token,
+          event.type,
+          event.data.email_id ?? null,
+          event.data.to ?? null,
+          event.data.from ?? null,
+          null,
+          EVENT_STATUS[event.type] ?? null,
+          event,
+        ],
+      )
+      if ((insert.rowCount ?? 0) === 0) {
+        // Duplicate / replay already processed — acknowledge without effects.
+        await client.query('COMMIT')
+        return { processed: false }
+      }
+
       const outbox = event.data.email_id
         ? await this.lookupOutbox(client, event.data.email_id)
         : null
-
       if (outbox) {
         // Back-fill the ledger with the resolved outbox for attribution.
         await client.query(`UPDATE email_webhook_events SET outbox_id = $1 WHERE id = $2`, [
@@ -238,10 +223,10 @@ export class EmailWebhookService {
           await this.applyDelivered(client, outbox, event)
           break
         case 'email.bounced':
-          await this.applyBounce(client, outbox, event)
+          await this.applyBounce(client, outbox, event, eventId)
           break
         case 'email.complained':
-          await this.applyComplaint(client, outbox, event)
+          await this.applyComplaint(client, outbox, event, eventId)
           break
         default:
           // sent / opened / clicked / delivery_delayed — audit only.
@@ -249,6 +234,7 @@ export class EmailWebhookService {
       }
 
       await client.query('COMMIT')
+      return { processed: true, eventId }
     } catch (err) {
       await client.query('ROLLBACK')
       throw err
@@ -264,6 +250,8 @@ export class EmailWebhookService {
     )
     return (result.rows[0] as OutboxRow | undefined) ?? null
   }
+
+  /* ----------------------- side effects ------------------------------ */
 
   private async applyDelivered(
     client: PoolClient,
@@ -289,12 +277,13 @@ export class EmailWebhookService {
     client: PoolClient,
     outbox: OutboxRow | null,
     event: ResendWebhookEvent,
+    eventId: string,
   ): Promise<void> {
     const hard = event.data.category === 'hard_bounce'
     const to = normalizeAddress(event.data.to)
     // Only hard bounces suppress: a soft (temporary) bounce should retry.
     if (to && hard) {
-      await this.suppress(client, to, 'hard_bounce', outbox?.profileId ?? null)
+      await this.suppress(client, to, 'hard_bounce', outbox?.profileId ?? null, eventId)
     }
 
     if (outbox) {
@@ -308,7 +297,8 @@ export class EmailWebhookService {
         status: 'failed',
         providerRef: event.data.email_id ?? null,
         message: hard ? 'Provider reported hard bounce' : 'Provider reported bounce',
-        errorCategory: 'permanent',
+        // Hard = permanent (will not recover); soft = transient (retryable).
+        errorCategory: hard ? 'permanent' : 'transient',
       })
     }
   }
@@ -317,13 +307,14 @@ export class EmailWebhookService {
     client: PoolClient,
     outbox: OutboxRow | null,
     event: ResendWebhookEvent,
+    eventId: string,
   ): Promise<void> {
     const to = normalizeAddress(event.data.to)
     if (!to) return
     // A spam complaint is both a suppression (stop emailing the address) and an
     // operational corrective record — captured here; admin tooling reads
     // email_suppressions reason='complaint'.
-    await this.suppress(client, to, 'complaint', outbox?.profileId ?? null)
+    await this.suppress(client, to, 'complaint', outbox?.profileId ?? null, eventId)
   }
 
   /** Insert a suppression row; deduplicated by (address, reason). */
@@ -332,12 +323,13 @@ export class EmailWebhookService {
     address: string,
     reason: 'hard_bounce' | 'complaint',
     profileId: string | null,
+    sourceEventId: string,
   ): Promise<void> {
     await client.query(
-      `INSERT INTO email_suppressions (id, address, reason, profile_id)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO email_suppressions (id, address, reason, profile_id, source_event_id)
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (address, reason) DO NOTHING`,
-      [uuidv7(), address, reason, profileId],
+      [uuidv7(), address, reason, profileId, sourceEventId],
     )
   }
 
@@ -358,7 +350,7 @@ export class EmailWebhookService {
       [notificationId],
     )
     const currentMax =
-          parseInt(String((maxResult.rows[0] as { n?: unknown } | undefined)?.n ?? '0'), 10) || 0
+      parseInt(String((maxResult.rows[0] as { n?: unknown } | undefined)?.n ?? '0'), 10) || 0
     const attemptNumber = currentMax + 1
     await client.query(
       `INSERT INTO notification_delivery_log
@@ -374,25 +366,6 @@ export class EmailWebhookService {
         input.message,
       ],
     )
-  }
-}
-
-/** Derived coarse status for the ledger row. */
-function eventStatus(type: ResendWebhookEvent['type']): string | null {
-  switch (type) {
-    case 'email.delivered':
-      return 'delivered'
-    case 'email.bounced':
-    case 'email.delivery_delayed':
-      return 'failed'
-    case 'email.complained':
-      return 'complained'
-    case 'email.opened':
-      return 'opened'
-    case 'email.clicked':
-      return 'clicked'
-    default:
-      return null
   }
 }
 

@@ -37,7 +37,7 @@ export type VerifySvixResult =
   | { ok: true }
   | { ok: false; reason: 'missing_secret' | 'missing_headers' | 'tampered' | 'replayed' }
 
-/** Treat the secret string as the Swix secret encoding. */
+/** Treat the secret string as the Svix secret encoding. */
 function signingKey(secret: string): Buffer {
   const body = secret.startsWith('whsec_') ? secret.slice('whsec_'.length) : secret
   // Resend/Bravenkeys encode the key as base64 after the `whsec_` prefix; when
