@@ -51,6 +51,15 @@ const baseRow = {
   lastError: null,
 }
 
+/**
+ * A fully-verified availability context (recipient has a verified email and
+ * phone, no consent needed for the mandatory `profile_verified` event used by
+ * most dispatch tests). Lets the pre-existing transport/dispatch behaviour
+ * tests exercise channel fan-out without being affected by the T-05.05.02
+ * availability gate.
+ */
+const fullyAvailable = () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} })
+
 describe('runOutboxPoll', () => {
   it('marks a fully-delivered row and jobs as done, persisting real provider refs', async () => {
     const { pool, updates } = makePool()
@@ -59,6 +68,7 @@ describe('runOutboxPoll', () => {
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email') },
+      availability: fullyAvailable,
     })
 
     expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 })
@@ -89,6 +99,7 @@ describe('runOutboxPoll', () => {
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
+      availability: fullyAvailable,
     })
 
     expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 })
@@ -122,6 +133,7 @@ describe('runOutboxPoll', () => {
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
+      availability: fullyAvailable,
     })
     expect(r.failed).toBe(1)
 
@@ -137,6 +149,42 @@ describe('runOutboxPoll', () => {
     expect(emailJob!.params[6]).toBeNull()
   })
 
+  it('skips an external channel without marketing opt-in via the availability gate (T-05.05.02)', async () => {
+    const { pool, updates } = makePool()
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
+      { ...baseRow, eventKey: 'marketing.promotion' },
+    ])
+
+    const r = await runOutboxPoll({
+      pool,
+      transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email') },
+      // Marketing event: verified destination in-app only; no marketing consent.
+      availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
+    })
+    // in_app delivered; the gated email leg is skipped, so the row is delivered.
+    expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 })
+
+    // The email transport must never be called for a skipped leg.
+    // (FakeTransport records reads — assert via the runOutboxPoll behaviour:
+    // only the in_app job is marked done.)
+    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
+    // in_app job → done; email job → flagged skipped/failed by the gate.
+    const inAppJob = jobUpdates.find((u) => u.params[5] === 'in_app' && u.params[1] === 'done')
+    expect(inAppJob).toBeTruthy()
+    // markSkippedJobs issues UPDATE ... SET status='failed', last_error=$3 WHERE outbox_id=$1 AND channel=$2
+    const emailJob = jobUpdates.find(
+      (u) => u.sql.includes('SET status = \'failed\'') && String(u.params[1]) === 'email',
+    )
+    expect(emailJob).toBeTruthy()
+    expect(String(emailJob!.params[2])).toContain('skipped:')
+    // A delivery-log row records the skip with a permanent error detail.
+    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
+    const emailLog = logInserts.find((u) => u.params[1] === 'email')
+    expect(emailLog).toBeTruthy()
+    expect(String(emailLog!.params[6])).toBe('permanent')
+    expect(String(emailLog!.params[7])).toContain('skipped: marketing')
+  })
+
   it('schedules a jittered run_after backoff on a retry-eligible job', async () => {
     const { pool, updates } = makePool()
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
@@ -144,6 +192,7 @@ describe('runOutboxPoll', () => {
     await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
+      availability: fullyAvailable,
     })
 
     const emailJob = updates.find((u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email')
@@ -162,7 +211,11 @@ describe('runOutboxPoll', () => {
       new Error('SMTP auth failed for user:key:AKIAIOSFODNN7EXAMPLE'),
     )
 
-    const r = await runOutboxPoll({ pool, transports: { in_app: new FakeTransport('in_app') } })
+    const r = await runOutboxPoll({
+      pool,
+      transports: { in_app: new FakeTransport('in_app') },
+      availability: fullyAvailable,
+    })
     expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 })
     const errCol = updates.find((u) => u.sql.includes('last_error'))
     expect(String(errCol?.params[3])).not.toContain('AKIAIOSFODNN7EXAMPLE')
