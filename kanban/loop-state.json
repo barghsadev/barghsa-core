@@ -6,7 +6,7 @@
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/191",
   "current_task_key": "05-notifications-documents-ai.md#T-05.06.07",
   "loop_iteration": 323,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -276,12 +276,17 @@
   ],
   "last_error": "",
   "notes": "T-05.06.07 (Resend delivery callback webhooks: POST /api/webhooks/email/resend, Svix HMAC verification, svix-id idempotency ledger, delivery-log/outbox updates, email_suppressions for hard bounce+complaint, migration 0034) PR #191 open, in_review.",
-  "last_updated": "2026-08-27T19:52:00Z",
+  "last_updated": "2026-08-27T19:58:00Z",
   "status_history": [
     {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.06",
-      "at": "2026-08-27T19:28:30Z"
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:57:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:58:00Z"
     },
     {
       "status": "merged",
