@@ -334,48 +334,83 @@ export class NotificationsService {
 
     const row = current.rows[0]
     if (!row) return null
-    // Terminal states are immutable once acted upon (idempotent no-op): return
-    // the canonical record shape so callers see a consistent result object.
-    if (row.status !== 'open') {
-      return { id: row.id, status: row.status }
-    }
 
     // Map the requested action to the persisted status (matches the
     // chk_ndl_status CHECK constraint).
     const nextStatus =
       action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed'
 
-    // The retry re-queue touches three tables; run it as a single transaction
-    // so a crash mid-way cannot leave the job re-queued while the dead-letter
-    // row stays open (or vice versa).
-    await pool.query('BEGIN')
+    // The retry re-queue touches three tables; acquire a dedicated client and
+    // run it as a single transaction so a crash mid-way cannot leave the job
+    // re-queued while the dead-letter row stays open (or vice versa). A
+    // dedicated client is required — multi-statement `pool.query('BEGIN')`
+    // does not pin a connection across statements.
+    const client = await pool.connect()
     try {
+      await client.query('BEGIN')
+
+      // Terminal states are immutable once acted upon (idempotent no-op); the
+      // UPDATE below is guarded to match only 'open' rows.
       if (action === 'retry') {
-        await pool.query(
+        // Reset the job to a fresh budget AND the parent outbox row (attempts
+        // and lock) so the worker re-dispatches instead of instantly
+        // re-dead-lettering from stale attempt counts. Idempotency keys are
+        // preserved, so re-processing cannot double-deliver (T-05.01.04).
+        await client.query(
           `UPDATE notification_job
               SET status = 'queued', run_after = NULL, attempts = 0,
                   last_error = NULL, updated_at = NOW()
             WHERE id = $1`,
           [row.jobId],
         )
-        await pool.query(
+        await client.query(
           `UPDATE notification_outbox
-              SET status = 'queued', locked_until = NULL, updated_at = NOW()
+              SET status = 'queued', locked_until = NULL, attempts = 0,
+                  updated_at = NOW()
             WHERE id = $1`,
           [row.outboxId],
         )
       }
-      await pool.query(
+
+      const updated = await client.query(
         `UPDATE notification_dead_letter
             SET status = $1, resolved_at = NOW(), resolved_by = $2, updated_at = NOW()
-          WHERE id = $3`,
+          WHERE id = $3 AND status = 'open'
+          RETURNING id,
+                    outbox_id AS "outboxId",
+                    job_id AS "jobId",
+                    channel,
+                    event_key AS "eventKey",
+                    severity,
+                    profile_id AS "profileId",
+                    user_id AS "userId",
+                    cause,
+                    error_category AS "errorCategory",
+                    attempts,
+                    max_attempts AS "maxAttempts",
+                    idempotency_key AS "idempotencyKey",
+                    status,
+                    resolved_at AS "resolvedAt",
+                    resolved_by AS "resolvedBy",
+                    created_at AS "createdAt",
+                    updated_at AS "updatedAt"`,
         [nextStatus, actor, id],
       )
-      await pool.query('COMMIT')
+
+      await client.query('COMMIT')
+
+      // If the row was already acted upon (status != 'open'), the guarded
+      // UPDATE affected zero rows: report the terminal state so the caller
+      // treats it as an idempotent no-op.
+      if (updated.rows.length === 0) {
+        return { id: row.id, status: row.status }
+      }
+      return updated.rows[0]
     } catch (err) {
-      await pool.query('ROLLBACK')
+      await client.query('ROLLBACK')
       throw err
+    } finally {
+      client.release()
     }
-    return { id, status: nextStatus }
   }
 }

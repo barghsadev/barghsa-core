@@ -62,6 +62,10 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
     try {
       const qs = openOnly ? '?status=open' : ''
       const res = await fetch(`/api/admin/notifications/dead-letters${qs}`)
+      if (res.status === 403) {
+        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale))
+        return
+      }
       if (!res.ok) {
         setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
         return
@@ -86,13 +90,17 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
       const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
         method: 'POST',
       })
+      if (res.status === 403) {
+        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale))
+        return
+      }
       if (!res.ok) {
-        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+        setError(t('admin.notifications.deadLetter.actionFailed', uiLocale))
         return
       }
       await load()
     } catch {
-      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+      setError(t('admin.notifications.deadLetter.actionFailed', uiLocale))
     } finally {
       setBusyId(null)
     }
@@ -175,7 +183,9 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                           : 'bg-amber-100 text-amber-700'
                       }`}
                     >
-                      {row.severity}
+                      {row.severity === 'critical'
+                        ? t('admin.notifications.deadLetter.severityCritical', uiLocale)
+                        : t('admin.notifications.deadLetter.severityError', uiLocale)}
                     </span>
                     {row.status && row.status !== 'open' && (
                       <span className="block text-xs text-gray-400 mt-1">

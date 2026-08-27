@@ -54,10 +54,12 @@ export interface WriteDeadLetterInput {
 
 /**
  * Log a dead-letter row for a job that exhausted its retries. Idempotent with
- * respect to `job_id`: re-processing the same exhausted job does not create a
- * second dead-letter row (guaranteed by the UNIQUE constraint on `job_id`
- * added in migration 0027). Uses the injected pool (real) so it participates
- * in the caller's transaction.
+ * respect to `job_id`: if the same job dead-letters again (e.g. after an admin
+ * Retry), the existing row is re-opened with fresh attempt/severity data
+ * (guaranteed by the UNIQUE constraint on `job_id` added in migration 0027),
+ * so a re-failure stays visible in the admin panel instead of silently
+ * disappearing behind `ON CONFLICT DO NOTHING`. Uses the injected pool (real)
+ * so it participates in the caller's transaction.
  */
 export async function writeDeadLetter(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,7 +75,22 @@ export async function writeDeadLetter(
         cause, error_category, attempts, max_attempts, idempotency_key, status)
      VALUES ($1, $2, $3, $4, $5::text, $6, $7, $8,
              $9::text, $10, $11, $12, 'open')
-     ON CONFLICT (job_id) DO NOTHING`,
+     ON CONFLICT (job_id) DO UPDATE SET
+       outbox_id = EXCLUDED.outbox_id,
+       channel = EXCLUDED.channel,
+       event_key = EXCLUDED.event_key,
+       severity = EXCLUDED.severity,
+       profile_id = EXCLUDED.profile_id,
+       user_id = EXCLUDED.user_id,
+       cause = EXCLUDED.cause,
+       error_category = EXCLUDED.error_category,
+       attempts = EXCLUDED.attempts,
+       max_attempts = EXCLUDED.max_attempts,
+       idempotency_key = EXCLUDED.idempotency_key,
+       status = 'open',
+       resolved_at = NULL,
+       resolved_by = NULL,
+       updated_at = NOW()`,
     [
       input.outboxId,
       input.jobId,

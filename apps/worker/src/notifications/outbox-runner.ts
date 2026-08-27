@@ -101,6 +101,39 @@ interface DispatchOutcome {
 }
 
 /**
+ * Run `work` inside a transaction when `pool` is a real `pg.Pool` (which
+ * supports `connect()`); otherwise fall back to running the queries directly
+ * against the (test) pool. Returns a bound query function and a `finish`
+ * token — use `q(...)` for every statement so the whole per-row persistence is
+ * atomic in production, while the fake test pool keeps working unchanged.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function withWorkerTx(pool: any): Promise<{
+  q: (sql: string, params?: unknown[]) => Promise<any>
+  commit: () => Promise<void>
+  rollback: () => Promise<void>
+  release: () => void
+}> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const client = typeof pool.connect === 'function' ? await pool.connect() : null
+  if (client) {
+    await client.query('BEGIN')
+    return {
+      q: (sql, params) => client.query(sql, params),
+      commit: () => client.query('COMMIT'),
+      rollback: () => client.query('ROLLBACK'),
+      release: () => client.release(),
+    }
+  }
+  return {
+    q: (sql, params) => pool.query(sql, params),
+    commit: async () => undefined,
+    rollback: async () => undefined,
+    release: () => undefined,
+  }
+}
+
+/**
  * Persist per-channel outcomes to each notification_job and derive the
  * outbox row's aggregate state. A successfully delivered job stores the real
  * provider ref returned by the transport (no synthetic values). A failed job
@@ -113,78 +146,95 @@ async function persistOutcomes(
   row: OutboxRow,
   outcomes: DispatchOutcome[],
 ): Promise<void> {
-  let anyFailed = false
-  const attempts = row.attempts + 1
-  for (const outcome of outcomes) {
-    const ok = outcome.result.status === 'delivered'
-    if (!ok) anyFailed = true
-    const exhausted = attempts >= row.maxAttempts
-    // Jittered backoff before the next attempt (null when the budget is spent).
-    const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
-    const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
-    const jobUpdate = await pool.query(
-      `UPDATE notification_job
-          SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
-              run_after = $7, updated_at = NOW()
-        WHERE outbox_id = $1 AND channel = $6
-        RETURNING id`,
-      [
-        row.id,
-        ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
-        ok ? outcome.result.providerRef : null,
-        attempts,
-        ok ? null : 'delivery failed',
-        outcome.channel,
-        runAfter,
-      ],
-    )
-    // A job that exhausted its retry budget is copied to the dead-letter queue
-    // (T-05.01.06) so the admin panel can triage it (Retry / Resolve / Dismiss).
-    // Idempotent via the UNIQUE constraint on job_id.
-    if (!ok && exhausted) {
-      const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id
-      if (jobId) {
-        // Prefer the outbox row's last sanitized error (set by failRow on a
-        // prior attempt) for triage; fall back to a generic description when
-        // the transport reported failure without an error message.
-        const cause = row.lastError ?? 'delivery failed'
-        await writeDeadLetter(pool, {
-          outboxId: row.id,
-          jobId,
-          channel: outcome.channel,
-          eventKey: row.eventKey,
-          profileId: row.profileId,
-          userId: row.userId,
+  // All per-row persistence (job status, dead-letter, delivery log, outbox
+  // state) is committed atomically on a pinned client in production.
+  const tx = await withWorkerTx(pool)
+  const q = tx.q
+  // Minimal pool-like surface so the shared writers route through the tx.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const qpool = { query: q } as any
+  try {
+    let anyFailed = false
+    const attempts = row.attempts + 1
+    for (const outcome of outcomes) {
+      const ok = outcome.result.status === 'delivered'
+      if (!ok) anyFailed = true
+      const exhausted = attempts >= row.maxAttempts
+      // Jittered backoff before the next attempt (null when the budget is spent).
+      const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+      const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
+      const jobUpdate = await q(
+        `UPDATE notification_job
+            SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
+                run_after = $7, updated_at = NOW()
+          WHERE outbox_id = $1 AND channel = $6
+          RETURNING id`,
+        [
+          row.id,
+          ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
+          ok ? outcome.result.providerRef : null,
           attempts,
-          maxAttempts: row.maxAttempts,
-          idempotencyKey: row.idempotencyKey,
-          cause,
-          errorCategory: classifyDeliveryError(cause),
-        })
+          ok ? null : 'delivery failed',
+          outcome.channel,
+          runAfter,
+        ],
+      )
+      // A job that exhausted its retry budget is copied to the dead-letter queue
+      // (T-05.01.06) so the admin panel can triage it (Retry / Resolve / Dismiss).
+      // Same transaction as the job status update, so a crash cannot leave a
+      // 'dead_letter' job with no dead-letter row.
+      if (!ok && exhausted) {
+        const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id
+        if (jobId) {
+          // Prefer the outbox row's last sanitized error (set by failRow on a
+          // prior attempt) for triage; fall back to a generic description when
+          // the transport reported failure without an error message.
+          const cause = row.lastError ?? 'delivery failed'
+          await writeDeadLetter(qpool, {
+            outboxId: row.id,
+            jobId,
+            channel: outcome.channel,
+            eventKey: row.eventKey,
+            profileId: row.profileId,
+            userId: row.userId,
+            attempts,
+            maxAttempts: row.maxAttempts,
+            idempotencyKey: row.idempotencyKey,
+            cause,
+            errorCategory: classifyDeliveryError(cause),
+          })
+        }
       }
+      // Append a delivery log row for this attempt (T-05.01.05). The suspected
+      // cause is derived from the sanitized provider message when available.
+      await writeDeliveryLog(qpool, {
+        notificationId: row.id,
+        channel: outcome.channel,
+        delivered: ok,
+        attemptNumber: attempts,
+        providerRef: ok ? outcome.result.providerRef : null,
+        latencyMs: outcome.latencyMs ?? null,
+        error: ok ? null : 'delivery failed',
+      })
     }
-    // Append a delivery log row for this attempt (T-05.01.05). The suspected
-    // cause is derived from the sanitized provider message when available.
-    await writeDeliveryLog(pool, {
-      notificationId: row.id,
-      channel: outcome.channel,
-      delivered: ok,
-      attemptNumber: attempts,
-      providerRef: ok ? outcome.result.providerRef : null,
-      latencyMs: outcome.latencyMs ?? null,
-      error: ok ? null : 'delivery failed',
-    })
-  }
 
-  if (!anyFailed) {
-    await pool.query(
-      `UPDATE notification_outbox
-          SET status = 'delivered', locked_until = NULL, updated_at = NOW()
-        WHERE id = $1`,
-      [row.id],
-    )
-  } else {
-    await failRow(pool, row, 'delivery failed on one or more channels')
+    if (!anyFailed) {
+      await q(
+        `UPDATE notification_outbox
+            SET status = 'delivered', locked_until = NULL, updated_at = NOW()
+          WHERE id = $1`,
+        [row.id],
+      )
+    } else {
+      await failRow(qpool, row, 'delivery failed on one or more channels')
+    }
+
+    await tx.commit()
+    tx.release()
+  } catch (err) {
+    await tx.rollback()
+    tx.release()
+    throw err
   }
 }
 
@@ -199,50 +249,65 @@ async function failAllJobs(
   row: OutboxRow,
   safeMessage: string,
 ): Promise<void> {
-  const attempts = row.attempts + 1
-  const exhausted = attempts >= row.maxAttempts
-  const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
-  const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
-  const jobUpdates = await pool.query(
-    `UPDATE notification_job
-        SET status = $2, attempts = $3, last_error = $4, run_after = $5,
-            updated_at = NOW()
-      WHERE outbox_id = $1
-      RETURNING id, channel`,
-    [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
-  )
-  // Exception path: exhausted jobs are also copied to the dead-letter queue
-  // (T-05.01.06) so the admin panel can triage them.
-  if (exhausted) {
-    const jobs = jobUpdates.rows as Array<{ id: string; channel: string }>
-    for (const job of jobs) {
-      await writeDeadLetter(pool, {
-        outboxId: row.id,
-        jobId: job.id,
-        channel: job.channel as NotificationChannel,
-        eventKey: row.eventKey,
-        profileId: row.profileId,
-        userId: row.userId,
-        attempts,
-        maxAttempts: row.maxAttempts,
-        idempotencyKey: row.idempotencyKey,
-        cause: safeMessage || 'dispatch failed',
-        errorCategory: classifyDeliveryError(safeMessage || 'dispatch failed'),
+  // Commit the job updates, all dead-letter rows, and delivery logs atomically
+  // on a pinned client in production (fallback: direct queries for test pool).
+  const tx = await withWorkerTx(pool)
+  const q = tx.q
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const qpool = { query: q } as any
+  try {
+    const attempts = row.attempts + 1
+    const exhausted = attempts >= row.maxAttempts
+    const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+    const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
+    const jobUpdates = await q(
+      `UPDATE notification_job
+          SET status = $2, attempts = $3, last_error = $4, run_after = $5,
+              updated_at = NOW()
+        WHERE outbox_id = $1
+        RETURNING id, channel`,
+      [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
+    )
+    // Exception path: exhausted jobs are also copied to the dead-letter queue
+    // (T-05.01.06) so the admin panel can triage them.
+    if (exhausted) {
+      const jobs = jobUpdates.rows as Array<{ id: string; channel: string }>
+      for (const job of jobs) {
+        await writeDeadLetter(qpool, {
+          outboxId: row.id,
+          jobId: job.id,
+          channel: job.channel as NotificationChannel,
+          eventKey: row.eventKey,
+          profileId: row.profileId,
+          userId: row.userId,
+          attempts,
+          maxAttempts: row.maxAttempts,
+          idempotencyKey: row.idempotencyKey,
+          cause: safeMessage || 'dispatch failed',
+          errorCategory: classifyDeliveryError(safeMessage || 'dispatch failed'),
+        })
+      }
+    }
+    // Exception path: dispatch threw before per-channel outcomes were recorded,
+    // so append one delivery log per requested channel describing the failure.
+    for (const channel of row.channels) {
+      await writeDeliveryLog(qpool, {
+        notificationId: row.id,
+        channel,
+        delivered: false,
+        attemptNumber: attempts,
+        providerRef: null,
+        latencyMs: null,
+        error: safeMessage || 'dispatch failed',
       })
     }
-  }
-  // Exception path: dispatch threw before per-channel outcomes were recorded,
-  // so append one delivery log per requested channel describing the failure.
-  for (const channel of row.channels) {
-    await writeDeliveryLog(pool, {
-      notificationId: row.id,
-      channel,
-      delivered: false,
-      attemptNumber: attempts,
-      providerRef: null,
-      latencyMs: null,
-      error: safeMessage || 'dispatch failed',
-    })
+
+    await tx.commit()
+    tx.release()
+  } catch (err) {
+    await tx.rollback()
+    tx.release()
+    throw err
   }
 }
 

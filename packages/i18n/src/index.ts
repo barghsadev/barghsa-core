@@ -793,6 +793,10 @@ export const fa: I18nDictionary = {
   'admin.notifications.deadLetter.dismiss': 'بستن',
   'admin.notifications.deadLetter.showAll': 'نمایش همه',
   'admin.notifications.deadLetter.openOnly': 'فقط باز',
+  'admin.notifications.deadLetter.severityCritical': 'بحرانی',
+  'admin.notifications.deadLetter.severityError': 'خطا',
+  'admin.notifications.deadLetter.accessDenied': 'دسترسی غیرمجاز',
+  'admin.notifications.deadLetter.actionFailed': 'انجام عملیات ناموفق بود',
 
   // ── Admin — Staff Roles (T-09.05.01) ───────────────────
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
@@ -1579,6 +1583,10 @@ export const en: I18nDictionary = {
     'admin.notifications.deadLetter.dismiss': 'Dismiss',
     'admin.notifications.deadLetter.showAll': 'Show all',
     'admin.notifications.deadLetter.openOnly': 'Open only',
+    'admin.notifications.deadLetter.severityCritical': 'Critical',
+    'admin.notifications.deadLetter.severityError': 'Error',
+    'admin.notifications.deadLetter.accessDenied': 'Access denied',
+    'admin.notifications.deadLetter.actionFailed': 'Action failed',
 
     // ── Admin — Staff Roles (T-09.05.01) ───────────────────
     'admin.roles.title': 'Roles & Permissions',

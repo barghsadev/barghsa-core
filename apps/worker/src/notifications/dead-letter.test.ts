@@ -57,7 +57,7 @@ describe('writeDeadLetter', () => {
     await writeDeadLetter(pool, base)
     const sql = inserts[0]!.sql
     expect(sql).toContain('INSERT INTO notification_dead_letter')
-    expect(sql).toContain('ON CONFLICT (job_id) DO NOTHING')
+    expect(sql).toContain('ON CONFLICT (job_id) DO UPDATE')
     const p = inserts[0]!.params
     expect(p[0]).toBe('ob-1')
     expect(p[1]).toBe('job-1')
