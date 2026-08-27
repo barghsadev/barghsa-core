@@ -1,3 +1,6 @@
 export * from './email-provider-config.service'
 export * from './email-provider-config.controller'
+export * from './smtp-config.schema'
+export * from './smtp-network-guard'
+export * from './smtp-connection-tester.service'
 export * from './provider-config.module'

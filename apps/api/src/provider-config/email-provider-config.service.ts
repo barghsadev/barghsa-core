@@ -2,6 +2,8 @@ import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/com
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { parseSmtpConfig } from './smtp-config.schema'
+import type { SmtpConnectionTesterService } from './smtp-connection-tester.service'
 
 /**
  * Email provider configuration service (E-05, T-05.06.01).
@@ -168,6 +170,8 @@ export class EmailProviderConfigService {
     @Optional()
     @Inject(PROVIDER_CONFIG_POOL)
     private readonly injectedPool?: ProviderPool,
+    @Optional()
+    private readonly smtpTester?: SmtpConnectionTesterService,
   ) {}
 
   private get db(): ProviderPool {
@@ -397,6 +401,59 @@ export class EmailProviderConfigService {
     const row = await this.findById(created.id)
     if (!row) throw new Error('Failed to read rolled-back provider config')
     return row
+  }
+
+  /* ---------------------------- Connection test ------------------------- */
+
+  /**
+   * Run a live SMTP connection test for a draft config (T-05.06.02), then
+   * persist the outcome as the row's `last_test_*` state. Only `smtp` drafts
+   * are supported here; Resend testing arrives in T-05.06.03.
+   */
+  async testConnection(id: string): Promise<{
+    ok: boolean
+    error: string | null
+    result: EmailProviderConfigResult
+  }> {
+    const existing = await this.findById(id)
+    if (!existing) throw new HttpException(ProviderErrors.notFound(), 404)
+    if (existing.status !== 'draft') {
+      throw new HttpException(ProviderErrors.notEditable(), 409)
+    }
+    if (existing.transport !== 'smtp') {
+      throw new HttpException(
+        errBody(
+          400,
+          ErrorCodes.VALIDATION_PARSE_ZOD.code,
+          'Live connection testing is only available for SMTP providers in this task',
+        ),
+        400,
+      )
+    }
+
+    const saved = await this.readConfig(id)
+    const parsed = parseSmtpConfig(saved)
+    if (!parsed.ok) {
+      const recorded = await this.recordTest(id, {
+        passed: false,
+        error: `Invalid SMTP configuration: ${parsed.error}`,
+      })
+      return { ok: false, error: `Invalid SMTP configuration: ${parsed.error}`, result: recorded }
+    }
+
+    if (!this.smtpTester) {
+      throw new HttpException(
+        errBody(500, ErrorCodes.INTERNAL_UNEXPECTED.code, 'SMTP connection tester is not available'),
+        500,
+      )
+    }
+
+    const outcome = await this.smtpTester.test(parsed.config)
+    const recorded = await this.recordTest(id, {
+      passed: outcome.ok,
+      ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+    })
+    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded }
   }
 
   /* ------------------------- Transaction + helpers ----------------------- */
