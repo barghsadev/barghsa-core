@@ -9,6 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
+import { v7 as uuidv7 } from 'uuid'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -290,5 +291,252 @@ export class UserSettingsController {
     this.logger.log(`User ${userId}: timezone updated to ${timezone}`)
 
     return { timezone }
+  }
+
+  // ── Marketing Consent (T-05.05.03) ──────────────────────────────
+
+  /**
+   * Channels eligible for marketing consent (email/SMS). In-app is never
+   * consent-gated and is therefore excluded from this surface.
+   */
+  private static readonly MARKETING_CHANNELS: ReadonlyArray<'email' | 'sms'> = [
+    'email',
+    'sms',
+  ]
+
+  /**
+   * Resolve the profile ids the marketing consent applies to.
+   *
+   * Consent is stored per (profile, channel). A user may own several active
+   * profiles; we apply consent to every non-archived profile so the delivery
+   * gate (T-05.05.02) honors the choice regardless of which profile an
+   * outbox row references.
+   */
+  private async resolveConsentProfileIds(
+    pool: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
+    userId: string,
+  ): Promise<string[]> {
+    const res = await pool.query(
+      `SELECT id FROM profiles WHERE user_id = $1 AND archived = false ORDER BY is_default DESC, created_at ASC`,
+      [userId],
+    )
+    return res.rows.map((r) => r.id as string)
+  }
+
+  /**
+   * GET /api/user/settings/marketing-consent
+   *
+   * Returns the authenticated user's marketing consent state for the
+   * email and SMS channels, along with the last time it changed. Consent is
+   * stored per (profile, channel); we report from the user's default (first
+   * active) profile.
+   */
+  @Get('marketing-consent')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:marketing:get', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get marketing consent preferences' })
+  @ApiResponse({
+    status: 200,
+    description: 'Marketing consent for email and SMS.',
+    schema: {
+      type: 'object',
+      properties: {
+        channels: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'object',
+              properties: {
+                optedIn: { type: 'boolean' },
+                lastChangedAt: { type: 'string', nullable: true },
+              },
+            },
+            sms: {
+              type: 'object',
+              properties: {
+                optedIn: { type: 'boolean' },
+                lastChangedAt: { type: 'string', nullable: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async getMarketingConsent(@Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId
+    const pool = getDbPool()
+
+    const profiles = await this.resolveConsentProfileIds(pool, userId)
+    // Default profile for display purposes. Empty consent by default.
+    const empty: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
+      email: { optedIn: false, lastChangedAt: null },
+      sms: { optedIn: false, lastChangedAt: null },
+    }
+    if (profiles.length === 0) {
+      return { channels: empty }
+    }
+
+    const res = await pool.query(
+      `SELECT channel, marketing_opted_in, updated_at
+         FROM user_notification_preferences
+        WHERE profile_id = $1 AND channel IN ('email','sms')`,
+      [profiles[0]],
+    )
+
+    const channels: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
+      email: { optedIn: false, lastChangedAt: null },
+      sms: { optedIn: false, lastChangedAt: null },
+    }
+    for (const row of res.rows) {
+      const ch = row.channel as 'email' | 'sms'
+      if (ch !== 'email' && ch !== 'sms') continue
+      channels[ch] = {
+        optedIn: Boolean(row.marketing_opted_in),
+        lastChangedAt: (row.updated_at as string) ?? null,
+      }
+    }
+
+    return { channels }
+  }
+
+  /**
+   * PUT /api/user/settings/marketing-consent
+   *
+   * Sets the user's marketing consent for the email and/or SMS channels.
+   * Consent is applied to every active profile and recorded in the audit
+   * trail. When opting in, `consent_granted_at` is stamped; when opting out,
+   * `consent_revoked_at` is stamped. The consent writes and the audit insert
+   * run inside a single transaction so a failure can never leave per-profile
+   * consent in an inconsistent state.
+   */
+  @Put('marketing-consent')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'settings:marketing:put', limit: 20, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Update marketing consent preferences' })
+  @ApiResponse({
+    status: 200,
+    description: 'Marketing consent updated.',
+    schema: { type: 'object' },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid request' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  async updateMarketingConsent(
+    @Body()
+    body: {
+      email?: boolean
+      sms?: boolean
+    },
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+
+    if (typeof body.email !== 'boolean' && typeof body.sms !== 'boolean') {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Provide at least one of email or sms as a boolean.',
+        },
+        400,
+      )
+    }
+
+    // Normalize: only provided channels are touched.
+    const desired = new Map<string, boolean>()
+    if (typeof body.email === 'boolean') desired.set('email', body.email)
+    if (typeof body.sms === 'boolean') desired.set('sms', body.sms)
+
+    const pool = getDbPool()
+    const profiles = await this.resolveConsentProfileIds(pool, userId)
+    if (profiles.length === 0) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      for (const profileId of profiles) {
+        for (const channel of UserSettingsController.MARKETING_CHANNELS) {
+          if (!desired.has(channel)) continue
+          const optedIn = desired.get(channel) as boolean
+          await client.query(
+            `INSERT INTO user_notification_preferences
+               (id, profile_id, channel, marketing_opted_in,
+                consent_granted_at, consent_revoked_at, created_at, updated_at)
+             VALUES ($1, $2, $3, $4,
+                     CASE WHEN $4 THEN NOW() ELSE NULL END,
+                     CASE WHEN $4 THEN NULL ELSE NOW() END,
+                     NOW(), NOW())
+             ON CONFLICT (profile_id, channel) DO UPDATE SET
+               marketing_opted_in = EXCLUDED.marketing_opted_in,
+               consent_granted_at = CASE WHEN EXCLUDED.marketing_opted_in
+                                   THEN NOW() ELSE user_notification_preferences.consent_granted_at END,
+               consent_revoked_at = CASE WHEN EXCLUDED.marketing_opted_in
+                                   THEN NULL ELSE NOW() END,
+               updated_at = NOW()`,
+            [uuidv7(), profileId, channel, optedIn],
+          )
+        }
+      }
+
+      // Audit trail — committed with the consent writes.
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'marketing_consent_changed',
+          JSON.stringify(Object.fromEntries(desired)),
+          uuidv7(),
+          req.ip ?? null,
+        ],
+      )
+
+      await client.query('COMMIT')
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => undefined)
+      throw err
+    } finally {
+      client.release()
+    }
+
+    const updated = await this.getMarketingConsentInternal(pool, profiles[0] as string)
+    this.logger.log(
+      `User ${userId}: marketing consent updated -> ${JSON.stringify(Object.fromEntries(desired))}`,
+    )
+    return { channels: updated }
+  }
+
+  /** Shared read used by both GET and PUT response. */
+  private async getMarketingConsentInternal(
+    pool: ReturnType<typeof getDbPool>,
+    profileId: string,
+  ): Promise<Record<string, { optedIn: boolean; lastChangedAt: string | null }>> {
+    const channels: Record<string, { optedIn: boolean; lastChangedAt: string | null }> = {
+      email: { optedIn: false, lastChangedAt: null },
+      sms: { optedIn: false, lastChangedAt: null },
+    }
+    const res = await pool.query(
+      `SELECT channel, marketing_opted_in, updated_at
+         FROM user_notification_preferences
+        WHERE profile_id = $1 AND channel IN ('email','sms')`,
+      [profileId],
+    )
+    for (const row of res.rows) {
+      const ch = row.channel as 'email' | 'sms'
+      if (ch !== 'email' && ch !== 'sms') continue
+      channels[ch] = {
+        optedIn: Boolean(row.marketing_opted_in),
+        lastChangedAt: (row.updated_at as string) ?? null,
+      }
+    }
+    return channels
   }
 }
