@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { randomBytes } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
@@ -7,6 +7,8 @@ import { Pool } from 'pg'
 import { createDirectDbPool } from '../index'
 import { products } from '../schema/products'
 import { users } from '../schema/users'
+import { notificationTemplates } from '../schema/notification-templates'
+import { buildSeedTemplates } from './notification-templates'
 import type { DbInstance } from '../index'
 
 // ---------------------------------------------------------------------------
@@ -301,6 +303,82 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
   return result
 }
 
+/**
+ * Seed the initial notification templates (T-05.04.05).
+ *
+ * Creates the first version of every notification template for every business
+ * event in the E-05 appendix, across both locales (fa/en) and every channel the
+ * event delivers on. Seed rows are created as version 1, status `active`,
+ * is_active `true`, and published_at set, so they are immediately usable by the
+ * notification engine.
+ *
+ * Idempotency: matching is on (event_key, channel, locale). If an active
+ * template already exists for a combo, that combo is skipped so re-running the
+ * seed never creates duplicates or shadows admin-authored edits. Inactive
+ * (archived/draft-only) combos are re-seeded to guarantee an active version
+ * exists for every event.
+ */
+async function seedNotificationTemplates(
+  db: DbInstance,
+  _force: boolean,
+): Promise<SeederResult> {
+  const result: SeederResult = {
+    entity: 'notification_templates',
+    created: 0,
+    skipped: 0,
+    errors: [],
+  }
+
+  const templates = buildSeedTemplates()
+  const now = new Date()
+
+  for (const tpl of templates) {
+    try {
+      // Skip when an active template already exists for the combo.
+      const existing = await db
+        .select({ id: notificationTemplates.id })
+        .from(notificationTemplates)
+        .where(
+          and(
+            eq(notificationTemplates.eventKey, tpl.eventKey),
+            eq(notificationTemplates.channel, tpl.channel),
+            eq(notificationTemplates.locale, tpl.locale),
+            eq(notificationTemplates.isActive, true),
+          ),
+        )
+        .limit(1)
+
+      if (existing.length > 0) {
+        result.skipped++
+        continue
+      }
+
+      await db.insert(notificationTemplates).values({
+        id: uuidv7(),
+        eventKey: tpl.eventKey,
+        channel: tpl.channel,
+        locale: tpl.locale,
+        subject: tpl.subject,
+        bodyTemplate: tpl.bodyTemplate,
+        variables: tpl.variables,
+        status: 'active',
+        isActive: true,
+        version: 1,
+        publishedAt: now,
+        createdAt: now,
+        updatedAt: now,
+      })
+
+      result.created++
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      result.errors.push(`template[${tpl.eventKey}/${tpl.channel}/${tpl.locale}]: ${message}`)
+    }
+  }
+
+  return result
+}
+
 // ---------------------------------------------------------------------------
 // Registered seeders — add new seeders here as the schema grows.
 // ---------------------------------------------------------------------------
@@ -309,6 +387,7 @@ const seeders: Seeder[] = [
   seedProducts,
   seedAdmin,
   seedGeography,
+  seedNotificationTemplates,
 ]
 
 // ---------------------------------------------------------------------------

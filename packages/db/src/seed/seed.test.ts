@@ -5,11 +5,21 @@ import type { IsolatedTestDb } from '../test/testDb'
 import { runSeed } from './index'
 import { products } from '../schema/products'
 import { users } from '../schema/users'
+import { notificationTemplates } from '../schema/notification-templates'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { buildSeedTemplates, NOTIFICATION_TEMPLATE_SEED } from './notification-templates'
 
 const MIGRATION_PATH = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
 const PRODUCTS_MIGRATION_PATH = resolve(__dirname, '../../drizzle/0014_recreate_products_schema.sql')
+const TEMPLATES_MIGRATION_PATH = resolve(
+  __dirname,
+  '../../drizzle/0024_create_notification_templates.sql',
+)
+const TEMPLATES_TEST_SEND_COLUMNS_PATH = resolve(
+  __dirname,
+  '../../drizzle/0029_add_template_test_send_columns.sql',
+)
 
 /**
  * Integration tests for the seed runner (T-02.04.05, updated for T-03.01.01.01).
@@ -64,6 +74,16 @@ describe('seed verification', () => {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
+
+    // Create the notification_templates table (T-09.04.01 / T-05.04.05).
+    const templatesMigrationSql = readFileSync(TEMPLATES_MIGRATION_PATH, 'utf-8').trim()
+    await ctx.pool.query(templatesMigrationSql)
+    // Test-send tracking columns (T-05.04.04) referenced by the schema.
+    const testSendColumnsSql = readFileSync(
+      TEMPLATES_TEST_SEND_COLUMNS_PATH,
+      'utf-8',
+    ).trim()
+    await ctx.pool.query(testSendColumnsSql)
   })
 
   afterAll(async () => {
@@ -259,5 +279,141 @@ describe('seed verification', () => {
           .where(eq(products.id, systemProduct!.id)),
       ).resolves.not.toThrow()
     })
+  })
+})
+
+// -------------------------------------------------------------------------
+// Notification template seeding (T-05.04.05)
+// -------------------------------------------------------------------------
+
+describe('notification template seeding', () => {
+  let ctx: IsolatedTestDb
+
+  beforeAll(async () => {
+    ctx = await createIsolatedTestDb()
+
+    const migrationSql = readFileSync(MIGRATION_PATH, 'utf-8').trim()
+    await ctx.pool.query(migrationSql)
+
+    // Tables required by the other registered seeders (they all run together).
+    await ctx.pool.query(readFileSync(PRODUCTS_MIGRATION_PATH, 'utf-8').trim())
+
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY,
+        username TEXT NOT NULL UNIQUE,
+        email TEXT,
+        mobile TEXT,
+        password_hash TEXT NOT NULL,
+        locale TEXT NOT NULL DEFAULT 'fa',
+        must_change_password BOOLEAN NOT NULL DEFAULT false,
+        is_admin BOOLEAN NOT NULL DEFAULT false,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
+
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS provinces (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+        name_fa TEXT NOT NULL,
+        name_en TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
+
+    const templatesMigrationSql = readFileSync(TEMPLATES_MIGRATION_PATH, 'utf-8').trim()
+    await ctx.pool.query(templatesMigrationSql)
+    // Test-send tracking columns (T-05.04.04) referenced by the schema.
+    const testSendColumnsSql = readFileSync(
+      TEMPLATES_TEST_SEND_COLUMNS_PATH,
+      'utf-8',
+    ).trim()
+    await ctx.pool.query(testSendColumnsSql)
+  })
+
+  afterAll(async () => {
+    await ctx.pool.end()
+    await dropTestSchema(ctx.schemaName)
+  })
+
+  it('seeds an active version-1 template for every event × channel × locale', async () => {
+    const result = await runSeed(false, ctx.db)
+    expect(result.ok).toBe(true)
+
+    const tplResult = result.results.find((r) => r.entity === 'notification_templates')
+    expect(tplResult).toBeDefined()
+    expect(tplResult!.errors).toHaveLength(0)
+
+    const expectedCount = buildSeedTemplates().length
+    // A fresh DB has no pre-existing templates, so every catalog row is created.
+    expect(tplResult!.created).toBe(expectedCount)
+
+    const rows = await ctx.db.select().from(notificationTemplates)
+    expect(rows).toHaveLength(expectedCount)
+
+    // Every row must be an active version 1 usable by the engine.
+    for (const row of rows) {
+      expect(row.version).toBe(1)
+      expect(row.status).toBe('active')
+      expect(row.isActive).toBe(true)
+      expect(row.locale).toMatch(/^(fa|en)$/)
+      expect(row.channel).toMatch(/^(email|sms|in_app)$/)
+    }
+
+    // Both locales present for a representative event (OTP) across all channels.
+    const otp = rows.filter((r) => r.eventKey === 'auth.otp_sent')
+    expect(otp.map((r) => `${r.locale}:${r.channel}`).sort()).toEqual([
+      'en:email',
+      'en:in_app',
+      'en:sms',
+      'fa:email',
+      'fa:in_app',
+      'fa:sms',
+    ])
+  })
+
+  it('is idempotent: re-running skips already-seeded combos', async () => {
+    await runSeed(false, ctx.db)
+    const result = await runSeed(false, ctx.db)
+
+    const tplResult = result.results.find((r) => r.entity === 'notification_templates')
+    expect(tplResult).toBeDefined()
+    expect(tplResult!.errors).toHaveLength(0)
+    expect(tplResult!.created).toBe(0)
+    expect(tplResult!.skipped).toBe(buildSeedTemplates().length)
+
+    // No duplicates were created.
+    const countResult = await ctx.db.execute<{ count: number }>(
+      sql`SELECT count(*)::int AS count FROM notification_templates`,
+    )
+    expect(countResult.rows[0]?.count).toBe(buildSeedTemplates().length)
+  })
+
+  it('covers a template for every event key in the registry', async () => {
+    const expectedKeys = new Set(NOTIFICATION_TEMPLATE_SEED.map((d) => d.eventKey))
+    const rows = await ctx.db.select({ eventKey: notificationTemplates.eventKey }).from(
+      notificationTemplates,
+    )
+    const seededKeys = new Set(rows.map((r) => r.eventKey))
+
+    expect([...seededKeys].sort()).toEqual([...expectedKeys].sort())
+  })
+
+  it('every placeholder used in body/subject is declared in the allow-list', () => {
+    const placeholders = (s: string): string[] =>
+      [...s.matchAll(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g)].map((m) => m[1]!)
+
+    for (const row of buildSeedTemplates()) {
+      const allowed = new Set(row.variables.map((v) => v.name))
+      const used = new Set<string>()
+      for (const p of placeholders(row.bodyTemplate)) used.add(p)
+      if (row.subject) for (const p of placeholders(row.subject)) used.add(p)
+
+      // Every placeholder used must be declared in the allow-list.
+      for (const p of used) {
+        expect(allowed.has(p), `${row.eventKey}/${row.channel}/${row.locale} uses undeclared {{${p}}}`).toBe(true)
+      }
+    }
   })
 })
