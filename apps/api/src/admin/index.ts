@@ -10,6 +10,16 @@ export type {
   UpdateStaffRolesResult,
 } from './admin.service.js'
 export { AdminController, CreateStaffUserSchema, type CreateStaffUserDto } from './admin.controller.js'
+export { DualApprovalController, RejectApprovalRequestSchema } from './dual-approval.controller.js'
+export {
+  DualApprovalService,
+  DUAL_APPROVAL_ACTION_TYPES,
+  toApprovalRequestDto,
+  sanitizeLimit,
+  sanitizeOffset,
+  type ApprovalRequestDto,
+  type ListApprovalRequestsOptions,
+} from './dual-approval.service.js'
 
 /**
  * Input for updating a staff user's roles.
