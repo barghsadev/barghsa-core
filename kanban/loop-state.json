@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.01.07",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-01-07--worker-metrics",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/169",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.01.07",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 305,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -250,12 +250,18 @@
     "02-auth-users-admin.md#T-06.01.01",
     "05-notifications-documents-ai.md#T-05.01.04",
     "05-notifications-documents-ai.md#T-05.01.05",
-    "05-notifications-documents-ai.md#T-05.01.06"
+    "05-notifications-documents-ai.md#T-05.01.06",
+    "05-notifications-documents-ai.md#T-05.01.07"
   ],
   "last_error": null,
-  "notes": "T-05.01.07 (metrics & observability) PR #169 in review.",
-  "last_updated": "2026-08-27T06:12:00Z",
+  "notes": "T-05.01.07 (metrics & observability) merged via PR #169. Next: T-05.01.08 (retention/cleanup of resolved dead-letter rows) or story T-05.02 in-app center.",
+  "last_updated": "2026-08-27T06:20:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.07",
+      "at": "2026-08-27T06:20:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.01.07",
