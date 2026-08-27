@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.06.07",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-06-07--email-delivery-callbacks",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/191",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.06.07",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 323,
-  "fix_attempts": 1,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -272,11 +272,12 @@
     "05-notifications-documents-ai.md#T-05.06.03",
     "05-notifications-documents-ai.md#T-05.06.04",
     "05-notifications-documents-ai.md#T-05.06.05",
-    "05-notifications-documents-ai.md#T-05.06.06"
+    "05-notifications-documents-ai.md#T-05.06.06",
+    "05-notifications-documents-ai.md#T-05.06.07"
   ],
   "last_error": "",
-  "notes": "T-05.06.07 (Resend delivery callback webhooks: POST /api/webhooks/email/resend, Svix HMAC verification, svix-id idempotency ledger, delivery-log/outbox updates, email_suppressions for hard bounce+complaint, migration 0034) PR #191 open, in_review.",
-  "last_updated": "2026-08-27T19:58:00Z",
+  "notes": "T-05.06.07 (Resend delivery callback webhooks: Svix HMAC verification, atomic idempotent ledger+effects, outbox/delivery-log updates, email_suppressions for hard bounce+complaint, migration 0034) MERGED via PR #191 (fb56a84). Loop idle. Next: 02-auth-users-admin.md#T-09.06.01.",
+  "last_updated": "2026-08-27T20:03:00Z",
   "status_history": [
     {
       "status": "fixing",
@@ -512,6 +513,16 @@
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.06.07",
       "at": "2026-08-27T19:52:00Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T20:03:00Z"
+    },
+    {
+      "status": "idle",
+      "task_key": "",
+      "at": "2026-08-27T20:03:00Z"
     }
   ]
 }
