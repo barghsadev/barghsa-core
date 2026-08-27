@@ -4,6 +4,7 @@ import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
 import DeadLetterPanel from '../components/DeadLetterPanel.js'
 import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js'
+import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js'
 
 interface NotificationVariable {
   name: string
@@ -417,6 +418,9 @@ export default function AdminNotificationsPage() {
           </button>
         </div>
       )}
+
+      {/* Template preview (T-05.04.03) */}
+      <TemplatePreviewPanel uiLocale={uiLocale} templates={templates} loading={loading} />
 
       {/* Delivery-window config (T-05.03.03) */}
       <DeliveryWindowConfigPanel uiLocale={uiLocale} />

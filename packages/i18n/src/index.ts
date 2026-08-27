@@ -822,6 +822,18 @@ export const fa: I18nDictionary = {
   'admin.notifications.window.errBeforeEnd': 'ساعت شروع باید قبل از ساعت پایان باشد',
   'admin.notifications.window.errTooShort': 'پنجره ارسال باید حداقل ۴ ساعت باشد',
 
+  // ── Admin — Template Preview (T-05.04.03) ─────────────────
+  'admin.notifications.preview.title': 'پیش‌نمایش قالب',
+  'admin.notifications.preview.description': 'رویداد، زبان، کانال و نسخه را انتخاب کنید تا قالب ذخیره‌شده با داده نمونه مشاهده شود.',
+  'admin.notifications.preview.reset': 'بازنشانی',
+  'admin.notifications.preview.version': 'نسخه',
+  'admin.notifications.preview.empty': 'قالبی برای این انتخاب وجود ندارد.',
+  'admin.notifications.preview.variables': 'متغیرهای در دسترس',
+  'admin.notifications.preview.noVariables': 'هیچ متغیری تعریف نشده است.',
+  'admin.notifications.preview.warnings.title': 'مشکلات متغیرها',
+  'admin.notifications.preview.warnings.undeclared': 'این متغیر در فهرست مجاز قالب تعریف نشده است.',
+  'admin.notifications.preview.warnings.missing': 'این متغیر موردنیاز ارزش نمونه‌ای ندارد.',
+
   // ── Admin — Staff Roles (T-09.05.01) ───────────────────
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
   'admin.roles.subtitle': 'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
@@ -1657,6 +1669,18 @@ export const en: I18nDictionary = {
     'admin.notifications.window.saveFailed': 'Failed to save delivery window config',
     'admin.notifications.window.errBeforeEnd': 'Start time must be before end time',
     'admin.notifications.window.errTooShort': 'Delivery window must be at least 4 hours',
+
+    // ── Admin — Template Preview (T-05.04.03) ──────────────
+    'admin.notifications.preview.title': 'Template Preview',
+    'admin.notifications.preview.description': 'Select an event, language, channel, and version to see the stored template rendered with sample data.',
+    'admin.notifications.preview.reset': 'Reset',
+    'admin.notifications.preview.version': 'Version',
+    'admin.notifications.preview.empty': 'No template matches this selection.',
+    'admin.notifications.preview.variables': 'Available variables',
+    'admin.notifications.preview.noVariables': 'No variables are defined.',
+    'admin.notifications.preview.warnings.title': 'Variable issues',
+    'admin.notifications.preview.warnings.undeclared': 'This variable is not in the template allow-list.',
+    'admin.notifications.preview.warnings.missing': 'This required variable has no sample value.',
 
     // ── Admin — Staff Roles (T-09.05.01) ───────────────────
     'admin.roles.title': 'Roles & Permissions',
