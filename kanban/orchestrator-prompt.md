@@ -11,7 +11,7 @@ Requirements:
 - Keep one active task/PR at a time.
 - If state is `idle`, select the next task and start implementing it in this run; do not stop at a task brief.
 - Continue the current branch/PR when state is `building`, `in_review`, or `fixing`.
-- For review, invoke `z-ai/glm-5.2` through `hermes chat --query-file ... --provider openrouter --reasoning high`; do not construct raw curl JSON.
+- For review, invoke `anthropic/claude-opus-5` through `hermes chat --query-file ... --provider openrouter --reasoning medium`; do not construct raw curl JSON.
 - Never merge without a valid reviewer approval and passing available required checks.
 - Preserve the current state on transient errors. Use `blocked` only when manual intervention is genuinely required.
 - Update `kanban/loop-state.json` after every state transition and before the run ends.

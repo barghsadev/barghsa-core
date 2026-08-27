@@ -3,6 +3,13 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
 import type { EmailProviderTransport, ProviderConfigBody } from './email-provider-config.service'
 
 /**
+ * Union of every provider transport the secrets service knows how to encrypt
+ * secret fields for. Email transports come from the email provider config
+ * service; SMS.ir (T-09.06.02) is added here.
+ */
+export type ProviderTransport = EmailProviderTransport | 'smsir'
+
+/**
  * Field-level secrets encryption for email provider configurations (E-05,
  * T-05.06.05).
  *
@@ -33,9 +40,10 @@ export const PROVIDER_SECRET_ENCRYPTION_ENV = 'PROVIDER_CONFIG_ENCRYPTION_KEY'
 export const PROVIDER_SECRETS_KEY = Symbol('PROVIDER_SECRETS_KEY')
 
 /** Which top-level config fields hold secrets per transport. */
-const SECRET_FIELDS: Record<EmailProviderTransport, readonly string[]> = {
+const SECRET_FIELDS: Record<ProviderTransport, readonly string[]> = {
   smtp: ['password'],
   resend: ['api_key', 'webhook_secret'],
+  smsir: ['api_key'],
 }
 
 /** Encrypted blob prefix (versioned so formats can evolve). */
@@ -70,7 +78,7 @@ export class ProviderSecretsService {
   }
 
   /** Secret field names for a transport. */
-  secretFieldsFor(transport: EmailProviderTransport): readonly string[] {
+  secretFieldsFor(transport: ProviderTransport): readonly string[] {
     return SECRET_FIELDS[transport] ?? []
   }
 
@@ -128,7 +136,7 @@ export class ProviderSecretsService {
    *   JSONB merge preserves the existing stored secret instead of encrypting
    *   the masked placeholder and permanently corrupting it.
    */
-  encryptConfig(transport: EmailProviderTransport, config: ProviderConfigBody): ProviderConfigBody {
+  encryptConfig(transport: ProviderTransport, config: ProviderConfigBody): ProviderConfigBody {
     const out = { ...config }
     for (const field of SECRET_FIELDS[transport] ?? []) {
       const value = out[field]
@@ -155,7 +163,7 @@ export class ProviderSecretsService {
    * Legacy plaintext values pass through unchanged. Used only at the send
    * boundary (connection testers / outbox worker email transport).
    */
-  decryptConfig(transport: EmailProviderTransport, config: ProviderConfigBody): ProviderConfigBody {
+  decryptConfig(transport: ProviderTransport, config: ProviderConfigBody): ProviderConfigBody {
     const out = { ...config }
     for (const field of SECRET_FIELDS[transport] ?? []) {
       const value = out[field]
@@ -173,7 +181,7 @@ export class ProviderSecretsService {
    * is missing but encrypted rows exist — the API must never break the admin
    * page over a secret it cannot decrypt.
    */
-  maskConfig(transport: EmailProviderTransport, config: ProviderConfigBody): ProviderMaskedConfig {
+  maskConfig(transport: ProviderTransport, config: ProviderConfigBody): ProviderMaskedConfig {
     const out: ProviderMaskedConfig = {}
     for (const [key, value] of Object.entries(config)) {
       const isSecret = SECRET_FIELDS[transport]?.includes(key) ?? false

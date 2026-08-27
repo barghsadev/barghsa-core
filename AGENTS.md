@@ -2,7 +2,7 @@
 
 > **Builder/orchestrator:** `deepseek/deepseek-v4-flash-0731` on OpenRouter
 >
-> **Reviewer:** `z-ai/glm-5.2` on OpenRouter
+> **Reviewer:** `anthropic/claude-opus-5` on OpenRouter
 >
 > **Scheduler:** paused Hermes cron job `d09ad66fea0b`
 
@@ -14,7 +14,7 @@ Process one small kanban task at a time:
 2. build it on a dedicated branch;
 3. run the repository's available checks;
 4. open a pull request;
-5. review it with GPT-5.6 Sol;
+5. review it with Claude Opus 5;
 6. fix blocking findings or squash-merge it;
 7. continue with the next task.
 
@@ -63,7 +63,7 @@ feat/e01-t-01-01-01--pnpm-workspace
 |---|---|---|
 | `idle` | No active task | Select and start the next task |
 | `building` | Builder owns the current task | Continue implementation or recover the existing branch/PR |
-| `in_review` | PR is ready | Run automated checks, then GPT-5.6 Sol review |
+| `in_review` | PR is ready | Run automated checks, then Claude Opus 5 review |
 | `fixing` | Review found blocking issues | Fix the same PR and return to review |
 | `blocked` | Manual intervention is needed | Stop; do not select another task |
 | `complete` | Queue exhausted | Stop |
@@ -136,9 +136,9 @@ Invoke the reviewer through Hermes so credentials stay in the configured provide
 ```bash
 hermes chat \
   --query-file /tmp/barghsa-review-prompt.txt \
-  --model z-ai/glm-5.2 \
+  --model anthropic/claude-opus-5 \
   --provider openrouter \
-  --reasoning high \
+  --reasoning medium \
   --max-turns 1 \
   --quiet
 ```

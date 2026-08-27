@@ -6,6 +6,9 @@ import { SmtpNetworkGuard } from './smtp-network-guard'
 import { ResendConnectionTesterService } from './resend-connection-tester.service'
 import { ProviderSecretsService } from './provider-secrets.service'
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service'
+import { SmsProviderConfigService } from './sms-provider-config.service'
+import { SmsProviderConfigController } from './sms-provider-config.controller'
+import { SmsirConnectionTesterService } from './smsir-connection-tester.service'
 import { SessionModule } from '../session/index.js'
 
 /**
@@ -20,7 +23,7 @@ import { SessionModule } from '../session/index.js'
  * send path via `EmailProviderConfigService.breakerDecision()`.
  */
 @Module({
-  controllers: [EmailProviderConfigController],
+  controllers: [EmailProviderConfigController, SmsProviderConfigController],
   providers: [
     EmailProviderConfigService,
     SmtpConnectionTesterService,
@@ -28,6 +31,8 @@ import { SessionModule } from '../session/index.js'
     ResendConnectionTesterService,
     ProviderSecretsService,
     EmailCircuitBreakerService,
+    SmsProviderConfigService,
+    SmsirConnectionTesterService,
   ],
   imports: [SessionModule],
   exports: [
@@ -36,6 +41,8 @@ import { SessionModule } from '../session/index.js'
     ResendConnectionTesterService,
     ProviderSecretsService,
     EmailCircuitBreakerService,
+    SmsProviderConfigService,
+    SmsirConnectionTesterService,
   ],
 })
 export class ProviderConfigModule {}
