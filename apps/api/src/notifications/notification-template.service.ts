@@ -3,6 +3,7 @@ import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { NotificationsService } from './notifications.service.js'
+import { escapeHtml, renderTemplate, validateTemplate } from './template-engine.js'
 
 export type TemplateChannel = 'email' | 'sms' | 'in_app'
 export type TemplateLocale = 'fa' | 'en'
@@ -143,89 +144,61 @@ export class NotificationTemplateService {
   /**
    * Escape a string for safe HTML/text output, preventing injection of
    * arbitrary markup/script via template variable values.
+   * Delegates to the shared template engine (T-05.04.02).
    */
   escapeHtml(value: string): string {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;')
+    return escapeHtml(value)
   }
 
   /**
    * Validate that every `{{placeholder}}` in the body is (a) well-formed and
    * (b) present in the template's allow-listed `variables`. Rejects unknown
-   * variables and unclosed placeholders with a 400.
+   * variables and unclosed placeholders with a 400. Delegates to the shared
+   * template engine (T-05.04.02).
    */
   validateVariables(
     bodyTemplate: string,
     variables: TemplateVariableInput[],
   ): void {
-    const allowed = new Set<string>(
-      NotificationTemplateService.normalizeVariables(variables).map((v) => v.name),
-    )
+    const allowed = NotificationTemplateService.normalizeVariables(
+      variables,
+    ).map((v) => v.name)
+    const problems = validateTemplate(bodyTemplate, allowed)
 
-    const opens = (bodyTemplate.match(/{{/g) ?? []).length
-    const closes = (bodyTemplate.match(/}}/g) ?? []).length
-    if (opens !== closes) {
+    // A well-formed, allow-listed body yields no problems.
+    for (const p of problems) {
+      const err = p.variable
+        ? `Variable "${p.variable}" in template: ${p.message}`
+        : p.message
       throw new HttpException(
         {
           statusCode: 400,
           error: 'NOTIFICATION_TEMPLATE_INVALID_VARIABLES',
-          message: 'Template contains an unclosed {{...}} placeholder',
+          message: err,
         },
         400,
       )
-    }
-
-    const re = /{{([^{}]+)}}/g
-    let m: RegExpExecArray | null
-    while ((m = re.exec(bodyTemplate)) !== null) {
-      const name = m[1]!.trim()
-      if (!/^[A-Za-z0-9_.]+$/.test(name)) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: 'NOTIFICATION_TEMPLATE_INVALID_VARIABLES',
-            message: `Invalid variable name "${name}" in template`,
-          },
-          400,
-        )
-      }
-      if (!allowed.has(name)) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: 'NOTIFICATION_TEMPLATE_UNKNOWN_VARIABLE',
-            message: `Variable "${name}" is not in the allow-list`,
-          },
-          400,
-        )
-      }
     }
   }
 
   /**
    * Render a template body/subject, substituting allow-listed variables with
    * escaped values. Unknown placeholders render as their escaped literal.
+   *
+   * Delegates to the shared template engine (T-05.04.02), which enforces the
+   * allow-list via safe, own-enumerable path resolution — so template
+   * variables can never expose internal JS object state or secrets
+   * (e.g. `__proto__`/`constructor`/`prototype`).
    */
   render(
     template: string,
     variables: TemplateVariableInput[],
     data?: Record<string, unknown>,
   ): string {
-    const allowed = new Set<string>(
-      NotificationTemplateService.normalizeVariables(variables).map((v) => v.name),
-    )
-    const ctx = data ?? {}
-    return template.replace(/{{([^{}]+)}}/g, (match, raw) => {
-      const name = raw.trim()
-      if (!allowed.has(name)) return this.escapeHtml(match)
-      const value = ctx[name]
-      if (value === undefined || value === null) return ''
-      return this.escapeHtml(String(value))
-    })
+    const allowed = NotificationTemplateService.normalizeVariables(
+      variables,
+    ).map((v) => v.name)
+    return renderTemplate(template, allowed, { data }).output
   }
 
   /**

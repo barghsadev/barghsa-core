@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "blocked",
+  "current_task_id": "T-05.04.02",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-04-02--template-engine",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/178",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.04.02",
   "loop_iteration": 311,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -261,10 +261,20 @@
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01"
   ],
-  "last_error": null,
-  "notes": "05-notifications-documents-ai.md#T-05.04.01 merged (PR #177) via variables-with-descriptions slice; loop -> idle.",
-  "last_updated": "2026-08-27T08:59:00Z",
+  "last_error": "GitHub Actions billing: re-checked 2026-08-27T11:30Z. Latest run 33066864851 (PR #178) at ~11:28Z: both jobs (Run tests, Verify monorepo integrity) FAIL in 2-3s, zero steps — annotation 'job was not started because recent account payments have failed or spending limit needs to be increased'. Billing STILL blocks CI. GLM-5.2 approve stands; PR mergeable, not draft. Merge impossible without passing required checks. Requires human GitHub billing fix + empty-push re-run CI + merge.",
+  "notes": "T-05.04.02 built+reviewed (GLM approve), PR #178 mergeable/not-draft. Re-checked 11:30Z: GitHub Actions billing STILL blocks CI (latest run 33066864851 ~2-3s, zero steps, payments/spending-limit annotation). Manual billing fix required, then empty-push re-run CI, then merge.",
+  "last_updated": "2026-08-27T11:30:53Z",
   "status_history": [
+    {
+      "status": "blocked",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.02",
+      "at": "2026-08-27T12:12:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.02",
+      "at": "2026-08-27T12:10:00Z"
+    },
     {
       "status": "idle",
       "task_key": "",
