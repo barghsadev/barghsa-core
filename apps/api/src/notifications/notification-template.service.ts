@@ -653,6 +653,7 @@ export class NotificationTemplateService {
             templateId,
             eventKey,
             destinationKind,
+            deliveredTo: 'in_app', // how it was actually delivered
             status,
             isTest: true,
           }),
@@ -661,7 +662,13 @@ export class NotificationTemplateService {
           new Date(),
         ],
       )
-      .catch(() => {})
+      .catch((err) => {
+        // Never fail the test-send because the audit write failed, but surface
+        // it so a broken audit pipeline is detectable rather than silent.
+        this.logger.warn(
+          `Failed to write test-send audit for template ${templateId}: ${String(err)}`,
+        )
+      })
   }
 
   /**
