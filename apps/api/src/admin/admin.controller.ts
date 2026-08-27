@@ -1370,4 +1370,88 @@ export class AdminController {
     this.logger.log(`Admin ${req.session.userId} dismissed dead-letter ${id}`)
     return result
   }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Delivery-window config (E-05, T-05.03.03)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * GET /api/admin/config/delivery-window
+   *
+   * Returns the current admin-configurable delivery window as
+   * `{ timezone, startHour, endHour }`. Falls back to the default
+   * 09:00–21:00 Asia/Tehran window when no value is persisted.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Get('config/delivery-window')
+  @ApiOperation({ summary: 'Get the delivery window configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current delivery window config.',
+    schema: {
+      type: 'object',
+      properties: {
+        timezone: { type: 'string', example: 'Asia/Tehran' },
+        startHour: { type: 'number', example: 9 },
+        endHour: { type: 'number', example: 21 },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getDeliveryWindow(@Req() req: AuthenticatedRequest) {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    return this.adminService.getDeliveryWindowConfig()
+  }
+
+  /**
+   * PUT /api/admin/config/delivery-window
+   *
+   * Persists a new delivery window. Body: `{ timezone, start_hour, end_hour }`.
+   * Validated server-side: start < end, length >= 4 hours, valid IANA timezone.
+   * Changes take effect for newly-scheduled messages; already-scheduled
+   * messages keep their original timing (per story T-05.03.03).
+   * Permission: admin (isAdmin session flag).
+   */
+  @Put('config/delivery-window')
+  @ApiOperation({ summary: 'Update the delivery window configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['timezone', 'start_hour', 'end_hour'],
+      properties: {
+        timezone: { type: 'string', example: 'Asia/Tehran' },
+        start_hour: { type: 'number', example: 9, minimum: 0, maximum: 23 },
+        end_hour: { type: 'number', example: 21, minimum: 0, maximum: 23 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Delivery window updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        timezone: { type: 'string' },
+        startHour: { type: 'number' },
+        endHour: { type: 'number' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setDeliveryWindow(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip)
+  }
 }

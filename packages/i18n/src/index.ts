@@ -805,6 +805,22 @@ export const fa: I18nDictionary = {
   'admin.notifications.deadLetter.statusResolved': 'حل شد',
   'admin.notifications.deadLetter.statusDismissed': 'بسته شد',
 
+  // ── Admin — Delivery Window (T-05.03.03) ──────────────
+  'admin.notifications.window.title': 'پنجره ارسال روزانه',
+  'admin.notifications.window.description': 'پیام‌های روزانه خارج از این پنجره صف می‌مانند و در بازه بعدی ارسال می‌شوند. رویدادهای امنیتی و OTP همیشه فوری ارسال می‌شوند.',
+  'admin.notifications.window.timezone': 'منطقه زمانی',
+  'admin.notifications.window.start': 'ساعت شروع',
+  'admin.notifications.window.end': 'ساعت پایان',
+  'admin.notifications.window.current': 'پیکربندی فعلی',
+  'admin.notifications.window.save': 'ذخیره',
+  'admin.notifications.window.saving': 'در حال ذخیره…',
+  'admin.notifications.window.saved': 'ذخیره شد',
+  'admin.notifications.window.loading': 'در حال بارگذاری پیکربندی پنجره ارسال…',
+  'admin.notifications.window.loadFailed': 'خطا در بارگذاری پیکربندی پنجره ارسال',
+  'admin.notifications.window.saveFailed': 'خطا در ذخیره پیکربندی پنجره ارسال',
+  'admin.notifications.window.errBeforeEnd': 'ساعت شروع باید قبل از ساعت پایان باشد',
+  'admin.notifications.window.errTooShort': 'پنجره ارسال باید حداقل ۴ ساعت باشد',
+
   // ── Admin — Staff Roles (T-09.05.01) ───────────────────
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
   'admin.roles.subtitle': 'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
@@ -1623,6 +1639,22 @@ export const en: I18nDictionary = {
     'admin.notifications.deadLetter.statusRetried': 'Retried',
     'admin.notifications.deadLetter.statusResolved': 'Resolved',
     'admin.notifications.deadLetter.statusDismissed': 'Dismissed',
+
+    // ── Admin — Delivery Window (T-05.03.03) ──────────────
+    'admin.notifications.window.title': 'Daily Delivery Window',
+    'admin.notifications.window.description': 'Daytime messages outside this window are queued and delivered in the next window. Security and OTP events are always sent immediately.',
+    'admin.notifications.window.timezone': 'Timezone',
+    'admin.notifications.window.start': 'Start time',
+    'admin.notifications.window.end': 'End time',
+    'admin.notifications.window.current': 'Current config',
+    'admin.notifications.window.save': 'Save',
+    'admin.notifications.window.saving': 'Saving…',
+    'admin.notifications.window.saved': 'Saved',
+    'admin.notifications.window.loading': 'Loading delivery window config…',
+    'admin.notifications.window.loadFailed': 'Failed to load delivery window config',
+    'admin.notifications.window.saveFailed': 'Failed to save delivery window config',
+    'admin.notifications.window.errBeforeEnd': 'Start time must be before end time',
+    'admin.notifications.window.errTooShort': 'Delivery window must be at least 4 hours',
 
     // ── Admin — Staff Roles (T-09.05.01) ───────────────────
     'admin.roles.title': 'Roles & Permissions',

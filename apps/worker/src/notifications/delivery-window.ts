@@ -28,31 +28,25 @@
  *
  * @module notifications
  */
-import { classifyNotificationType } from '@barghsa/shared/notifications'
+import {
+  classifyNotificationType,
+  DEFAULT_DELIVERY_WINDOW,
+  DELIVERY_WINDOW_CONFIG_KEY,
+  MIN_WINDOW_HOURS,
+  type DeliveryWindowConfig,
+} from '@barghsa/shared/notifications'
 import type { NotificationChannel } from '@barghsa/shared/notifications'
 
-/** Admin-configurable daily delivery window, expressed in hour-of-day. */
-export interface DeliveryWindowConfig {
-  /** IANA timezone the window is declared in, e.g. `Asia/Tehran`. */
-  timezone: string
-  /** Window open hour (0–23, inclusive start). */
-  startHour: number
-  /** Window close hour (0–23, exclusive end). */
-  endHour: number
-}
-
-/** Default window: 09:00–21:00 in Iran time (story T-05.03 default). */
-export const DEFAULT_DELIVERY_WINDOW: DeliveryWindowConfig = {
-  timezone: 'Asia/Tehran',
-  startHour: 9,
-  endHour: 21,
-}
-
-/** `app_config` key holding the admin-configurable delivery window (T-05.03.03). */
-export const DELIVERY_WINDOW_CONFIG_KEY = 'notification.delivery_window'
-
-/** Minimum sensible window length in hours (T-05.03.03 validates ≥ 4h). */
-export const MIN_WINDOW_HOURS = 4
+// Re-export the shared delivery-window contract so worker consumers (and the
+// worker test suite) keep importing from this module while the canonical
+// definitions live in @barghsa/shared/notifications (single source of truth,
+// used by both the admin config API and the worker).
+export {
+  DEFAULT_DELIVERY_WINDOW,
+  DELIVERY_WINDOW_CONFIG_KEY,
+  MIN_WINDOW_HOURS,
+  type DeliveryWindowConfig,
+} from '@barghsa/shared/notifications'
 
 /** External channels that are subject to the quiet window. */
 const EXTERNAL_CHANNELS: ReadonlySet<string> = new Set<NotificationChannel>(['email', 'sms'])
