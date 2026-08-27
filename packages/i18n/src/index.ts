@@ -797,6 +797,13 @@ export const fa: I18nDictionary = {
   'admin.notifications.deadLetter.severityError': 'خطا',
   'admin.notifications.deadLetter.accessDenied': 'دسترسی غیرمجاز',
   'admin.notifications.deadLetter.actionFailed': 'انجام عملیات ناموفق بود',
+  'admin.notifications.deadLetter.channelEmail': 'ایمیل',
+  'admin.notifications.deadLetter.channelSms': 'پیامک',
+  'admin.notifications.deadLetter.channelInApp': 'داخل برنامه',
+  'admin.notifications.deadLetter.statusOpen': 'باز',
+  'admin.notifications.deadLetter.statusRetried': 'تلاش مجدد شد',
+  'admin.notifications.deadLetter.statusResolved': 'حل شد',
+  'admin.notifications.deadLetter.statusDismissed': 'بسته شد',
 
   // ── Admin — Staff Roles (T-09.05.01) ───────────────────
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
@@ -1587,6 +1594,13 @@ export const en: I18nDictionary = {
     'admin.notifications.deadLetter.severityError': 'Error',
     'admin.notifications.deadLetter.accessDenied': 'Access denied',
     'admin.notifications.deadLetter.actionFailed': 'Action failed',
+    'admin.notifications.deadLetter.channelEmail': 'Email',
+    'admin.notifications.deadLetter.channelSms': 'SMS',
+    'admin.notifications.deadLetter.channelInApp': 'In-App',
+    'admin.notifications.deadLetter.statusOpen': 'Open',
+    'admin.notifications.deadLetter.statusRetried': 'Retried',
+    'admin.notifications.deadLetter.statusResolved': 'Resolved',
+    'admin.notifications.deadLetter.statusDismissed': 'Dismissed',
 
     // ── Admin — Staff Roles (T-09.05.01) ───────────────────
     'admin.roles.title': 'Roles & Permissions',

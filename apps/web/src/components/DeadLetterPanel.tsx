@@ -36,17 +36,26 @@ interface DeadLetterRow {
   updatedAt: string
 }
 
-const CHANNEL_LABELS: Record<DeadLetterRow['channel'], string> = {
-  email: 'Email',
-  sms: 'SMS',
-  in_app: 'In-App',
-}
-
 const STATUS_LABELS: Record<DeadLetterRow['status'], string> = {
   open: 'Open',
   retried: 'Retried',
   resolved: 'Resolved',
   dismissed: 'Dismissed',
+}
+
+function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
+  const key = `admin.notifications.deadLetter.channel${
+    channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'
+  }` as const
+  return t(key, uiLocale)
+}
+
+function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string {
+  const key =
+    `admin.notifications.deadLetter.status${
+      status === 'open' ? 'Open' : status === 'retried' ? 'Retried' : status === 'resolved' ? 'Resolved' : 'Dismissed'
+    }` as const
+  return t(key, uiLocale)
 }
 
 export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
@@ -174,7 +183,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                   <td className="px-4 py-3 font-mono text-xs" dir="ltr">
                     {row.eventKey}
                   </td>
-                  <td className="px-4 py-3">{CHANNEL_LABELS[row.channel] ?? row.channel}</td>
+                  <td className="px-4 py-3">{channelLabel(row.channel, uiLocale)}</td>
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
@@ -187,9 +196,9 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                         ? t('admin.notifications.deadLetter.severityCritical', uiLocale)
                         : t('admin.notifications.deadLetter.severityError', uiLocale)}
                     </span>
-                    {row.status && row.status !== 'open' && (
+                    {row.status !== 'open' && (
                       <span className="block text-xs text-gray-400 mt-1">
-                        {STATUS_LABELS[row.status] ?? row.status}
+                        {statusLabel(row.status, uiLocale)}
                       </span>
                     )}
                   </td>
