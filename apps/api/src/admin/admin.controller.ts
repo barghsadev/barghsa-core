@@ -13,12 +13,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
 import { NotificationTemplateService, type NotificationTemplateResult, type CreateNotificationTemplateInput, type PageTemplatesOptions } from '../notifications/notification-template.service.js'
+import { NotificationsService } from '../notifications/notifications.service.js'
 import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
@@ -145,6 +146,7 @@ export class AdminController {
     private readonly brandConfigService: BrandConfigService,
     private readonly tosService: TosService,
     private readonly notificationTemplateService: NotificationTemplateService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -1171,5 +1173,57 @@ export class AdminController {
   ): Promise<{ ok: boolean; destination: 'in_app' }> {
     this.assertNotificationPermission(req)
     return this.notificationTemplateService.testSend(id, req.session.userId)
+  }
+
+  /**
+   * GET /api/admin/notifications/delivery-logs
+   *
+   * Lists delivery-attempt log rows written by the worker (E-05, T-05.01.05).
+   * Filterable by notification id, channel, and status; newest-first with
+   * limit + offset pagination. Read-only: the append-only delivery log is
+   * written exclusively by the outbox worker.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Get('notifications/delivery-logs')
+  @ApiOperation({ summary: 'List notification delivery logs (admin)' })
+  @ApiQuery({ name: 'notificationId', required: false, type: String })
+  @ApiQuery({ name: 'channel', required: false, enum: ['in_app', 'email', 'sms'] })
+  @ApiQuery({ name: 'status', required: false, enum: ['delivered', 'failed'] })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'offset', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'List of delivery log rows.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listDeliveryLogs(
+    @Req() req: AuthenticatedRequest,
+    @Query('notificationId') notificationId?: string,
+    @Query('channel') channel?: 'in_app' | 'email' | 'sms',
+    @Query('status') status?: 'delivered' | 'failed',
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read delivery logs`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const options: {
+      notificationId?: string
+      channel?: 'in_app' | 'email' | 'sms'
+      status?: 'delivered' | 'failed'
+      limit?: number
+      offset?: number
+    } = {}
+    if (notificationId) options.notificationId = notificationId
+    if (channel) options.channel = channel
+    if (status) options.status = status
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN
+    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN
+    // Ignore non-numeric limit/offset so malformed queries fall back to the
+    // service defaults instead of producing a NaN SQL binding (500 today).
+    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit
+    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
+    return this.notificationsService.findDeliveryLogs(options)
   }
 }

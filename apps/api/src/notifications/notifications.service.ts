@@ -25,6 +25,20 @@ export interface NotificationResult {
   updatedAt: Date
 }
 
+/** A single delivery-log row surfaced to the admin panel (E-05, T-05.01.05). */
+export interface DeliveryLogRow {
+  id: string
+  notificationId: string
+  channel: 'in_app' | 'email' | 'sms'
+  status: 'delivered' | 'failed'
+  attemptNumber: number
+  providerRef: string | null
+  latencyMs: number | null
+  errorCategory: string | null
+  errorDetail: string | null
+  createdAt: Date
+}
+
 /**
  * In-app notification service (minimal stub for E-02 scope).
  *
@@ -168,5 +182,63 @@ export class NotificationsService {
        WHERE user_id = $2 AND read = false`,
       [now, userId],
     )
+  }
+
+  /**
+   * List delivery-log rows for the admin panel (E-05, T-05.01.05).
+   *
+   * Filters by optional notification id / channel / status/error, ordered
+   * newest-first, with limit + offset pagination. Rows are read directly from
+   * the append-only `notification_delivery_log` table written by the worker.
+   * DB snake_case columns are aliased to camelCase so runtime rows match the
+   * returned `DeliveryLogRow` shape.
+   *
+   * @param options - Optional filters and pagination.
+   */
+  async findDeliveryLogs(options: {
+    notificationId?: string
+    channel?: 'in_app' | 'email' | 'sms'
+    status?: 'delivered' | 'failed'
+    limit?: number
+    offset?: number
+  }): Promise<DeliveryLogRow[]> {
+    const pool = getDbPool()
+    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
+    const offset = Math.max(options.offset ?? 0, 0)
+
+    const conditions: string[] = []
+    const params: unknown[] = []
+    // Counter-based placeholder builder. Each filter appends its value and a
+    // fresh `$N` placeholder, so conditions never share or misnumber indexes.
+    const push = (column: string, value: string) => {
+      params.push(value)
+      conditions.push(`${column} = $${params.length}`)
+    }
+
+    if (options.notificationId) push('notification_id', options.notificationId)
+    if (options.channel) push('channel', options.channel)
+    if (options.status) push('status', options.status)
+
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+    // Alias snake_case DB columns to camelCase so runtime rows match the
+    // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
+    const rowsResult = await pool.query<DeliveryLogRow>(
+      `SELECT id,
+              notification_id AS "notificationId",
+              channel,
+              status,
+              attempt_number AS "attemptNumber",
+              provider_ref AS "providerRef",
+              latency_ms AS "latencyMs",
+              error_category AS "errorCategory",
+              error_detail AS "errorDetail",
+              created_at AS "createdAt"
+       FROM notification_delivery_log
+       ${where}
+       ORDER BY created_at DESC
+       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
+      [...params, limit, offset],
+    )
+    return rowsResult.rows
   }
 }

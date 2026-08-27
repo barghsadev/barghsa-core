@@ -2,6 +2,8 @@ import { getDbPool } from '@barghsa/db'
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications'
 import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions } from './outbox-reader.js'
 import { nextRetryDelayMs } from './retry-schedule.js'
+import { writeDeliveryLog } from './delivery-log.js'
+import { sanitizeError } from './error-redact.js'
 
 /**
  * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
@@ -36,39 +38,13 @@ export interface OutboxRunResult {
 
 /** How long a dispatched-but-unconfirmed row stays `sending` before re-claim. */
 const SENDING_LEASE_MS = 30_000
-/** Maximum length of a persisted `last_error`. */
-const LAST_ERROR_MAX_LEN = 500
 
 /**
- * Redact likely secret material from an error message and cap its length, so
- * transport errors (SMTP/SMS/Gateway) can never leak credentials into
- * `last_error`. Matches common patterns: bearer tokens, api keys, passwords,
- * and credentials embedded in URLs.
+ * Redact + cap a persisted error. Kept as an alias of the shared sanitizer so
+ * existing callers (and tests) importing `sanitizeLastError` from this module
+ * keep working. See `./error-redact.ts`.
  */
-export function sanitizeLastError(message: string): string {
-  const SECRET_PATTERNS: Array<{ re: RegExp; replacement: string }> = [
-    { re: /(bearer\s+)[A-Za-z0-9._~+/=-]+/gi, replacement: '$1[REDACTED]' },
-    { re: /(api[_-]?key\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
-    { re: /(password\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
-    { re: /(secret\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
-    { re: /(token\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
-    { re: /([a-z][a-z0-9+.-]*:\/\/)[^/\s:@]+(:[^@\s/]*)?@/gi, replacement: '$1[REDACTED]@' },
-    // Known provider/token shapes (AWS, OpenAI, GitHub, Slack, Stripe).
-    { re: /\bAKIA[0-9A-Z]{16}\b/g, replacement: '[REDACTED]' },
-    { re: /\bsk-[A-Za-z0-9_-]{20,}\b/g, replacement: '[REDACTED]' },
-    { re: /\b(ghp|gho|ghu|github_pat)_[A-Za-z0-9_]{20,}\b/g, replacement: '[REDACTED]' },
-    { re: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/g, replacement: '[REDACTED]' },
-    { re: /\bsk_live_[A-Za-z0-9]{20,}\b/g, replacement: '[REDACTED]' },
-    // Generic long alphanumeric run — high threshold to avoid scrubbing UUIDs
-    // and short transaction/hash identifiers while still catching raw keys.
-    { re: /([A-Za-z0-9]{48,})/g, replacement: '[REDACTED]' },
-  ]
-  let out = message
-  for (const p of SECRET_PATTERNS) {
-    out = out.replace(p.re, p.replacement)
-  }
-  return out.slice(0, LAST_ERROR_MAX_LEN)
-}
+export const sanitizeLastError = sanitizeError
 
 export async function runOutboxPoll(
   options?: OutboxReaderOptions & {
@@ -119,6 +95,8 @@ export async function runOutboxPoll(
 interface DispatchOutcome {
   channel: NotificationChannel
   result: { providerRef: string; status: 'delivered' | 'failed' }
+  /** Provider round-trip latency in milliseconds for this attempt. */
+  latencyMs: number
 }
 
 /**
@@ -135,10 +113,10 @@ async function persistOutcomes(
   outcomes: DispatchOutcome[],
 ): Promise<void> {
   let anyFailed = false
+  const attempts = row.attempts + 1
   for (const outcome of outcomes) {
     const ok = outcome.result.status === 'delivered'
     if (!ok) anyFailed = true
-    const attempts = row.attempts + 1
     const exhausted = attempts >= row.maxAttempts
     // Jittered backoff before the next attempt (null when the budget is spent).
     const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
@@ -158,6 +136,17 @@ async function persistOutcomes(
         runAfter,
       ],
     )
+    // Append a delivery log row for this attempt (T-05.01.05). The suspected
+    // cause is derived from the sanitized provider message when available.
+    await writeDeliveryLog(pool, {
+      notificationId: row.id,
+      channel: outcome.channel,
+      delivered: ok,
+      attemptNumber: attempts,
+      providerRef: ok ? outcome.result.providerRef : null,
+      latencyMs: outcome.latencyMs ?? null,
+      error: ok ? null : 'delivery failed',
+    })
   }
 
   if (!anyFailed) {
@@ -194,6 +183,19 @@ async function failAllJobs(
       WHERE outbox_id = $1`,
     [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
   )
+  // Exception path: dispatch threw before per-channel outcomes were recorded,
+  // so append one delivery log per requested channel describing the failure.
+  for (const channel of row.channels) {
+    await writeDeliveryLog(pool, {
+      notificationId: row.id,
+      channel,
+      delivered: false,
+      attemptNumber: attempts,
+      providerRef: null,
+      latencyMs: null,
+      error: safeMessage || 'dispatch failed',
+    })
+  }
 }
 
 /**

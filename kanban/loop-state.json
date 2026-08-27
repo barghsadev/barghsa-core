@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 302,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.01.05",
+  "current_task_id": "T-05.01.05",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-01-05--delivery-logs",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/167",
+  "loop_iteration": 303,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -251,9 +251,29 @@
     "05-notifications-documents-ai.md#T-05.01.04"
   ],
   "last_error": null,
-  "notes": "T-05.01.04 (per-channel idempotency) merged via PR #166; reset to idle. E-05 next: T-05.01.05.",
-  "last_updated": "2026-08-27T00:07:00Z",
+  "notes": "T-05.01.05 (status tracking & delivery logs): review requested changes (major snake_case/camelCase in admin query); fix committed to PR #167, re-entering review.",
+  "last_updated": "2026-08-27T05:10:00Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "at": "2026-08-27T05:10:00Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "at": "2026-08-27T05:06:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "at": "2026-08-27T05:05:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "at": "2026-08-27T05:00:00Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.01.04",
@@ -308,46 +328,6 @@
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.01.01",
       "at": "2026-08-26T22:49:03Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.06.01",
-      "at": "2026-08-26T16:23:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.05.01",
-      "at": "2026-08-26T16:22:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.05.01",
-      "at": "2026-08-26T19:18:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.05.01",
-      "at": "2026-08-26T19:16:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.04.01",
-      "at": "2026-08-26T15:51:07Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.03.02",
-      "at": "2026-08-26T15:21:07Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.03.02",
-      "at": "2026-08-26T15:20:07Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.03.02",
-      "at": "2026-08-26T15:19:07Z"
     }
   ]
 }
