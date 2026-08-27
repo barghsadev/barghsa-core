@@ -105,6 +105,20 @@ describe('renderTemplate — allow-list + escaping', () => {
     expect(r.missing).toEqual(['userName'])
   })
 
+  it('never stringifies function or nested-object values (no internal-state leak)', () => {
+    const f = function leakedSource() { return 'secret' }
+    const rFn = renderTemplate('{{fn}}', ['fn'], { data: { fn: f } })
+    expect(rFn.output).toBe('')
+    expect(rFn.missing).toEqual(['fn'])
+    expect(rFn.output).not.toContain('secret')
+
+    const rObj = renderTemplate('{{obj}}', ['obj'], {
+      data: { obj: { secret: 'cfg' } },
+    })
+    expect(rObj.output).toBe('')
+    expect(rObj.output).not.toContain('cfg')
+  })
+
   it('refuses to substitute an unknown placeholder (escaped literal, never data)', () => {
     const r = renderTemplate('{{evil}}', [], { data: { evil: 'xss' } })
     expect(r.output).toBe('{{evil}}')

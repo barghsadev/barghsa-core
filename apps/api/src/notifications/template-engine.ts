@@ -148,8 +148,8 @@ export function renderTemplate(
       missing.add(name)
       return ''
     }
-    if (typeof value === 'object') {
-      // Never stringify internal object shapes into a message.
+    if (typeof value === 'object' || typeof value === 'function') {
+      // Never stringify internal object/function shapes into a message.
       missing.add(name)
       return ''
     }
