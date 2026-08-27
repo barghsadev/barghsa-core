@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_id": "T-05.06.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-06-05--provider-secrets",
@@ -272,10 +272,15 @@
     "05-notifications-documents-ai.md#T-05.06.03",
     "05-notifications-documents-ai.md#T-05.06.04"
   ],
-  "last_error": "Review request_changes: (1) masked placeholder re-encryption corrupts secrets on update; (2) maskConfig crashes when key missing/encrypted row; (3) create w/ secrets fails when key unset contradicting docs; (4) no test for update() encryption path.",
-  "notes": "T-05.06.05 (Secrets encryption) PR #189 open for review.",
-  "last_updated": "2026-08-27T18:55:50Z",
+  "last_error": "",
+  "notes": "T-05.06.05 (Secrets encryption) PR #189 review round 2.",
+  "last_updated": "2026-08-27T18:58:32Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:58:32Z"
+    },
     {
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.06.05",
