@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.04.01",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-04-01--template-variable-descriptions",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/177",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.04.01",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 311,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -258,12 +258,18 @@
     "05-notifications-documents-ai.md#T-05.02.04",
     "05-notifications-documents-ai.md#T-05.03.01",
     "05-notifications-documents-ai.md#T-05.03.02",
-    "05-notifications-documents-ai.md#T-05.03.03"
+    "05-notifications-documents-ai.md#T-05.03.03",
+    "05-notifications-documents-ai.md#T-05.04.01"
   ],
   "last_error": null,
-  "notes": "T-05.04.01 (template entity & CRUD) fulfilled via a reviewable slice: template variables now carry {name, description} (backward-compatible with legacy string[]). PR #177 in_review.",
-  "last_updated": "2026-08-27T11:56:00Z",
+  "notes": "05-notifications-documents-ai.md#T-05.04.01 merged (PR #177) via variables-with-descriptions slice; loop -> idle.",
+  "last_updated": "2026-08-27T08:59:00Z",
   "status_history": [
+    {
+      "status": "idle",
+      "task_key": "",
+      "at": "2026-08-27T08:59:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.04.01",
@@ -278,16 +284,6 @@
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.03.03",
       "at": "2026-08-27T06:05:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.03",
-      "at": "2026-08-27T11:25:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
-      "at": "2026-08-27T06:03:19Z"
     }
   ]
 }
