@@ -777,6 +777,23 @@ export const fa: I18nDictionary = {
   'admin.notifications.error.delete': 'خطا در حذف قالب',
   'admin.notifications.error.testSend': 'خطا در ارسال آزمایشی',
 
+  // ── Admin — Notification Dead-Letter Queue (T-05.01.06) ───
+  'admin.notifications.deadLetter.title': 'صف پیام‌های ناموفق (Dead Letter)',
+  'admin.notifications.deadLetter.empty': 'هیچ پیام ناموفقی در صف نیست.',
+  'admin.notifications.deadLetter.loadFailed': 'خطا در بارگذاری صف پیام‌های ناموفق',
+  'admin.notifications.deadLetter.eventKey': 'رویداد',
+  'admin.notifications.deadLetter.channel': 'کانال',
+  'admin.notifications.deadLetter.severity': 'شدت',
+  'admin.notifications.deadLetter.cause': 'علت',
+  'admin.notifications.deadLetter.attempts': 'تلاش',
+  'admin.notifications.deadLetter.date': 'تاریخ',
+  'admin.notifications.deadLetter.actions': 'عملیات',
+  'admin.notifications.deadLetter.retry': 'تلاش مجدد',
+  'admin.notifications.deadLetter.resolve': 'حل‌شده',
+  'admin.notifications.deadLetter.dismiss': 'بستن',
+  'admin.notifications.deadLetter.showAll': 'نمایش همه',
+  'admin.notifications.deadLetter.openOnly': 'فقط باز',
+
   // ── Admin — Staff Roles (T-09.05.01) ───────────────────
   'admin.roles.title': 'نقش‌ها و دسترسی‌ها',
   'admin.roles.subtitle': 'نقش‌های کاربری کارکنان و مجموعه دسترسی‌های هر نقش. نقش‌های از پیش‌تعریف‌شده فقط‌خواندنی هستند.',
@@ -1544,7 +1561,24 @@ export const en: I18nDictionary = {
     'admin.notifications.error.publish': 'Failed to publish template',
     'admin.notifications.error.unpublish': 'Failed to unpublish template',
     'admin.notifications.error.delete': 'Failed to delete template',
-    'admin.notifications.error.testSend': 'Failed to send test',
+    'admin.notifications.error.testSend': 'Failed to send test notification',
+
+    // ── Admin — Notification Dead-Letter Queue (T-05.01.06) ───
+    'admin.notifications.deadLetter.title': 'Dead-Letter Queue',
+    'admin.notifications.deadLetter.empty': 'No dead-lettered notifications.',
+    'admin.notifications.deadLetter.loadFailed': 'Failed to load dead-letter queue',
+    'admin.notifications.deadLetter.eventKey': 'Event',
+    'admin.notifications.deadLetter.channel': 'Channel',
+    'admin.notifications.deadLetter.severity': 'Severity',
+    'admin.notifications.deadLetter.cause': 'Cause',
+    'admin.notifications.deadLetter.attempts': 'Attempts',
+    'admin.notifications.deadLetter.date': 'Date',
+    'admin.notifications.deadLetter.actions': 'Actions',
+    'admin.notifications.deadLetter.retry': 'Retry',
+    'admin.notifications.deadLetter.resolve': 'Resolve',
+    'admin.notifications.deadLetter.dismiss': 'Dismiss',
+    'admin.notifications.deadLetter.showAll': 'Show all',
+    'admin.notifications.deadLetter.openOnly': 'Open only',
 
     // ── Admin — Staff Roles (T-09.05.01) ───────────────────
     'admin.roles.title': 'Roles & Permissions',

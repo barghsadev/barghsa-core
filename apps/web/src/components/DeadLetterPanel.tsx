@@ -1,0 +1,219 @@
+import { useState, useEffect, useCallback } from 'react'
+import { t } from '@barghsa/i18n'
+import type { Locale } from '@barghsa/i18n'
+
+/**
+ * Admin dead-letter queue panel (E-05, T-05.01.06).
+ *
+ * Lists dead-lettered notification deliveries written by the outbox worker
+ * when a job exhausts its retry budget, and exposes the three triage actions:
+ * Retry (re-queue with the same idempotency key), Resolve (mark final), and
+ * Dismiss (acknowledge/remove from the active view).
+ *
+ * Reads /api/admin/notifications/dead-letters and posts to the per-record
+ * action endpoints. Open items default to the front; a toggle reveals all
+ * statuses.
+ */
+
+interface DeadLetterRow {
+  id: string
+  outboxId: string
+  jobId: string
+  channel: 'in_app' | 'email' | 'sms'
+  eventKey: string
+  severity: 'error' | 'critical'
+  profileId: string | null
+  userId: string | null
+  cause: string | null
+  errorCategory: string | null
+  attempts: number
+  maxAttempts: number
+  idempotencyKey: string
+  status: 'open' | 'retried' | 'resolved' | 'dismissed'
+  resolvedAt: string | null
+  resolvedBy: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+const CHANNEL_LABELS: Record<DeadLetterRow['channel'], string> = {
+  email: 'Email',
+  sms: 'SMS',
+  in_app: 'In-App',
+}
+
+const STATUS_LABELS: Record<DeadLetterRow['status'], string> = {
+  open: 'Open',
+  retried: 'Retried',
+  resolved: 'Resolved',
+  dismissed: 'Dismissed',
+}
+
+export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
+  const [rows, setRows] = useState<DeadLetterRow[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [openOnly, setOpenOnly] = useState(true)
+
+  const load = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const qs = openOnly ? '?status=open' : ''
+      const res = await fetch(`/api/admin/notifications/dead-letters${qs}`)
+      if (!res.ok) {
+        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+        return
+      }
+      const data = (await res.json()) as DeadLetterRow[]
+      setRows(data)
+    } catch {
+      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+    } finally {
+      setLoading(false)
+    }
+  }, [openOnly, uiLocale])
+
+  useEffect(() => {
+    void load()
+  }, [load])
+
+  async function act(id: string, action: 'retry' | 'resolve' | 'dismiss') {
+    setError(null)
+    try {
+      const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
+        method: 'POST',
+      })
+      if (!res.ok) {
+        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+        return
+      }
+      await load()
+    } catch {
+      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+    }
+  }
+
+  return (
+    <section className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">
+          {t('admin.notifications.deadLetter.title', uiLocale)}
+        </h2>
+        <button
+          onClick={() => setOpenOnly((v) => !v)}
+          className="px-3 py-1.5 border border-gray-300 rounded text-sm hover:bg-gray-50"
+        >
+          {openOnly
+            ? t('admin.notifications.deadLetter.openOnly', uiLocale)
+            : t('admin.notifications.deadLetter.showAll', uiLocale)}
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>
+      ) : rows.length === 0 ? (
+        <div className="p-4 text-gray-500">
+          {t('admin.notifications.deadLetter.empty', uiLocale)}
+        </div>
+      ) : (
+        <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-sm">
+            <thead className="bg-gray-50 text-left">
+              <tr>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.eventKey', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.channel', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.severity', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.cause', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.attempts', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.date', uiLocale)}
+                </th>
+                <th className="px-4 py-2 font-medium text-gray-600">
+                  {t('admin.notifications.deadLetter.actions', uiLocale)}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {rows.map((row) => (
+                <tr key={row.id} className="align-top">
+                  <td className="px-4 py-3 font-mono text-xs" dir="ltr">
+                    {row.eventKey}
+                  </td>
+                  <td className="px-4 py-3">{CHANNEL_LABELS[row.channel] ?? row.channel}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                        row.severity === 'critical'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-amber-100 text-amber-700'
+                      }`}
+                    >
+                      {row.severity}
+                    </span>
+                    {row.status && row.status !== 'open' && (
+                      <span className="block text-xs text-gray-400 mt-1">
+                        {STATUS_LABELS[row.status] ?? row.status}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-xs" dir="ltr">
+                    {row.cause ?? '—'}
+                  </td>
+                  <td className="px-4 py-3">
+                    {row.attempts}/{row.maxAttempts}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-gray-500">
+                    {new Date(row.createdAt).toLocaleString(uiLocale === 'fa' ? 'fa-IR' : 'en-US')}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {row.status === 'open' ? (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => void act(row.id, 'retry')}
+                          className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                        >
+                          {t('admin.notifications.deadLetter.retry', uiLocale)}
+                        </button>
+                        <button
+                          onClick={() => void act(row.id, 'resolve')}
+                          className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          {t('admin.notifications.deadLetter.resolve', uiLocale)}
+                        </button>
+                        <button
+                          onClick={() => void act(row.id, 'dismiss')}
+                          className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+                        >
+                          {t('admin.notifications.deadLetter.dismiss', uiLocale)}
+                        </button>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  )
+}
