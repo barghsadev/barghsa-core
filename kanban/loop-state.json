@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.06.01",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-06-01--email-provider-config",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/185",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.06.01",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 318,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -266,12 +266,18 @@
     "05-notifications-documents-ai.md#T-05.04.05",
     "05-notifications-documents-ai.md#T-05.05.01",
     "05-notifications-documents-ai.md#T-05.05.02",
-    "05-notifications-documents-ai.md#T-05.05.03"
+    "05-notifications-documents-ai.md#T-05.05.03",
+    "05-notifications-documents-ai.md#T-05.06.01"
   ],
   "last_error": "",
-  "notes": "T-05.06.01 built, PR #185 ready for review.",
-  "last_updated": "2026-08-27T14:12:00Z",
+  "notes": "T-05.06.01 (email provider config entity & lifecycle) MERGED via PR #185 (f26d001). Loop idle. Next: T-05.06.02 (SMTP configuration).",
+  "last_updated": "2026-08-27T15:07:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.01",
+      "at": "2026-08-27T15:06:11Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.06.01",
