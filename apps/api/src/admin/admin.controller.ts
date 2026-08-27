@@ -1226,4 +1226,148 @@ export class AdminController {
     if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
     return this.notificationsService.findDeliveryLogs(options)
   }
+
+  /**
+   * GET /api/admin/notifications/dead-letters
+   *
+   * Lists dead-letter records written by the outbox worker when a
+   * notification job exhausts its retry budget (E-05, T-05.01.06).
+   * Filterable by status / severity / channel; open items surface first with
+   * limit + offset pagination.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Get('notifications/dead-letters')
+  @ApiOperation({ summary: 'List notification dead-letter records (admin)' })
+  @ApiQuery({ name: 'status', required: false, enum: ['open', 'retried', 'resolved', 'dismissed'] })
+  @ApiQuery({ name: 'severity', required: false, enum: ['error', 'critical'] })
+  @ApiQuery({ name: 'channel', required: false, enum: ['in_app', 'email', 'sms'] })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'offset', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'List of dead-letter rows.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listDeadLetters(
+    @Req() req: AuthenticatedRequest,
+    @Query('status') status?: 'open' | 'retried' | 'resolved' | 'dismissed',
+    @Query('severity') severity?: 'error' | 'critical',
+    @Query('channel') channel?: 'in_app' | 'email' | 'sms',
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read dead-letters`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const options: {
+      status?: 'open' | 'retried' | 'resolved' | 'dismissed'
+      severity?: 'error' | 'critical'
+      channel?: 'in_app' | 'email' | 'sms'
+      limit?: number
+      offset?: number
+    } = {}
+    if (status) options.status = status
+    if (severity) options.severity = severity
+    if (channel) options.channel = channel
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN
+    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN
+    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit
+    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
+    return this.notificationsService.listDeadLetters(options)
+  }
+
+  /**
+   * POST /api/admin/notifications/dead-letters/:id/retry
+   *
+   * Re-queues a dead-lettered notification job (same idempotency key, so
+   * re-processing cannot double-deliver) for the worker to pick up again.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Post('notifications/dead-letters/:id/retry')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Retry a dead-lettered notification (admin)' })
+  @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
+  @ApiResponse({ status: 200, description: 'Dead-letter record re-queued.', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
+  async retryDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const result = await this.notificationsService.deadLetterAction(id, 'retry', req.session.userId)
+    if (result === null) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
+        404,
+      )
+    }
+    this.logger.log(`Admin ${req.session.userId} retried dead-letter ${id}`)
+    return result
+  }
+
+  /**
+   * POST /api/admin/notifications/dead-letters/:id/resolve
+   *
+   * Marks a dead-letter record final (no further retry). Idempotent.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Post('notifications/dead-letters/:id/resolve')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Resolve a dead-lettered notification (admin)' })
+  @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
+  @ApiResponse({ status: 200, description: 'Dead-letter record resolved.', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
+  async resolveDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const result = await this.notificationsService.deadLetterAction(id, 'resolve', req.session.userId)
+    if (result === null) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
+        404,
+      )
+    }
+    this.logger.log(`Admin ${req.session.userId} resolved dead-letter ${id}`)
+    return result
+  }
+
+  /**
+   * POST /api/admin/notifications/dead-letters/:id/dismiss
+   *
+   * Dismisses a dead-letter record from the active view. Idempotent.
+   * Permission: admin (isAdmin session flag).
+   */
+  @Post('notifications/dead-letters/:id/dismiss')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Dismiss a dead-lettered notification (admin)' })
+  @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
+  @ApiResponse({ status: 200, description: 'Dead-letter record dismissed.', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
+  async dismissDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const result = await this.notificationsService.deadLetterAction(id, 'dismiss', req.session.userId)
+    if (result === null) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
+        404,
+      )
+    }
+    this.logger.log(`Admin ${req.session.userId} dismissed dead-letter ${id}`)
+    return result
+  }
 }

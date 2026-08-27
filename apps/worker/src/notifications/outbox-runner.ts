@@ -2,7 +2,8 @@ import { getDbPool } from '@barghsa/db'
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications'
 import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions } from './outbox-reader.js'
 import { nextRetryDelayMs } from './retry-schedule.js'
-import { writeDeliveryLog } from './delivery-log.js'
+import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js'
+import { writeDeadLetter } from './dead-letter.js'
 import { sanitizeError } from './error-redact.js'
 
 /**
@@ -121,11 +122,12 @@ async function persistOutcomes(
     // Jittered backoff before the next attempt (null when the budget is spent).
     const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
     const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
-    await pool.query(
+    const jobUpdate = await pool.query(
       `UPDATE notification_job
           SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
               run_after = $7, updated_at = NOW()
-        WHERE outbox_id = $1 AND channel = $6`,
+        WHERE outbox_id = $1 AND channel = $6
+        RETURNING id`,
       [
         row.id,
         ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
@@ -136,6 +138,27 @@ async function persistOutcomes(
         runAfter,
       ],
     )
+    // A job that exhausted its retry budget is copied to the dead-letter queue
+    // (T-05.01.06) so the admin panel can triage it (Retry / Resolve / Dismiss).
+    // Idempotent via the UNIQUE constraint on job_id.
+    if (!ok && exhausted) {
+      const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id
+      if (jobId) {
+        await writeDeadLetter(pool, {
+          outboxId: row.id,
+          jobId,
+          channel: outcome.channel,
+          eventKey: row.eventKey,
+          profileId: row.profileId,
+          userId: row.userId,
+          attempts,
+          maxAttempts: row.maxAttempts,
+          idempotencyKey: row.idempotencyKey,
+          cause: 'delivery failed',
+          errorCategory: classifyDeliveryError('delivery failed'),
+        })
+      }
+    }
     // Append a delivery log row for this attempt (T-05.01.05). The suspected
     // cause is derived from the sanitized provider message when available.
     await writeDeliveryLog(pool, {
@@ -176,13 +199,34 @@ async function failAllJobs(
   const exhausted = attempts >= row.maxAttempts
   const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
   const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
-  await pool.query(
+  const jobUpdates = await pool.query(
     `UPDATE notification_job
         SET status = $2, attempts = $3, last_error = $4, run_after = $5,
             updated_at = NOW()
-      WHERE outbox_id = $1`,
+      WHERE outbox_id = $1
+      RETURNING id, channel`,
     [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
   )
+  // Exception path: exhausted jobs are also copied to the dead-letter queue
+  // (T-05.01.06) so the admin panel can triage them.
+  if (exhausted) {
+    const jobs = jobUpdates.rows as Array<{ id: string; channel: string }>
+    for (const job of jobs) {
+      await writeDeadLetter(pool, {
+        outboxId: row.id,
+        jobId: job.id,
+        channel: job.channel as NotificationChannel,
+        eventKey: row.eventKey,
+        profileId: row.profileId,
+        userId: row.userId,
+        attempts,
+        maxAttempts: row.maxAttempts,
+        idempotencyKey: row.idempotencyKey,
+        cause: safeMessage || 'dispatch failed',
+        errorCategory: classifyDeliveryError(safeMessage || 'dispatch failed'),
+      })
+    }
+  }
   // Exception path: dispatch threw before per-channel outcomes were recorded,
   // so append one delivery log per requested channel describing the failure.
   for (const channel of row.channels) {
