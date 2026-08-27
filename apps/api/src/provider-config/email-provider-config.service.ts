@@ -6,6 +6,10 @@ import { parseSmtpConfig } from './smtp-config.schema'
 import type { SmtpConnectionTesterService } from './smtp-connection-tester.service'
 import { parseResendConfig } from './resend-config.schema'
 import type { ResendConnectionTesterService } from './resend-connection-tester.service'
+import {
+  ProviderSecretsService,
+  type ProviderMaskedConfig,
+} from './provider-secrets.service'
 
 /**
  * Email provider configuration service (E-05, T-05.06.01).
@@ -40,7 +44,7 @@ export type EmailProviderTestStatus = 'pending' | 'passed' | 'failed'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ProviderConfigBody = Record<string, any>
 
-/** Row shape returned by the service — includes NO secrets or raw config. */
+/** Row shape returned by the service — includes NO raw secrets or unmasked config. */
 export interface EmailProviderConfigResult {
   id: string
   transport: EmailProviderTransport
@@ -55,6 +59,12 @@ export interface EmailProviderConfigResult {
   supersedesId: string | null
   createdAt: Date
   updatedAt: Date
+  /**
+   * Masked view of the stored transport config for admin UI display
+   * (T-05.06.05): secret fields are replaced with `*` + last 4 characters;
+   * non-secret fields pass through. NEVER contains plaintext secrets.
+   */
+  maskedConfig: ProviderMaskedConfig
 }
 
 export interface CreateProviderInput {
@@ -164,7 +174,8 @@ const SELECT_COLUMNS = `id,
   last_test_error AS "lastTestError",
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
-  updated_at AS "updatedAt"`
+  updated_at AS "updatedAt",
+  config`
 
 @Injectable()
 export class EmailProviderConfigService {
@@ -178,7 +189,13 @@ export class EmailProviderConfigService {
     private readonly smtpTester?: SmtpConnectionTesterService,
     @Optional()
     private readonly resendTester?: ResendConnectionTesterService,
-  ) {}
+    @Optional()
+    private readonly secretsService?: ProviderSecretsService,
+  ) {
+    this.secrets = secretsService ?? new ProviderSecretsService()
+  }
+
+  private readonly secrets: ProviderSecretsService
 
   private get db(): ProviderPool {
     return this.injectedPool ?? (getDbPool() as unknown as ProviderPool)
@@ -191,7 +208,9 @@ export class EmailProviderConfigService {
     const result = await this.db.query(
       `SELECT ${SELECT_COLUMNS} FROM email_provider_configs ORDER BY created_at DESC`,
     )
-    return result.rows as EmailProviderConfigResult[]
+    return (result.rows as Array<EmailProviderConfigResult & { config?: ProviderConfigBody }>).map(
+      (row) => this.maskRow(row),
+    )
   }
 
   async get(id: string): Promise<EmailProviderConfigResult> {
@@ -205,14 +224,34 @@ export class EmailProviderConfigService {
       `SELECT ${SELECT_COLUMNS} FROM email_provider_configs WHERE id = $1`,
       [id],
     )
-    return (result.rows[0] as EmailProviderConfigResult | undefined) ?? null
+    const row = result.rows[0] as
+      | (EmailProviderConfigResult & { config?: ProviderConfigBody })
+      | undefined
+    if (!row) return null
+    return this.maskRow(row)
+  }
+
+  /**
+   * Strip the raw config out of a DB row and attach a masked view (secret
+   * fields → `*…last4`), so plaintext/encrypted secrets never leave the API.
+   */
+  private maskRow(
+    row: EmailProviderConfigResult & { config?: ProviderConfigBody },
+  ): EmailProviderConfigResult {
+    const { config, ...rest } = row
+    const transport = row.transport
+    return {
+      ...rest,
+      maskedConfig: this.secrets.maskConfig(transport, config ?? {}),
+    }
   }
 
   /* ---------------------------- Mutations ------------------------------- */
 
-  /** Create a new draft configuration. New rows always start `draft`. */
+  /** Create a new draft configuration. New rows always start `draft`. Secrets are encrypted at rest. */
   async create(input: CreateProviderInput): Promise<EmailProviderConfigResult> {
     const id = uuidv7()
+    const config = this.secrets.encryptConfig(input.transport, input.config)
     await this.db.query(
       `INSERT INTO email_provider_configs
          (id, transport, label, status, config, created_by, supersedes_id)
@@ -221,7 +260,7 @@ export class EmailProviderConfigService {
         id,
         input.transport,
         input.label,
-        input.config,
+        config,
         input.createdBy,
         input.supersedesId ?? null,
       ],
@@ -247,14 +286,15 @@ export class EmailProviderConfigService {
     }
     if (input.config !== undefined) {
       /**
-       * Merge the patch over the existing stored config (JSONB `||`).
-       * This preserves fields the client did not resend — most importantly
-       * encrypted secrets (SMTP password / Resend API key), which the API
-       * never returns and which the UI therefore leaves blank when editing.
-       * Omitting a secret on update now keeps the current one instead of
-       * silently wiping it.
+       * Encrypt secret fields of the incoming patch before merging it over the
+       * stored config (JSONB `||`). This preserves fields the client did not
+       * resend — most importantly stored secrets (SMTP password / Resend API
+       * key), which the API never returns and which the UI therefore leaves
+       * blank when editing. Omitting a secret on update keeps the current one
+       * instead of silently wiping it; providing a new one encrypts it at rest.
        */
-      params.push(input.config)
+      const encryptedPatch = this.secrets.encryptConfig(existing.transport, input.config)
+      params.push(encryptedPatch)
       sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`)
     }
     if (sets.length > 0) {
@@ -575,11 +615,22 @@ export class EmailProviderConfigService {
     }
   }
 
+  /**
+   * Read the stored config for a row with secret fields decrypted. This is the
+   * decryption boundary (T-05.06.05): ONLY consumers that actually send — the
+   * SMTP/Resend connection testers and rollback (which re-encrypts on create)
+   * — read via this helper. Never exposed in API results; `maskRow` attaches a
+   * masked view instead.
+   */
   private async readConfig(id: string): Promise<ProviderConfigBody> {
     const result = await this.db.query(
-      `SELECT config FROM email_provider_configs WHERE id = $1`,
+      `SELECT config, transport FROM email_provider_configs WHERE id = $1`,
       [id],
     )
-    return (result.rows[0] as { config: ProviderConfigBody } | undefined)?.config ?? {}
+    const row = result.rows[0] as
+      | { config: ProviderConfigBody; transport: EmailProviderTransport }
+      | undefined
+    if (!row) return {}
+    return this.secrets.decryptConfig(row.transport, row.config ?? {})
   }
 }

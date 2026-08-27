@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-05.06.05",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-06-05--provider-secrets",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.06.05",
   "loop_iteration": 323,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -273,9 +273,14 @@
     "05-notifications-documents-ai.md#T-05.06.04"
   ],
   "last_error": "",
-  "notes": "T-05.06.04 (Provider admin UI) MERGED via PR #188 (5b46f75). Loop idle. Next: T-05.06.05 (Secrets encryption & masking, M).",
-  "last_updated": "2026-08-27T18:09:12Z",
+  "notes": "Building T-05.06.05 (Secrets encryption & masking): field-level AES-256-GCM at rest, maskedConfig in API results, decrypt only at send boundary.",
+  "last_updated": "2026-08-27T18:49:28Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:49:28Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.04",
