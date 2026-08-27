@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-05.02.02",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-02-02--notification-center-api",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.02.02",
   "loop_iteration": 305,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -255,8 +255,8 @@
     "05-notifications-documents-ai.md#T-05.02.01"
   ],
   "last_error": null,
-  "notes": "T-05.02.01 (in-app notification entity & transport) merged via PR #170. Next: T-05.02.02 (notification center API).",
-  "last_updated": "2026-08-27T06:47:00Z",
+  "notes": "Building T-05.02.02 (notification center API: cursor list, mark-read, read-all).",
+  "last_updated": "2026-08-27T07:06:00Z",
   "status_history": [
     {
       "status": "merged",

@@ -11,3 +11,5 @@
 export { NotificationsModule } from './notifications.module.js'
 export { NotificationsService } from './notifications.service.js'
 export { NotificationTemplateService } from './notification-template.service.js'
+export { NotificationCenterController } from './notification-center.controller.js'
+export { NotificationCenterService } from './notification-center.service.js'
