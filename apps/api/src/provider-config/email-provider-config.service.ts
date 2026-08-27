@@ -10,6 +10,17 @@ import {
   ProviderSecretsService,
   type ProviderMaskedConfig,
 } from './provider-secrets.service'
+import { EmailCircuitBreakerService } from './email-circuit-breaker.service'
+import {
+  PROVIDER_CONFIG_POOL,
+  type PoolClient,
+  type ProviderPool,
+} from './provider-config.di'
+
+// Re-export the DI token + pool types for backward compatibility with existing
+// imports (previously defined inline here).
+export { PROVIDER_CONFIG_POOL }
+export type { PoolClient, ProviderPool }
 
 /**
  * Email provider configuration service (E-05, T-05.06.01).
@@ -59,6 +70,11 @@ export interface EmailProviderConfigResult {
   supersedesId: string | null
   createdAt: Date
   updatedAt: Date
+  /** Circuit breaker health (T-05.06.06). See EmailCircuitBreakerService. */
+  degraded: boolean
+  degradedReason: string | null
+  breakerOpenedAt: Date | null
+  breakerCooldownUntil: Date | null
   /**
    * Masked view of the stored transport config for admin UI display
    * (T-05.06.05): secret fields are replaced with `*` + last 4 characters;
@@ -89,29 +105,10 @@ export interface RecordTestInput {
 }
 
 // ---------------------------------------------------------------------------
-// Pool abstraction (matches the `pg` Pool.shape used at runtime and the mock
-// pool used in tests: both expose `query` and `connect()`).
+// DB pool override types + injection token live in ./provider-config.di.ts
+// (moved there for T-05.06.06 so the circuit breaker can inject the same
+// optional pool without a runtime circular import). Re-exported above.
 // ---------------------------------------------------------------------------
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface PoolClient {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  release: () => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface ProviderPool {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  connect: () => Promise<PoolClient>
-}
-
-/**
- * Injection token for an optional query-pool override. Not registered in the
- * module, so Nest resolves it to `undefined` (thanks to `@Optional()`) and the
- * service falls back to the shared `getDbPool()` pool. Tests construct the
- * service directly with a mock pool as the first constructor argument.
- */
-export const PROVIDER_CONFIG_POOL = Symbol('PROVIDER_CONFIG_POOL')
 
 /** Build a standard HttpException body. */
 interface ErrBody {
@@ -175,6 +172,10 @@ const SELECT_COLUMNS = `id,
   supersedes_id AS "supersedesId",
   created_at AS "createdAt",
   updated_at AS "updatedAt",
+  degraded,
+  degraded_reason AS "degradedReason",
+  opened_at AS "breakerOpenedAt",
+  cooldown_until AS "breakerCooldownUntil",
   config`
 
 @Injectable()
@@ -191,6 +192,8 @@ export class EmailProviderConfigService {
     private readonly resendTester?: ResendConnectionTesterService,
     @Optional()
     private readonly secretsService?: ProviderSecretsService,
+    @Optional()
+    private readonly circuitBreaker?: EmailCircuitBreakerService,
   ) {
     this.secrets = secretsService ?? new ProviderSecretsService()
   }
@@ -462,10 +465,37 @@ export class EmailProviderConfigService {
   /* ---------------------------- Connection test ------------------------- */
 
   /**
+   * Circuit-breaker gate for the send path (T-05.06.06). Delegates to the
+   * injected EmailCircuitBreakerService; when the module has no breaker wired
+   * (older test harnesses) the gate is always open.
+   */
+  async breakerDecision(id: string): Promise<
+    | { allow: true; kind: 'closed' | 'half_open' }
+    | { allow: false; kind: 'open'; degradedReason: string; cooldownUntil: Date }
+  > {
+    if (!this.circuitBreaker) return { allow: true, kind: 'closed' }
+    const decision = await this.circuitBreaker.decision(id)
+    if (!decision.allow) {
+      return {
+        allow: false,
+        kind: 'open',
+        degradedReason: decision.degradedReason,
+        cooldownUntil: decision.cooldownUntil,
+      }
+    }
+    return { allow: true, kind: decision.kind }
+  }
+
+  /**
    * Run a live connection test for a draft config — SMTP handshake
    * (T-05.06.02) or Resend domain-verification + test-send to the admin's
    * email (T-05.06.03) — then persist the outcome as `last_test_*`.
    * `recipient` (the admin's email) is required for the Resend transport.
+   *
+   * Circuit breaker integration (T-05.06.06): every test outcome is fed back
+   * to the breaker, so a run of failures eventually marks the provider
+   * `degraded` and pauses the send path; a successful test-send while the
+   * breaker is in its half-open probe window resets it.
    */
   async testConnection(
     id: string,
@@ -481,8 +511,26 @@ export class EmailProviderConfigService {
       throw new HttpException(ProviderErrors.notEditable(), 409)
     }
 
+    // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
+    // elapsed), no test-send is allowed through this provider. After the
+    // cooldown the breaker allows exactly one half-open probe, which is what
+    // this connection test performs; its outcome is fed back via
+    // recordBreakerOutcome and a success resets the breaker.
+    const breaker = await this.breakerDecision(existing.id)
+    if (!breaker.allow) {
+      throw new HttpException(
+        errBody(
+          409,
+          ErrorCodes.CONFLICT_STATE.code,
+          `Email provider is degraded by the circuit breaker; test-send paused until ${breaker.cooldownUntil.toISOString()}`,
+        ),
+        409,
+      )
+    }
+
     if (existing.transport === 'resend') {
-      return this.testResendConnection(existing.id, recipient)
+      const outcome = await this.testResendConnection(existing.id, recipient)
+      return this.recordBreakerOutcome(existing.id, outcome)
     }
     if (existing.transport !== 'smtp') {
       throw new HttpException(
@@ -494,7 +542,33 @@ export class EmailProviderConfigService {
         400,
       )
     }
-    return this.testSmtpConnection(existing.id)
+    const outcome = await this.testSmtpConnection(existing.id)
+    return this.recordBreakerOutcome(existing.id, outcome)
+  }
+
+  /**
+   * Feed a connection-test outcome to the circuit breaker (T-05.06.06) and
+   * re-read the row so `degraded` / breaker fields in the result are fresh.
+   * A failing test on a non-degraded provider accumulates toward the trip
+   * threshold; a failing test while degraded extends the cooldown (failed
+   * probe); a passing test while degraded is the half-open probe that resets
+   * the breaker.
+   */
+  private async recordBreakerOutcome(
+    id: string,
+    outcome: { ok: boolean; error: string | null },
+  ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
+    if (this.circuitBreaker) {
+      const before = await this.circuitBreaker.readState(id)
+      await this.circuitBreaker.recordOutcome(id, {
+        ok: outcome.ok,
+        ...(outcome.error ? { cause: outcome.error } : {}),
+        isProbe: before.degraded,
+      })
+    }
+    const result = await this.findById(id)
+    if (!result) throw new HttpException(ProviderErrors.notFound(), 404)
+    return { ok: outcome.ok, error: outcome.error, result }
   }
 
   /** SMTP handshake connection test (T-05.06.02). */

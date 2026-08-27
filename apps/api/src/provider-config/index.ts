@@ -1,5 +1,6 @@
 export * from './email-provider-config.service'
 export * from './email-provider-config.controller'
+export * from './email-circuit-breaker.service'
 export * from './smtp-config.schema'
 export * from './smtp-network-guard'
 export * from './smtp-connection-tester.service'

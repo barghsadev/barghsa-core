@@ -172,6 +172,10 @@ function buildHarness() {
       supersedesId: r.supersedes_id,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
+      degraded: r.degraded ?? false,
+      degradedReason: r.degraded_reason ?? null,
+      breakerOpenedAt: r.opened_at ?? null,
+      breakerCooldownUntil: r.cooldown_until ?? null,
       // Raw config is included so the service's maskRow() can build the
       // masked view; it is stripped before the API returns the row.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

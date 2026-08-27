@@ -7,15 +7,16 @@ import {
   notificationsOutboxAge,
   notificationsQueueDepth,
   notificationsDeadLetterCount,
+  providerEmailHealth,
 } from './worker-metrics.js'
 
 /**
- * Worker notification-metrics tests (E-05, T-05.01.07).
+ * Worker notification-metrics tests (E-05, T-05.01.07 / T-05.06.06).
  *
- * Covers the DB-derived gauges (outbox age, queue depth, dead-letter count)
- * via an injected fake pool that returns rows for the three collector queries,
- * plus the in-process delivery-attempts counter increments and the Prometheus
- * text-format export.
+ * Covers the DB-derived gauges (outbox age, queue depth, dead-letter count,
+ * email provider health) via an injected fake pool that returns rows for the
+ * collector queries, plus the in-process delivery-attempts counter increments
+ * and the Prometheus text-format export.
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,6 +24,8 @@ function makePool(overrides: {
   age?: number
   depth?: number
   deadLetter?: number
+  /** Provider health rows: [{ id, health }]. */
+  providerHealth?: Array<{ id: string; health: number }>
 } = {}): any {
   return {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,6 +39,9 @@ function makePool(overrides: {
       if (sql.includes('notification_outbox')) {
         return { rows: [{ depth: overrides.depth ?? 7 }] }
       }
+      if (sql.includes('email_provider_configs')) {
+        return { rows: overrides.providerHealth ?? [] }
+      }
       return { rows: [] }
     },
   }
@@ -48,6 +54,7 @@ describe('worker notification metrics', () => {
     notificationsQueueDepth.reset()
     notificationsDeadLetterCount.reset()
     notificationsDeliveryAttempts.reset()
+    providerEmailHealth.reset()
   })
 
   it('recordDeliveryAttempt increments the labelled attempts counter', async () => {
@@ -77,5 +84,29 @@ describe('worker notification metrics', () => {
     expect(text).toContain('notifications_outbox_age_seconds 0')
     expect(text).toContain('notifications_queue_depth 0')
     expect(text).toContain('notifications_dead_letter_count 0')
+  })
+
+  it('reports provider_email_health per provider (1 healthy, 0 tripped)', async () => {
+    await collectNotificationGauges(
+      makePool({
+        providerHealth: [
+          { id: 'prov-active', health: 1 },
+          { id: 'prov-tripped', health: 0 },
+        ],
+      }),
+    )
+
+    const text = await exportWorkerMetrics()
+    expect(text).toContain('provider_email_health')
+    expect(text).toContain('provider_id="prov-active"} 1')
+    expect(text).toContain('provider_id="prov-tripped"} 0')
+  })
+
+  it('emits no provider_email_health series when no providers exist', async () => {
+    await collectNotificationGauges(makePool({ providerHealth: [] }))
+    const text = await exportWorkerMetrics()
+    // HELP/TYPE header lines exist for a registered metric; assert no label
+    // series was emitted (no provider_id= rows).
+    expect(text).not.toMatch(/provider_email_health\{provider_id=/)
   })
 })
