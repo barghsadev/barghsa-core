@@ -5,6 +5,7 @@ import {
   Param,
   HttpCode,
   NotFoundException,
+  BadRequestException,
   Query,
   Req,
   UseGuards,
@@ -16,6 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { NotificationCenterService } from './notification-center.service.js'
@@ -92,6 +94,13 @@ export class NotificationCenterController {
     const normDirection: CursorDirection =
       direction === 'newer' ? 'newer' : 'older'
     const parsedLimit = limit !== undefined ? parseInt(limit, 10) : undefined
+    if (parsedLimit !== undefined && Number.isNaN(parsedLimit)) {
+      throw new BadRequestException({
+        statusCode: 400,
+        error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        message: 'Invalid limit',
+      })
+    }
 
     const options: {
       cursor?: string

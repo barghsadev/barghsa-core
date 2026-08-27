@@ -41,9 +41,9 @@ export interface NotificationCenterItem {
 /** A cursor-keyed page of notifications plus the unread count. */
 export interface NotificationCenterPage {
   data: NotificationCenterItem[]
-  /** Opaque cursor for the next (older) page; null when there are no more. */
-  nextCursor: string | null
-  unreadCount: number
+  /** Opaque cursor for the next page; null when there are no more. */
+  next_cursor: string | null
+  unread_count: number
 }
 
 export interface ListNotificationsOptions {
@@ -245,15 +245,20 @@ export class NotificationCenterService {
 
     const hasMore = data.length > limit
     const page = hasMore ? data.slice(0, limit) : data
-    const lastRow = page[page.length - 1]
-    const nextCursor =
-      direction === 'older' && hasMore && lastRow
-        ? encodeCursor(lastRow.createdAt, lastRow.id)
+
+    // `next_cursor` continues in the same direction as the request:
+    //   - older: continue with rows strictly older than the last kept row.
+    //   - newer: continue with rows strictly newer than the first (newest) kept
+    //     row — the position the extra `limit + 1` fetched row proves exists.
+    const boundaryRow = direction === 'older' ? page[page.length - 1] : page[0]
+    const next_cursor =
+      hasMore && boundaryRow
+        ? encodeCursor(boundaryRow.createdAt, boundaryRow.id)
         : null
 
-    const unreadCount = await this.countUnread(profileId)
+    const unread_count = await this.countUnread(profileId)
 
-    return { data: page, nextCursor, unreadCount }
+    return { data: page, next_cursor, unread_count }
   }
 
   /** Total unread count for a profile (used for the badge & response). */

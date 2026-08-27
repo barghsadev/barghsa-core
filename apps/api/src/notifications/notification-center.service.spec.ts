@@ -70,8 +70,8 @@ describe('list', () => {
     // The list query (first call) is scoped to the profile.
     expect(params).toEqual(['profile-1', 51])
     expect(page.data).toHaveLength(2)
-    expect(page.nextCursor).toBeNull()
-    expect(page.unreadCount).toBe(3)
+    expect(page.next_cursor).toBeNull()
+    expect(page.unread_count).toBe(3)
   })
 
   it('emits a next_cursor when a following older page exists', async () => {
@@ -88,10 +88,47 @@ describe('list', () => {
     const page = await svc.list('profile-1', { limit: 2 })
 
     expect(page.data).toHaveLength(2)
-    expect(page.nextCursor).toBeTruthy()
+    expect(page.next_cursor).toBeTruthy()
     // decode the emitted cursor: it is the last kept row's position.
-    const pos = decodeCursor(page.nextCursor!)
+    const pos = decodeCursor(page.next_cursor!)
     expect(pos.id).toBe(b.id)
+  })
+
+  it('newer direction reverses to newest-first and emits a cursor from the newest kept row', async () => {
+    const pool = makeMockPool()
+    // Fetched in ASC order (oldest..newest); two distinct timestamps + one
+    // extra row so hasMore is true. Service reverses to newest-first.
+    const old = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
+    const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
+    const newest = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') })
+    pool.query
+      .mockResolvedValueOnce({ rows: [old, mid, newest] })
+      .mockResolvedValueOnce({ rows: [{ n: '0' }] })
+
+    const svc = new NotificationCenterService(pool)
+    const page = await svc.list('profile-1', { limit: 2, direction: 'newer' })
+
+    // Reverse: newest-first, page keeps the two newest.
+    expect(page.data[0]!.id).toBe(newest.id)
+    expect(page.data[1]!.id).toBe(mid.id)
+    expect(page.next_cursor).toBeTruthy()
+    // Continuous newer cursor anchors on the newest kept row.
+    const pos = decodeCursor(page.next_cursor!)
+    expect(pos.id).toBe(newest.id)
+  })
+
+  it('clamps limit to MAX_LIMIT', async () => {
+    const pool = makeMockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ n: '0' }] })
+
+    const svc = new NotificationCenterService(pool)
+    await svc.list('profile-1', { limit: 999 })
+
+    const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
+    // limit+1 = 101 after clamping to MAX_LIMIT (100).
+    expect(params).toEqual(['profile-1', 101])
   })
 
   it('filters unread rows and scopes to the profile', async () => {
