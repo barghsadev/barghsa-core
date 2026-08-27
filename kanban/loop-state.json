@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-05.06.04",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-06-04--provider-admin-ui",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/188",
   "current_task_key": "05-notifications-documents-ai.md#T-05.06.04",
   "loop_iteration": 323,
   "fix_attempts": 0,
@@ -272,9 +272,14 @@
     "05-notifications-documents-ai.md#T-05.06.03"
   ],
   "last_error": "",
-  "notes": "Building T-05.06.04 (Provider admin UI). Backend lifecycle endpoints exist; adding admin UI page + nav + i18n.",
-  "last_updated": "2026-08-27T16:48:59Z",
+  "notes": "PR #188 (provider admin UI) ready for review; state in_review.",
+  "last_updated": "2026-08-27T16:56:40Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
+      "at": "2026-08-27T16:56:40Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.06.04",
