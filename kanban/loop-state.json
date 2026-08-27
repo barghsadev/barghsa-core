@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 327,
+  "status": "in_review",
+  "current_task_id": "T-09.07.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-07-01--dual-approval-threshold",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/195",
+  "current_task_key": "02-auth-users-admin.md#T-09.07.01",
+  "loop_iteration": 328,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -279,8 +279,8 @@
     "02-auth-users-admin.md#T-09.06.03"
   ],
   "last_error": "",
-  "notes": "T-09.06.03 (notification daytime window config) MERGED via PR #194: GET/PUT /api/admin/config/delivery-window now under the single S-09.06 permission gate (admin:notification-providers:edit -> isAdmin; was bare inline isAdmin from T-05.03.03) with error-contract + delegation controller tests. Step-up on PUT deferred until the web step-up flow exists (panel uses raw fetch). Loop idle. Next: 02-auth-users-admin.md#T-09.07.01.",
-  "last_updated": "2026-08-28T00:25:02Z",
+  "notes": "T-09.07.01 (dual-approval threshold config) PR #195 open, ready, mergeable. Slice: GET/PUT /api/admin/config/dual-approval-threshold under single S-09.07 permission gate (admin:financial:edit -> isAdmin; mirrors S-09.06 delivery-window pattern). Shared @barghsa/shared/finance contract: finance.dual_approval_threshold app_config key, integer IRR 0..MAX_SAFE_INTEGER (0 = disabled), versioned upsert + config_version bump + config_change audit. Step-up and emergency override deferred (no web step-up flow / alert pipeline yet). Finance module (T-09.07.02 consumer) does not exist yet. Tests 858 pass, typecheck + build pass. Next: Claude Opus 5 review.",
+  "last_updated": "2026-08-27T21:58:53Z",
   "status_history": [
     {
       "status": "merged",
@@ -561,6 +561,11 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.06.03",
       "at": "2026-08-28T00:25:02Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.07.01",
+      "at": "2026-08-27T21:58:53Z"
     }
   ]
 }
