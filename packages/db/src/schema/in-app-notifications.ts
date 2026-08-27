@@ -1,3 +1,4 @@
+import { desc } from 'drizzle-orm'
 import { jsonb, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { profiles } from './profiles.js'
@@ -72,7 +73,8 @@ export const inAppNotifications = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
-    // Notification-center list query: a profile's notifications newest-first.
-    index('idx_ian_profile_created').on(table.profileId, table.createdAt),
+    // Notification-center list query: a profile's notifications newest-first
+    // (matches the SQL migration's (profile_id, created_at DESC) index).
+    index('idx_ian_profile_created').on(table.profileId, desc(table.createdAt)),
   ],
 )
