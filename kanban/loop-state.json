@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.04.03",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-04-03--template-preview",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/179",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.04.03",
-  "loop_iteration": 313,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 314,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -260,12 +260,18 @@
     "05-notifications-documents-ai.md#T-05.03.02",
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01",
-    "05-notifications-documents-ai.md#T-05.04.02"
+    "05-notifications-documents-ai.md#T-05.04.02",
+    "05-notifications-documents-ai.md#T-05.04.03"
   ],
   "last_error": "",
-  "notes": "T-05.04.03 (template preview) PR #179 ready for review. Backend preview endpoints pre-existing; added admin panel + client mirror lib (7 tests). CI green.",
-  "last_updated": "2026-08-27T12:04:31Z",
+  "notes": "T-05.04.03 (template preview) PR #179 MERGED (commit 5b4ca23). 2 review rounds; 1 major + 1 minor fixed. Loop idle.",
+  "last_updated": "2026-08-27T12:14:25Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.03",
+      "at": "2026-08-27T12:13:51Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.04.03",
