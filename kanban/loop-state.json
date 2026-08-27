@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.01.05",
-  "current_task_id": "T-05.01.05",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-01-05--delivery-logs",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/167",
+  "status": "idle",
+  "current_task_key": null,
+  "current_task_id": null,
+  "current_task_file": null,
+  "current_branch": null,
+  "current_pr_url": null,
   "loop_iteration": 303,
-  "fix_attempts": 1,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -248,12 +248,18 @@
     "05-notifications-documents-ai.md#T-05.01.02",
     "05-notifications-documents-ai.md#T-05.01.03",
     "02-auth-users-admin.md#T-06.01.01",
-    "05-notifications-documents-ai.md#T-05.01.04"
+    "05-notifications-documents-ai.md#T-05.01.04",
+    "05-notifications-documents-ai.md#T-05.01.05"
   ],
   "last_error": null,
-  "notes": "T-05.01.05 (status tracking & delivery logs): review requested changes (major snake_case/camelCase in admin query); fix committed to PR #167, re-entering review.",
-  "last_updated": "2026-08-27T05:10:00Z",
+  "notes": "T-05.01.05 (status tracking & delivery logs) merged via PR #167; reset to idle. E-05 next: T-05.01.06 (dead-letter queue & admin UI).",
+  "last_updated": "2026-08-27T05:15:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.05",
+      "at": "2026-08-27T05:12:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.01.05",
