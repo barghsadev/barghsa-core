@@ -129,7 +129,10 @@ export class NotificationCenterController {
   async markAllRead(@Req() req: AuthenticatedRequest) {
     const profileId = await this.requireActiveProfile(req)
     const marked = await this.notificationCenterService.markAllRead(profileId)
-    return { marked, unread_count: 0 }
+    // Re-query after the update so the reported count is accurate even if a
+    // new notification arrives concurrently between the UPDATE and the reply.
+    const unread_count = await this.notificationCenterService.countUnread(profileId)
+    return { marked, unread_count }
   }
 
   /**

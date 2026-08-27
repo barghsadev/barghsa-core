@@ -183,12 +183,19 @@ export class NotificationCenterService {
    * `filter=unread` narrows to unread rows. No cursor returns the newest page.
    * A cursor continues from that position in the given `direction`:
    *   - `older` (default): rows strictly older than the cursor position.
-   *   - `newer`:            rows strictly newer than the cursor position
-   *     (used to refresh the list with anything that arrived since a loaded
-   *     page). Results are still returned newest-first.
+   *   - `newer`:            rows strictly newer than the cursor position (used
+   *     to refresh the list with anything that arrived since a loaded page).
+   *
+   * Both directions fetch newest-first with the same `ORDER BY`; the only
+   * difference is the row-comparison operator (`<` for older, `>` for newer).
+   * This keeps pagination symmetric and free of duplicates:
+   *   - older: `next_cursor` anchors on the oldest kept row so the next page
+   *     continues with rows strictly older than it.
+   *   - newer: `next_cursor` anchors on the newest kept row so the next page
+   *     continues with rows strictly newer than it.
    *
    * Fetches `limit + 1` rows to detect a following page and emits an opaque
-   * `nextCursor` for it. `unreadCount` is the profile's total unread always.
+   * `next_cursor` for it. `unread_count` is the profile's total unread always.
    */
   async list(
     profileId: string,
@@ -210,9 +217,8 @@ export class NotificationCenterService {
       conditions.push('is_read = false')
     }
 
-    let cursorPosition: { createdAt: Date; id: string } | null = null
     if (options.cursor) {
-      cursorPosition = decodeCursor(options.cursor)
+      const cursorPosition = decodeCursor(options.cursor)
       const op = direction === 'older' ? '<' : '>'
       conditions.push(
         `(created_at, id) ${op} ($${++paramIndex}, $${++paramIndex})`,
@@ -220,12 +226,6 @@ export class NotificationCenterService {
       params.push(cursorPosition.createdAt, cursorPosition.id)
     }
 
-    // Newest-first is the canonical output order for the center. The `newer`
-    // direction fetches in ascending order internally then reverses.
-    const orderBy =
-      direction === 'older'
-        ? 'ORDER BY created_at DESC, id DESC'
-        : 'ORDER BY created_at ASC, id ASC'
     const limitIdx = ++paramIndex
     params.push(limit + 1)
 
@@ -233,23 +233,19 @@ export class NotificationCenterService {
       `SELECT ${SELECT_COLUMNS}
          FROM in_app_notifications
         WHERE ${conditions.join(' AND ')}
-        ${orderBy}
+        ORDER BY created_at DESC, id DESC
         LIMIT $${limitIdx}`,
       params,
     )
 
-    let data: NotificationCenterItem[] = rows.rows as NotificationCenterItem[]
-    if (direction === 'newer') {
-      data = [...data].reverse()
-    }
-
+    const data = rows.rows as NotificationCenterItem[]
     const hasMore = data.length > limit
     const page = hasMore ? data.slice(0, limit) : data
 
-    // `next_cursor` continues in the same direction as the request:
-    //   - older: continue with rows strictly older than the last kept row.
-    //   - newer: continue with rows strictly newer than the first (newest) kept
-    //     row — the position the extra `limit + 1` fetched row proves exists.
+    // Continue in the direction of travel, anchored on the boundary row that
+    // a following page is strictly beyond (no overlap / no skipped rows):
+    //   - older: the last (oldest) kept row.
+    //   - newer: the first (newest) kept row.
     const boundaryRow = direction === 'older' ? page[page.length - 1] : page[0]
     const next_cursor =
       hasMore && boundaryRow

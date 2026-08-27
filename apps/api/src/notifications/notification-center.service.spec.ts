@@ -94,27 +94,37 @@ describe('list', () => {
     expect(pos.id).toBe(b.id)
   })
 
-  it('newer direction reverses to newest-first and emits a cursor from the newest kept row', async () => {
+  it('newer direction returns newest-first and emits a cursor from the newest kept row', async () => {
     const pool = makeMockPool()
-    // Fetched in ASC order (oldest..newest); two distinct timestamps + one
-    // extra row so hasMore is true. Service reverses to newest-first.
-    const old = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
-    const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
+    // Both directions fetch DESC (newest-first); the mock simulates that.
     const newest = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') })
+    const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
+    const older = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
     pool.query
-      .mockResolvedValueOnce({ rows: [old, mid, newest] })
+      .mockResolvedValueOnce({ rows: [newest, mid, older] })
       .mockResolvedValueOnce({ rows: [{ n: '0' }] })
 
     const svc = new NotificationCenterService(pool)
-    const page = await svc.list('profile-1', { limit: 2, direction: 'newer' })
+    // Pass a cursor so the list generates the `>` row-comparison condition.
+    const cursor = encodeCursor(new Date('2026-08-27T05:00:00.000Z'), 'seed')
+    const page = await svc.list('profile-1', {
+      limit: 2,
+      direction: 'newer',
+      cursor,
+    })
 
-    // Reverse: newest-first, page keeps the two newest.
     expect(page.data[0]!.id).toBe(newest.id)
     expect(page.data[1]!.id).toBe(mid.id)
     expect(page.next_cursor).toBeTruthy()
     // Continuous newer cursor anchors on the newest kept row.
     const pos = decodeCursor(page.next_cursor!)
     expect(pos.id).toBe(newest.id)
+
+    // Newer uses a `>` row comparison with the same newest-first ORDER BY, so
+    // it is symmetric with `older` (no duplicate rows when continuing).
+    const [sql] = pool.query.mock.calls[0] as [string, unknown[]]
+    expect(sql).toContain('(created_at, id) >')
+    expect(sql).toContain('ORDER BY created_at DESC, id DESC')
   })
 
   it('clamps limit to MAX_LIMIT', async () => {
