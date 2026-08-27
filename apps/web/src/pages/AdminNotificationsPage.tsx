@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import type { FormEvent } from 'react'
 import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
+import DeadLetterPanel from '../components/DeadLetterPanel.js'
 
 interface NotificationTemplate {
   id: string
@@ -382,6 +383,9 @@ export default function AdminNotificationsPage() {
           </button>
         </div>
       )}
+
+      {/* Dead-letter queue (T-05.01.06) */}
+      <DeadLetterPanel uiLocale={uiLocale} />
 
       {/* Filters */}
       <div className="flex gap-4 items-center">

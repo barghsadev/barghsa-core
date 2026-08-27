@@ -40,6 +40,7 @@ const row: OutboxRow = {
   attempts: 0,
   maxAttempts: 5,
   scheduledAt: null,
+  lastError: null,
 }
 
 describe('dispatchOutbox', () => {

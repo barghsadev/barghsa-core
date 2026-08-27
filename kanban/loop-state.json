@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
-  "current_pr_url": null,
-  "loop_iteration": 303,
+  "status": "in_review",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.01.06",
+  "current_task_id": "T-05.01.06",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-01-06--dead-letter-queue",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/168",
+  "loop_iteration": 304,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -252,9 +252,19 @@
     "05-notifications-documents-ai.md#T-05.01.05"
   ],
   "last_error": null,
-  "notes": "T-05.01.05 (status tracking & delivery logs) merged via PR #167; reset to idle. E-05 next: T-05.01.06 (dead-letter queue & admin UI).",
-  "last_updated": "2026-08-27T05:15:00Z",
+  "notes": "T-05.01.06 (dead-letter queue & admin UI) implementation done, PR #168 in review (ready). Checks: worker tests pass, typecheck clean (worker/api/db/web/i18n). CI pending. Operational alerts for dead-letter accumulation deferred to T-05.01.07.",
+  "last_updated": "2026-08-27T05:00:00Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.06",
+      "at": "2026-08-27T04:50:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.06",
+      "at": "2026-08-27T04:44:00Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.01.05",

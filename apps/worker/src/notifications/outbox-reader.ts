@@ -40,6 +40,8 @@ export interface OutboxRow {
   attempts: number
   maxAttempts: number
   scheduledAt: Date | null
+  /** Sanitized error from the last failed attempt (for dead-letter triage). */
+  lastError: string | null
 }
 
 export interface OutboxReaderOptions {
@@ -87,7 +89,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           FOR UPDATE SKIP LOCKED
         )
         RETURNING id, profile_id, user_id, event_key, payload, channels,
-                  idempotency_key, attempts, max_attempts, scheduled_for`,
+                  idempotency_key, attempts, max_attempts, scheduled_for, last_error`,
     [leaseUntil, now, limit],
   )
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
@@ -101,6 +103,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
     attempts: (row.attempts as number) ?? 0,
     maxAttempts: (row.max_attempts as number) ?? 5,
     scheduledAt: (row.scheduled_for as Date | null) ?? null,
+    lastError: (row.last_error as string | null) ?? null,
   }))
 }
 
