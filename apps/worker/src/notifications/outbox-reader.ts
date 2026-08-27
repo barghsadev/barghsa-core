@@ -5,6 +5,7 @@ import type {
   NotificationSendPayload,
   NotificationSendResult,
 } from '@barghsa/shared/notifications'
+import { deriveChannelIdempotencyKey } from './outbox-writer.js'
 
 /**
  * Base outbox reader (E-05, T-05.01.01).
@@ -113,6 +114,12 @@ export interface DispatchOutcome {
  * registered transports. In-app is mandatory: if a row requests in_app but no
  * in_app transport is registered, this throws. Unregistered external channels
  * are skipped so a missing adapter never blocks in-app delivery.
+ *
+ * Idempotency (T-05.01.04): each channel receives its OWN per-channel key
+ * (`sha256(eventKey:channel:profileId)`) rather than the row-level key, so
+ * delivery to a given transport is at-most-once even across retries. Two
+ * different channels of the same event therefore get distinct keys and are
+ * never confused at the provider level.
  */
 export async function dispatchOutbox(
   row: OutboxRow,
@@ -122,7 +129,7 @@ export async function dispatchOutbox(
   for (const channel of row.channels) {
     const transport = transports[channel]
     const payload: NotificationSendPayload = {
-      idempotencyKey: row.idempotencyKey,
+      idempotencyKey: deriveChannelIdempotencyKey(row.eventKey, channel, row.profileId),
       channel,
       recipientId: row.userId ?? row.profileId,
       profileId: row.profileId,

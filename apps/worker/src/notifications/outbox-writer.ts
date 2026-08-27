@@ -34,7 +34,9 @@ export interface EnqueueOutboxInput {
   channels: NotificationChannel[]
   /**
    * Unique idempotency key. Defaults to sha256(`${eventKey}:${profileId}`).
-   * Override for cross-event semantics (e.g. per-channel keys after T-05.01.04).
+   * Override for cross-event semantics. Per-channel provider idempotency on
+   * the consuming side is derived separately (T-05.01.04); use this only to
+   * deduplicate whole outbox rows for the same (event, profile).
    */
   idempotencyKey?: string
   /** 'queued' (immediate) or 'scheduled' (deferred until scheduledFor). */
@@ -57,6 +59,24 @@ export interface EnqueueOutboxResult {
 /** Default idempotency key — sha256(eventKey + ':' + profileId). */
 export function deriveIdempotencyKey(eventKey: string, profileId: string): string {
   return createHash('sha256').update(`${eventKey}:${profileId}`).digest('hex')
+}
+
+/**
+ * Per-channel idempotency key (T-05.01.04) — sha256(eventKey:channel:profileId).
+ *
+ * Guarantees at-most-once logical delivery to a given channel transport even
+ * when the same outbox row is retried, re-inserted as a duplicate, or fanned
+ * out to multiple channels: each (event, channel, profile) combination maps to
+ * exactly one stable key, so repeated sends to a channel with the same key can
+ * never double-deliver. Resend and SMS.ir accept this as their provider-level
+ * idempotency key so adapters can participate in the guarantee at the wire.
+ */
+export function deriveChannelIdempotencyKey(
+  eventKey: string,
+  channel: NotificationChannel,
+  profileId: string,
+): string {
+  return createHash('sha256').update(`${eventKey}:${channel}:${profileId}`).digest('hex')
 }
 
 /**
