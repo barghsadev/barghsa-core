@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-09.07.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-07-02--dual-approval-workflow",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/196",
   "current_task_key": "02-auth-users-admin.md#T-09.07.02",
   "loop_iteration": 329,
   "fix_attempts": 0,
@@ -280,13 +280,13 @@
     "02-auth-users-admin.md#T-09.07.01"
   ],
   "last_error": "",
-  "notes": "Building T-09.07.02 (dual-approval workflow, L) as a prerequisite slice: approval-request lifecycle (create/list/approve/reject) under /api/admin/approval-requests with S-09.07 admin:financial:edit gate (isAdmin). Slice includes shared shouldRequireDualApproval predicate, approval_requests table (migration 0036), atomic audit_log transitions, no-self-approval + mandatory reject reason, in-app notification to eligible staff/initiator. Deferred: UI, step-up on resolution, role-permission eligibility, finance-module threshold consumer.",
-  "last_updated": "2026-08-27T22:15:34Z",
+  "notes": "T-09.07.02 slice in_review (PR #196): approval-request lifecycle under /api/admin/approval-requests, S-09.07 gate, migration 0036, atomic audit transitions, no-self-approval, mandatory reject reason, in-app notifications. Deferred: UI, step-up, role eligibility, finance-module consumer.",
+  "last_updated": "2026-08-27T22:16:05Z",
   "status_history": [
     {
-      "status": "building",
+      "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.07.02",
-      "at": "2026-08-27T22:15:34Z"
+      "at": "2026-08-27T22:16:05Z"
     },
     {
       "status": "merged",
