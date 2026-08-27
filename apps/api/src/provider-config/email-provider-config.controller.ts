@@ -114,6 +114,25 @@ export class EmailProviderConfigController {
     })
   }
 
+  @Post(':id/test-connection')
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Run a live SMTP connection test and record the outcome',
+    description:
+      'Performs a real SMTP handshake against the draft config and persists the ' +
+      'result as last_test_status. SSRF guard rejects private/internal ' +
+      'destinations unless allow-listed.',
+  })
+  @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
+  async testConnection(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ): Promise<EmailProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
+    this.assertAdmin(req)
+    const { ok, error, result } = await this.service.testConnection(id)
+    return { ...result, test: { ok, error } }
+  }
+
   @Post(':id/activate')
   @HttpCode(200)
   @ApiOperation({ summary: 'Activate a tested draft provider configuration' })

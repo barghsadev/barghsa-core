@@ -26,7 +26,7 @@ function buildHarness() {
 
     const idParam = (): string => String(params![0])
 
-    // INSERT (new draft)
+    // INSERT (new draft): params = [id, transport, label, config, createdBy, supersedesId]
     if (lower.includes('insert into email_provider_configs')) {
       const id = idParam()
       rows.set(id, {
@@ -34,9 +34,9 @@ function buildHarness() {
         transport: params![1],
         label: params![2],
         status: 'draft',
-        config: params![4],
-        created_by: params![5],
-        supersedes_id: params![6] ?? null,
+        config: params![3],
+        created_by: params![4],
+        supersedes_id: params![5] ?? null,
         created_at: new Date('2026-01-01T00:00:00Z'),
         updated_at: new Date('2026-01-01T00:00:00Z'),
         activated_at: null,
@@ -341,5 +341,72 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     await service.activate(a.id)
     expect(queries).toContain('BEGIN')
     expect(queries).toContain('COMMIT')
+  })
+})
+
+describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
+  // engine-less fake; the real SMTP handshake lives in SmtpConnectionTesterService.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fakeTester = (outcome: { ok: boolean; error?: string }) =>
+    ({ test: async () => outcome }) as never
+
+  it('runs the tester and records a passing test for a valid smtp draft', async () => {
+    const { service, rows } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
+      createdBy: 'admin-1',
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(service as any).smtpTester = fakeTester({ ok: true })
+    const out = await service.testConnection(created.id)
+    expect(out.ok).toBe(true)
+    expect(out.result.lastTestStatus).toBe('passed')
+    expect(rows.get(created.id).last_test_status).toBe('passed')
+  })
+
+  it('records a failing test with the tester error message', async () => {
+    const { service, rows } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', from_email: 'noreply@example.com' },
+      createdBy: 'admin-1',
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(service as any).smtpTester = fakeTester({ ok: false, error: 'Connection refused' })
+    const out = await service.testConnection(created.id)
+    expect(out.ok).toBe(false)
+    expect(out.error).toBe('Connection refused')
+    expect(out.result.lastTestStatus).toBe('failed')
+  })
+
+  it('rejects non-smtp transports with 400', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'resend',
+      label: 'R',
+      config: {},
+      createdBy: 'admin-1',
+    })
+    await expect(service.testConnection(created.id)).rejects.toMatchObject({ status: 400 })
+  })
+
+  it('records a validation failure when config is invalid', async () => {
+    const { service } = buildHarness()
+    // Missing required host + from_email -> schema failure.
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { port: 587 },
+      createdBy: 'admin-1',
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(service as any).smtpTester = fakeTester({ ok: false, error: 'unused' })
+    const out = await service.testConnection(created.id)
+    expect(out.ok).toBe(false)
+    expect(out.error).toContain('Invalid SMTP configuration')
+    expect(out.result.lastTestStatus).toBe('failed')
   })
 })
