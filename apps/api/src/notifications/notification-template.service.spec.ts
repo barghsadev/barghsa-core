@@ -103,6 +103,55 @@ describe('render', () => {
   })
 })
 
+describe('normalizeVariables', () => {
+  it('maps legacy plain-string entries to {name, description: null}', () => {
+    expect(NotificationTemplateService.normalizeVariables(['userName', 'profileLink'])).toEqual([
+      { name: 'userName', description: null },
+      { name: 'profileLink', description: null },
+    ])
+  })
+
+  it('preserves object entries with their descriptions', () => {
+    expect(
+      NotificationTemplateService.normalizeVariables([
+        { name: 'userName', description: 'The user display name' },
+        { name: 'verificationCode', description: null },
+      ]),
+    ).toEqual([
+      { name: 'userName', description: 'The user display name' },
+      { name: 'verificationCode', description: null },
+    ])
+  })
+
+  it('drops empty and duplicate names, keeping first occurrence', () => {
+    expect(
+      NotificationTemplateService.normalizeVariables([
+        '',
+        '  ',
+        'userName',
+        'userName',
+        'profileLink',
+      ]),
+    ).toEqual([
+      { name: 'userName', description: null },
+      { name: 'profileLink', description: null },
+    ])
+  })
+
+  it('handles null/undefined input as empty list', () => {
+    expect(NotificationTemplateService.normalizeVariables(null)).toEqual([])
+    expect(NotificationTemplateService.normalizeVariables(undefined)).toEqual([])
+  })
+
+  it('trims whitespace from name and description', () => {
+    expect(
+      NotificationTemplateService.normalizeVariables([
+        { name: '  userName ', description: '  a desc  ' },
+      ]),
+    ).toEqual([{ name: 'userName', description: 'a desc' }])
+  })
+})
+
 describe('buildSampleData', () => {
   it('derives a friendly label from camelCase, lowercased', () => {
     const data = service.buildSampleData(['userName', 'profileLink'])

@@ -1,11 +1,11 @@
 {
-  "status": "building",
-  "current_task_id": "T-05.03.03",
+  "status": "in_review",
+  "current_task_id": "T-05.04.01",
   "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-03-03--admin-delivery-window-2009",
-  "current_pr_url": "",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.03.03",
-  "loop_iteration": 310,
+  "current_branch": "feat/e05-t-05-04-01--template-variable-descriptions",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/177",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.04.01",
+  "loop_iteration": 311,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -257,51 +257,37 @@
     "05-notifications-documents-ai.md#T-05.02.03",
     "05-notifications-documents-ai.md#T-05.02.04",
     "05-notifications-documents-ai.md#T-05.03.01",
-    "05-notifications-documents-ai.md#T-05.03.02"
+    "05-notifications-documents-ai.md#T-05.03.02",
+    "05-notifications-documents-ai.md#T-05.03.03"
   ],
   "last_error": null,
-  "notes": "Building T-05.03.03 (admin delivery-window config UI): shared config consts, admin GET/PUT config/delivery-window, web panel, i18n.",
-  "last_updated": "2026-08-27T06:05:00Z",
+  "notes": "T-05.04.01 (template entity & CRUD) fulfilled via a reviewable slice: template variables now carry {name, description} (backward-compatible with legacy string[]). PR #177 in_review.",
+  "last_updated": "2026-08-27T11:56:00Z",
   "status_history": [
     {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.01",
+      "at": "2026-08-27T11:56:00Z"
+    },
+    {
       "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.01",
+      "at": "2026-08-27T11:40:00Z"
+    },
+    {
+      "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.03.03",
-      "at": "2026-08-27T11:24:00Z"
+      "at": "2026-08-27T06:05:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.03.03",
+      "at": "2026-08-27T11:25:00Z"
     },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.03.02",
       "at": "2026-08-27T06:03:19Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
-      "at": "2026-08-27T05:45:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
-      "at": "2026-08-27T05:32:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.01",
-      "at": "2026-08-27T05:31:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.01",
-      "at": "2026-08-27T05:27:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.03.01",
-      "at": "2026-08-27T05:26:31Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "",
-      "at": "2026-08-27T05:11:47Z"
     }
   ]
 }

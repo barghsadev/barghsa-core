@@ -8,6 +8,25 @@ export type TemplateChannel = 'email' | 'sms' | 'in_app'
 export type TemplateLocale = 'fa' | 'en'
 export type TemplateStatus = 'draft' | 'active' | 'archived'
 
+/**
+ * A single allow-listed template variable.
+ *
+ * `name` is the `{{name}}` placeholder used in the template body; `description`
+ * is human-readable guidance for admin preview/authoring (T-05.04.01). For
+ * backward compatibility, legacy storage as a plain string array is normalized
+ * to this shape (description = null).
+ */
+export interface TemplateVariable {
+  name: string
+  description: string | null
+}
+
+/** Accepts either {@link TemplateVariable} objects or legacy plain string names. */
+export type TemplateVariableInput =
+  | string
+  | TemplateVariable
+  | { name: string; description?: string | null | undefined }
+
 export interface NotificationTemplateResult {
   id: string
   eventKey: string
@@ -15,7 +34,7 @@ export interface NotificationTemplateResult {
   locale: TemplateLocale
   subject: string | null
   bodyTemplate: string
-  variables: string[]
+  variables: TemplateVariable[]
   status: TemplateStatus
   isActive: boolean
   version: number
@@ -31,13 +50,13 @@ export interface CreateNotificationTemplateInput {
   locale: TemplateLocale
   subject?: string | null
   bodyTemplate: string
-  variables: string[]
+  variables: TemplateVariableInput[]
 }
 
 export interface UpdateNotificationTemplateInput {
   subject?: string | null
   bodyTemplate?: string
-  variables?: string[]
+  variables?: TemplateVariableInput[]
 }
 
 export interface PageTemplatesOptions {
@@ -49,7 +68,7 @@ export interface PageTemplatesOptions {
 export interface RenderedTemplate {
   subject: string | null
   body: string
-  variables: string[]
+  variables: TemplateVariable[]
 }
 
 /**
@@ -70,6 +89,30 @@ export class NotificationTemplateService {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   /**
+   * Normalize a list of variable inputs (either `{name, description}` objects or
+   * legacy plain `string` names) into canonical {@link TemplateVariable} shape.
+   * Backward compatible: existing rows stored as `string[]` map to
+   * `{ name, description: null }`. Empty/whitespace names are dropped.
+   */
+  static normalizeVariables(
+    input: TemplateVariableInput[] | null | undefined,
+  ): TemplateVariable[] {
+    const out: TemplateVariable[] = []
+    const seen = new Set<string>()
+    for (const raw of input ?? []) {
+      const obj = typeof raw === 'string' ? null : raw
+      const name = (obj ? obj.name : (raw as string)).trim()
+      if (!name || seen.has(name)) continue
+      seen.add(name)
+      out.push({
+        name,
+        description: !obj ? null : obj.description?.trim() || null,
+      })
+    }
+    return out
+  }
+
+  /**
    * Row mapper: converts raw DB row to camelCase NotificationTemplateResult.
    */
   private mapRow(row: Record<string, unknown>): NotificationTemplateResult {
@@ -80,7 +123,9 @@ export class NotificationTemplateService {
       locale: row.locale as TemplateLocale,
       subject: (row.subject as string) ?? null,
       bodyTemplate: row.body_template as string,
-      variables: (row.variables as string[]) ?? [],
+      variables: NotificationTemplateService.normalizeVariables(
+        row.variables as TemplateVariableInput[],
+      ),
       status: row.status as TemplateStatus,
       isActive: row.is_active as boolean,
       version: (row.version as number) ?? 1,
@@ -113,8 +158,13 @@ export class NotificationTemplateService {
    * (b) present in the template's allow-listed `variables`. Rejects unknown
    * variables and unclosed placeholders with a 400.
    */
-  validateVariables(bodyTemplate: string, variables: string[]): void {
-    const allowed = new Set<string>(variables.map((v) => v.trim()).filter(Boolean))
+  validateVariables(
+    bodyTemplate: string,
+    variables: TemplateVariableInput[],
+  ): void {
+    const allowed = new Set<string>(
+      NotificationTemplateService.normalizeVariables(variables).map((v) => v.name),
+    )
 
     const opens = (bodyTemplate.match(/{{/g) ?? []).length
     const closes = (bodyTemplate.match(/}}/g) ?? []).length
@@ -162,10 +212,12 @@ export class NotificationTemplateService {
    */
   render(
     template: string,
-    variables: string[],
+    variables: TemplateVariableInput[],
     data?: Record<string, unknown>,
   ): string {
-    const allowed = new Set<string>(variables)
+    const allowed = new Set<string>(
+      NotificationTemplateService.normalizeVariables(variables).map((v) => v.name),
+    )
     const ctx = data ?? {}
     return template.replace(/{{([^{}]+)}}/g, (match, raw) => {
       const name = raw.trim()
@@ -180,10 +232,10 @@ export class NotificationTemplateService {
    * Build neutral sample values for every allow-listed variable, used by
    * preview and test-send.
    */
-  buildSampleData(variables: string[]): Record<string, string> {
+  buildSampleData(variables: TemplateVariableInput[]): Record<string, string> {
     const data: Record<string, string> = {}
-    for (const v of variables) {
-      const key = v.trim()
+    for (const v of NotificationTemplateService.normalizeVariables(variables)) {
+      const key = v.name.trim()
       if (key) data[key] = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase()
     }
     return data
@@ -267,6 +319,10 @@ export class NotificationTemplateService {
     // Validate template variables against the allow-list before persisting.
     this.validateVariables(input.bodyTemplate, input.variables ?? [])
 
+    // Canonicalize variable names + optional descriptions (accepts legacy strings).
+    const normalizedVariables =
+      NotificationTemplateService.normalizeVariables(input.variables)
+
     // Enforce at most one draft/active template per event+channel+locale.
     // The DB partial unique index (uq_notification_templates_active) only
     // covers active rows (is_active=true), so duplicate-draft prevention must
@@ -305,7 +361,7 @@ export class NotificationTemplateService {
         input.locale,
         input.subject ?? null,
         input.bodyTemplate,
-        JSON.stringify(input.variables),
+        JSON.stringify(normalizedVariables),
         actorUserId,
         now,
       ],
@@ -363,11 +419,13 @@ export class NotificationTemplateService {
       input.bodyTemplate !== undefined
         ? input.bodyTemplate
         : (template.rows[0]!.body_template as string)
-    const nextVariables =
+    const nextVariablesRaw =
       input.variables !== undefined
         ? input.variables
-        : ((template.rows[0]!.variables as string[]) ?? [])
-    this.validateVariables(nextBody, nextVariables)
+        : ((template.rows[0]!.variables as TemplateVariableInput[]) ?? [])
+    this.validateVariables(nextBody, nextVariablesRaw)
+    const normalizedVariables =
+      NotificationTemplateService.normalizeVariables(nextVariablesRaw)
 
     // Build dynamic SET clause
     const setClauses: string[] = []
@@ -384,7 +442,7 @@ export class NotificationTemplateService {
     }
     if (input.variables !== undefined) {
       setClauses.push(`variables = $${paramIndex++}::jsonb`)
-      params.push(JSON.stringify(input.variables))
+      params.push(JSON.stringify(normalizedVariables))
     }
 
     if (setClauses.length === 0) {
@@ -435,15 +493,16 @@ export class NotificationTemplateService {
    */
   async previewFromBody(
     bodyTemplate: string,
-    variables: string[],
+    variables: TemplateVariableInput[],
     sampleData?: Record<string, string>,
   ): Promise<RenderedTemplate> {
-    this.validateVariables(bodyTemplate, variables)
-    const data = sampleData ?? this.buildSampleData(variables)
+    const normalized = NotificationTemplateService.normalizeVariables(variables)
+    this.validateVariables(bodyTemplate, normalized)
+    const data = sampleData ?? this.buildSampleData(normalized)
     return {
       subject: null,
-      body: this.render(bodyTemplate, variables, data),
-      variables,
+      body: this.render(bodyTemplate, normalized, data),
+      variables: normalized,
     }
   }
 
