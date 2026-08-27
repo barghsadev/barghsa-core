@@ -49,7 +49,15 @@ describe('ProviderSecretsService (T-05.06.05)', () => {
     const enc = svc.encryptValue('super-secret')
     const parts = enc.split(':')
     const [version, iv, tag, data] = parts as [string, string, string, string]
-    const tampered = [version, iv, tag, `${data.slice(0, -1)}x`].join(':')
+    // Flip the FIRST base64url char to a guaranteed-different one: the first
+    // char encodes the most significant bits of ciphertext byte 0, so the
+    // decoded bytes always change and the GCM auth tag check must fail.
+    // (Previously the mutation replaced the LAST char with 'x', which is a
+    // no-op whenever the random ciphertext already ends in 'x' — a flaky
+    // ~1/64 chance that made this test intermittently fail under CI.)
+    const flipped = (data[0] === 'a' ? 'b' : 'a') + data.slice(1)
+    expect(flipped).not.toBe(data)
+    const tampered = [version, iv, tag, flipped].join(':')
     expect(() => svc.decryptValue(tampered)).toThrow()
   })
 
