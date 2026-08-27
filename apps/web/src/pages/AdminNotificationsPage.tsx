@@ -176,6 +176,7 @@ export default function AdminNotificationsPage() {
   // Test-send state
   const [testSending, setTestSending] = useState(false)
   const [testSendMsg, setTestSendMsg] = useState<string | null>(null)
+  const [testDestination, setTestDestination] = useState('')
   const bodyRef = useRef<HTMLTextAreaElement | null>(null)
 
   const parsedVariables = parseVariablesText(variablesStr)
@@ -212,6 +213,7 @@ export default function AdminNotificationsPage() {
     setBodyTemplate('')
     setVariablesStr('')
     setTestSendMsg(null)
+    setTestDestination('')
     setShowEditor(true)
   }
 
@@ -224,6 +226,7 @@ export default function AdminNotificationsPage() {
     setBodyTemplate(template.bodyTemplate)
     setVariablesStr(variablesToText(template.variables))
     setTestSendMsg(null)
+    setTestDestination('')
     setShowEditor(true)
   }
 
@@ -261,9 +264,13 @@ export default function AdminNotificationsPage() {
     setTestSending(true)
     setTestSendMsg(null)
     try {
+      const body: Record<string, unknown> = {}
+      const dest = testDestination.trim()
+      if (dest) body.destination = dest
       const res = await fetch(`/api/admin/notifications/templates/${editId}/test-send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
@@ -651,6 +658,23 @@ export default function AdminNotificationsPage() {
           <div className="flex gap-3 items-center">
             {editId && (
               <>
+                <div className="flex flex-col gap-1">
+                  <label htmlFor="test-destination" className="text-xs text-gray-500">
+                    {t('admin.notifications.testDestinationLabel', uiLocale)}
+                  </label>
+                  <input
+                    id="test-destination"
+                    type="text"
+                    value={testDestination}
+                    onChange={(e) => setTestDestination(e.target.value)}
+                    placeholder={t('admin.notifications.testDestinationPlaceholder', uiLocale)}
+                    className="border border-gray-300 rounded px-3 py-2 text-sm"
+                    dir="ltr"
+                  />
+                  <span className="text-xs text-gray-400">
+                    {t('admin.notifications.testDestinationHint', uiLocale)}
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={handleTestSend}
