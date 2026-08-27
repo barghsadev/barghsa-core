@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 323,
+  "status": "in_review",
+  "current_task_id": "T-09.06.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-06-01--email-transport-config",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/192",
+  "current_task_key": "02-auth-users-admin.md#T-09.06.01",
+  "loop_iteration": 324,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -276,9 +276,14 @@
     "05-notifications-documents-ai.md#T-05.06.07"
   ],
   "last_error": "",
-  "notes": "T-05.06.07 (Resend delivery callback webhooks: Svix HMAC verification, atomic idempotent ledger+effects, outbox/delivery-log updates, email_suppressions for hard bounce+complaint, migration 0034) MERGED via PR #191 (fb56a84). Loop idle. Next: 02-auth-users-admin.md#T-09.06.01.",
-  "last_updated": "2026-08-27T20:03:00Z",
+  "notes": "T-09.06.01 (Email transport configuration, XL) split into a reviewable authorization slice: added admin:notification-providers:edit permission gate (mapped to platform admin) + RequiresStepUp on all email-provider-config mutation endpoints (create/update/test/test-connection/activate/disable/rollback). PR #192 in_review. Data/lifecycle machinery was already built in epic-05.",
+  "last_updated": "2026-08-28T00:15:00Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.06.01",
+      "at": "2026-08-27T23:15:00Z"
+    },
     {
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.06.07",
