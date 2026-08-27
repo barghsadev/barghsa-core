@@ -17,6 +17,14 @@ import {
   isValidDualApprovalThreshold,
   type DualApprovalConfig,
 } from '@barghsa/shared/finance'
+import {
+  SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+  SERVICE_RESPONSE_TARGET_TYPES,
+  DEFAULT_SERVICE_RESPONSE_TARGETS,
+  toServiceResponseTargets,
+  validateServiceResponseTargets,
+  type ServiceResponseTargets,
+} from '@barghsa/shared/admin'
 import { ErrorCodes } from '@barghsa/shared/errors'
 
 /**
@@ -992,6 +1000,160 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Service response targets (S-09.08, T-09.08.01)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * Get the current admin-configurable service response targets from
+   * `app_config`.
+   *
+   * Returns the all-disabled default (every service type `null`) when no
+   * admin value has been persisted yet, so a fresh installation never fires
+   * breach alerts for pre-existing open items. A persisted row that does not
+   * normalize cleanly is warned about and served as the defaults — a corrupt
+   * value can disable breach detection but must not crash the read path or
+   * silently mean "alert everything immediately".
+   */
+  async getServiceResponseTargets(): Promise<ServiceResponseTargets> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [SERVICE_RESPONSE_TARGETS_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) {
+      return { ...DEFAULT_SERVICE_RESPONSE_TARGETS }
+    }
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const config = toServiceResponseTargets(persisted)
+    // Detect corruption: any catalog type whose stored value survived
+    // normalization differently than it was stored means the row is corrupt.
+    const corrupt = SERVICE_RESPONSE_TARGET_TYPES.some((type) => {
+      const raw = persisted?.[type] ?? null
+      return raw === null ? config[type] !== null : config[type] !== raw
+    })
+    if (corrupt) {
+      this.logger.warn(
+        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving normalized defaults`,
+      )
+    }
+    return config
+  }
+
+  /**
+   * Persist a new admin-configurable service response target map.
+   *
+   * Validates the proposal against the T-09.08.01 rules (known service types
+   * only; values `null` or integer hours within 1…8760) before writing. A
+   * failing validation throws a 400 with the collected issue list so the
+   * client can surface them. The map is a full replace: types omitted from
+   * the payload become `null` (disabled). On success it upserts `app_config`
+   * (versioned), bumps the global config version so caches invalidate, and
+   * records a `config_change` audit event with the previous value and both
+   * version numbers.
+   *
+   * @param input - raw request body (flat map, e.g. `{ ticket: 48 }`)
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the persisted (normalized) targets map
+   */
+  async setServiceResponseTargets(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<ServiceResponseTargets> {
+    const validation = validateServiceResponseTargets(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const config = toServiceResponseTargets(input)
+    const pool = getDbPool()
+    const now = new Date()
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Lock the existing row (if any) so the previous value recorded in the
+      // audit trail is the true value being replaced — read it before the
+      // upsert mutates it. Concurrent writers serialize on this row lock, so
+      // no target change can be dropped from the audit trail.
+      const prevResult = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY],
+      )
+      const previousValue =
+        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersion =
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+
+      const upsertResult = await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ($1, $2::jsonb, 1, $3)
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+         RETURNING version`,
+        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY, JSON.stringify(config), now],
+      )
+      const newVersion = upsertResult.rows[0]!.version as number
+
+      // Bump global config version for cache invalidation.
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      // Record audit event (config_change, matching other admin configs).
+      // The trail captures the previous value and both version numbers so a
+      // target change (including disabling a type) can be reconstructed
+      // end-to-end later.
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+            previousValue,
+            previousVersion,
+            newValue: config,
+            version: newVersion,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Service response targets set to ${JSON.stringify(config)} by ${actorUserId}`,
+      )
+      return config
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set service response targets config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500,

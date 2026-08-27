@@ -17,6 +17,7 @@
         "./verification": "./dist/verification/index.js",
         "./notifications": "./dist/notifications/index.js",
         "./finance": "./dist/finance/index.js",
+        "./admin": "./dist/admin/index.js",
         "./package.json": "./package.json"
     },
     "scripts": {

@@ -1691,4 +1691,94 @@ export class AdminController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session.userId, ip)
   }
+
+  /**
+   * Permission gate for service response target configuration (S-09.08).
+   *
+   * The S-09.08 service-targets surface (T-09.08.01) is protected by the
+   * `admin:service-targets:edit` capability. Today the session model exposes
+   * only `isAdmin` (platform admin); granular staff-role permissions arrive
+   * with the role system (T-09.05). Until then the capability maps to a
+   * platform admin session, matching the S-09.06 / S-09.07 gates. Centralized
+   * here as a single enforcement point for the whole S-09.08 config surface.
+   */
+  private assertServiceTargetsEditPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage service response targets',
+        },
+        403,
+      )
+    }
+  }
+
+  /**
+   * GET /api/admin/config/service-response-targets
+   *
+   * Returns the admin-configured response targets per service type (hours),
+   * defaulting every type to `null` (disabled) when nothing has been
+   * persisted yet.
+   */
+  @Get('config/service-response-targets')
+  @ApiOperation({ summary: 'Get the service response targets configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current service response targets (hours per service type).',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: { type: 'number', nullable: true },
+        verification_case: { type: 'number', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getServiceResponseTargets(@Req() req: AuthenticatedRequest) {
+    this.assertServiceTargetsEditPermission(req)
+    return this.adminService.getServiceResponseTargets()
+  }
+
+  /**
+   * PUT /api/admin/config/service-response-targets
+   *
+   * Persists a new service response target map. Body is a flat map of
+   * service type → target hours (`null` disables a type); the map is a
+   * full replace — types omitted from the payload become disabled.
+   *
+   * Note: breached targets create staff alerts but do not promise a service
+   * level to customers.
+   */
+  @Put('config/service-response-targets')
+  @ApiOperation({ summary: 'Update the service response targets configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: { type: 'number', nullable: true, example: 48, minimum: 1 },
+        verification_case: { type: 'number', nullable: true, example: 72, minimum: 1 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Service response targets updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: { type: 'number', nullable: true },
+        verification_case: { type: 'number', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setServiceResponseTargets(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertServiceTargetsEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setServiceResponseTargets(rawBody, req.session.userId, ip)
+  }
 }

@@ -3,6 +3,7 @@ import { type Server as HttpServer, createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
+import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -160,7 +161,36 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(outboxPoller));
   process.on('SIGINT', () => clearInterval(outboxPoller));
 
-  logger.info('Worker initialised — outbox poll loop active');
+  // ── Service breach scan loop (S-09.08, T-09.08.01) ────────────────────
+  // Periodically checks open service items (tickets, verification cases)
+  // against the admin-configured response targets and enqueues in-app staff
+  // alerts (via the outbox above, so delivery reuses the same durable
+  // pipeline). No-op when no config row exists, so a fresh installation is
+  // silent until an admin configures targets.
+  const SERVICE_BREACH_SCAN_MS = Number(process.env['SERVICE_BREACH_SCAN_MS'] ?? '300000');
+  let breachScanInFlight = false;
+  const breachScanner = setInterval(async () => {
+    if (draining || breachScanInFlight) return;
+    breachScanInFlight = true;
+    try {
+      const result = await scanServiceBreaches();
+      if (result.alerted > 0 || result.errors.length > 0) {
+        logger.info(
+          `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`,
+        );
+      }
+    } catch (err) {
+      logger.error(`Breach scan failed: ${(err as Error)?.message ?? String(err)}`);
+    } finally {
+      breachScanInFlight = false;
+    }
+  }, SERVICE_BREACH_SCAN_MS);
+  breachScanner.unref();
+
+  process.on('SIGTERM', () => clearInterval(breachScanner));
+  process.on('SIGINT', () => clearInterval(breachScanner));
+
+  logger.info('Worker initialised — outbox poll loop + breach scan active');
 }
 
 void main().catch((err: unknown) => {

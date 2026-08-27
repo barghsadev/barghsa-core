@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.08.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-08-01--service-response-targets",
   "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 329,
+  "current_task_key": "02-auth-users-admin.md#T-09.08.01",
+  "loop_iteration": 330,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -281,8 +281,8 @@
     "02-auth-users-admin.md#T-09.07.02"
   ],
   "last_error": "",
-  "notes": "T-09.07.02 (dual-approval workflow, L) MERGED via PR #196 (bb7e122) as prerequisite slice: approval-request lifecycle under /api/admin/approval-requests (S-09.07 admin:financial:edit gate), approval_requests table + migration 0036 (inline CHECKs, composite queue index, SQL-validated on postgres:16), shared shouldRequireDualApproval routing predicate, atomic audit_log transitions, no-self-approval + mandatory reject reason, in-app staff/initiator notifications. Two review rounds; critical FOR UPDATE-on-JOIN bug and major DTO-staleness fixed. Deferred: UI, step-up on resolve, role-based eligibility, shared correlation_id, FK indexes, finance-module threshold consumer. Loop idle. Next: queue order.",
-  "last_updated": "2026-08-27T22:25:21Z",
+  "notes": "T-09.08.01 (service response targets, M) building: admin-configurable hours targets per service type (ticket, verification_case) with config_change audit + worker breach scan alerting assigned staff/admins in-app.",
+  "last_updated": "2026-08-27T22:30:52Z",
   "status_history": [
     {
       "status": "merged",
@@ -583,6 +583,11 @@
       "status": "idle",
       "task_key": "02-auth-users-admin.md#T-09.07.01",
       "at": "2026-08-27T22:06:07Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.08.01",
+      "at": "2026-08-27T22:30:52Z"
     }
   ]
 }
