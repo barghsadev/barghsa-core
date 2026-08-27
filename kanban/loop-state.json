@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.06.03",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-06-03--delivery-window-auth",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/194",
-  "current_task_key": "02-auth-users-admin.md#T-09.06.03",
-  "loop_iteration": 326,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 327,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -275,11 +275,12 @@
     "05-notifications-documents-ai.md#T-05.06.06",
     "05-notifications-documents-ai.md#T-05.06.07",
     "02-auth-users-admin.md#T-09.06.01",
-    "02-auth-users-admin.md#T-09.06.02"
+    "02-auth-users-admin.md#T-09.06.02",
+    "02-auth-users-admin.md#T-09.06.03"
   ],
   "last_error": "",
-  "notes": "T-09.06.03 (delivery window config) PR #194 open, ready, mergeable. Slice: uniform S-09.06 permission gate (admin:notification-providers:edit -> isAdmin) on GET/PUT /api/admin/config/delivery-window (was bare inline isAdmin from T-05.03.03). Step-up on PUT deliberately deferred: DeliveryWindowConfigPanel (T-05.03.03) uses raw fetch and web app has no step-up flow yet; forcing step-up would regress the working panel. Tests 846 pass, typecheck + build pass. Next: Claude Opus 5 review.",
-  "last_updated": "2026-08-28T00:25:01Z",
+  "notes": "T-09.06.03 (notification daytime window config) MERGED via PR #194: GET/PUT /api/admin/config/delivery-window now under the single S-09.06 permission gate (admin:notification-providers:edit -> isAdmin; was bare inline isAdmin from T-05.03.03) with error-contract + delegation controller tests. Step-up on PUT deferred until the web step-up flow exists (panel uses raw fetch). Loop idle. Next: 02-auth-users-admin.md#T-09.07.01.",
+  "last_updated": "2026-08-28T00:25:02Z",
   "status_history": [
     {
       "status": "merged",
@@ -555,6 +556,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.06.03",
       "at": "2026-08-28T00:25:01Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.06.03",
+      "at": "2026-08-28T00:25:02Z"
     }
   ]
 }
