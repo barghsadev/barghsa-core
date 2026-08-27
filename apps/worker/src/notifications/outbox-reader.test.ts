@@ -52,10 +52,32 @@ describe('dispatchOutbox', () => {
     expect(outcomes.map((o) => o.channel)).toEqual(['in_app', 'email'])
     expect(outcomes.every((o) => o.result.status === 'delivered')).toBe(true)
 
-    expect(inApp.reads[0]!.idempotencyKey).toBe('abc123')
+    expect(inApp.reads[0]!.idempotencyKey).toMatch(/^[0-9a-f]{64}$/)
     expect(inApp.reads[0]!.recipientId).toBe('user-1')
     expect(email.reads[0]!.channel).toBe('email')
     expect(email.reads[0]!.providerRef).toBeUndefined()
+  })
+
+  it('gives each channel a distinct per-channel idempotency key (T-05.01.04)', async () => {
+    const inApp = new FakeTransport('in_app')
+    const email = new FakeTransport('email')
+    await dispatchOutbox(row, { in_app: inApp, email })
+
+    const inAppKey = inApp.reads[0]!.idempotencyKey
+    const emailKey = email.reads[0]!.idempotencyKey
+    expect(inAppKey).toMatch(/^[0-9a-f]{64}$/)
+    expect(emailKey).toMatch(/^[0-9a-f]{64}$/)
+    // Different channels ⇒ different keys for the same event/profile.
+    expect(inAppKey).not.toBe(emailKey)
+  })
+
+  it('derives a stable per-channel key across retries of the same row (T-05.01.04)', async () => {
+    const inApp = new FakeTransport('in_app')
+    const email = new FakeTransport('email')
+    await dispatchOutbox(row, { in_app: inApp, email })
+    await dispatchOutbox(row, { in_app: inApp, email })
+    expect(inApp.reads[0]!.idempotencyKey).toBe(inApp.reads[1]!.idempotencyKey)
+    expect(email.reads[0]!.idempotencyKey).toBe(email.reads[1]!.idempotencyKey)
   })
 
   it('throws when in_app transport is required but missing', async () => {

@@ -1,9 +1,9 @@
 {
-  "status": "idle",
-  "current_task_key": null,
-  "current_task_id": null,
-  "current_task_file": null,
-  "current_branch": null,
+  "status": "building",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.01.04",
+  "current_task_id": "T-05.01.04",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-01-04--idempotency-delivery",
   "current_pr_url": null,
   "loop_iteration": 302,
   "fix_attempts": 0,
@@ -249,9 +249,14 @@
     "05-notifications-documents-ai.md#T-05.01.03"
   ],
   "last_error": null,
-  "notes": "T-05.01.03 (job queue retry schedule) merged via PR #165; reset to idle.",
+  "notes": "Building T-05.01.04 idempotency for delivery (per-channel keys).",
   "last_updated": "2026-08-27T00:07:00Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.04",
+      "at": "2026-08-27T03:20:00Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.01.03",

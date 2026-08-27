@@ -59,7 +59,13 @@ export const notificationOutbox = pgTable(
       .notNull()
       .default('queued'),
 
-    /** Unique idempotency key — sha256(eventKey + channel + recipient). */
+    /**
+     * Row-level idempotency key — sha256(eventKey + profileId). Uniquely
+     * deduplicates whole outbox rows for the same (event, profile); duplicate
+     * inserts are skipped with ON CONFLICT DO NOTHING. Per-channel provider
+     * idempotency (sha256(eventKey:channel:profileId)) is derived by the worker
+     * at dispatch time (T-05.01.04).
+     */
     idempotencyKey: text('idempotency_key').notNull(),
 
     /** Leased window. NULL when unlocked; future timestamp = claimed by a worker. */

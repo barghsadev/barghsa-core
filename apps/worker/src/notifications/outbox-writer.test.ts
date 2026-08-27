@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { enqueueOutbox, deriveIdempotencyKey } from './outbox-writer.js'
+import {
+  enqueueOutbox,
+  deriveIdempotencyKey,
+  deriveChannelIdempotencyKey,
+} from './outbox-writer.js'
 
 /**
  * Transactional outbox write pipeline unit tests (E-05, T-05.01.02).
@@ -43,6 +47,23 @@ describe('deriveIdempotencyKey', () => {
     expect(a).toMatch(/^[0-9a-f]{64}$/)
     expect(a).toBe(b)
     expect(a).not.toBe(c)
+  })
+})
+
+describe('deriveChannelIdempotencyKey', () => {
+  it('is a stable sha256 hex digest of eventKey:channel:profileId', () => {
+    const a = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
+    const b = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
+    expect(a).toMatch(/^[0-9a-f]{64}$/)
+    expect(a).toBe(b)
+  })
+
+  it('varies by channel and by profile for the same event', () => {
+    const emailP1 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
+    const inAppP1 = deriveChannelIdempotencyKey('profile_verified', 'in_app', 'profile-1')
+    const emailP2 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-2')
+    expect(emailP1).not.toBe(inAppP1)
+    expect(emailP1).not.toBe(emailP2)
   })
 })
 
