@@ -8,11 +8,13 @@ import { serviceBreachAlerts } from './service-breach-alerts.js'
  *
  * The CHECK / UNIQUE constraints for this table live in migration 0037
  * (Drizzle v0.40's column builder has no `.check()`), so this test asserts
- * the migration still declares them and that the service-type CHECK stays in
- * sync with the domains the worker breach scan actually checks. If a future
- * `drizzle-kit generate` ever rewrites the migration and drops a constraint,
- * or the dedup guarantee is loosened, this test fails instead of silently
- * allowing duplicate breach alerts.
+ * the migration still declares them, the base columns (`created_at`,
+ * `updated_at`) match the `createTable` contract used by the drizzle schema,
+ * and that the service-type CHECK stays in sync with the domains the worker
+ * breach scan actually checks. If a future `drizzle-kit generate` ever
+ * rewrites the migration and drops a constraint, or the dedup guarantee is
+ * loosened, this test fails instead of silently allowing duplicate breach
+ * alerts.
  */
 const MIGRATION = readFileSync(
   join(process.cwd(), 'drizzle', '0037_create_service_breach_alerts.sql'),
@@ -25,6 +27,18 @@ describe('service_breach_alerts schema (T-09.08.01)', () => {
     for (const column of ['serviceType', 'itemId', 'targetHours', 'alertedAt']) {
       expect(columns).toContain(column)
     }
+  })
+
+  it('declares the createTable base columns (id, created_at, updated_at)', () => {
+    const columns = Object.keys(serviceBreachAlerts)
+    for (const column of ['id', 'createdAt', 'updatedAt']) {
+      expect(columns).toContain(column)
+    }
+    // The migration must create the same base columns the drizzle schema
+    // (createTable) exposes, or a future ORM query would hit missing columns.
+    expect(MIGRATION).toMatch(/id\s+UUID PRIMARY KEY DEFAULT uuid_generate_v7\(\)/)
+    expect(MIGRATION).toMatch(/created_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/)
+    expect(MIGRATION).toMatch(/updated_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/)
   })
 
   it('migration 0037 keeps the service-type CHECK constraint (ticket, verification_case)', () => {

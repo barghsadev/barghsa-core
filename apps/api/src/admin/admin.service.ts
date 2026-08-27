@@ -1043,7 +1043,7 @@ export class AdminService {
     })
     if (corrupt) {
       this.logger.warn(
-        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving normalized defaults`,
+        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types disabled)`,
       )
     }
     return config

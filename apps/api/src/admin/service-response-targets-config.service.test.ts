@@ -80,7 +80,7 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
     expect(result).toEqual({ ticket: 48, verification_case: null })
   })
 
-  it('serves normalized defaults and warns on a corrupt persisted value', async () => {
+  it('serves normalized values and warns on a corrupt persisted value', async () => {
     const { mockQuery } = await loadService()
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { ticket: 'soon', verification_case: 0 } }],
@@ -88,7 +88,21 @@ describe('AdminService.getServiceResponseTargets (T-09.08.01)', () => {
 
     const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined)
     const result = await service.getServiceResponseTargets()
-    expect(result).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
+    expect(result).toEqual({ ticket: null, verification_case: null })
+    expect(warnSpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps valid types and disables only the corrupt types in a mixed stored value', async () => {
+    const { mockQuery } = await loadService()
+    // One valid, one corrupt: the valid target must survive normalization
+    // while only the corrupt type degrades to disabled.
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ value: { ticket: 48, verification_case: 0 } }],
+    })
+
+    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined)
+    const result = await service.getServiceResponseTargets()
+    expect(result).toEqual({ ticket: 48, verification_case: null })
     expect(warnSpy).toHaveBeenCalledTimes(1)
   })
 })

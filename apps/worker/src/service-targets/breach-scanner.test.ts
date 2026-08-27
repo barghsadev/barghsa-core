@@ -3,6 +3,7 @@ import type { Pool } from 'pg'
 import {
   scanServiceBreaches,
   SERVICE_TARGET_BREACHED_EVENT_KEY,
+  DEFAULT_BREACH_BATCH_SIZE,
 } from './breach-scanner.js'
 
 /**
@@ -11,9 +12,9 @@ import {
  * `scanServiceBreaches` is exercised with an injected fake pool (recording
  * SQL + params) and an injected `enqueue` stub, so the full scan pipeline —
  * config load, breached-item queries, recipient resolution, ledger dedup,
- * outbox enqueue, and episode pruning — is covered DB-free at unit level.
+ * outbox enqueue, episode pruning — is covered DB-free at unit level.
  * The SQL itself is additionally validated against a real postgres:16
- * schema (see PR #197 validation notes).
+ * schema using the real DDL (see PR #197 validation notes).
  */
 
 interface FakeDb {
@@ -62,36 +63,44 @@ beforeEach(() => {
   enqueue.mockClear()
 })
 
+/** Default dispatch helper: a config row, breached rows, profiles, fresh ledger. */
+function defaultHandler(rows: Array<{ id: string; recipient_user_id: string | null }>) {
+  return (sql: string): { rows?: unknown[]; rowCount?: number } => {
+    if (sql.includes('FROM app_config')) {
+      return { rows: [{ value: { ticket: 48, verification_case: null } }] }
+    }
+    if (sql.includes('FROM tickets')) return { rows }
+    if (sql.includes('FROM profiles')) {
+      return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] }
+    }
+    if (sql.includes('INSERT INTO service_breach_alerts')) {
+      return { rows: [{ id: 'ledger-1', inserted: true }] }
+    }
+    if (sql.includes('DELETE FROM service_breach_alerts')) {
+      return { rowCount: 0 }
+    }
+    return { rows: [] }
+  }
+}
+
 describe('scanServiceBreaches (T-09.08.01)', () => {
-  it('is a no-op when no config row is persisted', async () => {
+  it('clears every ledger and disables when no config row is persisted', async () => {
     const db = makeFakeDb((sql) => {
       if (sql.includes('FROM app_config')) return { rows: [] }
+      if (sql.includes('DELETE FROM service_breach_alerts')) return { rowCount: 2 }
       return { rows: [] }
     })
     const result = await scanServiceBreaches(scanOptions(db))
     expect(result.enabled).toBe(false)
-    expect(db.pool.connect).not.toHaveBeenCalled()
+    // One transaction clearing both domains' ledgers.
+    expect(db.pool.connect).toHaveBeenCalledTimes(1)
+    expect(result.pruned).toBe(4)
+    const clears = db.calls.filter((c) => c.sql.includes('DELETE FROM service_breach_alerts'))
+    expect(clears.map((c) => c.params[0])).toEqual(['ticket', 'verification_case'])
   })
 
   it('alerts the assigned staff of a breached ticket via the outbox', async () => {
-    const db = makeFakeDb((sql) => {
-      if (sql.includes('FROM app_config')) {
-        return { rows: [{ value: { ticket: 48, verification_case: null } }] }
-      }
-      if (sql.includes('FROM tickets')) {
-        return { rows: [{ id: 'ticket-1', recipient_user_id: 'staff-1' }] }
-      }
-      if (sql.includes('FROM profiles')) {
-        return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] }
-      }
-      if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [{ id: 'ledger-1' }] }
-      }
-      if (sql.includes('DELETE FROM service_breach_alerts')) {
-        return { rowCount: 0 }
-      }
-      return { rows: [] }
-    })
+    const db = makeFakeDb(defaultHandler([{ id: 'ticket-1', recipient_user_id: 'staff-1' }]))
 
     const result = await scanServiceBreaches(scanOptions(db))
 
@@ -100,18 +109,23 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     expect(result.scanned).toEqual({ ticket: 1, verification_case: 0 })
 
     // The breach query applies the ticket open-statuses + target cutoff,
-    // measuring the item's age from its last-activity timestamp.
+    // measuring the item's age from its last-activity timestamp, and runs a
+    // bounded batch oldest-first.
     const breachCall = db.calls.find((c) => c.sql.includes('FROM tickets'))
     expect(breachCall!.params[0]).toEqual(['open', 'in_progress', 'waiting_staff'])
     expect(breachCall!.params[1]).toBeInstanceOf(Date)
+    expect(breachCall!.params[2]).toBe(DEFAULT_BREACH_BATCH_SIZE)
     expect(breachCall!.sql).toContain('updated_at <= $2')
+    expect(breachCall!.sql).toContain('ORDER BY updated_at ASC')
+    expect(breachCall!.sql).toContain('LIMIT $3')
 
-    // Ledger dedup insert carries a positive target snapshot.
+    // Ledger upsert carries a positive target snapshot and reports the
+    // episode as fresh (inserted = true via xmax).
     const ledgerCall = db.calls.find((c) => c.sql.includes('INSERT INTO service_breach_alerts'))
     expect(ledgerCall!.params).toEqual(['ticket', 'ticket-1', 48])
 
-    // Outbox enqueue: in_app channel, per-item idempotency key, localized
-    // service-type labels in the payload.
+    // Outbox enqueue: in_app channel, episode-scoped idempotency key,
+    // localized service-type labels in the payload.
     expect(enqueue).toHaveBeenCalledTimes(1)
     const enqArgs = enqueue.mock.calls[0]!
     expect(enqArgs[0]).toBe(db.client)
@@ -128,7 +142,9 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         target_hours: 48,
       },
     })
-    expect(String(enqArgs[1].idempotencyKey)).toContain('ticket-1:profile-1')
+    // The key embeds the ledger row id, so a re-breach after pruning gets a
+    // brand-new key instead of colliding with the first episode's outbox row.
+    expect(String(enqArgs[1].idempotencyKey)).toContain('ticket-1:profile-1:ledger-1')
   })
 
   it('does not re-alert an item whose breach episode is already recorded', async () => {
@@ -143,7 +159,8 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] }
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [] } // ON CONFLICT DO NOTHING — already alerted
+        // Same target on an existing episode → DO UPDATE no-op → no row.
+        return { rows: [] }
       }
       if (sql.includes('DELETE FROM service_breach_alerts')) {
         return { rowCount: 0 }
@@ -155,6 +172,37 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     expect(result.alerted).toBe(0)
     expect(result.skippedDuplicates).toBe(1)
     expect(enqueue).not.toHaveBeenCalled()
+  })
+
+  it('refreshes the target snapshot mid-episode without re-alerting', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('FROM app_config')) {
+        return { rows: [{ value: { ticket: 72 } }] }
+      }
+      if (sql.includes('FROM tickets')) {
+        return { rows: [{ id: 'ticket-1', recipient_user_id: 'staff-1' }] }
+      }
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] }
+      }
+      if (sql.includes('INSERT INTO service_breach_alerts')) {
+        // Existing episode, admin raised/lowered the target → row refreshed,
+        // reported as NOT a fresh insert (xmax != 0).
+        return { rows: [{ id: 'ledger-1', inserted: false }] }
+      }
+      if (sql.includes('DELETE FROM service_breach_alerts')) {
+        return { rowCount: 0 }
+      }
+      return { rows: [] }
+    })
+
+    const result = await scanServiceBreaches(scanOptions(db))
+    expect(result.alerted).toBe(0)
+    expect(result.skippedDuplicates).toBe(1)
+    expect(enqueue).not.toHaveBeenCalled()
+    // The refreshed target was still written to the ledger.
+    const ledgerCall = db.calls.find((c) => c.sql.includes('INSERT INTO service_breach_alerts'))
+    expect(ledgerCall!.params[2]).toBe(72)
   })
 
   it('alerts the creator of a breached verification case', async () => {
@@ -169,7 +217,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         return { rows: [{ id: 'profile-2', user_id: 'staff-2' }] }
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [{ id: 'ledger-2' }] }
+        return { rows: [{ id: 'ledger-2', inserted: true }] }
       }
       if (sql.includes('DELETE FROM service_breach_alerts')) {
         return { rowCount: 0 }
@@ -218,7 +266,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         }
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [{ id: 'ledger-3' }] }
+        return { rows: [{ id: 'ledger-3', inserted: true }] }
       }
       if (sql.includes('DELETE FROM service_breach_alerts')) {
         return { rowCount: 0 }
@@ -235,8 +283,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
 
   it('never alerts other items' + "'" + ' assigned staff for an unassigned ticket', async () => {
     // Mixed batch: one unassigned ticket (→ admins only) and one ticket
-    // assigned to staff-1 (→ staff-1 only). The unassigned ticket must NOT
-    // fan out to staff-1.
+    // assigned to staff-1 (→ staff-1 only).
     const db = makeFakeDb((sql) => {
       if (sql.includes('FROM app_config')) {
         return { rows: [{ value: { ticket: 24 } }] }
@@ -261,7 +308,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         }
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [{ id: `ledger-${Math.random()}` }] }
+        return { rows: [{ id: 'ledger-x', inserted: true }] }
       }
       if (sql.includes('DELETE FROM service_breach_alerts')) {
         return { rowCount: 0 }
@@ -294,13 +341,11 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
       if (sql.includes('FROM tickets')) {
         return { rows: [{ id: 'ticket-noprofile', recipient_user_id: 'staff-ghost' }] }
       }
-      // No default profile row for staff-ghost: the profiles query returns
-      // nothing, so no recipient is resolvable.
       if (sql.includes('FROM profiles')) {
-        return { rows: [] }
+        return { rows: [] } // staff-ghost has no default profile
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
-        return { rows: [{ id: 'ledger-x' }] }
+        return { rows: [{ id: 'ledger-x', inserted: true }] }
       }
       if (sql.includes('DELETE FROM service_breach_alerts')) {
         return { rowCount: 0 }
@@ -314,10 +359,35 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     expect(db.calls.some((c) => c.sql.includes('INSERT INTO service_breach_alerts'))).toBe(false)
     expect(result.alerted).toBe(0)
     expect(enqueue).not.toHaveBeenCalled()
-    // A warning makes the skip observable.
-    expect(options.logger.warn).toHaveBeenCalledWith(
-      expect.stringContaining('ticket-noprofile'),
-    )
+    // An aggregated warning makes the skip observable (one line per pass).
+    expect(options.logger.warn).toHaveBeenCalledWith(expect.stringContaining('ticket-noprofile'))
+  })
+
+  it('processes batches and reports truncated when the batch cap is hit', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('FROM app_config')) {
+        return { rows: [{ value: { ticket: 48 } }] }
+      }
+      if (sql.includes('FROM tickets')) {
+        return { rows: [{ id: 'ticket-1', recipient_user_id: 'staff-1' }] }
+      }
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: 'profile-1', user_id: 'staff-1' }] }
+      }
+      if (sql.includes('INSERT INTO service_breach_alerts')) {
+        return { rows: [{ id: 'ledger-1', inserted: true }] }
+      }
+      if (sql.includes('DELETE FROM service_breach_alerts')) {
+        return { rowCount: 0 }
+      }
+      return { rows: [] }
+    })
+
+    const result = await scanServiceBreaches(scanOptions(db, { batchSize: 1 }))
+    expect(result.alerted).toBe(1)
+    expect(result.truncated).toBe(true)
+    const breachCall = db.calls.find((c) => c.sql.includes('FROM tickets'))
+    expect(breachCall!.params[2]).toBe(1)
   })
 
   it('prunes ledger rows whose episode ended (item no longer breached)', async () => {
@@ -370,9 +440,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     expect(result.pruned).toBeGreaterThanOrEqual(5)
     expect(result.scanned).toEqual({ ticket: 0, verification_case: 0 })
     // verification_case was still scanned to completion (commit ran).
-    expect(
-      db.calls.filter((c) => c.sql === 'BEGIN').length,
-    ).toBeGreaterThanOrEqual(2)
+    expect(db.calls.filter((c) => c.sql === 'BEGIN').length).toBeGreaterThanOrEqual(2)
   })
 
   it('skips corrupt config values (types degrade to disabled)', async () => {

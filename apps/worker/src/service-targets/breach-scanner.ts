@@ -71,10 +71,15 @@ export interface BreachScanResult {
   scanned: Record<ServiceResponseTargetType, number>
   /** New breach episodes that were alerted. */
   alerted: number
-  /** Items already alerted that were seen again (deduped). */
+  /** Items already alerted that were seen again (deduped or target-refreshed). */
   skippedDuplicates: number
   /** Ledger rows pruned (episodes that ended, or a type got disabled). */
   pruned: number
+  /**
+   * True when any service type hit the per-scan batch cap (LIMIT), meaning
+   * more breached items remain and the next scan continues draining them.
+   */
+  truncated: boolean
   /** Per-type failure messages; the other types still got scanned. */
   errors: string[]
 }
@@ -85,14 +90,17 @@ interface BreachDomainSpec {
   /** Statuses that count as "open and awaiting staff". */
   openStatuses: readonly string[]
   /**
-   * SQL returning the breached open items: `id` plus `recipient_user_id`
-   * (nullable — the staff user responsible, or NULL when unassigned).
-   * `$1` = statuses, `$2` = cutoff timestamp.
+   * SQL returning up to `$3` breached open items, oldest activity first:
+   * `id` plus `recipient_user_id` (nullable — the staff user responsible,
+   * or NULL when unassigned). `$1` = statuses, `$2` = cutoff timestamp,
+   * `$3` = batch size.
    */
   findBreachedSql: string
   /**
    * SQL pruning ended episodes for this type.
    * `$1` = service_type, `$2` = statuses, `$3` = cutoff timestamp.
+   * The anti-join casts `item_id` to the source table's PK type (tickets.id
+   * is UUID; verification_cases.id is TEXT).
    */
   pruneSql: string
   /** SQL clearing the whole ledger when the type is disabled. `$1` = service_type. */
@@ -108,10 +116,12 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
     findBreachedSql: `SELECT id, assigned_to AS recipient_user_id
         FROM tickets
         WHERE status = ANY($1::text[])
-          AND updated_at <= $2`,
+          AND updated_at <= $2
+        ORDER BY updated_at ASC
+        LIMIT $3`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
-          AND item_id NOT IN (
+          AND item_id::uuid NOT IN (
             SELECT id FROM tickets
             WHERE status = ANY($2::text[])
               AND updated_at <= $3
@@ -126,7 +136,9 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
     findBreachedSql: `SELECT id, created_by AS recipient_user_id
         FROM verification_cases
         WHERE status = ANY($1::text[])
-          AND updated_at <= $2`,
+          AND updated_at <= $2
+        ORDER BY updated_at ASC
+        LIMIT $3`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
           AND item_id NOT IN (
@@ -140,6 +152,27 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
   },
 ]
 
+/** Default number of breached items processed per service type per scan. */
+export const DEFAULT_BREACH_BATCH_SIZE = 500
+
+/**
+ * SQL upserting one breach episode into the ledger.
+ *
+ * - Fresh episode (new row): inserted with the current target_hours and
+ *   reported as `inserted = true` (xmax = 0 ⇒ row created by this insert).
+ * - Existing row, same target: DO UPDATE's WHERE is false → no row is
+ *   returned at all (conflict takes the do-nothing path).
+ * - Existing row, changed target: the row is updated (target snapshot
+ *   refreshed) and returned with `inserted = false` — already alerted, so
+ *   no duplicate alert, but the ledger never advertises a stale target.
+ */
+const LEDGER_UPSERT_SQL = `INSERT INTO service_breach_alerts (service_type, item_id, target_hours)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (service_type, item_id)
+       DO UPDATE SET target_hours = EXCLUDED.target_hours
+       WHERE service_breach_alerts.target_hours <> EXCLUDED.target_hours
+     RETURNING id, (xmax = 0) AS inserted`
+
 export interface BreachScanOptions {
   /** Query pool override for tests; defaults to the worker's shared pool. */
   pool?: Pool
@@ -149,6 +182,8 @@ export interface BreachScanOptions {
   enqueue?: typeof enqueueOutbox
   /** Logger override for tests. */
   logger?: Pick<Console, 'warn' | 'info'>
+  /** Max breached items processed per service type per scan (default 500). */
+  batchSize?: number
 }
 
 const defaultLogger: Pick<Console, 'warn' | 'info'> = {
@@ -168,11 +203,11 @@ const SERVICE_TYPE_LABELS: Record<
 /**
  * Run one breach-detection pass.
  *
- * No config row → returns `{ enabled: false }` and does nothing else, so a
- * fresh installation (targets not configured) is a no-op. Corrupt stored
- * values degrade per-type to disabled through the shared normalizer. A
- * service type with `null` target is not scanned, but its ledger is cleared
- * so re-enabling the type re-evaluates every open item from scratch.
+ * No config row → clears every service type's episode ledger and returns
+ * `{ enabled: false }`: "no targets configured" and "all targets null"
+ * converge on the same ledger state, so accidentally deleting the config
+ * row can never leave stale rows that suppress future alerts. Corrupt
+ * stored values degrade per-type to disabled through the shared normalizer.
  */
 export async function scanServiceBreaches(
   options: BreachScanOptions = {},
@@ -181,6 +216,7 @@ export async function scanServiceBreaches(
   const now = options.now?.() ?? new Date()
   const enqueue = options.enqueue ?? enqueueOutbox
   const logger = options.logger ?? defaultLogger
+  const batchSize = options.batchSize ?? DEFAULT_BREACH_BATCH_SIZE
 
   const result: BreachScanResult = {
     enabled: true,
@@ -188,6 +224,7 @@ export async function scanServiceBreaches(
     alerted: 0,
     skippedDuplicates: 0,
     pruned: 0,
+    truncated: false,
     errors: [],
   }
 
@@ -195,7 +232,26 @@ export async function scanServiceBreaches(
     `SELECT value FROM app_config WHERE key = $1`,
     [SERVICE_RESPONSE_TARGETS_CONFIG_KEY],
   )
+
+  // No config row: same ledger semantics as "everything disabled" — clear
+  // every type's ledger so no stale episode can suppress a future alert.
   if (configResult.rows.length === 0) {
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+      for (const domain of BREACH_DOMAINS) {
+        const cleared = await client.query(domain.clearSql, [domain.serviceType])
+        result.pruned += cleared.rowCount ?? 0
+      }
+      await client.query('COMMIT')
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      const message = (error as Error)?.message ?? String(error)
+      result.errors.push(`ledger-clear: ${message}`)
+      logger.warn(`Ledger clear failed: ${message}`)
+    } finally {
+      client.release()
+    }
     result.enabled = false
     return result
   }
@@ -224,11 +280,17 @@ export async function scanServiceBreaches(
       const breached = await client.query<{
         id: string
         recipient_user_id: string | null
-      }>(domain.findBreachedSql, [domain.openStatuses, cutoff])
+      }>(domain.findBreachedSql, [domain.openStatuses, cutoff, batchSize])
       result.scanned[domain.serviceType] = breached.rows.length
+      // A full batch means more breached items likely remain; the next scan
+      // (same cutoff) continues draining the backlog oldest-first.
+      if (breached.rows.length >= batchSize) {
+        result.truncated = true
+      }
 
       if (breached.rows.length > 0) {
         const recipients = await resolveRecipients(client, breached.rows, domain)
+        const noRecipientSkips: Array<{ itemId: string; reason: string }> = []
         for (const row of breached.rows) {
           const itemRecipients = recipients.forItem(row.recipient_user_id)
 
@@ -236,31 +298,30 @@ export async function scanServiceBreaches(
           // no default profile): skip the ledger insert entirely so the item
           // is re-evaluated on the next scan — a silent, permanent alert
           // suppression is worse than re-checking a few minutes later.
+          // Warnings are aggregated (one line per pass) so a persistent
+          // condition cannot spam the worker log.
           if (itemRecipients.length === 0) {
-            logger.warn(
-              `No in-app recipient for breached ${domain.serviceType} ${row.id}; will re-evaluate next scan`,
-            )
+            noRecipientSkips.push({ itemId: row.id, reason: 'no default profile' })
             continue
           }
 
-          // Dedup: only rows actually inserted by this insert are new
-          // episodes. An existing (service_type, item_id) row means this
-          // item was already alerted — skip it.
-          const ledger = await client.query<{ id: string }>(
-            `INSERT INTO service_breach_alerts (service_type, item_id, target_hours)
-             VALUES ($1, $2, $3)
-             ON CONFLICT (service_type, item_id) DO NOTHING
-             RETURNING id`,
+          // Dedup + target-snapshot refresh in one statement. No row comes
+          // back for an already-alerted episode with an unchanged target;
+          // a fresh episode returns inserted=true; a changed target returns
+          // the refreshed row with inserted=false (no re-alert).
+          const ledger = await client.query<{ id: string; inserted: boolean }>(
+            LEDGER_UPSERT_SQL,
             [domain.serviceType, row.id, targetHours],
           )
-          if (ledger.rows.length === 0) {
+          if (ledger.rows.length === 0 || !ledger.rows[0]!.inserted) {
             result.skippedDuplicates++
             continue
           }
           result.alerted++
+          const ledgerId = ledger.rows[0]!.id
 
           for (const profile of itemRecipients) {
-            await enqueue(client, {
+            const enqueueResult = await enqueue(client, {
               profileId: profile.id,
               userId: profile.userId,
               eventKey: SERVICE_TARGET_BREACHED_EVENT_KEY,
@@ -272,9 +333,23 @@ export async function scanServiceBreaches(
                 target_hours: targetHours,
               },
               channels: ['in_app'],
-              idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id}`,
+              // Episode-scoped: the ledger row id guarantees a NEW key every
+              // episode, so an item that re-breaches after being pruned can
+              // never collide with its first episode's outbox row.
+              idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id}:${ledgerId}`,
             })
+            if (!enqueueResult.inserted) {
+              logger.warn(
+                `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id} (unexpected for a fresh episode)`,
+              )
+            }
           }
+        }
+        if (noRecipientSkips.length > 0) {
+          const samples = noRecipientSkips.slice(0, 3).map((s) => s.itemId).join(', ')
+          logger.warn(
+            `No in-app recipient for ${noRecipientSkips.length} breached ${domain.serviceType}(s) (${samples}${noRecipientSkips.length > 3 ? ', …' : ''}); re-evaluated next scan`,
+          )
         }
       }
 
@@ -300,9 +375,9 @@ export async function scanServiceBreaches(
     }
   }
 
-  if (result.alerted > 0) {
+  if (result.alerted > 0 || result.truncated) {
     logger.info(
-      `alerted=${result.alerted} skippedDuplicates=${result.skippedDuplicates} pruned=${result.pruned}`,
+      `alerted=${result.alerted} skippedDuplicates=${result.skippedDuplicates} pruned=${result.pruned} truncated=${result.truncated}`,
     )
   }
   return result
