@@ -1596,4 +1596,99 @@ export class AdminController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip)
   }
+
+  /**
+   * Permission gate for financial threshold configuration (S-09.07).
+   *
+   * The S-09.07 dual-approval/financial-threshold surface (T-09.07.01) is
+   * protected by the `admin:financial:edit` capability. Today the session
+   * model exposes only `isAdmin` (platform admin); granular staff-role
+   * permissions arrive with the role system (T-09.05). Until then the
+   * capability maps to a platform admin session, matching the S-09.06
+   * notification-delivery gates. Centralized here as a single enforcement
+   * point so the whole S-09.07 surface uses one check.
+   */
+  private assertFinancialThresholdPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage financial threshold configuration',
+        },
+        403,
+      )
+    }
+  }
+
+  /**
+   * GET /api/admin/config/dual-approval-threshold
+   *
+   * Returns the current admin-configurable dual-approval threshold as
+   * `{ thresholdIrR }`. Falls back to `{ thresholdIrR: 0 }` (dual approval
+   * disabled) when no value is persisted.
+   * Permission: `admin:financial:edit` (today: platform admin).
+   */
+  @Get('config/dual-approval-threshold')
+  @ApiOperation({ summary: 'Get the dual-approval threshold configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current dual-approval threshold config.',
+    schema: {
+      type: 'object',
+      properties: {
+        thresholdIrR: { type: 'number', example: 500000000 },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getDualApprovalThreshold(@Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req)
+    return this.adminService.getDualApprovalThresholdConfig()
+  }
+
+  /**
+   * PUT /api/admin/config/dual-approval-threshold
+   *
+   * Persists a new dual-approval threshold. Body: `{ threshold_irr }`.
+   * Validated server-side: integer IRR between 0 and `Number.MAX_SAFE_INTEGER`
+   * (0 = dual approval disabled). Changes are versioned and audited.
+   * Permission: `admin:financial:edit` (T-09.07.01).
+   *
+   * Step-up on this mutation is deliberately deferred: the web app does not
+   * implement the step-up challenge flow yet (admin config panels use raw
+   * fetch), so requiring step-up here would regress the working save path. It
+   * must land together with the client-side step-up flow (same follow-up as
+   * the T-09.06.01/02/03 admin config UI). The emergency override (reason +
+   * elevated permission + immediate alert + audit) is likewise deferred until
+   * the step-up flow and alert pipeline exist.
+   */
+  @Put('config/dual-approval-threshold')
+  @ApiOperation({ summary: 'Update the dual-approval threshold configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['threshold_irr'],
+      properties: {
+        threshold_irr: { type: 'number', example: 500000000, minimum: 0 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Dual-approval threshold updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        thresholdIrR: { type: 'number' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setDualApprovalThreshold(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session.userId, ip)
+  }
 }

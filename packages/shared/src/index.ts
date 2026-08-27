@@ -8,3 +8,4 @@ export * from './validation/index.js';
 export * from './agent-permissions/index.js';
 export * from './verification/index.js';
 export * from './notifications/index.js';
+export * from './finance/index.js';
