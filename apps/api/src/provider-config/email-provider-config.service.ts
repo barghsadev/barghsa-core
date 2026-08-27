@@ -4,6 +4,8 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { parseSmtpConfig } from './smtp-config.schema'
 import type { SmtpConnectionTesterService } from './smtp-connection-tester.service'
+import { parseResendConfig } from './resend-config.schema'
+import type { ResendConnectionTesterService } from './resend-connection-tester.service'
 
 /**
  * Email provider configuration service (E-05, T-05.06.01).
@@ -172,6 +174,8 @@ export class EmailProviderConfigService {
     private readonly injectedPool?: ProviderPool,
     @Optional()
     private readonly smtpTester?: SmtpConnectionTesterService,
+    @Optional()
+    private readonly resendTester?: ResendConnectionTesterService,
   ) {}
 
   private get db(): ProviderPool {
@@ -406,11 +410,15 @@ export class EmailProviderConfigService {
   /* ---------------------------- Connection test ------------------------- */
 
   /**
-   * Run a live SMTP connection test for a draft config (T-05.06.02), then
-   * persist the outcome as the row's `last_test_*` state. Only `smtp` drafts
-   * are supported here; Resend testing arrives in T-05.06.03.
+   * Run a live connection test for a draft config — SMTP handshake
+   * (T-05.06.02) or Resend domain-verification + test-send to the admin's
+   * email (T-05.06.03) — then persist the outcome as `last_test_*`.
+   * `recipient` (the admin's email) is required for the Resend transport.
    */
-  async testConnection(id: string): Promise<{
+  async testConnection(
+    id: string,
+    recipient?: string,
+  ): Promise<{
     ok: boolean
     error: string | null
     result: EmailProviderConfigResult
@@ -420,17 +428,29 @@ export class EmailProviderConfigService {
     if (existing.status !== 'draft') {
       throw new HttpException(ProviderErrors.notEditable(), 409)
     }
+
+    if (existing.transport === 'resend') {
+      return this.testResendConnection(existing.id, recipient)
+    }
     if (existing.transport !== 'smtp') {
       throw new HttpException(
         errBody(
           400,
           ErrorCodes.VALIDATION_PARSE_ZOD.code,
-          'Live connection testing is only available for SMTP providers in this task',
+          `Unsupported email transport: ${existing.transport}`,
         ),
         400,
       )
     }
+    return this.testSmtpConnection(existing.id)
+  }
 
+  /** SMTP handshake connection test (T-05.06.02). */
+  private async testSmtpConnection(id: string): Promise<{
+    ok: boolean
+    error: string | null
+    result: EmailProviderConfigResult
+  }> {
     const saved = await this.readConfig(id)
     const parsed = parseSmtpConfig(saved)
     if (!parsed.ok) {
@@ -449,6 +469,62 @@ export class EmailProviderConfigService {
     }
 
     const outcome = await this.smtpTester.test(parsed.config)
+    const recorded = await this.recordTest(id, {
+      passed: outcome.ok,
+      ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+    })
+    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded }
+  }
+
+  /** Resend domain-verification + test-send to the admin's email (T-05.06.03). */
+  private async testResendConnection(
+    id: string,
+    recipient?: string,
+  ): Promise<{
+    ok: boolean
+    error: string | null
+    result: EmailProviderConfigResult
+  }> {
+    if (!recipient || !recipient.trim()) {
+      throw new HttpException(
+        errBody(
+          400,
+          ErrorCodes.VALIDATION_PARSE_ZOD.code,
+          'A recipient email is required to test a Resend provider configuration',
+        ),
+        400,
+      )
+    }
+    const trimmed = recipient.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      throw new HttpException(
+        errBody(
+          400,
+          ErrorCodes.VALIDATION_PARSE_ZOD.code,
+          'Invalid recipient email for the Resend test-send',
+        ),
+        400,
+      )
+    }
+
+    const saved = await this.readConfig(id)
+    const parsed = parseResendConfig(saved)
+    if (!parsed.ok) {
+      const recorded = await this.recordTest(id, {
+        passed: false,
+        error: `Invalid Resend configuration: ${parsed.error}`,
+      })
+      return { ok: false, error: `Invalid Resend configuration: ${parsed.error}`, result: recorded }
+    }
+
+    if (!this.resendTester) {
+      throw new HttpException(
+        errBody(500, ErrorCodes.INTERNAL_UNEXPECTED.code, 'Resend connection tester is not available'),
+        500,
+      )
+    }
+
+    const outcome = await this.resendTester.test(parsed.config, trimmed)
     const recorded = await this.recordTest(id, {
       passed: outcome.ok,
       ...(outcome.error !== undefined ? { error: outcome.error } : {}),

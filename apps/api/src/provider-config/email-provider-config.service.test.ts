@@ -382,7 +382,7 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
     expect(out.result.lastTestStatus).toBe('failed')
   })
 
-  it('rejects non-smtp transports with 400', async () => {
+  it('rejects a test when recipient is missing for resend (400)', async () => {
     const { service } = buildHarness()
     const created = await service.create({
       transport: 'resend',
@@ -391,6 +391,47 @@ describe('EmailProviderConfigService.testConnection (T-05.06.02)', () => {
       createdBy: 'admin-1',
     })
     await expect(service.testConnection(created.id)).rejects.toMatchObject({ status: 400 })
+  })
+
+  it('validates an invalid recipient email for resend (400)', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'resend',
+      label: 'R',
+      config: {},
+      createdBy: 'admin-1',
+    })
+    await expect(service.testConnection(created.id, 'not-an-email')).rejects.toMatchObject({
+      status: 400,
+    })
+  })
+
+  it('rejects an unsupported transport with 400', async () => {
+    const { service, rows } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'S',
+      config: {},
+      createdBy: 'admin-1',
+    })
+    // Force an unknown transport by patching the stored row directly.
+    rows.get(created.id)!.transport = 'carrier'
+    await expect(service.testConnection(created.id)).rejects.toMatchObject({ status: 400 })
+  })
+
+  it('records a validation failure when resend config is invalid', async () => {
+    const { service } = buildHarness()
+    // Missing required api_key + from_email.
+    const created = await service.create({
+      transport: 'resend',
+      label: 'R',
+      config: {},
+      createdBy: 'admin-1',
+    })
+    const out = await service.testConnection(created.id, 'admin@example.com')
+    expect(out.ok).toBe(false)
+    expect(out.error).toContain('Invalid Resend configuration')
+    expect(out.result.lastTestStatus).toBe('failed')
   })
 
   it('records a validation failure when config is invalid', async () => {

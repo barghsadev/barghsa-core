@@ -36,6 +36,15 @@ export const RecordTestSchema = z.object({
   error: z.string().max(1000).optional(),
 })
 
+/**
+ * Optional body for `POST :id/test-connection`. `recipient` is required for
+ * the Resend transport (the admin's email to which the test-send is delivered);
+ * SMTP ignores it.
+ */
+export const TestConnectionSchema = z.object({
+  recipient: z.string().email().optional(),
+})
+
 function httpError(code: string, message: string, statusCode = 409): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode)
 }
@@ -117,19 +126,31 @@ export class EmailProviderConfigController {
   @Post(':id/test-connection')
   @HttpCode(200)
   @ApiOperation({
-    summary: 'Run a live SMTP connection test and record the outcome',
+    summary: 'Run a live connection test and record the outcome',
     description:
-      'Performs a real SMTP handshake against the draft config and persists the ' +
-      'result as last_test_status. SSRF guard rejects private/internal ' +
-      'destinations unless allow-listed.',
+      'SMTP: performs a real SMTP handshake against the draft config and persists ' +
+      'the result as last_test_status; SSRF guard rejects private/internal ' +
+      'destinations unless allow-listed. Resend: validates the sending domain is ' +
+      'verified and sends a real test email to body.recipient (the admin email).',
   })
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
+    @Body() body?: z.infer<typeof TestConnectionSchema>,
   ): Promise<EmailProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
     this.assertAdmin(req)
-    const { ok, error, result } = await this.service.testConnection(id)
+    const parsed = body === undefined ? null : TestConnectionSchema.safeParse(body)
+    if (body !== undefined && !parsed!.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
+        400,
+      )
+    }
+    const { ok, error, result } = await this.service.testConnection(
+      id,
+      parsed?.data?.recipient,
+    )
     return { ...result, test: { ok, error } }
   }
 
