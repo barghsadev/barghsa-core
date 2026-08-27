@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-05.06.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-06-05--provider-secrets",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/189",
   "current_task_key": "05-notifications-documents-ai.md#T-05.06.05",
   "loop_iteration": 323,
   "fix_attempts": 0,
@@ -273,9 +273,14 @@
     "05-notifications-documents-ai.md#T-05.06.04"
   ],
   "last_error": "",
-  "notes": "Building T-05.06.05 (Secrets encryption & masking): field-level AES-256-GCM at rest, maskedConfig in API results, decrypt only at send boundary.",
-  "last_updated": "2026-08-27T18:49:28Z",
+  "notes": "T-05.06.05 (Secrets encryption) PR #189 open for review.",
+  "last_updated": "2026-08-27T18:52:49Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:52:49Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.06.05",
