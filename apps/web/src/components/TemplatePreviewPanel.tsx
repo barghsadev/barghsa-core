@@ -185,10 +185,11 @@ export default function TemplatePreviewPanel({
           {/* Selection controls: event / language / channel / version */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="tpl-preview-event" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('admin.notifications.eventKey', uiLocale)}
               </label>
               <select
+                id="tpl-preview-event"
                 value={eventKey}
                 onChange={(e) => {
                   setEventKey(e.target.value)
@@ -206,10 +207,11 @@ export default function TemplatePreviewPanel({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="tpl-preview-channel" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('admin.notifications.channel', uiLocale)}
               </label>
               <select
+                id="tpl-preview-channel"
                 value={channel}
                 onChange={(e) => {
                   setChannel(e.target.value as TemplateChannel | '')
@@ -227,10 +229,11 @@ export default function TemplatePreviewPanel({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="tpl-preview-locale" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('admin.notifications.locale', uiLocale)}
               </label>
               <select
+                id="tpl-preview-locale"
                 value={locale}
                 onChange={(e) => {
                   setLocale(e.target.value as TemplateLocale | '')
@@ -248,10 +251,11 @@ export default function TemplatePreviewPanel({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="tpl-preview-version" className="block text-sm font-medium text-gray-700 mb-1">
                 {t('admin.notifications.preview.version', uiLocale)}
               </label>
               <select
+                id="tpl-preview-version"
                 value={versionId}
                 onChange={(e) => setVersionId(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2"

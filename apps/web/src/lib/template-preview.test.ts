@@ -48,19 +48,18 @@ describe('template-preview helpers', () => {
     })
   })
 
-  it('flags an undeclared variable and leaves dotted vars without a value as missing', () => {
+  it('flags an undeclared variable and resolves dotted vars from flat sample data', () => {
     const result = renderTemplatePreview(
       'Hi {{userName}}. Order: {{order.status}}. Amount: {{order.amount}}',
       [{ name: 'userName' }, ...VARIABLES.filter((v) => v.name === 'order.amount')],
     )
     // order.status is used but not in the allow-list -> undeclared
     expect(result.undeclared).toEqual(['order.status'])
-    // order.amount is allow-listed, but flat sample data cannot resolve a
-    // dotted path (mirrors server), so it is surfaced as missing-required.
-    expect(result.missingRequired).toEqual(['order.amount'])
+    // order.amount is allow-listed and resolves from the flat sample data key
+    expect(result.missingRequired).toEqual([])
     expect(result.output).toContain('Hi user name')
     expect(result.output).toContain('Order: {{order.status}}')
-    expect(result.output).toContain('Amount: ')
+    expect(result.output).toContain('Amount: order.amount')
   })
 
   it('reports an allow-listed variable as missing when no value is supplied', () => {

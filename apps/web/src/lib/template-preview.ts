@@ -90,6 +90,11 @@ function resolve(data: Record<string, string>, path: string): string | undefined
   for (const seg of segments) {
     if (BLOCKED_KEYS.has(seg)) return undefined
   }
+  // Sample data is built with flat keys (e.g. `order.amount`), so check the
+  // full path as a direct own property before attempting dotted traversal.
+  if (Object.prototype.hasOwnProperty.call(data, path)) {
+    return data[path]
+  }
   let node: unknown = data
   for (const seg of segments) {
     if (node === null || node === undefined) return undefined
