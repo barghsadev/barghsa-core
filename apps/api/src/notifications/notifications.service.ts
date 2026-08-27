@@ -190,6 +190,8 @@ export class NotificationsService {
    * Filters by optional notification id / channel / status/error, ordered
    * newest-first, with limit + offset pagination. Rows are read directly from
    * the append-only `notification_delivery_log` table written by the worker.
+   * DB snake_case columns are aliased to camelCase so runtime rows match the
+   * returned `DeliveryLogRow` shape.
    *
    * @param options - Optional filters and pagination.
    */
@@ -206,20 +208,31 @@ export class NotificationsService {
 
     const conditions: string[] = []
     const params: unknown[] = []
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const push = (cond: string, value: any) => {
+    // Counter-based placeholder builder. Each filter appends its value and a
+    // fresh `$N` placeholder, so conditions never share or misnumber indexes.
+    const push = (column: string, value: string) => {
       params.push(value)
-      conditions.push(cond.replace('$n', `$${params.length}`))
+      conditions.push(`${column} = $${params.length}`)
     }
 
-    if (options.notificationId) push('notification_id = $n', options.notificationId)
-    if (options.channel) push('channel = $n', options.channel)
-    if (options.status) push('status = $n', options.status)
+    if (options.notificationId) push('notification_id', options.notificationId)
+    if (options.channel) push('channel', options.channel)
+    if (options.status) push('status', options.status)
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+    // Alias snake_case DB columns to camelCase so runtime rows match the
+    // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
     const rowsResult = await pool.query<DeliveryLogRow>(
-      `SELECT id, notification_id, channel, status, attempt_number, provider_ref,
-              latency_ms, error_category, error_detail, created_at
+      `SELECT id,
+              notification_id AS "notificationId",
+              channel,
+              status,
+              attempt_number AS "attemptNumber",
+              provider_ref AS "providerRef",
+              latency_ms AS "latencyMs",
+              error_category AS "errorCategory",
+              error_detail AS "errorDetail",
+              created_at AS "createdAt"
        FROM notification_delivery_log
        ${where}
        ORDER BY created_at DESC

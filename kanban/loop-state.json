@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_key": "05-notifications-documents-ai.md#T-05.01.05",
   "current_task_id": "T-05.01.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-01-05--delivery-logs",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/167",
   "loop_iteration": 303,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
