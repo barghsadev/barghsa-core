@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { FormEvent } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
@@ -19,6 +19,7 @@ interface EmailProvider {
   status: Status
   createdBy: string
   activatedAt: string | null
+  activatedBy: string | null
   lastTestAt: string | null
   lastTestStatus: TestStatus
   lastTestError: string | null
@@ -499,9 +500,9 @@ export default function AdminEmailProvidersPage() {
           </div>
 
           {transport === 'smtp' ? (
-            <SmtpFields form={form as SmtpForm} setField={setField} />
+            <SmtpFields form={form as SmtpForm} setField={setField} editing={editId !== null} />
           ) : (
-            <ResendFields form={form as ResendForm} setField={setField} />
+            <ResendFields form={form as ResendForm} setField={setField} editing={editId !== null} />
           )}
 
           <div className="flex gap-3 pt-2">
@@ -591,8 +592,8 @@ export default function AdminEmailProvidersPage() {
                     </td>
                     <td className="px-4 py-3">
                       {p.activatedAt ? formatDate(p.activatedAt) : '—'}
-                      {p.activatedAt && p.lastTestStatus === 'passed' && (
-                        <p className="text-xs text-gray-400 mt-1">{t('admin.providers.meta.createdBy', uiLocale)}: {p.createdBy}</p>
+                      {p.activatedAt && p.activatedBy && (
+                        <p className="text-xs text-gray-400 mt-1">{t('admin.providers.meta.activatedBy', uiLocale)}: {p.activatedBy}</p>
                       )}
                     </td>
                     <td className="px-4 py-3 space-y-1">
@@ -670,58 +671,76 @@ export default function AdminEmailProvidersPage() {
 // Smtp fields
 // ---------------------------------------------------------------------------
 
-function SmtpFields({ form, setField }: { form: SmtpForm; setField: (k: keyof SmtpForm, v: string) => void }) {
-  const set = (k: keyof SmtpForm, v: string) => setField(k as keyof SmtpForm, v)
+function SmtpFields({ form, setField, editing }: { form: SmtpForm; setField: (k: string, v: string) => void; editing: boolean }) {
+  const uiLocale = useLocale()
+  const set = (k: keyof SmtpForm, v: string) => setField(k as string, v)
+  const sec = (k: string) => t(`admin.providers.field.${k}`, uiLocale)
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Field label="Host" required>
+      <Field label={sec('host')} required>
         <input type="text" value={form.host} onChange={(e) => set('host', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Port" required>
+      <Field label={sec('port')} required>
         <input type="number" value={form.port} onChange={(e) => set('port', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Security">
+      <Field label={sec('security')}>
         <select value={form.security} onChange={(e) => set('security', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2">
           <option value="STARTTLS">STARTTLS</option>
           <option value="TLS">TLS</option>
         </select>
       </Field>
-      <Field label="Username">
+      <Field label={sec('username')}>
         <input type="text" value={form.username} onChange={(e) => set('username', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Password" secret>
-        <input type="password" value={form.password} onChange={(e) => set('password', e.target.value)} autoComplete="new-password" className="w-full border border-gray-300 rounded px-3 py-2" />
+      <Field label={sec('password')} secret>
+        <input
+          type="password"
+          value={form.password}
+          onChange={(e) => set('password', e.target.value)}
+          placeholder={editing ? t('admin.providers.field.secretPlaceholder', uiLocale) : undefined}
+          autoComplete="new-password"
+          className="w-full border border-gray-300 rounded px-3 py-2"
+        />
       </Field>
-      <Field label="From name">
+      <Field label={sec('fromName')}>
         <input type="text" value={form.fromName} onChange={(e) => set('fromName', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="From email" required>
+      <Field label={sec('fromEmail')} required>
         <input type="email" value={form.fromEmail} onChange={(e) => set('fromEmail', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Reply-to">
+      <Field label={sec('replyTo')}>
         <input type="email" value={form.replyTo} onChange={(e) => set('replyTo', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
     </div>
   )
 }
 
-function ResendFields({ form, setField }: { form: ResendForm; setField: (k: keyof ResendForm, v: string) => void }) {
-  const set = (k: keyof ResendForm, v: string) => setField(k as keyof ResendForm, v)
+function ResendFields({ form, setField, editing }: { form: ResendForm; setField: (k: string, v: string) => void; editing: boolean }) {
+  const uiLocale = useLocale()
+  const set = (k: keyof ResendForm, v: string) => setField(k as string, v)
+  const sec = (k: string) => t(`admin.providers.field.${k}`, uiLocale)
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Field label="API key" required secret>
-        <input type="password" value={form.apiKey} onChange={(e) => set('apiKey', e.target.value)} autoComplete="new-password" className="w-full border border-gray-300 rounded px-3 py-2" />
+      <Field label={sec('apiKey')} required secret>
+        <input
+          type="password"
+          value={form.apiKey}
+          onChange={(e) => set('apiKey', e.target.value)}
+          placeholder={editing ? t('admin.providers.field.secretPlaceholder', uiLocale) : undefined}
+          autoComplete="new-password"
+          className="w-full border border-gray-300 rounded px-3 py-2"
+        />
       </Field>
-      <Field label="From name">
+      <Field label={sec('fromName')}>
         <input type="text" value={form.fromName} onChange={(e) => set('fromName', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="From email" required>
+      <Field label={sec('fromEmail')} required>
         <input type="email" value={form.fromEmail} onChange={(e) => set('fromEmail', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Reply-to">
+      <Field label={sec('replyTo')}>
         <input type="email" value={form.replyTo} onChange={(e) => set('replyTo', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
-      <Field label="Sending domain">
+      <Field label={sec('sendingDomain')}>
         <input type="text" value={form.sendingDomain} onChange={(e) => set('sendingDomain', e.target.value)} className="w-full border border-gray-300 rounded px-3 py-2" />
       </Field>
     </div>
@@ -759,7 +778,7 @@ function ResendTestRow({ provider, onTest, busy }: { provider: EmailProvider; on
 // Field wrapper
 // ---------------------------------------------------------------------------
 
-function Field({ label, required, secret, children }: { label: string; required?: boolean; secret?: boolean; children: React.ReactNode }) {
+function Field({ label, required, secret, children }: { label: string; required?: boolean; secret?: boolean; children: ReactNode }) {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">

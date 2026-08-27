@@ -68,6 +68,9 @@ export const emailProviderConfigs = pgTable(
     /** When this configuration was promoted to `active`. */
     activatedAt: timestamptz('activated_at'),
 
+    /** Admin user who activated (or rolled back to) this configuration. */
+    activatedBy: text('activated_by').references(() => users.userId, { onDelete: 'restrict' }),
+
     /** When the most recent test message was sent. */
     lastTestAt: timestamptz('last_test_at'),
 

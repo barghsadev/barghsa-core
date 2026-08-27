@@ -186,7 +186,7 @@ export class EmailProviderConfigController {
     @Param('id') id: string,
   ): Promise<EmailProviderConfigResult> {
     this.assertAdmin(req)
-    return this.service.activate(id)
+    return this.service.activate(id, req.session.userId)
   }
 
   @Post(':id/disable')

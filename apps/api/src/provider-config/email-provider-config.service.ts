@@ -48,6 +48,7 @@ export interface EmailProviderConfigResult {
   status: EmailProviderStatus
   createdBy: string
   activatedAt: Date | null
+  activatedBy: string | null
   lastTestAt: Date | null
   lastTestStatus: EmailProviderTestStatus
   lastTestError: string | null
@@ -157,6 +158,7 @@ const SELECT_COLUMNS = `id,
   status,
   created_by AS "createdBy",
   activated_at AS "activatedAt",
+  activated_by AS "activatedBy",
   last_test_at AS "lastTestAt",
   last_test_status AS "lastTestStatus",
   last_test_error AS "lastTestError",
@@ -244,8 +246,16 @@ export class EmailProviderConfigService {
       sets.push(`label = $${params.length}`)
     }
     if (input.config !== undefined) {
-      params.push(JSON.stringify(input.config))
-      sets.push(`config = $${params.length}::jsonb`)
+      /**
+       * Merge the patch over the existing stored config (JSONB `||`).
+       * This preserves fields the client did not resend — most importantly
+       * encrypted secrets (SMTP password / Resend API key), which the API
+       * never returns and which the UI therefore leaves blank when editing.
+       * Omitting a secret on update now keeps the current one instead of
+       * silently wiping it.
+       */
+      params.push(input.config)
+      sets.push(`config = COALESCE(config, '{}'::jsonb) || $${params.length}::jsonb`)
     }
     if (sets.length > 0) {
       params.push(id)
@@ -287,8 +297,10 @@ export class EmailProviderConfigService {
    * Activate a draft. Requires a passing test. Passively supersedes the current
    * active provider (status -> superseded) transactionally; the partial unique
    * index `uq_email_provider_active` is the DB-level guard against two actives.
+   * `activatedBy` records the admin who performed the activation so the UI can
+   * show who promoted this configuration to active (T-05.06.04).
    */
-  async activate(id: string): Promise<EmailProviderConfigResult> {
+  async activate(id: string, activatedBy?: string): Promise<EmailProviderConfigResult> {
     const existing = await this.findById(id)
     if (!existing) throw new HttpException(ProviderErrors.notFound(), 404)
     if (existing.status === 'active') return existing
@@ -310,9 +322,9 @@ export class EmailProviderConfigService {
 
       await client.query(
         `UPDATE email_provider_configs
-            SET status = 'active', activated_at = NOW(), supersedes_id = $2
+            SET status = 'active', activated_at = NOW(), activated_by = $3, supersedes_id = $2
           WHERE id = $1 AND status = 'draft'`,
-        [id, supersedesId],
+        [id, supersedesId, activatedBy ?? null],
       )
     })
 
@@ -396,9 +408,9 @@ export class EmailProviderConfigService {
       await client.query(
         `UPDATE email_provider_configs
             SET status = 'active', activated_at = NOW(),
-                last_test_status = 'passed', supersedes_id = $2
+                last_test_status = 'passed', supersedes_id = $2, activated_by = $3
           WHERE id = $1`,
-        [created.id, priorActiveId],
+        [created.id, priorActiveId, createdBy],
       )
     })
 
