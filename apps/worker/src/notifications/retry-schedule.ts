@@ -17,6 +17,7 @@
  * sane cadence and then surfaces for dead-letter examination rather than
  * growing forever.
  */
+import { classifyNotificationType } from '@barghsa/shared/notifications'
 
 /** Ladder of delays applied after each completed attempt (ms). */
 export const RETRY_DELAYS_MS: readonly number[] = [
@@ -95,10 +96,12 @@ export function nextRetryAt(
 }
 
 /**
- * Queue priority for a notification type: `urgent` (Immediate — security,
- * OTP, authentication, payment, refund, contract-cancellation) dispatches
- * before `normal` (daytime). Security-relevant types are registered as urgent
- * and cannot be reclassified by admins.
+ * Queue priority for a notification type: `urgent` (immediate delivery —
+ * security, OTP, authentication, payment, refund, contract-cancellation)
+ * dispatches before `normal` (daytime). Derived from the code-defined
+ * classification registry (T-05.03.01) so queue priority and delivery-window
+ * behaviour always agree; security-relevant types are `immediate` and cannot
+ * be reclassified by admins.
  */
 export type QueuePriority = 'urgent' | 'normal'
 
@@ -106,24 +109,16 @@ export type QueuePriority = 'urgent' | 'normal'
 export interface NotificationTypeConfig {
   /** Retry budget (defaults to `DEFAULT_MAX_ATTEMPTS` when omitted). */
   maxAttempts: number
-  /** Queue priority; security/OTP events are `urgent`. */
-  priority: QueuePriority
 }
 
 /**
- * Code-defined registry of notification-type retry/priority config. Keys are
- * event keys emitted by business modules. Types not listed fall back to the
- * defaults (max 5 attempts, normal priority).
- *
- * Security-sensitive types are pinned to `urgent` here so they always bypass
- * day/time queues regardless of admin configuration.
+ * Code-defined registry of notification-type retry config. Keys are event keys
+ * emitted by business modules. Types not listed fall back to the defaults
+ * (max 5 attempts).
  */
 const TYPE_CONFIG: Readonly<Record<string, NotificationTypeConfig>> = {
-  // Authentication / security — immediate, must not be deprioritised.
-  otp_sent: { maxAttempts: 3, priority: 'urgent' },
-  profile_verified: { maxAttempts: 5, priority: 'urgent' },
-  // Financial — near-real-time but not security-critical.
-  invoice_available: { maxAttempts: 5, priority: 'normal' },
+  // Authentication / security — bounded retries so OTPs don't linger.
+  'auth.otp_sent': { maxAttempts: 3 },
   // All other types → defaults.
 }
 
@@ -132,7 +127,10 @@ export function maxAttemptsForType(eventKey: string): number {
   return TYPE_CONFIG[eventKey]?.maxAttempts ?? DEFAULT_MAX_ATTEMPTS
 }
 
-/** Queue priority for a notification type (falls back to `normal`). */
+/**
+ * Queue priority for a notification type, derived from its delivery
+ * classification: `immediate` → `urgent`, everything else → `normal`.
+ */
 export function priorityForType(eventKey: string): QueuePriority {
-  return TYPE_CONFIG[eventKey]?.priority ?? 'normal'
+  return classifyNotificationType(eventKey) === 'immediate' ? 'urgent' : 'normal'
 }
