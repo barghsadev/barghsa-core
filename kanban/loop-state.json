@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "status": "building",
   "current_task_id": "T-05.02.01",
   "current_task_file": "05-notifications-documents-ai.md",
@@ -6,6 +7,15 @@
   "current_pr_url": "",
   "current_task_key": "05-notifications-documents-ai.md#T-05.02.01",
   "loop_iteration": 306,
+=======
+  "status": "in_review",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/170",
+  "current_task_key": "",
+  "loop_iteration": 305,
+>>>>>>> Stashed changes
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -254,6 +264,7 @@
     "05-notifications-documents-ai.md#T-05.01.07"
   ],
   "last_error": null,
+<<<<<<< Updated upstream
   "notes": "T-05.02.01 (notification entity & in-app transport) building on branch feat/e05-t-05-02-01--in-app-notifications. Migration 0028, InAppNotificationTransport wired into worker poll.",
   "last_updated": "2026-08-27T06:32:00Z",
   "status_history": [
@@ -261,6 +272,15 @@
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.02.01",
       "at": "2026-08-27T06:32:00Z"
+=======
+  "notes": "T-05.02.01 (in-app notifications) PR #170 ready for review.",
+  "last_updated": "2026-08-27T06:34:00Z",
+  "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.02.01",
+      "at": "2026-08-27T06:34:00Z"
+>>>>>>> Stashed changes
     },
     {
       "status": "merged",
