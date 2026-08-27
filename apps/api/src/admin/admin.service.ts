@@ -24,6 +24,14 @@ import {
   toServiceResponseTargets,
   validateServiceResponseTargets,
   type ServiceResponseTargets,
+  STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+  DEFAULT_STAFF_ASSIGNMENT_RULES,
+  toStaffAssignmentRules,
+  validateStaffAssignmentRules,
+  validateStaffTeamInput,
+  type StaffAssignmentRules,
+  type StaffTeamRecord,
+  type StaffTeamInput,
 } from '@barghsa/shared/admin'
 import { ErrorCodes } from '@barghsa/shared/errors'
 
@@ -1160,6 +1168,562 @@ export class AdminService {
       )
     } finally {
       client.release()
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Staff teams and assignment rules (S-09.08, T-09.08.02)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * Get the current admin-configurable staff assignment rules from
+   * `app_config`.
+   *
+   * Returns the all-manual default (every work type `teamId: null`) when no
+   * admin value has been persisted yet, so a fresh installation never
+   * auto-assigns work. A persisted row that does not normalize cleanly is
+   * warned about and served per-type normalized — a corrupt value can
+   * disable auto-assignment for a work type but must not crash the read
+   * path.
+   */
+  async getStaffAssignmentRules(): Promise<StaffAssignmentRules> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [STAFF_ASSIGNMENT_RULES_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) {
+      return structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES)
+    }
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const config = toStaffAssignmentRules(persisted)
+    // Detect corruption: any work type whose stored rule survived
+    // normalization differently than it was stored means the row is corrupt.
+    const corrupt = Object.keys(persisted ?? {}).some((workType) => {
+      const raw = (persisted as Record<string, unknown>)[workType]
+      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return true
+      const rule = raw as Record<string, unknown>
+      const normalized = config[workType as keyof StaffAssignmentRules]
+      return normalized.teamId !== rule.teamId ||
+        (typeof rule.strategy === 'string' && normalized.strategy !== rule.strategy)
+    })
+    if (corrupt) {
+      this.logger.warn(
+        `Staff assignment rules config row for key ${STAFF_ASSIGNMENT_RULES_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt work types fall back to manual assignment)`,
+      )
+    }
+    return config
+  }
+
+  /**
+   * Persist a new admin-configurable staff assignment rules map.
+   *
+   * Validates the proposal against the T-09.08.02 rules (known work types
+   * only; each rule has a `teamId` string/null and a valid strategy) before
+   * writing. A failing validation throws a 400 with the collected issue
+   * list. The map is a full replace: work types omitted from the payload
+   * become manual assignment. On success it upserts `app_config`
+   * (versioned), bumps the global config version so caches invalidate, and
+   * records a `config_change` audit event with the previous value and both
+   * version numbers.
+   *
+   * The teamId reference is not resolved here — a rule may name a team that
+   * is created later, and the assignment engine (future slice) resolves it
+   * at assignment time, skipping auto-assignment for unknown/disabled teams.
+   *
+   * @param input - raw request body (flat map, e.g. `{ ticket: { teamId: '…', strategy: 'round_robin' } }`)
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the persisted (normalized) assignment rules map
+   */
+  async setStaffAssignmentRules(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<StaffAssignmentRules> {
+    const validation = validateStaffAssignmentRules(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const config = toStaffAssignmentRules(input)
+    const pool = getDbPool()
+    const now = new Date()
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      const prevResult = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY],
+      )
+      const previousValue =
+        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersion =
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+
+      const upsertResult = await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ($1, $2::jsonb, 1, $3)
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+         RETURNING version`,
+        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY, JSON.stringify(config), now],
+      )
+      const newVersion = upsertResult.rows[0]!.version as number
+
+      // Bump global config version for cache invalidation.
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+            previousValue,
+            previousVersion,
+            newValue: config,
+            version: newVersion,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Staff assignment rules set to ${JSON.stringify(config)} by ${actorUserId}`,
+      )
+      return config
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set staff assignment rules config: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * List all staff teams with their member user ids (T-09.08.02).
+   *
+   * Returns teams ordered by name. Each team carries `memberUserIds` (the
+   * users currently in the team, ordered by membership created_at) so the
+   * admin surface can render member management without a second call.
+   */
+  async listStaffTeams(): Promise<StaffTeamRecord[]> {
+    const pool = getDbPool()
+    const teamsResult = await pool.query(
+      `SELECT id, name, description, skill_tags, is_active, created_at, updated_at
+       FROM staff_teams
+       ORDER BY name ASC`,
+    )
+    if (teamsResult.rows.length === 0) return []
+
+    const membersResult = await pool.query(
+      `SELECT team_id, user_id
+       FROM staff_team_members
+       WHERE team_id = ANY($1::uuid[])
+       ORDER BY created_at ASC`,
+      [teamsResult.rows.map((r: { id: string }) => r.id)],
+    )
+
+    const membersByTeam = new Map<string, string[]>()
+    for (const row of membersResult.rows as { team_id: string; user_id: string }[]) {
+      const list = membersByTeam.get(row.team_id) ?? []
+      list.push(row.user_id)
+      membersByTeam.set(row.team_id, list)
+    }
+
+    return teamsResult.rows.map((row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; created_at: Date; updated_at: Date }) => ({
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
+      isActive: row.is_active,
+      memberUserIds: membersByTeam.get(row.id) ?? [],
+      createdAt: row.created_at.toISOString(),
+      updatedAt: row.updated_at.toISOString(),
+    }))
+  }
+
+  /**
+   * Create a staff team (T-09.08.02).
+   *
+   * Validates the input (name/skill-tags/member shape), verifies every
+   * member user id exists, inserts the team row and its membership in one
+   * transaction, and records a `team_create` audit event. A duplicate team
+   * name surfaces as a 409.
+   *
+   * @param input - raw request body (`{ name, description?, skillTags?, memberUserIds? }`)
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the created team record
+   */
+  async createStaffTeam(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<StaffTeamRecord> {
+    const validation = validateStaffTeamInput(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const team: StaffTeamInput = {
+      name: (input as StaffTeamInput).name.trim(),
+      description: ((input as StaffTeamInput).description ?? null) as string | null,
+      skillTags: ((input as StaffTeamInput).skillTags ?? []).map((t: string) => t.trim()),
+      memberUserIds: (input as StaffTeamInput).memberUserIds ?? [],
+    }
+
+    const pool = getDbPool()
+    const client = await pool.connect()
+    const now = new Date()
+    const teamId = uuidv7()
+
+    try {
+      await client.query('BEGIN')
+
+      await this.assertTeamMembersExist(client, team.memberUserIds)
+
+      const insertResult = await client.query(
+        `INSERT INTO staff_teams (id, name, description, skill_tags, is_active, created_at, updated_at)
+         VALUES ($1, $2, $3, $4::jsonb, true, $5, $5)
+         RETURNING id, name, description, skill_tags, is_active, created_at, updated_at`,
+        [teamId, team.name, team.description, JSON.stringify(team.skillTags), now],
+      )
+      const row = insertResult.rows[0]!
+
+      await this.insertTeamMembers(client, teamId, team.memberUserIds, now)
+
+      await this.recordTeamAudit(client, 'team_create', actorUserId, ip, now, {
+        teamId,
+        name: team.name,
+        memberUserIds: team.memberUserIds,
+        skillTags: team.skillTags,
+      })
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Staff team '${team.name}' (${teamId}) created by ${actorUserId}`)
+      return this.mapTeamRow(row, team.memberUserIds)
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
+      if (this.isUniqueViolation(error, 'uq_st_name')) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'TEAM_NAME_TAKEN',
+            message: `A staff team named '${team.name}' already exists`,
+          },
+          409,
+        )
+      }
+      this.logger.error(`Failed to create staff team '${team.name}': ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create staff team' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Update a staff team (T-09.08.02).
+   *
+   * Validates against the same rules as create, verifies every member user
+   * id exists, replaces the team's row and membership set in one transaction,
+   * and records a `team_update` audit event with the previous snapshot.
+   *
+   * @param teamId - the team's UUID
+   * @param input - raw request body (partial allowed: `{ name?, description?, skillTags?, memberUserIds? }`)
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the updated team record
+   */
+  async updateStaffTeam(
+    teamId: string,
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<StaffTeamRecord> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+    const now = new Date()
+
+    try {
+      await client.query('BEGIN')
+
+      const existingResult = await client.query(
+        `SELECT id, name, description, skill_tags, is_active, created_at, updated_at
+         FROM staff_teams WHERE id = $1 FOR UPDATE`,
+        [teamId],
+      )
+      if (existingResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: 'TEAM_NOT_FOUND', message: 'Staff team not found' },
+          404,
+        )
+      }
+      const existing = existingResult.rows[0]!
+
+      const prevMembersResult = await client.query(
+        `SELECT user_id FROM staff_team_members WHERE team_id = $1 ORDER BY created_at ASC`,
+        [teamId],
+      )
+      const previousMemberUserIds = prevMembersResult.rows.map((r: { user_id: string }) => r.user_id)
+
+      // Normalize the update: merge provided fields with existing values,
+      // then run the full validator over the merged shape so a partial
+      // update cannot bypass a rule (e.g. name length).
+      const merged: StaffTeamInput = {
+        name: ((input as Record<string, unknown>).name !== undefined
+          ? String((input as Record<string, unknown>).name).trim()
+          : existing.name) as string,
+        description: (input as Record<string, unknown>).description !== undefined
+          ? ((input as Record<string, unknown>).description as string | null)
+          : (existing.description as string | null),
+        skillTags: (input as Record<string, unknown>).skillTags !== undefined
+          ? ((input as Record<string, unknown>).skillTags as string[])
+          : (Array.isArray(existing.skill_tags) ? (existing.skill_tags as string[]) : []),
+        memberUserIds: (input as Record<string, unknown>).memberUserIds !== undefined
+          ? ((input as Record<string, unknown>).memberUserIds as string[])
+          : previousMemberUserIds,
+      }
+
+      const validation = validateStaffTeamInput(merged)
+      if (!validation.ok) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: validation.issues.join('; '),
+          },
+          400,
+        )
+      }
+
+      await this.assertTeamMembersExist(client, merged.memberUserIds)
+
+      const updateResult = await client.query(
+        `UPDATE staff_teams
+         SET name = $2, description = $3, skill_tags = $4::jsonb, updated_at = $5
+         WHERE id = $1
+         RETURNING id, name, description, skill_tags, is_active, created_at, updated_at`,
+        [teamId, merged.name, merged.description, JSON.stringify(merged.skillTags), now],
+      )
+      const row = updateResult.rows[0]!
+
+      // Replace membership set (delete stale, insert new).
+      await client.query(`DELETE FROM staff_team_members WHERE team_id = $1`, [teamId])
+      await this.insertTeamMembers(client, teamId, merged.memberUserIds, now)
+
+      await this.recordTeamAudit(client, 'team_update', actorUserId, ip, now, {
+        teamId,
+        name: merged.name,
+        previousName: existing.name,
+        previousMemberUserIds,
+        memberUserIds: merged.memberUserIds,
+        previousSkillTags: Array.isArray(existing.skill_tags) ? existing.skill_tags : [],
+        skillTags: merged.skillTags,
+      })
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Staff team '${merged.name}' (${teamId}) updated by ${actorUserId}`)
+      return this.mapTeamRow(row, merged.memberUserIds)
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
+      if (this.isUniqueViolation(error, 'uq_st_name')) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'TEAM_NAME_TAKEN',
+            message: `A staff team named '${(input as Record<string, unknown>).name}' already exists`,
+          },
+          409,
+        )
+      }
+      this.logger.error(`Failed to update staff team ${teamId}: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff team' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  /**
+   * Delete a staff team (T-09.08.02).
+   *
+   * Removes the team row and its memberships (ON DELETE CASCADE) and
+   * records a `team_delete` audit event. Assignment rules referencing this
+   * team are left untouched — the assignment engine treats unknown/disabled
+   * teams as manual assignment, so a deleted team cannot break the worker.
+   *
+   * @param teamId - the team's UUID
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   */
+  async deleteStaffTeam(teamId: string, actorUserId: string, ip: string): Promise<{ deleted: true }> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+    const now = new Date()
+
+    try {
+      await client.query('BEGIN')
+
+      const existingResult = await client.query(
+        `SELECT id, name FROM staff_teams WHERE id = $1 FOR UPDATE`,
+        [teamId],
+      )
+      if (existingResult.rows.length === 0) {
+        throw new HttpException(
+          { statusCode: 404, error: 'TEAM_NOT_FOUND', message: 'Staff team not found' },
+          404,
+        )
+      }
+      const existing = existingResult.rows[0]!
+
+      await client.query(`DELETE FROM staff_teams WHERE id = $1`, [teamId])
+
+      await this.recordTeamAudit(client, 'team_delete', actorUserId, ip, now, {
+        teamId,
+        name: existing.name,
+      })
+
+      await client.query('COMMIT')
+
+      this.logger.log(`Staff team '${existing.name}' (${teamId}) deleted by ${actorUserId}`)
+      return { deleted: true }
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) throw error
+      this.logger.error(`Failed to delete staff team ${teamId}: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to delete staff team' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  // ── Staff team helpers ──────────────────────────────────────────────
+
+  private async assertTeamMembersExist(
+    client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: unknown[] }> },
+    memberUserIds: string[],
+  ): Promise<void> {
+    if (memberUserIds.length === 0) return
+    const result = await client.query(
+      `SELECT user_id FROM users WHERE user_id = ANY($1::text[])`,
+      [memberUserIds],
+    )
+    const found = new Set((result.rows as { user_id: string }[]).map((r) => r.user_id))
+    const missing = memberUserIds.filter((id) => !found.has(id))
+    if (missing.length > 0) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'MEMBER_USER_NOT_FOUND',
+          message: `Unknown member user id(s): ${missing.join(', ')}`,
+        },
+        400,
+      )
+    }
+  }
+
+  private async insertTeamMembers(
+    client: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
+    teamId: string,
+    memberUserIds: string[],
+    now: Date,
+  ): Promise<void> {
+    if (memberUserIds.length === 0) return
+    // Batch insert; ids are validated + deduped by the input validator.
+    const params: unknown[] = []
+    const values = memberUserIds
+      .map((userId) => {
+        const base = params.length
+        params.push(uuidv7(), teamId, userId, now, now)
+        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`
+      })
+      .join(', ')
+    await client.query(
+      `INSERT INTO staff_team_members (id, team_id, user_id, created_at, updated_at) VALUES ${values}`,
+      params,
+    )
+  }
+
+  private async recordTeamAudit(
+    client: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
+    event: string,
+    actorUserId: string,
+    ip: string,
+    now: Date,
+    metadata: Record<string, unknown>,
+  ): Promise<void> {
+    const auditId = uuidv7()
+    const correlationId = uuidv7()
+    await client.query(
+      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+       VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+      [auditId, actorUserId, event, JSON.stringify(metadata), correlationId, ip, now],
+    )
+  }
+
+  private isUniqueViolation(error: unknown, constraint: string): boolean {
+    const message = error instanceof Error ? error.message : String(error)
+    return message.includes(constraint)
+  }
+
+  private mapTeamRow(
+    row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; created_at: Date; updated_at: Date },
+    memberUserIds: string[],
+  ): StaffTeamRecord {
+    return {
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
+      isActive: row.is_active,
+      memberUserIds,
+      createdAt: row.created_at.toISOString(),
+      updatedAt: row.updated_at.toISOString(),
     }
   }
 }
