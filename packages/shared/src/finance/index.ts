@@ -5,3 +5,4 @@
  * @module finance
  */
 export * from './dual-approval-config.js'
+export * from './approval-request.js'
