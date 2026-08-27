@@ -281,9 +281,9 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": "Reviewer billing: anthropic/claude-opus-5 HTTP 402 — 'This request would exceed your available credits given your current in-flight requests. Retry after in-flight requests settle, or add credits.' Two consecutive attempts failed (02:20Z, 02:21Z); no concurrent reviewer process was running. Credential pool marks key OPENROUTER_API_KEY as exhausted with failure_reason=billing. Manual action required: add OpenRouter credits (openrouter.ai/settings/credits), then clear last_error and set status back to in_review to resume PR #198.",
+  "last_error": "Reviewer billing: anthropic/claude-opus-5 HTTP 402 - 'This request would exceed your available credits given your current in-flight requests. Retry after in-flight requests settle, or add credits.' Retried at 02:40Z and still blocked. Credential pool marks OPENROUTER_API_KEY exhausted (failure_reason=billing). Manual action REQUIRED: add OpenRouter credits (openrouter.ai/settings/credits), then clear last_error and set status back to in_review to resume PR #198.",
   "notes": "T-09.08.02 (staff teams + assignment rules, L) slice 1 in review: PR #198 — shared staff-teams contract + staff_teams/members schema + migration 0038 + admin CRUD (teams + assignment-rules app_config, audited). SQL validated on postgres:16. CI green (Run tests, Verify monorepo integrity). BLOCKED: reviewer model credits exhausted on OpenRouter (HTTP 402 x2). PR #198 not yet reviewed; resume by topping up credits and clearing last_error.",
-  "last_updated": "2026-08-27T23:22:10Z",
+  "last_updated": "2026-08-27T23:40:01Z",
   "status_history": [
     {
       "status": "merged",
