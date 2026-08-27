@@ -72,6 +72,13 @@ describe('runOutboxPoll', () => {
     // Real provider refs persisted (param $3), one per channel.
     expect(done.some((u) => u.params[2] === 'real:in_app')).toBe(true)
     expect(done.some((u) => u.params[2] === 'real:email')).toBe(true)
+
+    // Each delivered channel gets a delivery-log row (T-05.01.05).
+    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
+    expect(logInserts).toHaveLength(2)
+    expect(logInserts.every((u) => u.params[2] === 'delivered')).toBe(true)
+    // Sanitized error fields stay null on delivered attempts.
+    expect(logInserts.every((u) => u.params[6] === null && u.params[7] === null)).toBe(true)
   })
 
   it('marks only the failing job and returns the row to queued for retry', async () => {
@@ -89,6 +96,14 @@ describe('runOutboxPoll', () => {
     // in_app done, email retrying (not exhausted at attempts=1 of 5).
     expect(jobUpdates.find((u) => u.params[5] === 'in_app')!.params[1]).toBe('done')
     expect(jobUpdates.find((u) => u.params[5] === 'email')!.params[1]).toBe('retrying')
+
+    // Delivery logs: in_app delivered, email failed with a classified error.
+    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
+    expect(logInserts).toHaveLength(2)
+    const inAppLog = logInserts.find((u) => u.params[1] === 'in_app')!
+    const emailLog = logInserts.find((u) => u.params[1] === 'email')!
+    expect(inAppLog.params[2]).toBe('delivered')
+    expect(emailLog.params[2]).toBe('failed')
 
     // Outbox row returned to queued with an unconsumed locked_until (backoff).
     const outboxUpdate = updates.find(

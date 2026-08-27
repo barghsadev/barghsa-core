@@ -107,6 +107,8 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
 export interface DispatchOutcome {
   channel: NotificationChannel
   result: NotificationSendResult
+  /** Provider round-trip latency in milliseconds for this attempt. */
+  latencyMs: number
 }
 
 /**
@@ -142,8 +144,9 @@ export async function dispatchOutbox(
       }
       continue
     }
+    const startedAt = performance.now()
     const result = await transport.send(payload)
-    outcomes.push({ channel, result })
+    outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) })
   }
   return outcomes
 }
