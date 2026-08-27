@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.04.04",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-04-04--template-test-send",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/180",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.04.04",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 314,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -261,11 +261,12 @@
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01",
     "05-notifications-documents-ai.md#T-05.04.02",
-    "05-notifications-documents-ai.md#T-05.04.03"
+    "05-notifications-documents-ai.md#T-05.04.03",
+    "05-notifications-documents-ai.md#T-05.04.04"
   ],
   "last_error": "",
-  "notes": "T-05.04.04 (test-send) PR #180 ready for review.",
-  "last_updated": "2026-08-27T15:35:00Z",
+  "notes": "T-05.04.04 (test-send) PR #180 MERGED (commit 95dd4053). Destination validation + last_test_sent_at/status tracking. Loop idle. Next: T-05.04.05 (template seeding).",
+  "last_updated": "2026-08-27T12:40:00Z",
   "status_history": [
     {
       "status": "merged",
@@ -316,6 +317,11 @@
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.04.04",
       "at": "2026-08-27T15:35:00Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.04",
+      "at": "2026-08-27T12:40:00Z"
     }
   ]
 }
