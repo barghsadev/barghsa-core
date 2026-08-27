@@ -31,6 +31,13 @@ import { irrAmount } from '../types.js'
  * - a resolved request can never be re-resolved,
  * - a rejection always carries a reason.
  *
+ * Database-level CHECK constraints live in migration `0036` only (Drizzle's
+ * column builder in v0.40 does not expose `.check()`): `chk_ar_action_type`,
+ * `chk_ar_amount_positive`, `chk_ar_status`, plus the composite
+ * `idx_approval_requests_status_created_at`. `approval-requests.test.ts`
+ * pins migration 0036 so a future `drizzle-kit generate` cannot silently
+ * drop them.
+ *
  * @module db/schema
  */
 export const approvalRequests = createTable('approval_requests', {

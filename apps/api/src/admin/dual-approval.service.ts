@@ -457,26 +457,35 @@ export class DualApprovalService {
     amountIrR: number,
     initiatorUserId: string,
   ): Promise<void> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT user_id FROM users WHERE is_admin = TRUE AND user_id <> $1`,
-      [initiatorUserId],
-    )
+    try {
+      const pool = getDbPool()
+      const result = await pool.query(
+        `SELECT user_id FROM users WHERE is_admin = TRUE AND user_id <> $1`,
+        [initiatorUserId],
+      )
 
-    const title = 'درخواست تأیید دومرحلهای جدید'
-    const body =
-      `مبلغ ${amountIrR} ریال — ${actionType} نیاز به تأیید دومرحلهای دارد. ` +
-      'در صف تأیید بررسی کنید.'
-    const link = '/app/admin/approval-requests'
+      const title = 'درخواست تأیید دومرحلهای جدید'
+      const body =
+        `مبلغ ${amountIrR} ریال — ${actionType} نیاز به تأیید دومرحلهای دارد. ` +
+        'در صف تأیید بررسی کنید.'
+      const link = '/app/admin/approval-requests'
 
-    for (const row of result.rows as { user_id: string }[]) {
-      await this.notificationsService
-        .create({ userId: row.user_id, type: 'general', title, body, link })
-        .catch((error: unknown) => {
-          this.logger.warn(
-            `Failed to notify user ${row.user_id} about approval request ${requestId}: ${String(error)}`,
-          )
-        })
+      for (const row of result.rows as { user_id: string }[]) {
+        await this.notificationsService
+          .create({ userId: row.user_id, type: 'general', title, body, link })
+          .catch((error: unknown) => {
+            this.logger.warn(
+              `Failed to notify user ${row.user_id} about approval request ${requestId}: ${String(error)}`,
+            )
+          })
+      }
+    } catch (error) {
+      // The approval request itself is already durably committed; a failure
+      // to enumerate or notify eligible staff must never turn into a 500
+      // (which would make callers retry and create a duplicate request).
+      this.logger.warn(
+        `Failed to notify eligible staff about approval request ${requestId}: ${String(error)}`,
+      )
     }
   }
 

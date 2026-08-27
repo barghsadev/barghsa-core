@@ -202,20 +202,40 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     // An empty queue of eligible staff is a no-op, not an error.
   })
 
-  it('continues even when a staff notification fails (best-effort)', async () => {
+  it('continues even when the eligible-staff query fails after commit (best-effort)', async () => {
     const { mockQuery, mockConnect } = await loadService()
     const { mockClientQuery, client } = mockClient()
     mockConnect.mockResolvedValue(client)
     mockClientQuery.mockResolvedValue({ rows: [] })
     mockQuery
       .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
-      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2' }] })
-      .mockResolvedValueOnce({ rows: [{ id: 'req-3', action_type: 'refund', amount_irr: '5', initiator_id: 'user-1', initiator_username: null, reason: 'x', details: null, status: 'pending', reviewer_id: null, reviewer_username: null, review_reason: null, reviewed_at: null, created_at: new Date(), updated_at: new Date() }] })
-    notificationsService.create.mockRejectedValueOnce(new Error('db down'))
+      .mockRejectedValueOnce(new Error('eligibility query down'))
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'req-3',
+            action_type: 'refund',
+            amount_irr: '5',
+            initiator_id: 'user-1',
+            initiator_username: null,
+            reason: 'x',
+            details: null,
+            status: 'pending',
+            reviewer_id: null,
+            reviewer_username: null,
+            review_reason: null,
+            reviewed_at: null,
+            created_at: new Date(),
+            updated_at: new Date(),
+          },
+        ],
+      })
 
+    // The request is durably created; notification enumeration failure must
+    // not surface a 500 (a retry would duplicate the pending request).
     await expect(
       service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1'),
-    ).resolves.toBeDefined()
+    ).resolves.toMatchObject({ id: 'req-3', status: 'pending' })
   })
 })
 
