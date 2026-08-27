@@ -18,6 +18,14 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js'
  * in-app staff alert through the E-05 outbox pipeline (delivered to the
  * recipient's `in_app_notifications` by the outbox poller).
  *
+ * Clock semantics: an item's age is measured from `updated_at` — the
+ * last-activity timestamp, which both the ticket and verification-case
+ * services stamp on every state change. A target therefore measures
+ * **responsiveness** (time since the item last moved), not time since
+ * creation: a waiting_customer excursion or a staff reply resets the clock,
+ * and a ticket bouncing between states never re-alerts until it has been
+ * silent for the full target again.
+ *
  * Guarantees:
  * - **At-most-once alerting per breach episode.** The ledger's UNIQUE
  *   (service_type, item_id) constraint is the dedup mechanism: the scanner
@@ -25,7 +33,13 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js'
  *   inserted. The same item is never re-alerted on every scan.
  * - **Episode reset.** When an item leaves the breached set (resolved,
  *   closed, or the target is raised past its age) its ledger row is pruned,
- *   so a later re-breach starts a fresh episode and alerts again.
+ *   so a later re-breach starts a fresh episode and alerts again. Disabling
+ *   a service type entirely clears that type's whole ledger, so re-enabling
+ *   later re-evaluates every open item from scratch.
+ * - **No silent alert loss.** An item is only recorded as alerted after at
+ *   least one recipient was resolved for it; an unresolvable recipient
+ *   (staff account without a default profile) skips the ledger insert and
+ *   is re-evaluated on the next scan, logged for visibility.
  * - **Atomicity.** The ledger insert and the outbox rows for a service type
  *   share one transaction: a crash mid-scan can never leave an alert without
  *   its dedup row (which would re-alert on the next scan).
@@ -34,7 +48,7 @@ import { enqueueOutbox } from '../notifications/outbox-writer.js'
  *
  * Staff alerts are exactly what T-09.08.01 promises — breached targets
  * create staff alerts but do not promise a service level to customers.
- * Per-item event i18n templates land with the template engine (T-05.04.02).
+ * Per-event i18n rendering lands with the template engine (T-05.04.02).
  */
 
 /** Milliseconds per target hour. */
@@ -59,7 +73,7 @@ export interface BreachScanResult {
   alerted: number
   /** Items already alerted that were seen again (deduped). */
   skippedDuplicates: number
-  /** Ledger rows pruned (episodes that ended). */
+  /** Ledger rows pruned (episodes that ended, or a type got disabled). */
   pruned: number
   /** Per-type failure messages; the other types still got scanned. */
   errors: string[]
@@ -81,6 +95,8 @@ interface BreachDomainSpec {
    * `$1` = service_type, `$2` = statuses, `$3` = cutoff timestamp.
    */
   pruneSql: string
+  /** SQL clearing the whole ledger when the type is disabled. `$1` = service_type. */
+  clearSql: string
   /** Recipient policy when an item has no responsible user assigned. */
   fallback: 'admins' | 'none'
 }
@@ -92,14 +108,15 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
     findBreachedSql: `SELECT id, assigned_to AS recipient_user_id
         FROM tickets
         WHERE status = ANY($1::text[])
-          AND created_at <= $2`,
+          AND updated_at <= $2`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
           AND item_id NOT IN (
             SELECT id FROM tickets
             WHERE status = ANY($2::text[])
-              AND created_at <= $3
+              AND updated_at <= $3
           )`,
+    clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
     // Unassigned tickets are the whole platform's responsibility.
     fallback: 'admins',
   },
@@ -109,14 +126,15 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
     findBreachedSql: `SELECT id, created_by AS recipient_user_id
         FROM verification_cases
         WHERE status = ANY($1::text[])
-          AND created_at <= $2`,
+          AND updated_at <= $2`,
     pruneSql: `DELETE FROM service_breach_alerts
         WHERE service_type = $1
           AND item_id NOT IN (
             SELECT id FROM verification_cases
             WHERE status = ANY($2::text[])
-              AND created_at <= $3
+              AND updated_at <= $3
           )`,
+    clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
     // Cases are always created by a staff user (created_by is NOT NULL).
     fallback: 'none',
   },
@@ -138,12 +156,23 @@ const defaultLogger: Pick<Console, 'warn' | 'info'> = {
   info: (msg: unknown) => console.log(`[worker:breach-scan] ${String(msg)}`),
 }
 
+/** Human-readable in-app label per service type (both locales). */
+const SERVICE_TYPE_LABELS: Record<
+  ServiceResponseTargetType,
+  { fa: string; en: string }
+> = {
+  ticket: { fa: 'تیکت', en: 'ticket' },
+  verification_case: { fa: 'پرونده تأیید هویت', en: 'verification case' },
+}
+
 /**
  * Run one breach-detection pass.
  *
  * No config row → returns `{ enabled: false }` and does nothing else, so a
  * fresh installation (targets not configured) is a no-op. Corrupt stored
- * values degrade per-type to disabled through the shared normalizer.
+ * values degrade per-type to disabled through the shared normalizer. A
+ * service type with `null` target is not scanned, but its ledger is cleared
+ * so re-enabling the type re-evaluates every open item from scratch.
  */
 export async function scanServiceBreaches(
   options: BreachScanOptions = {},
@@ -175,12 +204,22 @@ export async function scanServiceBreaches(
 
   for (const domain of BREACH_DOMAINS) {
     const targetHours = targets[domain.serviceType]
-    if (targetHours === null) continue
-    const cutoff = new Date(now.getTime() - targetHours * HOUR_MS)
 
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+
+      // Disabled type: no scanning, but clear its episode ledger so a later
+      // re-enable re-evaluates every open item from scratch (episodes do not
+      // survive across a disable/enable cycle).
+      if (targetHours === null) {
+        const cleared = await client.query(domain.clearSql, [domain.serviceType])
+        result.pruned += cleared.rowCount ?? 0
+        await client.query('COMMIT')
+        continue
+      }
+
+      const cutoff = new Date(now.getTime() - targetHours * HOUR_MS)
 
       const breached = await client.query<{
         id: string
@@ -191,6 +230,19 @@ export async function scanServiceBreaches(
       if (breached.rows.length > 0) {
         const recipients = await resolveRecipients(client, breached.rows, domain)
         for (const row of breached.rows) {
+          const itemRecipients = recipients.forItem(row.recipient_user_id)
+
+          // No deliverable recipient (e.g. the responsible staff account has
+          // no default profile): skip the ledger insert entirely so the item
+          // is re-evaluated on the next scan — a silent, permanent alert
+          // suppression is worse than re-checking a few minutes later.
+          if (itemRecipients.length === 0) {
+            logger.warn(
+              `No in-app recipient for breached ${domain.serviceType} ${row.id}; will re-evaluate next scan`,
+            )
+            continue
+          }
+
           // Dedup: only rows actually inserted by this insert are new
           // episodes. An existing (service_type, item_id) row means this
           // item was already alerted — skip it.
@@ -207,13 +259,15 @@ export async function scanServiceBreaches(
           }
           result.alerted++
 
-          for (const profile of recipients.forItem(row.recipient_user_id)) {
+          for (const profile of itemRecipients) {
             await enqueue(client, {
               profileId: profile.id,
               userId: profile.userId,
               eventKey: SERVICE_TARGET_BREACHED_EVENT_KEY,
               payload: {
                 service_type: domain.serviceType,
+                service_type_name_fa: SERVICE_TYPE_LABELS[domain.serviceType].fa,
+                service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
                 item_id: row.id,
                 target_hours: targetHours,
               },
@@ -225,8 +279,9 @@ export async function scanServiceBreaches(
       }
 
       // Episode reset: drop ledger rows whose item is no longer breached
-      // (resolved, closed, or younger than the current target). The
-      // anti-join is exactly the breached set (same statuses + cutoff).
+      // (resolved, closed, silent again, or younger than the current
+      // target). The anti-join is exactly the breached set (same statuses +
+      // cutoff).
       const prune = await client.query(domain.pruneSql, [
         domain.serviceType,
         domain.openStatuses,
@@ -259,38 +314,57 @@ interface RecipientProfile {
   userId: string
 }
 
+interface ResolvedRecipients {
+  /** Profiles of the responsible staff users (keyed by user id). */
+  forItem: (userId: string | null) => RecipientProfile[]
+}
+
 /**
  * Resolve the default in-app profile for every staff user that must be
  * alerted for the current breached set.
  *
- * Recipients per item: the responsible user when one is assigned, otherwise
- * (for domains whose fallback is `admins`) every platform admin. A user
- * without a default profile is skipped — in-app delivery is profile-scoped,
- * and profile-less staff accounts are degenerate (staff created through the
- * admin flow always get an individual profile).
+ * Recipient policy:
+ * - an item with a responsible user assigned alerts exactly that user;
+ * - an unassigned item (only in domains whose fallback is `admins`) alerts
+ *   every platform admin — and **only** admins, never other items' assigned
+ *   staff;
+ * - a user without a default profile is skipped (in-app delivery is
+ *   profile-scoped; staff created through the admin flow always get an
+ *   individual profile) — the caller re-evaluates such items next scan.
  */
 async function resolveRecipients(
   client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
   rows: Array<{ recipient_user_id: string | null }>,
   domain: BreachDomainSpec,
-): Promise<{ forItem: (userId: string | null) => RecipientProfile[] }> {
-  const userIds = new Set<string>()
-  const hasUnassigned = rows.some((row) => row.recipient_user_id === null)
+): Promise<ResolvedRecipients> {
+  const assigneeUserIds = new Set<string>()
   for (const row of rows) {
-    if (row.recipient_user_id) userIds.add(row.recipient_user_id)
+    if (row.recipient_user_id) assigneeUserIds.add(row.recipient_user_id)
   }
-  if (hasUnassigned && domain.fallback === 'admins') {
+
+  // Admin fallback applies only when the batch actually contains unassigned
+  // items AND the domain's policy routes unassigned work to admins.
+  const hasUnassigned = rows.some((row) => row.recipient_user_id === null)
+  const needsAdmins = hasUnassigned && domain.fallback === 'admins'
+
+  const adminUserIds = new Set<string>()
+  if (needsAdmins) {
     const admins = await client.query(
       `SELECT user_id FROM users WHERE is_admin = TRUE`,
     )
-    for (const admin of admins.rows) userIds.add(String(admin.user_id))
+    for (const admin of admins.rows) {
+      adminUserIds.add(String(admin.user_id))
+    }
   }
 
+  // Resolve default profiles for every user that may need one: the batch's
+  // assigned staff and (when applicable) the platform admins.
+  const profileUserIds = new Set([...assigneeUserIds, ...adminUserIds])
   const profilesByUser = new Map<string, RecipientProfile>()
-  if (userIds.size > 0) {
+  if (profileUserIds.size > 0) {
     const profiles = await client.query(
       `SELECT id, user_id FROM profiles WHERE user_id = ANY($1::text[]) AND is_default = TRUE`,
-      [[...userIds]],
+      [[...profileUserIds]],
     )
     for (const profile of profiles.rows) {
       const userId = String(profile.user_id)
@@ -305,8 +379,14 @@ async function resolveRecipients(
       const profile = profilesByUser.get(userId)
       return profile ? [profile] : []
     }
-    // Unassigned item: fall back to every resolved platform admin profile.
-    return [...profilesByUser.values()]
+    // Unassigned item: platform admins only — never other items' assigned
+    // staff, whose profiles also live in the shared resolution map.
+    if (needsAdmins) {
+      return [...adminUserIds]
+        .map((adminId) => profilesByUser.get(adminId))
+        .filter((profile): profile is RecipientProfile => profile !== undefined)
+    }
+    return []
   }
 
   return { forItem }

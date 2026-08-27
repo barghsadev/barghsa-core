@@ -128,6 +128,13 @@ export function validateServiceResponseTargets(
  * map. Assumes {@link validateServiceResponseTargets} has already passed;
  * falls back defensively to `null` for anything malformed (should not happen
  * post-validation but keeps the write path total).
+ *
+ * Also used as the corruption-tolerant read-path normalizer: every catalog
+ * type independently degrades to `null` (disabled) when its stored value is
+ * malformed, so a corrupt row can never crash the admin read path or the
+ * worker breach scan — the worst a corrupt row can do is disable breach
+ * detection for one type (and the read path logs a warning so the
+ * corruption is observable).
  */
 export function toServiceResponseTargets(input: unknown): ServiceResponseTargets {
   const result: ServiceResponseTargets = { ...DEFAULT_SERVICE_RESPONSE_TARGETS }
@@ -140,18 +147,4 @@ export function toServiceResponseTargets(input: unknown): ServiceResponseTargets
     // absent / null / corrupt → stays null (disabled)
   }
   return result
-}
-
-/**
- * Defensively normalize a stored `app_config` value into a complete
- * {@link ServiceResponseTargets} map.
- *
- * Corruption-tolerant by design: a malformed row degrades per-type to
- * `null` (that type disabled) instead of throwing, so a corrupt value can
- * never crash the admin read path or the worker breach scan — the worst a
- * corrupt row can do is disable breach detection for one type (and the read
- * path logs a warning so the corruption is observable).
- */
-export function parseStoredServiceResponseTargets(raw: unknown): ServiceResponseTargets {
-  return toServiceResponseTargets(raw)
 }

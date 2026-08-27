@@ -167,7 +167,17 @@ async function main(): Promise<void> {
   // alerts (via the outbox above, so delivery reuses the same durable
   // pipeline). No-op when no config row exists, so a fresh installation is
   // silent until an admin configures targets.
-  const SERVICE_BREACH_SCAN_MS = Number(process.env['SERVICE_BREACH_SCAN_MS'] ?? '300000');
+  const BREACH_SCAN_DEFAULT_MS = 300000;
+  const breachScanRaw = Number(process.env['SERVICE_BREACH_SCAN_MS'] ?? String(BREACH_SCAN_DEFAULT_MS));
+  const SERVICE_BREACH_SCAN_MS =
+    Number.isFinite(breachScanRaw) && breachScanRaw >= 1000
+      ? breachScanRaw
+      : BREACH_SCAN_DEFAULT_MS;
+  if (SERVICE_BREACH_SCAN_MS !== breachScanRaw) {
+    logger.warn(
+      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`,
+    );
+  }
   let breachScanInFlight = false;
   const breachScanner = setInterval(async () => {
     if (draining || breachScanInFlight) return;

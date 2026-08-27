@@ -5,7 +5,6 @@ import {
   MAX_SERVICE_RESPONSE_TARGET_HOURS,
   validateServiceResponseTargets,
   toServiceResponseTargets,
-  parseStoredServiceResponseTargets,
   isValidServiceResponseTargetHours,
 } from './service-response-targets.js'
 
@@ -101,27 +100,20 @@ describe('service response targets contract (T-09.08.01)', () => {
         verification_case: 24,
       })
     })
-  })
 
-  describe('parseStoredServiceResponseTargets', () => {
-    it('parses a stored snake-free flat map', () => {
-      expect(
-        parseStoredServiceResponseTargets({ ticket: 48, verification_case: 72 }),
-      ).toEqual({ ticket: 48, verification_case: 72 })
-    })
-
-    it('returns all-disabled defaults for non-object stored values', () => {
-      expect(parseStoredServiceResponseTargets(null)).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
-      expect(parseStoredServiceResponseTargets('corrupt')).toEqual(
-        DEFAULT_SERVICE_RESPONSE_TARGETS,
-      )
-      expect(parseStoredServiceResponseTargets([48])).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
-    })
-
-    it('treats a stored zero as corrupt and disables that type', () => {
-      // Zero must never mean "alert everything immediately" — it degrades to
-      // null (disabled) exactly like any other corrupt value.
-      expect(parseStoredServiceResponseTargets({ ticket: 0 })).toEqual({
+    it('is the corruption-tolerant read-path normalizer for stored values', () => {
+      // A stored map parses as-is when valid…
+      expect(toServiceResponseTargets({ ticket: 48, verification_case: 72 })).toEqual({
+        ticket: 48,
+        verification_case: 72,
+      })
+      // …and degrades every malformed type to disabled, never throwing.
+      expect(toServiceResponseTargets(null)).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
+      expect(toServiceResponseTargets('corrupt')).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
+      expect(toServiceResponseTargets([48])).toEqual(DEFAULT_SERVICE_RESPONSE_TARGETS)
+      // A stored zero must never mean "alert everything immediately" — it
+      // degrades to null (disabled) exactly like any other corrupt value.
+      expect(toServiceResponseTargets({ ticket: 0 })).toEqual({
         ticket: null,
         verification_case: null,
       })
