@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.07.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-07-02--dual-approval-workflow",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/196",
-  "current_task_key": "02-auth-users-admin.md#T-09.07.02",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 329,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -277,12 +277,18 @@
     "02-auth-users-admin.md#T-09.06.01",
     "02-auth-users-admin.md#T-09.06.02",
     "02-auth-users-admin.md#T-09.06.03",
-    "02-auth-users-admin.md#T-09.07.01"
+    "02-auth-users-admin.md#T-09.07.01",
+    "02-auth-users-admin.md#T-09.07.02"
   ],
   "last_error": "",
-  "notes": "T-09.07.02 slice in_review (PR #196): approval-request lifecycle under /api/admin/approval-requests, S-09.07 gate, migration 0036, atomic audit transitions, no-self-approval, mandatory reject reason, in-app notifications. Deferred: UI, step-up, role eligibility, finance-module consumer.",
-  "last_updated": "2026-08-27T22:16:05Z",
+  "notes": "T-09.07.02 (dual-approval workflow, L) MERGED via PR #196 (bb7e122) as prerequisite slice: approval-request lifecycle under /api/admin/approval-requests (S-09.07 admin:financial:edit gate), approval_requests table + migration 0036 (inline CHECKs, composite queue index, SQL-validated on postgres:16), shared shouldRequireDualApproval routing predicate, atomic audit_log transitions, no-self-approval + mandatory reject reason, in-app staff/initiator notifications. Two review rounds; critical FOR UPDATE-on-JOIN bug and major DTO-staleness fixed. Deferred: UI, step-up on resolve, role-based eligibility, shared correlation_id, FK indexes, finance-module threshold consumer. Loop idle. Next: queue order.",
+  "last_updated": "2026-08-27T22:25:21Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.07.02",
+      "at": "2026-08-27T22:25:21Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.07.02",
