@@ -7,7 +7,7 @@
 -- Columns:
 --   id              UUIDv7 PK
 --   outbox_id       UUID FK -> notification_outbox(id) ON DELETE CASCADE
---   job_id          UUID FK -> notification_job(id) ON DELETE CASCADE
+--   job_id          UUID UNIQUE FK -> notification_job(id) ON DELETE CASCADE
 --   channel         TEXT NOT NULL CHECK in ('in_app','email','sms')
 --   event_key       TEXT NOT NULL (business event key for template lookup)
 --   severity        TEXT CHECK in ('error','critical') DEFAULT 'error'
@@ -37,7 +37,7 @@
 CREATE TABLE IF NOT EXISTS notification_dead_letter (
   id              UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   outbox_id       UUID NOT NULL REFERENCES notification_outbox(id) ON DELETE CASCADE,
-  job_id          UUID NOT NULL REFERENCES notification_job(id) ON DELETE CASCADE,
+  job_id          UUID NOT NULL UNIQUE REFERENCES notification_job(id) ON DELETE CASCADE,
   channel         TEXT NOT NULL,
   event_key       TEXT NOT NULL,
   severity        TEXT NOT NULL DEFAULT 'error',

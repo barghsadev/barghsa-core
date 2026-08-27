@@ -47,9 +47,11 @@ export const notificationDeadLetter = pgTable(
       .notNull()
       .references(() => notificationOutbox.id, { onDelete: 'cascade' }),
 
-    /** The per-channel job that exhausted its retries. */
+    /** The per-channel job that exhausted its retries. UNIQUE so re-processing
+     *  the same job is idempotent (`ON CONFLICT (job_id) DO NOTHING`). */
     jobId: uuidv7('job_id')
       .notNull()
+      .unique()
       .references(() => notificationJob.id, { onDelete: 'cascade' }),
 
     /** The channel this dead-letter applies to. */

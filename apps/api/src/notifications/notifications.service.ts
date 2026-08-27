@@ -290,8 +290,9 @@ export class NotificationsService {
        FROM notification_dead_letter
        ${where}
        ORDER BY
-         /* Open/retried first, then severity, then newest. */
+         /* Open/retried first, then critical severity, then newest. */
          CASE status WHEN 'open' THEN 0 WHEN 'retried' THEN 1 WHEN 'resolved' THEN 2 ELSE 3 END,
+         CASE severity WHEN 'critical' THEN 0 ELSE 1 END,
          created_at DESC
        LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
       [...params, limit, offset],
@@ -333,34 +334,48 @@ export class NotificationsService {
 
     const row = current.rows[0]
     if (!row) return null
-    // Terminal states are immutable once acted upon (idempotent no-op).
+    // Terminal states are immutable once acted upon (idempotent no-op): return
+    // the canonical record shape so callers see a consistent result object.
     if (row.status !== 'open') {
-      return row.status
+      return { id: row.id, status: row.status }
     }
 
-    if (action === 'retry') {
-      await pool.query(
-        `UPDATE notification_job
-            SET status = 'queued', run_after = NULL, attempts = 0,
-                last_error = NULL, updated_at = NOW()
-          WHERE id = $1`,
-        [row.jobId],
-      )
-      await pool.query(
-        `UPDATE notification_outbox
-            SET status = 'queued', locked_until = NULL, updated_at = NOW()
-          WHERE id = $1`,
-        [row.outboxId],
-      )
-    }
+    // Map the requested action to the persisted status (matches the
+    // chk_ndl_status CHECK constraint).
+    const nextStatus =
+      action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed'
 
-    const nextStatus = action === 'retry' ? 'retried' : action
-    await pool.query(
-      `UPDATE notification_dead_letter
-          SET status = $1, resolved_at = NOW(), resolved_by = $2, updated_at = NOW()
-        WHERE id = $3`,
-      [nextStatus, actor, id],
-    )
+    // The retry re-queue touches three tables; run it as a single transaction
+    // so a crash mid-way cannot leave the job re-queued while the dead-letter
+    // row stays open (or vice versa).
+    await pool.query('BEGIN')
+    try {
+      if (action === 'retry') {
+        await pool.query(
+          `UPDATE notification_job
+              SET status = 'queued', run_after = NULL, attempts = 0,
+                  last_error = NULL, updated_at = NOW()
+            WHERE id = $1`,
+          [row.jobId],
+        )
+        await pool.query(
+          `UPDATE notification_outbox
+              SET status = 'queued', locked_until = NULL, updated_at = NOW()
+            WHERE id = $1`,
+          [row.outboxId],
+        )
+      }
+      await pool.query(
+        `UPDATE notification_dead_letter
+            SET status = $1, resolved_at = NOW(), resolved_by = $2, updated_at = NOW()
+          WHERE id = $3`,
+        [nextStatus, actor, id],
+      )
+      await pool.query('COMMIT')
+    } catch (err) {
+      await pool.query('ROLLBACK')
+      throw err
+    }
     return { id, status: nextStatus }
   }
 }

@@ -144,6 +144,10 @@ async function persistOutcomes(
     if (!ok && exhausted) {
       const jobId = (jobUpdate.rows as Array<{ id: string }>)[0]?.id
       if (jobId) {
+        // Prefer the outbox row's last sanitized error (set by failRow on a
+        // prior attempt) for triage; fall back to a generic description when
+        // the transport reported failure without an error message.
+        const cause = row.lastError ?? 'delivery failed'
         await writeDeadLetter(pool, {
           outboxId: row.id,
           jobId,
@@ -154,8 +158,8 @@ async function persistOutcomes(
           attempts,
           maxAttempts: row.maxAttempts,
           idempotencyKey: row.idempotencyKey,
-          cause: 'delivery failed',
-          errorCategory: classifyDeliveryError('delivery failed'),
+          cause,
+          errorCategory: classifyDeliveryError(cause),
         })
       }
     }

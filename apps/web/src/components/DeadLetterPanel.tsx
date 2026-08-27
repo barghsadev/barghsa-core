@@ -54,6 +54,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [openOnly, setOpenOnly] = useState(true)
+  const [busyId, setBusyId] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -80,6 +81,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
 
   async function act(id: string, action: 'retry' | 'resolve' | 'dismiss') {
     setError(null)
+    setBusyId(id)
     try {
       const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
         method: 'POST',
@@ -91,6 +93,8 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
       await load()
     } catch {
       setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+    } finally {
+      setBusyId(null)
     }
   }
 
@@ -124,7 +128,13 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
         </div>
       ) : (
         <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <table
+            className="min-w-full divide-y divide-gray-200 text-sm"
+            aria-label={t('admin.notifications.deadLetter.title', uiLocale)}
+          >
+            <caption className="sr-only">
+              {t('admin.notifications.deadLetter.title', uiLocale)}
+            </caption>
             <thead className="bg-gray-50 text-left">
               <tr>
                 <th className="px-4 py-2 font-medium text-gray-600">
@@ -187,19 +197,25 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => void act(row.id, 'retry')}
-                          className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                          disabled={busyId === row.id}
+                          aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
+                          className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.retry', uiLocale)}
                         </button>
                         <button
                           onClick={() => void act(row.id, 'resolve')}
-                          className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700"
+                          disabled={busyId === row.id}
+                          aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
+                          className="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.resolve', uiLocale)}
                         </button>
                         <button
                           onClick={() => void act(row.id, 'dismiss')}
-                          className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50"
+                          disabled={busyId === row.id}
+                          aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
+                          className="px-2 py-1 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-50"
                         >
                           {t('admin.notifications.deadLetter.dismiss', uiLocale)}
                         </button>
