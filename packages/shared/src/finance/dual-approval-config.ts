@@ -49,6 +49,22 @@ export interface DualApprovalValidationResult {
 }
 
 /**
+ * Whether a raw persisted/parsed threshold value is a valid, losslessly
+ * representable IRR amount: a number, an integer, within `0`…`Number.MAX_SAFE_INTEGER`.
+ *
+ * Shared by {@link toDualApprovalConfig} (normalization) and the service
+ * read path (corruption detection) so the two can never drift apart.
+ */
+export function isValidDualApprovalThreshold(raw: unknown): raw is number {
+  return (
+    typeof raw === 'number' &&
+    Number.isSafeInteger(raw) &&
+    raw >= 0 &&
+    raw <= Number.MAX_SAFE_INTEGER
+  )
+}
+
+/**
  * Validate a proposed dual-approval threshold.
  *
  * Rules: `thresholdIrR` (or snake_case `threshold_irr`) must be a **number**
@@ -78,10 +94,8 @@ export function validateDualApprovalConfig(input: unknown): DualApprovalValidati
     return { ok: false, issues }
   }
 
-  if (!Number.isInteger(raw) || !Number.isSafeInteger(raw)) {
+  if (!isValidDualApprovalThreshold(raw)) {
     issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
-  } else if (raw < 0 || raw > Number.MAX_SAFE_INTEGER) {
-    issues.push(`threshold_irr must be between 0 and ${Number.MAX_SAFE_INTEGER}`)
   }
 
   return { ok: issues.length === 0, issues }
@@ -97,12 +111,7 @@ export function toDualApprovalConfig(input: unknown): DualApprovalConfig {
   if (!input || typeof input !== 'object') return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
   const o = input as Record<string, unknown>
   const raw = o.threshold_irr ?? o.thresholdIrR
-  if (
-    typeof raw === 'number' &&
-    Number.isSafeInteger(raw) &&
-    raw >= 0 &&
-    raw <= Number.MAX_SAFE_INTEGER
-  ) {
+  if (isValidDualApprovalThreshold(raw)) {
     return { thresholdIrR: raw }
   }
   return { ...DEFAULT_DUAL_APPROVAL_CONFIG }

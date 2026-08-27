@@ -14,6 +14,7 @@ import {
   DEFAULT_DUAL_APPROVAL_CONFIG,
   toDualApprovalConfig,
   validateDualApprovalConfig,
+  isValidDualApprovalThreshold,
   type DualApprovalConfig,
 } from '@barghsa/shared/finance'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -875,11 +876,7 @@ export class AdminService {
     // corruption observable so it cannot silently disable dual approval.
     const persisted = result.rows[0]!.value as Record<string, unknown> | null
     const persistedValue = persisted?.threshold_irr ?? persisted?.thresholdIrR
-    const persistedIsValid =
-      typeof persistedValue === 'number' &&
-      Number.isSafeInteger(persistedValue) &&
-      persistedValue >= 0
-    if (!persistedIsValid) {
+    if (!isValidDualApprovalThreshold(persistedValue)) {
       this.logger.warn(
         `Dual-approval threshold config row for key ${DUAL_APPROVAL_THRESHOLD_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving disabled default`,
       )
