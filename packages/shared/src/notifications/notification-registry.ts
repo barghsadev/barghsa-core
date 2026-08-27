@@ -107,6 +107,16 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
   'system.service_outage': { classification: 'immediate', securityPinned: false, category: 'system' },
   'marketing.promotion': { classification: 'daytime', securityPinned: false, category: 'marketing' },
   'system.notification_test': { classification: 'immediate', securityPinned: false, category: 'system' },
+
+  // ── Admin / staff operations (S-09.08) ─────────────────────────────────
+  // Staff-only operational alert: an open service item (ticket, verification
+  // case) has exceeded its admin-configured response target. Immediate so a
+  // breached target is never delayed by the daytime delivery window.
+  'admin.service_target_breached': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
 } as const
 
 /**

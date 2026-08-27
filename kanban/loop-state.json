@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 329,
+  "status": "in_review",
+  "current_task_id": "T-09.08.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-08-01--service-response-targets",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/197",
+  "current_task_key": "02-auth-users-admin.md#T-09.08.01",
+  "loop_iteration": 330,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -280,9 +280,9 @@
     "02-auth-users-admin.md#T-09.07.01",
     "02-auth-users-admin.md#T-09.07.02"
   ],
-  "last_error": "",
-  "notes": "T-09.07.02 (dual-approval workflow, L) MERGED via PR #196 (bb7e122) as prerequisite slice: approval-request lifecycle under /api/admin/approval-requests (S-09.07 admin:financial:edit gate), approval_requests table + migration 0036 (inline CHECKs, composite queue index, SQL-validated on postgres:16), shared shouldRequireDualApproval routing predicate, atomic audit_log transitions, no-self-approval + mandatory reject reason, in-app staff/initiator notifications. Two review rounds; critical FOR UPDATE-on-JOIN bug and major DTO-staleness fixed. Deferred: UI, step-up on resolve, role-based eligibility, shared correlation_id, FK indexes, finance-module threshold consumer. Loop idle. Next: queue order.",
-  "last_updated": "2026-08-27T22:25:21Z",
+  "last_error": "Reviewer invocation failed (round 3): OpenRouter billing — 'Add credits or update billing with that provider'. CLI: hermes chat --model anthropic/claude-opus-5 --provider openrouter (retried with --reasoning low). PR #197 ready, CI green, work complete; needs credits topped up then next tick re-invokes the reviewer.",
+  "notes": "T-09.08.01 (service response targets, M) PR #197 in review: GET/PUT /api/admin/config/service-response-targets (admin:service-targets:edit gate, config_change audit, versioned app_config) + worker breach scan (dedup ledger service_breach_alerts mgr 0037, in-app staff alerts via outbox, unassigned->admins fallback). SQL validated on postgres:16. CI pass.",
+  "last_updated": "2026-08-27T23:02:32Z",
   "status_history": [
     {
       "status": "merged",
@@ -583,6 +583,11 @@
       "status": "idle",
       "task_key": "02-auth-users-admin.md#T-09.07.01",
       "at": "2026-08-27T22:06:07Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.08.01",
+      "at": "2026-08-27T22:48:28Z"
     }
   ]
 }

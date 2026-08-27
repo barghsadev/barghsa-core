@@ -430,6 +430,20 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     channels: ['email', 'in_app'],
     variables: [],
   },
+  {
+    eventKey: 'admin.service_target_breached',
+    faSubject: null,
+    enSubject: null,
+    faBody: 'آیتم «{{item_id}}» ({{service_type_name_fa}}) بیش از {{target_hours}} ساعت بدون پاسخ مانده است. لطفاً بررسی کنید.',
+    enBody: 'Item {{item_id}} ({{service_type_name_en}}) has been awaiting response for over {{target_hours}} hours. Please review.',
+    channels: ['in_app'],
+    variables: [
+      { name: 'service_type_name_fa', description: 'نام فارسی نوع خدمت / Persian service type label' },
+      { name: 'service_type_name_en', description: 'English service type label' },
+      { name: 'item_id', description: 'شناسه آیتم / Item id' },
+      { name: 'target_hours', description: 'سقف زمانی ساعت / Target in hours' },
+    ],
+  },
 ]
 
 /**
