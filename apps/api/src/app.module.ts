@@ -23,12 +23,13 @@ import { TicketsModule } from './tickets/index.js'
 import { VerificationModule } from './verification/verification.module.js'
 import { DashboardModule } from './dashboard/dashboard.module.js'
 import { NotificationsModule } from './notifications/index.js'
+import { ProviderConfigModule } from './provider-config/index.js'
 import { WalletModule } from './wallet/index.js'
 import { InvoiceModule } from './invoice/index.js'
 import { PublicModule } from './public/public.module.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule, WalletModule, InvoiceModule, PublicModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule, ProviderConfigModule, WalletModule, InvoiceModule, PublicModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
