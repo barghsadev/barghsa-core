@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import {
   writeDeadLetter,
   deadLetterSeverity,
-  severityForEvent,
   type WriteDeadLetterInput,
 } from './dead-letter.js'
 
@@ -41,12 +40,12 @@ const base: WriteDeadLetterInput = {
 
 describe('deadLetterSeverity', () => {
   it('classifies urgent / security event types as critical', () => {
-    expect(deadLetterSeverity('otp_sent')).toBe('critical')
-    expect(severityForEvent('profile_verified')).toBe('critical')
+    expect(deadLetterSeverity('auth.otp_sent')).toBe('critical')
+    expect(deadLetterSeverity('contract.cancelled')).toBe('critical')
   })
 
   it('classifies ordinary event types as error', () => {
-    expect(deadLetterSeverity('invoice_available')).toBe('error')
+    expect(deadLetterSeverity('contract.created')).toBe('error')
     expect(deadLetterSeverity('welcome_email')).toBe('error')
   })
 })
@@ -71,7 +70,7 @@ describe('writeDeadLetter', () => {
 
   it('marks urgent event types critical', async () => {
     const { pool, inserts } = makePool()
-    await writeDeadLetter(pool, { ...base, eventKey: 'otp_sent' })
+    await writeDeadLetter(pool, { ...base, eventKey: 'auth.otp_sent' })
     expect(inserts[0]!.params[4]).toBe('critical')
   })
 

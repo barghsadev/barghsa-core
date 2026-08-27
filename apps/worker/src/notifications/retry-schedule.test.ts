@@ -45,9 +45,9 @@ describe('nextRetryDelayMs', () => {
 
   it('respects a per-type max_attempts budget', () => {
     const rng = () => 0.5
-    // otp_sent has maxAttempts=3 → exhausted after 3 completed attempts.
-    expect(nextRetryDelayMs(2, maxAttemptsForType('otp_sent'), rng)).not.toBeNull()
-    expect(nextRetryDelayMs(3, maxAttemptsForType('otp_sent'), rng)).toBeNull()
+    // auth.otp_sent has maxAttempts=3 → exhausted after 3 completed attempts.
+    expect(nextRetryDelayMs(2, maxAttemptsForType('auth.otp_sent'), rng)).not.toBeNull()
+    expect(nextRetryDelayMs(3, maxAttemptsForType('auth.otp_sent'), rng)).toBeNull()
   })
 })
 
@@ -95,15 +95,19 @@ describe('exponentialDelayMs', () => {
 
 describe('per-type registry', () => {
   it('resolves max_attempts per event key, falling back to the default', () => {
-    expect(maxAttemptsForType('otp_sent')).toBe(3)
-    expect(maxAttemptsForType('profile_verified')).toBe(5)
+    expect(maxAttemptsForType('auth.otp_sent')).toBe(3)
     expect(maxAttemptsForType('unknown_event')).toBe(DEFAULT_MAX_ATTEMPTS)
   })
 
-  it('classifies security/OTP types as urgent and others as normal', () => {
-    expect(priorityForType('otp_sent')).toBe('urgent')
-    expect(priorityForType('profile_verified')).toBe('urgent')
-    expect(priorityForType('invoice_available')).toBe('normal')
+  it('derives urgent priority from immediate classification and normal otherwise', () => {
+    // immediate classification → urgent (security/OTP, payment, refund, cancellation)
+    expect(priorityForType('auth.otp_sent')).toBe('urgent')
+    expect(priorityForType('auth.new_device_login')).toBe('urgent')
+    expect(priorityForType('payment.invoice_paid')).toBe('urgent')
+    expect(priorityForType('contract.cancelled')).toBe('urgent')
+    // daytime classification → normal
+    expect(priorityForType('contract.created')).toBe('normal')
+    expect(priorityForType('order.submitted')).toBe('normal')
     expect(priorityForType('unknown')).toBe('normal')
   })
 })
