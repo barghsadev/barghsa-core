@@ -1,9 +1,9 @@
 {
-  "status": "in_review",
+  "status": "idle",
   "current_task_id": "",
   "current_task_file": "",
   "current_branch": "",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/170",
+  "current_pr_url": "",
   "current_task_key": "",
   "loop_iteration": 305,
   "fix_attempts": 0,
@@ -251,12 +251,18 @@
     "05-notifications-documents-ai.md#T-05.01.04",
     "05-notifications-documents-ai.md#T-05.01.05",
     "05-notifications-documents-ai.md#T-05.01.06",
-    "05-notifications-documents-ai.md#T-05.01.07"
+    "05-notifications-documents-ai.md#T-05.01.07",
+    "05-notifications-documents-ai.md#T-05.02.01"
   ],
   "last_error": null,
-  "notes": "T-05.02.01 (in-app notifications) PR #170 ready for review.",
-  "last_updated": "2026-08-27T06:34:00Z",
+  "notes": "T-05.02.01 (in-app notification entity & transport) merged via PR #170. Next: T-05.02.02 (notification center API).",
+  "last_updated": "2026-08-27T06:47:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.02.01",
+      "at": "2026-08-27T06:47:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.02.01",
