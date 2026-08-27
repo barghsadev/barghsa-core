@@ -261,9 +261,9 @@
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01"
   ],
-  "last_error": "GitHub Actions billing: re-checked 2026-08-27 10:39Z. Fresh run 33063707581 (#178, head 38894cf) at ~10:38Z: both jobs (Run tests, Verify monorepo integrity) FAIL with zero steps in ~2s, no logs — 'job was not started because account payments failed / spending limit'. Billing still blocks. GLM-5.2 approve stands; PR mergeable, not draft. Cannot merge without passing required checks. Needs human GitHub billing fix, then CI re-run, then merge.",
+  "last_error": "GitHub Actions billing: re-checked 2026-08-27T10:44:12ZZ. Newer run 33064039454 (PR #178, head 316dde8) at ~10:40Z: both jobs (Run tests, Verify monorepo integrity) FAIL in ~3s, zero steps, log not found — 'job was not started because account payments failed / spending limit'. Billing STILL blocks CI. GLM-5.2 approve stands; PR mergeable, not draft. Cannot merge without passing required checks. Needs human GitHub billing fix, then empty-push re-run CI, then merge.",
   "notes": "T-05.04.02 built+reviewed (GLM approve), PR #178 mergeable/not-draft. Re-checked 10:39Z: GitHub Actions billing STILL blocks CI (run 33063707581 ~2s, zero steps, no logs, payments/spending-limit). Manual billing fix required, then empty-push re-run CI, then merge.",
-  "last_updated": "2026-08-27T10:39:40Z",
+  "last_updated": "2026-08-27T10:44:12Z",
   "status_history": [
     {
       "status": "blocked",
