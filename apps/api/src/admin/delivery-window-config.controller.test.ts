@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
+import { HttpException } from '@nestjs/common'
 import { AdminController } from './admin.controller.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { DEFAULT_DELIVERY_WINDOW } from '@barghsa/shared/notifications'
+import { ErrorCodes } from '@barghsa/shared/errors'
 
 // ─── Fixtures ──────────────────────────────────────────────────────────
 
@@ -34,29 +36,44 @@ function makeController() {
   return { controller, adminService }
 }
 
-// ─── Tests — permission + step-up metadata (T-09.06.03) ──────────────
+/** Extract the HttpException payload an assertion helper can check. */
+function rejectionBody(error: unknown): Record<string, unknown> {
+  if (error instanceof HttpException) {
+    return error.getResponse() as Record<string, unknown>
+  }
+  throw new Error(`expected HttpException, got ${String(error)}`)
+}
 
-describe('delivery-window config auth (T-09.06.03)', () => {
-  it('requires step-up on setDeliveryWindow (a config mutation)', () => {
-    const meta = Reflect.getMetadata('requiresStepUp', AdminController.prototype.setDeliveryWindow)
-    expect(meta).toBe(true)
-  })
+// ─── Tests — permission gate (T-09.06.03) ─────────────────────────────
 
-  it('does not require step-up for the read-only getDeliveryWindow', () => {
-    const meta = Reflect.getMetadata('requiresStepUp', AdminController.prototype.getDeliveryWindow)
-    expect(meta ?? false).toBe(false)
-  })
-
-  it('rejects non-admin on getDeliveryWindow via the permission gate', async () => {
+describe('delivery-window config permission gate (T-09.06.03)', () => {
+  it('rejects non-admin on getDeliveryWindow with the AUTHZ_FORBIDDEN contract', async () => {
     const { controller } = makeController()
-    await expect(controller.getDeliveryWindow(nonAdminReq)).rejects.toMatchObject({ status: 403 })
+    const rejection = await controller.getDeliveryWindow(nonAdminReq).catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 403 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 403,
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
   })
 
-  it('rejects non-admin on setDeliveryWindow via the permission gate', async () => {
+  it('rejects non-admin on setDeliveryWindow with the AUTHZ_FORBIDDEN contract', async () => {
     const { controller } = makeController()
-    await expect(
-      controller.setDeliveryWindow({ timezone: 'UTC', start_hour: 8, end_hour: 20 }, nonAdminReq),
-    ).rejects.toMatchObject({ status: 403 })
+    const rejection = await controller
+      .setDeliveryWindow({ timezone: 'UTC', start_hour: 8, end_hour: 20 }, nonAdminReq)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 403 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 403,
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
+  })
+
+  it('does not call the service when the permission gate rejects', async () => {
+    const { controller, adminService } = makeController()
+    await controller.setDeliveryWindow({ timezone: 'UTC', start_hour: 8, end_hour: 20 }, nonAdminReq)
+      .catch((e: unknown) => e)
+    expect(adminService.setDeliveryWindowConfig).not.toHaveBeenCalled()
   })
 
   it('allows admin to read the window and delegates to the service', async () => {

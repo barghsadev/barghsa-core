@@ -259,7 +259,6 @@
     "05-notifications-documents-ai.md#T-05.03.01",
     "05-notifications-documents-ai.md#T-05.03.02",
     "05-notifications-documents-ai.md#T-05.03.03",
-    "05-notifications-documents-ai.md#T-05.03.04",
     "05-notifications-documents-ai.md#T-05.04.01",
     "05-notifications-documents-ai.md#T-05.04.02",
     "05-notifications-documents-ai.md#T-05.04.03",
@@ -279,14 +278,9 @@
     "02-auth-users-admin.md#T-09.06.02"
   ],
   "last_error": "",
-  "notes": "T-09.06.03 (delivery window config) PR #194 open, ready, mergeable. Slice: hardened GET/PUT /api/admin/config/delivery-window to S-09.06 posture — admin:notification-providers:edit gate + step-up on PUT (was bare isAdmin from T-05.03.03). Tests 847 pass, typecheck + build pass. UI panel already exists (T-05.03.03). Next: Claude Opus 5 review.",
-  "last_updated": "2026-08-28T00:42:00Z",
+  "notes": "T-09.06.03 (delivery window config) PR #194 open, ready, mergeable. Slice: uniform S-09.06 permission gate (admin:notification-providers:edit -> isAdmin) on GET/PUT /api/admin/config/delivery-window (was bare inline isAdmin from T-05.03.03). Step-up on PUT deliberately deferred: DeliveryWindowConfigPanel (T-05.03.03) uses raw fetch and web app has no step-up flow yet; forcing step-up would regress the working panel. Tests 847 pass, typecheck + build pass. Next: Claude Opus 5 review.",
+  "last_updated": "2026-08-27T21:45:00Z",
   "status_history": [
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.06.03",
-      "at": "2026-08-28T00:42:00Z"
-    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.06.02",
@@ -505,22 +499,62 @@
     {
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.05.03",
-      "at": "2026-08-27T17:27:00Z"
+      "at": "2026-08-27T17:30:00Z"
     },
     {
       "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.04",
-      "at": "2026-08-27T17:29:00Z"
+      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
+      "at": "2026-08-27T17:40:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.02",
+      "at": "2026-08-27T15:35:52Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.02",
+      "at": "2026-08-27T15:47:17Z"
     },
     {
       "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.04",
-      "at": "2026-08-27T17:35:00Z"
+      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
+      "at": "2026-08-27T19:01:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
+      "at": "2026-08-27T19:03:00Z"
     },
     {
       "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.06.01",
-      "at": "2026-08-27T23:45:00Z"
+      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
+      "at": "2026-08-27T16:05:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:51:05Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:52:00Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T20:03:00Z"
+    },
+    {
+      "status": "idle",
+      "task_key": "",
+      "at": "2026-08-27T20:03:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.06.03",
+      "at": "2026-08-27T21:45:00Z"
     }
   ]
 }

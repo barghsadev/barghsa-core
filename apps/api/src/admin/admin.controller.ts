@@ -159,7 +159,7 @@ export class AdminController {
    * provider controllers. Centralized here as a single enforcement point so the
    * whole S-09.06 surface uses one check.
    */
-  private assertProviderEditPermission(req: AuthenticatedRequest): void {
+  private assertNotificationDeliveryEditPermission(req: AuthenticatedRequest): void {
     if (!(req.session.isAdmin ?? false)) {
       throw new HttpException(
         {
@@ -1544,7 +1544,7 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getDeliveryWindow(@Req() req: AuthenticatedRequest) {
-    this.assertProviderEditPermission(req)
+    this.assertNotificationDeliveryEditPermission(req)
     return this.adminService.getDeliveryWindowConfig()
   }
 
@@ -1555,13 +1555,16 @@ export class AdminController {
    * Validated server-side: start < end, length >= 4 hours, valid IANA timezone.
    * Changes take effect for newly-scheduled messages; already-scheduled
    * messages keep their original timing (per story T-05.03.03).
-   * Permission: `admin:notification-providers:edit` (T-09.06.03), plus recent
-   * step-up verification via @RequiresStepUp, matching the S-09.06 provider
-   * configuration surface (T-09.06.01/02).
+   * Permission: `admin:notification-providers:edit` (T-09.06.03).
+   *
+   * Step-up on this mutation is deliberately deferred: the delivery-window
+   * admin panel (T-05.03.03, `DeliveryWindowConfigPanel.tsx`) uses a raw fetch
+   * and the web app does not implement the step-up challenge flow yet, so
+   * requiring step-up here would regress the working save path. It must land
+   * together with the client-side step-up flow (same follow-up as the
+   * T-09.06.01/02 provider-config UI).
    */
   @Put('config/delivery-window')
-  @UseGuards(StepUpGuard)
-  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the delivery window configuration (admin)' })
   @ApiBody({
     schema: {
@@ -1587,9 +1590,9 @@ export class AdminController {
     },
   })
   @ApiResponse({ status: 400, description: 'Validation error' })
-  @ApiResponse({ status: 403, description: 'Admin role or step-up required' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
   async setDeliveryWindow(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertProviderEditPermission(req)
+    this.assertNotificationDeliveryEditPermission(req)
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip)
   }
