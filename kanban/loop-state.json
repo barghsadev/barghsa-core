@@ -261,9 +261,9 @@
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01"
   ],
-  "last_error": "GitHub Actions billing: runs 33057328054, 33057461335, 33057932187 (head commits f82ab99..088496e) not started - 'recent account payments have failed or your spending limit needs to be increased'. Only run 33057169005 passed, on pre-fix commit dd1e85d. Code fix f82ab99 has never passed CI. PR #178 mergeable, GLM-5.2 approve, but required checks cannot start. Needs manual GitHub account/billing resolution.",
-  "notes": "T-05.04.02 built+reviewed (GLM approve), code fix PUSHED (f82ab99) but its CI is blocking billing-origin 'job not started'. PR #178 open, ready to merge once billing resolved then CI re-run. Verify billing, re-run CI via empty push or checks, then merge.",
-  "last_updated": "2026-08-27T09:40:00Z",
+  "last_error": "GitHub Actions billing: re-checked 2026-08-27 09:45Z. Run 33059571314 (#178) now STARTS but both jobs (Run tests, Verify monorepo integrity) annotated 'job was not started because recent account payments have failed or your spending limit needs to be increased'. Root cause unchanged: account billing/payment requires human resolution. GLM-5.2 approve stands; PR mergeable. Cannot merge without passing required checks. Needs manual GitHub billing fix, then CI re-run, then merge.",
+    "notes": "T-05.04.02 built+reviewed (GLM approve). Billing issue persists across re-checks — CI job annotations still 'account payments failed / spending limit'. Manual billing resolution required. Once payment fixed, re-run CI (empty push), then merge PR #178 when checks pass.",
+    "last_updated": "2026-08-27T09:45:58Z",
   "status_history": [
     {
       "status": "blocked",
