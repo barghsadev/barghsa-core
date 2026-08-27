@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_id": "T-05.06.04",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-06-04--provider-admin-ui",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/188",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.06.04",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 323,
-  "fix_attempts": 2,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -269,12 +269,18 @@
     "05-notifications-documents-ai.md#T-05.05.03",
     "05-notifications-documents-ai.md#T-05.06.01",
     "05-notifications-documents-ai.md#T-05.06.02",
-    "05-notifications-documents-ai.md#T-05.06.03"
+    "05-notifications-documents-ai.md#T-05.06.03",
+    "05-notifications-documents-ai.md#T-05.06.04"
   ],
-  "last_error": "Review r2: Resend api_key edit handling broken (forces re-entry, empty would wipe key); skip required validation on edit; loading state unused.",
-  "notes": "Fixing PR #188 per review round 2 (Resend api_key edit).",
-  "last_updated": "2026-08-27T17:48:53Z",
+  "last_error": "",
+  "notes": "T-05.06.04 (Provider admin UI) MERGED via PR #188 (5b46f75). Loop idle. Next: T-05.06.05 (Secrets encryption & masking, M).",
+  "last_updated": "2026-08-27T18:09:12Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
+      "at": "2026-08-27T18:09:12Z"
+    },
     {
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.06.04",
