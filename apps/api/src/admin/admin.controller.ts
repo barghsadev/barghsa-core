@@ -147,6 +147,31 @@ export class AdminController {
     }
   }
 
+  /**
+   * Permission gate for notification delivery configuration (S-09.06).
+   *
+   * The S-09.06 notification-delivery surface (email providers, SMS.ir
+   * providers, and the daytime delivery window) is protected by the
+   * `admin:notification-providers:edit` capability. Today the session model
+   * exposes only `isAdmin` (platform admin); granular staff-role permissions
+   * arrive with the role system (T-09.05). Until then the capability maps to a
+   * platform admin session, matching the email (T-09.06.01) and SMS (T-09.06.02)
+   * provider controllers. Centralized here as a single enforcement point so the
+   * whole S-09.06 surface uses one check.
+   */
+  private assertProviderEditPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage notification delivery configuration',
+        },
+        403,
+      )
+    }
+  }
+
   constructor(
     private readonly adminService: AdminService,
     private readonly brandConfigService: BrandConfigService,
@@ -1501,7 +1526,7 @@ export class AdminController {
    * Returns the current admin-configurable delivery window as
    * `{ timezone, startHour, endHour }`. Falls back to the default
    * 09:00–21:00 Asia/Tehran window when no value is persisted.
-   * Permission: admin (isAdmin session flag).
+   * Permission: `admin:notification-providers:edit` (today: platform admin).
    */
   @Get('config/delivery-window')
   @ApiOperation({ summary: 'Get the delivery window configuration (admin)' })
@@ -1519,12 +1544,7 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getDeliveryWindow(@Req() req: AuthenticatedRequest) {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertProviderEditPermission(req)
     return this.adminService.getDeliveryWindowConfig()
   }
 
@@ -1535,9 +1555,13 @@ export class AdminController {
    * Validated server-side: start < end, length >= 4 hours, valid IANA timezone.
    * Changes take effect for newly-scheduled messages; already-scheduled
    * messages keep their original timing (per story T-05.03.03).
-   * Permission: admin (isAdmin session flag).
+   * Permission: `admin:notification-providers:edit` (T-09.06.03), plus recent
+   * step-up verification via @RequiresStepUp, matching the S-09.06 provider
+   * configuration surface (T-09.06.01/02).
    */
   @Put('config/delivery-window')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the delivery window configuration (admin)' })
   @ApiBody({
     schema: {
@@ -1563,14 +1587,9 @@ export class AdminController {
     },
   })
   @ApiResponse({ status: 400, description: 'Validation error' })
-  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 403, description: 'Admin role or step-up required' })
   async setDeliveryWindow(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    if (!(req.session.isAdmin ?? false)) {
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
-    }
+    this.assertProviderEditPermission(req)
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip)
   }
