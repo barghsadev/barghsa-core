@@ -2,6 +2,7 @@ import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
+import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -136,16 +137,16 @@ async function main(): Promise<void> {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
 
-  // ── Notification outbox poll loop (E-05, T-05.01.02) ───────────────
+  // ── Notification outbox poll loop (E-05, T-05.01.02 / T-05.02.01) ──────
   // Poll for due outbox rows, dispatch channels, and record outcomes.
-  // The loop captures `draining` by reference so a graceful shutdown stops
-  // leasing new work. Sending-only at this stage; retry/backoff scheduling
-  // (T-05.01.03) later extends the poll cadence.
+  // The in-app transport is mandatory and always registered so every row that
+  // requests `in_app` delivery lands a durable `in_app_notifications` row.
+  const transports = { in_app: new InAppNotificationTransport() };
   const OUTBOX_POLL_MS = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
   const outboxPoller = setInterval(async () => {
     if (draining) return;
     try {
-      const r = await runOutboxPoll();
+      const r = await runOutboxPoll({ transports });
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
