@@ -39,6 +39,7 @@ function baseResult(over: Partial<Record<string, unknown>> = {}) {
     supersedesId: null,
     createdAt: new Date(),
     updatedAt: new Date(),
+    maskedConfig: {},
     ...over,
   }
 }

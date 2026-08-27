@@ -2,8 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import {
   EmailProviderConfigService,
   type EmailProviderConfigResult,
+  type ProviderConfigBody,
   type ProviderPool,
 } from './email-provider-config.service'
+import { ProviderSecretsService } from './provider-secrets.service'
 
 /**
  * In-memory mock of the `email_provider_configs` table keyed by id, plus a
@@ -133,10 +135,10 @@ function buildHarness() {
       return { rows: [], rowCount: r ? 1 : 0 }
     }
 
-    // Read config blob (rollback path)
-    if (lower.includes('select config from email_provider_configs')) {
+    // Read config blob (send-boundary / rollback path): SELECT config, transport
+    if (lower.includes('select config') && lower.includes('from email_provider_configs')) {
       const r = rows.get(idParam())
-      return { rows: r ? [{ config: r.config }] : [] }
+      return { rows: r ? [{ config: r.config, transport: r.transport }] : [] }
     }
 
     // SELECT ... WHERE id = $1 -> single result
@@ -155,7 +157,7 @@ function buildHarness() {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function toResult(r: any): EmailProviderConfigResult {
+  function toResult(r: any): EmailProviderConfigResult & { config?: ProviderConfigBody } {
     return {
       id: r.id,
       transport: r.transport,
@@ -170,6 +172,12 @@ function buildHarness() {
       supersedesId: r.supersedes_id,
       createdAt: r.created_at,
       updatedAt: r.updated_at,
+      // Raw config is included so the service's maskRow() can build the
+      // masked view; it is stripped before the API returns the row.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      config: r.config,
+      // Placeholder — maskRow() replaces this with the real masked view.
+      maskedConfig: {},
     }
   }
 
@@ -183,7 +191,12 @@ function buildHarness() {
     }),
   } as unknown as ProviderPool
 
-  const service = new EmailProviderConfigService(pool as never)
+  // Deterministic test key (64 hex chars -> 32 raw bytes) so secret fields are
+  // encrypted at rest in the mock, mimicking the production env key.
+  const secretsService = new ProviderSecretsService(
+    '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+  )
+  const service = new EmailProviderConfigService(pool as never, undefined, undefined, secretsService)
 
   return { service, pool, rows, queries }
 }
@@ -254,6 +267,60 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     expect(stored).toMatchObject({
       host: 'smtp.new.example.com',
       password: 'super-secret',
+    })
+  })
+
+  it('encrypts a new password supplied on update and preserves it on later edits', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', password: 'first-secret' },
+      createdBy: 'admin-1',
+    })
+    // Replace the password with a new one.
+    await service.update(created.id, { config: { password: 'rotated-secret' } })
+    const serviceWithReader = service as unknown as { readConfig: (id: string) => Promise<Record<string, unknown>> }
+    const afterRotate = await serviceWithReader.readConfig(created.id)
+    expect(afterRotate.password).toBe('rotated-secret')
+
+    // Editing non-secret fields must not wipe the (now rotated) secret.
+    await service.update(created.id, { config: { host: 'smtp.other.example.com' } })
+    const afterEdit = await serviceWithReader.readConfig(created.id)
+    expect(afterEdit).toMatchObject({ host: 'smtp.other.example.com', password: 'rotated-secret' })
+  })
+
+  it('ignores masked placeholder values echoed back on update (no corruption)', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', password: 'real-secret' },
+      createdBy: 'admin-1',
+    })
+    // UI echoes the masked value back; it must not replace the stored secret.
+    await service.update(created.id, { config: { host: 'smtp.example.com', password: '********cret' } })
+    const serviceWithReader = service as unknown as { readConfig: (id: string) => Promise<Record<string, unknown>> }
+    const stored = await serviceWithReader.readConfig(created.id)
+    expect(stored.password).toBe('real-secret')
+  })
+
+  it('returns only a masked view of secrets in the API result', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', password: 'super-secret' },
+      createdBy: 'admin-1',
+    })
+    // Raw/plaintext or encrypted secret must never appear in the result.
+    expect(created).not.toHaveProperty('config')
+    expect(JSON.stringify(created)).not.toContain('super-secret')
+    expect(JSON.stringify(created)).not.toContain('v1:')
+    // maskedConfig exposes a masked display value (last 4 chars).
+    expect(created.maskedConfig).toMatchObject({
+      host: 'smtp.example.com',
+      password: '********cret',
     })
   })
 

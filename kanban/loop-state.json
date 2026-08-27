@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-05.06.05",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-06-05--provider-secrets",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/189",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.06.05",
   "loop_iteration": 323,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -273,9 +273,29 @@
     "05-notifications-documents-ai.md#T-05.06.04"
   ],
   "last_error": "",
-  "notes": "T-05.06.04 (Provider admin UI) MERGED via PR #188 (5b46f75). Loop idle. Next: T-05.06.05 (Secrets encryption & masking, M).",
-  "last_updated": "2026-08-27T18:09:12Z",
+  "notes": "T-05.06.05 (Secrets encryption) PR #189 review round 2.",
+  "last_updated": "2026-08-27T18:58:32Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:58:32Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:55:50Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:52:49Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:49:28Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.04",
