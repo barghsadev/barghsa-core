@@ -278,8 +278,8 @@
     "02-auth-users-admin.md#T-09.06.02"
   ],
   "last_error": "",
-  "notes": "T-09.06.03 (delivery window config) PR #194 open, ready, mergeable. Slice: uniform S-09.06 permission gate (admin:notification-providers:edit -> isAdmin) on GET/PUT /api/admin/config/delivery-window (was bare inline isAdmin from T-05.03.03). Step-up on PUT deliberately deferred: DeliveryWindowConfigPanel (T-05.03.03) uses raw fetch and web app has no step-up flow yet; forcing step-up would regress the working panel. Tests 847 pass, typecheck + build pass. Next: Claude Opus 5 review.",
-  "last_updated": "2026-08-27T21:45:00Z",
+  "notes": "T-09.06.03 (delivery window config) PR #194 open, ready, mergeable. Slice: uniform S-09.06 permission gate (admin:notification-providers:edit -> isAdmin) on GET/PUT /api/admin/config/delivery-window (was bare inline isAdmin from T-05.03.03). Step-up on PUT deliberately deferred: DeliveryWindowConfigPanel (T-05.03.03) uses raw fetch and web app has no step-up flow yet; forcing step-up would regress the working panel. Tests 846 pass, typecheck + build pass. Next: Claude Opus 5 review.",
+  "last_updated": "2026-08-28T00:25:01Z",
   "status_history": [
     {
       "status": "merged",
@@ -554,7 +554,7 @@
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.06.03",
-      "at": "2026-08-27T21:45:00Z"
+      "at": "2026-08-28T00:25:01Z"
     }
   ]
 }

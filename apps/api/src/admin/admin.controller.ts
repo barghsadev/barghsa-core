@@ -147,6 +147,14 @@ export class AdminController {
     }
   }
 
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly brandConfigService: BrandConfigService,
+    private readonly tosService: TosService,
+    private readonly notificationTemplateService: NotificationTemplateService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
+
   /**
    * Permission gate for notification delivery configuration (S-09.06).
    *
@@ -171,14 +179,6 @@ export class AdminController {
       )
     }
   }
-
-  constructor(
-    private readonly adminService: AdminService,
-    private readonly brandConfigService: BrandConfigService,
-    private readonly tosService: TosService,
-    private readonly notificationTemplateService: NotificationTemplateService,
-    private readonly notificationsService: NotificationsService,
-  ) {}
 
   /**
    * POST /api/admin/users/create-staff
