@@ -1,10 +1,10 @@
 {
-  "status": "building",
-  "current_task_id": "T-05.02.02",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-02-02--notification-center-api",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
   "current_pr_url": "",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.02.02",
+  "current_task_key": "",
   "loop_iteration": 305,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -252,12 +252,18 @@
     "05-notifications-documents-ai.md#T-05.01.05",
     "05-notifications-documents-ai.md#T-05.01.06",
     "05-notifications-documents-ai.md#T-05.01.07",
-    "05-notifications-documents-ai.md#T-05.02.01"
+    "05-notifications-documents-ai.md#T-05.02.01",
+    "05-notifications-documents-ai.md#T-05.02.02"
   ],
   "last_error": null,
-  "notes": "Building T-05.02.02 (notification center API: cursor list, mark-read, read-all).",
-  "last_updated": "2026-08-27T07:06:00Z",
+  "notes": "T-05.02.02 (notification center API) merged via PR #171. Next: T-05.02.03 (notification center UI).",
+  "last_updated": "2026-08-27T07:35:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.02.02",
+      "at": "2026-08-27T07:35:00Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.02.01",
