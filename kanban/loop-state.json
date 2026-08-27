@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-05.04.05",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-04-05--template-seeding",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/181",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.04.05",
   "loop_iteration": 314,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -265,9 +265,29 @@
     "05-notifications-documents-ai.md#T-05.04.04"
   ],
   "last_error": "",
-  "notes": "T-05.04.04 (test-send) PR #180 MERGED (commit 95dd4053). Destination validation + last_test_sent_at/status tracking. Loop idle. Next: T-05.04.05 (template seeding).",
-  "last_updated": "2026-08-27T12:40:00Z",
+  "notes": "T-05.04.05 reviewer APPROVED (after fixing tautological registry test). Waiting on CI to merge PR #181.",
+  "last_updated": "2026-08-27T13:28:52Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:28:52Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:11:21Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:04:50Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:03:24Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.04.03",
