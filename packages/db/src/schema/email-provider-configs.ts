@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
+import { jsonb, pgTable, text, uniqueIndex, boolean, integer } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
 import { uuidv7, timestamptz } from '../types.js'
 import { users } from './users.js'
@@ -83,6 +83,37 @@ export const emailProviderConfigs = pgTable(
 
     /** Safe, non-secret error from the most recent failed test-send. */
     lastTestError: text('last_test_error'),
+
+    /**
+     * Circuit breaker health (T-05.06.06). True when the per-provider email
+     * circuit breaker has tripped: `consecutive_failures` reached the
+     * threshold inside the failure window, the send path refuses new sends
+     * through this provider, and an ops alert has been raised. Persisted so
+     * restarts and multiple replicas agree on the same degraded status. This
+     * flag is parallel to — and independent of — the admin `status` lifecycle.
+     */
+    degraded: boolean('degraded').notNull().default(false),
+
+    /** Safe cause captured when the breaker tripped (non-secret). */
+    degradedReason: text('degraded_reason'),
+
+    /** Current consecutive failure run (persisted for diagnostics). */
+    consecutiveFailures: integer('consecutive_failures').notNull().default(0),
+
+    /** Failure count inside the current rolling window (drive the threshold). */
+    windowFailures: integer('window_failures').notNull().default(0),
+
+    /** Start of the current failure-counting window. */
+    windowStartedAt: timestamptz('window_started_at'),
+
+    /** Most recent failure timestamp (drives window/cooldown math). */
+    lastFailureAt: timestamptz('last_failure_at'),
+
+    /** When the breaker tripped (degraded=true was persisted). */
+    openedAt: timestamptz('opened_at'),
+
+    /** When the HALF_OPEN probe window opens (now + cooldown at trip time). */
+    cooldownUntil: timestamptz('cooldown_until'),
 
     /**
      * The `active` configuration this one replaced (set when this config is

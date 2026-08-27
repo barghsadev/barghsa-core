@@ -56,6 +56,13 @@ export const notificationsDeliveryAttempts = new Counter({
   registers: [registry],
 })
 
+export const providerEmailHealth = new Gauge({
+  name: 'provider_email_health',
+  help: 'Email provider circuit breaker health: 1=healthy, 0=tripped/degraded',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+})
+
 /**
  * Record one delivery attempt in the attempts counter. Called by the outbox
  * runner after each channel attempt resolves (success or failure). Pure
@@ -99,6 +106,18 @@ export async function collectNotificationGauges(
       WHERE status = 'open'`,
   )
   notificationsDeadLetterCount.set(Number(dlRes.rows[0]?.count ?? 0))
+
+  // Email provider circuit-breaker health (T-05.06.06): 1=healthy, 0=tripped.
+  // Recomputed from the persisted `degraded` flag on email_provider_configs
+  // so the /metrics endpoint reflects the same state the send path enforces.
+  const healthRes = await pool.query(
+    `SELECT id, CASE WHEN degraded THEN 0 ELSE 1 END AS health
+       FROM email_provider_configs`,
+  )
+  providerEmailHealth.reset()
+  for (const row of healthRes.rows as Array<{ id: string; health: number }>) {
+    providerEmailHealth.set({ provider_id: row.id }, Number(row.health))
+  }
 }
 
 /**
