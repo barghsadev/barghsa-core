@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_id": "T-05.04.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-04-05--template-seeding",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/181",
   "current_task_key": "05-notifications-documents-ai.md#T-05.04.05",
   "loop_iteration": 314,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -264,10 +264,15 @@
     "05-notifications-documents-ai.md#T-05.04.03",
     "05-notifications-documents-ai.md#T-05.04.04"
   ],
-  "last_error": "",
-  "notes": "T-05.04.05 implemented; PR #181 ready for review.",
-  "last_updated": "2026-08-27T13:04:50Z",
+  "last_error": "Reviewer: major — registry coverage test tautological. Fixed to validate against NOTIFICATION_TYPE_REGISTRY.",
+  "notes": "T-05.04.05 fixing: address reviewer major (registry coverage). Fix attempts=1.",
+  "last_updated": "2026-08-27T13:11:21Z",
   "status_history": [
+    {
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:11:21Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.04.05",

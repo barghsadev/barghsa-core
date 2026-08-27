@@ -31,6 +31,7 @@
         "uuid": "^14.0.0"
     },
     "devDependencies": {
+        "@barghsa/shared": "workspace:*",
         "@testcontainers/postgresql": "12.1.0",
         "@types/pg": "^8.11.0",
         "@types/uuid": "11.0.0",

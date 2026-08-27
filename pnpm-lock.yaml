@@ -192,6 +192,9 @@ importers:
         specifier: ^14.0.0
         version: 14.0.2
     devDependencies:
+      '@barghsa/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@testcontainers/postgresql':
         specifier: 12.1.0
         version: 12.1.0

@@ -8,7 +8,8 @@ import { users } from '../schema/users'
 import { notificationTemplates } from '../schema/notification-templates'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { buildSeedTemplates, NOTIFICATION_TEMPLATE_SEED } from './notification-templates'
+import { buildSeedTemplates } from './notification-templates'
+import { NOTIFICATION_TYPE_REGISTRY } from '@barghsa/shared/notifications'
 
 const MIGRATION_PATH = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
 const PRODUCTS_MIGRATION_PATH = resolve(__dirname, '../../drizzle/0014_recreate_products_schema.sql')
@@ -390,14 +391,29 @@ describe('notification template seeding', () => {
     expect(countResult.rows[0]?.count).toBe(buildSeedTemplates().length)
   })
 
-  it('covers a template for every event key in the registry', async () => {
-    const expectedKeys = new Set(NOTIFICATION_TEMPLATE_SEED.map((d) => d.eventKey))
+  it('covers a template for every event key in the authoritative registry', async () => {
     const rows = await ctx.db.select({ eventKey: notificationTemplates.eventKey }).from(
       notificationTemplates,
     )
     const seededKeys = new Set(rows.map((r) => r.eventKey))
 
-    expect([...seededKeys].sort()).toEqual([...expectedKeys].sort())
+    // The authoritative source of business events is NOTIFICATION_TYPE_REGISTRY
+    // in @barghsa/shared (mirrors the E-05 appendix), NOT the seed catalog —
+    // comparing against the seed itself would be tautological.
+    const registryKeys = Object.keys(NOTIFICATION_TYPE_REGISTRY)
+    for (const key of registryKeys) {
+      expect(seededKeys.has(key), `missing seed template for registry event "${key}"`).toBe(
+        true,
+      )
+    }
+
+    // Every seeded event must also be a known registry event (no drift/typos).
+    for (const key of seededKeys) {
+      expect(
+        key in NOTIFICATION_TYPE_REGISTRY,
+        `seeded event "${key}" is not in the notified registry`,
+      ).toBe(true)
+    }
   })
 
   it('every placeholder used in body/subject is declared in the allow-list', () => {
