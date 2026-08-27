@@ -1,10 +1,10 @@
 {
-  "status": "fixing",
-  "current_task_id": "T-05.05.03",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-05-03--marketing-consent-hist-2610",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/184",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.05.03",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 317,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -265,10 +265,11 @@
     "05-notifications-documents-ai.md#T-05.04.04",
     "05-notifications-documents-ai.md#T-05.04.05",
     "05-notifications-documents-ai.md#T-05.05.01",
-    "05-notifications-documents-ai.md#T-05.05.02"
+    "05-notifications-documents-ai.md#T-05.05.02",
+    "05-notifications-documents-ai.md#T-05.05.03"
   ],
   "last_error": "",
-  "notes": "T-05.05.03 PR #184: review request_changes. Major: wrap consent upserts+audit in transaction. Minor x2: Swagger field name, JSDoc path.",
+  "notes": "T-05.05.03 (marketing consent UI) PR #184 MERGED (5bb0cd7). Loop idle. Next: T-05.06.01.",
   "last_updated": "2026-08-27T14:09:58Z",
   "status_history": [
     {
@@ -385,6 +386,11 @@
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.05.03",
       "at": "2026-08-27T17:30:00Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
+      "at": "2026-08-27T17:40:00Z"
     }
   ]
 }
