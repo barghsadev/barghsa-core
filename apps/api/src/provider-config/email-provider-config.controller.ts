@@ -6,6 +6,7 @@ import {
   HttpException,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -16,6 +17,7 @@ import {
   EmailProviderConfigService,
   type CreateProviderInput,
   type EmailProviderConfigResult,
+  type UpdateProviderInput,
 } from './email-provider-config.service'
 import { SessionAuthGuard } from '../session/session.guard'
 import type { AuthenticatedRequest } from '../session/session.guard'
@@ -101,6 +103,28 @@ export class EmailProviderConfigController {
     return this.service.create(input)
   }
 
+  @Put(':id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Update a draft email provider configuration' })
+  async update(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: z.infer<typeof UpdateProviderSchema>,
+  ): Promise<EmailProviderConfigResult> {
+    this.assertAdmin(req)
+    const parsed = UpdateProviderSchema.safeParse(body)
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
+        400,
+      )
+    }
+    const input: UpdateProviderInput = {}
+    if (parsed.data.label !== undefined) input.label = parsed.data.label
+    if (parsed.data.config !== undefined) input.config = parsed.data.config
+    return this.service.update(id, input)
+  }
+
   @Post(':id/test')
   @HttpCode(200)
   @ApiOperation({ summary: 'Record a test-send result for a draft' })
@@ -162,7 +186,7 @@ export class EmailProviderConfigController {
     @Param('id') id: string,
   ): Promise<EmailProviderConfigResult> {
     this.assertAdmin(req)
-    return this.service.activate(id)
+    return this.service.activate(id, req.session.userId)
   }
 
   @Post(':id/disable')

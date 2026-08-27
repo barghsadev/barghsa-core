@@ -55,14 +55,16 @@ function buildHarness() {
     }
 
     // Activate query inside a transaction:
-    // UPDATE ... SET status='active', activated_at=NOW(), supersedes_id=$2 WHERE id=$1 [AND status='draft']
-    if (lower.includes('set status = \'active\'') && lower.includes('supersedes_id = $2')) {
+    // UPDATE ... SET status='active', activated_at=NOW(), activated_by=$3, supersedes_id=$2 WHERE id=$1 [AND status='draft']
+    if (lower.includes('set status = \'active\'') && lower.includes('supersedes_id')) {
       const targetId = idParam()
       const supersedesId = params![1] ?? null
+      const activatedBy = params![2] ?? null
       const r = rows.get(targetId)
       if (r) {
         r.status = 'active'
         r.activated_at = new Date('2026-01-01T00:00:00Z')
+        r.activated_by = activatedBy
         r.supersedes_id = supersedesId
       }
       return { rows: [], rowCount: r ? 1 : 0 }
@@ -118,7 +120,14 @@ function buildHarness() {
           r.label = params![0]
         }
         if (text.includes('config')) {
-          r.config = params![1] ?? r.config
+          // The config is the only object-typed parameter (label/ids are
+          // strings), so locate it regardless of the SET clause ordering.
+          const patch = params!.find((p) => typeof p === 'object' && p !== null) as
+            | Record<string, unknown>
+            | undefined
+          // Emulate the JSONB merge (`config || patch`) used by service.update
+          // so omitted keys (e.g. secrets) are preserved rather than wiped.
+          r.config = { ...(r.config ?? {}), ...(patch ?? {}) }
         }
       }
       return { rows: [], rowCount: r ? 1 : 0 }
@@ -154,6 +163,7 @@ function buildHarness() {
       status: r.status,
       createdBy: r.created_by,
       activatedAt: r.activated_at,
+      activatedBy: r.activated_by ?? null,
       lastTestAt: r.last_test_at,
       lastTestStatus: r.last_test_status,
       lastTestError: r.last_test_error,
@@ -219,9 +229,32 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     const tested = await service.recordTest(created.id, { passed: true })
     expect(tested.lastTestStatus).toBe('passed')
 
-    const active = await service.activate(created.id)
+    const active = await service.activate(created.id, 'admin-1')
     expect(active.status).toBe('active')
     expect(active.activatedAt).not.toBeNull()
+    expect(active.activatedBy).toBe('admin-1')
+  })
+
+  it('updates a draft by merging config so omitted secrets are preserved', async () => {
+    const { service } = buildHarness()
+    const created = await service.create({
+      transport: 'smtp',
+      label: 'SMTP',
+      config: { host: 'smtp.example.com', password: 'super-secret' },
+      createdBy: 'admin-1',
+    })
+    // Update changes the host but omits the password (the UI leaves secrets
+    // blank when editing since they are never returned by the API).
+    await service.update(created.id, {
+      config: { host: 'smtp.new.example.com' },
+    })
+    // Service result does not include config, so assert via the stored row.
+    const serviceWithReader = service as unknown as { readConfig: (id: string) => Promise<Record<string, unknown>> }
+    const stored = await serviceWithReader.readConfig(created.id)
+    expect(stored).toMatchObject({
+      host: 'smtp.new.example.com',
+      password: 'super-secret',
+    })
   })
 
   it('records a failing test and keeps the config in draft', async () => {
