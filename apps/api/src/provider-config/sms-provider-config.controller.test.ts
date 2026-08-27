@@ -110,10 +110,20 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
         error: null,
         result: baseResult({ lastTestStatus: 'passed' }),
       })
-      const result = await controller.testConnection(adminReq, 'cfg-1')
+      const result = await controller.testConnection(adminReq, 'cfg-1', {
+        recipient: '989121234567',
+        eventKey: 'otp:login',
+      })
       expect(result.test.ok).toBe(true)
       expect(result.lastTestStatus).toBe('passed')
-      expect(mockTestConnection).toHaveBeenCalledWith('cfg-1')
+      expect(mockTestConnection).toHaveBeenCalledWith('cfg-1', '989121234567', 'otp:login')
+    })
+
+    it('rejects an invalid recipient mobile with 400', async () => {
+      await expect(
+        controller.testConnection(adminReq, 'cfg-1', { recipient: 'not-a-number' }),
+      ).rejects.toBeInstanceOf(HttpException)
+      expect(mockTestConnection).not.toHaveBeenCalled()
     })
   })
 

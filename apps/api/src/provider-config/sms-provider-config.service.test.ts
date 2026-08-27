@@ -256,4 +256,40 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     expect(err).toBeInstanceOf(HttpException)
     expect(err.getResponse().message).toContain('unknown:event')
   })
+
+  it('rollback validates template mappings before re-activating a known-good version', async () => {
+    // Activate with a live event, then the event loses its SMS template
+    // (simulated by removing it from the live-template set).
+    const sourceCfg = {
+      ...VALID_CONFIG,
+      template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
+    }
+    const source = await svc.create({ label: 'old', config: sourceCfg, createdBy: 'a1' })
+    await svc.recordTest(source.id, { passed: true })
+    await svc.activate(source.id, 'a1')
+    await svc.disable(source.id)
+    h.activeTemplateEvents.delete('otp:login')
+
+    // Rollbacks clone the stored config; without validation this would re-activate
+    // a config pointing at an event with no live template.
+    const err = await svc.rollback(source.id, 'admin-1').catch((e) => e)
+    expect(err).toBeInstanceOf(HttpException)
+    expect(err.getResponse().message).toContain('otp:login')
+  })
+
+  it('rollback succeeds when the source template mappings still have live events', async () => {
+    const sourceCfg = {
+      ...VALID_CONFIG,
+      template_mappings: [{ event_key: 'otp:login', template_id: '2001' }],
+    }
+    const source = await svc.create({ label: 'old', config: sourceCfg, createdBy: 'a1' })
+    await svc.recordTest(source.id, { passed: true })
+    const activated = await svc.activate(source.id, 'a1')
+    expect(activated.status).toBe('active')
+
+    // Disable it, then roll back.
+    await svc.disable(source.id)
+    const rolledBack = await svc.rollback(source.id, 'admin-1')
+    expect(rolledBack.status).toBe('active')
+  })
 })

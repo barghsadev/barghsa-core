@@ -42,7 +42,7 @@ export const SmsirConfigSchema = z.object({
   timeout: z.number().int().min(1).max(300).default(15),
   /**
    * Max outbound messages per minute, applied by the sender to stay within the
-   * SMS.ir account's throughput contract. Default 20.
+   * SMS.ir account's throughput contract. Default 100.
    */
   throughput_limit: z.number().int().min(1).max(10000).default(100),
   /**

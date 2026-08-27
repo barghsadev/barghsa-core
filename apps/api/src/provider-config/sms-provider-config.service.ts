@@ -178,14 +178,14 @@ export class SmsProviderConfigService {
 
   /**
    * The set of notification event keys that currently have at least one active
-   * template. Used to validate template mappings on activation. Reads the
-   * `notification_templates` table directly so the admin surface reflects real
-   * template availability.
+   * SMS template. Used to validate SMS.ir template mappings on activation and
+   * to power the admin UI's event dropdown. Reads the `notification_templates`
+   * table directly so the admin surface reflects real template availability.
    */
   async availableTemplateEventKeys(): Promise<Set<string>> {
     const result = await this.db.query(
       `SELECT DISTINCT event_key FROM notification_templates
-        WHERE is_active = true AND channel IN ('sms', 'email')`,
+        WHERE is_active = true AND channel = 'sms'`,
     )
     return new Set(result.rows.map((r) => (r as { event_key: string }).event_key))
   }
@@ -351,11 +351,10 @@ export class SmsProviderConfigService {
   /**
    * Validate the SMS.ir template mappings in a draft before activation:
    * every mapping must declare a non-empty `template_id` (SMS.ir TemplateId)
-   * and an `event_key` that has a live notification template. This is the
-   * "Activation validates template IDs and variable availability" acceptance
-   * criterion. Variable availability (that the SMS.ir template actually
-   * accepts the mapped params) is checked by the live connection tester, which
-   * has the credentials to query SMS.ir — see `testConnection`.
+   * and an `event_key` that has a live SMS notification template. Template
+   * IDs / variable names are validated against the real SMS.ir template by
+   * `testConnection`'s live test-send, which activation requires to have
+   * passed (`last_test_status = 'passed'`) — see `SmsirConnectionTesterService`.
    */
   private async validateTemplateMappings(id: string): Promise<void> {
     const saved = await this.readConfig(id)
@@ -415,6 +414,12 @@ export class SmsProviderConfigService {
       createdBy,
     })
 
+    // The rollback clone bypasses the live test-send (known-good source), but
+    // its template mappings must still point at live SMS templates — the same
+    // invariant activate() enforces — otherwise a rollback could activate a
+    // config whose event keys have since lost their notification templates.
+    await this.validateTemplateMappings(created.id)
+
     await this.runTransaction(async (client) => {
       const before = await client.query(
         `UPDATE sms_provider_configs SET status = 'superseded'
@@ -439,11 +444,19 @@ export class SmsProviderConfigService {
 
   /**
    * Run a live connection check for a draft config via the SMS.ir connection
-   * tester (parses the stored config, validates the API key / sender, and re-
-   * checks template variable availability against the provider where the
-   * tester supports it), then persist the outcome as `last_test_*`.
+   * tester (parses the stored config, validates the API key / sender, checks
+   * the account credit, and when `recipient` is supplied performs a live
+   * test-send through the mapped template — validating template Id + variable
+   * names against SMS.ir), then persist the outcome as `last_test_*`.
+   *
+   * @param recipient admin's verified mobile number to receive the test SMS
+   * @param eventKey the mapped event to test-send; falls back to the first mapping
    */
-  async testConnection(id: string): Promise<{
+  async testConnection(
+    id: string,
+    recipient?: string,
+    eventKey?: string,
+  ): Promise<{
     ok: boolean
     error: string | null
     result: SmsProviderConfigResult
@@ -469,7 +482,7 @@ export class SmsProviderConfigService {
       return { ok: false, error: `Invalid SMS.ir configuration: ${parsed.error}`, result: recorded }
     }
 
-    const outcome = await this.smsirTester.test(parsed.config)
+    const outcome = await this.smsirTester.test(parsed.config, recipient, eventKey)
     const recorded = await this.recordTest(id, {
       passed: outcome.ok,
       ...(outcome.error !== undefined ? { error: outcome.error } : {}),

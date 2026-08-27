@@ -39,6 +39,22 @@ export const RecordSmsTestSchema = z.object({
   error: z.string().max(1000).optional(),
 })
 
+/**
+ * Optional body for `POST :id/test-connection`. `recipient` is the admin's
+ * verified mobile number to receive the real test SMS; `eventKey` selects the
+ * mapped template to send (defaults to the first mapping). Without a
+ * recipient the test still validates credentials + account credit but cannot
+ * prove template sendability, so activation requires a passed test that used
+ * a live send.
+ */
+export const TestConnectionSmsSchema = z.object({
+  recipient: z
+    .string()
+    .regex(/^\+?[0-9]{10,15}$/, 'Recipient must be a valid mobile number')
+    .optional(),
+  eventKey: z.string().min(1).max(128).optional(),
+})
+
 function httpError(code: string, message: string, statusCode = 409): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode)
 }
@@ -140,7 +156,15 @@ export class SmsProviderConfigController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Record a connection-test result for a draft' })
+  @ApiOperation({
+    summary: 'Record a connection-test result for a draft',
+    description:
+      'Trust model: setting passed=true self-attests a successful check without a send. ' +
+      'The canonical path is POST :id/test-connection, which performs the live credential/template ' +
+      'check (and a real test-send when body.recipient is given) and records the outcome itself. ' +
+      'This endpoint exists for parity with the email provider controller; admins should use ' +
+      'test-connection so activation gate (last_test_status=passed) reflects a real check.',
+  })
   async recordTest(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
@@ -165,18 +189,32 @@ export class SmsProviderConfigController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({
-    summary: 'Run a live SMS.ir credential/connection check and record the outcome',
+    summary: 'Run a live SMS.ir credential/template check and record the outcome',
     description:
-      'Validates the draft SMS.ir credentials and (when available) account credit, ' +
-      'then persists the result as last_test_status.',
+      'Validates the draft SMS.ir credentials and account credit, and when body.recipient ' +
+      '(the admin verified mobile) is supplied sends a real test SMS through the mapped ' +
+      'template — proving the TemplateId and its variables exist on SMS.ir — then persists ' +
+      'the result as last_test_status.',
   })
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
+    @Body() body?: z.infer<typeof TestConnectionSmsSchema>,
   ): Promise<SmsProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
     this.assertProviderEditPermission(req)
-    const { ok, error, result } = await this.service.testConnection(id)
+    const parsed = body === undefined ? null : TestConnectionSmsSchema.safeParse(body)
+    if (body !== undefined && !parsed!.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
+        400,
+      )
+    }
+    const { ok, error, result } = await this.service.testConnection(
+      id,
+      parsed?.data?.recipient,
+      parsed?.data?.eventKey,
+    )
     return { ...result, test: { ok, error } }
   }
 
