@@ -1,10 +1,10 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_key": "05-notifications-documents-ai.md#T-05.01.04",
   "current_task_id": "T-05.01.04",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-01-04--idempotency-delivery",
-  "current_pr_url": null,
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/166",
   "loop_iteration": 302,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -246,12 +246,18 @@
     "02-auth-users-admin.md#T-09.05.01",
     "05-notifications-documents-ai.md#T-05.01.01",
     "05-notifications-documents-ai.md#T-05.01.02",
-    "05-notifications-documents-ai.md#T-05.01.03"
+    "05-notifications-documents-ai.md#T-05.01.03",
+    "02-auth-users-admin.md#T-06.01.01"
   ],
   "last_error": null,
-  "notes": "Building T-05.01.04 idempotency for delivery (per-channel keys).",
+  "notes": "T-05.01.04 ready in PR #166 (in_review). Reconciled T-06.01.01 as already-merged (PR #138).",
   "last_updated": "2026-08-27T00:07:00Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.01.04",
+      "at": "2026-08-27T03:22:00Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.01.04",
