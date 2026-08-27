@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
+  "status": "fixing",
   "current_task_id": "T-05.06.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-06-05--provider-secrets",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/189",
   "current_task_key": "05-notifications-documents-ai.md#T-05.06.05",
   "loop_iteration": 323,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -272,10 +272,15 @@
     "05-notifications-documents-ai.md#T-05.06.03",
     "05-notifications-documents-ai.md#T-05.06.04"
   ],
-  "last_error": "",
+  "last_error": "Review request_changes: (1) masked placeholder re-encryption corrupts secrets on update; (2) maskConfig crashes when key missing/encrypted row; (3) create w/ secrets fails when key unset contradicting docs; (4) no test for update() encryption path.",
   "notes": "T-05.06.05 (Secrets encryption) PR #189 open for review.",
-  "last_updated": "2026-08-27T18:52:49Z",
+  "last_updated": "2026-08-27T18:55:50Z",
   "status_history": [
+    {
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
+      "at": "2026-08-27T18:55:50Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.06.05",

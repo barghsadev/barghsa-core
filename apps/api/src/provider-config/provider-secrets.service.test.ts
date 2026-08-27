@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import {
   ProviderSecretsService,
   isEncryptedSecretValue,
+  isMaskedValue,
   PROVIDER_SECRET_ENCRYPTION_ENV,
 } from './provider-secrets.service'
 
@@ -112,5 +113,49 @@ describe('ProviderSecretsService (T-05.06.05)', () => {
     const svc = new ProviderSecretsService(KEY)
     const masked = svc.maskConfig('smtp', { host: 'h', port: 587 })
     expect(masked).toMatchObject({ host: 'h', port: 587 })
+  })
+
+  it('encryptConfig omits masked placeholder values to preserve the stored secret', () => {
+    const svc = new ProviderSecretsService(KEY)
+    // UI echoes masked values back on edit; these must not be encrypted/stored.
+    const result = svc.encryptConfig('smtp', { host: 'h', password: '********cret' })
+    expect(result).toMatchObject({ host: 'h' })
+    expect(result).not.toHaveProperty('password')
+  })
+
+  it('discriminates masked placeholder values', () => {
+    expect(isMaskedValue('********cret')).toBe(true)
+    expect(isMaskedValue('****')).toBe(true)
+    expect(isMaskedValue('re_abcd1234')).toBe(false)
+    expect(isMaskedValue('***x')).toBe(true)
+    expect(isMaskedValue('thequickbrownfox')).toBe(false)
+    expect(isMaskedValue('')).toBe(false)
+  })
+
+  it('stores secrets as plaintext when no encryption key is configured (documented degradation)', () => {
+    const svc = new ProviderSecretsService(undefined)
+    process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = ''
+    const result = svc.encryptConfig('smtp', { host: 'h', password: 'plain' })
+    // Pass-through, not encrypted.
+    expect(result.password).toBe('plain')
+    expect(isEncryptedSecretValue(String(result.password))).toBe(false)
+  })
+
+  it('maskConfig degrades gracefully (no crash) when the key is missing for encrypted rows', () => {
+    process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = ''
+    const keyed = new ProviderSecretsService(KEY)
+    const enc = keyed.encryptConfig('smtp', { host: 'h', password: 'super-secret' })
+    // A fresh, key-less service reads the same encrypted row.
+    const svc = new ProviderSecretsService(undefined)
+    process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = ''
+    const masked = svc.maskConfig('smtp', enc)
+    expect(masked.host).toBe('h')
+    expect(String(masked.password)).toBe('[encrypted]')
+  })
+
+  it('maskConfig returns the last-4 masked value for a plaintext legacy secret', () => {
+    const svc = new ProviderSecretsService(KEY)
+    const masked = svc.maskConfig('smtp', { host: 'h', password: 'plaintext-legacy' })
+    expect(String(masked.password)).toBe('************gacy')
   })
 })

@@ -119,14 +119,33 @@ export class ProviderSecretsService {
   /**
    * Return a copy of `config` with every secret field encrypted. Non-secret
    * fields are untouched. Unknown keys are passed through as-is.
+   *
+   * - When no key is configured, secret fields are passed through as plaintext
+   *   (matching the documented/`.env.example` behavior: configs can still be
+   *   created, they just won't be encrypted at rest).
+   * - Values that already look like admin-UI masked placeholders (e.g.
+   *   `********cret`) are omitted from the returned object so the write path's
+   *   JSONB merge preserves the existing stored secret instead of encrypting
+   *   the masked placeholder and permanently corrupting it.
    */
   encryptConfig(transport: EmailProviderTransport, config: ProviderConfigBody): ProviderConfigBody {
     const out = { ...config }
     for (const field of SECRET_FIELDS[transport] ?? []) {
       const value = out[field]
-      if (typeof value === 'string' && value.length > 0) {
-        out[field] = this.encryptValue(value)
+      if (typeof value !== 'string' || value.length === 0) continue
+      // Masked display value → omit so the merge keeps the stored secret.
+      if (isMaskedValue(value)) {
+        delete out[field]
+        continue
       }
+      if (!this.available) {
+        // No key: store plaintext (documented degradation), not fail.
+        this.logger.warn(
+          `Provider owners: storing secret field "${field}" PLAINTEXT because ${PROVIDER_SECRET_ENCRYPTION_ENV} is not set`,
+        )
+        continue
+      }
+      out[field] = this.encryptValue(value)
     }
     return out
   }
@@ -150,7 +169,9 @@ export class ProviderSecretsService {
   /**
    * Return a copy of `config` safe for API responses / the admin UI: secret
    * fields replaced with a masked display value (last 4 chars visible),
-   * non-secret fields passed through as-is.
+   * non-secret fields passed through as-is. Degrades gracefully when the key
+   * is missing but encrypted rows exist — the API must never break the admin
+   * page over a secret it cannot decrypt.
    */
   maskConfig(transport: EmailProviderTransport, config: ProviderConfigBody): ProviderMaskedConfig {
     const out: ProviderMaskedConfig = {}
@@ -158,12 +179,22 @@ export class ProviderSecretsService {
       const isSecret = SECRET_FIELDS[transport]?.includes(key) ?? false
       if (isSecret && typeof value === 'string' && value.length > 0) {
         // Decrypt to derive the real length + tail for masking, then mask.
-        out[key] = this.maskValue(this.decryptValue(value))
+        out[key] = this.maskConfigSecret(value)
       } else {
         out[key] = value
       }
     }
     return out
+  }
+
+  /** Mask a stored secret for display; never throws on an undecryptable value. */
+  private maskConfigSecret(stored: string): string {
+    try {
+      return this.maskValue(this.decryptValue(stored))
+    } catch {
+      // Missing key or tampered/legacy-format blob — don't crash the admin page.
+      return isEncryptedSecretValue(stored) ? '[encrypted]' : this.maskValue(stored)
+    }
   }
 
   private requireKey(): Buffer {
@@ -192,4 +223,19 @@ function resolveKey(configured?: Buffer | string): Buffer | null {
 
 export function isEncryptedSecretValue(value: unknown): boolean {
   return typeof value === 'string' && value.startsWith(ENCRYPTED_VERSION + ':')
+}
+
+/**
+ * True when a string looks like an admin-UI masked placeholder output (one or
+ * more `*`s then up to 4 visible chars), e.g. `********cret`. Used to guard the
+ * update path so a masked value echoed back from the UI is never encrypted and
+ * stored (which would corrupt the real secret). Plain secrets that legitimately
+ * start with `*` are vanishingly rare and deliberately treated as placeholders
+ * to prefer preserving the stored secret over corrupting it.
+ */
+export function isMaskedValue(value: string): boolean {
+  if (value.length === 0) return false
+  const starCount = value.match(/^\*+/)?.[0].length ?? 0
+  if (starCount === 0) return false
+  return value.length - starCount <= 4
 }
