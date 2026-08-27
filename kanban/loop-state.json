@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-05.06.04",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-06-04--provider-admin-ui",
   "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 322,
+  "current_task_key": "05-notifications-documents-ai.md#T-05.06.04",
+  "loop_iteration": 323,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -272,9 +272,14 @@
     "05-notifications-documents-ai.md#T-05.06.03"
   ],
   "last_error": "",
-  "notes": "T-05.06.03 (Resend configuration) MERGED via PR #187 (8aad54c). Loop idle. Next: T-05.06.04 (Provider admin UI, L).",
-  "last_updated": "2026-08-27T16:05:00Z",
+  "notes": "Building T-05.06.04 (Provider admin UI). Backend lifecycle endpoints exist; adding admin UI page + nav + i18n.",
+  "last_updated": "2026-08-27T16:48:59Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
+      "at": "2026-08-27T16:48:59Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.01",
