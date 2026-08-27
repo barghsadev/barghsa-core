@@ -204,9 +204,12 @@ function smtpConfig(form: SmtpForm): Record<string, unknown> {
 
 function resendConfig(form: ResendForm): Record<string, unknown> {
   const config: Record<string, unknown> = {
-    api_key: form.apiKey,
     from_email: form.fromEmail,
   }
+  // Only include the API key when a new value was provided. When editing, an
+  // empty apiKey means "keep the stored key" (server merges the patch over the
+  // existing config), mirroring how the SMTP password is treated.
+  if (form.apiKey) config.api_key = form.apiKey
   if (form.fromName) config.from_name = form.fromName
   if (form.replyTo) config.reply_to = form.replyTo
   if (form.sendingDomain) config.sending_domain = form.sendingDomain
@@ -315,7 +318,10 @@ export default function AdminEmailProvidersPage() {
         }
       } else {
         const f = form as ResendForm
-        if (!f.apiKey.trim() || !f.fromEmail.trim()) {
+        // from_email is always required; the API key is only required on
+        // create. When editing, an empty apiKey preserves the stored key
+        // (server merges the config patch over the existing config).
+        if (!f.fromEmail.trim() || (!editId && !f.apiKey.trim())) {
           throw new Error(t('admin.providers.field.required', uiLocale))
         }
         if (editId) {
@@ -531,6 +537,9 @@ export default function AdminEmailProvidersPage() {
 
       {/* Provider list */}
       <div className="overflow-x-auto bg-white rounded-lg border border-gray-200">
+        {loading && (
+          <div className="p-4 text-gray-500">{t('admin.providers.loading', uiLocale)}</div>
+        )}
         <table className="min-w-full divide-y divide-gray-200 text-sm">
           <thead className="bg-gray-50">
             <tr>
