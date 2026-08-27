@@ -3,6 +3,7 @@ import { t, type Locale } from '@barghsa/i18n'
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js'
 import { TosBanner } from '../components/TosBanner.js'
 import { InvitationBanner } from '../components/InvitationBanner.js'
+import { NotificationBell } from '../components/NotificationBell.js'
 
 interface DashboardLayoutProps {
   locale?: Locale
@@ -29,6 +30,7 @@ export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
     { to: '/ai', label: t('dashboard.nav.ai', locale) },
     { to: '/documents', label: t('dashboard.nav.documents', locale) },
     { to: '/videos', label: t('dashboard.nav.videos', locale) },
+    { to: '/notifications', label: t('notifications.nav', locale) },
     { to: '/settings', label: t('dashboard.nav.settings', locale) },
   ]
 
@@ -39,6 +41,14 @@ export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
 
       {/* Invitation banner — shows pending agent invitations */}
       <InvitationBanner locale={locale} />
+
+      {/* App header — brand + notification center bell (T-05.02.03) */}
+      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:px-6">
+        <Link to="/" className="text-lg font-bold text-primary no-underline">
+          {t('auth.brand.title', locale)}
+        </Link>
+        <NotificationBell />
+      </header>
 
       {/* Main layout: sidebar + content */}
       <div className="flex flex-1">

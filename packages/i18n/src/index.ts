@@ -824,6 +824,28 @@ export const fa: I18nDictionary = {
   'admin.roles.effective.none': 'این کاربر هیچ دسترسی موثری ندارد.',
   'admin.roles.user.notfound': 'کاربر یافت نشد',
   'admin.roles.user.lookup.failed': 'خطا در دریافت دسترسی‌های کاربر',
+
+  // ── Notification Center (T-05.02.03) ─────────────────────
+  'notifications.title': 'مرکز اطلاع‌رسانی',
+  'notifications.nav': 'اطلاع‌رسانی',
+  'notifications.bellLabel': 'اعلان‌ها',
+  'notifications.bellAria': 'مشاهده اعلان‌ها (تعداد خوانده‌نشده: {count})',
+  'notifications.viewAll': 'مشاهده همه اعلان‌ها',
+  'notifications.markAllRead': 'علامت‌گذاری همه به‌عنوان خوانده‌شده',
+  'notifications.markAllReadDone': 'همه اعلان‌ها خوانده شدند',
+  'notifications.markReadAria': 'علامت‌گذاری این اعلان به‌عنوان خوانده‌شده',
+  'notifications.empty.title': 'اعلانی وجود ندارد',
+  'notifications.empty.unread': 'اعلان خوانده‌نشده‌ای ندارید',
+  'notifications.empty.body': 'هنگامی که رویداد یا اتفاق جدیدی رخ دهد، اعلان‌ها در اینجا نمایش داده می‌شوند.',
+  'notifications.loading': 'در حال بارگذاری اعلان‌ها…',
+  'notifications.loadMore': 'نمایش بیشتر',
+  'notifications.type.security': 'امنیت',
+  'notifications.type.payment': 'پرداخت',
+  'notifications.type.contract': 'قرارداد',
+  'notifications.type.order': 'سفارش',
+  'notifications.type.system': 'سیستم',
+  'notifications.error.load': 'خطا در بارگذاری اعلان‌ها',
+  'notifications.unread': 'فقط خوانده‌نشده',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -1621,6 +1643,28 @@ export const en: I18nDictionary = {
     'admin.roles.effective.none': 'This user has no effective permissions.',
     'admin.roles.user.notfound': 'User not found',
     'admin.roles.user.lookup.failed': 'Failed to look up user permissions',
+
+    // ── Notification Center (T-05.02.03) ─────────────────────
+    'notifications.title': 'Notification Center',
+    'notifications.nav': 'Notifications',
+    'notifications.bellLabel': 'Notifications',
+    'notifications.bellAria': 'View notifications ({count} unread)',
+    'notifications.viewAll': 'View all notifications',
+    'notifications.markAllRead': 'Mark all as read',
+    'notifications.markAllReadDone': 'All notifications marked as read',
+    'notifications.markReadAria': 'Mark this notification as read',
+    'notifications.empty.title': 'No notifications',
+    'notifications.empty.unread': 'You have no unread notifications',
+    'notifications.empty.body': 'When a new event or update occurs, notifications will appear here.',
+    'notifications.loading': 'Loading notifications…',
+    'notifications.loadMore': 'Load more',
+    'notifications.type.security': 'Security',
+    'notifications.type.payment': 'Payment',
+    'notifications.type.contract': 'Contract',
+    'notifications.type.order': 'Order',
+    'notifications.type.system': 'System',
+    'notifications.error.load': 'Failed to load notifications',
+    'notifications.unread': 'Unread only',
   };
 
 /** Supported locale codes */

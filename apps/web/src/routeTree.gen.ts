@@ -22,6 +22,7 @@ import { Route as AppAiRouteImport } from './routes/_app/ai'
 import { Route as AppChartsRouteImport } from './routes/_app/charts'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
@@ -113,6 +114,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppDocumentsRoute = AppDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSavingsRoute = AppSavingsRouteImport.update({
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
+  '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
@@ -312,6 +319,7 @@ export interface FileRoutesByTo {
   '/charts': typeof AppChartsRoute
   '/dashboard': typeof AppDashboardRoute
   '/documents': typeof AppDocumentsRoute
+  '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
@@ -355,6 +363,7 @@ export interface FileRoutesById {
   '/_app/charts': typeof AppChartsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/documents': typeof AppDocumentsRoute
+  '/_app/notifications': typeof AppNotificationsRoute
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
@@ -399,6 +408,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/dashboard'
     | '/documents'
+    | '/notifications'
     | '/savings'
     | '/videos'
     | '/wallet'
@@ -439,6 +449,7 @@ export interface FileRouteTypes {
     | '/charts'
     | '/dashboard'
     | '/documents'
+    | '/notifications'
     | '/savings'
     | '/videos'
     | '/wallet'
@@ -481,6 +492,7 @@ export interface FileRouteTypes {
     | '/_app/charts'
     | '/_app/dashboard'
     | '/_app/documents'
+    | '/_app/notifications'
     | '/_app/savings'
     | '/_app/videos'
     | '/_app/wallet'
@@ -614,6 +626,13 @@ declare module '@tanstack/react-router' {
       path: '/documents'
       fullPath: '/documents'
       preLoaderRoute: typeof AppDocumentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/savings': {
@@ -820,6 +839,7 @@ interface AppRouteChildren {
   AppChartsRoute: typeof AppChartsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDocumentsRoute: typeof AppDocumentsRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
   AppSavingsRoute: typeof AppSavingsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
@@ -838,6 +858,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppChartsRoute: AppChartsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDocumentsRoute: AppDocumentsRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
   AppSavingsRoute: AppSavingsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
