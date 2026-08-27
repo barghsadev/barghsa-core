@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-09.08.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-08-02--staff-teams-assignment",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/198",
   "current_task_key": "02-auth-users-admin.md#T-09.08.02",
   "loop_iteration": 331,
   "fix_attempts": 0,
@@ -282,8 +282,8 @@
     "02-auth-users-admin.md#T-09.08.01"
   ],
   "last_error": null,
-  "notes": "T-09.08.02 (staff teams + assignment rules, L) building slice 1: shared contract + staff_teams/members schema + migration 0038 + admin API CRUD (teams, assignment rules app_config). Assignment engine worker slice deferred.",
-  "last_updated": "2026-08-27T23:11:44Z",
+  "notes": "T-09.08.02 (staff teams + assignment rules, L) slice 1 in review: PR #198 — shared staff-teams contract + staff_teams/members schema + migration 0038 + admin CRUD (teams + assignment-rules app_config, audited). SQL validated on postgres:16. CI green. Worker assignment engine = follow-up slice.",
+  "last_updated": "2026-08-27T23:17:10Z",
   "status_history": [
     {
       "status": "merged",
@@ -599,6 +599,11 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
       "at": "2026-08-27T23:11:44Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-27T23:17:10Z"
     }
   ]
 }
