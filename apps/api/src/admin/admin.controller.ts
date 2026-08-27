@@ -1238,9 +1238,14 @@ export class AdminController {
   /**
    * POST /api/admin/notifications/templates/:id/test-send
    *
-   * Renders a template and delivers it to the admin's own verified
-   * destination (in-app notification today; email/SMS transport pending E-05).
-   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   * Renders a template and delivers it to the admin's own verified destination
+   * (or an allow-listed dev test address). The destination must belong to the
+   * acting admin's contact (users.email/mobile/username) or match
+   * TEST_SEND_ALLOWLIST (dev/test only) — see T-05.04.04. When no destination
+   * is supplied, the in-app default (the admin's own inbox) is used.
+   * Out-of-app email/SMS transport is pending E-05 (T-05.06), so delivery is
+   * in-app today. Permission: admin:notifications:edit (mapped to platform
+   * admin; granular staff roles land in T-09.05).
    */
   @Post('notifications/templates/:id/test-send')
   @HttpCode(200)
@@ -1248,15 +1253,46 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Test-send a rendered notification template' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        destination: {
+          type: 'string',
+          description:
+            'Verified destination (email or phone) belonging to the admin, or an allow-listed dev test address',
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 200, description: 'Test message delivered.' })
+  @ApiResponse({ status: 403, description: 'Destination not owned / not allow-listed, or admin role required' })
   @ApiResponse({ status: 404, description: 'Template not found' })
-  @ApiResponse({ status: 403, description: 'Admin role required' })
   async testSendNotificationTemplate(
     @Param('id') id: string,
+    @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
-  ): Promise<{ ok: boolean; destination: 'in_app' }> {
+  ): Promise<{ ok: boolean; destination: 'in_app'; lastTestStatus: 'delivered' | 'failed' }> {
     this.assertNotificationPermission(req)
-    return this.notificationTemplateService.testSend(id, req.session.userId)
+
+    const parsed = z
+      .object({
+        destination: z.string().trim().max(320).optional(),
+      })
+      .safeParse(rawBody ?? {})
+    if (!parsed.success) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400,
+      )
+    }
+
+    const destination = parsed.data.destination
+    return this.notificationTemplateService.testSend(
+      id,
+      req.session.userId,
+      destination !== undefined ? { destination } : undefined,
+    )
   }
 
   /**

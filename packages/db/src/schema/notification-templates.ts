@@ -73,6 +73,18 @@ export const notificationTemplates = pgTable(
     /** Whether this template is currently active for its event+channel+locale. */
     isActive: boolean('is_active').notNull().default(false),
 
+    /** When this template version was last test-sent by an admin (T-05.04.04). */
+    lastTestSentAt: timestamptz('last_test_sent_at'),
+
+    /**
+     * Outcome of the most recent test-send for this template version
+     * (T-05.04.04): 'delivered' when the attempt reached the destination,
+     * 'failed' when it errored. NULL until the first test-send.
+     */
+    lastTestStatus: text('last_test_status', {
+      enum: ['delivered', 'failed'],
+    }),
+
     /** When this template was last published to active. */
     publishedAt: timestamptz('published_at'),
 

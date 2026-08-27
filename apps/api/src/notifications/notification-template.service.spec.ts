@@ -164,3 +164,57 @@ describe('buildSampleData', () => {
     expect(Object.keys(data)).toEqual(['userName'])
   })
 })
+
+describe('isDestinationAllowed (T-05.04.04)', () => {
+  const contacts = ['admin@example.com', '+989120000000']
+
+  it('allows a destination matching the admin own email (case-insensitive)', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, 'Admin@Example.com', {}),
+    ).toBe(true)
+  })
+
+  it('allows a destination matching the admin own phone', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, '+989120000000', {}),
+    ).toBe(true)
+  })
+
+  it('allows an empty/null destination (in-app default)', () => {
+    expect(NotificationTemplateService.isDestinationAllowed(contacts, '', {})).toBe(true)
+    expect(NotificationTemplateService.isDestinationAllowed(contacts, undefined, {})).toBe(true)
+  })
+
+  it('allows an allow-listed test address outside production', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, 'qa@example.com', {
+        NODE_ENV: 'development',
+        TEST_SEND_ALLOWLIST: 'qa@example.com, staging@example.com',
+      }),
+    ).toBe(true)
+  })
+
+  it('rejects an allow-listed address in production (dev-only restriction)', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, 'qa@example.com', {
+        NODE_ENV: 'production',
+        TEST_SEND_ALLOWLIST: 'qa@example.com',
+      }),
+    ).toBe(false)
+  })
+
+  it('rejects a third-party destination that is not owned nor allow-listed', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, 'random@attacker.com', {
+        NODE_ENV: 'development',
+        TEST_SEND_ALLOWLIST: 'qa@example.com',
+      }),
+    ).toBe(false)
+  })
+
+  it('trims surrounding whitespace before comparing', () => {
+    expect(
+      NotificationTemplateService.isDestinationAllowed(contacts, '  admin@example.com  ', {}),
+    ).toBe(true)
+  })
+})

@@ -40,6 +40,8 @@ export interface NotificationTemplateResult {
   isActive: boolean
   version: number
   publishedAt: Date | null
+  lastTestSentAt: Date | null
+  lastTestStatus: 'delivered' | 'failed' | null
   createdBy: string | null
   createdAt: Date
   updatedAt: Date
@@ -131,6 +133,8 @@ export class NotificationTemplateService {
       isActive: row.is_active as boolean,
       version: (row.version as number) ?? 1,
       publishedAt: (row.published_at as Date) ?? null,
+      lastTestSentAt: (row.last_test_sent_at as Date) ?? null,
+      lastTestStatus: (row.last_test_status as 'delivered' | 'failed') ?? null,
       createdBy: (row.created_by as string) ?? null,
       createdAt: row.created_at as Date,
       updatedAt: row.updated_at as Date,
@@ -139,7 +143,7 @@ export class NotificationTemplateService {
 
   private readonly SELECT_COLUMNS = `id, event_key, channel, locale, subject,
       body_template, variables, status, is_active, version, published_at,
-      created_by, created_at, updated_at`
+      last_test_sent_at, last_test_status, created_by, created_at, updated_at`
 
   /**
    * Escape a string for safe HTML/text output, preventing injection of
@@ -480,33 +484,181 @@ export class NotificationTemplateService {
   }
 
   /**
-   * Test-send: render the template and deliver it to the admin's own verified
-   * destination. Out-of-app transport (email/SMS) belongs to E-05, so the
-   * available verified destination today is an in-app notification to the
-   * acting admin's account.
+   * Test-send: render the template and deliver it to a real destination.
+   *
+   * T-05.04.04. The admin supplies a destination (their own verified contact
+   * or an allow-listed dev test address). Delivery happens through whatever
+   * transport is active today — currently in-app, because the out-of-app
+   * email/SMS provider configuration belongs to E-05 (T-05.06). The attempt
+   * is recorded on the template version (`last_test_sent_at`,
+   * `last_test_status`) and audited as a test, never touching customer data.
+   *
+   * Destination policy:
+   * - The destination must belong to the acting admin's own verified contact
+   *   (their `users.email`, `users.mobile`, or `users.username`), OR
+   * - match a dev/test-only allow-list (`TEST_SEND_ALLOWLIST`,
+   *   comma-separated) that is honored only outside production.
+   * Any other destination is rejected with 403 so a test can never be sent
+   * to an arbitrary third party.
    */
   async testSend(
     id: string,
     actorUserId: string,
-  ): Promise<{ ok: boolean; destination: 'in_app' }> {
+    options?: { destination?: string },
+  ): Promise<{ ok: boolean; destination: 'in_app'; lastTestStatus: 'delivered' | 'failed' }> {
+    const pool = getDbPool()
     const tpl = await this.getById(id)
     const data = this.buildSampleData(tpl.variables)
     const renderedBody = this.render(tpl.bodyTemplate, tpl.variables, data)
     const renderedSubject =
       tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data) : null
 
-    await this.notificationsService.create({
-      userId: actorUserId,
-      type: 'general',
-      title: renderedSubject ?? `Test: ${tpl.eventKey}`,
-      body: renderedBody,
-    })
+    const destination = options?.destination?.trim() || null
+    await this.assertAllowedTestDestination(actorUserId, destination)
 
-    this.logger.log(
-      `Notification template test-sent: id=${id} event=${tpl.eventKey} by ${actorUserId}`,
+    try {
+      await this.notificationsService.create({
+        userId: actorUserId,
+        type: 'general',
+        title: renderedSubject ?? `Test: ${tpl.eventKey}`,
+        body: renderedBody,
+      })
+
+      await pool.query(
+        `UPDATE notification_templates
+         SET last_test_sent_at = $1, last_test_status = 'delivered', updated_at = $1
+         WHERE id = $2`,
+        [new Date(), id],
+      )
+      await this.writeTestAudit(id, tpl.eventKey, actorUserId, typeof destination, 'delivered')
+
+      this.logger.log(
+        `Notification template test-sent: id=${id} event=${tpl.eventKey} by ${actorUserId}`,
+      )
+
+      return { ok: true, destination: 'in_app', lastTestStatus: 'delivered' }
+    } catch (err) {
+      // Record the failed attempt even when delivery errored so the admin's
+      // template list shows test history accurately.
+      await pool
+        .query(
+          `UPDATE notification_templates
+           SET last_test_sent_at = $1, last_test_status = 'failed', updated_at = $1
+           WHERE id = $2`,
+          [new Date(), id],
+        )
+        .catch(() => {})
+      await this.writeTestAudit(id, tpl.eventKey, actorUserId, typeof destination, 'failed')
+      throw err
+    }
+  }
+
+  /**
+   * Pure decision rule for whether a test-send destination is permitted
+   * (T-05.04.04). Exported for unit testing without a DB.
+   *
+   * A destination is allowed when it matches one of the acting admin's own
+   * verified contacts, or when it is present in the dev/test-only allow-list
+   * (`TEST_SEND_ALLOWLIST`) honored only outside production.
+   */
+  static isDestinationAllowed(
+    actorContacts: Array<string | null | undefined>,
+    destination: string | null | undefined,
+    env?: { NODE_ENV?: string; TEST_SEND_ALLOWLIST?: string },
+  ): boolean {
+    if (!destination || !destination.trim()) return true // in-app default
+    const target = destination.trim().toLowerCase()
+
+    const own = new Set<string>()
+    for (const c of actorContacts) {
+      if (c) own.add(c.trim().toLowerCase())
+    }
+    if (own.has(target)) return true
+
+    const nodeEnv = (env?.NODE_ENV ?? 'development')
+    if (nodeEnv !== 'production') {
+      const allowList = (env?.TEST_SEND_ALLOWLIST ?? '')
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean)
+      if (allowList.includes(target)) return true
+    }
+    return false
+  }
+
+  /**
+   * Validate that a test-send destination is permitted: it must be the acting
+   * admin's own verified contact, or an allow-listed dev/test address that is
+   * only honored outside production. A null/empty destination means the admin
+   * accepted the in-app default (their own inbox), which is always allowed.
+   */
+  private async assertAllowedTestDestination(
+    actorUserId: string,
+    destination: string | null,
+  ): Promise<void> {
+    if (!destination) return
+
+    const pool = getDbPool()
+    const user = await pool.query<{
+      username: string
+      email: string | null
+      mobile: string | null
+    }>(`SELECT username, email, mobile FROM users WHERE user_id = $1`, [actorUserId])
+    const actor = user.rows[0]
+
+    const contacts = actor
+      ? [actor.username, actor.email, actor.mobile]
+      : []
+    const env: { NODE_ENV?: string; TEST_SEND_ALLOWLIST?: string } = {}
+    if (process.env['NODE_ENV'] !== undefined) env.NODE_ENV = process.env['NODE_ENV']
+    if (process.env['TEST_SEND_ALLOWLIST'] !== undefined) {
+      env.TEST_SEND_ALLOWLIST = process.env['TEST_SEND_ALLOWLIST']
+    }
+    if (NotificationTemplateService.isDestinationAllowed(contacts, destination, env)) {
+      return
+    }
+
+    throw new HttpException(
+      {
+        statusCode: 403,
+        error: 'NOTIFICATION_TEMPLATE_TEST_DESTINATION_FORBIDDEN',
+        message:
+          'Test-send destination must be your own verified contact or an allow-listed test address',
+      },
+      403,
     )
+  }
 
-    return { ok: true, destination: 'in_app' }
+  /** Append a test-send audit record (no customer data — template only). */
+  private async writeTestAudit(
+    templateId: string,
+    eventKey: string,
+    actorUserId: string,
+    destinationKind: string,
+    status: 'delivered' | 'failed',
+  ): Promise<void> {
+    const pool = getDbPool()
+    await pool
+      .query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          uuidv7(),
+          actorUserId,
+          'notification_template_test_sent',
+          JSON.stringify({
+            templateId,
+            eventKey,
+            destinationKind,
+            status,
+            isTest: true,
+          }),
+          uuidv7(),
+          'admin',
+          new Date(),
+        ],
+      )
+      .catch(() => {})
   }
 
   /**
