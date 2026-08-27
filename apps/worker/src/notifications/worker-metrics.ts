@@ -1,4 +1,4 @@
-import promClient, { Registry, Counter, Gauge } from 'prom-client'
+import { Registry, Counter, Gauge } from 'prom-client'
 import type { NotificationChannel } from '@barghsa/shared/notifications'
 
 /**
@@ -108,6 +108,6 @@ export async function exportWorkerMetrics(): Promise<string> {
   return registry.metrics()
 }
 
-// Re-export prom-client's collectDefaultMetrics so main.ts can wire Node
-// runtime metrics in one place without a second import surface.
+// Export the scoped registry so main.ts can wire Node runtime metrics
+// (collectDefaultMetrics) onto the same set in one place if desired.
 export { registry }
