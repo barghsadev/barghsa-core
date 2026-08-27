@@ -1218,8 +1218,12 @@ export class AdminController {
     if (notificationId) options.notificationId = notificationId
     if (channel) options.channel = channel
     if (status) options.status = status
-    if (limit) options.limit = parseInt(limit, 10)
-    if (offset) options.offset = parseInt(offset, 10)
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN
+    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN
+    // Ignore non-numeric limit/offset so malformed queries fall back to the
+    // service defaults instead of producing a NaN SQL binding (500 today).
+    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit
+    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
     return this.notificationsService.findDeliveryLogs(options)
   }
 }
