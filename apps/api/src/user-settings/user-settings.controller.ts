@@ -347,14 +347,14 @@ export class UserSettingsController {
             email: {
               type: 'object',
               properties: {
-                marketingOptedIn: { type: 'boolean' },
+                optedIn: { type: 'boolean' },
                 lastChangedAt: { type: 'string', nullable: true },
               },
             },
             sms: {
               type: 'object',
               properties: {
-                marketingOptedIn: { type: 'boolean' },
+                optedIn: { type: 'boolean' },
                 lastChangedAt: { type: 'string', nullable: true },
               },
             },
@@ -402,12 +402,14 @@ export class UserSettingsController {
   }
 
   /**
-   * PUT /api/user/notification-consent
+   * PUT /api/user/settings/marketing-consent
    *
    * Sets the user's marketing consent for the email and/or SMS channels.
    * Consent is applied to every active profile and recorded in the audit
    * trail. When opting in, `consent_granted_at` is stamped; when opting out,
-   * `consent_revoked_at` is stamped.
+   * `consent_revoked_at` is stamped. The consent writes and the audit insert
+   * run inside a single transaction so a failure can never leave per-profile
+   * consent in an inconsistent state.
    */
   @Put('marketing-consent')
   @HttpCode(200)
@@ -455,43 +457,55 @@ export class UserSettingsController {
       )
     }
 
-    for (const profileId of profiles) {
-      for (const channel of UserSettingsController.MARKETING_CHANNELS) {
-        if (!desired.has(channel)) continue
-        const optedIn = desired.get(channel) as boolean
-        await pool.query(
-          `INSERT INTO user_notification_preferences
-             (id, profile_id, channel, marketing_opted_in,
-              consent_granted_at, consent_revoked_at, created_at, updated_at)
-           VALUES ($1, $2, $3, $4,
-                   CASE WHEN $4 THEN NOW() ELSE NULL END,
-                   CASE WHEN $4 THEN NULL ELSE NOW() END,
-                   NOW(), NOW())
-           ON CONFLICT (profile_id, channel) DO UPDATE SET
-             marketing_opted_in = EXCLUDED.marketing_opted_in,
-             consent_granted_at = CASE WHEN EXCLUDED.marketing_opted_in
-                                 THEN NOW() ELSE user_notification_preferences.consent_granted_at END,
-             consent_revoked_at = CASE WHEN EXCLUDED.marketing_opted_in
-                                 THEN NULL ELSE NOW() END,
-             updated_at = NOW()`,
-          [uuidv7(), profileId, channel, optedIn],
-        )
-      }
-    }
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
 
-    // Audit trail
-    await pool.query(
-      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-       VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
-      [
-        uuidv7(),
-        userId,
-        'marketing_consent_changed',
-        JSON.stringify(Object.fromEntries(desired)),
-        uuidv7(),
-        req.ip ?? null,
-      ],
-    )
+      for (const profileId of profiles) {
+        for (const channel of UserSettingsController.MARKETING_CHANNELS) {
+          if (!desired.has(channel)) continue
+          const optedIn = desired.get(channel) as boolean
+          await client.query(
+            `INSERT INTO user_notification_preferences
+               (id, profile_id, channel, marketing_opted_in,
+                consent_granted_at, consent_revoked_at, created_at, updated_at)
+             VALUES ($1, $2, $3, $4,
+                     CASE WHEN $4 THEN NOW() ELSE NULL END,
+                     CASE WHEN $4 THEN NULL ELSE NOW() END,
+                     NOW(), NOW())
+             ON CONFLICT (profile_id, channel) DO UPDATE SET
+               marketing_opted_in = EXCLUDED.marketing_opted_in,
+               consent_granted_at = CASE WHEN EXCLUDED.marketing_opted_in
+                                   THEN NOW() ELSE user_notification_preferences.consent_granted_at END,
+               consent_revoked_at = CASE WHEN EXCLUDED.marketing_opted_in
+                                   THEN NULL ELSE NOW() END,
+               updated_at = NOW()`,
+            [uuidv7(), profileId, channel, optedIn],
+          )
+        }
+      }
+
+      // Audit trail — committed with the consent writes.
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
+        [
+          uuidv7(),
+          userId,
+          'marketing_consent_changed',
+          JSON.stringify(Object.fromEntries(desired)),
+          uuidv7(),
+          req.ip ?? null,
+        ],
+      )
+
+      await client.query('COMMIT')
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => undefined)
+      throw err
+    } finally {
+      client.release()
+    }
 
     const updated = await this.getMarketingConsentInternal(pool, profiles[0] as string)
     this.logger.log(
