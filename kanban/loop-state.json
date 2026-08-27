@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.06.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-06-01--email-transport-config",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/192",
-  "current_task_key": "02-auth-users-admin.md#T-09.06.01",
-  "loop_iteration": 324,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 325,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -273,12 +273,18 @@
     "05-notifications-documents-ai.md#T-05.06.04",
     "05-notifications-documents-ai.md#T-05.06.05",
     "05-notifications-documents-ai.md#T-05.06.06",
-    "05-notifications-documents-ai.md#T-05.06.07"
+    "05-notifications-documents-ai.md#T-05.06.07",
+    "02-auth-users-admin.md#T-09.06.01"
   ],
   "last_error": "",
-  "notes": "T-09.06.01 (Email transport configuration, XL) split into a reviewable authorization slice: added admin:notification-providers:edit permission gate (mapped to platform admin) + RequiresStepUp on all email-provider-config mutation endpoints (create/update/test/test-connection/activate/disable/rollback). PR #192 in_review. Data/lifecycle machinery was already built in epic-05.",
-  "last_updated": "2026-08-28T00:15:00Z",
+  "notes": "T-09.06.01 (Email transport configuration, XL) authorization slice MERGED via PR #192 (5743138): permission gate admin:notification-providers:edit (mapped to platform admin) + RequiresStepUp on all email-provider-config mutations. Data/lifecycle + admin UI already from epic-05. Loop idle. Next: 02-auth-users-admin.md#T-09.06.02.",
+  "last_updated": "2026-08-28T00:20:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.06.01",
+      "at": "2026-08-28T00:16:44Z"
+    },
     {
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.06.01",
