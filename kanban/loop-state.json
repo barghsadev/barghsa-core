@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-05.06.07",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-06-07--email-delivery-callbacks",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/191",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.06.07",
   "loop_iteration": 323,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -275,13 +275,18 @@
     "05-notifications-documents-ai.md#T-05.06.06"
   ],
   "last_error": "",
-  "notes": "T-05.06.06 (Email circuit breaker, persisted per-provider degraded state, 60s cooldown half-open probe recovery, provider_email_health gauge, migration 0033) MERGED via PR #190 (3d366b2). Loop idle. Next: T-05.06.07 (Email delivery callback handling, S).",
-  "last_updated": "2026-08-27T19:28:30Z",
+  "notes": "T-05.06.07 (Resend delivery callback webhooks: POST /api/webhooks/email/resend, Svix HMAC verification, svix-id idempotency ledger, delivery-log/outbox updates, email_suppressions for hard bounce+complaint, migration 0034) PR #191 open, in_review.",
+  "last_updated": "2026-08-27T19:58:00Z",
   "status_history": [
     {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.06",
-      "at": "2026-08-27T19:28:30Z"
+      "status": "fixing",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:57:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:58:00Z"
     },
     {
       "status": "merged",
@@ -497,6 +502,16 @@
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.03",
       "at": "2026-08-27T16:05:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:51:05Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:52:00Z"
     }
   ]
 }

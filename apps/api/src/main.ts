@@ -7,7 +7,7 @@ import { EtagInterceptor } from './common/etag.interceptor.js';
 import { Reflector } from '@nestjs/core';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
   // NestJS will call OnApplicationShutdown lifecycle hooks on all registered

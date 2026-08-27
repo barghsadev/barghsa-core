@@ -22,12 +22,14 @@ describe('parseResendConfig (T-05.06.03)', () => {
       from_email: 'no-reply@example.com',
       reply_to: 'support@example.com',
       sending_domain: 'example.com',
+      webhook_secret: 'whsec_abc123',
     })
     expect(parsed.ok).toBe(true)
     if (!parsed.ok) return
     expect(parsed.config.from_name).toBe('Barghsa')
     expect(parsed.config.reply_to).toBe('support@example.com')
     expect(parsed.config.sending_domain).toBe('example.com')
+    expect(parsed.config.webhook_secret).toBe('whsec_abc123')
   })
 
   it('rejects a missing api_key and from_email', () => {

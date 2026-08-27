@@ -35,7 +35,7 @@ export const PROVIDER_SECRETS_KEY = Symbol('PROVIDER_SECRETS_KEY')
 /** Which top-level config fields hold secrets per transport. */
 const SECRET_FIELDS: Record<EmailProviderTransport, readonly string[]> = {
   smtp: ['password'],
-  resend: ['api_key'],
+  resend: ['api_key', 'webhook_secret'],
 }
 
 /** Encrypted blob prefix (versioned so formats can evolve). */
