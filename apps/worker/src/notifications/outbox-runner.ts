@@ -6,6 +6,11 @@ import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js'
 import { writeDeadLetter } from './dead-letter.js'
 import { sanitizeError } from './error-redact.js'
 import { recordDeliveryAttempt } from './worker-metrics.js'
+import {
+  decideDeliverySchedule,
+  loadDeliveryWindowConfig,
+  type DeliveryWindowConfig,
+} from './delivery-window.js'
 
 /**
  * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
@@ -53,9 +58,16 @@ export async function runOutboxPoll(
     /** Override the pool for tests. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pool?: any
+    /** Override the delivery-window config for tests. */
+    deliveryWindow?: DeliveryWindowConfig
   },
 ): Promise<OutboxRunResult> {
   const pool = options?.pool ?? getDbPool()
+  // T-05.03.02: re-check queued rows against the delivery window on every
+  // wake-up and park daytime rows that are currently outside the quiet window
+  // (status→scheduled, scheduled_for→next open) so they are not leased until
+  // the window opens.
+  await reconcileDeliveryWindows(pool, options?.deliveryWindow)
   const rows = await leaseOutbox(options)
 
   const result: OutboxRunResult = { leased: rows.length, delivered: 0, failed: 0 }
@@ -343,6 +355,52 @@ async function failRow(
       backoffUntil,
     ],
   )
+}
+
+/**
+ * T-05.03.02 — apply the delivery window to queued rows on each worker wake-up.
+ *
+ * Resolves the admin-configurable window (default 09:00–21:00) and re-checks
+ * every `queued` outbox row. A `daytime` row that targets an external channel
+ * (email/sms) and is currently outside the window is parked as `scheduled`
+ * with `scheduled_for` set to the next window open; `immediate` and in-app-only
+ * rows stay `queued` and are leased normally. Rows already `scheduled` for a
+ * future boundary are intentionally left untouched — `leaseOutbox` skips them
+ * until `scheduled_for` passes, which is the "re-check on wakeup" delivery
+ * mechanism. Returns the number of rows re-scheduled this pass.
+ */
+export async function reconcileDeliveryWindows(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pool: any,
+  config?: DeliveryWindowConfig,
+): Promise<number> {
+  const cfg = config ?? (await loadDeliveryWindowConfig(pool))
+  const now = new Date()
+
+  const pending = await pool.query(
+    'SELECT id, event_key, channels FROM notification_outbox WHERE status = $1',
+    ['queued'],
+  )
+  if (pending.rows.length === 0) return 0
+
+  const toSchedule: Array<{ id: string; scheduledFor: Date }> = []
+  for (const row of pending.rows) {
+    const decision = decideDeliverySchedule(row.event_key, row.channels ?? [], now, cfg)
+    if (decision.kind === 'schedule') {
+      toSchedule.push({ id: row.id, scheduledFor: decision.scheduledFor })
+    }
+  }
+  if (toSchedule.length === 0) return 0
+
+  for (const item of toSchedule) {
+    await pool.query(
+      `UPDATE notification_outbox
+          SET status = 'scheduled', scheduled_for = $2, updated_at = NOW()
+        WHERE id = $1 AND status = 'queued'`,
+      [item.id, item.scheduledFor],
+    )
+  }
+  return toSchedule.length
 }
 
 export type { OutboxReaderOptions, NotificationChannel, INotificationTransport }
