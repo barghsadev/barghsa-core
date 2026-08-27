@@ -11,6 +11,15 @@ import {
   loadDeliveryWindowConfig,
   type DeliveryWindowConfig,
 } from './delivery-window.js'
+import {
+  resolveChannelAvailability,
+  type ChannelAvailabilityContext,
+  type ChannelSkipReason,
+} from './channel-availability.js'
+import {
+  loadChannelAvailabilityContext,
+  EMPTY_AVAILABILITY_CONTEXT,
+} from './channel-availability-loader.js'
 
 /**
  * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
@@ -60,6 +69,13 @@ export async function runOutboxPoll(
     pool?: any
     /** Override the delivery-window config for tests. */
     deliveryWindow?: DeliveryWindowConfig
+    /**
+     * Override for the channel-availability gate (T-05.05.02). When omitted,
+     * the worker loads the recipient's verified destinations + marketing
+     * consent from the DB for every leased row. A caller may inject a
+     * resolver/pre-loaded context for deterministic tests.
+     */
+    availability?: (row: OutboxRow) => Promise<ChannelAvailabilityContext> | ChannelAvailabilityContext
   },
 ): Promise<OutboxRunResult> {
   const pool = options?.pool ?? getDbPool()
@@ -83,7 +99,16 @@ export async function runOutboxPoll(
     )
 
     try {
-      const outcomes = await dispatchOutbox(row, options?.transports ?? {})
+      // T-05.05.02 — resolve which requested channels are actually available
+      // (verified destinations + marketing consent) before dispatching, so we
+      // never send an external leg the recipient can't or hasn't opted into.
+      const availability =
+        options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id)
+      const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT
+      const decision = resolveChannelAvailability(row.eventKey, row.channels, ctx)
+      await markSkippedJobs(pool, row, decision.skipped)
+
+      const outcomes = await dispatchOutbox({ ...row, channels: decision.allowed }, options?.transports ?? {})
       await persistOutcomes(pool, row, outcomes)
       // A row is "delivered" only when every requested channel delivered.
       const anyFailed = outcomes.some((o) => o.result.status === 'failed')
@@ -111,6 +136,43 @@ interface DispatchOutcome {
   result: { providerRef: string; status: 'delivered' | 'failed' }
   /** Provider round-trip latency in milliseconds for this attempt. */
   latencyMs: number
+}
+
+/**
+ * Mark the notification_job rows for external channels that the availability
+ * gate (T-05.05.02) skipped, and persist a delivery-log row describing the
+ * skip. Skipped legs are recorded as `failed` with a permanent
+ * `skipped:<reason>` detail so the admin panel can see exactly why an
+ * external channel was not delivered — without retrying (the skipped job is
+ * terminal, matching `required_channels_missing`-style permanent gating). The
+ * skipped jobs are never copied to the dead-letter queue (they are not
+ * retryable delivery failures) and do not block the in-app/allowed legs from
+ * delivering.
+ */
+async function markSkippedJobs(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pool: any,
+  row: OutboxRow,
+  skipped: ReadonlyArray<{ channel: 'email' | 'sms'; reason: ChannelSkipReason }>,
+): Promise<void> {
+  for (const skip of skipped) {
+    await pool.query(
+      `UPDATE notification_job
+          SET status = 'failed', last_error = $3, updated_at = NOW()
+        WHERE outbox_id = $1 AND channel = $2`,
+      [row.id, skip.channel, `skipped: ${skip.reason}`],
+    )
+    await writeDeliveryLog(pool, {
+      notificationId: row.id,
+      channel: skip.channel,
+      delivered: false,
+      attemptNumber: 1,
+      providerRef: null,
+      latencyMs: null,
+      error: `skipped: ${skip.reason}`,
+      errorCategory: 'permanent',
+    })
+  }
 }
 
 /**
