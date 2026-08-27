@@ -492,6 +492,18 @@ export const fa: I18nDictionary = {
   'settings.notifications.error.noEmail': 'برای این حساب ایمیلی ثبت نشده است. ابتدا ایمیل اضافه کنید',
   'settings.notifications.error.noMobile': 'برای این حساب شماره موبایلی ثبت نشده است. ابتدا شماره موبایل اضافه کنید',
 
+  // ── Settings — Marketing Consent (T-05.05.03) ────────────────
+  'settings.marketing.title': 'اعلان‌های بازاریابی',
+  'settings.marketing.description': 'دریافت اعلان‌های بازاریابی از طریق ایمیل و پیامک را مدیریت کنید. اعلان‌های امنیتی و معاملاتی همیشه ارسال می‌شوند و به این تنظیم مرتبط نیستند.',
+  'settings.marketing.optInEmailLabel': 'دریافت اعلان‌های بازاریابی از طریق ایمیل',
+  'settings.marketing.optInSmsLabel': 'دریافت اعلان‌های بازاریابی از طریق پیامک',
+  'settings.marketing.lastChangedAt': 'آخرین تغییر: {date}',
+  'settings.marketing.neverChanged': 'تاکنون تغییری ثبت نشده است',
+  'settings.marketing.success': 'تنظیمات اعلان‌های بازاریابی ذخیره شد',
+  'settings.marketing.error.save': 'خطا در ذخیره تنظیمات اعلان‌های بازاریابی',
+  'settings.marketing.saving': 'در حال ذخیره…',
+  'settings.marketing.loading': 'در حال بارگذاری…',
+
   // ── Settings — Timezone (T-03.03.06) ──────────────────────
   'settings.timezone.title': 'تنظیمات منطقه زمانی',
   'settings.timezone.description': 'منطقه زمانی خود را انتخاب کنید. تمام نمایش‌های تاریخ و ساعت بر اساس این تنظیم خواهد بود.',
@@ -1358,6 +1370,18 @@ export const en: I18nDictionary = {
   'settings.notifications.error.save': 'Failed to save notification preferences',
   'settings.notifications.error.noEmail': 'No email registered for this account. Add an email first',
   'settings.notifications.error.noMobile': 'No mobile number registered for this account. Add a mobile first',
+
+  // ── Settings — Marketing Consent (T-05.05.03) ────────────────
+  'settings.marketing.title': 'Marketing Notifications',
+  'settings.marketing.description': 'Receive marketing notifications via email and SMS. Security and transactional notifications are always sent and are not affected by this setting.',
+  'settings.marketing.optInEmailLabel': 'Receive marketing notifications via email',
+  'settings.marketing.optInSmsLabel': 'Receive marketing notifications via SMS',
+  'settings.marketing.lastChangedAt': 'Last changed: {date}',
+  'settings.marketing.neverChanged': 'No consent change recorded yet',
+  'settings.marketing.success': 'Marketing notification preferences saved',
+  'settings.marketing.error.save': 'Failed to save marketing notification preferences',
+  'settings.marketing.saving': 'Saving…',
+  'settings.marketing.loading': 'Loading…',
 
   // ── Settings — Timezone (T-03.03.06) ──────────────────────
   'settings.timezone.title': 'Timezone Settings',
