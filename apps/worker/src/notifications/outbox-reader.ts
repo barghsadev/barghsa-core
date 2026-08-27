@@ -75,7 +75,13 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           WHERE status IN ('queued', 'scheduled', 'sending')
             AND (locked_until IS NULL OR locked_until < $2)
             AND (scheduled_for IS NULL OR scheduled_for <= $2)
-          ORDER BY created_at ASC
+          ORDER BY
+            /* Urgent jobs (Immediate) dispatch before normal (daytime). */
+            EXISTS (
+              SELECT 1 FROM notification_job nj
+              WHERE nj.outbox_id = notification_outbox.id AND nj.priority = 'urgent'
+            ) DESC,
+            created_at ASC
           LIMIT $3
           FOR UPDATE SKIP LOCKED
         )

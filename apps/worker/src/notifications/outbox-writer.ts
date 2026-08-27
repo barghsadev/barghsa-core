@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import type { PoolClient } from 'pg'
 import type { NotificationChannel } from '@barghsa/shared/notifications'
+import { maxAttemptsForType, priorityForType } from './retry-schedule.js'
 
 /**
  * Transactional outbox write pipeline (E-05, T-05.01.02).
@@ -72,8 +73,10 @@ export async function enqueueOutbox(
   const idempotencyKey = input.idempotencyKey ?? deriveIdempotencyKey(input.eventKey, input.profileId)
   const channels = input.channels
   const status = input.status ?? 'queued'
-  const maxAttempts = input.maxAttempts ?? 5
-  const priority = input.priority ?? 'normal'
+  // Per-type config (T-05.01.03): max_attempts and queue priority resolve from
+  // the code-defined notification-type registry unless the caller overrides.
+  const maxAttempts = input.maxAttempts ?? maxAttemptsForType(input.eventKey)
+  const priority = input.priority ?? priorityForType(input.eventKey)
 
   if (channels.length === 0) {
     throw new Error('enqueueOutbox requires at least one channel')

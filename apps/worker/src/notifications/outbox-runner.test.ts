@@ -97,7 +97,7 @@ describe('runOutboxPoll', () => {
     expect(outboxUpdate).toBeTruthy()
   })
 
-  it('marks a row failed permanently when max attempts are exhausted', async () => {
+  it('marks a row failed permanently and dead-letters its jobs when max attempts are exhausted', async () => {
     const { pool, updates } = makePool()
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
       { ...baseRow, attempts: 4, maxAttempts: 5 },
@@ -114,8 +114,29 @@ describe('runOutboxPoll', () => {
       (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'failed',
     )
     expect(outboxUpdate).toBeTruthy()
+    // Exhausted jobs move to dead_letter (not just 'failed').
     const emailJob = updates.find((u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email')
-    expect(emailJob!.params[1]).toBe('failed')
+    expect(emailJob!.params[1]).toBe('dead_letter')
+    // No further retry scheduled after exhaustion: run_after is null.
+    expect(emailJob!.params[6]).toBeNull()
+  })
+
+  it('schedules a jittered run_after backoff on a retry-eligible job', async () => {
+    const { pool, updates } = makePool()
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
+
+    await runOutboxPoll({
+      pool,
+      transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
+    })
+
+    const emailJob = updates.find((u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email')
+    // Retrying job (attempts=1 of 5) gets a run_after backoff (param $6 now
+    // holds it; the retry ladder guarantees it is in the future).
+    expect(emailJob!.params[1]).toBe('retrying')
+    const runAfter = emailJob!.params[6] as Date
+    expect(runAfter).toBeInstanceOf(Date)
+    expect(runAfter.getTime()).toBeGreaterThan(Date.now())
   })
 
   it('propagates a throwing dispatch into a failed row with sanitized error and job bookkeeping', async () => {

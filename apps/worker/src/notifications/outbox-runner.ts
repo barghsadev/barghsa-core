@@ -1,9 +1,10 @@
 import { getDbPool } from '@barghsa/db'
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications'
 import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions } from './outbox-reader.js'
+import { nextRetryDelayMs } from './retry-schedule.js'
 
 /**
- * Outbox dispatch runner (E-05, T-05.01.02).
+ * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
  *
  * Ties the durable write pipeline together on the consuming side:
  * each poll leases due outbox rows (`leaseOutbox`), marks them `sending`,
@@ -12,12 +13,15 @@ import { leaseOutbox, dispatchOutbox, type OutboxRow, type OutboxReaderOptions }
  * `notification_job` row and the aggregate outcome on the outbox row.
  *
  * Lifecycle handled here:
- *   queued/scheduled → sending (leased) → delivered | queued(retry) | failed
+ *   queued/scheduled → sending (leased) → delivered | dead_letter | retrying
  *
  * - A retry-eligible row (attempts < maxAttempts) is returned to `queued` with
- *   a short `locked_until` back-off so it is not re-leased on the very next
- *   poll tick. Full exponential backoff+jitter belongs to T-05.01.03.
- * - A row whose attempts reach `max_attempts` is marked `failed` permanently.
+ *   a `locked_until` back-off drawn from the T-05.01.03 retry ladder
+ *   (1min → 5min → 30min → 2hr) with ±20% jitter, so it is not re-leased on
+ *   the very next poll tick.
+ * - A row whose attempts reach `max_attempts` is marked `failed` permanently
+ *   and its per-channel jobs move to `dead_letter` for review / retry / resolve.
+ * - `max_attempts` is configurable per notification type (see retry-schedule).
  * - `last_error` is sanitized before persistence so provider messages can
  *   never leak credentials or connection strings.
  */
@@ -32,8 +36,6 @@ export interface OutboxRunResult {
 
 /** How long a dispatched-but-unconfirmed row stays `sending` before re-claim. */
 const SENDING_LEASE_MS = 30_000
-/** Back-off placed on a retry-eligible row before the next claim. */
-const RETRY_BACKOFF_MS = 30_000
 /** Maximum length of a persisted `last_error`. */
 const LAST_ERROR_MAX_LEN = 500
 
@@ -122,7 +124,9 @@ interface DispatchOutcome {
 /**
  * Persist per-channel outcomes to each notification_job and derive the
  * outbox row's aggregate state. A successfully delivered job stores the real
- * provider ref returned by the transport (no synthetic values).
+ * provider ref returned by the transport (no synthetic values). A failed job
+ * is returned to `retrying` with a T-05.01.03 backoff `run_after`, or moved
+ * to `dead_letter` once its per-type attempt budget is exhausted.
  */
 async function persistOutcomes(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,18 +140,22 @@ async function persistOutcomes(
     if (!ok) anyFailed = true
     const attempts = row.attempts + 1
     const exhausted = attempts >= row.maxAttempts
+    // Jittered backoff before the next attempt (null when the budget is spent).
+    const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+    const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
     await pool.query(
       `UPDATE notification_job
           SET status = $2, provider_ref = $3, attempts = $4, last_error = $5,
-              updated_at = NOW()
+              run_after = $7, updated_at = NOW()
         WHERE outbox_id = $1 AND channel = $6`,
       [
         row.id,
-        ok ? 'done' : exhausted ? 'failed' : 'retrying',
+        ok ? 'done' : exhausted ? 'dead_letter' : 'retrying',
         ok ? outcome.result.providerRef : null,
         attempts,
         ok ? null : 'delivery failed',
         outcome.channel,
+        runAfter,
       ],
     )
   }
@@ -165,7 +173,7 @@ async function persistOutcomes(
 }
 
 /**
- * Mark every notification_job row for an outbox row as retrying/failed.
+ * Mark every notification_job row for an outbox row as retrying/dead_letter.
  * Used on the exception path where dispatchOutbox threw before per-channel
  * outcomes could be recorded, so job rows stay consistent with the outbox row.
  */
@@ -177,17 +185,21 @@ async function failAllJobs(
 ): Promise<void> {
   const attempts = row.attempts + 1
   const exhausted = attempts >= row.maxAttempts
+  const runAfterMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+  const runAfter = runAfterMs === null ? null : new Date(Date.now() + runAfterMs)
   await pool.query(
     `UPDATE notification_job
-        SET status = $2, attempts = $3, last_error = $4, updated_at = NOW()
+        SET status = $2, attempts = $3, last_error = $4, run_after = $5,
+            updated_at = NOW()
       WHERE outbox_id = $1`,
-    [row.id, exhausted ? 'failed' : 'retrying', attempts, safeMessage || null],
+    [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
   )
 }
 
 /**
  * Mark a row as failed. Retry-eligible rows return to `queued` with a
- * `locked_until` back-off; only exhausted rows become `failed` permanently.
+ * `locked_until` back-off drawn from the T-05.01.03 retry ladder; only
+ * exhausted rows become `failed` permanently (their jobs are dead-lettered).
  */
 async function failRow(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -197,6 +209,8 @@ async function failRow(
 ): Promise<void> {
   const attempts = row.attempts + 1
   const exhausted = attempts >= row.maxAttempts
+  const backoffMs = exhausted ? null : nextRetryDelayMs(attempts, row.maxAttempts)
+  const backoffUntil = backoffMs === null ? null : new Date(Date.now() + backoffMs)
 
   await pool.query(
     `UPDATE notification_outbox
@@ -208,7 +222,7 @@ async function failRow(
       exhausted ? 'failed' : 'queued',
       attempts,
       safeMessage || null,
-      exhausted ? null : new Date(Date.now() + RETRY_BACKOFF_MS),
+      backoffUntil,
     ],
   )
 }
