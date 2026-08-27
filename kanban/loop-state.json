@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.07.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-07-02--dual-approval-workflow",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-09.07.02",
   "loop_iteration": 329,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -280,9 +280,14 @@
     "02-auth-users-admin.md#T-09.07.01"
   ],
   "last_error": "",
-  "notes": "T-09.07.01 (dual-approval threshold config) MERGED via PR #195 (a8461ab): GET/PUT /api/admin/config/dual-approval-threshold under single S-09.07 gate (admin:financial:edit -> isAdmin; mirrors S-09.06). Shared @barghsa/shared/finance contract: finance.dual_approval_threshold app_config key, strict integer IRR 0..MAX_SAFE_INTEGER (0 = disabled, no coercion of booleans/strings), versioned upsert + FOR UPDATE previous-value audit + config_version bump + config_change audit. Two review rounds: strict typing, previousValue/version audit, shared isValidDualApprovalThreshold predicate. Step-up and emergency override deferred (no web step-up flow / alert pipeline yet). Finance module (T-09.07.02 consumer) not built yet. Loop idle. Next: 02-auth-users-admin.md#T-09.07.02.",
-  "last_updated": "2026-08-27T22:06:07Z",
+  "notes": "Building T-09.07.02 (dual-approval workflow, L) as a prerequisite slice: approval-request lifecycle (create/list/approve/reject) under /api/admin/approval-requests with S-09.07 admin:financial:edit gate (isAdmin). Slice includes shared shouldRequireDualApproval predicate, approval_requests table (migration 0036), atomic audit_log transitions, no-self-approval + mandatory reject reason, in-app notification to eligible staff/initiator. Deferred: UI, step-up on resolution, role-permission eligibility, finance-module threshold consumer.",
+  "last_updated": "2026-08-27T22:15:34Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.07.02",
+      "at": "2026-08-27T22:15:34Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.06.02",
