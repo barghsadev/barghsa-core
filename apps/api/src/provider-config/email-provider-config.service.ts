@@ -11,6 +11,16 @@ import {
   type ProviderMaskedConfig,
 } from './provider-secrets.service'
 import { EmailCircuitBreakerService } from './email-circuit-breaker.service'
+import {
+  PROVIDER_CONFIG_POOL,
+  type PoolClient,
+  type ProviderPool,
+} from './provider-config.di'
+
+// Re-export the DI token + pool types for backward compatibility with existing
+// imports (previously defined inline here).
+export { PROVIDER_CONFIG_POOL }
+export type { PoolClient, ProviderPool }
 
 /**
  * Email provider configuration service (E-05, T-05.06.01).
@@ -95,29 +105,10 @@ export interface RecordTestInput {
 }
 
 // ---------------------------------------------------------------------------
-// Pool abstraction (matches the `pg` Pool.shape used at runtime and the mock
-// pool used in tests: both expose `query` and `connect()`).
+// DB pool override types + injection token live in ./provider-config.di.ts
+// (moved there for T-05.06.06 so the circuit breaker can inject the same
+// optional pool without a runtime circular import). Re-exported above.
 // ---------------------------------------------------------------------------
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface PoolClient {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  release: () => void
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface ProviderPool {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  connect: () => Promise<PoolClient>
-}
-
-/**
- * Injection token for an optional query-pool override. Not registered in the
- * module, so Nest resolves it to `undefined` (thanks to `@Optional()`) and the
- * service falls back to the shared `getDbPool()` pool. Tests construct the
- * service directly with a mock pool as the first constructor argument.
- */
-export const PROVIDER_CONFIG_POOL = Symbol('PROVIDER_CONFIG_POOL')
 
 /** Build a standard HttpException body. */
 interface ErrBody {

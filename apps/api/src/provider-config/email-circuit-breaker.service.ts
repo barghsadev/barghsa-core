@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject, Optional } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
-import { PROVIDER_CONFIG_POOL, type ProviderPool } from './email-provider-config.service'
+import { PROVIDER_CONFIG_POOL, type ProviderPool } from './provider-config.di'
 
 /**
  * Per-provider email circuit breaker (E-05, T-05.06.06).
@@ -99,12 +99,15 @@ export class EmailCircuitBreakerService {
 
   constructor(
     @Optional() @Inject(PROVIDER_CONFIG_POOL) injectedPool?: ProviderPool,
-    config: EmailBreakerConfig = DEFAULT_EMAIL_BREAKER_CONFIG,
-    clock: Clock = SYSTEM_CLOCK,
+    @Optional() config?: EmailBreakerConfig,
+    @Optional() clock?: Clock,
   ) {
     this.injectedPool = injectedPool
-    this.config = config
-    this.clock = clock
+    // Nest DI treats every constructor parameter as an injectable token; mark
+    // the tuning knobs optional so the runtime defaults apply when no provider
+    // is registered, while tests pass explicit values positionally.
+    this.config = config ?? DEFAULT_EMAIL_BREAKER_CONFIG
+    this.clock = clock ?? SYSTEM_CLOCK
   }
 
   /** Shared DB pool (or injected/mock pool in tests). */
