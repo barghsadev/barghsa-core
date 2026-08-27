@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-05.04.05",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-04-05--template-seeding",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/181",
   "current_task_key": "05-notifications-documents-ai.md#T-05.04.05",
   "loop_iteration": 314,
   "fix_attempts": 0,
@@ -265,9 +265,14 @@
     "05-notifications-documents-ai.md#T-05.04.04"
   ],
   "last_error": "",
-  "notes": "Building T-05.04.05 (template seeding).",
-  "last_updated": "2026-08-27T13:03:24Z",
+  "notes": "T-05.04.05 implemented; PR #181 ready for review.",
+  "last_updated": "2026-08-27T13:04:50Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
+      "at": "2026-08-27T13:04:50Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.04.05",
