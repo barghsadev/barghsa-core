@@ -263,7 +263,7 @@
     "05-notifications-documents-ai.md#T-05.04.02"
   ],
   "last_error": "",
-  "notes": "T-05.04.03 (template preview) PR #179 ready for review. Token 312.",
+  "notes": "T-05.04.03 (template preview) PR #179 ready for review. Backend preview endpoints pre-existing; added admin panel + client mirror lib (7 tests). CI green.",
   "last_updated": "2026-08-27T12:04:31Z",
   "status_history": [
     {
