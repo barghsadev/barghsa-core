@@ -28,6 +28,13 @@
 --   - a resolved request can never be re-resolved (409),
 --   - a rejection always carries a reason.
 --
+-- Notes:
+--   - All constraints are defined inline in CREATE TABLE so the migration
+--     is safely re-appliable (no separate ALTER TABLE steps that would
+--     abort with duplicate-constraint errors on a re-run).
+--   - The queue index is composite (status, created_at DESC) so the hot
+--     pending view never re-sorts every matching row per page.
+--
 -- Rollback:
 --   DROP TABLE IF EXISTS approval_requests;
 
@@ -43,24 +50,22 @@ CREATE TABLE IF NOT EXISTS approval_requests (
   review_reason TEXT,
   reviewed_at   TIMESTAMPTZ,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- Financial actions subject to dual approval (T-09.07.01).
+  CONSTRAINT chk_ar_action_type
+    CHECK (action_type IN ('refund', 'manual_adjustment', 'bank_payment_confirmation')),
+
+  -- Amounts are positive IRR integers only.
+  CONSTRAINT chk_ar_amount_positive
+    CHECK (amount_irr > 0),
+
+  -- Lifecycle states of the dual-approval workflow.
+  CONSTRAINT chk_ar_status
+    CHECK (status IN ('pending', 'approved', 'rejected'))
 );
 
--- Financial actions subject to dual approval (T-09.07.01).
-ALTER TABLE approval_requests
-  ADD CONSTRAINT chk_ar_action_type
-  CHECK (action_type IN ('refund', 'manual_adjustment', 'bank_payment_confirmation'));
-
--- Amounts are positive IRR integers only.
-ALTER TABLE approval_requests
-  ADD CONSTRAINT chk_ar_amount_positive
-  CHECK (amount_irr > 0);
-
--- Lifecycle states of the dual-approval workflow.
-ALTER TABLE approval_requests
-  ADD CONSTRAINT chk_ar_status
-  CHECK (status IN ('pending', 'approved', 'rejected'));
-
--- The pending queue is the hot read path (GET /api/admin/approval-requests).
-CREATE INDEX IF NOT EXISTS idx_approval_requests_status
-  ON approval_requests (status);
+-- The pending queue is the hot read path (GET /api/admin/approval-requests);
+-- (status, created_at) serves both the status filter and the DESC ordering.
+CREATE INDEX IF NOT EXISTS idx_approval_requests_status_created_at
+  ON approval_requests (status, created_at DESC);

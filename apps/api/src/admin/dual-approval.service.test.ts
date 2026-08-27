@@ -346,20 +346,41 @@ describe('DualApprovalService.approveApprovalRequest', () => {
   })
 
   it('approves: updates state, writes the audit row, notifies the initiator', async () => {
-    const { mockConnect } = await loadService()
+    const { mockConnect, mockQuery } = await loadService()
     const { mockClientQuery, client } = mockClient()
     mockConnect.mockResolvedValue(client)
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT FOR UPDATE
+      .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT ... FOR UPDATE OF ar
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
       .mockResolvedValueOnce({ rows: [] }) // COMMIT
+    // Post-commit DTO re-read with the joined reviewer identity.
+    mockQuery.mockResolvedValueOnce({
+      rows: [
+        {
+          ...PENDING_ROW,
+          status: 'approved',
+          reviewer_id: 'user-2',
+          reviewer_username: 'staff2',
+          reviewed_at: new Date('2026-08-28T03:00:00Z'),
+        },
+      ],
+    })
 
     const result = await service.approveApprovalRequest('req-1', 'user-2', '1.1.1.1')
 
     expect(result.status).toBe('approved')
     expect(result.reviewerId).toBe('user-2')
+    // The response must reflect the reviewer identity (post-commit join),
+    // not the pre-update NULL.
+    expect(result.reviewerUsername).toBe('staff2')
+    expect(result.reviewedAt).toBe('2026-08-28T03:00:00.000Z')
+
+    // The row lock must be scoped to the base table: an unqualified
+    // FOR UPDATE on a LEFT JOIN query is rejected by PostgreSQL.
+    const selectCall = mockClientQuery.mock.calls[1]!
+    expect(String(selectCall[0])).toContain('FOR UPDATE OF ar')
 
     const updateCall = mockClientQuery.mock.calls[2]!
     expect(String(updateCall[0])).toContain('UPDATE approval_requests')
@@ -414,15 +435,28 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
   })
 
   it('rejects: persists reason, writes audit, notifies the initiator', async () => {
-    const { mockConnect } = await loadService()
+    const { mockConnect, mockQuery } = await loadService()
     const { mockClientQuery, client } = mockClient()
     mockConnect.mockResolvedValue(client)
     mockClientQuery
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT FOR UPDATE
+      .mockResolvedValueOnce({ rows: [PENDING_ROW] }) // SELECT ... FOR UPDATE OF ar
       .mockResolvedValueOnce({ rows: [] }) // UPDATE
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
       .mockResolvedValueOnce({ rows: [] }) // COMMIT
+    // Post-commit DTO re-read with the joined reviewer identity.
+    mockQuery.mockResolvedValueOnce({
+      rows: [
+        {
+          ...PENDING_ROW,
+          status: 'rejected',
+          reviewer_id: 'user-2',
+          reviewer_username: 'staff2',
+          review_reason: 'Duplicate of an earlier refund',
+          reviewed_at: new Date('2026-08-28T03:00:00Z'),
+        },
+      ],
+    })
 
     const result = await service.rejectApprovalRequest(
       'req-1',
@@ -433,6 +467,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
 
     expect(result.status).toBe('rejected')
     expect(result.reviewReason).toBe('Duplicate of an earlier refund')
+    expect(result.reviewerUsername).toBe('staff2')
 
     const updateCall = mockClientQuery.mock.calls[2]!
     expect(updateCall[1]).toEqual([
@@ -446,6 +481,8 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
     const auditCall = mockClientQuery.mock.calls[3]!
     expect(auditCall[1]).toContain('approval_request_rejected')
     expect(String(auditCall[1]![3])).toContain('"reviewReason":"Duplicate of an earlier refund"')
+    // BIGINT audit amounts are normalized to JSON numbers.
+    expect(String(auditCall[1]![3])).toContain('"amountIrR":50000000')
 
     const notifyCall = notificationsService.create.mock.calls[0]![0] as { userId: string; title: string; body: string }
     expect(notifyCall.userId).toBe('user-1')

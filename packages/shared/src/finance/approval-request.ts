@@ -188,7 +188,7 @@ export function toApprovalRequestInput(input: unknown): ApprovalRequestInput {
 
 /**
  * The T-09.07.02 routing rule: whether a financial action of `amountIrR`
- * toman must enter Pending Approval under the given configuration.
+ * IRR must enter Pending Approval under the given configuration.
  *
  * A stored threshold of `0` means dual approval is disabled, so nothing is
  * routed (T-09.07.01 semantics). Amounts that are not positive safe
@@ -196,6 +196,14 @@ export function toApprovalRequestInput(input: unknown): ApprovalRequestInput {
  * {@link validateApprovalRequestInput} first, so a malformed amount is a
  * programming error, not a reason to silently route funds around the
  * approval gate.
+ *
+ * IMPORTANT for consumers (the finance module): a present-but-corrupt
+ * stored threshold (one that fails {@link isValidDualApprovalThreshold})
+ * also returns `false`. That must NOT be treated as "no approval needed" —
+ * it means the configuration is broken. Consumers must fail the financial
+ * action closed and raise an alert rather than execute it unreviewed.
+ * The admin service's read path normalizes corrupt rows to the disabled
+ * default and logs a warning, which additionally blocks creation.
  */
 export function shouldRequireDualApproval(
   config: DualApprovalConfig,

@@ -319,7 +319,7 @@ export class DualApprovalService {
          LEFT JOIN users initiator ON initiator.user_id = ar.initiator_id
          LEFT JOIN users reviewer ON reviewer.user_id = ar.reviewer_id
          WHERE ar.id = $1
-         FOR UPDATE`,
+         FOR UPDATE OF ar`,
         [requestId],
       )
 
@@ -377,7 +377,10 @@ export class DualApprovalService {
           JSON.stringify({
             requestId,
             actionType: row.action_type,
-            amountIrR: row.amount_irr,
+            // BIGINT arrives as a string from pg; normalize to a number so
+            // both approval_request_created and the *_approved/_rejected
+            // events emit type-consistent audit metadata.
+            amountIrR: Number(row.amount_irr),
             initiatorUserId: row.initiator_id,
             reviewerUserId,
             ...(reviewReason !== null ? { reviewReason } : {}),
@@ -394,6 +397,10 @@ export class DualApprovalService {
         `Approval request ${requestId} ${decision}d by ${reviewerUserId}`,
       )
 
+      // Re-read after commit so the DTO reflects the joined reviewer
+      // identity (reviewer_id was NULL when the locked row was read).
+      const dto = await this.getRequestDto(requestId)
+
       // Best-effort in-app notification to the initiator.
       await this.notifyInitiator(requestId, row.initiator_id, decision, reviewReason)
         .catch((error: unknown) => {
@@ -402,7 +409,7 @@ export class DualApprovalService {
           )
         })
 
-      return toApprovalRequestDto({ ...row, ...this.applyResolution(row, newStatus, reviewerUserId, reviewReason, now) })
+      return dto
     } catch (error) {
       if (error instanceof HttpException) throw error
       await client.query('ROLLBACK').catch(() => {})
@@ -413,22 +420,6 @@ export class DualApprovalService {
       )
     } finally {
       client.release()
-    }
-  }
-
-  /** Merge the resolution columns into the pre-update row for the DTO. */
-  private applyResolution(
-    row: Record<string, unknown>,
-    status: ApprovalRequestStatus,
-    reviewerId: string,
-    reviewReason: string | null,
-    now: Date,
-  ): Record<string, unknown> {
-    return {
-      status,
-      reviewer_id: reviewerId,
-      review_reason: reviewReason,
-      reviewed_at: now,
     }
   }
 
