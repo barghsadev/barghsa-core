@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-05.03.02",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-03-02--delivery-window",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.03.02",
   "loop_iteration": 309,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -259,9 +259,14 @@
     "05-notifications-documents-ai.md#T-05.03.01"
   ],
   "last_error": null,
-  "notes": "T-05.03.01 (notification type registry & classification) merged via PR #174. Next: T-05.03.02 (delivery-window logic).",
-  "last_updated": "2026-08-27T05:31:00Z",
+  "notes": "T-05.03.01 merged (PR #174). Now building T-05.03.02 (delivery-window logic).",
+  "last_updated": "2026-08-27T05:32:00Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
+      "at": "2026-08-27T05:32:00Z"
+    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.03.01",

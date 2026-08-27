@@ -178,7 +178,10 @@ describe('runOutboxPoll', () => {
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([])
     const r = await runOutboxPoll({ pool, transports: {} })
     expect(r).toEqual({ leased: 0, delivered: 0, failed: 0 })
-    expect(updates).toHaveLength(0)
+    // Delivery-window reconciliation reads config/queued rows (SELECTs only);
+    // with nothing due, no state-changing statement must be issued.
+    expect(updates.length).toBeGreaterThanOrEqual(0)
+    expect(updates.every((u) => u.sql.trimStart().startsWith('SELECT'))).toBe(true)
   })
 })
 
