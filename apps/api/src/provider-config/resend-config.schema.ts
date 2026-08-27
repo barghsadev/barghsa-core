@@ -23,6 +23,13 @@ export const ResendConfigSchema = z.object({
    * `from_email` is checked instead.
    */
   sending_domain: z.string().min(1).max(253).optional(),
+  /**
+   * Resend webhook signing secret (the `whsec_…` value shown when creating a
+   * webhook). Used by the delivery-callback receiver (T-05.06.07) to verify
+   * HMAC-SHA256 signatures over `svix-id` / `svix-timestamp` / `svix-signature`.
+   * Secret at rest; never surfaced by the API (masked like `api_key`).
+   */
+  webhook_secret: z.string().min(1).max(1024).optional(),
 })
 
 export type ResendConfig = z.infer<typeof ResendConfigSchema>

@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-05.06.07",
+  "current_task_file": "05-notifications-documents-ai.md",
+  "current_branch": "feat/e05-t-05-06-07--email-delivery-callbacks",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "05-notifications-documents-ai.md#T-05.06.07",
   "loop_iteration": 323,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -497,6 +497,11 @@
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.03",
       "at": "2026-08-27T16:05:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
+      "at": "2026-08-27T19:51:05Z"
     }
   ]
 }
