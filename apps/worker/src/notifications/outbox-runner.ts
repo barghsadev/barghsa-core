@@ -5,6 +5,7 @@ import { nextRetryDelayMs } from './retry-schedule.js'
 import { writeDeliveryLog, classifyDeliveryError } from './delivery-log.js'
 import { writeDeadLetter } from './dead-letter.js'
 import { sanitizeError } from './error-redact.js'
+import { recordDeliveryAttempt } from './worker-metrics.js'
 
 /**
  * Outbox dispatch runner (E-05, T-05.01.02 / T-05.01.03).
@@ -158,6 +159,7 @@ async function persistOutcomes(
     const attempts = row.attempts + 1
     for (const outcome of outcomes) {
       const ok = outcome.result.status === 'delivered'
+      recordDeliveryAttempt(outcome.channel, ok ? 'delivered' : 'failed')
       if (!ok) anyFailed = true
       const exhausted = attempts >= row.maxAttempts
       // Jittered backoff before the next attempt (null when the budget is spent).
@@ -291,6 +293,7 @@ async function failAllJobs(
     // Exception path: dispatch threw before per-channel outcomes were recorded,
     // so append one delivery log per requested channel describing the failure.
     for (const channel of row.channels) {
+      recordDeliveryAttempt(channel, 'failed')
       await writeDeliveryLog(qpool, {
         notificationId: row.id,
         channel,

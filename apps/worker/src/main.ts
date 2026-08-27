@@ -1,6 +1,7 @@
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
+import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -44,8 +45,24 @@ async function main(): Promise<void> {
   createDbPool();
   logger.info('Database pool initialised');
 
-  // Expose a minimal health-check endpoint for container orchestration.
-  const server = createServer((_req, res) => {
+  // Expose a health-check endpoint (`/health` and `/`) for container
+  // orchestration plus a Prometheus `/metrics` endpoint carrying the
+  // notification observability gauges/counters (E-05, T-05.01.07).
+  const server = createServer(async (req, res) => {
+    const pathname = (req.url ?? '').split('?')[0];
+    if (pathname === '/metrics') {
+      try {
+        await collectNotificationGauges(getDbPool());
+        const body = await exportWorkerMetrics();
+        res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' });
+        res.end(body);
+      } catch (err) {
+        logger.error(`Metrics scrape failed: ${(err as Error)?.message ?? String(err)}`);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'error', service: 'worker' }));
+      }
+      return;
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
   });
