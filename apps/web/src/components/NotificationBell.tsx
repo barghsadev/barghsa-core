@@ -9,6 +9,8 @@ import {
   DropdownMenuSeparator,
 } from '@barghsa/ui'
 import { useLocale } from '../hooks/useLocale.js'
+import { useUnreadCount } from '../hooks/useUnreadCount.js'
+import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js'
 import {
   fetchNotifications,
   markOneRead,
@@ -21,21 +23,32 @@ import { NotificationRow } from './NotificationRow.js'
 const DROPDOWN_SIZE = 10
 
 /**
- * Header notification bell (E-05, T-05.02.03).
+ * Header notification bell (E-05, T-05.02.03 / T-05.02.04).
  *
  * A bell icon with an unread-count badge that opens a dropdown showing the
  * latest notifications plus quick actions ("mark all read", "view all"). Each
  * item is marked read on click and navigates to its linked record when one is
- * set. Supports RTL and shows a loading skeleton and empty state.
+ * set. The badge is kept real-time by a 30s short-poll (T-05.02.04), read
+ * actions update the count optimistically, and the unread count is mirrored
+ * into the document title while the tab is backgrounded. Supports RTL and
+ * shows a loading skeleton and empty state.
  */
 export function NotificationBell() {
   const locale = useLocale()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<NotificationItem[]>([])
-  const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const {
+    unreadCount,
+    setUnreadCount,
+    optimisticDecrement,
+  } = useUnreadCount()
+
+  // Mirror the unread count into the tab title while it is backgrounded.
+  useUnreadDocumentTitle(unreadCount)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -49,7 +62,7 @@ export function NotificationBell() {
     } finally {
       setLoading(false)
     }
-  }, [locale])
+  }, [locale, setUnreadCount])
 
   // Load once on mount so the badge is accurate before the dropdown is opened.
   useEffect(() => {
@@ -64,14 +77,18 @@ export function NotificationBell() {
   const handleItemClick = async (item: NotificationItem) => {
     const target = toNavigationTarget(item)
     if (!item.isRead) {
+      // Optimistic badge + row update (low-risk: read-state is idempotent),
+      // then reconcile with the authoritative server count.
+      optimisticDecrement(1)
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)),
+      )
       try {
         const count = await markOneRead(item.id)
         setUnreadCount(count)
-        setItems((prev) =>
-          prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)),
-        )
       } catch {
-        // Non-blocking: navigation still proceeds if a route exists.
+        // Non-blocking: navigation still proceeds if a route exists; the
+        // next short-poll reconciles the badge if the write failed.
       }
     }
     if (target) {
@@ -84,12 +101,13 @@ export function NotificationBell() {
   }
 
   const handleMarkAll = async () => {
+    optimisticDecrement(unreadCount)
+    setItems((prev) => prev.map((i) => ({ ...i, isRead: true })))
     try {
       const count = await markAllRead()
       setUnreadCount(count)
-      setItems((prev) => prev.map((i) => ({ ...i, isRead: true })))
     } catch {
-      // Non-blocking
+      // Non-blocking; the next short-poll reconciles the badge.
     }
   }
 

@@ -113,6 +113,22 @@ export async function markAllRead(): Promise<number> {
 }
 
 /**
+ * Fetch only the current unread count (T-05.02.04).
+ *
+ * Backed by the lightweight `GET /api/v1/notifications/unread-count` route so
+ * the real-time bell badge can short-poll every 30s without transporting a
+ * full notification page.
+ */
+export async function fetchUnreadCount(): Promise<number> {
+  const res = await fetch('/api/v1/notifications/unread-count', {
+    credentials: 'include',
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const body = (await res.json()) as { unread_count: number }
+  return body.unread_count
+}
+
+/**
  * Interpolate an i18n template string with `params`.
  *
  * Accepts both `{name}` (used by the existing i18n dictionary) and the

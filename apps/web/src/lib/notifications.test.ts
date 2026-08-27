@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import {
   interpolate,
   formatRelativeTime,
   notificationTypeLabelKey,
   toNavigationTarget,
+  fetchUnreadCount,
   type NotificationItem,
 } from './notifications.js'
 
@@ -86,5 +87,30 @@ describe('toNavigationTarget', () => {
       to: '/wallet',
       search: { state: 'Unpaid' },
     })
+  })
+})
+
+describe('fetchUnreadCount', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('returns the unread count from the unread-count endpoint', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ unread_count: 7 }),
+      }),
+    )
+    await expect(fetchUnreadCount()).resolves.toBe(7)
+  })
+
+  it('throws when the endpoint is not ok', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ ok: false, status: 500 }),
+    )
+    await expect(fetchUnreadCount()).rejects.toThrow('HTTP 500')
   })
 })

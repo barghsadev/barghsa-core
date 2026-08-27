@@ -36,11 +36,15 @@ import type {
  *
  * Routes:
  *   GET   /api/v1/notifications            -> cursor-keyed page
+ *   GET   /api/v1/notifications/unread-count -> lightweight unread count
  *   PATCH /api/v1/notifications/read-all   -> mark all read
  *   PATCH /api/v1/notifications/:id/read   -> mark one read
  *
  * The response envelope `{ data, next_cursor, unread_count }` is the contract
- * consumed by the notification center UI (T-05.02.03).
+ * consumed by the notification center UI (T-05.02.03). The dedicated
+ * `unread-count` route is the lightweight poll target used by the real-time
+ * badge (T-05.02.04): it only counts unread rows, so a 30-second short-poll
+ * costs a single COUNT query instead of transporting a full page.
  */
 @ApiTags('Notification Center')
 @ApiBearerAuth()
@@ -115,6 +119,22 @@ export class NotificationCenterController {
     if (parsedLimit !== undefined) options.limit = parsedLimit
 
     return this.notificationCenterService.list(profileId, options)
+  }
+
+  /**
+   * GET /api/v1/notifications/unread-count
+   *
+   * Lightweight poll target for the real-time bell badge (T-05.02.04).
+   * Returns only `{ unread_count }` — a single COUNT query — so the frontend
+   * can short-poll every 30s without transporting a full notification page.
+   */
+  @Get('unread-count')
+  @ApiOperation({ summary: 'Fetch the current unread notification count' })
+  @ApiResponse({ status: 200, description: '{ unread_count }' })
+  async unreadCount(@Req() req: AuthenticatedRequest) {
+    const profileId = await this.requireActiveProfile(req)
+    const unread_count = await this.notificationCenterService.countUnread(profileId)
+    return { unread_count }
   }
 
   /**

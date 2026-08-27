@@ -191,3 +191,27 @@ describe('markAllRead', () => {
     expect(n).toBe(5)
   })
 })
+
+describe('countUnread', () => {
+  it('counts unread rows for the profile (backing the unread-count poll)', async () => {
+    const pool = makeMockPool()
+    pool.query.mockResolvedValueOnce({ rows: [{ n: '3' }] })
+
+    const svc = new NotificationCenterService(pool)
+    const n = await svc.countUnread('profile-1')
+
+    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
+    expect(sql).toContain('COUNT(*)')
+    expect(sql).toContain('is_read = false')
+    expect(params).toEqual(['profile-1'])
+    expect(n).toBe(3)
+  })
+
+  it('returns 0 when no row is present', async () => {
+    const pool = makeMockPool()
+    pool.query.mockResolvedValueOnce({ rows: [] })
+
+    const svc = new NotificationCenterService(pool)
+    await expect(svc.countUnread('profile-1')).resolves.toBe(0)
+  })
+})
