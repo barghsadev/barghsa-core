@@ -5,6 +5,11 @@ import { useLocale } from '../hooks/useLocale.js'
 import DeadLetterPanel from '../components/DeadLetterPanel.js'
 import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js'
 
+interface NotificationVariable {
+  name: string
+  description: string | null
+}
+
 interface NotificationTemplate {
   id: string
   eventKey: string
@@ -12,7 +17,7 @@ interface NotificationTemplate {
   locale: 'fa' | 'en'
   subject: string | null
   bodyTemplate: string
-  variables: string[]
+  variables: NotificationVariable[]
   status: 'draft' | 'active' | 'archived'
   isActive: boolean
   version: number
@@ -73,14 +78,19 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;')
 }
 
-/** Neutral sample values for each allow-listed variable (preview / test-send). */
-function buildSampleData(variables: string[]): Record<string, string> {
+/** Neutral sample values for each allow-listed variable name (preview / test-send). */
+function buildSampleData(variables: NotificationVariable[]): Record<string, string> {
   const data: Record<string, string> = {}
   for (const v of variables) {
-    const key = v.trim()
+    const key = v.name.trim()
     if (key) data[key] = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase()
   }
   return data
+}
+
+/** Select just the allow-listed variable names. */
+function variableNames(variables: NotificationVariable[]): string[] {
+  return variables.map((v) => v.name.trim()).filter(Boolean)
 }
 
 /** Substitute {{variable}} placeholders with escaped sample values.
@@ -88,10 +98,10 @@ function buildSampleData(variables: string[]): Record<string, string> {
  * preview matches what the server validates on save — keep in lockstep. */
 function renderTemplate(
   template: string,
-  variables: string[],
+  variables: NotificationVariable[],
   data?: Record<string, string>,
 ): string {
-  const allowed = new Set(variables)
+  const allowed = new Set(variableNames(variables))
   const ctx = data ?? buildSampleData(variables)
   return template.replace(/{{([^{}]+)}}/g, (match, raw: string) => {
     const name = raw.trim()
@@ -99,6 +109,35 @@ function renderTemplate(
     const value = ctx[name]
     return escapeHtml(value === undefined ? '' : value)
   })
+}
+
+/**
+ * Parse the editor's variable textarea/lines into structured variable
+ * definitions. Each comma-or-newline-separated entry is either `name` or
+ * `name: description`; empty entries and duplicates are dropped and the
+ * description defaults to null (legacy template strings round-trip cleanly).
+ */
+function parseVariablesText(text: string): NotificationVariable[] {
+  const out: NotificationVariable[] = []
+  const seen = new Set<string>()
+  for (const raw of text.split(/[,\n]/)) {
+    const entry = raw.trim()
+    if (!entry) continue
+    const colon = entry.indexOf(':')
+    const name = (colon === -1 ? entry : entry.slice(0, colon)).trim()
+    if (!name || seen.has(name)) continue
+    seen.add(name)
+    const description = colon === -1 ? null : entry.slice(colon + 1).trim()
+    out.push({ name, description: description || null })
+  }
+  return out
+}
+
+/** Serialize variable definitions back to the comma-separated text format. */
+function variablesToText(variables: NotificationVariable[]): string {
+  return variables
+    .map((v) => (v.description ? `${v.name}: ${v.description}` : v.name))
+    .join(', ')
 }
 
 /**
@@ -138,10 +177,7 @@ export default function AdminNotificationsPage() {
   const [testSendMsg, setTestSendMsg] = useState<string | null>(null)
   const bodyRef = useRef<HTMLTextAreaElement | null>(null)
 
-  const parsedVariables = variablesStr
-    .split(',')
-    .map((v) => v.trim())
-    .filter(Boolean)
+  const parsedVariables = parseVariablesText(variablesStr)
 
   const fetchTemplates = useCallback(async () => {
     try {
@@ -185,7 +221,7 @@ export default function AdminNotificationsPage() {
     setLocale(template.locale)
     setSubject(template.subject ?? '')
     setBodyTemplate(template.bodyTemplate)
-    setVariablesStr(template.variables.join(', '))
+    setVariablesStr(variablesToText(template.variables))
     setTestSendMsg(null)
     setShowEditor(true)
   }
@@ -244,10 +280,7 @@ export default function AdminNotificationsPage() {
     e.preventDefault()
     setSaving(true)
 
-    const variables = variablesStr
-      .split(',')
-      .map((v) => v.trim())
-      .filter(Boolean)
+    const variables = parseVariablesText(variablesStr)
 
     const body: Record<string, unknown> = {
       eventKey,
@@ -550,16 +583,22 @@ export default function AdminNotificationsPage() {
                   </p>
                   <ul className="space-y-1">
                     {parsedVariables.map((v) => (
-                      <li key={v}>
+                      <li key={v.name}>
                         <button
                           type="button"
-                          onClick={() => insertVariable(v)}
+                          onClick={() => insertVariable(v.name)}
                           className="w-full text-left px-2 py-1 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-blue-50 hover:border-blue-300"
+                          title={v.description ?? undefined}
                         >
                           {'{{'}
-                          {v}
+                          {v.name}
                           {'}}'}
                         </button>
+                        {v.description && (
+                          <p className="px-1 pt-0.5 text-[11px] text-gray-500 leading-snug">
+                            {v.description}
+                          </p>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -586,20 +625,21 @@ export default function AdminNotificationsPage() {
             </div>
           </div>
 
-          {/* Variables (allow-list) */}
+          {/* Variables (allow-list: names + optional descriptions) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t('admin.notifications.variablesLabel', uiLocale)}
             </label>
             <p className="text-xs text-gray-400 mb-1">
-              {t('admin.notifications.variablesHint', uiLocale)}
+              {t('admin.notifications.variablesHintNew', uiLocale)}
             </p>
-            <input
-              type="text"
+            <textarea
               value={variablesStr}
               onChange={(e) => setVariablesStr(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
-              placeholder="userName, profileLink, verificationCode"
+              rows={3}
+              placeholder="userName: The user's display name, profileLink: Verification link"
+              dir="ltr"
             />
           </div>
 

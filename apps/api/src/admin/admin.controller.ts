@@ -18,7 +18,13 @@ import { z } from 'zod'
 import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
-import { NotificationTemplateService, type NotificationTemplateResult, type CreateNotificationTemplateInput, type PageTemplatesOptions } from '../notifications/notification-template.service.js'
+import {
+  NotificationTemplateService,
+  type NotificationTemplateResult,
+  type CreateNotificationTemplateInput,
+  type PageTemplatesOptions,
+  type RenderedTemplate,
+} from '../notifications/notification-template.service.js'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
@@ -925,7 +931,23 @@ export class AdminController {
         locale: { type: 'string', enum: ['fa', 'en'] },
         subject: { type: 'string', description: 'Email subject (email channel only)' },
         bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
-        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+        variables: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string', description: 'Variable name (legacy string form)' },
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', description: 'Placeholder name' },
+                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                },
+                required: ['name'],
+              },
+            ],
+          },
+          description: 'Allow-listed variable names (+ optional descriptions)',
+        },
       },
     },
   })
@@ -944,7 +966,17 @@ export class AdminController {
       locale: z.enum(['fa', 'en']),
       subject: z.string().max(200).nullable().optional(),
       bodyTemplate: z.string().min(1),
-      variables: z.array(z.string().min(1)).default([]),
+      variables: z
+        .array(
+          z.union([
+            z.string().min(1),
+            z.object({
+              name: z.string().min(1).max(100),
+              description: z.string().max(500).nullable().optional(),
+            }),
+          ]),
+        )
+        .default([]),
     })
 
     const parsed = schema.safeParse(rawBody)
@@ -983,7 +1015,23 @@ export class AdminController {
       properties: {
         subject: { type: 'string', description: 'Email subject' },
         bodyTemplate: { type: 'string', description: 'Template body' },
-        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+        variables: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string', description: 'Variable name (legacy string form)' },
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', description: 'Placeholder name' },
+                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                },
+                required: ['name'],
+              },
+            ],
+          },
+          description: 'Allow-listed variable names (+ optional descriptions)',
+        },
       },
     },
   })
@@ -1000,7 +1048,17 @@ export class AdminController {
     const schema = z.object({
       subject: z.string().max(200).nullable().optional(),
       bodyTemplate: z.string().min(1).optional(),
-      variables: z.array(z.string().min(1)).optional(),
+      variables: z
+        .array(
+          z.union([
+            z.string().min(1),
+            z.object({
+              name: z.string().min(1).max(100),
+              description: z.string().max(500).nullable().optional(),
+            }),
+          ]),
+        )
+        .optional(),
     })
 
     const parsed = schema.safeParse(rawBody)
@@ -1116,7 +1174,23 @@ export class AdminController {
       required: ['bodyTemplate', 'variables'],
       properties: {
         bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
-        variables: { type: 'array', items: { type: 'string' }, description: 'Allow-listed variable names' },
+        variables: {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string', description: 'Variable name (legacy string form)' },
+              {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', description: 'Placeholder name' },
+                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                },
+                required: ['name'],
+              },
+            ],
+          },
+          description: 'Allow-listed variable names (+ optional descriptions)',
+        },
         sampleData: { type: 'object', description: 'Optional sample values keyed by variable name' },
       },
     },
@@ -1127,12 +1201,22 @@ export class AdminController {
   async previewNotificationTemplateBody(
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
-  ): Promise<{ subject: string | null; body: string; variables: string[] }> {
+  ): Promise<RenderedTemplate> {
     this.assertNotificationPermission(req)
 
     const schema = z.object({
       bodyTemplate: z.string().min(1),
-      variables: z.array(z.string().min(1)).default([]),
+      variables: z
+        .array(
+          z.union([
+            z.string().min(1),
+            z.object({
+              name: z.string().min(1).max(100),
+              description: z.string().max(500).nullable().optional(),
+            }),
+          ]),
+        )
+        .default([]),
       sampleData: z.record(z.string(), z.string()).optional(),
     })
 
