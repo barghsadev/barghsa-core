@@ -261,9 +261,9 @@
     "05-notifications-documents-ai.md#T-05.03.03",
     "05-notifications-documents-ai.md#T-05.04.01"
   ],
-  "last_error": "GitHub Actions billing: run 33057328054 for fix commit f82ab99 not started - 'recent account payments have failed or your spending limit needs to be increased'. Prior commit (dd1e85d) CI passed; GLM-5.2 review approved. Cannot merge without required checks. Needs manual account/billing resolution.",
-  "notes": "T-05.04.02 built+reviewed (GLM approve), fix committed; blocked by GitHub billing preventing CI. PR #178 open, ready to merge once CI payment resolved.",
-  "last_updated": "2026-08-27T12:12:00Z",
+  "last_error": "GitHub Actions billing: runs 33057328054 (f82ab99) and 33057461335 (c97f431) not started - 'recent account payments have failed or your spending limit needs to be increased'. Prior commit (dd1e85d) CI passed; GLM-5.2 review approved. Cannot merge without required checks. Needs manual GitHub account/billing resolution.",
+  "notes": "T-05.04.02 built+reviewed (GLM approve), fix committed; blocked by GitHub billing preventing CI. PR #178 open, ready to merge once billing resolved. Verify billing then re-run CI.",
+  "last_updated": "2026-08-27T09:17:44Z",
   "status_history": [
     {
       "status": "blocked",
