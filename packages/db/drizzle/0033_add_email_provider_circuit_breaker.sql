@@ -31,7 +31,7 @@
 -- Rollback:
 --   ALTER TABLE email_provider_configs
 --     DROP COLUMN IF EXISTS degraded,
---     DROP COLUMN IF EXISTS consecutive_reason,
+--     DROP COLUMN IF EXISTS degraded_reason,
 --     DROP COLUMN IF EXISTS consecutive_failures,
 --     DROP COLUMN IF EXISTS window_failures,
 --     DROP COLUMN IF EXISTS window_started_at,
