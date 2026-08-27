@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-05.03.02",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-03-02--delivery-window",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/175",
   "current_task_key": "05-notifications-documents-ai.md#T-05.03.02",
   "loop_iteration": 309,
   "fix_attempts": 0,
@@ -259,9 +259,14 @@
     "05-notifications-documents-ai.md#T-05.03.01"
   ],
   "last_error": null,
-  "notes": "T-05.03.01 merged (PR #174). Now building T-05.03.02 (delivery-window logic).",
-  "last_updated": "2026-08-27T05:32:00Z",
+  "notes": "T-05.03.02 (delivery window logic) built; PR #175 in_review.",
+  "last_updated": "2026-08-27T05:45:00Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "05-notifications-documents-ai.md#T-05.03.02",
+      "at": "2026-08-27T05:45:00Z"
+    },
     {
       "status": "building",
       "task_key": "05-notifications-documents-ai.md#T-05.03.02",
