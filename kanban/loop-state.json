@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-05.06.06",
   "current_task_file": "05-notifications-documents-ai.md",
   "current_branch": "feat/e05-t-05-06-06--email-circuit-breaker",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/190",
   "current_task_key": "05-notifications-documents-ai.md#T-05.06.06",
   "loop_iteration": 323,
   "fix_attempts": 0,
