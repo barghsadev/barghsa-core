@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.07.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-07-01--dual-approval-threshold",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/195",
-  "current_task_key": "02-auth-users-admin.md#T-09.07.01",
-  "loop_iteration": 328,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 329,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -276,11 +276,12 @@
     "05-notifications-documents-ai.md#T-05.06.07",
     "02-auth-users-admin.md#T-09.06.01",
     "02-auth-users-admin.md#T-09.06.02",
-    "02-auth-users-admin.md#T-09.06.03"
+    "02-auth-users-admin.md#T-09.06.03",
+    "02-auth-users-admin.md#T-09.07.01"
   ],
   "last_error": "",
-  "notes": "T-09.07.01 (dual-approval threshold config) PR #195 open, ready, mergeable. Slice: GET/PUT /api/admin/config/dual-approval-threshold under single S-09.07 permission gate (admin:financial:edit -> isAdmin; mirrors S-09.06 delivery-window pattern). Shared @barghsa/shared/finance contract: finance.dual_approval_threshold app_config key, integer IRR 0..MAX_SAFE_INTEGER (0 = disabled), versioned upsert + config_version bump + config_change audit. Step-up and emergency override deferred (no web step-up flow / alert pipeline yet). Finance module (T-09.07.02 consumer) does not exist yet. Tests 858 pass, typecheck + build pass. Next: Claude Opus 5 review.",
-  "last_updated": "2026-08-27T21:58:53Z",
+  "notes": "T-09.07.01 (dual-approval threshold config) MERGED via PR #195 (a8461ab): GET/PUT /api/admin/config/dual-approval-threshold under single S-09.07 gate (admin:financial:edit -> isAdmin; mirrors S-09.06). Shared @barghsa/shared/finance contract: finance.dual_approval_threshold app_config key, strict integer IRR 0..MAX_SAFE_INTEGER (0 = disabled, no coercion of booleans/strings), versioned upsert + FOR UPDATE previous-value audit + config_version bump + config_change audit. Two review rounds: strict typing, previousValue/version audit, shared isValidDualApprovalThreshold predicate. Step-up and emergency override deferred (no web step-up flow / alert pipeline yet). Finance module (T-09.07.02 consumer) not built yet. Loop idle. Next: 02-auth-users-admin.md#T-09.07.02.",
+  "last_updated": "2026-08-27T22:06:07Z",
   "status_history": [
     {
       "status": "merged",
@@ -566,6 +567,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.07.01",
       "at": "2026-08-27T21:58:53Z"
+    },
+    {
+      "status": "idle",
+      "task_key": "02-auth-users-admin.md#T-09.07.01",
+      "at": "2026-08-27T22:06:07Z"
     }
   ]
 }
