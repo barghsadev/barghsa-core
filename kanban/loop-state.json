@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-05.02.04",
-  "current_task_file": "05-notifications-documents-ai.md",
-  "current_branch": "feat/e05-t-05-02-04--notification-polling",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/173",
-  "current_task_key": "05-notifications-documents-ai.md#T-05.02.04",
-  "loop_iteration": 307,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 308,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -254,12 +254,18 @@
     "05-notifications-documents-ai.md#T-05.01.07",
     "05-notifications-documents-ai.md#T-05.02.01",
     "05-notifications-documents-ai.md#T-05.02.02",
-    "05-notifications-documents-ai.md#T-05.02.03"
+    "05-notifications-documents-ai.md#T-05.02.03",
+    "05-notifications-documents-ai.md#T-05.02.04"
   ],
   "last_error": null,
-  "notes": "T-05.02.04 (notification polling/SSE) PR #173 open, in_review.",
-  "last_updated": "2026-08-27T05:06:47Z",
+  "notes": "T-05.02.04 (notification polling/SSE) merged via PR #173. Next: T-05.03.01 (notification type registry & classification).",
+  "last_updated": "2026-08-27T05:11:47Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "05-notifications-documents-ai.md#T-05.02.04",
+      "at": "2026-08-27T05:11:47Z"
+    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.02.04",
