@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-09.08.01",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-08-01--service-response-targets",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/197",
   "current_task_key": "02-auth-users-admin.md#T-09.08.01",
   "loop_iteration": 330,
   "fix_attempts": 0,
@@ -281,8 +281,8 @@
     "02-auth-users-admin.md#T-09.07.02"
   ],
   "last_error": "",
-  "notes": "T-09.08.01 (service response targets, M) building: admin-configurable hours targets per service type (ticket, verification_case) with config_change audit + worker breach scan alerting assigned staff/admins in-app.",
-  "last_updated": "2026-08-27T22:30:52Z",
+  "notes": "T-09.08.01 (service response targets, M) PR #197 in review: GET/PUT /api/admin/config/service-response-targets (admin:service-targets:edit gate, config_change audit, versioned app_config) + worker breach scan (dedup ledger service_breach_alerts mgr 0037, in-app staff alerts via outbox, unassigned->admins fallback). SQL validated on postgres:16. CI pass.",
+  "last_updated": "2026-08-27T22:48:28Z",
   "status_history": [
     {
       "status": "merged",
@@ -585,9 +585,9 @@
       "at": "2026-08-27T22:06:07Z"
     },
     {
-      "status": "building",
+      "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.08.01",
-      "at": "2026-08-27T22:30:52Z"
+      "at": "2026-08-27T22:48:28Z"
     }
   ]
 }
