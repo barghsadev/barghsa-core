@@ -515,6 +515,9 @@ export class NotificationTemplateService {
 
     const destination = options?.destination?.trim() || null
     await this.assertAllowedTestDestination(actorUserId, destination)
+    // 'in_app' when the default inbox is used, 'external' when a real
+    // email/phone destination was supplied and validated.
+    const destinationKind = destination ? 'external' : 'in_app'
 
     try {
       await this.notificationsService.create({
@@ -530,7 +533,7 @@ export class NotificationTemplateService {
          WHERE id = $2`,
         [new Date(), id],
       )
-      await this.writeTestAudit(id, tpl.eventKey, actorUserId, typeof destination, 'delivered')
+      await this.writeTestAudit(id, tpl.eventKey, actorUserId, destinationKind, 'delivered')
 
       this.logger.log(
         `Notification template test-sent: id=${id} event=${tpl.eventKey} by ${actorUserId}`,
@@ -548,7 +551,7 @@ export class NotificationTemplateService {
           [new Date(), id],
         )
         .catch(() => {})
-      await this.writeTestAudit(id, tpl.eventKey, actorUserId, typeof destination, 'failed')
+      await this.writeTestAudit(id, tpl.eventKey, actorUserId, destinationKind, 'failed')
       throw err
     }
   }
@@ -654,7 +657,7 @@ export class NotificationTemplateService {
             isTest: true,
           }),
           uuidv7(),
-          'admin',
+          null, // no request IP in this service layer — avoid a fake 'admin' literal
           new Date(),
         ],
       )
