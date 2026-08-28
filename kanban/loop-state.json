@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.11.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-11-02--knowledge-bases",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/208",
-  "current_task_key": "02-auth-users-admin.md#T-09.11.02",
-  "loop_iteration": 347,
-  "fix_attempts": 1,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 348,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -288,12 +288,18 @@
     "02-auth-users-admin.md#T-09.10.01",
     "02-auth-users-admin.md#T-09.10.02",
     "02-auth-users-admin.md#T-09.10.03",
-    "02-auth-users-admin.md#T-09.11.01"
+    "02-auth-users-admin.md#T-09.11.01",
+    "02-auth-users-admin.md#T-09.11.02"
   ],
   "last_error": null,
-  "notes": "T-09.11.01 MERGED (PR #207, squash) after 3 Claude Opus 5 review rounds (approve). Admin AI model management API slice live: /api/admin/ai-models CRUD (admin:ai:models perm, step-up mutations, zod http(s) URL validation), AES-256-GCM token encryption (AI_MODEL_ENCRYPTION_KEY, fail-closed 503 when missing, masked placeholders preserve stored token, empty string clears), SSRF-guarded provider test ping (openai_compatible /chat/completions Bearer, anthropic /messages x-api-key, redirect:manual + 3xx/status0 fail, token redaction in errors/previews, timeout+allowlist envs, rate-limited 20/min), status reachable/unreachable/unknown persisted via last_test_status + audit ai_model_created/updated/deleted/tested. Migration 0042 ai_models + drift guard. CI: build/typecheck/tests/integrity pass. Deferred (minor, per reviewer): web UI + fa/en dicts + RTL/a11y slice, worker-async ping (no API->worker RPC), journal entries (db:push schema-driven), sk-/ant- redact extension for T-09.11.04, legacy plaintext passthrough retirement, misconfigured badge. Returned to idle.",
-  "last_updated": "2026-08-28T12:04:41Z",
+  "notes": "T-09.11.02 MERGED (PR #208, squash) after 2 Claude Opus 5 review rounds (r1 request_changes, r2 approve). Admin knowledge base management API slice live: /api/admin/knowledge-bases CRUD + /api/admin/kb-groups CRUD, document attach/detach by storage key (validated against storage_records, snapshot metadata, idempotent ON CONFLICT, detach by link id because keys contain slashes), group membership link/unlink (idempotent, cascade-safe), processing_status pending|processing|ready|failed contract for the future chunk/embed worker (E-05 deferred), admin:ai:kb perm + step-up mutations + audit events kb_created/updated/deleted, kb_document_attached/detached, kb_group_*/kb_group_member_*. Migration 0043 knowledge_bases/kb_documents/kb_groups/kb_group_members + drift guard (composite PK, uuid FK types, named unique). CI: build/typecheck/tests/integrity green. Deferred (minor, per reviewer): web UI + fa/en dicts + RTL/a11y slice, migration idempotency re-run guard, updateKb COUNT() optimization, trailing newline. Returned to idle.",
+  "last_updated": "2026-08-28T12:27:50Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.11.02",
+      "at": "2026-08-28T12:27:50Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.02",
@@ -788,11 +794,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.11.01",
       "at": "2026-08-28T11:13:49Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.01",
-      "at": "2026-08-28T11:21:06Z"
     }
   ]
 }
