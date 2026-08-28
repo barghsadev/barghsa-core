@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.11.05",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-11-05--agent-slot-assignment",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/211",
-  "current_task_key": "02-auth-users-admin.md#T-09.11.05",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 350,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -291,17 +291,13 @@
     "02-auth-users-admin.md#T-09.11.01",
     "02-auth-users-admin.md#T-09.11.02",
     "02-auth-users-admin.md#T-09.11.03",
-    "02-auth-users-admin.md#T-09.11.04"
+    "02-auth-users-admin.md#T-09.11.04",
+    "02-auth-users-admin.md#T-09.11.05"
   ],
   "last_error": null,
-  "notes": "T-09.11.04 SLICE 1 MERGED (PR #210, squash) after 2 Claude Opus 5 rounds (r1 request_changes -> transactional create/update/remove, FK-race 409, UUID validation; r2 approve). Admin AI agent management API live: /api/admin/agents CRUD (model ref ai_models, KB links, policy links, enabled flag) + idempotent add / assertive remove KB & policy link endpoints; full-set link replace on PUT; migration 0045 + drizzle schema + drift guard (model FK RESTRICT, link CASCADE, composite PKs, reverse cascade indexes). Every mutation transactional on one client; no-op PUTs / identical reconcile emit no audit. CI: build/typecheck/tests/integrity green. NEXT: T-09.11.05 agent slot assignment. DEFERRED sub-features of T-09.11.04 (future slices): test-chat widget, group-level KB/policy links, admin web UI + fa/en dicts + RTL/a11y; also minors: single-row link ops transactional, reconcile skip-on-identical, N+1 batches, correlation_id from request trace.",
-  "last_updated": "2026-08-28T14:21:39Z",
+  "notes": "T-09.11.05 MERGED (PR #211, squash 984c8ba) after Claude Opus 5 round: approve r1. Agent slot assignment API live: GET /api/admin/agent-slots (all 5 predefined slots with agent ref + alsoUsedIn), PUT /api/admin/agent-slots/:slotKey/agent (assign uuid / clear null, step-up required). Migration 0046 ai_agent_slots (seed + CHECK pinning the 5 keys, SET NULL agent FK, updated_at trigger) + drizzle schema + drift guard. Transactional single-client mutations; FOR UPDATE row lock on assign; no-op emits no audit; FK-race 409; UUID + enum validation. CI: tests + integrity green. Deferred with UI slice: web UI dropdowns/\"also used in\" warning, fa/en dicts, RTL/a11y, test-chat widget. Follow-ups: updated_at Date typing (sibling convention), repo-wide drizzle _journal regeneration (stale since 0028, pre-existing).",
+  "last_updated": "2026-08-28T14:38:09Z",
   "status_history": [
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
-      "at": "2026-08-27T19:58:00Z"
-    },
     {
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.06.05",
@@ -796,6 +792,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.05",
       "at": "2026-08-28T14:21:39Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.11.05",
+      "at": "2026-08-28T14:38:09Z"
     }
   ]
 }
