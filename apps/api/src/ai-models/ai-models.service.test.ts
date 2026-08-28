@@ -98,6 +98,38 @@ describe('AiModelsService (T-09.11.01)', () => {
   })
 
   describe('create', () => {
+    it('fails closed with 503 when no encryption key is configured', async () => {
+      const { mockQuery } = mockPool()
+      vi.doMock('@barghsa/db', () => ({ getDbPool: () => ({ query: mockQuery }) }))
+      // Import fresh (beforeEach reset modules): KEYLESS secrets instance.
+      const { AiModelsService: Svc } = await import('./ai-models.service.js')
+      const keylessSecrets = new AiModelSecretsService() // no key
+      const tester = new (await import('./ai-model-tester.service.js')).AiModelTesterService(
+        okClient(),
+      )
+      const keyless = new Svc(keylessSecrets, tester)
+
+      try {
+        await keyless.create({
+          title: 'OpenAI GPT-4o',
+          providerType: 'openai_compatible',
+          baseUrl: 'https://api.openai.com/v1',
+          modelName: 'gpt-4o',
+          apiToken: 'sk-never-plaintext',
+          actorUserId: ACTOR,
+          ip: '1.2.3.4',
+        })
+        expect.fail('create should have thrown with 503')
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpException)
+        const http = error as HttpException
+        expect(http.getStatus()).toBe(503)
+        expect(http.getResponse()).toMatchObject({ error: 'AI_MODEL_ENCRYPTION_UNAVAILABLE' })
+      }
+      // The token must never reach the database.
+      expect(mockQuery).not.toHaveBeenCalled()
+    })
+
     it('encrypts the token at rest and records an audit event', async () => {
       const { mockQuery } = mockPool()
       await loadService({ query: mockQuery })
@@ -197,6 +229,28 @@ describe('AiModelsService (T-09.11.01)', () => {
       const values = updateCall![1] as unknown[]
       expect(String(values[0]).startsWith('v1:')).toBe(true)
       expect(values).not.toContain('sk-new-token')
+    })
+
+    it('clears the stored token when an empty string is submitted', async () => {
+      const { mockQuery } = mockPool()
+      await loadService({ query: mockQuery })
+      const secrets = new AiModelSecretsService(TEST_KEY)
+      const encrypted = secrets.encryptToken('sk-old-token')
+      mockQuery.mockResolvedValueOnce({ rows: [makeRow({ api_token: encrypted })] }) // findRow
+      mockQuery.mockResolvedValueOnce({ rows: [makeRow({ api_token: null })] }) // update -> null
+      mockQuery.mockResolvedValueOnce({ rows: [] }) // audit
+
+      const dto = await service.update('row-1', {
+        apiToken: '',
+        actorUserId: ACTOR,
+        ip: '1.2.3.4',
+      })
+
+      const calls = mockQuery.mock.calls
+      const updateCall = calls.find((c) => String(c[0]).startsWith('UPDATE ai_models'))
+      const values = updateCall![1] as unknown[]
+      expect(values[0]).toBeNull()
+      expect(dto.apiTokenMasked).toBe('')
     })
 
     it('is a no-op returning the row when no fields change', async () => {

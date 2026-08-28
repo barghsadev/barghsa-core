@@ -17,6 +17,7 @@ import { z } from 'zod'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
 import {
   AiModelsService,
   AI_MODEL_PROVIDER_TYPES,
@@ -143,7 +144,13 @@ export class AiModelsController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Update an AI model (admin)' })
+  @ApiOperation({
+    summary: 'Update an AI model (admin)',
+    description:
+      'Partial update. apiToken semantics: omit = unchanged, masked ' +
+      'placeholder = unchanged, empty string = clear, anything else = new ' +
+      'token (encrypted at rest).',
+  })
   @ApiResponse({ status: 200, description: 'AI model updated (masked token preserved).' })
   async update(
     @Req() req: AuthenticatedRequest,
@@ -186,6 +193,7 @@ export class AiModelsController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
+  @RateLimit({ namespace: 'ai-models:test', limit: 20, windowMs: 60_000 })
   @ApiOperation({
     summary: 'Test the connection to an AI model endpoint (admin)',
     description:

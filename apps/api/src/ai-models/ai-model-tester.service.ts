@@ -91,6 +91,10 @@ const defaultApiClient: AiModelApiClientLike = {
       headers,
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(timeoutMs),
+      // SSRF guard: the host is validated up front, so redirects must not be
+      // followed — a public host could 30x to a private/metadata endpoint and
+      // the response (up to the preview cap) would come back to the admin.
+      redirect: 'manual',
     })
     return { status: res.status, bodyText: await res.text() }
   },
@@ -259,7 +263,14 @@ export class AiModelTesterService {
         if (preview !== undefined) result.responsePreview = preview
         return result
       }
-      const detail = extractErrorDetail(wire.bodyText)
+      if (wire.status >= 300 && wire.status < 400) {
+        return {
+          ok: false,
+          error: 'Provider request failed: redirects are not followed',
+          latencyMs,
+        }
+      }
+      const detail = redactSecret(input.apiToken, extractErrorDetail(wire.bodyText))
       return {
         ok: false,
         error: `Provider request failed (HTTP ${wire.status})${detail ? `: ${detail}` : ''}`,
@@ -297,6 +308,26 @@ export class AiModelTesterService {
     if (blocked !== undefined) return `resolves to blocked address ${blocked}`
     return null
   }
+}
+
+/**
+ * Strip the configured token (and bearer-looking substrings) from an error
+ * detail before it reaches the API/UI/audit-log. Providers sometimes echo
+ * the submitted credential back in their error message (e.g. OpenAI's
+ * "Incorrect API key provided: sk-…"), and this detail is persisted in
+ * `ai_models.last_test_error` and the audit trail — it must never contain
+ * the token in clear.
+ */
+function redactSecret(apiToken: string | null, detail: string): string {
+  if (!detail) return ''
+  let out = detail
+  if (apiToken && apiToken.length > 0) {
+    out = out.split(apiToken).join('[redacted]')
+  }
+  // Defense in depth: bearer-looking substrings (sk-…, ant-…) even when the
+  // exact token was not matched (e.g. truncated echo or different key value).
+  out = out.replace(/\b(?:sk|ant)-[A-Za-z0-9_-]{4,}/g, '[redacted]')
+  return out
 }
 
 /** Trim/cap an arbitrary error string so secrets and huge bodies never leak. */

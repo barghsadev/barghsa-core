@@ -73,6 +73,31 @@ describe('AiModelTesterService (T-09.11.01)', () => {
   })
 
   describe('failure handling', () => {
+    it('treats redirects as failures (SSRF guard: redirects never followed)', async () => {
+      // A public host returning 302 → private/metadata endpoint must fail the
+      // test instead of being followed to the internal target.
+      const client = okClient(302, '')
+      const tester = new AiModelTesterService(client)
+      const result = await tester.test(input())
+      expect(result.ok).toBe(false)
+      expect(result.error).toMatch(/redirects are not followed/)
+    })
+
+    it('redacts the submitted token from provider error bodies', async () => {
+      // OpenAI-style: the provider echoes the credential in error.message.
+      const client = okClient(
+        401,
+        JSON.stringify({
+          error: { message: 'Incorrect API key provided: sk-echoed-secret-123456' },
+        }),
+      )
+      const tester = new AiModelTesterService(client)
+      const result = await tester.test(input({ apiToken: 'sk-echoed-secret-123456' }))
+      expect(result.ok).toBe(false)
+      expect(result.error).not.toContain('sk-echoed-secret-123456')
+      expect(result.error).toContain('[redacted]')
+    })
+
     it('reports provider HTTP errors with a truncated safe message', async () => {
       const client = okClient(
         401,

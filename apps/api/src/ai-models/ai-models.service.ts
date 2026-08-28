@@ -294,12 +294,26 @@ export class AiModelsService {
    * Prepare a token for storage: encrypt it (fail closed when no key is
    * configured and a real token is given), preserve the stored value when a
    * masked placeholder is echoed back, and normalize empty input to null.
+   * Token semantics (documented on the API): omit = unchanged,
+   * masked placeholder = unchanged, empty string = clear.
    */
   private prepareTokenForStore(apiToken: string | undefined, stored: string | null): string | null {
     if (apiToken === undefined || apiToken === null) return stored
     const trimmed = apiToken.trim()
     if (trimmed.length === 0) return null
     if (isMaskedAiToken(trimmed)) return stored
+    if (!this.secrets.available) {
+      // Never store a token in clear: surface an actionable 503 instead of
+      // an opaque internal error from encryptToken().
+      throw new HttpException(
+        {
+          statusCode: 503,
+          error: 'AI_MODEL_ENCRYPTION_UNAVAILABLE',
+          message: 'AI model token encryption is not configured (AI_MODEL_ENCRYPTION_KEY)',
+        },
+        503,
+      )
+    }
     return this.secrets.encryptToken(trimmed)
   }
 
