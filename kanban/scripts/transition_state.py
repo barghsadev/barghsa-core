@@ -35,7 +35,16 @@ def save(s):
 
 
 def main():
+    if len(sys.argv) < 2:
+        print('usage: transition_state.py <building|in_review|fixing|blocked|merged> [args...]', file=sys.stderr)
+        sys.exit(2)
     cmd = sys.argv[1]
+    if cmd == 'building' and len(sys.argv) < 6:
+        print('building requires <fname>#<id> <task_id> <task_file> <branch>', file=sys.stderr)
+        sys.exit(2)
+    if cmd == 'blocked' and len(sys.argv) < 3:
+        print('blocked requires a <reason>', file=sys.stderr)
+        sys.exit(2)
     s = load()
     if cmd == 'building':
         key, task_id, task_file, branch = sys.argv[2:6]
