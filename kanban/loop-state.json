@@ -5,7 +5,7 @@
   "current_branch": "feat/e02-t-09-08-02--staff-teams-assignment",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/198",
   "current_task_key": "02-auth-users-admin.md#T-09.08.02",
-  "loop_iteration": 332,
+  "loop_iteration": 334,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -282,8 +282,8 @@
     "02-auth-users-admin.md#T-09.08.01"
   ],
   "last_error": null,
-  "notes": "T-09.08.02 slice 1 (PR #198): round-1 review request_changes; all 3 major + 5 minor fixed and pushed; round-2 re-review blocked ONLY by OpenRouter credit exhaustion (HTTP 402 on claude-opus-5). Reverted blocked->in_review with last_error cleared so the loop auto-retries the review once credits are topped up. User action: add credits at openrouter.ai/settings/credits.",
-  "last_updated": "2026-08-28T01:39:31Z",
+  "notes": "T-09.08.02 slice 1 (PR #198): round-1 request_changes; all 3 major + 5 minor fixed and pushed (7286109). Round-2 re-review re-attempted this tick but reviewer (claude-opus-5) again returned OpenRouter HTTP 402 - credits exhausted. Kept in_review with last_error null so next tick auto-returns the review once credits top up. USER ACTION: add credits at openrouter.ai/settings/credits.",
+  "last_updated": "2026-08-28T01:47:40Z",
   "status_history": [
     {
       "status": "in_review",
