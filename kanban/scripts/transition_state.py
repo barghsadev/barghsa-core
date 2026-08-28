@@ -101,8 +101,12 @@ def main():
         print(f'unknown command {cmd}', file=sys.stderr)
         sys.exit(2)
 
-    # Keep history bounded to the latest 100 transitions.
-    s['status_history'] = s['status_history'][-100:]
+    # Keep history bounded to the latest 100 transitions. The repo
+    # convention is NEWEST-FIRST (sorted by `at` descending), so the
+    # appended entry must be sorted into place and the OLDEST entries
+    # trimmed — trimming the raw tail would drop the newest records.
+    s['status_history'].sort(key=lambda e: e['at'], reverse=True)
+    s['status_history'] = s['status_history'][:100]
     s['last_updated'] = now_iso()
     save(s)
     print(f"status -> {s['status']} (history {len(s['status_history'])} entries)")
