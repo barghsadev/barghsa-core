@@ -1762,6 +1762,149 @@ export class AdminController {
   }
 
   /**
+   * Permission gate for electricity-ordering settings (S-09.10).
+   *
+   * The S-09.10 mandatory green-electricity rules surface (T-09.10.02) is
+   * protected by the `admin:catalogue:edit` capability. Today the session
+   * model exposes only `isAdmin` (platform admin); granular staff-role
+   * permissions arrive with the role system (T-09.05). Until then the
+   * capability maps to a platform admin session, matching the S-09.06 /
+   * S-09.07 / S-09.08 gates. Centralized here as a single enforcement point
+   * for the whole S-09.10 config surface.
+   */
+  private assertElectricitySettingsPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage electricity ordering settings',
+        },
+        403,
+      )
+    }
+  }
+
+  /**
+   * GET /api/admin/config/green-electricity-rules
+   *
+   * Returns the current admin-configurable mandatory green-electricity
+   * rules as `{ simple_order, advanced_order }` (snake_case). Falls back to
+   * the T-09.10.02 defaults (simple enabled, advanced disabled, 1000 kW
+   * threshold, 4% share) when no value is persisted.
+   * Permission: `admin:catalogue:edit` (T-09.10.02).
+   */
+  @Get('config/green-electricity-rules')
+  @ApiOperation({ summary: 'Get the mandatory green-electricity rules configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current green-electricity rules configuration (both order modes).',
+    schema: {
+      type: 'object',
+      properties: {
+        simple_order: {
+          type: 'object',
+          properties: {
+            mandatory_green_enabled: { type: 'boolean' },
+            average_power_threshold_kw: { type: 'number' },
+            mandatory_green_share_percent: { type: 'number' },
+          },
+        },
+        advanced_order: {
+          type: 'object',
+          properties: {
+            mandatory_green_enabled: { type: 'boolean' },
+            average_power_threshold_kw: { type: 'number' },
+            mandatory_green_share_percent: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getGreenElectricityRules(@Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req)
+    return this.adminService.getGreenElectricityConfig()
+  }
+
+  /**
+   * PUT /api/admin/config/green-electricity-rules
+   *
+   * Persists new mandatory green-electricity rules for both order modes.
+   * Body: `{ simple_order, advanced_order }`, each a mode object with
+   * `mandatory_green_enabled` (boolean), `average_power_threshold_kw`
+   * (integer >= 0), and `mandatory_green_share_percent` (0..100). Validated
+   * server-side; changes are versioned and audited (config_change). Changes
+   * affect new orders only. The product-state fail-closed safety check is
+   * T-09.10.03.
+   * Permission: `admin:catalogue:edit` (T-09.10.02).
+   *
+   * Step-up on this mutation is deliberately deferred, matching the other
+   * admin config panels: the web app does not implement the step-up
+   * challenge flow yet.
+   */
+  @Put('config/green-electricity-rules')
+  @ApiOperation({ summary: 'Update the mandatory green-electricity rules configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['simple_order', 'advanced_order'],
+      properties: {
+        simple_order: {
+          type: 'object',
+          required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
+          properties: {
+            mandatory_green_enabled: { type: 'boolean', example: true },
+            average_power_threshold_kw: { type: 'number', example: 1000, minimum: 0 },
+            mandatory_green_share_percent: { type: 'number', example: 4, minimum: 0, maximum: 100 },
+          },
+        },
+        advanced_order: {
+          type: 'object',
+          required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
+          properties: {
+            mandatory_green_enabled: { type: 'boolean', example: false },
+            average_power_threshold_kw: { type: 'number', example: 1000, minimum: 0 },
+            mandatory_green_share_percent: { type: 'number', example: 4, minimum: 0, maximum: 100 },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Mandatory green-electricity rules updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        simple_order: {
+          type: 'object',
+          properties: {
+            mandatory_green_enabled: { type: 'boolean' },
+            average_power_threshold_kw: { type: 'number' },
+            mandatory_green_share_percent: { type: 'number' },
+          },
+        },
+        advanced_order: {
+          type: 'object',
+          properties: {
+            mandatory_green_enabled: { type: 'boolean' },
+            average_power_threshold_kw: { type: 'number' },
+            mandatory_green_share_percent: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setGreenElectricityRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setGreenElectricityConfig(rawBody, req.session.userId, ip)
+  }
+
+  /**
    * Permission gate for service response target configuration (S-09.08).
    *
    * The S-09.08 service-targets surface (T-09.08.01) is protected by the

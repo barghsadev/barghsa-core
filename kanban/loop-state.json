@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.10.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-10-02--green-electricity-rules",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-09.10.02",
   "loop_iteration": 346,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -289,13 +289,8 @@
   ],
   "last_error": null,
   "notes": "T-09.10.01 MERGED (PR #204, squash) after Claude Opus 5 approve. Admin per-transaction online wallet top-up limit live: GET/PUT /api/admin/config/wallet-top-up-limit (gated admin:financial:edit), finance.wallet_top_up_limit app_config (default 2,000,000,000 IRR), versioned + global config_version bump, audit config_change (prev/new + versions), strict integer validation rejecting coercible strings. WalletService.validateOnlineTopUpAmount enforcement seam reserved for online top-up endpoint T-04.2.02.01 (S-04.2.02). CI: Run tests + Verify monorepo integrity pass. Deferred (minor, per reviewer): corruption-warning on wallet read path, shared config-reader dedup, trailing newlines, redundant upper-bound clause; web UI, fa/en dict, step-up, real-PG integration test. Returned to idle.",
-  "last_updated": "2026-08-28T10:20:38Z",
+  "last_updated": "2026-08-28T10:33:26Z",
   "status_history": [
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.09.03",
-      "at": "2026-08-28T09:50:09Z"
-    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.03",
@@ -790,6 +785,11 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.10.01",
       "at": "2026-08-28T10:20:38Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.10.02",
+      "at": "2026-08-28T10:33:26Z"
     }
   ]
 }
