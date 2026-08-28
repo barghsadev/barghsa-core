@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.11.04",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-11-04--ai-agent-management",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-09.11.04",
   "loop_iteration": 349,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -293,14 +293,9 @@
     "02-auth-users-admin.md#T-09.11.03"
   ],
   "last_error": null,
-  "notes": "T-09.11.03 MERGED (PR #209, squash e65d8ba1) after 4 Claude Opus 5 review rounds (r1/r2/r3 request_changes, r4 approve). Admin AI policy management API slice live: /api/admin/policies CRUD (allowed_topics | disallowed_actions | data_access_scope | response_style, per-kind validated rules JSONB, optional enabled flag), /api/admin/policy-groups CRUD + members (idempotent ON CONFLICT, cascade-safe, audit only on real links). Migration 0044 + drizzle schema + drift guard (created_by TEXT FK pinned, composite PK, idempotent constraint creation). Cross-validation service-authoritative + controller superRefine; audit changedFields/before-after fidelity; validation errors carry zod details. Bonus fix: migration 0000 pins pgcrypto WITH SCHEMA public (order-dependent CI flake root cause, postgres:17-alpine). CI: build/typecheck/tests/integrity green. Deferred: web UI + fa/en dicts + RTL/a11y, pagination on list endpoints. Returned to idle.",
-  "last_updated": "2026-08-28T13:15:23Z",
+  "notes": "Building T-09.11.04 (XL) slice 1: backend agent CRUD + model/KB/policy links. Siblings T-09.11.01/02/03 merged (PRs #207/#208/#209). Test chat UI + web UI deferred.",
+  "last_updated": "2026-08-28T13:24:33Z",
   "status_history": [
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.07.02",
-      "at": "2026-08-27T22:16:05Z"
-    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.06.02",
@@ -795,6 +790,11 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.11.03",
       "at": "2026-08-28T13:15:23Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.11.04",
+      "at": "2026-08-28T13:24:33Z"
     }
   ]
 }
