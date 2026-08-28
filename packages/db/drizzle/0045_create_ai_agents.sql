@@ -91,6 +91,15 @@ CREATE INDEX IF NOT EXISTS idx_aiak_agent_id
 CREATE INDEX IF NOT EXISTS idx_aiap_agent_id
   ON ai_agent_policies (agent_id);
 
+-- Reverse lookups for ON DELETE CASCADE: deleting a knowledge base or
+-- policy must find its link rows without a sequential scan (the composite
+-- PK only covers agent_id-leading lookups).
+CREATE INDEX IF NOT EXISTS idx_aiak_kb_id
+  ON ai_agent_kbs (kb_id);
+
+CREATE INDEX IF NOT EXISTS idx_aiap_policy_id
+  ON ai_agent_policies (policy_id);
+
 -- ---------------------------------------------------------------------------
 -- Triggers: auto-update updated_at on row modification
 -- ---------------------------------------------------------------------------

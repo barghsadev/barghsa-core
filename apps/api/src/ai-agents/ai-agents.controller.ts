@@ -27,14 +27,15 @@ import {
 
 const titleSchema = z.string().min(1, 'Title is required').max(120)
 const descriptionSchema = z.string().max(2000).default('')
-const idListSchema = z
-  .array(z.string().min(1, 'Reference id must be non-empty').max(64))
-  .max(200, 'An agent can reference at most 200 items')
+// All agent/model/KB/policy ids are UUID columns; reject anything else before
+// it reaches Postgres (where 22P02 would otherwise surface as a raw 500).
+const uuidSchema = z.string().uuid('Expected a UUID')
+const idListSchema = z.array(uuidSchema).max(200, 'An agent can reference at most 200 items')
 
 export const CreateAgentSchema = z.object({
   title: titleSchema,
   description: descriptionSchema.optional(),
-  modelId: z.string().min(1, 'modelId is required').max(64),
+  modelId: uuidSchema,
   kbIds: idListSchema.optional(),
   policyIds: idListSchema.optional(),
   // Optional initial active/inactive state; defaults to enabled.
@@ -45,7 +46,7 @@ export const UpdateAgentSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
-    modelId: z.string().min(1).max(64).optional(),
+    modelId: uuidSchema.optional(),
     kbIds: idListSchema.optional(),
     policyIds: idListSchema.optional(),
     enabled: z.boolean().optional(),
@@ -53,11 +54,11 @@ export const UpdateAgentSchema = z
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
 
 export const AddAgentKbSchema = z.object({
-  kbId: z.string().min(1, 'kbId is required').max(64),
+  kbId: uuidSchema,
 })
 
 export const AddAgentPolicySchema = z.object({
-  policyId: z.string().min(1, 'policyId is required').max(64),
+  policyId: uuidSchema,
 })
 
 function httpError(
@@ -74,6 +75,14 @@ function httpError(
 
 function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+}
+
+/** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
+function assertUuid(id: string, label = 'id'): void {
+  const parsed = uuidSchema.safeParse(id)
+  if (!parsed.success) {
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+  }
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
@@ -126,6 +135,7 @@ export class AgentsController {
   @ApiResponse({ status: 200, description: 'The agent with its model and linked KBs/policies.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<AgentDetailDto> {
     this.assertAgentPermission(req)
+    assertUuid(id)
     return this.service.get(id)
   }
 
@@ -179,6 +189,7 @@ export class AgentsController {
     @Body() body: z.infer<typeof UpdateAgentSchema>,
   ): Promise<AgentDto> {
     this.assertAgentPermission(req)
+    assertUuid(id)
     const parsed = UpdateAgentSchema.safeParse(body)
     if (!parsed.success) {
       httpError(
@@ -213,6 +224,7 @@ export class AgentsController {
     @Param('id') id: string,
   ): Promise<void> {
     this.assertAgentPermission(req)
+    assertUuid(id)
     return this.service.remove(id, req.session.userId, requestIp(req))
   }
 
@@ -231,6 +243,7 @@ export class AgentsController {
     @Body() body: z.infer<typeof AddAgentKbSchema>,
   ): Promise<void> {
     this.assertAgentPermission(req)
+    assertUuid(id)
     const parsed = AddAgentKbSchema.safeParse(body)
     if (!parsed.success) {
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB link payload', 400, validationDetails(parsed.error.issues))
@@ -260,6 +273,8 @@ export class AgentsController {
     @Param('kbId') kbId: string,
   ): Promise<void> {
     this.assertAgentPermission(req)
+    assertUuid(id)
+    assertUuid(kbId, 'kbId')
     return this.service.removeKb(id, kbId, req.session.userId, requestIp(req))
   }
 
@@ -278,6 +293,7 @@ export class AgentsController {
     @Body() body: z.infer<typeof AddAgentPolicySchema>,
   ): Promise<void> {
     this.assertAgentPermission(req)
+    assertUuid(id)
     const parsed = AddAgentPolicySchema.safeParse(body)
     if (!parsed.success) {
       httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy link payload', 400, validationDetails(parsed.error.issues))
@@ -307,6 +323,8 @@ export class AgentsController {
     @Param('policyId') policyId: string,
   ): Promise<void> {
     this.assertAgentPermission(req)
+    assertUuid(id)
+    assertUuid(policyId, 'policyId')
     return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req))
   }
 }

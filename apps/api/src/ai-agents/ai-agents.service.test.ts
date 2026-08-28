@@ -1,11 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { AiAgentsService as ServiceType } from './ai-agents.service.js'
 
-/** Mocked pool: query() returns queued fixtures in order. */
+/** Mocked pool: pool.query and a transactional client share one mock fn. */
 function mockPool() {
   const mockQuery = vi.fn()
-  const pool = { query: mockQuery }
-  return { mockQuery, pool }
+  // Default: any un-queued call resolves to an empty result (covers ROLLBACK
+  // after an early-throw path). mockResolvedValueOnce entries take precedence.
+  mockQuery.mockImplementation(() => Promise.resolve({ rows: [] }))
+  const client = { query: mockQuery, release: vi.fn() }
+  const pool = { query: mockQuery, connect: async () => client }
+  return { mockQuery, pool, client }
 }
 
 function modelRow(over: Record<string, unknown> = {}) {
@@ -59,8 +63,8 @@ beforeEach(() => {
 describe('AiAgentsService (T-09.11.04)', () => {
   describe('list', () => {
     it('returns agents with link counts and model title', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery.mockResolvedValueOnce({
         rows: [
           {
@@ -92,8 +96,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
 
   describe('get', () => {
     it('throws 404 when the agent does not exist', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery.mockResolvedValueOnce({ rows: [] }) // findAgent
       await expect(service.get('missing')).rejects.toMatchObject({
         status: 404,
@@ -102,8 +106,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('throws 404 when the referenced model does not exist', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }) // findModel
@@ -114,8 +118,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('returns the agent with its model, KBs, and policies', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
@@ -135,9 +139,10 @@ describe('AiAgentsService (T-09.11.04)', () => {
 
   describe('create', () => {
     it('creates an agent with links and records an audit event', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool, client } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
         .mockResolvedValueOnce({ rows: [policyRow()] }) // findPolicy
@@ -145,6 +150,7 @@ describe('AiAgentsService (T-09.11.04)', () => {
         .mockResolvedValueOnce({ rowCount: 1 }) // bulkInsert kbs
         .mockResolvedValueOnce({ rowCount: 1 }) // bulkInsert policies
         .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
 
       const result = await service.create({
         title: 'Support assistant',
@@ -156,25 +162,29 @@ describe('AiAgentsService (T-09.11.04)', () => {
         ip: '1.2.3.4',
       })
       expect(result).toMatchObject({ id: 'agent-1', enabled: true, kbCount: 1, policyCount: 1 })
-      const agentSql = String(mockQuery.mock.calls[3]![0])
+      expect(result.modelTitle).toBe('gpt-4o')
+      expect(String(mockQuery.mock.calls[0]![0])).toBe('BEGIN')
+      const agentSql = String(mockQuery.mock.calls[4]![0])
       expect(agentSql).toContain('INSERT INTO ai_agents')
-      const kbSql = String(mockQuery.mock.calls[4]![0])
+      const kbSql = String(mockQuery.mock.calls[5]![0])
       expect(kbSql).toContain('INSERT INTO ai_agent_kbs')
-      expect(mockQuery.mock.calls[4]![1]).toContain('kb-1')
-      const auditSql = String(mockQuery.mock.calls[6]![0])
+      expect(mockQuery.mock.calls[5]![1]).toContain('kb-1')
+      const auditSql = String(mockQuery.mock.calls[7]![0])
       expect(auditSql).toContain('INSERT INTO audit_log')
-      expect(mockQuery.mock.calls[6]![1]).toContain('ai_agent_created')
+      expect(mockQuery.mock.calls[7]![1]).toContain('ai_agent_created')
+      expect(String(mockQuery.mock.calls[8]![0])).toBe('COMMIT')
+      expect(client.release).toHaveBeenCalled()
     })
 
     it('creates a disabled agent when enabled:false is supplied', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
         .mockResolvedValueOnce({ rows: [agentBaseRow({ enabled: false })] }) // insert
-        .mockResolvedValueOnce({ rowCount: 0 }) // bulkInsert kbs (empty)
-        .mockResolvedValueOnce({ rowCount: 0 }) // bulkInsert policies (empty)
         .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
       const result = await service.create({
         title: 'Draft agent',
         description: '',
@@ -183,76 +193,97 @@ describe('AiAgentsService (T-09.11.04)', () => {
         actorUserId: ACTOR,
         ip: '1.2.3.4',
       })
-      expect(result).toMatchObject({ enabled: false })
+      expect(result).toMatchObject({ enabled: false, kbCount: 0, policyCount: 0 })
     })
 
     it('throws 404 when the model does not exist (before any write)', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
-      mockQuery.mockResolvedValueOnce({ rows: [] }) // findModel
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
+      mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // findModel
       await expect(
         service.create({ title: 'x', description: '', modelId: 'missing', actorUserId: ACTOR, ip: '1.2.3.4' }),
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_MODEL_NOT_FOUND' } })
-      const writes = mockQuery.mock.calls.filter((c) => String(c[0]).includes('INSERT'))
+      const writes = mockQuery.mock.calls.filter((c) => String(c[0]).includes('INSERT INTO ai_agents'))
       expect(writes).toHaveLength(0)
     })
 
     it('throws 404 when a KB id does not exist', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
         .mockResolvedValueOnce({ rows: [] }) // findKb
       await expect(
         service.create({ title: 'x', description: '', modelId: 'model-1', kbIds: ['missing'], actorUserId: ACTOR, ip: '1.2.3.4' }),
       ).rejects.toMatchObject({ status: 404, response: { error: 'AI_KB_NOT_FOUND' } })
     })
+
+    it('maps an FK race on the agent insert to a 409 (rolls back)', async () => {
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
+      mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
+        .mockRejectedValueOnce({ code: '23503' }) // insert agent → FK violation
+      await expect(
+        service.create({ title: 'x', description: '', modelId: 'model-1', actorUserId: ACTOR, ip: '1.2.3.4' }),
+      ).rejects.toMatchObject({ status: 409, response: { error: 'AI_AGENT_MODEL_MISSING' } })
+    })
   })
 
   describe('update', () => {
     it('throws 404 for a missing agent', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
-      mockQuery.mockResolvedValueOnce({ rows: [] }) // findAgent
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
+      mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // findAgent
       await expect(
         service.update('missing', { title: 'x', actorUserId: ACTOR, ip: '1.2.3.4' }),
       ).rejects.toMatchObject({ status: 404 })
     })
 
     it('updates the enabled flag without touching references', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
+        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (dto)
         .mockResolvedValueOnce({ rows: [agentBaseRow({ enabled: false })] }) // UPDATE
-        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // kb count
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // policy count
         .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
 
       const result = await service.update('agent-1', { enabled: false, actorUserId: ACTOR, ip: '1.2.3.4' })
       expect(result).toMatchObject({ enabled: false })
-      const audit = String(mockQuery.mock.calls[5]![1])
+      const audit = String(mockQuery.mock.calls[6]![1])
       expect(audit).toContain('ai_agent_updated')
       expect(audit).toContain('"enabledBefore":true')
       expect(audit).toContain('"enabledAfter":false')
     })
 
-    it('reconciles a KB link set and records the change', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+    it('reconciles a KB link set, bumps updated_at, and records the change', async () => {
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
-        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (assert)
-        .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb (assert)
+        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (requireModel)
+        .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb (requireKbs)
         .mockResolvedValueOnce({ rows: [{ ref: 'kb-old' }] }) // reconcile before
         .mockResolvedValueOnce({ rows: [] }) // DELETE
         .mockResolvedValueOnce({ rowCount: 1 }) // bulkInsert
         .mockResolvedValueOnce({ rows: [{ ref: 'kb-1' }] }) // reconcile after
-        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (dto)
+        .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // bump updated_at
         .mockResolvedValueOnce({ rows: [{ count: 1 }] }) // kb count
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // policy count
         .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
 
       const result = await service.update('agent-1', { kbIds: ['kb-1'], actorUserId: ACTOR, ip: '1.2.3.4' })
       expect(result.kbCount).toBe(1)
@@ -265,19 +296,20 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('emits no audit when the reconcile does not change the link set', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
-        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (assert)
-        .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb (assert)
+        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (requireModel)
+        .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb (requireKbs)
         .mockResolvedValueOnce({ rows: [{ ref: 'kb-1' }] }) // reconcile before
         .mockResolvedValueOnce({ rows: [] }) // DELETE
         .mockResolvedValueOnce({ rowCount: 1 }) // bulkInsert
         .mockResolvedValueOnce({ rows: [{ ref: 'kb-1' }] }) // reconcile after (same)
-        .mockResolvedValueOnce({ rows: [modelRow()] }) // findModel (dto)
         .mockResolvedValueOnce({ rows: [{ count: 1 }] }) // kb count
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // policy count
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
 
       await service.update('agent-1', { kbIds: ['kb-1'], actorUserId: ACTOR, ip: '1.2.3.4' })
       const audits = mockQuery.mock.calls.filter((c) =>
@@ -289,29 +321,33 @@ describe('AiAgentsService (T-09.11.04)', () => {
 
   describe('remove', () => {
     it('throws 404 for a missing agent', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
-      mockQuery.mockResolvedValueOnce({ rows: [] })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
+      mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // findAgent
       await expect(service.remove('missing', ACTOR, '1.2.3.4')).rejects.toMatchObject({ status: 404 })
     })
 
     it('deletes the agent and records the audit event', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }) // DELETE
         .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
       await service.remove('agent-1', ACTOR, '1.2.3.4')
-      expect(String(mockQuery.mock.calls[1]![0])).toContain('DELETE FROM ai_agents')
-      expect(mockQuery.mock.calls[2]![1]).toContain('ai_agent_deleted')
+      expect(String(mockQuery.mock.calls[2]![0])).toContain('DELETE FROM ai_agents')
+      expect(mockQuery.mock.calls[3]![1]).toContain('ai_agent_deleted')
     })
   })
 
   describe('KB links', () => {
     it('links a KB (idempotent) and records the audit only on a real link', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
@@ -327,8 +363,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('is idempotent: a no-op re-link emits no audit', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [kbRow()] }) // findKb
@@ -339,8 +375,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('throws 404 when the KB does not exist', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }) // findKb
@@ -349,8 +385,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('removes a KB link, asserting a real link change', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
@@ -360,8 +396,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('throws 404 when removing a KB that is not linked', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 0 }) // DELETE → no row
@@ -374,8 +410,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
 
   describe('policy links', () => {
     it('links a policy and records the audit', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [policyRow()] }) // findPolicy
@@ -389,8 +425,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('removes a policy link', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rowCount: 1 }) // DELETE
@@ -400,8 +436,8 @@ describe('AiAgentsService (T-09.11.04)', () => {
     })
 
     it('throws 404 when the policy does not exist on link', async () => {
-      const { mockQuery } = mockPool()
-      service = await loadService({ query: mockQuery })
+      const { mockQuery, pool } = mockPool()
+      service = await loadService(pool)
       mockQuery
         .mockResolvedValueOnce({ rows: [agentBaseRow()] }) // findAgent
         .mockResolvedValueOnce({ rows: [] }) // findPolicy

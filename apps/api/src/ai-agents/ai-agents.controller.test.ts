@@ -39,10 +39,10 @@ const nonAdminReq = {
 
 function baseAgent(over: Record<string, unknown> = {}) {
   return {
-    id: 'agent-1',
+    id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
     title: 'Support assistant',
     description: '',
-    modelId: 'model-1',
+    modelId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
     modelTitle: 'gpt-4o',
     enabled: true,
     kbCount: 0,
@@ -64,25 +64,25 @@ describe('AgentsController (T-09.11.04)', () => {
   describe('permission gate (admin:ai:agents)', () => {
     it('rejects non-admin sessions on every route with 403', async () => {
       await expect(controller.list(nonAdminReq)).rejects.toMatchObject({ status: 403 })
-      await expect(controller.get(nonAdminReq, 'agent-1')).rejects.toMatchObject({ status: 403 })
+      await expect(controller.get(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')).rejects.toMatchObject({ status: 403 })
       await expect(
-        controller.create(nonAdminReq, { title: 'x', modelId: 'model-1' } as never),
+        controller.create(nonAdminReq, { title: 'x', modelId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' } as never),
       ).rejects.toMatchObject({ status: 403 })
       await expect(
-        controller.update(nonAdminReq, 'agent-1', { title: 'y' } as never),
+        controller.update(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { title: 'y' } as never),
       ).rejects.toMatchObject({ status: 403 })
-      await expect(controller.remove(nonAdminReq, 'agent-1')).rejects.toMatchObject({ status: 403 })
+      await expect(controller.remove(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')).rejects.toMatchObject({ status: 403 })
       await expect(
-        controller.addKb(nonAdminReq, 'agent-1', { kbId: 'kb-1' } as never),
+        controller.addKb(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { kbId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' } as never),
       ).rejects.toMatchObject({ status: 403 })
-      await expect(controller.removeKb(nonAdminReq, 'agent-1', 'kb-1')).rejects.toMatchObject({
+      await expect(controller.removeKb(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'cccccccc-cccc-4ccc-8ccc-cccccccccccc')).rejects.toMatchObject({
         status: 403,
       })
       await expect(
-        controller.addPolicy(nonAdminReq, 'agent-1', { policyId: 'pol-1' } as never),
+        controller.addPolicy(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { policyId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd' } as never),
       ).rejects.toMatchObject({ status: 403 })
       await expect(
-        controller.removePolicy(nonAdminReq, 'agent-1', 'pol-1'),
+        controller.removePolicy(nonAdminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'),
       ).rejects.toMatchObject({ status: 403 })
       expect(mockList).not.toHaveBeenCalled()
       expect(mockCreate).not.toHaveBeenCalled()
@@ -108,18 +108,18 @@ describe('AgentsController (T-09.11.04)', () => {
       const result = await controller.create(adminReq, {
         title: 'Support assistant',
         description: 'Boiler answers',
-        modelId: 'model-1',
-        kbIds: ['kb-1'],
-        policyIds: ['pol-1'],
+        modelId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        kbIds: ['cccccccc-cccc-4ccc-8ccc-cccccccccccc'],
+        policyIds: ['dddddddd-dddd-4ddd-8ddd-dddddddddddd'],
         enabled: false,
       } as never)
-      expect(result).toMatchObject({ id: 'agent-1', enabled: false })
+      expect(result).toMatchObject({ id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', enabled: false })
       expect(mockCreate).toHaveBeenCalledWith({
         title: 'Support assistant',
         description: 'Boiler answers',
-        modelId: 'model-1',
-        kbIds: ['kb-1'],
-        policyIds: ['pol-1'],
+        modelId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        kbIds: ['cccccccc-cccc-4ccc-8ccc-cccccccccccc'],
+        policyIds: ['dddddddd-dddd-4ddd-8ddd-dddddddddddd'],
         enabled: false,
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
@@ -127,9 +127,23 @@ describe('AgentsController (T-09.11.04)', () => {
     })
   })
 
+  describe('GET /api/admin/agents/:id', () => {
+    it('rejects a non-UUID agent id with 400 before reaching the service', async () => {
+      await expect(controller.get(adminReq, 'not-a-uuid')).rejects.toMatchObject({ status: 400 })
+      expect(mockGet).not.toHaveBeenCalled()
+    })
+
+    it('returns the agent detail', async () => {
+      mockGet.mockResolvedValue(baseAgent())
+      const result = await controller.get(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
+      expect(result).toMatchObject({ id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' })
+      expect(mockGet).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
+    })
+  })
+
   describe('PUT /api/admin/agents/:id', () => {
     it('rejects an empty update body', async () => {
-      await expect(controller.update(adminReq, 'agent-1', {} as never)).rejects.toMatchObject({
+      await expect(controller.update(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', {} as never)).rejects.toMatchObject({
         status: 400,
       })
       expect(mockUpdate).not.toHaveBeenCalled()
@@ -137,16 +151,16 @@ describe('AgentsController (T-09.11.04)', () => {
 
     it('rejects an oversized link list (>200)', async () => {
       await expect(
-        controller.update(adminReq, 'agent-1', { kbIds: new Array(201).fill('kb-x') } as never),
+        controller.update(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { kbIds: new Array(201).fill('kb-x') } as never),
       ).rejects.toMatchObject({ status: 400 })
       expect(mockUpdate).not.toHaveBeenCalled()
     })
 
     it('forwards only provided fields', async () => {
       mockUpdate.mockResolvedValue(baseAgent({ enabled: false }))
-      const result = await controller.update(adminReq, 'agent-1', { enabled: false } as never)
+      const result = await controller.update(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { enabled: false } as never)
       expect(result).toMatchObject({ enabled: false })
-      expect(mockUpdate).toHaveBeenCalledWith('agent-1', {
+      expect(mockUpdate).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', {
         enabled: false,
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
@@ -157,25 +171,25 @@ describe('AgentsController (T-09.11.04)', () => {
   describe('DELETE /api/admin/agents/:id', () => {
     it('deletes the agent', async () => {
       mockRemove.mockResolvedValue(undefined)
-      await expect(controller.remove(adminReq, 'agent-1')).resolves.toBeUndefined()
-      expect(mockRemove).toHaveBeenCalledWith('agent-1', 'admin-1', '10.0.0.8')
+      await expect(controller.remove(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')).resolves.toBeUndefined()
+      expect(mockRemove).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'admin-1', '10.0.0.8')
     })
   })
 
   describe('KB links', () => {
     it('links a KB (POST /:id/kbs)', async () => {
       mockAddKb.mockResolvedValue(undefined)
-      await expect(controller.addKb(adminReq, 'agent-1', { kbId: 'kb-1' } as never)).resolves.toBeUndefined()
+      await expect(controller.addKb(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { kbId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' } as never)).resolves.toBeUndefined()
       expect(mockAddKb).toHaveBeenCalledWith({
-        agentId: 'agent-1',
-        kbId: 'kb-1',
+        agentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        kbId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
       })
     })
 
     it('rejects a missing kbId', async () => {
-      await expect(controller.addKb(adminReq, 'agent-1', {} as never)).rejects.toMatchObject({
+      await expect(controller.addKb(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', {} as never)).rejects.toMatchObject({
         status: 400,
       })
       expect(mockAddKb).not.toHaveBeenCalled()
@@ -183,18 +197,18 @@ describe('AgentsController (T-09.11.04)', () => {
 
     it('removes a KB link (DELETE /:id/kbs/:kbId)', async () => {
       mockRemoveKb.mockResolvedValue(undefined)
-      await expect(controller.removeKb(adminReq, 'agent-1', 'kb-1')).resolves.toBeUndefined()
-      expect(mockRemoveKb).toHaveBeenCalledWith('agent-1', 'kb-1', 'admin-1', '10.0.0.8')
+      await expect(controller.removeKb(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'cccccccc-cccc-4ccc-8ccc-cccccccccccc')).resolves.toBeUndefined()
+      expect(mockRemoveKb).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'cccccccc-cccc-4ccc-8ccc-cccccccccccc', 'admin-1', '10.0.0.8')
     })
   })
 
   describe('policy links', () => {
     it('links a policy (POST /:id/policies)', async () => {
       mockAddPolicy.mockResolvedValue(undefined)
-      await expect(controller.addPolicy(adminReq, 'agent-1', { policyId: 'pol-1' } as never)).resolves.toBeUndefined()
+      await expect(controller.addPolicy(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', { policyId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd' } as never)).resolves.toBeUndefined()
       expect(mockAddPolicy).toHaveBeenCalledWith({
-        agentId: 'agent-1',
-        policyId: 'pol-1',
+        agentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        policyId: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
       })
@@ -202,8 +216,8 @@ describe('AgentsController (T-09.11.04)', () => {
 
     it('removes a policy link (DELETE /:id/policies/:policyId)', async () => {
       mockRemovePolicy.mockResolvedValue(undefined)
-      await expect(controller.removePolicy(adminReq, 'agent-1', 'pol-1')).resolves.toBeUndefined()
-      expect(mockRemovePolicy).toHaveBeenCalledWith('agent-1', 'pol-1', 'admin-1', '10.0.0.8')
+      await expect(controller.removePolicy(adminReq, 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'dddddddd-dddd-4ddd-8ddd-dddddddddddd')).resolves.toBeUndefined()
+      expect(mockRemovePolicy).toHaveBeenCalledWith('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'dddddddd-dddd-4ddd-8ddd-dddddddddddd', 'admin-1', '10.0.0.8')
     })
   })
 })

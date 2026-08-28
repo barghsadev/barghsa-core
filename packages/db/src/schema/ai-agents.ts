@@ -1,4 +1,5 @@
 import { pgTable, text, uuid, index, boolean, primaryKey } from 'drizzle-orm/pg-core'
+import { desc } from 'drizzle-orm'
 import { uuidv7, timestamptz } from '../types.js'
 import { users } from './users.js'
 import { aiModels } from './ai-models.js'
@@ -57,8 +58,8 @@ export const aiAgents = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
-    /** List by recency for the admin UI (migration 0045). */
-    index('idx_aia_created_at').on(table.createdAt),
+    /** List by recency for the admin UI (migration 0045, mirrored DESC). */
+    index('idx_aia_created_at').on(desc(table.createdAt)),
     /** Admin list model filter + referential integrity (migration 0045). */
     index('idx_aia_model_id').on(table.modelId),
   ],
@@ -95,6 +96,8 @@ export const aiAgentKbs = pgTable(
     primaryKey({ columns: [table.agentId, table.kbId] }),
     /** KB links of one agent (admin detail view). */
     index('idx_aiak_agent_id').on(table.agentId),
+    /** Reverse lookup for KB delete cascade (migration 0045). */
+    index('idx_aiak_kb_id').on(table.kbId),
   ],
 )
 
@@ -129,5 +132,7 @@ export const aiAgentPolicies = pgTable(
     primaryKey({ columns: [table.agentId, table.policyId] }),
     /** Policy links of one agent (admin detail view). */
     index('idx_aiap_agent_id').on(table.agentId),
+    /** Reverse lookup for policy delete cascade (migration 0045). */
+    index('idx_aiap_policy_id').on(table.policyId),
   ],
 )

@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { aiAgents } from './ai-agents.js'
-import { aiAgentKbs, aiAgentPolicies } from './ai-agents.js'
+import { aiAgents, aiAgentKbs, aiAgentPolicies } from './ai-agents.js'
 
 /**
  * Drift guard for the AI agent tables (T-09.11.04).
@@ -87,6 +86,13 @@ describe('AI agent schema (T-09.11.04)', () => {
     expect(MIGRATION).toMatch(/idx_aia_model_id[\s\S]*ON ai_agents \(model_id\)/)
     expect(MIGRATION).toMatch(/idx_aiak_agent_id[\s\S]*ON ai_agent_kbs \(agent_id\)/)
     expect(MIGRATION).toMatch(/idx_aiap_agent_id[\s\S]*ON ai_agent_policies \(agent_id\)/)
+  })
+
+  it('migration 0045 keeps the reverse-link cascade indexes (non-unique)', () => {
+    // Deleting a KB or policy cascades through these — without them the
+    // DELETE is a sequential scan over the link tables.
+    expect(MIGRATION).toMatch(/idx_aiak_kb_id[\s\S]*ON ai_agent_kbs \(kb_id\)/)
+    expect(MIGRATION).toMatch(/idx_aiap_policy_id[\s\S]*ON ai_agent_policies \(policy_id\)/)
   })
 
   it('migration 0045 keeps the updated_at trigger', () => {
