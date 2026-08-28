@@ -111,12 +111,19 @@ describe('evaluateGreenRuleEnforcement (fail-closed seam)', () => {
     expect(r.blocked).toBe(false)
   })
 
-  it('defaults to inactive for a malformed config (never silently enforces)', () => {
+  it('respects the default (advanced disabled) for an activatable product', () => {
     const r = evaluateGreenRuleEnforcement(
       DEFAULT_GREEN_ELECTRICITY_CONFIG,
       'advancedOrder', // disabled by default
       product(),
     )
+    expect(r.ruleActive).toBe(false)
+    expect(r.blocked).toBe(false)
+  })
+
+  it('fails to inactive for a malformed config (never silently enforces)', () => {
+    const malformed = { simpleOrder: {} } as unknown as GreenElectricityConfig
+    const r = evaluateGreenRuleEnforcement(malformed, 'simpleOrder', product())
     expect(r.ruleActive).toBe(false)
     expect(r.blocked).toBe(false)
   })

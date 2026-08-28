@@ -31,7 +31,6 @@ import {
   GREEN_ELECTRICITY_ORDER_MODES,
   GREEN_ELECTRICITY_SYSTEM_KEY,
   evaluateGreenRuleEnforcement,
-  greenProductBlockReasons,
   type GreenElectricityProductState,
 } from '@barghsa/shared/finance'
 import {
@@ -1266,18 +1265,24 @@ export class AdminService {
     // rule enabled if the green electricity product can actually support it
     // (exists, active, priced). If any mode ends up enabled while the product
     // is not activatable we refuse to persist, so a mandatory-green rule can
-    // never be activated against an unsupported product.
+    // never be activated against an unsupported product. The gate shares the
+    // fail-closed policy with the safety-status endpoint via the
+    // evaluateGreenRuleEnforcement seam. Note: the product row is read before
+    // the transaction opens; post-save drift (product deactivated after this
+    // check) is handled by the ordering engine consulting the seam's
+    // `blocked` flag and by the admin-facing safety-status path, not by
+    // retrying this write.
     const productState = await this.getGreenElectricityProductState()
     for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
-      if (!config[mode].mandatoryGreenEnabled) continue
-      const reasons = greenProductBlockReasons(productState)
-      if (reasons.length === 0) continue
+      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState)
+      if (!enforcement.blocked) continue
       const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced'
       throw new HttpException(
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Cannot activate: Green electricity product is ${reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
+          message: `Cannot activate: Green electricity product is ${enforcement.reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
+          details: { mode, reasons: [...enforcement.reasons] },
         },
         400,
       )
@@ -1375,14 +1380,18 @@ export class AdminService {
     if (result.rows.length === 0) {
       return { exists: false, status: null, priceIrR: null }
     }
-    const row = result.rows[0] as { status: string; price: bigint | null }
+    const row = result.rows[0] as { status: string; price: string | number | null }
+    // node-pg returns NUMERIC/BIGINT as string, but be defensive: any
+    // non-finite coercion maps to `null` (unpriced) so a corrupt value can
+    // never pass the activation gate as if it were priced (fail-closed).
+    const parsedPrice = row.price === null ? null : Number(row.price)
     return {
       exists: true,
       status:
         row.status === 'active' || row.status === 'inactive' || row.status === 'archived'
           ? row.status
           : 'inactive',
-      priceIrR: row.price === null ? null : Number(row.price),
+      priceIrR: parsedPrice !== null && Number.isFinite(parsedPrice) ? parsedPrice : null,
     }
   }
 

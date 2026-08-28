@@ -1853,7 +1853,7 @@ export class AdminController {
             priceIrR: { type: 'number', nullable: true },
           },
         },
-        simple_order: {
+        simpleOrder: {
           type: 'object',
           properties: {
             ruleActive: { type: 'boolean' },
@@ -1861,7 +1861,7 @@ export class AdminController {
             reasons: { type: 'array', items: { type: 'string' } },
           },
         },
-        advanced_order: {
+        advancedOrder: {
           type: 'object',
           properties: {
             ruleActive: { type: 'boolean' },

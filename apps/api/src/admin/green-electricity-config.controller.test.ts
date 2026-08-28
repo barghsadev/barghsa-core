@@ -145,4 +145,17 @@ describe('green-electricity-rules config permission gate (T-09.10.02)', () => {
     expect(result.simpleOrder.ruleActive).toBe(true)
     expect(adminService.getGreenElectricitySafetyStatus).toHaveBeenCalledTimes(1)
   })
+
+  it('safety-status response shape matches the documented OpenAPI contract (camelCase)', async () => {
+    const { controller } = makeController()
+    const result = await controller.getGreenElectricitySafetyStatus(adminReq)
+    // The @ApiResponse schema documents exactly these top-level keys; the
+    // wire contract must stay in sync with the code (T-09.10.02#205 lesson).
+    expect(Object.keys(result).sort()).toEqual(
+      ['product', 'simpleOrder', 'advancedOrder'].sort(),
+    )
+    expect(result.product).toEqual({ exists: true, status: 'active', priceIrR: 1_000_000 })
+    expect(result.simpleOrder).toEqual({ ruleActive: true, blocked: false, reasons: [] })
+    expect(result.advancedOrder).toEqual({ ruleActive: false, blocked: false, reasons: [] })
+  })
 })

@@ -15,6 +15,11 @@
  * so callers (ordering, UI alerts) treat that state as "ordering is blocked"
  * rather than "rule silently ignored".
  *
+ * Pending consumer: the E-03 ordering engine (T-03.04.01.02) must consult
+ * `evaluateGreenRuleEnforcement` and refuse to place an order when
+ * `blocked === true` for the order's mode. Until that lands, the admin
+ * safety-status endpoint surfaces the blocked state.
+ *
  * @module finance
  */
 import {

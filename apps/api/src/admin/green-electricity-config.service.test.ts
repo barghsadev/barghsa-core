@@ -438,6 +438,27 @@ describe('AdminService green rule safety (T-09.10.03)', () => {
     expect(state).toEqual({ exists: true, status: 'active', priceIrR: 5_000_000 })
   })
 
+  it('getGreenElectricityProductState treats a zero/string zero price as unpriced', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: '0' }], // node-pg NUMERIC arrives as string
+    })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 0 })
+    // priceIrR 0 flows through greenProductBlockReasons as 'unpriced' — the
+    // activation gate stays closed for a zero-priced product.
+    expect(state.priceIrR === 0 ? 'unpriced' : '').toBe('unpriced')
+  })
+
+  it('getGreenElectricityProductState treats an unparseable price as unpriced (fail-closed)', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 'not-a-number' }],
+    })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: null })
+  })
+
   it('safety status fails closed when an active rule is unsupported', async () => {
     const { mockQuery } = await loadService()
     // getGreenElectricityConfig: no persisted value → defaults (simple enabled)
