@@ -1,11 +1,11 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-09.12.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e09-t-09-12-02--vat-config",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/213",
   "current_task_key": "02-auth-users-admin.md#T-09.12.02",
-  "loop_iteration": 351,
+  "loop_iteration": 352,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -296,9 +296,14 @@
     "02-auth-users-admin.md#T-09.12.01"
   ],
   "last_error": null,
-  "notes": "T-09.12.02 building: VAT configuration admin API (versioned category rates + product overrides, effective dates, 0-100% validation, 0% fallback, audit change_recorded). UI deferred per T-09.12.01 precedent.",
-  "last_updated": "2026-08-28T15:58:50Z",
+  "notes": "T-09.12.02 in_review (PR #213): VAT configuration admin API — versioned category rates + product overrides, effective dates, 0-100% validation (basis points), 0% fallback, change_recorded audit, single-tx writes, resolution seam for invoice snapshotting (T-03.02.05.03). Tables vat_configurations + product_vat_overrides (migration 0047, GIST no-overlap). Permission admin:finance:edit; step-up on all mutations. UI deferred per T-09.12.01 precedent. All checks green: shared/db/api typecheck+tests, pnpm build (7/7).",
+  "last_updated": "2026-08-28T15:59:42Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.12.02",
+      "at": "2026-08-28T15:59:42Z"
+    },
     {
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.12.02",
@@ -793,11 +798,6 @@
       "status": "merged",
       "task_key": "05-notifications-documents-ai.md#T-05.04.02",
       "at": "2026-08-27T11:34:53Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "",
-      "at": "2026-08-27T08:59:00Z"
     }
   ]
 }
