@@ -44,9 +44,15 @@ function makeController() {
       mandatoryGreenSharePercent: 4,
     },
   })
+  const getGreenElectricitySafetyStatus = vi.fn().mockResolvedValue({
+    product: { exists: true, status: 'active', priceIrR: 1_000_000 },
+    simpleOrder: { ruleActive: true, blocked: false, reasons: [] },
+    advancedOrder: { ruleActive: false, blocked: false, reasons: [] },
+  })
   const adminService = {
     getGreenElectricityConfig,
     setGreenElectricityConfig,
+    getGreenElectricitySafetyStatus,
   }
   const controller = new AdminController(
     adminService as never,
@@ -119,5 +125,37 @@ describe('green-electricity-rules config permission gate (T-09.10.02)', () => {
       'admin-1',
       '127.0.0.1',
     )
+  })
+
+  it('rejects non-admin on getGreenElectricitySafetyStatus with the AUTHZ_FORBIDDEN contract', async () => {
+    const { controller } = makeController()
+    const rejection = await controller
+      .getGreenElectricitySafetyStatus(nonAdminReq)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 403 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 403,
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
+  })
+
+  it('allows admin to read the safety status and delegates to the service', async () => {
+    const { controller, adminService } = makeController()
+    const result = await controller.getGreenElectricitySafetyStatus(adminReq)
+    expect(result.simpleOrder.ruleActive).toBe(true)
+    expect(adminService.getGreenElectricitySafetyStatus).toHaveBeenCalledTimes(1)
+  })
+
+  it('safety-status response shape matches the documented OpenAPI contract (camelCase)', async () => {
+    const { controller } = makeController()
+    const result = await controller.getGreenElectricitySafetyStatus(adminReq)
+    // The @ApiResponse schema documents exactly these top-level keys; the
+    // wire contract must stay in sync with the code (T-09.10.02#205 lesson).
+    expect(Object.keys(result).sort()).toEqual(
+      ['product', 'simpleOrder', 'advancedOrder'].sort(),
+    )
+    expect(result.product).toEqual({ exists: true, status: 'active', priceIrR: 1_000_000 })
+    expect(result.simpleOrder).toEqual({ ruleActive: true, blocked: false, reasons: [] })
+    expect(result.advancedOrder).toEqual({ ruleActive: false, blocked: false, reasons: [] })
   })
 })

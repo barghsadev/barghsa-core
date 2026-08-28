@@ -191,9 +191,12 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
   })
 
   it('persists a camelCase payload with mandatoryGreenEnabled:false as disabled', async () => {
-    const { mockConnect } = await loadService()
+    const { mockConnect, mockQuery } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 1_000_000 }],
+    }) // green product state (no mode enabled, so gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
@@ -226,9 +229,12 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
   })
 
   it('persists the config, bumps config version, and records an audit', async () => {
-    const { pool, mockConnect } = await loadService()
+    const { pool, mockConnect, mockQuery } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 1_000_000 }],
+    }) // green product state (activatable → gate passes)
     // Call order: BEGIN, SELECT ... FOR UPDATE (no existing row),
     // INSERT RETURNING version, config_version, audit_log, COMMIT
     client.query
@@ -269,13 +275,22 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     })
 
     expect(client.release).toHaveBeenCalledTimes(1)
-    expect(pool.query).not.toHaveBeenCalled() // get path does not run on set
+    // pool.query runs exactly once for the T-09.10.03 green product state
+    // check (the GET config read path does not run during set).
+    expect(pool.query).toHaveBeenCalledTimes(1)
+    expect(pool.query).toHaveBeenCalledWith(
+      expect.stringContaining('FROM products WHERE system_key'),
+      ['green_electricity'],
+    )
   })
 
   it('records the previous value and version in the audit trail on overwrite', async () => {
-    const { mockConnect } = await loadService()
+    const { mockConnect, mockQuery } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 1_000_000 }],
+    }) // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({
@@ -308,9 +323,12 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
   })
 
   it('returns the persisted camelCase config', async () => {
-    const { mockConnect } = await loadService()
+    const { mockConnect, mockQuery } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 1_000_000 }],
+    }) // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
@@ -330,5 +348,132 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       averagePowerThresholdKw: 500,
       mandatoryGreenSharePercent: 10,
     })
+  })
+})
+
+// ─── Tests — T-09.10.03 activation safety gate ──────────────────────
+
+describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)', () => {
+  it('blocks enabling a mode when the green product is absent', async () => {
+    const { pool, mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({ rows: [] }) // no green product row
+
+    const err = (await service
+      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .catch((e: unknown) => e)) as HttpException
+    expect(err.getStatus()).toBe(400)
+    expect(String(err.message)).toMatch(/Cannot activate/i)
+    expect(String(err.message)).toMatch(/missing/i)
+    expect(pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('blocks enabling a mode when the green product is inactive', async () => {
+    const { pool, mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'inactive', price: 1_000_000 }],
+    })
+
+    const err = (await service
+      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .catch((e: unknown) => e)) as HttpException
+    expect(err.getStatus()).toBe(400)
+    expect(String(err.message)).toMatch(/inactive/i)
+    expect(pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('blocks enabling a mode when the green product is unpriced', async () => {
+    const { pool, mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: null }],
+    })
+
+    const err = (await service
+      .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+      .catch((e: unknown) => e)) as HttpException
+    expect(err.getStatus()).toBe(400)
+    expect(String(err.message)).toMatch(/unpriced/i)
+    expect(pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('allows a save that disables both modes even when the product is unusable', async () => {
+    const { mockConnect, mockQuery } = await loadService()
+    const { client } = mockClient()
+    mockConnect.mockResolvedValue(client)
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'inactive', price: null }],
+    }) // product unusable, but no mode is enabled → gate passes
+    client.query
+      .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
+      .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
+      .mockResolvedValueOnce({ rows: [] }) // config_version
+      .mockResolvedValueOnce({ rows: [] }) // audit_log
+      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+
+    const bothDisabled = {
+      simple_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
+      advanced_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
+    }
+    await service.setGreenElectricityConfig(bothDisabled, 'admin-1', '127.0.0.1')
+    expect(mockConnect).toHaveBeenCalledTimes(1)
+  })
+})
+
+// ─── Tests — product state + safety status (T-09.10.03) ─────────────
+
+describe('AdminService green rule safety (T-09.10.03)', () => {
+  it('getGreenElectricityProductState maps an absent row', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({ rows: [] })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: false, status: null, priceIrR: null })
+  })
+
+  it('getGreenElectricityProductState maps an active priced row', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 5_000_000 }],
+    })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 5_000_000 })
+  })
+
+  it('getGreenElectricityProductState treats a zero/string zero price as unpriced', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: '0' }], // node-pg NUMERIC arrives as string
+    })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 0 })
+    // priceIrR 0 flows through greenProductBlockReasons as 'unpriced' — the
+    // activation gate stays closed for a zero-priced product.
+    expect(state.priceIrR === 0 ? 'unpriced' : '').toBe('unpriced')
+  })
+
+  it('getGreenElectricityProductState treats an unparseable price as unpriced (fail-closed)', async () => {
+    const { mockQuery } = await loadService()
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'active', price: 'not-a-number' }],
+    })
+    const state = await service.getGreenElectricityProductState()
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: null })
+  })
+
+  it('safety status fails closed when an active rule is unsupported', async () => {
+    const { mockQuery } = await loadService()
+    // getGreenElectricityConfig: no persisted value → defaults (simple enabled)
+    mockQuery.mockResolvedValueOnce({ rows: [] })
+    // getGreenElectricityProductState: product inactive + unpriced
+    mockQuery.mockResolvedValueOnce({
+      rows: [{ status: 'inactive', price: null }],
+    })
+
+    const status = await service.getGreenElectricitySafetyStatus()
+    expect(status.simpleOrder.ruleActive).toBe(true)
+    expect(status.simpleOrder.blocked).toBe(true)
+    expect(status.simpleOrder.reasons).toContain('inactive')
+    // advanced mode is disabled by default → not blocked
+    expect(status.advancedOrder.ruleActive).toBe(false)
+    expect(status.advancedOrder.blocked).toBe(false)
   })
 })

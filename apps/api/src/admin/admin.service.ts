@@ -28,6 +28,10 @@ import {
   validateGreenElectricityConfig,
   greenElectricityConfigToStored,
   type GreenElectricityConfig,
+  GREEN_ELECTRICITY_ORDER_MODES,
+  GREEN_ELECTRICITY_SYSTEM_KEY,
+  evaluateGreenRuleEnforcement,
+  type GreenElectricityProductState,
 } from '@barghsa/shared/finance'
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
@@ -1256,6 +1260,34 @@ export class AdminService {
     }
 
     const config = toGreenElectricityConfig(input)
+
+    // T-09.10.03 — Activation safety gate. A mode may only be saved with the
+    // rule enabled if the green electricity product can actually support it
+    // (exists, active, priced). If any mode ends up enabled while the product
+    // is not activatable we refuse to persist, so a mandatory-green rule can
+    // never be activated against an unsupported product. The gate shares the
+    // fail-closed policy with the safety-status endpoint via the
+    // evaluateGreenRuleEnforcement seam. Note: the product row is read before
+    // the transaction opens; post-save drift (product deactivated after this
+    // check) is handled by the ordering engine consulting the seam's
+    // `blocked` flag and by the admin-facing safety-status path, not by
+    // retrying this write.
+    const productState = await this.getGreenElectricityProductState()
+    for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
+      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState)
+      if (!enforcement.blocked) continue
+      const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced'
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: `Cannot activate: Green electricity product is ${enforcement.reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
+          details: { mode, reasons: [...enforcement.reasons] },
+        },
+        400,
+      )
+    }
+
     const pool = getDbPool()
     const now = new Date()
     const stored = greenElectricityConfigToStored(config)
@@ -1330,6 +1362,63 @@ export class AdminService {
       )
     } finally {
       client.release()
+    }
+  }
+
+  /**
+   * Read the current state of the system `green_electricity` product from the
+   * `products` table. Absent row and missing/unpriced/zero price are all
+   * modelled explicitly so the activation and fail-closed checks can reason
+   * about them.
+   */
+  async getGreenElectricityProductState(): Promise<GreenElectricityProductState> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT status, price FROM products WHERE system_key = $1`,
+      [GREEN_ELECTRICITY_SYSTEM_KEY],
+    )
+    if (result.rows.length === 0) {
+      return { exists: false, status: null, priceIrR: null }
+    }
+    const row = result.rows[0] as { status: string; price: string | number | null }
+    // node-pg returns NUMERIC/BIGINT as string, but be defensive: any
+    // non-finite coercion maps to `null` (unpriced) so a corrupt value can
+    // never pass the activation gate as if it were priced (fail-closed).
+    const parsedPrice = row.price === null ? null : Number(row.price)
+    return {
+      exists: true,
+      status:
+        row.status === 'active' || row.status === 'inactive' || row.status === 'archived'
+          ? row.status
+          : 'inactive',
+      priceIrR: parsedPrice !== null && Number.isFinite(parsedPrice) ? parsedPrice : null,
+    }
+  }
+
+  /**
+   * T-09.10.03 — Green rule activation/safety status for both order modes.
+   *
+   * Evaluated fresh against the persisted green config and the current green
+   * product state. Used by the admin UI to alert when an active rule has
+   * become unenforceable (fail-closed: `blocked` true means ordering must be
+   * prevented until the product is fixed or the rule disabled), and by any
+   * consumer that needs the enforcement seam.
+   */
+  async getGreenElectricitySafetyStatus(): Promise<{
+    product: GreenElectricityProductState
+    simpleOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] }
+    advancedOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] }
+  }> {
+    const [config, productState] = await Promise.all([
+      this.getGreenElectricityConfig(),
+      this.getGreenElectricityProductState(),
+    ])
+    const simpleOrder = evaluateGreenRuleEnforcement(config, 'simpleOrder', productState)
+    const advancedOrder = evaluateGreenRuleEnforcement(config, 'advancedOrder', productState)
+    return {
+      product: productState,
+      simpleOrder: { ...simpleOrder, reasons: [...simpleOrder.reasons] },
+      advancedOrder: { ...advancedOrder, reasons: [...advancedOrder.reasons] },
     }
   }
 
