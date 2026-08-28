@@ -196,7 +196,7 @@ export class FailedNotificationsService {
     return this.transition(id, actorUserId, ip, 'dismissed', {
       description: 'Dismiss a dead-lettered notification',
       event: 'notification_dismissed',
-      allowedFrom: ['open'],
+      allowedFrom: ['open', 'retried'],
       requeue: false,
     })
   }
@@ -423,6 +423,15 @@ const SENSITIVE_WORDS = new Set([
   'verification',
   'national',
   'card',
+  // URL-ish keys often carry single-use tokens / magic links.
+  'link',
+  'url',
+  'href',
+  'uri',
+  'callback',
+  'redirect',
+  'invite',
+  'deeplink',
 ])
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -430,6 +439,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EMAIL_ANY_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g
 /** A 10–13 digit phone-like number, optionally with a leading + . */
 const PHONE_EMBEDDED_RE = /(?<!\d)(?:\+?\d[\d\s\-().]{8,}\d)(?!\d)/g
+/** URL query/segment params that carry single-use secrets, redacted in situ. */
+const URL_SECRET_PARAM_RE =
+  /([?&/](?:token|otp|code|key|secret|signature|jwt|password|passwd|nonce|pin|auth|access_token|refresh_token|verification|reset_token)[=/])[^&#\s"'<>]*/gi
 
 /**
  * Whether a key names a sensitive field. Keys are normalized so all common
@@ -499,10 +511,12 @@ export function maskSensitiveData(value: unknown, key = ''): unknown {
   if (typeof value !== 'string' || value === '') return value
   if (EMAIL_RE.test(value)) return maskEmail(value)
   if (isPhoneValue(value)) return maskPhone(value)
-  // Mask PII embedded inside longer strings (e.g. a provider `cause` message).
+  // Mask PII and single-use URL secrets embedded inside longer strings
+  // (e.g. a provider `cause` message or a reset link under a non-sensitive key).
   return value
     .replace(EMAIL_ANY_RE, (m) => maskEmail(m))
     .replace(PHONE_EMBEDDED_RE, (m) => maskPhone(m))
+    .replace(URL_SECRET_PARAM_RE, '$1***')
 }
 
 function maskEmail(email: string): string {

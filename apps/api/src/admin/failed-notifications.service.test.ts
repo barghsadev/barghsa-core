@@ -17,8 +17,9 @@ function mockPool() {
 
 function mockClient(calls: { sql: string; rows?: unknown[]; rowCount?: number }[]) {
   const mockClientQuery = vi.fn((...args: unknown[]) => {
-    const sql = String(args[0] ?? '')
-    const call = calls.find((c) => sql.includes(c.sql))
+    const norm = (s: string) => s.replace(/\s+/g, ' ')
+    const sql = norm(String(args[0] ?? ''))
+    const call = calls.find((c) => sql.includes(norm(c.sql)))
     if (call) return Promise.resolve({ rows: call.rows ?? [], rowCount: call.rowCount ?? 0 })
     // default: rollback/commit no-op
     return Promise.resolve({ rows: [], rowCount: 0 })
@@ -122,6 +123,18 @@ describe('maskSensitiveData / maskIdentifier (T-09.09.03)', () => {
     )
   })
 
+  it('redacts single-use tokens inside URLs', () => {
+    // URL-ish keys are fully redacted as sensitive keys.
+    expect(maskSensitiveData({ verify_url: 'https://app/verify?token=abc123' })).toEqual({
+      verify_url: '***',
+    })
+    expect(maskSensitiveData('https://app/reset?otp=482913', 'action_url')).toBe('***')
+    // A token-bearing URL under a non-sensitive key has its secret param scrubbed.
+    expect(maskSensitiveData('https://app/verify?token=abc123&r=1', 'raw')).toBe(
+      'https://app/verify?token=***&r=1',
+    )
+  })
+
   it('recursively masks nested objects and arrays but keeps safe keys', () => {
     const out = maskSensitiveData({
       name: 'Sara',
@@ -212,7 +225,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       { sql: 'BEGIN' },
       // SELECT ... FOR UPDATE
       {
-        sql: 'SELECT dl.*, ob.payload\n           FROM notification_dead_letter dl\n           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id\n          WHERE dl.id = $1\n          FOR UPDATE OF dl',
+        sql: 'FOR UPDATE OF dl',
         rows: [DL_ROW],
       },
       { sql: 'UPDATE notification_outbox' },
@@ -256,7 +269,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { client, mockRelease } = mockClient([
       { sql: 'BEGIN' },
       {
-        sql: 'SELECT dl.*, ob.payload\n           FROM notification_dead_letter dl\n           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id\n          WHERE dl.id = $1\n          FOR UPDATE OF dl',
+        sql: 'FOR UPDATE OF dl',
         rows: [resolved],
       },
       { sql: 'ROLLBACK' },
@@ -274,7 +287,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { client } = mockClient([
       { sql: 'BEGIN' },
       {
-        sql: 'SELECT dl.*, ob.payload\n           FROM notification_dead_letter dl\n           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id\n          WHERE dl.id = $1\n          FOR UPDATE OF dl',
+        sql: 'FOR UPDATE OF dl',
         rows: [],
       },
     ])
@@ -290,7 +303,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { mockClientQuery, client } = mockClient([
       { sql: 'BEGIN' },
       {
-        sql: 'SELECT dl.*, ob.payload\n           FROM notification_dead_letter dl\n           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id\n          WHERE dl.id = $1\n          FOR UPDATE OF dl',
+        sql: 'FOR UPDATE OF dl',
         rows: [DL_ROW],
       },
       { sql: 'UPDATE notification_dead_letter' },
@@ -311,7 +324,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { mockClientQuery, client } = mockClient([
       { sql: 'BEGIN' },
       {
-        sql: 'SELECT dl.*, ob.payload\n           FROM notification_dead_letter dl\n           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id\n          WHERE dl.id = $1\n          FOR UPDATE OF dl',
+        sql: 'FOR UPDATE OF dl',
         rows: [DL_ROW],
       },
       { sql: 'UPDATE notification_dead_letter' },
