@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.09.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-09-02--failed-jobs-dashboard",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/201",
-  "current_task_key": "02-auth-users-admin.md#T-09.09.02",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 343,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -282,12 +282,18 @@
     "02-auth-users-admin.md#T-09.08.01",
     "02-auth-users-admin.md#T-09.08.02",
     "02-auth-users-admin.md#T-09.08.03",
-    "02-auth-users-admin.md#T-09.09.01"
+    "02-auth-users-admin.md#T-09.09.01",
+    "02-auth-users-admin.md#T-09.09.02"
   ],
   "last_error": null,
-  "notes": "T-09.09.01 MERGED (PR #200, squash 3d9a594) after Claude Opus 5 round-2 approve (4 minor follow-ups deferred: correlation-id threading, fa/en dict keys for statuses/severities, Swagger DTO schema, trailing newlines). Reconciliation exceptions review surface live. Returned to idle.",
-  "last_updated": "2026-08-28T08:46:13Z",
+  "notes": "T-09.09.02 MERGED (PR #201, squash 9759232) after Claude Opus 5 round-2 approve. Failed-jobs dashboard live: background_jobs ledger (migration 0041) written by the worker via an atomic ON CONFLICT upsert (service_breach/escaltion scan + outbox poll), GET /api/admin/failed-jobs + retry/retry-bulk/resolve gated by admin:jobs:view/retry. Round-1 majors fixed (upsert race, redaction test); 6 follow-ups deferred (correlation-id, fa/en dict, Swagger DTO schema, schedule-aware runner, dead-letter attempt counter cap, real-PG integration test). Returned to idle.",
+  "last_updated": "2026-08-28T08:57:00Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.09.02",
+      "at": "2026-08-28T08:57:00Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.02",
