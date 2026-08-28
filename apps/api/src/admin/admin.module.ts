@@ -12,6 +12,8 @@ import { FailedJobsService } from './failed-jobs.service.js'
 import { FailedJobsController } from './failed-jobs.controller.js'
 import { FailedNotificationsService } from './failed-notifications.service.js'
 import { FailedNotificationsController } from './failed-notifications.controller.js'
+import { VatConfigService } from './vat-config.service.js'
+import { VatConfigController } from './vat-config.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 
 @Module({
@@ -22,6 +24,7 @@ import { TosModule } from '../tos/tos.module.js'
     ReconciliationExceptionsController,
     FailedJobsController,
     FailedNotificationsController,
+    VatConfigController,
   ],
   providers: [
     AdminService,
@@ -30,7 +33,8 @@ import { TosModule } from '../tos/tos.module.js'
     ReconciliationExceptionsService,
     FailedJobsService,
     FailedNotificationsService,
+    VatConfigService,
   ],
-  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService],
+  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService],
 })
 export class AdminModule {}
