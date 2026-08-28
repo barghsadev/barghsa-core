@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.09.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-09-01--reconciliation-exceptions",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-09.09.01",
   "loop_iteration": 343,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -284,9 +284,14 @@
     "02-auth-users-admin.md#T-09.08.03"
   ],
   "last_error": null,
-  "notes": "T-09.08.03 MERGED (PR #199, squash 88369d3) after Claude Opus 5 round-2 approve (3 minor follow-ups accepted). Escalation policy + scanner live. Returned to idle.",
-  "last_updated": "2026-08-28T11:00:00Z",
+  "notes": "Building T-09.09.01 reconciliation exceptions review surface (table 0040 + admin list/resolve/investigate/close + resolution_recorded audit).",
+  "last_updated": "2026-08-28T08:13:28Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.09.01",
+      "at": "2026-08-28T08:13:28Z"
+    },
     {
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",

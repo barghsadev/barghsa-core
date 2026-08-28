@@ -12,6 +12,17 @@ export type {
 export { AdminController, CreateStaffUserSchema, type CreateStaffUserDto } from './admin.controller.js'
 export { DualApprovalController, RejectApprovalRequestSchema } from './dual-approval.controller.js'
 export {
+  ReconciliationExceptionsController,
+  ResolutionNoteSchema,
+} from './reconciliation-exceptions.controller.js'
+export {
+  ReconciliationExceptionsService,
+  toReconciliationExceptionDto,
+  validateResolutionNote,
+  type ReconciliationExceptionDto,
+  type ListReconciliationExceptionsOptions,
+} from './reconciliation-exceptions.service.js'
+export {
   DualApprovalService,
   DUAL_APPROVAL_ACTION_TYPES,
   toApprovalRequestDto,
