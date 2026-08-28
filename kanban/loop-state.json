@@ -287,27 +287,13 @@
     "02-auth-users-admin.md#T-09.09.03",
     "02-auth-users-admin.md#T-09.10.01",
     "02-auth-users-admin.md#T-09.10.02",
-    "02-auth-users-admin.md#T-09.10.03"
+    "02-auth-users-admin.md#T-09.10.03",
+    "02-auth-users-admin.md#T-09.11.01"
   ],
   "last_error": null,
-  "notes": "T-09.10.01 MERGED (PR #204, squash) after Claude Opus 5 approve. Admin per-transaction online wallet top-up limit live: GET/PUT /api/admin/config/wallet-top-up-limit (gated admin:financial:edit), finance.wallet_top_up_limit app_config (default 2,000,000,000 IRR), versioned + global config_version bump, audit config_change (prev/new + versions), strict integer validation rejecting coercible strings. WalletService.validateOnlineTopUpAmount enforcement seam reserved for online top-up endpoint T-04.2.02.01 (S-04.2.02). CI: Run tests + Verify monorepo integrity pass. Deferred (minor, per reviewer): corruption-warning on wallet read path, shared config-reader dedup, trailing newlines, redundant upper-bound clause; web UI, fa/en dict, step-up, real-PG integration test. Returned to idle.",
-  "last_updated": "2026-08-28T11:07:43Z",
+  "notes": "T-09.11.01 MERGED (PR #207, squash) after 3 Claude Opus 5 review rounds (approve). Admin AI model management API slice live: /api/admin/ai-models CRUD (admin:ai:models perm, step-up mutations, zod http(s) URL validation), AES-256-GCM token encryption (AI_MODEL_ENCRYPTION_KEY, fail-closed 503 when missing, masked placeholders preserve stored token, empty string clears), SSRF-guarded provider test ping (openai_compatible /chat/completions Bearer, anthropic /messages x-api-key, redirect:manual + 3xx/status0 fail, token redaction in errors/previews, timeout+allowlist envs, rate-limited 20/min), status reachable/unreachable/unknown persisted via last_test_status + audit ai_model_created/updated/deleted/tested. Migration 0042 ai_models + drift guard. CI: build/typecheck/tests/integrity pass. Deferred (minor, per reviewer): web UI + fa/en dicts + RTL/a11y slice, worker-async ping (no API->worker RPC), journal entries (db:push schema-driven), sk-/ant- redact extension for T-09.11.04, legacy plaintext passthrough retirement, misconfigured badge. Returned to idle.",
+  "last_updated": "2026-08-28T11:33:57Z",
   "status_history": [
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.09.01",
-      "at": "2026-08-28T08:13:28Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T05:57:55Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T05:41:54Z"
-    },
     {
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
@@ -792,6 +778,21 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.10.03",
       "at": "2026-08-28T11:07:43Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.11.01",
+      "at": "2026-08-28T11:13:49Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.01",
+      "at": "2026-08-28T11:21:06Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.11.01",
+      "at": "2026-08-28T11:33:57Z"
     }
   ]
 }
