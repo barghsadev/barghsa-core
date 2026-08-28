@@ -8,6 +8,8 @@ import { DualApprovalService } from './dual-approval.service.js'
 import { DualApprovalController } from './dual-approval.controller.js'
 import { ReconciliationExceptionsService } from './reconciliation-exceptions.service.js'
 import { ReconciliationExceptionsController } from './reconciliation-exceptions.controller.js'
+import { FailedJobsService } from './failed-jobs.service.js'
+import { FailedJobsController } from './failed-jobs.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 
 @Module({
@@ -16,13 +18,15 @@ import { TosModule } from '../tos/tos.module.js'
     AdminController,
     DualApprovalController,
     ReconciliationExceptionsController,
+    FailedJobsController,
   ],
   providers: [
     AdminService,
     BrandConfigService,
     DualApprovalService,
     ReconciliationExceptionsService,
+    FailedJobsService,
   ],
-  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService],
+  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService],
 })
 export class AdminModule {}
