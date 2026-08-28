@@ -1,12 +1,12 @@
 {
-  "status": "blocked",
+  "status": "in_review",
   "current_task_id": "T-09.08.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-08-02--staff-teams-assignment",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/198",
   "current_task_key": "02-auth-users-admin.md#T-09.08.02",
   "loop_iteration": 332,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -281,9 +281,9 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": "Reviewer billing: anthropic/claude-opus-5 HTTP 402 retry at 2026-08-28T01:10:00Z still failed ('This request would exceed your available credits given your current in-flight requests. Retry after in-flight requests settle, or add credits.'). Credential pool marks OPENROUTER_API_KEY exhausted (failure_reason=billing). Manual action REQUIRED: add OpenRouter credits (openrouter.ai/settings/credits), then clear last_error and set status back to in_review to resume PR #198.",
-  "notes": "T-09.08.02 (staff teams + assignment rules, L) slice 1 in review: PR #198 \u2014 shared staff-teams contract + staff_teams/members schema + migration 0038 + admin CRUD, audited. CI green. BLOCKED one tick: reviewer billing 402 persists (credits not topped up). PR #198 NOT reviewed; resume by topping up credits and clearing last_error.",
-  "last_updated": "2026-08-28T01:10:00Z",
+  "last_error": null,
+  "notes": "T-09.08.02 (staff teams + assignment rules, L) slice 1: PR #198. Review round 1 (Opus 5) -> request_changes: fixed 3 major (validator optional skillTags/memberUserIds, corruption guard on unknown work-type keys, update name-coercion bypass) + 5 minor (isUniqueViolation pg-code, skillTags trim on update, user_id index migration 0038, trailing newlines, loop-state coherence). Billing 402 resolved. Re-review pending.",
+  "last_updated": "2026-08-28T01:26:00Z",
   "status_history": [
     {
       "status": "merged",
@@ -619,6 +619,11 @@
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
       "at": "2026-08-28T01:10:00Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:26:00Z"
     }
   ]
 }

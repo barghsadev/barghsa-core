@@ -98,6 +98,19 @@ describe('AdminService staff assignment rules (T-09.08.02)', () => {
       expect(result.verification_case.teamId).toBe('t-2')
       expect(result.verification_case.strategy).toBe('round_robin')
     })
+
+    it('treats an unknown work-type key as corrupt without throwing', async () => {
+      const { mockQuery } = await loadService()
+      mockQuery.mockResolvedValueOnce({
+        rows: [{
+          value: { consultation: { teamId: 't-9', strategy: 'load' } },
+        }],
+      })
+
+      const result = await service.getStaffAssignmentRules()
+      expect(result.ticket).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.ticket)
+      expect(result.verification_case).toEqual(DEFAULT_STAFF_ASSIGNMENT_RULES.verification_case)
+    })
   })
 
   describe('setStaffAssignmentRules', () => {
@@ -242,6 +255,32 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       expect(metadata.teamId).toEqual(expect.any(String))
     })
 
+    it('creates a team from a name-only body (optional fields default)', async () => {
+      const { mockConnect } = await loadService()
+      const { client } = mockClient()
+      mockConnect.mockResolvedValue(client)
+      const teamRow = {
+        id: 'team-1', name: 'Billing', description: null,
+        skill_tags: [], is_active: true,
+        created_at: new Date('2026-01-01T00:00:00Z'),
+        updated_at: new Date('2026-01-01T00:00:00Z'),
+      }
+      client.query
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [teamRow] }) // INSERT staff_teams RETURNING
+        .mockResolvedValueOnce({ rows: [] }) // audit
+        .mockResolvedValueOnce({ rows: [] }) // COMMIT
+
+      const result = await service.createStaffTeam(
+        { name: 'Billing' },
+        'admin-1',
+        '127.0.0.1',
+      )
+      expect(result).toMatchObject({
+        id: 'team-1', name: 'Billing', skillTags: [], memberUserIds: [],
+      })
+    })
+
     it('returns 400 when a member user does not exist', async () => {
       const { mockConnect } = await loadService()
       const { client } = mockClient()
@@ -267,7 +306,12 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockResolvedValueOnce({ rows: [] }) // members exist (none)
-        .mockRejectedValueOnce(new Error('duplicate key value violates unique constraint "uq_st_name"'))
+        .mockRejectedValueOnce(
+          Object.assign(
+            new Error('duplicate key value violates unique constraint "uq_st_name"'),
+            { code: '23505', constraint: 'uq_st_name' },
+          ),
+        )
         .mockResolvedValueOnce({ rows: [] }) // ROLLBACK
 
       await expect(
@@ -342,6 +386,27 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
         String(sql).includes('DELETE FROM staff_team_members'),
       )
       expect(deleteCall).toBeDefined()
+    })
+
+    it('rejects a non-string name without coercing it (e.g. name: 42)', async () => {
+      const { mockConnect } = await loadService()
+      const { client } = mockClient()
+      mockConnect.mockResolvedValue(client)
+      const existingRow = {
+        id: 'team-1', name: 'Billing', description: null,
+        skill_tags: ['billing'], is_active: true,
+        created_at: new Date('2026-01-01T00:00:00Z'),
+        updated_at: new Date('2026-01-01T00:00:00Z'),
+      }
+      client.query
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [existingRow] }) // SELECT FOR UPDATE
+        .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // prev members
+        .mockResolvedValueOnce({ rows: [] }) // ROLLBACK
+
+      await expect(
+        service.updateStaffTeam('team-1', { name: 42 }, 'admin-1', '127.0.0.1'),
+      ).rejects.toMatchObject({ status: 400 })
     })
   })
 

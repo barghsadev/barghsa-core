@@ -112,6 +112,11 @@ describe('staff team input validation (T-09.08.02)', () => {
     expect(result.ok).toBe(true)
   })
 
+  it('accepts a name-only payload (skillTags/memberUserIds optional)', () => {
+    expect(validateStaffTeamInput({ name: 'Billing' }).ok).toBe(true)
+    expect(validateStaffTeamInput({ name: 'Billing', description: null }).ok).toBe(true)
+  })
+
   it('rejects non-object input', () => {
     for (const bad of [null, undefined, 42, 'team', []]) {
       expect(validateStaffTeamInput(bad).ok).toBe(false)

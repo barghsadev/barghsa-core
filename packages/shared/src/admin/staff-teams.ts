@@ -225,9 +225,9 @@ export function validateStaffTeamInput(input: unknown): StaffTeamInputValidation
     issues.push('description must be a string or null')
   }
 
-  if (!Array.isArray(o.skillTags)) {
+  if (o.skillTags !== undefined && !Array.isArray(o.skillTags)) {
     issues.push('skillTags must be an array')
-  } else {
+  } else if (o.skillTags !== undefined) {
     if (o.skillTags.length > STAFF_TEAM_SKILL_TAGS_MAX) {
       issues.push(`skillTags must have at most ${STAFF_TEAM_SKILL_TAGS_MAX} tags`)
     }
@@ -242,9 +242,9 @@ export function validateStaffTeamInput(input: unknown): StaffTeamInputValidation
     }
   }
 
-  if (!Array.isArray(o.memberUserIds)) {
+  if (o.memberUserIds !== undefined && !Array.isArray(o.memberUserIds)) {
     issues.push('memberUserIds must be an array')
-  } else {
+  } else if (o.memberUserIds !== undefined) {
     if (o.memberUserIds.length > STAFF_TEAM_MEMBERS_MAX) {
       issues.push(`memberUserIds must have at most ${STAFF_TEAM_MEMBERS_MAX} members`)
     }

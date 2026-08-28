@@ -66,3 +66,8 @@ CREATE TABLE IF NOT EXISTS staff_team_members (
   CONSTRAINT uq_stm_team_member
     UNIQUE (team_id, user_id)
 );
+
+-- "Which teams is this user in" / FK cascade lookups from users are
+-- sequential without a user_id-leading index (the composite unique index
+-- above leads on team_id).
+CREATE INDEX IF NOT EXISTS idx_stm_user ON staff_team_members (user_id);

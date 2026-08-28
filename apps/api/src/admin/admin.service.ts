@@ -1204,6 +1204,9 @@ export class AdminService {
       if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return true
       const rule = raw as Record<string, unknown>
       const normalized = config[workType as keyof StaffAssignmentRules]
+      // Unknown work type (not in STAFF_ASSIGNMENT_WORK_TYPES): treat as
+      // corrupt rather than crashing on the undefined dereference below.
+      if (!normalized) return true
       return normalized.teamId !== rule.teamId ||
         (typeof rule.strategy === 'string' && normalized.strategy !== rule.strategy)
     })
@@ -1508,9 +1511,9 @@ export class AdminService {
       // then run the full validator over the merged shape so a partial
       // update cannot bypass a rule (e.g. name length).
       const merged: StaffTeamInput = {
-        name: ((input as Record<string, unknown>).name !== undefined
-          ? String((input as Record<string, unknown>).name).trim()
-          : existing.name) as string,
+        name: (input as Record<string, unknown>).name !== undefined
+          ? ((input as Record<string, unknown>).name as string)
+          : existing.name,
         description: (input as Record<string, unknown>).description !== undefined
           ? ((input as Record<string, unknown>).description as string | null)
           : (existing.description as string | null),
@@ -1533,6 +1536,11 @@ export class AdminService {
           400,
         )
       }
+
+      // Post-validation normalization mirrors createStaffTeam: trim the name
+      // and each skill tag so both endpoints store identical shapes.
+      merged.name = merged.name.trim()
+      merged.skillTags = merged.skillTags.map((t: string) => t.trim())
 
       await this.assertTeamMembersExist(client, merged.memberUserIds)
 
@@ -1707,8 +1715,8 @@ export class AdminService {
   }
 
   private isUniqueViolation(error: unknown, constraint: string): boolean {
-    const message = error instanceof Error ? error.message : String(error)
-    return message.includes(constraint)
+    const e = error as { code?: string; constraint?: string } | null
+    return e?.code === '23505' && e?.constraint === constraint
   }
 
   private mapTeamRow(

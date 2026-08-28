@@ -58,4 +58,8 @@ describe('staff_teams schema (T-09.08.02)', () => {
   it('migration 0038 prevents duplicate membership', () => {
     expect(MIGRATION).toMatch(/uq_stm_team_member[\s\S]*UNIQUE \(team_id, user_id\)/)
   })
+
+  it('migration 0038 indexes user_id for member-of lookups', () => {
+    expect(MIGRATION).toMatch(/CREATE INDEX IF NOT EXISTS idx_stm_user ON staff_team_members \(user_id\)/)
+  })
 })
