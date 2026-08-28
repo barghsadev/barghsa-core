@@ -51,6 +51,8 @@ def main():
     elif cmd == 'in_review':
         s['status'] = 'in_review'
         s['last_error'] = None
+        if len(sys.argv) > 2:
+            s['current_pr_url'] = sys.argv[2]
         s['status_history'].append({
             'status': 'in_review',
             'task_key': s['current_task_key'],
