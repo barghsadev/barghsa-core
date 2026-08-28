@@ -75,7 +75,8 @@ const OVERRIDE_ID = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd'
 async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
   vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }))
   const { VatConfigService: Svc } = await import('./vat-config.service.js')
-  return new Svc() as ServiceType
+  const correlationIdProvider = { getCorrelationId: () => 'corr-vat-test-1' }
+  return new Svc(correlationIdProvider as never) as ServiceType
 }
 
 let service: ServiceType
@@ -426,6 +427,168 @@ describe('VatConfigService (T-09.12.02)', () => {
       const overrideQ = router.queries('FROM product_vat_overrides pvo')[0]
       expect(overrideQ!.values[1]).toBeInstanceOf(Date)
       expect((overrideQ!.values[1] as Date).toISOString()).toBe('2026-06-01T00:00:00.000Z')
+    })
+
+    it('derives the category fallback from products.type when only productId is given', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('SELECT type FROM products WHERE id = $1', () => ({ rows: [{ type: 'electricity' }] }))
+      router.on('FROM product_vat_overrides pvo', () => ({ rows: [] }))
+      router.on('FROM vat_configurations\n          WHERE category', () => ({
+        rows: [{ rate: 900 }],
+      }))
+
+      const result = await service.resolve({ productId: PRODUCT_ID })
+
+      expect(result).toEqual({ rateBasisPoints: 900, source: 'category' })
+      const categoryQ = router.queries('FROM vat_configurations\n          WHERE category')[0]
+      expect(categoryQ!.values[0]).toBe('electricity')
+    })
+
+    it('an explicit category overrides the derived product type', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('SELECT type FROM products WHERE id = $1', () => ({ rows: [{ type: 'electricity' }] }))
+      router.on('FROM product_vat_overrides pvo', () => ({ rows: [] }))
+      router.on('FROM vat_configurations\n          WHERE category', () => ({
+        rows: [{ rate: 1000 }],
+      }))
+
+      const result = await service.resolve({ productId: PRODUCT_ID, category: 'consultation' })
+
+      const categoryQ = router.queries('FROM vat_configurations\n          WHERE category')[0]
+      expect(categoryQ!.values[0]).toBe('consultation')
+      expect(result).toEqual({ rateBasisPoints: 1000, source: 'category' })
+    })
+
+    it('an unknown product category type still resolves (0% fallback when nothing active)', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('SELECT type FROM products WHERE id = $1', () => ({ rows: [{ type: 'electricity' }] }))
+      router.on('FROM product_vat_overrides pvo', () => ({ rows: [] }))
+      router.on('FROM vat_configurations\n          WHERE category', () => ({ rows: [] }))
+
+      const result = await service.resolve({ productId: PRODUCT_ID })
+      expect(result).toEqual({ rateBasisPoints: 0, source: 'fallback_zero' })
+    })
+
+    it('rejects a malformed at timestamp', async () => {
+      const { pool } = makeDb()
+      service = await loadService(pool)
+      await expect(
+        service.resolve({ productId: PRODUCT_ID, at: 'not-a-date' }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+  })
+
+  describe('review hardening (r2)', () => {
+    it('createRate accepts the reserved product_override category', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('WHERE category = $1 AND effective_until IS NULL', () => ({ rows: [] }))
+      router.on(
+        'SELECT id, effective_from, effective_until\n             FROM vat_configurations',
+        () => ({ rows: [] }),
+      )
+      router.on('INSERT INTO vat_configurations', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      router.on('FROM vat_configurations\n        WHERE id = $1', () => ({
+        rows: [configRow({ category: 'product_override', rate: 500 })],
+      }))
+
+      const result = await service.createRate({
+        category: 'product_override',
+        rateBasisPoints: 500,
+        actorUserId: ACTOR,
+        ip: '127.0.0.1',
+      })
+
+      expect(result).toMatchObject({ category: 'product_override', rateBasisPoints: 500 })
+    })
+
+    it('createRate rejects a backdated effective_from inside an ended window', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('WHERE category = $1 AND effective_until IS NULL', () => ({ rows: [] }))
+      router.on(
+        'SELECT id, effective_from, effective_until\n             FROM vat_configurations',
+        () => ({
+          rows: [
+            {
+              id: 'ended-id',
+              effective_from: '2026-01-01T00:00:00.000Z',
+              effective_until: '2026-06-01T00:00:00.000Z',
+            },
+          ],
+        }),
+      )
+
+      await expect(
+        service.createRate({
+          category: 'electricity',
+          rateBasisPoints: 1000,
+          effectiveFrom: '2026-03-01T00:00:00.000Z', // inside ended window
+          actorUserId: ACTOR,
+          ip: '',
+        }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+
+    it('createProductOverride rejects linking an ended category rate', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('FROM vat_configurations\n        WHERE id', () => ({
+        rows: [configRow({ effective_until: '2026-06-01T00:00:00.000Z' })],
+      }))
+
+      await expect(
+        service.createProductOverride({
+          productId: PRODUCT_ID,
+          vatConfigId: CONFIG_ID,
+          actorUserId: ACTOR,
+          ip: '',
+        }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+
+    it('createProductOverride rejects linking a scheduled category rate', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('FROM vat_configurations\n        WHERE id', () => ({
+        rows: [configRow({ effective_from: '2026-12-01T00:00:00.000Z', effective_until: null })],
+      }))
+
+      await expect(
+        service.createProductOverride({
+          productId: PRODUCT_ID,
+          vatConfigId: CONFIG_ID,
+          actorUserId: ACTOR,
+          ip: '',
+        }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+
+    it('createProductOverride accepts linking a product_override rate row', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      router.on('FROM vat_configurations\n        WHERE id', () => ({
+        rows: [configRow({ category: 'product_override', rate: 500 })],
+      }))
+      router.on('FROM product_vat_overrides pvo\n         JOIN vat_configurations vc ON vc.id = pvo.vat_config_id\n        WHERE pvo.product_id = $1 AND pvo.effective_until IS NULL', () => ({ rows: [] }))
+      router.on('INSERT INTO product_vat_overrides', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      router.on('FROM product_vat_overrides pvo\n         JOIN vat_configurations vc ON vc.id = pvo.vat_config_id\n        WHERE pvo.id = $1', () => ({
+        rows: [overrideRow()],
+      }))
+
+      const result = await service.createProductOverride({
+        productId: PRODUCT_ID,
+        vatConfigId: CONFIG_ID,
+        actorUserId: ACTOR,
+        ip: '127.0.0.1',
+      })
+
+      expect(result).toMatchObject({ productId: PRODUCT_ID, rateBasisPoints: 500 })
     })
   })
 })

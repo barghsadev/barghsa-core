@@ -1,16 +1,19 @@
-import { Injectable, Logger, HttpException } from '@nestjs/common'
+import { Injectable, Logger, HttpException, Inject } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import {
   CHARGE_CATEGORIES,
   isChargeCategory,
+  isRateCategory,
   isValidVatBasisPoints,
+  PRODUCT_OVERRIDE_CATEGORY,
   resolveVatRate,
   vatWindowStatus,
   type VatConfigDto,
   type VatProductOverrideDto,
   type VatResolution,
 } from '@barghsa/shared/finance'
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
 
 /**
  * Admin VAT configuration service (S-09.12, T-09.12.02) — API slice.
@@ -96,8 +99,6 @@ type QueryFn = <T = Record<string, unknown>>(
   text: string,
   values?: unknown[],
 ) => Promise<{ rows: T[]; rowCount: number | null }>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type DbRow = any
 
 /** Minimal query executor shared by the pool and a transactional client. */
 type DbExecutor = { query: QueryFn }
@@ -134,6 +135,11 @@ const PG_CHECK_VIOLATION = '23514'
 export class VatConfigService {
   private readonly logger = new Logger(VatConfigService.name)
 
+  constructor(
+    @Inject(CorrelationIdProvider)
+    private readonly correlationIdProvider: CorrelationIdProvider,
+  ) {}
+
   // ─── Read ───────────────────────────────────────────────────────────────
 
   /**
@@ -142,7 +148,7 @@ export class VatConfigService {
    * expired) for the admin table view.
    */
   async list(category?: string): Promise<VatConfigDto[]> {
-    if (category !== undefined && !isChargeCategory(category)) {
+    if (category !== undefined && !isRateCategory(category)) {
       throw this.invalidCategory(category)
     }
     const pool = getDbPool()
@@ -182,15 +188,41 @@ export class VatConfigService {
   /**
    * Resolve the VAT rate at a point in time (the invoice snapshot seam,
    * T-03.02.05.03, will call this at invoice-line creation time).
-   * Product override wins; category active rate applies otherwise; 0%
-   * is the fallback.
+   *
+   * Rules (T-09.12.02 / T-03.02.05.03):
+   *   1. product has an active override  → the override's rate
+   *   2. charge category has an active rate → the category rate
+   *   3. otherwise                        → 0% (fallback)
+   *
+   * When `productId` is given, the product's own charge category is
+   * derived from `products.type` (its product-type discriminator) and
+   * used as the category fallback — so a caller can pass just the
+   * product and still get the category default (the middle rule) when
+   * no override is active. An explicit `category` argument overrides
+   * the derived one.
    */
   async resolve(input: ResolveVatInput): Promise<VatResolution> {
     const at = input.at !== undefined ? new Date(input.at) : new Date()
+    if (Number.isNaN(at.getTime())) {
+      throw this.invalidEffectiveDate('at')
+    }
     const pool = getDbPool()
 
     let productOverrideRate: number | null = null
+    let derivedCategory: string | undefined
     if (input.productId !== undefined) {
+      // Derive the product's charge category from its type, so the
+      // category-default rule is reachable with productId alone.
+      const product = await pool.query<{ type: string }>(
+        'SELECT type FROM products WHERE id = $1',
+        [input.productId],
+      )
+      if (product.rows.length > 0 && product.rows[0] !== undefined) {
+        derivedCategory = product.rows[0].type
+      }
+      // Only the override's own window governs: the linked config row is
+      // versioned (its effective window records when the rate came into
+      // force), but the override link is what the admin actively manages.
       const override = await pool.query<{ rate: number }>(
         `SELECT vc.rate
            FROM product_vat_overrides pvo
@@ -206,9 +238,10 @@ export class VatConfigService {
     }
 
     let categoryRate: number | null = null
-    if (input.category !== undefined) {
-      if (!isChargeCategory(input.category)) {
-        throw this.invalidCategory(input.category)
+    const category = input.category ?? derivedCategory
+    if (category !== undefined) {
+      if (!isChargeCategory(category)) {
+        throw this.invalidCategory(category)
       }
       const config = await pool.query<{ rate: number }>(
         `SELECT rate
@@ -218,7 +251,7 @@ export class VatConfigService {
             AND (effective_until IS NULL OR effective_until > $2)
           ORDER BY effective_from DESC
           LIMIT 1`,
-        [input.category, at],
+        [category, at],
       )
       categoryRate = config.rows[0]?.rate ?? null
     }
@@ -236,7 +269,7 @@ export class VatConfigService {
    * `scheduled` until their effective_from arrives.
    */
   async createRate(input: CreateVatRateInput): Promise<VatConfigDto> {
-    if (!isChargeCategory(input.category)) {
+    if (!isRateCategory(input.category)) {
       throw this.invalidCategory(input.category)
     }
     if (!isValidVatBasisPoints(input.rateBasisPoints)) {
@@ -283,6 +316,35 @@ export class VatConfigService {
             WHERE id = $2 AND effective_until IS NULL`,
           [effectiveFrom, open.id],
         )
+      } else {
+        // No open rate: the new open row must not overlap any already
+        // ended window. The DB EXCLUDE constraint would reject it as
+        // 23P01; pre-validate here so a mis-dated (e.g. backdated after
+        // an end-date) request surfaces as an actionable 400.
+        const conflict = await q.query<{ id: string; effective_from: string; effective_until: string | null }>(
+          `SELECT id, effective_from, effective_until
+             FROM vat_configurations
+            WHERE category = $1
+              AND effective_from <= $2
+              AND (effective_until IS NULL OR effective_until > $2)
+            LIMIT 1`,
+          [input.category, effectiveFrom],
+        )
+        if (conflict.rows.length > 0) {
+          const row = conflict.rows[0]
+          if (row !== undefined) {
+            throw new HttpException(
+              {
+                statusCode: 400,
+                error: 'VAT_RATE_INVALID_EFFECTIVE_FROM',
+                message:
+                  'The requested effective_from falls inside an existing rate window ' +
+                  `(id ${row.id}: ${row.effective_from}${row.effective_until ? ' -> ' + row.effective_until : ' (open)'})`,
+              },
+              400,
+            )
+          }
+        }
       }
 
       const id = uuidv7()
@@ -379,6 +441,12 @@ export class VatConfigService {
    * linked config row's rate instead of its category default. The
    * previously-open override for the product is closed at the new
    * effective_from. A re-submit of the same open override is a no-op.
+   *
+   * The linked config must be an override-eligible rate: either a row
+   * with the reserved `product_override` category (a product-specific
+   * rate) or an active category default. Linking an ended or
+   * never-active category row is rejected — the admin must end-date /
+   * create rates explicitly.
    */
   async createProductOverride(input: CreateProductOverrideInput): Promise<VatProductOverrideDto> {
     const effectiveFrom =
@@ -388,9 +456,40 @@ export class VatConfigService {
     }
 
     return this.withTransaction(async (q) => {
-      // The config row must exist and be an override-eligible rate.
+      // The config row must exist and be override-eligible.
       const config = await this.findConfigById(q, input.vatConfigId)
       if (!config) throw this.vatConfigNotFound(input.vatConfigId)
+
+      const isProductSpecific = config.category === PRODUCT_OVERRIDE_CATEGORY
+      const configEnded =
+        config.effective_until !== null &&
+        new Date(config.effective_until).getTime() <= effectiveFrom.getTime()
+      const configScheduled = new Date(config.effective_from).getTime() > effectiveFrom.getTime()
+      if (!isProductSpecific && (configEnded || configScheduled)) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'VAT_OVERRIDE_CONFIG_INACTIVE',
+            message:
+              'The linked VAT rate must be active at the override\'s effective_from ' +
+              '(link a product_override rate or an active category rate)',
+          },
+          400,
+        )
+      }
+      // A product_override rate row must itself be active (or scheduled)
+      // at the override's start — its window is the rate's own validity.
+      if (isProductSpecific && configEnded) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'VAT_OVERRIDE_CONFIG_INACTIVE',
+            message:
+              'The linked product_override rate is already ended — create a new rate first',
+          },
+          400,
+        )
+      }
 
       const open = await this.findOpenOverride(q, input.productId)
       if (open !== null) {
@@ -611,7 +710,7 @@ export class VatConfigService {
         error: 'VAT_CATEGORY_INVALID',
         message:
           `Invalid VAT charge category: ${category}. ` +
-          `Expected one of: ${CHARGE_CATEGORIES.join(', ')}`,
+          `Expected one of: ${[...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY].join(', ')}`,
       },
       400,
     )
@@ -711,6 +810,9 @@ export class VatConfigService {
       meta: Record<string, unknown>
     },
   ): Promise<void> {
+    // Correlate with the originating request when one exists (AsyncLocal
+    // Storage set by CorrelationIdMiddleware); fall back to a fresh id.
+    const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7()
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, 'change_recorded', $3::jsonb, $4, $5, $6)`,
@@ -718,7 +820,7 @@ export class VatConfigService {
         uuidv7(),
         input.actorUserId,
         JSON.stringify({ entity: input.entity, action: input.action, ...input.meta }),
-        uuidv7(),
+        correlationId,
         input.ip,
         new Date(),
       ],

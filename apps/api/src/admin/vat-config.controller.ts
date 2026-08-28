@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   CHARGE_CATEGORIES,
+  PRODUCT_OVERRIDE_CATEGORY,
   type VatConfigDto,
   type VatProductOverrideDto,
   type VatResolution,
@@ -26,7 +27,7 @@ import { VatConfigService } from './vat-config.service.js'
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const categorySchema = z.enum(CHARGE_CATEGORIES)
+const categorySchema = z.enum([...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY])
 const bpsSchema = z.number().int().min(0).max(10_000)
 const effectiveDateSchema = z
   .string()

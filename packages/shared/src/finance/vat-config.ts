@@ -43,9 +43,30 @@ export const CHARGE_CATEGORIES = [
 
 export type ChargeCategory = (typeof CHARGE_CATEGORIES)[number]
 
+/**
+ * Reserved category key for product-specific override rates.
+ *
+ * A `vat_configurations` row with this category holds a rate that only
+ * applies through a `product_vat_overrides` link (the admin "product
+ * override" surface). It is deliberately NOT part of `CHARGE_CATEGORIES`
+ * (it never acts as a category default), but it IS creatable via the
+ * admin API so a product-specific rate (e.g. 5% for one product when no
+ * category uses 5%) can be expressed.
+ */
+export const PRODUCT_OVERRIDE_CATEGORY = 'product_override'
+
 /** Whether a raw value is a known charge category key. */
 export function isChargeCategory(raw: unknown): raw is ChargeCategory {
   return typeof raw === 'string' && (CHARGE_CATEGORIES as readonly string[]).includes(raw)
+}
+
+/**
+ * Whether a raw value is a valid category for a `vat_configurations`
+ * row: either a known charge category or the reserved product-override
+ * key.
+ */
+export function isRateCategory(raw: unknown): raw is ChargeCategory | typeof PRODUCT_OVERRIDE_CATEGORY {
+  return isChargeCategory(raw) || raw === PRODUCT_OVERRIDE_CATEGORY
 }
 
 /** Maximum VAT rate in basis points: 100% = 10 000 bps. */

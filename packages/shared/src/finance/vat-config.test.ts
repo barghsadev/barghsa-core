@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest'
 import {
   CHARGE_CATEGORIES,
   isChargeCategory,
+  isRateCategory,
   isValidVatBasisPoints,
   MAX_VAT_BASIS_POINTS,
   MIN_VAT_BASIS_POINTS,
+  PRODUCT_OVERRIDE_CATEGORY,
   vatBasisPointsToPercent,
   vatPercentToBasisPoints,
   resolveVatRate,
@@ -67,6 +69,16 @@ describe('VAT shared contract (T-09.12.02)', () => {
       expect(isChargeCategory('vat_on_moon_shuttles')).toBe(false)
       expect(isChargeCategory('')).toBe(false)
       expect(isChargeCategory(42)).toBe(false)
+    })
+
+    it('accepts the reserved product-override key for config rows but not as a charge category', () => {
+      expect(isRateCategory(PRODUCT_OVERRIDE_CATEGORY)).toBe(true)
+      expect(isRateCategory('electricity')).toBe(true)
+      expect(isRateCategory('bogus')).toBe(false)
+      // The reserved key is NOT a charge category — it never acts as a
+      // category default.
+      expect(isChargeCategory(PRODUCT_OVERRIDE_CATEGORY)).toBe(false)
+      expect(CHARGE_CATEGORIES).not.toContain(PRODUCT_OVERRIDE_CATEGORY)
     })
   })
 

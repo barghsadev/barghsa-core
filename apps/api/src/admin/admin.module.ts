@@ -15,6 +15,7 @@ import { FailedNotificationsController } from './failed-notifications.controller
 import { VatConfigService } from './vat-config.service.js'
 import { VatConfigController } from './vat-config.controller.js'
 import { TosModule } from '../tos/tos.module.js'
+import { CorrelationIdProvider } from '../common/index.js'
 
 @Module({
   imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule],
@@ -34,6 +35,7 @@ import { TosModule } from '../tos/tos.module.js'
     FailedJobsService,
     FailedNotificationsService,
     VatConfigService,
+    CorrelationIdProvider,
   ],
   exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService],
 })

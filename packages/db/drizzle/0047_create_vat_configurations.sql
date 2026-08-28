@@ -70,6 +70,8 @@ CREATE INDEX IF NOT EXISTS idx_vat_configurations_category
   ON vat_configurations (category);
 CREATE INDEX IF NOT EXISTS idx_vat_configurations_effective_from
   ON vat_configurations (effective_from);
+CREATE INDEX IF NOT EXISTS idx_vat_configurations_effective_until
+  ON vat_configurations (effective_until);
 
 -- ---------------------------------------------------------------------------
 -- product_vat_overrides

@@ -79,4 +79,8 @@ describe('VAT configuration schema (T-09.12.02)', () => {
     expect(MIGRATION).toMatch(/trg_vat_configurations_updated_at/)
     expect(MIGRATION).toMatch(/trg_product_vat_overrides_updated_at/)
   })
+
+  it('migration 0047 indexes effective_until for window scans', () => {
+    expect(MIGRATION).toMatch(/idx_vat_configurations_effective_until/)
+  })
 })

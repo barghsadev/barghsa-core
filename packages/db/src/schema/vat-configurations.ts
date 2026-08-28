@@ -114,6 +114,8 @@ export const createVatConfigurationsTable = sql`
     ON vat_configurations (category);
   CREATE INDEX IF NOT EXISTS idx_vat_configurations_effective_from
     ON vat_configurations (effective_from);
+  CREATE INDEX IF NOT EXISTS idx_vat_configurations_effective_until
+    ON vat_configurations (effective_until);
 `
 
 /** SQL to create the product_vat_overrides table (migration 0047 source). */
