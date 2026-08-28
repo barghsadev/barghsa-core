@@ -1,12 +1,12 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.09.03",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-09-03--dead-letter-notifications",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/203",
-  "current_task_key": "02-auth-users-admin.md#T-09.09.03",
-  "loop_iteration": 344,
-  "fix_attempts": 2,
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
+  "loop_iteration": 345,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -283,12 +283,18 @@
     "02-auth-users-admin.md#T-09.08.02",
     "02-auth-users-admin.md#T-09.08.03",
     "02-auth-users-admin.md#T-09.09.01",
-    "02-auth-users-admin.md#T-09.09.02"
+    "02-auth-users-admin.md#T-09.09.02",
+    "02-auth-users-admin.md#T-09.09.03"
   ],
   "last_error": null,
-  "notes": "T-09.09.03 in review round 3 (PR #203). Round-2/3 blocking fixed: numeric secrets under sensitive keys redacted (last-4 no longer leaks), embedded-phone over-masking removed, retry requeue guarded by status+lease and fails closed with 409 on no-op, DTO built from tx row (no post-commit read). URL single-use tokens scrubbed. Passed api typecheck/test(1037)/build.",
-  "last_updated": "2026-08-28T09:50:09Z",
+  "notes": "T-09.09.03 MERGED (PR #203, squash) after Claude Opus 5 round-3 approve. Dead-letter notifications triage live: GET /api/admin/failed-notifications (masked payload/recipient) + retry/resolve/dismiss gated by admin:jobs:view/retry, atomic transitions with audit notification_retried/resolved/dismissed, retry fail-closed (409 on no-op), DTO from tx row. Reuses notification_dead_letter (migration 0027). Deferred: web UI, fa/en dict, Swagger DTO schema, real-PG integration test, correlation-id threading, lastActorId rename. Returned to idle.",
+  "last_updated": "2026-08-28T09:54:10Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.09.03",
+      "at": "2026-08-28T09:54:10Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.03",
