@@ -6,7 +6,7 @@
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/209",
   "current_task_key": "02-auth-users-admin.md#T-09.11.03",
   "loop_iteration": 349,
-  "fix_attempts": 0,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -292,14 +292,9 @@
     "02-auth-users-admin.md#T-09.11.02"
   ],
   "last_error": null,
-  "notes": "T-09.11.03 (Policy management, L) PR #209 in review: /api/admin/policies CRUD (4 policy types, per-kind validated rules JSONB, enabled flag) + /api/admin/policy-groups CRUD + members (idempotent, cascade-safe). Migration 0044 + drizzle schema + drift-guard test. admin:ai:policies gate + step-up + audit. CI: api+db typecheck/tests/build, openapi routes present, 40 new tests. Deferred: web UI + fa/en dicts + RTL/a11y.",
-  "last_updated": "2026-08-28T12:44:29Z",
+  "notes": "T-09.11.03 PR #209 review round 1 request_changes (3 major + 6 minor) — fixes committed (099894a): idempotent constraints in migration 0044, service-level rules/type cross-validation, audit changedFields/before-after fidelity, create-as-disabled, conditional member audit, zod details, drift pins for created_by TEXT + constraint guards, trailing newlines. Back to in_review for round 2.",
+  "last_updated": "2026-08-28T12:54:43Z",
   "status_history": [
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T04:59:05Z"
-    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
@@ -794,6 +789,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.03",
       "at": "2026-08-28T12:44:29Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T12:54:43Z"
     }
   ]
 }
