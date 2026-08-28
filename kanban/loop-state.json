@@ -281,9 +281,9 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": "Reviewer (anthropic/claude-opus-5) still returns OpenRouter HTTP 402 (credits exhausted) re-confirmed at 2026-08-28T04:31Z. Round-2 review of PR #198 (T-09.08.02) cannot proceed until credits are added. PR #198 is mergeable and all 3 checks pass; only a valid reviewer approval is missing. USER ACTION: add credits at https://openrouter.ai/settings/credits, then clear last_error and set status to in_review.",
+  "last_error": "Reviewer (anthropic/claude-opus-5) still returns OpenRouter HTTP 402 (credits exhausted) re-confirmed at 2026-08-28T04:43Z. Round-2 review of PR #198 (T-09.08.02) cannot proceed until credits are added. PR #198 is mergeable and all 3 checks pass; only a valid reviewer approval is missing. USER ACTION: add credits at https://openrouter.ai/settings/credits, then clear last_error and set status to in_review.",
   "notes": "T-09.08.02 slice 1 (PR #198): round-1 request_changes fixed and pushed (7286109). Round-2 review still blocked: claude-opus-5 returns OpenRouter HTTP 402 (credits exhausted) re-confirmed this tick (iter 337). PR is mergeable, non-draft, all 3 checks pass, but merge requires a valid reviewer approval (AGENTS.md rule 7). No auto-assignment or UI in scope (deliberate slice). USER ACTION REQUIRED: add OpenRouter credits, then set status=in_review and clear last_error to resume round-2 review.",
-  "last_updated": "2026-08-28T04:36:09Z",
+  "last_updated": "2026-08-28T04:43:28Z",
   "status_history": [
     {
       "status": "in_review",
