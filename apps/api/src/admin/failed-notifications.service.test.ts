@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { HttpException } from '@nestjs/common'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import type { FailedNotificationsService as ServiceType } from './failed-notifications.service.js'
 import {
   maskIdentifier,
@@ -49,6 +50,11 @@ async function loadService() {
 function httpStatus(error: unknown): number | undefined {
   if (error instanceof HttpException) return error.getStatus()
   return undefined
+}
+
+function rejectionBody(error: unknown): Record<string, unknown> {
+  if (error instanceof HttpException) return error.getResponse() as Record<string, unknown>
+  throw new Error(`expected HttpException, got ${String(error)}`)
 }
 
 const DL_ROW = {
@@ -149,9 +155,17 @@ describe('maskSensitiveData / maskIdentifier (T-09.09.03)', () => {
   })
 
   it('maskIdentifier shortens ids and hides very short values', () => {
-    expect(maskIdentifier('profile-1234567890')).toBe('pr…90')
+    expect(maskIdentifier('profile-1234567890')).toBe('pr...90')
     expect(maskIdentifier('abc')).toBe('***')
     expect(maskIdentifier(null)).toBeNull()
+  })
+
+  it('fully redacts numeric-string secrets under sensitive keys', () => {
+    expect(maskSensitiveData('1234567890', 'otp')).toBe('***')
+    expect(maskSensitiveData('4829139281', 'token')).toBe('***')
+    expect(maskSensitiveData('0012345678', 'national_id')).toBe('***')
+    // A genuine phone under a phone-ish key still partial-masks for triage.
+    expect(maskSensitiveData('09121234567', 'phone')).toBe('*******4567')
   })
 })
 
@@ -173,7 +187,7 @@ describe('FailedNotificationsService.listFailedNotifications (T-09.09.03)', () =
       eventKey: 'profile_verified',
       status: 'open',
       severity: 'error',
-      recipientKey: 'pr…90',
+      recipientKey: 'pr...90',
     })
     expect(result[0]!.data).toEqual({
       email: 'u***r@***.com',
@@ -236,6 +250,14 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     ])
     mockConnect.mockResolvedValue(client)
     mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]))
+    mockClientQuery.mockImplementation((...args: unknown[]): Promise<{ rows: unknown[]; rowCount: number }> => {
+      const s = String(args[0] ?? '')
+      if (s.includes('UPDATE notification_outbox') || s.includes('UPDATE notification_job')) {
+        return Promise.resolve({ rows: [], rowCount: 1 })
+      }
+      if (s.includes('FOR UPDATE OF dl')) return Promise.resolve({ rows: [DL_ROW] as unknown[], rowCount: 0 })
+      return Promise.resolve({ rows: [], rowCount: 0 })
+    })
 
     await service.retryFailedNotification('dl-1', 'admin-1', '127.0.0.1')
 
@@ -279,6 +301,40 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       .retryFailedNotification('dl-1', 'admin-1', '127.0.0.1')
       .catch((e: unknown) => e)
     expect(httpStatus(rejection)).toBe(409)
+    expect(mockRelease).toHaveBeenCalled()
+  })
+
+  it('retry fails closed with 409 when the underlying job is a no-op (not retryable)', async () => {
+    const { service, mockConnect } = await loadService()
+    const { mockClientQuery, client, mockRelease } = mockClient([
+      { sql: 'BEGIN' },
+      { sql: 'FOR UPDATE OF dl', rows: [DL_ROW] },
+      { sql: 'UPDATE notification_outbox' },
+      { sql: 'UPDATE notification_job' },
+    ])
+    mockConnect.mockResolvedValue(client)
+    // Both re-queue updates affect 0 rows -> not actually retryable.
+    mockClientQuery.mockImplementation((...args: unknown[]): Promise<{ rows: unknown[]; rowCount: number }> => {
+      const s = String(args[0] ?? '')
+      if (s.includes('UPDATE notification_outbox') || s.includes('UPDATE notification_job')) {
+        return Promise.resolve({ rows: [], rowCount: 0 })
+      }
+      if (s.includes('FOR UPDATE OF dl')) return Promise.resolve({ rows: [DL_ROW] as unknown[], rowCount: 0 })
+      return Promise.resolve({ rows: [], rowCount: 0 })
+    })
+    const rejection = await service
+      .retryFailedNotification('dl-1', 'admin-1', '127.0.0.1')
+      .catch((e: unknown) => e)
+    expect(httpStatus(rejection)).toBe(409)
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 409,
+      error: ErrorCodes.CONFLICT_STATE.code,
+    })
+    // No audit row was written for a failed retry.
+    const auditCall = mockClientQuery.mock.calls.find(([s]) =>
+      String(s).includes('INSERT INTO audit_log'),
+    )
+    expect(auditCall).toBeUndefined()
     expect(mockRelease).toHaveBeenCalled()
   })
 

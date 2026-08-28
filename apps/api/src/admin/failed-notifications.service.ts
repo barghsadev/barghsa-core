@@ -220,6 +220,9 @@ export class FailedNotificationsService {
 
     const client = await pool.connect()
     let committed = false
+    let txRow:
+      | (Record<string, unknown> & { status: string; outbox_id: string; channel: string })
+      | undefined
     try {
       await client.query('BEGIN')
 
@@ -234,6 +237,7 @@ export class FailedNotificationsService {
       const row = result.rows[0] as
         | (Record<string, unknown> & { status: string; outbox_id: string; channel: string })
         | undefined
+      txRow = row
 
       if (!row) {
         await client.query('ROLLBACK')
@@ -256,25 +260,42 @@ export class FailedNotificationsService {
       }
 
       if (opts.requeue) {
-        // Re-open the delivery: clear the lease, reset the attempt budget, and
-        // make the row immediately leasable by the outbox worker.
-        await client.query(
+        // Re-open delivery for a *retryable* row only: the outbox row must be
+        // `failed` and not mid-lease, and the channel job must still be
+        // `dead_letter`/`failed`. Guards against racing a worker that may be
+        // concurrently holding/executing the job, and against double-requeue.
+        const outboxUpdate = await client.query(
           `UPDATE notification_outbox
               SET status = 'queued', attempts = 0, locked_until = NULL,
                   scheduled_for = NULL, last_error = NULL, updated_at = NOW()
-            WHERE id = $1`,
+            WHERE id = $1
+              AND status IN ('failed')
+              AND (locked_until IS NULL OR locked_until < NOW())`,
           [row.outbox_id],
         )
         const jobUpdate = await client.query(
           `UPDATE notification_job
               SET status = 'queued', attempts = 0, run_after = NOW(),
                   last_error = NULL, updated_at = NOW()
-            WHERE outbox_id = $1 AND channel = $2`,
+            WHERE outbox_id = $1 AND channel = $2
+              AND status IN ('dead_letter', 'failed')`,
           [row.outbox_id, row.channel],
         )
-        if (jobUpdate?.rowCount === 0) {
-          this.logger.warn(
-            `Retry dead-letter ${id}: no notification_job matched (outbox=${row.outbox_id}, channel=${row.channel})`,
+        // A no-op update means the row is not actually retryable (already
+        // queued/in flight) — fail closed rather than reporting a false success.
+        if (
+          (outboxUpdate?.rowCount ?? 0) === 0 ||
+          (jobUpdate?.rowCount ?? 0) === 0
+        ) {
+          await client.query('ROLLBACK')
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: ErrorCodes.CONFLICT_STATE.code,
+              message:
+                'Notification is not in a retryable state (already queued or in flight)',
+            },
+            409,
           )
         }
       }
@@ -324,25 +345,16 @@ export class FailedNotificationsService {
       client.release()
     }
 
-    return this.getDto(id)
-  }
-
-  private async getDto(id: string): Promise<FailedNotificationDto> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT dl.*, ob.payload
-         FROM notification_dead_letter dl
-         LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
-        WHERE dl.id = $1`,
-      [id],
-    )
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter notification not found' },
-        404,
-      )
-    }
-    return toFailedNotificationDto(result.rows[0]!)
+    // Build the DTO from the row already fetched in-transaction (which carries
+    // the joined payload) plus the new status/actor, so a post-commit read
+    // cannot fail after the transition has landed.
+    return toFailedNotificationDto({
+      ...txRow!,
+      status: toStatus,
+      resolved_by: actorUserId,
+      resolved_at: now,
+      updated_at: now,
+    })
   }
 }
 
@@ -437,8 +449,6 @@ const SENSITIVE_WORDS = new Set([
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 /** Any email-looking sequence inside a longer string. */
 const EMAIL_ANY_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g
-/** A 10–13 digit phone-like number, optionally with a leading + . */
-const PHONE_EMBEDDED_RE = /(?<!\d)(?:\+?\d[\d\s\-().]{8,}\d)(?!\d)/g
 /** URL query/segment params that carry single-use secrets, redacted in situ. */
 const URL_SECRET_PARAM_RE =
   /([?&/](?:token|otp|code|key|secret|signature|jwt|password|passwd|nonce|pin|auth|access_token|refresh_token|verification|reset_token)[=/])[^&#\s"'<>]*/gi
@@ -449,13 +459,22 @@ const URL_SECRET_PARAM_RE =
  * `verification_code` and `apiKeyRef` all resolve to their sensitive words.
  */
 export function isSensitiveKey(key: string): boolean {
-  if (!key) return false
-  const words = key
+  return normalizedWords(key).some((w) => SENSITIVE_WORDS.has(w))
+}
+
+/** Split a key into its normalized, space-separated, lower-cased words. */
+function normalizedWords(key: string): string[] {
+  if (!key) return []
+  return key
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .replace(/[_\-.]+/g, ' ')
     .toLowerCase()
     .split(/\s+/)
-  return words.some((w) => SENSITIVE_WORDS.has(w))
+}
+
+/** Whether a normalized key contains a specific word (e.g. 'phone', 'email'). */
+function keyHasWord(key: string, word: string): boolean {
+  return normalizedWords(key).includes(word)
 }
 
 /** True when a string is a standalone phone-shaped value (10–13 digits). */
@@ -471,7 +490,8 @@ function isPhoneValue(value: string): boolean {
 export function maskIdentifier(id: string | null): string | null {
   if (!id) return null
   if (id.length <= 6) return '***'
-  return `${id.slice(0, 2)}…${id.slice(-2)}`
+  // ASCII ellipsis: bidi-neutral so it can't reorder in RTL (Persian) panels.
+  return `${id.slice(0, 2)}...${id.slice(-2)}`
 }
 
 /**
@@ -487,10 +507,14 @@ export function maskIdentifier(id: string | null): string | null {
 export function maskSensitiveData(value: unknown, key = ''): unknown {
   const sensitive = key !== '' && isSensitiveKey(key)
 
-  // Sensitive key + string value: partial-mask PII for triage, else redact.
+  // Sensitive key holding a string: only partial-mask genuine contact fields;
+  // every other sensitive key is fully redacted so numeric secrets (OTP,
+  // token, national-id digits) never leak even their last characters.
   if (sensitive && typeof value === 'string') {
-    if (EMAIL_RE.test(value)) return maskEmail(value)
-    if (isPhoneValue(value)) return maskPhone(value)
+    if (keyHasWord(key, 'email') && EMAIL_RE.test(value)) return maskEmail(value)
+    if ((keyHasWord(key, 'phone') || keyHasWord(key, 'mobile')) && isPhoneValue(value)) {
+      return maskPhone(value)
+    }
     return '***'
   }
   // Sensitive key + any other value type (numbers, booleans, whole nested
@@ -515,7 +539,6 @@ export function maskSensitiveData(value: unknown, key = ''): unknown {
   // (e.g. a provider `cause` message or a reset link under a non-sensitive key).
   return value
     .replace(EMAIL_ANY_RE, (m) => maskEmail(m))
-    .replace(PHONE_EMBEDDED_RE, (m) => maskPhone(m))
     .replace(URL_SECRET_PARAM_RE, '$1***')
 }
 
