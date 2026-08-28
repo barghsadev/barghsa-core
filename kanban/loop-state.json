@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-09.09.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-09-02--failed-jobs-dashboard",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/201",
+  "current_task_key": "02-auth-users-admin.md#T-09.09.02",
   "loop_iteration": 343,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -286,8 +286,13 @@
   ],
   "last_error": null,
   "notes": "T-09.09.01 MERGED (PR #200, squash 3d9a594) after Claude Opus 5 round-2 approve (4 minor follow-ups deferred: correlation-id threading, fa/en dict keys for statuses/severities, Swagger DTO schema, trailing newlines). Reconciliation exceptions review surface live. Returned to idle.",
-  "last_updated": "2026-08-28T08:26:11Z",
+  "last_updated": "2026-08-28T08:46:13Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.09.02",
+      "at": "2026-08-28T08:46:13Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.09.01",
