@@ -30,10 +30,16 @@ export const ResolutionNoteSchema = z.object({
   note: z.string().trim().min(1).max(1000),
 })
 
-/** Human-readable labels for the reconciliation statuses. */
+/** Strict validation for the list view's limit/offset query params. */
+const ListQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(200).optional(),
+  offset: z.coerce.number().int().min(0).optional(),
+})
+
+/** Swagger enum values for the reconciliation statuses. */
 const STATUSES = [...RECONCILIATION_STATUSES] as const
 
-/** Human-readable labels for the reconciliation severities. */
+/** Swagger enum values for the reconciliation severities. */
 const SEVERITIES = [...RECONCILIATION_SEVERITIES] as const
 
 /**
@@ -139,8 +145,21 @@ export class ReconciliationExceptionsController {
     if (severity !== undefined) {
       options.severity = severity as NonNullable<typeof options.severity>
     }
-    if (limit !== undefined) options.limit = Number(limit)
-    if (offset !== undefined) options.offset = Number(offset)
+    if (limit !== undefined || offset !== undefined) {
+      const parsed = ListQuerySchema.safeParse({ limit, offset })
+      if (!parsed.success) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'limit must be an integer 1..200 and offset a non-negative integer',
+          },
+          400,
+        )
+      }
+      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit
+      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset
+    }
     return this.reconciliationService.listReconciliationExceptions(options)
   }
 
