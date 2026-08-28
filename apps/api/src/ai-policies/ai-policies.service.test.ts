@@ -287,7 +287,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       })
     })
 
-    it('records changedFields [] for an identical-value PUT (audit fidelity)', async () => {
+    it('emits no audit for an identical-value PUT (no-op consistency)', async () => {
       const { mockQuery } = mockPool()
       service = await loadService({ query: mockQuery })
       const existing = policyBaseRow() // rules { actions: ['financial_advice'] }, enabled true
@@ -295,7 +295,6 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         .mockResolvedValueOnce({ rows: [existing] }) // findPolicy
         .mockResolvedValueOnce({ rows: [existing] }) // update return (no real change)
         .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // group count
-        .mockResolvedValueOnce({ rows: [] }) // audit
 
       await service.updatePolicy('pol-1', {
         title: 'No financial advice',
@@ -305,9 +304,12 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         actorUserId: ACTOR,
         ip: '1.2.3.4',
       })
-      const auditMeta = String(mockQuery.mock.calls[3]![1])
-      expect(auditMeta).toContain('"changedFields":[]')
-      expect(auditMeta).toContain('"rulesChanged":false')
+      // Same values → no changedFields → no audit event (matches the
+      // empty-body no-audit path).
+      const auditCalls = mockQuery.mock.calls.filter((call) =>
+        String(call[0]).includes('INSERT INTO audit_log'),
+      )
+      expect(auditCalls).toHaveLength(0)
     })
 
     it('removes a policy and records the audit event', async () => {

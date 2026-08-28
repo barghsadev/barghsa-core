@@ -316,6 +316,10 @@ export class AiPoliciesService {
       push('policy_type', input.policyType)
     }
     // Stable deep comparison via JSON serialization (rules is a plain JSONB doc).
+    // NOTE: key-order-sensitive — {b,a} vs {a,b} counts as changed. This is an
+    // accepted false-positive-only tradeoff (never a false negative), so the
+    // audit may over-report an identical-in-semantics rules edit but never
+    // misses a real guardrail change.
     const rulesActuallyChanged =
       input.rules !== undefined &&
       JSON.stringify(input.rules) !== JSON.stringify(existing.rules)
@@ -343,18 +347,23 @@ export class AiPoliciesService {
     if (!row) throw this.policyNotFound(id)
 
     const groupCount = await this.groupCountForPolicy(id)
-    await this.recordAudit('ai_policy_updated', input.actorUserId, input.ip, {
-      targetId: row.id,
-      title: row.title,
-      changedFields,
-      ...(changedFields.includes('enabled')
-        ? { enabledBefore: existing.enabled, enabledAfter: row.enabled }
-        : {}),
-      ...(changedFields.includes('policy_type')
-        ? { policyTypeBefore: existing.policy_type, policyTypeAfter: row.policy_type }
-        : {}),
-      rulesChanged: rulesActuallyChanged,
-    })
+    // No-op PUTs (same values, changedFields empty) are not audited — this is
+    // consistent with the empty-body early return above emitting no audit
+    // either; only real guardrail changes produce an ai_policy_updated event.
+    if (changedFields.length > 0) {
+      await this.recordAudit('ai_policy_updated', input.actorUserId, input.ip, {
+        targetId: row.id,
+        title: row.title,
+        changedFields,
+        ...(changedFields.includes('enabled')
+          ? { enabledBefore: existing.enabled, enabledAfter: row.enabled }
+          : {}),
+        ...(changedFields.includes('policy_type')
+          ? { policyTypeBefore: existing.policy_type, policyTypeAfter: row.policy_type }
+          : {}),
+        rulesChanged: rulesActuallyChanged,
+      })
+    }
     this.logger.log(`Policy updated: id=${id}, actor=${input.actorUserId}`)
     return { ...this.toPolicyBase(row), groupCount }
   }
