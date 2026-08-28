@@ -252,7 +252,8 @@ export class AgentSlotsService {
       `SELECT slot_key, label, agent_id, updated_at,
               NULL::text AS agent_title, NULL::boolean AS agent_enabled
          FROM ai_agent_slots
-        WHERE slot_key = $1`,
+        WHERE slot_key = $1
+        FOR UPDATE`,
       [slotKey],
     )
     return result.rows[0] ?? null

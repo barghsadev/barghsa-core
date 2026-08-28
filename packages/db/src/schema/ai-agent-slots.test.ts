@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { getTableConfig } from 'drizzle-orm/pg-core'
 import { aiAgentSlots } from './ai-agent-slots.js'
+import { aiAgents } from './ai-agents.js'
 
 /**
  * Drift guard for the AI agent slot table (T-09.11.05).
@@ -38,12 +40,15 @@ describe('AI agent slot schema (T-09.11.05)', () => {
   })
 
   it('drizzle schema declares a UUID FK to ai_agents with SET NULL', () => {
-    const agentId = aiAgentSlots['agentId'] as {
-      getSQLType: () => string
-      onDelete?: string
-      reference?: { foreignKey: boolean }
-    }
+    const agentId = aiAgentSlots['agentId'] as { getSQLType: () => string }
     expect(agentId.getSQLType()).toBe('uuid')
+
+    // Assert the FK behavior explicitly so removing the SET NULL rule (or
+    // retargeting the reference) fails this drift guard rather than passing.
+    const fks = getTableConfig(aiAgentSlots).foreignKeys
+    const agentFk = fks.find((fk) => fk.reference().foreignTable === aiAgents)
+    expect(agentFk).toBeDefined()
+    expect(agentFk!.onDelete).toBe('set null')
   })
 
   it('migration 0046 creates the ai_agent_slots table', () => {
@@ -78,9 +83,13 @@ describe('AI agent slot schema (T-09.11.05)', () => {
   })
 
   it('migration 0046 pins the five-key slot set with a CHECK constraint', () => {
-    expect(MIGRATION).toMatch(/chk_aias_slot_key[\s\S]*slot_key IN \(/)
+    // Assert only within the chk_aias_slot_key block so narrowing the IN list
+    // (e.g. dropping a key) actually fails the guard instead of being masked
+    // by the same literals appearing in the seed INSERT.
+    const checkBlock = /chk_aias_slot_key[\s\S]*?\)\s*;/.exec(MIGRATION)?.[0] ?? ''
+    expect(checkBlock).toMatch(/slot_key IN \(/)
     for (const key of SLOT_KEYS) {
-      expect(MIGRATION).toMatch(new RegExp(`'${key}'`))
+      expect(checkBlock).toMatch(new RegExp(`'${key}'`))
     }
   })
 
