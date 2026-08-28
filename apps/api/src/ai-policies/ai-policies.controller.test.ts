@@ -163,6 +163,16 @@ describe('PoliciesController (T-09.11.03)', () => {
       expect(mockUpdatePolicy).not.toHaveBeenCalled()
     })
 
+    it('rejects a mismatched policyType + rules pair (controller superRefine)', async () => {
+      await expect(
+        controller.update(adminReq, 'pol-1', {
+          policyType: 'response_style',
+          rules: { actions: ['financial_advice'] },
+        } as never),
+      ).rejects.toMatchObject({ status: 400 })
+      expect(mockUpdatePolicy).not.toHaveBeenCalled()
+    })
+
     it('forwards only provided fields and the enabled toggle', async () => {
       mockUpdatePolicy.mockResolvedValue(basePolicy({ enabled: false }))
       const result = await controller.update(adminReq, 'pol-1', { enabled: false } as never)

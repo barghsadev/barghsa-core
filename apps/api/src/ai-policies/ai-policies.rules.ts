@@ -33,10 +33,7 @@ export const rulesSchemas: Record<PolicyType, z.ZodType> = {
 }
 
 /** Flattened zod issues for client-facing validation detail. */
-export function rulesErrorDetails(
-  type: PolicyType,
-  issues: z.ZodIssue[],
-): Array<{ path: string; message: string }> {
+export function rulesErrorDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
   return issues.map((issue) => ({
     path: `rules.${issue.path.join('.')}`,
     message: issue.message,

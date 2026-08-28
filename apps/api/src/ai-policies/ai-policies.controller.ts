@@ -66,10 +66,31 @@ export const UpdatePolicySchema = z
     // Rules/type cross-validation happens authoritatively in the service
     // where the stored policy_type is known (a rules-only update must be
     // checked against the existing type; a type change requires new rules).
+    // The both-fields-present case is also checked here (defense in depth).
     rules: z.record(z.string(), z.unknown()).optional(),
     enabled: z.boolean().optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .superRefine((v, ctx) => {
+    if (v.policyType !== undefined && v.rules !== undefined) {
+      const parsed = rulesSchemas[v.policyType].safeParse(v.rules)
+      if (!parsed.success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['rules'],
+          message: `Invalid rules for policy type "${v.policyType}": ${parsed.error.issues
+            .map((i) => i.message)
+            .join('; ')}`,
+        })
+      }
+    }
+    if (Object.keys(v).length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: [],
+        message: 'At least one field must be provided',
+      })
+    }
+  })
 
 export const CreatePolicyGroupSchema = z.object({
   title: titleSchema,
@@ -183,6 +204,13 @@ export class PoliciesController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Update an AI policy (admin)' })
   @ApiResponse({ status: 200, description: 'AI policy updated.' })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Validation failure. Error codes: VALIDATION_PARSE_ZOD (payload shape, with details[]), ' +
+      'AI_POLICY_RULES_INVALID (rules incompatible with effective policy type, with details[]), ' +
+      'AI_POLICY_TYPE_WITHOUT_RULES (policyType changed without a matching rules document).',
+  })
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,

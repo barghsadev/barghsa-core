@@ -277,7 +277,7 @@ export class AiPoliciesService {
             statusCode: 400,
             error: 'AI_POLICY_RULES_INVALID',
             message: `Invalid rules for policy type "${effectiveType}"`,
-            details: rulesErrorDetails(effectiveType, parsedRules.error.issues),
+            details: rulesErrorDetails(parsedRules.error.issues),
           },
           400,
         )
@@ -312,11 +312,15 @@ export class AiPoliciesService {
       push('description', input.description)
     }
     if (input.policyType !== undefined) {
-      changedFields.push('policy_type')
+      if (input.policyType !== existing.policy_type) changedFields.push('policy_type')
       push('policy_type', input.policyType)
     }
+    // Stable deep comparison via JSON serialization (rules is a plain JSONB doc).
+    const rulesActuallyChanged =
+      input.rules !== undefined &&
+      JSON.stringify(input.rules) !== JSON.stringify(existing.rules)
     if (input.rules !== undefined) {
-      changedFields.push('rules')
+      if (rulesActuallyChanged) changedFields.push('rules')
       push('rules', JSON.stringify(input.rules))
     }
     if (input.enabled !== undefined) {
@@ -349,7 +353,7 @@ export class AiPoliciesService {
       ...(changedFields.includes('policy_type')
         ? { policyTypeBefore: existing.policy_type, policyTypeAfter: row.policy_type }
         : {}),
-      rulesChanged: changedFields.includes('rules'),
+      rulesChanged: rulesActuallyChanged,
     })
     this.logger.log(`Policy updated: id=${id}, actor=${input.actorUserId}`)
     return { ...this.toPolicyBase(row), groupCount }

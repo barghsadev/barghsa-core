@@ -139,8 +139,8 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         ip: '1.2.3.4',
       })
       expect(result).toMatchObject({ enabled: false })
-      // The enabled value is the 6th bind parameter.
-      expect(mockQuery.mock.calls[0]![1]).toContain(false)
+      // enabled is the 6th bind parameter (index 5): [id, title, desc, type, rules, enabled, ...].
+      expect(mockQuery.mock.calls[0]![1]![5]).toBe(false)
     })
 
     it('throws 404 on update of a missing policy', async () => {
@@ -239,6 +239,75 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       const auditMeta = String(mockQuery.mock.calls[3]![1])
       expect(auditMeta).toContain('"changedFields"')
       expect(auditMeta).toContain('"rulesChanged":true')
+    })
+
+    it('accepts a matching policyType + rules pair (effective-type branch)', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery
+        .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+        .mockResolvedValueOnce({
+          rows: [
+            policyBaseRow({
+              policy_type: 'response_style',
+              rules: { tone: 'friendly', language: 'fa' },
+            }),
+          ],
+        }) // update return
+        .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // group count
+        .mockResolvedValueOnce({ rows: [] }) // audit
+
+      const result = await service.updatePolicy('pol-1', {
+        policyType: 'response_style',
+        rules: { tone: 'friendly', language: 'fa' },
+        actorUserId: ACTOR,
+        ip: '1.2.3.4',
+      })
+      expect(result).toMatchObject({ policyType: 'response_style' })
+      const auditMeta = String(mockQuery.mock.calls[3]![1])
+      expect(auditMeta).toContain('"policyTypeBefore":"disallowed_actions"')
+      expect(auditMeta).toContain('"policyTypeAfter":"response_style"')
+    })
+
+    it('rejects a mismatched policyType + rules pair', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery.mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+
+      await expect(
+        service.updatePolicy('pol-1', {
+          policyType: 'response_style',
+          rules: { actions: ['financial_advice'] }, // actions[] is invalid for response_style
+          actorUserId: ACTOR,
+          ip: '1.2.3.4',
+        }),
+      ).rejects.toMatchObject({
+        status: 400,
+        response: { error: 'AI_POLICY_RULES_INVALID' },
+      })
+    })
+
+    it('records changedFields [] for an identical-value PUT (audit fidelity)', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      const existing = policyBaseRow() // rules { actions: ['financial_advice'] }, enabled true
+      mockQuery
+        .mockResolvedValueOnce({ rows: [existing] }) // findPolicy
+        .mockResolvedValueOnce({ rows: [existing] }) // update return (no real change)
+        .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // group count
+        .mockResolvedValueOnce({ rows: [] }) // audit
+
+      await service.updatePolicy('pol-1', {
+        title: 'No financial advice',
+        policyType: 'disallowed_actions',
+        rules: { actions: ['financial_advice'] },
+        enabled: true,
+        actorUserId: ACTOR,
+        ip: '1.2.3.4',
+      })
+      const auditMeta = String(mockQuery.mock.calls[3]![1])
+      expect(auditMeta).toContain('"changedFields":[]')
+      expect(auditMeta).toContain('"rulesChanged":false')
     })
 
     it('removes a policy and records the audit event', async () => {
