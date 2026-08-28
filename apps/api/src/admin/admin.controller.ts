@@ -1828,6 +1828,57 @@ export class AdminController {
   }
 
   /**
+   * GET /api/admin/config/green-electricity-rules/safety-status
+   *
+   * T-09.10.03 — Green rule activation safety status. Reports, for each
+   * order mode, whether the mandatory-green rule is active and whether it is
+   * currently blocked (fail-closed) because the green electricity product is
+   * not activatable (missing/inactive/unpriced). The admin UI uses this to
+   * alert when an active rule has become unenforceable. Permission:
+   * `admin:catalogue:edit`.
+   */
+  @Get('config/green-electricity-rules/safety-status')
+  @ApiOperation({ summary: 'Get the mandatory green-electricity rule safety status (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Per-mode rule activation + fail-closed safety status.',
+    schema: {
+      type: 'object',
+      properties: {
+        product: {
+          type: 'object',
+          properties: {
+            exists: { type: 'boolean' },
+            status: { type: 'string', nullable: true },
+            priceIrR: { type: 'number', nullable: true },
+          },
+        },
+        simple_order: {
+          type: 'object',
+          properties: {
+            ruleActive: { type: 'boolean' },
+            blocked: { type: 'boolean' },
+            reasons: { type: 'array', items: { type: 'string' } },
+          },
+        },
+        advanced_order: {
+          type: 'object',
+          properties: {
+            ruleActive: { type: 'boolean' },
+            blocked: { type: 'boolean' },
+            reasons: { type: 'array', items: { type: 'string' } },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getGreenElectricitySafetyStatus(@Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req)
+    return this.adminService.getGreenElectricitySafetyStatus()
+  }
+
+  /**
    * PUT /api/admin/config/green-electricity-rules
    *
    * Persists new mandatory green-electricity rules for both order modes.
