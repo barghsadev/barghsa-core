@@ -19,12 +19,17 @@ import { createTable } from '../base-table.js'
  * - `target_hours`  snapshot of the breached target (survives later
  *                   reconfiguration for the audit trail)
  * - `alerted_at`    when the episode's alert was recorded (base column)
+ * - `escalation_level`  highest escalation tier alerted for the episode
+ *                   (1 = assigned, 2 = team lead, 3 = admin; T-09.08.03)
+ * - `escalated_at`  when the current tier was emitted (NULL until the first
+ *                   level-2 escalation; becomes the next tier's delay base)
  *
- * Database-level CHECK constraints live in migration `0037` only (Drizzle's
+ * The escalation columns were added by migration `0039` (additive expand).
+ * Database-level CHECK constraints live in the migrations only (Drizzle's
  * column builder in v0.40 does not expose `.check()`): `chk_sba_service_type`,
- * `chk_sba_target_hours`, plus the `uq_sba_item` unique constraint.
- * `service-breach-alerts.test.ts` pins migration 0037 so a future
- * `drizzle-kit generate` cannot silently drop them.
+ * `chk_sba_target_hours`, `chk_sba_escalation_level`, plus the `uq_sba_item`
+ * unique constraint. `service-breach-alerts.test.ts` pins migrations 0037 and
+ * 0039 so a future `drizzle-kit generate` cannot silently drop them.
  *
  * @module db/schema
  */
@@ -42,4 +47,18 @@ export const serviceBreachAlerts = createTable('service_breach_alerts', {
   alertedAt: timestamp('alerted_at', { withTimezone: true, mode: 'date' })
     .defaultNow()
     .notNull(),
+
+  /**
+   * Highest escalation tier alerted for the episode: 1 = assigned (the
+   * breach alert, default), 2 = team lead, 3 = admin (T-09.08.03). 3 is
+   * terminal — no further escalation.
+   */
+  escalationLevel: integer('escalation_level').notNull().default(1),
+
+  /**
+   * When the current {@link escalationLevel} was emitted; NULL until the
+   * first level-2 escalation, at which point it becomes the delay baseline
+   * for the next tier.
+   */
+  escalatedAt: timestamp('escalated_at', { withTimezone: true, mode: 'date' }),
 })

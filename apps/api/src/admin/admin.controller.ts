@@ -1783,6 +1783,110 @@ export class AdminController {
   }
 
   /**
+   * Permission gate for service escalation policy configuration (S-09.08,
+   * T-09.08.03).
+   *
+   * The S-09.08 escalation-policy surface is protected by the
+   * `admin:service-escalation:edit` capability. Today the session model
+   * exposes only `isAdmin` (platform admin); granular staff-role permissions
+   * arrive with the role system (T-09.05). Until then the capability maps to
+   * a platform admin session, matching the S-09.08 service-targets gate.
+   * Centralized here as a single enforcement point for the escalation config
+   * surface.
+   */
+  private assertEscalationEditPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage the service escalation policy',
+        },
+        403,
+      )
+    }
+  }
+
+  /**
+   * GET /api/admin/config/escalation-policy
+   *
+   * Returns the admin-configured service escalation policy per service type,
+   * defaulting every type to `null` (escalation disabled) when nothing has
+   * been persisted yet.
+   */
+  @Get('config/escalation-policy')
+  @ApiOperation({ summary: 'Get the service escalation policy configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current escalation policy per service type.',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: {
+          type: 'object',
+          nullable: true,
+          properties: {
+            level2: { type: 'object', properties: { delayHours: { type: 'number', nullable: true }, channels: { type: 'array', items: { type: 'string' } } } },
+            level3: { type: 'object', properties: { delayHours: { type: 'number', nullable: true }, channels: { type: 'array', items: { type: 'string' } } } },
+          },
+        },
+        verification_case: { type: 'object', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getEscalationPolicy(@Req() req: AuthenticatedRequest) {
+    this.assertEscalationEditPermission(req)
+    return this.adminService.getEscalationPolicy()
+  }
+
+  /**
+   * PUT /api/admin/config/escalation-policy
+   *
+   * Persists a new service escalation policy. Body is a map of service type →
+   * `{ level2: { delayHours, channels }, level3: { delayHours, channels } }`
+   * or `null` to disable escalation for a type. The map is a full replace —
+   * types omitted from the payload become disabled.
+   */
+  @Put('config/escalation-policy')
+  @ApiOperation({ summary: 'Update the service escalation policy configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: {
+          type: 'object',
+          nullable: true,
+          properties: {
+            level2: { type: 'object', properties: { delayHours: { type: 'number', nullable: true, example: 24 }, channels: { type: 'array', items: { type: 'string', enum: ['in_app', 'email'] }, example: ['in_app', 'email'] } } },
+            level3: { type: 'object', properties: { delayHours: { type: 'number', nullable: true, example: 48 }, channels: { type: 'array', items: { type: 'string', enum: ['in_app', 'email'] }, example: ['in_app'] } } },
+          },
+        },
+        verification_case: { type: 'object', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Escalation policy updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: { type: 'object', nullable: true },
+        verification_case: { type: 'object', nullable: true },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setEscalationPolicy(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertEscalationEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setEscalationPolicy(rawBody, req.session.userId, ip)
+  }
+
+  /**
    * Permission gate for staff teams and assignment rules (S-09.08,
    * T-09.08.02).
    *
