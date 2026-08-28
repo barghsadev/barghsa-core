@@ -6,7 +6,7 @@
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/209",
   "current_task_key": "02-auth-users-admin.md#T-09.11.03",
   "loop_iteration": 349,
-  "fix_attempts": 1,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -292,14 +292,9 @@
     "02-auth-users-admin.md#T-09.11.02"
   ],
   "last_error": null,
-  "notes": "T-09.11.03 PR #209 review round 1 request_changes (3 major + 6 minor) — fixes committed (099894a): idempotent constraints in migration 0044, service-level rules/type cross-validation, audit changedFields/before-after fidelity, create-as-disabled, conditional member audit, zod details, drift pins for created_by TEXT + constraint guards, trailing newlines. Back to in_review for round 2.",
-  "last_updated": "2026-08-28T12:54:43Z",
+  "notes": "T-09.11.03 PR #209: r1 request_changes fixed; r2 request_changes (CI Run tests red on uuidv7-migration.test.ts — pre-existing order-dependent pgcrypto flake; root cause fixed: migration 0000 now CREATE EXTENSION pgcrypto WITH SCHEMA public, verified on postgres:17-alpine) + changedFields no-op fixes + controller superRefine + OpenAPI 400 codes + positional test asserts. Fresh CI pushed (33174241747). Awaiting green CI + review round 4.",
+  "last_updated": "2026-08-28T13:11:15Z",
   "status_history": [
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:39:31Z"
-    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.07.02",
@@ -794,6 +789,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.03",
       "at": "2026-08-28T12:54:43Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T13:11:15Z"
     }
   ]
 }
