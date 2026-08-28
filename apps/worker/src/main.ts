@@ -5,6 +5,7 @@ import { collectNotificationGauges, exportWorkerMetrics } from './notifications/
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceEscalations } from './service-targets/escalation-scanner.js';
+import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -152,8 +153,14 @@ async function main(): Promise<void> {
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
+      await recordJobSuccess('notification_outbox_poll');
     } catch (err) {
       logger.error(`Outbox poll failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: 'notification_outbox_poll',
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
     }
   }, OUTBOX_POLL_MS);
   outboxPoller.unref();
@@ -190,8 +197,23 @@ async function main(): Promise<void> {
           `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`,
         );
       }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: 'service_breach_scan',
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length },
+        });
+      } else {
+        await recordJobSuccess('service_breach_scan');
+      }
     } catch (err) {
       logger.error(`Breach scan failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: 'service_breach_scan',
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
     } finally {
       breachScanInFlight = false;
     }
@@ -231,8 +253,23 @@ async function main(): Promise<void> {
           `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`,
         );
       }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: 'service_escalation_scan',
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length },
+        });
+      } else {
+        await recordJobSuccess('service_escalation_scan');
+      }
     } catch (err) {
       logger.error(`Escalation scan failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: 'service_escalation_scan',
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
     } finally {
       escalationScanInFlight = false;
     }
