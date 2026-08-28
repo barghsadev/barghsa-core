@@ -11,12 +11,19 @@ import { sanitizeError } from '../notifications/error-redact.js'
 export const DEFAULT_MAX_ATTEMPTS = 5
 
 /**
- * Back-off applied when a job is marked `retrying` (or keeps failing), so
- * the admin dashboard reflects a delay before the next re-run. The worker's
- * recurring loops re-run on their own cadence regardless; this field is for
- * triage display and future schedule-aware runners.
+ * Back-off applied when a job keeps failing, so the admin dashboard reflects
+ * a delay before the next re-run. The worker's recurring loops re-run on
+ * their own cadence regardless; this field is for triage display and future
+ * schedule-aware runners.
  */
 const RETRY_BACKOFF_MS = 60_000
+
+/**
+ * The predicate of the `background_jobs` partial unique index that scopes the
+ * `ON CONFLICT` upsert target (see migration 0041). Kept in one place so the
+ * recorder SQL and the migration constraint cannot drift.
+ */
+const ACTIVE_STATUSES_SQL = "status IN ('failed', 'retrying', 'dead_letter')"
 
 /**
  * Input for {@link recordJobFailure}.
@@ -42,13 +49,19 @@ export interface RecordFailureInput {
  * throws, and {@link recordJobSuccess} on the next clean run. Every call is
  * wrapped so a ledger write can never mask the underlying worker error.
  *
+ * Reliability: the failure path is a single atomic `INSERT ... ON CONFLICT`
+ * upsert scoped to the partial unique index
+ * `uq_background_jobs_active_per_type`. PostgreSQL serialises concurrent
+ * writers on that index, so two overlapping poll ticks (or two worker
+ * replicas) can never both insert a second active row nor lose an attempt
+ * increment — unlike a SELECT-then-write read-modify-write, which races.
+ *
  * Semantics:
- * - one *active* failure row per job_type (the DB enforces at most one via
- *   the partial unique index `uq_background_jobs_active_per_type` for
- *   statuses failed/retrying/dead_letter);
- * - a new failure INSERTs a fresh row (status failed, attempts=1);
- * - a repeat failure on an active row increments attempts and advances the
- *   back-off; when attempts reach max, the row is dead-lettered;
+ * - a fresh failure INSERTs a row (status failed, attempts=1);
+ * - a repeat failure on an active row increments attempts; once attempts
+ *   reach max the row is dead-lettered, otherwise it returns to `failed`
+ *   (a `retrying` row reverts to `failed` on a new failure so it shows
+ *   under the dashboard's Failed filter);
  * - a success resolves any active row for that job_type (auto-clear), so a
  *   job that recovers leaves the dashboard.
  */
@@ -67,66 +80,39 @@ export async function recordJobFailure(
     const now = new Date()
     const nextRunAt = new Date(now.getTime() + RETRY_BACKOFF_MS)
 
-    const existing = await p.query(
-      `SELECT id, attempts, status
-         FROM background_jobs
-        WHERE job_type = $1
-          AND status IN ('failed', 'retrying', 'dead_letter')
-        ORDER BY first_failed_at DESC
-        LIMIT 1
-        FOR UPDATE`,
-      [input.jobType],
-    )
-
-    const row = existing.rows[0] as
-      | { id: string; attempts: number; status: string }
-      | undefined
-
-    if (!row) {
-      await p.query(
-        `INSERT INTO background_jobs
-           (job_type, status, error, error_category, attempts, max_attempts,
-            payload, first_failed_at, last_run_at, next_run_at,
-            created_at, updated_at)
-         VALUES ($1, 'failed', $2, $3, 1, $4, $5::jsonb, $6, $6, $7, $6, $6)`,
-        [
-          input.jobType,
-          safeMessage || null,
-          category,
-          maxAttempts,
-          JSON.stringify(input.payload ?? {}),
-          now,
-          nextRunAt,
-        ],
-      )
-      return
-    }
-
-    const attempts = row.attempts + 1
-    const exhausted = attempts >= maxAttempts
-    const nextStatus = exhausted ? 'dead_letter' : row.status === 'dead_letter' ? 'dead_letter' : row.status
     await p.query(
-      `UPDATE background_jobs
-          SET status = $2,
-              error = $3,
-              error_category = $4,
-              attempts = $5,
-              max_attempts = $6,
-              payload = $7::jsonb,
-              last_run_at = $8,
-              next_run_at = $9,
-              updated_at = $8
-        WHERE id = $1`,
+      `INSERT INTO background_jobs
+         (job_type, status, error, error_category, attempts, max_attempts,
+          payload, first_failed_at, last_run_at, next_run_at,
+          created_at, updated_at)
+       VALUES ($1, 'failed', $2, $3, 1, $4, $5::jsonb, $6, $6, $7, $6, $6)
+       ON CONFLICT (job_type) WHERE ${ACTIVE_STATUSES_SQL}
+       DO UPDATE SET
+         status = CASE
+                    WHEN background_jobs.attempts + 1 >= EXCLUDED.max_attempts
+                      THEN 'dead_letter'
+                    ELSE 'failed'
+                  END,
+         error = EXCLUDED.error,
+         error_category = EXCLUDED.error_category,
+         attempts = background_jobs.attempts + 1,
+         max_attempts = EXCLUDED.max_attempts,
+         payload = EXCLUDED.payload,
+         last_run_at = EXCLUDED.last_run_at,
+         next_run_at = CASE
+                         WHEN background_jobs.attempts + 1 >= EXCLUDED.max_attempts
+                           THEN NULL
+                         ELSE EXCLUDED.next_run_at
+                       END,
+         updated_at = EXCLUDED.last_run_at`,
       [
-        row.id,
-        nextStatus,
+        input.jobType,
         safeMessage || null,
         category,
-        attempts,
         maxAttempts,
         JSON.stringify(input.payload ?? {}),
         now,
-        exhausted ? null : nextRunAt,
+        nextRunAt,
       ],
     )
   } catch (err) {

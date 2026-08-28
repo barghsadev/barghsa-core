@@ -12,66 +12,75 @@ function makePool() {
 }
 
 describe('job-recorder (T-09.09.02)', () => {
-  it('inserts a fresh failure row when no active row exists', async () => {
+  it('records a failure as a single atomic upsert (fresh/insert params)', async () => {
     const { mockQuery, pool } = makePool()
-    // SELECT finds nothing, then INSERT.
-    mockQuery.mockResolvedValueOnce({ rows: [] })
     await recordJobFailure({ jobType: 'service_breach_scan', error: 'boom' }, pool)
 
-    const selectCall = mockQuery.mock.calls[0]!
-    expect(String(selectCall[0])).toContain('FROM background_jobs')
-    const insertCall = mockQuery.mock.calls[1]!
-    expect(String(insertCall[0])).toContain('INSERT INTO background_jobs')
-    // status 'failed' is a SQL literal; params are [jobType, error, category, maxAttempts, ...]
-    expect(String(insertCall[0])).toContain("'failed'")
-    expect(insertCall[1]![0]).toBe('service_breach_scan')
-    expect(insertCall[1]![1]).toBe('boom') // sanitized error
-    expect(insertCall[1]![2]).toBe('transient')
-    expect(insertCall[1]![3]).toBe(5) // maxAttempts
+    // Exactly one statement — no separate SELECT-then-write.
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+    const sql = String(mockQuery.mock.calls[0]![0])
+    expect(sql).toContain('INSERT INTO background_jobs')
+    expect(sql).toContain(
+      "ON CONFLICT (job_type) WHERE status IN ('failed', 'retrying', 'dead_letter')",
+    )
+    expect(sql).toContain('DO UPDATE SET')
+
+    const params = mockQuery.mock.calls[0]![1] as unknown[]
+    // [jobType, safeError, category, maxAttempts, payload, now, nextRunAt]
+    expect(params[0]).toBe('service_breach_scan')
+    expect(params[1]).toBe('boom')
+    expect(params[2]).toBe('transient')
+    expect(params[3]).toBe(DEFAULT_MAX_ATTEMPTS)
   })
 
-  it('increments attempts on an existing active row', async () => {
+  it('increments attempts inside the upsert DO UPDATE (no lost increments)', async () => {
     const { mockQuery, pool } = makePool()
-    mockQuery.mockResolvedValueOnce({
-      rows: [{ id: 'job-1', attempts: 2, status: 'failed' }],
-    })
     await recordJobFailure({ jobType: 'service_breach_scan', error: 'boom again' }, pool)
 
-    const updateCall = mockQuery.mock.calls[1]!
-    expect(String(updateCall[0])).toContain('UPDATE background_jobs')
-    expect(updateCall[1]![0]).toBe('job-1')
-    expect(updateCall[1]![4]).toBe(3) // attempts+1
-    expect(updateCall[1]![1]).toBe('failed')
+    const sql = String(mockQuery.mock.calls[0]![0])
+    expect(sql).toContain('attempts = background_jobs.attempts + 1')
+    // No standalone UPDATE statement anywhere in the failure path.
+    expect(sql).not.toMatch(/^\s*UPDATE background_jobs/m)
   })
 
-  it('dead-letters the row once attempts reach max_attempts', async () => {
+  it('dead-letters in the upsert once attempts + 1 reach max_attempts', async () => {
     const { mockQuery, pool } = makePool()
-    mockQuery.mockResolvedValueOnce({
-      rows: [{ id: 'job-1', attempts: 4, status: 'failed' }],
-    })
     await recordJobFailure(
       { jobType: 'service_breach_scan', error: 'final', maxAttempts: 5 },
       pool,
     )
 
-    const updateCall = mockQuery.mock.calls[1]!
-    expect(updateCall[1]![1]).toBe('dead_letter')
-    expect(updateCall[1]![4]).toBe(5)
-    // No next_run_at when dead-lettered (param 8 is null).
-    expect(updateCall[1]![8]).toBeNull()
+    const sql = String(mockQuery.mock.calls[0]![0])
+    expect(sql).toMatch(
+      /WHEN background_jobs\.attempts \+ 1 >= EXCLUDED\.max_attempts\s+THEN 'dead_letter'/,
+    )
+    // Clear next_run_at when dead-lettered.
+    expect(sql).toMatch(
+      /WHEN background_jobs\.attempts \+ 1 >= EXCLUDED\.max_attempts\s+THEN NULL/,
+    )
   })
 
-  it('sanitizes the persisted error message', async () => {
+  it('returns a non-exhausted row to `failed` so it stays under the Failed filter', async () => {
     const { mockQuery, pool } = makePool()
-    mockQuery.mockResolvedValueOnce({ rows: [] })
+    await recordJobFailure({ jobType: 'service_breach_scan', error: 'again' }, pool)
+
+    const sql = String(mockQuery.mock.calls[0]![0])
+    // The ELSE branch reverts retrying -> failed when not yet exhausted.
+    expect(sql).toMatch(/THEN 'dead_letter'\s+ELSE 'failed'\s+END/)
+  })
+
+  it('sanitizes the persisted error message (asserts on the real param, index 1)', async () => {
+    const { mockQuery, pool } = makePool()
     await recordJobFailure(
-      { jobType: 'service_breach_scan', error: 'provider threw: postgres://u:p@h/db' },
+      { jobType: 'service_breach_scan', error: 'provider threw: postgres://alice:s3cret@db.internal:5432/main' },
       pool,
     )
-    const insertCall = mockQuery.mock.calls[1]!
-    const persisted = String(insertCall[1]![2])
-    expect(persisted).not.toContain('postgres://')
-    expect(persisted).not.toContain('u:p')
+    const params = mockQuery.mock.calls[0]![1] as unknown[]
+    const persisted = String(params[1]) // the sanitized message
+    expect(persisted).not.toContain('s3cret')
+    expect(persisted).not.toContain('alice:s3cret')
+    expect(persisted).toContain('[REDACTED]')
+    expect(persisted).toContain('postgres://') // scheme itself is retained (secrets redacted)
   })
 
   it('never throws when the DB write fails (best-effort)', async () => {
@@ -86,9 +95,9 @@ describe('job-recorder (T-09.09.02)', () => {
     const { mockQuery, pool } = makePool()
     await recordJobSuccess('service_breach_scan', pool)
 
-    const updateCall = mockQuery.mock.calls[0]!
-    expect(String(updateCall[0])).toContain("status = 'resolved'")
-    expect(updateCall[1]![0]).toBe('service_breach_scan')
+    const sql = String(mockQuery.mock.calls[0]![0])
+    expect(sql).toContain("status = 'resolved'")
+    expect(mockQuery.mock.calls[0]![1]![0]).toBe('service_breach_scan')
   })
 
   it('exposes a sane default max attempts', () => {
