@@ -6,3 +6,4 @@
  */
 export * from './dual-approval-config.js'
 export * from './approval-request.js'
+export * from './wallet-topup-config.js'

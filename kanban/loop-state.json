@@ -1,11 +1,11 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.10.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-10-01--wallet-topup-limit",
   "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 345,
+  "current_task_key": "02-auth-users-admin.md#T-09.10.01",
+  "loop_iteration": 346,
   "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -287,8 +287,8 @@
     "02-auth-users-admin.md#T-09.09.03"
   ],
   "last_error": null,
-  "notes": "T-09.09.03 MERGED (PR #203, squash) after Claude Opus 5 round-3 approve. Dead-letter notifications triage live: GET /api/admin/failed-notifications (masked payload/recipient) + retry/resolve/dismiss gated by admin:jobs:view/retry, atomic transitions with audit notification_retried/resolved/dismissed, retry fail-closed (409 on no-op), DTO from tx row. Reuses notification_dead_letter (migration 0027). Deferred: web UI, fa/en dict, Swagger DTO schema, real-PG integration test, correlation-id threading, lastActorId rename. Returned to idle.",
-  "last_updated": "2026-08-28T09:54:10Z",
+  "notes": "T-09.10.01 START (S): admin-configurable per-transaction online wallet top-up limit (IRR, default 2,000,000,000) stored in app_config (finance.wallet_top_up_limit), versioned + audit config_change, enforced on the online top-up path (seam for T-04.2.02.01). Dependencies: admin config framework, wallet module — both present.",
+  "last_updated": "2026-08-28T10:04:08Z",
   "status_history": [
     {
       "status": "merged",
@@ -779,6 +779,11 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.08.03",
       "at": "2026-08-28T11:00:00Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.10.01",
+      "at": "2026-08-28T10:04:08Z"
     }
   ]
 }

@@ -1693,6 +1693,75 @@ export class AdminController {
   }
 
   /**
+   * GET /api/admin/config/wallet-top-up-limit
+   *
+   * Returns the current admin-configurable per-transaction online wallet
+   * top-up limit as `{ limitIrR }`. Falls back to `{ limitIrR: 2_000_000_000 }`
+   * (2,000,000,000 IRR) when no value is persisted.
+   * Permission: `admin:financial:edit` (T-09.10.01).
+   */
+  @Get('config/wallet-top-up-limit')
+  @ApiOperation({ summary: 'Get the online wallet top-up limit configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current online wallet top-up limit config.',
+    schema: {
+      type: 'object',
+      properties: {
+        limitIrR: { type: 'number', example: 2000000000 },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getWalletTopUpLimit(@Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req)
+    return this.adminService.getWalletTopUpLimitConfig()
+  }
+
+  /**
+   * PUT /api/admin/config/wallet-top-up-limit
+   *
+   * Persists a new per-transaction online wallet top-up limit. Body:
+   * `{ limit_irr }`. Validated server-side: integer IRR between 0 and
+   * `Number.MAX_SAFE_INTEGER` (0 = all online top-ups blocked). Changes are
+   * versioned and audited (config_change).
+   * Permission: `admin:financial:edit` (T-09.10.01).
+   *
+   * Step-up on this mutation is deliberately deferred, matching the other
+   * admin config panels (see setDualApprovalThreshold): the web app does not
+   * implement the step-up challenge flow yet. The emergency override is
+   * likewise deferred until the step-up flow and alert pipeline exist.
+   */
+  @Put('config/wallet-top-up-limit')
+  @ApiOperation({ summary: 'Update the online wallet top-up limit configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['limit_irr'],
+      properties: {
+        limit_irr: { type: 'number', example: 2000000000, minimum: 0 },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Online wallet top-up limit updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        limitIrR: { type: 'number' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setWalletTopUpLimit(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertFinancialThresholdPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session.userId, ip)
+  }
+
+  /**
    * Permission gate for service response target configuration (S-09.08).
    *
    * The S-09.08 service-targets surface (T-09.08.01) is protected by the

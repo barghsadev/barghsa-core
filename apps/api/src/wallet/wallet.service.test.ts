@@ -236,4 +236,49 @@ describe('WalletService', () => {
       expect(tx.amount).toBe(100000n)
     })
   })
+
+  describe('validateOnlineTopUpAmount (T-09.10.01)', () => {
+    beforeEach(() => {
+      mockPool.query.mockReset()
+    })
+
+    it('rejects a non-positive amount', async () => {
+      await expect(service.validateOnlineTopUpAmount(0n)).rejects.toThrow(
+        'Online top-up amount must be positive',
+      )
+      await expect(service.validateOnlineTopUpAmount(-100n)).rejects.toThrow(
+        'Online top-up amount must be positive',
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
+    })
+
+    it('uses the 2,000,000,000 IRR default when no limit is persisted', async () => {
+      mockPool.query.mockResolvedValue({ rows: [] })
+      await expect(service.validateOnlineTopUpAmount(2_000_000_000n)).resolves.toBeUndefined()
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('app_config'),
+        ['finance.wallet_top_up_limit'],
+      )
+    })
+
+    it('rejects an amount above the default limit', async () => {
+      mockPool.query.mockResolvedValue({ rows: [] })
+      await expect(service.validateOnlineTopUpAmount(2_000_000_001n)).rejects.toThrow(
+        'exceeds the configured per-transaction limit',
+      )
+    })
+
+    it('enforces a persisted admin limit', async () => {
+      mockPool.query.mockResolvedValue({ rows: [{ value: { limit_irr: 1_000_000_000 } }] })
+      await expect(service.validateOnlineTopUpAmount(1_000_000_000n)).resolves.toBeUndefined()
+      await expect(service.validateOnlineTopUpAmount(1_000_000_001n)).rejects.toThrow(
+        'exceeds the configured per-transaction limit',
+      )
+    })
+
+    it('blocks everything when the configured limit is 0', async () => {
+      mockPool.query.mockResolvedValue({ rows: [{ value: { limit_irr: 0 } }] })
+      await expect(service.validateOnlineTopUpAmount(1n)).rejects.toThrow('exceeds')
+    })
+  })
 })

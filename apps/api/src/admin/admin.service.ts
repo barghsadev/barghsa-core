@@ -16,6 +16,12 @@ import {
   validateDualApprovalConfig,
   isValidDualApprovalThreshold,
   type DualApprovalConfig,
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
+  toWalletTopUpLimitConfig,
+  validateWalletTopUpLimitConfig,
+  isValidWalletTopUpLimit,
+  type WalletTopUpLimitConfig,
 } from '@barghsa/shared/finance'
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
@@ -1013,6 +1019,157 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Online wallet top-up limit config (S-09.10, T-09.10.01)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * Get the current admin-configurable per-transaction online wallet top-up
+   * limit from `app_config`.
+   *
+   * Returns the 2,000,000,000 IRR default when no admin value has been
+   * persisted yet (T-09.10.01). A persisted row that does not normalize to a
+   * *valid* config means the stored value is corrupt; fail open to the
+   * default limit but make the corruption observable so it cannot silently
+   * change the enforced ceiling.
+   */
+  async getWalletTopUpLimitConfig(): Promise<WalletTopUpLimitConfig> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
+    const config = toWalletTopUpLimitConfig(result.rows[0]!.value)
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const persistedValue = persisted?.limit_irr ?? persisted?.limitIrR
+    if (!isValidWalletTopUpLimit(persistedValue)) {
+      this.logger.warn(
+        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving default limit`,
+      )
+    }
+    return config
+  }
+
+  /**
+   * Persist a new admin-configurable per-transaction online wallet top-up
+   * limit.
+   *
+   * Validates the proposal against the T-09.10.01 rules (integer IRR between
+   * 0 and `Number.MAX_SAFE_INTEGER`, 0 = all online top-ups blocked) before
+   * writing. A failing validation throws a 400 with the collected issue list
+   * so the client can surface them. On success it upserts `app_config`
+   * (versioned) and bumps the global config version so caches invalidate;
+   * the audit trail records the change with the previous value and both
+   * version numbers.
+   *
+   * @param input - raw request body ({ limit_irr })
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the persisted (camelCase) config
+   */
+  async setWalletTopUpLimitConfig(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<WalletTopUpLimitConfig> {
+    const validation = validateWalletTopUpLimitConfig(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const config = toWalletTopUpLimitConfig(input)
+    const pool = getDbPool()
+    const now = new Date()
+
+    // Persist in the snake_case shape `getWalletTopUpLimitConfig` and the
+    // T-04.2.02.01 online top-up flow consume.
+    const stored = {
+      limit_irr: config.limitIrR,
+    }
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Lock the existing row (if any) so the previous value recorded in the
+      // audit trail is the true value that is being replaced — read it before
+      // the upsert mutates it. Concurrent writers serialize on this row lock,
+      // so no limit change can be dropped from the audit trail.
+      const prevResult = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+      )
+      const previousValue =
+        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersion =
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+
+      const upsertResult = await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ($1, $2::jsonb, 1, $3)
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+         RETURNING version`,
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY, JSON.stringify(stored), now],
+      )
+      const newVersion = upsertResult.rows[0]!.version as number
+
+      // Bump global config version for cache invalidation.
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      // Record audit event (config_change, matching other admin configs).
+      // The audit trail captures the previous value and both version numbers
+      // so a limit change can be reconstructed end-to-end later.
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+            previousValue,
+            previousVersion,
+            newValue: stored,
+            version: newVersion,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Online wallet top-up limit set to IRR ${config.limitIrR} by ${actorUserId}`,
+      )
+      return config
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500,
