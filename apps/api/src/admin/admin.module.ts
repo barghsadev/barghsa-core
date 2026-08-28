@@ -10,6 +10,8 @@ import { ReconciliationExceptionsService } from './reconciliation-exceptions.ser
 import { ReconciliationExceptionsController } from './reconciliation-exceptions.controller.js'
 import { FailedJobsService } from './failed-jobs.service.js'
 import { FailedJobsController } from './failed-jobs.controller.js'
+import { FailedNotificationsService } from './failed-notifications.service.js'
+import { FailedNotificationsController } from './failed-notifications.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 
 @Module({
@@ -19,6 +21,7 @@ import { TosModule } from '../tos/tos.module.js'
     DualApprovalController,
     ReconciliationExceptionsController,
     FailedJobsController,
+    FailedNotificationsController,
   ],
   providers: [
     AdminService,
@@ -26,7 +29,8 @@ import { TosModule } from '../tos/tos.module.js'
     DualApprovalService,
     ReconciliationExceptionsService,
     FailedJobsService,
+    FailedNotificationsService,
   ],
-  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService],
+  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService],
 })
 export class AdminModule {}
