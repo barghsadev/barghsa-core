@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-09.12.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-12-01--admin-catalogue",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-09.12.01",
   "loop_iteration": 350,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -296,13 +296,8 @@
   ],
   "last_error": null,
   "notes": "T-09.11.05 MERGED (PR #211, squash 984c8ba) after Claude Opus 5 round: approve r1. Agent slot assignment API live: GET /api/admin/agent-slots (all 5 predefined slots with agent ref + alsoUsedIn), PUT /api/admin/agent-slots/:slotKey/agent (assign uuid / clear null, step-up required). Migration 0046 ai_agent_slots (seed + CHECK pinning the 5 keys, SET NULL agent FK, updated_at trigger) + drizzle schema + drift guard. Transactional single-client mutations; FOR UPDATE row lock on assign; no-op emits no audit; FK-race 409; UUID + enum validation. CI: tests + integrity green. Deferred with UI slice: web UI dropdowns/\"also used in\" warning, fa/en dicts, RTL/a11y, test-chat widget. Follow-ups: updated_at Date typing (sibling convention), repo-wide drizzle _journal regeneration (stale since 0028, pre-existing).",
-  "last_updated": "2026-08-28T14:38:09Z",
+  "last_updated": "2026-08-28T14:49:24Z",
   "status_history": [
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
-      "at": "2026-08-27T19:00:52Z"
-    },
     {
       "status": "in_review",
       "task_key": "05-notifications-documents-ai.md#T-05.06.05",
@@ -797,6 +792,11 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.11.05",
       "at": "2026-08-28T14:38:09Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.12.01",
+      "at": "2026-08-28T14:49:24Z"
     }
   ]
 }
