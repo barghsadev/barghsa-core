@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 331,
-  "fix_attempts": 0,
+  "status": "blocked",
+  "current_task_id": "T-09.08.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-08-02--staff-teams-assignment",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/198",
+  "current_task_key": "02-auth-users-admin.md#T-09.08.02",
+  "loop_iteration": 343,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -281,10 +281,30 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": null,
-  "notes": "PR #197 merged (5998819) — T-09.08.01 done. Follow-ups (minor): doc-drift comments for LEDGER_UPSERT xmax semantics, EOF newlines, controller 401/read-gate naming, admin UI slice + FA/EN disclaimer strings (T-09.08.02 next).",
-  "last_updated": "2026-08-27T23:07:58Z",
+  "last_error": "Reviewer (anthropic/claude-opus-5) still returns OpenRouter HTTP 402 (credits exhausted) retried this tick at 2026-08-28T06:57:30ZZ. Review of PR #198 (T-09.08.02) cannot proceed until credits are added. PR #198 is MERGEABLE, open, non-draft, all CI checks pass; only a valid reviewer approval. USER ACTION: add credits at https://openrouter.ai/settings/credits, then set status=in_review and clear last_error.",
+  "notes": "T-09.08.02 slice 1 (PR #198): reviewer retried this tick at 2026-08-28T06:57:30ZZ; claude-opus-5 still returns OpenRouter HTTP 402 (credit exhausted). PR mergeable, non-draft, CI checks pass. NOT auto-advancing (blocked = manual intervention). USER ACTION REQUIRED: add OpenRouter credits, then set status=in_review and clear last_error.",
+  "last_updated": "2026-08-28T06:57:30Z",
   "status_history": [
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:57:55Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:41:54Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T04:59:05Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:39:31Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.07.02",
@@ -594,6 +614,96 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.08.01",
       "at": "2026-08-27T23:07:58Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-27T23:11:44Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-27T23:17:10Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-27T23:22:10Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-27T23:53:05Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:10:00Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:26:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:27:00Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T02:06:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:57:26Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T04:30:36Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T04:55:42Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:06:10Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:09:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:31:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T06:15:36Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T06:35:40Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T06:46:42Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T06:57:30Z"
     }
   ]
 }

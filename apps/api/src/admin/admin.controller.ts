@@ -1781,4 +1781,275 @@ export class AdminController {
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
     return this.adminService.setServiceResponseTargets(rawBody, req.session.userId, ip)
   }
+
+  /**
+   * Permission gate for staff teams and assignment rules (S-09.08,
+   * T-09.08.02).
+   *
+   * The S-09.08 staff-teams surface is protected by the
+   * `admin:staff-teams:edit` capability. Today the session model exposes
+   * only `isAdmin` (platform admin); granular staff-role permissions arrive
+   * with the role system (T-09.05). Until then the capability maps to a
+   * platform admin session, matching the S-09.06 / S-09.07 / S-09.08
+   * gates. Centralized here as a single enforcement point for the whole
+   * staff-teams surface.
+   */
+  private assertStaffTeamsEditPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      throw new HttpException(
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Admin role required to manage staff teams',
+        },
+        403,
+      )
+    }
+  }
+
+  /**
+   * GET /api/admin/staff-teams
+   *
+   * Lists all staff teams (S-09.08, T-09.08.02), each with its member user
+   * ids, ordered by name.
+   */
+  @Get('staff-teams')
+  @ApiOperation({ summary: 'List staff teams (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff teams with members.',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          name: { type: 'string' },
+          description: { type: 'string', nullable: true },
+          skillTags: { type: 'array', items: { type: 'string' } },
+          isActive: { type: 'boolean' },
+          memberUserIds: { type: 'array', items: { type: 'string' } },
+          createdAt: { type: 'string' },
+          updatedAt: { type: 'string' },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listStaffTeams(@Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    return this.adminService.listStaffTeams()
+  }
+
+  /**
+   * POST /api/admin/staff-teams
+   *
+   * Creates a staff team with its members. Body:
+   * `{ name, description?, skillTags?, memberUserIds? }`. Member user ids
+   * must reference existing users.
+   */
+  @Post('staff-teams')
+  @ApiOperation({ summary: 'Create a staff team (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: { type: 'string', minLength: 1, maxLength: 80, example: 'Billing Support' },
+        description: { type: 'string', nullable: true },
+        skillTags: { type: 'array', items: { type: 'string' }, example: ['billing'] },
+        memberUserIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Staff team created.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        description: { type: 'string', nullable: true },
+        skillTags: { type: 'array', items: { type: 'string' } },
+        isActive: { type: 'boolean' },
+        memberUserIds: { type: 'array', items: { type: 'string' } },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 409, description: 'Team name already taken' })
+  @HttpCode(201)
+  async createStaffTeam(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.createStaffTeam(rawBody, req.session.userId, ip)
+  }
+
+  /**
+   * PUT /api/admin/staff-teams/:id
+   *
+   * Updates a staff team. Body is partial — omitted fields keep their
+   * current values. Members are replaced in full when `memberUserIds` is
+   * provided.
+   */
+  @Put('staff-teams/:id')
+  @ApiOperation({ summary: 'Update a staff team (admin)' })
+  @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', minLength: 1, maxLength: 80 },
+        description: { type: 'string', nullable: true },
+        skillTags: { type: 'array', items: { type: 'string' } },
+        memberUserIds: { type: 'array', items: { type: 'string' } },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff team updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string' },
+        description: { type: 'string', nullable: true },
+        skillTags: { type: 'array', items: { type: 'string' } },
+        isActive: { type: 'boolean' },
+        memberUserIds: { type: 'array', items: { type: 'string' } },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Team not found' })
+  @ApiResponse({ status: 409, description: 'Team name already taken' })
+  async updateStaffTeam(@Param('id') id: string, @Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.updateStaffTeam(id, rawBody, req.session.userId, ip)
+  }
+
+  /**
+   * DELETE /api/admin/staff-teams/:id
+   *
+   * Deletes a staff team (memberships cascade). Assignment rules naming the
+   * team are left intact — the assignment engine treats unknown teams as
+   * manual assignment.
+   */
+  @Delete('staff-teams/:id')
+  @ApiOperation({ summary: 'Delete a staff team (admin)' })
+  @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
+  @ApiResponse({ status: 200, description: 'Team deleted.', schema: { type: 'object', properties: { deleted: { type: 'boolean' } } } })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Team not found' })
+  async deleteStaffTeam(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.deleteStaffTeam(id, req.session.userId, ip)
+  }
+
+  /**
+   * GET /api/admin/config/assignment-rules
+   *
+   * Returns the admin-configured staff assignment rules per work type,
+   * defaulting every type to manual assignment (`teamId: null`) when
+   * nothing has been persisted yet.
+   */
+  @Get('config/assignment-rules')
+  @ApiOperation({ summary: 'Get the staff assignment rules configuration (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current staff assignment rules per work type.',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: {
+          type: 'object',
+          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
+        },
+        verification_case: {
+          type: 'object',
+          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async getStaffAssignmentRules(@Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    return this.adminService.getStaffAssignmentRules()
+  }
+
+  /**
+   * PUT /api/admin/config/assignment-rules
+   *
+   * Persists new staff assignment rules. Body is a flat map of work type →
+   * `{ teamId: string | null, strategy: 'round_robin' | 'expertise' | 'load' }`;
+   * the map is a full replace — work types omitted from the payload fall
+   * back to manual assignment (`teamId: null`).
+   *
+   * Note: rules take effect on new work; they do not retroactively
+   * reassign existing items.
+   */
+  @Put('config/assignment-rules')
+  @ApiOperation({ summary: 'Update the staff assignment rules configuration (admin)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: {
+          type: 'object',
+          properties: {
+            teamId: { type: 'string', nullable: true, example: '00000000-0000-7000-8000-000000000000' },
+            strategy: { type: 'string', enum: ['round_robin', 'expertise', 'load'], example: 'round_robin' },
+          },
+        },
+        verification_case: {
+          type: 'object',
+          properties: {
+            teamId: { type: 'string', nullable: true },
+            strategy: { type: 'string', enum: ['round_robin', 'expertise', 'load'] },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff assignment rules updated.',
+    schema: {
+      type: 'object',
+      properties: {
+        ticket: {
+          type: 'object',
+          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
+        },
+        verification_case: {
+          type: 'object',
+          properties: { teamId: { type: 'string', nullable: true }, strategy: { type: 'string' } },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async setStaffAssignmentRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.setStaffAssignmentRules(rawBody, req.session.userId, ip)
+  }
 }
