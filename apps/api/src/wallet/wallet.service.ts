@@ -1,5 +1,12 @@
 import { Injectable, Logger, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
+import {
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
+  toWalletTopUpLimitConfig,
+  isOnlineWalletTopUpAllowed,
+  type WalletTopUpLimitConfig,
+} from '@barghsa/shared/finance'
 
 export interface WalletRow {
   profileId: string
@@ -310,6 +317,43 @@ export class WalletService {
       [walletId, limit, offset],
     )
     return result.rows.map(mapTransaction)
+  }
+
+  /**
+   * Enforce the admin-configured per-transaction online wallet top-up limit
+   * (T-09.10.01).
+   *
+   * The online top-up initiation flow (S-04.2.02, T-04.2.02.01) must call
+   * this **before** creating a Pending top-up transaction, so no single
+   * online top-up can exceed the admin-configured ceiling. Reads the
+   * `finance.wallet_top_up_limit` value from `app_config`, falling back to
+   * the 2,000,000,000 IRR default when nothing is persisted, and rejects
+   * amounts over it with a 400.
+   *
+   * @throws BadRequestException when the amount is non-positive or exceeds
+   *   the configured limit.
+   */
+  async validateOnlineTopUpAmount(amountIrR: bigint): Promise<void> {
+    if (amountIrR <= 0n) {
+      throw new BadRequestException('Online top-up amount must be positive')
+    }
+    const limit = await this.getOnlineTopUpLimitConfig()
+    if (!isOnlineWalletTopUpAllowed(limit, amountIrR)) {
+      throw new BadRequestException(
+        `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured per-transaction limit of ${limit.limitIrR} IRR`,
+      )
+    }
+  }
+
+  /** Read the current online top-up limit config (default 2e9 IRR when unset). */
+  private async getOnlineTopUpLimitConfig(): Promise<WalletTopUpLimitConfig> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
+    return toWalletTopUpLimitConfig(result.rows[0]!.value)
   }
 }
 
