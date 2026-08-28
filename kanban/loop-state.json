@@ -1,5 +1,5 @@
 {
-  "status": "fixing",
+  "status": "in_review",
   "current_task_id": "T-09.09.03",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-09-03--dead-letter-notifications",
@@ -285,10 +285,15 @@
     "02-auth-users-admin.md#T-09.09.01",
     "02-auth-users-admin.md#T-09.09.02"
   ],
-  "last_error": "Review round 1: request_changes - 2 majors (maskSensitiveData bails on non-strings and misses camelCase keys; cause field returned verbatim), 5 minors",
-  "notes": "T-09.09.03 in review (PR #203): dead-letter notifications triage - GET /api/admin/failed-notifications (masked payload) + retry/resolve/dismiss gated by admin:jobs:view/retry, audit notification_retried/resolved/dismissed. Reuses notification_dead_letter (migration 0027). No DB migration needed. Passed api typecheck/test/build. Web UI deferred (matches T-09.09.02).",
-  "last_updated": "2026-08-28T09:23:42Z",
+  "last_error": null,
+  "notes": "T-09.09.03 in review round 2 (PR #203): dead-letter notifications triage. Round-1 majors fixed (masking now covers non-string + camelCase keys, cause scrubbed). Passed api typecheck/test/build. Web UI + real-PG test + correlation-id deferred.",
+  "last_updated": "2026-08-28T09:31:35Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.09.03",
+      "at": "2026-08-28T09:31:35Z"
+    },
     {
       "status": "fixing",
       "task_key": "02-auth-users-admin.md#T-09.09.03",
