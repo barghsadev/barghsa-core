@@ -298,10 +298,15 @@
     "02-auth-users-admin.md#T-09.12.03",
     "02-auth-users-admin.md#T-09.12.04"
   ],
-  "last_error": "OpenRouter credits still exhausted (total_credits 110 - total_usage 109.9798 = ~0.02 USD, re-verified 2026-08-28T20:37Z; no top-up landed since 19:24Z). PR #216 (T-09.12.05, 3153-line diff) needs ~0.50-1.50 USD for claude-opus-5 medium review — review NOT run, no review decision yet (gh reviewDecision empty). PR re-verified: open, mergeable, mergeStateStatus CLEAN, not draft, checks: Verify monorepo integrity SUCCESS, Run tests SUCCESS. Top up >= 2 USD at https://openrouter.ai/settings/credits; next tick re-verifies.",
+  "last_error": "OpenRouter credits still exhausted (total_credits 110 - total_usage 109.9891 = ~0.01 USD, re-verified 2026-08-28T20:43Z; no top-up landed since 19:24Z). PR #216 (T-09.12.05, 3153-line diff) needs ~0.50-1.50 USD for claude-opus-5 medium review — review NOT run, no review decision yet. PR re-verified: open, mergeable, mergeStateStatus CLEAN, not draft, checks: Verify monorepo integrity SUCCESS, Run tests SUCCESS. Top up >= 2 USD at https://openrouter.ai/settings/credits; next tick re-verifies.",
   "notes": "T-09.12.02 MERGED (PR #213, squash 7dfe460) after Claude Opus 5 rounds: r1 request_changes (2 majors + 5 minors) -> r2 approve. VAT configuration admin API live at /api/admin/finance/vat: GET list?category= (versioned rates with status), POST create (category or reserved product_override, rate as basis points 0..10000, future-dated allowed; same-rate no-op), POST :id/end (soft close, no hard delete), GET overrides, POST overrides (product links a rate row; linked config must be active at its effective_from), POST overrides/:id/end, GET resolve?productId=&category=&at= (product override wins -> category default -> 0% fallback; category derived from products.type when only productId given). Tables vat_configurations + product_vat_overrides (migration 0047): CHECK 0..10000 bps, GIST no-overlap per category/product, updated_at triggers. Permission admin:finance:edit (platform admin today); step-up on all mutations; single-tx change_recorded audit with request correlation id. Deferred: admin web UI slice (table view, override toggle, fa/en dicts, RTL/a11y), follow-up minors from r2 (backdate pre-check open-ended overlap, vc window honored in resolve override SELECT, derived-category unknown-type handling).",
-  "last_updated": "2026-08-28T20:37:15Z",
+  "last_updated": "2026-08-28T20:43:51Z",
   "status_history": [
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:43:51Z"
+    },
     {
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.12.05",
@@ -796,11 +801,6 @@
       "status": "fixing",
       "task_key": "05-notifications-documents-ai.md#T-05.05.03",
       "at": "2026-08-27T17:30:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T17:29:59Z"
     }
   ]
 }
