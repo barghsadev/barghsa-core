@@ -255,6 +255,28 @@ describe('Gift code validation (T-09.12.03)', () => {
     })
   })
 
+  it('forwards a percentage payload with its mandatory cap to the service', async () => {
+    const { controller, service } = makeController()
+    await controller.create(adminReq, {
+      code: 'PCT25',
+      discountType: 'percentage',
+      discountValue: '2500',
+      maxCapIrr: '1000000',
+      eligibility: 'public',
+      profileIds: [],
+      minOrderAmount: '0',
+      categories: [],
+    })
+
+    expect(service.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        discountType: 'percentage',
+        discountValue: '2500',
+        maxCapIrr: '1000000',
+      }),
+    )
+  })
+
   it('forwards toggle status to the service', async () => {
     const { controller, service } = makeController()
     await controller.setStatus(adminReq, CODE_ID, { status: 'inactive' })

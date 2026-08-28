@@ -91,4 +91,13 @@ describe('Gift code schema (T-09.12.03)', () => {
   it('migration declares updated_at triggers', () => {
     expect(MIGRATION).toContain('trg_gift_codes_updated_at')
   })
+
+  it('migration adds the gift-code mirror columns to orders (schema/service contract)', () => {
+    // OrdersService.createOrder writes gift_code_id / gift_discount_amount;
+    // the Drizzle schema declares them (schema/orders.ts) — the migration
+    // MUST add them or every gift-code order fails with 42703 on a real DB.
+    expect(MIGRATION).toContain('ADD COLUMN IF NOT EXISTS gift_code_id UUID')
+    expect(MIGRATION).toContain('ADD COLUMN IF NOT EXISTS gift_discount_amount BIGINT')
+    expect(MIGRATION).toContain('idx_orders_gift_code_id')
+  })
 })

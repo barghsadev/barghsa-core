@@ -41,7 +41,7 @@ const positiveIrrSchema = z
 const codeSchema = z
   .string()
   .min(1, 'code is required')
-  .max(80, 'code must be 80 characters or fewer')
+  .max(64, 'code must be 64 characters or fewer')
   .transform(normalizeGiftCode)
 const profileIdSchema = z.string().uuid('Expected a UUID')
 const categorySchema = z.string().min(1).max(40)
@@ -107,7 +107,7 @@ const UpdateGiftCodeSchema = z
     minOrderAmount: irrSchema.optional(),
     categories: z.array(categorySchema).optional(),
   })
-  .refine((data) => data.maxCapIrr === undefined || data.discountType === 'percentage', {
+  .refine((data) => data.maxCapIrr === undefined || data.maxCapIrr === null || data.discountType === 'percentage', {
     path: ['maxCapIrr'],
     message: 'maxCapIrr must not be set for fixed_irr codes',
   })

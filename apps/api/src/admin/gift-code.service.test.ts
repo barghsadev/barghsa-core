@@ -283,6 +283,34 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(router.queries('INSERT INTO gift_code_profiles')).toHaveLength(1) // deduped
     })
 
+    it('creates a percentage code with string basis points and a required cap', async () => {
+      const { pool, router } = makeDb()
+      router.on('SELECT 1 FROM gift_codes WHERE code = $1', () => ({ rows: [] }))
+      router.on('INSERT INTO gift_codes', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      router.on('GROUP BY gc.id', () => ({
+        rows: [giftRow({ discount_type: 'percentage', discount_value: '2500', max_cap_irr: '1000000' })],
+      }))
+      router.on('ANY($1::uuid[])', () => ({ rows: [] }))
+      service = await loadService(pool)
+
+      const result = await service.create({
+        ...createInput,
+        code: 'PCT25',
+        discountType: 'percentage',
+        discountValue: '2500',
+        maxCapIrr: '1000000',
+      })
+
+      expect(result.discountType).toBe('percentage')
+      expect(result.discountValue).toBe('2500')
+      expect(result.maxCapIrr).toBe('1000000')
+      const insert = router.queries('INSERT INTO gift_codes')[0]!
+      expect(insert.values).toContain('percentage')
+      expect(insert.values).toContain('2500')
+      expect(insert.values).toContain('1000000') // required cap persisted
+    })
+
     it('rejects invalid code charset', async () => {
       const { pool, router } = makeDb()
       service = await loadService(pool)
@@ -325,6 +353,37 @@ describe('GiftCodeService (T-09.12.03)', () => {
       await expect(
         service.update(CODE_ID, { code: 'OTHER', actorUserId: ACTOR, ip: 'x' }),
       ).rejects.toThrow(/already exists/)
+    })
+
+    it('converts a percentage code to fixed_irr by dropping the stale cap', async () => {
+      const { pool, router } = makeDb()
+      const current = giftRow({
+        discount_type: 'percentage',
+        discount_value: '2500',
+        max_cap_irr: '1000000',
+      })
+      router.on('WHERE id = $1', () => ({ rows: [current] }))
+      router.on('UPDATE gift_codes', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      router.on('GROUP BY gc.id', () => ({
+        rows: [giftRow({ discount_type: 'fixed_irr', discount_value: '100000', max_cap_irr: null })],
+      }))
+      router.on('ANY($1::uuid[])', () => ({ rows: [] }))
+      service = await loadService(pool)
+
+      const result = await service.update(CODE_ID, {
+        discountType: 'fixed_irr',
+        discountValue: '100000',
+        actorUserId: ACTOR,
+        ip: 'x',
+      })
+
+      expect(result.discountType).toBe('fixed_irr')
+      expect(result.maxCapIrr).toBeNull()
+      const update = router.queries('UPDATE gift_codes')[0]!
+      // max_cap_irr column index 3 is forced to NULL on conversion
+      expect(update.values[3]).toBeNull()
+      expect(update.values[0]).toBe(current.code)
     })
 
     it('replaces profile scopes when switching eligibility', async () => {
@@ -589,6 +648,34 @@ describe('GiftCodeService (T-09.12.03)', () => {
       // Note: the pool and client share the same `query` spy, so all queries
       // are visible; the test proves the service added no transaction control.
     })
+
+    it('records a change_recorded audit entry with the redemption (same executor)', async () => {
+      const { pool, router } = makeDb()
+      router.on('FOR UPDATE', () => ({ rows: [giftRow()] }))
+      router.on('INSERT INTO gift_code_redemptions', () => ({
+        rows: [redemptionRow()],
+        rowCount: 1,
+      }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      service = await loadService(pool)
+
+      await service.redeem({
+        giftCode: 'SALE10',
+        profileId: 'prof-1',
+        orderId: 'ord-1',
+        orderAmount: '2000000',
+        category: 'electricity',
+        actorUserId: 'user-1',
+        ip: '127.0.0.1',
+      })
+
+      const audit = router.queries('INSERT INTO audit_log')[0]!
+      expect(JSON.parse(String(audit.values[2]))).toMatchObject({
+        entity: 'gift_code',
+        action: 'redeemed',
+        orderId: 'ord-1',
+      })
+    })
   })
 
   describe('releaseByOrder', () => {
@@ -618,6 +705,32 @@ describe('GiftCodeService (T-09.12.03)', () => {
       const result = await service.releaseByOrder('ord-1')
 
       expect(result).toEqual({ released: 0 })
+    })
+
+    it('runs on a caller-provided executor and audits the release', async () => {
+      const { pool, router } = makeDb()
+      router.on('UPDATE gift_code_redemptions', () => ({
+        rows: [],
+        rowCount: 1,
+      }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      service = await loadService(pool)
+
+      const result = await service.releaseByOrder(
+        'ord-1',
+        pool as never,
+        { actorUserId: 'user-1', ip: '127.0.0.1' },
+      )
+
+      expect(result).toEqual({ released: 1 })
+      // No transaction control opened by the service itself.
+      expect(router.calls.filter((c) => c.sql === 'BEGIN')).toHaveLength(0)
+      const audit = router.queries('INSERT INTO audit_log')[0]!
+      expect(JSON.parse(String(audit.values[2]))).toMatchObject({
+        entity: 'gift_code',
+        action: 'released',
+        orderId: 'ord-1',
+      })
     })
   })
 })

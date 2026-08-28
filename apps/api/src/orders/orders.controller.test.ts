@@ -59,7 +59,7 @@ describe('OrdersController', () => {
       const result = await controller.createOrder(body, req)
 
       expect(result).toEqual(order)
-      expect(service.createOrder).toHaveBeenCalledWith('user-1', body)
+      expect(service.createOrder).toHaveBeenCalledWith('user-1', body, 'unknown')
     })
 
     it('forwards an optional giftCode to the service', async () => {
@@ -86,6 +86,7 @@ describe('OrdersController', () => {
       expect(service.createOrder).toHaveBeenCalledWith(
         'user-1',
         expect.objectContaining({ giftCode: ' SALE10 ' }),
+        'unknown',
       )
     })
   })
@@ -135,7 +136,7 @@ describe('OrdersController', () => {
       const result = await controller.cancelOrder('ord-001', req)
 
       expect(result.status).toBe('CANCELLED')
-      expect(service.cancelOrder).toHaveBeenCalledWith('user-1', 'ord-001')
+      expect(service.cancelOrder).toHaveBeenCalledWith('user-1', 'ord-001', 'unknown')
     })
 
     it('throws 404 when order not found', async () => {

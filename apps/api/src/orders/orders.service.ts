@@ -91,6 +91,7 @@ export class OrdersService {
   async createOrder(
     userId: string,
     dto: CreateOrderDto,
+    actorIp = 'unknown',
   ): Promise<OrderRow> {
     // ── Address field validation (fast-path, no DB) ────────────────
     if (!dto.address.provinceId?.trim()) {
@@ -199,6 +200,8 @@ export class OrdersService {
             orderId: order.id,
             orderAmount: product.price,
             category: product.type,
+            actorUserId: userId,
+            ip: actorIp,
           },
           client,
         )
@@ -254,40 +257,75 @@ export class OrdersService {
   /**
    * Cancel an order (T-09.12.03 order-creation seam).
    *
-   * Only DRAFT/PENDING orders can be cancelled (a CONFIRMED order must
-   * go through the payment lifecycle). Cancelling an order BEFORE
-   * payment restores its gift-code slot by default (the epic's policy):
-   * the redemption ledger row flips to `released` and stops counting
-   * against the code's limits. Idempotent — cancelling an already
-   * cancelled order is a no-op returning the current row.
+   * Only DRAFT/PENDING orders can be cancelled. Cancelling an order
+   * BEFORE payment restores its gift-code slot by default (the epic's
+   * policy): the redemption ledger row flips to `released` and stops
+   * counting against the code's limits.
+   *
+   * The status flip and the slot release run in ONE transaction, so a
+   * cancellation can never permanently leak a consumed slot because
+   * the release failed. Cancelling an already-cancelled order is an
+   * idempotent no-op returning the current row; a CONFIRMED (or other
+   * terminal, un-cancellable) order is rejected with 409 rather than
+   * silently reporting success.
    */
-  async cancelOrder(userId: string, orderId: string): Promise<OrderRow | null> {
+  async cancelOrder(
+    userId: string,
+    orderId: string,
+    actorIp = 'unknown',
+  ): Promise<OrderRow | null> {
     const pool = getDbPool()
-    const result = await pool.query(
-      `UPDATE orders
-          SET status = 'CANCELLED', updated_at = $1
-        WHERE id = $2 AND user_id = $3 AND status IN ('DRAFT', 'PENDING')
-        RETURNING *`,
-      [new Date(), orderId, userId],
-    )
-    if (result.rows.length === 0) {
-      // Either not found, not owned, or already terminal (CANCELLED /
-      // CONFIRMED). Re-read to distinguish 404 from idempotent no-op.
-      const existing = await pool.query(
-        `SELECT * FROM orders WHERE id = $1 AND user_id = $2`,
-        [orderId, userId],
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+      const result = await client.query(
+        `UPDATE orders
+            SET status = 'CANCELLED', updated_at = $1
+          WHERE id = $2 AND user_id = $3 AND status IN ('DRAFT', 'PENDING')
+          RETURNING *`,
+        [new Date(), orderId, userId],
       )
-      return existing.rows.length > 0 ? mapRow(existing.rows[0] as Record<string, unknown>) : null
+      if (result.rows.length === 0) {
+        await client.query('ROLLBACK').catch(() => {})
+        // Distinguish: not found / not owned (404) vs already cancelled
+        // (idempotent no-op) vs terminal non-cancellable (409).
+        const existing = await pool.query(
+          `SELECT * FROM orders WHERE id = $1 AND user_id = $2`,
+          [orderId, userId],
+        )
+        if (existing.rows.length === 0) return null
+        const row = mapRow(existing.rows[0] as Record<string, unknown>)
+        if (row.status === 'CANCELLED') return row
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'ORDER_NOT_CANCELLABLE',
+            message: `Order ${orderId} is ${row.status} and cannot be cancelled at this stage`,
+          },
+          409,
+        )
+      }
+      const order = mapRow(result.rows[0] as Record<string, unknown>)
+      // Restore the gift-code slot (default pre-payment policy) — same
+      // transaction: the release commits/rolls back with the cancel.
+      if (order.giftCodeId !== null) {
+        const { released } = await this.giftCodeService.releaseByOrder(
+          order.id,
+          client,
+          { actorUserId: userId, ip: actorIp },
+        )
+        this.logger.log(
+          `Order ${order.id} cancelled before payment; ${released} gift-code slot(s) restored`,
+        )
+      }
+      await client.query('COMMIT')
+      this.logger.log(`Order ${order.id} cancelled for user ${userId}`)
+      return order
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      throw error
+    } finally {
+      client.release()
     }
-    const order = mapRow(result.rows[0] as Record<string, unknown>)
-    // Restore the gift-code slot (default pre-payment policy).
-    if (order.giftCodeId !== null) {
-      const { released } = await this.giftCodeService.releaseByOrder(order.id)
-      this.logger.log(
-        `Order ${order.id} cancelled before payment; ${released} gift-code slot(s) restored`,
-      )
-    }
-    this.logger.log(`Order ${order.id} cancelled for user ${userId}`)
-    return order
   }
 }

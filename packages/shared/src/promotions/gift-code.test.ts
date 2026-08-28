@@ -50,11 +50,21 @@ describe('Gift code shared contract (T-09.12.03)', () => {
       expect(isGiftCodePercentageBps(2500)).toBe(true)
       expect(isGiftCodePercentageBps(MAX_GIFT_PERCENT_BPS)).toBe(true)
     })
-    it('rejects 0, negatives, floats, and out-of-range', () => {
+    it('accepts the numeric-string form used by the API payloads', () => {
+      expect(isGiftCodePercentageBps('1')).toBe(true)
+      expect(isGiftCodePercentageBps('2500')).toBe(true)
+      expect(isGiftCodePercentageBps('10000')).toBe(true)
+    })
+    it('rejects 0, negatives, floats, junk strings, and out-of-range', () => {
       expect(isGiftCodePercentageBps(0)).toBe(false)
       expect(isGiftCodePercentageBps(-100)).toBe(false)
       expect(isGiftCodePercentageBps(10001)).toBe(false)
       expect(isGiftCodePercentageBps(12.5)).toBe(false)
+      expect(isGiftCodePercentageBps('0')).toBe(false)
+      expect(isGiftCodePercentageBps('10001')).toBe(false)
+      expect(isGiftCodePercentageBps('12.5')).toBe(false)
+      expect(isGiftCodePercentageBps('abc')).toBe(false)
+      expect(isGiftCodePercentageBps('')).toBe(false)
     })
   })
 
@@ -132,6 +142,15 @@ describe('Gift code shared contract (T-09.12.03)', () => {
         discountType: 'fixed_irr',
         discountValue: '500000',
         maxCapIrr: null,
+      })
+      expect(result.ok).toBe(true)
+      expect(result.errors).toEqual([])
+    })
+    it('accepts a valid percentage payload with string basis points and cap', () => {
+      const result = validateGiftCodePayload({
+        discountType: 'percentage',
+        discountValue: '2500',
+        maxCapIrr: '1000000',
       })
       expect(result.ok).toBe(true)
       expect(result.errors).toEqual([])

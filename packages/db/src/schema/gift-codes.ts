@@ -243,3 +243,15 @@ export const createGiftCodeRedemptionsTable = sql`
   CREATE INDEX IF NOT EXISTS idx_gift_code_redemptions_code_profile_status
     ON gift_code_redemptions (gift_code_id, profile_id, status);
 `
+
+/** SQL to add the gift-code mirror columns to orders (migration 0048 source). */
+export const alterOrdersForGiftCodes = sql`
+  ALTER TABLE orders
+    ADD COLUMN IF NOT EXISTS gift_code_id UUID;
+
+  ALTER TABLE orders
+    ADD COLUMN IF NOT EXISTS gift_discount_amount BIGINT;
+
+  CREATE INDEX IF NOT EXISTS idx_orders_gift_code_id
+    ON orders (gift_code_id);
+`

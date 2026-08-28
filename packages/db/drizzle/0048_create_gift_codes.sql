@@ -160,6 +160,24 @@ CREATE INDEX IF NOT EXISTS idx_gift_code_redemptions_code_profile_status
   ON gift_code_redemptions (gift_code_id, profile_id, status);
 
 -- ---------------------------------------------------------------------------
+-- orders — gift-code mirror columns (T-09.12.03)
+--
+-- The Drizzle schema (schema/orders.ts) declares `gift_code_id` (uuid,
+-- no FK — the authoritative link lives in gift_code_redemptions.order_id)
+-- and `gift_discount_amount` (bigint). They must be added HERE for the
+-- orders module's gift-code integration to work on a real database.
+-- Both are nullable, so the expand is backward compatible.
+-- ---------------------------------------------------------------------------
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS gift_code_id UUID;
+
+ALTER TABLE orders
+  ADD COLUMN IF NOT EXISTS gift_discount_amount BIGINT;
+
+CREATE INDEX IF NOT EXISTS idx_orders_gift_code_id
+  ON orders (gift_code_id);
+
+-- ---------------------------------------------------------------------------
 -- updated_at triggers
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION update_gift_codes_updated_at()

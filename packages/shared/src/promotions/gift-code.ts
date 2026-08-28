@@ -97,14 +97,20 @@ export function isGiftCodeStatus(raw: unknown): raw is GiftCodeStatus {
  * Whether a raw value is a valid percentage discount in basis points:
  * an integer within [1, 10000] (0.01%..100%). A 0% gift code is
  * meaningless, so 0 is rejected.
+ *
+ * Accepts BOTH `number` and numeric `string` forms: the admin API sends
+ * `discountValue` as a decimal string (the pg bigint convention), so
+ * payload validation must coerce before checking.
  */
 export function isGiftCodePercentageBps(raw: unknown): raw is number {
-  return (
-    typeof raw === 'number' &&
-    Number.isSafeInteger(raw) &&
-    raw >= 1 &&
-    raw <= MAX_GIFT_PERCENT_BPS
-  )
+  if (typeof raw === 'number') {
+    return Number.isSafeInteger(raw) && raw >= 1 && raw <= MAX_GIFT_PERCENT_BPS
+  }
+  if (typeof raw === 'string' && /^[1-9]\d*$/.test(raw)) {
+    const value = Number(raw)
+    return Number.isSafeInteger(value) && value >= 1 && value <= MAX_GIFT_PERCENT_BPS
+  }
+  return false
 }
 
 /** Whether a raw value is a valid positive IRR amount (as string/bigint). */

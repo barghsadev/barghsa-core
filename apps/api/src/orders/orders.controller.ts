@@ -66,7 +66,7 @@ export class OrdersController {
       orderType: body.orderType,
       address: body.address,
       ...(body.giftCode !== undefined ? { giftCode: body.giftCode } : {}),
-    })
+    }, req.ip ?? 'unknown')
 
     this.logger.log(`Order ${order.id} created for user ${userId}`)
     return order
@@ -140,7 +140,7 @@ export class OrdersController {
     @Req() req: AuthenticatedRequest,
   ) {
     const userId = req.session.userId
-    const order = await this.ordersService.cancelOrder(userId, orderId)
+    const order = await this.ordersService.cancelOrder(userId, orderId, req.ip ?? 'unknown')
     if (!order) {
       throw new HttpException(
         { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },

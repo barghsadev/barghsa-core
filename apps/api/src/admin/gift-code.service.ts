@@ -106,6 +106,9 @@ export interface RedeemGiftCodeInput {
   orderAmount: string
   /** Product category (`products.type`) the order belongs to. */
   category: string
+  /** Actor (session user) for the redemption audit trail. */
+  actorUserId?: string
+  ip?: string
 }
 
 // ─── Internal row types ────────────────────────────────────────────────────
@@ -184,6 +187,11 @@ export class GiftCodeService {
     private readonly correlationIdProvider: CorrelationIdProvider,
   ) {}
 
+  /** Escapes LIKE metacharacters so a search term matches literally. */
+  private escapeLike(raw: string): string {
+    return raw.replace(/[\\%_]/g, '\\$&')
+  }
+
   // ─── Admin reads ───────────────────────────────────────────────────────
 
   /** List gift codes, newest first, with derived usage totals. */
@@ -199,13 +207,15 @@ export class GiftCodeService {
               COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount
          FROM gift_codes gc
          LEFT JOIN gift_code_redemptions gcr ON gcr.gift_code_id = gc.id
-        WHERE ($1::text IS NULL OR gc.code ILIKE '%' || $1 || '%')
+        WHERE ($1::text IS NULL OR gc.code ILIKE '%' || $1 || '%' ESCAPE '\')
           AND ($2::text IS NULL OR gc.status = $2)
           AND ($3::text IS NULL OR gc.discount_type = $3)
         GROUP BY gc.id
         ORDER BY gc.created_at DESC`,
       [
-        filter.search !== undefined && filter.search !== '' ? filter.search : null,
+        filter.search !== undefined && filter.search !== ''
+          ? this.escapeLike(filter.search)
+          : null,
         filter.status ?? null,
         filter.discountType ?? null,
       ],
@@ -370,7 +380,12 @@ export class GiftCodeService {
       }
       const discountType = input.discountType ?? current.discount_type
       const discountValue = input.discountValue ?? current.discount_value
-      const maxCapIrr = input.maxCapIrr !== undefined ? input.maxCapIrr : current.max_cap_irr
+      // A code converted to fixed_irr NEVER keeps a cap: when the caller
+      // switched the type and did not supply a cap, force null (otherwise
+      // the stale stored cap trips the fixed-forbids-cap rule forever).
+      const maxCapIrr = input.maxCapIrr !== undefined
+        ? input.maxCapIrr
+        : (discountType === 'fixed_irr' ? null : current.max_cap_irr)
       const validation = validateGiftCodePayload({
         discountType,
         discountValue,
@@ -621,6 +636,24 @@ export class GiftCodeService {
          RETURNING id, gift_code_id, profile_id, order_id, discount_amount, status, created_at`,
         [uuidv7(), gift.id, input.profileId, input.orderId, discountAmount, new Date()],
       )
+      // The ledger row is the primary trace, mirroring the epic's audit
+      // posture with a change_recorded event (same executor → commits
+      // with the redemption, no out-of-band writes).
+      if (input.actorUserId !== undefined) {
+        await this.recordChange(tx, {
+          actorUserId: input.actorUserId,
+          ip: input.ip ?? 'system',
+          entity: 'gift_code',
+          action: 'redeemed',
+          meta: {
+            giftCodeId: gift.id,
+            code,
+            profileId: input.profileId,
+            orderId: input.orderId,
+            discountAmount,
+          },
+        })
+      }
       this.logger.log(
         `Gift code redeemed: code=${code}, order=${input.orderId}, ` +
           `profile=${input.profileId}, discount=${discountAmount}`,
@@ -637,19 +670,42 @@ export class GiftCodeService {
    * (the default policy, T-09.12.03): consumed ledger rows flip to
    * `released` and stop counting against limits. Idempotent — already
    * released rows are untouched. Returns the number of slots restored.
+   *
+   * When `q` is omitted the service opens its own connection; when a
+   * caller-provided executor is passed (the orders module's cancel flow)
+   * the caller owns the transaction, so the cancellation and the slot
+   * release commit or roll back together — a cancelled order can never
+   * permanently leak a consumed slot because its release failed.
    */
-  async releaseByOrder(orderId: string): Promise<{ released: number }> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `UPDATE gift_code_redemptions SET status = 'released'
-        WHERE order_id = $1 AND status = 'consumed'`,
-      [orderId],
-    )
-    const released = result.rowCount ?? 0
-    if (released > 0) {
-      this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`)
+  async releaseByOrder(
+    orderId: string,
+    q?: DbExecutor,
+    audit?: { actorUserId: string; ip: string },
+  ): Promise<{ released: number }> {
+    const run = async (tx: DbExecutor): Promise<{ released: number }> => {
+      const result = await tx.query(
+        `UPDATE gift_code_redemptions SET status = 'released'
+          WHERE order_id = $1 AND status = 'consumed'`,
+        [orderId],
+      )
+      const released = result.rowCount ?? 0
+      if (released > 0) {
+        if (audit !== undefined) {
+          await this.recordChange(tx, {
+            actorUserId: audit.actorUserId,
+            ip: audit.ip,
+            entity: 'gift_code',
+            action: 'released',
+            meta: { orderId },
+          })
+        }
+        this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`)
+      }
+      return { released }
     }
-    return { released }
+
+    if (q !== undefined) return run(q)
+    return this.withTransaction(run)
   }
 
   private assertEligibility(raw: unknown): GiftCodeEligibility {
@@ -881,13 +937,25 @@ export class GiftCodeService {
       if (committed) throw error
       await client.query('ROLLBACK').catch(() => {})
       if (this.isPgError(error, PG_UNIQUE_VIOLATION)) {
-        // Either the normalized code raced a concurrent create, or the
-        // same order got a second redemption. Disambiguate by message.
+        // Disambiguate by constraint name: the normalized-code index
+        // racing a concurrent create is a duplicate code; the
+        // one-redemption-per-order index is a code already applied.
+        const constraint = (error as { constraint?: string }).constraint
+        if (constraint === 'uq_gift_code_redemptions_order_id') {
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: GIFT_CODE_ALREADY_APPLIED,
+              message: 'A gift code has already been applied to this order',
+            },
+            409,
+          )
+        }
         throw new HttpException(
           {
             statusCode: 409,
-            error: GIFT_CODE_ALREADY_APPLIED,
-            message: 'Conflicting gift code write (duplicate code or code already applied to this order)',
+            error: GIFT_CODE_ALREADY_EXISTS,
+            message: 'A gift code with this code already exists (codes are case-insensitive)',
           },
           409,
         )
