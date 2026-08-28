@@ -281,9 +281,9 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": "Reviewer (anthropic/claude-opus-5) still returns OpenRouter HTTP 402 (credits exhausted) at 2026-08-28T05:21:16Z. Round-2 review of PR #198 (T-09.08.02) cannot proceed until credits are added. PR #198 is MERGEABLE, open, non-draft, all CI checks pass; only a valid reviewer approval is missing. USER ACTION: add credits at https://openrouter.ai/settings/credits, then set status=in_review and clear last_error.",
-  "notes": "T-09.08.02 slice 1 (PR #198): reviewer retried this tick; claude-opus-5 still returns OpenRouter HTTP 402 (credits exhausted) at 2026-08-28T05:21:16Z. PR mergeable, non-draft, CI checks pass. Merge requires a valid reviewer approval. NOT auto-advancing to idle (blocked = manual intervention). USER ACTION REQUIRED: add OpenRouter credits, then set status=in_review and clear last_error.",
-  "last_updated": "2026-08-28T05:21:16Z",
+  "last_error": "Reviewer (anthropic/claude-opus-5) still returns OpenRouter HTTP 402 (credits exhausted) at 2026-08-28T05:31:00Z. Round-2 review of PR #198 (T-09.08.02) cannot proceed until credits are added. PR #198 is MERGEABLE, open, non-draft, all CI checks pass; only a valid reviewer approval is missing. USER ACTION: add credits at https://openrouter.ai/settings/credits, then set status=in_review and clear last_error.",
+  "notes": "T-09.08.02 slice 1 (PR #198): reviewer retried this tick; claude-opus-5 still returns OpenRouter HTTP 402 (credits exhausted). PR mergeable, non-draft, CI checks pass. Merge requires a valid reviewer approval. NOT auto-advancing (blocked = manual intervention). USER ACTION REQUIRED: add OpenRouter credits, then set status=in_review and clear last_error.",
+  "last_updated": "2026-08-28T05:31:00Z",
   "status_history": [
     {
       "status": "blocked",
@@ -669,6 +669,11 @@
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
       "at": "2026-08-28T05:09:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T05:31:00Z"
     }
   ]
 }
