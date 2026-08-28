@@ -14,6 +14,8 @@ import { FailedNotificationsService } from './failed-notifications.service.js'
 import { FailedNotificationsController } from './failed-notifications.controller.js'
 import { VatConfigService } from './vat-config.service.js'
 import { VatConfigController } from './vat-config.controller.js'
+import { GiftCodeService } from './gift-code.service.js'
+import { GiftCodeController } from './gift-code.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
 
@@ -26,6 +28,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     FailedJobsController,
     FailedNotificationsController,
     VatConfigController,
+    GiftCodeController,
   ],
   providers: [
     AdminService,
@@ -35,8 +38,9 @@ import { CorrelationIdProvider } from '../common/index.js'
     FailedJobsService,
     FailedNotificationsService,
     VatConfigService,
+    GiftCodeService,
     CorrelationIdProvider,
   ],
-  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService],
+  exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService, GiftCodeService],
 })
 export class AdminModule {}

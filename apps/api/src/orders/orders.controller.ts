@@ -53,6 +53,8 @@ export class OrdersController {
         fullAddress: string
         postalCode: string
       }
+      /** Optional gift code (T-09.12.03), redeemed atomically with the order. */
+      giftCode?: string
     },
     @Req() req: AuthenticatedRequest,
   ) {
@@ -63,6 +65,7 @@ export class OrdersController {
       productId: body.productId,
       orderType: body.orderType,
       address: body.address,
+      ...(body.giftCode !== undefined ? { giftCode: body.giftCode } : {}),
     })
 
     this.logger.log(`Order ${order.id} created for user ${userId}`)
@@ -112,6 +115,38 @@ export class OrdersController {
       )
     }
 
+    return order
+  }
+
+  /**
+   * POST /api/orders/:id/cancel
+   *
+   * Cancels a DRAFT/PENDING order (T-09.12.03 order-creation seam).
+   * Cancelling before payment restores the order's gift-code slot by
+   * default; a CONFIRMED order must go through the payment lifecycle
+   * and is not cancellable here. Idempotent for already-cancelled
+   * orders.
+   */
+  @Post(':id/cancel')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'orders:cancel:user', limit: 20, windowMs: 60_000 })
+  @ApiOperation({
+    summary: 'Cancel an order (restores its gift-code slot before payment)',
+  })
+  @ApiResponse({ status: 200, description: 'Order cancelled.' })
+  @ApiResponse({ status: 404, description: 'Order not found' })
+  async cancelOrder(
+    @Param('id') orderId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.session.userId
+    const order = await this.ordersService.cancelOrder(userId, orderId)
+    if (!order) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+        404,
+      )
+    }
     return order
   }
 }
