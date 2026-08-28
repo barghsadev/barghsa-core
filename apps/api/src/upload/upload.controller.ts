@@ -21,12 +21,16 @@ import {
   type VerifyUploadResponse,
 } from './upload.types.js';
 import {
-  isAllowedExtension,
-  isAllowedMimeType,
-  getMaxSizeBytes,
-  resolveCategory,
   getCategoryDescriptions,
+  resolveCategory,
 } from './upload.config.js';
+import {
+  UploadPolicyResolver,
+  effectiveAllowsExtension,
+  effectiveAllowsMime,
+  effectiveAllowsSize,
+} from './upload-policy.resolver.js';
+import { pickDetectedContentType, sniffContentTypes, SNIFF_SAMPLE_BYTES } from './content-type-sniffer.js';
 
 const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 3600; // 1 hour
@@ -38,6 +42,8 @@ export class UploadController {
     private readonly storage: StorageProvider | null,
     @Inject(IMMUTABLE_STORAGE_SERVICE)
     private readonly immutableStorageService: ImmutableStorageRecordService | null,
+    @Inject(UploadPolicyResolver)
+    private readonly policyResolver: UploadPolicyResolver,
   ) {}
 
   /**
@@ -45,6 +51,13 @@ export class UploadController {
    *
    * Validates file type, size, and permissions before returning the URL.
    * The API never proxies file bodies — only metadata.
+   *
+   * Since T-09.12.05 the checks run against the EFFECTIVE upload policy:
+   * the admin-configured DB policy (`upload_policies`) bounded by the
+   * deployment-level limits in `upload.config.ts`. Extension + claimed
+   * content type + size are all validated here; the *detected* content
+   * type is additionally verified on the `:key/verify` seam (magic-byte
+   * sniffing, because presigned uploads never pass through the API).
    */
   @Post('presigned-url')
   @HttpCode(HttpStatus.OK)
@@ -68,29 +81,37 @@ export class UploadController {
     const req: PresignedUrlRequest = parsed.data;
     const category = req.category ?? resolveCategory(req.metadata?.recordType);
 
-    // Validate file extension
-    if (!isAllowedExtension(req.fileName, category)) {
+    const policy = await this.policyResolver.resolveEffective(category);
+
+    // Validate file extension against the effective policy
+    if (!effectiveAllowsExtension(policy, req.fileName)) {
       const cfg = getCategoryDescriptions();
       throw new BadRequestException({
         message: `File type not allowed for category "${category}"`,
-        allowedExtensions: cfg[category]?.allowedExtensions ?? 'any',
+        allowedExtensions:
+          policy.allowedExtensions === null
+            ? (cfg[category]?.allowedExtensions ?? 'any')
+            : policy.allowedExtensions.join(', '),
+        policySource: policy.source,
       });
     }
 
-    // Validate MIME type
-    if (!isAllowedMimeType(req.contentType, category)) {
+    // Validate MIME type against the effective policy
+    if (!effectiveAllowsMime(policy, req.contentType)) {
       throw new BadRequestException({
         message: `Content type "${req.contentType}" not allowed for category "${category}"`,
+        allowedMimeTypes: policy.allowedMimeTypes,
+        policySource: policy.source,
       });
     }
 
-    // Validate file size
-    const maxSize = getMaxSizeBytes(category);
-    if (req.fileSize > maxSize) {
+    // Validate file size against the effective policy
+    if (!effectiveAllowsSize(policy, req.fileSize)) {
       throw new BadRequestException({
-        message: `File size exceeds maximum of ${maxSize / (1024 * 1024)} MB for category "${category}"`,
-        maxSizeBytes: maxSize,
+        message: `File size exceeds maximum of ${policy.maxSizeBytes / (1024 * 1024)} MB for category "${category}"`,
+        maxSizeBytes: policy.maxSizeBytes,
         actualBytes: req.fileSize,
+        policySource: policy.source,
       });
     }
 
@@ -124,11 +145,22 @@ export class UploadController {
    *
    * Called by the frontend after the browser has PUT the file to the
    * presigned URL so the API records the metadata and schedules a scan.
+   *
+   * Since T-09.12.05, when the caller supplies the upload `category`, the
+   * object's leading bytes are read back from storage and magic-byte
+   * detected; the detected content type must be among the effective
+   * policy's allowed MIME types:
+   * - matches  → `confirmed`;
+   * - no match → `type_mismatch` (with the detected type and the allowed
+   *   set echoed in the response);
+   * - not sniffable / no category → legacy `pending_scan` (no detection,
+   *   backward compatible).
    */
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
   async verifyUpload(
     @Param('key') key: string,
+    @Body() body?: { category?: string },
   ): Promise<VerifyUploadResponse> {
     this.ensureStorageReady();
 
@@ -138,11 +170,39 @@ export class UploadController {
     }
 
     try {
-      await this.storage!.getObject(key);
+      const object = await this.storage!.getObject(key);
+      const category = body?.category;
+
+      // Legacy path: no category → existence check only. Also covers
+      // categories where no detection is possible (no bytes).
+      if (!category) {
+        return {
+          key,
+          exists: true,
+          status: 'pending_scan',
+        };
+      }
+
+      const policy = await this.policyResolver.resolveEffective(category);
+      const sample = await this.readSample(object.body);
+      const candidates = sniffContentTypes(sample);
+      const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
+
+      if (detected !== null) {
+        return {
+          key,
+          exists: true,
+          status: 'confirmed',
+          detectedContentType: detected,
+        };
+      }
+
       return {
         key,
         exists: true,
-        status: 'pending_scan',
+        status: 'type_mismatch',
+        detectedContentType: candidates[0] ?? null,
+        allowedMimeTypes: policy.allowedMimeTypes,
       };
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
@@ -190,6 +250,39 @@ export class UploadController {
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------
+
+  /**
+   * Read up to {@link SNIFF_SAMPLE_BYTES} leading bytes from a web
+   * ReadableStream, then cancel it (the verify seam only needs the
+   * signature). Never buffers the whole object.
+   */
+  private async readSample(stream: ReadableStream): Promise<Uint8Array> {
+    const reader = stream.getReader();
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value) {
+          chunks.push(value);
+          total += value.byteLength;
+          if (total >= SNIFF_SAMPLE_BYTES) break;
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    const sample = new Uint8Array(Math.min(total, SNIFF_SAMPLE_BYTES));
+    let written = 0;
+    for (const chunk of chunks) {
+      const take = Math.min(chunk.byteLength, sample.length - written);
+      sample.set(chunk.subarray(0, take), written);
+      written += take;
+      if (written >= sample.length) break;
+    }
+    return sample;
+  }
 
   private ensureStorageReady(): void {
     if (!this.storage) {
