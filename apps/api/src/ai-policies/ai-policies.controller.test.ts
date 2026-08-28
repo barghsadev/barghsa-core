@@ -133,6 +133,26 @@ describe('PoliciesController (T-09.11.03)', () => {
         ip: '10.0.0.8',
       })
     })
+
+    it('forwards an optional enabled:false so a policy can be created disabled', async () => {
+      mockCreatePolicy.mockResolvedValue(basePolicy({ enabled: false }))
+      const result = await controller.create(adminReq, {
+        title: 'Draft guardrail',
+        policyType: 'disallowed_actions',
+        rules: { actions: ['financial_advice'] },
+        enabled: false,
+      } as never)
+      expect(result).toMatchObject({ enabled: false })
+      expect(mockCreatePolicy).toHaveBeenCalledWith({
+        title: 'Draft guardrail',
+        description: '',
+        policyType: 'disallowed_actions',
+        rules: { actions: ['financial_advice'] },
+        enabled: false,
+        actorUserId: 'admin-1',
+        ip: '10.0.0.8',
+      })
+    })
   })
 
   describe('PUT /api/admin/policies/:id', () => {
@@ -140,16 +160,6 @@ describe('PoliciesController (T-09.11.03)', () => {
       await expect(controller.update(adminReq, 'pol-1', {} as never)).rejects.toMatchObject({
         status: 400,
       })
-      expect(mockUpdatePolicy).not.toHaveBeenCalled()
-    })
-
-    it('rejects a rules/policyType mismatch', async () => {
-      await expect(
-        controller.update(adminReq, 'pol-1', {
-          policyType: 'response_style',
-          rules: { actions: ['financial_advice'] },
-        } as never),
-      ).rejects.toMatchObject({ status: 400 })
       expect(mockUpdatePolicy).not.toHaveBeenCalled()
     })
 

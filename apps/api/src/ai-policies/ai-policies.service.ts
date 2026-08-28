@@ -1,6 +1,8 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
+import { z } from 'zod'
 import { getDbPool } from '@barghsa/db'
+import { rulesSchemas, rulesErrorDetails } from './ai-policies.rules.js'
 
 /**
  * AI usage policy management service (S-09.11, T-09.11.03).
@@ -97,6 +99,8 @@ export interface CreatePolicyInput {
   rules: Record<string, unknown>
   actorUserId: string
   ip: string
+  /** Optional initial active/inactive state; defaults to enabled. */
+  enabled?: boolean
 }
 
 export interface UpdatePolicyInput {
@@ -218,6 +222,7 @@ export class AiPoliciesService {
   async createPolicy(input: CreatePolicyInput): Promise<PolicyDto> {
     const id = uuidv7()
     const now = new Date()
+    const enabled = input.enabled ?? true
 
     const result = await getDbPool().query<PolicyBaseRow>(
       `INSERT INTO ai_policies
@@ -230,7 +235,7 @@ export class AiPoliciesService {
         input.description,
         input.policyType,
         JSON.stringify(input.rules),
-        true,
+        enabled,
         input.actorUserId,
         now,
       ],
@@ -258,6 +263,37 @@ export class AiPoliciesService {
     const existing = await this.findPolicy(id)
     if (!existing) throw this.policyNotFound(id)
 
+    // Authoritative cross-validation: a rules-only update must be validated
+    // against the *stored* policy_type, and changing the policy_type without
+    // a fresh rules document leaves the stored document invalid for the new
+    // kind. Enforced here (where the DB state is known) as well as in the
+    // controller's create-time schema.
+    const effectiveType = input.policyType ?? existing.policy_type
+    if (input.rules !== undefined) {
+      const parsedRules = rulesSchemas[effectiveType].safeParse(input.rules)
+      if (!parsedRules.success) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'AI_POLICY_RULES_INVALID',
+            message: `Invalid rules for policy type "${effectiveType}"`,
+            details: rulesErrorDetails(effectiveType, parsedRules.error.issues),
+          },
+          400,
+        )
+      }
+    }
+    if (input.policyType !== undefined && input.rules === undefined) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'AI_POLICY_TYPE_WITHOUT_RULES',
+          message: 'Changing the policy type requires a matching rules document',
+        },
+        400,
+      )
+    }
+
     const fields: string[] = []
     const values: unknown[] = []
     let param = 1
@@ -266,11 +302,27 @@ export class AiPoliciesService {
       values.push(value)
     }
 
-    if (input.title !== undefined) push('title', input.title)
-    if (input.description !== undefined) push('description', input.description)
-    if (input.policyType !== undefined) push('policy_type', input.policyType)
-    if (input.rules !== undefined) push('rules', JSON.stringify(input.rules))
-    if (input.enabled !== undefined) push('enabled', input.enabled)
+    const changedFields: string[] = []
+    if (input.title !== undefined) {
+      if (input.title !== existing.title) changedFields.push('title')
+      push('title', input.title)
+    }
+    if (input.description !== undefined) {
+      if (input.description !== existing.description) changedFields.push('description')
+      push('description', input.description)
+    }
+    if (input.policyType !== undefined) {
+      changedFields.push('policy_type')
+      push('policy_type', input.policyType)
+    }
+    if (input.rules !== undefined) {
+      changedFields.push('rules')
+      push('rules', JSON.stringify(input.rules))
+    }
+    if (input.enabled !== undefined) {
+      if (input.enabled !== existing.enabled) changedFields.push('enabled')
+      push('enabled', input.enabled)
+    }
     if (fields.length === 0) return this.getPolicy(id)
 
     fields.push(`updated_at = $${param++}`)
@@ -290,6 +342,14 @@ export class AiPoliciesService {
     await this.recordAudit('ai_policy_updated', input.actorUserId, input.ip, {
       targetId: row.id,
       title: row.title,
+      changedFields,
+      ...(changedFields.includes('enabled')
+        ? { enabledBefore: existing.enabled, enabledAfter: row.enabled }
+        : {}),
+      ...(changedFields.includes('policy_type')
+        ? { policyTypeBefore: existing.policy_type, policyTypeAfter: row.policy_type }
+        : {}),
+      rulesChanged: changedFields.includes('rules'),
     })
     this.logger.log(`Policy updated: id=${id}, actor=${input.actorUserId}`)
     return { ...this.toPolicyBase(row), groupCount }
@@ -386,8 +446,15 @@ export class AiPoliciesService {
       values.push(value)
     }
 
-    if (input.title !== undefined) push('title', input.title)
-    if (input.description !== undefined) push('description', input.description)
+    const changedFields: string[] = []
+    if (input.title !== undefined) {
+      if (input.title !== existing.title) changedFields.push('title')
+      push('title', input.title)
+    }
+    if (input.description !== undefined) {
+      if (input.description !== existing.description) changedFields.push('description')
+      push('description', input.description)
+    }
     if (fields.length === 0) return this.getGroup(id)
 
     fields.push(`updated_at = $${param++}`)
@@ -407,6 +474,7 @@ export class AiPoliciesService {
     await this.recordAudit('ai_policy_group_updated', input.actorUserId, input.ip, {
       targetId: row.id,
       title: row.title,
+      changedFields,
     })
     this.logger.log(`Policy group updated: id=${id}, actor=${input.actorUserId}`)
     return { ...this.toGroupBase(row), memberCount }
@@ -434,13 +502,16 @@ export class AiPoliciesService {
     const policy = await this.findPolicy(input.policyId)
     if (!policy) throw this.policyNotFound(input.policyId)
 
+    let inserted = false
     try {
-      await getDbPool().query(
+      const res = await getDbPool().query(
         `INSERT INTO ai_policy_group_members (group_id, policy_id, created_at)
          VALUES ($1, $2, $3)
-         ON CONFLICT (group_id, policy_id) DO NOTHING`,
+         ON CONFLICT (group_id, policy_id) DO NOTHING
+         RETURNING group_id`,
         [input.groupId, input.policyId, new Date()],
       )
+      inserted = (res.rowCount ?? 0) > 0
     } catch (error) {
       if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
         // Race: one side was deleted between the existence check and insert.
@@ -455,12 +526,15 @@ export class AiPoliciesService {
       }
       throw error
     }
-    await this.recordAudit('ai_policy_group_member_added', input.actorUserId, input.ip, {
-      targetId: input.groupId,
-      policyId: input.policyId,
-    })
+    // Only audit a real link; a no-op re-link must not emit a duplicate event.
+    if (inserted) {
+      await this.recordAudit('ai_policy_group_member_added', input.actorUserId, input.ip, {
+        targetId: input.groupId,
+        policyId: input.policyId,
+      })
+    }
     this.logger.log(
-      `Policy linked into group: group=${input.groupId}, policy=${input.policyId}, actor=${input.actorUserId}`,
+      `Policy ${inserted ? 'linked into' : 'already in'} group: group=${input.groupId}, policy=${input.policyId}, actor=${input.actorUserId}`,
     )
   }
 

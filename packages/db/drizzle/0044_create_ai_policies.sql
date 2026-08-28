@@ -67,19 +67,34 @@ CREATE TABLE IF NOT EXISTS ai_policy_group_members (
 );
 
 -- A policy without a label is unusable by agents (T-09.11.04).
-ALTER TABLE ai_policies
-  ADD CONSTRAINT chk_aip_title
-  CHECK (title <> '');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_aip_title') THEN
+    ALTER TABLE ai_policies
+      ADD CONSTRAINT chk_aip_title
+      CHECK (title <> '');
+  END IF;
+END $$;
 
 -- Same for groups.
-ALTER TABLE ai_policy_groups
-  ADD CONSTRAINT chk_aipg_title
-  CHECK (title <> '');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_aipg_title') THEN
+    ALTER TABLE ai_policy_groups
+      ADD CONSTRAINT chk_aipg_title
+      CHECK (title <> '');
+  END IF;
+END $$;
 
 -- Only the supported policy kinds are storable.
-ALTER TABLE ai_policies
-  ADD CONSTRAINT chk_aip_type
-  CHECK (policy_type IN ('allowed_topics', 'disallowed_actions', 'data_access_scope', 'response_style'));
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_aip_type') THEN
+    ALTER TABLE ai_policies
+      ADD CONSTRAINT chk_aip_type
+      CHECK (policy_type IN ('allowed_topics', 'disallowed_actions', 'data_access_scope', 'response_style'));
+  END IF;
+END $$;
 
 -- List by recency for the admin UI.
 CREATE INDEX IF NOT EXISTS idx_aip_created_at

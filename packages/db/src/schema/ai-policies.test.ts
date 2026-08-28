@@ -94,6 +94,34 @@ describe('AI policy schema (T-09.11.03)', () => {
     expect(MIGRATION).toMatch(/policy_id\s+UUID NOT NULL REFERENCES ai_policies\(id\) ON DELETE CASCADE/)
   })
 
+  it('migration 0044 keeps the created_by owner FK (TEXT users.user_id, RESTRICT)', () => {
+    // users.user_id is TEXT (uuidv7 stored as text), so created_by is TEXT —
+    // pin the type and the RESTRICT action so a future drizzle-kit run cannot
+    // silently change it or drop the guard.
+    expect(
+      MIGRATION,
+    ).toMatch(/created_by\s+TEXT NOT NULL REFERENCES users\(user_id\) ON DELETE RESTRICT/)
+    // Both owner tables use the same FK contract.
+    const createdByCount = (MIGRATION.match(
+      /created_by\s+TEXT NOT NULL REFERENCES users\(user_id\) ON DELETE RESTRICT/g,
+    ) ?? []).length
+    expect(createdByCount).toBe(2)
+  })
+
+  it('migration 0044 creates the CHECK constraints idempotently (guarded)', () => {
+    // The three CHECK constraints are guarded so migration 0044 is re-runnable
+    // (DO $$ ... IF NOT EXISTS (SELECT 1 FROM pg_constraint ...) ... END $$).
+    expect(MIGRATION).toMatch(
+      /IF NOT EXISTS \(SELECT 1 FROM pg_constraint WHERE conname = 'chk_aip_title'\)/,
+    )
+    expect(MIGRATION).toMatch(
+      /IF NOT EXISTS \(SELECT 1 FROM pg_constraint WHERE conname = 'chk_aipg_title'\)/,
+    )
+    expect(MIGRATION).toMatch(
+      /IF NOT EXISTS \(SELECT 1 FROM pg_constraint WHERE conname = 'chk_aip_type'\)/,
+    )
+  })
+
   it('migration 0044 keeps the membership composite PK', () => {
     expect(MIGRATION).toMatch(/PRIMARY KEY \(group_id, policy_id\)/)
   })

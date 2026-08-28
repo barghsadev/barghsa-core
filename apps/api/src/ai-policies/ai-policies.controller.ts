@@ -24,8 +24,8 @@ import {
   type PolicyDetailDto,
   type PolicyGroupDto,
   type PolicyGroupDetailDto,
-  type PolicyType,
 } from './ai-policies.service.js'
+import { rulesSchemas } from './ai-policies.rules.js'
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
@@ -33,39 +33,16 @@ const titleSchema = z.string().min(1, 'Title is required').max(120)
 const descriptionSchema = z.string().max(2000).default('')
 const policyTypeSchema = z.enum(POLICY_TYPES)
 
-const stringList = (field: string) =>
-  z
-    .array(z.string().min(1).max(200))
-    .min(1, `At least one ${field} is required`)
-    .max(200)
-
-/**
- * Structured guardrail documents, validated per policy kind. These match
- * the shapes the consumer (AI agents, T-09.11.04) will interpret.
- */
-const rulesSchemas: Record<PolicyType, z.ZodType> = {
-  allowed_topics: z.object({
-    topics: stringList('topic'),
-  }),
-  disallowed_actions: z.object({
-    actions: stringList('action'),
-  }),
-  data_access_scope: z.object({
-    scopes: stringList('scope'),
-  }),
-  response_style: z.object({
-    tone: z.string().min(1, 'tone is required').max(200),
-    language: z.string().max(50).optional(),
-    maxLength: z.number().int().positive().max(100000).optional(),
-  }),
-}
-
 export const CreatePolicySchema = z
   .object({
     title: titleSchema,
     description: descriptionSchema.optional(),
     policyType: policyTypeSchema,
+    // Structured guardrail document; shape validated against the chosen
+    // policyType below (rulesSchemas shared with the service).
     rules: z.record(z.string(), z.unknown()),
+    // Optional initial active/inactive state; defaults to enabled.
+    enabled: z.boolean().optional(),
   })
   .superRefine((v, ctx) => {
     const rulesSchema = rulesSchemas[v.policyType]
@@ -86,31 +63,13 @@ export const UpdatePolicySchema = z
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
     policyType: policyTypeSchema.optional(),
+    // Rules/type cross-validation happens authoritatively in the service
+    // where the stored policy_type is known (a rules-only update must be
+    // checked against the existing type; a type change requires new rules).
     rules: z.record(z.string(), z.unknown()).optional(),
     enabled: z.boolean().optional(),
   })
-  .superRefine((v, ctx) => {
-    if (v.policyType !== undefined && v.rules !== undefined) {
-      const rulesSchema = rulesSchemas[v.policyType]
-      const parsed = rulesSchema.safeParse(v.rules)
-      if (!parsed.success) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['rules'],
-          message: `Invalid rules for policy type "${v.policyType}": ${parsed.error.issues
-            .map((i) => i.message)
-            .join('; ')}`,
-        })
-      }
-    }
-    if (Object.keys(v).length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: [],
-        message: 'At least one field must be provided',
-      })
-    }
-  })
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
 
 export const CreatePolicyGroupSchema = z.object({
   title: titleSchema,
@@ -128,12 +87,22 @@ export const AddGroupMemberSchema = z.object({
   policyId: z.string().min(1, 'policyId is required').max(64),
 })
 
-function httpError(code: string, message: string, statusCode = 400): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+function httpError(
+  code: string,
+  message: string,
+  statusCode = 400,
+  details?: unknown,
+): never {
+  throw new HttpException({ statusCode, error: code, message, ...(details ? { details } : {}) }, statusCode)
 }
 
 function requestIp(req: AuthenticatedRequest): string {
   return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+}
+
+/** Flattened zod issues so the admin UI can highlight the offending rule field. */
+function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
 }
 
 /**
@@ -195,13 +164,14 @@ export class PoliciesController {
     this.assertPolicyPermission(req)
     const parsed = CreatePolicySchema.safeParse(body)
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy payload', 400, validationDetails(parsed.error.issues))
     }
     return this.service.createPolicy({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       policyType: parsed.data.policyType,
       rules: parsed.data.rules,
+      ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
     })
@@ -221,7 +191,7 @@ export class PoliciesController {
     this.assertPolicyPermission(req)
     const parsed = UpdatePolicySchema.safeParse(body)
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy payload', 400, validationDetails(parsed.error.issues))
     }
     return this.service.updatePolicy(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
@@ -304,7 +274,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req)
     const parsed = CreatePolicyGroupSchema.safeParse(body)
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy group payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy group payload', 400, validationDetails(parsed.error.issues))
     }
     return this.service.createGroup({
       title: parsed.data.title,
@@ -328,7 +298,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req)
     const parsed = UpdatePolicyGroupSchema.safeParse(body)
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy group payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy group payload', 400, validationDetails(parsed.error.issues))
     }
     return this.service.updateGroup(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
@@ -371,7 +341,7 @@ export class PolicyGroupsController {
     this.assertPolicyPermission(req)
     const parsed = AddGroupMemberSchema.safeParse(body)
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid member payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid member payload', 400, validationDetails(parsed.error.issues))
     }
     return this.service.addGroupMember({
       groupId: id,
@@ -385,7 +355,13 @@ export class PolicyGroupsController {
   @HttpCode(204)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Remove an AI policy from a policy group (admin)' })
+  @ApiOperation({
+    summary: 'Remove an AI policy from a policy group (admin)',
+    description:
+      'Removing a policy that is not a member of the group returns 404. ' +
+      'Unlike the idempotent add-member link, removal is assertive so callers ' +
+      'can tell a real member change from a no-op.',
+  })
   @ApiResponse({ status: 204, description: 'Policy removed from group.' })
   async removeMember(
     @Req() req: AuthenticatedRequest,

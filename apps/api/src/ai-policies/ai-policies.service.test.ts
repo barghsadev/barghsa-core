@@ -122,6 +122,27 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       expect(mockQuery.mock.calls[1]![1]).toContain('ai_policy_created')
     })
 
+    it('creates a disabled policy when enabled:false is supplied', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery
+        .mockResolvedValueOnce({ rows: [policyBaseRow({ enabled: false })] }) // insert return
+        .mockResolvedValueOnce({ rows: [] }) // audit
+
+      const result = await service.createPolicy({
+        title: 'Draft guardrail',
+        description: '',
+        policyType: 'disallowed_actions',
+        rules: { actions: ['x'] },
+        enabled: false,
+        actorUserId: ACTOR,
+        ip: '1.2.3.4',
+      })
+      expect(result).toMatchObject({ enabled: false })
+      // The enabled value is the 6th bind parameter.
+      expect(mockQuery.mock.calls[0]![1]).toContain(false)
+    })
+
     it('throws 404 on update of a missing policy', async () => {
       const { mockQuery } = mockPool()
       service = await loadService({ query: mockQuery })
@@ -149,6 +170,75 @@ describe('AiPoliciesService (T-09.11.03)', () => {
         ip: '1.2.3.4',
       })
       expect(result).toMatchObject({ enabled: false, groupCount: 2 })
+      // Audit metadata must record what changed (fidelity for guardrail edits).
+      const auditMeta = String(mockQuery.mock.calls[3]![1])
+      expect(auditMeta).toContain('ai_policy_updated')
+      expect(auditMeta).toContain('"changedFields"')
+      expect(auditMeta).toContain('"enabledBefore":true')
+      expect(auditMeta).toContain('"enabledAfter":false')
+    })
+
+    it('rejects a rules-only update that violates the stored policy type', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      // Policy is a disallowed_actions policy; rules without an actions[] is invalid.
+      mockQuery.mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+
+      await expect(
+        service.updatePolicy('pol-1', {
+          rules: { topics: ['finance'] },
+          actorUserId: ACTOR,
+          ip: '1.2.3.4',
+        }),
+      ).rejects.toMatchObject({
+        status: 400,
+        response: { error: 'AI_POLICY_RULES_INVALID' },
+      })
+      // No UPDATE or audit should have been issued.
+      const writes = mockQuery.mock.calls.filter((c) =>
+        String(c[0]).toLowerCase().includes('update ai_policies') ||
+        String(c[0]).includes('INSERT INTO audit_log'),
+      )
+      expect(writes).toHaveLength(0)
+    })
+
+    it('rejects a policy-type change without a fresh rules document', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery.mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+
+      await expect(
+        service.updatePolicy('pol-1', {
+          policyType: 'response_style',
+          actorUserId: ACTOR,
+          ip: '1.2.3.4',
+        }),
+      ).rejects.toMatchObject({
+        status: 400,
+        response: { error: 'AI_POLICY_TYPE_WITHOUT_RULES' },
+      })
+    })
+
+    it('accepts a rules-only update that matches the stored policy type', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery
+        .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+        .mockResolvedValueOnce({
+          rows: [policyBaseRow({ rules: { actions: ['financial_advice', 'promises'] } })],
+        }) // update return
+        .mockResolvedValueOnce({ rows: [{ count: 0 }] }) // group count
+        .mockResolvedValueOnce({ rows: [] }) // audit
+
+      const result = await service.updatePolicy('pol-1', {
+        rules: { actions: ['financial_advice', 'promises'] },
+        actorUserId: ACTOR,
+        ip: '1.2.3.4',
+      })
+      expect(result).toMatchObject({ id: 'pol-1' })
+      const auditMeta = String(mockQuery.mock.calls[3]![1])
+      expect(auditMeta).toContain('"changedFields"')
+      expect(auditMeta).toContain('"rulesChanged":true')
     })
 
     it('removes a policy and records the audit event', async () => {
@@ -227,7 +317,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       mockQuery
         .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
         .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
-        .mockResolvedValueOnce({ rows: [] }) // insert member
+        .mockResolvedValueOnce({ rowCount: 1, rows: [{ group_id: 'grp-1' }] }) // insert member
         .mockResolvedValueOnce({ rows: [] }) // audit
 
       await expect(
@@ -241,6 +331,34 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       const insertSql = String(mockQuery.mock.calls[2]![0])
       expect(insertSql).toContain('INSERT INTO ai_policy_group_members')
       expect(insertSql).toContain('ON CONFLICT (group_id, policy_id) DO NOTHING')
+      // A real link emits an audit event.
+      const auditCalls = mockQuery.mock.calls.filter((call) =>
+        String(call[0]).includes('INSERT INTO audit_log'),
+      )
+      expect(auditCalls).toHaveLength(1)
+      expect(auditCalls[0]![1]).toContain('ai_policy_group_member_added')
+    })
+
+    it('is idempotent: a no-op re-link emits no audit event', async () => {
+      const { mockQuery } = mockPool()
+      service = await loadService({ query: mockQuery })
+      mockQuery
+        .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
+        .mockResolvedValueOnce({ rows: [policyBaseRow()] }) // findPolicy
+        .mockResolvedValueOnce({ rowCount: 0, rows: [] }) // insert → conflict
+
+      await expect(
+        service.addGroupMember({
+          groupId: 'grp-1',
+          policyId: 'pol-1',
+          actorUserId: ACTOR,
+          ip: '1.2.3.4',
+        }),
+      ).resolves.toBeUndefined()
+      const auditCalls = mockQuery.mock.calls.filter((call) =>
+        String(call[0]).includes('INSERT INTO audit_log'),
+      )
+      expect(auditCalls).toHaveLength(0)
     })
 
     it('throws 404 when the member policy does not exist', async () => {
