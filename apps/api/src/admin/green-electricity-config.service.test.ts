@@ -175,6 +175,56 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     ).rejects.toMatchObject({ status: 400 })
   })
 
+  it('rejects a mode with an omitted mandatory_green_enabled flag', async () => {
+    const { pool } = await loadService()
+    await expect(
+      service.setGreenElectricityConfig(
+        {
+          simple_order: { average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
+          advanced_order: VALID_INPUT.advanced_order,
+        },
+        'admin-1',
+        '127.0.0.1',
+      ),
+    ).rejects.toMatchObject({ status: 400 })
+    expect(pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('persists a camelCase payload with mandatoryGreenEnabled:false as disabled', async () => {
+    const { mockConnect } = await loadService()
+    const { client } = mockClient()
+    mockConnect.mockResolvedValue(client)
+    client.query
+      .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
+      .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
+      .mockResolvedValueOnce({ rows: [] }) // config_version
+      .mockResolvedValueOnce({ rows: [] }) // audit_log
+      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+
+    await service.setGreenElectricityConfig(
+      {
+        simpleOrder: {
+          mandatoryGreenEnabled: false,
+          averagePowerThresholdKw: 1000,
+          mandatoryGreenSharePercent: 4,
+        },
+        advancedOrder: {
+          mandatoryGreenEnabled: false,
+          averagePowerThresholdKw: 1000,
+          mandatoryGreenSharePercent: 4,
+        },
+      },
+      'admin-1',
+      '127.0.0.1',
+    )
+
+    const appConfigQuery = client.query.mock.calls[2]!
+    const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string)
+    expect(stored.simple_order.mandatory_green_enabled).toBe(false)
+    expect(stored.advanced_order.mandatory_green_enabled).toBe(false)
+  })
+
   it('persists the config, bumps config version, and records an audit', async () => {
     const { pool, mockConnect } = await loadService()
     const { client } = mockClient()

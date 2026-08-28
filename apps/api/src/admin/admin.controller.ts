@@ -1855,7 +1855,7 @@ export class AdminController {
           required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
           properties: {
             mandatory_green_enabled: { type: 'boolean', example: true },
-            average_power_threshold_kw: { type: 'number', example: 1000, minimum: 0 },
+            average_power_threshold_kw: { type: 'integer', example: 1000, minimum: 0 },
             mandatory_green_share_percent: { type: 'number', example: 4, minimum: 0, maximum: 100 },
           },
         },
@@ -1864,7 +1864,7 @@ export class AdminController {
           required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
           properties: {
             mandatory_green_enabled: { type: 'boolean', example: false },
-            average_power_threshold_kw: { type: 'number', example: 1000, minimum: 0 },
+            average_power_threshold_kw: { type: 'integer', example: 1000, minimum: 0 },
             mandatory_green_share_percent: { type: 'number', example: 4, minimum: 0, maximum: 100 },
           },
         },
@@ -1881,7 +1881,7 @@ export class AdminController {
           type: 'object',
           properties: {
             mandatory_green_enabled: { type: 'boolean' },
-            average_power_threshold_kw: { type: 'number' },
+            average_power_threshold_kw: { type: 'integer' },
             mandatory_green_share_percent: { type: 'number' },
           },
         },
@@ -1889,7 +1889,7 @@ export class AdminController {
           type: 'object',
           properties: {
             mandatory_green_enabled: { type: 'boolean' },
-            average_power_threshold_kw: { type: 'number' },
+            average_power_threshold_kw: { type: 'integer' },
             mandatory_green_share_percent: { type: 'number' },
           },
         },

@@ -1208,17 +1208,17 @@ export class AdminService {
     )
     if (result.rows.length === 0) return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
     const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const config = toGreenElectricityConfig(persisted)
-    // Warn on corruption: the stored snake_case shape must itself validate, so
-    // a malformed row (wrong types, missing modes) is surfaced rather than
-    // silently served as (possibly confusable) defaults.
+    // The stored snake_case shape must itself validate; a malformed row (wrong
+    // types, missing modes) is surfaced rather than silently served as a
+    // confusing mix of persisted + default fields.
     const validation = validateGreenElectricityConfig(persisted)
     if (!validation.ok) {
       this.logger.warn(
         `Green electricity config row for key ${GREEN_ELECTRICITY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`,
       )
+      return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
     }
-    return config
+    return toGreenElectricityConfig(persisted)
   }
 
   /**

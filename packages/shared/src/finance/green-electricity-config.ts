@@ -130,7 +130,10 @@ function validateMode(
   }
   const o = raw as Record<string, unknown>
 
-  if (o.mandatory_green_enabled !== undefined && typeof o.mandatory_green_enabled !== 'boolean') {
+  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled
+  if (enabled === undefined || enabled === null || enabled === '') {
+    issues.push(`${prefix}.mandatory_green_enabled is required`)
+  } else if (typeof enabled !== 'boolean') {
     issues.push(`${prefix}.mandatory_green_enabled must be a boolean`)
   }
 
@@ -191,11 +194,10 @@ export function toGreenElectricityModeConfig(
 ): GreenElectricityModeConfig {
   if (!raw || typeof raw !== 'object') return { ...fallback }
   const o = raw as Record<string, unknown>
+  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled
   return {
     mandatoryGreenEnabled:
-      typeof o.mandatory_green_enabled === 'boolean'
-        ? o.mandatory_green_enabled
-        : fallback.mandatoryGreenEnabled,
+      typeof enabled === 'boolean' ? enabled : fallback.mandatoryGreenEnabled,
     averagePowerThresholdKw: isValidAveragePowerThresholdKw(
       o.average_power_threshold_kw ?? o.averagePowerThresholdKw,
     )

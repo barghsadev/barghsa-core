@@ -143,6 +143,47 @@ describe('green-electricity config contract (T-09.10.02)', () => {
       })
       expect(r.ok).toBe(true)
     })
+
+    it('rejects a missing mandatory_green_enabled flag', () => {
+      const r = validateGreenElectricityConfig({
+        simple_order: {
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+        advanced_order: VALID_INPUT.advanced_order,
+      })
+      expect(r.ok).toBe(false)
+      expect(r.issues.join(' ')).toContain('mandatory_green_enabled is required')
+    })
+
+    it('accepts a camelCase payload with mandatoryGreenEnabled:false', () => {
+      const r = validateGreenElectricityConfig({
+        simple_order: {
+          mandatory_green_enabled: false,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+        advanced_order: {
+          mandatory_green_enabled: false,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+      })
+      expect(r.ok).toBe(true)
+      const c = toGreenElectricityConfig({
+        simple_order: {
+          mandatory_green_enabled: false,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+        advanced_order: {
+          mandatory_green_enabled: false,
+          average_power_threshold_kw: 1000,
+          mandatory_green_share_percent: 4,
+        },
+      })
+      expect(c.simpleOrder.mandatoryGreenEnabled).toBe(false)
+    })
   })
 
   describe('validators', () => {
