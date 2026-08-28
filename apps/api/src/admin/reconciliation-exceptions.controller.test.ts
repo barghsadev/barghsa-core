@@ -143,4 +143,39 @@ describe('reconciliation-exceptions body validation', () => {
       'fixed',
     )
   })
+
+  it('passes limit/offset to the service when valid', async () => {
+    const { controller, service } = makeController()
+    await controller.listReconciliationItems(undefined, undefined, '25', '5', adminReq)
+    expect(service.listReconciliationExceptions).toHaveBeenCalledWith({
+      limit: 25,
+      offset: 5,
+    })
+  })
+
+  it('rejects an out-of-range limit with 400', async () => {
+    const { controller, service } = makeController()
+    const rejection = await controller
+      .listReconciliationItems(undefined, undefined, '0', '5', adminReq)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 400,
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+    })
+    expect(service.listReconciliationExceptions).not.toHaveBeenCalled()
+  })
+
+  it('rejects a non-numeric offset with 400', async () => {
+    const { controller, service } = makeController()
+    const rejection = await controller
+      .listReconciliationItems(undefined, undefined, '10', 'abc', adminReq)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      statusCode: 400,
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+    })
+    expect(service.listReconciliationExceptions).not.toHaveBeenCalled()
+  })
 })
