@@ -277,6 +277,27 @@ describe('Gift code validation (T-09.12.03)', () => {
     )
   })
 
+  it('allows a cap-only PATCH on a percentage code (no discountType needed)', async () => {
+    const { controller, service } = makeController()
+    await controller.update(adminReq, CODE_ID, { maxCapIrr: '2000000' })
+
+    expect(service.update).toHaveBeenCalledWith(
+      CODE_ID,
+      expect.objectContaining({ maxCapIrr: '2000000' }),
+    )
+  })
+
+  it('still rejects a non-null cap with an explicit fixed_irr discountType', async () => {
+    const { controller } = makeController()
+    const rejection = await controller
+      .update(adminReq, CODE_ID, {
+        discountType: 'fixed_irr',
+        maxCapIrr: '2000000',
+      })
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+  })
+
   it('forwards toggle status to the service', async () => {
     const { controller, service } = makeController()
     await controller.setStatus(adminReq, CODE_ID, { status: 'inactive' })

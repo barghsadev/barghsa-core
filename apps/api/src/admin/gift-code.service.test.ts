@@ -11,10 +11,12 @@ function makeDb() {
   type Handler = (values: unknown[], callIndex: number) => { rows: unknown[]; rowCount?: number | null }
   const handlers = new Map<string, Handler>()
   const callCounts = new Map<string, number>()
-  const calls: Array<{ sql: string; values: unknown[] }> = []
+  const calls: Array<{ sql: string; values: unknown[]; executor: 'pool' | 'client' }> = []
 
-  const query = vi.fn(async (sql: string, values: unknown[] = []) => {
-    calls.push({ sql, values })
+  const route = async (
+    sql: string,
+    values: unknown[],
+  ): Promise<{ rows: unknown[]; rowCount?: number | null }> => {
     for (const [frag, fn] of handlers) {
       if (sql.includes(frag)) {
         const idx = callCounts.get(frag) ?? 0
@@ -23,10 +25,26 @@ function makeDb() {
       }
     }
     return { rows: [], rowCount: null }
-  })
+  }
 
-  const client = { query, release: vi.fn() }
-  const pool = { query, connect: async () => client }
+  // DISTINCT spies for pool and client: a test asserting a query ran on
+  // the transaction executor (not a fresh pool connection) can tell them
+  // apart — this is exactly how the in-tx profile-scope visibility bug
+  // was caught.
+  const client = {
+    query: vi.fn(async (sql: string, values: unknown[] = []) => {
+      calls.push({ sql, values, executor: 'client' })
+      return route(sql, values)
+    }),
+    release: vi.fn(),
+  }
+  const pool = {
+    query: vi.fn(async (sql: string, values: unknown[] = []) => {
+      calls.push({ sql, values, executor: 'pool' })
+      return route(sql, values)
+    }),
+    connect: async () => client,
+  }
 
   const router = {
     on: (frag: string, fn: Handler) => handlers.set(frag, fn),
@@ -34,7 +52,7 @@ function makeDb() {
     queries: (frag: string) => calls.filter((c) => c.sql.includes(frag)),
   }
 
-  return { query, pool, router }
+  return { query: pool.query, pool, router }
 }
 
 function giftRow(over: Record<string, unknown> = {}) {
@@ -145,7 +163,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
       await service.list({ search: 'sale', status: 'active', discountType: 'percentage' })
 
-      expect(seen[0]).toEqual(['sale', 'active', 'percentage'])
+      expect(seen[0]).toEqual(['SALE', 'active', 'percentage'])
     })
   })
 
@@ -309,6 +327,34 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(insert.values).toContain('percentage')
       expect(insert.values).toContain('2500')
       expect(insert.values).toContain('1000000') // required cap persisted
+    })
+
+    it('reads profile scopes INSIDE the write transaction (not a fresh pool connection)', async () => {
+      const { pool, router } = makeDb()
+      router.on('SELECT 1 FROM gift_codes WHERE code = $1', () => ({ rows: [] }))
+      router.on('INSERT INTO gift_codes', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO gift_code_profiles', () => ({ rows: [], rowCount: 1 }))
+      router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+      router.on('GROUP BY gc.id', () => ({
+        rows: [giftRow({ eligibility: 'profile' })],
+      }))
+      router.on('ANY($1::uuid[])', () => ({
+        rows: [{ gift_code_id: CODE_ID, profile_id: PROFILE_ID }],
+      }))
+      service = await loadService(pool)
+
+      const result = await service.create({
+        ...createInput,
+        eligibility: 'profile',
+        profileIds: [PROFILE_ID],
+      })
+
+      expect(result.profileIds).toEqual([PROFILE_ID])
+      // The scope SELECT must have run on the transaction CLIENT (the
+      // uncommitted join rows are invisible to a fresh pool connection).
+      const attach = router.queries('ANY($1::uuid[])')
+      expect(attach).toHaveLength(1)
+      expect(attach[0]!.executor).toBe('client')
     })
 
     it('rejects invalid code charset', async () => {
@@ -647,6 +693,39 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(router.calls.filter((c) => c.sql === 'COMMIT')).toHaveLength(0)
       // Note: the pool and client share the same `query` spy, so all queries
       // are visible; the test proves the service added no transaction control.
+    })
+
+    it('locks the code row FOR UPDATE before counting consumed redemptions', async () => {
+      const { pool, router } = makeDb()
+      const rows: Array<{ sql: string }> = []
+      router.on('FOR UPDATE', (values) => {
+        rows.push({ sql: 'FOR UPDATE' })
+        return { rows: [giftRow({ total_limit: 2 })] }
+      })
+      router.on("status = 'consumed'", () => {
+        rows.push({ sql: "COUNT status = 'consumed'" })
+        return { rows: [{ n: 1 }] }
+      })
+      router.on('INSERT INTO gift_code_redemptions', () => ({
+        rows: [redemptionRow()],
+        rowCount: 1,
+      }))
+      service = await loadService(pool)
+
+      await service.redeem({
+        giftCode: 'SALE10',
+        profileId: 'prof-1',
+        orderId: 'ord-1',
+        orderAmount: '2000000',
+        category: 'electricity',
+      })
+
+      // The lock MUST precede the limit counts, or concurrent redemptions
+      // could oversell (a reordered implementation fails this test).
+      const lockIdx = rows.findIndex((r) => r.sql === 'FOR UPDATE')
+      const countIdx = rows.findIndex((r) => r.sql.includes('COUNT'))
+      expect(lockIdx).toBeGreaterThanOrEqual(0)
+      expect(countIdx).toBeGreaterThan(lockIdx)
     })
 
     it('records a change_recorded audit entry with the redemption (same executor)', async () => {

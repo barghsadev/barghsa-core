@@ -276,6 +276,7 @@ export class OrdersService {
   ): Promise<OrderRow | null> {
     const pool = getDbPool()
     const client = await pool.connect()
+    let rolledBack = false
     try {
       await client.query('BEGIN')
       const result = await client.query(
@@ -287,6 +288,7 @@ export class OrdersService {
       )
       if (result.rows.length === 0) {
         await client.query('ROLLBACK').catch(() => {})
+        rolledBack = true
         // Distinguish: not found / not owned (404) vs already cancelled
         // (idempotent no-op) vs terminal non-cancellable (409).
         const existing = await pool.query(
@@ -322,7 +324,11 @@ export class OrdersService {
       this.logger.log(`Order ${order.id} cancelled for user ${userId}`)
       return order
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      // The no-match branch already rolled back; the catch only rolls
+      // back when the transaction is still open.
+      if (!rolledBack) {
+        await client.query('ROLLBACK').catch(() => {})
+      }
       throw error
     } finally {
       client.release()

@@ -187,11 +187,6 @@ export class GiftCodeService {
     private readonly correlationIdProvider: CorrelationIdProvider,
   ) {}
 
-  /** Escapes LIKE metacharacters so a search term matches literally. */
-  private escapeLike(raw: string): string {
-    return raw.replace(/[\\%_]/g, '\\$&')
-  }
-
   // ─── Admin reads ───────────────────────────────────────────────────────
 
   /** List gift codes, newest first, with derived usage totals. */
@@ -207,20 +202,23 @@ export class GiftCodeService {
               COALESCE(SUM(gcr.discount_amount) FILTER (WHERE gcr.status = 'consumed'), 0) AS total_discount
          FROM gift_codes gc
          LEFT JOIN gift_code_redemptions gcr ON gcr.gift_code_id = gc.id
-        WHERE ($1::text IS NULL OR gc.code ILIKE '%' || $1 || '%' ESCAPE '\')
+        WHERE ($1::text IS NULL OR strpos(gc.code, $1) > 0)
           AND ($2::text IS NULL OR gc.status = $2)
           AND ($3::text IS NULL OR gc.discount_type = $3)
         GROUP BY gc.id
         ORDER BY gc.created_at DESC`,
       [
+        // Codes are stored normalized (uppercase); normalize the search
+        // term defensively and use strpos — no LIKE metacharacters to
+        // escape or mis-handle.
         filter.search !== undefined && filter.search !== ''
-          ? this.escapeLike(filter.search)
+          ? normalizeGiftCode(filter.search)
           : null,
         filter.status ?? null,
         filter.discountType ?? null,
       ],
     )
-    return this.attachProfileIds(result.rows)
+    return this.attachProfileIds(pool, result.rows)
   }
 
   /** Full usage statistics for one code, for the admin stats view. */
@@ -257,7 +255,7 @@ export class GiftCodeService {
         LIMIT 25`,
       [id],
     )
-    const withProfiles = await this.attachProfileIds([code])
+    const withProfiles = await this.attachProfileIds(pool, [code])
     return {
       code: withProfiles[0] as GiftCodeDto,
       perProfile: perProfile.rows.map((row) => ({
@@ -661,7 +659,18 @@ export class GiftCodeService {
       return this.toRedemptionDto(inserted.rows[0] as RedemptionRow)
     }
 
-    if (q !== undefined) return run(q)
+    if (q !== undefined) {
+      try {
+        return await run(q)
+      } catch (error) {
+        // Caller owns the transaction (orders create flow): translate pg
+        // races here too — the caller will ROLLBACK the raw error, but
+        // surfacing a clean 409 instead of a raw pg 500 is this service's
+        // contract.
+        this.translatePgErrors(error)
+        throw error
+      }
+    }
     return this.withTransaction(run)
   }
 
@@ -819,10 +828,9 @@ export class GiftCodeService {
     }
   }
 
-  private async attachProfileIds(rows: GiftCodeWithUsageRow[]): Promise<GiftCodeDto[]> {
+  private async attachProfileIds(q: DbExecutor, rows: GiftCodeWithUsageRow[]): Promise<GiftCodeDto[]> {
     if (rows.length === 0) return []
-    const pool = getDbPool()
-    const entries = await pool.query<{ gift_code_id: string; profile_id: string }>(
+    const entries = await q.query<{ gift_code_id: string; profile_id: string }>(
       `SELECT gift_code_id, profile_id FROM gift_code_profiles
         WHERE gift_code_id = ANY($1::uuid[])
         ORDER BY profile_id`,
@@ -873,7 +881,7 @@ export class GiftCodeService {
   private async readDto(q: DbExecutor, id: string): Promise<GiftCodeDto> {
     const row = await this.findByIdWithUsage(q, id)
     if (!row) throw this.notFound(id)
-    const [dto] = await this.attachProfileIds([row])
+    const [dto] = await this.attachProfileIds(q, [row])
     return dto as GiftCodeDto
   }
 
@@ -936,43 +944,57 @@ export class GiftCodeService {
     } catch (error) {
       if (committed) throw error
       await client.query('ROLLBACK').catch(() => {})
-      if (this.isPgError(error, PG_UNIQUE_VIOLATION)) {
-        // Disambiguate by constraint name: the normalized-code index
-        // racing a concurrent create is a duplicate code; the
-        // one-redemption-per-order index is a code already applied.
-        const constraint = (error as { constraint?: string }).constraint
-        if (constraint === 'uq_gift_code_redemptions_order_id') {
-          throw new HttpException(
-            {
-              statusCode: 409,
-              error: GIFT_CODE_ALREADY_APPLIED,
-              message: 'A gift code has already been applied to this order',
-            },
-            409,
-          )
-        }
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: GIFT_CODE_ALREADY_EXISTS,
-            message: 'A gift code with this code already exists (codes are case-insensitive)',
-          },
-          409,
-        )
-      }
-      if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'GIFT_CODE_REFERENCE_MISSING',
-            message: 'A referenced profile or order no longer exists',
-          },
-          409,
-        )
-      }
+      this.translatePgErrors(error)
       throw error
     } finally {
       client.release()
+    }
+  }
+
+  /**
+   * Translate PG race conditions into clean HTTP errors. Used BOTH by
+   * withTransaction (self-owned transactions) and by the caller-provided
+   * executor path of {@link redeem} — the orders module passes its own
+   * client, so without this the same 23505/23503 races would surface as
+   * raw pg errors (500) on the order-creation path.
+   *
+   * Throws the mapped HttpException, or returns when the error is not a
+   * pg code this service owns (caller rethrows the original).
+   */
+  private translatePgErrors(error: unknown): void {
+    if (this.isPgError(error, PG_UNIQUE_VIOLATION)) {
+      // Disambiguate by constraint name: the normalized-code index
+      // racing a concurrent create is a duplicate code; the
+      // one-redemption-per-order index is a code already applied.
+      const constraint = (error as { constraint?: string }).constraint
+      if (constraint === 'uq_gift_code_redemptions_order_id') {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: GIFT_CODE_ALREADY_APPLIED,
+            message: 'A gift code has already been applied to this order',
+          },
+          409,
+        )
+      }
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: GIFT_CODE_ALREADY_EXISTS,
+          message: 'A gift code with this code already exists (codes are case-insensitive)',
+        },
+        409,
+      )
+    }
+    if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
+      throw new HttpException(
+        {
+          statusCode: 409,
+          error: 'GIFT_CODE_REFERENCE_MISSING',
+          message: 'A referenced profile or order no longer exists',
+        },
+        409,
+      )
     }
   }
 

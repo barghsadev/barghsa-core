@@ -107,10 +107,16 @@ const UpdateGiftCodeSchema = z
     minOrderAmount: irrSchema.optional(),
     categories: z.array(categorySchema).optional(),
   })
-  .refine((data) => data.maxCapIrr === undefined || data.maxCapIrr === null || data.discountType === 'percentage', {
-    path: ['maxCapIrr'],
-    message: 'maxCapIrr must not be set for fixed_irr codes',
-  })
+  .refine(
+    (data) =>
+      data.discountType !== 'fixed_irr' ||
+      data.maxCapIrr === undefined ||
+      data.maxCapIrr === null,
+    {
+      path: ['maxCapIrr'],
+      message: 'maxCapIrr must not be set for fixed_irr codes',
+    },
+  )
 
 const SetStatusSchema = z.object({
   status: statusSchema,
