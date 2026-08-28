@@ -326,7 +326,7 @@ export class ContractTemplateService {
         )
         const versionNumber = (maxSeq.rows[0]?.n ?? 0) + 1
         const versionId = uuidv7()
-        const inserted = await q.query<{ created_at: string }>(
+        const inserted = await q.query<{ created_at: string | Date }>(
           `INSERT INTO contract_template_versions
             (id, template_id, version_number, storage_key, file_name, content_type,
              file_size, placeholders, created_by, created_at)
@@ -367,7 +367,9 @@ export class ContractTemplateService {
           fileSize,
           placeholders,
           createdBy: input.actorUserId,
-          createdAt: inserted.rows[0]?.created_at ?? new Date().toISOString(),
+          createdAt: inserted.rows[0]?.created_at
+            ? new Date(inserted.rows[0].created_at).toISOString()
+            : new Date().toISOString(),
         }
       })
     } catch (err) {
