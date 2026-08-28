@@ -69,8 +69,8 @@ export const UpdateProductSchema = z
     description: descriptionSchema.nullable().optional(),
     status: statusSchema.optional(),
     categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
-    minKwh: kwhSchema.nullable().optional(),
-    maxKwh: kwhSchema.nullable().optional(),
+    minKwh: kwhSchema.optional(),
+    maxKwh: kwhSchema.optional(),
   })
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
 

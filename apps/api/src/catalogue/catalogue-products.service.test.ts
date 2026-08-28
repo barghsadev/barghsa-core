@@ -72,7 +72,6 @@ function priceVersionRow(over: Record<string, unknown> = {}) {
 
 const ACTOR = 'user-admin-1'
 const PRODUCT_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
-const NOW_ISO = '2026-08-28T00:00:00.000Z'
 
 /** Load CatalogueProductsService with a mocked @barghsa/db pool. */
 async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
@@ -183,16 +182,6 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       ip: '10.0.0.8',
     }
 
-    // Shared handlers: after the INSERTs, readDetail must return the product.
-    function wireReadable(router: ReturnType<typeof makeDb>['router'], p: Record<string, unknown>) {
-      router.on('FROM products', () => ({ rows: [p] }))
-      router.on('FROM product_categories', () => ({
-        rows: [{ product_id: p.id, category: 'electricity_generation_station_consultation' }],
-      }))
-      router.on('FROM electricity_product_limits', () => ({ rows: [] }))
-      router.on('FROM product_price_versions', () => ({ rows: [priceVersionRow()] }))
-    }
-
     it('rejects electricity products (system fixtures only)', async () => {
       const { pool } = makeDb()
       service = await loadService(pool)
@@ -233,7 +222,16 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       router.on('UPDATE products', () => ({ rows: [], rowCount: 1 }))
       router.on('INSERT INTO product_categories', () => ({ rows: [], rowCount: 1 }))
       router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
-      wireReadable(router, p)
+      // findOpenVersion (call 0) must find NO open version for a brand-new
+      // product; the readDetail price-history read (call 1) returns the row.
+      router.on('FROM product_price_versions', (_v, i) => ({
+        rows: i === 0 ? [] : [priceVersionRow()],
+      }))
+      router.on('FROM products', () => ({ rows: [p] }))
+      router.on('FROM product_categories', () => ({
+        rows: [{ product_id: p.id, category: 'electricity_generation_station_consultation' }],
+      }))
+      router.on('FROM electricity_product_limits', () => ({ rows: [] }))
 
       const result = await service.create(baseInput as never)
 
@@ -358,6 +356,37 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       router.on('FROM products', () => ({ rows: [productRow()] }))
       await expect(
         service.update(PRODUCT_ID, { minKwh: '100', actorUserId: ACTOR, ip: '10.0.0.8' }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+
+    it('requires both bounds when the product has no limits row yet', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      const p = productRow({ type: 'electricity', system_key: 'thermal_electricity' })
+      router.on('FROM products', () => ({ rows: [p] }))
+      router.on('FROM product_categories', () => ({ rows: [] }))
+      router.on('FROM electricity_product_limits', () => ({ rows: [] }))
+      await expect(
+        service.update(PRODUCT_ID, { minKwh: '100', actorUserId: ACTOR, ip: '10.0.0.8' }),
+      ).rejects.toMatchObject({ status: 400 })
+    })
+
+    it('rejects a merged limits pair where min exceeds max', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      const p = productRow({ type: 'electricity', system_key: 'thermal_electricity' })
+      router.on('FROM products', () => ({ rows: [p] }))
+      router.on('FROM product_categories', () => ({ rows: [] }))
+      // Existing row: max 100. Requested: min 500 -> merged min 500 > 100.
+      router.on('FROM electricity_product_limits', () => ({
+        rows: [{ product_id: p.id, min_kwh: '50', max_kwh: '100' }],
+      }))
+      await expect(
+        service.update(PRODUCT_ID, {
+          minKwh: '500',
+          actorUserId: ACTOR,
+          ip: '10.0.0.8',
+        }),
       ).rejects.toMatchObject({ status: 400 })
     })
 
@@ -510,26 +539,32 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       )
     })
 
-    it('is a no-op (no audit) when re-submitting the active version', async () => {
+    it('is a no-op (no audit) when re-submitting the active price', async () => {
       const { pool, router } = makeDb()
       service = await loadService(pool)
       const p = productRow({ price: '1500000' })
       router.on('FROM products', () => ({ rows: [p] }))
       router.on('FROM product_categories', () => ({ rows: [] }))
       router.on('FROM electricity_product_limits', () => ({ rows: [] }))
-      // findOpenVersion + readDetail both match; active version = 1500000,
-      // so the re-submit is a no-op.
+      // The open version started a month earlier; a same-price submission via
+      // the HTTP surface (effectiveFrom defaults to "now", not the open
+      // version's start) must still be a no-op.
       router.on('FROM product_price_versions', () => ({
-        rows: [priceVersionRow({ price: '1500000' })],
+        rows: [
+          priceVersionRow({
+            price: '1500000',
+            effective_from: '2026-07-28T00:00:00.000Z',
+          }),
+        ],
       }))
 
-      const result = await service.addPrice(
-        priceInput({ price: '1500000', effectiveFrom: NOW_ISO }),
-      )
+      const result = await service.addPrice(priceInput({ price: '1500000' }))
 
       expect(result.price).toBe('1500000')
       expect(router.queries('INSERT INTO audit_log').length).toBe(0)
       expect(router.queries('INSERT INTO product_price_versions').length).toBe(0)
+      expect(router.queries('UPDATE product_price_versions').length).toBe(0)
+      expect(router.queries('UPDATE products').length).toBe(0)
     })
 
     it('maps a concurrent FK violation to 409', async () => {

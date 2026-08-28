@@ -128,8 +128,9 @@ export interface UpdateProductInput {
   status?: 'active' | 'inactive'
   /** Full-set replace semantics (like the AI agent link sets). */
   categories?: ProductCategory[]
-  minKwh?: string | null
-  maxKwh?: string | null
+  /** Omit to leave untouched; electricity products only. */
+  minKwh?: string
+  maxKwh?: string
   actorUserId: string
   ip: string
 }
@@ -354,8 +355,33 @@ export class CatalogueProductsService {
           400,
         )
       }
+
+      // Merge partial limit updates against the current row (when one exists)
+      // and validate the MERGED pair — never just the requested values — so a
+      // partial write cannot produce an invalid min/max combination.
+      let mergedLimits: { minKwh: string; maxKwh: string } | null = null
       if (current.type === 'electricity' && (input.minKwh !== undefined || input.maxKwh !== undefined)) {
-        this.assertLimits(current.type, input.minKwh ?? null, input.maxKwh ?? null)
+        if (currentLimits === null) {
+          if (input.minKwh === undefined || input.maxKwh === undefined) {
+            throw new HttpException(
+              {
+                statusCode: 400,
+                error: 'CATALOGUE_LIMITS_INVALID',
+                message:
+                  'Both minKwh and maxKwh are required to set electricity limits ' +
+                  'on a product that has none yet',
+              },
+              400,
+            )
+          }
+          mergedLimits = { minKwh: input.minKwh, maxKwh: input.maxKwh }
+        } else {
+          mergedLimits = {
+            minKwh: input.minKwh ?? String(currentLimits.min_kwh),
+            maxKwh: input.maxKwh ?? String(currentLimits.max_kwh),
+          }
+        }
+        this.assertLimits(current.type, mergedLimits.minKwh, mergedLimits.maxKwh)
       }
 
       if (
@@ -407,6 +433,9 @@ export class CatalogueProductsService {
       if (input.status !== undefined) {
         push('status', input.status)
       }
+      // Always refresh the audit timestamp on mutation (belt-and-braces even
+      // where a DB touch trigger exists).
+      sets.push(`updated_at = NOW()`)
       if (sets.length > 0) {
         await q.query(`UPDATE products SET ${sets.join(', ')} WHERE id = $${param}`, [
           ...values,
@@ -421,8 +450,8 @@ export class CatalogueProductsService {
         }
       }
 
-      if (current.type === 'electricity' && (input.minKwh !== undefined || input.maxKwh !== undefined)) {
-        await this.upsertElectricityLimits(q, id, input.minKwh ?? null, input.maxKwh ?? null)
+      if (current.type === 'electricity' && mergedLimits !== null) {
+        await this.upsertElectricityLimits(q, id, mergedLimits.minKwh, mergedLimits.maxKwh)
       }
 
       await this.recordAudit(q, 'catalogue_product_updated', input.actorUserId, input.ip, {
@@ -430,7 +459,16 @@ export class CatalogueProductsService {
         ...(titleChanged ? { title: input.title } : {}),
         ...(descriptionChanged ? { description: input.description } : {}),
         ...(statusChanged ? { statusBefore: current.status, statusAfter: input.status } : {}),
-        ...(limitsChanged ? { limits: { minKwh: input.minKwh ?? null, maxKwh: input.maxKwh ?? null } } : {}),
+        ...(limitsChanged
+          ? {
+              limits: {
+                minKwhBefore: currentLimits?.min_kwh ?? null,
+                maxKwhBefore: currentLimits?.max_kwh ?? null,
+                minKwhAfter: mergedLimits?.minKwh ?? null,
+                maxKwhAfter: mergedLimits?.maxKwh ?? null,
+              },
+            }
+          : {}),
         ...(categoriesChanged ? { categories: input.categories } : {}),
       })
       this.logger.log(`Catalogue product updated: id=${id}, actor=${input.actorUserId}`)
@@ -466,7 +504,10 @@ export class CatalogueProductsService {
         return
       }
 
-      await q.query('UPDATE products SET status = $1 WHERE id = $2', ['archived', id])
+      await q.query('UPDATE products SET status = $1, updated_at = NOW() WHERE id = $2', [
+        'archived',
+        id,
+      ])
       await this.recordAudit(q, 'catalogue_product_archived', actorUserId, ip, {
         productId: id,
         type: current.type,
@@ -639,59 +680,68 @@ export class CatalogueProductsService {
   }
 
   /**
-     * Insert a new price version and close the previous open version at the
-     * new effective_from. Returns `false` when the request is an exact
-     * re-submit of the active version (same price, same effective_from) —
-     * the caller then emits no audit (no-op discipline).
-     * `products.price` mirrors the newest version so list/detail reads (and
-     * the public endpoint) keep showing the latest price.
-     */
-    private async insertPriceVersion(
-      q: DbExecutor,
-      input: { productId: string; price: string; effectiveFrom: string; actorUserId: string },
-    ): Promise<boolean> {
-      const id = uuidv7()
-      const from = new Date(input.effectiveFrom)
+   * Insert a new price version and close the previous open version at the
+   * new effective_from. Returns `false` when the submission is a no-op (the
+   * requested price equals the currently-open price — a version exists to
+   * record a price CHANGE, and a same-price version records nothing, so the
+   * no-op is reachable via HTTP where effectiveFrom defaults to "now").
+   * The caller then emits no audit (no-op discipline). `products.price`
+   * mirrors the newest version so list/detail reads (and the public
+   * endpoint) keep showing the latest price.
+   */
+  private async insertPriceVersion(
+    q: DbExecutor,
+    input: { productId: string; price: string; effectiveFrom: string; actorUserId: string },
+  ): Promise<boolean> {
+    const id = uuidv7()
+    const from = new Date(input.effectiveFrom)
 
-      const open = await this.findOpenVersion(q, input.productId)
-      if (open) {
-        const openFrom = new Date(open.effective_from)
-        if (String(open.price) === String(input.price) && openFrom.getTime() === from.getTime()) {
-          // Exact re-submit of the active version — no-op.
-          return false
-        }
-        if (from.getTime() <= openFrom.getTime()) {
-          throw new HttpException(
-            {
-              statusCode: 400,
-              error: 'CATALOGUE_PRICE_INVALID_EFFECTIVE_FROM',
-              message:
-                'A new price version must take effect strictly after the ' +
-                'currently active version (active since ' + open.effective_from + ')',
-            },
-            400,
-          )
-        }
-        // Close the previous open version at the new effective_from.
-        await q.query(
-          `UPDATE product_price_versions
-              SET effective_until = $1
-            WHERE id = $2 AND effective_until IS NULL`,
-          [from, open.id],
-        )
+    const open = await this.findOpenVersion(q, input.productId)
+    if (open) {
+      const openFrom = new Date(open.effective_from)
+
+      // Re-submitting the currently-open price is a no-op: a version exists
+      // to record a price CHANGE, and a same-price version (whatever its
+      // effective date) records nothing.
+      if (String(open.price) === String(input.price)) {
+        return false
       }
 
+      if (from.getTime() <= openFrom.getTime()) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'CATALOGUE_PRICE_INVALID_EFFECTIVE_FROM',
+            message:
+              'A new price version must take effect strictly after the ' +
+              'currently active version (active since ' + open.effective_from + ')',
+          },
+          400,
+        )
+      }
+      // Close the previous open version at the new effective_from.
       await q.query(
-        `INSERT INTO product_price_versions
-           (id, product_id, price, effective_from, effective_until, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, NULL, $5, $6, $6)`,
-        [id, input.productId, input.price, from, input.actorUserId, new Date()],
+        `UPDATE product_price_versions
+            SET effective_until = $1, updated_at = NOW()
+          WHERE id = $2 AND effective_until IS NULL`,
+        [from, open.id],
       )
-
-      // Mirror the newest price into products.price (the current price column).
-      await q.query('UPDATE products SET price = $1 WHERE id = $2', [input.price, input.productId])
-      return true
     }
+
+    await q.query(
+      `INSERT INTO product_price_versions
+         (id, product_id, price, effective_from, effective_until, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, NULL, $5, $6, $6)`,
+      [id, input.productId, input.price, from, input.actorUserId, new Date()],
+    )
+
+    // Mirror the newest price into products.price (the current price column).
+    await q.query('UPDATE products SET price = $1, updated_at = NOW() WHERE id = $2', [
+      input.price,
+      input.productId,
+    ])
+    return true
+  }
 
   private async findOpenVersion(
     q: DbExecutor,
@@ -749,8 +799,8 @@ export class CatalogueProductsService {
   private async upsertElectricityLimits(
     q: DbExecutor,
     productId: string,
-    minKwh: string | null,
-    maxKwh: string | null,
+    minKwh: string,
+    maxKwh: string,
   ): Promise<void> {
     const limits = await this.findLimits(q, productId)
     const min = minKwh ?? limits?.min_kwh ?? null
@@ -758,7 +808,9 @@ export class CatalogueProductsService {
 
     if (limits) {
       await q.query(
-        `UPDATE electricity_product_limits SET min_kwh = $1, max_kwh = $2 WHERE product_id = $3`,
+        `UPDATE electricity_product_limits
+            SET min_kwh = $1, max_kwh = $2, updated_at = NOW()
+          WHERE product_id = $3`,
         [min ?? 0, max ?? 0, productId],
       )
     } else {
@@ -798,23 +850,20 @@ export class CatalogueProductsService {
   }
 
   /** Electricity limits must satisfy the DB CHECK constraints (0018). */
-  private assertLimits(type: ProductType, minKwh: string | null, maxKwh: string | null): void {
+  private assertLimits(type: ProductType, minKwh: string, maxKwh: string): void {
     if (type !== 'electricity') {
-      if (minKwh !== null || maxKwh !== null) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: 'CATALOGUE_LIMITS_NOT_ALLOWED',
-            message: `Electricity consumption limits only apply to electricity products`,
-          },
-          400,
-        )
-      }
-      return
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'CATALOGUE_LIMITS_NOT_ALLOWED',
+          message: `Electricity consumption limits only apply to electricity products`,
+        },
+        400,
+      )
     }
-    const min = minKwh === null ? undefined : BigInt(minKwh)
-    const max = maxKwh === null ? undefined : BigInt(maxKwh)
-    if (min !== undefined && min < 0n) {
+    const min = BigInt(minKwh)
+    const max = BigInt(maxKwh)
+    if (min < 0n) {
       throw new HttpException(
         {
           statusCode: 400,
@@ -824,7 +873,7 @@ export class CatalogueProductsService {
         400,
       )
     }
-    if (max !== undefined && max < 0n) {
+    if (max < 0n) {
       throw new HttpException(
         {
           statusCode: 400,
@@ -834,7 +883,20 @@ export class CatalogueProductsService {
         400,
       )
     }
-    if (min !== undefined && max !== undefined && max > 0n && min > max) {
+    // Both zero is meaningless — the DB CHECK requires at least one bound.
+    if (min === 0n && max === 0n) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: 'CATALOGUE_LIMITS_INVALID',
+          message: 'At least one of minKwh or maxKwh must be non-zero',
+        },
+        400,
+      )
+    }
+    // maxKwh 0 means "no upper limit" (0018 CHECK: max_kwh = 0 OR min <= max),
+    // so the min<=max check only applies when a real cap is set.
+    if (max > 0n && min > max) {
       throw new HttpException(
         {
           statusCode: 400,
