@@ -1,11 +1,11 @@
 {
-  "status": "in_review",
+  "status": "blocked",
   "current_task_id": "T-09.08.02",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-08-02--staff-teams-assignment",
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/198",
   "current_task_key": "02-auth-users-admin.md#T-09.08.02",
-  "loop_iteration": 335,
+  "loop_iteration": 336,
   "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
@@ -281,9 +281,9 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01"
   ],
-  "last_error": null,
-  "notes": "T-09.08.02 slice 1 (PR #198): round-1 request_changes; all 3 major + 5 minor fixed and pushed (7286109). Round-2 re-review retried this tick (loop_iteration 335) but reviewer (claude-opus-5) again returned OpenRouter HTTP 402 - credits exhausted. Kept in_review with last_error null so next tick auto-retries the review once credits top up. USER ACTION: add credits at openrouter.ai/settings/credits.",
-  "last_updated": "2026-08-28T02:06:00Z",
+  "last_error": "Reviewer (anthropic/claude-opus-5) returns OpenRouter HTTP 402 - credits exhausted. Round-2 review of PR #198 (T-09.08.02) cannot proceed until credits are added. USER ACTION: add credits at https://openrouter.ai/settings/credits, then clear last_error and set status to in_review to resume the round-2 review.",
+  "notes": "T-09.08.02 slice 1 (PR #198): round-1 request_changes fixed and pushed (7286109). Round-2 review blocked: claude-opus-5 returns OpenRouter HTTP 402 (credits exhausted) on the currently-available credit. Moved to blocked so the loop stops retrying the paid review every tick. All 3 valid code checks pass and the PR is mergeable, but merge requires a valid reviewer approval (AGENTS.md rule 7). Action: add OpenRouter credits, then set loop-state.status=in_review and clear last_error.",
+  "last_updated": "2026-08-28T01:57:26Z",
   "status_history": [
     {
       "status": "in_review",
@@ -639,6 +639,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
       "at": "2026-08-28T02:06:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.08.02",
+      "at": "2026-08-28T01:57:26Z"
     }
   ]
 }
