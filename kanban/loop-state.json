@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.10.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-10-01--wallet-topup-limit",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/204",
-  "current_task_key": "02-auth-users-admin.md#T-09.10.01",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 346,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -284,17 +284,13 @@
     "02-auth-users-admin.md#T-09.08.03",
     "02-auth-users-admin.md#T-09.09.01",
     "02-auth-users-admin.md#T-09.09.02",
-    "02-auth-users-admin.md#T-09.09.03"
+    "02-auth-users-admin.md#T-09.09.03",
+    "02-auth-users-admin.md#T-09.10.01"
   ],
   "last_error": null,
-  "notes": "T-09.10.01 PR #204 in_review: admin configurable per-transaction online wallet top-up limit (IRR, default 2,000,000,000) via GET/PUT /api/admin/config/wallet-top-up-limit, finance.wallet_top_up_limit app_config, versioned + audit config_change, WalletService.validateOnlineTopUpAmount enforcement seam for T-04.2.02.01. Checks: shared 258 + api 1015 tests pass, typecheck pass, api build + OpenAPI pass. Deferred: web UI, fa/en dict, step-up, real-PG integration test.",
-  "last_updated": "2026-08-28T10:13:41Z",
+  "notes": "T-09.10.01 MERGED (PR #204, squash) after Claude Opus 5 approve. Admin per-transaction online wallet top-up limit live: GET/PUT /api/admin/config/wallet-top-up-limit (gated admin:financial:edit), finance.wallet_top_up_limit app_config (default 2,000,000,000 IRR), versioned + global config_version bump, audit config_change (prev/new + versions), strict integer validation rejecting coercible strings. WalletService.validateOnlineTopUpAmount enforcement seam reserved for online top-up endpoint T-04.2.02.01 (S-04.2.02). CI: Run tests + Verify monorepo integrity pass. Deferred (minor, per reviewer): corruption-warning on wallet read path, shared config-reader dedup, trailing newlines, redundant upper-bound clause; web UI, fa/en dict, step-up, real-PG integration test. Returned to idle.",
+  "last_updated": "2026-08-28T10:20:38Z",
   "status_history": [
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.09.03",
-      "at": "2026-08-28T09:54:10Z"
-    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.03",
@@ -789,6 +785,11 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.10.01",
       "at": "2026-08-28T10:13:41Z"
+    },
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.10.01",
+      "at": "2026-08-28T10:20:38Z"
     }
   ]
 }
