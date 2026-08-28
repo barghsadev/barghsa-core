@@ -25,8 +25,14 @@
 -- Rollback:
 --   DROP FUNCTION IF EXISTS public.uuid_generate_v7();
 
--- Ensure pgcrypto extension is available for gen_random_bytes()
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+-- Ensure pgcrypto extension is available for gen_random_bytes().
+-- WITH SCHEMA public pins the extension objects to a fixed schema: without
+-- it, PG installs the extension into the first schema of the creating
+-- connection's search_path, so `CREATE EXTENSION IF NOT EXISTS` from an
+-- isolated test schema makes gen_random_bytes invisible to every other
+-- schema (order-dependent test flake — see uuidv7-migration.test.ts CI
+-- history). Pinning to public keeps it resolvable from any search_path.
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 CREATE OR REPLACE FUNCTION public.uuid_generate_v7()
 RETURNS uuid

@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 348,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_id": "T-09.11.03",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-11-03--ai-policy-management",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/209",
+  "current_task_key": "02-auth-users-admin.md#T-09.11.03",
+  "loop_iteration": 349,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -292,29 +292,9 @@
     "02-auth-users-admin.md#T-09.11.02"
   ],
   "last_error": null,
-  "notes": "T-09.11.02 MERGED (PR #208, squash) after 2 Claude Opus 5 review rounds (r1 request_changes, r2 approve). Admin knowledge base management API slice live: /api/admin/knowledge-bases CRUD + /api/admin/kb-groups CRUD, document attach/detach by storage key (validated against storage_records, snapshot metadata, idempotent ON CONFLICT, detach by link id because keys contain slashes), group membership link/unlink (idempotent, cascade-safe), processing_status pending|processing|ready|failed contract for the future chunk/embed worker (E-05 deferred), admin:ai:kb perm + step-up mutations + audit events kb_created/updated/deleted, kb_document_attached/detached, kb_group_*/kb_group_member_*. Migration 0043 knowledge_bases/kb_documents/kb_groups/kb_group_members + drift guard (composite PK, uuid FK types, named unique). CI: build/typecheck/tests/integrity green. Deferred (minor, per reviewer): web UI + fa/en dicts + RTL/a11y slice, migration idempotency re-run guard, updateKb COUNT() optimization, trailing newline. Returned to idle.",
-  "last_updated": "2026-08-28T12:27:50Z",
+  "notes": "T-09.11.03 PR #209: r1 request_changes fixed; r2 request_changes (CI Run tests red on uuidv7-migration.test.ts — pre-existing order-dependent pgcrypto flake; root cause fixed: migration 0000 now CREATE EXTENSION pgcrypto WITH SCHEMA public, verified on postgres:17-alpine) + changedFields no-op fixes + controller superRefine + OpenAPI 400 codes + positional test asserts. Fresh CI pushed (33174241747). Awaiting green CI + review round 4.",
+  "last_updated": "2026-08-28T13:11:15Z",
   "status_history": [
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.11.02",
-      "at": "2026-08-28T12:27:50Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.02",
-      "at": "2026-08-28T12:04:41Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T04:59:05Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:39:31Z"
-    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.07.02",
@@ -794,6 +774,26 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.11.01",
       "at": "2026-08-28T11:13:49Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T12:42:58Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T12:44:29Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T12:54:43Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.03",
+      "at": "2026-08-28T13:11:15Z"
     }
   ]
 }
