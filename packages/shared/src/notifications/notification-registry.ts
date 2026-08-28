@@ -117,6 +117,16 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
     securityPinned: false,
     category: 'system',
   },
+
+  // Staff-only operational alert: a breached service item has climbed an
+  // escalation tier (team lead / admin) because no response arrived within
+  // the configured window (T-09.08.03). Immediate so an escalation is never
+  // delayed by the daytime delivery window.
+  'admin.service_escalated': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
 } as const
 
 /**

@@ -58,10 +58,10 @@ const HOUR_MS = 3_600_000
 export const SERVICE_TARGET_BREACHED_EVENT_KEY = 'admin.service_target_breached'
 
 /** Ticket statuses where staff owe a response (customer wait does not run the clock). */
-const TICKET_OPEN_STATUSES = ['open', 'in_progress', 'waiting_staff'] as const
+export const TICKET_OPEN_STATUSES = ['open', 'in_progress', 'waiting_staff'] as const
 
 /** Verification-case statuses where the case is still being worked. */
-const CASE_OPEN_STATUSES = ['Open', 'Under Review'] as const
+export const CASE_OPEN_STATUSES = ['Open', 'Under Review'] as const
 
 /** Outcome statistics of one breach scan. */
 export interface BreachScanResult {

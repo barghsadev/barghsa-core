@@ -444,6 +444,20 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
       { name: 'target_hours', description: 'سقف زمانی ساعت / Target in hours' },
     ],
   },
+  {
+    eventKey: 'admin.service_escalated',
+    faSubject: 'ارتقای فوریت — {{service_type_name_fa}}',
+    enSubject: 'Escalation — {{service_type_name_en}}',
+    faBody: 'آیتم «{{item_id}}» ({{service_type_name_fa}}) به دلیل عدم پاسخ در بازه زمانی، به سطح {{escalation_level}} ارتقا یافت. لطفاً بررسی کنید.',
+    enBody: 'Item {{item_id}} ({{service_type_name_en}}) has been escalated to level {{escalation_level}} because no response arrived in time. Please review.',
+    channels: ['in_app', 'email'],
+    variables: [
+      { name: 'service_type_name_fa', description: 'نام فارسی نوع خدمت / Persian service type label' },
+      { name: 'service_type_name_en', description: 'English service type label' },
+      { name: 'item_id', description: 'شناسه آیتم / Item id' },
+      { name: 'escalation_level', description: 'سطح ارتقا (۲ = سرپرست تیم، ۳ = مدیر) / Escalation level (2 = team lead, 3 = admin)' },
+    ],
+  },
 ]
 
 /**

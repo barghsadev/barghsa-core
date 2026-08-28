@@ -4,6 +4,7 @@ import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
+import { scanServiceEscalations } from './service-targets/escalation-scanner.js';
 
 /**
  * Grace period in milliseconds. Configurable via `SHUTDOWN_GRACE_PERIOD_MS`
@@ -200,7 +201,48 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(breachScanner));
   process.on('SIGINT', () => clearInterval(breachScanner));
 
-  logger.info('Worker initialised — outbox poll loop + breach scan active');
+  // ── Service escalation scan loop (S-09.08, T-09.08.03) ────────────────
+  // Periodically advances un-responded breach episodes up the escalation
+  // tiers (team lead, then admin) configured by the admin escalation policy
+  // (app_config admin.escalation_policy). No-op when no config row exists,
+  // so a fresh installation escalates nothing until an admin configures a
+  // policy.
+  const ESCALATION_SCAN_DEFAULT_MS = 300000;
+  const escalationScanRaw = Number(process.env['SERVICE_ESCALATION_SCAN_MS'] ?? String(ESCALATION_SCAN_DEFAULT_MS));
+  const SERVICE_ESCALATION_SCAN_MS =
+    Number.isFinite(escalationScanRaw) && escalationScanRaw >= 1000
+      ? escalationScanRaw
+      : ESCALATION_SCAN_DEFAULT_MS;
+  if (SERVICE_ESCALATION_SCAN_MS !== escalationScanRaw) {
+    logger.warn(
+      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`,
+    );
+  }
+  let escalationScanInFlight = false;
+  const escalationScanner = setInterval(async () => {
+    if (draining || escalationScanInFlight) return;
+    escalationScanInFlight = true;
+    try {
+      const result = await scanServiceEscalations();
+      if (result.escalated.ticket.level2 + result.escalated.ticket.level3 +
+          result.escalated.verification_case.level2 + result.escalated.verification_case.level3 > 0 ||
+          result.errors.length > 0) {
+        logger.info(
+          `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`,
+        );
+      }
+    } catch (err) {
+      logger.error(`Escalation scan failed: ${(err as Error)?.message ?? String(err)}`);
+    } finally {
+      escalationScanInFlight = false;
+    }
+  }, SERVICE_ESCALATION_SCAN_MS);
+  escalationScanner.unref();
+
+  process.on('SIGTERM', () => clearInterval(escalationScanner));
+  process.on('SIGINT', () => clearInterval(escalationScanner));
+
+  logger.info('Worker initialised — outbox poll loop + breach scan + escalation scan active');
 }
 
 void main().catch((err: unknown) => {
