@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm'
-import { text, timestamp, pgTable } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
+import { text, timestamp, uuid, pgTable } from 'drizzle-orm/pg-core'
+import { uuidv7, irrAmount } from '../types'
 import { users } from './users'
 import { profiles } from './profiles'
 import { products } from './products'
@@ -68,6 +68,23 @@ export const orders = pgTable(
 
     /** Address snapshot — postal code (copied from profile address). */
     snapshotPostalCode: text('snapshot_postal_code').notNull(),
+
+    /**
+     * Gift code applied at order creation (T-09.12.03) — denormalized
+     * mirror of the authoritative association in
+     * `gift_code_redemptions.order_id` (UNIQUE): at most one gift code
+     * per order. Nullable until a code is redeemed on the order. No FK
+     * here on purpose — referential integrity and the code link live
+     * in the redemption ledger, keeping the schema acyclic.
+     */
+    giftCodeId: uuid('gift_code_id'),
+
+    /**
+     * Exact IRR discount applied by the gift code at redemption time
+     * (T-09.12.03). Snapshot for display/history — the ledger row
+     * (`gift_code_redemptions.discount_amount`) is the source of truth.
+     */
+    giftDiscountAmount: irrAmount('gift_discount_amount'),
 
     /** When the order was created. */
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
