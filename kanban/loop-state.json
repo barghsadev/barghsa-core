@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-09.11.04",
   "current_task_file": "02-auth-users-admin.md",
   "current_branch": "feat/e02-t-09-11-04--ai-agent-management",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/210",
   "current_task_key": "02-auth-users-admin.md#T-09.11.04",
   "loop_iteration": 349,
   "fix_attempts": 0,
@@ -294,13 +294,8 @@
   ],
   "last_error": null,
   "notes": "Building T-09.11.04 (XL) slice 1: backend agent CRUD + model/KB/policy links. Siblings T-09.11.01/02/03 merged (PRs #207/#208/#209). Test chat UI + web UI deferred.",
-  "last_updated": "2026-08-28T13:24:33Z",
+  "last_updated": "2026-08-28T13:42:05Z",
   "status_history": [
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.06.02",
-      "at": "2026-08-28T00:23:19Z"
-    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.06.02",
@@ -795,6 +790,11 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.11.04",
       "at": "2026-08-28T13:24:33Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.11.04",
+      "at": "2026-08-28T13:42:05Z"
     }
   ]
 }
