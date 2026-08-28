@@ -95,6 +95,33 @@ describe('maskSensitiveData / maskIdentifier (T-09.09.03)', () => {
     expect(maskSensitiveData('abc', 'not_sensitive')).toBe('abc')
   })
 
+  it('redacts non-string secrets under sensitive keys (no type leak)', () => {
+    expect(maskSensitiveData(123456, 'otp')).toBe('***')
+    expect(maskSensitiveData(4821, 'pin')).toBe('***')
+    expect(maskSensitiveData(123456, 'amount')).toBe(123456)
+    expect(maskSensitiveData(true, 'not_sensitive')).toBe(true)
+  })
+
+  it('redacts whole nested objects under a sensitive parent key', () => {
+    expect(maskSensitiveData({ value: 'abc' }, 'token')).toBe('***')
+    expect(maskSensitiveData({ otp: 123456, token: { bearer: 'x' } })).toEqual({
+      otp: '***',
+      token: '***',
+    })
+  })
+
+  it('matches camelCase sensitive keys', () => {
+    expect(
+      maskSensitiveData({ otpCode: '123456', emailAddress: 'alice@corp.io', profileCode: 'A-10' }),
+    ).toEqual({ otpCode: '***', emailAddress: 'a***e@***.io', profileCode: 'A-10' })
+  })
+
+  it('masks PII embedded inside longer strings (e.g. provider causes)', () => {
+    expect(maskSensitiveData('SMTP 550 5.1.1 <user@example.com> unknown', 'cause')).toBe(
+      'SMTP 550 5.1.1 <u***r@***.com> unknown',
+    )
+  })
+
   it('recursively masks nested objects and arrays but keeps safe keys', () => {
     const out = maskSensitiveData({
       name: 'Sara',

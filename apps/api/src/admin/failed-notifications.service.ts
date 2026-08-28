@@ -265,13 +265,18 @@ export class FailedNotificationsService {
             WHERE id = $1`,
           [row.outbox_id],
         )
-        await client.query(
+        const jobUpdate = await client.query(
           `UPDATE notification_job
               SET status = 'queued', attempts = 0, run_after = NOW(),
                   last_error = NULL, updated_at = NOW()
             WHERE outbox_id = $1 AND channel = $2`,
           [row.outbox_id, row.channel],
         )
+        if (jobUpdate?.rowCount === 0) {
+          this.logger.warn(
+            `Retry dead-letter ${id}: no notification_job matched (outbox=${row.outbox_id}, channel=${row.channel})`,
+          )
+        }
       }
 
       await client.query(
@@ -369,7 +374,10 @@ export function toFailedNotificationDto(row: Record<string, unknown>): FailedNot
     channel: row.channel as NotificationChannel | string,
     eventKey: String(row.event_key),
     severity: row.severity as DeadLetterSeverity,
-    cause: row.cause === null || row.cause === undefined ? null : String(row.cause),
+    cause:
+      row.cause === null || row.cause === undefined
+        ? null
+        : String(maskSensitiveData(String(row.cause), 'cause')),
     errorCategory:
       row.error_category === null || row.error_category === undefined
         ? null
@@ -399,14 +407,53 @@ export function sanitizeOffset(raw: number | undefined): number {
   return raw
 }
 
-/** Keys whose values must never leave the API unmasked. */
-const SENSITIVE_KEY_RE =
-  /(?<![a-z0-9])(email|phone|mobile|password|passwd|otp|token|secret|apikey|api_key|auth|pin|verification|national_id|card_number)(?![a-z0-9])/i
+/** Sensitive words whose presence in a (normalized) key forces full redaction. */
+const SENSITIVE_WORDS = new Set([
+  'email',
+  'phone',
+  'mobile',
+  'password',
+  'passwd',
+  'otp',
+  'token',
+  'secret',
+  'api',
+  'auth',
+  'pin',
+  'verification',
+  'national',
+  'card',
+])
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const PHONE_RE = /^[+\d][\d\s\-()]{6,}$/
+/** Any email-looking sequence inside a longer string. */
+const EMAIL_ANY_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g
+/** A 10–13 digit phone-like number, optionally with a leading + . */
+const PHONE_EMBEDDED_RE = /(?<!\d)(?:\+?\d[\d\s\-().]{8,}\d)(?!\d)/g
 
 /**
- * Redact a possibly-sentitive recipient id for the ops panel — shows enough
+ * Whether a key names a sensitive field. Keys are normalized so all common
+ * casing styles match: `otp`, `recovery_token`, `otpCode`, `emailAddress`,
+ * `verification_code` and `apiKeyRef` all resolve to their sensitive words.
+ */
+export function isSensitiveKey(key: string): boolean {
+  if (!key) return false
+  const words = key
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_\-.]+/g, ' ')
+    .toLowerCase()
+    .split(/\s+/)
+  return words.some((w) => SENSITIVE_WORDS.has(w))
+}
+
+/** True when a string is a standalone phone-shaped value (10–13 digits). */
+function isPhoneValue(value: string): boolean {
+  const digits = value.replace(/\D/g, '')
+  return digits.length >= 10 && digits.length <= 13
+}
+
+/**
+ * Redact a possibly-sensitive recipient id for the ops panel — shows enough
  * to distinguish rows without leaking the raw id.
  */
 export function maskIdentifier(id: string | null): string | null {
@@ -418,10 +465,27 @@ export function maskIdentifier(id: string | null): string | null {
 /**
  * Recursively mask sensitive fields in a notification payload so the admin
  * panel can render raw delivery data without exposing PII or credentials.
- * Emails and phone numbers are partially masked regardless of key name;
- * explicitly sensitive keys are fully redacted.
+ *
+ * A key that names a sensitive field is fully redacted regardless of value
+ * type (so `{ otp: 123456 }` and `{ token: { value: 'abc' } }` are both
+ * `'***'`, not just string leaves). Emails and phone numbers are partially
+ * masked; stand-alone values and embedded occurrences inside longer strings
+ * (e.g. a provider `cause` message) are both covered.
  */
 export function maskSensitiveData(value: unknown, key = ''): unknown {
+  const sensitive = key !== '' && isSensitiveKey(key)
+
+  // Sensitive key + string value: partial-mask PII for triage, else redact.
+  if (sensitive && typeof value === 'string') {
+    if (EMAIL_RE.test(value)) return maskEmail(value)
+    if (isPhoneValue(value)) return maskPhone(value)
+    return '***'
+  }
+  // Sensitive key + any other value type (numbers, booleans, whole nested
+  // objects/arrays) is redacted entirely — `{ token: { value: 'abc' } }` is
+  // `'***'`, never recursed.
+  if (sensitive) return '***'
+
   if (Array.isArray(value)) {
     return value.map((item) => maskSensitiveData(item, key))
   }
@@ -434,9 +498,11 @@ export function maskSensitiveData(value: unknown, key = ''): unknown {
   }
   if (typeof value !== 'string' || value === '') return value
   if (EMAIL_RE.test(value)) return maskEmail(value)
-  if (PHONE_RE.test(value)) return maskPhone(value)
-  if (SENSITIVE_KEY_RE.test(key)) return '***'
+  if (isPhoneValue(value)) return maskPhone(value)
+  // Mask PII embedded inside longer strings (e.g. a provider `cause` message).
   return value
+    .replace(EMAIL_ANY_RE, (m) => maskEmail(m))
+    .replace(PHONE_EMBEDDED_RE, (m) => maskPhone(m))
 }
 
 function maskEmail(email: string): string {
