@@ -96,10 +96,17 @@ describe('maskSensitiveData / maskIdentifier (T-09.09.03)', () => {
     expect(maskSensitiveData('09121234567', 'name')).toBe('*******4567')
   })
 
-  it('fully redacts values under sensitive keys', () => {
+  it('fully redacts strings under sensitive keys', () => {
     expect(maskSensitiveData('s3cr3t', 'otp')).toBe('***')
     expect(maskSensitiveData('s3cr3t', 'recovery_token')).toBe('***')
     expect(maskSensitiveData('abc', 'not_sensitive')).toBe('abc')
+    // Iranian financial identifiers in billing payloads.
+    expect(maskSensitiveData('IR230570028180010453789101', 'sheba')).toBe('***')
+    expect(maskSensitiveData('12341234', 'account_number')).toBe('***')
+    expect(maskSensitiveData({ bill_id: 'B-123', amount: 250000 })).toEqual({
+      bill_id: '***',
+      amount: 250000,
+    })
   })
 
   it('redacts non-string secrets under sensitive keys (no type leak)', () => {

@@ -184,9 +184,11 @@ export class FailedNotificationsService {
 
   /**
    * Dismiss a dead-lettered notification, acknowledging it and removing it
-   * from the active view.
+   * from the active view. Allowed from `open` and `retried` (a row that was
+   * retried but failed again, or a retried row the admin rejects outright).
    *
-   * @throws 404 when the row does not exist, 409 when it is not `open`.
+   * @throws 404 when the row does not exist, 409 when the row is terminal
+   * (`resolved`/`dismissed`).
    */
   async dismissFailedNotification(
     id: string,
@@ -435,6 +437,12 @@ const SENSITIVE_WORDS = new Set([
   'verification',
   'national',
   'card',
+  // Iranian financial identifiers common in billing notification payloads.
+  'iban',
+  'sheba',
+  'account',
+  'bill',
+  'payment',
   // URL-ish keys often carry single-use tokens / magic links.
   'link',
   'url',
