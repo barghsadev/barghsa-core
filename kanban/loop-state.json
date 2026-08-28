@@ -6,7 +6,7 @@
   "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/203",
   "current_task_key": "02-auth-users-admin.md#T-09.09.03",
   "loop_iteration": 344,
-  "fix_attempts": 1,
+  "fix_attempts": 2,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -286,9 +286,14 @@
     "02-auth-users-admin.md#T-09.09.02"
   ],
   "last_error": null,
-  "notes": "T-09.09.03 in review round 2 (PR #203): dead-letter notifications triage. Round-1 majors fixed (masking now covers non-string + camelCase keys, cause scrubbed). Passed api typecheck/test/build. Web UI + real-PG test + correlation-id deferred.",
-  "last_updated": "2026-08-28T09:31:35Z",
+  "notes": "T-09.09.03 in review round 3 (PR #203). Round-2/3 blocking fixed: numeric secrets under sensitive keys redacted (last-4 no longer leaks), embedded-phone over-masking removed, retry requeue guarded by status+lease and fails closed with 409 on no-op, DTO built from tx row (no post-commit read). URL single-use tokens scrubbed. Passed api typecheck/test(1037)/build.",
+  "last_updated": "2026-08-28T09:50:09Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.09.03",
+      "at": "2026-08-28T09:50:09Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.03",
