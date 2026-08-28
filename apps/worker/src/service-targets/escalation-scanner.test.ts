@@ -222,7 +222,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
     expect(enqueue.mock.calls[0]![1]).toMatchObject({ profileId: 'pa', userId: 'admin-9' })
   })
 
-  it('reverts the claim and records an error when no deliverable recipient exists', async () => {
+  it('does not claim and re-evaluates when no deliverable recipient exists', async () => {
     const db = makeFakeDb((sql, params) => {
       if (sql.includes('FROM app_config')) {
         return { rows: [{ value: { ticket: { level2: { delayHours: 24, channels: ['in_app'] }, level3: { delayHours: 48, channels: ['in_app'] } } } }] }
@@ -230,18 +230,18 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
       if (sql.includes('JOIN tickets')) return params[1] === 1 ? { rows: [{ ledger_id: 'l1', item_id: 't1', responsible_user_id: 'ghost-1' }] } : { rows: [] }
       if (sql.includes('FROM staff_team_members')) return { rows: [] }
       if (sql.includes('FROM users')) return { rows: [] } // no admins
-      if (sql.includes('RETURNING id')) return { rows: [{ id: 'l1' }], rowCount: 1 }
-      // The revert UPDATE has no RETURNING.
-      return { rowCount: 1 }
+      // The claim is never issued because recipients resolve to none first.
+      return { rows: [] }
     })
 
     const options = scanOptions(db)
     const result = await scanServiceEscalations(options)
     expect(result.escalated.ticket.level2).toBe(0)
     expect(enqueue).not.toHaveBeenCalled()
-    expect(result.errors.some((e) => e.includes('no deliverable escalation recipient'))).toBe(true)
-    // A revert UPDATE was issued (no RETURNING id).
-    expect(db.calls.some((c) => c.sql.includes('UPDATE service_breach_alerts') && !c.sql.includes('RETURNING id'))).toBe(true)
+    // No advance claim was even attempted (recipients resolution came up empty).
+    expect(db.calls.some((c) => c.sql.includes('UPDATE service_breach_alerts'))).toBe(false)
+    // An aggregated warning makes the no-recipient skip observable without an error.
+    expect(options.logger.warn).toHaveBeenCalledWith(expect.stringContaining('t1'))
   })
 
   it('skips an escalation whose claim was already won by a concurrent scan', async () => {
@@ -261,6 +261,37 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
     expect(result.escalated.ticket.level2).toBe(0)
     expect(result.skippedConcurrent).toBe(1)
     expect(enqueue).not.toHaveBeenCalled()
+  })
+
+  it('does not report an escalation whose transaction rolled back on a later candidate', async () => {
+    // First candidate escalates fine; a second candidate throws during
+    // enqueue, rolling back the whole per-type transaction — so the first
+    // candidate must not be reported as escalated (counters apply on COMMIT).
+    const db = makeFakeDb((sql, params) => {
+      if (sql.includes('FROM app_config')) {
+        return { rows: [{ value: { ticket: { level2: { delayHours: 24, channels: ['in_app'] }, level3: { delayHours: 48, channels: ['in_app'] } } } }] }
+      }
+      if (sql.includes('JOIN tickets')) {
+        return params[1] === 1
+          ? { rows: [{ ledger_id: 'l1', item_id: 't1', responsible_user_id: 'staff-1' }, { ledger_id: 'l2', item_id: 't2', responsible_user_id: 'staff-2' }] }
+          : { rows: [] }
+      }
+      if (sql.includes('FROM staff_team_members')) return { rows: [{ user_id: 'lead-1' }] }
+      if (sql.includes('FROM profiles')) return { rows: [{ id: 'pl', user_id: 'lead-1' }] }
+      if (sql.includes('RETURNING id')) return { rows: [{ id: params[0] }], rowCount: 1 }
+      return { rows: [] }
+    })
+    // First candidate enqueues OK; second candidate's enqueue throws.
+    enqueue
+      .mockResolvedValueOnce({ outboxId: 'ob-1', inserted: true })
+      .mockRejectedValueOnce(new Error('transport gone'))
+
+    const result = await scanServiceEscalations(scanOptions(db))
+    // The per-type transaction rolled back, so the committed escalation count is 0.
+    expect(result.escalated.ticket.level2).toBe(0)
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0]).toContain('ticket')
+    expect(result.errors[0]).toContain('transport gone')
   })
 
   it('isolates a failing service type and still scans the others', async () => {

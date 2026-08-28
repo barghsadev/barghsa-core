@@ -46,9 +46,11 @@ import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js'
  *   (the ledger stores the target per episode), so an item that was just
  *   responded to or resolved is not escalated even if the breach scanner has
  *   not yet pruned its ledger row.
- * - **No silent alert loss.** If a tier's recipients cannot be resolved, the
- *   escalation claim is reverted so the item is re-evaluated next scan
- *   rather than permanently stuck at the higher tier.
+ * - **No silent alert loss.** Recipients are resolved *before* the atomic
+ *   claim, so there is no "claim then revert" window: an item whose tier's
+ *   recipients cannot be resolved is simply not claimed (the ledger stays at
+ *   its current tier) and the item is re-evaluated next scan rather than
+ *   being permanently stuck at a higher tier with no alert.
  * - **Failure isolation.** A failure while scanning one service type is
  *   recorded and skipped; the other types are still scanned.
  *
@@ -140,11 +142,6 @@ const ADVANCE_SQL = `UPDATE service_breach_alerts
    WHERE id = $1 AND escalation_level = $2
    RETURNING id`
 
-/** SQL reverting a claim whose recipients could not be resolved. */
-const REVERT_SQL = `UPDATE service_breach_alerts
-   SET escalation_level = $2, escalated_at = $3, updated_at = $4
-   WHERE id = $1`
-
 /** Human-readable in-app label per service type (both locales). */
 const SERVICE_TYPE_LABELS: Record<ServiceResponseTargetType, { fa: string; en: string }> = {
   ticket: { fa: 'تیکت', en: 'ticket' },
@@ -226,14 +223,22 @@ export async function scanServiceEscalations(
     try {
       await client.query('BEGIN')
 
+      // Counters are applied only *after* the COMMIT below, so a partial
+      // failure that rolls back the per-type transaction never reports
+      // escalations that were not durably committed.
+      let tier2 = 0
+      let tier3 = 0
+
       // Level 2: assigned → team lead, measured from the breach alert.
       if (policy.level2.delayHours !== null) {
         const due = await fetchDue(client, domain, policy.level2.delayHours, now, batchSize, 1, 'alerted_at')
         for (const candidate of due) {
-          await escalateOne(
+          const outcome = await escalateOne(
             client, enqueue, logger, domain, candidate,
-            policy.level2, /* fromLevel */ 1, /* toLevel */ 2, now, result, 'level2',
+            policy.level2, /* fromLevel */ 1, /* toLevel */ 2, now,
           )
+          if (outcome === 'escalated') tier2++
+          else if (outcome === 'concurrent') result.skippedConcurrent++
         }
       }
 
@@ -241,14 +246,18 @@ export async function scanServiceEscalations(
       if (policy.level3.delayHours !== null) {
         const due = await fetchDue(client, domain, policy.level3.delayHours, now, batchSize, 2, 'escalated_at')
         for (const candidate of due) {
-          await escalateOne(
+          const outcome = await escalateOne(
             client, enqueue, logger, domain, candidate,
-            policy.level3, /* fromLevel */ 2, /* toLevel */ 3, now, result, 'level3',
+            policy.level3, /* fromLevel */ 2, /* toLevel */ 3, now,
           )
+          if (outcome === 'escalated') tier3++
+          else if (outcome === 'concurrent') result.skippedConcurrent++
         }
       }
 
       await client.query('COMMIT')
+      result.escalated[domain.serviceType].level2 += tier2
+      result.escalated[domain.serviceType].level3 += tier3
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       const message = (error as Error)?.message ?? String(error)
@@ -285,9 +294,18 @@ async function fetchDue(
 }
 
 /**
- * Escalate one candidate to the target tier: atomically advance the ledger
- * (conditional on the expected current level) and, only if this scan wins
- * the claim, enqueue the escalation notification to the tier's recipients.
+ * Escalate one candidate to the target tier.
+ *
+ * Recipients are resolved *before* the atomic claim, so there is never a
+ * "claim then revert" window: an item whose recipients cannot be resolved is
+ * simply not claimed and is re-evaluated next scan (its ledger stays at the
+ * current tier). Only when recipients exist does this scan atomically
+ * advance the tier (conditional on the expected current level) and, if it
+ * wins the claim, enqueue the escalation notifications.
+ *
+ * @returns 'escalated' (claim won + notifications enqueued), 'concurrent'
+ *   (a concurrent scan already advanced the tier — no duplicate enqueued),
+ *   or 'no_recipient' (no deliverable recipient; item left at current tier).
  */
 async function escalateOne(
   client: PoolClient,
@@ -299,9 +317,28 @@ async function escalateOne(
   fromLevel: number,
   toLevel: number,
   now: Date,
-  result: EscalationScanResult,
-  tier: 'level2' | 'level3',
-): Promise<void> {
+): Promise<'escalated' | 'concurrent' | 'no_recipient'> {
+  // Resolve recipients first. No state is changed before the claim, so a
+  // missing/deliverable-less recipient simply leaves the ledger untouched
+  // and the item is re-evaluated on the next scan — there is no revert.
+  let recipients: RecipientProfile[] = []
+  if (toLevel === 2) {
+    // Team lead = the responsible user's team members; fall back to admins.
+    recipients = await resolveLevel2Recipients(client, candidate.responsible_user_id)
+  } else {
+    recipients = await resolveAdminRecipients(client)
+  }
+
+  if (recipients.length === 0) {
+    // No deliverable recipient (e.g. no team, no admins, or no default
+    // profile): leave the ledger at the current tier so the item is
+    // re-evaluated next scan rather than stuck at a higher tier with no alert.
+    logger.warn(
+      `No deliverable recipient for ${domain.serviceType} ${candidate.item_id} at level ${toLevel}; re-evaluated next scan`,
+    )
+    return 'no_recipient'
+  }
+
   // Atomic claim: only the scan that observes the expected current level
   // wins and returns a row. A concurrent scan that already advanced the tier
   // gets nothing and never enqueues a duplicate.
@@ -312,36 +349,8 @@ async function escalateOne(
     now,
   ])
   if (claim.rowCount === 0 || claim.rows.length === 0) {
-    result.skippedConcurrent++
-    return
+    return 'concurrent'
   }
-
-  // Resolve recipients for this tier.
-  let recipients: RecipientProfile[] = []
-  if (toLevel === 2) {
-    // Team lead = the responsible user's team members; fall back to admins.
-    recipients = await resolveLevel2Recipients(client, candidate.responsible_user_id)
-  } else {
-    recipients = await resolveAdminRecipients(client)
-  }
-
-  if (recipients.length === 0) {
-    // No deliverable recipient: revert the claim so the item is re-evaluated
-    // next scan rather than being permanently advanced with no alert.
-    await client
-      .query(REVERT_SQL, [candidate.ledger_id, fromLevel, toLevel === 2 ? null : now, now])
-      .catch(() => {
-        logger.warn(
-          `Failed to revert escalation claim for ${domain.serviceType} ${candidate.item_id}`,
-        )
-      })
-    result.errors.push(
-      `${domain.serviceType}:${candidate.item_id}: no deliverable escalation recipient at level ${toLevel}`,
-    )
-    return
-  }
-
-  result.escalated[domain.serviceType][tier]++
 
   for (const profile of recipients) {
     const enqueueResult = await enqueue(client, {
@@ -366,6 +375,8 @@ async function escalateOne(
       )
     }
   }
+
+  return 'escalated'
 }
 
 /** Resolve the default in-app/email profile(s) for every platform admin. */
