@@ -324,10 +324,14 @@ export class CatalogueProductsService {
 
       const titleChanged =
         input.title !== undefined &&
-        JSON.stringify(input.title) !== JSON.stringify(current.title)
+        (input.title.fa !== current.title.fa || input.title.en !== current.title.en)
       const descriptionChanged =
         input.description !== undefined &&
-        JSON.stringify(input.description) !== JSON.stringify(current.description)
+        (input.description === null
+          ? current.description !== null
+          : current.description === null ||
+            input.description.fa !== current.description.fa ||
+            input.description.en !== current.description.en)
       const statusChanged = input.status !== undefined && input.status !== current.status
       const minChanged =
         input.minKwh !== undefined &&
@@ -735,11 +739,17 @@ export class CatalogueProductsService {
       [id, input.productId, input.price, from, input.actorUserId, new Date()],
     )
 
-    // Mirror the newest price into products.price (the current price column).
-    await q.query('UPDATE products SET price = $1, updated_at = NOW() WHERE id = $2', [
-      input.price,
-      input.productId,
-    ])
+    // Mirror the newest price into products.price ONLY once it is effective
+    // (from <= now), so the "current" price never leads its own effective
+    // date. A future-dated version is recorded in the history but does not
+    // promote the current price until a scheduler / read-time resolution
+    // applies it.
+    if (from.getTime() <= Date.now()) {
+      await q.query('UPDATE products SET price = $1, updated_at = NOW() WHERE id = $2', [
+        input.price,
+        input.productId,
+      ])
+    }
     return true
   }
 

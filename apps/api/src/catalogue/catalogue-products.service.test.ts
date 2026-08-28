@@ -514,29 +514,43 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       ).rejects.toMatchObject({ status: 400 })
     })
 
-    it('closes the previous open version, inserts the new one, and syncs the current price', async () => {
+    it('closes the previous open version, inserts the new one, and syncs the current price when effective', async () => {
       const { pool, router } = makeDb()
       service = await loadService(pool)
-      const open = priceVersionRow()
+      const open = priceVersionRow({ effective_from: '2026-08-01T00:00:00.000Z' })
       const p = productRow({ price: '1800000' })
       wireAddPriceDb(router, p, open)
-      // The price-history read (FROM product_price_versions) is consumed by the
-      // findOpenVersion handler overlapping with the readDetail history read —
-      // both match 'FROM product_price_versions'. findOpenVersion limits to
-      // effective_until IS NULL, so give it the full two-row history and have
-      // insertPriceVersion operate on the open row by its handler below.
-
-      const result = await service.addPrice(priceInput())
+      // Effective date in the past (2026-08-15 < now): the new price is
+      // current immediately, so products.price is mirrored.
+      const result = await service.addPrice(
+        priceInput({ effectiveFrom: '2026-08-15T00:00:00.000Z' }),
+      )
 
       expect(result.price).toBe('1800000')
       expect(router.queries('UPDATE product_price_versions').length).toBe(1)
       const close = router.queries('UPDATE product_price_versions')[0]!
-      expect(close.values[0]).toEqual(new Date('2026-09-01T00:00:00.000Z'))
+      expect(close.values[0]).toEqual(new Date('2026-08-15T00:00:00.000Z'))
       const priceSync = router.queries('UPDATE products')[0]
       expect(priceSync!.values).toEqual(['1800000', PRODUCT_ID])
       expect(router.queries('INSERT INTO audit_log')[0]!.values).toContain(
         'catalogue_product_price_changed',
       )
+    })
+
+    it('does not mirror a future-dated price into products.price', async () => {
+      const { pool, router } = makeDb()
+      service = await loadService(pool)
+      const open = priceVersionRow({ effective_from: '2026-08-01T00:00:00.000Z' })
+      const p = productRow({ price: '1500000' }) // current price stays old
+      wireAddPriceDb(router, p, open)
+      // Future-dated (2026-09-01 > now): the new version is recorded but the
+      // current price is NOT promoted ahead of its effective date.
+      const result = await service.addPrice(priceInput())
+
+      expect(result.price).toBe('1500000')
+      expect(router.queries('INSERT INTO product_price_versions').length).toBe(1)
+      expect(router.queries('UPDATE products').length).toBe(0)
+      expect(router.queries('INSERT INTO audit_log').length).toBe(1)
     })
 
     it('is a no-op (no audit) when re-submitting the active price', async () => {
