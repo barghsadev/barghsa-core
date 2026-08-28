@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-09.09.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-09-01--reconciliation-exceptions",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/200",
+  "current_task_key": "02-auth-users-admin.md#T-09.09.01",
   "loop_iteration": 343,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -284,9 +284,19 @@
     "02-auth-users-admin.md#T-09.08.03"
   ],
   "last_error": null,
-  "notes": "T-09.08.03 MERGED (PR #199, squash 88369d3) after Claude Opus 5 round-2 approve (3 minor follow-ups accepted). Escalation policy + scanner live. Returned to idle.",
-  "last_updated": "2026-08-28T11:00:00Z",
+  "notes": "T-09.09.01 built: reconciliation exceptions review surface. PR #200 ready for review (draft→ready, mergeable). Awaiting Claude Opus 5 review.",
+  "last_updated": "2026-08-28T08:16:25Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.09.01",
+      "at": "2026-08-28T08:16:25Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.09.01",
+      "at": "2026-08-28T08:13:28Z"
+    },
     {
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
