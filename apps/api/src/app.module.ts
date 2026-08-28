@@ -25,13 +25,14 @@ import { DashboardModule } from './dashboard/dashboard.module.js'
 import { NotificationsModule } from './notifications/index.js'
 import { ProviderConfigModule } from './provider-config/index.js'
 import { AiModelsModule } from './ai-models/index.js'
+import { KnowledgeBasesModule } from './knowledge-bases/index.js'
 import { EmailWebhookModule } from './email-webhook/index.js'
 import { WalletModule } from './wallet/index.js'
 import { InvoiceModule } from './invoice/index.js'
 import { PublicModule } from './public/public.module.js'
 
 @Module({
-  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule, ProviderConfigModule, AiModelsModule, EmailWebhookModule, WalletModule, InvoiceModule, PublicModule],
+  imports: [RedisModule, ConfigCacheModule, HealthModule, MetricsModule, RateLimitModule, StorageModule, UploadModule, CspReportModule, AuthModule, SessionModule, ProfilesModule, GeographyModule, UserSettingsModule, OrdersModule, TosModule, CrmModule, AdminModule, TicketsModule, VerificationModule, DashboardModule, NotificationsModule, ProviderConfigModule, AiModelsModule, KnowledgeBasesModule, EmailWebhookModule, WalletModule, InvoiceModule, PublicModule],
   controllers: [AppController],
   providers: [CorrelationIdProvider, ShutdownService],
 })
