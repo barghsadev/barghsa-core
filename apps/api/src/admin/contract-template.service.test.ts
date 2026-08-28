@@ -198,7 +198,8 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     expect(version.versionNumber).toBe(3)
     expect(version.placeholders).toEqual(['customerName', 'amount'])
     expect(version.fileName).toBe('power.docx')
-    expect(version.storageKey).toMatch(/^contract-templates\//)
+    // The whitelist-suffix regex preserves a benign extension on the key.
+    expect(version.storageKey).toMatch(/^contract-templates\/[0-9a-f-]{36}\.docx$/)
     expect(storage.putObject).toHaveBeenCalledTimes(1)
     expect(storage.deleteObject).not.toHaveBeenCalled()
 
@@ -216,7 +217,8 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
   })
 
   it('returns 503 (with no version row) when object storage write fails', async () => {
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.query }))
+    db.router.on('SELECT 1 FROM contract_templates WHERE id = $1', () => ({ rows: [templateRow()] }))
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.pool }))
     const { ContractTemplateService: Svc } = await import('./contract-template.service.js')
     const { StorageProviderError } = await import('@barghsa/shared/storage')
     const correlationIdProvider = { getCorrelationId: () => 'corr' }
@@ -295,7 +297,7 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
   })
 
   it('returns 503 when object storage is not configured', async () => {
-    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.query }))
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.pool }))
     const { ContractTemplateService: Svc } = await import('./contract-template.service.js')
     const correlationIdProvider = { getCorrelationId: () => 'corr' }
     const service = new Svc(correlationIdProvider as never, null) as ServiceType
@@ -322,6 +324,22 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     })
     expect(version.versionNumber).toBe(1)
     expect(db.router.queries("UPDATE contract_templates SET status = 'active'").length).toBe(1)
+  })
+
+  it('rejects an unknown template on upload with 404 before touching storage', async () => {
+    db.router.on('SELECT 1 FROM contract_templates WHERE id = $1', () => ({ rows: [] }))
+    const { service, storage } = await loadService(db.pool)
+    const error = await expectError(
+      service.uploadVersion(TEMPLATE_ID, {
+        fileName: 'a.docx',
+        content: '{{x}}',
+        actorUserId: ACTOR,
+        ip: 'ip',
+      }),
+    )
+    expect(error.getStatus()).toBe(404)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' })
+    expect(storage.putObject).not.toHaveBeenCalled()
   })
 })
 
@@ -429,5 +447,47 @@ describe('ContractTemplateService.get (T-09.12.04)', () => {
     const error = await expectError(service.get(TEMPLATE_ID))
     expect(error.getStatus()).toBe(404)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' })
+  })
+})
+
+// ─── pg race translation ───────────────────────────────────────────────────
+
+describe('ContractTemplateService pg race translation (T-09.12.04)', () => {
+  it('maps uq_contract_template_versions_template_ver 23505 to a retryable 409', async () => {
+    db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
+    db.router.on('SELECT COALESCE(MAX(version_number), 0)::int AS n', () => ({ rows: [{ n: 0 }] }))
+    db.router.on('INSERT INTO contract_template_versions', () => {
+      throw { code: '23505', constraint: 'uq_contract_template_versions_template_ver' }
+    })
+    const { service } = await loadService(db.pool)
+    const error = await expectError(
+      service.uploadVersion(TEMPLATE_ID, {
+        fileName: 'a.docx',
+        content: '{{x}}',
+        actorUserId: ACTOR,
+        ip: 'ip',
+      }),
+    )
+    expect(error.getStatus()).toBe(409)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_VERSION_RACE' })
+  })
+
+  it('maps uq_contract_template_versions_storage_key 23505 to 409', async () => {
+    db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
+    db.router.on('SELECT COALESCE(MAX(version_number), 0)::int AS n', () => ({ rows: [{ n: 2 }] }))
+    db.router.on('INSERT INTO contract_template_versions', () => {
+      throw { code: '23505', constraint: 'uq_contract_template_versions_storage_key' }
+    })
+    const { service } = await loadService(db.pool)
+    const error = await expectError(
+      service.uploadVersion(TEMPLATE_ID, {
+        fileName: 'a.docx',
+        content: '{{x}}',
+        actorUserId: ACTOR,
+        ip: 'ip',
+      }),
+    )
+    expect(error.getStatus()).toBe(409)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_VERSION_CONFLICT' })
   })
 })

@@ -280,11 +280,19 @@ export class ContractTemplateService {
     const name = this.assertFileName(input.fileName)
     const content = this.assertContent(input.content)
     const placeholders = extractContractTemplatePlaceholders(content)
+    const effectiveContentType = input.contentType ?? 'text/plain'
     const storageKey = this.buildStorageKey(name)
 
+    // Cheap pre-transaction existence check so an unknown template id
+    // never touches object storage (the reviewer r2 minor; the FOR UPDATE
+    // read inside the transaction remains authoritative for races).
+    const pool = getDbPool()
+    const exists = await pool.query('SELECT 1 FROM contract_templates WHERE id = $1', [id])
+    if (exists.rows.length === 0) throw this.notFound(id)
+
     try {
-      await this.storage.putObject(storageKey, content, input.contentType ?? 'text/plain', {
-        fileName: name,
+      await this.storage.putObject(storageKey, content, effectiveContentType, {
+        fileName: this.asciiMetadataValue(name),
         templateId: id,
       })
     } catch (err) {
@@ -318,14 +326,15 @@ export class ContractTemplateService {
         )
         const versionNumber = (maxSeq.rows[0]?.n ?? 0) + 1
         const versionId = uuidv7()
-        await q.query(
+        const inserted = await q.query<{ created_at: string }>(
           `INSERT INTO contract_template_versions
-             (id, template_id, version_number, storage_key, file_name, content_type,
-              file_size, placeholders, created_by, created_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+            (id, template_id, version_number, storage_key, file_name, content_type,
+             file_size, placeholders, created_by, created_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+           RETURNING created_at`,
           [
             versionId, id, versionNumber, storageKey, name,
-            input.contentType ?? null, fileSize, placeholders, input.actorUserId, new Date(),
+            effectiveContentType, fileSize, placeholders, input.actorUserId, new Date(),
           ],
         )
         // Ensure the template is active once it has its first version (a
@@ -354,11 +363,11 @@ export class ContractTemplateService {
           versionNumber,
           storageKey,
           fileName: name,
-          contentType: input.contentType ?? null,
+          contentType: effectiveContentType,
           fileSize,
           placeholders,
           createdBy: input.actorUserId,
-          createdAt: new Date().toISOString(),
+          createdAt: inserted.rows[0]?.created_at ?? new Date().toISOString(),
         }
       })
     } catch (err) {
@@ -515,9 +524,17 @@ export class ContractTemplateService {
         400,
       )
     }
-    // Prevent path traversal in the storage suffix.
-    const base = raw.split(/[\\/]/).pop() ?? raw
-    return base
+    // Prevent path traversal in the storage suffix and trim surrounding
+    // whitespace (r2 minor: a ' power.docx ' name persisted verbatim).
+    return (raw.split(/[\\/]/).pop() ?? raw).trim()
+  }
+
+  /**
+   * S3 user metadata must be US-ASCII; strip non-ASCII characters while
+   * keeping the DB column's original sanitized name.
+   */
+  private asciiMetadataValue(value: string): string {
+    return value.replace(/[^\x20-\x7E]/g, '_')
   }
 
   private assertContent(raw: string): string {
@@ -544,7 +561,7 @@ export class ContractTemplateService {
     // Extension derived only from a whitelist-safe suffix (letters/digits,
     // 1-10 chars) so a hostile name can never inject path separators or
     // '..' into the key. `fileName` here is already the sanitized basename.
-    const m = /\\.([A-Za-z0-9]{1,10})$/.exec(fileName)
+    const m = /\.([A-Za-z0-9]{1,10})$/.exec(fileName)
     const ext = m ? `.${m[1]!.toLowerCase()}` : ''
     return `${TEMPLATE_STORAGE_PREFIX}${uuidv7()}${ext}`
   }
