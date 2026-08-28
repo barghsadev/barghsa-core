@@ -85,7 +85,7 @@ describe('Contract template permission gate (T-09.12.04)', () => {
       controller.get(nonAdminReq, TEMPLATE_ID),
       controller.create(nonAdminReq, { name: 'X' }),
       controller.update(nonAdminReq, TEMPLATE_ID, { status: 'inactive' }),
-      controller.uploadVersion(nonAdminReq, TEMPLATE_ID, { fileName: 'a.docx', content: 'x' }),
+      controller.uploadVersion(nonAdminReq, TEMPLATE_ID, { fileName: 'a.docx', contentType: 'text/plain', content: 'x' }),
       controller.delete(nonAdminReq, TEMPLATE_ID),
     ]
     for (const attempt of attempts) {

@@ -118,6 +118,18 @@ function reject(error: unknown): HttpException {
   throw new Error(`expected HttpException, got ${String(error)}`)
 }
 
+/** Await a promise, unwrap a rejection into an HttpException, and fail the
+ * test if it resolves instead of rejecting (avoids the `.catch(reject)`
+ * union type problem). */
+async function expectError<T>(p: Promise<T>): Promise<HttpException> {
+  try {
+    await p
+  } catch (error) {
+    return reject(error)
+  }
+  throw new Error('expected the call to reject, but it resolved')
+}
+
 // ─── create ────────────────────────────────────────────────────────────────
 
 describe('ContractTemplateService.create (T-09.12.04)', () => {
@@ -149,14 +161,14 @@ describe('ContractTemplateService.create (T-09.12.04)', () => {
   it('rejects a duplicate name (case-insensitive) with 409', async () => {
     db.router.on('FROM contract_templates WHERE LOWER(name) = $1', () => ({ rows: [{ id: 'x' }] }))
     const { service } = await loadService(db.pool)
-    const error = await service.create(createInput()).catch(reject)
+    const error = await expectError(service.create(createInput()))
     expect(error.getStatus()).toBe(409)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_ALREADY_EXISTS' })
   })
 
   it('rejects a blank name with 400', async () => {
     const { service } = await loadService(db.pool)
-    const error = await service.create(createInput({ name: '   ' })).catch(reject)
+    const error = await expectError(service.create(createInput({ name: '   ' })))
     expect(error.getStatus()).toBe(400)
   })
 })
@@ -165,10 +177,14 @@ describe('ContractTemplateService.create (T-09.12.04)', () => {
 
 describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
   it('stores the file, extracts placeholders, appends a version and audits', async () => {
+    const auditCalls: unknown[][] = []
     db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
     db.router.on('SELECT COALESCE(MAX(version_number), 0)::int AS n', () => ({ rows: [{ n: 2 }] }))
     db.router.on('INSERT INTO contract_template_versions', () => ({ rows: [] }))
-    db.router.on("INSERT INTO audit_log", () => ({ rows: [] }))
+    db.router.on('INSERT INTO audit_log', (values: unknown[]) => {
+      auditCalls.push(values)
+      return { rows: [] }
+    })
 
     const { service, storage } = await loadService(db.pool)
     const version = await service.uploadVersion(TEMPLATE_ID, {
@@ -188,9 +204,71 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
 
     const insert = db.router.queries('INSERT INTO contract_template_versions')
     expect(insert.length).toBe(1)
+    // Mandated change_recorded audit with the correct business action/metadata.
+    expect(auditCalls.length).toBe(1)
+    expect(db.router.queries('INSERT INTO audit_log')[0]!.sql).toContain('change_recorded')
+    const auditSqlArg = JSON.parse(String(auditCalls[0]![2]))
+    expect(auditSqlArg.entity).toBe('contract_template')
+    expect(auditSqlArg.action).toBe('version_uploaded')
+    expect(auditSqlArg.versionNumber).toBe(3)
+    // uploads serialize version-number allocation via FOR UPDATE row lock.
+    expect(db.router.queries('FOR UPDATE').length).toBeGreaterThanOrEqual(1)
   })
 
-  it('sanitizes the file name to its base (path traversal guard)', async () => {
+  it('returns 503 (with no version row) when object storage write fails', async () => {
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.query }))
+    const { ContractTemplateService: Svc } = await import('./contract-template.service.js')
+    const { StorageProviderError } = await import('@barghsa/shared/storage')
+    const correlationIdProvider = { getCorrelationId: () => 'corr' }
+    const storage = {
+      putObject: vi.fn().mockRejectedValue(new StorageProviderError('write failed')),
+      deleteObject: vi.fn().mockResolvedValue(undefined),
+    }
+    const service = new Svc(correlationIdProvider as never, storage as never) as ServiceType
+    const error = await expectError(
+      service.uploadVersion(TEMPLATE_ID, {
+        fileName: 'a.docx',
+        content: '{{x}}',
+        actorUserId: ACTOR,
+        ip: 'ip',
+      }),
+    )
+    expect(error.getStatus()).toBe(503)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_STORAGE_DISABLED' })
+    expect(db.router.queries('INSERT INTO contract_template_versions').length).toBe(0)
+  })
+
+  it('rolls the orphaned object back out of storage when the DB insert fails', async () => {
+    const putKeys: string[] = []
+    vi.doMock('@barghsa/db', () => ({ getDbPool: () => db.pool }))
+    const { ContractTemplateService: Svc } = await import('./contract-template.service.js')
+    const correlationIdProvider = { getCorrelationId: () => 'corr' }
+    const storage = {
+      putObject: vi.fn(async (_key: string) => {
+        putKeys.push(_key)
+        return undefined
+      }),
+      deleteObject: vi.fn().mockResolvedValue(undefined),
+    }
+    db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
+    db.router.on('SELECT COALESCE(MAX(version_number), 0)::int AS n', () => ({ rows: [{ n: 0 }] }))
+    db.router.on('INSERT INTO contract_template_versions', () => {
+      throw new Error('insert boom')
+    })
+    const service = new Svc(correlationIdProvider as never, storage as never) as ServiceType
+    await expect(
+      service.uploadVersion(TEMPLATE_ID, {
+        fileName: 'a.docx',
+        content: '{{x}}',
+        actorUserId: ACTOR,
+        ip: 'ip',
+      }),
+    ).rejects.toThrow('insert boom')
+    expect(putKeys.length).toBe(1)
+    expect(storage.deleteObject).toHaveBeenCalledWith(putKeys[0])
+  })
+
+  it('sanitizes the file name to its base — storage key cannot escape the prefix', async () => {
     db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
     db.router.on('SELECT COALESCE(MAX(version_number), 0)::int AS n', () => ({ rows: [{ n: 0 }] }))
     db.router.on('INSERT INTO contract_template_versions', () => ({ rows: [] }))
@@ -198,14 +276,22 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
 
     const { service, storage } = await loadService(db.pool)
     const version = await service.uploadVersion(TEMPLATE_ID, {
-      fileName: '../../evil.docx',
+      fileName: '../../evil.d/../../../etc/passwd',
       content: '{{x}}',
       actorUserId: ACTOR,
       ip: '127.0.0.1',
     })
-    expect(version.fileName).toBe('evil.docx')
-    expect(version.storageKey).toMatch(/^contract-templates\//)
-    expect(storage.putObject).toHaveBeenCalledTimes(1)
+    expect(version.fileName).toBe('passwd')
+    // The key is built from the SANITIZED basename ('passwd'), not the raw
+    // input, and the extension comes from a whitelist-safe regex — no '/',
+    // no '..', no '.' beyond the single extension separator.
+    expect(version.storageKey).toMatch(/^contract-templates\/[0-9a-f-]{36}$/)
+    const putKey = (storage.putObject as ReturnType<typeof vi.fn>).mock.calls[0]![0] as string
+    expect(putKey).toBe(version.storageKey)
+    const suffix = putKey.slice('contract-templates/'.length)
+    expect(suffix).not.toContain('/')
+    expect(suffix).not.toContain('..')
+    expect(suffix).toMatch(/^[0-9a-f-]{36}$/)
   })
 
   it('returns 503 when object storage is not configured', async () => {
@@ -213,9 +299,9 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
     const { ContractTemplateService: Svc } = await import('./contract-template.service.js')
     const correlationIdProvider = { getCorrelationId: () => 'corr' }
     const service = new Svc(correlationIdProvider as never, null) as ServiceType
-    const error = await service
-      .uploadVersion(TEMPLATE_ID, { fileName: 'a.docx', content: 'x', actorUserId: ACTOR, ip: 'ip' })
-      .catch(reject)
+    const error = await expectError(
+      service.uploadVersion(TEMPLATE_ID, { fileName: 'a.docx', content: 'x', actorUserId: ACTOR, ip: 'ip' }),
+    )
     expect(error.getStatus()).toBe(503)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_STORAGE_DISABLED' })
   })
@@ -242,20 +328,36 @@ describe('ContractTemplateService.uploadVersion (T-09.12.04)', () => {
 // ─── update ────────────────────────────────────────────────────────────────
 
 describe('ContractTemplateService.update (T-09.12.04)', () => {
-  it('renames with uniqueness checked excluding self', async () => {
+  it('renames with uniqueness checked excluding self (excluding self)', async () => {
+    const updateCalls: unknown[][] = []
     db.router.on('WHERE LOWER(name) = $1 AND id <> $2', () => ({ rows: [] }))
     db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
-    db.router.on('UPDATE contract_templates', () => ({ rows: [] }))
+    db.router.on('UPDATE contract_templates', (values: unknown[]) => {
+      updateCalls.push(values)
+      return { rows: [] }
+    })
     db.router.on('INSERT INTO audit_log', () => ({ rows: [] }))
     db.router.on('COUNT(*)::int AS n FROM contract_template_versions', () => ({ rows: [{ n: 0 }] }))
+    db.router.on('FROM contract_template_versions', () => ({ rows: [] }))
     const { service } = await loadService(db.pool)
     const dto = await service.update(TEMPLATE_ID, {
       name: 'New Name',
       actorUserId: ACTOR,
       ip: 'ip',
     })
-    expect(dto.name).toBe('Power Contract')
+    // update() returns readDto which reads back the (still-stale) mock row,
+    // but the UPDATE itself must carry the new name and exclude-self params.
+    expect(updateCalls.length).toBe(1)
+    expect(updateCalls[0]![0]).toBe('New Name')
     expect(db.router.queries('UPDATE contract_templates').length).toBe(1)
+  })
+
+  it('rejects an unknown template on update with 404', async () => {
+    db.router.on('FROM contract_templates', () => ({ rows: [] }))
+    const { service } = await loadService(db.pool)
+    const error = await expectError(service.update(TEMPLATE_ID, { name: 'X', actorUserId: ACTOR, ip: 'ip' }))
+    expect(error.getStatus()).toBe(404)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' })
   })
 })
 
@@ -266,7 +368,7 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
     db.router.on('FROM contract_templates', () => ({ rows: [templateRow()] }))
     db.router.on('FROM contract_template_versions WHERE template_id = $1 LIMIT 1', () => ({ rows: [{ id: 'v' }] }))
     const { service } = await loadService(db.pool)
-    const error = await service.delete(TEMPLATE_ID, ACTOR, 'ip').catch(reject)
+    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'))
     expect(error.getStatus()).toBe(409)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_VERSIONED' })
   })
@@ -276,7 +378,7 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
     db.router.on('FROM contract_template_versions WHERE template_id = $1 LIMIT 1', () => ({ rows: [] }))
     db.router.on('FROM contract_type_templates WHERE template_id = $1 LIMIT 1', () => ({ rows: [{ id: 'r' }] }))
     const { service } = await loadService(db.pool)
-    const error = await service.delete(TEMPLATE_ID, ACTOR, 'ip').catch(reject)
+    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'))
     expect(error.getStatus()).toBe(409)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_REFERENCED' })
   })
@@ -291,6 +393,14 @@ describe('ContractTemplateService.delete (T-09.12.04)', () => {
     const result = await service.delete(TEMPLATE_ID, ACTOR, 'ip')
     expect(result.deleted).toBe(true)
     expect(db.router.queries('DELETE FROM contract_templates').length).toBe(1)
+  })
+
+  it('rejects deleting an unknown template with 404', async () => {
+    db.router.on('FROM contract_templates', () => ({ rows: [] }))
+    const { service } = await loadService(db.pool)
+    const error = await expectError(service.delete(TEMPLATE_ID, ACTOR, 'ip'))
+    expect(error.getStatus()).toBe(404)
+    expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' })
   })
 })
 
@@ -316,7 +426,7 @@ describe('ContractTemplateService.get (T-09.12.04)', () => {
   it('returns 404 for an unknown template', async () => {
     db.router.on('FROM contract_templates', () => ({ rows: [] }))
     const { service } = await loadService(db.pool)
-    const error = await service.get(TEMPLATE_ID).catch(reject)
+    const error = await expectError(service.get(TEMPLATE_ID))
     expect(error.getStatus()).toBe(404)
     expect(error.getResponse()).toMatchObject({ error: 'CONTRACT_TEMPLATE_NOT_FOUND' })
   })

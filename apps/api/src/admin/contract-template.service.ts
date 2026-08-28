@@ -35,6 +35,16 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
  *   rejected with 409 (the RESTRICT FKs guarantee this at the DB level
  *   too — see migration 0049).
  *
+ * Scope note (T-09.12.04 API slice): placeholder extraction operates on
+ * the file's text content via the shared `{{name}}` regex. This slice
+ * accepts text-based templates (`text/*` content types), which is where
+ * `{{date}}`/`{{customerName}}`/`{{amount}}` are extracted and stored.
+ * Binary document formats (`.docx` — a zip whose text lives in
+ * `word/document.xml`) are a documented follow-up: the current
+ * upload endpoint validates `text/*` only, so a `.docx` upload is
+ * rejected rather than silently parsed as bytes. See the PR body /
+ * controller ApiOperation for the deferred follow-up.
+ *
  * Object storage: the file body is written through the global
  * `STORAGE_PROVIDER`. When storage is not configured (no S3), uploads
  * fail with 503 rather than silently dropping the file.
@@ -148,11 +158,8 @@ export class ContractTemplateService {
         GROUP BY ct.id
         ORDER BY ct.created_at DESC`,
     )
-    const byId = new Map(templates.rows.map((r) => [r.id, r]))
     const latest = await this.latestVersions(pool, templates.rows.map((r) => r.id))
-    return templates.rows.map((row) =>
-      this.toDto(row, byId.get(row.id)?.version_count ?? 0, latest.get(row.id) ?? null),
-    )
+    return templates.rows.map((row) => this.toDto(row, row.version_count, latest.get(row.id) ?? null))
   }
 
   /** Full template detail with every version, oldest first. */
@@ -273,11 +280,11 @@ export class ContractTemplateService {
     const name = this.assertFileName(input.fileName)
     const content = this.assertContent(input.content)
     const placeholders = extractContractTemplatePlaceholders(content)
-    const storageKey = this.buildStorageKey(input.fileName)
+    const storageKey = this.buildStorageKey(name)
 
     try {
       await this.storage.putObject(storageKey, content, input.contentType ?? 'text/plain', {
-        fileName: input.fileName,
+        fileName: name,
         templateId: id,
       })
     } catch (err) {
@@ -296,6 +303,14 @@ export class ContractTemplateService {
       return await this.withTransaction(async (q) => {
         const current = await this.findById(q, id)
         if (!current) throw this.notFound(id)
+
+        // Serialize the version-number sequence per template: lock the
+        // template row FOR UPDATE before reading MAX(version_number), so
+        // two concurrent uploads on the same template cannot compute the
+        // same next number at READ COMMITTED. The
+        // uq_contract_template_versions_template_ver index remains the
+        // hard backstop (mapped to a retryable 409 in translatePgErrors).
+        await q.query('SELECT 1 FROM contract_templates WHERE id = $1 FOR UPDATE', [id])
 
         const maxSeq = await q.query<{ n: number }>(
           'SELECT COALESCE(MAX(version_number), 0)::int AS n FROM contract_template_versions WHERE template_id = $1',
@@ -478,7 +493,9 @@ export class ContractTemplateService {
       'SELECT COUNT(*)::int AS n FROM contract_template_versions WHERE template_id = $1',
       [id],
     )
-    return this.toDto(row, count.rows[0]?.n ?? 0, null)
+    const versions = await this.versionsFor(q, id)
+    const latest = versions.length > 0 ? versions[versions.length - 1]! : null
+    return this.toDto(row, count.rows[0]?.n ?? 0, latest)
   }
 
   // ─── Validation ────────────────────────────────────────────────────────
@@ -524,7 +541,11 @@ export class ContractTemplateService {
   }
 
   private buildStorageKey(fileName: string): string {
-    const ext = fileName.includes('.') ? fileName.slice(fileName.lastIndexOf('.')).toLowerCase() : ''
+    // Extension derived only from a whitelist-safe suffix (letters/digits,
+    // 1-10 chars) so a hostile name can never inject path separators or
+    // '..' into the key. `fileName` here is already the sanitized basename.
+    const m = /\\.([A-Za-z0-9]{1,10})$/.exec(fileName)
+    const ext = m ? `.${m[1]!.toLowerCase()}` : ''
     return `${TEMPLATE_STORAGE_PREFIX}${uuidv7()}${ext}`
   }
 
@@ -613,6 +634,18 @@ export class ContractTemplateService {
       if (constraint === 'uq_contract_template_versions_storage_key') {
         throw new HttpException(
           { statusCode: 409, error: 'CONTRACT_TEMPLATE_VERSION_CONFLICT', message: 'Template file already stored' },
+          409,
+        )
+      }
+      if (constraint === 'uq_contract_template_versions_template_ver') {
+        // A concurrent upload won the version-number race despite the row
+        // lock (e.g. held by another transaction); retryable.
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'CONTRACT_TEMPLATE_VERSION_RACE',
+            message: 'Template version race — retry the upload',
+          },
           409,
         )
       }

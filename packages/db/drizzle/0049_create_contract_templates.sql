@@ -46,6 +46,10 @@
 --   once a link row exists, DELETE on contract_templates fails at the DB
 --   level; the service maps it to a 409 with a friendly message.
 --
+-- Idempotency: this migration is fully re-runnable (CREATE IF NOT EXISTS,
+-- inline CHECKs, DROP TRIGGER IF EXISTS) so a partial re-application does
+-- not abort with 42710/42P07, matching sibling migrations.
+--
 -- Rollback:
 --   DROP TABLE IF EXISTS contract_type_templates CASCADE;
 --   DROP TABLE IF EXISTS contract_template_versions CASCADE;
@@ -58,21 +62,16 @@ CREATE TABLE IF NOT EXISTS contract_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   name TEXT NOT NULL,
   description TEXT,
-  status TEXT NOT NULL DEFAULT 'active',
+  status TEXT NOT NULL DEFAULT 'active'
+    CONSTRAINT chk_contract_templates_status CHECK (status IN ('active', 'inactive')),
   created_by TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT chk_contract_templates_name CHECK (length(btrim(name)) > 0)
 );
 
-ALTER TABLE contract_templates
-  ADD CONSTRAINT chk_contract_templates_status
-  CHECK (status IN ('active', 'inactive'));
-
-ALTER TABLE contract_templates
-  ADD CONSTRAINT chk_contract_templates_name
-  CHECK (length(btrim(name)) > 0);
-
 -- Case-insensitive uniqueness (service stores the trimmed name as given).
+-- IF NOT EXISTS makes the index creation idempotent across re-runs.
 CREATE UNIQUE INDEX IF NOT EXISTS uq_contract_templates_name_lower
   ON contract_templates (LOWER(name));
 CREATE INDEX IF NOT EXISTS idx_contract_templates_status
@@ -84,7 +83,8 @@ CREATE INDEX IF NOT EXISTS idx_contract_templates_status
 CREATE TABLE IF NOT EXISTS contract_template_versions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
   template_id UUID NOT NULL REFERENCES contract_templates(id) ON DELETE RESTRICT,
-  version_number INTEGER NOT NULL,
+  version_number INTEGER NOT NULL
+    CONSTRAINT chk_contract_template_versions_version_number CHECK (version_number > 0),
   storage_key TEXT NOT NULL,
   file_name TEXT NOT NULL,
   content_type TEXT,
@@ -93,10 +93,6 @@ CREATE TABLE IF NOT EXISTS contract_template_versions (
   created_by TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-
-ALTER TABLE contract_template_versions
-  ADD CONSTRAINT chk_contract_template_versions_version_number
-  CHECK (version_number > 0);
 
 -- Storage key is globally unique (files are never shared between versions).
 CREATE UNIQUE INDEX IF NOT EXISTS uq_contract_template_versions_storage_key
@@ -119,7 +115,7 @@ CREATE INDEX IF NOT EXISTS idx_contract_type_templates_template_id
   ON contract_type_templates (template_id);
 
 -- ---------------------------------------------------------------------------
--- updated_at triggers
+-- updated_at triggers (idempotent — DROP IF EXISTS first)
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION update_contract_templates_updated_at()
 RETURNS TRIGGER
@@ -130,6 +126,8 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+DROP TRIGGER IF EXISTS trg_contract_templates_updated_at ON contract_templates;
 
 CREATE TRIGGER trg_contract_templates_updated_at
   BEFORE UPDATE ON contract_templates

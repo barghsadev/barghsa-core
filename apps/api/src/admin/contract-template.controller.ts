@@ -15,7 +15,7 @@ import {
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { CONTRACT_TEMPLATE_STATUSES, type ContractTemplateDto } from '@barghsa/shared/admin'
+import { CONTRACT_TEMPLATE_STATUSES, type ContractTemplateDto, type ContractTemplateVersionDto } from '@barghsa/shared/admin'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { ContractTemplateService } from './contract-template.service.js'
@@ -44,7 +44,15 @@ const UpdateContractTemplateSchema = z.object({
 
 const UploadVersionSchema = z.object({
   fileName: z.string().min(1, 'fileName is required').max(255, 'fileName is too long'),
-  contentType: z.string().max(100, 'contentType is too long').optional(),
+  contentType: z
+    .string()
+    .max(100, 'contentType is too long')
+    .refine(
+      (t) => /^text\/[a-z0-9.+-]+$/i.test(t),
+      'Only text/* content types are accepted for placeholder extraction',
+    )
+    .optional()
+    .default('text/plain'),
   content: z.string(),
 })
 
@@ -224,7 +232,7 @@ export class ContractTemplateController {
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
     @Body() body: z.infer<typeof UploadVersionSchema>,
-  ): Promise<ReturnType<ContractTemplateService['uploadVersion']>> {
+  ): Promise<ContractTemplateVersionDto> {
     this.assertDocumentsPermission(req)
     assertUuid(id)
     const parsed = UploadVersionSchema.safeParse(body)
