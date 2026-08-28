@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { bigint, index, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
+import { bigint, index, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { users } from './users.js'
 import { storageRecords } from './storage-record.js'
@@ -76,7 +76,7 @@ export const kbDocuments = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** Owning knowledge base (cascade delete removes the link). */
-    kbId: text('kb_id')
+    kbId: uuid('kb_id')
       .notNull()
       .references(() => knowledgeBases.id, { onDelete: 'cascade' }),
 
@@ -117,7 +117,7 @@ export const kbDocuments = pgTable(
   },
   (table) => [
     /** A document is attached to a KB exactly once (migration 0043). */
-    uniqueIndex('uq_kbd_kb_storage').on(table.kbId, table.storageKey),
+    unique('uq_kbd_kb_storage').on(table.kbId, table.storageKey),
     /** Documents of one KB (admin detail view). */
     index('idx_kbd_kb_id').on(table.kbId),
     /** Pending-document claim queries for the future chunk/embed worker. */

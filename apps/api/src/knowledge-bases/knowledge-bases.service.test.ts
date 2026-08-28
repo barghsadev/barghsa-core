@@ -290,10 +290,10 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
       service = await loadService({ query: mockQuery })
       mockQuery
         .mockResolvedValueOnce({ rows: [kbBaseRow()] }) // findKb
-        .mockResolvedValueOnce({ rowCount: 0 }) // delete
+        .mockResolvedValueOnce({ rows: [] }) // findDocumentLinkById
 
       await expect(
-        service.detachDocument('kb-1', 'uploads/ghost.pdf', ACTOR, '1.2.3.4'),
+        service.detachDocument('kb-1', 'doc-ghost', ACTOR, '1.2.3.4'),
       ).rejects.toMatchObject({
         status: 404,
         response: { error: 'KB_DOCUMENT_NOT_FOUND' },
@@ -305,14 +305,16 @@ describe('KnowledgeBasesService (T-09.11.02)', () => {
       service = await loadService({ query: mockQuery })
       mockQuery
         .mockResolvedValueOnce({ rows: [kbBaseRow()] }) // findKb
-        .mockResolvedValueOnce({ rowCount: 1 }) // delete
+        .mockResolvedValueOnce({ rows: [docRow()] }) // findDocumentLinkById
+        .mockResolvedValueOnce({ rows: [] }) // delete
         .mockResolvedValueOnce({ rows: [] }) // audit
 
       await expect(
-        service.detachDocument('kb-1', 'uploads/faq.pdf', ACTOR, '1.2.3.4'),
+        service.detachDocument('kb-1', 'doc-1', ACTOR, '1.2.3.4'),
       ).resolves.toBeUndefined()
-      const deleteSql = String(mockQuery.mock.calls[1]![0])
+      const deleteSql = String(mockQuery.mock.calls[2]![0])
       expect(deleteSql).toContain('DELETE FROM kb_documents')
+      expect(deleteSql).toContain('id = $1 AND kb_id = $2')
     })
   })
 

@@ -211,22 +211,25 @@ export class KnowledgeBasesController {
     })
   }
 
-  @Delete(':id/documents/:storageKey')
+  @Delete(':id/documents/:documentId')
   @HttpCode(204)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({
     summary: 'Detach a document from a knowledge base (admin)',
-    description: 'Removes the KB↔document link. The underlying storage record is retained.',
+    description:
+      'Removes the KB↔document link by link id. The underlying storage ' +
+      'record is retained. The link id is used instead of the storage key ' +
+      'because storage keys contain path separators.',
   })
   @ApiResponse({ status: 204, description: 'Document detached.' })
   async detachDocument(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('storageKey') storageKey: string,
+    @Param('documentId') documentId: string,
   ): Promise<void> {
     this.assertKbPermission(req)
-    return this.service.detachDocument(id, storageKey, req.session.userId, requestIp(req))
+    return this.service.detachDocument(id, documentId, req.session.userId, requestIp(req))
   }
 }
 

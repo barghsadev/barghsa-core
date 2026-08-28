@@ -1,4 +1,4 @@
-import { index, pgTable, text } from 'drizzle-orm/pg-core'
+import { index, pgTable, primaryKey, text, uuid } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { users } from './users.js'
 import { knowledgeBases } from './knowledge-bases.js'
@@ -61,12 +61,12 @@ export const kbGroupMembers = pgTable(
   'kb_group_members',
   {
     /** Owning group (UUID PK of kb_groups). */
-    groupId: text('group_id')
+    groupId: uuid('group_id')
       .notNull()
       .references(() => kbGroups.id, { onDelete: 'cascade' }),
 
     /** Member KB (UUID PK of knowledge_bases). */
-    kbId: text('kb_id')
+    kbId: uuid('kb_id')
       .notNull()
       .references(() => knowledgeBases.id, { onDelete: 'cascade' }),
 
@@ -74,12 +74,9 @@ export const kbGroupMembers = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
+    /** Composite PK: a KB is a member of a group exactly once (migration 0043). */
+    primaryKey({ columns: [table.groupId, table.kbId] }),
     /** Reverse lookup: which groups contain a given KB. */
     index('idx_kbgm_kb_id').on(table.kbId),
   ],
 )
-
-// The composite primary key (group_id, kb_id) is declared in migration
-// 0043 via the table definition; Drizzle's pgTable would generate
-// `primaryKey({ columns: [groupId, kbId] })` on db push, which matches.
-export { kbGroups as kbGroupsTable }

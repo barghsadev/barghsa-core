@@ -92,6 +92,22 @@ describe('knowledge base schema (T-09.11.02)', () => {
     expect(MIGRATION).toMatch(/storage_key\s+TEXT NOT NULL REFERENCES storage_records\(storage_key\) ON DELETE RESTRICT/)
   })
 
+  it('drizzle schema declares UUID FK columns matching migration 0043', () => {
+    // kb_documents.kb_id, kb_group_members.group_id/kb_id must be UUID-typed
+    // in the schema so db:push produces the same columns as the migration.
+    const columns = [
+      kbDocuments['kbId'],
+      kbGroupMembers['groupId'],
+      kbGroupMembers['kbId'],
+    ] as Array<{ getSQLType: () => string }>
+    for (const column of columns) {
+      const sqlType = column.getSQLType()
+      // drizzle uuid() reports the TS data type as 'string' but the emitted
+      // SQL column type is 'uuid'.
+      expect(sqlType).toBe('uuid')
+    }
+  })
+
   it('migration 0043 keeps the group-membership composite PK', () => {
     expect(MIGRATION).toMatch(/PRIMARY KEY \(group_id, kb_id\)/)
   })

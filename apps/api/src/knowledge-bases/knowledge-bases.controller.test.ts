@@ -114,7 +114,7 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
         controller.attachDocument(nonAdminReq, 'kb-1', { storageKey: 'uploads/x.pdf' }),
       ).rejects.toMatchObject({ status: 403 })
       await expect(
-        controller.detachDocument(nonAdminReq, 'kb-1', 'uploads/x.pdf'),
+        controller.detachDocument(nonAdminReq, 'kb-1', 'doc-1'),
       ).rejects.toMatchObject({ status: 403 })
       expect(mockListKbs).not.toHaveBeenCalled()
       expect(mockAttachDocument).not.toHaveBeenCalled()
@@ -198,13 +198,13 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
     })
   })
 
-  describe('DELETE /api/admin/knowledge-bases/:id/documents/:storageKey', () => {
+  describe('DELETE /api/admin/knowledge-bases/:id/documents/:documentId', () => {
     it('detaches the document', async () => {
       mockDetachDocument.mockResolvedValue(undefined)
       await expect(
-        controller.detachDocument(adminReq, 'kb-1', 'uploads/faq.pdf'),
+        controller.detachDocument(adminReq, 'kb-1', 'doc-1'),
       ).resolves.toBeUndefined()
-      expect(mockDetachDocument).toHaveBeenCalledWith('kb-1', 'uploads/faq.pdf', 'admin-1', '10.0.0.8')
+      expect(mockDetachDocument).toHaveBeenCalledWith('kb-1', 'doc-1', 'admin-1', '10.0.0.8')
     })
   })
 })

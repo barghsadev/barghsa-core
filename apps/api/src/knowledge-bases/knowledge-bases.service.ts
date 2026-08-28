@@ -419,36 +419,42 @@ export class KnowledgeBasesService {
     }
   }
 
-  /** Detach a document from a KB. The storage record itself is retained. */
+  /**
+   * Detach a document from a KB by its link row id. The storage record
+   * itself is retained. The link id (rather than the storage key) is used
+   * because storage keys contain path separators (e.g. `uploads/faq.pdf`)
+   * and cannot be encoded as a route segment.
+   */
   async detachDocument(
     kbId: string,
-    storageKey: string,
+    documentId: string,
     actorUserId: string,
     ip: string,
   ): Promise<void> {
     const kb = await this.findKb(kbId)
     if (!kb) throw this.kbNotFound(kbId)
 
-    const result = await getDbPool().query(
-      'DELETE FROM kb_documents WHERE kb_id = $1 AND storage_key = $2',
-      [kbId, storageKey],
-    )
-    if ((result.rowCount ?? 0) === 0) {
+    const link = await this.findDocumentLinkById(documentId, kbId)
+    if (!link) {
       throw new HttpException(
         {
           statusCode: 404,
           error: 'KB_DOCUMENT_NOT_FOUND',
-          message: `Document "${storageKey}" is not attached to KB ${kbId}`,
+          message: `Document link ${documentId} is not attached to KB ${kbId}`,
         },
         404,
       )
     }
+    await getDbPool().query('DELETE FROM kb_documents WHERE id = $1 AND kb_id = $2', [
+      documentId,
+      kbId,
+    ])
     await this.recordAudit('kb_document_detached', actorUserId, ip, {
       targetId: kbId,
-      storageKey,
+      storageKey: link.storage_key,
     })
     this.logger.log(
-      `Document detached from KB: kb=${kbId}, key=${storageKey}, actor=${actorUserId}`,
+      `Document detached from KB: kb=${kbId}, key=${link.storage_key}, actor=${actorUserId}`,
     )
   }
 
@@ -678,6 +684,20 @@ export class KnowledgeBasesService {
          FROM kb_documents
         WHERE kb_id = $1 AND storage_key = $2`,
       [kbId, storageKey],
+    )
+    return result.rows[0] ?? null
+  }
+
+  private async findDocumentLinkById(
+    documentId: string,
+    kbId: string,
+  ): Promise<KbDocumentRow | null> {
+    const result = await getDbPool().query<KbDocumentRow>(
+      `SELECT id, kb_id, storage_key, file_name, mime_type, size_bytes,
+              processing_status, processing_error, created_at, updated_at
+         FROM kb_documents
+        WHERE id = $1 AND kb_id = $2`,
+      [documentId, kbId],
     )
     return result.rows[0] ?? null
   }
