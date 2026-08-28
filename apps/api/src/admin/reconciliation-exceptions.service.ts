@@ -56,8 +56,8 @@ const MAX_RESOLUTION_NOTE_LENGTH = 1000
  * Every state change writes an `audit_log` row (`reconciliation_status_changed`
  * for investigate, `resolution_recorded` for resolve/close) in the same
  * transaction as the state change, so the durable audit trail can never
- * diverge from the live ledger. A terminal item (`resolved`/`closed`) can
- * never be transitioned again (409).
+ * diverge from the live ledger. Only `closed` is terminal — a `resolved`
+ * item may still be closed, but a closed item can never move again (409).
  *
  * The rows themselves are produced by the finance reconciliation system
  * (a later epic dependency); this service is the review/state surface on top,
@@ -202,6 +202,16 @@ export class ReconciliationExceptionsService {
    * Shared state-transition path. All state changes and their audit rows
    * commit atomically under a row lock, so a concurrent double-resolve can
    * never produce two audit records for one resolution.
+   *
+   * Which columns are written depends on the target status (the resolution
+   * fields are only ever written by resolve/close, never stamped by a mere
+   * status move):
+   * - `investigating` → claims the item: sets `status` + `assigned_to_id`
+   *   (the working staff member). Resolution columns stay untouched.
+   * - `resolved`     → records the resolver / note / timestamp.
+   * - `closed`       → records the closer as the resolution owner only if
+   *   none was set before (COALESCE), so a close-after-resolve never
+   *   overwrites the original resolver's durable record.
    */
   private async transition(
     exceptionId: string,
@@ -218,6 +228,7 @@ export class ReconciliationExceptionsService {
     const now = new Date()
 
     const client = await pool.connect()
+    let committed = false
     try {
       await client.query('BEGIN')
 
@@ -255,12 +266,36 @@ export class ReconciliationExceptionsService {
         )
       }
 
-      await client.query(
-        `UPDATE reconciliation_exceptions
-         SET status = $1, resolved_by_id = $2, resolution_note = $3, resolved_at = $4, updated_at = $4
-         WHERE id = $5`,
-        [toStatus, actorUserId, opts.note, now, exceptionId],
-      )
+      if (toStatus === 'investigating') {
+        // Claim action: only the status and assigned staff change.
+        await client.query(
+          `UPDATE reconciliation_exceptions
+           SET status = $1, assigned_to_id = $2, updated_at = $3
+           WHERE id = $4`,
+          [toStatus, actorUserId, now, exceptionId],
+        )
+      } else if (toStatus === 'resolved') {
+        // Resolution: record the resolver, note and timestamp.
+        await client.query(
+          `UPDATE reconciliation_exceptions
+           SET status = $1, resolved_by_id = $2, resolution_note = $3, resolved_at = $4, updated_at = $4
+           WHERE id = $5`,
+          [toStatus, actorUserId, opts.note, now, exceptionId],
+        )
+      } else {
+        // Close: never overwrite a pre-existing resolution record; fill in
+        // the closer only when the item was never resolved before.
+        await client.query(
+          `UPDATE reconciliation_exceptions
+           SET status = $1,
+               resolved_by_id = COALESCE(resolved_by_id, $2),
+               resolution_note = COALESCE(resolution_note, $3),
+               resolved_at = COALESCE(resolved_at, $4),
+               updated_at = $4
+           WHERE id = $5`,
+          [toStatus, actorUserId, opts.note, now, exceptionId],
+        )
+      }
 
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
@@ -283,13 +318,13 @@ export class ReconciliationExceptionsService {
       )
 
       await client.query('COMMIT')
+      committed = true
 
       this.logger.log(
         `Reconciliation exception ${exceptionId} ${toStatus} by ${actorUserId}`,
       )
-
-      return await this.getExceptionDto(exceptionId)
     } catch (error) {
+      if (committed) throw error
       if (error instanceof HttpException) throw error
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to resolve reconciliation exception: ${String(error)}`)
@@ -300,6 +335,12 @@ export class ReconciliationExceptionsService {
     } finally {
       client.release()
     }
+
+    // Post-commit DTO read is deliberately outside the transactional
+    // try/catch: the state change and audit row are already durably
+    // committed, so a failure to re-read must never ROLLBACK (the
+    // transaction is closed) or report the transition as failed.
+    return this.getExceptionDto(exceptionId)
   }
 
   /** Fetch a single exception by id (post-commit read for the DTO). */
