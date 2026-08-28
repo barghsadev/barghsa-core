@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-09.09.01",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e02-t-09-09-01--reconciliation-exceptions",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/200",
-  "current_task_key": "02-auth-users-admin.md#T-09.09.01",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 343,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -281,12 +281,18 @@
     "02-auth-users-admin.md#T-09.07.02",
     "02-auth-users-admin.md#T-09.08.01",
     "02-auth-users-admin.md#T-09.08.02",
-    "02-auth-users-admin.md#T-09.08.03"
+    "02-auth-users-admin.md#T-09.08.03",
+    "02-auth-users-admin.md#T-09.09.01"
   ],
   "last_error": null,
-  "notes": "T-09.09.01 built: reconciliation exceptions review surface. PR #200 ready for review (draft→ready, mergeable). Awaiting Claude Opus 5 review.",
-  "last_updated": "2026-08-28T08:16:25Z",
+  "notes": "T-09.09.01 MERGED (PR #200, squash 3d9a594) after Claude Opus 5 round-2 approve (4 minor follow-ups deferred: correlation-id threading, fa/en dict keys for statuses/severities, Swagger DTO schema, trailing newlines). Reconciliation exceptions review surface live. Returned to idle.",
+  "last_updated": "2026-08-28T08:26:11Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-09.09.01",
+      "at": "2026-08-28T08:26:11Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.09.01",
