@@ -22,6 +22,12 @@ import {
   validateWalletTopUpLimitConfig,
   isValidWalletTopUpLimit,
   type WalletTopUpLimitConfig,
+  GREEN_ELECTRICITY_CONFIG_KEY,
+  DEFAULT_GREEN_ELECTRICITY_CONFIG,
+  toGreenElectricityConfig,
+  validateGreenElectricityConfig,
+  greenElectricityConfigToStored,
+  type GreenElectricityConfig,
 } from '@barghsa/shared/finance'
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
@@ -1170,6 +1176,154 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`)
+      throw new HttpException(
+        { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
+        500,
+      )
+    } finally {
+      client.release()
+    }
+  }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Mandatory green-electricity rules (S-09.10, T-09.10.02)
+  // ───────────────────────────────────────────────────────────────────────
+
+  /**
+   * Get the current admin-configurable mandatory green-electricity rules
+   * from `app_config`.
+   *
+   * Returns the T-09.10.02 defaults (simple enabled, advanced disabled,
+   * 1000 kW threshold, 4% share) when no admin value has been persisted
+   * yet. A persisted row that does not normalize to a *valid* config is
+   * warned about and served as the defaults — a corrupt value must not crash
+   * the read path or silently change the enforced rule. The product-state
+   * fail-closed safety check (T-09.10.03) is out of scope for this slice.
+   */
+  async getGreenElectricityConfig(): Promise<GreenElectricityConfig> {
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [GREEN_ELECTRICITY_CONFIG_KEY],
+    )
+    if (result.rows.length === 0) return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    // The stored snake_case shape must itself validate; a malformed row (wrong
+    // types, missing modes) is surfaced rather than silently served as a
+    // confusing mix of persisted + default fields.
+    const validation = validateGreenElectricityConfig(persisted)
+    if (!validation.ok) {
+      this.logger.warn(
+        `Green electricity config row for key ${GREEN_ELECTRICITY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`,
+      )
+      return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
+    }
+    return toGreenElectricityConfig(persisted)
+  }
+
+  /**
+   * Persist new admin-configurable mandatory green-electricity rules.
+   *
+   * Validates the proposal against the T-09.10.02 rules (both mode objects
+   * present; boolean enable flags; integer threshold >= 0; share in 0..100)
+   * before writing. A failing validation throws a 400 with the collected
+   * issue list. On success it upserts `app_config` (versioned) and bumps the
+   * global config version so caches invalidate; the audit trail records the
+   * change with the previous value and both version numbers. Changes affect
+   * new orders only (existing orders retain their confirmation snapshot) —
+   * no retroactive enforcement is performed here.
+   *
+   * @param input - raw request body ({ simple_order, advanced_order })
+   * @param actorUserId - admin user performing the change (for audit)
+   * @param ip - source IP (for audit)
+   * @returns the persisted (camelCase) config
+   */
+  async setGreenElectricityConfig(
+    input: unknown,
+    actorUserId: string,
+    ip: string,
+  ): Promise<GreenElectricityConfig> {
+    const validation = validateGreenElectricityConfig(input)
+    if (!validation.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const config = toGreenElectricityConfig(input)
+    const pool = getDbPool()
+    const now = new Date()
+    const stored = greenElectricityConfigToStored(config)
+
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+
+      // Lock the existing row (if any) so the previous value recorded in the
+      // audit trail is the true value being replaced. Concurrent writers
+      // serialize on this row lock, so no rule change can be dropped from the
+      // audit trail.
+      const prevResult = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [GREEN_ELECTRICITY_CONFIG_KEY],
+      )
+      const previousValue =
+        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersion =
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+
+      const upsertResult = await client.query(
+        `INSERT INTO app_config (key, value, version, updated_at)
+         VALUES ($1, $2::jsonb, 1, $3)
+         ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
+         RETURNING version`,
+        [GREEN_ELECTRICITY_CONFIG_KEY, JSON.stringify(stored), now],
+      )
+      const newVersion = upsertResult.rows[0]!.version as number
+
+      // Bump global config version for cache invalidation.
+      await client.query(
+        `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
+        [now],
+      )
+
+      // Record audit event (config_change, matching other admin configs).
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          actorUserId,
+          'config_change',
+          JSON.stringify({
+            key: GREEN_ELECTRICITY_CONFIG_KEY,
+            previousValue,
+            previousVersion,
+            newValue: stored,
+            version: newVersion,
+          }),
+          correlationId,
+          ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Mandatory green-electricity rules updated by ${actorUserId}`,
+      )
+      return config
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      this.logger.error(`Failed to set green electricity config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500,
