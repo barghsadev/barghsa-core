@@ -258,26 +258,37 @@ export class AiModelTesterService {
       const wire = await this.client.request(input, this.timeoutMs())
       const latencyMs = Date.now() - started
       if (wire.status >= 200 && wire.status < 300) {
-        const preview = extractPreview(input.providerType, wire.bodyText)
+        // Defense in depth: even a successful body could echo the token.
+        const preview = redactSecret(
+          input.apiToken,
+          extractPreview(input.providerType, wire.bodyText) ?? '',
+        )
         const result: AiModelTestResult = { ok: true, latencyMs }
-        if (preview !== undefined) result.responsePreview = preview
+        if (preview) result.responsePreview = preview
         return result
       }
-      if (wire.status >= 300 && wire.status < 400) {
+      // `redirect: 'manual'` makes undici return an opaque-redirect response
+      // whose status is 0 with an empty body (Fetch spec), so a redirect is
+      // observed as status 0 — not the real 3xx. Treat both as "redirect".
+      if (wire.status === 0 || (wire.status >= 300 && wire.status < 400)) {
         return {
           ok: false,
           error: 'Provider request failed: redirects are not followed',
           latencyMs,
         }
       }
-      const detail = redactSecret(input.apiToken, extractErrorDetail(wire.bodyText))
+      const errorDetail = redactSecret(input.apiToken, extractErrorDetail(wire.bodyText))
       return {
         ok: false,
-        error: `Provider request failed (HTTP ${wire.status})${detail ? `: ${detail}` : ''}`,
+        error: `Provider request failed (HTTP ${wire.status})${errorDetail ? `: ${errorDetail}` : ''}`,
         latencyMs,
       }
     } catch (error) {
-      const detail = error instanceof Error ? error.message : String(error)
+      // Redact as defense in depth: a thrown error must never carry the token.
+      const detail = redactSecret(
+        input.apiToken,
+        error instanceof Error ? error.message : String(error),
+      )
       const latencyMs = Date.now() - started
       return {
         ok: false,

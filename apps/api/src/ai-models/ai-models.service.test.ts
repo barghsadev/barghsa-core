@@ -42,7 +42,6 @@ function okClient(): AiModelApiClientLike {
   }
 }
 
-let AiModelsService: typeof AiModelsServiceType
 let service: AiModelsServiceType
 
 beforeEach(() => {
@@ -293,6 +292,36 @@ describe('AiModelsService (T-09.11.01)', () => {
   })
 
   describe('test', () => {
+    it('reports an undecryptable stored token without pinging the provider', async () => {
+      const { mockQuery } = mockPool()
+      await loadService({ query: mockQuery })
+      // Tampered/foreign-key blob that will not decrypt with TEST_KEY.
+      mockQuery.mockResolvedValueOnce({
+        rows: [makeRow({ api_token: 'v1:AAAAAAAA:BBBBBBBB:CCCCCCCC' })],
+      }) // findRow
+      mockQuery.mockResolvedValueOnce({
+        rows: [
+          makeRow({
+            api_token: 'v1:AAAAAAAA:BBBBBBBB:CCCCCCCC',
+            last_test_status: 'failed',
+            last_test_error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
+          }),
+        ],
+      }) // update (persist failed) + RETURNING
+      mockQuery.mockResolvedValueOnce({ rows: [] }) // audit
+
+      const { model, test } = await service.test('row-1', ACTOR, '1.2.3.4')
+
+      expect(test.ok).toBe(false)
+      expect(test.error).toMatch(/could not be decrypted/)
+      expect(model.status).toBe('unreachable')
+      // No provider ping was attempted (the injected client was never called).
+      const calls = mockQuery.mock.calls
+      expect(
+        calls.some((c) => String(c[0]).includes('UPDATE ai_models')),
+      ).toBe(true)
+    })
+
     it('persists a passed outcome and returns the preview', async () => {
       const { mockQuery } = mockPool()
       await loadService({ query: mockQuery })

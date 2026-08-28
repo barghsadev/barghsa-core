@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import {
   AiModelTesterService,
   AI_MODEL_API_CLIENT,
@@ -83,6 +83,16 @@ describe('AiModelTesterService (T-09.11.01)', () => {
       expect(result.error).toMatch(/redirects are not followed/)
     })
 
+    it('treats opaque-redirect status 0 (undici manual redirect) as a failure', async () => {
+      // With `redirect: 'manual'`, undici surfaces a redirect as an
+      // opaque-redirect response with status 0 — not the real 3xx.
+      const client = okClient(0, '')
+      const tester = new AiModelTesterService(client)
+      const result = await tester.test(input())
+      expect(result.ok).toBe(false)
+      expect(result.error).toMatch(/redirects are not followed/)
+    })
+
     it('redacts the submitted token from provider error bodies', async () => {
       // OpenAI-style: the provider echoes the credential in error.message.
       const client = okClient(
@@ -96,6 +106,26 @@ describe('AiModelTesterService (T-09.11.01)', () => {
       expect(result.ok).toBe(false)
       expect(result.error).not.toContain('sk-echoed-secret-123456')
       expect(result.error).toContain('[redacted]')
+    })
+
+    it('redacts the submitted token from thrown-client errors', async () => {
+      const failing = {
+        request: vi.fn().mockRejectedValue(new Error(`connection refused for sk-catch-secret`)),
+      }
+      const tester = new AiModelTesterService(failing)
+      const result = await tester.test(input({ apiToken: 'sk-catch-secret' }))
+      expect(result.ok).toBe(false)
+      expect(JSON.stringify(result)).not.toContain('sk-catch-secret')
+      expect(result.error).toContain('[redacted]')
+    })
+
+    it('redacts the submitted token from successful response previews', async () => {
+      const client = okClient(200, JSON.stringify({ choices: [{ message: { content: 'echo sk-preview-secret' } }] }))
+      const tester = new AiModelTesterService(client)
+      const result = await tester.test(input({ apiToken: 'sk-preview-secret' }))
+      expect(result.ok).toBe(true)
+      expect(result.responsePreview).not.toContain('sk-preview-secret')
+      expect(result.responsePreview).toContain('[redacted]')
     })
 
     it('reports provider HTTP errors with a truncated safe message', async () => {

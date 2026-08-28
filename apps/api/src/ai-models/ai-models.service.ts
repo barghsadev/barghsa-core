@@ -252,9 +252,38 @@ export class AiModelsService {
               this.logger.warn(
                 `AI model test skipped (token undecryptable): id=${id} — ${String(error)}`,
               )
-              return null
+              // Do NOT ping unauthenticated: an undecryptable stored token is
+              // a key-management problem, not a provider reachability one.
+              return undefined
             }
           })()
+
+    if (apiToken === undefined) {
+      const result: AiModelTestResult = {
+        ok: false,
+        error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
+        latencyMs: 0,
+      }
+      const now = new Date()
+      const updated = await getDbPool().query<AiModelRow>(
+        `UPDATE ai_models
+            SET last_tested_at = $1,
+                last_test_status = 'failed',
+                last_test_error = $2,
+                updated_at = $1
+          WHERE id = $3
+          RETURNING id, title, provider_type, base_url, model_name, api_token,
+                    last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
+        [now, result.error, id],
+      )
+      const row = updated.rows[0] ?? existing
+      await this.recordAudit('ai_model_tested', row, actorUserId, ip, {
+        ok: false,
+        latencyMs: 0,
+        error: result.error,
+      })
+      return { model: this.toDto(row), test: result }
+    }
 
     const input: AiModelTestInput = {
       providerType: existing.provider_type,
