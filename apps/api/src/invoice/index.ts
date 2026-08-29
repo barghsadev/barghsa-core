@@ -12,6 +12,22 @@ export type {
   ManualInvoiceLineResult,
   ManualInvoiceResult,
 } from './manual-invoice.service.js'
+export { AutoInvoiceService } from './auto-invoice.service.js'
+export type {
+  CreateAutoInvoiceCommand,
+  AutoInvoiceLineResult,
+  AutoInvoiceItemResult,
+  AutoInvoiceResult,
+} from './auto-invoice.service.js'
+export {
+  calculateAutoInvoice,
+  calculateAutoLine,
+  autoLineDescription,
+  AUTO_INVOICE_ERRORS,
+  type AutoInvoiceLineInput,
+  type CalculatedAutoLine,
+  type AutoInvoiceCalculation,
+} from './auto-invoice.calculation.js'
 export {
   calculateManualInvoice,
   calculateManualLine,
