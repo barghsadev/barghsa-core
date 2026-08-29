@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-04.1.01.06",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-1-01-06--invoice-state-machine-integration-tests",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/222",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
   "loop_iteration": 356,
   "fix_attempts": 0,
@@ -306,8 +306,13 @@
   ],
   "last_error": null,
   "notes": "T-04.1.01.05 MERGED (PR #221, squash 165f375) after 1 review round (Claude Opus 5 approve, 6 minors; 4 fixed in-place — TransactionClient narrowed to query-only, repository as required DI dependency, consistent last-match audit-call selection, normalized SQL assertion + trailing newlines; 1 documented follow-up: DB-level append-only guard for audit_log via trigger/grant needs a migration and is out of scope here; 1 reviewer observation on pre-existing logger.debug retained as-is). Repo covers audit for all 17 allowed invoice transitions with canonical invoice.<label> events, atomic with the state change. 1552 api tests pass, CI green. Next task in queue order: 04-invoices-wallet-contracts.md#T-04.1.01.06 (integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection).",
-  "last_updated": "2026-08-29T18:04:26Z",
+  "last_updated": "2026-08-29T18:05:10Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
+      "at": "2026-08-29T18:05:10Z"
+    },
     {
       "status": "building",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
@@ -802,11 +807,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.11.01",
       "at": "2026-08-28T11:13:49Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.10.03",
-      "at": "2026-08-28T11:07:43Z"
     }
   ]
 }
