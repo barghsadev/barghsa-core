@@ -210,7 +210,7 @@ export class AutoInvoiceService {
       const existing = (await client.query(
         `SELECT id FROM invoices
          WHERE order_id = $1
-           AND metadata->>'source' = 'auto'
+           AND type = 'auto'
          LIMIT 1`,
         [cmd.orderId],
       )) as { rows: Array<{ id: string }> }
@@ -317,9 +317,9 @@ export class AutoInvoiceService {
       })
 
       await client.query(
-        `INSERT INTO invoices (id, profile_id, order_id, contract_id, state,
+        `INSERT INTO invoices (id, profile_id, order_id, contract_id, type, state,
                                total_amount, issued_at, payable_from, due_at, metadata)
-         VALUES ($1, $2, $3, NULL, 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
+         VALUES ($1, $2, $3, NULL, 'auto', 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
         [
           invoiceId,
           order.profile_id,

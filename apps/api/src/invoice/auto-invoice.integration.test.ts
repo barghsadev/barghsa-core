@@ -66,6 +66,10 @@ const POSITION_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0055_add_invoice_lines_position.sql',
 )
+const IDEMPOTENCY_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -156,6 +160,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: user, profile, product, VAT config + override, order.

@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { check, jsonb, text, pgTable } from 'drizzle-orm/pg-core'
+import { check, jsonb, text, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
 import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 import { orders } from './orders'
@@ -78,6 +78,16 @@ export const invoices = pgTable(
      */
     consultationId: text('consultation_id'),
 
+    /**
+     * Invoice source/kind discriminator (T-04.1.02.06).
+     * `'auto'` (system-generated from an order) or `'manual'` (staff
+     * created), with future contract / consultation kinds as the owning
+     * epics land. Backs the idempotency unique index on
+     * `(order_id, type)` so an order can produce at most one auto invoice.
+     * Nullable: manual invoices carry no origin and never collide.
+     */
+    type: text('type'),
+
     /** Current invoice state (invoice_state enum). */
     state: invoiceStateEnum('state').notNull().default('Draft'),
 
@@ -133,6 +143,14 @@ export const invoices = pgTable(
       'ck_refund_not_exceeds_paid',
       sql`${table.refundedAmount} <= ${table.paidAmount}`,
     ),
+    /**
+     * Idempotency: an order produces at most one invoice of a given type
+     * (T-04.1.02.06). Created by migration 0057.
+     */
+    orderIdTypeUnique: uniqueIndex('uq_invoices_order_id_type').on(
+      table.orderId,
+      table.type,
+    ),
   }),
 )
 
@@ -154,6 +172,7 @@ export const createInvoicesTable = sql`
     order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
     contract_id TEXT,
     consultation_id TEXT,
+    type TEXT,
     state invoice_state NOT NULL DEFAULT 'Draft',
     total_amount BIGINT NOT NULL CHECK (total_amount >= 0),
     paid_amount BIGINT NOT NULL DEFAULT 0 CHECK (paid_amount >= 0),
@@ -177,4 +196,6 @@ export const createInvoicesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_invoices_order_id ON invoices (order_id);
   CREATE INDEX IF NOT EXISTS idx_invoices_contract_id ON invoices (contract_id);
   CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id);
+  CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type
+    ON invoices (order_id, type);
 `
