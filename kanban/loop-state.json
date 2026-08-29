@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.02.04",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-02-04--vat-calculation-module",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/226",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -310,8 +310,18 @@
   ],
   "last_error": null,
   "notes": "T-04.1.02.03 MERGED (PR #225, squash b2fa392) after 3 review rounds (Claude Opus 5: request_changes -> approve -> approve). AutoInvoiceService: order/contract creation seam that creates a linked invoice atomically in the caller's tx (client join; owns BEGIN/COMMIT/ROLLBACK only standalone); snapshots price/VAT rate/product composition/gift discount + terms into invoices.metadata AND invoice_items; VAT on NET post-discount taxable amount via roundHalfUpDiv; FOR UPDATE order lock + runtime duplicate guard (409; durable unique index in T-04.1.02.06); 100%-coverage gift code allowed (0-total invoice, no rollback); discount allocated across lines in composition order with leftover throw; pure auto-invoice.calculation (table-driven), 3 new test files, API 1654/1654 CI green. Follow-ups: durable unique order_id index (T-04.1.02.06), contract entry point (E-04.5 contracts table), multi-line discount policy, 0-total invoice settlement path. Next: T-04.1.02.04 (VAT calculation module with category default / product override resolution).",
-  "last_updated": "2026-08-29T19:46:30Z",
+  "last_updated": "2026-08-29T20:01:27Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "at": "2026-08-29T20:01:27Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+      "at": "2026-08-29T20:01:27Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
@@ -801,16 +811,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.12.01",
       "at": "2026-08-28T14:49:24Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.11.05",
-      "at": "2026-08-28T14:38:09Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.05",
-      "at": "2026-08-28T14:21:39Z"
     }
   ]
 }

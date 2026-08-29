@@ -17,6 +17,8 @@ import { BadRequestException, NotFoundException, ConflictException } from '@nest
 import { AutoInvoiceService } from './auto-invoice.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
+import { VatCalculationRepository } from './vat-calculation.repository.js'
+import { VatCalculationService } from './vat-calculation.service.js'
 
 // ---- Mocks ----
 const mockClient = {
@@ -246,7 +248,10 @@ describe('AutoInvoiceService', () => {
     resetDb()
     installDbHandler()
     const stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository())
-    service = new AutoInvoiceService(stateMachine)
+    service = new AutoInvoiceService(
+      stateMachine,
+      new VatCalculationService(new VatCalculationRepository()),
+    )
     mockPool.connect.mockResolvedValue(mockClient)
     mockClient.release.mockImplementation(() => {})
   })

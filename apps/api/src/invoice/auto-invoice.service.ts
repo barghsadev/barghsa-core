@@ -37,11 +37,12 @@ import {
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { v7 as uuidv7 } from 'uuid'
-import { resolveVatRate } from '@barghsa/shared/finance'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import type { TransitionResult } from './invoice-state-machine.service.js'
 import type { TransactionClient } from './invoice-audit.repository.js'
 import type { InvoiceState } from './invoice-state.model.js'
+import { VatCalculationService } from './vat-calculation.service.js'
+import type { ResolvedVatRate } from './vat-calculation.repository.js'
 import {
   calculateAutoInvoice,
   type AutoInvoiceCalculation,
@@ -151,6 +152,7 @@ export class AutoInvoiceService {
 
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
+    private readonly vatCalculation: VatCalculationService,
   ) {}
 
   /**
@@ -235,14 +237,14 @@ export class AutoInvoiceService {
       }
 
       // --- 4. Resolve the VAT rate (explicit override or in-tx default) ---
-      const vatRate = await this.resolveVatRateAt(client, {
-        productId: product.id,
-        productType: product.type,
-        at: now,
-        ...(cmd.vatRateBasisPoints !== undefined
-          ? { explicitRate: cmd.vatRateBasisPoints }
-          : {}),
-      })
+      const vatRate: { rateBasisPoints: number; source: ResolvedVatRate['source'] | 'explicit' } =
+        cmd.vatRateBasisPoints !== undefined
+          ? { rateBasisPoints: cmd.vatRateBasisPoints, source: 'explicit' }
+          : await this.vatCalculation.resolveRate(client, {
+              productId: product.id,
+              category: product.type,
+              at: now,
+            })
 
       // --- 5. Pure calculation (RangeError → 400) ---
       const lineInput: AutoInvoiceLineInput = {
@@ -416,62 +418,6 @@ export class AutoInvoiceService {
       throw error
     } finally {
       if (ownsClient) client.release()
-    }
-  }
-
-  /**
-   * Resolve the VAT rate for a product at a point in time, on the given
-   * client (in-tx when joining a caller transaction).
-   *
-   * Precedence (T-09.12.02 / T-03.02.05.03): explicit caller override →
-   * active product override → active category default (products.type is
-   * a CHARGE_CATEGORIES key) → 0% fallback. The formal VAT resolution
-   * module is T-04.1.02.04; this seam keeps the snapshot correct until
-   * it lands.
-   */
-  private async resolveVatRateAt(
-    client: import('pg').PoolClient,
-    input: {
-      productId: string
-      productType: string
-      at: Date
-      explicitRate?: number
-    },
-  ): Promise<{ rateBasisPoints: number; source: string }> {
-    if (input.explicitRate !== undefined) {
-      return { rateBasisPoints: input.explicitRate, source: 'explicit' }
-    }
-
-    const override = (await client.query(
-      `SELECT vc.rate
-         FROM product_vat_overrides pvo
-         JOIN vat_configurations vc ON vc.id = pvo.vat_config_id
-        WHERE pvo.product_id = $1
-          AND pvo.effective_from <= $2
-          AND (pvo.effective_until IS NULL OR pvo.effective_until > $2)
-        ORDER BY pvo.effective_from DESC
-        LIMIT 1`,
-      [input.productId, input.at],
-    )) as { rows: Array<{ rate: number }> }
-
-    const category = (await client.query(
-      `SELECT rate
-         FROM vat_configurations
-        WHERE category = $1
-          AND effective_from <= $2
-          AND (effective_until IS NULL OR effective_until > $2)
-        ORDER BY effective_from DESC
-        LIMIT 1`,
-      [input.productType, input.at],
-    )) as { rows: Array<{ rate: number }> }
-
-    const resolution = resolveVatRate(
-      override.rows[0]?.rate ?? null,
-      category.rows[0]?.rate ?? null,
-    )
-    return {
-      rateBasisPoints: resolution.rateBasisPoints,
-      source: resolution.source,
     }
   }
 

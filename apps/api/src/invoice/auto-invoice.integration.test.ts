@@ -29,6 +29,8 @@ import type { IsolatedTestDb } from '@barghsa/db/test'
 import { AutoInvoiceService } from './auto-invoice.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
+import { VatCalculationRepository } from './vat-calculation.repository.js'
+import { VatCalculationService } from './vat-calculation.service.js'
 import { calculateAutoInvoice } from './auto-invoice.calculation.js'
 
 // ---- Real-DB wiring ------------------------------------------------------
@@ -85,6 +87,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     poolHolder.pool = ctx.pool
     service = new AutoInvoiceService(
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
+      new VatCalculationService(new VatCalculationRepository()),
     )
 
     // --- DDL: uuid v7 fn, enum, minimal FK targets, then the order and
