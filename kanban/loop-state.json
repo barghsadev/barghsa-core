@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-04.1.02.01",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-1-02-01--invoice-lines-items-tables",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/223",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -303,12 +303,18 @@
     "02-auth-users-admin.md#T-10.01.02",
     "04-invoices-wallet-contracts.md#T-04.1.01.04",
     "04-invoices-wallet-contracts.md#T-04.1.01.05",
-    "04-invoices-wallet-contracts.md#T-04.1.01.06"
+    "04-invoices-wallet-contracts.md#T-04.1.01.06",
+    "04-invoices-wallet-contracts.md#T-04.1.02.01"
   ],
   "last_error": null,
-  "notes": "T-04.1.02.01 in review (PR #223): invoice_lines (spec columns, CHECKs, ON DELETE CASCADE) + invoice_items (product-composition snapshot, product FK RESTRICT) tables, migration 0054 idempotent with updated_at triggers, real-DB enforcement suite 15/15, db 231 tests, root typecheck 11/11. Next after review: T-04.1.02.02 (ManualInvoiceService).",
-  "last_updated": "2026-08-29T18:20:33Z",
+  "notes": "T-04.1.02.01 MERGED (PR #223, squash ea076fc) after 1 review round (Claude Opus 5 approve, 7 minors; none blocking — follow-ups: out-of-band application of migration 0054 documented in PR body, trailing newlines in 4 new files, DDL-literal↔migration constraint tie test, stronger pg_trigger assertions, product_title NOT NULL, explicit line ordering column for T-04.1.02.02, DB-level line immutability with S-04.1.05). Real-DB suite 15/15, db 231 tests, root typecheck 11/11, CI green. Next: T-04.1.02.02 (ManualInvoiceService, L).",
+  "last_updated": "2026-08-29T18:26:30Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "at": "2026-08-29T18:26:30Z"
+    },
     {
       "status": "in_review",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
@@ -803,11 +809,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.03",
       "at": "2026-08-28T13:11:15Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.03",
-      "at": "2026-08-28T12:54:43Z"
     }
   ]
 }
