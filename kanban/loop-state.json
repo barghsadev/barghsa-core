@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-04.1.01.04",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-01-01-04--invoice-amount-constraints",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/220",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -300,12 +300,18 @@
     "02-auth-users-admin.md#T-09.12.05",
     "02-auth-users-admin.md#T-09.12.06",
     "02-auth-users-admin.md#T-10.01.01",
-    "02-auth-users-admin.md#T-10.01.02"
+    "02-auth-users-admin.md#T-10.01.02",
+    "04-invoices-wallet-contracts.md#T-04.1.01.04"
   ],
   "last_error": null,
-  "notes": "T-10.01.02 MERGED (PR #219, squash dc74226) after 1 review round (Claude Opus 5 approve, 4 minors left as follow-up). GET /api/admin/staff/audit live: paginated role_change audit timeline (newest first) with target/actor usernames, role names from staff_roles, addedRoles/removedRoles diffs, reason/correlationId/ip/createdAt; filters userId (UUID-validated), from/to ISO timestamps (from<=to), limit 1..200 default 50; admin-only gate (admin:staff:view→isAdmin). Read-only, no migration. Review minors: SQL-side guard for metadata::jsonb cast (22P02 if a non-JSON metadata row ever exists), targetUserId ''→null on malformed rows, test asserting limit/offset reach $4/$5, trailing newlines in 2 test files. UI timeline deferred with admin web UI slice.",
-  "last_updated": "2026-08-29T17:35:17Z",
+  "notes": "T-04.1.01.04 MERGED (PR #220, squash 07bd39f) after 1 review round (Claude Opus 5 approve, 7 minors; 4 fixed in-place — to_regclass guard, non-neg CHECK backfill parity, __dirname resolution, trailing newlines; 2 left as follow-up per established drift-guard pattern + intentional last-in-file backfill test; 1 documented loud-failure). Migration 0052 enforces ck_paid_not_exceeds_total + ck_refund_not_exceeds_paid at DB level: CREATE TABLE IF NOT EXISTS invoices (no prior migration created it) + idempotent DO-block backfill. 216 db tests pass, CI green. Queue front-loaded: E-04 block (position 259-363) now precedes T-11.01.01 (position 364) since T-11.01.01 depends on E-04 financial obligations; next task in queue order is 04-invoices-wallet-contracts.md#T-04.1.01.05 (audit repo entry for invoice state transitions).",
+  "last_updated": "2026-08-29T17:40:44Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "at": "2026-08-29T17:40:44Z"
+    },
     {
       "status": "in_review",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
@@ -800,11 +806,6 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.08.03",
       "at": "2026-08-28T11:00:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.10.03",
-      "at": "2026-08-28T10:53:19Z"
     }
   ]
 }
