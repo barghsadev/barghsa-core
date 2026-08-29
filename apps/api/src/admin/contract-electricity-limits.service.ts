@@ -98,8 +98,9 @@ export class ContractElectricityLimitsService {
     }
     const persisted = result.rows[0]!.value as Record<string, unknown> | null
     // The stored snake_case shape must itself validate; a malformed row is
-    // surfaced rather than silently served as a confusing mix of persisted
-    // + default fields (same fail-safe as the green-electricity config).
+    // logged and served as the documented defaults, so a corrupt value can
+    // never widen or narrow the enforced limits (same fail-safe as the
+    // green-electricity config read path).
     const validation = validateContractElectricityLimits(persisted)
     if (!validation.ok) {
       this.logger.warn(

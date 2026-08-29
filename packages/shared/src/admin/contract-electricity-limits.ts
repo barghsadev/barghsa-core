@@ -141,6 +141,23 @@ export function validateContractElectricityLimits(
   }
   const o = input as Record<string, unknown>
 
+  // Reject unrecognised top-level keys so a typo'd field cannot silently
+  // slip through (accepted set: snake_case wire names + camelCase aliases).
+  const unknownKeys = Object.keys(o).filter(
+    (k) =>
+      ![
+        'max_quantity_increase_percent',
+        'maxQuantityIncreasePercent',
+        'max_contract_duration_months',
+        'maxContractDuration',
+        'lead_time_days',
+        'leadTimeDays',
+      ].includes(k),
+  )
+  for (const key of unknownKeys) {
+    issues.push(`unknown field "${key}"`)
+  }
+
   const percent = o.max_quantity_increase_percent ?? o.maxQuantityIncreasePercent
   if (percent === undefined || percent === null || percent === '') {
     issues.push('max_quantity_increase_percent is required')

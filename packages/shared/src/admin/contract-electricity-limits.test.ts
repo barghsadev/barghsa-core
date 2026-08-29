@@ -134,6 +134,17 @@ describe('validateContractElectricityLimits (T-09.12.06)', () => {
     })
     expect(result.ok).toBe(false)
   })
+
+  it('rejects unknown top-level fields with their key named', () => {
+    const result = validateContractElectricityLimits({
+      max_quantity_increase_percent: 20,
+      max_contract_duration_months: 24,
+      lead_time_days: 0,
+      lead_days: 5,
+    })
+    expect(result.ok).toBe(false)
+    expect(result.issues).toContain('unknown field "lead_days"')
+  })
 })
 
 describe('toContractElectricityLimits / stored shape (T-09.12.06)', () => {
