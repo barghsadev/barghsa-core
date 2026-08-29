@@ -30,6 +30,11 @@ export {
   VAT_CALC_ERRORS,
 } from './vat-calculation.service.js'
 export {
+  RoundingService,
+  ROUNDING_ERRORS,
+  MAX_ROUNDING_PRECISION,
+} from './rounding.service.js'
+export {
   calculateAutoInvoice,
   calculateAutoLine,
   autoLineDescription,
