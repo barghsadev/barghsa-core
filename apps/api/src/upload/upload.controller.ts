@@ -262,15 +262,24 @@ export class UploadController {
 
   /**
    * Extract the category bound into a server-issued upload key of shape
-   * `uploads/<category>/<uuid><ext>`. Returns null when the key has no
-   * category segment or the segment is not a known upload category, so
-   * the caller can fail closed instead of guessing.
+   * `uploads/<category>/<uuid><ext>`. Returns null when the key does not
+   * start with the upload prefix, has no category segment, carries path
+   * traversal, or the category is not a known upload category — so the
+   * caller can fail closed instead of guessing. Self-defending: does not
+   * rely on the caller having pre-validated the key.
    */
   private resolveCategoryFromKey(key: string): string | null {
+    if (!key.startsWith(UPLOAD_PREFIX) || key.includes('..')) return null;
     const rest = key.slice(UPLOAD_PREFIX.length);
     const slash = rest.indexOf('/');
     if (slash === -1) return null;
     const category = rest.slice(0, slash);
+    // Exactly one more segment (the file name) must follow the category.
+    // `uploads/document/a/b.pdf` or `uploads/document/` is not a key the
+    // server issues — reject rather than pass an unexpected path shape
+    // to the storage provider.
+    const remainder = rest.slice(slash + 1);
+    if (remainder.length === 0 || remainder.includes('/')) return null;
     return UPLOAD_CATEGORIES.includes(category) ? category : null;
   }
 

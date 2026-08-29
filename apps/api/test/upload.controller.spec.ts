@@ -312,6 +312,87 @@ describe('UploadController', () => {
       expect(storage.getObject).not.toHaveBeenCalled();
     });
 
+    it('fails closed on unprefixed or traversal keys before touching storage', async () => {
+      for (const bad of [
+        'document/f.pdf', // missing uploads/ prefix
+        'x/document/f.pdf', // wrong prefix
+        'uploads/document/../../etc/passwd', // traversal
+        'uploads/../document/f.pdf', // traversal via prefix
+        'uploads/document/', // no file segment
+        'uploads/document/a/b.pdf', // extra segment
+      ]) {
+        await expect(controller.verifyUpload(bad)).rejects.toThrow(BadRequestException);
+      }
+      expect(storage.getObject).not.toHaveBeenCalled();
+    });
+
+    it('round-trips every category resolveCategory can emit through presign → verify', async () => {
+      vi.mocked(storage.presignedPutUrl).mockResolvedValue('https://s3.example.com/presigned');
+      // category → (fileName, contentType, detected bytes) for a valid
+      // upload per category. Covers resolveCategory's document/contract/
+      // image/video/general branches, not just the admin-configurable set.
+      const cases: Array<{
+        recordType: string;
+        fileName: string;
+        contentType: string;
+        object: ReturnType<typeof pdfObject>;
+      }> = [
+        {
+          recordType: 'invoice',
+          fileName: 'file.pdf',
+          contentType: 'application/pdf',
+          object: pdfObject(),
+        },
+        {
+          recordType: 'contract',
+          fileName: 'file.pdf',
+          contentType: 'application/pdf',
+          object: pdfObject(),
+        },
+        {
+          recordType: 'avatar',
+          fileName: 'file.png',
+          contentType: 'image/png',
+          object: {
+            body: streamOfBytes([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 'png']),
+            contentType: 'image/png',
+            contentLength: 12,
+            metadata: {},
+            etag: '"png"',
+          },
+        },
+        {
+          recordType: 'intro_video',
+          fileName: 'file.mp4',
+          contentType: 'video/mp4',
+          object: {
+            body: streamOfBytes([0x00, 0x00, 0x00, 0x18, 'ftypisom']),
+            contentType: 'video/mp4',
+            contentLength: 12,
+            metadata: {},
+            etag: '"mp4"',
+          },
+        },
+        {
+          recordType: 'mystery',
+          fileName: 'file.pdf',
+          contentType: 'application/pdf',
+          object: pdfObject(),
+        },
+      ];
+      for (const c of cases) {
+        vi.mocked(storage.getObject).mockResolvedValue(c.object);
+        const presigned = await controller.getPresignedUrl({
+          fileName: c.fileName,
+          contentType: c.contentType,
+          fileSize: 1000,
+          metadata: { recordType: c.recordType },
+        });
+        const result = await controller.verifyUpload(presigned.key);
+        expect(result.status).toBe('confirmed');
+      }
+    });
+
     it('returns confirmed when detected bytes match the category policy', async () => {
       vi.mocked(storage.getObject).mockResolvedValue(pdfObject());
 
