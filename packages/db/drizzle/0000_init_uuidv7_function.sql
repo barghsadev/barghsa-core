@@ -32,6 +32,13 @@
 -- isolated test schema makes gen_random_bytes invisible to every other
 -- schema (order-dependent test flake — see uuidv7-migration.test.ts CI
 -- history). Pinning to public keeps it resolvable from any search_path.
+--
+-- The advisory transaction lock serializes concurrent `CREATE EXTENSION`
+-- attempts: parallel test workers (both API integration suites apply this
+-- migration) race on pg_extension_name_index inside `IF NOT EXISTS`
+-- otherwise (duplicate key value violates unique constraint
+-- "pg_extension_name_index"). The lock makes the second waiter a no-op.
+SELECT pg_advisory_xact_lock(hashtext('barghsa.pgcrypto'));
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 CREATE OR REPLACE FUNCTION public.uuid_generate_v7()
