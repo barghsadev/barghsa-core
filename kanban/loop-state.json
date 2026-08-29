@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-10.01.02",
-  "current_task_file": "02-auth-users-admin.md",
-  "current_branch": "feat/e10-t-10-01-02--staff-permission-audit",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/219",
-  "current_task_key": "02-auth-users-admin.md#T-10.01.02",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -299,12 +299,18 @@
     "02-auth-users-admin.md#T-09.12.04",
     "02-auth-users-admin.md#T-09.12.05",
     "02-auth-users-admin.md#T-09.12.06",
-    "02-auth-users-admin.md#T-10.01.01"
+    "02-auth-users-admin.md#T-10.01.01",
+    "02-auth-users-admin.md#T-10.01.02"
   ],
   "last_error": null,
-  "notes": "T-10.01.01 MERGED (PR #218, squash db28baa) after 1 review round (Claude Opus 5 approve, 6 minors). E-10 staff admin API slice live: GET /api/admin/staff (paginated list of platform admins + role holders: name via default profile, role names, lastLoginAt, active/disabled status; cap admin:staff:view mapped to isAdmin), POST /api/admin/staff/:userId/disable (step-up; one tx: disabled_at + revoke all sessions + consume all refresh tokens + staff_user_disabled audit; idempotent; self-disable 400; non-staff 404). Migration 0051: users.disabled_at + last_login_at (nullable). Login/OTP-verify/password-reset/refresh reject disabled accounts (AUTH:ACCOUNT:DISABLED, fa/en keys); last_login_at set on password+OTP logins only. Follow-up minors from r1: move reset-password disabled check after OTP verify (enumeration), single-ROLLBACK failure paths, log residue fix, 401-vs-403 code consistency on refresh, guarantee 1 row/user in list (dup default profiles). Deferred: admin web UI slice (table, disable confirm, RTL/a11y), re-enable endpoint.",
-  "last_updated": "2026-08-29T17:18:38Z",
+  "notes": "T-10.01.02 MERGED (PR #219, squash dc74226) after 1 review round (Claude Opus 5 approve, 4 minors left as follow-up). GET /api/admin/staff/audit live: paginated role_change audit timeline (newest first) with target/actor usernames, role names from staff_roles, addedRoles/removedRoles diffs, reason/correlationId/ip/createdAt; filters userId (UUID-validated), from/to ISO timestamps (from<=to), limit 1..200 default 50; admin-only gate (admin:staff:view→isAdmin). Read-only, no migration. Review minors: SQL-side guard for metadata::jsonb cast (22P02 if a non-JSON metadata row ever exists), targetUserId ''→null on malformed rows, test asserting limit/offset reach $4/$5, trailing newlines in 2 test files. UI timeline deferred with admin web UI slice.",
+  "last_updated": "2026-08-29T17:20:49Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "02-auth-users-admin.md#T-10.01.02",
+      "at": "2026-08-29T17:20:49Z"
+    },
     {
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-10.01.02",
@@ -799,11 +805,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.08.03",
       "at": "2026-08-28T10:46:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.10.02",
-      "at": "2026-08-28T10:42:49Z"
     }
   ]
 }
