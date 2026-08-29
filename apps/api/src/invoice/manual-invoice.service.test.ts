@@ -232,7 +232,7 @@ describe('ManualInvoiceService', () => {
     it('rolls back when the Issue transition fails', async () => {
       mockQuery((sql) => {
         if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] }
-        if (sql.startsWith('SELECT id FROM invoices WHERE metadata')) return { rows: [] }
+        if (sql.startsWith('SELECT id, metadata FROM invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
         if (sql.startsWith('SELECT id, state FROM invoices')) return { rows: [{ id: 'inv', state: 'Draft' }] }

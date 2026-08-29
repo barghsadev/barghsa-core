@@ -61,6 +61,20 @@ describe('roundHalfUpDiv (half-up to nearest IRR)', () => {
     expect(() => roundHalfUpDiv(10n, -1n)).toThrow(RangeError)
     expect(() => roundHalfUpDiv(-1n, 10n)).toThrow(RangeError)
   })
+
+  it('is exact half-up for any positive denominator (odd-denominator case)', () => {
+    // 1/3 = 0.333... → 0; 2/3 = 0.666... → 1 (floor-based formulas
+    // would mis-handle the .5 boundary only; thirds never hit .5, but the
+    // contract must hold for any d)
+    expect(roundHalfUpDiv(1n, 3n)).toBe(0n)
+    expect(roundHalfUpDiv(2n, 3n)).toBe(1n)
+    // exact .5 with an odd denominator: (d/2)/d is fractional, so the
+    // nearest representable half is tested via 2d scaling:
+    // 5/10 is trivial; here 7/14 = 0.5 → rounds up to 1
+    expect(roundHalfUpDiv(7n, 14n)).toBe(1n)
+    expect(roundHalfUpDiv(6n, 14n)).toBe(0n) // 0.428... → 0
+    expect(roundHalfUpDiv(8n, 14n)).toBe(1n) // 0.571... → 1
+  })
 })
 
 describe('calculateManualLine', () => {

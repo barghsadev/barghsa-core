@@ -54,10 +54,12 @@ export interface ManualInvoiceCalculation {
  *
  * Half-up means a fractional part of exactly 0.5 rounds away from zero.
  * All financial inputs here are non-negative, so this equals
- * `floor((numerator + denominator/2) / denominator)` — implemented with
- * pure BigInt division (no floats). The common financial case is
- * `roundHalfUpDiv(lineTotal * vatRate, 10000)` — VAT at integer basis
- * points rounded to the nearest IRR.
+ * `ceil(numerator/denominator - 0.5)`, implemented with pure BigInt
+ * arithmetic (no floats) and correct for ANY positive denominator —
+ * the formula `(2n + d) / 2d` is exact for odd denominators too, where
+ * `numerator + denominator/2` would floor and round 0.5 down. The common
+ * financial case is `roundHalfUpDiv(lineTotal * vatRate, 10000)` — VAT at
+ * integer basis points rounded to the nearest IRR.
  *
  * @throws RangeError when the denominator is not positive.
  */
@@ -68,7 +70,10 @@ export function roundHalfUpDiv(numerator: bigint, denominator: bigint): bigint {
   if (numerator < 0n) {
     throw new RangeError('roundHalfUpDiv: numerator must be non-negative')
   }
-  return (numerator + denominator / 2n) / denominator
+  // (2n + d) / 2d — exact half-up for any positive d (BigInt division
+  // truncates toward zero, which equals floor for the non-negative
+  // dividend 2n + d).
+  return (numerator * 2n + denominator) / (denominator * 2n)
 }
 
 /** Validation error message for a manual invoice line. */

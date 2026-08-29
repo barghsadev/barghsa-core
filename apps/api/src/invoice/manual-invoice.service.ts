@@ -112,17 +112,23 @@ export interface ManualInvoiceResult {
   transition: TransitionResult
 }
 
-/** Normalized payload fingerprint so idempotency keys cannot be reused
- *  for a different invoice. */
+/**
+ * Normalized payload fingerprint so idempotency keys cannot be reused
+ * for a different invoice. Covers every user-controlled payload field
+ * (profile, contract, lines, due date); the actor is deliberately NOT
+ * part of the fingerprint — the key identifies the operation, so a
+ * retry by a different staff member replays the same invoice.
+ */
 export function fingerprintManualInvoice(cmd: {
   profileId: string
   contractId?: string
-  actorUserId: string
   lines: ManualInvoiceLineInput[]
+  dueAt?: Date
 }): string {
   const normal = {
     profileId: cmd.profileId,
     contractId: cmd.contractId ?? null,
+    dueAt: cmd.dueAt?.toISOString() ?? null,
     lines: cmd.lines.map((l) => ({
       description: l.description.trim(),
       quantity: l.quantity,
