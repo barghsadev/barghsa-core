@@ -106,6 +106,21 @@ describe('invoice origin links migration (T-04.1.02.05)', () => {
     expect(fk.rows[0]!.referenced).toBe('orders')
   })
 
+  it('contract_id and consultation_id are deferred refs — no FK constraints yet', async () => {
+    const fks = await ctx.db.execute<{ attname: string }>(sql`
+      SELECT a.attname
+      FROM pg_constraint c
+      JOIN pg_attribute a ON a.attnum = ANY (c.conkey) AND a.attrelid = c.conrelid
+      WHERE c.conrelid = 'invoices'::regclass
+        AND c.contype = 'f'
+        AND a.attname IN ('contract_id', 'consultation_id')
+    `)
+    // Target tables are TBD, so there must be no FK constraint tying these
+    // columns to a (nonexistent) table. They carry the origin reference as
+    // plain nullable text until the owning epic defines the target table.
+    expect(fks.rows).toHaveLength(0)
+  })
+
   it('allows storing origin references (order + deferred contract/consultation)', async () => {
     await ctx.db.execute(sql`
       INSERT INTO invoices (profile_id, order_id, contract_id, consultation_id, total_amount)
@@ -114,7 +129,7 @@ describe('invoice origin links migration (T-04.1.02.05)', () => {
         (SELECT id FROM orders LIMIT 1),
         'contract-001',
         'consultation-001',
-        1_000_000
+        1000000
       )
     `)
 
@@ -137,7 +152,7 @@ describe('invoice origin links migration (T-04.1.02.05)', () => {
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (profile_id, total_amount)
-        VALUES ((SELECT id FROM profiles LIMIT 1), 500_000)
+        VALUES ((SELECT id FROM profiles LIMIT 1), 500000)
       `),
     ).resolves.toBeDefined()
   })

@@ -22,6 +22,13 @@
 -- Idempotent: ADD COLUMN IF NOT EXISTS + CREATE INDEX IF NOT EXISTS make
 -- re-runs a no-op.
 --
+-- Locking note: CREATE INDEX (non-CONCURRENTLY) takes an ACCESS EXCLUSIVE
+-- lock on `invoices` for the duration of the build. Harmless at this stage —
+-- the invoices table is expected to be small when this ships (0 rows in the
+-- originating feature). If a later epic relies on add-index-at-scale on a
+-- populated table, plan CREATE INDEX CONCURRENTLY (run outside a
+-- transaction) for the production apply path.
+--
 -- Rollback:
 --   ALTER TABLE invoices DROP COLUMN IF EXISTS consultation_id;
 --   DROP INDEX IF EXISTS idx_invoices_contract_id;
