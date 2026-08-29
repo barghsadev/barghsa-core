@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-04.1.02.07",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-1-02-07--rounding-service",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/229",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
   "loop_iteration": 357,
   "fix_attempts": 0,
@@ -313,8 +313,13 @@
   ],
   "last_error": null,
   "notes": "T-04.1.02.06 MERGED (PR #228, squash 5bb38f8) in 1 review round (Claude Opus 5: approve; 3 minors all tracked as follow-up). Idempotency: invoices now has nullable type TEXT (auto/manual) + unique uq_invoices_order_id_type on (order_id,type); migration 0057 backfills legacy rows from metadata->'source'. Auto+manual services persist type; auto runtime guard reads durable type column. Real-PG test proves same-order duplicate rejected, different-type allowed, NULL-distinct manual rows allowed, backfill, idempotency. db suite 29 files/251 tests, api 115 files/1672 tests, typecheck 11/11. Follow-ups tracked: (1) auto guard ON CONFLICT/catch-23505 for concurrency; (2) guard backfill re-run via DO/pg_indexes; (3) type CHECK constraint or pgEnum. Next: T-04.1.02.07 (RoundingService.roundHalfUp half-up, M).",
-  "last_updated": "2026-08-29T20:43:43Z",
+  "last_updated": "2026-08-29T20:47:12Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "at": "2026-08-29T20:47:12Z"
+    },
     {
       "status": "building",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
@@ -809,11 +814,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.12.03",
       "at": "2026-08-28T16:58:24Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "02-auth-users-admin.md#T-09.12.03",
-      "at": "2026-08-28T16:44:14Z"
     }
   ]
 }
