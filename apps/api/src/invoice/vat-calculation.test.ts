@@ -20,10 +20,13 @@ function makeExecutor(routes: {
   const executor: DbExecutor = {
     query: (async (text: string) => {
       calls.push(text)
+      // Match on the most discriminating token so branch order does not
+      // matter: the override query JOINs both tables but the products /
+      // bare-category queries do not.
       if (text.includes('FROM products')) {
         return { rows: routes.product ?? [] }
       }
-      if (text.includes('FROM product_vat_overrides')) {
+      if (text.includes('product_vat_overrides pvo')) {
         return { rows: routes.override }
       }
       if (text.includes('FROM vat_configurations')) {

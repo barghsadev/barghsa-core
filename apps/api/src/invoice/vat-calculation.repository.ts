@@ -80,6 +80,10 @@ export class VatCalculationRepository {
     // Precedence: active product override wins outright. Only fall back
     // to the category when no override applies — deriving the category
     // costs a products round-trip, so skip it when the override resolves.
+    // SHORTCUT ASSUMPTION: safe only while shared resolveVatRate treats a
+    // non-null override as unconditionally winning. If it ever gains a
+    // rule that compares override against category (min/max/intersect),
+    // the category must be resolved here before short-circuiting.
     const override = await this.findActiveOverrideRate(
       executor,
       input.productId,
