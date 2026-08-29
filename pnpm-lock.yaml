@@ -96,15 +96,27 @@ importers:
       '@swc/core':
         specifier: ^1.11.0
         version: 1.16.1
+      '@testcontainers/postgresql':
+        specifier: 12.1.0
+        version: 12.1.0
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.6
       '@types/nodemailer':
         specifier: 8.0.1
         version: 8.0.1
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.23.1
       '@types/uuid':
         specifier: 11.0.0
         version: 11.0.0
+      pg:
+        specifier: ^8.14.0
+        version: 8.23.0
+      testcontainers:
+        specifier: 12.1.0
+        version: 12.1.0
       typescript:
         specifier: ^5.7.0
         version: 5.9.3

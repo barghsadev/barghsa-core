@@ -92,6 +92,12 @@ export const invoices = pgTable(
     /** When the invoice was cancelled (if applicable). */
     cancelledAt: timestamptz('cancelled_at'),
 
+    /** When the invoice entered `Paid` (PayFromWallet or ConfirmBankReceipt). */
+    paidAt: timestamptz('paid_at'),
+
+    /** When the invoice entered `Overdue` (MarkOverdue). */
+    overdueAt: timestamptz('overdue_at'),
+
     /** Extensible metadata payload for snapshots and auxiliary data. */
     metadata: jsonb('metadata'),
 
@@ -145,6 +151,8 @@ export const createInvoicesTable = sql`
     payable_from TIMESTAMPTZ,
     due_at TIMESTAMPTZ,
     cancelled_at TIMESTAMPTZ,
+    paid_at TIMESTAMPTZ,
+    overdue_at TIMESTAMPTZ,
     metadata JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
