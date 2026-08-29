@@ -37,6 +37,7 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
       'profileId',
       'orderId',
       'contractId',
+      'consultationId',
       'state',
       'totalAmount',
       'paidAmount',
@@ -83,5 +84,53 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_state')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_due_at')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_order_id')
+  })
+})
+
+/**
+ * Drift guard for the invoice origin-link migration (T-04.1.02.05).
+ *
+ * Migration 0056 adds the nullable `consultation_id` origin column and the
+ * contract/consultation lookup indexes. `order_id` already exists as a
+ * nullable FK. `contract_id` / `consultation_id` are deferred FKs (target
+ * tables TBD) — the columns carry the origin reference from day one. If a
+ * future `drizzle-kit generate` rewrite or manual edit drops the column or
+ * an index, this test fails instead of silently unlinking invoices from
+ * their origin.
+ */
+const ORIGIN_MIGRATION = readFileSync(
+  resolve(__dirname, '../../drizzle/0056_add_invoice_origin_links.sql'),
+  'utf8',
+)
+
+describe('Invoice origin links schema (T-04.1.02.05)', () => {
+  it('invoices table declares all three origin columns', () => {
+    const columns = Object.keys(invoices)
+    expect(columns).toContain('orderId')
+    expect(columns).toContain('contractId')
+    expect(columns).toContain('consultationId')
+  })
+
+  it('orderId, contractId, consultationId are all nullable origin columns', () => {
+    // orderId is a real nullable FK to orders (verified against the DB in
+    // invoices-origin.test.ts via pg_constraint).
+    expect(invoices.orderId.notNull).toBe(false)
+
+    // contractId / consultationId — nullable deferred FK columns (target
+    // tables TBD).
+    expect(invoices.contractId.notNull).toBe(false)
+    expect(invoices.consultationId.notNull).toBe(false)
+  })
+
+  it('migration 0056 adds consultation_id and the contract/consultation indexes', () => {
+    expect(ORIGIN_MIGRATION).toContain(
+      'ALTER TABLE invoices\n  ADD COLUMN IF NOT EXISTS consultation_id TEXT;',
+    )
+    expect(ORIGIN_MIGRATION).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_invoices_contract_id ON invoices (contract_id)',
+    )
+    expect(ORIGIN_MIGRATION).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id)',
+    )
   })
 })

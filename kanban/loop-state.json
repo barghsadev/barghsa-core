@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.02.05",
+  "current_task_file": "kanban/epics/04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-02-05--invoice-origin-fks",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/227",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -311,8 +311,18 @@
   ],
   "last_error": null,
   "notes": "T-04.1.02.04 MERGED (PR #226, squash 3ddaf7a) after 2 review rounds (Claude Opus 5: approve -> approve; 6+4 minors, all addressed or tracked). VAT calculation module: VatCalculationRepository (loads active product override + category rate on any DbExecutor — pool or caller-owned tx client) + VatCalculationService (resolveRate: product override > category default > 0% fallback; override-first short-circuit with documented resolveVatRate invariant; product type derives category; explicit-rate fast path preserved in AutoInvoiceService). Pure vatAmount(): integer-only BigInt half-up to nearest IRR, non-taxable = 0. AutoInvoiceService passes the module; InvoiceModule + index wiring. 4 files new (repo/service/unit+integration tests), real-PG 7 tests, unit 138, API tsc+build green. Follow-ups tracked: route *.calculation.ts rounding onto vatAmount() so the two implementations cannot drift (the calc modules stay dependency-free). Next: T-04.1.02.05 (nullable orderId/contractId/consultationId invoice origin FKs, S).",
-  "last_updated": "2026-08-29T20:08:37Z",
+  "last_updated": "2026-08-29T20:19:23Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "at": "2026-08-29T20:19:23Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "at": "2026-08-29T20:13:27Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
@@ -802,16 +812,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.12.02",
       "at": "2026-08-28T15:58:50Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.12.01",
-      "at": "2026-08-28T15:24:07Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.12.01",
-      "at": "2026-08-28T15:07:16Z"
     }
   ]
 }
