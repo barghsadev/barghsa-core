@@ -261,8 +261,8 @@ export class ManualInvoiceService {
       })
 
       await client.query(
-        `INSERT INTO invoices (id, profile_id, contract_id, state, total_amount, issued_at, payable_from, due_at, metadata)
-         VALUES ($1, $2, $3, 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
+        `INSERT INTO invoices (id, profile_id, contract_id, type, state, total_amount, issued_at, payable_from, due_at, metadata)
+         VALUES ($1, $2, $3, 'manual', 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
         [
           invoiceId,
           cmd.profileId,
