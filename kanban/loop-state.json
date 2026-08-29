@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.01.04",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-01-01-04--invoice-amount-constraints",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/220",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -304,8 +304,18 @@
   ],
   "last_error": null,
   "notes": "T-10.01.02 MERGED (PR #219, squash dc74226) after 1 review round (Claude Opus 5 approve, 4 minors left as follow-up). GET /api/admin/staff/audit live: paginated role_change audit timeline (newest first) with target/actor usernames, role names from staff_roles, addedRoles/removedRoles diffs, reason/correlationId/ip/createdAt; filters userId (UUID-validated), from/to ISO timestamps (from<=to), limit 1..200 default 50; admin-only gate (admin:staff:view→isAdmin). Read-only, no migration. Review minors: SQL-side guard for metadata::jsonb cast (22P02 if a non-JSON metadata row ever exists), targetUserId ''→null on malformed rows, test asserting limit/offset reach $4/$5, trailing newlines in 2 test files. UI timeline deferred with admin web UI slice.",
-  "last_updated": "2026-08-29T17:20:49Z",
+  "last_updated": "2026-08-29T17:35:17Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "at": "2026-08-29T17:35:17Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+      "at": "2026-08-29T17:31:14Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-10.01.02",
@@ -795,16 +805,6 @@
       "status": "building",
       "task_key": "02-auth-users-admin.md#T-09.10.03",
       "at": "2026-08-28T10:53:19Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.03",
-      "at": "2026-08-28T10:52:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.08.03",
-      "at": "2026-08-28T10:46:00Z"
     }
   ]
 }
