@@ -1,12 +1,12 @@
 {
-  "status": "fixing",
-  "current_task_id": "T-04.1.02.03",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-1-02-03--auto-invoice-service",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/225",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 356,
-  "fix_attempts": 1,
+  "fix_attempts": 0,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -305,12 +305,18 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.05",
     "04-invoices-wallet-contracts.md#T-04.1.01.06",
     "04-invoices-wallet-contracts.md#T-04.1.02.01",
-    "04-invoices-wallet-contracts.md#T-04.1.02.02"
+    "04-invoices-wallet-contracts.md#T-04.1.02.02",
+    "04-invoices-wallet-contracts.md#T-04.1.02.03"
   ],
   "last_error": null,
-  "notes": "T-04.1.02.02 MERGED (PR #224, squash 3ed4432) after 2 review rounds (Claude Opus 5: request_changes → approve). ManualInvoiceService: pure calc module (roundHalfUpDiv exact half-up for any denominator), atomic create+issue on one tx via TransitionOptions.client join, idempotency key with SHA-256 payload fingerprint (409 on mismatch, profile-scoped), event-narrowed audit lookup, invoice_lines.position column (migration 0055), 0000 advisory-lock fix for pgcrypto race, 4 new test files (calc/unit/integration + state-machine join tests). API 1615/1615, db 234/234, CI green. Follow-ups (accepted minors): C-04.CC.01 durable idempotency unique index, replay synthetic transition when invoice moved on, HTTP controller pending C-04.CC.03, formal invoice_calculation_snapshot column in T-04.1.02.08. Next: T-04.1.02.03 (AutoInvoiceService, M).",
-  "last_updated": "2026-08-29T19:39:19Z",
+  "notes": "T-04.1.02.03 MERGED (PR #225, squash b2fa392) after 3 review rounds (Claude Opus 5: request_changes -> approve -> approve). AutoInvoiceService: order/contract creation seam that creates a linked invoice atomically in the caller's tx (client join; owns BEGIN/COMMIT/ROLLBACK only standalone); snapshots price/VAT rate/product composition/gift discount + terms into invoices.metadata AND invoice_items; VAT on NET post-discount taxable amount via roundHalfUpDiv; FOR UPDATE order lock + runtime duplicate guard (409; durable unique index in T-04.1.02.06); 100%-coverage gift code allowed (0-total invoice, no rollback); discount allocated across lines in composition order with leftover throw; pure auto-invoice.calculation (table-driven), 3 new test files, API 1654/1654 CI green. Follow-ups: durable unique order_id index (T-04.1.02.06), contract entry point (E-04.5 contracts table), multi-line discount policy, 0-total invoice settlement path. Next: T-04.1.02.04 (VAT calculation module with category default / product override resolution).",
+  "last_updated": "2026-08-29T19:46:30Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "at": "2026-08-29T19:46:30Z"
+    },
     {
       "status": "fixing",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
@@ -805,11 +811,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.05",
       "at": "2026-08-28T14:21:39Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.11.05",
-      "at": "2026-08-28T14:12:55Z"
     }
   ]
 }
