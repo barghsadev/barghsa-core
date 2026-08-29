@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-10.01.01",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e10-t-10-01-01--staff-user-list",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/218",
+  "current_task_key": "02-auth-users-admin.md#T-10.01.01",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -302,8 +302,18 @@
   ],
   "last_error": null,
   "notes": "T-09.12.02 MERGED (PR #213, squash 7dfe460) after Claude Opus 5 rounds: r1 request_changes (2 majors + 5 minors) -> r2 approve. VAT configuration admin API live at /api/admin/finance/vat: GET list?category= (versioned rates with status), POST create (category or reserved product_override, rate as basis points 0..10000, future-dated allowed; same-rate no-op), POST :id/end (soft close, no hard delete), GET overrides, POST overrides (product links a rate row; linked config must be active at its effective_from), POST overrides/:id/end, GET resolve?productId=&category=&at= (product override wins -> category default -> 0% fallback; category derived from products.type when only productId given). Tables vat_configurations + product_vat_overrides (migration 0047): CHECK 0..10000 bps, GIST no-overlap per category/product, updated_at triggers. Permission admin:finance:edit (platform admin today); step-up on all mutations; single-tx change_recorded audit with request correlation id. Deferred: admin web UI slice (table view, override toggle, fa/en dicts, RTL/a11y), follow-up minors from r2 (backdate pre-check open-ended overlap, vc window honored in resolve override SELECT, derived-category unknown-type handling).",
-  "last_updated": "2026-08-29T16:50:11Z",
+  "last_updated": "2026-08-29T17:07:20Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-10.01.01",
+      "at": "2026-08-29T17:07:20Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-10.01.01",
+      "at": "2026-08-29T17:04:24Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.12.06",
@@ -793,16 +803,6 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.10.01",
       "at": "2026-08-28T10:20:38Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.10.01",
-      "at": "2026-08-28T10:13:41Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.10.01",
-      "at": "2026-08-28T10:04:08Z"
     }
   ]
 }

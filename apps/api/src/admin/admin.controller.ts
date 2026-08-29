@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult } from './admin.service.js'
+import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult, type StaffListResult, type DisableStaffResult, type StaffListQuery } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
 import {
@@ -393,6 +393,115 @@ export class AdminController {
     )
 
     return result
+  }
+
+  /**
+   * GET /api/admin/staff
+   *
+   * Lists staff accounts (T-10.01.01): platform admins plus any user holding
+   * at least one staff role — separate from the CRM customer list. Each row
+   * includes the default-profile name, aggregated role names, last login,
+   * and status (active/disabled).
+   *
+   * Permission: `admin:staff:view` — mapped to a platform-admin session
+   * today, per the S-09/S-10 convention (granular staff-role permissions
+   * arrive with the role system).
+   */
+  @Get('staff')
+  @ApiOperation({ summary: 'List staff accounts' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Page size (1..200, default 50)' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default 0)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated staff list.',
+    schema: {
+      type: 'object',
+      properties: {
+        items: { type: 'array', items: { type: 'object' } },
+        total: { type: 'number' },
+        limit: { type: 'number' },
+        offset: { type: 'number' },
+      },
+    },
+  })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listStaff(
+    @Query('limit') limit: string | undefined,
+    @Query('offset') offset: string | undefined,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<StaffListResult> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff accounts`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN
+    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN
+    const listQuery: StaffListQuery = {}
+    if (Number.isFinite(parsedLimit)) listQuery.limit = parsedLimit
+    if (Number.isFinite(parsedOffset)) listQuery.offset = parsedOffset
+    return this.adminService.listStaff(listQuery)
+  }
+
+  /**
+   * POST /api/admin/staff/:userId/disable
+   *
+   * Disables a staff account (T-10.01.01): revokes every active session,
+   * consumes every refresh token, and prevents future login/password-reset
+   * until the account is re-enabled (re-enable is a later slice). Requires
+   * step-up authentication.
+   *
+   * Permission: `admin:staff:edit` — mapped to a platform-admin session
+   * today.
+   */
+  @Post('staff/:userId/disable')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Disable a staff account (requires step-up)' })
+  @ApiParam({ name: 'userId', description: 'Staff user UUID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Staff account disabled.',
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        username: { type: 'string' },
+        status: { type: 'string', enum: ['disabled'] },
+        disabledAt: { type: 'string' },
+        alreadyDisabled: { type: 'boolean' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Cannot disable own account' })
+  @ApiResponse({ status: 401, description: 'Not authenticated or step-up needed' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 404, description: 'Staff user not found' })
+  async disableStaff(
+    @Param('userId') userId: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<DisableStaffResult> {
+    // ── Permission check: admin only ─────────────────────────────
+    const isAdmin = req.session.isAdmin ?? false
+
+    if (!isAdmin) {
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to disable staff user ${userId}`,
+      )
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    return this.adminService.disableStaff({
+      userId,
+      actorUserId: req.session.userId,
+      ip,
+    })
   }
 
   /**

@@ -134,6 +134,61 @@ export type CreateStaffUserResult = {
   | { activationToken: string; temporaryPassword?: never; message: string }
 )
 
+// ─── Staff user list & disable types (T-10.01.01) ────────────────────
+
+/** Pagination for the staff list. */
+export interface StaffListQuery {
+  limit?: number
+  offset?: number
+}
+
+/** One role held by a staff user (aggregated into the list row). */
+export interface StaffUserRoleSummary {
+  roleId: string
+  name: string
+}
+
+/** One staff account in the admin staff list. */
+export interface StaffUserSummary {
+  userId: string
+  username: string
+  email: string | null
+  mobile: string | null
+  firstName: string | null
+  lastName: string | null
+  roles: StaffUserRoleSummary[]
+  isAdmin: boolean
+  lastLoginAt: string | null
+  disabledAt: string | null
+  status: 'active' | 'disabled'
+  createdAt: string
+}
+
+/** Paginated staff list result. */
+export interface StaffListResult {
+  items: StaffUserSummary[]
+  total: number
+  limit: number
+  offset: number
+}
+
+/** Input for disabling a staff account. */
+export interface DisableStaffInput {
+  userId: string
+  actorUserId: string
+  ip: string
+}
+
+/** Result of disabling a staff account. */
+export interface DisableStaffResult {
+  userId: string
+  username: string
+  status: 'disabled'
+  disabledAt: string
+  /** True when the account was already disabled (idempotent no-op). */
+  alreadyDisabled: boolean
+}
+
 /**
  * Character set for generating temporary passwords.
  * Ambiguous characters (0/O, 1/l/I) are excluded to avoid confusion.
@@ -2288,6 +2343,233 @@ export class AdminService {
       memberUserIds,
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
+    }
+  }
+
+  // ── Staff user list & disable (T-10.01.01) ───────────────────────────
+
+  /**
+   * List staff accounts for the admin staff management view.
+   *
+   * "Staff" = users who are platform admins (`is_admin`) OR hold at least
+   * one staff role (`user_roles`), i.e. the accounts an admin manages —
+   * deliberately separate from the CRM customer list. Each row carries the
+   * default-profile name, aggregated role names, last successful login
+   * (`last_login_at`), and account status derived from `disabled_at`.
+   *
+   * @param query - Pagination (limit clamped to 1..200, default 50).
+   */
+  async listStaff(query: StaffListQuery = {}): Promise<StaffListResult> {
+    const pool = getDbPool()
+    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200)
+    const offset = Math.max(Math.trunc(query.offset ?? 0), 0)
+
+    const staffWhere = `u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`
+
+    const countResult = await pool.query<{ total: number }>(
+      `SELECT COUNT(*)::int AS total
+       FROM users u
+       WHERE ${staffWhere}`,
+    )
+    const total = countResult.rows[0]?.total ?? 0
+
+    const listResult = await pool.query<{
+      user_id: string
+      username: string
+      email: string | null
+      mobile: string | null
+      is_admin: boolean
+      created_at: Date
+      last_login_at: Date | null
+      disabled_at: Date | null
+      first_name: string | null
+      last_name: string | null
+      roles: unknown
+    }>(
+      `SELECT u.user_id, u.username, u.email, u.mobile, u.is_admin,
+              u.created_at, u.last_login_at, u.disabled_at,
+              p.first_name, p.last_name,
+              COALESCE(
+                json_agg(json_build_object('roleId', r.role_id, 'name', r.name) ORDER BY r.name)
+                  FILTER (WHERE r.role_id IS NOT NULL),
+                '[]'
+              ) AS roles
+       FROM users u
+       LEFT JOIN profiles p
+         ON p.user_id = u.user_id
+        AND p.is_default = true
+       LEFT JOIN user_roles ur ON ur.user_id = u.user_id
+       LEFT JOIN staff_roles r ON r.role_id = ur.role_id
+       WHERE ${staffWhere}
+       GROUP BY u.user_id, u.username, u.email, u.mobile, u.is_admin,
+                u.created_at, u.last_login_at, u.disabled_at,
+                p.first_name, p.last_name
+       ORDER BY u.created_at DESC
+       LIMIT $1 OFFSET $2`,
+      [limit, offset],
+    )
+
+    const items: StaffUserSummary[] = listResult.rows.map((row) => ({
+      userId: row.user_id,
+      username: row.username,
+      email: row.email,
+      mobile: row.mobile,
+      firstName: row.first_name,
+      lastName: row.last_name,
+      roles: Array.isArray(row.roles)
+        ? (row.roles as { roleId: string; name: string }[])
+        : [],
+      isAdmin: row.is_admin,
+      lastLoginAt: row.last_login_at ? row.last_login_at.toISOString() : null,
+      disabledAt: row.disabled_at ? row.disabled_at.toISOString() : null,
+      status: row.disabled_at ? 'disabled' : 'active',
+      createdAt: row.created_at.toISOString(),
+    }))
+
+    return { items, total, limit, offset }
+  }
+
+  /**
+   * Disable a staff account (T-10.01.01).
+   *
+   * Atomically: marks the account disabled (`disabled_at`), revokes every
+   * active session, consumes every active refresh token, and records an
+   * `audit_log` entry. Login, password reset, and refresh-token redemption
+   * all reject disabled accounts afterwards, so a disabled staff member is
+   * signed out everywhere immediately and cannot authenticate again.
+   *
+   * Idempotent: disabling an already-disabled account succeeds with
+   * `alreadyDisabled: true` and issues no additional writes.
+   *
+   * @throws 404 when the user is not a staff account (or does not exist)
+   * @throws 400 when an admin attempts to disable their own account
+   */
+  async disableStaff(input: DisableStaffInput): Promise<DisableStaffResult> {
+    const pool = getDbPool()
+    const client = await pool.connect()
+    const now = new Date()
+
+    try {
+      await client.query('BEGIN')
+
+      // Lock the target row; staff-only so the endpoint cannot probe
+      // arbitrary customer accounts.
+      const targetResult = await client.query<{
+        user_id: string
+        username: string
+        disabled_at: Date | null
+      }>(
+        `SELECT u.user_id, u.username, u.disabled_at
+         FROM users u
+         WHERE u.user_id = $1
+           AND (u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id))
+         FOR UPDATE`,
+        [input.userId],
+      )
+
+      if (targetResult.rows.length === 0) {
+        await client.query('ROLLBACK')
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404,
+        )
+      }
+
+      const target = targetResult.rows[0]!
+
+      if (input.userId === input.actorUserId) {
+        await client.query('ROLLBACK')
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'STAFF_DISABLE_SELF',
+            message: 'An admin cannot disable their own account',
+          },
+          400,
+        )
+      }
+
+      if (target.disabled_at) {
+        await client.query('COMMIT')
+        this.logger.log(
+          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${input.actorUserId}`,
+        )
+        return {
+          userId: target.user_id,
+          username: target.username,
+          status: 'disabled',
+          disabledAt: target.disabled_at.toISOString(),
+          alreadyDisabled: true,
+        }
+      }
+
+      // Mark disabled + revoke sessions + consume refresh tokens in ONE
+      // transaction so no active credential survives the disable.
+      await client.query(
+        `UPDATE users
+         SET disabled_at = $1, updated_at = $1
+         WHERE user_id = $2`,
+        [now, target.user_id],
+      )
+
+      await client.query(
+        `UPDATE sessions
+         SET revoked_at = $1, updated_at = $1
+         WHERE user_id = $2 AND revoked_at IS NULL`,
+        [now, target.user_id],
+      )
+
+      await client.query(
+        `UPDATE refresh_tokens
+         SET consumed_at = $1
+         WHERE user_id = $2 AND consumed_at IS NULL`,
+        [now, target.user_id],
+      )
+
+      // Audit trail: who disabled whom, when, and the correlation id.
+      const auditId = uuidv7()
+      const correlationId = uuidv7()
+      await client.query(
+        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+        [
+          auditId,
+          target.user_id,
+          'staff_user_disabled',
+          JSON.stringify({
+            actorUserId: input.actorUserId,
+            disabledAt: now.toISOString(),
+            correlationId,
+          }),
+          correlationId,
+          input.ip,
+          now,
+        ],
+      )
+
+      await client.query('COMMIT')
+
+      this.logger.log(
+        `Staff user ${target.user_id} (${target.username}) disabled by ${input.actorUserId}; ${'all sessions revoked'}`,
+      )
+
+      return {
+        userId: target.user_id,
+        username: target.username,
+        status: 'disabled',
+        disabledAt: now.toISOString(),
+        alreadyDisabled: false,
+      }
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
+      this.logger.error(`Failed to disable staff user ${input.userId}: ${String(err)}`)
+      throw new HttpException(
+        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
+        500,
+      )
+    } finally {
+      client.release()
     }
   }
 }

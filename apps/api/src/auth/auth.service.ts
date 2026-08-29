@@ -160,7 +160,7 @@ export class AuthService {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
         `SELECT user_id, password_hash, must_change_password,
-                password_change_token, password_change_token_expires_at, is_admin
+                password_change_token, password_change_token_expires_at, is_admin, disabled_at
          FROM users
          WHERE username = $1`,
         [input.username],
@@ -202,6 +202,19 @@ export class AuthService {
       // 3b. Extract user properties
       const userId = userResult.rows[0].user_id
       const isStaff = userResult.rows[0].is_admin ?? false
+
+      // 3b2. Reject disabled accounts (T-10.01.01). Checked *after* the
+      // password verifies so account existence is not leaked to callers
+      // without valid credentials (same ordering as the must-change-password
+      // branch below). A disabled account never gets a password-change token,
+      // a session, or an OTP challenge.
+      if (userResult.rows[0].disabled_at) {
+        this.logger.warn(`Login blocked for disabled user ${userId} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
+          403,
+        )
+      }
 
       // 3c. Check if user must change password (T-02.01.04)
       // NOTE: This check intentionally precedes MFA/OTP enforcement (step 4).
@@ -285,6 +298,14 @@ export class AuthService {
         isStaff,
         { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
       )
+
+      // Record last successful login (T-10.01.01) — best-effort; a failed
+      // analytics write must never fail the login itself.
+      await pool
+        .query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
+        .catch(() => {
+          // Non-critical — the login already succeeded
+        })
 
       // Reset rate-limit counters on successful login
       await this.rateLimitService.resetSecurityRateLimit(rateLimitKeyStr).catch(() => {
@@ -588,6 +609,24 @@ export class AuthService {
         )
       }
 
+      // 1b. Reject disabled accounts (T-10.01.01) — the OTP grants a fresh
+      // session, so it must not complete for a disabled account. Thrown
+      // inside the transaction; the catch below rolls back and re-throws.
+      const challengeUserStatus = await client.query(
+        `SELECT disabled_at FROM users WHERE user_id = $1`,
+        [challengeRow.user_id],
+      )
+      if (
+        challengeUserStatus.rows.length > 0 &&
+        challengeUserStatus.rows[0].disabled_at
+      ) {
+        this.logger.warn(`OTP login blocked for disabled user ${challengeRow.user_id} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
+          403,
+        )
+      }
+
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(otp)
       if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
@@ -646,6 +685,13 @@ export class AuthService {
         false,
         { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
       )
+
+      // Record last successful login (T-10.01.01) — best-effort.
+      await getDbPool()
+        .query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
+        .catch(() => {
+          // Non-critical — the login already succeeded
+        })
 
       // 5. Optionally mark device as trusted
       if (trustDevice && deviceFingerprint) {
@@ -1017,6 +1063,24 @@ export class AuthService {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
           400,
+        )
+      }
+
+      // 1b. Reject disabled accounts (T-10.01.01) — a disabled account must
+      // not be able to reset its password, which would let it log back in.
+      const passwordResetUserStatus = await client.query(
+        `SELECT disabled_at FROM users WHERE user_id = $1`,
+        [row.user_id],
+      )
+      if (
+        passwordResetUserStatus.rows.length > 0 &&
+        passwordResetUserStatus.rows[0].disabled_at
+      ) {
+        await client.query('ROLLBACK').catch(() => {})
+        this.logger.warn(`Password reset blocked for disabled user ${row.user_id} from ${ip}`)
+        throw new HttpException(
+          { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
+          403,
         )
       }
 
