@@ -77,6 +77,18 @@ export class VatCalculationRepository {
   ): Promise<ResolvedVatRate> {
     const at = input.at ?? new Date()
 
+    // Precedence: active product override wins outright. Only fall back
+    // to the category when no override applies — deriving the category
+    // costs a products round-trip, so skip it when the override resolves.
+    const override = await this.findActiveOverrideRate(
+      executor,
+      input.productId,
+      at,
+    )
+    if (override !== null) {
+      return resolveVatRate(override, null)
+    }
+
     let derivedCategory: string | undefined
     if (input.productId !== undefined && input.category === undefined) {
       // Derive the product's charge category from its type so the
@@ -90,18 +102,13 @@ export class VatCalculationRepository {
       }
     }
 
-    const override = await this.findActiveOverrideRate(
-      executor,
-      input.productId,
-      at,
-    )
     const categoryRate = await this.findActiveCategoryRate(
       executor,
       input.category ?? derivedCategory,
       at,
     )
 
-    return resolveVatRate(override, categoryRate)
+    return resolveVatRate(null, categoryRate)
   }
 
   /** Active product-override rate (bps) at `at`, or null when none. */

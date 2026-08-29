@@ -14,9 +14,11 @@
  * The resolution can run on the shared pool or a caller-owned
  * transaction client (see `DbExecutor`), so invoice generation snapshots
  * the rate inside the same transaction that creates the invoice
- * (S-04.1.02, README atomicity rule). Both AutoInvoiceService and
- * ManualInvoiceService use this module instead of embedding their own
- * lookup/rounding logic.
+ * (S-04.1.02, README atomicity rule). AutoInvoiceService resolves rates
+ * through this module instead of embedding its own lookup logic;
+ * consolidating the per-line rounding calls in the pure calculation
+ * modules (`*.calculation.ts`) onto `vatAmount()` is a follow-up so the
+ * math stays dependency-free there.
  */
 
 import { Injectable } from '@nestjs/common'

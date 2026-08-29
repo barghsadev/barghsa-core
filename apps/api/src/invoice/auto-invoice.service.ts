@@ -42,6 +42,7 @@ import type { TransitionResult } from './invoice-state-machine.service.js'
 import type { TransactionClient } from './invoice-audit.repository.js'
 import type { InvoiceState } from './invoice-state.model.js'
 import { VatCalculationService } from './vat-calculation.service.js'
+import type { ResolvedVatRate } from './vat-calculation.repository.js'
 import {
   calculateAutoInvoice,
   type AutoInvoiceCalculation,
@@ -236,7 +237,7 @@ export class AutoInvoiceService {
       }
 
       // --- 4. Resolve the VAT rate (explicit override or in-tx default) ---
-      const vatRate: { rateBasisPoints: number; source: string } =
+      const vatRate: { rateBasisPoints: number; source: ResolvedVatRate['source'] | 'explicit' } =
         cmd.vatRateBasisPoints !== undefined
           ? { rateBasisPoints: cmd.vatRateBasisPoints, source: 'explicit' }
           : await this.vatCalculation.resolveRate(client, {
