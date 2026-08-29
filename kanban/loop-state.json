@@ -1,12 +1,12 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
-  "loop_iteration": 354,
-  "fix_attempts": 0,
+  "status": "in_review",
+  "current_task_id": "T-09.12.05",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e02-t-09-12-05--upload-policies",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/216",
+  "current_task_key": "02-auth-users-admin.md#T-09.12.05",
+  "loop_iteration": 356,
+  "fix_attempts": 1,
   "build_completed_tasks": [
     "01-platform-infrastructure.md#T-01.01.01",
     "01-platform-infrastructure.md#T-01.01.02",
@@ -300,8 +300,258 @@
   ],
   "last_error": null,
   "notes": "T-09.12.02 MERGED (PR #213, squash 7dfe460) after Claude Opus 5 rounds: r1 request_changes (2 majors + 5 minors) -> r2 approve. VAT configuration admin API live at /api/admin/finance/vat: GET list?category= (versioned rates with status), POST create (category or reserved product_override, rate as basis points 0..10000, future-dated allowed; same-rate no-op), POST :id/end (soft close, no hard delete), GET overrides, POST overrides (product links a rate row; linked config must be active at its effective_from), POST overrides/:id/end, GET resolve?productId=&category=&at= (product override wins -> category default -> 0% fallback; category derived from products.type when only productId given). Tables vat_configurations + product_vat_overrides (migration 0047): CHECK 0..10000 bps, GIST no-overlap per category/product, updated_at triggers. Permission admin:finance:edit (platform admin today); step-up on all mutations; single-tx change_recorded audit with request correlation id. Deferred: admin web UI slice (table view, override toggle, fa/en dicts, RTL/a11y), follow-up minors from r2 (backdate pre-check open-ended overlap, vc window honored in resolve override SELECT, derived-category unknown-type handling).",
-  "last_updated": "2026-08-28T18:23:09Z",
+  "last_updated": "2026-08-29T16:19:11Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-29T16:19:11Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-29T16:11:47Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-29T16:09:23Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:29:52Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:24:38Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:15:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:13:10Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:09:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:06:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:03:52Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T22:00:53Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:58:04Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:55:13Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:51:21Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:51:05Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:48:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:42:02Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:38:59Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:32:45Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:23:47Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:20:49Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:17:07Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:10:56Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:07:49Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:04:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T21:01:55Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:58:53Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:55:56Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:52:55Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:49:52Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:46:56Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:43:51Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:37:15Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:34:07Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:31:09Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:28:01Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:24:17Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:20:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:13:00Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:05:40Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T20:00:08Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:43:42Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:39:10Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:24:57Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:22:08Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:18:21Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T19:07:01Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T18:57:31Z"
+    },
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T18:38:23Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "02-auth-users-admin.md#T-09.12.05",
+      "at": "2026-08-28T18:38:23Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.12.04",
@@ -551,256 +801,6 @@
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.08.02",
       "at": "2026-08-28T05:31:00Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T05:09:00Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T05:06:10Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T04:55:42Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T04:30:36Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T02:06:00Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:57:26Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:27:00Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:26:00Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-28T01:10:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.06.03",
-      "at": "2026-08-28T00:25:02Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.06.03",
-      "at": "2026-08-28T00:25:01Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-27T23:53:05Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-27T23:22:10Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-27T23:17:10Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.08.02",
-      "at": "2026-08-27T23:11:44Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.08.01",
-      "at": "2026-08-27T23:07:58Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.08.01",
-      "at": "2026-08-27T22:48:28Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "02-auth-users-admin.md#T-09.07.01",
-      "at": "2026-08-27T22:06:07Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.07.01",
-      "at": "2026-08-27T21:58:53Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
-      "at": "2026-08-27T20:03:00Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "",
-      "at": "2026-08-27T20:03:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
-      "at": "2026-08-27T19:52:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.07",
-      "at": "2026-08-27T19:51:05Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
-      "at": "2026-08-27T19:03:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
-      "at": "2026-08-27T19:01:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
-      "at": "2026-08-27T18:52:49Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.05",
-      "at": "2026-08-27T18:49:28Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T18:09:12Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T17:48:53Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
-      "at": "2026-08-27T17:40:00Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
-      "at": "2026-08-27T17:30:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T17:29:59Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
-      "at": "2026-08-27T17:28:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.03",
-      "at": "2026-08-27T17:26:00Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T16:59:36Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T16:56:40Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.04",
-      "at": "2026-08-27T16:48:59Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.01",
-      "at": "2026-08-27T16:46:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.01",
-      "at": "2026-08-27T16:45:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.03",
-      "at": "2026-08-27T16:05:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.02",
-      "at": "2026-08-27T15:47:17Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.02",
-      "at": "2026-08-27T15:35:52Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.04.04",
-      "at": "2026-08-27T15:35:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.01",
-      "at": "2026-08-27T15:06:11Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.04.03",
-      "at": "2026-08-27T15:02:00Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.01",
-      "at": "2026-08-27T14:12:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "05-notifications-documents-ai.md#T-05.06.01",
-      "at": "2026-08-27T14:10:00Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.02",
-      "at": "2026-08-27T14:09:58Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "05-notifications-documents-ai.md#T-05.05.02",
-      "at": "2026-08-27T14:07:02Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "05-notifications-documents-ai.md#T-05.04.05",
-      "at": "2026-08-27T13:31:24Z"
     }
   ]
 }

@@ -42,6 +42,16 @@ const DEFAULT_CATEGORIES: Record<string, UploadCategoryConfig> = {
     allowedExtensions: ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif'],
     maxSizeBytes: 20 * MB,
   },
+  video: {
+    allowedMimeTypes: [
+      'video/mp4',
+      'video/webm',
+      'video/quicktime',
+      'video/x-matroska',
+    ],
+    allowedExtensions: ['.mp4', '.webm', '.mov', '.mkv'],
+    maxSizeBytes: 100 * MB,
+  },
   contract: {
     allowedMimeTypes: [
       'application/pdf',
@@ -82,6 +92,38 @@ export function getCategoryConfig(category?: string): UploadCategoryConfig {
 }
 
 export function getMaxSizeBytes(category?: string): number {
+  return getCategoryConfig(category).maxSizeBytes;
+}
+
+/**
+ * Deployment-level extension superset for a category (the "hard floor").
+ * Admin-configured upload policies (T-09.12.05) may only pick a SUBSET of
+ * these extensions — a policy can never permit a format the deployment
+ * does not trust. Empty array means "any extension" (the `general`
+ * category); the admin-configurable categories (document/image/video) all
+ * have concrete lists.
+ */
+export function getDeploymentAllowedExtensions(category?: string): readonly string[] {
+  return getCategoryConfig(category).allowedExtensions;
+}
+
+/**
+ * Deployment-level MIME whitelist for a category. Content types are a
+ * deployment concern (they are the trust boundary for serving/scanning),
+ * so the DB upload policy (T-09.12.05) configures extensions and size
+ * only — the MIME set always comes from here.
+ */
+export function getDeploymentAllowedMimeTypes(category?: string): readonly string[] {
+  return getCategoryConfig(category).allowedMimeTypes;
+}
+
+/**
+ * Deployment-level per-category size cap (the "hard floor"). The
+ * effective upload limit is min(DB policy max size, this cap), so an
+ * admin cannot raise a category's limit beyond what the deployment
+ * allows. (T-09.12.05)
+ */
+export function getDeploymentMaxSizeBytes(category?: string): number {
   return getCategoryConfig(category).maxSizeBytes;
 }
 
@@ -146,6 +188,9 @@ export function resolveCategory(recordType?: string): string {
   }
   if (lower === 'avatar' || lower === 'photo' || lower === 'image') {
     return 'image';
+  }
+  if (lower === 'video' || lower === 'clip' || lower === 'intro_video') {
+    return 'video';
   }
   return 'general';
 }

@@ -18,6 +18,8 @@ import { GiftCodeService } from './gift-code.service.js'
 import { GiftCodeController } from './gift-code.controller.js'
 import { ContractTemplateService } from './contract-template.service.js'
 import { ContractTemplateController } from './contract-template.controller.js'
+import { UploadPolicyService } from './upload-policy.service.js'
+import { UploadPolicyController } from './upload-policy.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
 
@@ -32,6 +34,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     VatConfigController,
     GiftCodeController,
     ContractTemplateController,
+    UploadPolicyController,
   ],
   providers: [
     AdminService,
@@ -43,6 +46,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     VatConfigService,
     GiftCodeService,
     ContractTemplateService,
+    UploadPolicyService,
     CorrelationIdProvider,
   ],
   exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService, GiftCodeService],

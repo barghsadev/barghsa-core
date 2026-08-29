@@ -21,12 +21,17 @@ import {
   type VerifyUploadResponse,
 } from './upload.types.js';
 import {
-  isAllowedExtension,
-  isAllowedMimeType,
-  getMaxSizeBytes,
-  resolveCategory,
   getCategoryDescriptions,
+  resolveCategory,
+  UPLOAD_CATEGORIES,
 } from './upload.config.js';
+import {
+  UploadPolicyResolver,
+  effectiveAllowsExtension,
+  effectiveAllowsMime,
+  effectiveAllowsSize,
+} from './upload-policy.resolver.js';
+import { pickDetectedContentType, sniffContentTypes, SNIFF_SAMPLE_BYTES } from './content-type-sniffer.js';
 
 const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 3600; // 1 hour
@@ -38,6 +43,8 @@ export class UploadController {
     private readonly storage: StorageProvider | null,
     @Inject(IMMUTABLE_STORAGE_SERVICE)
     private readonly immutableStorageService: ImmutableStorageRecordService | null,
+    @Inject(UploadPolicyResolver)
+    private readonly policyResolver: UploadPolicyResolver,
   ) {}
 
   /**
@@ -45,6 +52,13 @@ export class UploadController {
    *
    * Validates file type, size, and permissions before returning the URL.
    * The API never proxies file bodies — only metadata.
+   *
+   * Since T-09.12.05 the checks run against the EFFECTIVE upload policy:
+   * the admin-configured DB policy (`upload_policies`) bounded by the
+   * deployment-level limits in `upload.config.ts`. Extension + claimed
+   * content type + size are all validated here; the *detected* content
+   * type is additionally verified on the `:key/verify` seam (magic-byte
+   * sniffing, because presigned uploads never pass through the API).
    */
   @Post('presigned-url')
   @HttpCode(HttpStatus.OK)
@@ -68,37 +82,48 @@ export class UploadController {
     const req: PresignedUrlRequest = parsed.data;
     const category = req.category ?? resolveCategory(req.metadata?.recordType);
 
-    // Validate file extension
-    if (!isAllowedExtension(req.fileName, category)) {
+    const policy = await this.policyResolver.resolveEffective(category);
+
+    // Validate file extension against the effective policy
+    if (!effectiveAllowsExtension(policy, req.fileName)) {
       const cfg = getCategoryDescriptions();
       throw new BadRequestException({
         message: `File type not allowed for category "${category}"`,
-        allowedExtensions: cfg[category]?.allowedExtensions ?? 'any',
+        allowedExtensions:
+          policy.allowedExtensions === null
+            ? (cfg[category]?.allowedExtensions ?? 'any')
+            : policy.allowedExtensions.join(', '),
+        policySource: policy.source,
       });
     }
 
-    // Validate MIME type
-    if (!isAllowedMimeType(req.contentType, category)) {
+    // Validate MIME type against the effective policy
+    if (!effectiveAllowsMime(policy, req.contentType)) {
       throw new BadRequestException({
         message: `Content type "${req.contentType}" not allowed for category "${category}"`,
+        allowedMimeTypes: policy.allowedMimeTypes,
+        policySource: policy.source,
       });
     }
 
-    // Validate file size
-    const maxSize = getMaxSizeBytes(category);
-    if (req.fileSize > maxSize) {
+    // Validate file size against the effective policy
+    if (!effectiveAllowsSize(policy, req.fileSize)) {
       throw new BadRequestException({
-        message: `File size exceeds maximum of ${maxSize / (1024 * 1024)} MB for category "${category}"`,
-        maxSizeBytes: maxSize,
+        message: `File size exceeds maximum of ${policy.maxSizeBytes / (1024 * 1024)} MB for category "${category}"`,
+        maxSizeBytes: policy.maxSizeBytes,
         actualBytes: req.fileSize,
+        policySource: policy.source,
       });
     }
 
-    // Generate a unique key
+    // Generate a unique key. The (already validated) category is bound
+    // into the key — `uploads/<category>/<uuid><ext>` — so the verify
+    // seam can re-derive it server-side instead of trusting a
+    // client-supplied body field (T-09.12.05).
     const ext = (req.fileName.includes('.')
       ? req.fileName.slice(req.fileName.lastIndexOf('.')).toLowerCase()
       : '');
-    const uniqueKey = `${UPLOAD_PREFIX}${randomUUID()}${ext}`;
+    const uniqueKey = `${UPLOAD_PREFIX}${category}/${randomUUID()}${ext}`;
 
     try {
       const presignedUrl = await this.storage!.presignedPutUrl(
@@ -120,10 +145,25 @@ export class UploadController {
   }
 
   /**
-   * Verify that an object was uploaded successfully and mark it pending scan.
+   * Verify that an object was uploaded successfully and that its
+   * detected content type is permitted for its category.
    *
    * Called by the frontend after the browser has PUT the file to the
-   * presigned URL so the API records the metadata and schedules a scan.
+   * presigned URL. The object's leading bytes are read back from storage
+   * and magic-byte detected; the detected content type must be among the
+   * effective policy's allowed MIME types:
+   * - matches  → `confirmed`;
+   * - no match → `type_mismatch` (with the detected type and the allowed
+   *   set echoed in the response);
+   * - not detected (no signature) → `type_mismatch` (fail closed);
+   * - missing object → `not_found`.
+   *
+   * The category is **not** taken from the request body: it is re-derived
+   * from the server-issued object key (`uploads/<category>/<uuid><ext>`,
+   * bound at presign time), validated against the known category set, and
+   * the endpoint fails closed (400) when the category cannot be resolved.
+   * A client therefore cannot skip content-type detection by omitting or
+   * loosening `category`.
    */
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
@@ -137,12 +177,41 @@ export class UploadController {
       throw new BadRequestException('Invalid upload key');
     }
 
+    // Server-side category resolution: `uploads/<category>/<uuid><ext>`
+    // was issued by `getPresignedUrl`, which already validated the
+    // category against the policy. Fail closed on unknown/missing
+    // category instead of silently skipping detection.
+    const category = this.resolveCategoryFromKey(key);
+    if (category === null) {
+      throw new BadRequestException({
+        message: 'Invalid upload key: missing or unknown category',
+        hint: 'Expected key shape uploads/<category>/<uuid>.<ext>',
+      });
+    }
+
     try {
-      await this.storage!.getObject(key);
+      const object = await this.storage!.getObject(key);
+
+      const policy = await this.policyResolver.resolveEffective(category);
+      const sample = await this.readSample(object.body);
+      const candidates = sniffContentTypes(sample);
+      const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
+
+      if (detected !== null) {
+        return {
+          key,
+          exists: true,
+          status: 'confirmed',
+          detectedContentType: detected,
+        };
+      }
+
       return {
         key,
         exists: true,
-        status: 'pending_scan',
+        status: 'type_mismatch',
+        detectedContentType: candidates[0] ?? null,
+        allowedMimeTypes: policy.allowedMimeTypes,
       };
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
@@ -190,6 +259,67 @@ export class UploadController {
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------
+
+  /**
+   * Extract the category bound into a server-issued upload key of shape
+   * `uploads/<category>/<uuid><ext>`. Returns null when the key does not
+   * start with the upload prefix, has no category segment, carries path
+   * traversal, or the category is not a known upload category — so the
+   * caller can fail closed instead of guessing. Self-defending: does not
+   * rely on the caller having pre-validated the key.
+   */
+  private resolveCategoryFromKey(key: string): string | null {
+    if (!key.startsWith(UPLOAD_PREFIX) || key.includes('..')) return null;
+    const rest = key.slice(UPLOAD_PREFIX.length);
+    const slash = rest.indexOf('/');
+    if (slash === -1) return null;
+    const category = rest.slice(0, slash);
+    // Exactly one more segment (the file name) must follow the category.
+    // `uploads/document/a/b.pdf` or `uploads/document/` is not a key the
+    // server issues — reject rather than pass an unexpected path shape
+    // to the storage provider.
+    const remainder = rest.slice(slash + 1);
+    if (remainder.length === 0 || remainder.includes('/')) return null;
+    return UPLOAD_CATEGORIES.includes(category) ? category : null;
+  }
+
+  /**
+   * Read up to {@link SNIFF_SAMPLE_BYTES} leading bytes from a web
+   * ReadableStream, then cancel it (the verify seam only needs the
+   * signature). Never buffers the whole object; cancelling tears down
+   * the underlying storage response/socket instead of leaking it.
+   */
+  private async readSample(stream: ReadableStream): Promise<Uint8Array> {
+    const reader = stream.getReader();
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value) {
+          chunks.push(value);
+          total += value.byteLength;
+          if (total >= SNIFF_SAMPLE_BYTES) break;
+        }
+      }
+    } finally {
+      // Cancel the stream so the storage provider tears down the unused
+      // body (cancelling also releases the reader lock). Swallow errors:
+      // the sample has already been read and a failed teardown must not
+      // turn a successful verification into a 500.
+      await reader.cancel().catch(() => {});
+    }
+    const sample = new Uint8Array(Math.min(total, SNIFF_SAMPLE_BYTES));
+    let written = 0;
+    for (const chunk of chunks) {
+      const take = Math.min(chunk.byteLength, sample.length - written);
+      sample.set(chunk.subarray(0, take), written);
+      written += take;
+      if (written >= sample.length) break;
+    }
+    return sample;
+  }
 
   private ensureStorageReady(): void {
     if (!this.storage) {
