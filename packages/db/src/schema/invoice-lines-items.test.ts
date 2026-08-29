@@ -17,6 +17,10 @@ const INVOICE_LINES_ITEMS_MIGRATION = resolve(
   __dirname,
   '../../drizzle/0054_create_invoice_lines_and_items.sql',
 )
+const LINE_POSITION_MIGRATION = resolve(
+  __dirname,
+  '../../drizzle/0055_add_invoice_lines_position.sql',
+)
 
 /**
  * Real-PostgreSQL enforcement tests for the invoice_lines / invoice_items
@@ -94,6 +98,9 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
 
     const migrationSql = readFileSync(INVOICE_LINES_ITEMS_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(migrationSql)
+
+    const positionSql = readFileSync(LINE_POSITION_MIGRATION, 'utf-8').trim()
+    await ctx.pool.query(positionSql)
   })
 
   afterAll(async () => {
@@ -342,6 +349,49 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
     ).rejects.toMatchObject({ code: '23514' })
   })
 
+  // ---- Line ordering column (0055, T-04.1.02.02) --------------------------
+
+  it('stores an explicit position per line and returns lines in that order', async () => {
+    const invoiceId = await insertInvoice()
+    await ctx.db.execute(sql`
+      INSERT INTO invoice_lines
+        (invoice_id, description, quantity, unit_price, line_total, position)
+      VALUES
+        (${invoiceId}, 'second', 1, 1000, 1000, 1),
+        (${invoiceId}, 'first', 1, 2000, 2000, 0)
+    `)
+
+    const result = await ctx.db.execute<{ position: number; description: string }>(sql`
+      SELECT position, description FROM invoice_lines
+      WHERE invoice_id = ${invoiceId}
+      ORDER BY position ASC
+    `)
+    expect(result.rows.map((r) => r.description)).toEqual(['first', 'second'])
+    expect(result.rows.map((r) => r.position)).toEqual([0, 1])
+  })
+
+  it('defaults position to 0 for legacy inserts (0055 backfill-compatible)', async () => {
+    const invoiceId = await insertInvoice()
+    const result = await ctx.db.execute<{ position: number }>(sql`
+      INSERT INTO invoice_lines (invoice_id, description, quantity, unit_price, line_total)
+      VALUES (${invoiceId}, 'legacy', 1, 1000, 1000)
+      RETURNING position
+    `)
+    expect(result.rows[0]!.position).toBe(0)
+  })
+
+  it('migration 0055 is idempotent — re-running keeps the column and index', async () => {
+    const positionSql = readFileSync(LINE_POSITION_MIGRATION, 'utf-8').trim()
+    await expect(ctx.pool.query(positionSql)).resolves.toBeDefined()
+
+    const indexes = await ctx.db.execute<{ indexname: string }>(sql`
+      SELECT indexname FROM pg_indexes
+      WHERE schemaname = ${ctx.schemaName}
+        AND indexname = 'idx_invoice_lines_invoice_position'
+    `)
+    expect(indexes.rows).toHaveLength(1)
+  })
+
   // ---- Drizzle schema drift guard -----------------------------------------
 
   it('Drizzle schema mirrors the S-04.1.02 spec column set', () => {
@@ -357,6 +407,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         'vat_rate',
         'vat_amount',
         'is_taxable',
+        'position',
         'created_at',
         'updated_at',
       ]),

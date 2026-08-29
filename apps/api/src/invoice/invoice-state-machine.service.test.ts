@@ -166,6 +166,58 @@ describe('InvoiceStateMachineService', () => {
       ).rejects.toThrow(BadRequestException)
     })
 
+    it('runs on a caller-provided client without its own transaction (join path)', async () => {
+      // Caller owns the tx: no pool.connect, no BEGIN/COMMIT/ROLLBACK/release.
+      const callerClient = {
+        query: vi.fn()
+          .mockResolvedValueOnce({ rows: [makeInvoiceRow({ state: 'Draft' })] }) // FOR UPDATE
+          .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE
+          .mockResolvedValueOnce({ rows: [] }), // INSERT audit
+      }
+
+      const result = await service.transition('inv-001', 'Draft', 'Unpaid', {
+        actorUserId: 'user-001',
+        client: callerClient,
+      })
+
+      expect(result.transition).toBe('Issue')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+      expect(mockClient.release).not.toHaveBeenCalled()
+
+      const calls = callerClient.query.mock.calls.map((c) => (c[0] as string).trim().split(/\s+/)[0]!.toUpperCase())
+      expect(calls).not.toContain('BEGIN')
+      expect(calls).not.toContain('COMMIT')
+      expect(calls).not.toContain('ROLLBACK')
+      // Lock + UPDATE + audit INSERT ran on the caller's transaction
+      expect(calls.filter((c) => c === 'SELECT')).toHaveLength(1)
+      expect(calls).toContain('UPDATE')
+      const auditSql = callerClient.query.mock.calls
+        .map((c) => c[0] as string)
+        .find((sql) => sql.includes('INSERT INTO audit_log'))
+      expect(auditSql).toBeDefined()
+    })
+
+    it('does not issue ROLLBACK on failure when a caller client is provided', async () => {
+      const callerClient = {
+        query: vi.fn()
+          .mockResolvedValueOnce({ rows: [] }) // FOR UPDATE → empty (NotFound)
+          .mockResolvedValueOnce({ rows: [] }), // caller's own ROLLBACK later
+      }
+
+      await expect(
+        service.transition('inv-999', 'Draft', 'Unpaid', {
+          actorUserId: 'user-001',
+          client: callerClient,
+        }),
+      ).rejects.toThrow(NotFoundException)
+
+      // The service must not COMMIT/ROLLBACK/release — the caller owns them
+      const queries = callerClient.query.mock.calls.map((c) => (c[0] as string).trim().split(/\s+/)[0]!.toUpperCase())
+      expect(queries).not.toContain('COMMIT')
+      expect(queries).not.toContain('ROLLBACK')
+      expect(mockClient.release).not.toHaveBeenCalled()
+    })
+
     it('throws BadRequestException when amount constraints fail', async () => {
       await expect(
         service.transition('inv-001', 'Unpaid', 'Paid', {

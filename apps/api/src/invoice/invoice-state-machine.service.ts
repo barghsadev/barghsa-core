@@ -17,6 +17,7 @@
 
 import { Injectable, InternalServerErrorException, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
+import type { PoolClient } from 'pg'
 import {
   type InvoiceState,
   type InvoiceTransition,
@@ -25,7 +26,7 @@ import {
   transitionName,
   TRANSITION_LABELS,
 } from './invoice-state.model.js'
-import { InvoiceAuditRepository } from './invoice-audit.repository.js'
+import { InvoiceAuditRepository, type TransactionClient } from './invoice-audit.repository.js'
 
 /** Result returned by every transition method. */
 export interface TransitionResult {
@@ -56,6 +57,17 @@ export interface TransitionOptions {
    * set of side-effect column updates.
    */
   now?: Date
+  /**
+   * Optional caller-owned transaction client.
+   *
+   * When provided, the service runs the transition on the caller's open
+   * transaction (after the caller's BEGIN) and does NOT connect, BEGIN,
+   * COMMIT, ROLLBACK, or release — the caller owns the full transaction
+   * lifecycle and must COMMIT/ROLLBACK. This lets money-moving flows
+   * (e.g. ManualInvoiceService creating + issuing an invoice) stay atomic
+   * in one transaction (S-04.1.02, README atomicity rule).
+   */
+  client?: TransactionClient
 }
 
 @Injectable()
@@ -98,20 +110,25 @@ export class InvoiceStateMachineService {
     const label = TRANSITION_LABELS[transition]
 
     // --- 2. DB transaction ---
+    // If the caller supplied a client, join their open transaction (they
+    // own BEGIN/COMMIT/ROLLBACK/release). Otherwise open and own one here.
     const pool = getDbPool()
-    const client = await pool.connect()
+    const ownsClient = !opts.client
+    const client: PoolClient = opts.client
+      ? (opts.client as unknown as PoolClient)
+      : await pool.connect()
     try {
-      await client.query('BEGIN')
+      if (ownsClient) await client.query('BEGIN')
 
       // Lock the invoice row and verify its current state
-      const lockResult = await client.query(
+      const lockResult = (await client.query(
         `SELECT id, state FROM invoices WHERE id = $1 FOR UPDATE`,
         [invoiceId],
-      )
+      )) as { rows: Array<{ id: string; state: string }> }
       if (lockResult.rows.length === 0) {
         throw new NotFoundException(`Invoice not found: ${invoiceId}`)
       }
-      const currentState = lockResult.rows[0].state as InvoiceState
+      const currentState = lockResult.rows[0]!.state as InvoiceState
       if (currentState !== from) {
         throw new BadRequestException(
           `Invoice ${invoiceId} state conflict: expected '${from}', current '${currentState}'`,
@@ -177,7 +194,7 @@ export class InvoiceStateMachineService {
         now,
       )
 
-      await client.query('COMMIT')
+      if (ownsClient) await client.query('COMMIT')
 
       this.logger.log(
         `Invoice ${invoiceId} ${from} → ${to} (${label}) by ${opts.actorUserId}`,
@@ -185,7 +202,7 @@ export class InvoiceStateMachineService {
 
       return { invoiceId, fromState: from, toState: to, transition, auditId }
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      if (ownsClient) await client.query('ROLLBACK').catch(() => {})
       // Re-throw NestJS exceptions as-is; wrap generic errors
       if (
         error instanceof BadRequestException ||
@@ -198,7 +215,7 @@ export class InvoiceStateMachineService {
         `Invoice transition failed: ${String(error)}`,
       )
     } finally {
-      client.release()
+      if (ownsClient) client.release()
     }
   }
 

@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.02.02",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-02-02--manual-invoice-service",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/224",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -308,8 +308,23 @@
   ],
   "last_error": null,
   "notes": "T-04.1.02.01 MERGED (PR #223, squash ea076fc) after 1 review round (Claude Opus 5 approve, 7 minors; none blocking — follow-ups: out-of-band application of migration 0054 documented in PR body, trailing newlines in 4 new files, DDL-literal↔migration constraint tie test, stronger pg_trigger assertions, product_title NOT NULL, explicit line ordering column for T-04.1.02.02, DB-level line immutability with S-04.1.05). Real-DB suite 15/15, db 231 tests, root typecheck 11/11, CI green. Next: T-04.1.02.02 (ManualInvoiceService, L).",
-  "last_updated": "2026-08-29T18:26:30Z",
+  "last_updated": "2026-08-29T18:49:30Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "at": "2026-08-29T18:49:30Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "at": "2026-08-29T18:49:19Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+      "at": "2026-08-29T18:36:47Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
@@ -794,21 +809,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.04",
       "at": "2026-08-28T13:42:05Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.11.04",
-      "at": "2026-08-28T13:24:33Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.11.03",
-      "at": "2026-08-28T13:15:23Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.03",
-      "at": "2026-08-28T13:11:15Z"
     }
   ]
 }

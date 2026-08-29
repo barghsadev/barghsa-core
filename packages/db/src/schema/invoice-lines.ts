@@ -66,6 +66,19 @@ export const invoiceLines = pgTable(
     /** Whether this line participates in VAT calculation. */
     isTaxable: boolean('is_taxable').notNull().default(true),
 
+    /**
+     * 0-based display order of the line within its invoice (T-04.1.02.02).
+     *
+     * Manual invoices carry N custom lines whose order matters — the order
+     * the finance staff enters them. `created_at` alone cannot express it
+     * (same-timestamp ties), so the service writes 0..N-1 on insert and
+     * reads `ORDER BY position`. Existing rows default to 0 (migration
+     * 0055), which is correct because pre-0055 invoices were single-line
+     * in practice and the column only guarantees *stable* order going
+     * forward.
+     */
+    position: integer('position').notNull().default(0),
+
     /** When the line record was created. */
     createdAt: timestamptz('created_at').defaultNow().notNull(),
 
@@ -120,6 +133,7 @@ export const createInvoiceLinesTable = sql`
     vat_rate INTEGER NOT NULL DEFAULT 0,
     vat_amount BIGINT NOT NULL DEFAULT 0,
     is_taxable BOOLEAN NOT NULL DEFAULT TRUE,
+    position INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_invoice_lines_quantity_positive CHECK (quantity > 0),
@@ -131,4 +145,5 @@ export const createInvoiceLinesTable = sql`
   );
 
   CREATE INDEX IF NOT EXISTS idx_invoice_lines_invoice_id ON invoice_lines (invoice_id);
+  CREATE INDEX IF NOT EXISTS idx_invoice_lines_invoice_position ON invoice_lines (invoice_id, position);
 `
