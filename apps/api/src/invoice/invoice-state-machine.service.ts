@@ -16,7 +16,6 @@
  */
 
 import { Injectable, InternalServerErrorException, Logger, NotFoundException, BadRequestException } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import {
   type InvoiceState,
@@ -26,6 +25,7 @@ import {
   transitionName,
   TRANSITION_LABELS,
 } from './invoice-state.model.js'
+import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 
 /** Result returned by every transition method. */
 export interface TransitionResult {
@@ -61,6 +61,10 @@ export interface TransitionOptions {
 @Injectable()
 export class InvoiceStateMachineService {
   private readonly logger = new Logger(InvoiceStateMachineService.name)
+
+  constructor(
+    private readonly auditRepository: InvoiceAuditRepository,
+  ) {}
 
   /**
    * Transition an invoice from its current state to a new state, recording
@@ -157,28 +161,20 @@ export class InvoiceStateMachineService {
         values,
       )
 
-      // --- 5. Audit log entry ---
-      const auditId = uuidv7()
-      const auditMetadata = JSON.stringify({
-        invoiceId,
-        fromState: from,
-        toState: to,
-        transition: label,
-        reason: opts.reason ?? null,
-      })
-
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [
-          auditId,
-          opts.actorUserId,
-          `invoice.${label}`,
-          auditMetadata,
-          opts.correlationId ?? null,
-          opts.ip ?? null,
-          now,
-        ],
+      // --- 5. Audit log entry (append-only, same transaction) ---
+      const auditId = await this.auditRepository.recordTransition(
+        client,
+        {
+          invoiceId,
+          fromState: from,
+          toState: to,
+          transition,
+          actorUserId: opts.actorUserId,
+          reason: opts.reason,
+          correlationId: opts.correlationId,
+          ip: opts.ip,
+        },
+        now,
       )
 
       await client.query('COMMIT')

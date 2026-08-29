@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.01.05",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-01-01-05--invoice-audit-repository",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/221",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -305,8 +305,18 @@
   ],
   "last_error": null,
   "notes": "T-04.1.01.04 MERGED (PR #220, squash 07bd39f) after 1 review round (Claude Opus 5 approve, 7 minors; 4 fixed in-place — to_regclass guard, non-neg CHECK backfill parity, __dirname resolution, trailing newlines; 2 left as follow-up per established drift-guard pattern + intentional last-in-file backfill test; 1 documented loud-failure). Migration 0052 enforces ck_paid_not_exceeds_total + ck_refund_not_exceeds_paid at DB level: CREATE TABLE IF NOT EXISTS invoices (no prior migration created it) + idempotent DO-block backfill. 216 db tests pass, CI green. Queue front-loaded: E-04 block (position 259-363) now precedes T-11.01.01 (position 364) since T-11.01.01 depends on E-04 financial obligations; next task in queue order is 04-invoices-wallet-contracts.md#T-04.1.01.05 (audit repo entry for invoice state transitions).",
-  "last_updated": "2026-08-29T17:40:44Z",
+  "last_updated": "2026-08-29T17:48:19Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "at": "2026-08-29T17:48:19Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
+      "at": "2026-08-29T17:45:55Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
@@ -796,16 +806,6 @@
       "status": "fixing",
       "task_key": "02-auth-users-admin.md#T-09.10.03",
       "at": "2026-08-28T11:03:18Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.10.03",
-      "at": "2026-08-28T11:00:34Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.08.03",
-      "at": "2026-08-28T11:00:00Z"
     }
   ]
 }

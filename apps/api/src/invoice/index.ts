@@ -1,6 +1,11 @@
 export { InvoiceModule } from './invoice.module.js'
 export { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 export type { TransitionResult, TransitionOptions } from './invoice-state-machine.service.js'
+export { InvoiceAuditRepository } from './invoice-audit.repository.js'
+export type {
+  InvoiceAuditEntry,
+  TransactionClient,
+} from './invoice-audit.repository.js'
 export {
   INVOICE_STATES,
   INVOICE_TRANSITIONS,
