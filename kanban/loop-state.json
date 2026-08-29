@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
-  "current_pr_url": "",
-  "current_task_key": "",
+  "status": "in_review",
+  "current_task_id": "T-04.1.02.01",
+  "current_task_file": "04-invoices-wallet-contracts.md",
+  "current_branch": "feat/e04-t-04-1-02-01--invoice-lines-items-tables",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/223",
+  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -306,9 +306,19 @@
     "04-invoices-wallet-contracts.md#T-04.1.01.06"
   ],
   "last_error": null,
-  "notes": "T-04.1.01.06 MERGED (PR #222, squash f55372c) after 1 review round (Claude Opus 5 approve, 6 minors; none blocking — follow-ups: Docker-dependency blast radius of globalSetup in apps/api vitest, defensive metadata JSON.parse, trailing newlines in 4 files, fixture realism, incomingPaidAmount branch left to unit tests, out-of-band application of migration 0053 to environments documented in PR body). Real-DB Testcontainers suite covers all 17 allowed transitions, all 64 forbidden pairs, deterministic FOR UPDATE concurrency rejection (winner/loser + stale-from), amount guards, NotFound and atomic rollback; migration 0053 fixed real SQLSTATE 42703 defect (service emitted paid_at/overdue_at that never existed in schema). 1579 api tests pass, CI green. 0053 must be applied out-of-band where db:migrate:run is used (journal stale at 0028).",
-  "last_updated": "2026-08-29T18:14:42Z",
+  "notes": "T-04.1.02.01 in review (PR #223): invoice_lines (spec columns, CHECKs, ON DELETE CASCADE) + invoice_items (product-composition snapshot, product FK RESTRICT) tables, migration 0054 idempotent with updated_at triggers, real-DB enforcement suite 15/15, db 231 tests, root typecheck 11/11. Next after review: T-04.1.02.02 (ManualInvoiceService).",
+  "last_updated": "2026-08-29T18:20:33Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "at": "2026-08-29T18:20:33Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+      "at": "2026-08-29T18:17:39Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
@@ -798,16 +808,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.11.03",
       "at": "2026-08-28T12:54:43Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.03",
-      "at": "2026-08-28T12:44:29Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.11.03",
-      "at": "2026-08-28T12:42:58Z"
     }
   ]
 }
