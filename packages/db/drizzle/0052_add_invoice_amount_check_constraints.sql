@@ -50,10 +50,19 @@ CREATE TABLE IF NOT EXISTS invoices (
 -- ---------------------------------------------------------------------------
 -- 2. Idempotent backfill for databases whose invoices table predates the
 --    named constraints (e.g. created by an earlier drizzle-kit push).
+--    Adds the two amount invariants AND the non-negative column checks so a
+--    backfilled table ends up with exactly the same guard surface as one
+--    created by this migration. Notes:
+--      * to_regclass resolves against search_path — the same relation the
+--        CREATE TABLE IF NOT EXISTS above touches.
+--      * If a legacy table already holds rows that violate a constraint,
+--        the ALTER fails loudly and the migration stops. Violating legacy
+--        data must be reconciled before applying 0052 (acceptable: the
+--        whole point of the constraint is that such rows must not exist).
 -- ---------------------------------------------------------------------------
 DO $$
 BEGIN
-  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'invoices' AND relkind = 'r') THEN
+  IF to_regclass('invoices') IS NOT NULL THEN
     IF NOT EXISTS (
       SELECT 1 FROM pg_constraint
       WHERE conname = 'ck_paid_not_exceeds_total' AND conrelid = 'invoices'::regclass
@@ -70,6 +79,33 @@ BEGIN
       ALTER TABLE invoices
         ADD CONSTRAINT ck_refund_not_exceeds_paid
         CHECK (refunded_amount <= paid_amount);
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint
+      WHERE conname = 'ck_invoices_total_amount_nonneg' AND conrelid = 'invoices'::regclass
+    ) THEN
+      ALTER TABLE invoices
+        ADD CONSTRAINT ck_invoices_total_amount_nonneg
+        CHECK (total_amount >= 0);
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint
+      WHERE conname = 'ck_invoices_paid_amount_nonneg' AND conrelid = 'invoices'::regclass
+    ) THEN
+      ALTER TABLE invoices
+        ADD CONSTRAINT ck_invoices_paid_amount_nonneg
+        CHECK (paid_amount >= 0);
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint
+      WHERE conname = 'ck_invoices_refunded_amount_nonneg' AND conrelid = 'invoices'::regclass
+    ) THEN
+      ALTER TABLE invoices
+        ADD CONSTRAINT ck_invoices_refunded_amount_nonneg
+        CHECK (refunded_amount >= 0);
     END IF;
   END IF;
 END $$;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { resolve } from 'node:path'
 import { getTableConfig } from 'drizzle-orm/pg-core'
 import { invoices } from './invoices.js'
 
@@ -25,7 +25,7 @@ import { invoices } from './invoices.js'
  * money-safety posture.
  */
 const MIGRATION = readFileSync(
-  join(process.cwd(), 'drizzle', '0052_add_invoice_amount_check_constraints.sql'),
+  resolve(__dirname, '../../drizzle/0052_add_invoice_amount_check_constraints.sql'),
   'utf8',
 )
 
@@ -70,9 +70,15 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
     expect(MIGRATION).toMatch(/ADD CONSTRAINT ck_refund_not_exceeds_paid[\s\S]*CHECK \(refunded_amount <= paid_amount\)/)
   })
 
+  it('migration 0052 backfills the non-negative column CHECKs for legacy tables', () => {
+    expect(MIGRATION).toMatch(/ADD CONSTRAINT ck_invoices_total_amount_nonneg[\s\S]*CHECK \(total_amount >= 0\)/)
+    expect(MIGRATION).toMatch(/ADD CONSTRAINT ck_invoices_paid_amount_nonneg[\s\S]*CHECK \(paid_amount >= 0\)/)
+    expect(MIGRATION).toMatch(/ADD CONSTRAINT ck_invoices_refunded_amount_nonneg[\s\S]*CHECK \(refunded_amount >= 0\)/)
+  })
+
   it('migration 0052 is idempotent (matching sibling migrations)', () => {
     expect(MIGRATION).toContain('CREATE TABLE IF NOT EXISTS invoices')
-    expect(MIGRATION).toMatch(/IF NOT EXISTS \(\s*SELECT 1 FROM pg_constraint/)
+    expect(MIGRATION).toMatch(/IF to_regclass\('invoices'\) IS NOT NULL/)
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_profile_id')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_state')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_invoices_due_at')

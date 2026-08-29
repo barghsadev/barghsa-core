@@ -146,10 +146,19 @@ describe('invoice amount CHECK constraints (T-04.1.01.04)', () => {
     const constraints = await ctx.db.execute<{ name: string }>(sql`
       SELECT conname AS name FROM pg_constraint
       WHERE conrelid = 'invoices'::regclass
-        AND conname IN ('ck_paid_not_exceeds_total', 'ck_refund_not_exceeds_paid')
+        AND conname IN (
+          'ck_paid_not_exceeds_total',
+          'ck_refund_not_exceeds_paid',
+          'ck_invoices_total_amount_nonneg',
+          'ck_invoices_paid_amount_nonneg',
+          'ck_invoices_refunded_amount_nonneg'
+        )
       ORDER BY conname
     `)
     expect(constraints.rows.map((r) => r.name)).toEqual([
+      'ck_invoices_paid_amount_nonneg',
+      'ck_invoices_refunded_amount_nonneg',
+      'ck_invoices_total_amount_nonneg',
       'ck_paid_not_exceeds_total',
       'ck_refund_not_exceeds_paid',
     ])
