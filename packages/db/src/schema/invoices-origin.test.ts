@@ -161,7 +161,8 @@ describe('invoice origin links migration (T-04.1.02.05)', () => {
 
     const cols = await ctx.db.execute<{ column_name: string }>(sql`
       SELECT column_name FROM information_schema.columns
-      WHERE table_name = 'invoices' AND column_name = 'consultation_id'
+      WHERE table_schema = current_schema()
+        AND table_name = 'invoices' AND column_name = 'consultation_id'
     `)
     expect(cols.rows).toHaveLength(1)
   })
