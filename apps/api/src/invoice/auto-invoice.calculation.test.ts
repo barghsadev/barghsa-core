@@ -110,17 +110,24 @@ describe('calculateAutoInvoice', () => {
     ).toThrow(RangeError)
   })
 
+  it('allows a 100%-coverage gift discount (zero total)', () => {
+    // fixed_irr caps at min(value, orderAmount): a full-coverage code
+    // makes lineTotal 0 and total 0 — a legitimate order, not an error.
+    const result = calculateAutoInvoice(
+      [line({ unitPrice: 100_000n, vatRate: 900 })],
+      100_000n,
+    )
+    expect(result.totalDiscount).toBe(100_000n)
+    expect(result.lines[0]!.lineTotal).toBe(0n)
+    expect(result.lines[0]!.vatAmount).toBe(0n)
+    expect(result.totalAmount).toBe(0n)
+  })
+
   it('rejects an empty line list', () => {
     expect(() => calculateAutoInvoice([])).toThrow(AUTO_INVOICE_ERRORS.NO_LINES())
   })
 
-  it('rejects a zero total', () => {
-    expect(() =>
-      calculateAutoInvoice([line({ unitPrice: 0n })]),
-    ).toThrow(AUTO_INVOICE_ERRORS.ZERO_TOTAL())
-  })
-
-  it('allocates the discount to the first taxable line only', () => {
+  it('allocates the discount across lines in order', () => {
     const result = calculateAutoInvoice(
       [
         line({ unitPrice: 1_000_000n, vatRate: 900 }),
@@ -128,10 +135,46 @@ describe('calculateAutoInvoice', () => {
       ],
       800_000n,
     )
+    // Line 1 absorbs up to its full gross (1,000,000) — takes all 800,000.
     expect(result.lines[0]!.discount).toBe(800_000n)
     expect(result.lines[1]!.discount).toBe(0n)
     // Line 1: 200,000 net + 18,000 VAT; line 2: 500,000 + 45,000
     expect(result.totalAmount).toBe(763_000n)
+  })
+
+  it('spills the discount to the next line when the first is fully covered', () => {
+    const result = calculateAutoInvoice(
+      [
+        line({ unitPrice: 500_000n, vatRate: 900 }),
+        line({ unitPrice: 500_000n, vatRate: 900 }),
+      ],
+      800_000n,
+    )
+    // Line 1 takes all 500,000 → 0; the remaining 300,000 goes to line 2.
+    expect(result.lines[0]!.discount).toBe(500_000n)
+    expect(result.lines[0]!.lineTotal).toBe(0n)
+    expect(result.lines[1]!.discount).toBe(300_000n)
+    expect(result.lines[1]!.lineTotal).toBe(200_000n)
+  })
+
+  it('throws when the discount cannot be fully applied to non-taxable lines', () => {
+    // Non-taxable lines still absorb discount (zero VAT); a discount
+    // larger than the combined gross must not be silently dropped.
+    expect(() =>
+      calculateAutoInvoice(
+        [
+          line({ unitPrice: 100_000n, vatRate: 900, isTaxable: false }),
+          line({ unitPrice: 200_000n, vatRate: 900, isTaxable: false }),
+        ],
+        400_000n,
+      ),
+    ).toThrow(RangeError)
+  })
+
+  it('rejects a negative order discount', () => {
+    expect(() => calculateAutoInvoice([line()], -1n)).toThrow(
+      AUTO_INVOICE_ERRORS.NEGATIVE_DISCOUNT(),
+    )
   })
 })
 

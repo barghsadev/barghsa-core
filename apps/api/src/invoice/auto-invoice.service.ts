@@ -175,11 +175,13 @@ export class AutoInvoiceService {
       throw new BadRequestException('dueAt cannot be in the past')
     }
 
-    const pool = getDbPool()
     const ownsClient = !cmd.client
+    // Resolve the pool only on the standalone path — the caller-client
+    // path (order-creation seam) needs no pool at all.
+    const pool = ownsClient ? getDbPool() : null
     const client = cmd.client
       ? (cmd.client as unknown as import('pg').PoolClient)
-      : await pool.connect()
+      : await pool!.connect()
     try {
       if (ownsClient) await client.query('BEGIN')
 
@@ -187,7 +189,7 @@ export class AutoInvoiceService {
       const orderResult = (await client.query(
         `SELECT id, profile_id, product_id, order_type, status,
                 gift_code_id, gift_discount_amount, created_at
-           FROM orders WHERE id = $1`,
+           FROM orders WHERE id = $1 FOR UPDATE`,
         [cmd.orderId],
       )) as { rows: OrderSnapshotRow[] }
       const order = orderResult.rows[0]
@@ -383,8 +385,24 @@ export class AutoInvoiceService {
       // --- 8. Read back INSIDE the transaction (read-your-own-writes) ---
       const excerpt = await this.loadInvoiceExcerpt(client, invoiceId)
 
+      // The lines table does not store product identity (that lives in
+      // invoice_items), so overlay the in-memory calculation lines — which
+      // carry productId / productType / productTitle — onto the persisted
+      // read-back by position. Insertion order == read-back order
+      // (ORDER BY position), so the merge is exact; the id/position come
+      // from the DB, the composition fields from the calculation.
+      const lines = excerpt.lines.map((persisted, index) => {
+        const calc = calculation.lines[index]
+        if (!calc) return persisted
+        return {
+          ...calc,
+          id: persisted.id,
+          position: persisted.position,
+        }
+      })
+
       if (ownsClient) await client.query('COMMIT')
-      return { ...excerpt, auditId: transition.auditId, transition }
+      return { ...excerpt, lines, auditId: transition.auditId, transition }
     } catch (error) {
       if (ownsClient) await client.query('ROLLBACK').catch(() => {})
       if (

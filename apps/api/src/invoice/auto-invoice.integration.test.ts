@@ -21,11 +21,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common'
+import { ConflictException, NotFoundException } from '@nestjs/common'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
@@ -259,6 +255,9 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     expect(result.lines[0]!.vatRate).toBe(900)
     expect(result.lines[0]!.vatAmount).toBe(90_000n)
     expect(result.lines[0]!.description).toBe('برق حرارتی')
+    // Product identity is merged from the calculation (not fabricated).
+    expect(result.lines[0]!.productId).toBe(PRODUCT_ID)
+    expect(result.lines[0]!.productType).toBe('electricity')
     expect(result.items).toHaveLength(1)
     expect(result.items[0]!.productId).toBe(PRODUCT_ID)
     expect(result.transition.transition).toBe('Issue')
@@ -344,6 +343,41 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     }
     expect(snapshot.gift.giftCodeId).toBe('66666666-6666-7666-8666-666666666666')
     expect(snapshot.gift.discountAmount).toBe('250000')
+  })
+
+  it('does not roll back the order for a 100%-coverage gift discount', async () => {
+    // fixed_irr caps a code at min(value, orderAmount): a gift discount
+    // equal to the product price (1,000,000) yields a 0-total invoice —
+    // the order must still be created, not aborted.
+    const orderId = 'a1a1a1a1-a1a1-7a1a-8a1a-a1a1a1a1a1a9'
+    await insertOrder(orderId, {
+      giftCodeId: '88888888-8888-7888-8888-888888888888',
+      giftDiscountAmount: 1_000_000,
+    })
+
+    const result = await service.createInvoiceForOrder({
+      orderId,
+      actorUserId: ACTOR_USER_ID,
+      vatRateBasisPoints: 900,
+      now: new Date('2026-08-01T10:00:00.000Z'),
+    })
+
+    // lineTotal 0, VAT 0, total 0 — a legitimate fully-discounted invoice.
+    expect(result.totalAmount).toBe(0n)
+    expect(result.totalDiscount).toBe(1_000_000n)
+    expect(result.lines[0]!.lineTotal).toBe(0n)
+    expect(result.lines[0]!.vatAmount).toBe(0n)
+    expect(result.state).toBe('Unpaid')
+
+    // The order row still exists (nothing rolled back).
+    const orderStillThere = (await ctx.db.execute<{ n: number }>(
+      `SELECT COUNT(*)::int AS n FROM orders WHERE id = '${orderId}'`,
+    )).rows[0]!.n
+    expect(orderStillThere).toBe(1)
+    const invoiceCount = (await ctx.db.execute<{ n: number }>(
+      `SELECT COUNT(*)::int AS n FROM invoices WHERE order_id = '${orderId}'`,
+    )).rows[0]!.n
+    expect(invoiceCount).toBe(1)
   })
 
   it('rejects a duplicate auto invoice for the same order (409)', async () => {

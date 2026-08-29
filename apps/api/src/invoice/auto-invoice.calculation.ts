@@ -93,9 +93,12 @@ export const AUTO_INVOICE_ERRORS = {
   BAD_QUANTITY: () => 'Line quantity must be a positive integer',
   NEGATIVE_UNIT_PRICE: () => 'Line unit price cannot be negative',
   BAD_VAT_RATE: () => 'Line VAT rate must be between 0 and 10000 basis points',
+  NEGATIVE_DISCOUNT: () => 'Gift discount cannot be negative',
   DISCOUNT_EXCEEDS_LINE: (discount: bigint, subtotal: bigint) =>
     `Gift discount ${discount} IRR exceeds the line subtotal ${subtotal} IRR`,
-  ZERO_TOTAL: () => 'Auto invoice total must be positive',
+  DISCOUNT_EXCEEDS_INVOICE: (discount: bigint, gross: bigint) =>
+    `Gift discount ${discount} IRR exceeds the invoice subtotal ${gross} IRR`,
+  NEGATIVE_TOTAL: () => 'Auto invoice total cannot be negative',
 } as const
 
 /** Validate one input line, throwing a RangeError on the first violation. */
@@ -141,12 +144,14 @@ export function calculateAutoLine(
 ): CalculatedAutoLine {
   assertValidAutoLine(line)
   if (discount < 0n) {
-    throw new RangeError(AUTO_INVOICE_ERRORS.DISCOUNT_EXCEEDS_LINE(discount, 0n))
+    throw new RangeError(AUTO_INVOICE_ERRORS.NEGATIVE_DISCOUNT())
   }
   const gross = BigInt(line.quantity) * line.unitPrice
   if (discount > gross) {
     throw new RangeError(AUTO_INVOICE_ERRORS.DISCOUNT_EXCEEDS_LINE(discount, gross))
   }
+  // A zero line (discount == gross) is legitimate: a 100%-coverage gift
+  // code (fixed_irr caps at min(value, orderAmount)) fully pays the line.
   const isTaxable = line.isTaxable !== false
   const lineTotal = gross - discount
   const vatAmount = isTaxable
@@ -170,9 +175,13 @@ export function calculateAutoLine(
 /**
  * Validate and calculate a full auto invoice from composed lines.
  *
- * The order-level gift-code discount is allocated to the FIRST taxable
- * line (today's order model is single-product, so this is the only line;
- * multi-line allocation policies arrive with E-03 order compositions).
+ * The order-level gift-code discount is allocated across the lines in
+ * composition order, each line absorbing at most its pre-discount gross
+ * (`quantity × unitPrice`). Any discount left after the last line throws —
+ * a partially-applicable gift discount can never be silently dropped.
+ * Discounts reduce the line subtotal BEFORE VAT (T-03.02.03.06): taxable
+ * lines compute VAT on the net amount; non-taxable lines absorb discount
+ * with zero VAT.
  *
  * @throws RangeError with an AUTO_INVOICE_ERRORS message on invalid input.
  */
@@ -184,18 +193,28 @@ export function calculateAutoInvoice(
     throw new RangeError(AUTO_INVOICE_ERRORS.NO_LINES())
   }
   if (orderDiscount < 0n) {
-    throw new RangeError(AUTO_INVOICE_ERRORS.DISCOUNT_EXCEEDS_LINE(orderDiscount, 0n))
+    throw new RangeError(AUTO_INVOICE_ERRORS.NEGATIVE_DISCOUNT())
   }
 
+  const totalGross = lines.reduce(
+    (sum, l) => sum + BigInt(l.quantity) * l.unitPrice,
+    0n,
+  )
   let remaining = orderDiscount
   const calculated = lines.map((line) => {
-    // Allocate the order discount to the first taxable line, then stop.
-    const isTaxable = line.isTaxable !== false
-    const discount = isTaxable && remaining > 0n ? remaining : 0n
+    // Absorb as much of the remaining discount as this line can carry.
+    const gross = BigInt(line.quantity) * line.unitPrice
+    const discount = remaining > 0n ? (remaining < gross ? remaining : gross) : 0n
+    remaining -= discount
     const result = calculateAutoLine(line, discount)
-    if (discount > 0n) remaining = 0n
     return result
   })
+
+  if (remaining > 0n) {
+    throw new RangeError(
+      AUTO_INVOICE_ERRORS.DISCOUNT_EXCEEDS_INVOICE(orderDiscount, totalGross),
+    )
+  }
 
   const totalAmount = calculated.reduce(
     (sum, line) => sum + line.lineTotal + line.vatAmount,
@@ -203,8 +222,8 @@ export function calculateAutoInvoice(
   )
   const totalDiscount = calculated.reduce((sum, line) => sum + line.discount, 0n)
 
-  if (totalAmount <= 0n) {
-    throw new RangeError(AUTO_INVOICE_ERRORS.ZERO_TOTAL())
+  if (totalAmount < 0n) {
+    throw new RangeError(AUTO_INVOICE_ERRORS.NEGATIVE_TOTAL())
   }
 
   return { lines: calculated, totalAmount, totalDiscount }
