@@ -23,13 +23,13 @@ import {
 /**
  * Minimal transaction-scoped client accepted by the repository.
  *
- * Structural type (query + release) so the repository stays decoupled from
- * the `pg` driver and is trivially mockable in tests. A `pg` PoolClient
- * satisfies it.
+ * Structural type (query only) so the repository stays decoupled from the
+ * `pg` driver and is trivially mockable in tests. A `pg` PoolClient
+ * satisfies it; connection lifecycle (connect/release) belongs to the
+ * caller that owns the transaction.
  */
 export interface TransactionClient {
   query(text: string, params?: unknown[]): Promise<unknown>
-  release(): void
 }
 
 /** Audit context for one invoice state transition (T-04.1.01.05). */

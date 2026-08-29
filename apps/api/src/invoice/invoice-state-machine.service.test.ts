@@ -8,6 +8,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
+import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import {
   ALLOWED_TRANSITIONS,
   TRANSITION_LABELS,
@@ -64,7 +65,7 @@ describe('InvoiceStateMachineService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    service = new InvoiceStateMachineService()
+    service = new InvoiceStateMachineService(new InvoiceAuditRepository())
     mockPool.connect.mockResolvedValue(mockClient)
     mockClient.release.mockImplementation(() => {})
   })
@@ -335,9 +336,10 @@ describe('InvoiceStateMachineService', () => {
           })
 
           const name = transitionName(from, to)!
-          const auditCall = mockClient.query.mock.calls.find(
+          const auditCalls = mockClient.query.mock.calls.filter(
             (c: unknown[]) => (c[0] as string).includes('INSERT INTO audit_log'),
           )
+          const auditCall = auditCalls[auditCalls.length - 1]
           expect(auditCall, `audit insert for ${from} → ${to}`).toBeDefined()
           const params = auditCall![1] as unknown[]
           expect(params[2], `event for ${from} → ${to}`).toBe(

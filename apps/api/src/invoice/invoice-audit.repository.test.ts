@@ -112,8 +112,11 @@ describe('InvoiceAuditRepository', () => {
       const last = insertCall()!
       const lastParams = last[1] as unknown[]
       expect(lastParams[2], `event for ${transition}`).toBe(expected)
-      expect(last[0]).toBe(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)\n       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      // Compare SQL with collapsed whitespace so reformatting the query
+      // does not break the assertion.
+      const normalized = (sql: string) => sql.replace(/\s+/g, ' ').trim()
+      expect(normalized(last[0] as string)).toBe(
+        'INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7)',
       )
     }
     expect(mockClient.query).toHaveBeenCalledTimes(INVOICE_TRANSITIONS.length)

@@ -63,7 +63,7 @@ export class InvoiceStateMachineService {
   private readonly logger = new Logger(InvoiceStateMachineService.name)
 
   constructor(
-    private readonly auditRepository: InvoiceAuditRepository = new InvoiceAuditRepository(),
+    private readonly auditRepository: InvoiceAuditRepository,
   ) {}
 
   /**
