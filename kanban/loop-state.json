@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-04.1.02.07",
-  "current_task_file": "04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-1-02-07--rounding-service",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/229",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 357,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -309,12 +309,18 @@
     "04-invoices-wallet-contracts.md#T-04.1.02.03",
     "04-invoices-wallet-contracts.md#T-04.1.02.04",
     "04-invoices-wallet-contracts.md#T-04.1.02.05",
-    "04-invoices-wallet-contracts.md#T-04.1.02.06"
+    "04-invoices-wallet-contracts.md#T-04.1.02.06",
+    "04-invoices-wallet-contracts.md#T-04.1.02.07"
   ],
   "last_error": null,
-  "notes": "T-04.1.02.06 MERGED (PR #228, squash 5bb38f8) in 1 review round (Claude Opus 5: approve; 3 minors all tracked as follow-up). Idempotency: invoices now has nullable type TEXT (auto/manual) + unique uq_invoices_order_id_type on (order_id,type); migration 0057 backfills legacy rows from metadata->'source'. Auto+manual services persist type; auto runtime guard reads durable type column. Real-PG test proves same-order duplicate rejected, different-type allowed, NULL-distinct manual rows allowed, backfill, idempotency. db suite 29 files/251 tests, api 115 files/1672 tests, typecheck 11/11. Follow-ups tracked: (1) auto guard ON CONFLICT/catch-23505 for concurrency; (2) guard backfill re-run via DO/pg_indexes; (3) type CHECK constraint or pgEnum. Next: T-04.1.02.07 (RoundingService.roundHalfUp half-up, M).",
-  "last_updated": "2026-08-29T20:47:12Z",
+  "notes": "T-04.1.02.07 MERGED (PR #229, squash bdb42ab) in 1 review round (Claude Opus 5: approve; 4 minors all fixed in-place). RoundingService.roundHalfUp(value: bigint, precision: number) — validated half-up-to-nearest-IRR wrapper over the existing pure roundHalfUpDiv primitive (scale 10^precision; precision 0..18, int8-scaled bound); TypeError for non-bigint, RangeError for negative value / bad precision. Table-driven tests (33) with product financial examples (9%/10% VAT basis-point scale on 1M/750k/55,055/55,054/55,056, sub-IRR fractions, exact-half vs banker's anchors). Registered in InvoiceModule + barrel. api 116 files/1705 tests, typecheck pass, build pass; lint/format not available (no lint tasks/prettier config). Next: T-04.1.02.08 (invoice_calculation_snapshot JSONB column for reproducibility, S).",
+  "last_updated": "2026-08-29T20:53:50Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+      "at": "2026-08-29T20:53:50Z"
+    },
     {
       "status": "in_review",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
@@ -809,11 +815,6 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.12.03",
       "at": "2026-08-28T17:02:54Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.12.03",
-      "at": "2026-08-28T16:58:24Z"
     }
   ]
 }
