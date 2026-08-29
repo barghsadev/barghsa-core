@@ -911,3 +911,205 @@ describe('AdminService.disableStaff', () => {
     ).rejects.toMatchObject({ status: 404 })
   })
 })
+
+// ─── Tests — listStaffAudit (T-10.01.02) ─────────────────────────────
+
+describe('AdminService.listStaffAudit', () => {
+  const ROLE_CHANGE_METADATA = JSON.stringify({
+    targetUserId: 'u-target',
+    previousRoleIds: ['role-customer-support'],
+    newRoleIds: ['role-customer-support', 'role-finance'],
+    reason: 'Promoted to finance reviewer',
+  })
+
+  it('returns role_change events with computed added/removed diffs and resolved role names', async () => {
+    const { pool } = mockPool()
+    const createdAt = new Date('2026-08-20T09:30:00Z')
+    // count, staff_roles lookup, page
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({
+        rows: [
+          { role_id: 'role-customer-support', name: 'Customer Support' },
+          { role_id: 'role-finance', name: 'Finance' },
+        ],
+      })
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'audit-1',
+            actor_user_id: 'u-admin',
+            target_user_id: 'u-target',
+            target_username: 'staff@example.com',
+            actor_username: 'admin@example.com',
+            metadata: ROLE_CHANGE_METADATA,
+            correlation_id: 'corr-1',
+            ip: '10.0.0.9',
+            created_at: createdAt,
+          },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffAudit()
+
+    expect(result.total).toBe(1)
+    expect(result.items).toHaveLength(1)
+    const event = result.items[0]!
+    expect(event.targetUserId).toBe('u-target')
+    expect(event.targetUsername).toBe('staff@example.com')
+    expect(event.actorUserId).toBe('u-admin')
+    expect(event.actorUsername).toBe('admin@example.com')
+    expect(event.addedRoles).toEqual([{ roleId: 'role-finance', roleName: 'Finance' }])
+    expect(event.removedRoles).toEqual([])
+    expect(event.previousRoleIds).toEqual(['role-customer-support'])
+    expect(event.newRoleIds).toEqual(['role-customer-support', 'role-finance'])
+    expect(event.reason).toBe('Promoted to finance reviewer')
+    expect(event.createdAt).toBe('2026-08-20T09:30:00.000Z')
+  })
+
+  it('computes removals and falls back to roleId when a role has no staff_roles row', async () => {
+    const { pool } = mockPool()
+    const metadata = JSON.stringify({
+      targetUserId: 'u-target',
+      previousRoleIds: ['role-finance', 'role-ops'],
+      newRoleIds: ['role-finance'],
+      reason: null,
+    })
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({ rows: [{ role_id: 'role-finance', name: 'Finance' }] })
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'audit-2',
+            actor_user_id: 'u-admin',
+            target_user_id: 'u-target',
+            target_username: null,
+            actor_username: 'admin@example.com',
+            metadata,
+            correlation_id: null,
+            ip: null,
+            created_at: new Date('2026-08-21T08:00:00Z'),
+          },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffAudit()
+
+    expect(result.items[0]!.removedRoles).toEqual([
+      { roleId: 'role-ops', roleName: 'role-ops' },
+    ])
+    expect(result.items[0]!.addedRoles).toEqual([])
+    expect(result.items[0]!.reason).toBeNull()
+    expect(result.items[0]!.targetUsername).toBeNull()
+  })
+
+  it('passes the userId and date-range filters into both SQL queries', async () => {
+    const { pool } = mockPool()
+    const fromIso = '2026-08-01T00:00:00.000Z'
+    const toIso = '2026-08-31T23:59:59.999Z'
+    pool.query.mockResolvedValue({ rows: [] })
+    // First call resolves count 0 — filters are asserted on the params; an
+    // empty page short-circuits before the roles/page queries.
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 0 }] })
+      .mockResolvedValue({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await service.listStaffAudit({ userId: '11111111-2222-4333-8444-555555555555', from: fromIso, to: toIso })
+
+    const countCall = pool.query.mock.calls[0]!
+    expect(countCall[1]).toEqual([
+      '11111111-2222-4333-8444-555555555555',
+      new Date(fromIso),
+      new Date(toIso),
+    ])
+    expect(String(countCall[0])).toContain('role_change')
+    expect(String(countCall[0])).toContain('targetUserId')
+    expect(String(countCall[0])).toContain('created_at >= $2')
+  })
+
+  it('clamps limit to 1..200 and defaults to 50/0', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [{ total: 0 }] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const clamped = await service.listStaffAudit({ limit: 5000 })
+    expect(clamped.limit).toBe(200)
+
+    const defaulted = await service.listStaffAudit()
+    expect(defaulted.limit).toBe(50)
+    expect(defaulted.offset).toBe(0)
+  })
+
+  it('rejects a non-UUID userId filter with 400', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await expect(service.listStaffAudit({ userId: 'not-a-uuid' })).rejects.toMatchObject({
+      status: 400,
+    })
+    expect(pool.query).not.toHaveBeenCalled()
+  })
+
+  it('rejects an invalid date range with 400', async () => {
+    const { pool } = mockPool()
+    pool.query.mockResolvedValue({ rows: [] })
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await expect(
+      service.listStaffAudit({ from: '2026-09-01T00:00:00Z', to: '2026-08-01T00:00:00Z' }),
+    ).rejects.toMatchObject({ status: 400 })
+    expect(pool.query).not.toHaveBeenCalled()
+  })
+
+  it('handles malformed metadata rows without crashing the page', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({ rows: [] }) // staff_roles empty
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'audit-3',
+            actor_user_id: 'u-admin',
+            target_user_id: null,
+            target_username: null,
+            actor_username: 'admin@example.com',
+            metadata: 'not-json-at-all',
+            correlation_id: null,
+            ip: null,
+            created_at: new Date('2026-08-22T08:00:00Z'),
+          },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaffAudit()
+    expect(result.items[0]!.addedRoles).toEqual([])
+    expect(result.items[0]!.removedRoles).toEqual([])
+    expect(result.items[0]!.targetUserId).toBe('')
+  })
+})
