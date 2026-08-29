@@ -1,10 +1,10 @@
 {
-  "status": "idle",
-  "current_task_id": "",
-  "current_task_file": "",
-  "current_branch": "",
+  "status": "building",
+  "current_task_id": "T-10.01.02",
+  "current_task_file": "02-auth-users-admin.md",
+  "current_branch": "feat/e10-t-10-01-02--staff-permission-audit",
   "current_pr_url": "",
-  "current_task_key": "",
+  "current_task_key": "02-auth-users-admin.md#T-10.01.02",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -303,8 +303,13 @@
   ],
   "last_error": null,
   "notes": "T-10.01.01 MERGED (PR #218, squash db28baa) after 1 review round (Claude Opus 5 approve, 6 minors). E-10 staff admin API slice live: GET /api/admin/staff (paginated list of platform admins + role holders: name via default profile, role names, lastLoginAt, active/disabled status; cap admin:staff:view mapped to isAdmin), POST /api/admin/staff/:userId/disable (step-up; one tx: disabled_at + revoke all sessions + consume all refresh tokens + staff_user_disabled audit; idempotent; self-disable 400; non-staff 404). Migration 0051: users.disabled_at + last_login_at (nullable). Login/OTP-verify/password-reset/refresh reject disabled accounts (AUTH:ACCOUNT:DISABLED, fa/en keys); last_login_at set on password+OTP logins only. Follow-up minors from r1: move reset-password disabled check after OTP verify (enumeration), single-ROLLBACK failure paths, log residue fix, 401-vs-403 code consistency on refresh, guarantee 1 row/user in list (dup default profiles). Deferred: admin web UI slice (table, disable confirm, RTL/a11y), re-enable endpoint.",
-  "last_updated": "2026-08-29T17:09:13Z",
+  "last_updated": "2026-08-29T17:15:23Z",
   "status_history": [
+    {
+      "status": "building",
+      "task_key": "02-auth-users-admin.md#T-10.01.02",
+      "at": "2026-08-29T17:15:23Z"
+    },
     {
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-10.01.01",
@@ -799,11 +804,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.10.02",
       "at": "2026-08-28T10:34:14Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.10.02",
-      "at": "2026-08-28T10:33:26Z"
     }
   ]
 }
