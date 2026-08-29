@@ -8,10 +8,14 @@
  *   1. validates the input lines and the target profile;
  *   2. calculates `lineTotal`, per-line `vatAmount` (half-up rounded to
  *      the nearest IRR on taxable lines) and the invoice `totalAmount`;
- *   3. persists the invoice (Draft) + its lines in ONE transaction;
+ *   3. persists the invoice (Draft, issue timestamps NULL) + its lines
+ *      in ONE transaction;
  *   4. issues it (Draft → Unpaid) in the SAME transaction, setting
  *      issuedAt / payableFrom / dueAt and writing the canonical
- *      `invoice.issue` audit entry (S-04.1.01 audit rule).
+ *      `invoice.issue` audit entry (S-04.1.01 audit rule);
+ *   5. reads the result back INSIDE the transaction (read-your-own-writes)
+ *      and only then COMMITs — a read failure can never be reported as a
+ *      create failure for an already-committed invoice.
  *
  * Atomicity: the whole create+issue flow runs on a single DB connection
  * inside one BEGIN/COMMIT, with the state-machine transition joining the
@@ -19,11 +23,12 @@
  * (validation, FK, issue), every row rolls back — no orphan Draft.
  *
  * Idempotency: an optional `idempotencyKey` is stored in the invoice
- * `metadata` and replayed inside the transaction (a retry with the same
- * key returns the already-created invoice instead of duplicating it).
- * The durable idempotency-keys framework (unique index, expiry) lands
- * with C-04.CC.01; this is the per-command minimal guard so immediate
- * retries are safe.
+ * `metadata` and replayed inside the transaction. The lookup is scoped
+ * to the same profile + `source = 'manual'`, and a SHA-256 fingerprint
+ * of the normalized payload is stored so a reused key with a DIFFERENT
+ * payload is rejected with a 409 instead of silently returning the wrong
+ * invoice (no cross-profile disclosure). The durable idempotency-keys
+ * framework (unique index, expiry) lands with C-04.CC.01.
  *
  * Money rules: all amounts are bigint IRR; floating point is forbidden;
  * VAT is rounded half-up per line (README §Invoices).
@@ -31,15 +36,18 @@
 
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { createHash } from 'node:crypto'
 import { getDbPool } from '@barghsa/db'
 import { v7 as uuidv7 } from 'uuid'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import type { TransitionResult } from './invoice-state-machine.service.js'
 import type { TransactionClient } from './invoice-audit.repository.js'
+import type { InvoiceState } from './invoice-state.model.js'
 import {
   calculateManualInvoice,
   type CalculatedManualLine,
@@ -72,11 +80,12 @@ export interface CreateManualInvoiceCommand {
   /** Source IP of the staff member (audited). */
   ip?: string
   /**
-   * Idempotency key: retrying with the same key returns the existing
-   * invoice instead of creating a duplicate.
+   * Idempotency key: retrying with the same key and the same payload
+   * returns the existing invoice instead of creating a duplicate. A key
+   * reused with a different payload is rejected with ConflictException.
    */
   idempotencyKey?: string
-  /** Explicit due date; defaults to issuedAt + 7 days. */
+  /** Explicit due date (>= now); defaults to issuedAt + 7 days. */
   dueAt?: Date
   /** Override "now" for tests. */
   now?: Date
@@ -93,7 +102,7 @@ export interface ManualInvoiceResult {
   invoiceId: string
   profileId: string
   contractId: string | null
-  state: 'Unpaid'
+  state: InvoiceState
   totalAmount: bigint
   lines: ManualInvoiceLineResult[]
   issuedAt: Date
@@ -101,6 +110,28 @@ export interface ManualInvoiceResult {
   dueAt: Date | null
   auditId: string
   transition: TransitionResult
+}
+
+/** Normalized payload fingerprint so idempotency keys cannot be reused
+ *  for a different invoice. */
+export function fingerprintManualInvoice(cmd: {
+  profileId: string
+  contractId?: string
+  actorUserId: string
+  lines: ManualInvoiceLineInput[]
+}): string {
+  const normal = {
+    profileId: cmd.profileId,
+    contractId: cmd.contractId ?? null,
+    lines: cmd.lines.map((l) => ({
+      description: l.description.trim(),
+      quantity: l.quantity,
+      unitPrice: l.unitPrice.toString(),
+      vatRate: l.vatRate,
+      isTaxable: l.isTaxable !== false,
+    })),
+  }
+  return createHash('sha256').update(JSON.stringify(normal)).digest('hex')
 }
 
 @Injectable()
@@ -114,8 +145,11 @@ export class ManualInvoiceService {
   /**
    * Create a manual invoice and issue it atomically.
    *
-   * @throws BadRequestException on invalid lines or a non-positive total.
+   * @throws BadRequestException on invalid lines, a non-positive total,
+   *   or a due date in the past.
    * @throws NotFoundException when the profile does not exist.
+   * @throws ConflictException when an idempotency key is reused with a
+   *   different payload.
    */
   async createManualInvoice(
     cmd: CreateManualInvoiceCommand,
@@ -135,6 +169,9 @@ export class ManualInvoiceService {
     const dueAt =
       cmd.dueAt ??
       new Date(now.getTime() + DEFAULT_MANUAL_DUE_DAYS * 24 * 60 * 60 * 1000)
+    if (dueAt.getTime() < now.getTime()) {
+      throw new BadRequestException('dueAt cannot be in the past')
+    }
 
     const pool = getDbPool()
     const client = await pool.connect()
@@ -147,30 +184,34 @@ export class ManualInvoiceService {
         [cmd.profileId],
       )) as { rows: Array<{ id: string }> }
       if (profileResult.rows.length === 0) {
-        await client.query('ROLLBACK').catch(() => {})
         throw new NotFoundException(`Profile not found: ${cmd.profileId}`)
       }
 
-      // --- 3. Idempotency replay (same key → same invoice) ---
+      // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {
+        const fingerprint = fingerprintManualInvoice(cmd)
         const existing = (await client.query(
-          `SELECT id FROM invoices WHERE metadata->>'idempotencyKey' = $1 LIMIT 1`,
-          [cmd.idempotencyKey],
-        )) as { rows: Array<{ id: string }> }
+          `SELECT id, metadata FROM invoices
+           WHERE profile_id = $1
+             AND metadata->>'source' = 'manual'
+             AND metadata->>'idempotencyKey' = $2
+           LIMIT 1`,
+          [cmd.profileId, cmd.idempotencyKey],
+        )) as { rows: Array<{ id: string; metadata: Record<string, unknown> | null }> }
+
         if (existing.rows.length > 0) {
           const existingId = existing.rows[0]!.id
-          const replayed = await this.loadInvoiceExcerpt(client, existingId)
+          const storedFingerprint =
+            (existing.rows[0]!.metadata as Record<string, unknown> | null)
+              ?.fingerprint ?? null
+          if (storedFingerprint !== null && storedFingerprint !== fingerprint) {
+            throw new ConflictException(
+              `Idempotency key ${cmd.idempotencyKey} was already used with a different payload`,
+            )
+          }
 
-          // Return the original creation result (C-04.CC.01 cached-response
-          // semantics): the issue audit id of the original creation.
-          // audit_log.metadata is TEXT holding JSON — cast to jsonb.
-          const auditResult = (await client.query(
-            `SELECT id FROM audit_log
-             WHERE metadata::jsonb->>'invoiceId' = $1
-             ORDER BY created_at ASC, id ASC LIMIT 1`,
-            [existingId],
-          )) as { rows: Array<{ id: string }> }
-          const auditId = auditResult.rows[0]?.id ?? ''
+          const replayed = await this.loadInvoiceExcerpt(client, existingId)
+          const auditId = await this.findIssueAuditId(client, existingId)
 
           await client.query('COMMIT')
           return {
@@ -187,12 +228,17 @@ export class ManualInvoiceService {
         }
       }
 
-      // --- 4. Insert the invoice (Draft) + calculation snapshot ---
+      // --- 4. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
       const invoiceId = uuidv7()
       const metadata = JSON.stringify({
         source: 'manual',
         generatedBy: cmd.actorUserId,
-        ...(cmd.idempotencyKey ? { idempotencyKey: cmd.idempotencyKey } : {}),
+        ...(cmd.idempotencyKey
+          ? {
+              idempotencyKey: cmd.idempotencyKey,
+              fingerprint: fingerprintManualInvoice(cmd),
+            }
+          : {}),
         calculation: {
           lines: calculation.lines.map((l) => ({
             description: l.description,
@@ -210,13 +256,12 @@ export class ManualInvoiceService {
 
       await client.query(
         `INSERT INTO invoices (id, profile_id, contract_id, state, total_amount, issued_at, payable_from, due_at, metadata)
-         VALUES ($1, $2, $3, 'Draft', $4, $5, $5, $6, $7::jsonb)`,
+         VALUES ($1, $2, $3, 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
         [
           invoiceId,
           cmd.profileId,
           cmd.contractId ?? null,
           calculation.totalAmount,
-          now,
           dueAt,
           metadata,
         ],
@@ -259,15 +304,19 @@ export class ManualInvoiceService {
         },
       )
 
-      await client.query('COMMIT')
+      // --- 7. Read back INSIDE the transaction (read-your-own-writes):
+      //      a read failure here rolls back everything and cannot be
+      //      reported as a create failure for a committed invoice. ---
+      const excerpt = await this.loadInvoiceExcerpt(client, invoiceId)
 
-      const result = await this.loadInvoiceExcerpt(client, invoiceId)
-      return { ...result, auditId: transition.auditId, transition }
+      await client.query('COMMIT')
+      return { ...excerpt, auditId: transition.auditId, transition }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       if (
         error instanceof BadRequestException ||
-        error instanceof NotFoundException
+        error instanceof NotFoundException ||
+        error instanceof ConflictException
       ) {
         throw error
       }
@@ -279,9 +328,30 @@ export class ManualInvoiceService {
   }
 
   /**
+   * Find the `invoice.issue` audit entry id for an invoice.
+   *
+   * The lookup narrows on the indexed `event` column FIRST, so the
+   * TEXT→jsonb cast on `metadata` is only evaluated for matching rows
+   * (audit_log.metadata is TEXT holding JSON; a global cast would 22P02
+   * on any non-JSON row written by another service).
+   */
+  private async findIssueAuditId(
+    client: TransactionClient,
+    invoiceId: string,
+  ): Promise<string> {
+    const auditResult = (await client.query(
+      `SELECT id FROM audit_log
+       WHERE event = 'invoice.issue'
+         AND metadata::jsonb->>'invoiceId' = $1
+       ORDER BY created_at ASC, id ASC LIMIT 1`,
+      [invoiceId],
+    )) as { rows: Array<{ id: string }> }
+    return auditResult.rows[0]?.id ?? ''
+  }
+
+  /**
    * Load one invoice (state/totals/dates) with its lines in display order.
-   * Used after COMMIT and for idempotency replay. Queries run on the
-   * provided (transaction-scoped or pool) client.
+   * Queries run on the provided (transaction-scoped or pool) client.
    */
   private async loadInvoiceExcerpt(
     client: TransactionClient,
@@ -332,7 +402,10 @@ export class ManualInvoiceService {
       invoiceId: row.id,
       profileId: row.profile_id,
       contractId: row.contract_id,
-      state: row.state as 'Unpaid',
+      // The state is read from the DB — never cast. Fresh creates are
+      // 'Unpaid' after the Issue transition; replayed invoices may have
+      // moved on (paid/cancelled) and are reported truthfully.
+      state: row.state as InvoiceState,
       totalAmount: BigInt(row.total_amount),
       // issued_at / payable_from are set by the Issue transition; the
       // fallbacks keep the type honest for hypothetical legacy rows.

@@ -38,6 +38,10 @@
 -- migration) race on pg_extension_name_index inside `IF NOT EXISTS`
 -- otherwise (duplicate key value violates unique constraint
 -- "pg_extension_name_index"). The lock makes the second waiter a no-op.
+-- IMPORTANT: this file must be applied as a single multi-statement SQL
+-- request (pg uses one implicit transaction for the whole string), so the
+-- advisory lock is held through CREATE EXTENSION. A per-statement applier
+-- would release the lock between statements and restore the race.
 SELECT pg_advisory_xact_lock(hashtext('barghsa.pgcrypto'));
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 

@@ -130,7 +130,8 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
   async function countAuditRows(invoiceId: string): Promise<number> {
     const result = await ctx.db.execute<{ n: number }>(
       `SELECT COUNT(*)::int AS n FROM audit_log
-       WHERE metadata::jsonb ->> 'invoiceId' = '${invoiceId}'`,
+       WHERE event = 'invoice.issue'
+         AND metadata::jsonb ->> 'invoiceId' = '${invoiceId}'`,
     )
     return result.rows[0]!.n
   }
@@ -272,12 +273,15 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
   })
 
   it('rolls back every row when the audit insert fails mid-transaction', async () => {
-    // Break the audit_log FK by dropping the users reference target for a
+    // Break the audit_log FK by referencing a non-existent user for a
     // synthetic actor: the transition's audit insert then fails, which must
-    // roll back the invoice AND its lines (no orphan Draft).
-    const before = await ctx.db.execute<{ n: number }>(
-      `SELECT COUNT(*)::int AS n FROM invoices`,
-    )
+    // roll back the invoice AND its lines AND the audit row (no orphan
+    // Draft, no orphan lines, no partial audit trail).
+    const before = {
+      invoices: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoices`)).rows[0]!.n,
+      lines: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoice_lines`)).rows[0]!.n,
+      audit: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM audit_log`)).rows[0]!.n,
+    }
 
     await expect(
       service.createManualInvoice({
@@ -287,9 +291,72 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
       }),
     ).rejects.toThrow()
 
-    const after = await ctx.db.execute<{ n: number }>(
-      `SELECT COUNT(*)::int AS n FROM invoices`,
+    const after = {
+      invoices: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoices`)).rows[0]!.n,
+      lines: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM invoice_lines`)).rows[0]!.n,
+      audit: (await ctx.db.execute<{ n: number }>(`SELECT COUNT(*)::int AS n FROM audit_log`)).rows[0]!.n,
+    }
+    expect(after.invoices).toBe(before.invoices)
+    expect(after.lines).toBe(before.lines)
+    expect(after.audit).toBe(before.audit)
+
+    // No Draft invoice may linger for the profile after the failed create
+    const drafts = await ctx.db.execute<{ n: number }>(
+      `SELECT COUNT(*)::int AS n FROM invoices
+       WHERE profile_id = '${PROFILE_ID}' AND state = 'Draft'`,
     )
-    expect(after.rows[0]!.n).toBe(before.rows[0]!.n)
+    expect(drafts.rows[0]!.n).toBe(0)
+  })
+
+  it('rejects an idempotency key reused with a different payload', async () => {
+    await service.createManualInvoice({
+      profileId: PROFILE_ID,
+      actorUserId: ACTOR_USER_ID,
+      idempotencyKey: 'manual-idem-conflict',
+      lines: [{ description: 'first', quantity: 1, unitPrice: 100_000n, vatRate: 0 }],
+    })
+
+    await expect(
+      service.createManualInvoice({
+        profileId: PROFILE_ID,
+        actorUserId: ACTOR_USER_ID,
+        idempotencyKey: 'manual-idem-conflict',
+        lines: [{ description: 'DIFFERENT', quantity: 2, unitPrice: 200_000n, vatRate: 900 }],
+      }),
+    ).rejects.toThrow()
+
+    // Still exactly one invoice with the key
+    const result = await ctx.db.execute<{ n: number }>(
+      `SELECT COUNT(*)::int AS n FROM invoices
+       WHERE metadata->>'idempotencyKey' = 'manual-idem-conflict'`,
+    )
+    expect(result.rows[0]!.n).toBe(1)
+  })
+
+  it('never returns another profile invoice on an idempotency key collision', async () => {
+    // Second profile exists so a cross-profile key collision is possible
+    const otherProfile = '33333333-3333-7333-8333-333333333333'
+    await ctx.db.execute(
+      `INSERT INTO profiles (id) VALUES ('${otherProfile}') ON CONFLICT (id) DO NOTHING`,
+    )
+
+    const first = await service.createManualInvoice({
+      profileId: PROFILE_ID,
+      actorUserId: ACTOR_USER_ID,
+      idempotencyKey: 'shared-key-001',
+      lines: [{ description: 'for profile A', quantity: 1, unitPrice: 50_000n, vatRate: 0 }],
+    })
+
+    // Same key on a different profile must create a NEW invoice, not
+    // replay profile A's invoice.
+    const second = await service.createManualInvoice({
+      profileId: otherProfile,
+      actorUserId: ACTOR_USER_ID,
+      idempotencyKey: 'shared-key-001',
+      lines: [{ description: 'for profile B', quantity: 1, unitPrice: 60_000n, vatRate: 0 }],
+    })
+
+    expect(second.invoiceId).not.toBe(first.invoiceId)
+    expect(second.profileId).toBe(otherProfile)
   })
 })

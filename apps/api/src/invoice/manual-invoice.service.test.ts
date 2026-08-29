@@ -10,7 +10,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { ManualInvoiceService } from './manual-invoice.service.js'
+import { ManualInvoiceService, fingerprintManualInvoice } from './manual-invoice.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 
@@ -53,6 +53,11 @@ function command(overrides: Record<string, unknown> = {}) {
   }
 }
 
+/** The fingerprint the service itself computes for the base command. */
+function fingerprintForTest() {
+  return fingerprintManualInvoice(command({ idempotencyKey: 'manual-inv-123' }))
+}
+
 describe('ManualInvoiceService', () => {
   let service: ManualInvoiceService
 
@@ -70,7 +75,7 @@ describe('ManualInvoiceService', () => {
       mockQuery((sql) => {
         calls.push(sql.trim().split(/\s+/)[0]!.toUpperCase())
         if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] }
-        if (sql.startsWith('SELECT id FROM invoices WHERE metadata')) return { rows: [] }
+        if (sql.startsWith("SELECT id, metadata FROM invoices")) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
         if (sql.startsWith('SELECT id, state FROM invoices')) return { rows: [{ id: 'inv', state: 'Draft' }] }
@@ -118,6 +123,17 @@ describe('ManualInvoiceService', () => {
       // The state machine must NOT open its own transaction
       expect(mockPool.connect).toHaveBeenCalledTimes(1)
       expect(mockClient.release).toHaveBeenCalledTimes(1)
+      // The read-back happens BEFORE COMMIT (read-your-own-writes inside
+      // the tx) so a read failure cannot report a committed invoice as
+      // failed.
+      const readIdx = mockClient.query.mock.calls.findIndex(
+        (c) => (c[0] as string).startsWith('SELECT id, profile_id'),
+      )
+      const commitIdx = mockClient.query.mock.calls.findIndex(
+        (c) => (c[0] as string) === 'COMMIT',
+      )
+      expect(readIdx).toBeGreaterThanOrEqual(0)
+      expect(commitIdx).toBeGreaterThan(readIdx)
     })
 
     it('rejects invalid lines with BadRequestException', async () => {
@@ -154,7 +170,12 @@ describe('ManualInvoiceService', () => {
     it('replays the existing invoice when the idempotency key is reused', async () => {
       mockQuery((sql) => {
         if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] }
-        if (sql.startsWith('SELECT id FROM invoices WHERE metadata')) return { rows: [{ id: '00000000-0000-7000-8000-000000000007' }] }
+        if (sql.startsWith('SELECT id, metadata FROM invoices')) return {
+          rows: [{ id: '00000000-0000-7000-8000-000000000007', metadata: { fingerprint: fingerprintForTest() } }],
+        }
+        if (sql.startsWith('SELECT id FROM audit_log')) return {
+          rows: [{ id: '00000000-0000-7000-8000-000000000009' }],
+        }
         if (sql.startsWith('SELECT id, profile_id')) return {
           rows: [{
             id: '00000000-0000-7000-8000-000000000007',
@@ -176,6 +197,7 @@ describe('ManualInvoiceService', () => {
       )
 
       expect(result.invoiceId).toBe('00000000-0000-7000-8000-000000000007')
+      expect(result.auditId).toBe('00000000-0000-7000-8000-000000000009')
       // No invoice INSERT should have happened
       const inserts = mockClient.query.mock.calls.filter(
         (c) => (c[0] as string).startsWith('INSERT INTO invoices'),
@@ -186,6 +208,25 @@ describe('ManualInvoiceService', () => {
         (c) => (c[0] as string).includes('FOR UPDATE'),
       )
       expect(lockCalls).toHaveLength(0)
+    })
+
+    it('rejects an idempotency key reused with a different payload', async () => {
+      mockQuery((sql) => {
+        if (sql.startsWith('SELECT id FROM profiles')) return { rows: [{ id: 'profile-001' }] }
+        if (sql.startsWith('SELECT id, metadata FROM invoices')) return {
+          rows: [{ id: '00000000-0000-7000-8000-000000000007', metadata: { fingerprint: 'different-fingerprint' } }],
+        }
+        return { rows: [] }
+      })
+
+      await expect(
+        service.createManualInvoice(
+          command({ idempotencyKey: 'manual-inv-123' }),
+        ),
+      ).rejects.toThrow('already used with a different payload')
+      // No COMMIT — the conflict aborts the transaction
+      const calls = mockClient.query.mock.calls.map((c) => (c[0] as string).trim().split(/\s+/)[0]!.toUpperCase())
+      expect(calls).not.toContain('COMMIT')
     })
 
     it('rolls back when the Issue transition fails', async () => {
