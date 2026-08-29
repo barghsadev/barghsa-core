@@ -36,6 +36,7 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
  *   - `profileId` — FK → profiles.id (the customer).
  *   - `orderId?` — optional FK → orders.id.
  *   - `contractId?` — optional text reference (contracts table TBD).
+ *   - `consultationId?` — optional text reference (consultations table TBD).
  *   - `state` — current invoice state (invoice_state enum).
  *   - `totalAmount` — int8; invoice total in IRR.
  *   - `paidAmount` — int8, default 0; cumulative confirmed payments.
@@ -63,10 +64,19 @@ export const invoices = pgTable(
       .references(() => orders.id, { onDelete: 'set null' }),
 
     /**
-     * Optional reference to a contract.
+     * Optional reference to a contract (T-04.1.02.05).
      * FK deferred until the contracts table is defined.
      */
     contractId: text('contract_id'),
+
+    /**
+     * Optional reference to a consultation (T-04.1.02.05).
+     * FK deferred until the consultations table is defined, mirroring the
+     * contractId pattern — the column carries the origin reference from day
+     * one, and the actual FK constraint is added in the epic that creates
+     * the consultations table.
+     */
+    consultationId: text('consultation_id'),
 
     /** Current invoice state (invoice_state enum). */
     state: invoiceStateEnum('state').notNull().default('Draft'),
@@ -143,6 +153,7 @@ export const createInvoicesTable = sql`
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
     contract_id TEXT,
+    consultation_id TEXT,
     state invoice_state NOT NULL DEFAULT 'Draft',
     total_amount BIGINT NOT NULL CHECK (total_amount >= 0),
     paid_amount BIGINT NOT NULL DEFAULT 0 CHECK (paid_amount >= 0),
@@ -164,4 +175,6 @@ export const createInvoicesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_invoices_state ON invoices (state);
   CREATE INDEX IF NOT EXISTS idx_invoices_due_at ON invoices (due_at);
   CREATE INDEX IF NOT EXISTS idx_invoices_order_id ON invoices (order_id);
+  CREATE INDEX IF NOT EXISTS idx_invoices_contract_id ON invoices (contract_id);
+  CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id);
 `
