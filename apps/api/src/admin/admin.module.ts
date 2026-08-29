@@ -20,6 +20,8 @@ import { ContractTemplateService } from './contract-template.service.js'
 import { ContractTemplateController } from './contract-template.controller.js'
 import { UploadPolicyService } from './upload-policy.service.js'
 import { UploadPolicyController } from './upload-policy.controller.js'
+import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js'
+import { ContractElectricityLimitsController } from './contract-electricity-limits.controller.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
 
@@ -35,6 +37,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     GiftCodeController,
     ContractTemplateController,
     UploadPolicyController,
+    ContractElectricityLimitsController,
   ],
   providers: [
     AdminService,
@@ -47,6 +50,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     GiftCodeService,
     ContractTemplateService,
     UploadPolicyService,
+    ContractElectricityLimitsService,
     CorrelationIdProvider,
   ],
   exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService, GiftCodeService],
