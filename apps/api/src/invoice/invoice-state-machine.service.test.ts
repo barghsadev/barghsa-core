@@ -8,6 +8,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
+import {
+  ALLOWED_TRANSITIONS,
+  TRANSITION_LABELS,
+  transitionName,
+  type InvoiceState,
+  type TransitionContext,
+} from './invoice-state.model.js'
 
 // ---- Mocks ----
 const mockClient = {
@@ -294,6 +301,52 @@ describe('InvoiceStateMachineService', () => {
       expect(service.canFullRefund('Paid')).toBe(true)
       expect(service.canFullRefund('PartiallyRefunded')).toBe(false)
       expect(service.canFullRefund('Unpaid')).toBe(false)
+    })
+  })
+
+  describe('audit entry for every transition (T-04.1.01.05)', () => {
+    /** Financials that satisfy the amount-based guards for each target state. */
+    function financialsFor(to: InvoiceState): TransitionContext | undefined {
+      switch (to) {
+        case 'Paid':
+          return { paidAmount: 1_000_000n, totalAmount: 1_000_000n, refundedAmount: 0n }
+        case 'Refunded':
+          return { paidAmount: 1_000_000n, totalAmount: 1_000_000n, refundedAmount: 1_000_000n }
+        case 'PartiallyFunded':
+          return { paidAmount: 500_000n, totalAmount: 1_000_000n, refundedAmount: 0n }
+        case 'PartiallyRefunded':
+          return { paidAmount: 1_000_000n, totalAmount: 1_000_000n, refundedAmount: 200_000n }
+        default:
+          return undefined
+      }
+    }
+
+    it('writes one audit entry with the canonical event for every allowed transition', async () => {
+      let pairs = 0
+      for (const from of Object.keys(ALLOWED_TRANSITIONS) as InvoiceState[]) {
+        for (const to of ALLOWED_TRANSITIONS[from]) {
+          pairs += 1
+          mockTransitionFlowSuccess(from, 3)
+
+          const financials = financialsFor(to)
+          await service.transition('inv-001', from, to, {
+            actorUserId: 'user-001',
+            ...(financials ? { financials } : {}),
+          })
+
+          const name = transitionName(from, to)!
+          const auditCall = mockClient.query.mock.calls.find(
+            (c: unknown[]) => (c[0] as string).includes('INSERT INTO audit_log'),
+          )
+          expect(auditCall, `audit insert for ${from} → ${to}`).toBeDefined()
+          const params = auditCall![1] as unknown[]
+          expect(params[2], `event for ${from} → ${to}`).toBe(
+            `invoice.${TRANSITION_LABELS[name]}`,
+          )
+          expect(params[1], `actor for ${from} → ${to}`).toBe('user-001')
+        }
+      }
+      expect(pairs).toBeGreaterThan(0)
     })
   })
 })
