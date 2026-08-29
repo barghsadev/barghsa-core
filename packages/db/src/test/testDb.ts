@@ -33,6 +33,12 @@ export interface IsolatedTestDb {
   db: ReturnType<typeof drizzle>
   /** Pool backing this instance — call `end()` after the test. */
   pool: Pool
+  /**
+   * Connection string whose `search_path` targets the isolated schema.
+   * Callers that need additional pools (e.g. to exercise concurrent
+   * connections) can build their own `Pool` from this URL.
+   */
+  connectionString: string
 }
 
 const MANAGEMENT_POOL_MAX = 5
@@ -56,10 +62,15 @@ function getManagementPool(): Pool {
  * scoped to it.
  *
  * @param prefix - Optional schema name prefix (default `test_`).
- * @returns An `IsolatedTestDb` with `schemaName`, `db`, and `pool`.
+ * @param poolMax - Max connections for the returned pool. Defaults to 1 so
+ *   tests never accidentally use parallel connections; raise it (e.g. 4)
+ *   when a test must exercise concurrent transactions on the same data.
+ * @returns An `IsolatedTestDb` with `schemaName`, `db`, `pool`, and the
+ *   schema-scoped `connectionString`.
  */
 export async function createIsolatedTestDb(
   prefix = 'test_',
+  poolMax = 1,
 ): Promise<IsolatedTestDb> {
   const schemaName = `${prefix}${randomUUID().replace(/-/g, '').slice(0, 12)}`
   const mgmtPool = getManagementPool()
@@ -72,10 +83,10 @@ export async function createIsolatedTestDb(
     const sep = baseUrl.includes('?') ? '&' : '?'
     const schemaUrl = `${baseUrl}${sep}options=${encodeURIComponent(`-c search_path=${schemaName},public`)}`
 
-    const pool = new Pool({ connectionString: schemaUrl, max: 1 })
+    const pool = new Pool({ connectionString: schemaUrl, max: poolMax })
     const db = drizzle(pool, { logger: false })
 
-    return { schemaName, db, pool }
+    return { schemaName, db, pool, connectionString: schemaUrl }
   } finally {
     await mgmtPool.end().catch(() => {})
   }
