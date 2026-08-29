@@ -1,10 +1,10 @@
 {
-  "status": "in_review",
-  "current_task_id": "T-04.1.02.05",
-  "current_task_file": "kanban/epics/04-invoices-wallet-contracts.md",
-  "current_branch": "feat/e04-t-04-1-02-05--invoice-origin-fks",
-  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/227",
-  "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+  "status": "idle",
+  "current_task_id": "",
+  "current_task_file": "",
+  "current_branch": "",
+  "current_pr_url": "",
+  "current_task_key": "",
   "loop_iteration": 356,
   "fix_attempts": 0,
   "build_completed_tasks": [
@@ -307,12 +307,18 @@
     "04-invoices-wallet-contracts.md#T-04.1.02.01",
     "04-invoices-wallet-contracts.md#T-04.1.02.02",
     "04-invoices-wallet-contracts.md#T-04.1.02.03",
-    "04-invoices-wallet-contracts.md#T-04.1.02.04"
+    "04-invoices-wallet-contracts.md#T-04.1.02.04",
+    "04-invoices-wallet-contracts.md#T-04.1.02.05"
   ],
   "last_error": null,
-  "notes": "T-04.1.02.04 MERGED (PR #226, squash 3ddaf7a) after 2 review rounds (Claude Opus 5: approve -> approve; 6+4 minors, all addressed or tracked). VAT calculation module: VatCalculationRepository (loads active product override + category rate on any DbExecutor — pool or caller-owned tx client) + VatCalculationService (resolveRate: product override > category default > 0% fallback; override-first short-circuit with documented resolveVatRate invariant; product type derives category; explicit-rate fast path preserved in AutoInvoiceService). Pure vatAmount(): integer-only BigInt half-up to nearest IRR, non-taxable = 0. AutoInvoiceService passes the module; InvoiceModule + index wiring. 4 files new (repo/service/unit+integration tests), real-PG 7 tests, unit 138, API tsc+build green. Follow-ups tracked: route *.calculation.ts rounding onto vatAmount() so the two implementations cannot drift (the calc modules stay dependency-free). Next: T-04.1.02.05 (nullable orderId/contractId/consultationId invoice origin FKs, S).",
-  "last_updated": "2026-08-29T20:19:23Z",
+  "notes": "T-04.1.02.05 MERGED (PR #227, squash 228c6f4) in 1 review round (Claude Opus 5: approve; 5 minors all addressed except one tracked follow-up). Invoice origin links: invoices now carries nullable orderId (real FK -> orders, ON DELETE SET NULL, retained), contractId (deferred TEXT ref), consultationId (NEW deferred TEXT ref, mirroring contractId — target consultations table TBD). Migration 0056 adds consultation_id + idx_invoices_contract_id/idx_invoices_consultation_id; mirrors source-of-truth createInvoicesTable SQL. real-PG test proves nullable columns, order FK retained, no FK on contract/consultation (deferred), origin refs storable, no-origin invoices allowed, idempotency; all queries schema-scoped for vitest parallel isolation. db full suite 28 files/244 tests, api+worker typecheck green. Follow-up tracked: drift-guard assertion on createInvoicesTable source SQL via a reliable introspection helper (String() / queryChunks unreliable across Drizzle versions). Next: T-04.1.02.06 (idempotency: unique orderId+type index, M).",
+  "last_updated": "2026-08-29T20:23:28Z",
   "status_history": [
+    {
+      "status": "merged",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+      "at": "2026-08-29T20:23:28Z"
+    },
     {
       "status": "in_review",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
@@ -807,11 +813,6 @@
       "status": "in_review",
       "task_key": "02-auth-users-admin.md#T-09.12.02",
       "at": "2026-08-28T15:59:42Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.12.02",
-      "at": "2026-08-28T15:58:50Z"
     }
   ]
 }
