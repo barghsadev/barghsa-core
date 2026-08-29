@@ -324,6 +324,29 @@ describe('SessionService', () => {
         service.redeemRefreshToken('nonexistent'),
       ).rejects.toThrow(UnauthorizedException)
     })
+
+    it('rejects a refresh token for a disabled account (T-10.01.01)', async () => {
+      const tokenRow = makeTokenRow()
+
+      mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql === 'COMMIT') return { rows: [] }
+        if (sql.startsWith('ROLLBACK')) return { rows: [] }
+        if (sql.includes('token_hash')) return { rows: [tokenRow] }
+        // Disabled account status lookup
+        if (sql.includes('FROM users')) return { rows: [{ disabled_at: new Date() }] }
+        return { rows: [] }
+      })
+
+      await expect(
+        service.redeemRefreshToken(validToken),
+      ).rejects.toThrow(UnauthorizedException)
+
+      // The token must NOT be rotated for a disabled account
+      const inserts = mockClient.query.mock.calls.filter(
+        (c: any[]) => String(c[0]).includes('INSERT INTO refresh_tokens'),
+      )
+      expect(inserts).toHaveLength(0)
+    })
   })
 
   // ────────────────────────────────────────────────────────────

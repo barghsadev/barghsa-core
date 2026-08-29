@@ -61,6 +61,8 @@ describe('seed verification', () => {
         activation_token TEXT,
         activation_token_expires_at TIMESTAMPTZ,
         last_accepted_tos_version TEXT,
+        disabled_at TIMESTAMPTZ,
+        last_login_at TIMESTAMPTZ,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
@@ -309,6 +311,8 @@ describe('notification template seeding', () => {
         locale TEXT NOT NULL DEFAULT 'fa',
         must_change_password BOOLEAN NOT NULL DEFAULT false,
         is_admin BOOLEAN NOT NULL DEFAULT false,
+        disabled_at TIMESTAMPTZ,
+        last_login_at TIMESTAMPTZ,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )

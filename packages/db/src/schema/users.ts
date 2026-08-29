@@ -18,6 +18,8 @@ import { pgTable, text, boolean, timestamp } from 'drizzle-orm/pg-core'
  * - `must_change_password` — staff-enforced flag (T-02.01.04).
  * - `is_admin` — admin flag for bootstrap and initial admin user (T-02.04.03).
  * - `last_accepted_tos_version` — current accepted TOS version (T-04.01.03).
+ * - `disabled_at` — nullable; set when the staff account is disabled (T-10.01.01).
+ * - `last_login_at` — nullable; last successful login (T-10.01.01).
  * - `created_at` / `updated_at` — audit columns.
  */
 export const users = pgTable(
@@ -67,6 +69,15 @@ export const users = pgTable(
 
     /** Version ID of the TOS the user last accepted (T-04.01.03). */
     lastAcceptedTosVersion: text('last_accepted_tos_version'),
+
+    /** When the account was disabled (T-10.01.01). Null = active. A disabled
+     * account cannot log in, cannot reset its password, and has all sessions
+     * revoked; refresh tokens are consumed at disable time. */
+    disabledAt: timestamp('disabled_at', { withTimezone: true, mode: 'date' }),
+
+    /** Last successful login timestamp (T-10.01.01). Null until first login.
+     * Updated on password and OTP login paths; registration does not count. */
+    lastLoginAt: timestamp('last_login_at', { withTimezone: true, mode: 'date' }),
 
     /** When the user was created (registration verified). */
     createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
@@ -137,6 +148,19 @@ export const createUsersTable = sql`
       WHERE table_name = 'users' AND column_name = 'activation_token_expires_at'
     ) THEN
       ALTER TABLE users ADD COLUMN activation_token_expires_at TIMESTAMPTZ;
+    END IF;
+    -- T-10.01.01: staff account status + last login (migration 0051)
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'disabled_at'
+    ) THEN
+      ALTER TABLE users ADD COLUMN disabled_at TIMESTAMPTZ;
+    END IF;
+    IF NOT EXISTS (
+      SELECT 1 FROM information_schema.columns
+      WHERE table_name = 'users' AND column_name = 'last_login_at'
+    ) THEN
+      ALTER TABLE users ADD COLUMN last_login_at TIMESTAMPTZ;
     END IF;
   END $$;
 `

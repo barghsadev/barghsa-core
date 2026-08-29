@@ -304,6 +304,12 @@ export const ErrorCodes = {
     messageKey: 'auth.login.error.mustChangePassword',
     severity: 'info' as ErrorSeverity,
   },
+  AUTH_ACCOUNT_DISABLED: {
+    code: 'AUTH:ACCOUNT:DISABLED',
+    httpStatus: 403,
+    messageKey: 'auth.login.error.accountDisabled',
+    severity: 'info' as ErrorSeverity,
+  },
   AUTH_LOGIN_PASSWORD_REUSED: {
     code: 'AUTH:LOGIN:PASSWORD_REUSED',
     httpStatus: 422,

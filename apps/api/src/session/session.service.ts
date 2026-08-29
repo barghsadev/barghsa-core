@@ -432,6 +432,25 @@ export class SessionService {
 
       const tokenRow = tokenResult.rows[0]
 
+      // 1b. Reject tokens belonging to a disabled account (T-10.01.01).
+      // Disable consumes every active refresh token, so an unconsumed token
+      // here means a race between disable and refresh — the refresh must not
+      // mint a fresh session for a disabled user either way.
+      const refreshUserStatus = await client.query(
+        `SELECT disabled_at FROM users WHERE user_id = $1`,
+        [tokenRow.user_id],
+      )
+      if (
+        refreshUserStatus.rows.length > 0 &&
+        refreshUserStatus.rows[0].disabled_at
+      ) {
+        await client.query('ROLLBACK')
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code,
+        })
+      }
+
       // 2. Check for token reuse (already consumed)
       if (tokenRow.consumed_at) {
         // Token theft detected — revoke the entire family

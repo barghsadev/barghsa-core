@@ -15,6 +15,10 @@ function mockPool() {
 function mockClient() {
   const mockClientQuery = vi.fn()
   const mockRelease = vi.fn()
+  // Benign default so un-queued calls (e.g. the catch-path ROLLBACK after an
+  // error) resolve instead of returning undefined. Explicit
+  // mockResolvedValueOnce entries still take precedence over it.
+  mockClientQuery.mockImplementation(async () => ({ rows: [] }))
   const client = { query: mockClientQuery, release: mockRelease }
   return { mockClientQuery, mockRelease, client }
 }
@@ -684,5 +688,226 @@ describe('AdminService.getEffectivePermissions', () => {
     service = new Svc()
 
     await expect(service.getEffectivePermissions('missing')).rejects.toMatchObject({ status: 404 })
+  })
+})
+
+// ─── Tests — listStaff (T-10.01.01) ──────────────────────────────────
+
+describe('AdminService.listStaff', () => {
+  it('returns staff rows with roles, last login, and status', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 2 }] }) // count
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            user_id: 'u-admin',
+            username: 'admin@example.com',
+            email: 'admin@example.com',
+            mobile: null,
+            is_admin: true,
+            created_at: new Date('2026-01-01T00:00:00Z'),
+            last_login_at: new Date('2026-08-01T10:00:00Z'),
+            disabled_at: null,
+            first_name: 'Ada',
+            last_name: 'Lovelace',
+            roles: [{ roleId: 'role-admin', name: 'Admin' }],
+          },
+          {
+            user_id: 'u-support',
+            username: '+989120000000',
+            email: null,
+            mobile: '+989120000000',
+            is_admin: false,
+            created_at: new Date('2026-02-01T00:00:00Z'),
+            last_login_at: null,
+            disabled_at: new Date('2026-08-15T12:00:00Z'),
+            first_name: 'Grace',
+            last_name: 'Hopper',
+            roles: [{ roleId: 'role-customer-support', name: 'Customer Support' }],
+          },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaff({ limit: 10, offset: 0 })
+
+    expect(result.total).toBe(2)
+    expect(result.limit).toBe(10)
+    expect(result.items).toHaveLength(2)
+    expect(result.items[0]!.username).toBe('admin@example.com')
+    expect(result.items[0]!.status).toBe('active')
+    expect(result.items[0]!.roles).toEqual([{ roleId: 'role-admin', name: 'Admin' }])
+    expect(result.items[0]!.lastLoginAt).toBe('2026-08-01T10:00:00.000Z')
+    expect(result.items[1]!.status).toBe('disabled')
+    expect(result.items[1]!.lastLoginAt).toBeNull()
+    expect(result.items[1]!.disabledAt).toBe('2026-08-15T12:00:00.000Z')
+    expect(result.items[1]!.isAdmin).toBe(false)
+  })
+
+  it('clamps limit to the 1..200 range and defaults to 50', async () => {
+    const { pool } = mockPool()
+    // Two listStaff calls × (COUNT + list) queries
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ total: 0 }] })
+      .mockResolvedValueOnce({ rows: [] })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const clamped = await service.listStaff({ limit: 5000 })
+    expect(clamped.limit).toBe(200)
+
+    const defaulted = await service.listStaff()
+    expect(defaulted.limit).toBe(50)
+
+    // First query of each call is the COUNT; list query params follow.
+    expect(pool.query.mock.calls[1]![1]).toEqual([200, 0])
+    expect(pool.query.mock.calls[3]![1]).toEqual([50, 0])
+  })
+
+  it('legacy string roles degrade to an empty array', async () => {
+    const { pool } = mockPool()
+    pool.query
+      .mockResolvedValueOnce({ rows: [{ total: 1 }] })
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            user_id: 'u1',
+            username: 'a@example.com',
+            email: null,
+            mobile: null,
+            is_admin: false,
+            created_at: new Date('2026-01-01T00:00:00Z'),
+            last_login_at: null,
+            disabled_at: null,
+            first_name: null,
+            last_name: null,
+            roles: 'not-an-array',
+          },
+        ],
+      })
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.listStaff()
+    expect(result.items[0]!.roles).toEqual([])
+    expect(result.items[0]!.firstName).toBeNull()
+  })
+})
+
+// ─── Tests — disableStaff (T-10.01.01) ───────────────────────────────
+
+describe('AdminService.disableStaff', () => {
+  it('disables the account, revokes sessions/tokens, and records an audit entry', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery, mockRelease } = mockClient()
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: 'u-target', username: 'staff@example.com', disabled_at: null }] })
+      .mockResolvedValueOnce(undefined) // UPDATE users
+      .mockResolvedValueOnce(undefined) // UPDATE sessions
+      .mockResolvedValueOnce(undefined) // UPDATE refresh_tokens
+      .mockResolvedValueOnce(undefined) // INSERT audit_log
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.disableStaff({
+      userId: 'u-target',
+      actorUserId: 'u-admin',
+      ip: '10.0.0.1',
+    })
+
+    expect(result.status).toBe('disabled')
+    expect(result.alreadyDisabled).toBe(false)
+    expect(result.username).toBe('staff@example.com')
+    expect(result.disabledAt).toBeTruthy()
+
+    // Sessions and refresh tokens are revoked in the same transaction
+    const sqlCalls = mockClientQuery.mock.calls.map((c: unknown[]) => c[0] as string)
+    expect(sqlCalls.some((s) => s.includes('UPDATE sessions') && s.includes('revoked_at'))).toBe(true)
+    expect(sqlCalls.some((s) => s.includes('UPDATE refresh_tokens') && s.includes('consumed_at'))).toBe(true)
+
+    // Audit entry carries actor + target
+    const auditCall = mockClientQuery.mock.calls.find((c) => String(c[0]).includes('INSERT INTO audit_log'))
+    expect(auditCall).toBeDefined()
+    const auditMetadata = JSON.parse(auditCall![1]![3] as string)
+    expect(auditMetadata).toMatchObject({ actorUserId: 'u-admin' })
+    expect(auditCall![1]![1]).toBe('u-target') // audit_log.user_id = target
+    expect(mockRelease).toHaveBeenCalled()
+  })
+
+  it('rejects disabling your own account', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery } = mockClient()
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: 'u-admin', username: 'admin@example.com', disabled_at: null }] })
+      .mockResolvedValueOnce(undefined) // ROLLBACK
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await expect(
+      service.disableStaff({ userId: 'u-admin', actorUserId: 'u-admin', ip: '10.0.0.1' }),
+    ).rejects.toMatchObject({ status: 400 })
+  })
+
+  it('is idempotent for an already-disabled account', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery } = mockClient()
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: 'u2', username: 'x@example.com', disabled_at: new Date('2026-08-01T00:00:00Z') }] })
+      .mockResolvedValueOnce(undefined) // COMMIT
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    const result = await service.disableStaff({ userId: 'u2', actorUserId: 'u-admin', ip: '10.0.0.1' })
+
+    expect(result.alreadyDisabled).toBe(true)
+    expect(result.disabledAt).toBe('2026-08-01T00:00:00.000Z')
+    // No UPDATE writes for the already-disabled path
+    const writes = mockClientQuery.mock.calls.filter((c) => String(c[0]).startsWith('UPDATE'))
+    expect(writes).toHaveLength(0)
+  })
+
+  it('throws 404 for a non-staff or unknown user', async () => {
+    const { pool, mockConnect } = mockPool()
+    const { client, mockClientQuery } = mockClient()
+
+    mockConnect.mockResolvedValueOnce(client)
+    mockClientQuery
+      .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // target select — not staff / missing
+      .mockResolvedValueOnce(undefined) // ROLLBACK
+
+    vi.doMock('@barghsa/db', () => mockDbModule(pool))
+    const { AdminService: Svc } = await import('./admin.service.js')
+    service = new Svc()
+
+    await expect(
+      service.disableStaff({ userId: 'customer-not-staff', actorUserId: 'u-admin', ip: '10.0.0.1' }),
+    ).rejects.toMatchObject({ status: 404 })
   })
 })
