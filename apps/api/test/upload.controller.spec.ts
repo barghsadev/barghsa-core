@@ -289,7 +289,7 @@ describe('UploadController', () => {
   // -----------------------------------------------------------------------
 
   describe('verifyUpload', () => {
-    it('returns pending_scan when object exists (legacy path, no category)', async () => {
+    it('fails closed when the key has no category segment', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: new ReadableStream(),
         contentType: 'image/jpeg',
@@ -298,24 +298,27 @@ describe('UploadController', () => {
         etag: '"abc123"',
       });
 
-      const result = await controller.verifyUpload('uploads/some-uuid.jpg');
+      // Legacy key shape `uploads/<uuid><ext>` — no category to resolve.
+      await expect(
+        controller.verifyUpload('uploads/some-uuid.jpg'),
+      ).rejects.toThrow(BadRequestException);
+      expect(storage.getObject).not.toHaveBeenCalled();
+    });
 
-      expect(result).toEqual({
-        key: 'uploads/some-uuid.jpg',
-        exists: true,
-        status: 'pending_scan',
-      });
+    it('fails closed when the key carries an unknown category', async () => {
+      await expect(
+        controller.verifyUpload('uploads/bogus/some-uuid.pdf'),
+      ).rejects.toThrow(BadRequestException);
+      expect(storage.getObject).not.toHaveBeenCalled();
     });
 
     it('returns confirmed when detected bytes match the category policy', async () => {
       vi.mocked(storage.getObject).mockResolvedValue(pdfObject());
 
-      const result = await controller.verifyUpload('uploads/some-uuid.pdf', {
-        category: 'document',
-      });
+      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
 
       expect(result).toEqual({
-        key: 'uploads/some-uuid.pdf',
+        key: 'uploads/document/some-uuid.pdf',
         exists: true,
         status: 'confirmed',
         detectedContentType: 'application/pdf',
@@ -331,12 +334,10 @@ describe('UploadController', () => {
         etag: '"png"',
       });
 
-      const result = await controller.verifyUpload('uploads/some-uuid.pdf', {
-        category: 'document',
-      });
+      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
 
       expect(result).toMatchObject({
-        key: 'uploads/some-uuid.pdf',
+        key: 'uploads/document/some-uuid.pdf',
         exists: true,
         status: 'type_mismatch',
         detectedContentType: 'image/png',
@@ -345,7 +346,7 @@ describe('UploadController', () => {
       expect(result.allowedMimeTypes).not.toContain('image/png');
     });
 
-    it('returns type_mismatch for an empty object (no sniffable signature)', async () => {
+    it('returns type_mismatch for an empty object (no sniffable signature, fail closed)', async () => {
       vi.mocked(storage.getObject).mockResolvedValue({
         body: streamOf(''),
         contentType: 'application/pdf',
@@ -354,22 +355,20 @@ describe('UploadController', () => {
         etag: '"empty"',
       });
 
-      const result = await controller.verifyUpload('uploads/some-uuid.pdf', {
-        category: 'document',
-      });
+      const result = await controller.verifyUpload('uploads/document/some-uuid.pdf');
 
       expect(result).toMatchObject({ exists: true, status: 'type_mismatch', detectedContentType: null });
     });
 
     it('returns not_found when object does not exist', async () => {
       vi.mocked(storage.getObject).mockRejectedValue(
-        new StorageObjectNotFound('uploads/missing.jpg'),
+        new StorageObjectNotFound('uploads/document/missing.jpg'),
       );
 
-      const result = await controller.verifyUpload('uploads/missing.jpg');
+      const result = await controller.verifyUpload('uploads/document/missing.jpg');
 
       expect(result).toEqual({
-        key: 'uploads/missing.jpg',
+        key: 'uploads/document/missing.jpg',
         exists: false,
         status: 'not_found',
       });

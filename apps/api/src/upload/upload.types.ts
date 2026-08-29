@@ -52,15 +52,18 @@ export interface PresignedUrlResponse {
 /**
  * Response for an upload verification.
  *
- * Since T-09.12.05, when the verify call supplies the upload `category`,
- * the stored object's leading bytes are magic-byte detected and compared
- * against the effective policy's allowed MIME set:
+ * The category is re-derived server-side from the object key
+ * (`uploads/<category>/<uuid><ext>`, bound at presign time) — see
+ * `UploadController.verifyUpload`. Detection always runs:
  * - `confirmed` — object exists and detected content type is allowed;
  * - `type_mismatch` — object exists but its real bytes are not a
- *   permitted content type for the category;
- * - `pending_scan` — object exists, no detection performed (legacy path,
- *   no category supplied);
+ *   permitted content type for the category (or carry no detectable
+ *   signature — fail closed);
  * - `not_found` — object does not exist.
+ *
+ * `pending_scan` is retained for backward compatibility with legacy
+ * callers; this endpoint no longer produces it (a client cannot opt out
+ * of content-type detection).
  */
 export interface VerifyUploadResponse {
   key: string;

@@ -6,7 +6,6 @@ import {
   MAX_UPLOAD_POLICY_EXTENSIONS,
   MIN_UPLOAD_POLICY_SIZE_BYTES,
   isUploadPolicyCategory,
-  isValidPolicyExtension,
   normalizePolicyExtensions,
   uploadPolicyWindowStatus,
   type UploadPolicyCategory,
