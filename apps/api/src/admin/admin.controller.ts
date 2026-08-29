@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
-import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult, type StaffListResult, type DisableStaffResult, type StaffListQuery } from './admin.service.js'
+import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult, type StaffListResult, type DisableStaffResult, type StaffListQuery, type StaffAuditResult, type StaffAuditQuery } from './admin.service.js'
 import { BrandConfigService } from './brand-config.service.js'
 import { TosService } from '../tos/tos.service.js'
 import {
@@ -502,6 +502,67 @@ export class AdminController {
       actorUserId: req.session.userId,
       ip,
     })
+  }
+
+  /**
+   * GET /api/admin/staff/audit
+   *
+   * Staff permission audit timeline (T-10.01.02): `role_change` audit
+   * events — who granted or removed which role, for whom, when, and with
+   * what reason. Filterable by target staff user and by date range, and
+   * paginated like the staff list.
+   *
+   * Permission: `admin:staff:view` — mapped to a platform-admin session
+   * today, per the S-09/S-10 convention.
+   */
+  @Get('staff/audit')
+  @ApiOperation({ summary: 'Staff permission audit timeline (role changes)' })
+  @ApiQuery({ name: 'userId', required: false, description: 'Filter to role changes of one staff user (UUID)' })
+  @ApiQuery({ name: 'from', required: false, description: 'Inclusive lower bound (ISO timestamp) on event time' })
+  @ApiQuery({ name: 'to', required: false, description: 'Inclusive upper bound (ISO timestamp) on event time' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Page size (1..200, default 50)' })
+  @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default 0)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated role-change audit events.',
+    schema: {
+      type: 'object',
+      properties: {
+        items: { type: 'array', items: { type: 'object' } },
+        total: { type: 'number' },
+        limit: { type: 'number' },
+        offset: { type: 'number' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid userId or date range' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
+  async listStaffAudit(
+    @Query('userId') userId: string | undefined,
+    @Query('from') from: string | undefined,
+    @Query('to') to: string | undefined,
+    @Query('limit') limit: string | undefined,
+    @Query('offset') offset: string | undefined,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<StaffAuditResult> {
+    if (!(req.session.isAdmin ?? false)) {
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read the staff permission audit`)
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403,
+      )
+    }
+
+    const auditQuery: StaffAuditQuery = {}
+    if (userId !== undefined) auditQuery.userId = userId
+    if (from !== undefined) auditQuery.from = from
+    if (to !== undefined) auditQuery.to = to
+    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN
+    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN
+    if (Number.isFinite(parsedLimit)) auditQuery.limit = parsedLimit
+    if (Number.isFinite(parsedOffset)) auditQuery.offset = parsedOffset
+
+    return this.adminService.listStaffAudit(auditQuery)
   }
 
   /**

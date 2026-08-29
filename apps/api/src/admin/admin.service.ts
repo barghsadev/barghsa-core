@@ -189,6 +189,65 @@ export interface DisableStaffResult {
   alreadyDisabled: boolean
 }
 
+// ─── Staff permission audit types (T-10.01.02) ────────────────────────
+
+/**
+ * Filter for the staff permission audit timeline.
+ *
+ * The timeline is "per user": `userId` restricts to role changes of one
+ * staff user (the `metadata.targetUserId` of `role_change` events), and
+ * `from`/`to` bound the event time.
+ */
+export interface StaffAuditQuery {
+  /** Restrict to role changes for a single staff user (UUID). */
+  userId?: string
+  /** Inclusive lower bound (ISO timestamp) on the event time. */
+  from?: string
+  /** Inclusive upper bound (ISO timestamp) on the event time. */
+  to?: string
+  limit?: number
+  offset?: number
+}
+
+/** A role granted or revoked by a `role_change` audit event. */
+export interface StaffAuditRoleChange {
+  roleId: string
+  roleName: string
+}
+
+/**
+ * One `role_change` audit event rendered for the admin timeline.
+ *
+ * `addedRoles`/`removedRoles` are the computed diff between the previous
+ * and the new role set — the UI renders them as "Assigned [role] by
+ * [admin] on [date]" / "Removed [role] by [admin] on [date]".
+ */
+export interface StaffAuditEvent {
+  id: string
+  /** The staff user whose roles changed. */
+  targetUserId: string
+  targetUsername: string | null
+  /** The admin who performed the change. */
+  actorUserId: string
+  actorUsername: string | null
+  addedRoles: StaffAuditRoleChange[]
+  removedRoles: StaffAuditRoleChange[]
+  previousRoleIds: string[]
+  newRoleIds: string[]
+  reason: string | null
+  correlationId: string | null
+  ip: string | null
+  createdAt: string
+}
+
+/** Paginated staff permission audit result. */
+export interface StaffAuditResult {
+  items: StaffAuditEvent[]
+  total: number
+  limit: number
+  offset: number
+}
+
 /**
  * Character set for generating temporary passwords.
  * Ambiguous characters (0/O, 1/l/I) are excluded to avoid confusion.
@@ -281,6 +340,47 @@ function generateTemporaryPassword(): string {
  * PostgreSQL error code for unique constraint violation.
  */
 const PG_UNIQUE_VIOLATION = '23505'
+
+/**
+ * UUID (versions 1–8) matcher for validating the audit `userId` filter.
+ */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** Shape of the `role_change` metadata written by `updateStaffRoles`. */
+interface RoleChangeMetadata {
+  targetUserId: string
+  previousRoleIds: string[]
+  newRoleIds: string[]
+  reason: string | null
+}
+
+/**
+ * Parse the JSON `metadata` column of a `role_change` audit row
+ * defensively. node-postgres may hand back a string (TEXT-like JSON) or an
+ * already-parsed object; malformed rows degrade rather than crash the
+ * timeline.
+ */
+function parseRoleChangeMetadata(raw: unknown): RoleChangeMetadata | null {
+  let parsed: unknown = raw
+  if (typeof raw === 'string') {
+    try {
+      parsed = JSON.parse(raw)
+    } catch {
+      return null
+    }
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null
+  const meta = parsed as Record<string, unknown>
+  if (typeof meta.targetUserId !== 'string') return null
+  const previousRoleIds = Array.isArray(meta.previousRoleIds)
+    ? meta.previousRoleIds.filter((id): id is string => typeof id === 'string')
+    : []
+  const newRoleIds = Array.isArray(meta.newRoleIds)
+    ? meta.newRoleIds.filter((id): id is string => typeof id === 'string')
+    : []
+  const reason = typeof meta.reason === 'string' ? meta.reason : null
+  return { targetUserId: meta.targetUserId, previousRoleIds, newRoleIds, reason }
+}
 
 /**
  * Admin service: staff user creation, role assignment, and user management.
@@ -2571,5 +2671,141 @@ export class AdminService {
     } finally {
       client.release()
     }
+  }
+
+  /**
+   * Staff permission audit timeline (T-10.01.02).
+   *
+   * Returns `role_change` audit events — the record of role additions and
+   * removals for staff users — newest first, paginated, and filterable by
+   * target user and date range. Each event is enriched with the target and
+   * actor usernames, and the role names resolved from `staff_roles`, with
+   * `addedRoles`/`removedRoles` computed as the diff between the previous
+   * and the new role set.
+   *
+   * The `role_change` event is written by `updateStaffRoles` with the
+   * actor in `audit_log.user_id` and the affected user in
+   * `metadata.targetUserId`. Because a role change is a permission change
+   * (roles grant permissions, deny-by-default), this timeline is the staff
+   * permission audit trail.
+   *
+   * @throws 400 when `userId` is not a UUID or the date range is invalid
+   */
+  async listStaffAudit(query: StaffAuditQuery = {}): Promise<StaffAuditResult> {
+    const pool = getDbPool()
+    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200)
+    const offset = Math.max(Math.trunc(query.offset ?? 0), 0)
+
+    // ── Validate filters ───────────────────────────────────────────
+    if (query.userId !== undefined && !UUID_RE.test(query.userId)) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'userId must be a valid UUID' },
+        400,
+      )
+    }
+
+    const from = query.from !== undefined ? new Date(query.from) : null
+    const to = query.to !== undefined ? new Date(query.to) : null
+    if (query.from !== undefined && Number.isNaN(from!.getTime())) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'from must be a valid ISO timestamp' },
+        400,
+      )
+    }
+    if (query.to !== undefined && Number.isNaN(to!.getTime())) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'to must be a valid ISO timestamp' },
+        400,
+      )
+    }
+    if (from && to && from.getTime() > to.getTime()) {
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'from must not be after to' },
+        400,
+      )
+    }
+
+    // ── Count ──────────────────────────────────────────────────────
+    const countResult = await pool.query<{ total: number }>(
+      `SELECT COUNT(*)::int AS total
+       FROM audit_log a
+       WHERE a.event = 'role_change'
+         AND ($1::text IS NULL OR a.metadata::jsonb->>'targetUserId' = $1)
+         AND ($2::timestamptz IS NULL OR a.created_at >= $2)
+         AND ($3::timestamptz IS NULL OR a.created_at <= $3)`,
+      [query.userId ?? null, from, to],
+    )
+    const total = countResult.rows[0]?.total ?? 0
+
+    if (total === 0) {
+      return { items: [], total, limit, offset }
+    }
+
+    // ── Role names for diff rendering ──────────────────────────────
+    const rolesResult = await pool.query<{ role_id: string; name: string }>(
+      `SELECT role_id, name FROM staff_roles`,
+    )
+    const roleNames = new Map(rolesResult.rows.map((r) => [r.role_id, r.name]))
+
+    // ── Page ───────────────────────────────────────────────────────
+    const listResult = await pool.query<{
+      id: string
+      actor_user_id: string
+      target_user_id: string | null
+      target_username: string | null
+      actor_username: string | null
+      metadata: unknown
+      correlation_id: string | null
+      ip: string | null
+      created_at: Date
+    }>(
+      `SELECT a.id,
+              a.user_id AS actor_user_id,
+              a.metadata::jsonb->>'targetUserId' AS target_user_id,
+              tu.username AS target_username,
+              au.username AS actor_username,
+              a.metadata,
+              a.correlation_id,
+              a.ip,
+              a.created_at
+       FROM audit_log a
+       LEFT JOIN users tu ON tu.user_id = a.metadata::jsonb->>'targetUserId'
+       LEFT JOIN users au ON au.user_id = a.user_id
+       WHERE a.event = 'role_change'
+         AND ($1::text IS NULL OR a.metadata::jsonb->>'targetUserId' = $1)
+         AND ($2::timestamptz IS NULL OR a.created_at >= $2)
+         AND ($3::timestamptz IS NULL OR a.created_at <= $3)
+       ORDER BY a.created_at DESC, a.id DESC
+       LIMIT $4 OFFSET $5`,
+      [query.userId ?? null, from, to, limit, offset],
+    )
+
+    const items: StaffAuditEvent[] = listResult.rows.map((row) => {
+      const meta = parseRoleChangeMetadata(row.metadata)
+      const previousRoleIds = Array.isArray(meta?.previousRoleIds) ? meta!.previousRoleIds : []
+      const newRoleIds = Array.isArray(meta?.newRoleIds) ? meta!.newRoleIds : []
+      const addedRoleIds = newRoleIds.filter((id) => !previousRoleIds.includes(id))
+      const removedRoleIds = previousRoleIds.filter((id) => !newRoleIds.includes(id))
+      const withNames = (ids: string[]): StaffAuditRoleChange[] =>
+        ids.map((roleId) => ({ roleId, roleName: roleNames.get(roleId) ?? roleId }))
+
+      return {
+        id: row.id,
+        targetUserId: row.target_user_id ?? meta?.targetUserId ?? '',
+        targetUsername: row.target_username,
+        actorUserId: row.actor_user_id,
+        actorUsername: row.actor_username,
+        addedRoles: withNames(addedRoleIds),
+        removedRoles: withNames(removedRoleIds),
+        previousRoleIds,
+        newRoleIds,
+        reason: (meta?.reason as string | undefined) ?? null,
+        correlationId: row.correlation_id,
+        ip: row.ip,
+        createdAt: row.created_at.toISOString(),
+      }
+    })
+
+    return { items, total, limit, offset }
   }
 }
