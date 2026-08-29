@@ -23,6 +23,12 @@
  * over a line list so richer compositions (electricity bundles, saving
  * plan + hardware) reuse the same rules when E-03 lands them.
  *
+ * Discount allocation policy (INTENTIONAL): the order-level gift discount
+ * is absorbed by lines strictly in composition order, each line taking up
+ * to its full pre-discount gross. A deterministic taxable-first or
+ * proportional policy may replace this before multi-line order
+ * compositions ship (tracked as a follow-up).
+ *
  * This module has no database or NestJS dependency; it is table-driven
  * testable and shared by the service and any worker.
  */
@@ -94,6 +100,8 @@ export const AUTO_INVOICE_ERRORS = {
   NEGATIVE_UNIT_PRICE: () => 'Line unit price cannot be negative',
   BAD_VAT_RATE: () => 'Line VAT rate must be between 0 and 10000 basis points',
   NEGATIVE_DISCOUNT: () => 'Gift discount cannot be negative',
+  ZERO_TOTAL_WITHOUT_DISCOUNT: () =>
+    'Auto invoice total is zero but no discount produced it — a product must have a positive price',
   DISCOUNT_EXCEEDS_LINE: (discount: bigint, subtotal: bigint) =>
     `Gift discount ${discount} IRR exceeds the line subtotal ${subtotal} IRR`,
   DISCOUNT_EXCEEDS_INVOICE: (discount: bigint, gross: bigint) =>
@@ -196,6 +204,12 @@ export function calculateAutoInvoice(
     throw new RangeError(AUTO_INVOICE_ERRORS.NEGATIVE_DISCOUNT())
   }
 
+  // Validate every line FIRST so an invalid input never escapes as a
+  // TypeError from the BigInt math below (RangeError → BadRequest 400).
+  for (const l of lines) {
+    assertValidAutoLine(l)
+  }
+
   const totalGross = lines.reduce(
     (sum, l) => sum + BigInt(l.quantity) * l.unitPrice,
     0n,
@@ -224,6 +238,12 @@ export function calculateAutoInvoice(
 
   if (totalAmount < 0n) {
     throw new RangeError(AUTO_INVOICE_ERRORS.NEGATIVE_TOTAL())
+  }
+  // A zero total is legitimate ONLY when a discount produced it (100%
+  // gift coverage). A zero-total invoice from a zero-priced product is a
+  // configuration error, not a free product.
+  if (totalAmount === 0n && totalDiscount === 0n) {
+    throw new RangeError(AUTO_INVOICE_ERRORS.ZERO_TOTAL_WITHOUT_DISCOUNT())
   }
 
   return { lines: calculated, totalAmount, totalDiscount }

@@ -176,6 +176,13 @@ describe('calculateAutoInvoice', () => {
       AUTO_INVOICE_ERRORS.NEGATIVE_DISCOUNT(),
     )
   })
+
+  it('rejects a zero total that no discount produced', () => {
+    // Zero-priced product with no gift discount is a config error.
+    expect(() =>
+      calculateAutoInvoice([line({ unitPrice: 0n })]),
+    ).toThrow(AUTO_INVOICE_ERRORS.ZERO_TOTAL_WITHOUT_DISCOUNT())
+  })
 })
 
 describe('autoLineDescription', () => {
