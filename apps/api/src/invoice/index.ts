@@ -20,6 +20,16 @@ export type {
   AutoInvoiceResult,
 } from './auto-invoice.service.js'
 export {
+  VatCalculationRepository,
+  type DbExecutor,
+  type ResolvedVatRate,
+  type ResolveVatRateInput,
+} from './vat-calculation.repository.js'
+export {
+  VatCalculationService,
+  VAT_CALC_ERRORS,
+} from './vat-calculation.service.js'
+export {
   calculateAutoInvoice,
   calculateAutoLine,
   autoLineDescription,
