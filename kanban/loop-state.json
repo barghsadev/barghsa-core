@@ -1,9 +1,9 @@
 {
-  "status": "building",
+  "status": "in_review",
   "current_task_id": "T-04.1.02.03",
   "current_task_file": "04-invoices-wallet-contracts.md",
   "current_branch": "feat/e04-t-04-1-02-03--auto-invoice-service",
-  "current_pr_url": "",
+  "current_pr_url": "https://github.com/barghsadev/barghsa-core/pull/225",
   "current_task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
   "loop_iteration": 356,
   "fix_attempts": 0,
@@ -309,8 +309,13 @@
   ],
   "last_error": null,
   "notes": "T-04.1.02.02 MERGED (PR #224, squash 3ed4432) after 2 review rounds (Claude Opus 5: request_changes → approve). ManualInvoiceService: pure calc module (roundHalfUpDiv exact half-up for any denominator), atomic create+issue on one tx via TransitionOptions.client join, idempotency key with SHA-256 payload fingerprint (409 on mismatch, profile-scoped), event-narrowed audit lookup, invoice_lines.position column (migration 0055), 0000 advisory-lock fix for pgcrypto race, 4 new test files (calc/unit/integration + state-machine join tests). API 1615/1615, db 234/234, CI green. Follow-ups (accepted minors): C-04.CC.01 durable idempotency unique index, replay synthetic transition when invoice moved on, HTTP controller pending C-04.CC.03, formal invoice_calculation_snapshot column in T-04.1.02.08. Next: T-04.1.02.03 (AutoInvoiceService, M).",
-  "last_updated": "2026-08-29T19:17:11Z",
+  "last_updated": "2026-08-29T19:29:11Z",
   "status_history": [
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+      "at": "2026-08-29T19:29:11Z"
+    },
     {
       "status": "building",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
@@ -805,11 +810,6 @@
       "status": "merged",
       "task_key": "02-auth-users-admin.md#T-09.11.04",
       "at": "2026-08-28T14:04:58Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.11.04",
-      "at": "2026-08-28T14:01:23Z"
     }
   ]
 }
