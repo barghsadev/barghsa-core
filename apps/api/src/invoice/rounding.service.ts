@@ -41,8 +41,8 @@ export const MAX_ROUNDING_PRECISION = 18
 
 /** Error messages for the rounding surface. */
 export const ROUNDING_ERRORS = {
-  NEGATIVE_VALUE: () =>
-    'roundHalfUp: value must be a non-negative bigint (money is never negative)',
+  NOT_BIGINT: () => 'roundHalfUp: value must be a bigint',
+  NEGATIVE_VALUE: () => 'roundHalfUp: value must be non-negative (money is never negative)',
   BAD_PRECISION: () =>
     `roundHalfUp: precision must be an integer between 0 and ${MAX_ROUNDING_PRECISION}`,
 } as const
@@ -58,7 +58,10 @@ export class RoundingService {
    * @returns The nearest whole IRR, exact halves rounding away from zero.
    */
   roundHalfUp(value: bigint, precision: number): bigint {
-    if (typeof value !== 'bigint' || value < 0n) {
+    if (typeof value !== 'bigint') {
+      throw new TypeError(ROUNDING_ERRORS.NOT_BIGINT())
+    }
+    if (value < 0n) {
       throw new RangeError(ROUNDING_ERRORS.NEGATIVE_VALUE())
     }
     if (

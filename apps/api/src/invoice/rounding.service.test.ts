@@ -59,7 +59,8 @@ describe('RoundingService.roundHalfUp (T-04.1.02.07)', () => {
     // 0.9 → 1
     [9_000n * 1n, 4, 1n],
     // large amounts stay exact at 9% VAT
-    [9_223_372_036_854_775_807n, 4, 922_337_203_685_478n], // int8 max × 1 = 9.22…e14.5807 → half-up .5807 → +1
+    // 9_223_372_036_854_775_807 / 10^4 = 922_337_203_685_477.5807 → half-up → 922_337_203_685_478
+    [9_223_372_036_854_775_807n, 4, 922_337_203_685_478n],
   ])('rounds half-up to the nearest IRR: roundHalfUp(%n, %n) → %n', (value, precision, expected) => {
     expect(service.roundHalfUp(value, precision)).toBe(expected)
   })
@@ -72,10 +73,10 @@ describe('RoundingService.roundHalfUp (T-04.1.02.07)', () => {
   })
 
   it('rounds exact halves up, never toward even (banker’s rounding forbidden)', () => {
-    // 2.5 → 3 (not 2)
+    // 2.5 → 3 (half-even would give 2)
     expect(service.roundHalfUp(250n, 2)).toBe(3n)
-    // 3.5 → 4 (not 4 via even rule — sanity anchor)
-    expect(service.roundHalfUp(350n, 2)).toBe(4n)
+    // 4.5 → 5 (half-even would give 4 — discriminating anchor)
+    expect(service.roundHalfUp(450n, 2)).toBe(5n)
     // 1.5 → 2
     expect(service.roundHalfUp(15n, 1)).toBe(2n)
   })
@@ -94,9 +95,9 @@ describe('RoundingService.roundHalfUp (T-04.1.02.07)', () => {
 
   it('rejects non-bigint values', () => {
     // Runtime guard for callers bypassing TypeScript (e.g. JS/CJS bridges).
-    expect(() => service.roundHalfUp(1 as unknown as bigint, 4)).toThrow(RangeError)
+    expect(() => service.roundHalfUp(1 as unknown as bigint, 4)).toThrow(TypeError)
     expect(() => service.roundHalfUp(1 as unknown as bigint, 4)).toThrow(
-      ROUNDING_ERRORS.NEGATIVE_VALUE(),
+      ROUNDING_ERRORS.NOT_BIGINT(),
     )
   })
 
