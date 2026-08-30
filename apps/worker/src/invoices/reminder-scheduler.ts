@@ -9,12 +9,7 @@ import {
   type InvoiceReminderOffset,
 } from '@barghsa/shared/finance'
 import { isValidTimeZone, type DeliveryWindowConfig } from '@barghsa/shared/notifications'
-import {
-  DEFAULT_DELIVERY_WINDOW,
-  isWithinWindow,
-  loadDeliveryWindowConfig,
-  nextWindowOpen,
-} from '../notifications/delivery-window.js'
+import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../notifications/delivery-window.js'
 
 /**
  * ReminderScheduler (S-04.1.04, T-04.1.04.02).
@@ -199,16 +194,19 @@ function parseDueAtValue(value: Date | string | null | undefined): Date | null {
   return null
 }
 
+/**
+ * Resolve the admin delivery window. Query errors must propagate: a
+ * transient `app_config` failure must not insert durable schedule rows
+ * against the default hours, because later ticks skip invoices that
+ * already have rows. Missing or malformed values are already normalized
+ * by `loadDeliveryWindowConfig`.
+ */
 async function loadWindow(
   pool: Pool,
   override: DeliveryWindowConfig | undefined,
 ): Promise<DeliveryWindowConfig> {
   if (override) return override
-  try {
-    return await loadDeliveryWindowConfig(pool)
-  } catch {
-    return { ...DEFAULT_DELIVERY_WINDOW }
-  }
+  return loadDeliveryWindowConfig(pool)
 }
 
 /**

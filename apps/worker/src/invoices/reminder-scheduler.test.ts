@@ -360,4 +360,39 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     })
     expect(db.pool.connect).not.toHaveBeenCalled()
   })
+
+  it('does not insert schedule rows when the delivery-window config query fails', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('app_config')) throw new Error('connection reset')
+      return defaultHandler()(sql)
+    })
+    const logger = { warn: vi.fn(), info: vi.fn() }
+
+    await expect(
+      scheduleIssuedInvoiceReminders({
+        pool: db.pool as unknown as Pool,
+        logger,
+      }),
+    ).rejects.toThrow('connection reset')
+
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
+    expect(db.pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('still schedules when app_config has no delivery-window entry', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('app_config')) return { rows: [] }
+      return defaultHandler()(sql)
+    })
+    const result = await scheduleIssuedInvoiceReminders({
+      pool: db.pool as unknown as Pool,
+      logger: { warn: vi.fn(), info: vi.fn() },
+    })
+    expect(result.scheduled).toBe(1)
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      true,
+    )
+  })
 })
