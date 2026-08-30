@@ -5,6 +5,7 @@ import { collectNotificationGauges, exportWorkerMetrics } from './notifications/
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceEscalations } from './service-targets/escalation-scanner.js';
+import { INVOICE_OVERDUE_JOB_TYPE, scanOverdueInvoices } from './invoices/overdue-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
@@ -279,7 +280,60 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(escalationScanner));
   process.on('SIGINT', () => clearInterval(escalationScanner));
 
-  logger.info('Worker initialised — outbox poll loop + breach scan + escalation scan active');
+  // ── Invoice overdue scan loop (S-04.1.03, T-04.1.03.04) ──────────────
+  // Periodically marks Unpaid / Partially funded invoices whose dueAt is
+  // strictly in the past as Overdue. No late fees; reminders continue.
+  const OVERDUE_SCAN_DEFAULT_MS = 300000;
+  const overdueScanRaw = Number(process.env['INVOICE_OVERDUE_SCAN_MS'] ?? String(OVERDUE_SCAN_DEFAULT_MS));
+  const INVOICE_OVERDUE_SCAN_MS =
+    Number.isFinite(overdueScanRaw) && overdueScanRaw >= 1000
+      ? overdueScanRaw
+      : OVERDUE_SCAN_DEFAULT_MS;
+  if (INVOICE_OVERDUE_SCAN_MS !== overdueScanRaw) {
+    logger.warn(
+      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`,
+    );
+  }
+  let overdueScanInFlight = false;
+  const overdueScanner = setInterval(async () => {
+    if (draining || overdueScanInFlight) return;
+    overdueScanInFlight = true;
+    try {
+      const result = await scanOverdueInvoices();
+      if (result.marked > 0 || result.errors.length > 0) {
+        logger.info(
+          `Overdue scan: marked=${result.marked} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+        );
+      }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: INVOICE_OVERDUE_JOB_TYPE,
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, marked: result.marked },
+        });
+      } else {
+        await recordJobSuccess(INVOICE_OVERDUE_JOB_TYPE);
+      }
+    } catch (err) {
+      logger.error(`Overdue scan failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: INVOICE_OVERDUE_JOB_TYPE,
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
+    } finally {
+      overdueScanInFlight = false;
+    }
+  }, INVOICE_OVERDUE_SCAN_MS);
+  overdueScanner.unref();
+
+  process.on('SIGTERM', () => clearInterval(overdueScanner));
+  process.on('SIGINT', () => clearInterval(overdueScanner));
+
+  logger.info(
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan active',
+  );
 }
 
 void main().catch((err: unknown) => {
