@@ -65,6 +65,17 @@ class LoopRunnerProtocolTests(unittest.TestCase):
         self.assertIn("invoice_calculation_snapshot", section)
         self.assertIn("| S |", section)
 
+    def test_review_schema_types_const_and_enum_fields_for_codex(self):
+        schema = json.loads(loop_runner.REVIEW_SCHEMA.read_text())
+        properties = schema["properties"]
+
+        self.assertEqual(properties["schema_version"]["type"], "integer")
+        self.assertEqual(properties["decision"]["type"], "string")
+        self.assertEqual(
+            properties["issues"]["items"]["properties"]["severity"]["type"],
+            "string",
+        )
+
     def test_state_dispatch_keeps_review_and_merge_on_separate_ticks(self):
         self.assertEqual(loop_runner.action_for_status("idle"), "cursor_build")
         self.assertEqual(loop_runner.action_for_status("building"), "cursor_build")
