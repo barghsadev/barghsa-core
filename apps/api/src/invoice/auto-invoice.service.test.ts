@@ -289,21 +289,6 @@ describe('AutoInvoiceService', () => {
       )
       expect(readIdx).toBeGreaterThanOrEqual(0)
       expect(commitIdx).toBeGreaterThan(readIdx)
-
-      const insertCall = mockClient.query.mock.calls.find(
-        (c) => (c[0] as string).startsWith('INSERT INTO invoices'),
-      )
-      expect(insertCall![0] as string).toContain('invoice_calculation_snapshot')
-      const snapshot = JSON.parse(insertCall![1]![6] as string) as {
-        version: number
-        source: string
-        steps: Array<{ vat: { result: string } }>
-        totals: { totalAmount: string }
-      }
-      expect(snapshot.version).toBe(1)
-      expect(snapshot.source).toBe('auto')
-      expect(snapshot.steps[0]!.vat.result).toBe('90000')
-      expect(snapshot.totals.totalAmount).toBe('1090000')
     })
 
     it('applies an explicit VAT rate and the gift discount before VAT', async () => {
@@ -335,18 +320,6 @@ describe('AutoInvoiceService', () => {
       expect(metadata.snapshot.vat.rateBasisPoints).toBe(900)
       expect(metadata.snapshot.gift.discountAmount).toBe('250000')
       expect(metadata.snapshot.gift.giftCodeId).toBe(db.order.gift_code_id)
-
-      const calcSnapshot = JSON.parse(insertCall![1]![6] as string) as {
-        inputs: { orderDiscount: string }
-        steps: Array<{ discount: string; lineTotal: string; vat: { result: string } }>
-        totals: { totalDiscount: string; totalAmount: string }
-      }
-      expect(calcSnapshot.inputs.orderDiscount).toBe('250000')
-      expect(calcSnapshot.steps[0]!.discount).toBe('250000')
-      expect(calcSnapshot.steps[0]!.lineTotal).toBe('750000')
-      expect(calcSnapshot.steps[0]!.vat.result).toBe('67500')
-      expect(calcSnapshot.totals.totalDiscount).toBe('250000')
-      expect(calcSnapshot.totals.totalAmount).toBe('817500')
     })
 
     it('resolves the VAT rate from an active product override', async () => {

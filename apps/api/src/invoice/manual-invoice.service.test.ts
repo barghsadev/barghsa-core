@@ -134,22 +134,6 @@ describe('ManualInvoiceService', () => {
       )
       expect(readIdx).toBeGreaterThanOrEqual(0)
       expect(commitIdx).toBeGreaterThan(readIdx)
-
-      const insertCall = mockClient.query.mock.calls.find(
-        (c) => (c[0] as string).startsWith('INSERT INTO invoices'),
-      )
-      expect(insertCall).toBeDefined()
-      expect(insertCall![0] as string).toContain('invoice_calculation_snapshot')
-      const snapshot = JSON.parse(insertCall![1]![6] as string) as {
-        version: number
-        source: string
-        steps: Array<{ vat: { result: string } }>
-        totals: { totalAmount: string }
-      }
-      expect(snapshot.version).toBe(1)
-      expect(snapshot.source).toBe('manual')
-      expect(snapshot.steps[0]!.vat.result).toBe('90000')
-      expect(snapshot.totals.totalAmount).toBe('1090000')
     })
 
     it('rejects invalid lines with BadRequestException', async () => {

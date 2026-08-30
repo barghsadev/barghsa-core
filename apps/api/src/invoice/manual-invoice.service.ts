@@ -53,7 +53,6 @@ import {
   type CalculatedManualLine,
   type ManualInvoiceLineInput,
 } from './manual-invoice.calculation.js'
-import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
 
 /**
  * Default due period for manual invoices (days from issue).
@@ -237,10 +236,6 @@ export class ManualInvoiceService {
 
       // --- 4. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
       const invoiceId = uuidv7()
-      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(
-        cmd.lines,
-        calculation,
-      )
       const metadata = JSON.stringify({
         source: 'manual',
         generatedBy: cmd.actorUserId,
@@ -266,8 +261,8 @@ export class ManualInvoiceService {
       })
 
       await client.query(
-        `INSERT INTO invoices (id, profile_id, contract_id, type, state, total_amount, issued_at, payable_from, due_at, metadata, invoice_calculation_snapshot)
-         VALUES ($1, $2, $3, 'manual', 'Draft', $4, NULL, NULL, $5, $6::jsonb, $7::jsonb)`,
+        `INSERT INTO invoices (id, profile_id, contract_id, type, state, total_amount, issued_at, payable_from, due_at, metadata)
+         VALUES ($1, $2, $3, 'manual', 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
         [
           invoiceId,
           cmd.profileId,
@@ -275,7 +270,6 @@ export class ManualInvoiceService {
           calculation.totalAmount,
           dueAt,
           metadata,
-          JSON.stringify(calculationSnapshot),
         ],
       )
 

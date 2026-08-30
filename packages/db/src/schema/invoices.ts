@@ -46,9 +46,6 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
  *   - `dueAt` — payment deadline.
  *   - `cancelledAt?` — when the invoice was cancelled (if applicable).
  *   - `metadata` — JSONB for extensible structured data snapshots.
- *   - `invoiceCalculationSnapshot` — JSONB of calculation inputs,
- *     intermediate rounding steps, and final totals (T-04.1.02.08).
- *     Nullable so legacy rows remain valid; new invoices populate it.
  *   - `createdAt` / `updatedAt` — audit columns (from baseColumns).
  */
 export const invoices = pgTable(
@@ -124,16 +121,6 @@ export const invoices = pgTable(
     /** Extensible metadata payload for snapshots and auxiliary data. */
     metadata: jsonb('metadata'),
 
-    /**
-     * Canonical calculation snapshot (T-04.1.02.08).
-     *
-     * JSON object recording every input, each VAT half-up rounding step,
-     * and the final totals so the invoice can be reproduced later
-     * (T-04.1.02.09). Amounts are decimal-digit strings (bigint IRR).
-     * Nullable: pre-existing rows have no snapshot.
-     */
-    invoiceCalculationSnapshot: jsonb('invoice_calculation_snapshot'),
-
     /** When the invoice record was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -197,7 +184,6 @@ export const createInvoicesTable = sql`
     paid_at TIMESTAMPTZ,
     overdue_at TIMESTAMPTZ,
     metadata JSONB,
-    invoice_calculation_snapshot JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_paid_not_exceeds_total CHECK (paid_amount <= total_amount),

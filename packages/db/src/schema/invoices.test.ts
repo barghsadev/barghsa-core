@@ -47,7 +47,6 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
       'dueAt',
       'cancelledAt',
       'metadata',
-      'invoiceCalculationSnapshot',
     ]) {
       expect(columns).toContain(column)
     }
@@ -132,36 +131,6 @@ describe('Invoice origin links schema (T-04.1.02.05)', () => {
     )
     expect(ORIGIN_MIGRATION).toContain(
       'CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id)',
-    )
-  })
-})
-
-/**
- * Drift guard for the invoice calculation snapshot column (T-04.1.02.08).
- *
- * Migration 0058 adds nullable `invoice_calculation_snapshot` JSONB so
- * issued invoices keep every calculation input, VAT half-up rounding
- * step, and final total. If a future rewrite drops the column, this
- * test fails instead of silently losing reproducibility.
- */
-const CALCULATION_SNAPSHOT_MIGRATION = readFileSync(
-  resolve(__dirname, '../../drizzle/0058_add_invoice_calculation_snapshot.sql'),
-  'utf8',
-)
-
-describe('Invoice calculation snapshot schema (T-04.1.02.08)', () => {
-  it('invoices table declares invoiceCalculationSnapshot', () => {
-    const columns = Object.keys(invoices)
-    expect(columns).toContain('invoiceCalculationSnapshot')
-  })
-
-  it('invoiceCalculationSnapshot is nullable JSONB (legacy rows stay valid)', () => {
-    expect(invoices.invoiceCalculationSnapshot.notNull).toBe(false)
-  })
-
-  it('migration 0058 adds the column idempotently', () => {
-    expect(CALCULATION_SNAPSHOT_MIGRATION).toContain(
-      'ALTER TABLE invoices\n  ADD COLUMN IF NOT EXISTS invoice_calculation_snapshot JSONB;',
     )
   })
 })

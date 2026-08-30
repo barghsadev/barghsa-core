@@ -2,7 +2,7 @@
  * Real-PostgreSQL integration tests for AutoInvoiceService (T-04.1.02.03).
  *
  * Runs the actual service against a Testcontainers-managed PostgreSQL 17
- * instance (migrations 0052 → 0053 → 0054 → 0055 → 0057 → 0058 + audit_log) and proves:
+ * instance (migrations 0052 → 0053 → 0054 → 0055 + audit_log) and proves:
  *
  *   1. Order → invoice creation is ATOMIC: the invoice, its lines, its
  *      product-composition items and the audit entry land in ONE
@@ -10,8 +10,7 @@
  *   2. The invoice is `Unpaid` with issuedAt/payableFrom/dueAt set and the
  *      canonical `invoice.issue` audit entry written exactly once.
  *   3. Snapshot semantics: product price/title/type + VAT rate + gift-code
- *      discount are frozen at creation time (metadata + invoice_items +
- *      invoice_calculation_snapshot).
+ *      discount are frozen at creation time (metadata + invoice_items).
  *   4. VAT is applied on the NET taxable amount (after the pre-VAT gift
  *      discount), half-up rounded to the nearest IRR.
  *   5. Failures roll back everything (no orphan Draft, no lines, no items,
@@ -70,10 +69,6 @@ const POSITION_MIGRATION = resolve(
 const IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql',
-)
-const CALCULATION_SNAPSHOT_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
 )
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
@@ -166,7 +161,6 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: user, profile, product, VAT config + override, order.
@@ -326,39 +320,6 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
       en: 'Thermal Electricity',
     })
 
-    // --- Calculation snapshot: inputs, VAT rounding step, totals
-    const snapRow = await ctx.db.execute<{
-      invoice_calculation_snapshot: {
-        version: number
-        source: string
-        inputs: {
-          orderDiscount: string
-          lines: Array<{ unitPrice: string; vatRate: number; productId: string }>
-        }
-        steps: Array<{
-          gross: string
-          discount: string
-          lineTotal: string
-          vat: { result: string; numerator: string }
-        }>
-        totals: { totalAmount: string; totalVat: string; totalDiscount: string }
-      } | null
-    }>(`SELECT invoice_calculation_snapshot FROM invoices WHERE id = '${result.invoiceId}'`)
-    const snap = snapRow.rows[0]!.invoice_calculation_snapshot
-    expect(snap).not.toBeNull()
-    expect(snap!.version).toBe(1)
-    expect(snap!.source).toBe('auto')
-    expect(snap!.inputs.orderDiscount).toBe('0')
-    expect(snap!.inputs.lines[0]!.productId).toBe(PRODUCT_ID)
-    expect(snap!.inputs.lines[0]!.unitPrice).toBe('1000000')
-    expect(snap!.inputs.lines[0]!.vatRate).toBe(900)
-    expect(snap!.steps[0]!.gross).toBe('1000000')
-    expect(snap!.steps[0]!.discount).toBe('0')
-    expect(snap!.steps[0]!.vat.result).toBe('90000')
-    expect(snap!.steps[0]!.vat.numerator).toBe('900000000')
-    expect(snap!.totals.totalVat).toBe('90000')
-    expect(snap!.totals.totalAmount).toBe('1090000')
-
     // --- Exactly one canonical audit entry (invoice.issue)
     expect(await countAuditRows(result.invoiceId)).toBe(1)
   })
@@ -381,21 +342,6 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     expect(result.lines[0]!.lineTotal).toBe(750_000n)
     expect(result.lines[0]!.vatAmount).toBe(67_500n)
     expect(result.totalAmount).toBe(817_500n)
-
-    const snapRow = await ctx.db.execute<{
-      invoice_calculation_snapshot: {
-        inputs: { orderDiscount: string }
-        steps: Array<{ discount: string; lineTotal: string; vat: { result: string } }>
-        totals: { totalDiscount: string; totalAmount: string }
-      } | null
-    }>(`SELECT invoice_calculation_snapshot FROM invoices WHERE id = '${result.invoiceId}'`)
-    const calcSnap = snapRow.rows[0]!.invoice_calculation_snapshot
-    expect(calcSnap!.inputs.orderDiscount).toBe('250000')
-    expect(calcSnap!.steps[0]!.discount).toBe('250000')
-    expect(calcSnap!.steps[0]!.lineTotal).toBe('750000')
-    expect(calcSnap!.steps[0]!.vat.result).toBe('67500')
-    expect(calcSnap!.totals.totalDiscount).toBe('250000')
-    expect(calcSnap!.totals.totalAmount).toBe('817500')
 
     const meta = (await ctx.db.execute<{ metadata: Record<string, unknown> | null }>(
       `SELECT metadata FROM invoices WHERE id = '${result.invoiceId}'`,

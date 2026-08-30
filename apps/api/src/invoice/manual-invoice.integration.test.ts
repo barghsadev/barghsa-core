@@ -3,7 +3,7 @@
  * (T-04.1.02.02).
  *
  * Runs the actual service against a Testcontainers-managed PostgreSQL 17
- * instance (migrations 0052 → 0053 → 0054 → 0055 → 0057 → 0058 + audit_log) and proves:
+ * instance (migrations 0052 → 0053 → 0054 → 0055 + audit_log) and proves:
  *
  *   1. Create + issue is ATOMIC: one BEGIN/COMMIT on a single connection.
  *   2. The invoice lands in `Unpaid` with issuedAt/payableFrom/dueAt set
@@ -65,10 +65,6 @@ const IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql',
 )
-const CALCULATION_SNAPSHOT_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
-)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -115,7 +111,6 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: one profile + one actor.
@@ -186,29 +181,6 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     expect(invoiceRow.rows[0]!.issued_at).not.toBeNull()
     expect(invoiceRow.rows[0]!.payable_from).not.toBeNull()
     expect(invoiceRow.rows[0]!.due_at).not.toBeNull()
-
-    // --- Calculation snapshot: inputs, rounding steps, totals
-    const snapRow = await ctx.db.execute<{
-      invoice_calculation_snapshot: {
-        version: number
-        source: string
-        inputs: { lines: Array<{ unitPrice: string; vatRate: number }> }
-        steps: Array<{ vat: { result: string; numerator: string } }>
-        totals: { totalAmount: string; totalVat: string; subtotal: string }
-      } | null
-    }>(`SELECT invoice_calculation_snapshot FROM invoices WHERE id = '${result.invoiceId}'`)
-    const snap = snapRow.rows[0]!.invoice_calculation_snapshot
-    expect(snap).not.toBeNull()
-    expect(snap!.version).toBe(1)
-    expect(snap!.source).toBe('manual')
-    expect(snap!.inputs.lines).toHaveLength(2)
-    expect(snap!.inputs.lines[0]!.unitPrice).toBe('500000')
-    expect(snap!.inputs.lines[0]!.vatRate).toBe(900)
-    expect(snap!.steps[0]!.vat.result).toBe('90000')
-    expect(snap!.steps[0]!.vat.numerator).toBe('900000000')
-    expect(snap!.totals.subtotal).toBe('1100000')
-    expect(snap!.totals.totalVat).toBe('90000')
-    expect(snap!.totals.totalAmount).toBe('1190000')
 
     // --- Exactly one canonical audit entry (invoice.issue)
     expect(await countAuditRows(result.invoiceId)).toBe(1)

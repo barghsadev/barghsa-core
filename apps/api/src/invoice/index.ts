@@ -53,21 +53,6 @@ export {
   type ManualInvoiceCalculation,
 } from './manual-invoice.calculation.js'
 export {
-  INVOICE_CALCULATION_SNAPSHOT_VERSION,
-  INVOICE_ROUNDING_RULE,
-  VAT_BASIS_POINT_SCALE,
-  irrJson,
-  describeVatRounding,
-  buildManualInvoiceCalculationSnapshot,
-  buildAutoInvoiceCalculationSnapshot,
-  type InvoiceCalculationSnapshot,
-  type InvoiceCalculationSnapshotInputs,
-  type InvoiceCalculationSnapshotLineInput,
-  type InvoiceVatRoundingStep,
-  type InvoiceLineCalculationStep,
-  type InvoiceCalculationSnapshotTotals,
-} from './invoice-calculation-snapshot.js'
-export {
   INVOICE_STATES,
   INVOICE_TRANSITIONS,
   INVOICE_TERMINAL_STATES,
