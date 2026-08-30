@@ -4,8 +4,9 @@
  * The snapshot is the reproducibility document stored on
  * `invoices.invoice_calculation_snapshot`: inputs, VAT half-up rounding
  * steps, and final totals. Amounts are decimal-digit strings so int8 IRR
- * survives JSON. T-04.1.02.09 will replay these inputs against PostgreSQL;
- * these tests prove the document is complete and internally consistent.
+ * survives JSON. `replayInvoiceCalculation` (T-04.1.02.09) re-runs the
+ * original math from `snapshot.inputs`; these tests prove the document
+ * is complete, internally consistent, and round-trippable.
  */
 
 import { describe, it, expect } from 'vitest'
@@ -16,9 +17,12 @@ import {
   INVOICE_ROUNDING_RULE,
   VAT_BASIS_POINT_SCALE,
   irrJson,
+  parseIrrJson,
+  parseSnapshotTotals,
   describeVatRounding,
   buildManualInvoiceCalculationSnapshot,
   buildAutoInvoiceCalculationSnapshot,
+  replayInvoiceCalculation,
 } from './invoice-calculation-snapshot.js'
 
 function autoLine(overrides: Partial<AutoInvoiceLineInput> = {}): AutoInvoiceLineInput {
@@ -197,5 +201,113 @@ describe('buildAutoInvoiceCalculationSnapshot', () => {
     expect(snapshot.steps[1]!.remainingDiscountAfter).toBe('0')
     expect(snapshot.steps[1]!.lineTotal).toBe('500000')
     expect(snapshot.totals.totalDiscount).toBe('500000')
+  })
+})
+
+describe('parseIrrJson', () => {
+  it('parses decimal-digit strings, including int8 above MAX_SAFE_INTEGER', () => {
+    expect(parseIrrJson('0')).toBe(0n)
+    expect(parseIrrJson('1090000')).toBe(1_090_000n)
+    expect(parseIrrJson('9007199254740993')).toBe(9_007_199_254_740_993n)
+  })
+
+  it('rejects JSON Numbers so a coerced int8 cannot silently lose precision', () => {
+    expect(() => parseIrrJson(1_090_000)).toThrow(/JSON Number/)
+    expect(() => parseIrrJson(Number.MAX_SAFE_INTEGER + 2)).toThrow(/JSON Number/)
+  })
+
+  it('rejects non-digit strings', () => {
+    expect(() => parseIrrJson('1.5')).toThrow(/decimal-digit/)
+    expect(() => parseIrrJson('')).toThrow(/decimal-digit/)
+    expect(() => parseIrrJson(null)).toThrow(/decimal-digit/)
+  })
+})
+
+describe('replayInvoiceCalculation', () => {
+  it('reproduces manual totals from snapshot inputs alone', () => {
+    const inputs = [
+      { description: 'برق مصرفی', quantity: 1, unitPrice: 1_000_000n, vatRate: 900 },
+      {
+        description: 'کارمزد',
+        quantity: 1,
+        unitPrice: 100_000n,
+        vatRate: 0,
+        isTaxable: false,
+      },
+    ]
+    const calc = calculateManualInvoice(inputs)
+    const snapshot = buildManualInvoiceCalculationSnapshot(inputs, calc)
+    const replayed = replayInvoiceCalculation(snapshot)
+    const totals = parseSnapshotTotals(snapshot.totals)
+
+    expect(replayed.source).toBe('manual')
+    expect(replayed.totalAmount).toBe(calc.totalAmount)
+    expect(replayed.totalAmount).toBe(totals.totalAmount)
+    expect(replayed.subtotal).toBe(totals.subtotal)
+    expect(replayed.totalVat).toBe(totals.totalVat)
+    expect(replayed.totalDiscount).toBe(0n)
+    expect(replayed.lines[0]!.vatAmount).toBe(90_000n)
+    expect(replayed.lines[1]!.vatAmount).toBe(0n)
+  })
+
+  it('reproduces auto totals including gift-discount allocation', () => {
+    const inputs = [
+      autoLine({ quantity: 1, unitPrice: 400_000n, vatRate: 0, isTaxable: false }),
+      autoLine({
+        productId: '22222222-2222-7222-8222-222222222222',
+        productType: 'hardware',
+        productTitle: { fa: 'کنتور', en: 'Meter' },
+        unitPrice: 600_000n,
+        vatRate: 900,
+      }),
+    ]
+    const discount = 500_000n
+    const calc = calculateAutoInvoice(inputs, discount)
+    const snapshot = buildAutoInvoiceCalculationSnapshot(inputs, discount, calc)
+    const replayed = replayInvoiceCalculation(snapshot)
+    const totals = parseSnapshotTotals(snapshot.totals)
+
+    expect(replayed.source).toBe('auto')
+    expect(replayed.totalAmount).toBe(calc.totalAmount)
+    expect(replayed.totalAmount).toBe(totals.totalAmount)
+    expect(replayed.totalDiscount).toBe(totals.totalDiscount)
+    expect(replayed.lines[0]!.discount).toBe(400_000n)
+    expect(replayed.lines[1]!.discount).toBe(100_000n)
+    expect(replayed.lines[1]!.lineTotal).toBe(500_000n)
+  })
+
+  it('survives JSON round-trip, including amounts above MAX_SAFE_INTEGER', () => {
+    const inputs = [
+      {
+        description: 'مبلغ بزرگ',
+        quantity: 1,
+        unitPrice: 9_007_199_254_740_993n,
+        vatRate: 900,
+      },
+    ]
+    const snapshot = buildManualInvoiceCalculationSnapshot(
+      inputs,
+      calculateManualInvoice(inputs),
+    )
+    const roundTripped = JSON.parse(JSON.stringify(snapshot)) as typeof snapshot
+    const replayed = replayInvoiceCalculation(roundTripped)
+    expect(typeof roundTripped.inputs.lines[0]!.unitPrice).toBe('string')
+    expect(replayed.totalAmount).toBe(parseIrrJson(snapshot.totals.totalAmount))
+    expect(replayed.lines[0]!.lineTotal).toBe(9_007_199_254_740_993n)
+  })
+
+  it('ignores stored totals — a tampered snapshot still recomputes from inputs', () => {
+    const inputs = [
+      { description: 'x', quantity: 1, unitPrice: 1_000_000n, vatRate: 900 },
+    ]
+    const snapshot = buildManualInvoiceCalculationSnapshot(
+      inputs,
+      calculateManualInvoice(inputs),
+    )
+    snapshot.totals.totalAmount = '1'
+    snapshot.totals.subtotal = '1'
+    snapshot.totals.totalVat = '1'
+    const replayed = replayInvoiceCalculation(snapshot)
+    expect(replayed.totalAmount).toBe(1_090_000n)
   })
 })
