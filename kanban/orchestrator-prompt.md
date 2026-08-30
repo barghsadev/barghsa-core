@@ -1,20 +1,28 @@
-# Barghsa Build Loop — One Tick
+# Barghsa Build Loop — Ownership-Separated Tick
 
-Advance the Barghsa build/review loop by one useful, bounded step.
+The live loop is implemented by `kanban/scripts/loop-runner.py` and runs as a `no_agent=True` cron script.
 
-The working directory and full protocol come from this repository's `AGENTS.md`. First run `python3 kanban/scripts/build_backlog.py --check`; if it fails, set state to `blocked` with the exact validator error and stop. Then read `AGENTS.md`, `kanban/loop-state.json`, and `kanban/task-queue.json`, and reconcile the state with git and GitHub before acting.
+## Ownership
 
-Requirements:
+- Cursor CLI + Grok 4.6 owns build/fix, validation, commits, pushes, meaningful PR creation/update, and the `in_review` handoff.
+- Codex CLI + GPT Sol 5.6 owns the structured exact-HEAD review artifact.
+- The deterministic supervisor selects, dispatches, verifies, and merges only from `approved` on a later tick.
 
-- Follow the state machine in `AGENTS.md` exactly.
-- Use `<fname>#<id>` as the task key; never treat a bare task ID as globally unique.
-- Keep one active task/PR at a time.
-- If state is `idle`, select the next task and start implementing it in this run; do not stop at a task brief.
-- Continue the current branch/PR when state is `building`, `in_review`, or `fixing`.
-- For review, invoke `anthropic/claude-opus-5` through `hermes chat --query-file ... --provider openrouter --reasoning medium`; do not construct raw curl JSON.
-- Never merge without a valid reviewer approval and passing available required checks.
-- Preserve the current state on transient errors. Use `blocked` only when manual intervention is genuinely required.
-- Update `kanban/loop-state.json` after every state transition and before the run ends.
-- Do not ask questions; report a concise action/result or blocker.
+## Non-negotiable gates
 
-A cron run has a bounded runtime. Make one concrete unit of progress and leave truthful, resumable state for the next tick.
+- Validate the generated backlog before every tick.
+- One active task and one PR only.
+- Cursor must create or edit the PR itself and write `## What`, `## Acceptance criteria`, `## Validation`, and `## Risks / limitations`.
+- The supervisor never commits builder work or creates/edits the PR.
+- Materialize and verify immutable base/head SHAs before Codex; review the SHA-pinned diff, never a mutable branch ref.
+- Codex output must match `kanban/scripts/review-schema.json` and be bound to the current PR number and exact 40-character HEAD SHA.
+- Persist a random nonce, post the review with marker `<!-- barghsa-codex-review:v1 -->`, and read it back from the authenticated GitHub actor.
+- Bind approval to exact comment ID/URL/author, nonce, artifact SHA-256 digest, and HEAD before changing state.
+- `in_review` can only transition to `approved` or `fixing`; it cannot merge.
+- Merge only on a separate `approved` tick after re-fetching the PR, durable review binding, exact HEAD, mergeability, and at least one GitHub check with every entry explicitly `COMPLETED`/`SUCCESS`.
+- Any new commit invalidates prior approval: clear all approval-binding fields and return to `in_review`.
+- Merge with `--match-head-commit <reviewed-sha>`, then re-fetch both the merged PR and durable comment and revalidate the full binding before finalizing state.
+- Keep `kanban/loop-state.json` local runtime state; it must not enter a product PR.
+- Keep `/tmp/barghsa-loop-runner.lock` outside the repository.
+
+See repository `AGENTS.md` for the full protocol and state contracts.
