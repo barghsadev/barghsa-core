@@ -47,6 +47,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'service_breach_scan', label: 'Service response-target breach scan' },
   { key: 'service_escalation_scan', label: 'Service escalation scan' },
   { key: 'notification_outbox_poll', label: 'Notification outbox poll' },
+  { key: 'invoice_overdue_scan', label: 'Invoice overdue scan' },
 ] as const
 
 /** A known background job type key. */
