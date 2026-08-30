@@ -169,6 +169,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
       pool: ctx.pool,
       deliveryWindow: DEFAULT_DELIVERY_WINDOW,
       batchSize: 50,
+      now: ISSUED,
     })
     expect(first.errors).toEqual([])
     expect(first).toMatchObject({ scanned: 1, scheduled: 1, skipped: 0 })
@@ -196,6 +197,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
       pool: ctx.pool,
       deliveryWindow: DEFAULT_DELIVERY_WINDOW,
       batchSize: 50,
+      now: ISSUED,
     })
     expect(second).toMatchObject({ scanned: 0, scheduled: 0, skipped: 0, errors: [] })
 
@@ -223,5 +225,52 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
       `SELECT COUNT(*)::text AS count FROM invoice_reminder_schedule`,
     )
     expect(count.rows[0]?.count).toBe('0')
+  })
+
+  it('does not queue elapsed offsets for a short due period or a delayed catch-up pass', async () => {
+    const shortIssued = new Date('2026-09-05T12:00:00.000Z')
+    const shortId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: shortIssued,
+    })
+    const short = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      now: shortIssued,
+    })
+    expect(short).toMatchObject({ scanned: 1, scheduled: 1, errors: [] })
+    const shortRows = await ctx.pool.query<{ offset: number }>(
+      `SELECT "offset" FROM invoice_reminder_schedule WHERE invoice_id = $1 ORDER BY "offset" ASC`,
+      [shortId],
+    )
+    expect(shortRows.rows.map((row) => row.offset)).toEqual([-1, 0, 1, 7])
+
+    await ctx.pool.query('DELETE FROM invoice_reminder_schedule')
+    await ctx.pool.query('DELETE FROM invoices')
+
+    const lateId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: ISSUED,
+    })
+    const lateNow = new Date('2026-09-05T12:00:00.000Z')
+    const late = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      now: lateNow,
+    })
+    expect(late).toMatchObject({ scanned: 1, scheduled: 1, errors: [] })
+    const lateRows = await ctx.pool.query<{ offset: number; scheduled_at: Date }>(
+      `SELECT "offset", scheduled_at
+         FROM invoice_reminder_schedule
+        WHERE invoice_id = $1
+        ORDER BY "offset" ASC`,
+      [lateId],
+    )
+    expect(lateRows.rows.map((row) => row.offset)).toEqual([-1, 0, 1, 7])
+    expect(
+      lateRows.rows.every((row) => row.scheduled_at.getTime() >= lateNow.getTime()),
+    ).toBe(true)
   })
 })

@@ -14,6 +14,8 @@ import {
   DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE,
   FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
   INVOICE_REMINDER_JOB_TYPE,
+  REMINDER_SCHEDULE_CATCH_UP_GRACE_MS,
+  isElapsedReminder,
   planInvoiceReminders,
   reminderWindowForProfile,
   scheduleIssuedInvoiceReminders,
@@ -61,8 +63,17 @@ function scheduleOptions(db: FakeDb, overrides: Record<string, unknown> = {}) {
     pool: db.pool as unknown as Pool,
     logger,
     deliveryWindow: TEHRAN,
+    now: ISSUED,
     ...overrides,
   }
+}
+
+function insertedOffsets(params: unknown[]): number[] {
+  const offsets: number[] = []
+  for (let i = 1; i < params.length; i += 3) {
+    offsets.push(Number(params[i]))
+  }
+  return offsets
 }
 
 function unpaidCandidate(
@@ -170,6 +181,8 @@ describe('planInvoiceReminders', () => {
   it('emits one row per canonical offset for in_app, inside the window', () => {
     const planned = planInvoiceReminders({
       dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now: ISSUED,
       channels: ['in_app'],
       window: TEHRAN,
     })
@@ -190,6 +203,8 @@ describe('planInvoiceReminders', () => {
   it('crosses offsets with enabled external channels', () => {
     const planned = planInvoiceReminders({
       dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now: ISSUED,
       channels: ['in_app', 'email', 'sms'],
       window: TEHRAN,
     })
@@ -203,8 +218,11 @@ describe('planInvoiceReminders', () => {
 
   it('applies the daytime window to every offset instant', () => {
     const dueOutside = new Date('2026-09-07T02:00:00.000Z')
+    const issuedAt = new Date('2026-08-31T02:00:00.000Z')
     const planned = planInvoiceReminders({
       dueAt: dueOutside,
+      issuedAt,
+      now: issuedAt,
       channels: ['in_app'],
       window: TEHRAN,
     })
@@ -214,6 +232,59 @@ describe('planInvoiceReminders', () => {
     expect(planned.find((row) => row.offset === -7)?.scheduledAt.toISOString()).toBe(
       '2026-08-31T05:30:00.000Z',
     )
+  })
+
+  it('omits offsets whose instant predates issuedAt (short due period)', () => {
+    // Issued 2 days before due: -7 and -3 fall before issuance.
+    const issuedAt = new Date('2026-09-05T12:00:00.000Z')
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      issuedAt,
+      now: issuedAt,
+      channels: ['in_app'],
+      window: TEHRAN,
+    })
+    expect(planned.map((row) => row.offset)).toEqual([-1, 0, 1, 7])
+    expect(planned.every((row) => row.scheduledAt.getTime() >= issuedAt.getTime())).toBe(true)
+  })
+
+  it('omits offsets already elapsed when the catch-up poll runs late', () => {
+    // 7-day invoice, worker first sees it 5 days later (2 days before due).
+    const now = new Date('2026-09-05T12:00:00.000Z')
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now,
+      channels: ['in_app'],
+      window: TEHRAN,
+    })
+    expect(planned.map((row) => row.offset)).toEqual([-1, 0, 1, 7])
+    expect(planned.every((row) => row.scheduledAt.getTime() >= now.getTime())).toBe(true)
+  })
+
+  it('still queues the on-issue -7 offset when the 60s catch-up poll is slightly late', () => {
+    const now = new Date(ISSUED.getTime() + 60_000)
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now,
+      channels: ['in_app'],
+      window: TEHRAN,
+    })
+    expect(planned.map((row) => row.offset)).toEqual([...INVOICE_REMINDER_OFFSETS])
+    expect(now.getTime() - ISSUED.getTime()).toBeLessThan(REMINDER_SCHEDULE_CATCH_UP_GRACE_MS)
+  })
+
+  it('omits a snapped instant that remains in the past after window alignment', () => {
+    // Pre-open instant snaps to today's 09:00 Tehran, which is still before `now`.
+    const instant = new Date('2026-09-05T02:00:00.000Z')
+    const scheduledAt = snapToDaytimeWindow(instant, TEHRAN)
+    const issuedAt = new Date('2026-08-31T12:00:00.000Z')
+    const now = new Date('2026-09-05T12:00:00.000Z')
+    expect(scheduledAt.toISOString()).toBe('2026-09-05T05:30:00.000Z')
+    expect(
+      isElapsedReminder({ instant, scheduledAt, issuedAt, now }),
+    ).toBe(true)
   })
 })
 
@@ -246,13 +317,11 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     expect(insert).toBeDefined()
     expect(insert!.sql).toContain('"offset"')
     expect(insert!.params[0]).toBe('inv-unpaid')
-    const offsets = []
+    expect(insertedOffsets(insert!.params)).toEqual([...INVOICE_REMINDER_OFFSETS])
     const channels = []
-    for (let i = 1; i < insert!.params.length; i += 3) {
-      offsets.push(insert!.params[i])
-      channels.push(insert!.params[i + 1])
+    for (let i = 2; i < insert!.params.length; i += 3) {
+      channels.push(insert!.params[i])
     }
-    expect(offsets).toEqual([...INVOICE_REMINDER_OFFSETS])
     expect(channels).toEqual(['in_app', 'in_app', 'in_app', 'in_app', 'in_app', 'in_app'])
     expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
   })
@@ -273,6 +342,37 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
       channels.add(String(insert!.params[i]))
     }
     expect(channels).toEqual(new Set(['in_app', 'email', 'sms']))
+  })
+
+  it('does not insert already-elapsed offsets for a short due period', async () => {
+    const issuedAt = new Date('2026-09-05T12:00:00.000Z')
+    const row = unpaidCandidate('inv-short', { issued_at: issuedAt })
+    const db = makeFakeDb(defaultHandler([row]))
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { now: issuedAt }),
+    )
+    expect(result.scheduled).toBe(1)
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insertedOffsets(insert!.params)).toEqual([-1, 0, 1, 7])
+  })
+
+  it('does not insert stale offsets when the worker processes the invoice days late', async () => {
+    const now = new Date('2026-09-05T12:00:00.000Z')
+    const db = makeFakeDb(defaultHandler())
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db, { now }))
+    expect(result.scheduled).toBe(1)
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insertedOffsets(insert!.params)).toEqual([-1, 0, 1, 7])
+  })
+
+  it('skips insert when every offset has already elapsed', async () => {
+    const now = new Date('2026-09-20T12:00:00.000Z')
+    const db = makeFakeDb(defaultHandler())
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db, { now }))
+    expect(result).toMatchObject({ scanned: 1, scheduled: 0, skipped: 1, errors: [] })
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
   })
 
   it('skips a candidate that is no longer eligible after the row lock', async () => {
@@ -389,6 +489,7 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     const result = await scheduleIssuedInvoiceReminders({
       pool: db.pool as unknown as Pool,
       logger: { warn: vi.fn(), info: vi.fn() },
+      now: ISSUED,
     })
     expect(result.scheduled).toBe(1)
     expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(

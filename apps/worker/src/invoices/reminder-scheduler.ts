@@ -29,12 +29,22 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  *   2. Snap that instant into the daytime delivery window (09:00–21:00
  *      by default) in the **profile owner's timezone**, using the admin
  *      window hours from `app_config` when present.
- *   3. Insert `in_app` always, plus `email`/`sms` when those channels
+ *   3. Omit elapsed offsets (see catch-up policy below) so ReminderSender
+ *      cannot claim a stack of already-due rows right after issue.
+ *   4. Insert `in_app` always, plus `email`/`sms` when those channels
  *      are enabled on `users.notification_preferences`.
+ *
+ * Catch-up policy: queue an offset only when its unsnapped instant is
+ * on or after `issuedAt` and its snapped `scheduledAt` is on or after
+ * `max(issuedAt, now - REMINDER_SCHEDULE_CATCH_UP_GRACE_MS)`. Offsets
+ * that predate issuance (short due period) or that elapsed before this
+ * pass (delayed poll) are dropped, not backfilled. The grace covers the
+ * 60s catch-up poll so the on-issue `-7` offset of a default 7-day due
+ * period is not discarded as stale.
  *
  * Admin per-offset toggles (T-04.1.04.05) and the unique
  * (invoiceId, offset, channel) index (T-04.1.04.04) are later tasks;
- * this pass inserts the full canonical offset set and is idempotent by
+ * this pass inserts remaining future offsets and is idempotent by
  * skipping invoices that already have any schedule row (re-checked
  * under `FOR UPDATE SKIP LOCKED`).
  *
@@ -44,6 +54,14 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
 
 /** Default number of issued invoices claimed per tick. */
 export const DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE = 200
+
+/**
+ * Offsets whose snapped `scheduledAt` is this close to the scheduling
+ * pass are still queued. Matches the 60s catch-up poll (and leaves slack
+ * for a slow batch) so a default 7-day due period still gets its `-7`
+ * on-issue reminder; hours- or days-late processing does not.
+ */
+export const REMINDER_SCHEDULE_CATCH_UP_GRACE_MS = 60 * 60 * 1000
 
 /** Stable worker task key recorded in `background_jobs`. */
 export const INVOICE_REMINDER_JOB_TYPE = 'invoice_reminder_scheduler' as const
@@ -56,7 +74,8 @@ export interface ReminderScheduleResult {
   scheduled: number
   /**
    * Candidates skipped because a concurrent worker held the row, the
-   * invoice was no longer eligible after lock, or rows already existed.
+   * invoice was no longer eligible after lock, rows already existed,
+   * or every offset had already elapsed.
    */
   skipped: number
   /** True when the candidate query hit the batch cap. */
@@ -82,6 +101,11 @@ export interface ReminderScheduleOptions {
    * Production leaves this unset so the admin-configured window is used.
    */
   deliveryWindow?: DeliveryWindowConfig
+  /**
+   * Stable scheduling-pass timestamp used to drop elapsed offsets.
+   * Production leaves this unset (`new Date()` once per pass).
+   */
+  now?: Date
 }
 
 const defaultLogger = {
@@ -163,11 +187,44 @@ export function snapToDaytimeWindow(instant: Date, config: DeliveryWindowConfig)
 }
 
 /**
+ * Lower bound for "already elapsed" against the scheduling pass.
+ * Never earlier than `issuedAt` (a reminder cannot predate the invoice).
+ * `now - grace` covers catch-up poll latency without backfilling days-old
+ * offsets.
+ */
+export function reminderElapsedCutoffMs(
+  issuedAt: Date,
+  now: Date,
+  graceMs: number = REMINDER_SCHEDULE_CATCH_UP_GRACE_MS,
+): number {
+  return Math.max(issuedAt.getTime(), now.getTime() - graceMs)
+}
+
+/**
+ * True when this offset must not be queued: the unsnapped instant predates
+ * issuance, or the snapped send time is already behind the catch-up cutoff.
+ */
+export function isElapsedReminder(input: {
+  instant: Date
+  scheduledAt: Date
+  issuedAt: Date
+  now: Date
+}): boolean {
+  if (input.instant.getTime() < input.issuedAt.getTime()) return true
+  return input.scheduledAt.getTime() < reminderElapsedCutoffMs(input.issuedAt, input.now)
+}
+
+/**
  * Build the schedule rows for one invoice: canonical offsets × enabled
  * channels, with daytime-window snapping applied to every `scheduledAt`.
+ * Elapsed offsets (before `issuedAt`, or already past `now` beyond the
+ * catch-up grace) are omitted so ReminderSender cannot bulk-dispatch
+ * obsolete reminders.
  */
 export function planInvoiceReminders(input: {
   dueAt: Date
+  issuedAt: Date
+  now: Date
   channels: readonly InvoiceReminderChannel[]
   window: DeliveryWindowConfig
 }): PlannedReminderRow[] {
@@ -176,6 +233,9 @@ export function planInvoiceReminders(input: {
   const rows: PlannedReminderRow[] = []
   for (const { offset, instant } of computeReminderInstants(input.dueAt)) {
     const scheduledAt = snapToDaytimeWindow(instant, input.window)
+    if (isElapsedReminder({ instant, scheduledAt, issuedAt: input.issuedAt, now: input.now })) {
+      continue
+    }
     for (const channel of channels) {
       rows.push({ offset, channel, scheduledAt })
     }
@@ -219,6 +279,7 @@ export async function scheduleIssuedInvoiceReminders(
   const pool = options.pool ?? getDbPool()
   const logger = options.logger ?? defaultLogger
   const batchSize = options.batchSize ?? DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE
+  const now = parseDueAtValue(options.now ?? new Date()) ?? new Date()
 
   const result: ReminderScheduleResult = {
     scanned: 0,
@@ -243,7 +304,7 @@ export async function scheduleIssuedInvoiceReminders(
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
-      const inserted = await scheduleOneInvoice(client, candidate, adminWindow)
+      const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now)
       if (inserted) {
         await client.query('COMMIT')
         result.scheduled += 1
@@ -268,6 +329,7 @@ async function scheduleOneInvoice(
   client: PoolClient,
   candidate: CandidateRow,
   adminWindow: DeliveryWindowConfig,
+  now: Date,
 ): Promise<boolean> {
   const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [candidate.id])
   const row = locked.rows[0]
@@ -278,11 +340,12 @@ async function scheduleOneInvoice(
   if ((existing.rowCount ?? existing.rows.length) > 0) return false
 
   const dueAt = parseDueAtValue(row.due_at)
-  if (dueAt === null) return false
+  const issuedAt = parseDueAtValue(row.issued_at)
+  if (dueAt === null || issuedAt === null) return false
 
   const window = reminderWindowForProfile(adminWindow, row.timezone)
   const channels = reminderChannelsFromPreferences(row.notification_preferences)
-  const planned = planInvoiceReminders({ dueAt, channels, window })
+  const planned = planInvoiceReminders({ dueAt, issuedAt, now, channels, window })
   if (planned.length === 0) return false
 
   const values: unknown[] = [row.id]
