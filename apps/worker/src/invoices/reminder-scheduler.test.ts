@@ -1,0 +1,363 @@
+import { describe, it, expect, vi } from 'vitest'
+import type { Pool } from 'pg'
+import {
+  INVOICE_REMINDER_CHANNELS,
+  INVOICE_REMINDER_OFFSETS,
+  REMINDER_STOP_STATES,
+} from '@barghsa/shared/finance'
+import {
+  INVOICE_REMINDER_CHANNELS as DB_CHANNELS,
+  INVOICE_REMINDER_OFFSETS as DB_OFFSETS,
+} from '@barghsa/db'
+import { DEFAULT_DELIVERY_WINDOW } from '@barghsa/shared/notifications'
+import {
+  DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE,
+  FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
+  INVOICE_REMINDER_JOB_TYPE,
+  planInvoiceReminders,
+  reminderWindowForProfile,
+  scheduleIssuedInvoiceReminders,
+  snapToDaytimeWindow,
+} from './reminder-scheduler.js'
+
+/**
+ * ReminderScheduler unit tests (S-04.1.04, T-04.1.04.02).
+ *
+ * `scheduleIssuedInvoiceReminders` is exercised with an injected fake pool
+ * so the candidate query, per-row lock + eligibility re-check, and the
+ * multi-row INSERT are covered DB-free. Datetime / window helpers are
+ * pure and asserted against Asia/Tehran wall-clock boundaries.
+ */
+
+interface FakeDb {
+  pool: { connect: ReturnType<typeof vi.fn>; query: ReturnType<typeof vi.fn> }
+  calls: Array<{ sql: string; params: unknown[] }>
+}
+
+function makeFakeDb(
+  onSql: (sql: string, params: unknown[]) => { rows?: unknown[]; rowCount?: number },
+): FakeDb {
+  const calls: Array<{ sql: string; params: unknown[] }> = []
+  const respond = async (sql: string, params: unknown[] = []) => {
+    calls.push({ sql, params })
+    const result = onSql(sql, params)
+    return { rows: result.rows ?? [], rowCount: result.rowCount ?? result.rows?.length ?? 0 }
+  }
+  const client = { query: respond, release: vi.fn() }
+  const pool = {
+    connect: vi.fn().mockResolvedValue(client),
+    query: respond,
+  }
+  return { pool: pool as never, calls }
+}
+
+const TEHRAN = DEFAULT_DELIVERY_WINDOW
+const DUE_INSIDE = new Date('2026-09-07T12:00:00.000Z') // 15:30 Tehran
+const ISSUED = new Date('2026-08-31T12:00:00.000Z')
+
+function scheduleOptions(db: FakeDb, overrides: Record<string, unknown> = {}) {
+  const logger = { warn: vi.fn(), info: vi.fn() }
+  return {
+    pool: db.pool as unknown as Pool,
+    logger,
+    deliveryWindow: TEHRAN,
+    ...overrides,
+  }
+}
+
+function unpaidCandidate(
+  id = 'inv-unpaid',
+  extras: Partial<{
+    state: string
+    due_at: Date
+    issued_at: Date
+    timezone: string
+    notification_preferences: string
+  }> = {},
+) {
+  return {
+    id,
+    state: extras.state ?? 'Unpaid',
+    due_at: extras.due_at ?? DUE_INSIDE,
+    issued_at: extras.issued_at ?? ISSUED,
+    timezone: extras.timezone ?? 'Asia/Tehran',
+    notification_preferences: extras.notification_preferences ?? 'IN_APP',
+  }
+}
+
+function defaultHandler(
+  candidates: ReturnType<typeof unpaidCandidate>[] = [unpaidCandidate()],
+  locked: ReturnType<typeof unpaidCandidate>[] | 'match' = 'match',
+  existingCount = 0,
+) {
+  return (sql: string): { rows?: unknown[]; rowCount?: number } => {
+    if (sql.includes('FROM invoices i') && sql.includes('NOT EXISTS')) {
+      return { rows: candidates }
+    }
+    if (sql.includes('FOR UPDATE OF i SKIP LOCKED')) {
+      return { rows: locked === 'match' ? candidates : locked }
+    }
+    if (sql.includes('FROM invoice_reminder_schedule WHERE invoice_id')) {
+      return { rows: existingCount > 0 ? [{ '?column?': 1 }] : [], rowCount: existingCount }
+    }
+    if (sql.includes('INSERT INTO invoice_reminder_schedule')) {
+      return { rows: [], rowCount: 6 }
+    }
+    return { rows: [] }
+  }
+}
+
+describe('ReminderScheduler contract (T-04.1.04.02)', () => {
+  it('exposes the background-job type the worker recorder uses', () => {
+    expect(INVOICE_REMINDER_JOB_TYPE).toBe('invoice_reminder_scheduler')
+  })
+
+  it('keeps shared offsets/channels in lock-step with the db schema', () => {
+    expect([...INVOICE_REMINDER_OFFSETS]).toEqual([...DB_OFFSETS])
+    expect([...INVOICE_REMINDER_CHANNELS]).toEqual([...DB_CHANNELS])
+  })
+
+  it('binds stop states to invoice_state[] and skips invoices that already have rows', () => {
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      'NOT (i.state = ANY($1::invoice_state[]))',
+    )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).not.toContain('$1::text[]')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('issued_at IS NOT NULL')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('due_at IS NOT NULL')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      'FROM invoice_reminder_schedule s WHERE s.invoice_id = i.id',
+    )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('ORDER BY i.issued_at ASC, i.id ASC')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('LIMIT $2')
+  })
+})
+
+describe('snapToDaytimeWindow / reminderWindowForProfile', () => {
+  it('leaves an in-window instant unchanged', () => {
+    // 12:00Z == 15:30 Tehran → inside 09:00–21:00
+    expect(snapToDaytimeWindow(DUE_INSIDE, TEHRAN).toISOString()).toBe(DUE_INSIDE.toISOString())
+  })
+
+  it('snaps a pre-open instant to today\'s window open', () => {
+    // 02:00Z == 05:30 Tehran → 09:00 Tehran == 05:30Z
+    const snapped = snapToDaytimeWindow(new Date('2026-09-07T02:00:00.000Z'), TEHRAN)
+    expect(snapped.toISOString()).toBe('2026-09-07T05:30:00.000Z')
+  })
+
+  it('snaps a post-close instant to tomorrow\'s window open', () => {
+    // 18:00Z == 21:30 Tehran → 2026-09-08 09:00 Tehran == 05:30Z
+    const snapped = snapToDaytimeWindow(new Date('2026-09-07T18:00:00.000Z'), TEHRAN)
+    expect(snapped.toISOString()).toBe('2026-09-08T05:30:00.000Z')
+  })
+
+  it('uses the profile timezone with admin window hours', () => {
+    const window = reminderWindowForProfile(
+      { timezone: 'UTC', startHour: 8, endHour: 20 },
+      'Asia/Tehran',
+    )
+    expect(window).toEqual({ timezone: 'Asia/Tehran', startHour: 8, endHour: 20 })
+  })
+
+  it('falls back to the admin timezone when the profile zone is invalid', () => {
+    const admin = { timezone: 'UTC', startHour: 9, endHour: 21 }
+    expect(reminderWindowForProfile(admin, 'Not/AZone').timezone).toBe('UTC')
+    expect(reminderWindowForProfile(admin, '').timezone).toBe('UTC')
+    expect(reminderWindowForProfile(admin, null).timezone).toBe('UTC')
+  })
+})
+
+describe('planInvoiceReminders', () => {
+  it('emits one row per canonical offset for in_app, inside the window', () => {
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      channels: ['in_app'],
+      window: TEHRAN,
+    })
+    expect(planned).toHaveLength(6)
+    expect(planned.map((row) => row.offset)).toEqual([...INVOICE_REMINDER_OFFSETS])
+    expect(planned.every((row) => row.channel === 'in_app')).toBe(true)
+    expect(planned.find((row) => row.offset === 0)?.scheduledAt.toISOString()).toBe(
+      DUE_INSIDE.toISOString(),
+    )
+    expect(planned.find((row) => row.offset === -7)?.scheduledAt.toISOString()).toBe(
+      '2026-08-31T12:00:00.000Z',
+    )
+    expect(planned.find((row) => row.offset === 7)?.scheduledAt.toISOString()).toBe(
+      '2026-09-14T12:00:00.000Z',
+    )
+  })
+
+  it('crosses offsets with enabled external channels', () => {
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      channels: ['in_app', 'email', 'sms'],
+      window: TEHRAN,
+    })
+    expect(planned).toHaveLength(18)
+    expect(planned.filter((row) => row.offset === 0).map((row) => row.channel)).toEqual([
+      'in_app',
+      'email',
+      'sms',
+    ])
+  })
+
+  it('applies the daytime window to every offset instant', () => {
+    const dueOutside = new Date('2026-09-07T02:00:00.000Z')
+    const planned = planInvoiceReminders({
+      dueAt: dueOutside,
+      channels: ['in_app'],
+      window: TEHRAN,
+    })
+    expect(planned.find((row) => row.offset === 0)?.scheduledAt.toISOString()).toBe(
+      '2026-09-07T05:30:00.000Z',
+    )
+    expect(planned.find((row) => row.offset === -7)?.scheduledAt.toISOString()).toBe(
+      '2026-08-31T05:30:00.000Z',
+    )
+  })
+})
+
+describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
+  it('selects issued invoices without schedule rows, oldest issued first, bounded', async () => {
+    const db = makeFakeDb(defaultHandler())
+    await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+
+    const find = db.calls.find((c) => c.sql.includes('NOT EXISTS'))
+    expect(find).toBeDefined()
+    expect(find!.params[0]).toEqual([...REMINDER_STOP_STATES])
+    expect(find!.params[1]).toBe(DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE)
+    expect(find!.sql).toContain('state = ANY($1::invoice_state[])')
+    expect(find!.sql).not.toContain('$1::text[]')
+  })
+
+  it('inserts six in_app rows for an Unpaid invoice with default preferences', async () => {
+    const db = makeFakeDb(defaultHandler())
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+
+    expect(result).toMatchObject({
+      scanned: 1,
+      scheduled: 1,
+      skipped: 0,
+      truncated: false,
+      errors: [],
+    })
+
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insert).toBeDefined()
+    expect(insert!.sql).toContain('"offset"')
+    expect(insert!.params[0]).toBe('inv-unpaid')
+    const offsets = []
+    const channels = []
+    for (let i = 1; i < insert!.params.length; i += 3) {
+      offsets.push(insert!.params[i])
+      channels.push(insert!.params[i + 1])
+    }
+    expect(offsets).toEqual([...INVOICE_REMINDER_OFFSETS])
+    expect(channels).toEqual(['in_app', 'in_app', 'in_app', 'in_app', 'in_app', 'in_app'])
+    expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
+  })
+
+  it('inserts email and sms rows when those preferences are enabled', async () => {
+    const row = unpaidCandidate('inv-multi', {
+      notification_preferences: 'IN_APP,EMAIL,SMS',
+    })
+    const db = makeFakeDb(defaultHandler([row]))
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result.scheduled).toBe(1)
+
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insert).toBeDefined()
+    expect(insert!.params).toHaveLength(1 + 18 * 3)
+    const channels = new Set<string>()
+    for (let i = 2; i < insert!.params.length; i += 3) {
+      channels.add(String(insert!.params[i]))
+    }
+    expect(channels).toEqual(new Set(['in_app', 'email', 'sms']))
+  })
+
+  it('skips a candidate that is no longer eligible after the row lock', async () => {
+    const candidate = unpaidCandidate()
+    const db = makeFakeDb(
+      defaultHandler([candidate], [{ ...candidate, state: 'Paid' }]),
+    )
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result).toMatchObject({ scanned: 1, scheduled: 0, skipped: 1, errors: [] })
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
+    expect(db.calls.some((c) => c.sql === 'ROLLBACK')).toBe(true)
+  })
+
+  it('skips when schedule rows already exist under lock (idempotent re-run)', async () => {
+    const db = makeFakeDb(defaultHandler([unpaidCandidate()], 'match', 1))
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result).toMatchObject({ scanned: 1, scheduled: 0, skipped: 1 })
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
+  })
+
+  it('skips when FOR UPDATE SKIP LOCKED returns no row (held by a concurrent worker)', async () => {
+    const db = makeFakeDb(defaultHandler([unpaidCandidate()], []))
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result).toMatchObject({ scanned: 1, scheduled: 0, skipped: 1 })
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
+  })
+
+  it('isolates a per-invoice failure and continues the batch', async () => {
+    const rows = [unpaidCandidate('inv-ok'), unpaidCandidate('inv-boom')]
+    const db = makeFakeDb((sql, params) => {
+      if (sql.includes('NOT EXISTS')) return { rows }
+      if (sql.includes('FOR UPDATE OF i SKIP LOCKED')) {
+        return { rows: [rows.find((r) => r.id === params[0])!] }
+      }
+      if (sql.includes('FROM invoice_reminder_schedule WHERE invoice_id')) {
+        return { rows: [], rowCount: 0 }
+      }
+      if (sql.includes('INSERT INTO invoice_reminder_schedule')) {
+        if (params[0] === 'inv-boom') throw new Error('deadlock')
+        return { rows: [], rowCount: 6 }
+      }
+      return { rows: [] }
+    })
+
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result.scheduled).toBe(1)
+    expect(result.errors).toHaveLength(1)
+    expect(result.errors[0]).toContain('inv-boom')
+    expect(result.errors[0]).toContain('deadlock')
+  })
+
+  it('sets truncated when the candidate query fills the batch cap', async () => {
+    const rows = [unpaidCandidate('inv-0'), unpaidCandidate('inv-1')]
+    const db = makeFakeDb(defaultHandler(rows))
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { batchSize: 2 }),
+    )
+    expect(result.truncated).toBe(true)
+    expect(result.scanned).toBe(2)
+    expect(result.scheduled).toBe(2)
+  })
+
+  it('locks each candidate with FOR UPDATE OF i SKIP LOCKED', async () => {
+    const db = makeFakeDb(defaultHandler())
+    await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    const lock = db.calls.find((c) => c.sql.includes('FOR UPDATE OF i SKIP LOCKED'))
+    expect(lock!.params).toEqual(['inv-unpaid'])
+  })
+
+  it('is a no-op when every issued invoice already has a schedule', async () => {
+    const db = makeFakeDb(defaultHandler([]))
+    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db))
+    expect(result).toMatchObject({
+      scanned: 0,
+      scheduled: 0,
+      skipped: 0,
+      truncated: false,
+      errors: [],
+    })
+    expect(db.pool.connect).not.toHaveBeenCalled()
+  })
+})

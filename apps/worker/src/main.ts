@@ -6,6 +6,10 @@ import { InAppNotificationTransport } from './notifications/in-app-transport.js'
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceEscalations } from './service-targets/escalation-scanner.js';
 import { INVOICE_OVERDUE_JOB_TYPE, scanOverdueInvoices } from './invoices/overdue-scanner.js';
+import {
+  INVOICE_REMINDER_JOB_TYPE,
+  scheduleIssuedInvoiceReminders,
+} from './invoices/reminder-scheduler.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
@@ -331,8 +335,61 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(overdueScanner));
   process.on('SIGINT', () => clearInterval(overdueScanner));
 
+  // ── Invoice reminder scheduler (S-04.1.04, T-04.1.04.02) ─────────────
+  // Catch-up poll: issued invoices without schedule rows get reminder
+  // datetimes computed from dueAt + canonical offsets and inserted.
+  const REMINDER_SCHEDULE_DEFAULT_MS = 60_000;
+  const reminderScheduleRaw = Number(
+    process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? String(REMINDER_SCHEDULE_DEFAULT_MS),
+  );
+  const INVOICE_REMINDER_SCHEDULE_MS =
+    Number.isFinite(reminderScheduleRaw) && reminderScheduleRaw >= 1000
+      ? reminderScheduleRaw
+      : REMINDER_SCHEDULE_DEFAULT_MS;
+  if (INVOICE_REMINDER_SCHEDULE_MS !== reminderScheduleRaw) {
+    logger.warn(
+      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`,
+    );
+  }
+  let reminderScheduleInFlight = false;
+  const reminderScheduler = setInterval(async () => {
+    if (draining || reminderScheduleInFlight) return;
+    reminderScheduleInFlight = true;
+    try {
+      const result = await scheduleIssuedInvoiceReminders();
+      if (result.scheduled > 0 || result.errors.length > 0) {
+        logger.info(
+          `Reminder schedule: scheduled=${result.scheduled} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+        );
+      }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: INVOICE_REMINDER_JOB_TYPE,
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, scheduled: result.scheduled },
+        });
+      } else {
+        await recordJobSuccess(INVOICE_REMINDER_JOB_TYPE);
+      }
+    } catch (err) {
+      logger.error(`Reminder schedule failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: INVOICE_REMINDER_JOB_TYPE,
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
+    } finally {
+      reminderScheduleInFlight = false;
+    }
+  }, INVOICE_REMINDER_SCHEDULE_MS);
+  reminderScheduler.unref();
+
+  process.on('SIGTERM', () => clearInterval(reminderScheduler));
+  process.on('SIGINT', () => clearInterval(reminderScheduler));
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler active',
   );
 }
 
