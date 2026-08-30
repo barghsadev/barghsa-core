@@ -15,6 +15,7 @@ import {
   FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
   INVOICE_REMINDER_JOB_TYPE,
   REMINDER_SCHEDULE_CATCH_UP_GRACE_MS,
+  REMINDER_SCHEDULE_HORIZON_DAYS,
   isElapsedReminder,
   planInvoiceReminders,
   reminderWindowForProfile,
@@ -140,6 +141,18 @@ describe('ReminderScheduler contract (T-04.1.04.02)', () => {
     )
     expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('ORDER BY i.issued_at ASC, i.id ASC')
     expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('LIMIT $2')
+    expect(REMINDER_SCHEDULE_HORIZON_DAYS).toBe(8)
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      `INTERVAL '${REMINDER_SCHEDULE_HORIZON_DAYS} days'`,
+    )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      `INTERVAL '${REMINDER_SCHEDULE_CATCH_UP_GRACE_MS / 1000} seconds'`,
+    )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('$3::timestamptz')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('$4::timestamptz IS NULL')
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      '(i.issued_at, i.id) > ($4::timestamptz, $5::uuid)',
+    )
   })
 })
 
@@ -297,6 +310,9 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     expect(find).toBeDefined()
     expect(find!.params[0]).toEqual([...REMINDER_STOP_STATES])
     expect(find!.params[1]).toBe(DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE)
+    expect(find!.params[2]).toEqual(ISSUED)
+    expect(find!.params[3]).toBeNull()
+    expect(find!.params[4]).toBeNull()
     expect(find!.sql).toContain('state = ANY($1::invoice_state[])')
     expect(find!.sql).not.toContain('$1::text[]')
   })
@@ -439,6 +455,55 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     expect(result.truncated).toBe(true)
     expect(result.scanned).toBe(2)
     expect(result.scheduled).toBe(2)
+  })
+
+  it('pages past a full batch of elapsed-offset invoices and schedules a newer issue', async () => {
+    const staleDue = new Date('2026-01-01T12:00:00.000Z')
+    const staleIssued = new Date('2025-12-25T12:00:00.000Z')
+    const stale = Array.from({ length: 5 }, (_, index) =>
+      unpaidCandidate(`11111111-1111-7111-8111-11111111111${index}`, {
+        due_at: staleDue,
+        issued_at: new Date(staleIssued.getTime() + index),
+      }),
+    )
+    const fresh = unpaidCandidate('22222222-2222-7222-8222-222222222222')
+    const byId = new Map([...stale, fresh].map((row) => [row.id, row]))
+
+    const db = makeFakeDb((sql, params) => {
+      if (sql.includes('FROM invoices i') && sql.includes('NOT EXISTS')) {
+        const afterId = params[4]
+        if (afterId == null) return { rows: stale }
+        return { rows: [fresh] }
+      }
+      if (sql.includes('FOR UPDATE OF i SKIP LOCKED')) {
+        const row = byId.get(String(params[0]))
+        return { rows: row ? [row] : [] }
+      }
+      if (sql.includes('FROM invoice_reminder_schedule WHERE invoice_id')) {
+        return { rows: [], rowCount: 0 }
+      }
+      if (sql.includes('INSERT INTO invoice_reminder_schedule')) {
+        return { rows: [], rowCount: 6 }
+      }
+      return { rows: [] }
+    })
+
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { batchSize: 5, now: ISSUED }),
+    )
+
+    expect(result).toMatchObject({
+      scanned: 6,
+      scheduled: 1,
+      skipped: 5,
+      truncated: false,
+      errors: [],
+    })
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insert?.params[0]).toBe(fresh.id)
+    const findCalls = db.calls.filter((c) => c.sql.includes('NOT EXISTS'))
+    expect(findCalls).toHaveLength(2)
+    expect(findCalls[1]?.params[4]).toBe(stale[stale.length - 1]?.id)
   })
 
   it('locks each candidate with FOR UPDATE OF i SKIP LOCKED', async () => {

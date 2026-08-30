@@ -1,6 +1,7 @@
-import type { Pool, PoolClient } from 'pg'
+import type { Pool, PoolClient, QueryResult } from 'pg'
 import { getDbPool } from '@barghsa/db'
 import {
+  INVOICE_REMINDER_OFFSETS,
   REMINDER_STOP_STATES,
   computeReminderInstants,
   isEligibleForReminderSchedule,
@@ -42,6 +43,12 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * 60s catch-up poll so the on-issue `-7` offset of a default 7-day due
  * period is not discarded as stale.
  *
+ * Terminally stale invoices (latest possible reminder already outside
+ * the catch-up window) are excluded from the candidate query so they
+ * cannot occupy the bounded oldest-first batch and starve later issues.
+ * A pass also keyset-paginates past skipped pages in the same tick so a
+ * residual empty-plan cohort cannot block a newly issued invoice.
+ *
  * Admin per-offset toggles (T-04.1.04.05) and the unique
  * (invoiceId, offset, channel) index (T-04.1.04.04) are later tasks;
  * this pass inserts remaining future offsets and is idempotent by
@@ -52,8 +59,29 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * already-inserted future rows is T-04.1.04.06.
  */
 
-/** Default number of issued invoices claimed per tick. */
+/** Default number of issued invoices claimed per page / scheduling quota. */
 export const DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE = 200
+
+/**
+ * Extra calendar day beyond the latest canonical offset so a post-close
+ * instant snapped to the next daytime-window open is still a candidate.
+ */
+export const REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS = 1
+
+/**
+ * Inclusive horizon used by the candidate query: latest S-04.1.04 offset
+ * (`+7`) plus the daytime-window snap-forward buffer. Invoices whose
+ * `due_at + this many days` is already before the catch-up cutoff cannot
+ * receive any schedule row and must not occupy the oldest-first batch.
+ */
+export const REMINDER_SCHEDULE_HORIZON_DAYS =
+  Math.max(...INVOICE_REMINDER_OFFSETS) + REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS
+
+/**
+ * Max candidate pages per pass (each up to `batchSize`). Bounds work when
+ * a residual empty-plan cohort still matches the SQL horizon.
+ */
+export const DEFAULT_REMINDER_SCHEDULE_MAX_PAGES = 10
 
 /**
  * Offsets whose snapped `scheduledAt` is this close to the scheduling
@@ -123,6 +151,14 @@ const defaultLogger = {
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
  * bind the stop-state array as `invoice_state[]`. Skip invoices that
  * already have any schedule row so a re-run is a no-op.
+ *
+ * `$3` is the pass `now`. Invoices whose latest possible reminder
+ * (`due_at` + {@link REMINDER_SCHEDULE_HORIZON_DAYS}) is already before
+ * `GREATEST(issued_at, now - grace)` are excluded so they cannot fill
+ * the oldest-first `LIMIT` and starve later issues.
+ *
+ * `$4`/`$5` are an optional keyset `(issued_at, id)` cursor so one pass
+ * can page past skipped candidates. Bind both NULL on the first page.
  */
 export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
                COALESCE(u.timezone, 'Asia/Tehran') AS timezone,
@@ -135,6 +171,14 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
           AND NOT (i.state = ANY($1::invoice_state[]))
           AND NOT EXISTS (
             SELECT 1 FROM invoice_reminder_schedule s WHERE s.invoice_id = i.id
+          )
+          AND i.due_at + INTERVAL '${REMINDER_SCHEDULE_HORIZON_DAYS} days' >= GREATEST(
+            i.issued_at,
+            $3::timestamptz - INTERVAL '${REMINDER_SCHEDULE_CATCH_UP_GRACE_MS / 1000} seconds'
+          )
+          AND (
+            $4::timestamptz IS NULL
+            OR (i.issued_at, i.id) > ($4::timestamptz, $5::uuid)
           )
         ORDER BY i.issued_at ASC, i.id ASC
         LIMIT $2`
@@ -271,7 +315,9 @@ async function loadWindow(
 
 /**
  * Run one reminder-scheduling pass over issued invoices that still lack
- * schedule rows.
+ * schedule rows. Pages past skipped/empty-plan candidates in the same
+ * tick so a full batch of terminally stale invoices cannot starve a
+ * newly issued invoice that still has future offsets.
  */
 export async function scheduleIssuedInvoiceReminders(
   options: ReminderScheduleOptions = {},
@@ -291,35 +337,59 @@ export async function scheduleIssuedInvoiceReminders(
 
   const adminWindow = await loadWindow(pool, options.deliveryWindow)
 
-  const candidates = await pool.query<CandidateRow>(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL, [
-    [...REMINDER_STOP_STATES],
-    batchSize,
-  ])
-  result.scanned = candidates.rows.length
-  if (candidates.rows.length >= batchSize) {
-    result.truncated = true
-  }
+  let cursorIssuedAt: Date | null = null
+  let cursorId: string | null = null
 
-  for (const candidate of candidates.rows) {
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-      const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now)
-      if (inserted) {
-        await client.query('COMMIT')
-        result.scheduled += 1
-      } else {
-        await client.query('ROLLBACK')
-        result.skipped += 1
-      }
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`
-      result.errors.push(message)
-      logger.warn(`Reminder schedule failed: ${message}`)
-    } finally {
-      client.release()
+  for (let page = 0; page < DEFAULT_REMINDER_SCHEDULE_MAX_PAGES; page += 1) {
+    const candidates: QueryResult<CandidateRow> = await pool.query<CandidateRow>(
+      FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
+      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId],
+    )
+    result.scanned += candidates.rows.length
+    if (candidates.rows.length === 0) {
+      result.truncated = false
+      break
     }
+
+    for (const candidate of candidates.rows) {
+      const client = await pool.connect()
+      try {
+        await client.query('BEGIN')
+        const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now)
+        if (inserted) {
+          await client.query('COMMIT')
+          result.scheduled += 1
+        } else {
+          await client.query('ROLLBACK')
+          result.skipped += 1
+        }
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => {})
+        const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`
+        result.errors.push(message)
+        logger.warn(`Reminder schedule failed: ${message}`)
+      } finally {
+        client.release()
+      }
+
+      if (result.scheduled >= batchSize) {
+        result.truncated = true
+        return result
+      }
+    }
+
+    if (candidates.rows.length < batchSize) {
+      result.truncated = false
+      break
+    }
+
+    result.truncated = true
+    const last: CandidateRow | undefined = candidates.rows[candidates.rows.length - 1]
+    if (!last) break
+    const lastIssuedAt = parseDueAtValue(last.issued_at)
+    if (lastIssuedAt === null) break
+    cursorIssuedAt = lastIssuedAt
+    cursorId = last.id
   }
 
   return result

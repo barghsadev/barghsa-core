@@ -151,7 +151,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
 
     const result = await ctx.pool.query<{ id: string; state: string }>(
       FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
-      [[...REMINDER_STOP_STATES], 200],
+      [[...REMINDER_STOP_STATES], 200, ISSUED, null, null],
     )
 
     expect(result.rows.map((row) => row.id).sort()).toEqual([overdue, unpaid].sort())
@@ -272,5 +272,106 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
     expect(
       lateRows.rows.every((row) => row.scheduled_at.getTime() >= lateNow.getTime()),
     ).toBe(true)
+  })
+
+  it('excludes invoices whose latest reminder is already outside the catch-up window', async () => {
+    const staleId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: new Date('2026-01-01T12:00:00.000Z'),
+      issuedAt: new Date('2025-12-25T12:00:00.000Z'),
+    })
+    const freshId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: ISSUED,
+    })
+
+    const result = await ctx.pool.query<{ id: string }>(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL, [
+      [...REMINDER_STOP_STATES],
+      200,
+      ISSUED,
+      null,
+      null,
+    ])
+
+    expect(result.rows.map((row) => row.id)).toEqual([freshId])
+    expect(result.rows.some((row) => row.id === staleId)).toBe(false)
+  })
+
+  it('schedules a newly issued invoice when a full batch of terminally stale invoices is older', async () => {
+    const batchSize = 8
+    const staleIssued = new Date('2025-12-25T12:00:00.000Z')
+    for (let index = 0; index < batchSize; index += 1) {
+      await insertInvoice({
+        state: 'Unpaid',
+        dueAt: new Date('2026-01-01T12:00:00.000Z'),
+        issuedAt: new Date(staleIssued.getTime() + index * 1000),
+      })
+    }
+    const freshId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: ISSUED,
+    })
+
+    const pass = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize,
+      now: ISSUED,
+    })
+
+    expect(pass.errors).toEqual([])
+    expect(pass.scheduled).toBe(1)
+    expect(pass.scanned).toBe(1)
+    const scheduled = await ctx.pool.query<{ invoice_id: string }>(
+      `SELECT DISTINCT invoice_id FROM invoice_reminder_schedule`,
+    )
+    expect(scheduled.rows.map((row) => row.invoice_id)).toEqual([freshId])
+  })
+
+  it('schedules a newly issued invoice after a full batch of elapsed-offset invoices', async () => {
+    const batchSize = 8
+    const staleDue = new Date('2026-09-07T12:00:00.000Z')
+    const staleIssued = new Date('2026-08-31T12:00:00.000Z')
+    // +7 is 2h before `now`, inside the daytime window, so the planner
+    // emits no rows; due+8 days is still after the cutoff so SQL keeps them.
+    const now = new Date('2026-09-14T14:00:00.000Z')
+    const staleIds: string[] = []
+    for (let index = 0; index < batchSize; index += 1) {
+      staleIds.push(
+        await insertInvoice({
+          state: 'Unpaid',
+          dueAt: staleDue,
+          issuedAt: new Date(staleIssued.getTime() + index * 1000),
+        }),
+      )
+    }
+    const freshIssued = new Date('2026-09-14T13:30:00.000Z')
+    const freshDue = new Date('2026-09-21T12:00:00.000Z')
+    const freshId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: freshDue,
+      issuedAt: freshIssued,
+    })
+
+    const pass = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize,
+      now,
+    })
+
+    expect(pass.errors).toEqual([])
+    expect(pass.scheduled).toBe(1)
+    expect(pass.scanned).toBeGreaterThan(batchSize)
+
+    const scheduled = await ctx.pool.query<{ invoice_id: string }>(
+      `SELECT DISTINCT invoice_id FROM invoice_reminder_schedule`,
+    )
+    expect(scheduled.rows.map((row) => row.invoice_id)).toEqual([freshId])
+    expect(staleIds.every((id) => scheduled.rows.every((row) => row.invoice_id !== id))).toBe(
+      true,
+    )
   })
 })
