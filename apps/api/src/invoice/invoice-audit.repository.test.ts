@@ -121,4 +121,39 @@ describe('InvoiceAuditRepository', () => {
     }
     expect(mockClient.query).toHaveBeenCalledTimes(INVOICE_TRANSITIONS.length)
   })
+
+  it('records a staff dueAt override with the customer-visible reason', async () => {
+    const occurredAt = new Date('2026-08-02T12:00:00Z')
+    const auditId = await repo.recordDueAtOverride(
+      mockClient,
+      {
+        invoiceId: 'inv-override',
+        actorUserId: 'staff-001',
+        invoiceState: 'Unpaid',
+        snapshot: {
+          dueAt: '2026-09-15T08:00:00.000Z',
+          previousDueAt: '2026-08-08T10:00:00.000Z',
+          reason: 'Customer requested an extension',
+          actorUserId: 'staff-001',
+          overriddenAt: occurredAt.toISOString(),
+          customerVisible: true,
+        },
+        correlationId: 'corr-override',
+        ip: '10.0.0.9',
+      },
+      occurredAt,
+    )
+
+    expect(auditId).toBe('audit-0000-0000-7000-000000000000')
+    const params = insertCall()![1] as unknown[]
+    expect(params[2]).toBe('invoice.due_at.override')
+    expect(params[3]).toContain('"invoiceId":"inv-override"')
+    expect(params[3]).toContain('"previousDueAt":"2026-08-08T10:00:00.000Z"')
+    expect(params[3]).toContain('"newDueAt":"2026-09-15T08:00:00.000Z"')
+    expect(params[3]).toContain('"reason":"Customer requested an extension"')
+    expect(params[3]).toContain('"customerVisible":true')
+    expect(params[4]).toBe('corr-override')
+    expect(params[5]).toBe('10.0.0.9')
+    expect(params[6]).toBe(occurredAt)
+  })
 })

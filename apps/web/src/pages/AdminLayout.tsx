@@ -21,6 +21,7 @@ export default function AdminLayout() {
               <li><a href="/admin/geography" className="text-blue-600 hover:underline">Geography</a></li>
               <li><a href="/admin/tos" className="text-blue-600 hover:underline">Terms of Service</a></li>
               <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
+              <li><a href="/admin/invoices" className="text-blue-600 hover:underline">Invoices</a></li>
               <li><a href="/admin/providers" className="text-blue-600 hover:underline">Email Providers</a></li>
               <li><a href="/admin/roles" className="text-blue-600 hover:underline">Roles &amp; Permissions</a></li>
               <li className="pt-2 mt-2 border-t border-gray-100">

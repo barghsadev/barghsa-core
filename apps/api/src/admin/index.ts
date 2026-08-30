@@ -11,6 +11,7 @@ export type {
 } from './admin.service.js'
 export { AdminController, CreateStaffUserSchema, type CreateStaffUserDto } from './admin.controller.js'
 export { DualApprovalController, RejectApprovalRequestSchema } from './dual-approval.controller.js'
+export { DueAtOverrideController } from './due-at-override.controller.js'
 export {
   ReconciliationExceptionsController,
   ResolutionNoteSchema,

@@ -12,8 +12,9 @@
  * client so issuance snapshots the period inside the same transaction
  * that creates the invoice.
  *
- * Staff-override permission + customer-visible reason are T-04.1.03.03;
- * this module only computes the instant.
+ * Staff-override permission + customer-visible reason are T-04.1.03.03
+ * (`DueAtOverrideService` + staff UI/API); this module only computes the
+ * instant.
  */
 
 import { Injectable } from '@nestjs/common'
