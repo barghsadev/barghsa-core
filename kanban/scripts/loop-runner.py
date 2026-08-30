@@ -120,14 +120,22 @@ def release_lock() -> None:
 def task_section(task: dict[str, Any]) -> str:
     path = EPICS_DIR / task["fname"]
     text = path.read_text()
-    start = text.find(f"**{task['id']} —")
-    if start < 0:
-        raise RuntimeError(f"task heading not found: {task['key']}")
-    following = text[start + 2 :]
-    next_heading = following.find("\n**T-")
-    if next_heading >= 0:
-        return text[start : start + 2 + next_heading].strip()
-    return "\n".join(text[start:].splitlines()[:80]).strip()
+    heading_start = text.find(f"**{task['id']} —")
+    if heading_start >= 0:
+        following = text[heading_start + 2 :]
+        next_heading = following.find("\n**T-")
+        if next_heading >= 0:
+            return text[heading_start : heading_start + 2 + next_heading].strip()
+        return "\n".join(text[heading_start:].splitlines()[:80]).strip()
+
+    row_pattern = re.compile(
+        rf"^\|\s*{re.escape(task['id'])}\s*\|.*$", re.MULTILINE
+    )
+    row_match = row_pattern.search(text)
+    if row_match:
+        return row_match.group(0).strip()
+
+    raise RuntimeError(f"task section not found: {task['key']}")
 
 
 def next_task(state: dict[str, Any]) -> dict[str, Any] | None:

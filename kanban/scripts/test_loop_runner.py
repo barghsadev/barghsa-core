@@ -58,6 +58,13 @@ class LoopRunnerProtocolTests(unittest.TestCase):
     def successful_check(self):
         return {"name": "CI", "conclusion": "SUCCESS", "status": "COMPLETED"}
 
+    def test_task_section_extracts_table_row_tasks(self):
+        section = loop_runner.task_section(self.task)
+
+        self.assertIn("T-04.1.02.08", section)
+        self.assertIn("invoice_calculation_snapshot", section)
+        self.assertIn("| S |", section)
+
     def test_state_dispatch_keeps_review_and_merge_on_separate_ticks(self):
         self.assertEqual(loop_runner.action_for_status("idle"), "cursor_build")
         self.assertEqual(loop_runner.action_for_status("building"), "cursor_build")
