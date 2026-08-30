@@ -6,6 +6,10 @@ import type {
   NotificationSendPayload,
   NotificationSendResult,
 } from '@barghsa/shared/notifications'
+import {
+  PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+  reminderOutboxIdempotencyKey,
+} from '../invoices/reminder-sender.js'
 
 /**
  * Base outbox reader unit tests.
@@ -79,6 +83,42 @@ describe('dispatchOutbox', () => {
     await dispatchOutbox(row, { in_app: inApp, email })
     expect(inApp.reads[0]!.idempotencyKey).toBe(inApp.reads[1]!.idempotencyKey)
     expect(email.reads[0]!.idempotencyKey).toBe(email.reads[1]!.idempotencyKey)
+  })
+
+  it('gives distinct transport keys to two reminder rows for the same profile (T-04.1.04.03)', async () => {
+    const invoiceA = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaa1'
+    const invoiceB = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbb2'
+    const rowA: OutboxRow = {
+      ...row,
+      eventKey: PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      idempotencyKey: reminderOutboxIdempotencyKey(invoiceA, -7),
+    }
+    const rowB: OutboxRow = {
+      ...row,
+      eventKey: PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      idempotencyKey: reminderOutboxIdempotencyKey(invoiceB, -3),
+    }
+
+    const inApp = new FakeTransport('in_app')
+    const email = new FakeTransport('email')
+    await dispatchOutbox(rowA, { in_app: inApp, email })
+    await dispatchOutbox(rowB, { in_app: inApp, email })
+    await dispatchOutbox(rowA, { in_app: inApp, email })
+
+    const inAppA = inApp.reads[0]!.idempotencyKey
+    const inAppB = inApp.reads[1]!.idempotencyKey
+    const inAppARetry = inApp.reads[2]!.idempotencyKey
+    const emailA = email.reads[0]!.idempotencyKey
+    const emailB = email.reads[1]!.idempotencyKey
+    const emailARetry = email.reads[2]!.idempotencyKey
+
+    expect(inAppA).toMatch(/^[0-9a-f]{64}$/)
+    expect(inAppB).toMatch(/^[0-9a-f]{64}$/)
+    expect(inAppA).not.toBe(inAppB)
+    expect(emailA).not.toBe(emailB)
+    expect(inAppA).not.toBe(emailA)
+    expect(inAppA).toBe(inAppARetry)
+    expect(emailA).toBe(emailARetry)
   })
 
   it('throws when in_app transport is required but missing', async () => {

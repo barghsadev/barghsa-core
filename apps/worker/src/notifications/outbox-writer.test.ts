@@ -51,19 +51,26 @@ describe('deriveIdempotencyKey', () => {
 })
 
 describe('deriveChannelIdempotencyKey', () => {
-  it('is a stable sha256 hex digest of eventKey:channel:profileId', () => {
-    const a = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
-    const b = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
+  it('is a stable sha256 hex digest of eventKey:channel:profileId:outboxKey', () => {
+    const a = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
+    const b = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
     expect(a).toMatch(/^[0-9a-f]{64}$/)
     expect(a).toBe(b)
   })
 
-  it('varies by channel and by profile for the same event', () => {
-    const emailP1 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1')
-    const inAppP1 = deriveChannelIdempotencyKey('profile_verified', 'in_app', 'profile-1')
-    const emailP2 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-2')
+  it('varies by channel, profile, and outbox idempotency key for the same event', () => {
+    const emailP1 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
+    const inAppP1 = deriveChannelIdempotencyKey('profile_verified', 'in_app', 'profile-1', 'outbox-a')
+    const emailP2 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-2', 'outbox-a')
+    const emailOtherRow = deriveChannelIdempotencyKey(
+      'profile_verified',
+      'email',
+      'profile-1',
+      'outbox-b',
+    )
     expect(emailP1).not.toBe(inAppP1)
     expect(emailP1).not.toBe(emailP2)
+    expect(emailP1).not.toBe(emailOtherRow)
   })
 })
 

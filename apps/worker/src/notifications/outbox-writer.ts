@@ -34,9 +34,10 @@ export interface EnqueueOutboxInput {
   channels: NotificationChannel[]
   /**
    * Unique idempotency key. Defaults to sha256(`${eventKey}:${profileId}`).
-   * Override for cross-event semantics. Per-channel provider idempotency on
-   * the consuming side is derived separately (T-05.01.04); use this only to
-   * deduplicate whole outbox rows for the same (event, profile).
+   * Override when one (event, profile) may enqueue more than one logical
+   * delivery (e.g. invoice reminders keyed by invoice + offset). Per-channel
+   * provider keys at dispatch incorporate this value so distinct outbox
+   * rows never collide at the transport (T-05.01.04).
    */
   idempotencyKey?: string
   /** 'queued' (immediate) or 'scheduled' (deferred until scheduledFor). */
@@ -62,21 +63,26 @@ export function deriveIdempotencyKey(eventKey: string, profileId: string): strin
 }
 
 /**
- * Per-channel idempotency key (T-05.01.04) — sha256(eventKey:channel:profileId).
+ * Per-channel idempotency key (T-05.01.04) —
+ * sha256(eventKey:channel:profileId:outboxIdempotencyKey).
  *
  * Guarantees at-most-once logical delivery to a given channel transport even
  * when the same outbox row is retried, re-inserted as a duplicate, or fanned
- * out to multiple channels: each (event, channel, profile) combination maps to
- * exactly one stable key, so repeated sends to a channel with the same key can
- * never double-deliver. Resend and SMS.ir accept this as their provider-level
- * idempotency key so adapters can participate in the guarantee at the wire.
+ * out to multiple channels. The outbox row's business-event key is part of
+ * the digest so two queued events for the same (event, profile) — such as
+ * two `payment.invoice_reminder` rows for different invoices or offsets —
+ * receive distinct provider keys, while a retry of one row stays stable.
+ * Resend and SMS.ir accept this as their provider-level idempotency key.
  */
 export function deriveChannelIdempotencyKey(
   eventKey: string,
   channel: NotificationChannel,
   profileId: string,
+  outboxIdempotencyKey: string,
 ): string {
-  return createHash('sha256').update(`${eventKey}:${channel}:${profileId}`).digest('hex')
+  return createHash('sha256')
+    .update(`${eventKey}:${channel}:${profileId}:${outboxIdempotencyKey}`)
+    .digest('hex')
 }
 
 /**
