@@ -13,6 +13,8 @@ import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { ManualInvoiceService, fingerprintManualInvoice } from './manual-invoice.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 
 // ---- Mocks ----
 const mockClient = {
@@ -64,7 +66,10 @@ describe('ManualInvoiceService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     const stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository())
-    service = new ManualInvoiceService(stateMachine)
+    service = new ManualInvoiceService(
+      stateMachine,
+      new DueAtCalculationService(new DueAtCalculationRepository()),
+    )
     mockPool.connect.mockResolvedValue(mockClient)
     mockClient.release.mockImplementation(() => {})
   })

@@ -35,6 +35,15 @@ export {
   MAX_ROUNDING_PRECISION,
 } from './rounding.service.js'
 export {
+  DueAtCalculationRepository,
+  type ActiveDuePeriod,
+} from './due-at.repository.js'
+export {
+  DueAtCalculationService,
+  type ResolveInvoiceDueAtInput,
+  type ResolvedInvoiceDueAt,
+} from './due-at.service.js'
+export {
   calculateAutoInvoice,
   calculateAutoLine,
   autoLineDescription,

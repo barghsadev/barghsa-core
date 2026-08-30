@@ -32,6 +32,8 @@ import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import { VatCalculationRepository } from './vat-calculation.repository.js'
 import { VatCalculationService } from './vat-calculation.service.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 import { calculateAutoInvoice } from './auto-invoice.calculation.js'
 
 // ---- Real-DB wiring ------------------------------------------------------
@@ -75,6 +77,10 @@ const CALCULATION_SNAPSHOT_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
 )
+const DUE_PERIODS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -97,6 +103,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     service = new AutoInvoiceService(
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
       new VatCalculationService(new VatCalculationRepository()),
+      new DueAtCalculationService(new DueAtCalculationRepository()),
     )
 
     // --- DDL: uuid v7 fn, enum, minimal FK targets, then the order and
@@ -167,6 +174,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: user, profile, product, VAT config + override, order.
@@ -552,7 +560,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     expect(outside).toBe(0)
   })
 
-  it('defaults dueAt to issuedAt + 7 days', async () => {
+  it('defaults dueAt to issuedAt + 7 days when no period is configured', async () => {
     const orderId = 'b0b0b0b0-b0b0-7b0b-8b0b-b0b0b0b0b007'
     await insertOrder(orderId)
 
@@ -564,6 +572,26 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     const due = new Date(result.dueAt!).getTime()
     const issued = new Date(result.issuedAt).getTime()
     expect(due - issued).toBe(7 * 24 * 60 * 60 * 1000)
+  })
+
+  it('computes dueAt as issuedAt + electricity service_due_periods days', async () => {
+    await ctx.db.execute(
+      `INSERT INTO service_due_periods
+         (service_type, default_days, effective_from, created_by)
+       VALUES ('electricity', 21, '2026-01-01T00:00:00.000Z', '${ACTOR_USER_ID}')`,
+    )
+    const orderId = 'd2d2d2d2-d2d2-7d2d-8d2d-d2d2d2d2d209'
+    await insertOrder(orderId)
+    const issuedAt = new Date('2026-08-01T10:00:00.000Z')
+    const result = await service.createInvoiceForOrder({
+      orderId,
+      actorUserId: ACTOR_USER_ID,
+      now: issuedAt,
+    })
+    expect(new Date(result.dueAt!).getTime() - issuedAt.getTime()).toBe(
+      21 * 24 * 60 * 60 * 1000,
+    )
+    await ctx.db.execute(`DELETE FROM service_due_periods WHERE service_type = 'electricity'`)
   })
 
   it('production parity: same totals as the pure calculation module', async () => {

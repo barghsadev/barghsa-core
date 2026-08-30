@@ -27,6 +27,8 @@ import type { IsolatedTestDb } from '@barghsa/db/test'
 import { ManualInvoiceService } from './manual-invoice.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 
 // ---- Real-DB wiring ------------------------------------------------------
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
@@ -69,6 +71,10 @@ const CALCULATION_SNAPSHOT_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
 )
+const DUE_PERIODS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -86,6 +92,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     poolHolder.pool = ctx.pool
     service = new ManualInvoiceService(
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
+      new DueAtCalculationService(new DueAtCalculationRepository()),
     )
 
     // --- DDL: uuid v7 fn, enum, minimal FK targets, then the invoice
@@ -116,6 +123,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: one profile + one actor.
@@ -233,7 +241,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     expect(stored.rows[0]!.vat_amount).toBe('1')
   })
 
-  it('defaults dueAt to issuedAt + 7 days unless overridden', async () => {
+  it('defaults dueAt to issuedAt + 7 days (fallback) unless overridden', async () => {
     const withDefault = await service.createManualInvoice({
       profileId: PROFILE_ID,
       actorUserId: ACTOR_USER_ID,
@@ -251,6 +259,25 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
       dueAt: explicit,
     })
     expect(new Date(withOverride.dueAt!).getTime()).toBe(explicit.getTime())
+  })
+
+  it('computes dueAt as issuedAt + service_due_periods default_days', async () => {
+    await ctx.db.execute(
+      `INSERT INTO service_due_periods
+         (service_type, default_days, effective_from, created_by)
+       VALUES ('manual', 14, '2026-01-01T00:00:00.000Z', '${ACTOR_USER_ID}')`,
+    )
+    const issuedAt = new Date('2026-08-01T10:00:00.000Z')
+    const result = await service.createManualInvoice({
+      profileId: PROFILE_ID,
+      actorUserId: ACTOR_USER_ID,
+      now: issuedAt,
+      lines: [{ description: 'config days', quantity: 1, unitPrice: 10_000n, vatRate: 0 }],
+    })
+    expect(new Date(result.dueAt!).getTime() - issuedAt.getTime()).toBe(
+      14 * 24 * 60 * 60 * 1000,
+    )
+    await ctx.db.execute(`DELETE FROM service_due_periods WHERE service_type = 'manual'`)
   })
 
   it('replays the same invoice when the idempotency key is reused', async () => {
