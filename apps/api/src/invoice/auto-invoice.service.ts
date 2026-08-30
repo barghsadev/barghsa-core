@@ -49,6 +49,7 @@ import {
   type AutoInvoiceLineInput,
   type CalculatedAutoLine,
 } from './auto-invoice.calculation.js'
+import { buildAutoInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
 
 /**
  * Default due period for auto-generated invoices (days from issue).
@@ -271,6 +272,11 @@ export class AutoInvoiceService {
 
       // --- 6. Persist the invoice + lines + items in ONE transaction ---
       const invoiceId = uuidv7()
+      const calculationSnapshot = buildAutoInvoiceCalculationSnapshot(
+        [lineInput],
+        giftDiscount,
+        calculation,
+      )
       const metadata = JSON.stringify({
         source: 'auto',
         origin: { type: 'order', orderId: order.id },
@@ -318,8 +324,9 @@ export class AutoInvoiceService {
 
       await client.query(
         `INSERT INTO invoices (id, profile_id, order_id, contract_id, type, state,
-                               total_amount, issued_at, payable_from, due_at, metadata)
-         VALUES ($1, $2, $3, NULL, 'auto', 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
+                               total_amount, issued_at, payable_from, due_at, metadata,
+                               invoice_calculation_snapshot)
+         VALUES ($1, $2, $3, NULL, 'auto', 'Draft', $4, NULL, NULL, $5, $6::jsonb, $7::jsonb)`,
         [
           invoiceId,
           order.profile_id,
@@ -327,6 +334,7 @@ export class AutoInvoiceService {
           calculation.totalAmount,
           dueAt,
           metadata,
+          JSON.stringify(calculationSnapshot),
         ],
       )
 
