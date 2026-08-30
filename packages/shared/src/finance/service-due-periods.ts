@@ -15,8 +15,9 @@
  * At most one open row exists per service type, enforced by the
  * `service_due_periods` GIST EXCLUDE constraint (migration 0059).
  *
- * `dueAt` resolution (`issuedAt + default_days`, staff override) lands
- * in T-04.1.03.02; this module is the shared type/validation surface.
+ * `dueAt` resolution (`issuedAt + default_days`, staff override) lives
+ * in `due-at.ts` (T-04.1.03.02); this module is the shared
+ * type/validation surface for the admin config rows.
  *
  * @module finance
  */
@@ -31,7 +32,7 @@ export const SERVICE_DUE_PERIOD_TYPES = [
 
 export type ServiceDuePeriodType = (typeof SERVICE_DUE_PERIOD_TYPES)[number]
 
-/** Fallback used by invoice issuance until T-04.1.03.02 reads this table. */
+/** Fallback used by invoice issuance when no active period row exists. */
 export const DEFAULT_SERVICE_DUE_DAYS = 7
 
 /** Minimum configurable due period in days (due the next calendar day). */

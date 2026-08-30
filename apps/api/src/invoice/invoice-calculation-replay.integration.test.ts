@@ -29,6 +29,8 @@ import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import { VatCalculationRepository } from './vat-calculation.repository.js'
 import { VatCalculationService } from './vat-calculation.service.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 import {
   parseIrrJson,
   parseSnapshotTotals,
@@ -77,6 +79,10 @@ const CALCULATION_SNAPSHOT_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
 )
+const DUE_PERIODS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0059_create_service_due_periods.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -97,10 +103,12 @@ describe('invoice calculation snapshot replay — real PostgreSQL (T-04.1.02.09)
     ctx = await createIsolatedTestDb('test_', 2)
     poolHolder.pool = ctx.pool
     const stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository())
-    manual = new ManualInvoiceService(stateMachine)
+    const dueAt = new DueAtCalculationService(new DueAtCalculationRepository())
+    manual = new ManualInvoiceService(stateMachine, dueAt)
     auto = new AutoInvoiceService(
       stateMachine,
       new VatCalculationService(new VatCalculationRepository()),
+      dueAt,
     )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
@@ -165,6 +173,7 @@ describe('invoice calculation snapshot replay — real PostgreSQL (T-04.1.02.09)
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     await ctx.db.execute(

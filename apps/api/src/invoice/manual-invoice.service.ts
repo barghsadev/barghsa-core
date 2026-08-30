@@ -43,6 +43,7 @@ import {
 } from '@nestjs/common'
 import { createHash } from 'node:crypto'
 import { getDbPool } from '@barghsa/db'
+import { duePeriodTypeForManual } from '@barghsa/shared/finance'
 import { v7 as uuidv7 } from 'uuid'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import type { TransitionResult } from './invoice-state-machine.service.js'
@@ -54,15 +55,7 @@ import {
   type ManualInvoiceLineInput,
 } from './manual-invoice.calculation.js'
 import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
-
-/**
- * Default due period for manual invoices (days from issue).
- *
- * Pending T-04.1.03.01/.02 (admin-configured `service_due_periods`), a
- * manual invoice is due 7 days after issue. Callers can override via
- * `dueAt`.
- */
-export const DEFAULT_MANUAL_DUE_DAYS = 7
+import { DueAtCalculationService } from './due-at.service.js'
 
 /** Command to create and issue one manual invoice. */
 export interface CreateManualInvoiceCommand {
@@ -86,7 +79,7 @@ export interface CreateManualInvoiceCommand {
    * reused with a different payload is rejected with ConflictException.
    */
   idempotencyKey?: string
-  /** Explicit due date (>= now); defaults to issuedAt + 7 days. */
+  /** Explicit due date (>= now); defaults to issuedAt + configured days. */
   dueAt?: Date
   /** Override "now" for tests. */
   now?: Date
@@ -147,6 +140,7 @@ export class ManualInvoiceService {
 
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
+    private readonly dueAtCalculation: DueAtCalculationService,
   ) {}
 
   /**
@@ -173,10 +167,7 @@ export class ManualInvoiceService {
     }
 
     const now = cmd.now ?? new Date()
-    const dueAt =
-      cmd.dueAt ??
-      new Date(now.getTime() + DEFAULT_MANUAL_DUE_DAYS * 24 * 60 * 60 * 1000)
-    if (dueAt.getTime() < now.getTime()) {
+    if (cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
       throw new BadRequestException('dueAt cannot be in the past')
     }
 
@@ -235,7 +226,15 @@ export class ManualInvoiceService {
         }
       }
 
-      // --- 4. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
+      // --- 4. Resolve dueAt (issuedAt + config_days, or staff override) ---
+      const due = await this.dueAtCalculation.resolve(client, {
+        serviceType: duePeriodTypeForManual(),
+        issuedAt: now,
+        ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
+      })
+      const dueAt = due.dueAt
+
+      // --- 5. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
       const invoiceId = uuidv7()
       const calculationSnapshot = buildManualInvoiceCalculationSnapshot(
         cmd.lines,
@@ -244,6 +243,13 @@ export class ManualInvoiceService {
       const metadata = JSON.stringify({
         source: 'manual',
         generatedBy: cmd.actorUserId,
+        due: {
+          dueAt: dueAt.toISOString(),
+          source: due.source,
+          configDays: due.configDays,
+          serviceType: due.serviceType,
+          periodId: due.periodId,
+        },
         ...(cmd.idempotencyKey
           ? {
               idempotencyKey: cmd.idempotencyKey,
@@ -279,7 +285,7 @@ export class ManualInvoiceService {
         ],
       )
 
-      // --- 5. Insert the lines (position = entry order) ---
+      // --- 6. Insert the lines (position = entry order) ---
       for (const [index, line] of calculation.lines.entries()) {
         await client.query(
           `INSERT INTO invoice_lines
@@ -300,7 +306,7 @@ export class ManualInvoiceService {
         )
       }
 
-      // --- 6. Issue: Draft → Unpaid on the SAME transaction ---
+      // --- 7. Issue: Draft → Unpaid on the SAME transaction ---
       const transition = await this.stateMachine.transition(
         invoiceId,
         'Draft',

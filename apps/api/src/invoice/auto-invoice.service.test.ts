@@ -19,6 +19,8 @@ import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import { VatCalculationRepository } from './vat-calculation.repository.js'
 import { VatCalculationService } from './vat-calculation.service.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 
 // ---- Mocks ----
 const mockClient = {
@@ -251,6 +253,7 @@ describe('AutoInvoiceService', () => {
     service = new AutoInvoiceService(
       stateMachine,
       new VatCalculationService(new VatCalculationRepository()),
+      new DueAtCalculationService(new DueAtCalculationRepository()),
     )
     mockPool.connect.mockResolvedValue(mockClient)
     mockClient.release.mockImplementation(() => {})

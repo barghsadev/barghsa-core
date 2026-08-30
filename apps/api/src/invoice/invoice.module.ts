@@ -6,6 +6,8 @@ import { AutoInvoiceService } from './auto-invoice.service.js'
 import { VatCalculationRepository } from './vat-calculation.repository.js'
 import { VatCalculationService } from './vat-calculation.service.js'
 import { RoundingService } from './rounding.service.js'
+import { DueAtCalculationRepository } from './due-at.repository.js'
+import { DueAtCalculationService } from './due-at.service.js'
 
 @Module({
   providers: [
@@ -16,6 +18,8 @@ import { RoundingService } from './rounding.service.js'
     VatCalculationRepository,
     VatCalculationService,
     RoundingService,
+    DueAtCalculationRepository,
+    DueAtCalculationService,
   ],
   exports: [
     InvoiceStateMachineService,
@@ -25,6 +29,8 @@ import { RoundingService } from './rounding.service.js'
     VatCalculationRepository,
     VatCalculationService,
     RoundingService,
+    DueAtCalculationRepository,
+    DueAtCalculationService,
   ],
 })
 export class InvoiceModule {}

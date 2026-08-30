@@ -36,6 +36,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
+import { duePeriodTypeForProduct } from '@barghsa/shared/finance'
 import { v7 as uuidv7 } from 'uuid'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import type { TransitionResult } from './invoice-state-machine.service.js'
@@ -50,14 +51,7 @@ import {
   type CalculatedAutoLine,
 } from './auto-invoice.calculation.js'
 import { buildAutoInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
-
-/**
- * Default due period for auto-generated invoices (days from issue).
- * Pending T-04.1.03.01/.02 (admin-configured `service_due_periods`), an
- * auto invoice is due 7 days after issue. Callers can override via
- * `dueAt`.
- */
-export const DEFAULT_AUTO_DUE_DAYS = 7
+import { DueAtCalculationService } from './due-at.service.js'
 
 /** Command to create + issue one auto invoice from an order. */
 export interface CreateAutoInvoiceCommand {
@@ -80,7 +74,7 @@ export interface CreateAutoInvoiceCommand {
   reason?: string
   /** Source IP of the requesting user; omit for system-initiated creation. */
   ip?: string
-  /** Explicit due date (>= now); defaults to issuedAt + 7 days. */
+  /** Explicit due date (>= now); defaults to issuedAt + configured days. */
   dueAt?: Date
   /** Override "now" for tests. */
   now?: Date
@@ -154,6 +148,7 @@ export class AutoInvoiceService {
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
     private readonly vatCalculation: VatCalculationService,
+    private readonly dueAtCalculation: DueAtCalculationService,
   ) {}
 
   /**
@@ -171,10 +166,7 @@ export class AutoInvoiceService {
     cmd: CreateAutoInvoiceCommand,
   ): Promise<AutoInvoiceResult> {
     const now = cmd.now ?? new Date()
-    const dueAt =
-      cmd.dueAt ??
-      new Date(now.getTime() + DEFAULT_AUTO_DUE_DAYS * 24 * 60 * 60 * 1000)
-    if (dueAt.getTime() < now.getTime()) {
+    if (cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
       throw new BadRequestException('dueAt cannot be in the past')
     }
 
@@ -270,7 +262,15 @@ export class AutoInvoiceService {
         throw err
       }
 
-      // --- 6. Persist the invoice + lines + items in ONE transaction ---
+      // --- 6. Resolve dueAt (issuedAt + config_days, or staff override) ---
+      const due = await this.dueAtCalculation.resolve(client, {
+        serviceType: duePeriodTypeForProduct(product.type),
+        issuedAt: now,
+        ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
+      })
+      const dueAt = due.dueAt
+
+      // --- 7. Persist the invoice + lines + items in ONE transaction ---
       const invoiceId = uuidv7()
       const calculationSnapshot = buildAutoInvoiceCalculationSnapshot(
         [lineInput],
@@ -281,6 +281,13 @@ export class AutoInvoiceService {
         source: 'auto',
         origin: { type: 'order', orderId: order.id },
         generatedBy: cmd.actorUserId,
+        due: {
+          dueAt: dueAt.toISOString(),
+          source: due.source,
+          configDays: due.configDays,
+          serviceType: due.serviceType,
+          periodId: due.periodId,
+        },
         snapshot: {
           product: {
             id: product.id,
