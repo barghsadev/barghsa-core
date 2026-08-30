@@ -310,12 +310,83 @@
     "04-invoices-wallet-contracts.md#T-04.1.02.04",
     "04-invoices-wallet-contracts.md#T-04.1.02.05",
     "04-invoices-wallet-contracts.md#T-04.1.02.06",
-    "04-invoices-wallet-contracts.md#T-04.1.02.07"
+    "04-invoices-wallet-contracts.md#T-04.1.02.07",
+    "04-invoices-wallet-contracts.md#T-04.1.04.02"
   ],
-  "last_error": null,
-  "notes": "T-04.1.02.07 MERGED (PR #229, squash bdb42ab) in 1 review round (Claude Opus 5: approve; 4 minors all fixed in-place). RoundingService.roundHalfUp(value: bigint, precision: number) — validated half-up-to-nearest-IRR wrapper over the existing pure roundHalfUpDiv primitive (scale 10^precision; precision 0..18, int8-scaled bound); TypeError for non-bigint, RangeError for negative value / bad precision. Table-driven tests (33) with product financial examples (9%/10% VAT basis-point scale on 1M/750k/55,055/55,054/55,056, sub-IRR fractions, exact-half vs banker's anchors). Registered in InvoiceModule + barrel. api 116 files/1705 tests, typecheck pass, build pass; lint/format not available (no lint tasks/prettier config). Next: T-04.1.02.08 (invoice_calculation_snapshot JSONB column for reproducibility, S).",
-  "last_updated": "2026-08-29T20:53:50Z",
+  "last_error": "",
+  "notes": "T-04.1.04.02 in_review PR #241 after restoring MAX_FIX_ATTEMPTS to 3.",
+  "last_updated": "2026-08-30T20:42:46Z",
   "status_history": [
+    {
+      "status": "idle",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:42:46Z"
+    },
+    {
+      "status": "approved",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:40:31Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:36:47Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:31:19Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:27:30Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T20:17:01Z"
+    },
+    {
+      "status": "blocked",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:30:28Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:27:29Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:23:38Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:12:40Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:08:07Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T13:01:30Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T12:57:59Z"
+    },
+    {
+      "status": "building",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+      "at": "2026-08-30T12:51:30Z"
+    },
     {
       "status": "merged",
       "task_key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
@@ -745,76 +816,16 @@
       "status": "blocked",
       "task_key": "02-auth-users-admin.md#T-09.12.05",
       "at": "2026-08-28T19:43:42Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T19:39:10Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T19:24:57Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T19:22:08Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T19:18:21Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T19:07:01Z"
-    },
-    {
-      "status": "blocked",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T18:57:31Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T18:38:23Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.12.05",
-      "at": "2026-08-28T18:38:23Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.12.04",
-      "at": "2026-08-28T18:23:09Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.12.04",
-      "at": "2026-08-28T17:42:33Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "02-auth-users-admin.md#T-09.12.04",
-      "at": "2026-08-28T17:34:55Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "02-auth-users-admin.md#T-09.12.04",
-      "at": "2026-08-28T17:30:55Z"
-    },
-    {
-      "status": "building",
-      "task_key": "02-auth-users-admin.md#T-09.12.04",
-      "at": "2026-08-28T17:20:25Z"
-    },
-    {
-      "status": "merged",
-      "task_key": "02-auth-users-admin.md#T-09.12.03",
-      "at": "2026-08-28T17:02:54Z"
     }
-  ]
+  ],
+  "current_pr_number": null,
+  "current_head_sha": "",
+  "review": null,
+  "reviewed_head_sha": "",
+  "review_comment_id": null,
+  "review_comment_url": "",
+  "review_comment_author": "",
+  "review_artifact_sha256": "",
+  "review_nonce": "",
+  "validation_results": []
 }
