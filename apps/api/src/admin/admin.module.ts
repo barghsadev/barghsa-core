@@ -22,11 +22,13 @@ import { UploadPolicyService } from './upload-policy.service.js'
 import { UploadPolicyController } from './upload-policy.controller.js'
 import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js'
 import { ContractElectricityLimitsController } from './contract-electricity-limits.controller.js'
+import { InvoiceModule } from '../invoice/invoice.module.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
+import { DueAtOverrideController } from './due-at-override.controller.js'
 
 @Module({
-  imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule],
+  imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule, InvoiceModule],
   controllers: [
     AdminController,
     DualApprovalController,
@@ -38,6 +40,7 @@ import { CorrelationIdProvider } from '../common/index.js'
     ContractTemplateController,
     UploadPolicyController,
     ContractElectricityLimitsController,
+    DueAtOverrideController,
   ],
   providers: [
     AdminService,

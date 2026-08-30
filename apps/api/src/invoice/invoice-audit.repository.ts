@@ -15,6 +15,10 @@
 import { Injectable } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import {
+  DUE_AT_OVERRIDE_EVENT,
+  type InvoiceDueAtOverrideSnapshot,
+} from '@barghsa/shared/finance'
+import {
   type InvoiceState,
   type InvoiceTransition,
   TRANSITION_LABELS,
@@ -89,6 +93,53 @@ export class InvoiceAuditRepository {
         auditId,
         entry.actorUserId,
         event,
+        metadata,
+        entry.correlationId ?? null,
+        entry.ip ?? null,
+        occurredAt,
+      ],
+    )
+
+    return auditId
+  }
+
+  /**
+   * Record one append-only audit entry for a staff `dueAt` override
+   * (T-04.1.03.03). The customer-visible reason is stored in metadata
+   * alongside previous/new due instants.
+   *
+   * Must run inside the same DB transaction that updates `invoices.due_at`
+   * and invoice metadata.
+   */
+  async recordDueAtOverride(
+    client: TransactionClient,
+    entry: {
+      invoiceId: string
+      actorUserId: string
+      snapshot: InvoiceDueAtOverrideSnapshot
+      invoiceState: InvoiceState
+      correlationId?: string | undefined
+      ip?: string | undefined
+    },
+    occurredAt: Date,
+  ): Promise<string> {
+    const auditId = uuidv7()
+    const metadata = JSON.stringify({
+      invoiceId: entry.invoiceId,
+      invoiceState: entry.invoiceState,
+      previousDueAt: entry.snapshot.previousDueAt,
+      newDueAt: entry.snapshot.dueAt,
+      reason: entry.snapshot.reason,
+      customerVisible: true,
+    })
+
+    await client.query(
+      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        auditId,
+        entry.actorUserId,
+        DUE_AT_OVERRIDE_EVENT,
         metadata,
         entry.correlationId ?? null,
         entry.ip ?? null,
