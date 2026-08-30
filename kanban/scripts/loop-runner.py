@@ -226,7 +226,7 @@ def do_idle():
         f"agent -p {shq(brief)} "
         f"--model '{BUILDER_MODEL}' "
         f"--trust --print",
-        timeout=900
+        timeout=None
     )
     log(f"Cursor done (rc={rc})")
 
@@ -277,7 +277,7 @@ def do_building():
             rc, _, _ = shell(
                 f"agent -p {shq(TASK_BRIEF.read_text()[:3000])} "
                 f"--model '{BUILDER_MODEL}' --trust --print",
-                timeout=900
+                timeout=None
             )
             _, _, _ = shell("git add -A", timeout=15)
             rc2, staged, _ = shell("git diff --cached --name-only", timeout=10)
@@ -413,7 +413,7 @@ def do_fixing():
     rc, _, err = shell(
         f"agent -p {shq(prompt)} "
         f"--model '{BUILDER_MODEL}' --trust --print",
-        timeout=600
+        timeout=None
     )
     if rc != 0:
         s = get_state()
