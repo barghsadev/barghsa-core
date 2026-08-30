@@ -104,7 +104,22 @@ export async function dropTestSchema(schemaName: string): Promise<void> {
   }
   const mgmtPool = getManagementPool()
   try {
-    await mgmtPool.query(`DROP SCHEMA IF EXISTS "${schemaName}" CASCADE`)
+    let lastError: unknown
+    for (let attempt = 0; attempt < 8; attempt++) {
+      try {
+        await mgmtPool.query(`DROP SCHEMA IF EXISTS "${schemaName}" CASCADE`)
+        return
+      } catch (err) {
+        lastError = err
+        // GIST EXCLUDE indexes share btree_gist operator classes; parallel
+        // DROP SCHEMA of those tables can deadlock (40P01).
+        if ((err as { code?: string }).code !== '40P01' || attempt === 7) {
+          throw err
+        }
+        await new Promise((resolve) => setTimeout(resolve, 50 * 2 ** attempt))
+      }
+    }
+    throw lastError
   } finally {
     await mgmtPool.end().catch(() => {})
   }

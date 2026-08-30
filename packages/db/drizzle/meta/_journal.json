@@ -85,6 +85,13 @@
       "when": 1750000000000,
       "tag": "0058_add_invoice_calculation_snapshot",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1788048000000,
+      "tag": "0059_create_service_due_periods",
+      "breakpoints": true
     }
   ]
 }
