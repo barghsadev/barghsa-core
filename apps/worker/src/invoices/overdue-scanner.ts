@@ -94,9 +94,15 @@ const defaultLogger = {
   },
 }
 
-const FIND_CANDIDATES_SQL = `SELECT id, state, due_at
+/**
+ * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
+ * comparing it to `$1::text[]` has no operator and fails on every scan.
+ * Cast the bound array to `invoice_state[]` so the predicate is valid and
+ * can use `idx_invoices_state`.
+ */
+export const FIND_OVERDUE_CANDIDATES_SQL = `SELECT id, state, due_at
         FROM invoices
-        WHERE state = ANY($1::text[])
+        WHERE state = ANY($1::invoice_state[])
           AND due_at IS NOT NULL
           AND due_at < $2
         ORDER BY due_at ASC, id ASC
@@ -112,7 +118,7 @@ const UPDATE_OVERDUE_SQL = `UPDATE invoices
             overdue_at = $2,
             updated_at = NOW()
         WHERE id = $1
-          AND state = $3`
+          AND state = $3::invoice_state`
 
 const INSERT_AUDIT_SQL = `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`
@@ -182,7 +188,7 @@ export async function scanOverdueInvoices(
     return result
   }
 
-  const candidates = await pool.query<CandidateRow>(FIND_CANDIDATES_SQL, [
+  const candidates = await pool.query<CandidateRow>(FIND_OVERDUE_CANDIDATES_SQL, [
     [...OVERDUE_ELIGIBLE_STATES],
     now,
     batchSize,

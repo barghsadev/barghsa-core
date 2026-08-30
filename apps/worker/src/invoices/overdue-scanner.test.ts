@@ -7,6 +7,7 @@ import {
 } from '@barghsa/shared/finance'
 import {
   DEFAULT_OVERDUE_BATCH_SIZE,
+  FIND_OVERDUE_CANDIDATES_SQL,
   INVOICE_OVERDUE_JOB_TYPE,
   resolveOverdueActor,
   scanOverdueInvoices,
@@ -94,6 +95,11 @@ describe('scanOverdueInvoices (T-04.1.03.04)', () => {
     expect(INVOICE_OVERDUE_JOB_TYPE).toBe('invoice_overdue_scan')
   })
 
+  it('binds the candidate predicate to invoice_state[] not text[]', () => {
+    expect(FIND_OVERDUE_CANDIDATES_SQL).toContain('state = ANY($1::invoice_state[])')
+    expect(FIND_OVERDUE_CANDIDATES_SQL).not.toContain('$1::text[]')
+  })
+
   it('selects Unpaid/PartiallyFunded invoices past dueAt, oldest first, bounded', async () => {
     const db = makeFakeDb(defaultHandler())
     await scanOverdueInvoices(scanOptions(db))
@@ -103,6 +109,8 @@ describe('scanOverdueInvoices (T-04.1.03.04)', () => {
     expect(find!.params[0]).toEqual(['Unpaid', 'PartiallyFunded'])
     expect(find!.params[1]).toBe(NOW)
     expect(find!.params[2]).toBe(DEFAULT_OVERDUE_BATCH_SIZE)
+    expect(find!.sql).toContain('state = ANY($1::invoice_state[])')
+    expect(find!.sql).not.toContain('$1::text[]')
     expect(find!.sql).toContain('ORDER BY due_at ASC, id ASC')
     expect(find!.sql).toContain('LIMIT $3')
     expect(find!.sql).toContain('due_at IS NOT NULL')
@@ -117,7 +125,7 @@ describe('scanOverdueInvoices (T-04.1.03.04)', () => {
     const update = db.calls.find((c) => c.sql.includes("SET state = 'Overdue'"))
     expect(update!.params).toEqual(['inv-unpaid', NOW, 'Unpaid'])
     expect(update!.sql).toContain('overdue_at = $2')
-    expect(update!.sql).toContain('AND state = $3')
+    expect(update!.sql).toContain('AND state = $3::invoice_state')
 
     const audit = db.calls.find((c) => c.sql.includes('INSERT INTO audit_log'))
     expect(audit!.params[0]).toBe('audit-1')
