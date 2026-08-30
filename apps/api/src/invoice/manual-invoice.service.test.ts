@@ -117,6 +117,25 @@ describe('ManualInvoiceService', () => {
       expect(result.lines[0]!.vatAmount).toBe(90_000n)
       expect(result.transition.transition).toBe('Issue')
 
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => (c[0] as string).startsWith('INSERT INTO invoices'),
+      )
+      expect(insertCall).toBeDefined()
+      const insertSql = insertCall![0] as string
+      expect(insertSql).toContain('invoice_calculation_snapshot')
+      const snapshot = JSON.parse(insertCall![1]![6] as string) as {
+        version: number
+        rounding: string
+        source: string
+        steps: Array<{ vat: { rounded: string; exactHalf: boolean } }>
+        totals: { totalAmount: string }
+      }
+      expect(snapshot.version).toBe(1)
+      expect(snapshot.rounding).toBe('half-up-to-nearest-IRR')
+      expect(snapshot.source).toBe('manual')
+      expect(snapshot.steps[0]!.vat.rounded).toBe('90000')
+      expect(snapshot.totals.totalAmount).toBe('1090000')
+
       // Atomicity: exactly one BEGIN and one COMMIT, both on the same client
       expect(calls.filter((c) => c === 'BEGIN')).toHaveLength(1)
       expect(calls.filter((c) => c === 'COMMIT')).toHaveLength(1)

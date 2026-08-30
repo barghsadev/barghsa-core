@@ -43,6 +43,7 @@ import type { TransactionClient } from './invoice-audit.repository.js'
 import type { InvoiceState } from './invoice-state.model.js'
 import { VatCalculationService } from './vat-calculation.service.js'
 import type { ResolvedVatRate } from './vat-calculation.repository.js'
+import { buildAutoCalculationSnapshot } from './invoice-calculation-snapshot.js'
 import {
   calculateAutoInvoice,
   type AutoInvoiceCalculation,
@@ -315,11 +316,15 @@ export class AutoInvoiceService {
           rounding: 'half-up-to-nearest-IRR',
         },
       })
+      const calculationSnapshot = JSON.stringify(
+        buildAutoCalculationSnapshot(calculation, giftDiscount),
+      )
 
       await client.query(
         `INSERT INTO invoices (id, profile_id, order_id, contract_id, type, state,
-                               total_amount, issued_at, payable_from, due_at, metadata)
-         VALUES ($1, $2, $3, NULL, 'auto', 'Draft', $4, NULL, NULL, $5, $6::jsonb)`,
+                               total_amount, issued_at, payable_from, due_at, metadata,
+                               invoice_calculation_snapshot)
+         VALUES ($1, $2, $3, NULL, 'auto', 'Draft', $4, NULL, NULL, $5, $6::jsonb, $7::jsonb)`,
         [
           invoiceId,
           order.profile_id,
@@ -327,6 +332,7 @@ export class AutoInvoiceService {
           calculation.totalAmount,
           dueAt,
           metadata,
+          calculationSnapshot,
         ],
       )
 

@@ -320,6 +320,24 @@ describe('AutoInvoiceService', () => {
       expect(metadata.snapshot.vat.rateBasisPoints).toBe(900)
       expect(metadata.snapshot.gift.discountAmount).toBe('250000')
       expect(metadata.snapshot.gift.giftCodeId).toBe(db.order.gift_code_id)
+
+      const snapshot = JSON.parse(insertCall![1]![6] as string) as {
+        source: string
+        inputs: { orderDiscount: string }
+        steps: Array<{
+          discount: string
+          lineTotal: string
+          vat: { rounded: string }
+        }>
+        totals: { totalAmount: string; totalDiscount: string }
+      }
+      expect(snapshot.source).toBe('auto')
+      expect(snapshot.inputs.orderDiscount).toBe('250000')
+      expect(snapshot.steps[0]!.discount).toBe('250000')
+      expect(snapshot.steps[0]!.lineTotal).toBe('750000')
+      expect(snapshot.steps[0]!.vat.rounded).toBe('67500')
+      expect(snapshot.totals.totalAmount).toBe('817500')
+      expect(snapshot.totals.totalDiscount).toBe('250000')
     })
 
     it('resolves the VAT rate from an active product override', async () => {

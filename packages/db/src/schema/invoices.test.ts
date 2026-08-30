@@ -47,6 +47,7 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
       'dueAt',
       'cancelledAt',
       'metadata',
+      'invoiceCalculationSnapshot',
     ]) {
       expect(columns).toContain(column)
     }
@@ -132,5 +133,37 @@ describe('Invoice origin links schema (T-04.1.02.05)', () => {
     expect(ORIGIN_MIGRATION).toContain(
       'CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id)',
     )
+  })
+})
+
+/**
+ * Drift guard for the invoice calculation snapshot (T-04.1.02.08).
+ *
+ * Migration 0058 adds the nullable `invoice_calculation_snapshot` JSONB
+ * column. If a future `drizzle-kit generate` rewrite or manual edit drops
+ * the column, this test fails instead of silently losing the
+ * reproducibility audit.
+ */
+const SNAPSHOT_MIGRATION = readFileSync(
+  resolve(__dirname, '../../drizzle/0058_add_invoice_calculation_snapshot.sql'),
+  'utf8',
+)
+
+describe('Invoice calculation snapshot schema (T-04.1.02.08)', () => {
+  it('invoices table declares invoiceCalculationSnapshot', () => {
+    const columns = Object.keys(invoices)
+    expect(columns).toContain('invoiceCalculationSnapshot')
+  })
+
+  it('invoiceCalculationSnapshot is a nullable JSONB column', () => {
+    expect(invoices.invoiceCalculationSnapshot.notNull).toBe(false)
+    expect(invoices.invoiceCalculationSnapshot.getSQLType()).toBe('jsonb')
+  })
+
+  it('migration 0058 adds the JSONB column idempotently', () => {
+    expect(SNAPSHOT_MIGRATION).toContain(
+      'ALTER TABLE invoices\n  ADD COLUMN IF NOT EXISTS invoice_calculation_snapshot JSONB;',
+    )
+    expect(SNAPSHOT_MIGRATION).toContain('ADD COLUMN IF NOT EXISTS')
   })
 })

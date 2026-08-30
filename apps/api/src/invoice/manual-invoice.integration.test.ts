@@ -65,6 +65,10 @@ const IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql',
 )
+const SNAPSHOT_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -111,6 +115,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: one profile + one actor.
@@ -174,13 +179,33 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
       issued_at: Date | null
       payable_from: Date | null
       due_at: Date | null
-    }>(`SELECT state, total_amount, issued_at, payable_from, due_at
+      invoice_calculation_snapshot: {
+        version: number
+        rounding: string
+        source: string
+        steps: Array<{
+          lineTotal: string
+          vat: { rounded: string; isTaxable: boolean }
+        }>
+        totals: { totalAmount: string; totalVat: string }
+      }
+    }>(`SELECT state, total_amount, issued_at, payable_from, due_at, invoice_calculation_snapshot
         FROM invoices WHERE id = '${result.invoiceId}'`)
     expect(invoiceRow.rows[0]!.state).toBe('Unpaid')
     expect(invoiceRow.rows[0]!.total_amount).toBe('1190000')
     expect(invoiceRow.rows[0]!.issued_at).not.toBeNull()
     expect(invoiceRow.rows[0]!.payable_from).not.toBeNull()
     expect(invoiceRow.rows[0]!.due_at).not.toBeNull()
+
+    const calcSnapshot = invoiceRow.rows[0]!.invoice_calculation_snapshot
+    expect(calcSnapshot.version).toBe(1)
+    expect(calcSnapshot.rounding).toBe('half-up-to-nearest-IRR')
+    expect(calcSnapshot.source).toBe('manual')
+    expect(calcSnapshot.steps).toHaveLength(2)
+    expect(calcSnapshot.steps[0]!.vat.rounded).toBe('90000')
+    expect(calcSnapshot.steps[1]!.vat.isTaxable).toBe(false)
+    expect(calcSnapshot.totals.totalAmount).toBe('1190000')
+    expect(calcSnapshot.totals.totalVat).toBe('90000')
 
     // --- Exactly one canonical audit entry (invoice.issue)
     expect(await countAuditRows(result.invoiceId)).toBe(1)

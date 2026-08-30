@@ -3,6 +3,7 @@ import { check, jsonb, text, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
 import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 import { orders } from './orders'
+import type { InvoiceCalculationSnapshot } from './invoice-calculation-snapshot'
 
 /**
  * Invoice state enum (T-04.1.01.02).
@@ -46,6 +47,9 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
  *   - `dueAt` — payment deadline.
  *   - `cancelledAt?` — when the invoice was cancelled (if applicable).
  *   - `metadata` — JSONB for extensible structured data snapshots.
+ *   - `invoiceCalculationSnapshot` — JSONB calculation audit (inputs,
+ *     intermediate rounding steps, final totals) for reproducibility
+ *     (T-04.1.02.08). Nullable so existing rows remain valid.
  *   - `createdAt` / `updatedAt` — audit columns (from baseColumns).
  */
 export const invoices = pgTable(
@@ -121,6 +125,17 @@ export const invoices = pgTable(
     /** Extensible metadata payload for snapshots and auxiliary data. */
     metadata: jsonb('metadata'),
 
+    /**
+     * Calculation audit for reproducibility (T-04.1.02.08).
+     *
+     * Stores inputs, per-line VAT half-up rounding steps, and final
+     * totals as JSON (IRR amounts as decimal strings). Written by
+     * invoice-generation services on INSERT; replayed by T-04.1.02.09.
+     */
+    invoiceCalculationSnapshot: jsonb('invoice_calculation_snapshot').$type<
+      InvoiceCalculationSnapshot
+    >(),
+
     /** When the invoice record was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -184,6 +199,7 @@ export const createInvoicesTable = sql`
     paid_at TIMESTAMPTZ,
     overdue_at TIMESTAMPTZ,
     metadata JSONB,
+    invoice_calculation_snapshot JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_paid_not_exceeds_total CHECK (paid_amount <= total_amount),

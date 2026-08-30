@@ -70,6 +70,10 @@ const IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0057_add_invoice_type_idempotency.sql',
 )
+const SNAPSHOT_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0058_add_invoice_calculation_snapshot.sql',
+)
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
@@ -161,6 +165,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     await ctx.pool.query(readFileSync(LINES_ITEMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(POSITION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: user, profile, product, VAT config + override, order.
@@ -279,7 +284,13 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
       payable_from: Date | null
       due_at: Date | null
       metadata: Record<string, unknown> | null
-    }>(`SELECT order_id, state, total_amount, issued_at, payable_from, due_at, metadata
+      invoice_calculation_snapshot: {
+        source: string
+        steps: Array<{ vat: { rounded: string; rateBps: number } }>
+        totals: { totalAmount: string }
+      }
+    }>(`SELECT order_id, state, total_amount, issued_at, payable_from, due_at, metadata,
+               invoice_calculation_snapshot
         FROM invoices WHERE id = '${result.invoiceId}'`)
     expect(invoiceRow.rows[0]!.order_id).toBe(orderId)
     expect(invoiceRow.rows[0]!.state).toBe('Unpaid')
@@ -301,6 +312,12 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     expect(snapshot.vat.source).toBe('product_override')
     expect(snapshot.vat.rateBasisPoints).toBe(900)
     expect(snapshot.terms.orderType).toBe('electricity')
+
+    const calcSnapshot = invoiceRow.rows[0]!.invoice_calculation_snapshot
+    expect(calcSnapshot.source).toBe('auto')
+    expect(calcSnapshot.steps[0]!.vat.rateBps).toBe(900)
+    expect(calcSnapshot.steps[0]!.vat.rounded).toBe('90000')
+    expect(calcSnapshot.totals.totalAmount).toBe('1090000')
 
     // --- invoice_items carry the frozen product composition
     const itemRows = await ctx.db.execute<{
