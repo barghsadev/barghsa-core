@@ -68,6 +68,13 @@ describe('drizzle migrate() applies invoice_calculation_snapshot (T-04.1.02.08)'
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
     `)
+    // 0059 (service_due_periods) is journaled after 0058; migrate() will
+    // also apply it and needs the users FK target.
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY
+      )
+    `)
 
     const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(amountSql)

@@ -32,6 +32,16 @@ export async function setup(): Promise<void> {
   const connectionString = started.getConnectionUri()
   process.env.TEST_DATABASE_URL = connectionString
 
+  // btree_gist is required by GIST EXCLUDE windows (VAT, upload policies,
+  // service_due_periods). Create it once here so parallel migrations do
+  // not race on CREATE EXTENSION.
+  const bootstrap = new Pool({ connectionString, max: 1 })
+  try {
+    await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist')
+  } finally {
+    await bootstrap.end()
+  }
+
   // Create a lightweight pool for schema management (used by test helpers).
   shutdownPool = new Pool({ connectionString, max: 2 })
 }
