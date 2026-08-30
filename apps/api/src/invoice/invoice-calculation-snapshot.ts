@@ -3,7 +3,10 @@
  *
  * JSON-serializable document stored on `invoices.invoice_calculation_snapshot`.
  * Captures every input, each VAT half-up rounding step, and the final
- * totals so an issued invoice can be reproduced later (T-04.1.02.09).
+ * totals so an issued invoice can be reproduced later.
+ *
+ * `replayInvoiceCalculation` is the T-04.1.02.09 reproduction path:
+ * it consumes only `snapshot.inputs` and re-runs the original math.
  *
  * Money is encoded as decimal-digit strings: JSON Number cannot carry
  * signed int8 IRR past `Number.MAX_SAFE_INTEGER`. Floating point is
@@ -13,14 +16,16 @@
  * This module has no database or NestJS dependency.
  */
 
-import { roundHalfUpDiv } from './manual-invoice.calculation.js'
-import type {
-  CalculatedManualLine,
-  ManualInvoiceCalculation,
-  ManualInvoiceLineInput,
+import {
+  calculateManualInvoice,
+  roundHalfUpDiv,
+  type CalculatedManualLine,
+  type ManualInvoiceCalculation,
+  type ManualInvoiceLineInput,
 } from './manual-invoice.calculation.js'
 import {
   autoLineDescription,
+  calculateAutoInvoice,
   type AutoInvoiceCalculation,
   type AutoInvoiceLineInput,
   type CalculatedAutoLine,
@@ -41,6 +46,28 @@ export const VAT_BASIS_POINT_SCALE = 10_000 as const
 /** Serialize a bigint IRR amount as a decimal-digit JSON string. */
 export function irrJson(value: bigint): string {
   return value.toString()
+}
+
+/**
+ * Parse a snapshot IRR field back to bigint.
+ *
+ * Rejects JSON Numbers: PostgreSQL JSONB + `JSON.parse` would silently
+ * lose precision on int8 amounts above `Number.MAX_SAFE_INTEGER` if the
+ * snapshot stored money as numbers. A coerced number is a bug, not an
+ * input to BigInt.
+ */
+export function parseIrrJson(value: unknown): bigint {
+  if (typeof value === 'number') {
+    throw new RangeError(
+      'parseIrrJson: IRR arrived as a JSON Number — precision may be lost; expected a decimal-digit string',
+    )
+  }
+  if (typeof value !== 'string' || !/^-?\d+$/.test(value)) {
+    throw new RangeError(
+      `parseIrrJson: expected a decimal-digit IRR string, got ${JSON.stringify(value)}`,
+    )
+  }
+  return BigInt(value)
 }
 
 /** One staff/system-entered line as stored for replay. */
@@ -322,4 +349,136 @@ export function buildAutoInvoiceCalculationSnapshot(
       calculation.totalAmount,
     ),
   }
+}
+
+/** Per-line money produced by replaying snapshot inputs. */
+export interface ReplayedInvoiceLine {
+  lineTotal: bigint
+  vatAmount: bigint
+  discount: bigint
+}
+
+/**
+ * Result of replaying `snapshot.inputs` through the same calculation
+ * modules that issued the invoice. Totals are bigint IRR so the caller
+ * can compare against both `snapshot.totals` (strings) and persisted
+ * `invoices.total_amount` / `invoice_lines` (int8).
+ */
+export interface ReplayedInvoiceCalculation {
+  source: 'manual' | 'auto'
+  totalAmount: bigint
+  subtotal: bigint
+  totalVat: bigint
+  totalDiscount: bigint
+  lines: ReplayedInvoiceLine[]
+}
+
+function snapshotLineToManualInput(
+  line: InvoiceCalculationSnapshotLineInput,
+): ManualInvoiceLineInput {
+  return {
+    description: line.description,
+    quantity: line.quantity,
+    unitPrice: parseIrrJson(line.unitPrice),
+    vatRate: line.vatRate,
+    isTaxable: line.isTaxable,
+  }
+}
+
+function snapshotLineToAutoInput(
+  line: InvoiceCalculationSnapshotLineInput,
+): AutoInvoiceLineInput {
+  if (typeof line.productId !== 'string' || line.productId.length === 0) {
+    throw new RangeError(
+      'replayInvoiceCalculation: auto snapshot line is missing productId',
+    )
+  }
+  if (typeof line.productType !== 'string' || line.productType.length === 0) {
+    throw new RangeError(
+      'replayInvoiceCalculation: auto snapshot line is missing productType',
+    )
+  }
+  return {
+    productId: line.productId,
+    productType: line.productType,
+    productTitle: line.productTitle ?? null,
+    quantity: line.quantity,
+    unitPrice: parseIrrJson(line.unitPrice),
+    vatRate: line.vatRate,
+    isTaxable: line.isTaxable,
+  }
+}
+
+/** Decode snapshot totals (decimal-digit strings) to bigint IRR. */
+export function parseSnapshotTotals(
+  totals: InvoiceCalculationSnapshotTotals,
+): {
+  subtotal: bigint
+  totalVat: bigint
+  totalDiscount: bigint
+  totalAmount: bigint
+} {
+  return {
+    subtotal: parseIrrJson(totals.subtotal),
+    totalVat: parseIrrJson(totals.totalVat),
+    totalDiscount: parseIrrJson(totals.totalDiscount),
+    totalAmount: parseIrrJson(totals.totalAmount),
+  }
+}
+
+/**
+ * Replay invoice calculation inputs stored on a snapshot and produce
+ * the same bigint totals the original issue used.
+ *
+ * Only `snapshot.inputs` is consumed. Stored `steps` / `totals` are
+ * ignored so this is a true reproduction, not a copy of cached results.
+ *
+ * @throws RangeError when the snapshot source is unknown, auto lines
+ *   lack product identity, or any IRR field is not a digit string.
+ */
+export function replayInvoiceCalculation(
+  snapshot: InvoiceCalculationSnapshot,
+): ReplayedInvoiceCalculation {
+  if (snapshot.source === 'manual') {
+    const calc = calculateManualInvoice(
+      snapshot.inputs.lines.map(snapshotLineToManualInput),
+    )
+    return {
+      source: 'manual',
+      totalAmount: calc.totalAmount,
+      subtotal: calc.lines.reduce((sum, l) => sum + l.lineTotal, 0n),
+      totalVat: calc.lines.reduce((sum, l) => sum + l.vatAmount, 0n),
+      totalDiscount: 0n,
+      lines: calc.lines.map((l) => ({
+        lineTotal: l.lineTotal,
+        vatAmount: l.vatAmount,
+        discount: 0n,
+      })),
+    }
+  }
+
+  if (snapshot.source === 'auto') {
+    const calc = calculateAutoInvoice(
+      snapshot.inputs.lines.map(snapshotLineToAutoInput),
+      parseIrrJson(snapshot.inputs.orderDiscount),
+    )
+    return {
+      source: 'auto',
+      totalAmount: calc.totalAmount,
+      subtotal: calc.lines.reduce((sum, l) => sum + l.lineTotal, 0n),
+      totalVat: calc.lines.reduce((sum, l) => sum + l.vatAmount, 0n),
+      totalDiscount: calc.totalDiscount,
+      lines: calc.lines.map((l) => ({
+        lineTotal: l.lineTotal,
+        vatAmount: l.vatAmount,
+        discount: l.discount,
+      })),
+    }
+  }
+
+  throw new RangeError(
+    `replayInvoiceCalculation: unknown snapshot source ${JSON.stringify(
+      (snapshot as { source?: unknown }).source,
+    )}`,
+  )
 }
