@@ -8,6 +8,7 @@ import {
   addReminderOffset,
   computeReminderInstants,
   isEligibleForReminderSchedule,
+  isEligibleForReminderSend,
   isInvoiceReminderOffset,
   isReminderStopState,
   reminderChannelsFromPreferences,
@@ -92,6 +93,23 @@ describe('reminder schedule contract (T-04.1.04.02)', () => {
       expect(isEligibleForReminderSchedule('Refunded', ISSUED, DUE)).toBe(false)
       expect(isEligibleForReminderSchedule('Unpaid', null, DUE)).toBe(false)
       expect(isEligibleForReminderSchedule('Unpaid', ISSUED, null)).toBe(false)
+    })
+  })
+
+  describe('isEligibleForReminderSend', () => {
+    it('allows Unpaid, Overdue, and in-flight payment states', () => {
+      expect(isEligibleForReminderSend('Unpaid')).toBe(true)
+      expect(isEligibleForReminderSend('Overdue')).toBe(true)
+      expect(isEligibleForReminderSend('PartiallyFunded')).toBe(true)
+      expect(isEligibleForReminderSend('PaymentUnderReview')).toBe(true)
+      expect(isEligibleForReminderSend('PartiallyRefunded')).toBe(true)
+    })
+
+    it('rejects Draft and S-04.1.04 stop states', () => {
+      expect(isEligibleForReminderSend('Draft')).toBe(false)
+      expect(isEligibleForReminderSend('Paid')).toBe(false)
+      expect(isEligibleForReminderSend('Cancelled')).toBe(false)
+      expect(isEligibleForReminderSend('Refunded')).toBe(false)
     })
   })
 

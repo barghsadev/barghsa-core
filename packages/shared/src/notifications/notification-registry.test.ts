@@ -31,6 +31,8 @@ describe('notification type registry & classification (T-05.03.01)', () => {
       expect(classifyNotificationType('ticket.new_reply')).toBe('daytime')
       expect(classifyNotificationType('profile.verification_status')).toBe('daytime')
       expect(classifyNotificationType('marketing.promotion')).toBe('daytime')
+      expect(classifyNotificationType('payment.invoice_overdue')).toBe('daytime')
+      expect(classifyNotificationType('payment.invoice_reminder')).toBe('daytime')
     })
 
     it('defaults unknown / unregistered event keys to daytime', () => {

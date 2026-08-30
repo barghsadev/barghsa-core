@@ -66,6 +66,9 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
   'payment.wallet_topup_failed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
   'payment.invoice_paid': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
   'payment.invoice_overdue': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
+  // Hourly ReminderSender (T-04.1.04.03). Daytime: schedule rows are already
+  // snapped into the delivery window; the outbox still parks a late tick.
+  'payment.invoice_reminder': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
   'payment.refund_completed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
   'payment.refund_failed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
 
