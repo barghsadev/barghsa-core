@@ -319,16 +319,20 @@ def materialize_review_commits(pr: dict[str, Any]) -> None:
         timeout=120,
         check=True,
     )
-    resolved_base = run(["git", "rev-parse", "origin/main^{commit}"], timeout=30, check=True).stdout.strip()
+    # A PR's advertised base SHA is immutable for this review request, but
+    # refs/heads/main may advance after the PR was opened. Verify that exact
+    # base object exists rather than incorrectly requiring current main to
+    # still equal the PR's original base.
+    run(["git", "cat-file", "-e", f"{base_sha}^{{commit}}"], timeout=30, check=True)
     resolved_head = run(
         ["git", "rev-parse", f"origin/barghsa-review-{pr_number}^{{commit}}"],
         timeout=30,
         check=True,
     ).stdout.strip()
-    if resolved_base != base_sha or resolved_head != head_sha:
+    if resolved_head != head_sha:
         raise RuntimeError(
-            f"materialized review refs do not match GitHub SHAs: "
-            f"base {resolved_base}!={base_sha}, head {resolved_head}!={head_sha}"
+            f"materialized review head does not match GitHub SHA: "
+            f"{resolved_head}!={head_sha}"
         )
 
 

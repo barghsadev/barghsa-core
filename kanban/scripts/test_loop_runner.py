@@ -4,6 +4,8 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
 MODULE_PATH = Path(__file__).with_name("loop-runner.py")
 spec = importlib.util.spec_from_file_location("loop_runner", MODULE_PATH)
@@ -75,6 +77,25 @@ class LoopRunnerProtocolTests(unittest.TestCase):
             properties["issues"]["items"]["properties"]["severity"]["type"],
             "string",
         )
+
+    def test_materialize_review_commits_accepts_stale_pr_base_after_main_advances(self):
+        pr = {
+            "number": 233,
+            "baseRefOid": "a" * 40,
+            "headRefOid": "b" * 40,
+        }
+
+        def fake_run(command, **_kwargs):
+            if command[:2] == ["git", "rev-parse"]:
+                return SimpleNamespace(stdout="b" * 40 + "\n")
+            return SimpleNamespace(stdout="")
+
+        with mock.patch.object(loop_runner, "run", side_effect=fake_run) as run_mock:
+            loop_runner.materialize_review_commits(pr)
+
+        commands = [call.args[0] for call in run_mock.call_args_list]
+        self.assertIn(["git", "cat-file", "-e", "a" * 40 + "^{commit}"], commands)
+        self.assertNotIn(["git", "rev-parse", "origin/main^{commit}"], commands)
 
     def test_state_dispatch_keeps_review_and_merge_on_separate_ticks(self):
         self.assertEqual(loop_runner.action_for_status("idle"), "cursor_build")
