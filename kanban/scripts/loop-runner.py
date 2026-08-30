@@ -31,7 +31,7 @@ REVIEW_SCHEMA = BASE / "kanban/scripts/review-schema.json"
 BUILDER_MODEL = "cursor-grok-4.6-high"
 REVIEWER_MODEL = "gpt-5.6-sol"
 REVIEW_MARKER = "<!-- barghsa-codex-review:v1 -->"
-MAX_FIX_ATTEMPTS = 10
+MAX_FIX_ATTEMPTS = 3
 _LOCK_HANDLE: Any = None
 
 
