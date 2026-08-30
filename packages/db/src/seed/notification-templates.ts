@@ -146,6 +146,20 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     ],
   },
   {
+    eventKey: 'payment.invoice_reminder',
+    faSubject: 'یادآوری پرداخت قبض',
+    enSubject: 'Invoice payment reminder',
+    faBody: 'این یک یادآوری برای پرداخت قبض شماست.\n\nشناسه قبض: {{invoiceId}}\nسررسید: {{dueAt}}\nزمان یادآوری: {{scheduledAt}}\nفاصله تا سررسید (روز): {{offset}}\n\nلطفاً در اسرع وقت پرداخت کنید.',
+    enBody: 'This is a reminder to pay your invoice.\n\nInvoice ID: {{invoiceId}}\nDue date: {{dueAt}}\nReminder time: {{scheduledAt}}\nDays relative to due date: {{offset}}\n\nPlease pay as soon as possible.',
+    channels: ['email', 'sms', 'in_app'],
+    variables: [
+      { name: 'invoiceId', description: 'شناسه قبض / Invoice id' },
+      { name: 'offset', description: 'فاصله روز نسبت به سررسید / Days relative to due date' },
+      { name: 'dueAt', description: 'سررسید / Due date' },
+      { name: 'scheduledAt', description: 'زمان یادآوری / Reminder scheduled time' },
+    ],
+  },
+  {
     eventKey: 'payment.refund_completed',
     faSubject: 'استرداد وجه انجام شد',
     enSubject: 'Refund completed',
