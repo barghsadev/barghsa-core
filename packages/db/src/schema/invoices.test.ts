@@ -164,4 +164,13 @@ describe('Invoice calculation snapshot schema (T-04.1.02.08)', () => {
       'ALTER TABLE invoices\n  ADD COLUMN IF NOT EXISTS invoice_calculation_snapshot JSONB;',
     )
   })
+
+  it('migration 0058 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string }> }
+    expect(journal.entries.map((entry) => entry.tag)).toContain(
+      '0058_add_invoice_calculation_snapshot',
+    )
+  })
 })
