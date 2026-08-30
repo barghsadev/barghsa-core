@@ -12,11 +12,11 @@
     "issues"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
+    "schema_version": { "type": "integer", "const": 1 },
     "task_key": { "type": "string", "minLength": 3 },
     "pr_number": { "type": "integer", "minimum": 1 },
     "reviewed_head_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-    "decision": { "enum": ["approve", "request_changes"] },
+    "decision": { "type": "string", "enum": ["approve", "request_changes"] },
     "summary": { "type": "string", "minLength": 3 },
     "issues": {
       "type": "array",
@@ -25,7 +25,7 @@
         "additionalProperties": false,
         "required": ["severity", "file", "line", "description", "suggestion"],
         "properties": {
-          "severity": { "enum": ["critical", "major", "minor"] },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
           "file": { "type": "string" },
           "line": { "type": "integer", "minimum": 0 },
           "description": { "type": "string", "minLength": 3 },
