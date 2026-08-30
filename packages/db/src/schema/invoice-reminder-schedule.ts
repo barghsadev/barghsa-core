@@ -7,6 +7,9 @@ import { invoices } from './invoices'
 /**
  * Canonical reminder offsets in days relative to `invoices.due_at`
  * (S-04.1.04): 7/3/1 days before, on due, 1 and 7 days after.
+ *
+ * Must stay in lock-step with `@barghsa/shared/finance` INVOICE_REMINDER_OFFSETS
+ * (T-04.1.04.02) and `chk_invoice_reminder_schedule_offset` in migration 0060.
  */
 export const INVOICE_REMINDER_OFFSETS = [-7, -3, -1, 0, 1, 7] as const
 export type InvoiceReminderOffset = (typeof INVOICE_REMINDER_OFFSETS)[number]
