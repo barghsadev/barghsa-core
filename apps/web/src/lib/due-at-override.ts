@@ -11,6 +11,18 @@ export function isInvoiceUuid(value: string): boolean {
   return UUID_RE.test(value.trim())
 }
 
+/**
+ * True when the lookup field still identifies the invoice currently loaded
+ * into the override form. A mismatch must discard the loaded invoice so a
+ * staff member cannot override invoice A while the field shows invoice B.
+ */
+export function lookupMatchesLoadedInvoice(
+  lookupId: string,
+  loadedInvoiceId: string,
+): boolean {
+  return lookupId.trim() === loadedInvoiceId
+}
+
 /** Convert an ISO timestamp to a `datetime-local` input value. */
 export function isoToDatetimeLocal(iso: string | null | undefined): string {
   if (!iso) return ''

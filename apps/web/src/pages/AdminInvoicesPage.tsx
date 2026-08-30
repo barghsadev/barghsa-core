@@ -13,6 +13,7 @@ import {
   datetimeLocalToIso,
   isInvoiceUuid,
   isoToDatetimeLocal,
+  lookupMatchesLoadedInvoice,
 } from '../lib/due-at-override.js'
 
 /**
@@ -94,12 +95,31 @@ export default function AdminInvoicesPage() {
     }
   }
 
+  function discardLoadedInvoice() {
+    setInvoice(null)
+    setDueLocal('')
+    setReason('')
+    setSaved(false)
+    setClientIssue(null)
+  }
+
+  function handleInvoiceIdChange(next: string) {
+    setInvoiceId(next)
+    if (invoice && !lookupMatchesLoadedInvoice(next, invoice.invoiceId)) {
+      discardLoadedInvoice()
+    }
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setSaved(false)
     setClientIssue(null)
     setError(null)
     if (!invoice) return
+    if (!lookupMatchesLoadedInvoice(invoiceId, invoice.invoiceId)) {
+      discardLoadedInvoice()
+      return
+    }
 
     const iso = datetimeLocalToIso(dueLocal)
     if (!iso) {
@@ -171,7 +191,7 @@ export default function AdminInvoicesPage() {
             aria-required="true"
             aria-describedby="invoice-id-hint"
             value={invoiceId}
-            onChange={(e) => setInvoiceId(e.target.value)}
+            onChange={(e) => handleInvoiceIdChange(e.target.value)}
             className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
             dir="ltr"
           />
@@ -198,6 +218,12 @@ export default function AdminInvoicesPage() {
           </h2>
 
           <dl className="grid grid-cols-1 gap-2 text-sm">
+            <div>
+              <dt className="text-gray-500">{t('admin.invoices.loadedId', locale)}</dt>
+              <dd className="font-mono text-sm" dir="ltr" data-testid="loaded-invoice-id">
+                {invoice.invoiceId}
+              </dd>
+            </div>
             <div>
               <dt className="text-gray-500">{t('admin.invoices.state', locale)}</dt>
               <dd className="font-medium">{invoice.state}</dd>
