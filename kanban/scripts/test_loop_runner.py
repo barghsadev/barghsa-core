@@ -60,6 +60,9 @@ class LoopRunnerProtocolTests(unittest.TestCase):
     def successful_check(self):
         return {"name": "CI", "conclusion": "SUCCESS", "status": "COMPLETED"}
 
+    def test_fix_attempt_limit_allows_ten_rounds(self):
+        self.assertEqual(loop_runner.MAX_FIX_ATTEMPTS, 10)
+
     def test_task_section_extracts_table_row_tasks(self):
         section = loop_runner.task_section(self.task)
 
