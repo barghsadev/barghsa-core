@@ -444,4 +444,153 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
     expect(container.textContent).toContain('Failed to save reminder toggle')
   })
+
+  function pressKey(target: EventTarget, key: string, init: KeyboardEventInit = {}) {
+    target.dispatchEvent(
+      new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init }),
+    )
+  }
+
+  async function openStepUpFromToggle(testId = 'reminder-toggle-electricity--7') {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        return stepUpForbidden()
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        return {
+          ok: true,
+          json: async () => ({ message: 'ok', stepUpVerifiedAt: '2026-08-31T01:00:00.000Z' }),
+        }
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+    await renderPanel()
+    const toggle = await clickToggle(testId)
+    const dialog = container.querySelector('[data-testid="reminder-step-up-dialog"]') as HTMLElement
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    const cancel = container.querySelector(
+      '[data-testid="reminder-step-up-cancel"]',
+    ) as HTMLButtonElement
+    const submit = container.querySelector(
+      '[data-testid="reminder-step-up-submit"]',
+    ) as HTMLButtonElement
+    return { toggle, dialog, password, cancel, submit }
+  }
+
+  it('traps Tab and Shift+Tab inside the step-up dialog and inerts the page behind it', async () => {
+    const outside = document.createElement('button')
+    outside.type = 'button'
+    outside.dataset.testid = 'outside-page-control'
+    outside.textContent = 'outside'
+    document.body.appendChild(outside)
+
+    try {
+      const { dialog, password, cancel, submit } = await openStepUpFromToggle()
+
+      expect(document.activeElement).toBe(password)
+      expect(submit.disabled).toBe(true)
+      expect(outside.hasAttribute('inert')).toBe(true)
+      expect(container.querySelector('table')?.closest('[inert]')).not.toBeNull()
+
+      await act(async () => {
+        pressKey(password, 'Tab')
+      })
+      expect(document.activeElement).toBe(cancel)
+      expect(document.activeElement).not.toBe(outside)
+
+      await act(async () => {
+        pressKey(cancel, 'Tab')
+      })
+      expect(document.activeElement).toBe(password)
+      expect(dialog.contains(document.activeElement)).toBe(true)
+
+      await act(async () => {
+        pressKey(password, 'Tab', { shiftKey: true })
+      })
+      expect(document.activeElement).toBe(cancel)
+
+      await act(async () => {
+        pressKey(cancel, 'Tab', { shiftKey: true })
+      })
+      expect(document.activeElement).toBe(password)
+      expect(outside.contains(document.activeElement)).toBe(false)
+    } finally {
+      outside.remove()
+    }
+  })
+
+  it('closes on Escape and restores focus to the initiating switch', async () => {
+    const { toggle, password } = await openStepUpFromToggle()
+    expect(document.activeElement).toBe(password)
+
+    await act(async () => {
+      pressKey(password, 'Escape')
+    })
+
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+    expect(document.activeElement).toBe(toggle)
+    expect(toggle.checked).toBe(true)
+    expect(toggle.disabled).toBe(false)
+  })
+
+  it('restores focus to the initiating switch when the step-up dialog is cancelled', async () => {
+    const { toggle, cancel } = await openStepUpFromToggle()
+
+    await act(async () => {
+      cancel.click()
+    })
+
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+    expect(document.activeElement).toBe(toggle)
+    expect(toggle.checked).toBe(true)
+  })
+
+  it('restores focus to the initiating switch after a successful step-up submit', async () => {
+    let putCount = 0
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        putCount += 1
+        if (putCount === 1) return stepUpForbidden()
+        const body = JSON.parse(String(init.body)) as PutBody
+        return {
+          ok: true,
+          json: async () => matrixWith(body.serviceType, body.offset, body.enabled),
+        }
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        return {
+          ok: true,
+          json: async () => ({ message: 'ok', stepUpVerifiedAt: '2026-08-31T01:00:00.000Z' }),
+        }
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      setInputValue(password, 'secret')
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-submit"]') as HTMLButtonElement).click()
+    })
+
+    expect(putCount).toBe(2)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+    expect(document.activeElement).toBe(toggle)
+    expect(toggle.disabled).toBe(false)
+  })
 })

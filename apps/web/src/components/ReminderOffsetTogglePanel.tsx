@@ -1,4 +1,11 @@
-import { useState, useEffect, useCallback, useRef, type FormEvent } from 'react'
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type FormEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react'
 import { t } from '@barghsa/i18n'
 import type { Locale } from '@barghsa/i18n'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -156,6 +163,43 @@ function ariaLabel(
     .replace('{service}', t(serviceKey(serviceType), locale))
 }
 
+const TABBABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',')
+
+function getTabbable(root: HTMLElement): HTMLElement[] {
+  return Array.from(root.querySelectorAll<HTMLElement>(TABBABLE_SELECTOR)).filter((el) => {
+    if (el.tabIndex < 0) return false
+    if (el.getAttribute('aria-hidden') === 'true') return false
+    return true
+  })
+}
+
+/** Mark every sibling from `keep` up to `document.body` as inert so the page cannot be tabbed. */
+function inertOutside(keep: HTMLElement): () => void {
+  const applied: HTMLElement[] = []
+  let current: HTMLElement | null = keep
+  while (current && current !== document.body) {
+    const parent: HTMLElement | null = current.parentElement
+    if (!parent) break
+    for (const sibling of Array.from(parent.children)) {
+      if (sibling === current || !(sibling instanceof HTMLElement)) continue
+      if (sibling.hasAttribute('inert')) continue
+      sibling.setAttribute('inert', '')
+      applied.push(sibling)
+    }
+    current = parent
+  }
+  return () => {
+    for (const el of applied) el.removeAttribute('inert')
+  }
+}
+
 export default function ReminderOffsetTogglePanel() {
   const locale = useLocale()
   const isRtl = locale === 'fa'
@@ -169,6 +213,12 @@ export default function ReminderOffsetTogglePanel() {
   const [stepUpPassword, setStepUpPassword] = useState('')
   const [stepUpError, setStepUpError] = useState<string | null>(null)
   const [stepUpSubmitting, setStepUpSubmitting] = useState(false)
+  const stepUpDialogRef = useRef<HTMLDivElement | null>(null)
+  const stepUpPasswordRef = useRef<HTMLInputElement | null>(null)
+  const stepUpTriggerRef = useRef<HTMLInputElement | null>(null)
+  const restoreTriggerRef = useRef(false)
+  const stepUpSubmittingRef = useRef(false)
+  stepUpSubmittingRef.current = stepUpSubmitting
 
   function markPending(key: string, pending: boolean) {
     if (pending) pendingKeysRef.current.add(key)
@@ -226,10 +276,31 @@ export default function ReminderOffsetTogglePanel() {
     load()
   }, [load])
 
+  useEffect(() => {
+    if (!stepUpOpen) return
+    const dialog = stepUpDialogRef.current
+    if (!dialog) return
+    const releaseInert = inertOutside(dialog)
+    stepUpPasswordRef.current?.focus()
+    return () => {
+      releaseInert()
+    }
+  }, [stepUpOpen])
+
+  useEffect(() => {
+    if (stepUpOpen || !restoreTriggerRef.current) return
+    const trigger = stepUpTriggerRef.current
+    if (!trigger || trigger.disabled) return
+    restoreTriggerRef.current = false
+    stepUpTriggerRef.current = null
+    trigger.focus()
+  }, [stepUpOpen, pendingKeys])
+
   async function handleToggle(
     serviceType: ServiceDuePeriodType,
     offset: InvoiceReminderOffset,
     enabled: boolean,
+    trigger: HTMLInputElement,
   ) {
     if (!toggles) return
     const key = toggleKey(serviceType, offset)
@@ -244,6 +315,8 @@ export default function ReminderOffsetTogglePanel() {
     const outcome = await persistToggle(item)
     if (outcome === 'step_up') {
       awaitingStepUpRef.current.push(item)
+      if (!stepUpTriggerRef.current) stepUpTriggerRef.current = trigger
+      restoreTriggerRef.current = true
       setStepUpOpen(true)
     }
   }
@@ -360,7 +433,9 @@ export default function ReminderOffsetTogglePanel() {
                             aria-busy={busy}
                             checked={enabled}
                             disabled={busy}
-                            onChange={(e) => handleToggle(serviceType, offset, e.target.checked)}
+                            onChange={(e) =>
+                              handleToggle(serviceType, offset, e.target.checked, e.currentTarget)
+                            }
                             className="h-4 w-4 rounded border-gray-300"
                           />
                           <span className="sr-only">
@@ -381,16 +456,41 @@ export default function ReminderOffsetTogglePanel() {
 
       {stepUpOpen && (
         <div
+          ref={stepUpDialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="reminder-step-up-title"
           data-testid="reminder-step-up-dialog"
+          tabIndex={-1}
           onClick={(event) => {
             if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp()
           }}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape' && !stepUpSubmitting) cancelStepUp()
+          onKeyDown={(event: ReactKeyboardEvent<HTMLDivElement>) => {
+            if (event.key === 'Escape') {
+              if (stepUpSubmittingRef.current) return
+              event.preventDefault()
+              cancelStepUp()
+              return
+            }
+            if (event.key !== 'Tab') return
+            const tabbable = getTabbable(event.currentTarget)
+            if (tabbable.length === 0) {
+              event.preventDefault()
+              event.currentTarget.focus()
+              return
+            }
+            const active = document.activeElement
+            const index = tabbable.indexOf(active as HTMLElement)
+            event.preventDefault()
+            if (event.shiftKey) {
+              const next = index <= 0 ? tabbable[tabbable.length - 1]! : tabbable[index - 1]!
+              next.focus()
+              return
+            }
+            const next =
+              index === -1 || index >= tabbable.length - 1 ? tabbable[0]! : tabbable[index + 1]!
+            next.focus()
           }}
         >
           <form
@@ -411,11 +511,11 @@ export default function ReminderOffsetTogglePanel() {
                 {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
               </label>
               <input
+                ref={stepUpPasswordRef}
                 id="reminder-step-up-password"
                 data-testid="reminder-step-up-password"
                 type="password"
                 autoComplete="current-password"
-                autoFocus
                 value={stepUpPassword}
                 disabled={stepUpSubmitting}
                 placeholder={t('admin.invoices.reminders.stepUp.passwordPlaceholder', locale)}
