@@ -123,6 +123,17 @@ describe('drizzle migrate() applies invoice adjustment kind (T-04.1.05.03)', () 
     expect(generated.rows[0]!.attgenerated).toBe('s')
   })
 
+  it('adds the kind/link CHECK as NOT VALID through migrate()', async () => {
+    const row = await ctx.pool.query<{ convalidated: boolean }>(
+      `SELECT convalidated
+         FROM pg_constraint
+        WHERE conname = 'ck_invoices_adjustment_kind_matches_link'
+          AND conrelid = 'invoices'::regclass`,
+    )
+    expect(row.rows).toHaveLength(1)
+    expect(row.rows[0]!.convalidated).toBe(false)
+  })
+
   it('records 0067 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
       `SELECT created_at::text AS created_at

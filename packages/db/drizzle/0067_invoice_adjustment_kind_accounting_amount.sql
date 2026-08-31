@@ -1,5 +1,5 @@
 -- Migration 0067: First-class adjustment kind + signed accounting amount
--- (T-04.1.05.03)
+-- (T-04.1.05.03) — expand / migrate phase
 --
 -- createAdjustmentInvoice(amount) with a negative amount is a credit note,
 -- not a customer payable. `total_amount` stays non-negative (CHECK from
@@ -9,20 +9,30 @@
 --
 -- Expand:
 --   * `adjustment_kind` TEXT NULL — 'charge' | 'credit' on adjustment
---     rows; NULL on ordinary invoices.
+--     rows; NULL on ordinary invoices. Old writers may still insert a
+--     linked row without a kind; the column stays nullable.
 --   * `accounting_amount` BIGINT GENERATED ALWAYS — signed IRR
 --     contribution to customer liability (`-total_amount` for credits,
 --     `total_amount` otherwise). Existing rows backfill automatically.
 --
--- CHECK `ck_invoices_adjustment_kind_matches_link` ties kind to
--- `adjustment_for_invoice_id` so a credit cannot be stored as an
--- ordinary unpaid invoice.
+-- Migrate:
+--   * Deterministic backfill of existing `adjustment_for_invoice_id`
+--     rows that have a null kind. Prefer `metadata.kind` when it is
+--     already 'charge' or 'credit' (first-revision writers stored the
+--     discriminator only in JSON); otherwise 'charge' — the previous
+--     schema had no credit-note column, so a linked row is an additional
+--     charge.
+--   * CHECK `ck_invoices_adjustment_kind_matches_link` is added
+--     NOT VALID: new writes are enforced, but existing rows are not
+--     scanned. VALIDATE belongs in a later contract-phase migration
+--     after old writers that omit `adjustment_kind` are retired.
 --
 -- Guard: skip when `invoices` is missing so journaled migrate() against
 -- a pre-invoice schema is a no-op. The kind/link CHECK is added only
 -- when `adjustment_for_invoice_id` exists (migration 0064).
 --
--- Idempotent: column existence + pg_constraint existence checks.
+-- Idempotent: column existence + pg_constraint existence checks;
+-- backfill is filtered to `adjustment_kind IS NULL`.
 --
 -- Rollback:
 --   ALTER TABLE invoices DROP CONSTRAINT IF EXISTS
@@ -69,6 +79,22 @@ BEGIN
      WHERE table_schema = current_schema()
        AND table_name = 'invoices'
        AND column_name = 'adjustment_for_invoice_id'
+  ) THEN
+    UPDATE invoices
+       SET adjustment_kind = CASE
+             WHEN metadata->>'kind' IN ('charge', 'credit') THEN metadata->>'kind'
+             ELSE 'charge'
+           END
+     WHERE adjustment_for_invoice_id IS NOT NULL
+       AND adjustment_kind IS NULL;
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+      FROM information_schema.columns
+     WHERE table_schema = current_schema()
+       AND table_name = 'invoices'
+       AND column_name = 'adjustment_for_invoice_id'
   ) AND NOT EXISTS (
     SELECT 1 FROM pg_constraint
      WHERE conname = 'ck_invoices_adjustment_kind_matches_link'
@@ -82,6 +108,6 @@ BEGIN
           adjustment_kind IS NULL
           OR adjustment_kind IN ('charge', 'credit')
         )
-      );
+      ) NOT VALID;
   END IF;
 END $$;

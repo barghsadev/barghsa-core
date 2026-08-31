@@ -180,8 +180,9 @@ export const invoices = pgTable(
      *
      * `'charge'` = additional customer payable; `'credit'` = credit note
      * that reduces net liability and is excluded from payment flow.
-     * NULL on ordinary (non-adjustment) invoices. Enforced with
-     * `adjustment_for_invoice_id` by migration 0067.
+     * NULL on ordinary (non-adjustment) invoices. Migration 0067 adds
+     * the column and a NOT VALID kind/link CHECK; VALIDATE is a later
+     * contract-phase migration after old writers are retired.
      */
     adjustmentKind: text('adjustment_kind'),
 
@@ -251,7 +252,8 @@ export const invoices = pgTable(
     }).onDelete('restrict'),
     /**
      * Adjustment rows must declare charge vs credit; ordinary rows
-     * must not (T-04.1.05.03 / migration 0067).
+     * must not (T-04.1.05.03). Migration 0067 adds this CHECK as
+     * NOT VALID; VALIDATE is a later contract-phase migration.
      */
     adjustmentKindMatchesLink: check(
       'ck_invoices_adjustment_kind_matches_link',
@@ -313,6 +315,8 @@ export const createInvoicesTable = sql`
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_paid_not_exceeds_total CHECK (paid_amount <= total_amount),
     CONSTRAINT ck_refund_not_exceeds_paid CHECK (refunded_amount <= paid_amount),
+    -- Greenfield CREATE has no existing rows, so this CHECK is validated.
+    -- Migration 0067 adds the same constraint as NOT VALID on upgrade.
     CONSTRAINT ck_invoices_adjustment_kind_matches_link CHECK (
       (adjustment_for_invoice_id IS NULL) = (adjustment_kind IS NULL)
       AND (

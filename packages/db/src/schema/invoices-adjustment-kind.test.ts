@@ -27,7 +27,8 @@ const ADJUSTMENT_KIND_MIGRATION = resolve(
  *   - ordinary invoices keep NULL kind and accounting_amount = total;
  *   - a credit stores adjustment_kind='credit' and negative accounting_amount;
  *   - a charge stores positive accounting_amount equal to total;
- *   - kind without a link (and a link without kind) are rejected;
+ *   - kind without a link (and a link without kind) are rejected on new writes;
+ *   - the kind/link CHECK is NOT VALID (existing rows are not scanned);
  *   - the migration is idempotent.
  */
 describe('invoice adjustment kind and accounting amount (T-04.1.05.03)', () => {
@@ -177,5 +178,114 @@ describe('invoice adjustment kind and accounting amount (T-04.1.05.03)', () => {
         AND column_name IN ('adjustment_kind', 'accounting_amount')
     `)
     expect(cols.rows).toHaveLength(2)
+  })
+
+  it('adds the kind/link CHECK as NOT VALID', async () => {
+    const row = await ctx.pool.query<{ convalidated: boolean }>(
+      `SELECT convalidated
+         FROM pg_constraint
+        WHERE conname = 'ck_invoices_adjustment_kind_matches_link'
+          AND conrelid = 'invoices'::regclass`,
+    )
+    expect(row.rows).toHaveLength(1)
+    expect(row.rows[0]!.convalidated).toBe(false)
+  })
+})
+
+/**
+ * Upgrade-path test: rows created under 0064 (linked, kind NULL) must
+ * not fail 0067. Backfill assigns kind, and the CHECK is NOT VALID so
+ * the migration does not scan existing rows.
+ */
+describe('invoice adjustment kind upgrade from 0064 rows (T-04.1.05.03)', () => {
+  let ctx: IsolatedTestDb
+
+  beforeAll(async () => {
+    ctx = await createIsolatedTestDb()
+
+    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.db.execute(sql`
+      CREATE TYPE invoice_state AS ENUM (
+        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
+        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
+      )
+    `)
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS profiles (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS orders (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+
+    await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim())
+    await ctx.db.execute(sql`INSERT INTO profiles (id) VALUES (uuid_generate_v7())`)
+    await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
+  })
+
+  afterAll(async () => {
+    await ctx.pool.end()
+    await dropTestSchema(ctx.schemaName)
+  })
+
+  it('backfills existing linked rows and does not fail the migration', async () => {
+    const original = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO invoices (profile_id, total_amount, state)
+       VALUES ((SELECT id FROM profiles LIMIT 1), 1090000, 'Paid')
+       RETURNING id`,
+    )
+    const originalId = original.rows[0]!.id
+
+    const legacyCharge = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO invoices
+         (profile_id, total_amount, adjustment_for_invoice_id, state)
+       VALUES (
+         (SELECT id FROM profiles LIMIT 1), 250000, $1, 'Unpaid'
+       )
+       RETURNING id`,
+      [originalId],
+    )
+    const legacyCredit = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO invoices
+         (profile_id, total_amount, adjustment_for_invoice_id, state, metadata)
+       VALUES (
+         (SELECT id FROM profiles LIMIT 1), 80000, $1, 'Unpaid',
+         '{"source":"adjustment","kind":"credit"}'::jsonb
+       )
+       RETURNING id`,
+      [originalId],
+    )
+
+    await expect(
+      ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim()),
+    ).resolves.toBeDefined()
+
+    const charge = await ctx.pool.query<{ adjustment_kind: string }>(
+      `SELECT adjustment_kind FROM invoices WHERE id = $1`,
+      [legacyCharge.rows[0]!.id],
+    )
+    expect(charge.rows[0]!.adjustment_kind).toBe('charge')
+
+    const credit = await ctx.pool.query<{
+      adjustment_kind: string
+      accounting_amount: string
+    }>(
+      `SELECT adjustment_kind, accounting_amount::text
+         FROM invoices WHERE id = $1`,
+      [legacyCredit.rows[0]!.id],
+    )
+    expect(credit.rows[0]!.adjustment_kind).toBe('credit')
+    expect(credit.rows[0]!.accounting_amount).toBe('-80000')
+
+    const constraint = await ctx.pool.query<{ convalidated: boolean }>(
+      `SELECT convalidated
+         FROM pg_constraint
+        WHERE conname = 'ck_invoices_adjustment_kind_matches_link'
+          AND conrelid = 'invoices'::regclass`,
+    )
+    expect(constraint.rows[0]!.convalidated).toBe(false)
   })
 })

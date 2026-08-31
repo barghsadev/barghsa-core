@@ -143,7 +143,11 @@ export interface CreateAdjustmentInvoiceResult {
   consultationId: string | null
   lines: ManualInvoiceLineResult[]
   issuedAt: Date
-  payableFrom: Date
+  /**
+   * Earliest customer-payment instant. Null on credits — they must
+   * never enter the payment flow. Non-null on charges.
+   */
+  payableFrom: Date | null
   dueAt: Date | null
   issueAuditId: string
   issueTransition: TransitionResult
@@ -427,6 +431,11 @@ export class CreateAdjustmentInvoiceService {
       )
 
       const excerpt = await this.loadAdjustmentExcerpt(client, adjustmentId)
+      if (kind === 'charge' && excerpt.payableFrom === null) {
+        throw new Error(
+          `Charge adjustment ${adjustmentId} is missing payable_from`,
+        )
+      }
 
       await client.query('COMMIT')
       return {
@@ -480,7 +489,7 @@ export class CreateAdjustmentInvoiceService {
     accountingAmount: bigint
     lines: ManualInvoiceLineResult[]
     issuedAt: Date
-    payableFrom: Date
+    payableFrom: Date | null
     dueAt: Date | null
   }> {
     const invoiceResult = (await client.query(
@@ -545,7 +554,7 @@ export class CreateAdjustmentInvoiceService {
       totalAmount: BigInt(row.total_amount),
       accountingAmount: BigInt(row.accounting_amount),
       issuedAt: row.issued_at ?? new Date(),
-      payableFrom: row.payable_from ?? new Date(),
+      payableFrom: row.payable_from,
       dueAt: row.due_at,
       lines: linesResult.rows.map((l) => ({
         id: l.id,

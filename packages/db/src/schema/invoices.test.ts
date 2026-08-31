@@ -393,8 +393,9 @@ describe('Invoice order-type unique index excludes adjustments (T-04.1.05.03)', 
  * Drift guard for first-class adjustment kind + signed accounting amount
  * (T-04.1.05.03).
  *
- * Migration 0067 adds `adjustment_kind` and generated `accounting_amount`
- * so credit notes are distinguishable from unpaid customer debt.
+ * Migration 0067 adds nullable `adjustment_kind` and generated
+ * `accounting_amount`, backfills existing linked rows, and adds the
+ * kind/link CHECK as NOT VALID (VALIDATE is a later contract phase).
  */
 const ADJUSTMENT_KIND_MIGRATION = readFileSync(
   resolve(
@@ -425,6 +426,13 @@ describe('Invoice adjustment kind and accounting amount (T-04.1.05.03)', () => {
     )
     expect(ADJUSTMENT_KIND_MIGRATION).toContain(
       'ck_invoices_adjustment_kind_matches_link',
+    )
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain('NOT VALID')
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      'WHERE adjustment_for_invoice_id IS NOT NULL',
+    )
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      "WHEN metadata->>'kind' IN ('charge', 'credit')",
     )
   })
 

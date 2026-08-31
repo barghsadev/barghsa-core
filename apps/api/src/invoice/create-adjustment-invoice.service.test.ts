@@ -199,6 +199,7 @@ describe('CreateAdjustmentInvoiceService', () => {
     expect(result.totalAmount).toBe(250_000n)
     expect(result.accountingAmount).toBe(250_000n)
     expect(result.orderId).toBe('order-001')
+    expect(result.payableFrom).toEqual(new Date('2026-08-01T10:00:00.000Z'))
     expect(result.issueTransition.transition).toBe('Issue')
 
     expect(calls.filter((c) => c === 'BEGIN')).toHaveLength(1)
@@ -268,6 +269,7 @@ describe('CreateAdjustmentInvoiceService', () => {
     expect(result.totalAmount).toBe(80_000n)
     expect(result.accountingAmount).toBe(-80_000n)
     expect(result.dueAt).toBeNull()
+    expect(result.payableFrom).toBeNull()
 
     const insertCall = mockClient.query.mock.calls.find(
       (c) => (c[0] as string).startsWith('INSERT INTO invoices'),
@@ -292,6 +294,14 @@ describe('CreateAdjustmentInvoiceService', () => {
       (c) => (c[0] as string).includes('FROM service_due_periods'),
     )
     expect(dueLookups).toHaveLength(0)
+  })
+
+  it('refuses to invent payableFrom when a charge row is missing it', async () => {
+    mockQuery(happyPathHandler(adjustmentExcerpt({ payable_from: null })))
+
+    await expect(service.createAdjustmentInvoice(command())).rejects.toThrow(
+      /missing payable_from/,
+    )
   })
 
   it('rejects an empty reason without opening a connection', async () => {
