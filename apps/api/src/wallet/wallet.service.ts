@@ -277,7 +277,10 @@ export class WalletService {
    *
    * In one DB transaction:
    *   1. `SELECT … FOR UPDATE` the wallet row.
-   *   2. Return the existing ledger row when `idempotencyKey` already posted.
+   *   2. Return the existing ledger row when `idempotencyKey` already posted
+   *      as the same Completed debit (matching type, amount, and refId).
+   *      Collisions with credits, reservations, or a different debit command
+   *      throw ConflictException — they must not report success.
    *   3. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
    *   4. Atomically reserve (`reserved_balance += amount` with
    *      `WHERE version = X AND available >= amount`) then complete
@@ -329,12 +332,10 @@ export class WalletService {
         [idempotencyKey],
       )
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0] as { wallet_id: string }
-        if (existing.wallet_id !== canonicalWalletId) {
-          throw new ConflictException('Idempotency key already used for a different wallet')
-        }
+        const existing = idemResult.rows[0]!
+        assertMatchingDebitReplay(existing, canonicalWalletId, amount, ref)
         await client.query('COMMIT')
-        return mapTransaction(idemResult.rows[0])
+        return mapTransaction(existing)
       }
 
       const posted = BigInt(wallet.posted_balance)
@@ -408,14 +409,12 @@ export class WalletService {
           `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
           [idempotencyKey],
         )
-        if (
-          existing.rows.length > 0 &&
-          canonicalWalletId !== undefined &&
-          existing.rows[0]!.wallet_id === canonicalWalletId
-        ) {
-          return mapTransaction(existing.rows[0])
+        if (existing.rows.length === 0 || canonicalWalletId === undefined) {
+          throw new ConflictException('Idempotency key already used')
         }
-        throw new ConflictException('Idempotency key already used')
+        const committed = existing.rows[0]!
+        assertMatchingDebitReplay(committed, canonicalWalletId, amount, ref)
+        return mapTransaction(committed)
       }
       throw error
     } finally {
@@ -617,6 +616,41 @@ function isWalletCreditType(type: string): type is WalletCreditType {
 
 function isWalletDebitType(type: string): type is WalletDebitType {
   return (WALLET_DEBIT_TYPES as readonly string[]).includes(type)
+}
+
+type WalletLedgerIdempotencyRow = {
+  wallet_id: string
+  type: string
+  amount: string | number | bigint
+  state: string
+  ref_id?: string | null
+}
+
+/**
+ * Idempotent debit replay is only valid for the same Completed debit
+ * command: same wallet, type, negative amount, and refId. A colliding
+ * credit, reservation, or debit with different parameters must not be
+ * returned as a successful debit.
+ */
+function assertMatchingDebitReplay(
+  existing: WalletLedgerIdempotencyRow,
+  canonicalWalletId: string,
+  amount: bigint,
+  ref: WalletDebitRef,
+): void {
+  if (existing.wallet_id !== canonicalWalletId) {
+    throw new ConflictException('Idempotency key already used for a different wallet')
+  }
+  const existingRefId = existing.ref_id ?? null
+  const expectedRefId = ref.refId ?? null
+  const isSameDebit =
+    existing.state === 'Completed' &&
+    existing.type === ref.type &&
+    BigInt(existing.amount) === -amount &&
+    existingRefId === expectedRefId
+  if (!isSameDebit) {
+    throw new ConflictException('Idempotency key already used for a different wallet operation')
+  }
 }
 
 function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
