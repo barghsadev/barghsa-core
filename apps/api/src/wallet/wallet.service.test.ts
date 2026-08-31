@@ -44,23 +44,6 @@ function makeTxRow(overrides: Record<string, unknown> = {}) {
   }
 }
 
-/**
- * Helper to mock the executeWalletTx transaction flow.
- * The executeWalletTx method calls in order:
- *   1. BEGIN
- *   2. SELECT ... FOR UPDATE (wallet)
- *   3. SELECT by idempotency_key
- * Then the operation-specific queries follow.
- */
-function mockExecuteWalletTxFlow(walletRow: any, idempotencyResult: any[] = []) {
-  mockClient.query
-    .mockResolvedValueOnce({ rows: [] })           // BEGIN
-    .mockResolvedValueOnce({ rows: [walletRow] })  // SELECT ... FOR UPDATE
-    .mockResolvedValueOnce({ rows: idempotencyResult }) // idempotency check
-  // Caller must add remaining mocks after this
-  return mockClient.query
-}
-
 describe('WalletService', () => {
   let service: WalletService
 
@@ -122,63 +105,187 @@ describe('WalletService', () => {
     })
   })
 
-  describe('credit', () => {
-    it('credits wallet and returns transaction', async () => {
+  describe('credit (T-04.2.01.03)', () => {
+    /**
+     * Query sequence for a first-time credit:
+     *   0: BEGIN
+     *   1: SELECT … FOR UPDATE
+     *   2: SELECT by idempotency_key
+     *   3: INSERT wallet_transactions
+     *   4: UPDATE wallets … WHERE version = X AND posted_balance >= 0
+     *   5: COMMIT
+     */
+    it('inserts a Completed ledger row and updates postedBalance under version + postedBalance >= 0', async () => {
       const wallet = makeWalletRow()
-      // mockClient.query sequence for executeWalletTx:
-      // 0: BEGIN → no rows
-      // 1: SELECT FOR UPDATE → wallet
-      // 2: idempotency check → no existing
-      // 3: UPDATE wallets → updated wallet
-      // 4: INSERT transaction → tx row
       mockClient.query
-        .mockResolvedValueOnce({ rows: [] })                    // 0: BEGIN
-        .mockResolvedValueOnce({ rows: [wallet] })              // 1: SELECT FOR UPDATE
-        .mockResolvedValueOnce({ rows: [] })                    // 2: idempotency check (empty)
-        .mockResolvedValueOnce({                                 // 3: UPDATE wallets
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeTxRow()] })
+        .mockResolvedValueOnce({
           rows: [makeWalletRow({ version: 2, posted_balance: '1100000' })],
         })
-        .mockResolvedValueOnce({ rows: [makeTxRow()] })          // 4: INSERT transaction
 
-      const result = await service.credit('profile-1', 100000n, {
-        idempotencyKey: 'idem-001',
-        type: 'topup',
-      })
+      const result = await service.credit(
+        'profile-1',
+        100000n,
+        { type: 'topup', refId: 'evt-1', description: 'online top-up' },
+        'idem-001',
+      )
 
       expect(result.state).toBe('Completed')
       expect(result.type).toBe('topup')
-      // Verify COMMIT was called
+      expect(result.amount).toBe(100000n)
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![0]).toContain("'Completed'")
+      expect(insertCall![1]).toEqual([
+        'profile-1',
+        'topup',
+        100000n,
+        'idem-001',
+        'evt-1',
+        'online top-up',
+        null,
+      ])
+
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('posted_balance = posted_balance + $1')
+      expect(updateCall![0]).toContain('version = version + 1')
+      expect(updateCall![0]).toMatch(/version = \$3/)
+      expect(updateCall![0]).toContain('posted_balance >= 0')
+      expect(updateCall![1]).toEqual([100000n, 'profile-1', 1])
+
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
     })
 
-    it('returns existing transaction on idempotent retry', async () => {
+    it('returns the existing transaction on idempotent retry without mutating the wallet', async () => {
       const wallet = makeWalletRow()
       const existingTx = makeTxRow()
 
       mockClient.query
-        .mockResolvedValueOnce({ rows: [] })                    // 0: BEGIN
-        .mockResolvedValueOnce({ rows: [wallet] })              // 1: SELECT FOR UPDATE
-        .mockResolvedValueOnce({ rows: [existingTx] })          // 2: idempotency check (FOUND!)
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
 
-      const result = await service.credit('profile-1', 100000n, {
-        idempotencyKey: 'idem-001',
-        type: 'topup',
-      })
+      const result = await service.credit(
+        'profile-1',
+        100000n,
+        { type: 'topup' },
+        'idem-001',
+      )
 
       expect(result.id).toBe('tx-001')
-      // No further queries beyond idempotency check
-      expect(mockClient.query).toHaveBeenCalledTimes(4) // BEGIN, FOR UPDATE, idempotency check, COMMIT
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
     })
 
-    it('rejects zero or negative credit', async () => {
+    it('rejects a colliding idempotency key owned by another wallet', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: 'profile-other' })] })
+
       await expect(
-        service.credit('profile-1', 0n, { idempotencyKey: 'k', type: 'topup' }),
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects zero or negative credit without opening a transaction', async () => {
+      await expect(
+        service.credit('profile-1', 0n, { type: 'topup' }, 'k'),
       ).rejects.toThrow('Credit amount must be positive')
 
       await expect(
-        service.credit('profile-1', -100n, { idempotencyKey: 'k', type: 'topup' }),
+        service.credit('profile-1', -100n, { type: 'topup' }, 'k'),
       ).rejects.toThrow('Credit amount must be positive')
+
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a blank idempotency key', async () => {
+      await expect(
+        service.credit('profile-1', 100n, { type: 'topup' }, '   '),
+      ).rejects.toThrow('Idempotency key is required')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a non-credit ledger type', async () => {
+      await expect(
+        service.credit(
+          'profile-1',
+          100n,
+          { type: 'payment' } as unknown as { type: 'topup' },
+          'k',
+        ),
+      ).rejects.toThrow('Credit type must be one of')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('throws NotFound when the wallet row is missing', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.credit('missing', 100n, { type: 'topup' }, 'k'),
+      ).rejects.toThrow('Wallet not found: missing')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the credit when UPDATE matches no row (version mismatch or postedBalance < 0)', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeTxRow()] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('version mismatch or postedBalance < 0')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('returns the committed ledger row when INSERT races on the unique idempotency index', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({ rows: [makeTxRow()] })
+
+      const result = await service.credit(
+        'profile-1',
+        100000n,
+        { type: 'topup' },
+        'idem-001',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('idempotency_key'),
+        ['idem-001'],
+      )
     })
   })
 
