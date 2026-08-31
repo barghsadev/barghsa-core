@@ -304,12 +304,13 @@ describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)',
       })
       .join('')
     expect(rendered).toContain('replaces_invoice_id')
+    expect(rendered).toContain('adjustment_for_invoice_id')
   })
 
   it('createInvoicesTable SQL declares the partial unique index', () => {
     const schemaSql = readFileSync(resolve(__dirname, './invoices.ts'), 'utf8')
     expect(schemaSql).toMatch(
-      /uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL/,
+      /uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL AND adjustment_for_invoice_id IS NULL/,
     )
     expect(createInvoicesTable).toBeDefined()
   })
@@ -334,6 +335,51 @@ describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)',
     )
     const prior = journal.entries.find(
       (entry) => entry.tag === '0064_add_invoice_correction_self_references',
+    )
+    expect(rewrite).toBeDefined()
+    expect(prior).toBeDefined()
+    expect(rewrite!.when).toBeGreaterThan(prior!.when)
+  })
+})
+
+/**
+ * Drift guard for the adjustment-safe (order_id, type) unique index
+ * (T-04.1.05.03).
+ *
+ * Migration 0066 extends `uq_invoices_order_id_type` so adjustment
+ * invoices (`adjustment_for_invoice_id IS NOT NULL`) are excluded the
+ * same way replacements are. Ordinary auto/manual idempotency is
+ * unchanged.
+ */
+const ORDER_TYPE_ADJUSTMENT_MIGRATION = readFileSync(
+  resolve(
+    __dirname,
+    '../../drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql',
+  ),
+  'utf8',
+)
+
+describe('Invoice order-type unique index excludes adjustments (T-04.1.05.03)', () => {
+  it('migration 0066 rewrites the unique index to exclude both correction FKs', () => {
+    expect(ORDER_TYPE_ADJUSTMENT_MIGRATION).toContain(
+      'DROP INDEX IF EXISTS uq_invoices_order_id_type',
+    )
+    expect(ORDER_TYPE_ADJUSTMENT_MIGRATION).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL AND adjustment_for_invoice_id IS NULL/,
+    )
+  })
+
+  it('migration 0066 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string; when: number }> }
+    const tags = journal.entries.map((entry) => entry.tag)
+    expect(tags).toContain('0066_invoice_order_type_unique_exclude_adjustments')
+    const rewrite = journal.entries.find(
+      (entry) => entry.tag === '0066_invoice_order_type_unique_exclude_adjustments',
+    )
+    const prior = journal.entries.find(
+      (entry) => entry.tag === '0065_invoice_order_type_unique_exclude_replacements',
     )
     expect(rewrite).toBeDefined()
     expect(prior).toBeDefined()

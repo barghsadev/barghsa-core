@@ -23,6 +23,19 @@ export type {
   CancelAndReplaceInvoiceResult,
   ReplaceableInvoiceState,
 } from './cancel-and-replace-invoice.service.js'
+export {
+  CreateAdjustmentInvoiceService,
+  isAdjustableInvoiceState,
+  adjustmentKindForAmount,
+  ADJUSTABLE_INVOICE_STATES,
+  CREATE_ADJUSTMENT_ERRORS,
+} from './create-adjustment-invoice.service.js'
+export type {
+  CreateAdjustmentInvoiceCommand,
+  CreateAdjustmentInvoiceResult,
+  AdjustableInvoiceState,
+  AdjustmentKind,
+} from './create-adjustment-invoice.service.js'
 export { AutoInvoiceService } from './auto-invoice.service.js'
 export type {
   CreateAutoInvoiceCommand,

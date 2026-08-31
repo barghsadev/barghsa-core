@@ -8,15 +8,14 @@ import type { IsolatedTestDb } from './test/testDb'
 
 /**
  * Proves production `migrate()` (drizzle-orm journal discovery) applies
- * migration 0065. Hand-running the SQL file is not enough: drizzle-orm
+ * migration 0066. Hand-running the SQL file is not enough: drizzle-orm
  * only executes tags listed in `drizzle/meta/_journal.json`.
  *
- * The isolated schema already has invoices with `type`, the pre-0065
- * unique (order_id, type) index, and `replaces_invoice_id`. Journal
- * bookkeeping is seeded through 0064 so migrate() must pick up 0065 and
- * rewrite the unique index as partial. migrate() from this head also
- * applies 0066 (adjustment exclusion); the asserted predicate is the
- * final correction-safe form.
+ * The isolated schema already has invoices with `type`, the 0065
+ * unique (order_id, type) WHERE replaces_invoice_id IS NULL index, and
+ * `adjustment_for_invoice_id`. Journal bookkeeping is seeded through
+ * 0065 so migrate() must pick up 0066 and rewrite the unique index
+ * to also exclude adjustment rows.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
@@ -34,11 +33,15 @@ const CORRECTION_MIGRATION = resolve(
   DRIZZLE_FOLDER,
   '0064_add_invoice_correction_self_references.sql',
 )
-const REPLACEMENT_TAG = '0065_invoice_order_type_unique_exclude_replacements'
-/** `when` of journal tag 0064 — last entry before 0065 was registered. */
-const PRIOR_JOURNAL_HEAD_WHEN = 1788480000000
+const REPLACEMENT_INDEX_MIGRATION = resolve(
+  DRIZZLE_FOLDER,
+  '0065_invoice_order_type_unique_exclude_replacements.sql',
+)
+const ADJUSTMENT_TAG = '0066_invoice_order_type_unique_exclude_adjustments'
+/** `when` of journal tag 0065 — last entry before 0066 was registered. */
+const PRIOR_JOURNAL_HEAD_WHEN = 1788566400000
 
-describe('drizzle migrate() applies invoice order-type replacement unique index (T-04.1.05.02)', () => {
+describe('drizzle migrate() applies invoice order-type adjustment unique index (T-04.1.05.03)', () => {
   let ctx: IsolatedTestDb
   let rewriteWhen: number
 
@@ -46,15 +49,15 @@ describe('drizzle migrate() applies invoice order-type replacement unique index 
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
       entries: Array<{ tag: string; when: number }>
     }
-    const rewriteEntry = journal.entries.find((entry) => entry.tag === REPLACEMENT_TAG)
+    const rewriteEntry = journal.entries.find((entry) => entry.tag === ADJUSTMENT_TAG)
     if (!rewriteEntry) {
       throw new Error(
-        `${REPLACEMENT_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
+        `${ADJUSTMENT_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
       )
     }
     if (rewriteEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
       throw new Error(
-        `${REPLACEMENT_TAG} journal 'when' (${rewriteEntry.when}) must be after 0064 (${PRIOR_JOURNAL_HEAD_WHEN})`,
+        `${ADJUSTMENT_TAG} journal 'when' (${rewriteEntry.when}) must be after 0065 (${PRIOR_JOURNAL_HEAD_WHEN})`,
       )
     }
     rewriteWhen = rewriteEntry.when
@@ -82,6 +85,7 @@ describe('drizzle migrate() applies invoice order-type replacement unique index 
     await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
@@ -92,7 +96,7 @@ describe('drizzle migrate() applies invoice order-type replacement unique index 
     `)
     await ctx.pool.query(
       `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-      ['prior-journal-head-0064', PRIOR_JOURNAL_HEAD_WHEN],
+      ['prior-journal-head-0065', PRIOR_JOURNAL_HEAD_WHEN],
     )
 
     await migrate(ctx.db, {
@@ -119,7 +123,7 @@ describe('drizzle migrate() applies invoice order-type replacement unique index 
     expect(def.rows[0]!.indexdef).toMatch(/adjustment_for_invoice_id IS NULL/i)
   })
 
-  it('records 0065 in the migrator bookkeeping table', async () => {
+  it('records 0066 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
       `SELECT created_at::text AS created_at
        FROM __drizzle_migrations

@@ -10,6 +10,7 @@ import { DueAtCalculationRepository } from './due-at.repository.js'
 import { DueAtCalculationService } from './due-at.service.js'
 import { DueAtOverrideService } from './due-at-override.service.js'
 import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.service.js'
+import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js'
 
 @Module({
   providers: [
@@ -24,6 +25,7 @@ import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.ser
     DueAtCalculationService,
     DueAtOverrideService,
     CancelAndReplaceInvoiceService,
+    CreateAdjustmentInvoiceService,
   ],
   exports: [
     InvoiceStateMachineService,
@@ -37,6 +39,7 @@ import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.ser
     DueAtCalculationService,
     DueAtOverrideService,
     CancelAndReplaceInvoiceService,
+    CreateAdjustmentInvoiceService,
   ],
 })
 export class InvoiceModule {}
