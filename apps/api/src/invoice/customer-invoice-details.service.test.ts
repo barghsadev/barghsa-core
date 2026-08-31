@@ -3,17 +3,22 @@
  *
  * Covers explanation extraction, role classification, chain ordering,
  * profile isolation (404), missing invoice, direct draft 404, draft
- * family-member exclusion, and list filtering of drafts.
+ * family-member exclusion, complete families longer than 50, and
+ * fail-closed errors when the family CTE is truncated.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
+  CUSTOMER_INVOICE_FAMILY_CTE_MARKER,
+  CUSTOMER_INVOICE_MAX_CHAIN,
   CUSTOMER_VISIBLE_STATE_SQL,
   CustomerInvoiceDetailsService,
   assembleCustomerInvoiceDetails,
+  assertCompleteInvoiceFamily,
   explanationForCorrection,
+  predecessorId,
   roleForInvoice,
   type InvoiceFamilyRow,
   type InvoiceLineRow,
@@ -62,6 +67,41 @@ function row(overrides: Partial<InvoiceFamilyRow> & { id: string }): InvoiceFami
     metadata: {},
     ...overrides,
   }
+}
+
+function familyQueryRows(
+  invoices: InvoiceFamilyRow[],
+  truncated = false,
+): { rows: Array<InvoiceFamilyRow & { family_truncated: boolean }> } {
+  return {
+    rows: invoices.map((invoice) => ({
+      ...invoice,
+      family_truncated: truncated,
+    })),
+  }
+}
+
+function isFamilyCte(sql: string): boolean {
+  return (
+    sql.includes('WITH RECURSIVE') &&
+    sql.includes(CUSTOMER_INVOICE_FAMILY_CTE_MARKER)
+  )
+}
+
+function uuidAt(n: number): string {
+  return `aaaaaaaa-aaaa-7aaa-8aaa-${n.toString(16).padStart(12, '0')}`
+}
+
+function linearReplacementChain(length: number): InvoiceFamilyRow[] {
+  return Array.from({ length }, (_, i) =>
+    row({
+      id: uuidAt(i),
+      created_at: new Date(Date.UTC(2026, 0, 1, 0, 0, i)),
+      issued_at: new Date(Date.UTC(2026, 0, 1, 0, 0, i)),
+      replaces_invoice_id: i === 0 ? null : uuidAt(i - 1),
+      metadata: i === 0 ? {} : { reason: `Correction ${i}` },
+    }),
+  )
 }
 
 function line(
@@ -243,6 +283,51 @@ describe('assembleCustomerInvoiceDetails', () => {
   })
 })
 
+describe('assertCompleteInvoiceFamily', () => {
+  it('returns the true root of a chain longer than 50', () => {
+    const chain = linearReplacementChain(51)
+    const root = assertCompleteInvoiceFamily(chain, false)
+    expect(root.id).toBe(uuidAt(0))
+    expect(predecessorId(root)).toBeNull()
+    expect(chain).toHaveLength(51)
+  })
+
+  it('errors instead of treating the viewed correction as the original', () => {
+    const viewed = row({
+      id: REPLACEMENT_ID,
+      replaces_invoice_id: ORIGINAL_ID,
+    })
+    const rejection = (() => {
+      try {
+        assertCompleteInvoiceFamily([viewed], false)
+        throw new Error('expected assertCompleteInvoiceFamily to throw')
+      } catch (error) {
+        return error
+      }
+    })()
+    expect(rejection).toMatchObject({ status: 500 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.INTERNAL_SERVER.code,
+    })
+  })
+
+  it('errors when the safety bound truncated the family', () => {
+    const chain = linearReplacementChain(3)
+    const rejection = (() => {
+      try {
+        assertCompleteInvoiceFamily(chain, true)
+        throw new Error('expected assertCompleteInvoiceFamily to throw')
+      } catch (error) {
+        return error
+      }
+    })()
+    expect(rejection).toMatchObject({ status: 500 })
+    expect(rejectionBody(rejection).error).toBe(
+      ErrorCodes.INTERNAL_SERVER.code,
+    )
+  })
+})
+
 describe('CustomerInvoiceDetailsService', () => {
   const service = new CustomerInvoiceDetailsService()
 
@@ -314,17 +399,21 @@ describe('CustomerInvoiceDetailsService', () => {
       if (sql.includes('FROM profiles')) {
         return { rows: [{ id: PROFILE_ID }] }
       }
+      if (isFamilyCte(sql)) {
+        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+        expect(sql).toContain("n.state <> 'Draft'")
+        expect(params).toEqual([
+          ORIGINAL_ID,
+          PROFILE_ID,
+          CUSTOMER_INVOICE_MAX_CHAIN,
+        ])
+        return familyQueryRows([original, issuedAdjustment])
+      }
       if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
         expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
         const id = params![0] as string
         if (id === ORIGINAL_ID) return { rows: [original] }
         if (id === DRAFT_ADJUSTMENT_ID) return { rows: [] }
-        return { rows: [] }
-      }
-      if (sql.includes('replaces_invoice_id = ANY')) {
-        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
-        const parents = params![1] as string[]
-        if (parents.includes(ORIGINAL_ID)) return { rows: [issuedAdjustment] }
         return { rows: [] }
       }
       if (sql.includes('FROM invoice_lines')) {
@@ -364,15 +453,18 @@ describe('CustomerInvoiceDetailsService', () => {
       if (sql.includes('FROM profiles')) {
         return { rows: [{ id: PROFILE_ID }] }
       }
+      if (isFamilyCte(sql)) {
+        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+        expect(params).toEqual([
+          REPLACEMENT_ID,
+          PROFILE_ID,
+          CUSTOMER_INVOICE_MAX_CHAIN,
+        ])
+        return familyQueryRows([original, replacement])
+      }
       if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
         const id = params![0] as string
         if (id === REPLACEMENT_ID) return { rows: [replacement] }
-        if (id === ORIGINAL_ID) return { rows: [original] }
-        return { rows: [] }
-      }
-      if (sql.includes('replaces_invoice_id = ANY')) {
-        const parents = params![1] as string[]
-        if (parents.includes(ORIGINAL_ID)) return { rows: [replacement] }
         return { rows: [] }
       }
       if (sql.includes('FROM invoice_lines')) {
@@ -394,6 +486,69 @@ describe('CustomerInvoiceDetailsService', () => {
     expect(details.chain[1]!.explanation).toBe(
       'Quantity was billed as 1 instead of 2',
     )
+  })
+
+  it('returns the complete family when the chain is longer than 50', async () => {
+    const chain = linearReplacementChain(51)
+    const viewed = chain[50]!
+    mockPool.query.mockImplementation(async (sql: string, params?: unknown[]) => {
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: PROFILE_ID }] }
+      }
+      if (isFamilyCte(sql)) {
+        expect(params).toEqual([
+          viewed.id,
+          PROFILE_ID,
+          CUSTOMER_INVOICE_MAX_CHAIN,
+        ])
+        expect(CUSTOMER_INVOICE_MAX_CHAIN).toBeGreaterThan(50)
+        return familyQueryRows(chain)
+      }
+      if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
+        return { rows: [viewed] }
+      }
+      if (sql.includes('FROM invoice_lines')) {
+        return { rows: chain.map((invoice) => line(invoice.id, 'Line')) }
+      }
+      return { rows: [] }
+    })
+
+    const details = await service.getForUser(USER_ID, viewed.id)
+    expect(details.viewedInvoiceId).toBe(uuidAt(50))
+    expect(details.originalInvoiceId).toBe(uuidAt(0))
+    expect(details.chain).toHaveLength(51)
+    expect(details.chain[0]!.role).toBe('original')
+    expect(details.chain[50]!.role).toBe('replacement')
+    expect(details.chain[50]!.explanation).toBe('Correction 50')
+  })
+
+  it('errors when a chain beyond the safety bound would omit the true original', async () => {
+    const viewed = row({
+      id: REPLACEMENT_ID,
+      replaces_invoice_id: ORIGINAL_ID,
+      metadata: { reason: 'Would be mislabeled as original' },
+    })
+    mockPool.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: PROFILE_ID }] }
+      }
+      if (isFamilyCte(sql)) {
+        return familyQueryRows([viewed], true)
+      }
+      if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
+        return { rows: [viewed] }
+      }
+      return { rows: [] }
+    })
+
+    const rejection = await service
+      .getForUser(USER_ID, REPLACEMENT_ID)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 500 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.INTERNAL_SERVER.code,
+      message: 'Invoice correction chain exceeds the maximum supported length',
+    })
   })
 
   it('lists non-draft invoices for the active profile', async () => {

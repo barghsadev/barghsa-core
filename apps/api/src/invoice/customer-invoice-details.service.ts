@@ -85,10 +85,22 @@ export interface CustomerInvoiceListDto {
   invoices: CustomerInvoiceListItemDto[]
 }
 
-export const CUSTOMER_INVOICE_MAX_CHAIN = 50
+/**
+ * Safety bound on the recursive family CTE diameter (hops). Exhausting
+ * this bound is an explicit error — never a partial family or a
+ * mis-identified original. Typical chains are a handful of invoices.
+ */
+export const CUSTOMER_INVOICE_MAX_CHAIN = 256
 
 /** Matches `listForUser`: drafts are staff-only and never customer-visible. */
 export const CUSTOMER_VISIBLE_STATE_SQL = `state <> 'Draft'`
+
+export const CUSTOMER_INVOICE_FAMILY_CTE_MARKER = 'customer_invoice_family_cte'
+
+const FAMILY_TRUNCATED_MESSAGE =
+  'Invoice correction chain exceeds the maximum supported length'
+const FAMILY_ROOT_MESSAGE =
+  'Invoice correction chain is cyclic or missing an original invoice'
 
 export interface InvoiceFamilyRow {
   id: string
@@ -221,6 +233,44 @@ function createdAtMs(row: InvoiceFamilyRow): number {
 
 export function predecessorId(row: InvoiceFamilyRow): string | null {
   return row.replaces_invoice_id ?? row.adjustment_for_invoice_id ?? null
+}
+
+export function isFamilyTruncatedFlag(value: unknown): boolean {
+  return value === true || value === 't' || value === 'true'
+}
+
+/**
+ * Require a complete, uniquely rooted family. A missing root or a
+ * predecessor outside the loaded set must not fall back to `family[0]`,
+ * which would label a viewed correction as the original invoice.
+ */
+export function assertCompleteInvoiceFamily(
+  family: InvoiceFamilyRow[],
+  truncated: boolean,
+): InvoiceFamilyRow {
+  if (truncated) {
+    httpError(
+      ErrorCodes.INTERNAL_SERVER.code,
+      FAMILY_TRUNCATED_MESSAGE,
+      500,
+    )
+  }
+  const ids = new Set(family.map((row) => row.id))
+  for (const row of family) {
+    const pred = predecessorId(row)
+    if (pred !== null && !ids.has(pred)) {
+      httpError(
+        ErrorCodes.INTERNAL_SERVER.code,
+        FAMILY_TRUNCATED_MESSAGE,
+        500,
+      )
+    }
+  }
+  const roots = family.filter((row) => predecessorId(row) === null)
+  if (roots.length !== 1) {
+    httpError(ErrorCodes.INTERNAL_SERVER.code, FAMILY_ROOT_MESSAGE, 500)
+  }
+  return roots[0]!
 }
 
 export function assembleCustomerInvoiceDetails(input: {
@@ -386,9 +436,11 @@ export class CustomerInvoiceDetailsService {
       )
     }
 
-    const family = await this.loadFamily(viewed, profileId)
-    const original =
-      family.find((row) => predecessorId(row) === null) ?? family[0]!
+    const { rows: family, truncated } = await this.loadFamily(
+      viewed.id,
+      profileId,
+    )
+    const original = assertCompleteInvoiceFamily(family, truncated)
     const linesByInvoiceId = await this.loadLines(family.map((row) => row.id))
 
     return assembleCustomerInvoiceDetails({
@@ -427,63 +479,86 @@ export class CustomerInvoiceDetailsService {
   }
 
   /**
-   * Walk predecessors to the chain root, then BFS every replacement and
-   * adjustment that points at a family member. All hops are profile-scoped.
+   * Load the complete correction family with a recursive CTE: walk both
+   * to predecessors and to replacements/adjustments, with path-based
+   * cycle detection. Neighbor leftovers after the hop bound set
+   * `family_truncated` so callers can fail closed.
    */
   private async loadFamily(
-    viewed: InvoiceFamilyRow,
+    seedId: string,
     profileId: string,
-  ): Promise<InvoiceFamilyRow[]> {
-    const byId = new Map<string, InvoiceFamilyRow>([[viewed.id, viewed]])
-    let cursor: InvoiceFamilyRow | undefined = viewed
-    let depth = 0
-    while (cursor && depth < CUSTOMER_INVOICE_MAX_CHAIN) {
-      const parentId = predecessorId(cursor)
-      if (!parentId || byId.has(parentId)) break
-      const parent = await this.loadInvoice(parentId, profileId)
-      if (!parent) break
-      byId.set(parent.id, parent)
-      cursor = parent
-      depth += 1
-    }
-
-    let frontier = [...byId.keys()]
-    while (frontier.length > 0 && byId.size < CUSTOMER_INVOICE_MAX_CHAIN) {
-      const children = await this.loadChildren(profileId, frontier, [
-        ...byId.keys(),
-      ])
-      if (children.length === 0) break
-      const next: string[] = []
-      for (const child of children) {
-        if (byId.has(child.id)) continue
-        byId.set(child.id, child)
-        next.push(child.id)
-      }
-      frontier = next
-    }
-
-    return [...byId.values()]
-  }
-
-  private async loadChildren(
-    profileId: string,
-    parentIds: string[],
-    alreadyHave: string[],
-  ): Promise<InvoiceFamilyRow[]> {
+  ): Promise<{ rows: InvoiceFamilyRow[]; truncated: boolean }> {
     const pool = getDbPool()
-    const result = await pool.query<InvoiceFamilyRow>(
-      `SELECT ${INVOICE_SELECT}
-         FROM invoices
-        WHERE profile_id = $1
-          AND ${CUSTOMER_VISIBLE_STATE_SQL}
-          AND (
-            replaces_invoice_id = ANY($2::uuid[])
-            OR adjustment_for_invoice_id = ANY($2::uuid[])
-          )
-          AND NOT (id = ANY($3::uuid[]))`,
-      [profileId, parentIds, alreadyHave],
+    const result = await pool.query<
+      InvoiceFamilyRow & { family_truncated: unknown }
+    >(
+      `-- ${CUSTOMER_INVOICE_FAMILY_CTE_MARKER}
+       WITH RECURSIVE family AS (
+         SELECT ${INVOICE_SELECT},
+                ARRAY[id]::uuid[] AS path,
+                1 AS depth
+           FROM invoices
+          WHERE id = $1::uuid
+            AND profile_id = $2::uuid
+            AND ${CUSTOMER_VISIBLE_STATE_SQL}
+
+          UNION ALL
+
+         SELECT n.id, n.profile_id, n.state, n.total_amount, n.paid_amount,
+                n.refunded_amount, n.accounting_amount, n.adjustment_kind,
+                n.issued_at, n.payable_from, n.due_at, n.cancelled_at,
+                n.created_at, n.replaces_invoice_id, n.adjustment_for_invoice_id,
+                n.metadata,
+                f.path || n.id,
+                f.depth + 1
+           FROM invoices n
+           INNER JOIN family f ON (
+             n.id = COALESCE(f.replaces_invoice_id, f.adjustment_for_invoice_id)
+             OR n.replaces_invoice_id = f.id
+             OR n.adjustment_for_invoice_id = f.id
+           )
+          WHERE n.profile_id = $2::uuid
+            AND n.state <> 'Draft'
+            AND NOT (n.id = ANY(f.path))
+            AND f.depth < $3
+       ),
+       loaded AS (
+         SELECT DISTINCT ON (id) ${INVOICE_SELECT}
+           FROM family
+          ORDER BY id, depth ASC
+       ),
+       truncated AS (
+         SELECT EXISTS (
+           SELECT 1
+             FROM invoices n
+            WHERE n.profile_id = $2::uuid
+              AND n.state <> 'Draft'
+              AND (
+                EXISTS (
+                  SELECT 1 FROM loaded x
+                   WHERE COALESCE(x.replaces_invoice_id, x.adjustment_for_invoice_id) = n.id
+                )
+                OR EXISTS (
+                  SELECT 1 FROM loaded x
+                   WHERE n.replaces_invoice_id = x.id
+                      OR n.adjustment_for_invoice_id = x.id
+                )
+              )
+              AND NOT EXISTS (SELECT 1 FROM loaded y WHERE y.id = n.id)
+         ) AS family_truncated
+       )
+       SELECT l.*, t.family_truncated
+         FROM loaded l
+         CROSS JOIN truncated t`,
+      [seedId, profileId, CUSTOMER_INVOICE_MAX_CHAIN],
     )
-    return result.rows
+    const truncated = result.rows.some((row) =>
+      isFamilyTruncatedFlag(row.family_truncated),
+    )
+    const rows = result.rows.map(
+      ({ family_truncated: _truncated, ...invoice }) => invoice,
+    )
+    return { rows, truncated }
   }
 
   private async loadLines(
