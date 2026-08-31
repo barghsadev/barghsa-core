@@ -1,5 +1,14 @@
 import { sql } from 'drizzle-orm'
-import { check, jsonb, text, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
+import {
+  check,
+  foreignKey,
+  index,
+  jsonb,
+  text,
+  pgTable,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core'
 import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 import { orders } from './orders'
@@ -49,6 +58,10 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
  *   - `invoiceCalculationSnapshot` — JSONB of calculation inputs,
  *     intermediate rounding steps, and final totals (T-04.1.02.08).
  *     Nullable so legacy rows remain valid; new invoices populate it.
+ *   - `replacesInvoiceId?` — nullable self-FK to the cancelled invoice
+ *     this row replaces (pre-payment cancel+replace, T-04.1.05.01).
+ *   - `adjustmentForInvoiceId?` — nullable self-FK to the paid invoice
+ *     this row adjusts (post-payment adjustment, T-04.1.05.01).
  *   - `createdAt` / `updatedAt` — audit columns (from baseColumns).
  */
 export const invoices = pgTable(
@@ -134,6 +147,27 @@ export const invoices = pgTable(
      */
     invoiceCalculationSnapshot: jsonb('invoice_calculation_snapshot'),
 
+    /**
+     * Cancel+replace link (T-04.1.05.01 / S-04.1.05).
+     *
+     * The corrected invoice stores the id of the cancelled original it
+     * replaces. Nullable: ordinary invoices have no predecessor.
+     * FK is declared below (self-reference via `foreignKey`) and in
+     * migration 0064 — `ON DELETE RESTRICT` so an original cannot be
+     * dropped while a replacement still points at it.
+     */
+    replacesInvoiceId: uuid('replaces_invoice_id'),
+
+    /**
+     * Adjustment invoice link (T-04.1.05.01 / S-04.1.05).
+     *
+     * A post-payment adjustment (positive charge or negative credit)
+     * stores the id of the paid invoice it adjusts. Nullable: ordinary
+     * invoices are not adjustments. Same RESTRICT self-FK as
+     * `replacesInvoiceId`.
+     */
+    adjustmentForInvoiceId: uuid('adjustment_for_invoice_id'),
+
     /** When the invoice record was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -163,6 +197,30 @@ export const invoices = pgTable(
     orderIdTypeUnique: uniqueIndex('uq_invoices_order_id_type').on(
       table.orderId,
       table.type,
+    ),
+    /**
+     * Self-FK: replacement invoice → cancelled original (T-04.1.05.01).
+     * Declared here rather than on the column to avoid circular type
+     * inference on the table initializer.
+     */
+    replacesInvoiceFk: foreignKey({
+      name: 'invoices_replaces_invoice_id_fkey',
+      columns: [table.replacesInvoiceId],
+      foreignColumns: [table.id],
+    }).onDelete('restrict'),
+    /**
+     * Self-FK: adjustment invoice → paid original (T-04.1.05.01).
+     */
+    adjustmentForInvoiceFk: foreignKey({
+      name: 'invoices_adjustment_for_invoice_id_fkey',
+      columns: [table.adjustmentForInvoiceId],
+      foreignColumns: [table.id],
+    }).onDelete('restrict'),
+    replacesInvoiceIdIdx: index('idx_invoices_replaces_invoice_id').on(
+      table.replacesInvoiceId,
+    ),
+    adjustmentForInvoiceIdIdx: index('idx_invoices_adjustment_for_invoice_id').on(
+      table.adjustmentForInvoiceId,
     ),
   }),
 )
@@ -198,6 +256,8 @@ export const createInvoicesTable = sql`
     overdue_at TIMESTAMPTZ,
     metadata JSONB,
     invoice_calculation_snapshot JSONB,
+    replaces_invoice_id UUID REFERENCES invoices(id) ON DELETE RESTRICT,
+    adjustment_for_invoice_id UUID REFERENCES invoices(id) ON DELETE RESTRICT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_paid_not_exceeds_total CHECK (paid_amount <= total_amount),
@@ -210,6 +270,10 @@ export const createInvoicesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_invoices_order_id ON invoices (order_id);
   CREATE INDEX IF NOT EXISTS idx_invoices_contract_id ON invoices (contract_id);
   CREATE INDEX IF NOT EXISTS idx_invoices_consultation_id ON invoices (consultation_id);
+  CREATE INDEX IF NOT EXISTS idx_invoices_replaces_invoice_id
+    ON invoices (replaces_invoice_id);
+  CREATE INDEX IF NOT EXISTS idx_invoices_adjustment_for_invoice_id
+    ON invoices (adjustment_for_invoice_id);
   CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type
     ON invoices (order_id, type);
 `

@@ -48,6 +48,8 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
       'cancelledAt',
       'metadata',
       'invoiceCalculationSnapshot',
+      'replacesInvoiceId',
+      'adjustmentForInvoiceId',
     ]) {
       expect(columns).toContain(column)
     }
@@ -172,5 +174,94 @@ describe('Invoice calculation snapshot schema (T-04.1.02.08)', () => {
     expect(journal.entries.map((entry) => entry.tag)).toContain(
       '0058_add_invoice_calculation_snapshot',
     )
+  })
+})
+
+/**
+ * Drift guard for invoice correction self-references (T-04.1.05.01).
+ *
+ * Migration 0064 adds nullable `replaces_invoice_id` and
+ * `adjustment_for_invoice_id` UUID self-FKs so cancel+replace and
+ * adjustment invoices can point at the original they correct. If a
+ * future rewrite drops a column, FK, or lookup index, this test fails
+ * instead of silently unlinking the correction chain.
+ */
+const CORRECTION_MIGRATION = readFileSync(
+  resolve(__dirname, '../../drizzle/0064_add_invoice_correction_self_references.sql'),
+  'utf8',
+)
+
+describe('Invoice correction self-references schema (T-04.1.05.01)', () => {
+  it('invoices table declares replacesInvoiceId and adjustmentForInvoiceId', () => {
+    const columns = Object.keys(invoices)
+    expect(columns).toContain('replacesInvoiceId')
+    expect(columns).toContain('adjustmentForInvoiceId')
+  })
+
+  it('both correction links are nullable UUID columns (legacy rows stay valid)', () => {
+    expect(invoices.replacesInvoiceId.notNull).toBe(false)
+    expect(invoices.adjustmentForInvoiceId.notNull).toBe(false)
+  })
+
+  it('Drizzle schema declares RESTRICT self-FKs and lookup indexes', () => {
+    const { foreignKeys, indexes } = getTableConfig(invoices)
+    const selfFks = foreignKeys.filter((fk) => fk.reference().foreignTable === invoices)
+    const localColumns = selfFks.flatMap((fk) => fk.reference().columns.map((col) => col.name))
+    expect(localColumns).toEqual(
+      expect.arrayContaining(['replaces_invoice_id', 'adjustment_for_invoice_id']),
+    )
+    expect(selfFks.length).toBeGreaterThanOrEqual(2)
+    for (const fk of selfFks) {
+      expect(fk.onDelete).toBe('restrict')
+    }
+
+    const indexNames = indexes.map((idx) => idx.config.name)
+    expect(indexNames).toEqual(
+      expect.arrayContaining([
+        'idx_invoices_replaces_invoice_id',
+        'idx_invoices_adjustment_for_invoice_id',
+      ]),
+    )
+  })
+
+  it('migration 0064 adds both columns as nullable UUID self-FKs', () => {
+    expect(CORRECTION_MIGRATION).toContain(
+      'ADD COLUMN IF NOT EXISTS replaces_invoice_id UUID',
+    )
+    expect(CORRECTION_MIGRATION).toContain(
+      'ADD COLUMN IF NOT EXISTS adjustment_for_invoice_id UUID',
+    )
+    expect(CORRECTION_MIGRATION).toMatch(
+      /replaces_invoice_id UUID\s+REFERENCES invoices\(id\) ON DELETE RESTRICT/,
+    )
+    expect(CORRECTION_MIGRATION).toMatch(
+      /adjustment_for_invoice_id UUID\s+REFERENCES invoices\(id\) ON DELETE RESTRICT/,
+    )
+  })
+
+  it('migration 0064 creates lookup indexes idempotently', () => {
+    expect(CORRECTION_MIGRATION).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_invoices_replaces_invoice_id',
+    )
+    expect(CORRECTION_MIGRATION).toContain(
+      'CREATE INDEX IF NOT EXISTS idx_invoices_adjustment_for_invoice_id',
+    )
+  })
+
+  it('migration 0064 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string; when: number }> }
+    const tags = journal.entries.map((entry) => entry.tag)
+    expect(tags).toContain('0064_add_invoice_correction_self_references')
+    const correction = journal.entries.find(
+      (entry) => entry.tag === '0064_add_invoice_correction_self_references',
+    )
+    const prior = journal.entries.find(
+      (entry) => entry.tag === '0063_cancel_reminders_on_invoice_stop_state',
+    )
+    expect(correction).toBeDefined()
+    expect(prior).toBeDefined()
+    expect(correction!.when).toBeGreaterThan(prior!.when)
   })
 })

@@ -120,6 +120,13 @@
       "when": 1788393600000,
       "tag": "0063_cancel_reminders_on_invoice_stop_state",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1788480000000,
+      "tag": "0064_add_invoice_correction_self_references",
+      "breakpoints": true
     }
   ]
 }
