@@ -29,7 +29,8 @@ import { enqueueOutbox, type EnqueueOutboxInput, type EnqueueOutboxResult } from
  * - **Idempotent.** Outbox `idempotency_key` is
  *   sha256(`payment.invoice_reminder:{invoiceId}:{offset}`). A replay
  *   that finds a duplicate still stamps the schedule rows `sent`.
- *   Unique (invoiceId, offset, channel) is T-04.1.04.04.
+ *   Unique (invoiceId, offset, channel) is enforced by migration 0061
+ *   (T-04.1.04.04).
  * - **Failure isolation.** One group’s failure is recorded and skipped;
  *   the rest of the batch still runs.
  * - **Bounded drain.** A full batch (`LIMIT`) sets `truncated` so the

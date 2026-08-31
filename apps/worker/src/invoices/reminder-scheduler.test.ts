@@ -332,6 +332,7 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
     expect(insert).toBeDefined()
     expect(insert!.sql).toContain('"offset"')
+    expect(insert!.sql).toContain('ON CONFLICT (invoice_id, "offset", channel) DO NOTHING')
     expect(insert!.params[0]).toBe('inv-unpaid')
     expect(insertedOffsets(insert!.params)).toEqual([...INVOICE_REMINDER_OFFSETS])
     const channels = []

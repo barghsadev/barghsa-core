@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm'
-import { integer, text } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
+import { integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
+import { baseColumns } from '../base-table'
 import { timestamptz, uuidv7 } from '../types'
 import { invoices } from './invoices'
 
@@ -56,40 +56,54 @@ export type InvoiceReminderStatus = (typeof INVOICE_REMINDER_STATUSES)[number]
  *   - the `updated_at` trigger.
  *
  * Idempotency unique index on (invoice_id, offset, channel) is T-04.1.04.04
- * and is intentionally not created here.
+ * (migration 0061).
  */
-export const invoiceReminderSchedule = createTable('invoice_reminder_schedule', {
-  /** Invoice this reminder belongs to; deleting the invoice drops its schedule. */
-  invoiceId: uuidv7('invoice_id')
-    .notNull()
-    .references(() => invoices.id, { onDelete: 'cascade' }),
+export const invoiceReminderSchedule = pgTable(
+  'invoice_reminder_schedule',
+  {
+    ...baseColumns,
 
-  /**
-   * Days relative to `due_at` (negative = before). SQL column is `"offset"`
-   * (quoted: OFFSET is reserved). CHECK the canonical S-04.1.04 set.
-   */
-  offset: integer('offset').notNull(),
+    /** Invoice this reminder belongs to; deleting the invoice drops its schedule. */
+    invoiceId: uuidv7('invoice_id')
+      .notNull()
+      .references(() => invoices.id, { onDelete: 'cascade' }),
 
-  /** Target channel for this row (one row per invoice/offset/channel). */
-  channel: text('channel', {
-    enum: INVOICE_REMINDER_CHANNELS,
-  }).notNull(),
+    /**
+     * Days relative to `due_at` (negative = before). SQL column is `"offset"`
+     * (quoted: OFFSET is reserved). CHECK the canonical S-04.1.04 set.
+     */
+    offset: integer('offset').notNull(),
 
-  /** When this reminder becomes eligible for dispatch. */
-  scheduledAt: timestamptz('scheduled_at').notNull(),
+    /** Target channel for this row (one row per invoice/offset/channel). */
+    channel: text('channel', {
+      enum: INVOICE_REMINDER_CHANNELS,
+    }).notNull(),
 
-  /** When the reminder was dispatched; null until status is `sent`. */
-  sentAt: timestamptz('sent_at'),
+    /** When this reminder becomes eligible for dispatch. */
+    scheduledAt: timestamptz('scheduled_at').notNull(),
 
-  /** Lifecycle status. Default `scheduled`. */
-  status: text('status', {
-    enum: INVOICE_REMINDER_STATUSES,
-  })
-    .notNull()
-    .default('scheduled'),
-})
+    /** When the reminder was dispatched; null until status is `sent`. */
+    sentAt: timestamptz('sent_at'),
 
-/** SQL to create the invoice_reminder_schedule table (migration 0060 source). */
+    /** Lifecycle status. Default `scheduled`. */
+    status: text('status', {
+      enum: INVOICE_REMINDER_STATUSES,
+    })
+      .notNull()
+      .default('scheduled'),
+  },
+  (table) => ({
+    /**
+     * Same reminder never planned twice (S-04.1.04 / T-04.1.04.04).
+     * Created by migration 0061.
+     */
+    invoiceOffsetChannelUnique: uniqueIndex(
+      'uq_invoice_reminder_schedule_invoice_offset_channel',
+    ).on(table.invoiceId, table.offset, table.channel),
+  }),
+)
+
+/** SQL to create the invoice_reminder_schedule table (migrations 0060 + 0061). */
 export const createInvoiceReminderScheduleTable = sql`
   CREATE TABLE IF NOT EXISTS invoice_reminder_schedule (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
@@ -119,6 +133,8 @@ export const createInvoiceReminderScheduleTable = sql`
   CREATE INDEX IF NOT EXISTS idx_invoice_reminder_schedule_due
     ON invoice_reminder_schedule (scheduled_at)
     WHERE status = 'scheduled';
+  CREATE UNIQUE INDEX IF NOT EXISTS uq_invoice_reminder_schedule_invoice_offset_channel
+    ON invoice_reminder_schedule (invoice_id, "offset", channel);
 
   CREATE OR REPLACE FUNCTION update_invoice_reminder_schedule_updated_at()
   RETURNS TRIGGER

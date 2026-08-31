@@ -34,6 +34,10 @@ const REMINDER_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0060_create_invoice_reminder_schedule.sql',
 )
+const REMINDER_IDEMPOTENCY_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0061_add_invoice_reminder_schedule_idempotency.sql',
+)
 const OUTBOX_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0025_create_notification_outbox.sql',
@@ -78,6 +82,7 @@ describe('reminder sender — real PostgreSQL (T-04.1.04.03)', () => {
     )`)
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REMINDER_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REMINDER_IDEMPOTENCY_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(
