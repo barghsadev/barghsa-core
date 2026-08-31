@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { getTableConfig } from 'drizzle-orm/pg-core'
-import { invoices } from './invoices.js'
+import { createInvoicesTable, invoices } from './invoices.js'
 
 /**
  * Drift guard for the invoices table constraints (T-04.1.01.04).
@@ -263,5 +263,80 @@ describe('Invoice correction self-references schema (T-04.1.05.01)', () => {
     expect(correction).toBeDefined()
     expect(prior).toBeDefined()
     expect(correction!.when).toBeGreaterThan(prior!.when)
+  })
+})
+
+/**
+ * Drift guard for the correction-safe (order_id, type) unique index
+ * (T-04.1.05.02).
+ *
+ * Migration 0065 rewrites `uq_invoices_order_id_type` as a partial unique
+ * index over ordinary invoices (`replaces_invoice_id IS NULL`) so a
+ * cancel+replace successor can copy `order_id` without colliding with the
+ * cancelled original or a sibling manual invoice, while ordinary
+ * auto/manual idempotency is unchanged.
+ */
+const ORDER_TYPE_REPLACEMENT_MIGRATION = readFileSync(
+  resolve(
+    __dirname,
+    '../../drizzle/0065_invoice_order_type_unique_exclude_replacements.sql',
+  ),
+  'utf8',
+)
+
+describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)', () => {
+  it('Drizzle unique index is partial on replaces_invoice_id IS NULL', () => {
+    const { indexes } = getTableConfig(invoices)
+    const orderType = indexes.find((idx) => idx.config.name === 'uq_invoices_order_id_type')
+    expect(orderType).toBeDefined()
+    expect(orderType!.config.unique).toBe(true)
+    expect(orderType!.config.where).toBeDefined()
+    const chunks = (
+      orderType!.config.where as { queryChunks?: unknown[] } | undefined
+    )?.queryChunks
+    const rendered = (chunks ?? [])
+      .map((chunk) => {
+        if (typeof chunk === 'string') return chunk
+        if (chunk && typeof chunk === 'object' && 'name' in chunk) {
+          return String((chunk as { name: unknown }).name)
+        }
+        return ''
+      })
+      .join('')
+    expect(rendered).toContain('replaces_invoice_id')
+  })
+
+  it('createInvoicesTable SQL declares the partial unique index', () => {
+    const schemaSql = readFileSync(resolve(__dirname, './invoices.ts'), 'utf8')
+    expect(schemaSql).toMatch(
+      /uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL/,
+    )
+    expect(createInvoicesTable).toBeDefined()
+  })
+
+  it('migration 0065 rewrites the unique index as partial and is idempotent', () => {
+    expect(ORDER_TYPE_REPLACEMENT_MIGRATION).toContain(
+      'DROP INDEX IF EXISTS uq_invoices_order_id_type',
+    )
+    expect(ORDER_TYPE_REPLACEMENT_MIGRATION).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL/,
+    )
+  })
+
+  it('migration 0065 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string; when: number }> }
+    const tags = journal.entries.map((entry) => entry.tag)
+    expect(tags).toContain('0065_invoice_order_type_unique_exclude_replacements')
+    const rewrite = journal.entries.find(
+      (entry) => entry.tag === '0065_invoice_order_type_unique_exclude_replacements',
+    )
+    const prior = journal.entries.find(
+      (entry) => entry.tag === '0064_add_invoice_correction_self_references',
+    )
+    expect(rewrite).toBeDefined()
+    expect(prior).toBeDefined()
+    expect(rewrite!.when).toBeGreaterThan(prior!.when)
   })
 })

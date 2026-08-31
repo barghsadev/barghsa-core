@@ -99,8 +99,10 @@ export const invoices = pgTable(
      * `'auto'` (system-generated from an order) or `'manual'` (staff
      * created), with future contract / consultation kinds as the owning
      * epics land. Backs the idempotency unique index on
-     * `(order_id, type)` so an order can produce at most one auto invoice.
-     * Nullable: manual invoices carry no origin and never collide.
+     * `(order_id, type)` so an order can produce at most one ordinary
+     * (non-replacement) auto invoice. Correction replacements set
+     * `replaces_invoice_id` and are excluded from that index
+     * (T-04.1.05.02). Nullable: order-less manuals never collide.
      */
     type: text('type'),
 
@@ -191,13 +193,16 @@ export const invoices = pgTable(
       sql`${table.refundedAmount} <= ${table.paidAmount}`,
     ),
     /**
-     * Idempotency: an order produces at most one invoice of a given type
-     * (T-04.1.02.06). Created by migration 0057.
+     * Idempotency: an order produces at most one ordinary (non-replacement)
+     * invoice of a given type (T-04.1.02.06 / T-04.1.05.02).
+     * Correction-chain rows set `replaces_invoice_id` and are excluded so
+     * cancel+replace can copy `order_id` without colliding with the
+     * cancelled original or a sibling invoice of type `manual`.
+     * Created by migration 0057; predicate rewritten by 0065.
      */
-    orderIdTypeUnique: uniqueIndex('uq_invoices_order_id_type').on(
-      table.orderId,
-      table.type,
-    ),
+    orderIdTypeUnique: uniqueIndex('uq_invoices_order_id_type')
+      .on(table.orderId, table.type)
+      .where(sql`${table.replacesInvoiceId} IS NULL`),
     /**
      * Self-FK: replacement invoice → cancelled original (T-04.1.05.01).
      * Declared here rather than on the column to avoid circular type
@@ -275,5 +280,6 @@ export const createInvoicesTable = sql`
   CREATE INDEX IF NOT EXISTS idx_invoices_adjustment_for_invoice_id
     ON invoices (adjustment_for_invoice_id);
   CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type
-    ON invoices (order_id, type);
+    ON invoices (order_id, type)
+    WHERE replaces_invoice_id IS NULL;
 `

@@ -12,6 +12,17 @@ export type {
   ManualInvoiceLineResult,
   ManualInvoiceResult,
 } from './manual-invoice.service.js'
+export {
+  CancelAndReplaceInvoiceService,
+  isReplaceableInvoiceState,
+  REPLACEABLE_INVOICE_STATES,
+  CANCEL_AND_REPLACE_ERRORS,
+} from './cancel-and-replace-invoice.service.js'
+export type {
+  CancelAndReplaceInvoiceCommand,
+  CancelAndReplaceInvoiceResult,
+  ReplaceableInvoiceState,
+} from './cancel-and-replace-invoice.service.js'
 export { AutoInvoiceService } from './auto-invoice.service.js'
 export type {
   CreateAutoInvoiceCommand,

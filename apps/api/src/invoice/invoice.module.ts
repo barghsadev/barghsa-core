@@ -9,6 +9,7 @@ import { RoundingService } from './rounding.service.js'
 import { DueAtCalculationRepository } from './due-at.repository.js'
 import { DueAtCalculationService } from './due-at.service.js'
 import { DueAtOverrideService } from './due-at-override.service.js'
+import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.service.js'
 
 @Module({
   providers: [
@@ -22,6 +23,7 @@ import { DueAtOverrideService } from './due-at-override.service.js'
     DueAtCalculationRepository,
     DueAtCalculationService,
     DueAtOverrideService,
+    CancelAndReplaceInvoiceService,
   ],
   exports: [
     InvoiceStateMachineService,
@@ -34,6 +36,7 @@ import { DueAtOverrideService } from './due-at-override.service.js'
     DueAtCalculationRepository,
     DueAtCalculationService,
     DueAtOverrideService,
+    CancelAndReplaceInvoiceService,
   ],
 })
 export class InvoiceModule {}
