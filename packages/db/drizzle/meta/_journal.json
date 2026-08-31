@@ -127,6 +127,13 @@
       "when": 1788480000000,
       "tag": "0064_add_invoice_correction_self_references",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1788566400000,
+      "tag": "0065_invoice_order_type_unique_exclude_replacements",
+      "breakpoints": true
     }
   ]
 }

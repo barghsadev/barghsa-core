@@ -78,6 +78,10 @@ const CORRECTION_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0064_add_invoice_correction_self_references.sql',
 )
+const REPLACEMENT_INDEX_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql',
+)
 
 const PROFILE_ID = '33333333-3333-7333-8333-333333333333'
 const ACTOR_USER_ID = 'staff-cancel-replace'
@@ -125,6 +129,7 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
     await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim())
 
     await ctx.db.execute(
       `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}') ON CONFLICT (id) DO NOTHING`,
@@ -144,13 +149,16 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
     state: string
     paidAmount?: bigint
     type?: string
-    withOrder?: boolean
+    /** Explicit order id. `null` = no order. Omit to create a fresh order. */
+    orderId?: string | null
   }): Promise<string> {
     const id = uuidv7()
-    let orderId: string | null = null
-    if (opts.withOrder !== false) {
+    let orderId: string | null
+    if (opts.orderId === undefined) {
       orderId = uuidv7()
       await ctx.pool.query(`INSERT INTO orders (id) VALUES ($1)`, [orderId])
+    } else {
+      orderId = opts.orderId
     }
     await ctx.pool.query(
       `INSERT INTO invoices
@@ -367,5 +375,91 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
       [originalId],
     )
     expect(extras.rows[0]!.n).toBe(0)
+  })
+
+  it('replaces an order-linked original of type manual without unique-index collision', async () => {
+    const orderId = uuidv7()
+    await ctx.pool.query(`INSERT INTO orders (id) VALUES ($1)`, [orderId])
+    const originalId = await insertInvoice({
+      state: 'Unpaid',
+      type: 'manual',
+      orderId,
+    })
+
+    const result = await service.cancelAndReplaceInvoice({
+      invoiceId: originalId,
+      reason: 'Correct order-linked manual invoice',
+      newLines: [
+        { description: 'اصلاح دستی', quantity: 1, unitPrice: 250_000n, vatRate: 0, isTaxable: false },
+      ],
+      actorUserId: ACTOR_USER_ID,
+      now: NOW,
+    })
+
+    expect(result.originalState).toBe('Cancelled')
+    expect(result.replacementState).toBe('Unpaid')
+    expect(result.orderId).toBe(orderId)
+    expect(result.replacesInvoiceId).toBe(originalId)
+
+    const replacement = await ctx.pool.query<{
+      type: string | null
+      order_id: string | null
+      replaces_invoice_id: string | null
+    }>(
+      `SELECT type, order_id, replaces_invoice_id FROM invoices WHERE id = $1`,
+      [result.replacementInvoiceId],
+    )
+    expect(replacement.rows[0]!.type).toBe('manual')
+    expect(replacement.rows[0]!.order_id).toBe(orderId)
+    expect(replacement.rows[0]!.replaces_invoice_id).toBe(originalId)
+  })
+
+  it('replaces an auto invoice when the order already has another manual invoice', async () => {
+    const orderId = uuidv7()
+    await ctx.pool.query(`INSERT INTO orders (id) VALUES ($1)`, [orderId])
+    const siblingManualId = await insertInvoice({
+      state: 'Unpaid',
+      type: 'manual',
+      orderId,
+    })
+    const originalId = await insertInvoice({
+      state: 'Unpaid',
+      type: 'auto',
+      orderId,
+    })
+
+    const result = await service.cancelAndReplaceInvoice({
+      invoiceId: originalId,
+      reason: 'Correct auto invoice alongside existing manual invoice',
+      newLines: [
+        { description: 'اصلاح خودکار', quantity: 1, unitPrice: 300_000n, vatRate: 0, isTaxable: false },
+      ],
+      actorUserId: ACTOR_USER_ID,
+      now: NOW,
+    })
+
+    expect(result.originalState).toBe('Cancelled')
+    expect(result.replacementState).toBe('Unpaid')
+    expect(result.orderId).toBe(orderId)
+    expect(result.replacesInvoiceId).toBe(originalId)
+
+    const sibling = await ctx.pool.query<{ state: string; type: string | null }>(
+      `SELECT state, type FROM invoices WHERE id = $1`,
+      [siblingManualId],
+    )
+    expect(sibling.rows[0]!.state).toBe('Unpaid')
+    expect(sibling.rows[0]!.type).toBe('manual')
+
+    const replacement = await ctx.pool.query<{
+      type: string | null
+      order_id: string | null
+      replaces_invoice_id: string | null
+    }>(
+      `SELECT type, order_id, replaces_invoice_id FROM invoices WHERE id = $1`,
+      [result.replacementInvoiceId],
+    )
+    expect(replacement.rows[0]!.type).toBe('manual')
+    expect(replacement.rows[0]!.order_id).toBe(orderId)
+    expect(replacement.rows[0]!.replaces_invoice_id).toBe(originalId)
   })
 })

@@ -29,9 +29,12 @@
  *   8. Read the result back inside the transaction, then COMMIT.
  *
  * Replacement `type` is `'manual'` because `newLines` are staff-entered.
- * Copying `'auto'` would collide with `uq_invoices_order_id_type` on the
- * still-present cancelled original. Origin columns (`order_id`,
- * `contract_id`, `consultation_id`, `profile_id`) are copied.
+ * Origin columns (`order_id`, `contract_id`, `consultation_id`,
+ * `profile_id`) are copied. `uq_invoices_order_id_type` is a partial
+ * unique index over rows with `replaces_invoice_id IS NULL` (migration
+ * 0065), so the replacement — which sets that column — does not collide
+ * with the cancelled original or a sibling ordinary invoice of the same
+ * type.
  *
  * Money rules: all amounts are bigint IRR; VAT is half-up per line.
  */
