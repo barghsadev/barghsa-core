@@ -1,5 +1,13 @@
 import { sql } from 'drizzle-orm'
-import { text, jsonb, integer, pgTable, uniqueIndex } from 'drizzle-orm/pg-core'
+import {
+  check,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core'
 import { uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
 
@@ -50,22 +58,58 @@ export const wallets = pgTable(
 )
 
 /**
+ * Ledger type discriminator (T-04.2.01.02 / S-04.2.01).
+ *
+ * Must stay in lock-step with `chk_wallet_transactions_type` in migration 0068.
+ */
+export const WALLET_TRANSACTION_TYPES = [
+  'topup',
+  'payment',
+  'refund',
+  'reservation',
+  'release',
+  'reversal',
+  'compensating',
+] as const
+export type WalletTransactionType = (typeof WALLET_TRANSACTION_TYPES)[number]
+
+/**
+ * Ledger lifecycle states (T-04.2.01.02 / S-04.2.01).
+ *
+ * Must stay in lock-step with `chk_wallet_transactions_state` in migration 0068.
+ */
+export const WALLET_TRANSACTION_STATES = [
+  'Pending',
+  'Reserved',
+  'Completed',
+  'Failed',
+  'Rejected',
+  'Released',
+  'Reversed',
+] as const
+export type WalletTransactionState = (typeof WALLET_TRANSACTION_STATES)[number]
+
+/**
  * Wallet transaction ledger table (T-04.2.01.02).
  *
- * Every balance change is a ledger entry. Immutable after creation —
- * corrections use compensating transactions rather than UPDATE/DELETE.
+ * Every balance change is a ledger entry. Rows are not hard-deleted;
+ * corrections use compensating transactions rather than rewriting amounts.
+ * Lifecycle `state` may advance (e.g. Reserved → Released).
  *
  * Columns:
  *   - `id` — UUIDv7 primary key.
- *   - `walletId` — FK → wallets.profileId.
+ *   - `walletId` — FK → wallets.profileId (RESTRICT).
  *   - `type` — transaction type discriminator.
- *   - `amount` — int8; positive for credit, negative for debit.
- *   - `state` — lifecycle state.
+ *   - `amount` — int8; positive for credit, negative for debit; never zero.
+ *   - `state` — lifecycle state (default Pending).
  *   - `idempotencyKey` — unique per transaction, prevents duplicate processing.
- *   - `refId` — optional reference to related domain entity (invoice, order, etc.).
- *   - `description` — optional human-readable description.
- *   - `metadata` — JSONB for extensible structured data.
+ *   - `refId?` — optional reference to related domain entity (invoice, order, etc.).
+ *   - `description?` — optional human-readable description.
+ *   - `metadata` — JSONB for extensible structured data (default {}).
  *   - `createdAt` / `updatedAt` — audit columns.
+ *
+ * CHECKs, lookup indexes, the unique idempotency index, and the
+ * `updated_at` trigger live in migration 0068 (and are mirrored here).
  */
 export const walletTransactions = pgTable(
   'wallet_transactions',
@@ -80,7 +124,7 @@ export const walletTransactions = pgTable(
 
     /** Transaction type discriminator. */
     type: text('type', {
-      enum: ['topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'],
+      enum: WALLET_TRANSACTION_TYPES,
     }).notNull(),
 
     /**
@@ -91,7 +135,7 @@ export const walletTransactions = pgTable(
 
     /** Transaction lifecycle state. */
     state: text('state', {
-      enum: ['Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed'],
+      enum: WALLET_TRANSACTION_STATES,
     })
       .notNull()
       .default('Pending'),
@@ -109,7 +153,7 @@ export const walletTransactions = pgTable(
     description: text('description'),
 
     /** Extensible metadata payload. */
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').notNull().default(sql`'{}'::jsonb`),
 
     /** When the transaction was created. */
     createdAt: timestamptz('created_at')
@@ -123,9 +167,20 @@ export const walletTransactions = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => ({
+    typeCheck: check(
+      'chk_wallet_transactions_type',
+      sql`${table.type} IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating')`,
+    ),
+    stateCheck: check(
+      'chk_wallet_transactions_state',
+      sql`${table.state} IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')`,
+    ),
+    amountNonzero: check('chk_wallet_transactions_amount_nonzero', sql`${table.amount} <> 0`),
+    walletIdIdx: index('idx_wallet_tx_wallet_id').on(table.walletId),
+    stateIdx: index('idx_wallet_tx_state').on(table.state),
+    typeIdx: index('idx_wallet_tx_type').on(table.type),
     /** Enforce idempotency: duplicate key detection. */
-    idempotencyUniqueIdx: uniqueIndex('idx_wallet_tx_idempotency')
-      .on(table.idempotencyKey),
+    idempotencyUniqueIdx: uniqueIndex('idx_wallet_tx_idempotency').on(table.idempotencyKey),
   }),
 )
 
@@ -160,19 +215,38 @@ export const createWalletsTable = sql`
 `
 
 /**
- * SQL to create the wallet_transactions table.
+ * SQL to create the wallet_transactions table (migration 0068 source).
+ *
+ * Wallets itself is T-04.2.01.01; 0068 creates it IF NOT EXISTS so the
+ * ledger FK has a target on databases that never received a wallets
+ * migration. The available-balance trigger stays in `createWalletsTable`
+ * (T-04.2.01.07) and is not applied here.
  */
 export const createWalletTransactionsTable = sql`
+  CREATE TABLE IF NOT EXISTS wallets (
+    profile_id UUID PRIMARY KEY REFERENCES profiles(id) ON DELETE RESTRICT,
+    posted_balance BIGINT NOT NULL DEFAULT 0,
+    reserved_balance BIGINT NOT NULL DEFAULT 0,
+    version INTEGER NOT NULL DEFAULT 0,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  );
+
   CREATE TABLE IF NOT EXISTS wallet_transactions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     wallet_id UUID NOT NULL REFERENCES wallets(profile_id) ON DELETE RESTRICT,
-    type TEXT NOT NULL CHECK (type IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating')),
-    amount BIGINT NOT NULL CHECK (amount <> 0),
-    state TEXT NOT NULL DEFAULT 'Pending' CHECK (state IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')),
+    type TEXT NOT NULL
+      CONSTRAINT chk_wallet_transactions_type
+        CHECK (type IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating')),
+    amount BIGINT NOT NULL
+      CONSTRAINT chk_wallet_transactions_amount_nonzero
+        CHECK (amount <> 0),
+    state TEXT NOT NULL DEFAULT 'Pending'
+      CONSTRAINT chk_wallet_transactions_state
+        CHECK (state IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')),
     idempotency_key TEXT NOT NULL,
     ref_id TEXT,
     description TEXT,
-    metadata JSONB,
+    metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
@@ -181,4 +255,21 @@ export const createWalletTransactionsTable = sql`
   CREATE INDEX IF NOT EXISTS idx_wallet_tx_state ON wallet_transactions (state);
   CREATE INDEX IF NOT EXISTS idx_wallet_tx_type ON wallet_transactions (type);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_wallet_tx_idempotency ON wallet_transactions (idempotency_key);
+
+  CREATE OR REPLACE FUNCTION update_wallet_transactions_updated_at()
+  RETURNS TRIGGER
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+  END;
+  $$;
+
+  DROP TRIGGER IF EXISTS trg_wallet_transactions_updated_at ON wallet_transactions;
+
+  CREATE TRIGGER trg_wallet_transactions_updated_at
+    BEFORE UPDATE ON wallet_transactions
+    FOR EACH ROW
+    EXECUTE FUNCTION update_wallet_transactions_updated_at();
 `
