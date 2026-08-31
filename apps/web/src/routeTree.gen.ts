@@ -26,6 +26,8 @@ import { Route as AppNotificationsRouteImport } from './routes/_app/notification
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
+import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
+import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
@@ -136,6 +138,16 @@ const AppVideosRoute = AppVideosRouteImport.update({
 const AppWalletRoute = AppWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
+  id: '/invoices/$invoiceId',
+  path: '/invoices/$invoiceId',
   getParentRoute: () => AppRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -294,6 +306,8 @@ export interface FileRoutesByFullPath {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/invoices/': typeof AppInvoicesIndexRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
@@ -337,6 +351,8 @@ export interface FileRoutesByTo {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/invoices': typeof AppInvoicesIndexRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
@@ -383,6 +399,8 @@ export interface FileRoutesById {
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
+  '/_app/invoices/': typeof AppInvoicesIndexRoute
+  '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
@@ -430,6 +448,8 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/invoices/'
+    | '/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
@@ -473,6 +493,8 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/invoices'
+    | '/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/geography'
     | '/admin/invoices'
@@ -518,6 +540,8 @@ export interface FileRouteTypes {
     | '/_app/savings'
     | '/_app/videos'
     | '/_app/wallet'
+    | '/_app/invoices/'
+    | '/_app/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
@@ -678,6 +702,20 @@ declare module '@tanstack/react-router' {
       path: '/wallet'
       fullPath: '/wallet'
       preLoaderRoute: typeof AppWalletRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/': {
+      id: '/_app/invoices/'
+      path: '/invoices'
+      fullPath: '/invoices/'
+      preLoaderRoute: typeof AppInvoicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/$invoiceId': {
+      id: '/_app/invoices/$invoiceId'
+      path: '/invoices/$invoiceId'
+      fullPath: '/invoices/$invoiceId'
+      preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/admin/': {
@@ -881,6 +919,8 @@ interface AppRouteChildren {
   AppSavingsRoute: typeof AppSavingsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
+  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
+  AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
@@ -900,6 +940,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppSavingsRoute: AppSavingsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
+  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
+  AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
