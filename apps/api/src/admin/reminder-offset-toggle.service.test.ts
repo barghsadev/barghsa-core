@@ -145,5 +145,41 @@ describe('ReminderOffsetToggleService.set (T-04.1.04.05)', () => {
     expect(router.queries('BEGIN')).toHaveLength(1)
     expect(router.queries('COMMIT')).toHaveLength(1)
     expect(client.release).toHaveBeenCalled()
+
+    const lock = router.queries('pg_advisory_xact_lock')[0]
+    expect(lock?.values).toEqual(['barghsa.invoice_reminder_offset_toggles', 'manual', 0])
+    const lockIdx = router.calls.findIndex((c) => c.sql.includes('pg_advisory_xact_lock'))
+    const forUpdateIdx = router.calls.findIndex((c) => c.sql.includes('FOR UPDATE'))
+    expect(lockIdx).toBeGreaterThan(-1)
+    expect(forUpdateIdx).toBeGreaterThan(lockIdx)
+  })
+
+  it('locks the pair with an advisory lock before reading previousEnabled', async () => {
+    const { pool, router } = makeDb()
+    router.on('FOR UPDATE', () => ({
+      rows: [{ service_type: 'electricity', offset: -7, enabled: false }],
+    }))
+    router.on('ON CONFLICT', () => ({ rows: [], rowCount: 1 }))
+    router.on('INSERT INTO audit_log', () => ({ rows: [], rowCount: 1 }))
+    router.on('FROM invoice_reminder_offset_toggles', () => ({
+      rows: [{ service_type: 'electricity', offset: -7, enabled: true }],
+    }))
+    const service = await loadService(pool)
+
+    await service.set({
+      raw: { serviceType: 'electricity', offset: -7, enabled: true },
+      actorUserId: ACTOR,
+      ip: '127.0.0.1',
+    })
+
+    const lock = router.queries('pg_advisory_xact_lock')[0]
+    expect(lock?.values).toEqual([
+      'barghsa.invoice_reminder_offset_toggles',
+      'electricity',
+      -7,
+    ])
+    const audit = router.queries('INSERT INTO audit_log')[0]
+    const metadata = JSON.parse(String(audit?.values[3])) as { previousEnabled: boolean }
+    expect(metadata.previousEnabled).toBe(false)
   })
 })

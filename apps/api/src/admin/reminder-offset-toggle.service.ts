@@ -22,6 +22,8 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
  * the controller boundary (mapped to platform admin today).
  */
 
+const TOGGLE_LOCK_NAMESPACE = 'barghsa.invoice_reminder_offset_toggles'
+
 export interface SetReminderOffsetToggleInput {
   raw: unknown
   actorUserId: string
@@ -64,7 +66,9 @@ export class ReminderOffsetToggleService {
 
   /**
    * Upsert one (serviceType, offset) enable flag. Validation failures
-   * throw 400. Concurrent writers serialize on the unique pair.
+   * throw 400. Concurrent writers serialize on a transaction-scoped
+   * advisory lock for the pair so a missing row still has a lock to
+   * wait on (SELECT ... FOR UPDATE is a no-op when the row is absent).
    */
   async set(input: SetReminderOffsetToggleInput): Promise<ReminderOffsetToggleDto[]> {
     const parsed = parseReminderOffsetToggleBody(input.raw)
@@ -81,9 +85,23 @@ export class ReminderOffsetToggleService {
 
     const pool = getDbPool()
     const client = await pool.connect()
-    const now = new Date()
     try {
       await client.query('BEGIN')
+
+      // SELECT ... FOR UPDATE locks nothing when the toggle row does not
+      // exist. Two concurrent first writes would both observe the default
+      // previousEnabled=true; after one upsert waits on the unique index
+      // and overwrites the other, both audit events would claim the
+      // transition started from enabled. An xact-scoped advisory lock
+      // serializes the pair before we read, so previousEnabled matches
+      // the immediately preceding committed value.
+      await client.query(
+        `SELECT pg_advisory_xact_lock(
+           hashtext($1),
+           hashtext($2 || ':' || $3::text)
+         )`,
+        [TOGGLE_LOCK_NAMESPACE, parsed.value.serviceType, parsed.value.offset],
+      )
 
       const previous = await client.query<StoredToggleRow>(
         `SELECT service_type, "offset", enabled
@@ -106,7 +124,7 @@ export class ReminderOffsetToggleService {
       const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7()
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
+         VALUES ($1, $2, $3, $4::jsonb, $5, $6, clock_timestamp())`,
         [
           auditId,
           input.actorUserId,
@@ -119,7 +137,6 @@ export class ReminderOffsetToggleService {
           }),
           correlationId,
           input.ip,
-          now,
         ],
       )
 
