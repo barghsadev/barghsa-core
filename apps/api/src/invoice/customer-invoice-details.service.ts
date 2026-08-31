@@ -396,11 +396,16 @@ const INVOICE_SELECT = `id, profile_id, state, total_amount, paid_amount, refund
 
 @Injectable()
 export class CustomerInvoiceDetailsService {
+  /**
+   * Active profile is the caller's non-archived default, falling back to
+   * their earliest non-archived profile. Archived profiles are inactive
+   * and must not isolate invoice list/details.
+   */
   async resolveActiveProfileId(userId: string): Promise<string | null> {
     const pool = getDbPool()
     const result = await pool.query<{ id: string }>(
       `SELECT id FROM profiles
-       WHERE user_id = $1
+       WHERE user_id = $1 AND archived = false
        ORDER BY is_default DESC, created_at ASC
        LIMIT 1`,
       [userId],

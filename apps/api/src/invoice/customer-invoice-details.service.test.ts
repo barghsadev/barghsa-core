@@ -2,9 +2,9 @@
  * Unit tests for customer invoice details assembly (T-04.1.05.04).
  *
  * Covers explanation extraction, role classification, chain ordering,
- * profile isolation (404), missing invoice, direct draft 404, draft
- * family-member exclusion, complete families longer than 50, and
- * fail-closed errors when the family CTE is truncated.
+ * profile isolation (404), archived-profile skip, missing invoice,
+ * direct draft 404, draft family-member exclusion, complete families
+ * longer than 50, and fail-closed errors when the family CTE is truncated.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -26,6 +26,7 @@ import {
 
 const USER_ID = 'user-001'
 const PROFILE_ID = '11111111-1111-7111-8111-111111111111'
+const ARCHIVED_DEFAULT_ID = '99999999-9999-7999-8999-999999999999'
 const ORIGINAL_ID = '22222222-2222-7222-8222-222222222222'
 const REPLACEMENT_ID = '33333333-3333-7333-8333-333333333333'
 const ADJUSTMENT_ID = '44444444-4444-7444-8444-444444444444'
@@ -335,6 +336,16 @@ describe('CustomerInvoiceDetailsService', () => {
     mockPool.query.mockReset()
   })
 
+  function profilesQueryResult(sql: string): { rows: Array<{ id: string }> } {
+    expect(sql).toContain('AND archived = false')
+    expect(sql).toContain('ORDER BY is_default DESC, created_at ASC')
+    // Without the archived filter the default (archived) row would win
+    // `ORDER BY is_default DESC`. With the filter, only the live profile
+    // remains.
+    const excludesArchived = sql.includes('AND archived = false')
+    return { rows: [{ id: excludesArchived ? PROFILE_ID : ARCHIVED_DEFAULT_ID }] }
+  }
+
   it('404s when the caller has no active profile', async () => {
     mockPool.query.mockResolvedValueOnce({ rows: [] })
     const rejection = await service.getForUser(USER_ID, ORIGINAL_ID).catch((e: unknown) => e)
@@ -343,6 +354,76 @@ describe('CustomerInvoiceDetailsService', () => {
       error: ErrorCodes.NOT_FOUND_RESOURCE.code,
       message: 'No active profile',
     })
+    const profileSql = mockPool.query.mock.calls[0]![0] as string
+    expect(profileSql).toContain('archived = false')
+  })
+
+  it('skips an archived default profile in favor of a non-archived profile', async () => {
+    mockPool.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM profiles')) {
+        return profilesQueryResult(sql)
+      }
+      if (sql.includes('FROM invoices')) {
+        return { rows: [row({ id: ORIGINAL_ID })] }
+      }
+      return { rows: [] }
+    })
+
+    const list = await service.listForUser(USER_ID)
+    expect(list.invoices[0]!.invoiceId).toBe(ORIGINAL_ID)
+    const invoiceParams = mockPool.query.mock.calls[1]![1] as unknown[]
+    expect(invoiceParams[0]).toBe(PROFILE_ID)
+    expect(invoiceParams[0]).not.toBe(ARCHIVED_DEFAULT_ID)
+
+    mockPool.query.mockClear()
+    mockPool.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM profiles')) {
+        return profilesQueryResult(sql)
+      }
+      if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
+        return { rows: [row({ id: ORIGINAL_ID })] }
+      }
+      if (isFamilyCte(sql)) {
+        return familyQueryRows([row({ id: ORIGINAL_ID })])
+      }
+      if (sql.includes('FROM invoice_lines')) {
+        return { rows: [line(ORIGINAL_ID, 'Usage')] }
+      }
+      return { rows: [] }
+    })
+
+    const details = await service.getForUser(USER_ID, ORIGINAL_ID)
+    expect(details.viewedInvoiceId).toBe(ORIGINAL_ID)
+    const detailsInvoiceParams = mockPool.query.mock.calls[1]![1] as unknown[]
+    expect(detailsInvoiceParams).toEqual([ORIGINAL_ID, PROFILE_ID])
+    expect(detailsInvoiceParams).not.toContain(ARCHIVED_DEFAULT_ID)
+  })
+
+  it('404s when the user has only archived profiles', async () => {
+    mockPool.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM profiles')) {
+        expect(sql).toContain('archived = false')
+        return { rows: [] }
+      }
+      throw new Error(`unexpected query after archived-only profile lookup: ${sql}`)
+    })
+
+    const listRejection = await service.listForUser(USER_ID).catch((e: unknown) => e)
+    expect(listRejection).toMatchObject({ status: 404 })
+    expect(rejectionBody(listRejection)).toMatchObject({
+      error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+      message: 'No active profile',
+    })
+
+    const detailsRejection = await service
+      .getForUser(USER_ID, ORIGINAL_ID)
+      .catch((e: unknown) => e)
+    expect(detailsRejection).toMatchObject({ status: 404 })
+    expect(rejectionBody(detailsRejection)).toMatchObject({
+      error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+      message: 'No active profile',
+    })
+    expect(mockPool.query.mock.calls).toHaveLength(2)
   })
 
   it('404s when the invoice belongs to another profile', async () => {
