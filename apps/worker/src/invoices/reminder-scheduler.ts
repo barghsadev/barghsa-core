@@ -7,6 +7,7 @@ import {
   enabledOffsetsForServiceType,
   isEligibleForReminderSchedule,
   mergeReminderOffsetToggles,
+  serviceTypesWithNoEnabledOffsets,
   reminderChannelsFromPreferences,
   type InvoiceReminderChannel,
   type InvoiceReminderOffset,
@@ -56,6 +57,9 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * `invoice_reminder_offset_toggles` at the start of each pass. Disabled
  * offsets for the invoice's service type are omitted. Missing pairs
  * default to enabled. Toggles apply to newly scheduled invoices only.
+ * Service types with every offset disabled are excluded from the
+ * candidate query so they cannot fill the bounded window across ticks;
+ * re-enabling any offset returns those invoices to the candidate set.
  *
  * Stop states (Paid / Cancelled / Refunded) are not scheduled; cancelling
  * already-inserted future rows is T-04.1.04.06.
@@ -167,6 +171,11 @@ const defaultLogger = {
  *
  * `$4`/`$5` are an optional keyset `(issued_at, id)` cursor so one pass
  * can page past skipped candidates. Bind both NULL on the first page.
+ *
+ * `$6` is the list of service types with no currently enabled offsets.
+ * Those invoices stay unscheduled until a toggle is re-enabled, but
+ * must not occupy the oldest-first `LIMIT`. Unclassified invoices
+ * (null/empty `serviceType`) are never excluded this way.
  */
 export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
                NULLIF(i.metadata #>> '{due,serviceType}', '') AS service_type,
@@ -189,6 +198,7 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
             $4::timestamptz IS NULL
             OR (i.issued_at, i.id) > ($4::timestamptz, $5::uuid)
           )
+          AND COALESCE(NULLIF(i.metadata #>> '{due,serviceType}', ''), '') <> ALL($6::text[])
         ORDER BY i.issued_at ASC, i.id ASC
         LIMIT $2`
 
@@ -358,7 +368,9 @@ async function loadReminderOffsetToggles(
  * Run one reminder-scheduling pass over issued invoices that still lack
  * schedule rows. Pages past skipped/empty-plan candidates in the same
  * tick so a full batch of terminally stale invoices cannot starve a
- * newly issued invoice that still has future offsets.
+ * newly issued invoice that still has future offsets. Fully disabled
+ * service types are omitted from the candidate query entirely so a
+ * large zero-plan cohort cannot occupy every page across ticks.
  */
 export async function scheduleIssuedInvoiceReminders(
   options: ReminderScheduleOptions = {},
@@ -378,6 +390,7 @@ export async function scheduleIssuedInvoiceReminders(
 
   const adminWindow = await loadWindow(pool, options.deliveryWindow)
   const offsetToggles = await loadReminderOffsetToggles(pool, options.reminderOffsetToggles)
+  const excludedServiceTypes = serviceTypesWithNoEnabledOffsets(offsetToggles)
 
   let cursorIssuedAt: Date | null = null
   let cursorId: string | null = null
@@ -385,7 +398,7 @@ export async function scheduleIssuedInvoiceReminders(
   for (let page = 0; page < DEFAULT_REMINDER_SCHEDULE_MAX_PAGES; page += 1) {
     const candidates: QueryResult<CandidateRow> = await pool.query<CandidateRow>(
       FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
-      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId],
+      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId, excludedServiceTypes],
     )
     result.scanned += candidates.rows.length
     if (candidates.rows.length === 0) {

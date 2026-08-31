@@ -13,6 +13,7 @@ import {
 import { DEFAULT_DELIVERY_WINDOW } from '@barghsa/shared/notifications'
 import {
   DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE,
+  DEFAULT_REMINDER_SCHEDULE_MAX_PAGES,
   FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
   INVOICE_REMINDER_JOB_TYPE,
   REMINDER_SCHEDULE_CATCH_UP_GRACE_MS,
@@ -159,6 +160,7 @@ describe('ReminderScheduler contract (T-04.1.04.02)', () => {
     expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
       "metadata #>> '{due,serviceType}'",
     )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('<> ALL($6::text[])')
   })
 })
 
@@ -343,6 +345,7 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     expect(find!.params[2]).toEqual(ISSUED)
     expect(find!.params[3]).toBeNull()
     expect(find!.params[4]).toBeNull()
+    expect(find!.params[5]).toEqual([])
     expect(find!.sql).toContain('state = ANY($1::invoice_state[])')
     expect(find!.sql).not.toContain('$1::text[]')
   })
@@ -399,6 +402,114 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     expect(result.scheduled).toBe(1)
     const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
     expect(insertedOffsets(insert!.params)).toEqual([...INVOICE_REMINDER_OFFSETS])
+  })
+
+  it('binds fully-disabled service types so they cannot fill the candidate window', async () => {
+    const row = unpaidCandidate('inv-consultation', { service_type: 'consultation' })
+    const db = makeFakeDb(defaultHandler([row]))
+    const toggles = mergeReminderOffsetToggles(
+      INVOICE_REMINDER_OFFSETS.map((offset) => ({
+        serviceType: 'electricity',
+        offset,
+        enabled: false,
+      })),
+    )
+    await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { reminderOffsetToggles: toggles }),
+    )
+    const find = db.calls.find((c) => c.sql.includes('NOT EXISTS'))
+    expect(find?.params[5]).toEqual(['electricity'])
+    expect(find?.sql).toContain('<> ALL($6::text[])')
+  })
+
+  it('schedules an enabled newer invoice past more than max-pages of fully-disabled older invoices', async () => {
+    const batchSize = 2
+    const disabledCount = DEFAULT_REMINDER_SCHEDULE_MAX_PAGES * batchSize + 1
+    const disabled = Array.from({ length: disabledCount }, (_, index) =>
+      unpaidCandidate(`disabled-${String(index).padStart(4, '0')}`, {
+        service_type: 'electricity',
+        issued_at: new Date(ISSUED.getTime() - 86_400_000 + index),
+      }),
+    )
+    const fresh = unpaidCandidate('fresh-consultation', {
+      service_type: 'consultation',
+      issued_at: ISSUED,
+    })
+    const all = [...disabled, fresh]
+    const byId = new Map(all.map((row) => [row.id, row]))
+    const toggles = mergeReminderOffsetToggles(
+      INVOICE_REMINDER_OFFSETS.map((offset) => ({
+        serviceType: 'electricity',
+        offset,
+        enabled: false,
+      })),
+    )
+
+    const db = makeFakeDb((sql, params) => {
+      if (sql.includes('FROM invoices i') && sql.includes('NOT EXISTS')) {
+        const excluded = new Set((params[5] as string[] | undefined) ?? [])
+        const afterIssued = params[3] as Date | null
+        const afterId = params[4] as string | null
+        const limit = Number(params[1])
+        const eligible = all.filter((row) => {
+          if (row.service_type != null && excluded.has(row.service_type)) return false
+          if (afterIssued == null || afterId == null) return true
+          if (row.issued_at.getTime() > afterIssued.getTime()) return true
+          return row.issued_at.getTime() === afterIssued.getTime() && row.id > afterId
+        })
+        return { rows: eligible.slice(0, limit) }
+      }
+      if (sql.includes('FOR UPDATE OF i SKIP LOCKED')) {
+        const row = byId.get(String(params[0]))
+        return { rows: row ? [row] : [] }
+      }
+      if (sql.includes('FROM invoice_reminder_schedule WHERE invoice_id')) {
+        return { rows: [], rowCount: 0 }
+      }
+      if (sql.includes('INSERT INTO invoice_reminder_schedule')) {
+        return { rows: [], rowCount: 6 }
+      }
+      return { rows: [] }
+    })
+
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { batchSize, reminderOffsetToggles: toggles }),
+    )
+
+    expect(disabledCount).toBeGreaterThan(DEFAULT_REMINDER_SCHEDULE_MAX_PAGES * batchSize)
+    expect(result).toMatchObject({
+      scanned: 1,
+      scheduled: 1,
+      skipped: 0,
+      truncated: false,
+      errors: [],
+    })
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insert?.params[0]).toBe(fresh.id)
+    const findCalls = db.calls.filter((c) => c.sql.includes('NOT EXISTS'))
+    expect(findCalls).toHaveLength(1)
+    expect(findCalls[0]?.params[5]).toEqual(['electricity'])
+  })
+
+  it('returns fully-disabled invoices to the candidate set after an offset is re-enabled', async () => {
+    const row = unpaidCandidate('inv-electricity', { service_type: 'electricity' })
+    const db = makeFakeDb(defaultHandler([row]))
+    const toggles = mergeReminderOffsetToggles([
+      ...INVOICE_REMINDER_OFFSETS.map((offset) => ({
+        serviceType: 'electricity' as const,
+        offset,
+        enabled: false,
+      })),
+      { serviceType: 'electricity', offset: 0, enabled: true },
+    ])
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { reminderOffsetToggles: toggles }),
+    )
+    expect(result.scheduled).toBe(1)
+    const find = db.calls.find((c) => c.sql.includes('NOT EXISTS'))
+    expect(find?.params[5]).toEqual([])
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insertedOffsets(insert!.params)).toEqual([0])
   })
 
   it('inserts email and sms rows when those preferences are enabled', async () => {

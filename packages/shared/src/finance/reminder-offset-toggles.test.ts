@@ -8,6 +8,7 @@ import {
   defaultReminderOffsetToggles,
   enabledOffsetsForServiceType,
   mergeReminderOffsetToggles,
+  serviceTypesWithNoEnabledOffsets,
   parseReminderOffsetToggleBody,
 } from './reminder-offset-toggles.js'
 
@@ -54,6 +55,30 @@ describe('reminder offset toggles contract (T-04.1.04.05)', () => {
     expect(enabledOffsetsForServiceType(toggles, 'saving_plan')).toEqual([...INVOICE_REMINDER_OFFSETS])
     expect(enabledOffsetsForServiceType(toggles, null)).toEqual([...INVOICE_REMINDER_OFFSETS])
     expect(enabledOffsetsForServiceType(toggles, 'hardware')).toEqual([...INVOICE_REMINDER_OFFSETS])
+  })
+
+  it('lists only service types whose entire offset set is disabled', () => {
+    expect(serviceTypesWithNoEnabledOffsets(defaultReminderOffsetToggles())).toEqual([])
+    const electricityOff = mergeReminderOffsetToggles(
+      INVOICE_REMINDER_OFFSETS.map((offset) => ({
+        serviceType: 'electricity',
+        offset,
+        enabled: false,
+      })),
+    )
+    expect(serviceTypesWithNoEnabledOffsets(electricityOff)).toEqual(['electricity'])
+    expect(enabledOffsetsForServiceType(electricityOff, 'saving_plan')).toEqual([
+      ...INVOICE_REMINDER_OFFSETS,
+    ])
+    const reenabled = mergeReminderOffsetToggles([
+      ...INVOICE_REMINDER_OFFSETS.map((offset) => ({
+        serviceType: 'electricity',
+        offset,
+        enabled: false,
+      })),
+      { serviceType: 'electricity', offset: 0, enabled: true },
+    ])
+    expect(serviceTypesWithNoEnabledOffsets(reenabled)).toEqual([])
   })
 })
 

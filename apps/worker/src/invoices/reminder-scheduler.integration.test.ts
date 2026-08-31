@@ -17,6 +17,7 @@ import type { IsolatedTestDb } from '@barghsa/db/test'
 import { INVOICE_REMINDER_OFFSETS, REMINDER_STOP_STATES } from '@barghsa/shared/finance'
 import { DEFAULT_DELIVERY_WINDOW } from '@barghsa/shared/notifications'
 import {
+  DEFAULT_REMINDER_SCHEDULE_MAX_PAGES,
   FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
   scheduleIssuedInvoiceReminders,
 } from './reminder-scheduler.js'
@@ -171,7 +172,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
 
     const result = await ctx.pool.query<{ id: string; state: string }>(
       FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
-      [[...REMINDER_STOP_STATES], 200, ISSUED, null, null],
+      [[...REMINDER_STOP_STATES], 200, ISSUED, null, null, []],
     )
 
     expect(result.rows.map((row) => row.id).sort()).toEqual([overdue, unpaid].sort())
@@ -340,6 +341,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
       ISSUED,
       null,
       null,
+      [],
     ])
 
     expect(result.rows.map((row) => row.id)).toEqual([freshId])
@@ -421,5 +423,64 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
     expect(staleIds.every((id) => scheduled.rows.every((row) => row.invoice_id !== id))).toBe(
       true,
     )
+  })
+
+  it('schedules an enabled newer invoice past more than max-pages of fully-disabled older invoices', async () => {
+    const batchSize = 2
+    const disabledCount = DEFAULT_REMINDER_SCHEDULE_MAX_PAGES * batchSize + 1
+    const staleIssued = new Date(ISSUED.getTime() - 86_400_000)
+    for (let index = 0; index < disabledCount; index += 1) {
+      await insertInvoice({
+        state: 'Unpaid',
+        dueAt: DUE,
+        issuedAt: new Date(staleIssued.getTime() + index * 1000),
+        metadata: { due: { serviceType: 'electricity' } },
+      })
+    }
+    const freshId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: ISSUED,
+      metadata: { due: { serviceType: 'consultation' } },
+    })
+
+    for (const offset of INVOICE_REMINDER_OFFSETS) {
+      await ctx.pool.query(
+        `INSERT INTO invoice_reminder_offset_toggles (service_type, "offset", enabled, updated_by)
+         VALUES ('electricity', $1, FALSE, $2)`,
+        [offset, USER_ID],
+      )
+    }
+
+    const pass = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize,
+      now: ISSUED,
+    })
+
+    expect(disabledCount).toBeGreaterThan(DEFAULT_REMINDER_SCHEDULE_MAX_PAGES * batchSize)
+    expect(pass.errors).toEqual([])
+    expect(pass.scheduled).toBe(1)
+    expect(pass.scanned).toBe(1)
+
+    const scheduled = await ctx.pool.query<{ invoice_id: string }>(
+      `SELECT DISTINCT invoice_id FROM invoice_reminder_schedule`,
+    )
+    expect(scheduled.rows.map((row) => row.invoice_id)).toEqual([freshId])
+
+    await ctx.pool.query(
+      `UPDATE invoice_reminder_offset_toggles SET enabled = TRUE
+        WHERE service_type = 'electricity' AND "offset" = 0`,
+    )
+    const afterReenable = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize,
+      now: ISSUED,
+    })
+    expect(afterReenable.errors).toEqual([])
+    expect(afterReenable.scheduled).toBeGreaterThan(0)
+    expect(afterReenable.scanned).toBeGreaterThan(0)
   })
 })

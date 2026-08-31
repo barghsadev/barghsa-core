@@ -104,6 +104,20 @@ export function enabledOffsetsForServiceType(
   return INVOICE_REMINDER_OFFSETS.filter((offset) => !disabled.has(offset))
 }
 
+/**
+ * Canonical service types whose entire offset set is currently disabled.
+ * ReminderScheduler excludes these from the candidate query so a fully
+ * disabled cohort cannot occupy the bounded oldest-first window.
+ * Re-enabling any offset removes the type from this list.
+ */
+export function serviceTypesWithNoEnabledOffsets(
+  toggles: readonly ReminderOffsetToggleDto[],
+): ServiceDuePeriodType[] {
+  return SERVICE_DUE_PERIOD_TYPES.filter(
+    (serviceType) => enabledOffsetsForServiceType(toggles, serviceType).length === 0,
+  )
+}
+
 /** True when `raw` is a boolean (not a 0/1 number or string). */
 function isBoolean(raw: unknown): raw is boolean {
   return typeof raw === 'boolean'
