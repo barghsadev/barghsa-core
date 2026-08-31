@@ -148,6 +148,13 @@
       "when": 1788739200000,
       "tag": "0067_invoice_adjustment_kind_accounting_amount",
       "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1788825600000,
+      "tag": "0068_create_wallet_transactions",
+      "breakpoints": true
     }
   ]
 }
