@@ -26,6 +26,8 @@ import { InvoiceModule } from '../invoice/invoice.module.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
 import { DueAtOverrideController } from './due-at-override.controller.js'
+import { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
+import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
 
 @Module({
   imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule, InvoiceModule],
@@ -41,6 +43,7 @@ import { DueAtOverrideController } from './due-at-override.controller.js'
     UploadPolicyController,
     ContractElectricityLimitsController,
     DueAtOverrideController,
+    ReminderOffsetToggleController,
   ],
   providers: [
     AdminService,
@@ -55,6 +58,7 @@ import { DueAtOverrideController } from './due-at-override.controller.js'
     UploadPolicyService,
     ContractElectricityLimitsService,
     CorrelationIdProvider,
+    ReminderOffsetToggleService,
   ],
   exports: [AdminService, BrandConfigService, DualApprovalService, ReconciliationExceptionsService, FailedJobsService, FailedNotificationsService, VatConfigService, GiftCodeService],
 })

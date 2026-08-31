@@ -14,8 +14,9 @@ import type { IsolatedTestDb } from './test/testDb'
  * The isolated schema is seeded to look like a database that already
  * applied journal entries through 0059 and already has `invoices` (FK
  * target). `migrate()` must then pick up 0060 from the journal and
- * create `invoice_reminder_schedule`. 0061 (unique index) is journaled
- * after 0060 so migrate() also applies it.
+ * create `invoice_reminder_schedule`. 0061 (unique index) and 0062
+ * (offset toggles) are journaled after 0060 so migrate() also applies
+ * them; 0062 needs the `users` FK target.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
@@ -55,6 +56,11 @@ describe('drizzle migrate() applies invoice_reminder_schedule (T-04.1.04.01)', (
     const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(uuidSql)
 
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY
+      )
+    `)
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',

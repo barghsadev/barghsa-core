@@ -37,6 +37,10 @@ const REMINDER_IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0061_add_invoice_reminder_schedule_idempotency.sql',
 )
+const REMINDER_OFFSET_TOGGLES_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0062_create_invoice_reminder_offset_toggles.sql',
+)
 
 const USER_ID = 'reminder-scheduler-owner'
 const PROFILE_ID = '11111111-1111-7111-8111-111111111111'
@@ -74,6 +78,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REMINDER_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REMINDER_IDEMPOTENCY_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REMINDER_OFFSET_TOGGLES_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(
       `INSERT INTO users (user_id, timezone, notification_preferences)
@@ -94,6 +99,7 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
 
   beforeEach(async () => {
     await ctx.pool.query('DELETE FROM invoice_reminder_schedule')
+    await ctx.pool.query('DELETE FROM invoice_reminder_offset_toggles')
     await ctx.pool.query('DELETE FROM invoices')
   })
 
@@ -102,14 +108,23 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
     dueAt: Date | null
     issuedAt: Date | null
     paidAmount?: number
+    metadata?: Record<string, unknown>
   }): Promise<string> {
     const id = randomUUID()
     const paid = opts.paidAmount ?? (opts.state === 'PartiallyFunded' ? 400_000 : 0)
     await ctx.pool.query(
       `INSERT INTO invoices
-         (id, profile_id, state, total_amount, paid_amount, issued_at, due_at)
-       VALUES ($1, $2, $3::invoice_state, 1000000, $4, $5, $6)`,
-      [id, PROFILE_ID, opts.state, paid, opts.issuedAt, opts.dueAt],
+         (id, profile_id, state, total_amount, paid_amount, issued_at, due_at, metadata)
+       VALUES ($1, $2, $3::invoice_state, 1000000, $4, $5, $6, $7::jsonb)`,
+      [
+        id,
+        PROFILE_ID,
+        opts.state,
+        paid,
+        opts.issuedAt,
+        opts.dueAt,
+        opts.metadata ? JSON.stringify(opts.metadata) : null,
+      ],
     )
     return id
   }
@@ -211,6 +226,34 @@ describe('reminder scheduler — real PostgreSQL (T-04.1.04.02)', () => {
       [invoiceId],
     )
     expect(count.rows[0]?.count).toBe('6')
+  })
+
+  it('omits admin-disabled offsets for the invoice service type (T-04.1.04.05)', async () => {
+    await ctx.pool.query(
+      `INSERT INTO invoice_reminder_offset_toggles (service_type, "offset", enabled, updated_by)
+       VALUES ('electricity', -7, FALSE, $1), ('electricity', 7, FALSE, $1)`,
+      [USER_ID],
+    )
+    const invoiceId = await insertInvoice({
+      state: 'Unpaid',
+      dueAt: DUE,
+      issuedAt: ISSUED,
+      metadata: { due: { serviceType: 'electricity' } },
+    })
+
+    const result = await scheduleIssuedInvoiceReminders({
+      pool: ctx.pool,
+      deliveryWindow: DEFAULT_DELIVERY_WINDOW,
+      batchSize: 50,
+      now: ISSUED,
+    })
+    expect(result).toMatchObject({ scanned: 1, scheduled: 1, skipped: 0, errors: [] })
+
+    const rows = await ctx.pool.query<{ offset: number }>(
+      `SELECT "offset" FROM invoice_reminder_schedule WHERE invoice_id = $1 ORDER BY "offset" ASC`,
+      [invoiceId],
+    )
+    expect(rows.rows.map((row) => row.offset)).toEqual([-3, -1, 0, 1])
   })
 
   it('does not schedule Paid invoices even when they have issuedAt/dueAt', async () => {

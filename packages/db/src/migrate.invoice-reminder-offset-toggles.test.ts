@@ -8,47 +8,42 @@ import type { IsolatedTestDb } from './test/testDb'
 
 /**
  * Proves production `migrate()` (drizzle-orm journal discovery) applies
- * migration 0059. Hand-running the SQL file is not enough: drizzle-orm
+ * migration 0062. Hand-running the SQL file is not enough: drizzle-orm
  * only executes tags listed in `drizzle/meta/_journal.json`.
  *
  * The isolated schema is seeded to look like a database that already
- * applied journal entries through 0058 and already has `users` (FK
- * target) plus `invoices` (0060 FK target). `migrate()` must then pick
- * up 0059 from the journal and create `service_due_periods`. 0060 is
- * journaled after 0059 so migrate() also applies it.
+ * applied journal entries through 0061 and already has `users` (FK
+ * target). `migrate()` must then pick up 0062 from the journal and
+ * create `invoice_reminder_offset_toggles`.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
 const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json')
 const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql')
-const AMOUNT_MIGRATION = resolve(
-  DRIZZLE_FOLDER,
-  '0052_add_invoice_amount_check_constraints.sql',
-)
-const DUE_PERIODS_TAG = '0059_create_service_due_periods'
-/** `when` of journal tag 0058 — last entry before 0059 was registered. */
-const PRIOR_JOURNAL_HEAD_WHEN = 1750000000000
+const TOGGLES_TAG = '0062_create_invoice_reminder_offset_toggles'
+/** `when` of journal tag 0061 — last entry before 0062 was registered. */
+const PRIOR_JOURNAL_HEAD_WHEN = 1788220800000
 
-describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
+describe('drizzle migrate() applies invoice_reminder_offset_toggles (T-04.1.04.05)', () => {
   let ctx: IsolatedTestDb
-  let duePeriodsWhen: number
+  let togglesWhen: number
 
   beforeAll(async () => {
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
       entries: Array<{ tag: string; when: number }>
     }
-    const duePeriodsEntry = journal.entries.find((entry) => entry.tag === DUE_PERIODS_TAG)
-    if (!duePeriodsEntry) {
+    const togglesEntry = journal.entries.find((entry) => entry.tag === TOGGLES_TAG)
+    if (!togglesEntry) {
       throw new Error(
-        `${DUE_PERIODS_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
+        `${TOGGLES_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
       )
     }
-    if (duePeriodsEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
+    if (togglesEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
       throw new Error(
-        `${DUE_PERIODS_TAG} journal 'when' (${duePeriodsEntry.when}) must be after 0058 (${PRIOR_JOURNAL_HEAD_WHEN})`,
+        `${TOGGLES_TAG} journal 'when' (${togglesEntry.when}) must be after 0061 (${PRIOR_JOURNAL_HEAD_WHEN})`,
       )
     }
-    duePeriodsWhen = duePeriodsEntry.when
+    togglesWhen = togglesEntry.when
 
     ctx = await createIsolatedTestDb()
 
@@ -60,27 +55,6 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         user_id TEXT PRIMARY KEY
       )
     `)
-    // 0060 (invoice_reminder_schedule), 0061 (unique index), and 0062
-    // (offset toggles) are journaled after 0059; migrate() will also
-    // apply them and needs the invoices FK target.
-    await ctx.db.execute(sql`
-      CREATE TYPE invoice_state AS ENUM (
-        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-      )
-    `)
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `)
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `)
-    const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(amountSql)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
@@ -91,7 +65,7 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
     `)
     await ctx.pool.query(
       `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-      ['prior-journal-head-0058', PRIOR_JOURNAL_HEAD_WHEN],
+      ['prior-journal-head-0061', PRIOR_JOURNAL_HEAD_WHEN],
     )
 
     await migrate(ctx.db, {
@@ -105,29 +79,28 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
     await dropTestSchema(ctx.schemaName)
   })
 
-  it('creates service_due_periods through the journaled migrate() path', async () => {
+  it('creates invoice_reminder_offset_toggles through the journaled migrate() path', async () => {
     const cols = await ctx.db.execute<{ column_name: string }>(sql`
       SELECT column_name
       FROM information_schema.columns
       WHERE table_schema = current_schema()
-        AND table_name = 'service_due_periods'
+        AND table_name = 'invoice_reminder_offset_toggles'
       ORDER BY ordinal_position
     `)
     expect(cols.rows.map((row) => row.column_name)).toEqual(
       expect.arrayContaining([
         'id',
         'service_type',
-        'default_days',
-        'effective_from',
-        'effective_until',
-        'created_by',
+        'offset',
+        'enabled',
+        'updated_by',
         'created_at',
         'updated_at',
       ]),
     )
   })
 
-  it('records 0059 in the migrator bookkeeping table', async () => {
+  it('records 0062 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
       `SELECT created_at::text AS created_at
        FROM __drizzle_migrations
@@ -136,6 +109,6 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
       [PRIOR_JOURNAL_HEAD_WHEN],
     )
     expect(rows.rows.length).toBeGreaterThanOrEqual(1)
-    expect(rows.rows.map((row) => Number(row.created_at))).toContain(duePeriodsWhen)
+    expect(rows.rows.map((row) => Number(row.created_at))).toContain(togglesWhen)
   })
 })

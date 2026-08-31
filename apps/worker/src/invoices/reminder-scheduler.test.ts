@@ -4,6 +4,7 @@ import {
   INVOICE_REMINDER_CHANNELS,
   INVOICE_REMINDER_OFFSETS,
   REMINDER_STOP_STATES,
+  mergeReminderOffsetToggles,
 } from '@barghsa/shared/finance'
 import {
   INVOICE_REMINDER_CHANNELS as DB_CHANNELS,
@@ -83,6 +84,7 @@ function unpaidCandidate(
     state: string
     due_at: Date
     issued_at: Date
+    service_type: string | null
     timezone: string
     notification_preferences: string
   }> = {},
@@ -92,6 +94,7 @@ function unpaidCandidate(
     state: extras.state ?? 'Unpaid',
     due_at: extras.due_at ?? DUE_INSIDE,
     issued_at: extras.issued_at ?? ISSUED,
+    service_type: extras.service_type ?? null,
     timezone: extras.timezone ?? 'Asia/Tehran',
     notification_preferences: extras.notification_preferences ?? 'IN_APP',
   }
@@ -152,6 +155,9 @@ describe('ReminderScheduler contract (T-04.1.04.02)', () => {
     expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain('$4::timestamptz IS NULL')
     expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
       '(i.issued_at, i.id) > ($4::timestamptz, $5::uuid)',
+    )
+    expect(FIND_UNSCHEDULED_ISSUED_INVOICES_SQL).toContain(
+      "metadata #>> '{due,serviceType}'",
     )
   })
 })
@@ -299,6 +305,30 @@ describe('planInvoiceReminders', () => {
       isElapsedReminder({ instant, scheduledAt, issuedAt, now }),
     ).toBe(true)
   })
+
+  it('omits admin-disabled offsets (T-04.1.04.05)', () => {
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now: ISSUED,
+      channels: ['in_app'],
+      window: TEHRAN,
+      enabledOffsets: [-3, -1, 0, 1],
+    })
+    expect(planned.map((row) => row.offset)).toEqual([-3, -1, 0, 1])
+  })
+
+  it('inserts nothing when every offset is disabled', () => {
+    const planned = planInvoiceReminders({
+      dueAt: DUE_INSIDE,
+      issuedAt: ISSUED,
+      now: ISSUED,
+      channels: ['in_app'],
+      window: TEHRAN,
+      enabledOffsets: [],
+    })
+    expect(planned).toEqual([])
+  })
 })
 
 describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
@@ -341,6 +371,34 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
     }
     expect(channels).toEqual(['in_app', 'in_app', 'in_app', 'in_app', 'in_app', 'in_app'])
     expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
+  })
+
+  it('omits disabled offsets for the invoice service type (T-04.1.04.05)', async () => {
+    const row = unpaidCandidate('inv-electricity', { service_type: 'electricity' })
+    const db = makeFakeDb(defaultHandler([row]))
+    const toggles = mergeReminderOffsetToggles([
+      { serviceType: 'electricity', offset: -7, enabled: false },
+      { serviceType: 'electricity', offset: 7, enabled: false },
+    ])
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { reminderOffsetToggles: toggles }),
+    )
+    expect(result.scheduled).toBe(1)
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insertedOffsets(insert!.params)).toEqual([-3, -1, 0, 1])
+  })
+
+  it('keeps the full offset set when the invoice has no service type', async () => {
+    const db = makeFakeDb(defaultHandler([unpaidCandidate('inv-unknown', { service_type: null })]))
+    const toggles = mergeReminderOffsetToggles([
+      { serviceType: 'electricity', offset: -7, enabled: false },
+    ])
+    const result = await scheduleIssuedInvoiceReminders(
+      scheduleOptions(db, { reminderOffsetToggles: toggles }),
+    )
+    expect(result.scheduled).toBe(1)
+    const insert = db.calls.find((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))
+    expect(insertedOffsets(insert!.params)).toEqual([...INVOICE_REMINDER_OFFSETS])
   })
 
   it('inserts email and sms rows when those preferences are enabled', async () => {
@@ -540,6 +598,23 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
         logger,
       }),
     ).rejects.toThrow('connection reset')
+
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
+      false,
+    )
+    expect(db.pool.connect).not.toHaveBeenCalled()
+  })
+
+  it('does not insert schedule rows when the offset-toggle query fails', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('invoice_reminder_offset_toggles')) throw new Error('toggles unavailable')
+      return defaultHandler()(sql)
+    })
+    const logger = { warn: vi.fn(), info: vi.fn() }
+
+    await expect(
+      scheduleIssuedInvoiceReminders(scheduleOptions(db, { logger })),
+    ).rejects.toThrow('toggles unavailable')
 
     expect(db.calls.some((c) => c.sql.includes('INSERT INTO invoice_reminder_schedule'))).toBe(
       false,
