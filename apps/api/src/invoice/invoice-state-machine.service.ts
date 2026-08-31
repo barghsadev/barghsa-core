@@ -25,8 +25,12 @@ import {
   validateTransition,
   transitionName,
   TRANSITION_LABELS,
+  TRANSITION_ERRORS,
 } from './invoice-state.model.js'
 import { InvoiceAuditRepository, type TransactionClient } from './invoice-audit.repository.js'
+import {
+  isCustomerPaymentTransition,
+} from '@barghsa/shared/finance'
 
 /** Result returned by every transition method. */
 export interface TransitionResult {
@@ -122,9 +126,11 @@ export class InvoiceStateMachineService {
 
       // Lock the invoice row and verify its current state
       const lockResult = (await client.query(
-        `SELECT id, state FROM invoices WHERE id = $1 FOR UPDATE`,
+        `SELECT id, state, adjustment_kind FROM invoices WHERE id = $1 FOR UPDATE`,
         [invoiceId],
-      )) as { rows: Array<{ id: string; state: string }> }
+      )) as {
+        rows: Array<{ id: string; state: string; adjustment_kind: string | null }>
+      }
       if (lockResult.rows.length === 0) {
         throw new NotFoundException(`Invoice not found: ${invoiceId}`)
       }
@@ -132,6 +138,14 @@ export class InvoiceStateMachineService {
       if (currentState !== from) {
         throw new BadRequestException(
           `Invoice ${invoiceId} state conflict: expected '${from}', current '${currentState}'`,
+        )
+      }
+      if (
+        lockResult.rows[0]!.adjustment_kind === 'credit' &&
+        isCustomerPaymentTransition(transition)
+      ) {
+        throw new BadRequestException(
+          TRANSITION_ERRORS.CREDIT_NOT_PAYABLE(invoiceId),
         )
       }
 
@@ -229,7 +243,11 @@ export class InvoiceStateMachineService {
     return from === 'Draft'
   }
 
-  canSubmitBankReceipt(from: InvoiceState): boolean {
+  canSubmitBankReceipt(
+    from: InvoiceState,
+    adjustmentKind?: string | null,
+  ): boolean {
+    if (adjustmentKind === 'credit') return false
     return from === 'Unpaid' || from === 'PartiallyFunded'
   }
 
@@ -237,11 +255,19 @@ export class InvoiceStateMachineService {
     return from === 'PaymentUnderReview'
   }
 
-  canPayFromWallet(from: InvoiceState): boolean {
+  canPayFromWallet(
+    from: InvoiceState,
+    adjustmentKind?: string | null,
+  ): boolean {
+    if (adjustmentKind === 'credit') return false
     return from === 'Unpaid' || from === 'PartiallyFunded'
   }
 
-  canMarkOverdue(from: InvoiceState): boolean {
+  canMarkOverdue(
+    from: InvoiceState,
+    adjustmentKind?: string | null,
+  ): boolean {
+    if (adjustmentKind === 'credit') return false
     return from === 'Unpaid' || from === 'PartiallyFunded'
   }
 

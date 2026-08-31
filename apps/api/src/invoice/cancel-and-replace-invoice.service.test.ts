@@ -117,7 +117,7 @@ describe('CancelAndReplaceInvoiceService', () => {
       if (sql.includes('FROM service_due_periods')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
-      if (sql.startsWith('SELECT id, state FROM invoices')) {
+      if (sql.startsWith('SELECT id, state')) {
         lockCount += 1
         return {
           rows: [{
@@ -279,7 +279,7 @@ describe('CancelAndReplaceInvoiceService', () => {
       if (sql.includes('paid_amount') && sql.includes('FOR UPDATE')) {
         return { rows: [originalRow()] }
       }
-      if (sql.startsWith('SELECT id, state FROM invoices')) {
+      if (sql.startsWith('SELECT id, state')) {
         return { rows: [{ id: 'inv-original', state: 'Unpaid' }] }
       }
       if (sql.startsWith('UPDATE invoices SET state')) throw new Error('DB down')

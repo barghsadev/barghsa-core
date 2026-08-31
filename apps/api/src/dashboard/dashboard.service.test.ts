@@ -125,6 +125,11 @@ describe('DashboardService', () => {
       const result = await service.getQuickStatusCounts('user-1')
 
       expect(result.unpaidInvoices).toBe(2)
+
+      const invoiceQuery = mockQuery.mock.calls.find(
+        (call: unknown[]) => (call[0] as string).includes('FROM invoices'),
+      )
+      expect(invoiceQuery?.[0]).toContain("adjustment_kind IS DISTINCT FROM 'credit'")
     })
 
     it('scopes counts to the correct profile (isolation test)', async () => {

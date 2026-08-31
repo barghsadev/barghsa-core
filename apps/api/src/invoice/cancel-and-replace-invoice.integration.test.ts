@@ -82,6 +82,10 @@ const REPLACEMENT_INDEX_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0065_invoice_order_type_unique_exclude_replacements.sql',
 )
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_ID = '33333333-3333-7333-8333-333333333333'
 const ACTOR_USER_ID = 'staff-cancel-replace'
@@ -130,6 +134,7 @@ describe('CancelAndReplaceInvoiceService — real PostgreSQL (T-04.1.05.02)', ()
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
 
     await ctx.db.execute(
       `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}') ON CONFLICT (id) DO NOTHING`,

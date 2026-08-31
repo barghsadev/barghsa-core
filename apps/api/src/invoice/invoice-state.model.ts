@@ -150,6 +150,8 @@ export const TRANSITION_ERRORS = {
   NONNEGATIVE_REFUNDED: () => `refundedAmount cannot be negative`,
   TOTAL_POSITIVE: () => `totalAmount must be positive`,
   NONNEGATIVE_INCOMING: () => `incoming paid amount cannot be negative`,
+  CREDIT_NOT_PAYABLE: (invoiceId: string) =>
+    `Invoice ${invoiceId} is a credit note and cannot enter the customer payment flow`,
 } as const
 
 /** Validate that a state string is one of the 9 authoritative states. */

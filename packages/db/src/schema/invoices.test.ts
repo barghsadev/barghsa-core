@@ -50,6 +50,8 @@ describe('Invoice amount constraints schema (T-04.1.01.04)', () => {
       'invoiceCalculationSnapshot',
       'replacesInvoiceId',
       'adjustmentForInvoiceId',
+      'adjustmentKind',
+      'accountingAmount',
     ]) {
       expect(columns).toContain(column)
     }
@@ -304,12 +306,13 @@ describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)',
       })
       .join('')
     expect(rendered).toContain('replaces_invoice_id')
+    expect(rendered).toContain('adjustment_for_invoice_id')
   })
 
   it('createInvoicesTable SQL declares the partial unique index', () => {
     const schemaSql = readFileSync(resolve(__dirname, './invoices.ts'), 'utf8')
     expect(schemaSql).toMatch(
-      /uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL/,
+      /uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL AND adjustment_for_invoice_id IS NULL/,
     )
     expect(createInvoicesTable).toBeDefined()
   })
@@ -338,5 +341,115 @@ describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)',
     expect(rewrite).toBeDefined()
     expect(prior).toBeDefined()
     expect(rewrite!.when).toBeGreaterThan(prior!.when)
+  })
+})
+
+/**
+ * Drift guard for the adjustment-safe (order_id, type) unique index
+ * (T-04.1.05.03).
+ *
+ * Migration 0066 extends `uq_invoices_order_id_type` so adjustment
+ * invoices (`adjustment_for_invoice_id IS NOT NULL`) are excluded the
+ * same way replacements are. Ordinary auto/manual idempotency is
+ * unchanged.
+ */
+const ORDER_TYPE_ADJUSTMENT_MIGRATION = readFileSync(
+  resolve(
+    __dirname,
+    '../../drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql',
+  ),
+  'utf8',
+)
+
+describe('Invoice order-type unique index excludes adjustments (T-04.1.05.03)', () => {
+  it('migration 0066 rewrites the unique index to exclude both correction FKs', () => {
+    expect(ORDER_TYPE_ADJUSTMENT_MIGRATION).toContain(
+      'DROP INDEX IF EXISTS uq_invoices_order_id_type',
+    )
+    expect(ORDER_TYPE_ADJUSTMENT_MIGRATION).toMatch(
+      /CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type[\s\S]*WHERE replaces_invoice_id IS NULL AND adjustment_for_invoice_id IS NULL/,
+    )
+  })
+
+  it('migration 0066 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string; when: number }> }
+    const tags = journal.entries.map((entry) => entry.tag)
+    expect(tags).toContain('0066_invoice_order_type_unique_exclude_adjustments')
+    const rewrite = journal.entries.find(
+      (entry) => entry.tag === '0066_invoice_order_type_unique_exclude_adjustments',
+    )
+    const prior = journal.entries.find(
+      (entry) => entry.tag === '0065_invoice_order_type_unique_exclude_replacements',
+    )
+    expect(rewrite).toBeDefined()
+    expect(prior).toBeDefined()
+    expect(rewrite!.when).toBeGreaterThan(prior!.when)
+  })
+})
+
+/**
+ * Drift guard for first-class adjustment kind + signed accounting amount
+ * (T-04.1.05.03).
+ *
+ * Migration 0067 adds nullable `adjustment_kind` and generated
+ * `accounting_amount`, backfills existing linked rows, and adds the
+ * kind/link CHECK as NOT VALID (VALIDATE is a later contract phase).
+ */
+const ADJUSTMENT_KIND_MIGRATION = readFileSync(
+  resolve(
+    __dirname,
+    '../../drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+  ),
+  'utf8',
+)
+
+describe('Invoice adjustment kind and accounting amount (T-04.1.05.03)', () => {
+  it('Drizzle schema declares adjustmentKind and accountingAmount', () => {
+    const columns = Object.keys(invoices)
+    expect(columns).toContain('adjustmentKind')
+    expect(columns).toContain('accountingAmount')
+  })
+
+  it('Drizzle schema declares the kind/link CHECK', () => {
+    const { checks } = getTableConfig(invoices)
+    const names = checks.map((c) => String(c.name))
+    expect(names).toContain('ck_invoices_adjustment_kind_matches_link')
+  })
+
+  it('migration 0067 adds generated accounting_amount and kind CHECK', () => {
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain('ADD COLUMN adjustment_kind TEXT')
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain('GENERATED ALWAYS AS')
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      "WHEN adjustment_kind = 'credit' THEN -total_amount",
+    )
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      'ck_invoices_adjustment_kind_matches_link',
+    )
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain('NOT VALID')
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      'WHERE adjustment_for_invoice_id IS NOT NULL',
+    )
+    expect(ADJUSTMENT_KIND_MIGRATION).toContain(
+      "WHEN metadata->>'kind' IN ('charge', 'credit')",
+    )
+  })
+
+  it('migration 0067 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../../drizzle/meta/_journal.json'), 'utf8'),
+    ) as { entries: Array<{ tag: string; when: number }> }
+    const tags = journal.entries.map((entry) => entry.tag)
+    expect(tags).toContain('0067_invoice_adjustment_kind_accounting_amount')
+    const next = journal.entries.find(
+      (entry) => entry.tag === '0067_invoice_adjustment_kind_accounting_amount',
+    )
+    const prior = journal.entries.find(
+      (entry) => entry.tag === '0066_invoice_order_type_unique_exclude_adjustments',
+    )
+    expect(next).toBeDefined()
+    expect(prior).toBeDefined()
+    expect(next!.when).toBeGreaterThan(prior!.when)
   })
 })

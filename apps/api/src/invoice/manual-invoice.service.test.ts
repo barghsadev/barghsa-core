@@ -83,7 +83,7 @@ describe('ManualInvoiceService', () => {
         if (sql.startsWith("SELECT id, metadata FROM invoices")) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
-        if (sql.startsWith('SELECT id, state FROM invoices')) return { rows: [{ id: 'inv', state: 'Draft' }] }
+        if (sql.startsWith('SELECT id, state')) return { rows: [{ id: 'inv', state: 'Draft' }] }
         if (sql.startsWith('UPDATE invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO audit_log')) return { rows: [] }
         if (sql.startsWith('SELECT id, profile_id')) return {
@@ -256,7 +256,7 @@ describe('ManualInvoiceService', () => {
         if (sql.startsWith('SELECT id, metadata FROM invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
         if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
-        if (sql.startsWith('SELECT id, state FROM invoices')) return { rows: [{ id: 'inv', state: 'Draft' }] }
+        if (sql.startsWith('SELECT id, state')) return { rows: [{ id: 'inv', state: 'Draft' }] }
         if (sql.startsWith('UPDATE invoices')) throw new Error('DB down')
         return { rows: [] }
       })

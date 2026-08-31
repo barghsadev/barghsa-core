@@ -134,6 +134,20 @@
       "when": 1788566400000,
       "tag": "0065_invoice_order_type_unique_exclude_replacements",
       "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1788652800000,
+      "tag": "0066_invoice_order_type_unique_exclude_adjustments",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1788739200000,
+      "tag": "0067_invoice_adjustment_kind_accounting_amount",
+      "breakpoints": true
     }
   ]
 }
