@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, type FormEvent } from 'react'
 import { t } from '@barghsa/i18n'
 import type { Locale } from '@barghsa/i18n'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   INVOICE_REMINDER_OFFSETS,
   SERVICE_DUE_PERIOD_TYPES,
@@ -61,15 +62,80 @@ function patchCell(
   return found ? next : [...next, { serviceType, offset, enabled }]
 }
 
+type PendingToggle = {
+  serviceType: ServiceDuePeriodType
+  offset: InvoiceReminderOffset
+  enabled: boolean
+  previousEnabled: boolean
+}
+
+type SaveResult =
+  | { kind: 'ok'; enabled: boolean }
+  | { kind: 'step_up' }
+  | { kind: 'error'; message: string }
+
+function readErrorCode(data: unknown): string | null {
+  if (!data || typeof data !== 'object') return null
+  const rec = data as { error?: unknown; requiresStepUp?: unknown }
+  if (typeof rec.error === 'string') return rec.error
+  if (rec.error && typeof rec.error === 'object') {
+    const nested = rec.error as { code?: unknown }
+    if (typeof nested.code === 'string') return nested.code
+  }
+  if (rec.requiresStepUp === true) return ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+  return null
+}
+
+function errorMessage(data: unknown, fallback: string): string {
+  if (!data || typeof data !== 'object') return fallback
+  const rec = data as { message?: unknown; error?: unknown }
+  if (typeof rec.message === 'string' && rec.message) return rec.message
+  if (rec.error && typeof rec.error === 'object') {
+    const nested = rec.error as { message?: unknown }
+    if (typeof nested.message === 'string' && nested.message) return nested.message
+  }
+  if (typeof rec.error === 'string' && rec.error) return rec.error
+  return fallback
+}
+
+function isStepUpRequired(res: Response, data: unknown): boolean {
+  return res.status === 403 && readErrorCode(data) === ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code
+}
+
 async function parseError(res: Response, fallback: string): Promise<string> {
   try {
-    const data = (await res.json()) as { message?: string; error?: string }
-    if (typeof data?.message === 'string' && data.message) return data.message
-    if (typeof data?.error === 'string' && data.error) return data.error
+    return errorMessage(await res.json(), fallback)
   } catch {
-    /* fall through */
+    return fallback
   }
-  return fallback
+}
+
+async function saveToggle(
+  serviceType: ServiceDuePeriodType,
+  offset: InvoiceReminderOffset,
+  enabled: boolean,
+  fallback: string,
+): Promise<SaveResult> {
+  const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
+    method: 'PUT',
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ serviceType, offset, enabled }),
+  })
+  const data: unknown = await res.json().catch(() => null)
+  if (isStepUpRequired(res, data)) return { kind: 'step_up' }
+  if (!res.ok) return { kind: 'error', message: errorMessage(data, fallback) }
+  const matrix = Array.isArray(data) ? (data as ReminderOffsetToggleDto[]) : []
+  const saved = matrix.find((row) => row.serviceType === serviceType && row.offset === offset)
+  return { kind: 'ok', enabled: saved?.enabled ?? enabled }
+}
+
+async function verifyStepUp(password: string): Promise<boolean> {
+  const res = await fetch('/api/auth/step-up', {
+    method: 'POST',
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ password }),
+  })
+  return res.ok
 }
 
 function ariaLabel(
@@ -89,12 +155,40 @@ export default function ReminderOffsetTogglePanel() {
   const [loading, setLoading] = useState(true)
   const [pendingKeys, setPendingKeys] = useState<ReadonlySet<string>>(() => new Set())
   const pendingKeysRef = useRef(new Set<string>())
+  const awaitingStepUpRef = useRef<PendingToggle[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [stepUpOpen, setStepUpOpen] = useState(false)
+  const [stepUpPassword, setStepUpPassword] = useState('')
+  const [stepUpError, setStepUpError] = useState<string | null>(null)
+  const [stepUpSubmitting, setStepUpSubmitting] = useState(false)
 
   function markPending(key: string, pending: boolean) {
     if (pending) pendingKeysRef.current.add(key)
     else pendingKeysRef.current.delete(key)
     setPendingKeys(new Set(pendingKeysRef.current))
+  }
+
+  function revertToggle(item: PendingToggle) {
+    setToggles((current) =>
+      current ? patchCell(current, item.serviceType, item.offset, item.previousEnabled) : current,
+    )
+    markPending(toggleKey(item.serviceType, item.offset), false)
+  }
+
+  async function persistToggle(item: PendingToggle): Promise<'step_up' | 'done'> {
+    const fallback = t('admin.invoices.reminders.saveFailed', locale)
+    const result = await saveToggle(item.serviceType, item.offset, item.enabled, fallback)
+    if (result.kind === 'step_up') return 'step_up'
+    if (result.kind === 'error') {
+      revertToggle(item)
+      setError(result.message)
+      return 'done'
+    }
+    setToggles((current) =>
+      current ? patchCell(current, item.serviceType, item.offset, result.enabled) : current,
+    )
+    markPending(toggleKey(item.serviceType, item.offset), false)
+    return 'done'
   }
 
   const load = useCallback(async () => {
@@ -132,29 +226,48 @@ export default function ReminderOffsetTogglePanel() {
       current ? patchCell(current, serviceType, offset, enabled) : current,
     )
     setError(null)
+    const item: PendingToggle = { serviceType, offset, enabled, previousEnabled }
+    const outcome = await persistToggle(item)
+    if (outcome === 'step_up') {
+      awaitingStepUpRef.current.push(item)
+      setStepUpOpen(true)
+    }
+  }
+
+  function cancelStepUp() {
+    const pending = awaitingStepUpRef.current
+    awaitingStepUpRef.current = []
+    for (const item of pending) revertToggle(item)
+    setStepUpOpen(false)
+    setStepUpPassword('')
+    setStepUpError(null)
+    setStepUpSubmitting(false)
+  }
+
+  async function submitStepUp(event: FormEvent) {
+    event.preventDefault()
+    if (!stepUpPassword.trim() || stepUpSubmitting) return
+    setStepUpSubmitting(true)
+    setStepUpError(null)
     try {
-      const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
-        method: 'PUT',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ serviceType, offset, enabled }),
-      })
-      if (!res.ok) {
-        throw new Error(await parseError(res, t('admin.invoices.reminders.saveFailed', locale)))
+      const verified = await verifyStepUp(stepUpPassword)
+      if (!verified) {
+        setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale))
+        return
       }
-      const data = (await res.json()) as ReminderOffsetToggleDto[]
-      const saved = data.find((row) => row.serviceType === serviceType && row.offset === offset)
-      setToggles((current) =>
-        current
-          ? patchCell(current, serviceType, offset, saved?.enabled ?? enabled)
-          : current,
-      )
-    } catch (err) {
-      setToggles((current) =>
-        current ? patchCell(current, serviceType, offset, previousEnabled) : current,
-      )
-      setError(err instanceof Error ? err.message : t('admin.invoices.reminders.saveFailed', locale))
+      const pending = awaitingStepUpRef.current
+      awaitingStepUpRef.current = []
+      setStepUpOpen(false)
+      setStepUpPassword('')
+      for (const item of pending) {
+        const outcome = await persistToggle(item)
+        if (outcome === 'step_up') {
+          revertToggle(item)
+          setError(t('admin.invoices.reminders.saveFailed', locale))
+        }
+      }
     } finally {
-      markPending(key, false)
+      setStepUpSubmitting(false)
     }
   }
 
@@ -243,6 +356,83 @@ export default function ReminderOffsetTogglePanel() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {stepUpOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reminder-step-up-title"
+          data-testid="reminder-step-up-dialog"
+          onClick={(event) => {
+            if (event.target === event.currentTarget && !stepUpSubmitting) cancelStepUp()
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape' && !stepUpSubmitting) cancelStepUp()
+          }}
+        >
+          <form
+            className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full space-y-4"
+            onClick={(event) => event.stopPropagation()}
+            onSubmit={submitStepUp}
+          >
+            <div>
+              <h3 id="reminder-step-up-title" className="text-lg font-semibold text-gray-900">
+                {t('admin.invoices.reminders.stepUp.title', locale)}
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                {t('admin.invoices.reminders.stepUp.description', locale)}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="reminder-step-up-password" className="block text-sm font-medium text-gray-700">
+                {t('admin.invoices.reminders.stepUp.passwordLabel', locale)}
+              </label>
+              <input
+                id="reminder-step-up-password"
+                data-testid="reminder-step-up-password"
+                type="password"
+                autoComplete="current-password"
+                autoFocus
+                value={stepUpPassword}
+                disabled={stepUpSubmitting}
+                placeholder={t('admin.invoices.reminders.stepUp.passwordPlaceholder', locale)}
+                onChange={(event) => {
+                  setStepUpPassword(event.target.value)
+                  setStepUpError(null)
+                }}
+                className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+              />
+              {stepUpError && (
+                <p className="text-sm text-red-700" role="alert">
+                  {stepUpError}
+                </p>
+              )}
+            </div>
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                data-testid="reminder-step-up-cancel"
+                disabled={stepUpSubmitting}
+                onClick={cancelStepUp}
+                className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
+              >
+                {t('admin.invoices.reminders.stepUp.cancel', locale)}
+              </button>
+              <button
+                type="submit"
+                data-testid="reminder-step-up-submit"
+                disabled={stepUpSubmitting || !stepUpPassword.trim()}
+                className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {stepUpSubmitting
+                  ? t('admin.invoices.reminders.stepUp.verifying', locale)
+                  : t('admin.invoices.reminders.stepUp.submit', locale)}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </section>

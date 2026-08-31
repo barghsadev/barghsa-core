@@ -23,6 +23,7 @@ export const fa: I18nDictionary = {
   'error.authz.insufficient.role': 'نقش کاربری شما مجاز به انجام این عملیات نیست',
   'error.authz.not.resource.owner': 'شما مالک این منبع نیستید',
   'error.authz.profile.not_verified': 'پروفایل شما تأیید نشده است. برای ثبت سفارش جدید، ابتدا پروفایل خود را تأیید کنید',
+  'error.authz.step_up.required': 'برای انجام این عملیات باید هویت خود را دوباره تأیید کنید',
 
   // ── Not Found ───────────────────────────────────────────
   'error.not_found.resource': 'منبع درخواستی یافت نشد',
@@ -984,6 +985,14 @@ export const fa: I18nDictionary = {
   'admin.invoices.reminders.offset.p1': '۱ روز بعد',
   'admin.invoices.reminders.offset.p7': '۷ روز بعد',
   'admin.invoices.reminders.toggleAria': 'یادآوری {offset} برای {service}',
+  'admin.invoices.reminders.stepUp.title': 'تأیید هویت لازم است',
+  'admin.invoices.reminders.stepUp.description': 'تغییر زمان‌بندی یادآوری پرداخت نیاز به تأیید مجدد هویت دارد. رمز عبور خود را وارد کنید.',
+  'admin.invoices.reminders.stepUp.passwordLabel': 'رمز عبور',
+  'admin.invoices.reminders.stepUp.passwordPlaceholder': 'رمز عبور خود را وارد کنید',
+  'admin.invoices.reminders.stepUp.submit': 'تأیید و ذخیره',
+  'admin.invoices.reminders.stepUp.cancel': 'انصراف',
+  'admin.invoices.reminders.stepUp.verifying': 'در حال تأیید…',
+  'admin.invoices.reminders.stepUp.failed': 'تأیید هویت ناموفق بود. رمز عبور را بررسی کنید.',
 
   // ── Notification Center (T-05.02.03) ─────────────────────
   'notifications.title': 'مرکز اطلاع‌رسانی',
@@ -1029,6 +1038,7 @@ export const en: I18nDictionary = {
   'error.authz.insufficient.role': 'Your role does not have permission for this action',
   'error.authz.not.resource.owner': 'You are not the owner of this resource',
   'error.authz.profile.not_verified': 'Your profile is not verified. Please verify your profile before placing an order',
+  'error.authz.step_up.required': 'Re-verify your identity to continue',
 
   // ── Not Found ───────────────────────────────────────────
   'error.not_found.resource': 'Requested resource was not found',
@@ -1963,6 +1973,14 @@ export const en: I18nDictionary = {
     'admin.invoices.reminders.offset.p1': '1 day after',
     'admin.invoices.reminders.offset.p7': '7 days after',
     'admin.invoices.reminders.toggleAria': '{offset} reminder for {service}',
+    'admin.invoices.reminders.stepUp.title': 'Verification required',
+    'admin.invoices.reminders.stepUp.description': 'Changing payment reminder scheduling requires a fresh identity check. Enter your password to continue.',
+    'admin.invoices.reminders.stepUp.passwordLabel': 'Password',
+    'admin.invoices.reminders.stepUp.passwordPlaceholder': 'Enter your password',
+    'admin.invoices.reminders.stepUp.submit': 'Verify and save',
+    'admin.invoices.reminders.stepUp.cancel': 'Cancel',
+    'admin.invoices.reminders.stepUp.verifying': 'Verifying…',
+    'admin.invoices.reminders.stepUp.failed': 'Verification failed. Check your password and try again.',
 
     // ── Notification Center (T-05.02.03) ─────────────────────
     'notifications.title': 'Notification Center',

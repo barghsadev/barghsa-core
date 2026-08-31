@@ -209,4 +209,146 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     expect(second.checked).toBe(false)
     expect(container.textContent).toContain('boom')
   })
+
+  function setInputValue(el: HTMLInputElement, value: string) {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+    setter?.call(el, value)
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+  }
+
+  function stepUpForbidden() {
+    return {
+      ok: false,
+      status: 403,
+      json: async () => ({
+        error: { code: 'AUTHZ:STEP_UP_REQUIRED', message: 'Re-verify your identity to continue' },
+      }),
+    }
+  }
+
+  it('opens a step-up challenge when PUT returns AUTHZ:STEP_UP_REQUIRED and keeps the optimistic toggle', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        return stepUpForbidden()
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+
+    expect(toggle.checked).toBe(false)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).not.toBeNull()
+    expect(container.textContent).toContain('Verification required')
+    expect(container.textContent).not.toContain('Re-verify your identity to continue')
+  })
+
+  it('rejects the write until step-up, then retries the PUT after verification', async () => {
+    let putCount = 0
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        putCount += 1
+        if (putCount === 1) return stepUpForbidden()
+        const body = JSON.parse(String(init.body)) as PutBody
+        return {
+          ok: true,
+          json: async () => matrixWith(body.serviceType, body.offset, body.enabled),
+        }
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        expect(JSON.parse(String(init.body))).toEqual({ password: 'secret' })
+        return {
+          ok: true,
+          json: async () => ({ message: 'ok', stepUpVerifiedAt: '2026-08-31T01:00:00.000Z' }),
+        }
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    expect(putCount).toBe(1)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).not.toBeNull()
+
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      setInputValue(password, 'secret')
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-submit"]') as HTMLButtonElement).click()
+    })
+
+    const stepUp = fetchMock.mock.calls.find((call) => String(call[0]).endsWith('/api/auth/step-up'))
+    expect(stepUp).toBeDefined()
+    expect((stepUp![1] as RequestInit).method).toBe('POST')
+    expect(putCount).toBe(2)
+    expect(toggle.checked).toBe(false)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+  })
+
+  it('reverts the toggle when the step-up challenge is cancelled', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        return stepUpForbidden()
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    expect(toggle.checked).toBe(false)
+
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-cancel"]') as HTMLButtonElement).click()
+    })
+
+    expect(toggle.checked).toBe(true)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+  })
+
+  it('keeps the challenge open when password verification fails', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        return stepUpForbidden()
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        return { ok: false, status: 422, json: async () => ({ error: { code: 'AUTH:LOGIN_INVALID_CREDENTIALS' } }) }
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      setInputValue(password, 'wrong')
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-submit"]') as HTMLButtonElement).click()
+    })
+
+    expect(toggle.checked).toBe(false)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).not.toBeNull()
+    expect(container.textContent).toContain('Verification failed')
+  })
 })

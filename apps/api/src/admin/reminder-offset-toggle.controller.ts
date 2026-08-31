@@ -16,6 +16,7 @@ import {
   type ReminderOffsetToggleDto,
 } from '@barghsa/shared/finance'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
 
 function httpError(
@@ -43,16 +44,15 @@ function requestIp(req: AuthenticatedRequest): string {
  *   `admin:finance:invoices:reminder-offsets` capability. Today the
  *   session model exposes only `req.session.isAdmin` (platform admin);
  *   granular staff-role permissions arrive with C-04.CC.03.
- * - Step-up on the mutation is deliberately deferred, matching other
- *   raw-fetch admin config panels (`DeliveryWindowConfigPanel`, dual-approval
- *   threshold, wallet top-up limit). The web toggle panel uses raw `fetch`
- *   and does not implement the AUTHZ:STEP_UP_REQUIRED challenge/retry flow
- *   yet; requiring step-up here would let admins load the matrix but fail
- *   every toggle. It must land together with the client-side step-up flow.
+ * - The mutation additionally requires recent step-up verification
+ *   (`@RequiresStepUp()` / StepUpGuard). Disabling an offset can suppress
+ *   payment reminders for an entire service type, so a stolen or unattended
+ *   admin session must not be enough. The web panel handles
+ *   `AUTHZ:STEP_UP_REQUIRED` with a password challenge and retries the PUT.
  */
 @ApiTags('Admin · Invoice reminder offsets')
 @ApiBearerAuth()
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 @Controller('api/admin/config/invoice-reminder-offsets')
 export class ReminderOffsetToggleController {
   constructor(private readonly service: ReminderOffsetToggleService) {}
@@ -81,13 +81,13 @@ export class ReminderOffsetToggleController {
 
   @Put()
   @HttpCode(200)
+  @RequiresStepUp()
   @ApiOperation({
     summary: 'Enable or disable one reminder offset for one service type (admin)',
     description:
       'Upserts (serviceType, offset, enabled). Changes apply to newly ' +
       'scheduled invoices; already-inserted schedule rows are left in place. ' +
-      'Step-up is deferred until the web raw-fetch admin panels implement the ' +
-      'AUTHZ:STEP_UP_REQUIRED challenge/retry flow.',
+      'Requires a recent step-up verification (AUTHZ:STEP_UP_REQUIRED).',
   })
   @ApiBody({
     schema: {
@@ -105,7 +105,7 @@ export class ReminderOffsetToggleController {
   })
   @ApiResponse({ status: 200, description: 'Updated toggle matrix.' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 403, description: 'Admin role or step-up required' })
   async set(
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown,

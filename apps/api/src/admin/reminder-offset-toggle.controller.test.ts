@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
-import { HttpException } from '@nestjs/common'
+import { ForbiddenException, HttpException } from '@nestjs/common'
+import { GUARDS_METADATA } from '@nestjs/common/constants'
+import { Reflector } from '@nestjs/core'
 import { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
+import { StepUpGuard } from '../session/step-up.guard.js'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   REMINDER_OFFSET_TOGGLE_PERMISSION,
@@ -82,12 +85,53 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
     })
   })
 
-  it('defers RequiresStepUp on set until the web raw-fetch challenge flow exists', () => {
+  it('protects the controller with StepUpGuard and requires step-up on set only', () => {
+    const guards = Reflect.getMetadata(
+      GUARDS_METADATA,
+      ReminderOffsetToggleController,
+    ) as unknown[]
+    expect(guards).toEqual(expect.arrayContaining([SessionAuthGuard, StepUpGuard]))
     expect(
-      Reflect.getMetadata('requiresStepUp', ReminderOffsetToggleController.prototype.set) ?? false,
-    ).toBe(false)
+      Reflect.getMetadata('requiresStepUp', ReminderOffsetToggleController.prototype.set),
+    ).toBe(true)
     expect(
       Reflect.getMetadata('requiresStepUp', ReminderOffsetToggleController.prototype.list) ?? false,
     ).toBe(false)
+  })
+
+  it('rejects set without a fresh step-up and allows it after verification', () => {
+    const guard = new StepUpGuard(new Reflector())
+    const session = {
+      sessionId: 'sid-1',
+      csrfToken: 'csrf-1',
+      userId: 'admin-1',
+      isAdmin: true,
+      stepUpVerifiedAt: null as Date | null,
+    }
+
+    const contextFor = (handler: (...args: never[]) => unknown) =>
+      ({
+        switchToHttp: () => ({
+          getRequest: () => ({ method: 'PUT', session }),
+        }),
+        getHandler: () => handler,
+        getClass: () => ReminderOffsetToggleController,
+      }) as never
+
+    try {
+      guard.canActivate(contextFor(ReminderOffsetToggleController.prototype.set))
+      expect.unreachable('set must require a fresh step-up')
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(ForbiddenException)
+      expect((error as ForbiddenException).getStatus()).toBe(403)
+      expect((error as ForbiddenException).getResponse()).toMatchObject({
+        error: ErrorCodes.AUTHZ_STEP_UP_REQUIRED.code,
+      })
+    }
+
+    expect(guard.canActivate(contextFor(ReminderOffsetToggleController.prototype.list))).toBe(true)
+
+    session.stepUpVerifiedAt = new Date()
+    expect(guard.canActivate(contextFor(ReminderOffsetToggleController.prototype.set))).toBe(true)
   })
 })
