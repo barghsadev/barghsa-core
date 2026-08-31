@@ -8,8 +8,9 @@
  * description).
  *
  * Profile isolation: every query is scoped to the caller's active
- * (default) profile. Missing invoices, other profiles, and unknown ids
- * all resolve to the same not-found outcome so existence is not leaked.
+ * (default) profile. Missing invoices, other profiles, unknown ids, and
+ * Draft invoices (not yet issued, staff-only) all resolve to the same
+ * not-found outcome so existence is not leaked.
  *
  * Money is serialized as decimal-digit strings (signed int8 IRR). JSON
  * Number cannot carry amounts past `Number.MAX_SAFE_INTEGER`.
@@ -85,6 +86,9 @@ export interface CustomerInvoiceListDto {
 }
 
 export const CUSTOMER_INVOICE_MAX_CHAIN = 50
+
+/** Matches `listForUser`: drafts are staff-only and never customer-visible. */
+export const CUSTOMER_VISIBLE_STATE_SQL = `state <> 'Draft'`
 
 export interface InvoiceFamilyRow {
   id: string
@@ -361,7 +365,7 @@ export class CustomerInvoiceDetailsService {
       `SELECT ${INVOICE_SELECT}
          FROM invoices
         WHERE profile_id = $1
-          AND state <> 'Draft'
+          AND ${CUSTOMER_VISIBLE_STATE_SQL}
         ORDER BY created_at DESC`,
       [profileId],
     )
@@ -415,7 +419,8 @@ export class CustomerInvoiceDetailsService {
     const result = await pool.query<InvoiceFamilyRow>(
       `SELECT ${INVOICE_SELECT}
          FROM invoices
-        WHERE id = $1 AND profile_id = $2`,
+        WHERE id = $1 AND profile_id = $2
+          AND ${CUSTOMER_VISIBLE_STATE_SQL}`,
       [invoiceId, profileId],
     )
     return result.rows[0] ?? null
@@ -470,6 +475,7 @@ export class CustomerInvoiceDetailsService {
       `SELECT ${INVOICE_SELECT}
          FROM invoices
         WHERE profile_id = $1
+          AND ${CUSTOMER_VISIBLE_STATE_SQL}
           AND (
             replaces_invoice_id = ANY($2::uuid[])
             OR adjustment_for_invoice_id = ANY($2::uuid[])

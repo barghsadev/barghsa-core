@@ -2,13 +2,15 @@
  * Unit tests for customer invoice details assembly (T-04.1.05.04).
  *
  * Covers explanation extraction, role classification, chain ordering,
- * profile isolation (404), missing invoice, and list filtering of drafts.
+ * profile isolation (404), missing invoice, direct draft 404, draft
+ * family-member exclusion, and list filtering of drafts.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
+  CUSTOMER_VISIBLE_STATE_SQL,
   CustomerInvoiceDetailsService,
   assembleCustomerInvoiceDetails,
   explanationForCorrection,
@@ -23,6 +25,8 @@ const ORIGINAL_ID = '22222222-2222-7222-8222-222222222222'
 const REPLACEMENT_ID = '33333333-3333-7333-8333-333333333333'
 const ADJUSTMENT_ID = '44444444-4444-7444-8444-444444444444'
 const OTHER_ID = '55555555-5555-7555-8555-555555555555'
+const DRAFT_ID = '77777777-7777-7777-8777-777777777777'
+const DRAFT_ADJUSTMENT_ID = '88888888-8888-7888-8888-888888888888'
 
 const mockPool = {
   query: vi.fn(),
@@ -267,6 +271,79 @@ describe('CustomerInvoiceDetailsService', () => {
     expect(rejectionBody(rejection).error).toBe(ErrorCodes.NOT_FOUND_RESOURCE.code)
     const loadCall = mockPool.query.mock.calls[1] as [string, unknown[]]
     expect(loadCall[1]).toEqual([OTHER_ID, PROFILE_ID])
+    expect(loadCall[0]).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+  })
+
+  it('404s when requesting a draft invoice in the active profile', async () => {
+    mockPool.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: PROFILE_ID }] }
+      }
+      if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
+        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+        return { rows: [] }
+      }
+      return { rows: [] }
+    })
+
+    const rejection = await service
+      .getForUser(USER_ID, DRAFT_ID)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 404 })
+    expect(rejectionBody(rejection).error).toBe(ErrorCodes.NOT_FOUND_RESOURCE.code)
+    expect(rejectionBody(rejection).message).toBe(`Invoice not found: ${DRAFT_ID}`)
+  })
+
+  it('excludes draft linked invoices from the correction chain', async () => {
+    const original = row({
+      id: ORIGINAL_ID,
+      state: 'Paid',
+      paid_amount: '100000',
+    })
+    const issuedAdjustment = row({
+      id: ADJUSTMENT_ID,
+      created_at: new Date('2026-08-03T10:00:00.000Z'),
+      adjustment_for_invoice_id: ORIGINAL_ID,
+      adjustment_kind: 'charge',
+      total_amount: '50000',
+      accounting_amount: '50000',
+      metadata: { reason: 'Issued post-payment charge', kind: 'charge' },
+    })
+
+    mockPool.query.mockImplementation(async (sql: string, params?: unknown[]) => {
+      if (sql.includes('FROM profiles')) {
+        return { rows: [{ id: PROFILE_ID }] }
+      }
+      if (sql.includes('FROM invoices') && sql.includes('WHERE id = $1')) {
+        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+        const id = params![0] as string
+        if (id === ORIGINAL_ID) return { rows: [original] }
+        if (id === DRAFT_ADJUSTMENT_ID) return { rows: [] }
+        return { rows: [] }
+      }
+      if (sql.includes('replaces_invoice_id = ANY')) {
+        expect(sql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
+        const parents = params![1] as string[]
+        if (parents.includes(ORIGINAL_ID)) return { rows: [issuedAdjustment] }
+        return { rows: [] }
+      }
+      if (sql.includes('FROM invoice_lines')) {
+        return {
+          rows: [
+            line(ORIGINAL_ID, 'Usage'),
+            line(ADJUSTMENT_ID, 'Issued post-payment charge', '50000'),
+          ],
+        }
+      }
+      return { rows: [] }
+    })
+
+    const details = await service.getForUser(USER_ID, ORIGINAL_ID)
+    expect(details.chain.map((n) => n.invoiceId)).toEqual([
+      ORIGINAL_ID,
+      ADJUSTMENT_ID,
+    ])
+    expect(details.chain.map((n) => n.invoiceId)).not.toContain(DRAFT_ADJUSTMENT_ID)
   })
 
   it('walks a replacement chain and returns original + replacement with explanations', async () => {
@@ -337,6 +414,6 @@ describe('CustomerInvoiceDetailsService', () => {
     expect(list.invoices[0]!.invoiceId).toBe(REPLACEMENT_ID)
     expect(list.invoices[0]!.explanation).toBe('Qty fix')
     const listSql = mockPool.query.mock.calls[1]![0] as string
-    expect(listSql).toContain("state <> 'Draft'")
+    expect(listSql).toContain(CUSTOMER_VISIBLE_STATE_SQL)
   })
 })
