@@ -8,6 +8,13 @@ import {
   type WalletTopUpLimitConfig,
 } from '@barghsa/shared/finance'
 
+const PG_UNIQUE_VIOLATION = '23505'
+const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency'
+
+/** Ledger types that post as a credit (positive amount, money in). */
+const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating', 'reversal'] as const
+type WalletCreditType = (typeof WALLET_CREDIT_TYPES)[number]
+
 export interface WalletRow {
   profileId: string
   postedBalance: bigint
@@ -29,6 +36,19 @@ export interface TransactionRow {
   metadata: unknown | null
   createdAt: Date
   updatedAt: Date
+}
+
+/**
+ * Credit reference payload (T-04.2.01.03).
+ *
+ * `type` is the ledger discriminator; `refId` optionally points at the
+ * originating domain entity (invoice, refund, provider event, …).
+ */
+export interface WalletCreditRef {
+  type: WalletCreditType
+  refId?: string | null
+  description?: string | null
+  metadata?: unknown
 }
 
 @Injectable()
@@ -120,38 +140,119 @@ export class WalletService {
   }
 
   /**
-   * Credit a wallet (money in). Uses atomic transaction with FOR UPDATE locking.
+   * Credit a wallet (T-04.2.01.03).
+   *
+   * In one DB transaction:
+   *   1. `SELECT … FOR UPDATE` the wallet row.
+   *   2. Return the existing ledger row when `idempotencyKey` already posted.
+   *   3. INSERT a Completed ledger row (positive amount).
+   *   4. UPDATE `posted_balance` with
+   *      `WHERE version = X AND posted_balance >= 0`.
+   *
+   * The version predicate is optimistic locking; the non-negative
+   * `posted_balance` predicate refuses to post onto a corrupt wallet.
+   * Unique `idempotency_key` is the last-line duplicate guard.
    */
   async credit(
     walletId: string,
     amount: bigint,
-    ref: { idempotencyKey: string; type: string; refId?: string; description?: string },
+    ref: WalletCreditRef,
+    idempotencyKey: string,
   ): Promise<TransactionRow> {
     if (amount <= 0n) throw new BadRequestException('Credit amount must be positive')
+    if (!idempotencyKey.trim()) {
+      throw new BadRequestException('Idempotency key is required')
+    }
+    if (!isWalletCreditType(ref.type)) {
+      throw new BadRequestException(`Credit type must be one of: ${WALLET_CREDIT_TYPES.join(', ')}`)
+    }
 
-    return this.executeWalletTx(walletId, ref.idempotencyKey, async (client, wallet) => {
+    const pool = getDbPool()
+    const client = await pool.connect()
+    // PostgreSQL UUID columns return canonical lowercase; callers may pass
+    // any valid spelling. Ownership checks must use the row's profile_id.
+    let canonicalWalletId: string | undefined
+    try {
+      await client.query('BEGIN')
+
+      const walletResult = await client.query(
+        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
+        [walletId],
+      )
+      if (walletResult.rows.length === 0) {
+        throw new NotFoundException(`Wallet not found: ${walletId}`)
+      }
+      const wallet = walletResult.rows[0] as { version: number; profile_id: string }
+      canonicalWalletId = wallet.profile_id
+
+      const idemResult = await client.query(
+        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+        [idempotencyKey],
+      )
+      if (idemResult.rows.length > 0) {
+        const existing = idemResult.rows[0] as { wallet_id: string }
+        if (existing.wallet_id !== canonicalWalletId) {
+          throw new ConflictException('Idempotency key already used for a different wallet')
+        }
+        await client.query('COMMIT')
+        return mapTransaction(idemResult.rows[0])
+      }
+
+      const txResult = await client.query(
+        `INSERT INTO wallet_transactions
+           (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+         VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6, COALESCE($7::jsonb, '{}'::jsonb))
+         RETURNING *`,
+        [
+          walletId,
+          ref.type,
+          amount,
+          idempotencyKey,
+          ref.refId ?? null,
+          ref.description ?? null,
+          ref.metadata === undefined ? null : JSON.stringify(ref.metadata),
+        ],
+      )
+
       const updateResult = await client.query(
         `UPDATE wallets
          SET posted_balance = posted_balance + $1,
              version = version + 1,
              updated_at = NOW()
-         WHERE profile_id = $2 AND version = $3
+         WHERE profile_id = $2
+           AND version = $3
+           AND posted_balance >= 0
          RETURNING *`,
         [amount, walletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new ConflictException('Concurrent wallet modification detected')
+        throw new ConflictException(
+          'Wallet credit rejected: version mismatch or postedBalance < 0',
+        )
       }
 
-      const txResult = await client.query(
-        `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key, ref_id, description)
-         VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6)
-         RETURNING *`,
-        [walletId, ref.type, amount, ref.idempotencyKey, ref.refId ?? null, ref.description ?? null],
-      )
-
+      await client.query('COMMIT')
       return mapTransaction(txResult.rows[0])
-    })
+    } catch (error) {
+      await client.query('ROLLBACK')
+      if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
+        const existing = await pool.query(
+          `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+          [idempotencyKey],
+        )
+        if (
+          existing.rows.length > 0 &&
+          canonicalWalletId !== undefined &&
+          existing.rows[0]!.wallet_id === canonicalWalletId
+        ) {
+          return mapTransaction(existing.rows[0])
+        }
+        throw new ConflictException('Idempotency key already used')
+      }
+      throw error
+    } finally {
+      client.release()
+    }
   }
 
   /**
@@ -382,4 +483,15 @@ function mapTransaction(row: any): TransactionRow {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
+}
+
+function isWalletCreditType(type: string): type is WalletCreditType {
+  return (WALLET_CREDIT_TYPES as readonly string[]).includes(type)
+}
+
+function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
+  if (!error || typeof error !== 'object') return false
+  const pgError = error as { code?: string; constraint?: string }
+  if (pgError.code !== PG_UNIQUE_VIOLATION) return false
+  return constraint === undefined || pgError.constraint === constraint
 }
