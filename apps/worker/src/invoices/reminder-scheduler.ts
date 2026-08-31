@@ -61,8 +61,9 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * candidate query so they cannot fill the bounded window across ticks;
  * re-enabling any offset returns those invoices to the candidate set.
  *
- * Stop states (Paid / Cancelled / Refunded) are not scheduled; cancelling
- * already-inserted future rows is T-04.1.04.06.
+ * Stop states (Paid / Cancelled / Refunded) are not scheduled; remaining
+ * `scheduled` rows are cancelled by T-04.1.04.06 when the invoice enters
+ * those states.
  */
 
 /** Default number of issued invoices claimed per page / scheduling quota. */

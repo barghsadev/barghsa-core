@@ -14,7 +14,9 @@ import type { IsolatedTestDb } from './test/testDb'
  * The isolated schema is seeded to look like a database that already
  * applied journal entries through 0061 and already has `users` (FK
  * target). `migrate()` must then pick up 0062 from the journal and
- * create `invoice_reminder_offset_toggles`.
+ * create `invoice_reminder_offset_toggles`. 0063 (cancel reminders on
+ * stop state) is journaled after 0062 so migrate() also applies it and
+ * needs `invoices` plus `invoice_reminder_schedule`.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
@@ -23,6 +25,11 @@ const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql'
 const TOGGLES_TAG = '0062_create_invoice_reminder_offset_toggles'
 /** `when` of journal tag 0061 — last entry before 0062 was registered. */
 const PRIOR_JOURNAL_HEAD_WHEN = 1788220800000
+const AMOUNT_MIGRATION = resolve(DRIZZLE_FOLDER, '0052_add_invoice_amount_check_constraints.sql')
+const REMINDER_TABLE_MIGRATION = resolve(
+  DRIZZLE_FOLDER,
+  '0060_create_invoice_reminder_schedule.sql',
+)
 
 describe('drizzle migrate() applies invoice_reminder_offset_toggles (T-04.1.04.05)', () => {
   let ctx: IsolatedTestDb
@@ -55,6 +62,26 @@ describe('drizzle migrate() applies invoice_reminder_offset_toggles (T-04.1.04.0
         user_id TEXT PRIMARY KEY
       )
     `)
+    // 0063 (cancel-on-stop-state) is journaled after 0062; migrate() will
+    // also apply it and needs the invoices + reminder-schedule tables.
+    await ctx.db.execute(sql`
+      CREATE TYPE invoice_state AS ENUM (
+        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
+        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
+      )
+    `)
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS profiles (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS orders (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+    await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REMINDER_TABLE_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

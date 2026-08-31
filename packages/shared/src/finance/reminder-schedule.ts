@@ -38,8 +38,9 @@ export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
 
 /**
  * Invoice states that must not receive a new reminder plan (S-04.1.04
- * "stop immediately"). T-04.1.04.06 later cancels already-inserted rows
- * on these transitions; the scheduler also skips them on catch-up.
+ * "stop immediately"). T-04.1.04.06 cancels already-inserted `scheduled`
+ * rows on these transitions (migration 0063 trigger + sender catch-up);
+ * the scheduler also skips them on catch-up.
  */
 export const REMINDER_STOP_STATES = ['Paid', 'Cancelled', 'Refunded'] as const
 

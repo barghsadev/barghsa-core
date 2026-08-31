@@ -60,9 +60,10 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         user_id TEXT PRIMARY KEY
       )
     `)
-    // 0060 (invoice_reminder_schedule), 0061 (unique index), and 0062
-    // (offset toggles) are journaled after 0059; migrate() will also
-    // apply them and needs the invoices FK target.
+    // 0060 (invoice_reminder_schedule), 0061 (unique index), 0062
+    // (offset toggles), and 0063 (cancel on stop state) are journaled
+    // after 0059; migrate() will also apply them and needs the invoices
+    // FK target.
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',

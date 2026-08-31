@@ -113,6 +113,13 @@
       "when": 1788307200000,
       "tag": "0062_create_invoice_reminder_offset_toggles",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1788393600000,
+      "tag": "0063_cancel_reminders_on_invoice_stop_state",
+      "breakpoints": true
     }
   ]
 }
