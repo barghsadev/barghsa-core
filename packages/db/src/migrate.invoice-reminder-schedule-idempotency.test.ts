@@ -8,14 +8,13 @@ import type { IsolatedTestDb } from './test/testDb'
 
 /**
  * Proves production `migrate()` (drizzle-orm journal discovery) applies
- * migration 0059. Hand-running the SQL file is not enough: drizzle-orm
+ * migration 0061. Hand-running the SQL file is not enough: drizzle-orm
  * only executes tags listed in `drizzle/meta/_journal.json`.
  *
  * The isolated schema is seeded to look like a database that already
- * applied journal entries through 0058 and already has `users` (FK
- * target) plus `invoices` (0060 FK target). `migrate()` must then pick
- * up 0059 from the journal and create `service_due_periods`. 0060 is
- * journaled after 0059 so migrate() also applies it.
+ * applied journal entries through 0060 and already has
+ * `invoice_reminder_schedule`. `migrate()` must then pick up 0061 from
+ * the journal and create the unique (invoice_id, offset, channel) index.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
@@ -25,44 +24,40 @@ const AMOUNT_MIGRATION = resolve(
   DRIZZLE_FOLDER,
   '0052_add_invoice_amount_check_constraints.sql',
 )
-const DUE_PERIODS_TAG = '0059_create_service_due_periods'
-/** `when` of journal tag 0058 — last entry before 0059 was registered. */
-const PRIOR_JOURNAL_HEAD_WHEN = 1750000000000
+const REMINDER_TABLE_MIGRATION = resolve(
+  DRIZZLE_FOLDER,
+  '0060_create_invoice_reminder_schedule.sql',
+)
+const IDEMPOTENCY_TAG = '0061_add_invoice_reminder_schedule_idempotency'
+/** `when` of journal tag 0060 — last entry before 0061 was registered. */
+const PRIOR_JOURNAL_HEAD_WHEN = 1788134400000
 
-describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
+describe('drizzle migrate() applies reminder-schedule unique index (T-04.1.04.04)', () => {
   let ctx: IsolatedTestDb
-  let duePeriodsWhen: number
+  let idempotencyWhen: number
 
   beforeAll(async () => {
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
       entries: Array<{ tag: string; when: number }>
     }
-    const duePeriodsEntry = journal.entries.find((entry) => entry.tag === DUE_PERIODS_TAG)
-    if (!duePeriodsEntry) {
+    const idempotencyEntry = journal.entries.find((entry) => entry.tag === IDEMPOTENCY_TAG)
+    if (!idempotencyEntry) {
       throw new Error(
-        `${DUE_PERIODS_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
+        `${IDEMPOTENCY_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
       )
     }
-    if (duePeriodsEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
+    if (idempotencyEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
       throw new Error(
-        `${DUE_PERIODS_TAG} journal 'when' (${duePeriodsEntry.when}) must be after 0058 (${PRIOR_JOURNAL_HEAD_WHEN})`,
+        `${IDEMPOTENCY_TAG} journal 'when' (${idempotencyEntry.when}) must be after 0060 (${PRIOR_JOURNAL_HEAD_WHEN})`,
       )
     }
-    duePeriodsWhen = duePeriodsEntry.when
+    idempotencyWhen = idempotencyEntry.when
 
     ctx = await createIsolatedTestDb()
 
     const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(uuidSql)
 
-    await ctx.db.execute(sql`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY
-      )
-    `)
-    // 0060 (invoice_reminder_schedule) and 0061 (unique index) are
-    // journaled after 0059; migrate() will also apply them and needs
-    // the invoices FK target.
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
@@ -79,8 +74,12 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
     `)
+
     const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(amountSql)
+
+    const tableSql = readFileSync(REMINDER_TABLE_MIGRATION, 'utf-8').trim()
+    await ctx.pool.query(tableSql)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
@@ -91,7 +90,7 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
     `)
     await ctx.pool.query(
       `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-      ['prior-journal-head-0058', PRIOR_JOURNAL_HEAD_WHEN],
+      ['prior-journal-head-0060', PRIOR_JOURNAL_HEAD_WHEN],
     )
 
     await migrate(ctx.db, {
@@ -105,29 +104,17 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
     await dropTestSchema(ctx.schemaName)
   })
 
-  it('creates service_due_periods through the journaled migrate() path', async () => {
-    const cols = await ctx.db.execute<{ column_name: string }>(sql`
-      SELECT column_name
-      FROM information_schema.columns
-      WHERE table_schema = current_schema()
-        AND table_name = 'service_due_periods'
-      ORDER BY ordinal_position
+  it('creates the unique index through the journaled migrate() path', async () => {
+    const idx = await ctx.db.execute<{ index_name: string }>(sql`
+      SELECT indexname AS index_name FROM pg_indexes
+      WHERE schemaname = current_schema()
+        AND tablename = 'invoice_reminder_schedule'
+        AND indexname = 'uq_invoice_reminder_schedule_invoice_offset_channel'
     `)
-    expect(cols.rows.map((row) => row.column_name)).toEqual(
-      expect.arrayContaining([
-        'id',
-        'service_type',
-        'default_days',
-        'effective_from',
-        'effective_until',
-        'created_by',
-        'created_at',
-        'updated_at',
-      ]),
-    )
+    expect(idx.rows).toHaveLength(1)
   })
 
-  it('records 0059 in the migrator bookkeeping table', async () => {
+  it('records 0061 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
       `SELECT created_at::text AS created_at
        FROM __drizzle_migrations
@@ -136,6 +123,6 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
       [PRIOR_JOURNAL_HEAD_WHEN],
     )
     expect(rows.rows.length).toBeGreaterThanOrEqual(1)
-    expect(rows.rows.map((row) => Number(row.created_at))).toContain(duePeriodsWhen)
+    expect(rows.rows.map((row) => Number(row.created_at))).toContain(idempotencyWhen)
   })
 })

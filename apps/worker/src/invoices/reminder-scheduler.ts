@@ -49,11 +49,11 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * A pass also keyset-paginates past skipped pages in the same tick so a
  * residual empty-plan cohort cannot block a newly issued invoice.
  *
- * Admin per-offset toggles (T-04.1.04.05) and the unique
- * (invoiceId, offset, channel) index (T-04.1.04.04) are later tasks;
- * this pass inserts remaining future offsets and is idempotent by
- * skipping invoices that already have any schedule row (re-checked
- * under `FOR UPDATE SKIP LOCKED`).
+ * Admin per-offset toggles (T-04.1.04.05) are a later task; this pass
+ * inserts remaining future offsets and is idempotent by skipping
+ * invoices that already have any schedule row (re-checked under
+ * `FOR UPDATE SKIP LOCKED`) and by `ON CONFLICT DO NOTHING` against
+ * the unique (invoiceId, offset, channel) index (T-04.1.04.04).
  *
  * Stop states (Paid / Cancelled / Refunded) are not scheduled; cancelling
  * already-inserted future rows is T-04.1.04.06.
@@ -429,7 +429,8 @@ async function scheduleOneInvoice(
 
   await client.query(
     `INSERT INTO invoice_reminder_schedule (invoice_id, "offset", channel, scheduled_at)
-     VALUES ${placeholders.join(', ')}`,
+     VALUES ${placeholders.join(', ')}
+     ON CONFLICT (invoice_id, "offset", channel) DO NOTHING`,
     values,
   )
 
