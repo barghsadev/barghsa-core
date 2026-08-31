@@ -351,4 +351,97 @@ describe('ReminderOffsetTogglePanel (T-04.1.04.05)', () => {
     expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).not.toBeNull()
     expect(container.textContent).toContain('Verification failed')
   })
+
+  it('reverts the switch and clears pending when the PUT promise rejects', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        throw new TypeError('Failed to fetch')
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+
+    expect(toggle.checked).toBe(true)
+    expect(toggle.disabled).toBe(false)
+    expect(container.textContent).toContain('Failed to save reminder toggle')
+  })
+
+  it('keeps the challenge and queued toggle when step-up fetch rejects', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        return stepUpForbidden()
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        throw new TypeError('Failed to fetch')
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      setInputValue(password, 'secret')
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-submit"]') as HTMLButtonElement).click()
+    })
+
+    expect(toggle.checked).toBe(false)
+    expect(toggle.disabled).toBe(true)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).not.toBeNull()
+    expect(container.textContent).toContain('Verification failed')
+  })
+
+  it('reverts the toggle when the retry PUT rejects after a successful step-up', async () => {
+    let putCount = 0
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && (!init || init.method === 'GET')) {
+        return { ok: true, json: async () => defaultReminderOffsetToggles() }
+      }
+      if (url.endsWith('/api/admin/config/invoice-reminder-offsets') && init?.method === 'PUT') {
+        putCount += 1
+        if (putCount === 1) return stepUpForbidden()
+        throw new TypeError('Failed to fetch')
+      }
+      if (url.endsWith('/api/auth/step-up') && init?.method === 'POST') {
+        return {
+          ok: true,
+          json: async () => ({ message: 'ok', stepUpVerifiedAt: '2026-08-31T01:00:00.000Z' }),
+        }
+      }
+      return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
+    })
+
+    await renderPanel()
+    const toggle = await clickToggle('reminder-toggle-electricity--7')
+    const password = container.querySelector(
+      '[data-testid="reminder-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      setInputValue(password, 'secret')
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="reminder-step-up-submit"]') as HTMLButtonElement).click()
+    })
+
+    expect(putCount).toBe(2)
+    expect(toggle.checked).toBe(true)
+    expect(toggle.disabled).toBe(false)
+    expect(container.querySelector('[data-testid="reminder-step-up-dialog"]')).toBeNull()
+    expect(container.textContent).toContain('Failed to save reminder toggle')
+  })
 })

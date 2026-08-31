@@ -116,26 +116,34 @@ async function saveToggle(
   enabled: boolean,
   fallback: string,
 ): Promise<SaveResult> {
-  const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
-    method: 'PUT',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ serviceType, offset, enabled }),
-  })
-  const data: unknown = await res.json().catch(() => null)
-  if (isStepUpRequired(res, data)) return { kind: 'step_up' }
-  if (!res.ok) return { kind: 'error', message: errorMessage(data, fallback) }
-  const matrix = Array.isArray(data) ? (data as ReminderOffsetToggleDto[]) : []
-  const saved = matrix.find((row) => row.serviceType === serviceType && row.offset === offset)
-  return { kind: 'ok', enabled: saved?.enabled ?? enabled }
+  try {
+    const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
+      method: 'PUT',
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ serviceType, offset, enabled }),
+    })
+    const data: unknown = await res.json().catch(() => null)
+    if (isStepUpRequired(res, data)) return { kind: 'step_up' }
+    if (!res.ok) return { kind: 'error', message: errorMessage(data, fallback) }
+    const matrix = Array.isArray(data) ? (data as ReminderOffsetToggleDto[]) : []
+    const saved = matrix.find((row) => row.serviceType === serviceType && row.offset === offset)
+    return { kind: 'ok', enabled: saved?.enabled ?? enabled }
+  } catch {
+    return { kind: 'error', message: fallback }
+  }
 }
 
 async function verifyStepUp(password: string): Promise<boolean> {
-  const res = await fetch('/api/auth/step-up', {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify({ password }),
-  })
-  return res.ok
+  try {
+    const res = await fetch('/api/auth/step-up', {
+      method: 'POST',
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ password }),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
 }
 
 function ariaLabel(
@@ -177,18 +185,24 @@ export default function ReminderOffsetTogglePanel() {
 
   async function persistToggle(item: PendingToggle): Promise<'step_up' | 'done'> {
     const fallback = t('admin.invoices.reminders.saveFailed', locale)
-    const result = await saveToggle(item.serviceType, item.offset, item.enabled, fallback)
-    if (result.kind === 'step_up') return 'step_up'
-    if (result.kind === 'error') {
+    try {
+      const result = await saveToggle(item.serviceType, item.offset, item.enabled, fallback)
+      if (result.kind === 'step_up') return 'step_up'
+      if (result.kind === 'error') {
+        revertToggle(item)
+        setError(result.message)
+        return 'done'
+      }
+      setToggles((current) =>
+        current ? patchCell(current, item.serviceType, item.offset, result.enabled) : current,
+      )
+      markPending(toggleKey(item.serviceType, item.offset), false)
+      return 'done'
+    } catch {
       revertToggle(item)
-      setError(result.message)
+      setError(fallback)
       return 'done'
     }
-    setToggles((current) =>
-      current ? patchCell(current, item.serviceType, item.offset, result.enabled) : current,
-    )
-    markPending(toggleKey(item.serviceType, item.offset), false)
-    return 'done'
   }
 
   const load = useCallback(async () => {
@@ -250,7 +264,13 @@ export default function ReminderOffsetTogglePanel() {
     setStepUpSubmitting(true)
     setStepUpError(null)
     try {
-      const verified = await verifyStepUp(stepUpPassword)
+      let verified = false
+      try {
+        verified = await verifyStepUp(stepUpPassword)
+      } catch {
+        setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale))
+        return
+      }
       if (!verified) {
         setStepUpError(t('admin.invoices.reminders.stepUp.failed', locale))
         return
