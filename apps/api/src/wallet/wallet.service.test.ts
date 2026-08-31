@@ -344,21 +344,355 @@ describe('WalletService', () => {
     })
   })
 
-  describe('debit', () => {
-    it('rejects insufficient balance', async () => {
+  describe('debit (T-04.2.01.04)', () => {
+    /**
+     * Query sequence for a first-time debit:
+     *   0: BEGIN
+     *   1: SELECT … FOR UPDATE
+     *   2: SELECT by idempotency_key
+     *   3: UPDATE wallets … reserved_balance += amount (reserve)
+     *   4: UPDATE wallets … posted_balance -= amount, reserved_balance -= amount (complete)
+     *   5: INSERT wallet_transactions (negative amount, Completed)
+     *   6: COMMIT
+     */
+    it('reserves then completes, inserting a Completed ledger row with a negative amount', async () => {
+      const wallet = makeWalletRow()
+      const debitTx = makeTxRow({
+        type: 'payment',
+        amount: '-100000',
+        state: 'Completed',
+        idempotency_key: 'idem-debit-001',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, reserved_balance: '300000' })],
+        })
+        .mockResolvedValueOnce({
+          rows: [
+            makeWalletRow({
+              version: 3,
+              posted_balance: '900000',
+              reserved_balance: '200000',
+            }),
+          ],
+        })
+        .mockResolvedValueOnce({ rows: [debitTx] })
+
+      const result = await service.debit(
+        'profile-1',
+        100000n,
+        { type: 'payment', refId: 'inv-1', description: 'invoice settlement' },
+        'idem-debit-001',
+      )
+
+      expect(result.state).toBe('Completed')
+      expect(result.type).toBe('payment')
+      expect(result.amount).toBe(-100000n)
+
+      const walletUpdates = mockClient.query.mock.calls.filter(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(walletUpdates).toHaveLength(2)
+
+      const reserveCall = walletUpdates[0]!
+      expect(reserveCall[0]).toContain('reserved_balance = reserved_balance + $1')
+      expect(reserveCall[0]).toContain('version = version + 1')
+      expect(reserveCall[0]).toContain('(posted_balance - reserved_balance) >= $1')
+      expect(reserveCall[1]).toEqual([100000n, 'profile-1', 1])
+
+      const completeCall = walletUpdates[1]!
+      expect(completeCall[0]).toContain('posted_balance = posted_balance - $1')
+      expect(completeCall[0]).toContain('reserved_balance = reserved_balance - $1')
+      expect(completeCall[0]).toContain('reserved_balance >= $1')
+      expect(completeCall[0]).toContain('posted_balance >= $1')
+      expect(completeCall[1]).toEqual([100000n, 'profile-1', 2])
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![0]).toContain("'Completed'")
+      expect(insertCall![1]).toEqual([
+        'profile-1',
+        'payment',
+        -100000n,
+        'idem-debit-001',
+        'inv-1',
+        'invoice settlement',
+        null,
+      ])
+
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('rejects when availableBalance is below the debit amount', async () => {
       const lowWallet = makeWalletRow({ posted_balance: '50000', reserved_balance: '0' })
 
       mockClient.query
-        .mockResolvedValueOnce({ rows: [] })                    // 0: BEGIN
-        .mockResolvedValueOnce({ rows: [lowWallet] })           // 1: SELECT FOR UPDATE
-        .mockResolvedValueOnce({ rows: [] })                    // 2: idempotency check
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [lowWallet] })
+        .mockResolvedValueOnce({ rows: [] })
 
       await expect(
-        service.debit('profile-1', 100000n, {
-          idempotencyKey: 'idem-002',
-          type: 'payment',
-        }),
+        service.debit('profile-1', 100000n, { type: 'payment' }, 'idem-002'),
       ).rejects.toThrow('Insufficient balance')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects when reserved funds leave availableBalance below the debit amount', async () => {
+      const wallet = makeWalletRow({ posted_balance: '1000000', reserved_balance: '900000' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.debit('profile-1', 200000n, { type: 'payment' }, 'idem-reserved'),
+      ).rejects.toThrow('Insufficient balance: available=100000, required=200000')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('returns the existing transaction on idempotent retry without mutating the wallet', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({ type: 'payment', amount: '-100000' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      const result = await service.debit('profile-1', 100000n, { type: 'payment' }, 'idem-001')
+
+      expect(result.id).toBe('tx-001')
+      expect(result.amount).toBe(-100000n)
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('treats uppercase and lowercase walletId spellings as the same owner on retry', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const existingTx = makeTxRow({
+        wallet_id: canonical,
+        type: 'payment',
+        amount: '-100000',
+        idempotency_key: 'idem-case',
+      })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      const result = await service.debit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'payment' },
+        'idem-case',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects a colliding idempotency key owned by another wallet', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: 'profile-other' })] })
+
+      await expect(
+        service.debit('profile-1', 100000n, { type: 'payment' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects zero or negative debit without opening a transaction', async () => {
+      await expect(
+        service.debit('profile-1', 0n, { type: 'payment' }, 'k'),
+      ).rejects.toThrow('Debit amount must be positive')
+
+      await expect(
+        service.debit('profile-1', -100n, { type: 'payment' }, 'k'),
+      ).rejects.toThrow('Debit amount must be positive')
+
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a blank idempotency key', async () => {
+      await expect(
+        service.debit('profile-1', 100n, { type: 'payment' }, '   '),
+      ).rejects.toThrow('Idempotency key is required')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a non-debit ledger type', async () => {
+      await expect(
+        service.debit(
+          'profile-1',
+          100n,
+          { type: 'topup' } as unknown as { type: 'payment' },
+          'k',
+        ),
+      ).rejects.toThrow('Debit type must be one of')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('throws NotFound when the wallet row is missing', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.debit('missing', 100n, { type: 'payment' }, 'k'),
+      ).rejects.toThrow('Wallet not found: missing')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the debit when the reserve UPDATE matches no row', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.debit('profile-1', 100000n, { type: 'payment' }, 'idem-001'),
+      ).rejects.toThrow('version mismatch or insufficient availableBalance')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the debit when the complete UPDATE matches no row', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, reserved_balance: '300000' })],
+        })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.debit('profile-1', 100000n, { type: 'payment' }, 'idem-001'),
+      ).rejects.toThrow('version mismatch or reserved/posted shortfall')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('returns the committed ledger row when INSERT races on the unique idempotency index', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, reserved_balance: '300000' })],
+        })
+        .mockResolvedValueOnce({
+          rows: [
+            makeWalletRow({
+              version: 3,
+              posted_balance: '900000',
+              reserved_balance: '200000',
+            }),
+          ],
+        })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ type: 'payment', amount: '-100000' })],
+      })
+
+      const result = await service.debit(
+        'profile-1',
+        100000n,
+        { type: 'payment' },
+        'idem-001',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(result.amount).toBe(-100000n)
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('idempotency_key'),
+        ['idem-001'],
+      )
+    })
+
+    it('returns the committed row on unique-index race when retry uses a UUID spelling variant', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ profile_id: canonical, version: 2, reserved_balance: '300000' })],
+        })
+        .mockResolvedValueOnce({
+          rows: [
+            makeWalletRow({
+              profile_id: canonical,
+              version: 3,
+              posted_balance: '900000',
+              reserved_balance: '200000',
+            }),
+          ],
+        })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [
+          makeTxRow({
+            wallet_id: canonical,
+            type: 'payment',
+            amount: '-100000',
+            idempotency_key: 'idem-case-race',
+          }),
+        ],
+      })
+
+      const result = await service.debit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'payment' },
+        'idem-case-race',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
   })
 
