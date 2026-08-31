@@ -169,6 +169,9 @@ export class WalletService {
 
     const pool = getDbPool()
     const client = await pool.connect()
+    // PostgreSQL UUID columns return canonical lowercase; callers may pass
+    // any valid spelling. Ownership checks must use the row's profile_id.
+    let canonicalWalletId: string | undefined
     try {
       await client.query('BEGIN')
 
@@ -179,7 +182,8 @@ export class WalletService {
       if (walletResult.rows.length === 0) {
         throw new NotFoundException(`Wallet not found: ${walletId}`)
       }
-      const wallet = walletResult.rows[0] as { version: number }
+      const wallet = walletResult.rows[0] as { version: number; profile_id: string }
+      canonicalWalletId = wallet.profile_id
 
       const idemResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
@@ -187,7 +191,7 @@ export class WalletService {
       )
       if (idemResult.rows.length > 0) {
         const existing = idemResult.rows[0] as { wallet_id: string }
-        if (existing.wallet_id !== walletId) {
+        if (existing.wallet_id !== canonicalWalletId) {
           throw new ConflictException('Idempotency key already used for a different wallet')
         }
         await client.query('COMMIT')
@@ -236,7 +240,11 @@ export class WalletService {
           `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
           [idempotencyKey],
         )
-        if (existing.rows.length > 0 && existing.rows[0]!.wallet_id === walletId) {
+        if (
+          existing.rows.length > 0 &&
+          canonicalWalletId !== undefined &&
+          existing.rows[0]!.wallet_id === canonicalWalletId
+        ) {
           return mapTransaction(existing.rows[0])
         }
         throw new ConflictException('Idempotency key already used')

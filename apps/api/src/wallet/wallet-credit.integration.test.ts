@@ -180,6 +180,32 @@ describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
     expect(matching).toHaveLength(1)
   })
 
+  it('retries the same idempotency key with uppercase/lowercase UUID spellings without changing the balance', async () => {
+    const first = await service.credit(
+      PROFILE_A,
+      5_000n,
+      { type: 'topup' },
+      'credit-uuid-case',
+    )
+    const afterFirst = await fetchWallet(PROFILE_A)
+
+    const second = await service.credit(
+      PROFILE_A.toUpperCase(),
+      5_000n,
+      { type: 'topup' },
+      'credit-uuid-case',
+    )
+    const afterSecond = await fetchWallet(PROFILE_A)
+
+    expect(second.id).toBe(first.id)
+    expect(second.walletId).toBe(PROFILE_A)
+    expect(afterSecond.posted_balance).toBe(afterFirst.posted_balance)
+    expect(afterSecond.version).toBe(afterFirst.version)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'credit-uuid-case'),
+    ).toHaveLength(1)
+  })
+
   it('lets concurrent retries of the same idempotency key credit only once', async () => {
     const before = await fetchWallet(PROFILE_A)
     const results = await Promise.all([

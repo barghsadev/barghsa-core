@@ -190,6 +190,33 @@ describe('WalletService', () => {
       ).toBe(false)
     })
 
+    it('treats uppercase and lowercase walletId spellings as the same owner on retry', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const existingTx = makeTxRow({ wallet_id: canonical, idempotency_key: 'idem-case' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      const result = await service.credit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'topup' },
+        'idem-case',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
     it('rejects a colliding idempotency key owned by another wallet', async () => {
       const wallet = makeWalletRow()
       mockClient.query
@@ -286,6 +313,34 @@ describe('WalletService', () => {
         expect.stringContaining('idempotency_key'),
         ['idem-001'],
       )
+    })
+
+    it('returns the committed row on unique-index race when retry uses a UUID spelling variant', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ wallet_id: canonical, idempotency_key: 'idem-case-race' })],
+      })
+
+      const result = await service.credit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'topup' },
+        'idem-case-race',
+      )
+
+      expect(result.id).toBe('tx-001')
+      expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
   })
 
