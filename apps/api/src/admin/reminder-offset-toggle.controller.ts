@@ -16,7 +16,6 @@ import {
   type ReminderOffsetToggleDto,
 } from '@barghsa/shared/finance'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
 
 function httpError(
@@ -44,8 +43,12 @@ function requestIp(req: AuthenticatedRequest): string {
  *   `admin:finance:invoices:reminder-offsets` capability. Today the
  *   session model exposes only `req.session.isAdmin` (platform admin);
  *   granular staff-role permissions arrive with C-04.CC.03.
- * - The mutation additionally requires recent step-up verification
- *   (`@RequiresStepUp()`) — reminder schedule is financial configuration.
+ * - Step-up on the mutation is deliberately deferred, matching other
+ *   raw-fetch admin config panels (`DeliveryWindowConfigPanel`, dual-approval
+ *   threshold, wallet top-up limit). The web toggle panel uses raw `fetch`
+ *   and does not implement the AUTHZ:STEP_UP_REQUIRED challenge/retry flow
+ *   yet; requiring step-up here would let admins load the matrix but fail
+ *   every toggle. It must land together with the client-side step-up flow.
  */
 @ApiTags('Admin · Invoice reminder offsets')
 @ApiBearerAuth()
@@ -78,13 +81,13 @@ export class ReminderOffsetToggleController {
 
   @Put()
   @HttpCode(200)
-  @UseGuards(StepUpGuard)
-  @RequiresStepUp()
   @ApiOperation({
     summary: 'Enable or disable one reminder offset for one service type (admin)',
     description:
       'Upserts (serviceType, offset, enabled). Changes apply to newly ' +
-      'scheduled invoices; already-inserted schedule rows are left in place.',
+      'scheduled invoices; already-inserted schedule rows are left in place. ' +
+      'Step-up is deferred until the web raw-fetch admin panels implement the ' +
+      'AUTHZ:STEP_UP_REQUIRED challenge/retry flow.',
   })
   @ApiBody({
     schema: {
@@ -102,7 +105,7 @@ export class ReminderOffsetToggleController {
   })
   @ApiResponse({ status: 200, description: 'Updated toggle matrix.' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  @ApiResponse({ status: 403, description: 'Admin role or step-up required' })
+  @ApiResponse({ status: 403, description: 'Admin role required' })
   async set(
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown,

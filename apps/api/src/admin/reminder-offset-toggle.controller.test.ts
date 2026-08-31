@@ -81,4 +81,13 @@ describe('reminder offset toggle permission gate (T-04.1.04.05)', () => {
       ip: '127.0.0.1',
     })
   })
+
+  it('defers RequiresStepUp on set until the web raw-fetch challenge flow exists', () => {
+    expect(
+      Reflect.getMetadata('requiresStepUp', ReminderOffsetToggleController.prototype.set) ?? false,
+    ).toBe(false)
+    expect(
+      Reflect.getMetadata('requiresStepUp', ReminderOffsetToggleController.prototype.list) ?? false,
+    ).toBe(false)
+  })
 })
