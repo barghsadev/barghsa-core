@@ -1,8 +1,11 @@
-import { describe, it, expect, vi } from 'vitest'
+import { createHash } from 'node:crypto'
+import { describe, it, expect } from 'vitest'
+import { PAYMENT_INVOICE_REMINDER_EVENT_KEY } from '../invoices/reminder-sender.js'
 import {
   enqueueOutbox,
   deriveIdempotencyKey,
   deriveChannelIdempotencyKey,
+  CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS,
 } from './outbox-writer.js'
 
 /**
@@ -51,14 +54,14 @@ describe('deriveIdempotencyKey', () => {
 })
 
 describe('deriveChannelIdempotencyKey', () => {
-  it('is a stable sha256 hex digest of eventKey:channel:profileId:outboxKey', () => {
+  it('is a stable sha256 hex digest of eventKey:channel:profileId for pre-existing events', () => {
     const a = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
     const b = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
     expect(a).toMatch(/^[0-9a-f]{64}$/)
     expect(a).toBe(b)
   })
 
-  it('varies by channel, profile, and outbox idempotency key for the same event', () => {
+  it('varies by channel and profile for pre-existing events, but ignores the outbox key', () => {
     const emailP1 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'outbox-a')
     const inAppP1 = deriveChannelIdempotencyKey('profile_verified', 'in_app', 'profile-1', 'outbox-a')
     const emailP2 = deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-2', 'outbox-a')
@@ -70,7 +73,43 @@ describe('deriveChannelIdempotencyKey', () => {
     )
     expect(emailP1).not.toBe(inAppP1)
     expect(emailP1).not.toBe(emailP2)
-    expect(emailP1).not.toBe(emailOtherRow)
+    expect(emailP1).toBe(emailOtherRow)
+  })
+
+  it('matches the historical digest so a queued non-reminder retry cannot redeliver', () => {
+    const legacy = createHash('sha256')
+      .update('profile_verified:email:profile-1')
+      .digest('hex')
+    expect(
+      deriveChannelIdempotencyKey('profile_verified', 'email', 'profile-1', 'pre-deploy-outbox-key'),
+    ).toBe(legacy)
+  })
+
+  it('folds the outbox key into reminder channel keys so distinct invoices stay distinct', () => {
+    expect(
+      CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(PAYMENT_INVOICE_REMINDER_EVENT_KEY),
+    ).toBe(true)
+    const a = deriveChannelIdempotencyKey(
+      PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      'email',
+      'profile-1',
+      'outbox-a',
+    )
+    const b = deriveChannelIdempotencyKey(
+      PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      'email',
+      'profile-1',
+      'outbox-b',
+    )
+    const aRetry = deriveChannelIdempotencyKey(
+      PAYMENT_INVOICE_REMINDER_EVENT_KEY,
+      'email',
+      'profile-1',
+      'outbox-a',
+    )
+    expect(a).toMatch(/^[0-9a-f]{64}$/)
+    expect(a).not.toBe(b)
+    expect(a).toBe(aRetry)
   })
 })
 

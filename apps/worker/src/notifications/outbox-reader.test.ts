@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { describe, it, expect } from 'vitest'
 import { dispatchOutbox, type OutboxRow } from './outbox-reader.js'
 import type {
@@ -119,6 +120,30 @@ describe('dispatchOutbox', () => {
     expect(inAppA).not.toBe(emailA)
     expect(inAppA).toBe(inAppARetry)
     expect(emailA).toBe(emailARetry)
+  })
+
+  it('presents the legacy provider key on retry of a pre-existing non-reminder row', async () => {
+    const queuedBeforeDeploy: OutboxRow = {
+      ...row,
+      eventKey: 'profile_verified',
+      idempotencyKey: 'pre-deploy-outbox-key',
+    }
+    const inApp = new FakeTransport('in_app')
+    const email = new FakeTransport('email')
+    await dispatchOutbox(queuedBeforeDeploy, { in_app: inApp, email })
+    await dispatchOutbox(queuedBeforeDeploy, { in_app: inApp, email })
+
+    const expectedInApp = createHash('sha256')
+      .update(`profile_verified:in_app:${queuedBeforeDeploy.profileId}`)
+      .digest('hex')
+    const expectedEmail = createHash('sha256')
+      .update(`profile_verified:email:${queuedBeforeDeploy.profileId}`)
+      .digest('hex')
+
+    expect(inApp.reads[0]!.idempotencyKey).toBe(expectedInApp)
+    expect(email.reads[0]!.idempotencyKey).toBe(expectedEmail)
+    expect(inApp.reads[1]!.idempotencyKey).toBe(expectedInApp)
+    expect(email.reads[1]!.idempotencyKey).toBe(expectedEmail)
   })
 
   it('throws when in_app transport is required but missing', async () => {

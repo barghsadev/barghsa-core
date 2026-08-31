@@ -64,7 +64,9 @@ export const notificationOutbox = pgTable(
      * callers may override (e.g. invoice reminders keyed by invoice + offset).
      * Duplicate inserts are skipped with ON CONFLICT DO NOTHING. Per-channel
      * provider idempotency is derived at dispatch as
-     * sha256(eventKey:channel:profileId:outboxIdempotencyKey) (T-05.01.04).
+     * sha256(eventKey:channel:profileId) for pre-existing events, and
+     * sha256(eventKey:channel:profileId:outboxIdempotencyKey) for
+     * `payment.invoice_reminder` (T-05.01.04).
      */
     idempotencyKey: text('idempotency_key').notNull(),
 
