@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { t } from '@barghsa/i18n'
 import type { Locale } from '@barghsa/i18n'
 import {
@@ -43,6 +43,24 @@ function isEnabled(
   return toggles.find((row) => row.serviceType === serviceType && row.offset === offset)?.enabled ?? true
 }
 
+/** Patch a single cell. Never replace the rest of the matrix from a request snapshot. */
+function patchCell(
+  current: ReminderOffsetToggleDto[],
+  serviceType: ServiceDuePeriodType,
+  offset: InvoiceReminderOffset,
+  enabled: boolean,
+): ReminderOffsetToggleDto[] {
+  let found = false
+  const next = current.map((row) => {
+    if (row.serviceType === serviceType && row.offset === offset) {
+      found = true
+      return { ...row, enabled }
+    }
+    return row
+  })
+  return found ? next : [...next, { serviceType, offset, enabled }]
+}
+
 async function parseError(res: Response, fallback: string): Promise<string> {
   try {
     const data = (await res.json()) as { message?: string; error?: string }
@@ -69,8 +87,15 @@ export default function ReminderOffsetTogglePanel() {
   const isRtl = locale === 'fa'
   const [toggles, setToggles] = useState<ReminderOffsetToggleDto[] | null>(null)
   const [loading, setLoading] = useState(true)
-  const [pendingKey, setPendingKey] = useState<string | null>(null)
+  const [pendingKeys, setPendingKeys] = useState<ReadonlySet<string>>(() => new Set())
+  const pendingKeysRef = useRef(new Set<string>())
   const [error, setError] = useState<string | null>(null)
+
+  function markPending(key: string, pending: boolean) {
+    if (pending) pendingKeysRef.current.add(key)
+    else pendingKeysRef.current.delete(key)
+    setPendingKeys(new Set(pendingKeysRef.current))
+  }
 
   const load = useCallback(async () => {
     try {
@@ -100,13 +125,12 @@ export default function ReminderOffsetTogglePanel() {
   ) {
     if (!toggles) return
     const key = toggleKey(serviceType, offset)
-    const previous = toggles
-    setToggles(
-      toggles.map((row) =>
-        row.serviceType === serviceType && row.offset === offset ? { ...row, enabled } : row,
-      ),
+    if (pendingKeysRef.current.has(key)) return
+    const previousEnabled = isEnabled(toggles, serviceType, offset)
+    markPending(key, true)
+    setToggles((current) =>
+      current ? patchCell(current, serviceType, offset, enabled) : current,
     )
-    setPendingKey(key)
     setError(null)
     try {
       const res = await fetch('/api/admin/config/invoice-reminder-offsets', {
@@ -118,12 +142,19 @@ export default function ReminderOffsetTogglePanel() {
         throw new Error(await parseError(res, t('admin.invoices.reminders.saveFailed', locale)))
       }
       const data = (await res.json()) as ReminderOffsetToggleDto[]
-      setToggles(data)
+      const saved = data.find((row) => row.serviceType === serviceType && row.offset === offset)
+      setToggles((current) =>
+        current
+          ? patchCell(current, serviceType, offset, saved?.enabled ?? enabled)
+          : current,
+      )
     } catch (err) {
-      setToggles(previous)
+      setToggles((current) =>
+        current ? patchCell(current, serviceType, offset, previousEnabled) : current,
+      )
       setError(err instanceof Error ? err.message : t('admin.invoices.reminders.saveFailed', locale))
     } finally {
-      setPendingKey(null)
+      markPending(key, false)
     }
   }
 
@@ -183,7 +214,7 @@ export default function ReminderOffsetTogglePanel() {
                   {INVOICE_REMINDER_OFFSETS.map((offset) => {
                     const enabled = isEnabled(toggles, serviceType, offset)
                     const key = toggleKey(serviceType, offset)
-                    const busy = pendingKey === key
+                    const busy = pendingKeys.has(key)
                     return (
                       <td key={offset} className="text-center py-3 px-2">
                         <label className="inline-flex items-center justify-center gap-2 cursor-pointer">
@@ -193,6 +224,7 @@ export default function ReminderOffsetTogglePanel() {
                             data-testid={`reminder-toggle-${serviceType}-${offset}`}
                             aria-label={ariaLabel(locale, serviceType, offset)}
                             aria-checked={enabled}
+                            aria-busy={busy}
                             checked={enabled}
                             disabled={busy}
                             onChange={(e) => handleToggle(serviceType, offset, e.target.checked)}
