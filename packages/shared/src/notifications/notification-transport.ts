@@ -36,12 +36,14 @@ export type NotificationSendResultStatus = 'delivered' | 'failed'
 /**
  * A single logical delivery request handed to a transport adapter.
  *
- * `idempotencyKey` is unique per (event, channel, recipient) so retries and
- * duplicate outbox rows never double-deliver. `payload` carries the business
+ * `idempotencyKey` is unique per (event, channel, recipient). Reminder events
+ * also fold the outbox row key so distinct invoices/offsets stay distinct;
+ * other events keep sha256(eventKey:channel:profileId) so retries of
+ * pre-existing rows cannot redeliver. `payload` carries the business
  * variables needed to render the message through the active template.
  */
 export interface NotificationSendPayload {
-  /** Unique idempotency key, typically sha256(eventKey + channel + recipientId). */
+  /** Unique idempotency key, typically sha256(eventKey:channel:profileId). */
   idempotencyKey: string
 
   /** The channel this payload should be delivered on. */

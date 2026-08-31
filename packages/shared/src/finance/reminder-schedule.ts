@@ -106,6 +106,17 @@ export function isEligibleForReminderSchedule(
 }
 
 /**
+ * True when ReminderSender (T-04.1.04.03) may dispatch a due schedule
+ * row: the invoice is not Draft and has not reached Paid / Cancelled /
+ * Refunded. Overdue and in-flight payment states stay eligible so the
+ * hourly cron can still send.
+ */
+export function isEligibleForReminderSend(state: string): boolean {
+  if (state === 'Draft') return false
+  return !isReminderStopState(state)
+}
+
+/**
  * Map `users.notification_preferences` (`IN_APP,EMAIL,SMS`) onto schedule
  * channel tokens. `in_app` is always included (S-04.1.04: reminders are
  * always sent in-app plus any enabled external channel).

@@ -121,10 +121,10 @@ export interface DispatchOutcome {
  * are skipped so a missing adapter never blocks in-app delivery.
  *
  * Idempotency (T-05.01.04): each channel receives its OWN per-channel key
- * (`sha256(eventKey:channel:profileId)`) rather than the row-level key, so
- * delivery to a given transport is at-most-once even across retries. Two
- * different channels of the same event therefore get distinct keys and are
- * never confused at the provider level.
+ * rather than the row-level key, so delivery to a given transport is
+ * at-most-once even across retries. Pre-existing events keep the legacy
+ * digest `sha256(eventKey:channel:profileId)`. Invoice reminders fold the
+ * outbox row key in so two reminders for the same profile stay distinct.
  */
 export async function dispatchOutbox(
   row: OutboxRow,
@@ -134,7 +134,12 @@ export async function dispatchOutbox(
   for (const channel of row.channels) {
     const transport = transports[channel]
     const payload: NotificationSendPayload = {
-      idempotencyKey: deriveChannelIdempotencyKey(row.eventKey, channel, row.profileId),
+      idempotencyKey: deriveChannelIdempotencyKey(
+        row.eventKey,
+        channel,
+        row.profileId,
+        row.idempotencyKey,
+      ),
       channel,
       recipientId: row.userId ?? row.profileId,
       profileId: row.profileId,

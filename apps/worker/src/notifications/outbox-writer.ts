@@ -34,9 +34,13 @@ export interface EnqueueOutboxInput {
   channels: NotificationChannel[]
   /**
    * Unique idempotency key. Defaults to sha256(`${eventKey}:${profileId}`).
-   * Override for cross-event semantics. Per-channel provider idempotency on
-   * the consuming side is derived separately (T-05.01.04); use this only to
-   * deduplicate whole outbox rows for the same (event, profile).
+   * Override when one (event, profile) may enqueue more than one logical
+   * delivery (e.g. invoice reminders keyed by invoice + offset). For
+   * `payment.invoice_reminder` only, per-channel provider keys at dispatch
+   * also fold this value in so distinct outbox rows never collide at the
+   * transport. Pre-existing events keep the legacy digest
+   * sha256(eventKey:channel:profileId) so in-flight retries after deploy
+   * cannot redeliver (T-05.01.04).
    */
   idempotencyKey?: string
   /** 'queued' (immediate) or 'scheduled' (deferred until scheduledFor). */
@@ -62,21 +66,42 @@ export function deriveIdempotencyKey(eventKey: string, profileId: string): strin
 }
 
 /**
- * Per-channel idempotency key (T-05.01.04) — sha256(eventKey:channel:profileId).
+ * Events whose per-channel provider digest includes the outbox row key so
+ * two logical deliveries to the same profile stay distinct at Resend/SMS.ir.
+ * Every other event keeps the pre-reminder formula so a job that was
+ * already attempted before this deploy presents the same key on retry.
+ */
+export const CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS: ReadonlySet<string> =
+  new Set(['payment.invoice_reminder'])
+
+/**
+ * Per-channel idempotency key (T-05.01.04).
  *
- * Guarantees at-most-once logical delivery to a given channel transport even
- * when the same outbox row is retried, re-inserted as a duplicate, or fanned
- * out to multiple channels: each (event, channel, profile) combination maps to
- * exactly one stable key, so repeated sends to a channel with the same key can
- * never double-deliver. Resend and SMS.ir accept this as their provider-level
- * idempotency key so adapters can participate in the guarantee at the wire.
+ * Legacy (every event except `payment.invoice_reminder`):
+ *   sha256(eventKey:channel:profileId)
+ *
+ * Reminder events (new rows only; none exist in production yet):
+ *   sha256(eventKey:channel:profileId:outboxIdempotencyKey)
+ *
+ * The outbox key is folded in only for reminder events so two queued
+ * reminders for the same profile (different invoices or offsets) receive
+ * distinct provider keys, while a retry of one row stays stable. Pre-existing
+ * events omit the outbox key so a queued/retrying row created before this
+ * deploy cannot change the key presented to the transport.
  */
 export function deriveChannelIdempotencyKey(
   eventKey: string,
   channel: NotificationChannel,
   profileId: string,
+  outboxIdempotencyKey?: string,
 ): string {
-  return createHash('sha256').update(`${eventKey}:${channel}:${profileId}`).digest('hex')
+  const includeOutboxKey =
+    outboxIdempotencyKey !== undefined &&
+    CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(eventKey)
+  const material = includeOutboxKey
+    ? `${eventKey}:${channel}:${profileId}:${outboxIdempotencyKey}`
+    : `${eventKey}:${channel}:${profileId}`
+  return createHash('sha256').update(material).digest('hex')
 }
 
 /**

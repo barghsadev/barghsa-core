@@ -10,6 +10,11 @@ import {
   INVOICE_REMINDER_JOB_TYPE,
   scheduleIssuedInvoiceReminders,
 } from './invoices/reminder-scheduler.js';
+import {
+  DEFAULT_REMINDER_SEND_INTERVAL_MS,
+  INVOICE_REMINDER_SEND_JOB_TYPE,
+  sendDueInvoiceReminders,
+} from './invoices/reminder-sender.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
@@ -388,8 +393,60 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(reminderScheduler));
   process.on('SIGINT', () => clearInterval(reminderScheduler));
 
+  // ── Invoice reminder sender (S-04.1.04, T-04.1.04.03) ────────────────
+  // Hourly cron: due `scheduled` reminder rows are claimed, invoice state
+  // is re-checked, and delivery is written through the notification outbox.
+  const reminderSendRaw = Number(
+    process.env['INVOICE_REMINDER_SEND_MS'] ?? String(DEFAULT_REMINDER_SEND_INTERVAL_MS),
+  );
+  const INVOICE_REMINDER_SEND_MS =
+    Number.isFinite(reminderSendRaw) && reminderSendRaw >= 1000
+      ? reminderSendRaw
+      : DEFAULT_REMINDER_SEND_INTERVAL_MS;
+  if (INVOICE_REMINDER_SEND_MS !== reminderSendRaw) {
+    logger.warn(
+      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`,
+    );
+  }
+  let reminderSendInFlight = false;
+  const reminderSender = setInterval(async () => {
+    if (draining || reminderSendInFlight) return;
+    reminderSendInFlight = true;
+    try {
+      const result = await sendDueInvoiceReminders();
+      if (result.sent > 0 || result.errors.length > 0) {
+        logger.info(
+          `Reminder send: sent=${result.sent} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+        );
+      }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: INVOICE_REMINDER_SEND_JOB_TYPE,
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, sent: result.sent },
+        });
+      } else {
+        await recordJobSuccess(INVOICE_REMINDER_SEND_JOB_TYPE);
+      }
+    } catch (err) {
+      logger.error(`Reminder send failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: INVOICE_REMINDER_SEND_JOB_TYPE,
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
+    } finally {
+      reminderSendInFlight = false;
+    }
+  }, INVOICE_REMINDER_SEND_MS);
+  reminderSender.unref();
+
+  process.on('SIGTERM', () => clearInterval(reminderSender));
+  process.on('SIGINT', () => clearInterval(reminderSender));
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender active',
   );
 }
 

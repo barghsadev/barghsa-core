@@ -60,11 +60,13 @@ export const notificationOutbox = pgTable(
       .default('queued'),
 
     /**
-     * Row-level idempotency key — sha256(eventKey + profileId). Uniquely
-     * deduplicates whole outbox rows for the same (event, profile); duplicate
-     * inserts are skipped with ON CONFLICT DO NOTHING. Per-channel provider
-     * idempotency (sha256(eventKey:channel:profileId)) is derived by the worker
-     * at dispatch time (T-05.01.04).
+     * Row-level idempotency key — defaults to sha256(eventKey:profileId);
+     * callers may override (e.g. invoice reminders keyed by invoice + offset).
+     * Duplicate inserts are skipped with ON CONFLICT DO NOTHING. Per-channel
+     * provider idempotency is derived at dispatch as
+     * sha256(eventKey:channel:profileId) for pre-existing events, and
+     * sha256(eventKey:channel:profileId:outboxIdempotencyKey) for
+     * `payment.invoice_reminder` (T-05.01.04).
      */
     idempotencyKey: text('idempotency_key').notNull(),
 
