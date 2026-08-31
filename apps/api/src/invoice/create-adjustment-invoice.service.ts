@@ -11,12 +11,15 @@
  *
  * Sign of `amount` (bigint IRR):
  *   - positive → additional charge: issued Unpaid invoice the customer
- *     must pay; `due_at` is resolved like a manual invoice.
- *   - negative → credit: issued Unpaid credit-note invoice whose stored
+ *     must pay; `due_at` is resolved like a manual invoice;
+ *     `adjustment_kind = 'charge'`; `accounting_amount = total_amount`.
+ *   - negative → credit note: issued document whose stored
  *     `total_amount` is `abs(amount)` (DB CHECK `total_amount >= 0`);
- *     `due_at` is left NULL so reminder/overdue workers do not treat it
- *     as a customer payable. The signed amount lives in metadata and
- *     the command result. Refunds/wallet application are S-04.4.01.
+ *     `adjustment_kind = 'credit'`; generated `accounting_amount` is
+ *     negative so outstanding queries subtract it. `due_at` and
+ *     `payable_from` stay NULL so reminder/overdue/payment workers do
+ *     not treat it as a customer payable. Wallet payout of the credit
+ *     remains S-04.4.01.
  *   - zero is rejected.
  *
  * Flow (one DB transaction):
@@ -53,7 +56,10 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
-import { duePeriodTypeForManual } from '@barghsa/shared/finance'
+import {
+  duePeriodTypeForManual,
+  type AdjustmentKind,
+} from '@barghsa/shared/finance'
 import { v7 as uuidv7 } from 'uuid'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import type { TransitionResult } from './invoice-state-machine.service.js'
@@ -83,7 +89,7 @@ export const ADJUSTABLE_INVOICE_STATES = [
 
 export type AdjustableInvoiceState = (typeof ADJUSTABLE_INVOICE_STATES)[number]
 
-export type AdjustmentKind = 'charge' | 'credit'
+export type { AdjustmentKind }
 
 export const CREATE_ADJUSTMENT_ERRORS = {
   REASON_REQUIRED: () => 'A reason is required to create an adjustment invoice',
@@ -128,6 +134,8 @@ export interface CreateAdjustmentInvoiceResult {
   amount: bigint
   /** Stored invoice total (`abs(amount)`). */
   totalAmount: bigint
+  /** Signed liability contribution (`-totalAmount` for credits). */
+  accountingAmount: bigint
   adjustmentForInvoiceId: string
   profileId: string
   contractId: string | null
@@ -338,9 +346,10 @@ export class CreateAdjustmentInvoiceService {
         `INSERT INTO invoices
            (id, profile_id, order_id, contract_id, consultation_id, type, state,
             total_amount, issued_at, payable_from, due_at, metadata,
-            invoice_calculation_snapshot, adjustment_for_invoice_id)
+            invoice_calculation_snapshot, adjustment_kind,
+            adjustment_for_invoice_id)
          VALUES ($1, $2, $3, $4, $5, 'manual', 'Draft', $6, NULL, NULL, $7,
-                 $8::jsonb, $9::jsonb, $10)`,
+                 $8::jsonb, $9::jsonb, $10, $11)`,
         [
           adjustmentId,
           original.profile_id,
@@ -351,6 +360,7 @@ export class CreateAdjustmentInvoiceService {
           dueAt,
           adjustmentMetadata,
           JSON.stringify(calculationSnapshot),
+          kind,
           cmd.originalInvoiceId,
         ],
       )
@@ -392,6 +402,18 @@ export class CreateAdjustmentInvoiceService {
         },
       )
 
+      if (kind === 'credit') {
+        // Issue always stamps payable_from. Credits are not customer
+        // payables — clear it so payment/reminder/overdue workers that
+        // key off payable_from cannot treat the row as a bill.
+        await client.query(
+          `UPDATE invoices
+              SET payable_from = NULL, updated_at = $2
+            WHERE id = $1`,
+          [adjustmentId, now],
+        )
+      }
+
       const originalMetadata = asMetadataObject(original.metadata)
       const nextOriginalMetadata = appendAdjustedByInvoiceId(
         originalMetadata,
@@ -415,6 +437,7 @@ export class CreateAdjustmentInvoiceService {
         kind,
         amount,
         totalAmount: excerpt.totalAmount,
+        accountingAmount: excerpt.accountingAmount,
         adjustmentForInvoiceId: excerpt.adjustmentForInvoiceId,
         profileId: excerpt.profileId,
         contractId: excerpt.contractId,
@@ -454,6 +477,7 @@ export class CreateAdjustmentInvoiceService {
     adjustmentForInvoiceId: string
     state: InvoiceState
     totalAmount: bigint
+    accountingAmount: bigint
     lines: ManualInvoiceLineResult[]
     issuedAt: Date
     payableFrom: Date
@@ -461,7 +485,7 @@ export class CreateAdjustmentInvoiceService {
   }> {
     const invoiceResult = (await client.query(
       `SELECT id, profile_id, order_id, contract_id, consultation_id, state,
-              total_amount, issued_at, payable_from, due_at,
+              total_amount, accounting_amount, issued_at, payable_from, due_at,
               adjustment_for_invoice_id
          FROM invoices
         WHERE id = $1`,
@@ -475,6 +499,7 @@ export class CreateAdjustmentInvoiceService {
         consultation_id: string | null
         state: string
         total_amount: string
+        accounting_amount: string
         issued_at: Date | null
         payable_from: Date | null
         due_at: Date | null
@@ -518,6 +543,7 @@ export class CreateAdjustmentInvoiceService {
       adjustmentForInvoiceId: row.adjustment_for_invoice_id,
       state: row.state as InvoiceState,
       totalAmount: BigInt(row.total_amount),
+      accountingAmount: BigInt(row.accounting_amount),
       issuedAt: row.issued_at ?? new Date(),
       payableFrom: row.payable_from ?? new Date(),
       dueAt: row.due_at,

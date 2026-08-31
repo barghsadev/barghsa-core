@@ -87,6 +87,10 @@ const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
 )
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_ID = '11111111-1111-7111-8111-111111111111'
 const ACTOR_USER_ID = 'actor-integration-test'
@@ -161,6 +165,7 @@ describe('InvoiceStateMachineService — real PostgreSQL integration (T-04.1.01.
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: one profile + one actor.
     await ctx.db.execute(

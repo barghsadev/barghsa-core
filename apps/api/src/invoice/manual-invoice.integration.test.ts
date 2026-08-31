@@ -79,6 +79,10 @@ const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
 )
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_ID = '22222222-2222-7222-8222-222222222222'
 const ACTOR_USER_ID = 'staff-integration-manual'
@@ -125,6 +129,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: one profile + one actor.
     await ctx.db.execute(

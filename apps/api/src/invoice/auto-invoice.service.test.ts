@@ -193,7 +193,7 @@ function installDbHandler() {
       return { rows: [] }
     }
     // State machine: lock row
-    if (s.startsWith('SELECT id, state FROM invoices')) {
+    if (s.startsWith('SELECT id, state')) {
       return { rows: [{ id: 'inv', state: db.invoiceState }] }
     }
     // State machine: apply update
@@ -458,7 +458,7 @@ describe('AutoInvoiceService', () => {
         if (s.startsWith('INSERT INTO invoices')) return { rows: [] }
         if (s.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
         if (s.startsWith('INSERT INTO invoice_items')) return { rows: [] }
-        if (s.startsWith('SELECT id, state FROM invoices')) return { rows: [{ id: 'inv', state: 'Draft' }] }
+        if (s.startsWith('SELECT id, state')) return { rows: [{ id: 'inv', state: 'Draft' }] }
         if (s.startsWith('INSERT INTO audit_log')) return { rows: [] }
         return { rows: [] }
       })
@@ -505,7 +505,7 @@ describe('AutoInvoiceService', () => {
           return { rows: [] }
         }
         if (s.startsWith('INSERT INTO invoice_items')) return { rows: [] }
-        if (s.startsWith('SELECT id, state FROM invoices')) {
+        if (s.startsWith('SELECT id, state')) {
           db.invoiceState = 'Unpaid'
           return { rows: [{ id: 'inv', state: 'Draft' }] }
         }

@@ -85,6 +85,10 @@ const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
 )
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const USER_ID = 'user-integration-auto'
 const ACTOR_USER_ID = 'staff-integration-auto'
@@ -176,6 +180,7 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     await ctx.pool.query(readFileSync(CALCULATION_SNAPSHOT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(DUE_PERIODS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
 
     // --- Seed data: user, profile, product, VAT config + override, order.
     await ctx.db.execute(

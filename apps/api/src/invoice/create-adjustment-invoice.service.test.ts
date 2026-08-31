@@ -94,6 +94,7 @@ function adjustmentExcerpt(overrides: Record<string, unknown> = {}) {
     payable_from: new Date('2026-08-01T10:00:00.000Z'),
     due_at: new Date('2026-08-08T10:00:00.000Z'),
     adjustment_for_invoice_id: 'inv-original',
+    accounting_amount: '250000',
     ...overrides,
   }
 }
@@ -146,7 +147,7 @@ describe('CreateAdjustmentInvoiceService', () => {
       if (sql.includes('FROM service_due_periods')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
-      if (sql.startsWith('SELECT id, state FROM invoices')) {
+      if (sql.startsWith('SELECT id, state')) {
         return {
           rows: [{
             id: '00000000-0000-7000-8000-000000000001',
@@ -196,6 +197,7 @@ describe('CreateAdjustmentInvoiceService', () => {
     expect(result.kind).toBe('charge')
     expect(result.amount).toBe(250_000n)
     expect(result.totalAmount).toBe(250_000n)
+    expect(result.accountingAmount).toBe(250_000n)
     expect(result.orderId).toBe('order-001')
     expect(result.issueTransition.transition).toBe('Issue')
 
@@ -209,10 +211,12 @@ describe('CreateAdjustmentInvoiceService', () => {
     )
     expect(insertCall).toBeDefined()
     expect(insertCall![0] as string).toContain('adjustment_for_invoice_id')
+    expect(insertCall![0] as string).toContain('adjustment_kind')
     expect(insertCall![0] as string).not.toContain('replaces_invoice_id')
     const params = insertCall![1] as unknown[]
     const adjustmentId = params[0]
     expect(result.adjustmentInvoiceId).toBe(adjustmentId)
+    expect(params[9]).toBe('charge')
     expect(params[params.length - 1]).toBe('inv-original')
     expect(insertCall![0] as string).toContain("'manual'")
     const snapshot = JSON.parse(params[8] as string) as {
@@ -248,7 +252,9 @@ describe('CreateAdjustmentInvoiceService', () => {
       happyPathHandler(
         adjustmentExcerpt({
           total_amount: '80000',
+          accounting_amount: '-80000',
           due_at: null,
+          payable_from: null,
         }),
       ),
     )
@@ -260,6 +266,7 @@ describe('CreateAdjustmentInvoiceService', () => {
     expect(result.kind).toBe('credit')
     expect(result.amount).toBe(-80_000n)
     expect(result.totalAmount).toBe(80_000n)
+    expect(result.accountingAmount).toBe(-80_000n)
     expect(result.dueAt).toBeNull()
 
     const insertCall = mockClient.query.mock.calls.find(
@@ -268,12 +275,18 @@ describe('CreateAdjustmentInvoiceService', () => {
     const params = insertCall![1] as unknown[]
     expect(params[5]).toBe(80_000n)
     expect(params[6]).toBeNull()
+    expect(params[9]).toBe('credit')
     const metadata = JSON.parse(params[7] as string) as {
       kind: string
       amount: string
     }
     expect(metadata.kind).toBe('credit')
     expect(metadata.amount).toBe('-80000')
+
+    const payableClear = mockClient.query.mock.calls.filter(
+      (c) => (c[0] as string).includes('payable_from = NULL'),
+    )
+    expect(payableClear).toHaveLength(1)
 
     const dueLookups = mockClient.query.mock.calls.filter(
       (c) => (c[0] as string).includes('FROM service_due_periods'),
@@ -354,7 +367,7 @@ describe('CreateAdjustmentInvoiceService', () => {
       if (sql.includes('FROM service_due_periods')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoices')) return { rows: [] }
       if (sql.startsWith('INSERT INTO invoice_lines')) return { rows: [] }
-      if (sql.startsWith('SELECT id, state FROM invoices')) {
+      if (sql.startsWith('SELECT id, state')) {
         return { rows: [{ id: '00000000-0000-7000-8000-000000000001', state: 'Draft' }] }
       }
       if (sql.startsWith('UPDATE invoices SET state')) throw new Error('DB down')

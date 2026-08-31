@@ -136,6 +136,36 @@ describe('InvoiceStateMachineService', () => {
       expect(updateCall![0] as string).toContain('cancelled_at')
     })
 
+    it('rejects PayFromWallet and SubmitBankReceipt on a credit note', async () => {
+      mockClient.query
+        .mockReset()
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeInvoiceRow({ state: 'Unpaid', adjustment_kind: 'credit' })],
+        })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.transition('inv-001', 'Unpaid', 'Paid', {
+          actorUserId: 'user-001',
+        }),
+      ).rejects.toThrow(/credit note/)
+
+      mockClient.query
+        .mockReset()
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeInvoiceRow({ state: 'Unpaid', adjustment_kind: 'credit' })],
+        })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.transition('inv-001', 'Unpaid', 'PaymentUnderReview', {
+          actorUserId: 'user-001',
+        }),
+      ).rejects.toThrow(/credit note/)
+    })
+
     it('transitions Paid → Refunded successfully', async () => {
       mockTransitionFlowSuccess('Paid', 3)
 
@@ -315,6 +345,7 @@ describe('InvoiceStateMachineService', () => {
       expect(service.canSubmitBankReceipt('PartiallyFunded')).toBe(true)
       expect(service.canSubmitBankReceipt('Draft')).toBe(false)
       expect(service.canSubmitBankReceipt('Paid')).toBe(false)
+      expect(service.canSubmitBankReceipt('Unpaid', 'credit')).toBe(false)
     })
 
     it('canConfirmBankReceipt', () => {
@@ -327,12 +358,15 @@ describe('InvoiceStateMachineService', () => {
       expect(service.canPayFromWallet('PartiallyFunded')).toBe(true)
       expect(service.canPayFromWallet('Draft')).toBe(false)
       expect(service.canPayFromWallet('Paid')).toBe(false)
+      expect(service.canPayFromWallet('Unpaid', 'credit')).toBe(false)
+      expect(service.canPayFromWallet('Unpaid', 'charge')).toBe(true)
     })
 
     it('canMarkOverdue', () => {
       expect(service.canMarkOverdue('Unpaid')).toBe(true)
       expect(service.canMarkOverdue('PartiallyFunded')).toBe(true)
       expect(service.canMarkOverdue('Overdue')).toBe(false)
+      expect(service.canMarkOverdue('Unpaid', 'credit')).toBe(false)
     })
 
     it('canCancel', () => {

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
+import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance'
 
 export interface QuickStatusCounts {
   activeContracts: number
@@ -50,7 +51,9 @@ export class DashboardService {
    * - **Pending orders:** orders with `status = 'PENDING'`.
    * - **Open tickets:** tickets with a non-terminal status (open,
    *   in_progress, waiting_customer, waiting_staff).
-   * - **Unpaid invoices:** invoices in state `'Unpaid'` or `'Overdue'`.
+   * - **Unpaid invoices:** customer-payable invoices in state `'Unpaid'`
+   *   or `'Overdue'`. Credit-note adjustments (`adjustment_kind = 'credit'`)
+   *   are excluded — they reduce liability rather than adding a bill.
    */
   async getQuickStatusCounts(userId: string): Promise<QuickStatusCounts> {
     const profileId = await this.getDefaultProfileId(userId)
@@ -77,7 +80,7 @@ export class DashboardService {
       pool.query<{ cnt: number }>(
         `SELECT COUNT(*)::int AS cnt
          FROM invoices
-         WHERE profile_id = $1 AND state IN ('Unpaid', 'Overdue')`,
+         WHERE profile_id = $1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
         [profileId],
       ),
     ])

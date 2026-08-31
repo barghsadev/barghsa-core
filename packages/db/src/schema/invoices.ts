@@ -62,6 +62,10 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
  *     this row replaces (pre-payment cancel+replace, T-04.1.05.01).
  *   - `adjustmentForInvoiceId?` — nullable self-FK to the paid invoice
  *     this row adjusts (post-payment adjustment, T-04.1.05.01).
+ *   - `adjustmentKind?` — `'charge'` | `'credit'` on adjustment rows;
+ *     NULL on ordinary invoices (T-04.1.05.03).
+ *   - `accountingAmount` — signed IRR contribution to customer
+ *     liability (generated: `-total_amount` for credits).
  *   - `createdAt` / `updatedAt` — audit columns (from baseColumns).
  */
 export const invoices = pgTable(
@@ -171,6 +175,26 @@ export const invoices = pgTable(
      */
     adjustmentForInvoiceId: uuid('adjustment_for_invoice_id'),
 
+    /**
+     * First-class adjustment discriminator (T-04.1.05.03).
+     *
+     * `'charge'` = additional customer payable; `'credit'` = credit note
+     * that reduces net liability and is excluded from payment flow.
+     * NULL on ordinary (non-adjustment) invoices. Enforced with
+     * `adjustment_for_invoice_id` by migration 0067.
+     */
+    adjustmentKind: text('adjustment_kind'),
+
+    /**
+     * Signed IRR contribution to customer liability (T-04.1.05.03).
+     *
+     * Generated in migration 0067: `-total_amount` when
+     * `adjustment_kind = 'credit'`, otherwise `total_amount`. Ordinary
+     * invoices therefore match `total_amount`; credits cannot be
+     * mistaken for unpaid debt by amount-based outstanding queries.
+     */
+    accountingAmount: irrAmount('accounting_amount'),
+
     /** When the invoice record was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -225,6 +249,20 @@ export const invoices = pgTable(
       columns: [table.adjustmentForInvoiceId],
       foreignColumns: [table.id],
     }).onDelete('restrict'),
+    /**
+     * Adjustment rows must declare charge vs credit; ordinary rows
+     * must not (T-04.1.05.03 / migration 0067).
+     */
+    adjustmentKindMatchesLink: check(
+      'ck_invoices_adjustment_kind_matches_link',
+      sql`(
+        (${table.adjustmentForInvoiceId} IS NULL) = (${table.adjustmentKind} IS NULL)
+        AND (
+          ${table.adjustmentKind} IS NULL
+          OR ${table.adjustmentKind} IN ('charge', 'credit')
+        )
+      )`,
+    ),
     replacesInvoiceIdIdx: index('idx_invoices_replaces_invoice_id').on(
       table.replacesInvoiceId,
     ),
@@ -267,10 +305,21 @@ export const createInvoicesTable = sql`
     invoice_calculation_snapshot JSONB,
     replaces_invoice_id UUID REFERENCES invoices(id) ON DELETE RESTRICT,
     adjustment_for_invoice_id UUID REFERENCES invoices(id) ON DELETE RESTRICT,
+    adjustment_kind TEXT CHECK (adjustment_kind IS NULL OR adjustment_kind IN ('charge', 'credit')),
+    accounting_amount BIGINT GENERATED ALWAYS AS (
+      CASE WHEN adjustment_kind = 'credit' THEN -total_amount ELSE total_amount END
+    ) STORED,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT ck_paid_not_exceeds_total CHECK (paid_amount <= total_amount),
-    CONSTRAINT ck_refund_not_exceeds_paid CHECK (refunded_amount <= paid_amount)
+    CONSTRAINT ck_refund_not_exceeds_paid CHECK (refunded_amount <= paid_amount),
+    CONSTRAINT ck_invoices_adjustment_kind_matches_link CHECK (
+      (adjustment_for_invoice_id IS NULL) = (adjustment_kind IS NULL)
+      AND (
+        adjustment_kind IS NULL
+        OR adjustment_kind IN ('charge', 'credit')
+      )
+    )
   );
 
   CREATE INDEX IF NOT EXISTS idx_invoices_profile_id ON invoices (profile_id);

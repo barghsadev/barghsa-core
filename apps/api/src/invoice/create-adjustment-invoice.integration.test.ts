@@ -6,14 +6,17 @@
  *   1. Paid invoice receives a linked additional-charge invoice with
  *      `adjustment_for_invoice_id` set; original state/lines/amounts
  *      are unchanged.
- *   2. Negative amount stores a non-negative credit total and null due_at.
+ *   2. Negative amount stores a credit note (`adjustment_kind='credit'`,
+ *      negative `accounting_amount`, null due_at/payable_from) that
+ *      reduces net customer liability and cannot enter PayFromWallet /
+ *      SubmitBankReceipt.
  *   3. Unpaid originals are rejected and left untouched.
  *   4. Multiple adjustments on the same order-linked original do not
  *      collide with `uq_invoices_order_id_type`.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { ConflictException, NotFoundException } from '@nestjs/common'
+import { ConflictException, NotFoundException, BadRequestException } from '@nestjs/common'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { v7 as uuidv7 } from 'uuid'
@@ -24,6 +27,10 @@ import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import { DueAtCalculationRepository } from './due-at.repository.js'
 import { DueAtCalculationService } from './due-at.service.js'
+import {
+  NET_CUSTOMER_LIABILITY_SELECT,
+  UNPAID_CUSTOMER_INVOICE_PREDICATE,
+} from '@barghsa/shared/finance'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -88,6 +95,10 @@ const ADJUSTMENT_INDEX_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0066_invoice_order_type_unique_exclude_adjustments.sql',
 )
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_ID = '33333333-3333-7333-8333-333333333333'
 const ACTOR_USER_ID = 'staff-create-adjustment'
@@ -99,12 +110,14 @@ const ORIGINAL_TOTAL = 1_090_000n
 describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', () => {
   let ctx: IsolatedTestDb
   let service: CreateAdjustmentInvoiceService
+  let stateMachine: InvoiceStateMachineService
 
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 2)
     poolHolder.pool = ctx.pool
+    stateMachine = new InvoiceStateMachineService(new InvoiceAuditRepository())
     service = new CreateAdjustmentInvoiceService(
-      new InvoiceStateMachineService(new InvoiceAuditRepository()),
+      stateMachine,
       new DueAtCalculationService(new DueAtCalculationRepository()),
     )
 
@@ -138,6 +151,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ADJUSTMENT_INDEX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
 
     await ctx.db.execute(
       `INSERT INTO profiles (id) VALUES ('${PROFILE_ID}') ON CONFLICT (id) DO NOTHING`,
@@ -158,6 +172,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     paidAmount?: bigint
     type?: string
     orderId?: string | null
+    profileId?: string
   }): Promise<string> {
     const id = uuidv7()
     let orderId: string | null
@@ -175,7 +190,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8, $9, $10::jsonb)`,
       [
         id,
-        PROFILE_ID,
+        opts.profileId ?? PROFILE_ID,
         orderId,
         opts.type ?? 'auto',
         opts.state,
@@ -234,6 +249,7 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     expect(result.kind).toBe('charge')
     expect(result.amount).toBe(250_000n)
     expect(result.totalAmount).toBe(250_000n)
+    expect(result.accountingAmount).toBe(250_000n)
     expect(result.originalInvoiceId).toBe(originalId)
     expect(result.originalState).toBe('Paid')
     expect(result.adjustmentForInvoiceId).toBe(originalId)
@@ -258,6 +274,8 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
       state: string
       type: string | null
       total_amount: string
+      accounting_amount: string
+      adjustment_kind: string | null
       adjustment_for_invoice_id: string | null
       replaces_invoice_id: string | null
       order_id: string | null
@@ -265,7 +283,8 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
       invoice_calculation_snapshot: { source: string; totals: { totalAmount: string } }
       metadata: { kind: string; amount: string }
     }>(
-      `SELECT state, type, total_amount, adjustment_for_invoice_id,
+      `SELECT state, type, total_amount, accounting_amount, adjustment_kind,
+              adjustment_for_invoice_id,
               replaces_invoice_id, order_id, due_at, invoice_calculation_snapshot,
               metadata
          FROM invoices WHERE id = $1`,
@@ -274,6 +293,8 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     expect(adjustment.rows[0]!.state).toBe('Unpaid')
     expect(adjustment.rows[0]!.type).toBe('manual')
     expect(adjustment.rows[0]!.total_amount).toBe('250000')
+    expect(adjustment.rows[0]!.accounting_amount).toBe('250000')
+    expect(adjustment.rows[0]!.adjustment_kind).toBe('charge')
     expect(adjustment.rows[0]!.adjustment_for_invoice_id).toBe(originalId)
     expect(adjustment.rows[0]!.replaces_invoice_id).toBeNull()
     expect(adjustment.rows[0]!.order_id).toBe(result.orderId)
@@ -293,9 +314,25 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     expect(issueAudit.rows[0]!.n).toBe(1)
   })
 
-  it('creates a linked credit invoice with abs total and null due_at', async () => {
-    const originalId = await insertInvoice({ state: 'Paid' })
-    const before = await originalSnapshot(originalId)
+  it('creates a linked credit that reduces net liability and cannot be paid', async () => {
+    const liabilityProfileId = uuidv7()
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [liabilityProfileId])
+
+    const unpaidSiblingId = await insertInvoice({
+      state: 'Unpaid',
+      paidAmount: 0n,
+      profileId: liabilityProfileId,
+    })
+    const originalId = await insertInvoice({
+      state: 'Paid',
+      profileId: liabilityProfileId,
+    })
+    const beforeLiability = await ctx.pool.query<{ net: string }>(
+      `SELECT ${NET_CUSTOMER_LIABILITY_SELECT} AS net
+         FROM invoices WHERE profile_id = $1`,
+      [liabilityProfileId],
+    )
+    expect(beforeLiability.rows[0]!.net).toBe(ORIGINAL_TOTAL.toString())
 
     const result = await service.createAdjustmentInvoice({
       originalInvoiceId: originalId,
@@ -308,26 +345,71 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     expect(result.kind).toBe('credit')
     expect(result.amount).toBe(-80_000n)
     expect(result.totalAmount).toBe(80_000n)
+    expect(result.accountingAmount).toBe(-80_000n)
     expect(result.dueAt).toBeNull()
     expect(result.adjustmentState).toBe('Unpaid')
     expect(result.originalState).toBe('Paid')
 
-    const after = await originalSnapshot(originalId)
-    expect(after.invoice.state).toBe('Paid')
-    expect(after.lines).toEqual(before.lines)
-
     const adjustment = await ctx.pool.query<{
       total_amount: string
+      accounting_amount: string
+      adjustment_kind: string | null
       due_at: Date | null
+      payable_from: Date | null
       metadata: { kind: string; amount: string }
     }>(
-      `SELECT total_amount, due_at, metadata FROM invoices WHERE id = $1`,
+      `SELECT total_amount, accounting_amount, adjustment_kind, due_at,
+              payable_from, metadata
+         FROM invoices WHERE id = $1`,
       [result.adjustmentInvoiceId],
     )
     expect(adjustment.rows[0]!.total_amount).toBe('80000')
+    expect(adjustment.rows[0]!.accounting_amount).toBe('-80000')
+    expect(adjustment.rows[0]!.adjustment_kind).toBe('credit')
     expect(adjustment.rows[0]!.due_at).toBeNull()
+    expect(adjustment.rows[0]!.payable_from).toBeNull()
     expect(adjustment.rows[0]!.metadata.kind).toBe('credit')
     expect(adjustment.rows[0]!.metadata.amount).toBe('-80000')
+
+    const unpaidCount = await ctx.pool.query<{ cnt: number }>(
+      `SELECT COUNT(*)::int AS cnt
+         FROM invoices
+        WHERE profile_id = $1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
+      [liabilityProfileId],
+    )
+    expect(unpaidCount.rows[0]!.cnt).toBe(1)
+
+    const afterLiability = await ctx.pool.query<{ net: string }>(
+      `SELECT ${NET_CUSTOMER_LIABILITY_SELECT} AS net
+         FROM invoices WHERE profile_id = $1`,
+      [liabilityProfileId],
+    )
+    expect(afterLiability.rows[0]!.net).toBe((ORIGINAL_TOTAL - 80_000n).toString())
+
+    await expect(
+      stateMachine.transition(
+        result.adjustmentInvoiceId,
+        'Unpaid',
+        'Paid',
+        { actorUserId: ACTOR_USER_ID, now: NOW },
+      ),
+    ).rejects.toThrow(BadRequestException)
+
+    await expect(
+      stateMachine.transition(
+        result.adjustmentInvoiceId,
+        'Unpaid',
+        'PaymentUnderReview',
+        { actorUserId: ACTOR_USER_ID, now: NOW },
+      ),
+    ).rejects.toThrow(BadRequestException)
+
+    const stillUnpaid = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM invoices WHERE id = $1`,
+      [result.adjustmentInvoiceId],
+    )
+    expect(stillUnpaid.rows[0]!.state).toBe('Unpaid')
+    expect(unpaidSiblingId).toBeTruthy()
   })
 
   it('rejects an unpaid invoice and leaves it untouched', async () => {
