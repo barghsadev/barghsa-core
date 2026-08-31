@@ -10,7 +10,7 @@
  * S-04.1.04 schedule. ReminderScheduler (T-04.1.04.02) omits disabled
  * offsets when inserting `invoice_reminder_schedule` rows. Toggles apply
  * to newly scheduled invoices; already-inserted rows are left in place
- * (cancel-on-paid is T-04.1.04.06).
+ * until the invoice enters Paid/Cancelled/Refunded (T-04.1.04.06).
  *
  * @module finance
  */

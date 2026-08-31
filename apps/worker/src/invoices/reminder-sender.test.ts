@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import type { Pool } from 'pg'
 import { REMINDER_STOP_STATES } from '@barghsa/shared/finance'
+import { CANCEL_FUTURE_INVOICE_REMINDERS_SQL } from './reminder-canceller.js'
 import {
   DEFAULT_REMINDER_SEND_BATCH_SIZE,
   DEFAULT_REMINDER_SEND_INTERVAL_MS,
@@ -115,6 +116,9 @@ function defaultHandler(
       const count = markCount ?? lockedRows.length
       return { rows: [], rowCount: count }
     }
+    if (sql.includes("SET status = 'cancelled'")) {
+      return { rows: [], rowCount: lockedRows.length }
+    }
     return { rows: [] }
   }
 }
@@ -201,16 +205,20 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
     expect(options.enqueue).not.toHaveBeenCalled()
   })
 
-  it('skips when the invoice was paid after the candidate query', async () => {
+  it('cancels remaining scheduled rows when the invoice was paid after the candidate query', async () => {
     const db = makeFakeDb(defaultHandler(undefined, undefined, [invoiceRow({ state: 'Paid' })]))
     const options = sendOptions(db)
     const result = await sendDueInvoiceReminders(options)
     expect(result.skipped).toBe(1)
     expect(result.sent).toBe(0)
     expect(options.enqueue).not.toHaveBeenCalled()
+    const cancel = db.calls.find((c) => c.sql === CANCEL_FUTURE_INVOICE_REMINDERS_SQL)
+    expect(cancel?.params).toEqual([INVOICE_ID])
+    expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
+    expect(db.calls.some((c) => c.sql === 'ROLLBACK')).toBe(false)
   })
 
-  it('skips Cancelled and Refunded invoices under lock', async () => {
+  it('cancels remaining scheduled rows for Cancelled and Refunded invoices under lock', async () => {
     for (const state of ['Cancelled', 'Refunded'] as const) {
       const db = makeFakeDb(defaultHandler(undefined, undefined, [invoiceRow({ state })]))
       const options = sendOptions(db)
@@ -218,6 +226,8 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
       expect(result.skipped).toBe(1)
       expect(result.sent).toBe(0)
       expect(options.enqueue).not.toHaveBeenCalled()
+      expect(db.calls.some((c) => c.sql === CANCEL_FUTURE_INVOICE_REMINDERS_SQL)).toBe(true)
+      expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
     }
   })
 

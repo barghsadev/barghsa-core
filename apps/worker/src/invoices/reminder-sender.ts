@@ -8,6 +8,7 @@ import {
 } from '@barghsa/shared/finance'
 import type { NotificationChannel } from '@barghsa/shared/notifications'
 import { enqueueOutbox, type EnqueueOutboxInput, type EnqueueOutboxResult } from '../notifications/outbox-writer.js'
+import { cancelRemindersIfStopState } from './reminder-canceller.js'
 
 /**
  * ReminderSender (S-04.1.04, T-04.1.04.03).
@@ -36,8 +37,10 @@ import { enqueueOutbox, type EnqueueOutboxInput, type EnqueueOutboxResult } from
  * - **Bounded drain.** A full batch (`LIMIT`) sets `truncated` so the
  *   next hourly tick continues oldest-due first.
  *
- * Cancelling future rows when the invoice reaches a stop state is
- * T-04.1.04.06; this pass only skips send for those invoices.
+ * Stop states (T-04.1.04.06): the invoices-state trigger cancels remaining
+ * `scheduled` rows when Paid/Cancelled/Refunded is written. If this pass
+ * still sees a stop-state invoice under lock (race after the candidate
+ * query), it cancels leftover rows in the same transaction and COMMITs.
  */
 
 /** Default number of (invoice, offset) groups claimed per tick. */
@@ -218,10 +221,13 @@ export async function sendDueInvoiceReminders(
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
-      const sent = await sendOneGroup(client, group, now, enqueue)
-      if (sent) {
+      const outcome = await sendOneGroup(client, group, now, enqueue)
+      if (outcome === 'sent') {
         await client.query('COMMIT')
         result.sent += 1
+      } else if (outcome === 'stopped') {
+        await client.query('COMMIT')
+        result.skipped += 1
       } else {
         await client.query('ROLLBACK')
         result.skipped += 1
@@ -239,24 +245,29 @@ export async function sendDueInvoiceReminders(
   return result
 }
 
+type SendGroupOutcome = 'sent' | 'skipped' | 'stopped'
+
 async function sendOneGroup(
   client: PoolClient,
   group: GroupRow,
   now: Date,
   enqueue: EnqueueFn,
-): Promise<boolean> {
+): Promise<SendGroupOutcome> {
   const lockedInvoice = await client.query<InvoiceRow>(LOCK_INVOICE_SQL, [group.invoice_id])
   const invoice = lockedInvoice.rows[0]
-  if (!invoice) return false
-  if (!isEligibleForReminderSend(invoice.state)) return false
-  if (invoice.profile_id === null || invoice.profile_id === '') return false
+  if (!invoice) return 'skipped'
+  if (!isEligibleForReminderSend(invoice.state)) {
+    const stopped = await cancelRemindersIfStopState(client, invoice.id, invoice.state)
+    return stopped ? 'stopped' : 'skipped'
+  }
+  if (invoice.profile_id === null || invoice.profile_id === '') return 'skipped'
 
   const lockedRows = await client.query<ScheduleRow>(LOCK_DUE_ROWS_SQL, [
     group.invoice_id,
     group.offset,
     now,
   ])
-  if (lockedRows.rows.length === 0) return false
+  if (lockedRows.rows.length === 0) return 'skipped'
 
   const channels = channelsForOutbox(lockedRows.rows.map((row) => row.channel))
   const earliest = lockedRows.rows.reduce<Date | null>((acc, row) => {
@@ -284,7 +295,7 @@ async function sendOneGroup(
 
   const ids = lockedRows.rows.map((row) => row.id)
   const updated = await client.query(MARK_SENT_SQL, [ids, now])
-  if ((updated.rowCount ?? 0) !== ids.length) return false
+  if ((updated.rowCount ?? 0) !== ids.length) return 'skipped'
 
-  return true
+  return 'sent'
 }

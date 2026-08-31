@@ -15,8 +15,9 @@ import type { IsolatedTestDb } from './test/testDb'
  * applied journal entries through 0060 and already has
  * `invoice_reminder_schedule`. `migrate()` must then pick up 0061 from
  * the journal and create the unique (invoice_id, offset, channel) index.
- * 0062 (offset toggles) is journaled after 0061 so migrate() also applies
- * it and needs the `users` FK target.
+ * 0062 (offset toggles) and 0063 (cancel on stop state) are journaled
+ * after 0061 so migrate() also applies them; 0062 needs the `users` FK
+ * target.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')

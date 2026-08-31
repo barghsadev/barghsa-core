@@ -27,7 +27,7 @@ export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
  * - `scheduled` — waiting for ReminderSender (T-04.1.04.03)
  * - `sent` — dispatched via the notification outbox; `sent_at` is set
  * - `cancelled` — stopped because the invoice reached Paid/Cancelled/Refunded
- *   (T-04.1.04.06)
+ *   (T-04.1.04.06; trigger `trg_cancel_invoice_reminders_on_stop_state`)
  */
 export const INVOICE_REMINDER_STATUSES = ['scheduled', 'sent', 'cancelled'] as const
 export type InvoiceReminderStatus = (typeof INVOICE_REMINDER_STATUSES)[number]
@@ -56,7 +56,8 @@ export type InvoiceReminderStatus = (typeof INVOICE_REMINDER_STATUSES)[number]
  *   - the `updated_at` trigger.
  *
  * Idempotency unique index on (invoice_id, offset, channel) is T-04.1.04.04
- * (migration 0061).
+ * (migration 0061). Cancelling remaining `scheduled` rows when the invoice
+ * enters Paid/Cancelled/Refunded is T-04.1.04.06 (migration 0063).
  */
 export const invoiceReminderSchedule = pgTable(
   'invoice_reminder_schedule',
@@ -154,3 +155,13 @@ export const createInvoiceReminderScheduleTable = sql`
     FOR EACH ROW
     EXECUTE FUNCTION update_invoice_reminder_schedule_updated_at();
 `
+
+/**
+ * Cancel remaining unsent (`scheduled`) reminder rows for one invoice
+ * (T-04.1.04.06). Matches `cancel_future_invoice_reminders` in migration 0063.
+ * Already-`sent` rows are not rewritten; `sent_at` stays NULL on cancelled rows.
+ */
+export const CANCEL_FUTURE_INVOICE_REMINDERS_SQL = `UPDATE invoice_reminder_schedule
+        SET status = 'cancelled'
+        WHERE invoice_id = $1
+          AND status = 'scheduled'`

@@ -14,9 +14,9 @@ import type { IsolatedTestDb } from './test/testDb'
  * The isolated schema is seeded to look like a database that already
  * applied journal entries through 0059 and already has `invoices` (FK
  * target). `migrate()` must then pick up 0060 from the journal and
- * create `invoice_reminder_schedule`. 0061 (unique index) and 0062
- * (offset toggles) are journaled after 0060 so migrate() also applies
- * them; 0062 needs the `users` FK target.
+ * create `invoice_reminder_schedule`. 0061 (unique index), 0062
+ * (offset toggles), and 0063 (cancel on stop state) are journaled after
+ * 0060 so migrate() also applies them; 0062 needs the `users` FK target.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
