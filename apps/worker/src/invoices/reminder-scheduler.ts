@@ -4,10 +4,14 @@ import {
   INVOICE_REMINDER_OFFSETS,
   REMINDER_STOP_STATES,
   computeReminderInstants,
+  enabledOffsetsForServiceType,
   isEligibleForReminderSchedule,
+  mergeReminderOffsetToggles,
+  serviceTypesWithNoEnabledOffsets,
   reminderChannelsFromPreferences,
   type InvoiceReminderChannel,
   type InvoiceReminderOffset,
+  type ReminderOffsetToggleDto,
 } from '@barghsa/shared/finance'
 import { isValidTimeZone, type DeliveryWindowConfig } from '@barghsa/shared/notifications'
 import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../notifications/delivery-window.js'
@@ -49,11 +53,13 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  * A pass also keyset-paginates past skipped pages in the same tick so a
  * residual empty-plan cohort cannot block a newly issued invoice.
  *
- * Admin per-offset toggles (T-04.1.04.05) are a later task; this pass
- * inserts remaining future offsets and is idempotent by skipping
- * invoices that already have any schedule row (re-checked under
- * `FOR UPDATE SKIP LOCKED`) and by `ON CONFLICT DO NOTHING` against
- * the unique (invoiceId, offset, channel) index (T-04.1.04.04).
+ * Admin per-offset toggles (T-04.1.04.05) are read from
+ * `invoice_reminder_offset_toggles` at the start of each pass. Disabled
+ * offsets for the invoice's service type are omitted. Missing pairs
+ * default to enabled. Toggles apply to newly scheduled invoices only.
+ * Service types with every offset disabled are excluded from the
+ * candidate query so they cannot fill the bounded window across ticks;
+ * re-enabling any offset returns those invoices to the candidate set.
  *
  * Stop states (Paid / Cancelled / Refunded) are not scheduled; cancelling
  * already-inserted future rows is T-04.1.04.06.
@@ -130,6 +136,12 @@ export interface ReminderScheduleOptions {
    */
   deliveryWindow?: DeliveryWindowConfig
   /**
+   * Admin offset-enable matrix. When set, the toggle table is not
+   * queried (unit tests). Production leaves this unset so live admin
+   * toggles are used. Missing pairs default to enabled.
+   */
+  reminderOffsetToggles?: ReminderOffsetToggleDto[]
+  /**
    * Stable scheduling-pass timestamp used to drop elapsed offsets.
    * Production leaves this unset (`new Date()` once per pass).
    */
@@ -159,8 +171,14 @@ const defaultLogger = {
  *
  * `$4`/`$5` are an optional keyset `(issued_at, id)` cursor so one pass
  * can page past skipped candidates. Bind both NULL on the first page.
+ *
+ * `$6` is the list of service types with no currently enabled offsets.
+ * Those invoices stay unscheduled until a toggle is re-enabled, but
+ * must not occupy the oldest-first `LIMIT`. Unclassified invoices
+ * (null/empty `serviceType`) are never excluded this way.
  */
 export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
+               NULLIF(i.metadata #>> '{due,serviceType}', '') AS service_type,
                COALESCE(u.timezone, 'Asia/Tehran') AS timezone,
                COALESCE(u.notification_preferences, 'IN_APP') AS notification_preferences
         FROM invoices i
@@ -180,10 +198,12 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
             $4::timestamptz IS NULL
             OR (i.issued_at, i.id) > ($4::timestamptz, $5::uuid)
           )
+          AND COALESCE(NULLIF(i.metadata #>> '{due,serviceType}', ''), '') <> ALL($6::text[])
         ORDER BY i.issued_at ASC, i.id ASC
         LIMIT $2`
 
 const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
+               NULLIF(i.metadata #>> '{due,serviceType}', '') AS service_type,
                COALESCE(u.timezone, 'Asia/Tehran') AS timezone,
                COALESCE(u.notification_preferences, 'IN_APP') AS notification_preferences
         FROM invoices i
@@ -199,6 +219,7 @@ interface CandidateRow {
   state: string
   due_at: Date | string | null
   issued_at: Date | string | null
+  service_type: string | null
   timezone: string | null
   notification_preferences: string | null
 }
@@ -259,11 +280,12 @@ export function isElapsedReminder(input: {
 }
 
 /**
- * Build the schedule rows for one invoice: canonical offsets × enabled
+ * Build the schedule rows for one invoice: enabled offsets × enabled
  * channels, with daytime-window snapping applied to every `scheduledAt`.
  * Elapsed offsets (before `issuedAt`, or already past `now` beyond the
  * catch-up grace) are omitted so ReminderSender cannot bulk-dispatch
- * obsolete reminders.
+ * obsolete reminders. Admin-disabled offsets (T-04.1.04.05) are omitted
+ * when `enabledOffsets` is provided.
  */
 export function planInvoiceReminders(input: {
   dueAt: Date
@@ -271,11 +293,17 @@ export function planInvoiceReminders(input: {
   now: Date
   channels: readonly InvoiceReminderChannel[]
   window: DeliveryWindowConfig
+  /** Canonical offsets still enabled for this invoice's service type. */
+  enabledOffsets?: readonly InvoiceReminderOffset[]
 }): PlannedReminderRow[] {
   const channels: InvoiceReminderChannel[] =
     input.channels.length > 0 ? [...input.channels] : ['in_app']
+  const allowed = new Set<InvoiceReminderOffset>(
+    input.enabledOffsets ?? INVOICE_REMINDER_OFFSETS,
+  )
   const rows: PlannedReminderRow[] = []
   for (const { offset, instant } of computeReminderInstants(input.dueAt)) {
+    if (!allowed.has(offset)) continue
     const scheduledAt = snapToDaytimeWindow(instant, input.window)
     if (isElapsedReminder({ instant, scheduledAt, issuedAt: input.issuedAt, now: input.now })) {
       continue
@@ -314,10 +342,35 @@ async function loadWindow(
 }
 
 /**
+ * Load the admin offset-enable matrix. Query errors must propagate: a
+ * transient failure must not insert durable rows against a stale
+ * all-enabled default, because later ticks skip invoices that already
+ * have rows. An empty table is merged to all-enabled.
+ */
+async function loadReminderOffsetToggles(
+  pool: Pool,
+  override: ReminderOffsetToggleDto[] | undefined,
+): Promise<ReminderOffsetToggleDto[]> {
+  if (override) return override
+  const result = await pool.query<{ service_type: string; offset: number; enabled: boolean }>(
+    `SELECT service_type, "offset", enabled FROM invoice_reminder_offset_toggles`,
+  )
+  return mergeReminderOffsetToggles(
+    result.rows.map((row) => ({
+      serviceType: row.service_type,
+      offset: Number(row.offset),
+      enabled: row.enabled,
+    })),
+  )
+}
+
+/**
  * Run one reminder-scheduling pass over issued invoices that still lack
  * schedule rows. Pages past skipped/empty-plan candidates in the same
  * tick so a full batch of terminally stale invoices cannot starve a
- * newly issued invoice that still has future offsets.
+ * newly issued invoice that still has future offsets. Fully disabled
+ * service types are omitted from the candidate query entirely so a
+ * large zero-plan cohort cannot occupy every page across ticks.
  */
 export async function scheduleIssuedInvoiceReminders(
   options: ReminderScheduleOptions = {},
@@ -336,6 +389,8 @@ export async function scheduleIssuedInvoiceReminders(
   }
 
   const adminWindow = await loadWindow(pool, options.deliveryWindow)
+  const offsetToggles = await loadReminderOffsetToggles(pool, options.reminderOffsetToggles)
+  const excludedServiceTypes = serviceTypesWithNoEnabledOffsets(offsetToggles)
 
   let cursorIssuedAt: Date | null = null
   let cursorId: string | null = null
@@ -343,7 +398,7 @@ export async function scheduleIssuedInvoiceReminders(
   for (let page = 0; page < DEFAULT_REMINDER_SCHEDULE_MAX_PAGES; page += 1) {
     const candidates: QueryResult<CandidateRow> = await pool.query<CandidateRow>(
       FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
-      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId],
+      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId, excludedServiceTypes],
     )
     result.scanned += candidates.rows.length
     if (candidates.rows.length === 0) {
@@ -355,7 +410,7 @@ export async function scheduleIssuedInvoiceReminders(
       const client = await pool.connect()
       try {
         await client.query('BEGIN')
-        const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now)
+        const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now, offsetToggles)
         if (inserted) {
           await client.query('COMMIT')
           result.scheduled += 1
@@ -400,6 +455,7 @@ async function scheduleOneInvoice(
   candidate: CandidateRow,
   adminWindow: DeliveryWindowConfig,
   now: Date,
+  offsetToggles: ReminderOffsetToggleDto[],
 ): Promise<boolean> {
   const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [candidate.id])
   const row = locked.rows[0]
@@ -415,7 +471,8 @@ async function scheduleOneInvoice(
 
   const window = reminderWindowForProfile(adminWindow, row.timezone)
   const channels = reminderChannelsFromPreferences(row.notification_preferences)
-  const planned = planInvoiceReminders({ dueAt, issuedAt, now, channels, window })
+  const enabledOffsets = enabledOffsetsForServiceType(offsetToggles, row.service_type)
+  const planned = planInvoiceReminders({ dueAt, issuedAt, now, channels, window, enabledOffsets })
   if (planned.length === 0) return false
 
   const values: unknown[] = [row.id]

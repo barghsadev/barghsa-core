@@ -12,6 +12,8 @@ export type {
 export { AdminController, CreateStaffUserSchema, type CreateStaffUserDto } from './admin.controller.js'
 export { DualApprovalController, RejectApprovalRequestSchema } from './dual-approval.controller.js'
 export { DueAtOverrideController } from './due-at-override.controller.js'
+export { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
+export { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
 export {
   ReconciliationExceptionsController,
   ResolutionNoteSchema,

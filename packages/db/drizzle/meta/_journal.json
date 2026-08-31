@@ -106,6 +106,13 @@
       "when": 1788220800000,
       "tag": "0061_add_invoice_reminder_schedule_idempotency",
       "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1788307200000,
+      "tag": "0062_create_invoice_reminder_offset_toggles",
+      "breakpoints": true
     }
   ]
 }

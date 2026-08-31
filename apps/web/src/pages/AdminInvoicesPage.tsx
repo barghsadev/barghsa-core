@@ -15,6 +15,7 @@ import {
   isoToDatetimeLocal,
   lookupMatchesLoadedInvoice,
 } from '../lib/due-at-override.js'
+import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.js'
 
 /**
  * Staff dueAt override page (T-04.1.03.03).
@@ -160,7 +161,10 @@ export default function AdminInvoicesPage() {
   }
 
   return (
-    <div className="max-w-xl space-y-6">
+    <div className="max-w-4xl space-y-8">
+      <ReminderOffsetTogglePanel />
+
+      <div className="max-w-xl space-y-6">
       <header>
         <h1 className="text-2xl font-bold">{t('admin.invoices.title', locale)}</h1>
         <p className="text-gray-600 mt-2">{t('admin.invoices.description', locale)}</p>
@@ -324,6 +328,7 @@ export default function AdminInvoicesPage() {
           {clientIssue}
         </p>
       )}
+      </div>
     </div>
   )
 }

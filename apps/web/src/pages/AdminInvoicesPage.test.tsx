@@ -43,6 +43,9 @@ describe('AdminInvoicesPage lookup binding (T-04.1.03.03)', () => {
             json: async () => invoiceDto(INVOICE_A),
           }
         }
+        if (url.endsWith('/api/admin/config/invoice-reminder-offsets')) {
+          return { ok: true, json: async () => [] }
+        }
         return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
       }),
     )

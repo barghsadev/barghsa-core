@@ -15,6 +15,8 @@ import type { IsolatedTestDb } from './test/testDb'
  * applied journal entries through 0060 and already has
  * `invoice_reminder_schedule`. `migrate()` must then pick up 0061 from
  * the journal and create the unique (invoice_id, offset, channel) index.
+ * 0062 (offset toggles) is journaled after 0061 so migrate() also applies
+ * it and needs the `users` FK target.
  */
 
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
@@ -58,6 +60,11 @@ describe('drizzle migrate() applies reminder-schedule unique index (T-04.1.04.04
     const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
     await ctx.pool.query(uuidSql)
 
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY
+      )
+    `)
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
