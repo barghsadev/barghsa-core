@@ -1,4 +1,13 @@
 export { InvoiceModule } from './invoice.module.js'
+export { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
+export { CustomerInvoiceController } from './customer-invoice.controller.js'
+export type {
+  CustomerInvoiceDetailsDto,
+  CustomerInvoiceListDto,
+  CustomerInvoiceNodeDto,
+  CustomerInvoiceLineDto,
+  InvoiceCorrectionRole,
+} from './customer-invoice-details.service.js'
 export { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 export type { TransitionResult, TransitionOptions } from './invoice-state-machine.service.js'
 export { InvoiceAuditRepository } from './invoice-audit.repository.js'

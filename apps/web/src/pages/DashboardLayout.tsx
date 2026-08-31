@@ -27,6 +27,7 @@ export function DashboardLayout({ locale = 'fa' }: DashboardLayoutProps) {
     { to: '/electricity', label: t('dashboard.nav.electricity', locale) },
     { to: '/savings', label: t('dashboard.nav.savings', locale) },
     { to: '/wallet', label: t('dashboard.nav.wallet', locale) },
+    { to: '/invoices', label: t('dashboard.nav.invoices', locale) },
     { to: '/ai', label: t('dashboard.nav.ai', locale) },
     { to: '/documents', label: t('dashboard.nav.documents', locale) },
     { to: '/videos', label: t('dashboard.nav.videos', locale) },
