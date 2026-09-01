@@ -80,25 +80,77 @@ describe('drizzle migrate() applies wallet_transactions (T-04.2.01.02)', () => {
   })
 
   it('creates wallet_transactions through the journaled migrate() path', async () => {
-    const cols = await ctx.db.execute<{ column_name: string }>(sql`
-      SELECT column_name
+    const cols = await ctx.db.execute<{
+      column_name: string
+      udt_name: string
+      is_nullable: string
+      column_default: string | null
+    }>(sql`
+      SELECT column_name, udt_name, is_nullable, column_default
       FROM information_schema.columns
       WHERE table_schema = current_schema()
         AND table_name = 'wallet_transactions'
       ORDER BY ordinal_position
     `)
-    expect(cols.rows.map((row) => row.column_name)).toEqual([
-      'id',
-      'wallet_id',
-      'type',
-      'amount',
-      'state',
-      'idempotency_key',
-      'ref_id',
-      'description',
-      'metadata',
-      'created_at',
-      'updated_at',
+    expect(
+      cols.rows.map((row) => ({
+        column_name: row.column_name,
+        udt_name: row.udt_name,
+        is_nullable: row.is_nullable,
+      })),
+    ).toEqual([
+      { column_name: 'id', udt_name: 'uuid', is_nullable: 'NO' },
+      { column_name: 'wallet_id', udt_name: 'uuid', is_nullable: 'NO' },
+      { column_name: 'type', udt_name: 'text', is_nullable: 'NO' },
+      { column_name: 'amount', udt_name: 'int8', is_nullable: 'NO' },
+      { column_name: 'state', udt_name: 'text', is_nullable: 'NO' },
+      { column_name: 'idempotency_key', udt_name: 'text', is_nullable: 'NO' },
+      { column_name: 'ref_id', udt_name: 'text', is_nullable: 'YES' },
+      { column_name: 'description', udt_name: 'text', is_nullable: 'YES' },
+      { column_name: 'metadata', udt_name: 'jsonb', is_nullable: 'NO' },
+      { column_name: 'created_at', udt_name: 'timestamptz', is_nullable: 'NO' },
+      { column_name: 'updated_at', udt_name: 'timestamptz', is_nullable: 'NO' },
+    ])
+    const byName = Object.fromEntries(cols.rows.map((row) => [row.column_name, row]))
+    expect(byName.id?.column_default).toContain('uuid_generate_v7')
+    expect(byName.state?.column_default).toContain('Pending')
+    expect(byName.metadata?.column_default).toContain('{}')
+  })
+
+  it('enforces type/state/amount CHECKs and unique idempotency via migrate()', async () => {
+    const checks = await ctx.pool.query<{ conname: string }>(
+      `SELECT con.conname
+       FROM pg_constraint con
+       JOIN pg_class rel ON rel.oid = con.conrelid
+       JOIN pg_namespace nsp ON nsp.oid = rel.relnamespace
+       WHERE nsp.nspname = current_schema()
+         AND rel.relname = 'wallet_transactions'
+         AND con.contype = 'c'
+       ORDER BY con.conname`,
+    )
+    expect(checks.rows.map((row) => row.conname)).toEqual([
+      'chk_wallet_transactions_amount_nonzero',
+      'chk_wallet_transactions_state',
+      'chk_wallet_transactions_type',
+    ])
+
+    const indexes = await ctx.pool.query<{ indexname: string }>(
+      `SELECT indexname FROM pg_indexes
+       WHERE schemaname = current_schema()
+         AND tablename = 'wallet_transactions'
+         AND indexname IN (
+           'idx_wallet_tx_wallet_id',
+           'idx_wallet_tx_state',
+           'idx_wallet_tx_type',
+           'idx_wallet_tx_idempotency'
+         )
+       ORDER BY indexname`,
+    )
+    expect(indexes.rows.map((row) => row.indexname)).toEqual([
+      'idx_wallet_tx_idempotency',
+      'idx_wallet_tx_state',
+      'idx_wallet_tx_type',
+      'idx_wallet_tx_wallet_id',
     ])
   })
 

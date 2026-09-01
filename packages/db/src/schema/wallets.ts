@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core'
 import { uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
@@ -134,8 +135,8 @@ export const walletTransactions = pgTable(
     /** UUIDv7 opaque transaction identifier. */
     id: uuidv7('id').primaryKey().notNull(),
 
-    /** Foreign key to the wallet (profile). */
-    walletId: text('wallet_id')
+    /** Foreign key to the wallet (profile). UUID, matching wallets.profile_id. */
+    walletId: uuid('wallet_id')
       .notNull()
       .references(() => wallets.profileId, { onDelete: 'restrict' }),
 

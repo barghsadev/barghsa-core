@@ -34,6 +34,7 @@ describe('wallet_transactions schema (T-04.2.01.02)', () => {
   it('declares the domain columns expected by WalletService', () => {
     const columns = Object.keys(walletTransactions)
     for (const column of [
+      'id',
       'walletId',
       'type',
       'amount',
@@ -42,9 +43,21 @@ describe('wallet_transactions schema (T-04.2.01.02)', () => {
       'refId',
       'description',
       'metadata',
+      'createdAt',
+      'updatedAt',
     ]) {
       expect(columns).toContain(column)
     }
+  })
+
+  it('maps id and walletId as UUID columns matching migration 0068', () => {
+    const byName = Object.fromEntries(
+      getTableConfig(walletTransactions).columns.map((column) => [column.name, column]),
+    )
+    expect(byName.id?.getSQLType()).toBe('uuid')
+    expect(byName.wallet_id?.getSQLType()).toBe('uuid')
+    expect(byName.amount?.getSQLType()).toBe('bigint')
+    expect(byName.metadata?.getSQLType()).toBe('jsonb')
   })
 
   it('exports the closed type and state enumerations', () => {
