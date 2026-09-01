@@ -608,6 +608,56 @@ describe('WalletService', () => {
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
     })
 
+    it('binds reserve, complete, and ledger insert to the wallet row canonical profile_id', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const debitTx = makeTxRow({
+        wallet_id: canonical,
+        type: 'payment',
+        amount: '-100000',
+        state: 'Completed',
+        idempotency_key: 'idem-canonical-debit',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ profile_id: canonical, version: 2, reserved_balance: '300000' })],
+        })
+        .mockResolvedValueOnce({
+          rows: [
+            makeWalletRow({
+              profile_id: canonical,
+              version: 3,
+              posted_balance: '900000',
+              reserved_balance: '200000',
+            }),
+          ],
+        })
+        .mockResolvedValueOnce({ rows: [debitTx] })
+
+      await service.debit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'payment', refId: 'inv-1', description: 'invoice settlement' },
+        'idem-canonical-debit',
+      )
+
+      const walletUpdates = mockClient.query.mock.calls.filter(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(walletUpdates).toHaveLength(2)
+      expect(walletUpdates[0]![1]).toEqual([100000n, canonical, 1])
+      expect(walletUpdates[1]![1]).toEqual([100000n, canonical, 2])
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![1][0]).toBe(canonical)
+    })
+
     it('rejects when availableBalance is below the debit amount', async () => {
       const lowWallet = makeWalletRow({ posted_balance: '50000', reserved_balance: '0' })
 
