@@ -1,0 +1,250 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { HttpException } from '@nestjs/common'
+import { ErrorCodes } from '@barghsa/shared/errors'
+import {
+  OnlineTopUpCallbackService,
+  onlineTopUpCreditIdempotencyKey,
+} from './online-topup-callback.service.js'
+import { signPaymentCallback } from './payment-callback-verifier.js'
+import type { WalletService } from './wallet.service.js'
+import type { PaymentGateway } from './payment-gateway.js'
+
+const mockPool = {
+  query: vi.fn(),
+  connect: vi.fn(),
+}
+
+const mockClient = {
+  query: vi.fn(),
+  release: vi.fn(),
+}
+
+vi.mock('@barghsa/db', () => ({
+  getDbPool: () => mockPool,
+}))
+
+const SECRET = 'whsec-test'
+const MERCHANT = 'merchant-1'
+const TX_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+const CREDIT_ID = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const PROFILE_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
+const AUTHORITY = 'auth-pending-1'
+const AMOUNT = 100_000
+const EVENT_ID = 'evt-paid-1'
+
+function makePendingRow(overrides: Record<string, unknown> = {}) {
+  return {
+    id: TX_ID,
+    wallet_id: PROFILE_ID,
+    type: 'topup',
+    amount: String(AMOUNT),
+    state: 'Pending',
+    idempotency_key: 'idem-init-1',
+    ref_id: AUTHORITY,
+    description: 'Online wallet top-up',
+    metadata: { channel: 'online', gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test' } },
+    created_at: new Date('2026-09-01'),
+    updated_at: new Date('2026-09-01'),
+    ...overrides,
+  }
+}
+
+function payload(overrides: Record<string, unknown> = {}) {
+  return JSON.stringify({
+    merchantOrderId: TX_ID,
+    merchantId: MERCHANT,
+    authority: AUTHORITY,
+    amountIrR: AMOUNT,
+    status: 'paid',
+    ...overrides,
+  })
+}
+
+function signedInput(rawBody: string, eventId = EVENT_ID, now = Math.floor(Date.now() / 1000)) {
+  const timestamp = String(now)
+  return {
+    headers: {
+      eventId,
+      timestamp,
+      signature: signPaymentCallback(rawBody, eventId, timestamp, SECRET),
+    },
+    rawBody,
+  }
+}
+
+function makeService() {
+  const credit = vi.fn().mockResolvedValue({
+    id: CREDIT_ID,
+    walletId: PROFILE_ID,
+    type: 'topup',
+    amount: BigInt(AMOUNT),
+    state: 'Completed',
+    idempotencyKey: onlineTopUpCreditIdempotencyKey(TX_ID),
+    refId: AUTHORITY,
+    description: 'Online wallet top-up',
+    metadata: {},
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  })
+  const walletService = { credit } as unknown as WalletService
+  const verifyPayment = vi.fn().mockResolvedValue({ paid: true, providerRefId: 'psp-ref-1' })
+  const gateway = {
+    startPayment: vi.fn(),
+    recoverPayment: vi.fn(),
+    verifyPayment,
+  } as unknown as PaymentGateway
+  const service = new OnlineTopUpCallbackService(walletService, gateway, {
+    webhookSecret: SECRET,
+    merchantId: MERCHANT,
+  })
+  return { service, credit, verifyPayment }
+}
+
+function rejectionBody(error: unknown): Record<string, unknown> {
+  if (error instanceof HttpException) return error.getResponse() as Record<string, unknown>
+  throw new Error(`expected HttpException, got ${String(error)}`)
+}
+
+function scriptClient(opts: {
+  pending?: ReturnType<typeof makePendingRow> | null
+  existingCredit?: { id: string } | null
+}) {
+  mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+      return { rows: [] }
+    }
+    if (sql.includes('FROM wallet_transactions WHERE id =')) {
+      return { rows: opts.pending ? [opts.pending] : [] }
+    }
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+      return { rows: opts.existingCredit ? [makePendingRow({ id: opts.existingCredit.id, state: 'Completed', idempotency_key: onlineTopUpCreditIdempotencyKey(TX_ID) })] : [] }
+    }
+    if (sql.includes('UPDATE wallet_transactions')) {
+      return { rows: [], rowCount: 1 }
+    }
+    if (sql.includes('INSERT INTO wallet_topup_callback_events')) {
+      return { rows: [], rowCount: 1 }
+    }
+    return { rows: [] }
+  })
+}
+
+describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
+  beforeEach(() => {
+    mockPool.connect.mockResolvedValue(mockClient)
+    mockClient.query.mockReset()
+    mockClient.release.mockReset()
+  })
+
+  it('rejects a callback when the signing secret is missing', async () => {
+    const { verifyPayment } = makeService()
+    const service = new OnlineTopUpCallbackService(
+      { credit: vi.fn() } as never,
+      { verifyPayment } as never,
+      { webhookSecret: '', merchantId: MERCHANT },
+    )
+    const rejection = await service.handle(signedInput(payload())).catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_UNCONFIGURED.code,
+    })
+  })
+
+  it('rejects a tampered signature before touching the wallet', async () => {
+    const { service, credit, verifyPayment } = makeService()
+    const input = signedInput(payload())
+    input.rawBody = payload({ amountIrR: 1 })
+    const rejection = await service.handle(input).catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(credit).not.toHaveBeenCalled()
+    expect(verifyPayment).not.toHaveBeenCalled()
+  })
+
+  it('rejects a timestamp outside the replay window', async () => {
+    const { service, credit } = makeService()
+    const rawBody = payload()
+    const now = Math.floor(Date.now() / 1000)
+    const timestamp = String(now - 301)
+    const rejection = await service
+      .handle({
+        headers: {
+          eventId: EVENT_ID,
+          timestamp,
+          signature: signPaymentCallback(rawBody, EVENT_ID, timestamp, SECRET),
+        },
+        rawBody,
+      })
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_REPLAYED.code,
+    })
+    expect(credit).not.toHaveBeenCalled()
+  })
+
+  it('rejects a merchant id that does not match configured merchant context', async () => {
+    const { service, credit } = makeService()
+    const rejection = await service
+      .handle(signedInput(payload({ merchantId: 'other-merchant' })))
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(credit).not.toHaveBeenCalled()
+    expect(mockPool.connect).not.toHaveBeenCalled()
+  })
+
+  it('credits via WalletService.credit with a stable idempotency key', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      ok: true,
+      processed: true,
+      credited: true,
+      transactionId: TX_ID,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalledWith({
+      amountIrR: BigInt(AMOUNT),
+      merchantOrderId: TX_ID,
+      authority: AUTHORITY,
+      idempotencyKey: TX_ID,
+    })
+    expect(credit).toHaveBeenCalledWith(
+      PROFILE_ID,
+      BigInt(AMOUNT),
+      expect.objectContaining({
+        type: 'topup',
+        refId: 'psp-ref-1',
+      }),
+      onlineTopUpCreditIdempotencyKey(TX_ID),
+    )
+    const updates = mockClient.query.mock.calls.filter((call) =>
+      String(call[0]).includes("SET state = 'Released'"),
+    )
+    expect(updates).toHaveLength(1)
+  })
+
+  it('does not credit when the server-side verify reports unpaid', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const { service, credit, verifyPayment } = makeService()
+    verifyPayment.mockResolvedValue({ paid: false, providerRefId: null })
+    const result = await service.handle(signedInput(payload()))
+    expect(result.credited).toBe(false)
+    expect(credit).not.toHaveBeenCalled()
+  })
+
+  it('replays a duplicate event id after credit without calling credit again', async () => {
+    scriptClient({ pending: makePendingRow({ state: 'Released' }), existingCredit: { id: CREDIT_ID } })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: false,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(credit).not.toHaveBeenCalled()
+    expect(verifyPayment).not.toHaveBeenCalled()
+  })
+})

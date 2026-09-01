@@ -2,16 +2,19 @@ import { Module } from '@nestjs/common'
 import { WalletController } from './wallet.controller.js'
 import { WalletService } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
+import { OnlineTopUpCallbackController } from './online-topup-callback.controller.js'
+import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
 import { SessionModule } from '../session/index.js'
 import { ProfilesModule } from '../profiles/index.js'
 
 @Module({
   imports: [SessionModule, ProfilesModule],
-  controllers: [WalletController],
+  controllers: [WalletController, OnlineTopUpCallbackController],
   providers: [
     WalletService,
     OnlineTopUpService,
+    OnlineTopUpCallbackService,
     {
       provide: PAYMENT_GATEWAY,
       useFactory: () => createPaymentGatewayFromEnv(),

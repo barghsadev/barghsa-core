@@ -20,6 +20,7 @@ import type { IsolatedTestDb } from './test/testDb'
 const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
 const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json')
 const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql')
+const WALLET_TX_MIGRATION = resolve(DRIZZLE_FOLDER, '0068_create_wallet_transactions.sql')
 const WALLET_CHECK_TAG = '0069_wallet_available_balance_check'
 /** `when` of journal tag 0068 — last entry before 0069 was registered. */
 const PRIOR_JOURNAL_HEAD_WHEN = 1788825600000
@@ -66,6 +67,9 @@ describe('drizzle migrate() applies wallets available-balance CHECK (T-04.2.01.0
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
+    // 0068 also created wallet_transactions. Later journal tags (0070)
+    // FK that table, so a post-0068 schema must include it.
+    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

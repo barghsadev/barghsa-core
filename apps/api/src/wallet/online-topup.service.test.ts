@@ -60,6 +60,7 @@ function makeGateway(overrides: Partial<PaymentGateway> = {}): PaymentGateway {
       redirectUrl: REDIRECT,
     }),
     recoverPayment: vi.fn().mockResolvedValue(null),
+    verifyPayment: vi.fn().mockResolvedValue({ paid: true, providerRefId: 'ref-1' }),
     ...overrides,
   }
 }
