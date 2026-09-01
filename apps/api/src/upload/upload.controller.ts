@@ -4,6 +4,8 @@ import {
   Post,
   Body,
   Param,
+  Req,
+  UseGuards,
   HttpCode,
   HttpStatus,
   ServiceUnavailableException,
@@ -14,6 +16,7 @@ import { randomUUID } from 'node:crypto';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import {
   PresignedUrlRequestSchema,
   type PresignedUrlRequest,
@@ -190,19 +193,14 @@ export class UploadController {
     }
 
     try {
-      const object = await this.storage!.getObject(key);
+      const inspected = await this.inspectUploadedObject(key, category);
 
-      const policy = await this.policyResolver.resolveEffective(category);
-      const sample = await this.readSample(object.body);
-      const candidates = sniffContentTypes(sample);
-      const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
-
-      if (detected !== null) {
+      if (inspected.kind === 'confirmed') {
         return {
           key,
           exists: true,
           status: 'confirmed',
-          detectedContentType: detected,
+          detectedContentType: inspected.detected,
         };
       }
 
@@ -210,8 +208,8 @@ export class UploadController {
         key,
         exists: true,
         status: 'type_mismatch',
-        detectedContentType: candidates[0] ?? null,
-        allowedMimeTypes: policy.allowedMimeTypes,
+        detectedContentType: inspected.detected,
+        allowedMimeTypes: [...inspected.allowed],
       };
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
@@ -228,15 +226,25 @@ export class UploadController {
   /**
    * Record a completed upload in the storage_records table for immutability tracking.
    *
-   * Should be called after upload is complete and verified. Creates a
-   * `storage_records` entry with status `active` so the object can
-   * later be signed/approved (marked immutable) or deleted.
+   * Re-runs object verification so a direct API client cannot create an
+   * `active` record independently of the verify seam. Persists uploader
+   * identity and optional intended purpose in authoritative metadata.
    */
   @Post(':key/record')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(SessionAuthGuard)
   async recordUpload(
     @Param('key') key: string,
-    @Body() body: { fileName?: string; contentType?: string; fileSize?: number; category?: string },
+    @Body()
+    body: {
+      fileName?: string
+      contentType?: string
+      fileSize?: number
+      category?: string
+      purpose?: string
+      profileId?: string
+    },
+    @Req() req: AuthenticatedRequest,
   ): Promise<{ key: string; status: string }> {
     this.ensureStorageReady();
     this.ensureImmutableServiceReady();
@@ -245,12 +253,56 @@ export class UploadController {
       throw new BadRequestException('Invalid upload key');
     }
 
+    const category = this.resolveCategoryFromKey(key);
+    if (category === null) {
+      throw new BadRequestException({
+        message: 'Invalid upload key: missing or unknown category',
+        hint: 'Expected key shape uploads/<category>/<uuid>.<ext>',
+      });
+    }
+
+    let detectedContentType: string
+    try {
+      const inspected = await this.inspectUploadedObject(key, category);
+      if (inspected.kind !== 'confirmed') {
+        throw new BadRequestException({
+          message: 'Upload must be verified before it can be recorded',
+          status: inspected.kind,
+        });
+      }
+      detectedContentType = inspected.detected
+    } catch (err) {
+      if (err instanceof StorageObjectNotFound) {
+        throw new BadRequestException({
+          message: 'Upload must be verified before it can be recorded',
+          status: 'not_found',
+        });
+      }
+      throw err;
+    }
+
+    const purpose =
+      typeof body.purpose === 'string' && body.purpose.trim().length > 0
+        ? body.purpose.trim().slice(0, 64)
+        : undefined;
+    const profileId =
+      typeof body.profileId === 'string' && body.profileId.trim().length > 0
+        ? body.profileId.trim().slice(0, 64)
+        : undefined;
+
     await this.immutableStorageService!.createRecord({
       storageKey: key,
       fileName: body.fileName,
-      contentType: body.contentType,
+      contentType: body.contentType ?? detectedContentType,
       fileSize: body.fileSize,
-      category: body.category ?? resolveCategory(body.fileName) ?? 'general',
+      category: body.category ?? category,
+      metadata: {
+        verified: true,
+        verifiedAt: new Date().toISOString(),
+        uploadedBy: req.session.userId,
+        ...(profileId ? { profileId } : {}),
+        ...(purpose ? { purpose } : {}),
+      },
     });
 
     return { key, status: 'recorded' };
@@ -259,6 +311,33 @@ export class UploadController {
   // -----------------------------------------------------------------------
   // Helpers
   // -----------------------------------------------------------------------
+
+  /**
+   * Re-read the object and magic-byte sniff it against the category
+   * bound into the key. Throws {@link StorageObjectNotFound} when the
+   * object is missing; callers map that to `not_found`.
+   */
+  private async inspectUploadedObject(
+    key: string,
+    category: string,
+  ): Promise<
+    | { kind: 'confirmed'; detected: string }
+    | { kind: 'type_mismatch'; detected: string | null; allowed: readonly string[] }
+  > {
+    const object = await this.storage!.getObject(key);
+    const policy = await this.policyResolver.resolveEffective(category);
+    const sample = await this.readSample(object.body);
+    const candidates = sniffContentTypes(sample);
+    const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
+    if (detected !== null) {
+      return { kind: 'confirmed', detected };
+    }
+    return {
+      kind: 'type_mismatch',
+      detected: candidates[0] ?? null,
+      allowed: policy.allowedMimeTypes,
+    };
+  }
 
   /**
    * Extract the category bound into a server-issued upload key of shape

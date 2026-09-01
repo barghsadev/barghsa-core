@@ -176,6 +176,13 @@ export const walletTransactions = pgTable(
     /** Extensible metadata payload. */
     metadata: jsonb('metadata').notNull().default(sql`'{}'::jsonb`),
 
+    /**
+     * Bank-receipt object-storage key. NULL for non-receipt ledger rows.
+     * Partial unique index `uq_wallet_tx_receipt_attachment` (migration
+     * 0072) ensures one stored receipt can back at most one top-up.
+     */
+    receiptAttachmentKey: text('receipt_attachment_key'),
+
     /** When the transaction was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -202,6 +209,13 @@ export const walletTransactions = pgTable(
     typeIdx: index('idx_wallet_tx_type').on(table.type),
     /** Enforce idempotency: duplicate key detection. */
     idempotencyUniqueIdx: uniqueIndex('idx_wallet_tx_idempotency').on(table.idempotencyKey),
+    /**
+     * One bank-receipt attachment may back at most one ledger row
+     * (T-04.2.02.03). Online top-ups leave the column NULL.
+     */
+    receiptAttachmentUnique: uniqueIndex('uq_wallet_tx_receipt_attachment')
+      .on(table.receiptAttachmentKey)
+      .where(sql`${table.receiptAttachmentKey} IS NOT NULL`),
   }),
 )
 

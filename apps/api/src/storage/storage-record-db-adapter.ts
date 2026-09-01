@@ -9,7 +9,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import type { DbInstance } from '@barghsa/db'
 import { storageRecords, type StorageRecordStatus } from '@barghsa/db/schema/storage-record'
-import { eq } from '@barghsa/db'
+import { eq, sql } from '@barghsa/db'
 import type { DbAdapter } from '@barghsa/shared/storage'
 
 @Injectable()
@@ -26,15 +26,52 @@ export class StorageRecordDbAdapter implements DbAdapter {
     category?: string | null
     metadata?: Record<string, unknown> | null
   }): Promise<void> {
-    await this.db.insert(storageRecords).values({
-      storageKey: params.storageKey,
-      fileName: params.fileName ?? null,
-      contentType: params.contentType ?? null,
-      fileSize: params.fileSize ?? null,
-      category: params.category ?? null,
-      status: 'active',
-      metadata: params.metadata ?? null,
-    })
+    const metadataJson = JSON.stringify(params.metadata ?? null)
+    await this.db.execute(sql`
+      INSERT INTO storage_records (
+        storage_key, file_name, content_type, file_size, category, status, metadata
+      ) VALUES (
+        ${params.storageKey},
+        ${params.fileName ?? null},
+        ${params.contentType ?? null},
+        ${params.fileSize ?? null},
+        ${params.category ?? null},
+        'active',
+        CAST(${metadataJson} AS jsonb)
+      )
+      ON CONFLICT (storage_key) DO UPDATE SET
+        file_name = COALESCE(EXCLUDED.file_name, storage_records.file_name),
+        content_type = COALESCE(EXCLUDED.content_type, storage_records.content_type),
+        file_size = COALESCE(EXCLUDED.file_size, storage_records.file_size),
+        category = COALESCE(EXCLUDED.category, storage_records.category),
+        metadata = (
+          COALESCE(storage_records.metadata, '{}'::jsonb)
+          || COALESCE(EXCLUDED.metadata, '{}'::jsonb)
+          || jsonb_strip_nulls(jsonb_build_object(
+            'verified', (
+              COALESCE((storage_records.metadata->>'verified')::boolean, false)
+              OR COALESCE((EXCLUDED.metadata->>'verified')::boolean, false)
+            ),
+            'verifiedAt', COALESCE(
+              storage_records.metadata->>'verifiedAt',
+              EXCLUDED.metadata->>'verifiedAt'
+            ),
+            'uploadedBy', COALESCE(
+              storage_records.metadata->>'uploadedBy',
+              EXCLUDED.metadata->>'uploadedBy'
+            ),
+            'profileId', COALESCE(
+              storage_records.metadata->>'profileId',
+              EXCLUDED.metadata->>'profileId'
+            ),
+            'purpose', COALESCE(
+              storage_records.metadata->>'purpose',
+              EXCLUDED.metadata->>'purpose'
+            )
+          ))
+        ),
+        updated_at = NOW()
+    `)
   }
 
   async getStorageRecordStatus(storageKey: string): Promise<StorageRecordStatus | null> {

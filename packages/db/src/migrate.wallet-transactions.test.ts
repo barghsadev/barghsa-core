@@ -110,6 +110,7 @@ describe('drizzle migrate() applies wallet_transactions (T-04.2.01.02)', () => {
       { column_name: 'metadata', udt_name: 'jsonb', is_nullable: 'NO' },
       { column_name: 'created_at', udt_name: 'timestamptz', is_nullable: 'NO' },
       { column_name: 'updated_at', udt_name: 'timestamptz', is_nullable: 'NO' },
+      { column_name: 'receipt_attachment_key', udt_name: 'text', is_nullable: 'YES' },
     ])
     const byName = Object.fromEntries(cols.rows.map((row) => [row.column_name, row]))
     expect(byName.id?.column_default).toContain('uuid_generate_v7')

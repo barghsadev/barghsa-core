@@ -10,6 +10,8 @@ import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
 import { UploadController } from '../src/upload/upload.controller.js';
 import { UploadPolicyResolver, type EffectiveUploadPolicy } from '../src/upload/upload-policy.resolver.js';
+import { SessionAuthGuard } from '../src/session/session.guard.js';
+import type { AuthenticatedRequest } from '../src/session/session.guard.js';
 import {
   getDeploymentAllowedExtensions,
   getDeploymentAllowedMimeTypes,
@@ -103,11 +105,15 @@ describe('UploadController', () => {
           useValue: resolver,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(SessionAuthGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     return module.get(UploadController);
   }
 
   beforeEach(async () => {
+    mockImmutableService.createRecord.mockReset();
     controller = await buildModule();
   });
 
@@ -473,6 +479,75 @@ describe('UploadController', () => {
       await expect(
         ctrl.verifyUpload('uploads/test.pdf'),
       ).rejects.toThrow(ServiceUnavailableException);
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // recordUpload
+  // -----------------------------------------------------------------------
+
+  describe('recordUpload', () => {
+    const req = { session: { userId: 'user-1' } } as AuthenticatedRequest;
+
+    it('persists verified uploader identity and purpose after a confirmed sniff', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue(pdfObject());
+      mockImmutableService.createRecord.mockResolvedValue(undefined);
+
+      const result = await controller.recordUpload(
+        'uploads/document/some-uuid.pdf',
+        {
+          fileName: 'receipt.pdf',
+          purpose: 'bank_receipt',
+          profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+        },
+        req,
+      );
+
+      expect(result).toEqual({
+        key: 'uploads/document/some-uuid.pdf',
+        status: 'recorded',
+      });
+      expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
+        expect.objectContaining({
+          storageKey: 'uploads/document/some-uuid.pdf',
+          metadata: expect.objectContaining({
+            verified: true,
+            uploadedBy: 'user-1',
+            purpose: 'bank_receipt',
+            profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+          }),
+        }),
+      );
+    });
+
+    it('refuses to record when the object was never uploaded', async () => {
+      vi.mocked(storage.getObject).mockRejectedValue(
+        new StorageObjectNotFound('uploads/document/missing.pdf'),
+      );
+
+      await expect(
+        controller.recordUpload('uploads/document/missing.pdf', { purpose: 'bank_receipt' }, req),
+      ).rejects.toThrow(BadRequestException);
+      expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
+    });
+
+    it('refuses to record when detected bytes do not match the category', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        body: streamOfBytes([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 'binary-image']),
+        contentType: 'application/pdf',
+        contentLength: 20,
+        metadata: {},
+        etag: '"png"',
+      });
+
+      await expect(
+        controller.recordUpload(
+          'uploads/document/some-uuid.pdf',
+          { purpose: 'bank_receipt' },
+          req,
+        ),
+      ).rejects.toThrow(BadRequestException);
+      expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { t, type Locale } from '@barghsa/i18n'
+import { parseBankReceiptTopUpAmountIrR, BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 
@@ -19,7 +20,19 @@ type PageError =
   | 'conflict'
   | 'generic'
 
-function formatAmount(amount: number, locale: Locale): string {
+type ReceiptError =
+  | 'invalid-amount'
+  | 'invalid-date'
+  | 'invalid-payer-ref'
+  | 'invalid-file'
+  | 'upload'
+  | 'conflict'
+  | 'generic'
+
+const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024
+const IMAGE_MAX_BYTES = 20 * 1024 * 1024
+
+function formatAmount(amount: number | bigint, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
@@ -38,6 +51,12 @@ function mapSubmitError(status: number, message: string): PageError {
   if (status === 502 || status === 504) return 'gateway'
   if (status === 400 && /exceeds/i.test(message)) return 'limit-exceeded'
   if (status === 400) return 'invalid-amount'
+  return 'generic'
+}
+
+function mapReceiptSubmitError(status: number): ReceiptError {
+  if (status === 409) return 'conflict'
+  if (status === 400) return 'generic'
   return 'generic'
 }
 
@@ -75,12 +94,107 @@ function isSafeGatewayRedirectUrl(raw: string): boolean {
   }
 }
 
+function utcTodayIso(): string {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function receiptCategoryForFile(file: File): 'document' | 'image' | null {
+  const name = file.name.toLowerCase()
+  const type = file.type.toLowerCase()
+  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'document'
+  if (
+    type === 'image/jpeg' ||
+    type === 'image/png' ||
+    type === 'image/webp' ||
+    name.endsWith('.jpg') ||
+    name.endsWith('.jpeg') ||
+    name.endsWith('.png') ||
+    name.endsWith('.webp')
+  ) {
+    return 'image'
+  }
+  return null
+}
+
+function isAllowedReceiptFile(file: File): boolean {
+  const category = receiptCategoryForFile(file)
+  if (category === null) return false
+  const max = category === 'document' ? DOCUMENT_MAX_BYTES : IMAGE_MAX_BYTES
+  return file.size > 0 && file.size <= max
+}
+
+async function uploadReceiptAttachment(file: File, profileId: string): Promise<string | null> {
+  const category = receiptCategoryForFile(file)
+  if (category === null) return null
+  const presignRes = await fetch('/api/upload/presigned-url', {
+    method: 'POST',
+    credentials: 'include',
+    headers: withCsrf({
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }),
+    body: JSON.stringify({
+      fileName: file.name,
+      contentType: file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
+      fileSize: file.size,
+      category,
+      metadata: { recordType: 'receipt' },
+    }),
+  })
+  const presign = (await presignRes.json().catch(() => ({}))) as {
+    key?: string
+    presignedUrl?: string
+  }
+  if (!presignRes.ok || typeof presign.key !== 'string' || typeof presign.presignedUrl !== 'string') {
+    return null
+  }
+
+  const putRes = await fetch(presign.presignedUrl, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
+    },
+  })
+  if (!putRes.ok) return null
+
+  const encodedKey = encodeURIComponent(presign.key)
+  const verifyRes = await fetch(`/api/upload/${encodedKey}/verify`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: withCsrf({ Accept: 'application/json' }),
+  })
+  const verify = (await verifyRes.json().catch(() => ({}))) as { status?: string }
+  if (!verifyRes.ok || verify.status !== 'confirmed') return null
+
+  const recordRes = await fetch(`/api/upload/${encodedKey}/record`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: withCsrf({
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }),
+    body: JSON.stringify({
+      fileName: file.name,
+      contentType: file.type || undefined,
+      fileSize: file.size,
+      category,
+      purpose: BANK_RECEIPT_STORAGE_PURPOSE,
+      profileId,
+    }),
+  })
+  if (!recordRes.ok) return null
+  return presign.key
+}
+
 /**
- * Customer wallet top-up page (T-04.2.02.01).
+ * Customer wallet top-up page (T-04.2.02.01 / T-04.2.02.03).
  *
- * Collects a positive IRR amount, starts an online top-up (Pending ledger
- * row + provider session), and redirects the browser to the gateway.
- * The wallet is credited only after the authenticated provider callback.
+ * Online: collects a positive IRR amount, starts a Pending ledger row plus
+ * provider session, and redirects to the gateway.
+ * Bank receipt: collects amount, date, payer ref, attachment, and note;
+ * uploads the file, then creates a Pending top-up. The wallet is credited
+ * only after provider callback or finance confirmation.
  */
 export function WalletPage() {
   const locale = useLocale()
@@ -94,12 +208,32 @@ export function WalletPage() {
   const [submitting, setSubmitting] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey)
 
+  const [receiptAmountInput, setReceiptAmountInput] = useState('')
+  const [receiptDate, setReceiptDate] = useState('')
+  const [receiptPayerRef, setReceiptPayerRef] = useState('')
+  const [receiptNote, setReceiptNote] = useState('')
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [receiptSubmitting, setReceiptSubmitting] = useState(false)
+  const [receiptError, setReceiptError] = useState<ReceiptError | null>(null)
+  const [receiptSuccess, setReceiptSuccess] = useState(false)
+  const [receiptIdempotencyKey, setReceiptIdempotencyKey] = useState(newIdempotencyKey)
+
   const amountDigits = normalizeIrrAmountDigits(amountInput)
   const amountValue = amountDigits === '' ? null : Number(amountDigits)
   const tomanPreview = useMemo(() => {
     if (amountValue === null || !Number.isSafeInteger(amountValue)) return null
     return Math.round(amountValue / 10)
   }, [amountValue])
+
+  const receiptAmountDigits = normalizeIrrAmountDigits(receiptAmountInput)
+  const receiptAmountIrR = useMemo(
+    () => parseBankReceiptTopUpAmountIrR(receiptAmountDigits),
+    [receiptAmountDigits],
+  )
+  const receiptTomanPreview = useMemo(() => {
+    if (receiptAmountIrR === null) return null
+    return receiptAmountIrR / 10n
+  }, [receiptAmountIrR])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -184,6 +318,84 @@ export function WalletPage() {
     }
   }
 
+  async function handleReceiptSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!profileId || receiptSubmitting) return
+
+    if (receiptAmountIrR === null) {
+      setReceiptError('invalid-amount')
+      setReceiptSuccess(false)
+      return
+    }
+    if (!receiptDate || receiptDate > utcTodayIso()) {
+      setReceiptError('invalid-date')
+      setReceiptSuccess(false)
+      return
+    }
+    if (receiptPayerRef.trim().length === 0) {
+      setReceiptError('invalid-payer-ref')
+      setReceiptSuccess(false)
+      return
+    }
+    if (!receiptFile || !isAllowedReceiptFile(receiptFile)) {
+      setReceiptError('invalid-file')
+      setReceiptSuccess(false)
+      return
+    }
+
+    setReceiptSubmitting(true)
+    setReceiptError(null)
+    setReceiptSuccess(false)
+    try {
+      const attachmentKey = await uploadReceiptAttachment(receiptFile, profileId)
+      if (!attachmentKey) {
+        setReceiptError('upload')
+        return
+      }
+
+      const res = await fetch(`/api/wallet/${profileId}/bank-receipt-top-ups`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: withCsrf({
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Idempotency-Key': receiptIdempotencyKey,
+        }),
+        body: JSON.stringify({
+          amount: receiptAmountIrR.toString(),
+          paymentDate: receiptDate,
+          payerReference: receiptPayerRef.trim(),
+          attachmentKey,
+          customerNote: receiptNote.trim() === '' ? undefined : receiptNote.trim(),
+        }),
+      })
+      const payload = (await res.json().catch(() => ({}))) as {
+        state?: string
+        amount?: unknown
+        message?: string
+      }
+      const confirmedAmount = parseBankReceiptTopUpAmountIrR(payload.amount)
+      if (!res.ok || payload.state !== 'Pending' || confirmedAmount !== receiptAmountIrR) {
+        const next = mapReceiptSubmitError(res.status)
+        if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey())
+        setReceiptError(next)
+        return
+      }
+
+      setReceiptSuccess(true)
+      setReceiptIdempotencyKey(newIdempotencyKey())
+      setReceiptFile(null)
+      const walletRes = await fetch(`/api/wallet/${profileId}`, { credentials: 'include' })
+      if (walletRes.ok) {
+        setWallet((await walletRes.json()) as WalletBalance)
+      }
+    } catch {
+      setReceiptError('upload')
+    } finally {
+      setReceiptSubmitting(false)
+    }
+  }
+
   const errorMessage =
     error === null
       ? null
@@ -200,6 +412,23 @@ export function WalletPage() {
                 : error === 'conflict'
                   ? t('wallet.page.conflict', locale)
                   : t('wallet.page.loadError', locale)
+
+  const receiptErrorMessage =
+    receiptError === null
+      ? null
+      : receiptError === 'invalid-amount'
+        ? t('wallet.page.invalidAmount', locale)
+        : receiptError === 'invalid-date'
+          ? t('wallet.page.receiptInvalidDate', locale)
+          : receiptError === 'invalid-payer-ref'
+            ? t('wallet.page.receiptInvalidPayerRef', locale)
+            : receiptError === 'invalid-file'
+              ? t('wallet.page.receiptInvalidFile', locale)
+              : receiptError === 'upload'
+                ? t('wallet.page.receiptUploadError', locale)
+                : receiptError === 'conflict'
+                  ? t('wallet.page.conflict', locale)
+                  : t('wallet.page.receiptGenericError', locale)
 
   return (
     <div className="mx-auto max-w-lg space-y-6" dir={isRtl ? 'rtl' : 'ltr'} data-testid="wallet-page">
@@ -238,6 +467,9 @@ export function WalletPage() {
 
           {profileId && (
             <form onSubmit={handleSubmit} className="space-y-4 rounded-lg bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900">
+                {t('wallet.page.onlineTitle', locale)}
+              </h2>
               <div>
                 <label htmlFor="top-up-amount" className="block text-sm font-medium text-gray-700">
                   {t('wallet.page.amountLabel', locale)}
@@ -278,6 +510,177 @@ export function WalletPage() {
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark disabled:opacity-60"
               >
                 {submitting ? t('wallet.page.submitting', locale) : t('wallet.page.submit', locale)}
+              </button>
+            </form>
+          )}
+
+          {profileId && (
+            <form
+              onSubmit={handleReceiptSubmit}
+              className="space-y-4 rounded-lg bg-white p-6 shadow-sm"
+              data-testid="wallet-receipt-form"
+            >
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  {t('wallet.page.receiptTitle', locale)}
+                </h2>
+                <p className="mt-1 text-sm text-gray-600">
+                  {t('wallet.page.receiptSubtitle', locale)}
+                </p>
+              </div>
+
+              {receiptSuccess && (
+                <div
+                  role="status"
+                  data-testid="wallet-receipt-success"
+                  className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800"
+                >
+                  {t('wallet.page.receiptSuccess', locale)}
+                </div>
+              )}
+
+              {receiptErrorMessage && (
+                <div
+                  role="alert"
+                  data-testid="wallet-receipt-error"
+                  className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+                >
+                  {receiptErrorMessage}
+                </div>
+              )}
+
+              <div>
+                <label
+                  htmlFor="receipt-amount"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {t('wallet.page.receiptAmountLabel', locale)}
+                </label>
+                <input
+                  id="receipt-amount"
+                  data-testid="wallet-receipt-amount"
+                  name="receiptAmount"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={receiptAmountInput}
+                  disabled={receiptSubmitting}
+                  aria-invalid={receiptError === 'invalid-amount'}
+                  onChange={(event) => {
+                    setReceiptAmountInput(normalizeIrrAmountDigits(event.target.value))
+                    if (receiptError === 'invalid-amount') setReceiptError(null)
+                  }}
+                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+                {receiptTomanPreview !== null && (
+                  <p className="mt-1 text-sm text-gray-500" data-testid="wallet-receipt-toman">
+                    {t('wallet.page.tomanPreview', locale).replace(
+                      '{amount}',
+                      formatAmount(receiptTomanPreview, locale),
+                    )}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="receipt-date" className="block text-sm font-medium text-gray-700">
+                  {t('wallet.page.receiptDateLabel', locale)}
+                </label>
+                <input
+                  id="receipt-date"
+                  data-testid="wallet-receipt-date"
+                  name="paymentDate"
+                  type="date"
+                  max={utcTodayIso()}
+                  value={receiptDate}
+                  disabled={receiptSubmitting}
+                  aria-invalid={receiptError === 'invalid-date'}
+                  onChange={(event) => {
+                    setReceiptDate(event.target.value)
+                    if (receiptError === 'invalid-date') setReceiptError(null)
+                  }}
+                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="receipt-payer-ref"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  {t('wallet.page.receiptPayerRefLabel', locale)}
+                </label>
+                <input
+                  id="receipt-payer-ref"
+                  data-testid="wallet-receipt-payer-ref"
+                  name="payerReference"
+                  type="text"
+                  autoComplete="off"
+                  maxLength={128}
+                  value={receiptPayerRef}
+                  disabled={receiptSubmitting}
+                  aria-invalid={receiptError === 'invalid-payer-ref'}
+                  onChange={(event) => {
+                    setReceiptPayerRef(event.target.value)
+                    if (receiptError === 'invalid-payer-ref') setReceiptError(null)
+                  }}
+                  className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="receipt-file" className="block text-sm font-medium text-gray-700">
+                  {t('wallet.page.receiptFileLabel', locale)}
+                </label>
+                <input
+                  id="receipt-file"
+                  data-testid="wallet-receipt-file"
+                  name="receiptFile"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"
+                  disabled={receiptSubmitting}
+                  aria-invalid={receiptError === 'invalid-file'}
+                  aria-describedby="receipt-file-hint"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0] ?? null
+                    setReceiptFile(file)
+                    if (receiptError === 'invalid-file' || receiptError === 'upload') {
+                      setReceiptError(null)
+                    }
+                  }}
+                  className="mt-1 block w-full text-sm text-gray-600 file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary"
+                />
+                <p id="receipt-file-hint" className="mt-2 text-sm text-gray-500">
+                  {t('wallet.page.receiptFileHint', locale)}
+                </p>
+              </div>
+
+              <div>
+                <label htmlFor="receipt-note" className="block text-sm font-medium text-gray-700">
+                  {t('wallet.page.receiptNoteLabel', locale)}
+                </label>
+                <textarea
+                  id="receipt-note"
+                  data-testid="wallet-receipt-note"
+                  name="customerNote"
+                  rows={3}
+                  maxLength={2000}
+                  value={receiptNote}
+                  disabled={receiptSubmitting}
+                  onChange={(event) => setReceiptNote(event.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+
+              <button
+                type="submit"
+                data-testid="wallet-receipt-submit"
+                disabled={receiptSubmitting}
+                className="w-full rounded-lg border border-primary bg-white px-4 py-2.5 text-sm font-medium text-primary hover:bg-primary/5 disabled:opacity-60"
+              >
+                {receiptSubmitting
+                  ? t('wallet.page.receiptSubmitting', locale)
+                  : t('wallet.page.receiptSubmit', locale)}
               </button>
             </form>
           )}
