@@ -1,15 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   ONLINE_TOPUP_CALLBACK_PATH,
+  PaymentGatewayRejectedError,
   assertSafePaymentGatewayUrl,
   createHttpPaymentGateway,
   createPaymentGatewayFromEnv,
   createRedirectPaymentGateway,
   createZarinpalPaymentGateway,
+  paymentCallbackUrlForOrder,
   resolvePaymentGatewayAdapterName,
   resolvePaymentGatewayAllowedHosts,
   resolvePaymentGatewayCallbackUrl,
   resolvePaymentGatewayStartUrl,
+  resolveZarinpalUnverifiedUrl,
   type PaymentGatewayFetch,
 } from './payment-gateway.js'
 
@@ -71,6 +74,15 @@ describe('RedirectPaymentGateway (T-04.2.02.01)', () => {
       idempotencyKey: 'tx-002',
     })
     expect(other.authority).not.toBe(first.authority)
+  })
+
+  it('recovers the same deterministic authority without creating a new session', async () => {
+    const gateway = createRedirectPaymentGateway({
+      startUrl: 'https://pay.example.test/checkout',
+    })
+    const started = await gateway.startPayment(START_REQUEST)
+    const recovered = await gateway.recoverPayment(START_REQUEST)
+    expect(recovered).toEqual(started)
   })
 
   it('rejects a non-https configured start URL', () => {
@@ -255,6 +267,9 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
       }),
     })
     await expect(gateway.startPayment(START_REQUEST)).rejects.toThrow(/Merchant is invalid/)
+    await expect(gateway.startPayment(START_REQUEST)).rejects.toBeInstanceOf(
+      PaymentGatewayRejectedError,
+    )
   })
 
   it('rejects a non-https configured StartPay URL', () => {
@@ -264,6 +279,70 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
         startPayUrl: 'http://payment.zarinpal.com/pg/StartPay',
       }),
     ).toThrow(/https URL/)
+  })
+
+  it('recovers the created authority after a timeout without posting a second payment request', async () => {
+    const created: string[] = []
+    const request = {
+      ...START_REQUEST,
+      callbackUrl: paymentCallbackUrlForOrder(START_REQUEST.callbackUrl, START_REQUEST.merchantOrderId),
+    }
+    const fetchImpl: PaymentGatewayFetch = vi.fn().mockImplementation(async (url: string) => {
+      if (String(url).includes('/request.json')) {
+        created.push('A00000000000000000000000000000000001')
+        throw Object.assign(new Error('The operation was aborted due to timeout'), {
+          name: 'TimeoutError',
+        })
+      }
+      if (String(url).includes('/unVerified.json')) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: {
+              code: 100,
+              authorities: created.map((authority) => ({
+                authority,
+                amount: 250000,
+                callback_url: request.callbackUrl,
+              })),
+            },
+            errors: [],
+          }),
+        }
+      }
+      throw new Error(`unexpected URL ${url}`)
+    })
+
+    const gateway = createZarinpalPaymentGateway({
+      merchantId: '11111111-1111-1111-1111-111111111111',
+      fetchImpl,
+    })
+
+    await expect(gateway.startPayment(request)).rejects.toThrow(/timeout/)
+    expect(created).toHaveLength(1)
+
+    const recovered = await gateway.recoverPayment(request)
+    expect(recovered).toEqual({
+      authority: 'A00000000000000000000000000000000001',
+      redirectUrl:
+        'https://payment.zarinpal.com/pg/StartPay/A00000000000000000000000000000000001',
+    })
+    expect(created).toHaveLength(1)
+    expect(fetchImpl).toHaveBeenCalledWith(
+      'https://payment.zarinpal.com/pg/v4/payment/unVerified.json',
+      expect.objectContaining({ method: 'POST' }),
+    )
+    const postCalls = (fetchImpl as ReturnType<typeof vi.fn>).mock.calls.filter((call) =>
+      String(call[0]).includes('/request.json'),
+    )
+    expect(postCalls).toHaveLength(1)
+  })
+
+  it('derives the unverified inquiry URL from the payment request URL', () => {
+    expect(resolveZarinpalUnverifiedUrl('https://sandbox.zarinpal.com/pg/v4/payment/request.json')).toBe(
+      'https://sandbox.zarinpal.com/pg/v4/payment/unVerified.json',
+    )
   })
 })
 
@@ -413,6 +492,43 @@ describe('HTTP payment gateway (T-04.2.02.01)', () => {
         startUrl: 'http://psp.test/pay',
       }),
     ).toThrow(/https URL/)
+  })
+
+  it('recovers an existing session via inquiry after the create request times out', async () => {
+    const created: string[] = []
+    const fetchImpl: PaymentGatewayFetch = vi.fn().mockImplementation(async (url: string, init) => {
+      if (init?.method === 'POST') {
+        created.push('psp-auth-timeout')
+        throw Object.assign(new Error('The operation was aborted due to timeout'), {
+          name: 'TimeoutError',
+        })
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          authority: created[0],
+          redirectUrl: 'https://psp.test/pay/psp-auth-timeout',
+        }),
+      }
+    })
+    const gateway = createHttpPaymentGateway({
+      requestUrl: 'https://psp.test/v1/payments',
+      apiKey: 'secret-key',
+      fetchImpl,
+    })
+
+    await expect(gateway.startPayment(START_REQUEST)).rejects.toThrow(/timeout/)
+    const recovered = await gateway.recoverPayment(START_REQUEST)
+    expect(recovered).toEqual({
+      authority: 'psp-auth-timeout',
+      redirectUrl: 'https://psp.test/pay/psp-auth-timeout',
+    })
+    expect(created).toHaveLength(1)
+    const postCalls = (fetchImpl as ReturnType<typeof vi.fn>).mock.calls.filter(
+      (call) => call[1]?.method === 'POST',
+    )
+    expect(postCalls).toHaveLength(1)
   })
 })
 

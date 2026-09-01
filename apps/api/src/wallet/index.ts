@@ -17,10 +17,13 @@ export type {
 export {
   PAYMENT_GATEWAY,
   ONLINE_TOPUP_CALLBACK_PATH,
+  PaymentGatewayRejectedError,
   createRedirectPaymentGateway,
   createHttpPaymentGateway,
   createZarinpalPaymentGateway,
   createPaymentGatewayFromEnv,
+  isPaymentGatewayRejectedError,
+  paymentCallbackUrlForOrder,
   resolvePaymentGatewayAdapterName,
 } from './payment-gateway.js'
 export type {

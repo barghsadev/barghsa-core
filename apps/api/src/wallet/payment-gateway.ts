@@ -19,6 +19,8 @@ export const ONLINE_TOPUP_CALLBACK_PATH = '/api/wallet/top-ups/callback'
 export const DEFAULT_ZARINPAL_REQUEST_URL =
   'https://payment.zarinpal.com/pg/v4/payment/request.json'
 export const DEFAULT_ZARINPAL_START_PAY_URL = 'https://payment.zarinpal.com/pg/StartPay'
+export const DEFAULT_ZARINPAL_UNVERIFIED_URL =
+  'https://payment.zarinpal.com/pg/v4/payment/unVerified.json'
 export const DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS = 15_000
 export const DEFAULT_DEV_CALLBACK_ORIGIN = 'http://localhost:4000'
 export const DEFAULT_DEV_START_URL = 'https://pay.sandbox.local/start'
@@ -49,6 +51,44 @@ export interface PaymentGatewayStartResult {
 
 export interface PaymentGateway {
   startPayment(request: PaymentGatewayStartRequest): Promise<PaymentGatewayStartResult>
+  /**
+   * Look up an existing payable session for this merchant order /
+   * idempotency key. Must not create a new session. Returns null when
+   * the provider has no matching authority.
+   */
+  recoverPayment(request: PaymentGatewayStartRequest): Promise<PaymentGatewayStartResult | null>
+}
+
+/**
+ * Provider returned a definite business rejection (no session created).
+ * Timeouts, aborts, and 5xx stay generic Errors so callers treat them
+ * as ambiguous — the provider may already have a payable session.
+ */
+export class PaymentGatewayRejectedError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'PaymentGatewayRejectedError'
+  }
+}
+
+export function isPaymentGatewayRejectedError(error: unknown): boolean {
+  return (
+    error instanceof PaymentGatewayRejectedError ||
+    (error instanceof Error && error.name === 'PaymentGatewayRejectedError')
+  )
+}
+
+/**
+ * Per-transaction callback URL so provider inquiry can uniquely match
+ * the Pending ledger row after an ambiguous start (timeout after create).
+ */
+export function paymentCallbackUrlForOrder(
+  baseCallbackUrl: string,
+  merchantOrderId: string,
+): string {
+  const url = new URL(baseCallbackUrl)
+  url.searchParams.set('orderId', merchantOrderId)
+  return url.href
 }
 
 const AUTHORITY_NAMESPACE = 'barghsa.payment-gateway.authority.v1'
@@ -261,6 +301,47 @@ function resolveTimeoutMs(env: NodeJS.ProcessEnv): number {
   return parsed
 }
 
+function isDefiniteHttpClientRejection(status: number): boolean {
+  return status >= 400 && status < 500 && status !== 408 && status !== 429
+}
+
+function callbackUrlsMatch(left: string, right: string): boolean {
+  try {
+    const a = new URL(left)
+    const b = new URL(right)
+    if (a.origin !== b.origin || a.pathname !== b.pathname) return false
+    const orderA = a.searchParams.get('orderId')
+    const orderB = b.searchParams.get('orderId')
+    if (orderA || orderB) return orderA === orderB
+    return a.search === b.search
+  } catch {
+    return left === right
+  }
+}
+
+export function resolveZarinpalUnverifiedUrl(requestUrl: string): string {
+  if (requestUrl.endsWith('/request.json')) {
+    return requestUrl.replace(/request\.json$/, 'unVerified.json')
+  }
+  try {
+    return `${new URL(requestUrl).origin}/pg/v4/payment/unVerified.json`
+  } catch {
+    return DEFAULT_ZARINPAL_UNVERIFIED_URL
+  }
+}
+
+export function paymentGatewayInquiryUrl(
+  requestUrl: string,
+  merchantOrderId: string,
+  idempotencyKey: string,
+  inquiryUrl?: string,
+): string {
+  const url = new URL(inquiryUrl && inquiryUrl.length > 0 ? inquiryUrl : requestUrl)
+  url.searchParams.set('orderId', merchantOrderId)
+  url.searchParams.set('idempotencyKey', idempotencyKey)
+  return url.href
+}
+
 /**
  * Redirect-style adapter: builds a hosted-checkout URL without talking
  * to a live PSP. Only for development/test when
@@ -284,21 +365,24 @@ export function createRedirectPaymentGateway(
     'PAYMENT_GATEWAY_START_URL',
   )
 
+  async function startPayment(request: PaymentGatewayStartRequest): Promise<PaymentGatewayStartResult> {
+    const authority = stablePaymentAuthority(request.idempotencyKey)
+    const url = new URL(startUrl.href)
+    url.searchParams.set('authority', authority)
+    url.searchParams.set('amount', request.amountIrR.toString())
+    url.searchParams.set('orderId', request.merchantOrderId)
+    url.searchParams.set('callbackUrl', request.callbackUrl)
+    const redirectUrl = assertSafePaymentGatewayUrl(
+      url.toString(),
+      allowedHosts,
+      'payment gateway redirectUrl',
+    ).href
+    return { authority, redirectUrl }
+  }
+
   return {
-    async startPayment(request) {
-      const authority = stablePaymentAuthority(request.idempotencyKey)
-      const url = new URL(startUrl.href)
-      url.searchParams.set('authority', authority)
-      url.searchParams.set('amount', request.amountIrR.toString())
-      url.searchParams.set('orderId', request.merchantOrderId)
-      url.searchParams.set('callbackUrl', request.callbackUrl)
-      const redirectUrl = assertSafePaymentGatewayUrl(
-        url.toString(),
-        allowedHosts,
-        'payment gateway redirectUrl',
-      ).href
-      return { authority, redirectUrl }
-    },
+    startPayment,
+    recoverPayment: startPayment,
   }
 }
 
@@ -324,6 +408,7 @@ export function createHttpPaymentGateway(options: {
   requestUrl: string
   apiKey: string
   startUrl?: string
+  inquiryUrl?: string
   timeoutMs?: number
   fetchImpl?: PaymentGatewayFetch
   allowedHosts?: readonly string[]
@@ -333,9 +418,13 @@ export function createHttpPaymentGateway(options: {
   const startUrlRaw = options.startUrl ? stripTrailingSlash(options.startUrl) : undefined
   const allowedHosts =
     options.allowedHosts ??
-    resolvePaymentGatewayAllowedHosts({}, [options.requestUrl, startUrlRaw])
+    resolvePaymentGatewayAllowedHosts({}, [options.requestUrl, startUrlRaw, options.inquiryUrl])
+  const completedSessions = new Map<string, PaymentGatewayStartResult>()
 
   assertHttpsUrl(options.requestUrl, 'PAYMENT_GATEWAY_REQUEST_URL')
+  if (options.inquiryUrl) {
+    assertHttpsUrl(options.inquiryUrl, 'PAYMENT_GATEWAY_INQUIRY_URL')
+  }
   const startUrl = startUrlRaw
     ? stripTrailingSlash(
         assertSafePaymentGatewayUrl(
@@ -346,8 +435,44 @@ export function createHttpPaymentGateway(options: {
       )
     : undefined
 
+  const readSession = (
+    body: unknown,
+    missingAuthorityMessage: string,
+  ): PaymentGatewayStartResult => {
+    const record = readJsonObject(body)
+    const authority = typeof record?.authority === 'string' ? record.authority.trim() : ''
+    if (!authority) {
+      throw new Error(missingAuthorityMessage)
+    }
+
+    const redirectFromProvider =
+      typeof record?.redirectUrl === 'string' ? record.redirectUrl.trim() : ''
+    if (redirectFromProvider) {
+      const redirectUrl = assertSafePaymentGatewayUrl(
+        redirectFromProvider,
+        allowedHosts,
+        'payment gateway redirectUrl',
+      ).href
+      return { authority, redirectUrl }
+    }
+    if (!startUrl) {
+      throw new Error(
+        'Payment gateway response did not include redirectUrl and PAYMENT_GATEWAY_START_URL is not set',
+      )
+    }
+    const redirectUrl = assertSafePaymentGatewayUrl(
+      `${startUrl}/${encodeURIComponent(authority)}`,
+      allowedHosts,
+      'payment gateway redirectUrl',
+    ).href
+    return { authority, redirectUrl }
+  }
+
   return {
     async startPayment(request) {
+      const cached = completedSessions.get(request.idempotencyKey)
+      if (cached) return cached
+
       const amount = requireSafePositiveAmount(request.amountIrR)
       const res = await fetchImpl(options.requestUrl, {
         method: 'POST',
@@ -375,36 +500,59 @@ export function createHttpPaymentGateway(options: {
         throw new Error(`Payment gateway request failed: invalid JSON (HTTP ${res.status})`)
       }
       if (!res.ok) {
-        throw new Error(`Payment gateway request failed: HTTP ${res.status}`)
+        const message = `Payment gateway request failed: HTTP ${res.status}`
+        if (isDefiniteHttpClientRejection(res.status)) {
+          throw new PaymentGatewayRejectedError(message)
+        }
+        throw new Error(message)
       }
 
+      const session = readSession(
+        body,
+        'Payment gateway response did not include a provider authority',
+      )
+      completedSessions.set(request.idempotencyKey, session)
+      return session
+    },
+    async recoverPayment(request) {
+      const cached = completedSessions.get(request.idempotencyKey)
+      if (cached) return cached
+
+      const inquiryUrl = paymentGatewayInquiryUrl(
+        options.requestUrl,
+        request.merchantOrderId,
+        request.idempotencyKey,
+        options.inquiryUrl,
+      )
+      const res = await fetchImpl(inquiryUrl, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${options.apiKey}`,
+          'X-API-KEY': options.apiKey,
+          'Idempotency-Key': request.idempotencyKey,
+          Accept: 'application/json',
+        },
+        signal: AbortSignal.timeout(timeoutMs),
+      })
+      if (res.status === 404 || res.status === 204) return null
+      let body: unknown
+      try {
+        body = await res.json()
+      } catch {
+        throw new Error(`Payment gateway inquiry failed: invalid JSON (HTTP ${res.status})`)
+      }
+      if (!res.ok) {
+        throw new Error(`Payment gateway inquiry failed: HTTP ${res.status}`)
+      }
       const record = readJsonObject(body)
       const authority = typeof record?.authority === 'string' ? record.authority.trim() : ''
-      if (!authority) {
-        throw new Error('Payment gateway response did not include a provider authority')
-      }
-
-      const redirectFromProvider =
-        typeof record?.redirectUrl === 'string' ? record.redirectUrl.trim() : ''
-      if (redirectFromProvider) {
-        const redirectUrl = assertSafePaymentGatewayUrl(
-          redirectFromProvider,
-          allowedHosts,
-          'payment gateway redirectUrl',
-        ).href
-        return { authority, redirectUrl }
-      }
-      if (!startUrl) {
-        throw new Error(
-          'Payment gateway response did not include redirectUrl and PAYMENT_GATEWAY_START_URL is not set',
-        )
-      }
-      const redirectUrl = assertSafePaymentGatewayUrl(
-        `${startUrl}/${encodeURIComponent(authority)}`,
-        allowedHosts,
-        'payment gateway redirectUrl',
-      ).href
-      return { authority, redirectUrl }
+      if (!authority) return null
+      const session = readSession(
+        body,
+        'Payment gateway inquiry did not include a provider authority',
+      )
+      completedSessions.set(request.idempotencyKey, session)
+      return session
     },
   }
 }
@@ -418,6 +566,7 @@ export function createZarinpalPaymentGateway(options: {
   merchantId: string
   requestUrl?: string
   startPayUrl?: string
+  unverifiedUrl?: string
   timeoutMs?: number
   fetchImpl?: PaymentGatewayFetch
   allowedHosts?: readonly string[]
@@ -426,11 +575,14 @@ export function createZarinpalPaymentGateway(options: {
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS
   const requestUrl = options.requestUrl ?? DEFAULT_ZARINPAL_REQUEST_URL
   const startPayUrlRaw = stripTrailingSlash(options.startPayUrl ?? DEFAULT_ZARINPAL_START_PAY_URL)
+  const unverifiedUrlRaw = options.unverifiedUrl ?? resolveZarinpalUnverifiedUrl(requestUrl)
   const allowedHosts =
     options.allowedHosts ??
-    resolvePaymentGatewayAllowedHosts({}, [requestUrl, startPayUrlRaw])
+    resolvePaymentGatewayAllowedHosts({}, [requestUrl, startPayUrlRaw, unverifiedUrlRaw])
+  const completedSessions = new Map<string, PaymentGatewayStartResult>()
 
   assertHttpsUrl(requestUrl, 'PAYMENT_GATEWAY_REQUEST_URL')
+  assertHttpsUrl(unverifiedUrlRaw, 'PAYMENT_GATEWAY_INQUIRY_URL')
   const startPayUrl = stripTrailingSlash(
     assertSafePaymentGatewayUrl(
       startPayUrlRaw,
@@ -438,9 +590,22 @@ export function createZarinpalPaymentGateway(options: {
       'PAYMENT_GATEWAY_START_URL',
     ).href,
   )
+  const unverifiedUrl = assertHttpsUrl(unverifiedUrlRaw, 'PAYMENT_GATEWAY_INQUIRY_URL').href
+
+  function sessionFromAuthority(authority: string): PaymentGatewayStartResult {
+    const redirectUrl = assertSafePaymentGatewayUrl(
+      `${startPayUrl}/${encodeURIComponent(authority)}`,
+      allowedHosts,
+      'payment gateway redirectUrl',
+    ).href
+    return { authority, redirectUrl }
+  }
 
   return {
     async startPayment(request) {
+      const cached = completedSessions.get(request.idempotencyKey)
+      if (cached) return cached
+
       const amount = requireSafePositiveAmount(request.amountIrR)
       const res = await fetchImpl(requestUrl, {
         method: 'POST',
@@ -481,15 +646,72 @@ export function createZarinpalPaymentGateway(options: {
           (typeof errorRecord?.message === 'string' && errorRecord.message) ||
           (typeof data?.message === 'string' && data.message) ||
           `HTTP ${res.status} code=${String(code ?? 'missing')}`
-        throw new Error(`ZarinPal request rejected: ${message}`)
+        const detail = `ZarinPal request rejected: ${message}`
+        if (res.ok || isDefiniteHttpClientRejection(res.status)) {
+          throw new PaymentGatewayRejectedError(detail)
+        }
+        throw new Error(detail)
       }
 
-      const redirectUrl = assertSafePaymentGatewayUrl(
-        `${startPayUrl}/${encodeURIComponent(authority)}`,
-        allowedHosts,
-        'payment gateway redirectUrl',
-      ).href
-      return { authority, redirectUrl }
+      const session = sessionFromAuthority(authority)
+      completedSessions.set(request.idempotencyKey, session)
+      return session
+    },
+    async recoverPayment(request) {
+      const cached = completedSessions.get(request.idempotencyKey)
+      if (cached) return cached
+
+      const amount = requireSafePositiveAmount(request.amountIrR)
+      const res = await fetchImpl(unverifiedUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ merchant_id: options.merchantId }),
+        signal: AbortSignal.timeout(timeoutMs),
+      })
+
+      let body: unknown
+      try {
+        body = await res.json()
+      } catch {
+        throw new Error(`ZarinPal unverified inquiry failed: invalid JSON (HTTP ${res.status})`)
+      }
+      if (!res.ok) {
+        throw new Error(`ZarinPal unverified inquiry failed: HTTP ${res.status}`)
+      }
+
+      const record = readJsonObject(body)
+      const data = readJsonObject(record?.data)
+      const authorities = Array.isArray(data?.authorities) ? data.authorities : []
+      const matches: string[] = []
+      for (const entry of authorities) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry)) continue
+        const item = entry as Record<string, unknown>
+        const authority = typeof item.authority === 'string' ? item.authority.trim() : ''
+        if (!authority) continue
+        const callback =
+          typeof item.callback_url === 'string'
+            ? item.callback_url
+            : typeof item.callbackUrl === 'string'
+              ? item.callbackUrl
+              : ''
+        const entryAmount =
+          typeof item.amount === 'number'
+            ? item.amount
+            : typeof item.amount === 'string'
+              ? Number.parseInt(item.amount, 10)
+              : NaN
+        if (entryAmount !== amount) continue
+        if (!callback || !callbackUrlsMatch(callback, request.callbackUrl)) continue
+        matches.push(authority)
+      }
+
+      if (matches.length !== 1) return null
+      const session = sessionFromAuthority(matches[0]!)
+      completedSessions.set(request.idempotencyKey, session)
+      return session
     },
   }
 }
@@ -536,9 +758,12 @@ export function createPaymentGatewayFromEnv(
     }
     const zarinpalRequestUrl = env.PAYMENT_GATEWAY_REQUEST_URL?.trim()
     const startPayUrl = env.PAYMENT_GATEWAY_START_URL?.trim()
+    const inquiryUrl = env.PAYMENT_GATEWAY_INQUIRY_URL?.trim()
     const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [
       zarinpalRequestUrl || DEFAULT_ZARINPAL_REQUEST_URL,
       startPayUrl || DEFAULT_ZARINPAL_START_PAY_URL,
+      inquiryUrl ||
+        resolveZarinpalUnverifiedUrl(zarinpalRequestUrl || DEFAULT_ZARINPAL_REQUEST_URL),
     ])
     return createZarinpalPaymentGateway({
       merchantId,
@@ -546,6 +771,7 @@ export function createPaymentGatewayFromEnv(
       allowedHosts,
       ...(zarinpalRequestUrl ? { requestUrl: zarinpalRequestUrl } : {}),
       ...(startPayUrl ? { startPayUrl } : {}),
+      ...(inquiryUrl ? { unverifiedUrl: inquiryUrl } : {}),
       ...(options.fetchImpl ? { fetchImpl: options.fetchImpl } : {}),
     })
   }
@@ -558,13 +784,15 @@ export function createPaymentGatewayFromEnv(
     )
   }
   const startUrl = env.PAYMENT_GATEWAY_START_URL?.trim()
-  const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [requestUrl, startUrl])
+  const inquiryUrl = env.PAYMENT_GATEWAY_INQUIRY_URL?.trim()
+  const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [requestUrl, startUrl, inquiryUrl])
   return createHttpPaymentGateway({
     requestUrl,
     apiKey,
     timeoutMs,
     allowedHosts,
     ...(startUrl ? { startUrl } : {}),
+    ...(inquiryUrl ? { inquiryUrl } : {}),
     ...(options.fetchImpl ? { fetchImpl: options.fetchImpl } : {}),
   })
 }

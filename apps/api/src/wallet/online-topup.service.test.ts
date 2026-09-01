@@ -4,7 +4,10 @@ import { BadRequestException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { OnlineTopUpService } from './online-topup.service.js'
 import type { WalletService } from './wallet.service.js'
-import type { PaymentGateway } from './payment-gateway.js'
+import {
+  PaymentGatewayRejectedError,
+  type PaymentGateway,
+} from './payment-gateway.js'
 
 const mockPool = {
   query: vi.fn(),
@@ -56,6 +59,7 @@ function makeGateway(overrides: Partial<PaymentGateway> = {}): PaymentGateway {
       authority: 'auth-1',
       redirectUrl: REDIRECT,
     }),
+    recoverPayment: vi.fn().mockResolvedValue(null),
     ...overrides,
   }
 }
@@ -213,6 +217,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
         amountIrR: AMOUNT,
         merchantOrderId: TX_ID,
         idempotencyKey: TX_ID,
+        callbackUrl: `http://localhost:4000/api/wallet/top-ups/callback?orderId=${TX_ID}`,
       }),
     )
     expect(mockClient.query).toHaveBeenCalledWith(
@@ -313,9 +318,11 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     expect(mockClient.release).toHaveBeenCalled()
   })
 
-  it('surfaces a gateway failure as PROVIDER_DOWNSTREAM and leaves the Pending row', async () => {
+  it('surfaces a gateway failure as PROVIDER_DOWNSTREAM and keeps the initializing claim after an ambiguous error', async () => {
     scriptClient()
-    gateway.startPayment = vi.fn().mockRejectedValue(new Error('psp down'))
+    gateway.startPayment = vi.fn().mockRejectedValue(
+      Object.assign(new Error('The operation was aborted due to timeout'), { name: 'TimeoutError' }),
+    )
 
     const rejection = await service
       .initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
@@ -330,6 +337,23 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
       expect.any(Array),
     )
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining("- 'gateway'"),
+      expect.any(Array),
+    )
+    expect(gateway.recoverPayment).not.toHaveBeenCalled()
+  })
+
+  it('releases the initializing claim only after a definite provider rejection', async () => {
+    scriptClient()
+    gateway.startPayment = vi.fn().mockRejectedValue(
+      new PaymentGatewayRejectedError('Merchant is invalid'),
+    )
+
+    await expect(
+      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
+    ).rejects.toBeInstanceOf(HttpException)
+
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining("- 'gateway'"),
       expect.any(Array),
@@ -363,8 +387,13 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     )
   })
 
-  it('recovers an initializing claim after crash without overwriting it or minting a new provider key', async () => {
+  it('recovers an initializing claim after crash without calling startPayment or minting a new provider key', async () => {
     const claimId = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+    const callbackUrl = `http://localhost:4000/api/wallet/top-ups/callback?orderId=${TX_ID}`
+    gateway.recoverPayment = vi.fn().mockResolvedValue({
+      authority: 'auth-1',
+      redirectUrl: REDIRECT,
+    })
     scriptClient({
       existing: makePendingRow({
         metadata: {
@@ -375,7 +404,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
             providerIdempotencyKey: TX_ID,
             merchantOrderId: TX_ID,
             amountIrR: AMOUNT.toString(),
-            callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+            callbackUrl,
           },
         },
       }),
@@ -388,13 +417,14 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     })
 
     expect(result.redirectUrl).toBe(REDIRECT)
-    expect(gateway.startPayment).toHaveBeenCalledTimes(1)
-    expect(gateway.startPayment).toHaveBeenCalledWith(
+    expect(gateway.startPayment).not.toHaveBeenCalled()
+    expect(gateway.recoverPayment).toHaveBeenCalledTimes(1)
+    expect(gateway.recoverPayment).toHaveBeenCalledWith(
       expect.objectContaining({
         amountIrR: AMOUNT,
         merchantOrderId: TX_ID,
         idempotencyKey: TX_ID,
-        callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+        callbackUrl,
       }),
     )
     expect(mockClient.query).not.toHaveBeenCalledWith(
@@ -410,5 +440,62 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
         claimId,
       ]),
     )
+  })
+
+  it('does not create a second authority when the provider session is created but the client times out', async () => {
+    const created: string[] = []
+    const timeout = Object.assign(new Error('The operation was aborted due to timeout'), {
+      name: 'TimeoutError',
+    })
+    gateway.startPayment = vi.fn().mockImplementation(async () => {
+      created.push(`auth-${created.length + 1}`)
+      throw timeout
+    })
+    gateway.recoverPayment = vi.fn().mockImplementation(async () => {
+      const authority = created[0]
+      if (!authority) return null
+      return {
+        authority,
+        redirectUrl: `https://pay.test/start?authority=${authority}`,
+      }
+    })
+
+    scriptClient()
+    await expect(
+      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
+    ).rejects.toBeInstanceOf(HttpException)
+    expect(created).toEqual(['auth-1'])
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining("- 'gateway'"),
+      expect.any(Array),
+    )
+
+    const claimId = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
+    scriptClient({
+      existing: makePendingRow({
+        metadata: {
+          channel: 'online',
+          gateway: {
+            status: 'initializing',
+            claimId,
+            providerIdempotencyKey: TX_ID,
+            merchantOrderId: TX_ID,
+            amountIrR: AMOUNT.toString(),
+            callbackUrl: `http://localhost:4000/api/wallet/top-ups/callback?orderId=${TX_ID}`,
+          },
+        },
+      }),
+    })
+
+    const result = await service.initiate({
+      profileId: PROFILE_ID,
+      amountIrR: AMOUNT,
+      idempotencyKey: IDEM,
+    })
+
+    expect(result.redirectUrl).toBe(REDIRECT)
+    expect(gateway.startPayment).toHaveBeenCalledTimes(1)
+    expect(gateway.recoverPayment).toHaveBeenCalledTimes(1)
+    expect(created).toEqual(['auth-1'])
   })
 })

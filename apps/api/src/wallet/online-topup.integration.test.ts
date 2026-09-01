@@ -13,12 +13,13 @@
  *   5. Concurrent same-key retries call startPayment once and keep
  *      metadata.authority aligned with ref_id.
  *   6. A crash after startPayment succeeds but before persist is recovered
- *      with the same provider idempotency key and does not mint a second
- *      payable session.
+ *      via provider inquiry and does not mint a second payable session.
+ *   7. If the provider creates a session but the client times out, retry
+ *      recovers that authority and cannot create a second one.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { BadRequestException, ConflictException } from '@nestjs/common'
+import { BadRequestException, ConflictException, HttpException } from '@nestjs/common'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
@@ -73,6 +74,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           authority: `auth-${request.merchantOrderId}`,
           redirectUrl: `https://pay.test/start?order=${request.merchantOrderId}&amount=${request.amountIrR.toString()}`,
         }
+      },
+      async recoverPayment() {
+        return null
       },
     }
     service = new OnlineTopUpService(walletService, gateway)
@@ -289,6 +293,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           redirectUrl: `https://pay.test/start?authority=auth-once-${request.merchantOrderId}`,
         }
       },
+      async recoverPayment() {
+        return null
+      },
     }
     const concurrentService = new OnlineTopUpService(walletService, slowGateway)
     const input = {
@@ -327,7 +334,8 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       { authority: string; redirectUrl: string }
     >()
     let startCallsLocal = 0
-    const idempotentGateway: PaymentGateway = {
+    let recoverCallsLocal = 0
+    const reconcilingGateway: PaymentGateway = {
       async startPayment(request) {
         if (!request.idempotencyKey) {
           throw new Error('provider idempotency key is required')
@@ -342,8 +350,12 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         sessions.set(request.idempotencyKey, session)
         return session
       },
+      async recoverPayment(request) {
+        recoverCallsLocal += 1
+        return sessions.get(request.idempotencyKey) ?? null
+      },
     }
-    const recoverService = new OnlineTopUpService(walletService, idempotentGateway)
+    const recoverService = new OnlineTopUpService(walletService, reconcilingGateway)
 
     const inserted = await ctx.pool.query<{ id: string }>(
       `INSERT INTO wallet_transactions
@@ -380,7 +392,7 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
             providerIdempotencyKey: transactionId,
             merchantOrderId: transactionId,
             amountIrR: '9000',
-            callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+            callbackUrl: `http://localhost:4000/api/wallet/top-ups/callback?orderId=${transactionId}`,
           },
         }),
       ],
@@ -394,7 +406,8 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
 
     expect(result.transactionId).toBe(transactionId)
     expect(result.redirectUrl).toBe(seeded.redirectUrl)
-    expect(startCallsLocal).toBe(1)
+    expect(startCallsLocal).toBe(0)
+    expect(recoverCallsLocal).toBe(1)
     expect(sessions.size).toBe(1)
 
     const ledger = await fetchLedger(PROFILE_A)
@@ -411,6 +424,74 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         redirectUrl: seeded.redirectUrl,
         claimId,
         providerIdempotencyKey: transactionId,
+      },
+    })
+  })
+
+  it('recovers the provider session after a client timeout and cannot create a second authority', async () => {
+    const createdAuthorities: string[] = []
+    const sessions = new Map<string, { authority: string; redirectUrl: string }>()
+    const timeoutGateway: PaymentGateway = {
+      async startPayment(request) {
+        const session = {
+          authority: `auth-timeout-${request.idempotencyKey}-${createdAuthorities.length + 1}`,
+          redirectUrl: `https://pay.test/start?authority=auth-timeout-${request.idempotencyKey}-${createdAuthorities.length + 1}`,
+        }
+        createdAuthorities.push(session.authority)
+        sessions.set(request.idempotencyKey, session)
+        throw Object.assign(new Error('The operation was aborted due to timeout'), {
+          name: 'TimeoutError',
+        })
+      },
+      async recoverPayment(request) {
+        return sessions.get(request.idempotencyKey) ?? null
+      },
+    }
+    const timeoutService = new OnlineTopUpService(walletService, timeoutGateway)
+    const input = {
+      profileId: PROFILE_A,
+      amountIrR: 11_000n,
+      idempotencyKey: 'online-topup-timeout-then-retry',
+    }
+
+    const first = await timeoutService.initiate(input).catch((error: unknown) => error)
+    expect(first).toBeInstanceOf(HttpException)
+    expect((first as HttpException).getStatus()).toBe(502)
+    expect(createdAuthorities).toHaveLength(1)
+
+    const pending = (await fetchLedger(PROFILE_A)).find(
+      (row) => row.idempotency_key === 'online-topup-timeout-then-retry',
+    )
+    expect(pending?.state).toBe('Pending')
+    expect(pending?.ref_id).toBeNull()
+    expect(pending?.metadata).toMatchObject({
+      channel: 'online',
+      gateway: {
+        status: 'initializing',
+        providerIdempotencyKey: pending!.id,
+        merchantOrderId: pending!.id,
+      },
+    })
+
+    const result = await timeoutService.initiate(input)
+    expect(result.transactionId).toBe(pending!.id)
+    expect(result.redirectUrl).toBe(sessions.get(pending!.id)!.redirectUrl)
+    expect(createdAuthorities).toEqual([`auth-timeout-${pending!.id}-1`])
+    expect(createdAuthorities).toHaveLength(1)
+
+    const ledger = await fetchLedger(PROFILE_A)
+    const matching = ledger.filter(
+      (row) => row.idempotency_key === 'online-topup-timeout-then-retry',
+    )
+    expect(matching).toHaveLength(1)
+    const row = matching[0]!
+    expect(row.ref_id).toBe(createdAuthorities[0])
+    expect(row.metadata).toMatchObject({
+      channel: 'online',
+      gateway: {
+        authority: createdAuthorities[0],
+        redirectUrl: result.redirectUrl,
+        providerIdempotencyKey: row.id,
       },
     })
   })

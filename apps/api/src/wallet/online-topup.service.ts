@@ -12,6 +12,8 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import { WalletService, type TransactionRow } from './wallet.service.js'
 import {
   PAYMENT_GATEWAY,
+  isPaymentGatewayRejectedError,
+  paymentCallbackUrlForOrder,
   resolvePaymentGatewayCallbackUrl,
   type PaymentGateway,
   type PaymentGatewayStartResult,
@@ -67,8 +69,11 @@ interface QueryClient {
  *   5. Claim gateway start at most once, persist the provider idempotency
  *      key (transaction id), then start a payment-gateway session and
  *      compare-and-set persist authority/redirect. An initializing claim
- *      without an authority is recovered with the same provider key —
- *      never overwritten into a second payable session.
+ *      without an authority is recovered via provider inquiry keyed by
+ *      the transaction id — never overwritten into a second payable
+ *      session. Ambiguous start failures (timeout after the provider
+ *      created a session) keep the claim so retry cannot mint another
+ *      authority.
  *
  * Wallet credit is intentionally deferred to the authenticated provider
  * callback (T-04.2.02.02). Browser redirect is not proof of payment.
@@ -112,7 +117,10 @@ export class OnlineTopUpService {
           return toResult(pending, existing.redirectUrl)
         }
 
-        const callbackUrl = resolvePaymentGatewayCallbackUrl()
+        const callbackUrl = paymentCallbackUrlForOrder(
+          resolvePaymentGatewayCallbackUrl(),
+          pending.id,
+        )
         let recovered = readInitializingClaim(pending.metadata, pending.id, callbackUrl)
         let claimId: string
         let ownsFreshClaim = false
@@ -150,28 +158,54 @@ export class OnlineTopUpService {
           recovered?.amountIrR && recovered.amountIrR.length > 0
             ? BigInt(recovered.amountIrR)
             : input.amountIrR
+        const startRequest = {
+          amountIrR: startAmount,
+          merchantOrderId: recovered?.merchantOrderId ?? pending.id,
+          description: ONLINE_TOPUP_DESCRIPTION,
+          callbackUrl: recovered?.callbackUrl ?? callbackUrl,
+          idempotencyKey: providerIdempotencyKey,
+        }
         let session: PaymentGatewayStartResult
-        try {
-          session = await this.paymentGateway.startPayment({
-            amountIrR: startAmount,
-            merchantOrderId: recovered?.merchantOrderId ?? pending.id,
-            description: ONLINE_TOPUP_DESCRIPTION,
-            callbackUrl: recovered?.callbackUrl ?? callbackUrl,
-            idempotencyKey: providerIdempotencyKey,
-          })
-        } catch (error) {
-          if (ownsFreshClaim) {
-            await this.releaseGatewayClaim(client, pending.id, claimId)
+        if (!ownsFreshClaim) {
+          try {
+            const recoveredSession = await this.paymentGateway.recoverPayment(startRequest)
+            if (!recoveredSession) {
+              throw httpError(
+                ErrorCodes.PROVIDER_DOWNSTREAM,
+                'Payment gateway session could not be recovered',
+                502,
+              )
+            }
+            session = recoveredSession
+          } catch (error) {
+            if (error instanceof HttpException) throw error
+            this.logger.error(
+              `Payment gateway recover failed for pending top-up ${pending.id}`,
+              error instanceof Error ? error.stack : undefined,
+            )
+            throw httpError(
+              ErrorCodes.PROVIDER_DOWNSTREAM,
+              'Payment gateway is unavailable',
+              502,
+            )
           }
-          this.logger.error(
-            `Payment gateway start failed for pending top-up ${pending.id}`,
-            error instanceof Error ? error.stack : undefined,
-          )
-          throw httpError(
-            ErrorCodes.PROVIDER_DOWNSTREAM,
-            'Payment gateway is unavailable',
-            502,
-          )
+        } else {
+          try {
+            session = await this.paymentGateway.startPayment(startRequest)
+          } catch (error) {
+            if (isPaymentGatewayRejectedError(error)) {
+              await this.releaseGatewayClaim(client, pending.id, claimId)
+            }
+            this.logger.error(
+              `Payment gateway start failed for pending top-up ${pending.id}`,
+              error instanceof Error ? error.stack : undefined,
+            )
+            throw httpError(
+              ErrorCodes.PROVIDER_DOWNSTREAM,
+              'Payment gateway is unavailable',
+              502,
+            )
+          }
         }
 
         let persisted: GatewaySessionMeta | null
