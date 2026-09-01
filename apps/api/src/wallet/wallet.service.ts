@@ -80,6 +80,19 @@ export interface WalletReserveRef {
   metadata?: unknown
 }
 
+/**
+ * Minimal queryable used by the optimistic posted-balance update
+ * (T-04.2.01.06). Matches `pg` Pool / PoolClient `query()` so the
+ * primitive can run inside a caller-owned transaction or against the
+ * shared pool. Tests pass a mock with the same shape.
+ */
+export interface WalletQueryClient {
+  query: (
+    text: string,
+    params?: unknown[],
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+}
+
 @Injectable()
 export class WalletService {
   /**
@@ -122,6 +135,66 @@ export class WalletService {
   }
 
   /**
+   * Apply a signed posted-balance delta under optimistic locking
+   * (T-04.2.01.06).
+   *
+   * Executes:
+   * ```
+   * UPDATE wallets
+   * SET posted_balance = posted_balance + delta,
+   *     version = version + 1
+   * WHERE profile_id = X AND version = expectedVersion
+   * ```
+   *
+   * The wallets PK is `profile_id` (the task text's `id`). A matching
+   * version applies `delta` (positive or negative) and bumps `version`
+   * atomically; a stale `expectedVersion` matches zero rows.
+   *
+   * This is the locking primitive, not a standalone money-moving
+   * command. Callers that change customer funds must also write the
+   * matching ledger row in the same transaction (S-04.2.01).
+   *
+   * Pass `client` to participate in an open transaction; omit it to
+   * run against the shared pool.
+   *
+   * @returns the updated wallet row
+   * @throws ConflictException when zero rows match (version mismatch
+   *   or missing wallet)
+   */
+  async applyPostedBalanceDelta(
+    walletId: string,
+    delta: bigint,
+    expectedVersion: number,
+    client?: WalletQueryClient,
+  ): Promise<WalletRow> {
+    if (!walletId.trim()) {
+      throw new BadRequestException('Wallet id is required')
+    }
+    if (delta === 0n) {
+      throw new BadRequestException('Posted-balance delta must be non-zero')
+    }
+    if (!Number.isInteger(expectedVersion) || expectedVersion < 0) {
+      throw new BadRequestException('Expected version must be a non-negative integer')
+    }
+
+    const queryable = client ?? getDbPool()
+    const result = await queryable.query(
+      `UPDATE wallets
+       SET posted_balance = posted_balance + $1::bigint,
+           version = version + 1,
+           updated_at = NOW()
+       WHERE profile_id = $2
+         AND version = $3
+       RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
+      [delta, walletId, expectedVersion],
+    )
+    if (result.rows.length === 0) {
+      throw new ConflictException('Wallet optimistic lock failed: version mismatch')
+    }
+    return mapWallet(result.rows[0] as Parameters<typeof mapWallet>[0])
+  }
+
+  /**
    * Credit a wallet (T-04.2.01.03).
    *
    * In one DB transaction:
@@ -132,11 +205,14 @@ export class WalletService {
    *      throw ConflictException — they must not report success.
    *   3. INSERT a Completed ledger row (positive amount) using the wallet
    *      row's canonical `profile_id`.
-   *   4. UPDATE `posted_balance` with
-   *      `WHERE version = X AND posted_balance >= 0`.
+   *   4. UPDATE `posted_balance` via `applyPostedBalanceDelta`
+   *      (`posted_balance + amount`, `version + 1`,
+   *      `WHERE profile_id = X AND version = expectedVersion`).
+   *      A wallet whose `posted_balance` is already negative is
+   *      rejected before the lock update (T-04.2.01.03 invariant).
    *
    * The version predicate is optimistic locking; the non-negative
-   * `posted_balance` predicate refuses to post onto a corrupt wallet.
+   * `posted_balance` check refuses to post onto a corrupt wallet.
    * Unique `idempotency_key` is the last-line duplicate guard.
    */
   async credit(
@@ -168,7 +244,11 @@ export class WalletService {
       if (walletResult.rows.length === 0) {
         throw new NotFoundException(`Wallet not found: ${walletId}`)
       }
-      const wallet = walletResult.rows[0] as { version: number; profile_id: string }
+      const wallet = walletResult.rows[0] as {
+        version: number
+        profile_id: string
+        posted_balance: string | number | bigint
+      }
       canonicalWalletId = wallet.profile_id
 
       const idemResult = await client.query(
@@ -180,6 +260,12 @@ export class WalletService {
         assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref)
         await client.query('COMMIT')
         return mapTransaction(existing)
+      }
+
+      if (BigInt(wallet.posted_balance) < 0n) {
+        throw new ConflictException(
+          'Wallet credit rejected: version mismatch or postedBalance < 0',
+        )
       }
 
       const txResult = await client.query(
@@ -198,21 +284,20 @@ export class WalletService {
         ],
       )
 
-      const updateResult = await client.query(
-        `UPDATE wallets
-         SET posted_balance = posted_balance + $1,
-             version = version + 1,
-             updated_at = NOW()
-         WHERE profile_id = $2
-           AND version = $3
-           AND posted_balance >= 0
-         RETURNING *`,
-        [amount, walletId, wallet.version],
-      )
-      if (updateResult.rows.length === 0) {
-        throw new ConflictException(
-          'Wallet credit rejected: version mismatch or postedBalance < 0',
+      try {
+        await this.applyPostedBalanceDelta(
+          canonicalWalletId,
+          amount,
+          wallet.version,
+          client,
         )
+      } catch (error) {
+        if (error instanceof ConflictException) {
+          throw new ConflictException(
+            'Wallet credit rejected: version mismatch or postedBalance < 0',
+          )
+        }
+        throw error
       }
 
       await client.query('COMMIT')
