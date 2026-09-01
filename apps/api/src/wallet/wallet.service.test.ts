@@ -1118,9 +1118,9 @@ describe('WalletService', () => {
         (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
       )
       expect(updateCall).toBeDefined()
-      expect(updateCall![0]).toContain('reserved_balance = reserved_balance + $1')
+      expect(updateCall![0]).toContain('reserved_balance = reserved_balance + $1::bigint')
       expect(updateCall![0]).toContain('version = version + 1')
-      expect(updateCall![0]).toContain('(posted_balance - reserved_balance) >= $1')
+      expect(updateCall![0]).toContain('(posted_balance - reserved_balance) >= $1::bigint')
       expect(updateCall![1]).toEqual([50000n, 'profile-1', 1])
 
       const insertCall = mockClient.query.mock.calls.find(
@@ -1141,7 +1141,7 @@ describe('WalletService', () => {
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
     })
 
-    it('inserts the ledger row against the wallet row canonical profile_id', async () => {
+    it('binds the reserved_balance UPDATE and ledger insert to the wallet row canonical profile_id', async () => {
       const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
       const wallet = makeWalletRow({ profile_id: canonical })
       mockClient.query
@@ -1154,6 +1154,12 @@ describe('WalletService', () => {
         .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: canonical, type: 'reservation', state: 'Reserved' })] })
 
       await service.reserve(canonical.toUpperCase(), 50000n, 'idem-canonical-reserve')
+
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![1]).toEqual([50000n, canonical, 1])
 
       const insertCall = mockClient.query.mock.calls.find(
         (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
@@ -1449,15 +1455,56 @@ describe('WalletService', () => {
         (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
       )
       expect(walletUpdate).toBeDefined()
-      expect(walletUpdate![0]).toContain('reserved_balance = reserved_balance - $1')
-      expect(walletUpdate![0]).toContain('reserved_balance >= $1')
+      expect(walletUpdate![0]).toContain('reserved_balance = reserved_balance - $1::bigint')
+      expect(walletUpdate![0]).toContain('reserved_balance >= $1::bigint')
       expect(walletUpdate![1]).toEqual([50000n, 'profile-1', 1])
 
       const txUpdate = mockClient.query.mock.calls.find(
         (c) => typeof c[0] === 'string' && (c[0] as string).includes("SET state = 'Released'"),
       )
       expect(txUpdate).toBeDefined()
+      expect(txUpdate![0]).toContain("AND type = 'reservation'")
+      expect(txUpdate![0]).toContain("AND state = 'Reserved'")
+      expect(txUpdate![1]).toEqual(['res-001'])
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('binds wallet and ledger UPDATEs to the locked row canonical ids', async () => {
+      const canonicalWallet = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const canonicalReservation = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+      const reservation = makeTxRow({
+        id: canonicalReservation,
+        wallet_id: canonicalWallet,
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+      })
+      const released = { ...reservation, state: 'Released' }
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+        .mockResolvedValueOnce({ rows: [makeWalletRow({ profile_id: canonicalWallet })] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ profile_id: canonicalWallet, reserved_balance: '150000', version: 2 })],
+        })
+        .mockResolvedValueOnce({ rows: [released] })
+
+      const result = await service.release(canonicalReservation.toUpperCase())
+
+      expect(result.id).toBe(canonicalReservation)
+      expect(result.state).toBe('Released')
+
+      const walletUpdate = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(walletUpdate).toBeDefined()
+      expect(walletUpdate![1]).toEqual([50000n, canonicalWallet, 1])
+
+      const txUpdate = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes("SET state = 'Released'"),
+      )
+      expect(txUpdate).toBeDefined()
+      expect(txUpdate![1]).toEqual([canonicalReservation])
     })
 
     it('returns the existing row on idempotent re-release without mutating the wallet', async () => {
@@ -1550,6 +1597,28 @@ describe('WalletService', () => {
 
       await expect(service.release('res-001')).rejects.toThrow(
         'version mismatch or reservedBalance shortfall',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the release when the ledger state UPDATE matches no row', async () => {
+      const reservation = makeTxRow({
+        id: 'res-001',
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+        .mockResolvedValueOnce({ rows: [makeWalletRow()] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ reserved_balance: '150000', version: 2 })],
+        })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.release('res-001')).rejects.toThrow(
+        'reservation state changed concurrently',
       )
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })

@@ -21,6 +21,9 @@
  *   9. Reusing a credit or debit idempotency key, retrying a reserve
  *      with a different amount/refId, or replaying a released key is
  *      ConflictException and does not mutate the wallet.
+ *  10. A first-time reserve with an uppercase walletId spelling posts
+ *      against the canonical UUID. release() with an uppercase
+ *      reservation id decrements reserved_balance once.
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
  * schema-scoped Testcontainers pool.
@@ -208,6 +211,36 @@ describe('WalletService.reserve / release — real PostgreSQL (T-04.2.01.05)', (
     expect(
       (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'reserve-uuid-case'),
     ).toHaveLength(1)
+  })
+
+  it('posts a first-time reserve with an uppercase walletId against the canonical UUID', async () => {
+    const before = await fetchWallet(PROFILE_A)
+    const tx = await service.reserve(
+      PROFILE_A.toUpperCase(),
+      4_500n,
+      'reserve-uuid-case-first',
+      { refId: 'inv-case-first' },
+    )
+
+    expect(tx.walletId).toBe(PROFILE_A)
+    expect(tx.amount).toBe(4_500n)
+    expect(tx.state).toBe('Reserved')
+    expect(tx.type).toBe('reservation')
+
+    const after = await fetchWallet(PROFILE_A)
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance))
+    expect(BigInt(after.reserved_balance)).toBe(BigInt(before.reserved_balance) + 4_500n)
+    expect(after.version).toBe(before.version + 1)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'reserve-uuid-case-first'),
+    ).toEqual([
+      expect.objectContaining({
+        id: tx.id,
+        amount: '4500',
+        state: 'Reserved',
+        ref_id: 'inv-case-first',
+      }),
+    ])
   })
 
   it('lets concurrent retries of the same idempotency key reserve only once', async () => {
@@ -443,6 +476,31 @@ describe('WalletService.reserve / release — real PostgreSQL (T-04.2.01.05)', (
     expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance))
     expect(BigInt(after.reserved_balance)).toBe(BigInt(before.reserved_balance) - 9_000n)
     expect(after.version).toBe(before.version + 1)
+  })
+
+  it('releases with an uppercase reservation id against the canonical ledger UUID', async () => {
+    const hold = await service.reserve(PROFILE_A, 3_500n, 'reserve-release-uuid-case')
+    const afterReserve = await fetchWallet(PROFILE_A)
+
+    const released = await service.release(hold.id.toUpperCase())
+    const afterRelease = await fetchWallet(PROFILE_A)
+
+    expect(released.id).toBe(hold.id)
+    expect(released.state).toBe('Released')
+    expect(released.amount).toBe(3_500n)
+    expect(BigInt(afterRelease.posted_balance)).toBe(BigInt(afterReserve.posted_balance))
+    expect(BigInt(afterRelease.reserved_balance)).toBe(BigInt(afterReserve.reserved_balance) - 3_500n)
+    expect(afterRelease.version).toBe(afterReserve.version + 1)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'reserve-release-uuid-case'),
+    ).toEqual([
+      expect.objectContaining({
+        id: hold.id,
+        type: 'reservation',
+        amount: '3500',
+        state: 'Released',
+      }),
+    ])
   })
 
   it('rejects replaying a released reservation key as a new hold', async () => {

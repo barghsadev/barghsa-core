@@ -488,7 +488,8 @@ export class WalletService {
    *      or a released/different reservation throw ConflictException.
    *   3. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
    *   4. UPDATE `reserved_balance` with
-   *      `WHERE version = X AND (posted_balance - reserved_balance) >= amount`.
+   *      `WHERE profile_id = canonical AND version = X
+   *       AND (posted_balance - reserved_balance) >= amount`.
    *   5. INSERT a Reserved ledger row (positive amount, type reservation)
    *      using the wallet row's canonical `profile_id`.
    *
@@ -551,12 +552,12 @@ export class WalletService {
 
       const updateResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance + $1,
+         SET reserved_balance = reserved_balance + $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND (posted_balance - reserved_balance) >= $1
+           AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
         [amount, canonicalWalletId, wallet.version],
       )
@@ -613,9 +614,11 @@ export class WalletService {
    *      without a second reserved_balance decrement.
    *   3. `SELECT … FOR UPDATE` the wallet.
    *   4. UPDATE `reserved_balance -= amount` with
-   *      `WHERE version = X AND reserved_balance >= amount`.
-   *   5. Advance the reservation `state` to Released. Posted balance is
-   *      unchanged, so available balance rises by the released amount.
+   *      `WHERE profile_id = canonical AND version = X
+   *       AND reserved_balance >= amount`.
+   *   5. Advance the reservation `state` to Released using the locked
+   *      row's canonical `id`. Posted balance is unchanged, so available
+   *      balance rises by the released amount.
    */
   async release(reservationId: string): Promise<TransactionRow> {
     if (!reservationId.trim()) {
@@ -641,6 +644,9 @@ export class WalletService {
         amount: string | number | bigint
         state: string
       }
+      // PostgreSQL UUID columns return canonical lowercase; callers may pass
+      // any valid spelling. Mutations must use the locked row's id.
+      const canonicalReservationId = reservation.id
       if (reservation.type !== 'reservation') {
         throw new ConflictException('Ledger row is not a reservation')
       }
@@ -667,17 +673,18 @@ export class WalletService {
         throw new NotFoundException(`Wallet not found: ${reservation.wallet_id}`)
       }
       const wallet = walletResult.rows[0] as { version: number; profile_id: string }
+      const canonicalWalletId = wallet.profile_id
 
       const updateResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance - $1,
+         SET reserved_balance = reserved_balance - $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND reserved_balance >= $1
+           AND reserved_balance >= $1::bigint
          RETURNING *`,
-        [amount, wallet.profile_id, wallet.version],
+        [amount, canonicalWalletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
         throw new ConflictException(
@@ -686,9 +693,19 @@ export class WalletService {
       }
 
       const releasedResult = await client.query(
-        `UPDATE wallet_transactions SET state = 'Released' WHERE id = $1 RETURNING *`,
-        [reservationId],
+        `UPDATE wallet_transactions
+         SET state = 'Released'
+         WHERE id = $1
+           AND type = 'reservation'
+           AND state = 'Reserved'
+         RETURNING *`,
+        [canonicalReservationId],
       )
+      if (releasedResult.rows.length === 0) {
+        throw new ConflictException(
+          'Wallet release rejected: reservation state changed concurrently',
+        )
+      }
 
       await client.query('COMMIT')
       return mapTransaction(releasedResult.rows[0])
