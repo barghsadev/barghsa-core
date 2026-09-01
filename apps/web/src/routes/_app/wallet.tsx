@@ -1,13 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-
-function WalletPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Wallet</h1>
-      <p className="text-gray-600">Top up your account balance.</p>
-    </div>
-  )
-}
+import { WalletPage } from '../../pages/WalletPage.js'
 
 export const Route = createFileRoute('/_app/wallet')({
   component: WalletPage,
