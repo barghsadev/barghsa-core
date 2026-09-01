@@ -27,6 +27,13 @@ import { profiles } from './profiles'
  *   - `reservedBalance` — int8, default 0. Amount reserved in payment flow.
  *   - `version` — monotonic optimistic lock integer.
  *   - `updatedAt` — last mutation timestamp.
+ *
+ * `availableBalance` is never a stored (or generated-stored) column.
+ * Migration 0069 / `chk_wallets_available_balance_nonneg` enforces
+ * `(posted_balance - reserved_balance) >= 0` as a table CHECK on that
+ * derived expression (T-04.2.01.07). PostgreSQL evaluates the expression
+ * on INSERT/UPDATE, so neither a generated column nor a trigger is
+ * required.
  */
 export const wallets = pgTable(
   'wallets',
@@ -55,6 +62,16 @@ export const wallets = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
+  (table) => ({
+    /**
+     * Non-negative available balance on the derived value
+     * `posted_balance - reserved_balance` (T-04.2.01.07). Not a stored column.
+     */
+    availableBalanceNonneg: check(
+      'chk_wallets_available_balance_nonneg',
+      sql`(${table.postedBalance} - ${table.reservedBalance}) >= 0`,
+    ),
+  }),
 )
 
 /**
@@ -193,25 +210,10 @@ export const createWalletsTable = sql`
     posted_balance BIGINT NOT NULL DEFAULT 0,
     reserved_balance BIGINT NOT NULL DEFAULT 0,
     version INTEGER NOT NULL DEFAULT 0,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT chk_wallets_available_balance_nonneg
+      CHECK ((posted_balance - reserved_balance) >= 0)
   );
-
-  -- Non-negative derived-balance constraint enforced via trigger
-  -- (available_balance = posted_balance - reserved_balance must be >= 0)
-  CREATE OR REPLACE FUNCTION check_wallet_available_balance()
-  RETURNS TRIGGER AS $$
-  BEGIN
-    IF (NEW.posted_balance - NEW.reserved_balance) < 0 THEN
-      RAISE EXCEPTION 'available_balance cannot be negative: posted=% reserved=%',
-        NEW.posted_balance, NEW.reserved_balance;
-    END IF;
-    RETURN NEW;
-  END;
-  $$ LANGUAGE plpgsql;
-
-  CREATE OR REPLACE TRIGGER trg_wallet_available_balance
-    BEFORE INSERT OR UPDATE ON wallets
-    FOR EACH ROW EXECUTE FUNCTION check_wallet_available_balance();
 `
 
 /**
@@ -219,8 +221,9 @@ export const createWalletsTable = sql`
  *
  * Wallets itself is T-04.2.01.01; 0068 creates it IF NOT EXISTS so the
  * ledger FK has a target on databases that never received a wallets
- * migration. The available-balance trigger stays in `createWalletsTable`
- * (T-04.2.01.07) and is not applied here.
+ * migration. The available-balance CHECK
+ * (`chk_wallets_available_balance_nonneg`) lives in migration 0069 /
+ * `createWalletsTable` (T-04.2.01.07) and is not applied here.
  */
 export const createWalletTransactionsTable = sql`
   CREATE TABLE IF NOT EXISTS wallets (

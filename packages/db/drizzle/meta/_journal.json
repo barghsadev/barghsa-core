@@ -155,6 +155,13 @@
       "when": 1788825600000,
       "tag": "0068_create_wallet_transactions",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1788912000000,
+      "tag": "0069_wallet_available_balance_check",
+      "breakpoints": true
     }
   ]
 }
