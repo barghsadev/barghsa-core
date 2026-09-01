@@ -38,12 +38,29 @@ export interface HandleProviderCallbackInput {
   rawBody: string
 }
 
+export interface HandleZarinpalReturnInput {
+  orderId: string
+  authority: string
+  status: string
+}
+
 export interface HandleProviderCallbackResult {
   ok: true
   processed: boolean
   credited: boolean
   transactionId: string | null
   creditTransactionId: string | null
+}
+
+interface ProcessVerifiedPayloadInput {
+  eventId: string
+  merchantOrderId: string
+  authority: string
+  /** When set, must match the pending amount. When omitted, the stored amount is used. */
+  amountIrR?: bigint
+  status: 'paid' | 'failed' | 'cancelled'
+  providerRefId?: string
+  raw: unknown
 }
 
 type CallbackEventStatus = 'processing' | 'credited' | 'unpaid' | 'duplicate'
@@ -76,18 +93,21 @@ const CallbackBodySchema = z
 /**
  * Authenticated payment-provider callback handler (T-04.2.02.02).
  *
- * Browser redirects are not proof of payment. This service:
- *   1. Verifies HMAC-SHA256 over the raw body.
- *   2. Enforces a ±5 minute timestamp replay window.
- *   3. Claims the provider event id before any business side effect
+ * Browser redirect query params are never proof of payment. Two ingress
+ * paths share the same verify-then-credit pipeline:
+ *   - HMAC-signed POST (http adapter / signed webhooks).
+ *   - ZarinPal GET return (`orderId`, `Authority`, `Status`) bound to
+ *     the stored Pending top-up, then confirmed via `verifyPayment()`.
+ *
+ * Shared steps after authentication:
+ *   1. Claims the provider event id before any business side effect
  *      (atomic INSERT … ON CONFLICT DO NOTHING RETURNING). Duplicate
  *      event ids stop here, including replays bound to another order.
- *   4. Checks merchant id, order id, amount, and authority against the
- *      Pending top-up.
- *   5. Confirms payment with the gateway server-side.
- *   6. Credits the wallet via `WalletService.credit()` using a stable
+ *   2. Checks order id, amount, and authority against the Pending top-up.
+ *   3. Confirms payment with the gateway server-side.
+ *   4. Credits the wallet via `WalletService.credit()` using a stable
  *      idempotency key derived from the pending transaction id.
- *   7. Releases the original Pending intent so it does not post twice
+ *   5. Releases the original Pending intent so it does not post twice
  *      (posted balance comes only from the Completed credit row).
  */
 @Injectable()
@@ -168,20 +188,72 @@ export class OnlineTopUpCallbackService {
       )
     }
 
+    return this.processVerifiedPayload({
+      eventId,
+      merchantOrderId: parsed.data.merchantOrderId,
+      authority: parsed.data.authority,
+      amountIrR,
+      status: parsed.data.status,
+      raw: parsed.data,
+      ...(parsed.data.providerRefId ? { providerRefId: parsed.data.providerRefId } : {}),
+    })
+  }
+
+  /**
+   * ZarinPal browser return (T-04.2.02.02). `Status`/`Authority` on the
+   * redirect are not proof of payment: they are bound to the Pending
+   * row (`orderId` + stored authority) and confirmed with `verify.json`
+   * before `WalletService.credit()`.
+   */
+  async handleZarinpalReturn(
+    input: HandleZarinpalReturnInput,
+  ): Promise<HandleProviderCallbackResult> {
+    const orderId = input.orderId.trim()
+    const authority = input.authority.trim()
+    const statusRaw = input.status.trim()
+    if (!z.string().uuid().safeParse(orderId).success) {
+      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback merchant order was not found')
+    }
+    if (!authority) {
+      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback authority is required')
+    }
+
+    const statusUpper = statusRaw.toUpperCase()
+    const status: ProcessVerifiedPayloadInput['status'] =
+      statusUpper === 'OK' ? 'paid' : statusUpper === 'NOK' ? 'cancelled' : 'failed'
+
+    return this.processVerifiedPayload({
+      eventId: zarinpalReturnEventId(orderId, authority),
+      merchantOrderId: orderId,
+      authority,
+      status,
+      raw: {
+        source: 'zarinpal-return',
+        orderId,
+        authority,
+        status: statusRaw,
+      },
+    })
+  }
+
+  private async processVerifiedPayload(
+    input: ProcessVerifiedPayloadInput,
+  ): Promise<HandleProviderCallbackResult> {
     const pool = getDbPool()
     const client = await pool.connect()
-    const lockKeys = onlineTopUpCallbackLockKeys(parsed.data.merchantOrderId)
+    const lockKeys = onlineTopUpCallbackLockKeys(input.merchantOrderId)
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys)
       try {
-        const pending = await this.loadPendingTopUp(client, parsed.data.merchantOrderId)
-        this.assertMerchantContext(pending, parsed.data, amountIrR)
+        const pending = await this.loadPendingTopUp(client, input.merchantOrderId)
+        const amountIrR = input.amountIrR ?? pending.amount
+        this.assertMerchantContext(pending, input.authority, amountIrR)
 
         const claim = await this.claimEvent(client, {
-          eventId,
+          eventId: input.eventId,
           pendingId: pending.id,
           walletId: pending.walletId,
-          raw: parsed.data,
+          raw: input.raw,
         })
         if (!claim.inserted) {
           const existing = claim.existing
@@ -201,9 +273,9 @@ export class OnlineTopUpCallbackService {
         const alreadyCredited = await this.findExistingCredit(client, pending.id)
         if (alreadyCredited) {
           if (pending.state === 'Pending') {
-            await this.releasePendingIntent(client, pending.id, alreadyCredited.id, eventId)
+            await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId)
           }
-          await this.finalizeEvent(client, eventId, 'duplicate')
+          await this.finalizeEvent(client, input.eventId, 'duplicate')
           return {
             ok: true,
             processed: false,
@@ -213,9 +285,9 @@ export class OnlineTopUpCallbackService {
           }
         }
 
-        if (parsed.data.status !== 'paid') {
-          await this.markPendingFailed(client, pending.id, parsed.data.status)
-          await this.finalizeEvent(client, eventId, 'unpaid')
+        if (input.status !== 'paid') {
+          await this.markPendingFailed(client, pending.id, input.status)
+          await this.finalizeEvent(client, input.eventId, 'unpaid')
           return {
             ok: true,
             processed: true,
@@ -230,7 +302,7 @@ export class OnlineTopUpCallbackService {
           verified = await this.paymentGateway.verifyPayment({
             amountIrR,
             merchantOrderId: pending.id,
-            authority: parsed.data.authority,
+            authority: input.authority,
             idempotencyKey: pending.id,
           })
         } catch (error) {
@@ -247,7 +319,7 @@ export class OnlineTopUpCallbackService {
 
         if (!verified.paid) {
           await this.markPendingFailed(client, pending.id, 'verify_unpaid')
-          await this.finalizeEvent(client, eventId, 'unpaid')
+          await this.finalizeEvent(client, input.eventId, 'unpaid')
           return {
             ok: true,
             processed: true,
@@ -257,7 +329,7 @@ export class OnlineTopUpCallbackService {
           }
         }
 
-        const providerRef = parsed.data.providerRefId ?? verified.providerRefId ?? parsed.data.authority
+        const providerRef = input.providerRefId ?? verified.providerRefId ?? input.authority
         const credit = await this.walletService.credit(
           pending.walletId,
           amountIrR,
@@ -268,15 +340,15 @@ export class OnlineTopUpCallbackService {
             metadata: {
               channel: 'online',
               pendingTransactionId: pending.id,
-              eventId,
-              authority: parsed.data.authority,
+              eventId: input.eventId,
+              authority: input.authority,
             },
           },
           onlineTopUpCreditIdempotencyKey(pending.id),
         )
 
-        await this.releasePendingIntent(client, pending.id, credit.id, eventId)
-        await this.finalizeEvent(client, eventId, 'credited')
+        await this.releasePendingIntent(client, pending.id, credit.id, input.eventId)
+        await this.finalizeEvent(client, input.eventId, 'credited')
 
         this.logger.log(
           `Online top-up ${pending.id} credited as ${credit.id} for wallet ${pending.walletId}`,
@@ -318,7 +390,7 @@ export class OnlineTopUpCallbackService {
 
   private assertMerchantContext(
     pending: TransactionRow,
-    payload: z.infer<typeof CallbackBodySchema>,
+    authority: string,
     amountIrR: bigint,
   ): void {
     if (pending.type !== 'topup') {
@@ -328,7 +400,7 @@ export class OnlineTopUpCallbackService {
       httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback amount does not match merchant order')
     }
     const storedAuthority = readStoredAuthority(pending)
-    if (!storedAuthority || storedAuthority !== payload.authority) {
+    if (!storedAuthority || storedAuthority !== authority) {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
         'Payment callback authority does not match merchant order',
@@ -490,6 +562,11 @@ export class OnlineTopUpCallbackService {
 
 export function onlineTopUpCreditIdempotencyKey(pendingTransactionId: string): string {
   return `wallet-online-topup-credit:${pendingTransactionId}`
+}
+
+/** Stable event id for ZarinPal GET returns (no provider-issued event header). */
+export function zarinpalReturnEventId(orderId: string, authority: string): string {
+  return `zarinpal-return:${orderId}:${authority}`
 }
 
 export function onlineTopUpCallbackLockKeys(merchantOrderId: string): [number, number] {

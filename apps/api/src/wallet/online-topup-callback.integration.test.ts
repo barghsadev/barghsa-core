@@ -23,6 +23,7 @@ import { WalletService } from './wallet.service.js'
 import {
   OnlineTopUpCallbackService,
   onlineTopUpCreditIdempotencyKey,
+  zarinpalReturnEventId,
 } from './online-topup-callback.service.js'
 import { signPaymentCallback } from './payment-callback-verifier.js'
 import type { PaymentGateway } from './payment-gateway.js'
@@ -353,5 +354,62 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     })
     const after = await fetchWallet()
     expect(after.posted_balance).toBe(before.posted_balance)
+  })
+
+  it('credits once from a ZarinPal GET return after server-side verify', async () => {
+    const pendingZarinpal = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5, $6::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        AMOUNT.toString(),
+        'online-topup-callback-int-zarinpal',
+        AUTHORITY,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+        }),
+      ],
+    )
+    const zarinpalPendingId = pendingZarinpal.rows[0]!.id
+    const before = await fetchWallet()
+
+    const result = await service.handleZarinpalReturn({
+      orderId: zarinpalPendingId,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(result.credited).toBe(true)
+    expect(result.processed).toBe(true)
+
+    const after = await fetchWallet()
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance) + AMOUNT)
+
+    const credit = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE idempotency_key = $1`,
+      [onlineTopUpCreditIdempotencyKey(zarinpalPendingId)],
+    )
+    expect(credit.rows).toHaveLength(1)
+    expect(credit.rows[0]?.state).toBe('Completed')
+
+    const event = await ctx.pool.query<{ status: string }>(
+      `SELECT status FROM wallet_topup_callback_events WHERE event_id = $1`,
+      [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY)],
+    )
+    expect(event.rows).toHaveLength(1)
+    expect(event.rows[0]?.status).toBe('credited')
+
+    const replay = await service.handleZarinpalReturn({
+      orderId: zarinpalPendingId,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(replay.processed).toBe(false)
+    expect(replay.credited).toBe(true)
+    const afterReplay = await fetchWallet()
+    expect(afterReplay.posted_balance).toBe(after.posted_balance)
   })
 })

@@ -4,6 +4,7 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   OnlineTopUpCallbackService,
   onlineTopUpCreditIdempotencyKey,
+  zarinpalReturnEventId,
 } from './online-topup-callback.service.js'
 import { signPaymentCallback } from './payment-callback-verifier.js'
 import type { WalletService } from './wallet.service.js'
@@ -377,5 +378,106 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       expect.objectContaining({ type: 'topup' }),
       onlineTopUpCreditIdempotencyKey(TX_ID),
     )
+  })
+
+  it('credits a ZarinPal GET return after binding orderId/Authority and server-side verify', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handleZarinpalReturn({
+      orderId: TX_ID,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(result).toMatchObject({
+      ok: true,
+      processed: true,
+      credited: true,
+      transactionId: TX_ID,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalledWith({
+      amountIrR: BigInt(AMOUNT),
+      merchantOrderId: TX_ID,
+      authority: AUTHORITY,
+      idempotencyKey: TX_ID,
+    })
+    expect(credit).toHaveBeenCalledWith(
+      PROFILE_ID,
+      BigInt(AMOUNT),
+      expect.objectContaining({
+        type: 'topup',
+        refId: 'psp-ref-1',
+        metadata: expect.objectContaining({
+          eventId: zarinpalReturnEventId(TX_ID, AUTHORITY),
+          authority: AUTHORITY,
+        }),
+      }),
+      onlineTopUpCreditIdempotencyKey(TX_ID),
+    )
+    const claim = mockClient.query.mock.calls.find((call) =>
+      String(call[0]).includes('INSERT INTO wallet_topup_callback_events'),
+    )
+    expect(claim?.[1]?.[0]).toBe(zarinpalReturnEventId(TX_ID, AUTHORITY))
+  })
+
+  it('does not credit a ZarinPal GET return with Status=NOK', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handleZarinpalReturn({
+      orderId: TX_ID,
+      authority: AUTHORITY,
+      status: 'NOK',
+    })
+    expect(result).toMatchObject({ processed: true, credited: false })
+    expect(verifyPayment).not.toHaveBeenCalled()
+    expect(credit).not.toHaveBeenCalled()
+  })
+
+  it('rejects a ZarinPal GET return whose Authority does not match the pending order', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const { service, credit, verifyPayment } = makeService()
+    const rejection = await service
+      .handleZarinpalReturn({
+        orderId: TX_ID,
+        authority: 'wrong-authority',
+        status: 'OK',
+      })
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(verifyPayment).not.toHaveBeenCalled()
+    expect(credit).not.toHaveBeenCalled()
+  })
+
+  it('credits a ZarinPal GET return without a webhook HMAC secret', async () => {
+    scriptClient({ pending: makePendingRow() })
+    const credit = vi.fn().mockResolvedValue({
+      id: CREDIT_ID,
+      walletId: PROFILE_ID,
+      type: 'topup',
+      amount: BigInt(AMOUNT),
+      state: 'Completed',
+      idempotencyKey: onlineTopUpCreditIdempotencyKey(TX_ID),
+      refId: AUTHORITY,
+      description: 'Online wallet top-up',
+      metadata: {},
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    const verifyPayment = vi.fn().mockResolvedValue({ paid: true, providerRefId: 'psp-ref-1' })
+    const service = new OnlineTopUpCallbackService(
+      { credit } as never,
+      { verifyPayment } as never,
+      { webhookSecret: '', merchantId: MERCHANT },
+    )
+    const result = await service.handleZarinpalReturn({
+      orderId: TX_ID,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(result.credited).toBe(true)
+    expect(verifyPayment).toHaveBeenCalled()
+    expect(credit).toHaveBeenCalled()
   })
 })

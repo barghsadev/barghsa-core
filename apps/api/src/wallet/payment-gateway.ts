@@ -76,8 +76,8 @@ export interface PaymentGateway {
   recoverPayment(request: PaymentGatewayStartRequest): Promise<PaymentGatewayStartResult | null>
   /**
    * Server-side payment confirmation (T-04.2.02.02). Browser redirect
-   * query params are never sufficient; callers must use this after
-   * authenticating the callback.
+   * query params are never sufficient proof; callers must bind them to
+   * the Pending order and call this before crediting.
    */
   verifyPayment(request: PaymentGatewayVerifyRequest): Promise<PaymentGatewayVerifyResult>
 }
