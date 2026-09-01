@@ -256,7 +256,7 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     const defaultIssued = new Date(withDefault.issuedAt).getTime()
     expect(defaultDue - defaultIssued).toBe(7 * 24 * 60 * 60 * 1000)
 
-    const explicit = new Date('2026-09-01T00:00:00.000Z')
+    const explicit = new Date('2027-01-01T00:00:00.000Z')
     const withOverride = await service.createManualInvoice({
       profileId: PROFILE_ID,
       actorUserId: ACTOR_USER_ID,
