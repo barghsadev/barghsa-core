@@ -14,8 +14,13 @@ const MIGRATION_PATH = resolve(
   __dirname,
   '../../drizzle/0070_create_wallet_topup_callback_events.sql',
 )
+const PROCESSING_MIGRATION_PATH = resolve(
+  __dirname,
+  '../../drizzle/0071_wallet_topup_callback_events_processing_status.sql',
+)
 const JOURNAL_PATH = resolve(__dirname, '../../drizzle/meta/_journal.json')
 const MIGRATION = readFileSync(MIGRATION_PATH, 'utf8')
+const PROCESSING_MIGRATION = readFileSync(PROCESSING_MIGRATION_PATH, 'utf8')
 
 describe('wallet_topup_callback_events schema (T-04.2.02.02)', () => {
   it('Drizzle table has the event-id unique index and FKs', () => {
@@ -47,6 +52,9 @@ describe('wallet_topup_callback_events schema (T-04.2.02.02)', () => {
     expect(MIGRATION).toContain('CREATE TABLE IF NOT EXISTS wallet_topup_callback_events')
     expect(MIGRATION).toContain('CREATE UNIQUE INDEX IF NOT EXISTS uq_wallet_topup_callback_event_id')
     expect(MIGRATION).toContain("CHECK (status IN ('credited', 'unpaid', 'duplicate'))")
+    expect(PROCESSING_MIGRATION).toContain(
+      "CHECK (status IN ('processing', 'credited', 'unpaid', 'duplicate'))",
+    )
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
       entries: Array<{ tag: string; idx: number; when: number }>
     }
@@ -54,6 +62,12 @@ describe('wallet_topup_callback_events schema (T-04.2.02.02)', () => {
     expect(entry).toBeDefined()
     expect(entry!.idx).toBe(70)
     expect(entry!.when).toBeGreaterThan(1788912000000)
+    const processing = journal.entries.find(
+      (row) => row.tag === '0071_wallet_topup_callback_events_processing_status',
+    )
+    expect(processing).toBeDefined()
+    expect(processing!.idx).toBe(71)
+    expect(processing!.when).toBeGreaterThan(entry!.when)
   })
 })
 
@@ -71,6 +85,7 @@ describe('wallet_topup_callback_events PostgreSQL enforcement (T-04.2.02.02)', (
     `)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(MIGRATION_PATH, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(PROCESSING_MIGRATION_PATH, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId])
   }, 60_000)
@@ -101,5 +116,22 @@ describe('wallet_topup_callback_events PostgreSQL enforcement (T-04.2.02.02)', (
         VALUES ('evt-dup', ${pendingId}::uuid, ${profileId}::uuid, 'credited')
       `),
     ).rejects.toMatchObject({ code: '23505' })
+  })
+
+  it('accepts a processing claim status after migration 0071', async () => {
+    const tx = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key)
+       VALUES ($1, 'topup', 1000, 'Pending', 'cb-schema-processing')
+       RETURNING id`,
+      [profileId],
+    )
+    await expect(
+      ctx.db.execute(sql`
+        INSERT INTO wallet_topup_callback_events
+          (event_id, pending_transaction_id, wallet_id, status)
+        VALUES ('evt-processing', ${tx.rows[0]!.id}::uuid, ${profileId}::uuid, 'processing')
+      `),
+    ).resolves.toBeTruthy()
   })
 })

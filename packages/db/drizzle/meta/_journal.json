@@ -169,6 +169,13 @@
       "when": 1788998400000,
       "tag": "0070_create_wallet_topup_callback_events",
       "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1789084800000,
+      "tag": "0071_wallet_topup_callback_events_processing_status",
+      "breakpoints": true
     }
   ]
 }

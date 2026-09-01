@@ -17,12 +17,14 @@ const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json')
 const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql')
 const WALLET_TX_MIGRATION = resolve(DRIZZLE_FOLDER, '0068_create_wallet_transactions.sql')
 const CALLBACK_TAG = '0070_create_wallet_topup_callback_events'
+const PROCESSING_TAG = '0071_wallet_topup_callback_events_processing_status'
 /** `when` of journal tag 0069 — last entry before 0070 was registered. */
 const PRIOR_JOURNAL_HEAD_WHEN = 1788912000000
 
 describe('drizzle migrate() applies wallet_topup_callback_events (T-04.2.02.02)', () => {
   let ctx: IsolatedTestDb
   let callbackWhen: number
+  let processingWhen: number
 
   beforeAll(async () => {
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
@@ -37,7 +39,17 @@ describe('drizzle migrate() applies wallet_topup_callback_events (T-04.2.02.02)'
         `${CALLBACK_TAG} journal 'when' (${entry.when}) must be after 0069 (${PRIOR_JOURNAL_HEAD_WHEN})`,
       )
     }
+    const processing = journal.entries.find((row) => row.tag === PROCESSING_TAG)
+    if (!processing) {
+      throw new Error(`${PROCESSING_TAG} is missing from drizzle/meta/_journal.json`)
+    }
+    if (processing.when <= entry.when) {
+      throw new Error(
+        `${PROCESSING_TAG} journal 'when' (${processing.when}) must be after 0070 (${entry.when})`,
+      )
+    }
     callbackWhen = entry.when
+    processingWhen = processing.when
 
     ctx = await createIsolatedTestDb()
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
@@ -90,5 +102,16 @@ describe('drizzle migrate() applies wallet_topup_callback_events (T-04.2.02.02)'
       [PRIOR_JOURNAL_HEAD_WHEN],
     )
     expect(rows.rows.map((row) => Number(row.created_at))).toContain(callbackWhen)
+    expect(rows.rows.map((row) => Number(row.created_at))).toContain(processingWhen)
+  })
+
+  it('widens the status CHECK so processing claims are allowed', async () => {
+    const check = await ctx.pool.query<{ consrc: string }>(
+      `SELECT pg_get_constraintdef(oid) AS consrc
+         FROM pg_constraint
+        WHERE conname = 'chk_wallet_topup_callback_events_status'
+          AND conrelid = 'wallet_topup_callback_events'::regclass`,
+    )
+    expect(check.rows[0]?.consrc).toContain('processing')
   })
 })

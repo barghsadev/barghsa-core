@@ -54,6 +54,10 @@ const CALLBACK_EVENTS_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0070_create_wallet_topup_callback_events.sql',
 )
+const CALLBACK_EVENTS_PROCESSING_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0071_wallet_topup_callback_events_processing_status.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const SECRET = 'integration-webhook-secret'
@@ -95,6 +99,7 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     `)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CALLBACK_EVENTS_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(CALLBACK_EVENTS_PROCESSING_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [PROFILE_A])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A])
 
@@ -213,6 +218,113 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       ['evt-int-1'],
     )
     expect(events.rows).toHaveLength(1)
+  })
+
+  it('does not credit a different pending order that reuses a claimed event id', async () => {
+    const pending2 = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5, $6::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        AMOUNT.toString(),
+        'online-topup-callback-int-other',
+        AUTHORITY,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+        }),
+      ],
+    )
+    const otherId = pending2.rows[0]!.id
+    const before = await fetchWallet()
+    const result = await service.handle(
+      signed(
+        {
+          merchantOrderId: otherId,
+          merchantId: MERCHANT,
+          authority: AUTHORITY,
+          amountIrR: AMOUNT.toString(),
+          status: 'paid',
+        },
+        'evt-int-1',
+      ),
+    )
+    expect(result.processed).toBe(false)
+    expect(result.transactionId).toBe(pendingId)
+    const after = await fetchWallet()
+    expect(after.posted_balance).toBe(before.posted_balance)
+
+    const extraCredit = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE idempotency_key = $1`,
+      [onlineTopUpCreditIdempotencyKey(otherId)],
+    )
+    expect(extraCredit.rows).toHaveLength(0)
+  })
+
+  it('resumes credit after a crash that claimed the event id', async () => {
+    const pendingCrash = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5, $6::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        AMOUNT.toString(),
+        'online-topup-callback-int-crash',
+        AUTHORITY,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+        }),
+      ],
+    )
+    const crashPendingId = pendingCrash.rows[0]!.id
+    await ctx.pool.query(
+      `INSERT INTO wallet_topup_callback_events
+         (event_id, pending_transaction_id, wallet_id, status, raw)
+       VALUES ($1, $2, $3, 'processing', $4::jsonb)`,
+      [
+        'evt-int-crash',
+        crashPendingId,
+        PROFILE_A,
+        JSON.stringify({
+          merchantOrderId: crashPendingId,
+          merchantId: MERCHANT,
+          authority: AUTHORITY,
+          amountIrR: AMOUNT.toString(),
+          status: 'paid',
+        }),
+      ],
+    )
+
+    const before = await fetchWallet()
+    const result = await service.handle(
+      signed(
+        {
+          merchantOrderId: crashPendingId,
+          merchantId: MERCHANT,
+          authority: AUTHORITY,
+          amountIrR: AMOUNT.toString(),
+          status: 'paid',
+        },
+        'evt-int-crash',
+      ),
+    )
+    expect(result.credited).toBe(true)
+    expect(result.processed).toBe(true)
+    const after = await fetchWallet()
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance) + AMOUNT)
+
+    const event = await ctx.pool.query<{ status: string }>(
+      `SELECT status FROM wallet_topup_callback_events WHERE event_id = $1`,
+      ['evt-int-crash'],
+    )
+    expect(event.rows).toHaveLength(1)
+    expect(event.rows[0]?.status).toBe('credited')
   })
 
   it('rejects a wrong signature without changing balances', async () => {

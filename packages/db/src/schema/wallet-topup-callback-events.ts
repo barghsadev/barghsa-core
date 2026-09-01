@@ -6,10 +6,12 @@ import { walletTransactions, wallets } from './wallets.js'
  * Durable ledger of authenticated online top-up provider callbacks
  * (T-04.2.02.02 / S-04.2.02).
  *
- * Each distinct provider `event_id` is stored at most once. Re-delivery
- * of the same event inserts nothing so wallet credit cannot run twice
- * from a captured payload. `raw` keeps the verified JSON snapshot for
- * audit; it must never include the HMAC secret.
+ * Each distinct provider `event_id` is claimed at most once (atomic
+ * INSERT … ON CONFLICT DO NOTHING RETURNING) before any wallet side
+ * effect. `processing` is the in-flight claim so a crash can resume
+ * the same pending order; terminal values are `credited`, `unpaid`,
+ * and `duplicate`. `raw` keeps the verified JSON snapshot for audit
+ * and must never include the HMAC secret.
  */
 export const walletTopupCallbackEvents = pgTable(
   'wallet_topup_callback_events',
@@ -30,9 +32,9 @@ export const walletTopupCallbackEvents = pgTable(
       .notNull()
       .references(() => wallets.profileId, { onDelete: 'restrict' }),
 
-    /** Coarse outcome: credited, unpaid, or ignored duplicate. */
+    /** Claim/outcome: processing, credited, unpaid, or ignored duplicate. */
     status: text('status', {
-      enum: ['credited', 'unpaid', 'duplicate'],
+      enum: ['processing', 'credited', 'unpaid', 'duplicate'],
     }).notNull(),
 
     /** Verified callback JSON (no secrets). */

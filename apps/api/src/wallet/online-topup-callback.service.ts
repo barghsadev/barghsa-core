@@ -46,6 +46,15 @@ export interface HandleProviderCallbackResult {
   creditTransactionId: string | null
 }
 
+type CallbackEventStatus = 'processing' | 'credited' | 'unpaid' | 'duplicate'
+
+interface CallbackEventRow {
+  eventId: string
+  pendingTransactionId: string
+  walletId: string
+  status: CallbackEventStatus
+}
+
 interface QueryClient {
   query: (
     text: string,
@@ -70,7 +79,9 @@ const CallbackBodySchema = z
  * Browser redirects are not proof of payment. This service:
  *   1. Verifies HMAC-SHA256 over the raw body.
  *   2. Enforces a ±5 minute timestamp replay window.
- *   3. Deduplicates by provider event id.
+ *   3. Claims the provider event id before any business side effect
+ *      (atomic INSERT … ON CONFLICT DO NOTHING RETURNING). Duplicate
+ *      event ids stop here, including replays bound to another order.
  *   4. Checks merchant id, order id, amount, and authority against the
  *      Pending top-up.
  *   5. Confirms payment with the gateway server-side.
@@ -166,18 +177,33 @@ export class OnlineTopUpCallbackService {
         const pending = await this.loadPendingTopUp(client, parsed.data.merchantOrderId)
         this.assertMerchantContext(pending, parsed.data, amountIrR)
 
+        const claim = await this.claimEvent(client, {
+          eventId,
+          pendingId: pending.id,
+          walletId: pending.walletId,
+          raw: parsed.data,
+        })
+        if (!claim.inserted) {
+          const existing = claim.existing
+          if (!existing) {
+            httpError(
+              ErrorCodes.PROVIDER_CALLBACK_INVALID,
+              'Payment callback event id could not be claimed',
+            )
+          }
+          const resumeSameOrder =
+            existing.status === 'processing' && existing.pendingTransactionId === pending.id
+          if (!resumeSameOrder) {
+            return this.alreadyProcessedResult(client, existing)
+          }
+        }
+
         const alreadyCredited = await this.findExistingCredit(client, pending.id)
         if (alreadyCredited) {
-          await this.recordEvent(client, {
-            eventId,
-            pendingId: pending.id,
-            walletId: pending.walletId,
-            status: 'duplicate',
-            raw: parsed.data,
-          })
           if (pending.state === 'Pending') {
             await this.releasePendingIntent(client, pending.id, alreadyCredited.id, eventId)
           }
+          await this.finalizeEvent(client, eventId, 'duplicate')
           return {
             ok: true,
             processed: false,
@@ -189,13 +215,7 @@ export class OnlineTopUpCallbackService {
 
         if (parsed.data.status !== 'paid') {
           await this.markPendingFailed(client, pending.id, parsed.data.status)
-          await this.recordEvent(client, {
-            eventId,
-            pendingId: pending.id,
-            walletId: pending.walletId,
-            status: 'unpaid',
-            raw: parsed.data,
-          })
+          await this.finalizeEvent(client, eventId, 'unpaid')
           return {
             ok: true,
             processed: true,
@@ -227,13 +247,7 @@ export class OnlineTopUpCallbackService {
 
         if (!verified.paid) {
           await this.markPendingFailed(client, pending.id, 'verify_unpaid')
-          await this.recordEvent(client, {
-            eventId,
-            pendingId: pending.id,
-            walletId: pending.walletId,
-            status: 'unpaid',
-            raw: parsed.data,
-          })
+          await this.finalizeEvent(client, eventId, 'unpaid')
           return {
             ok: true,
             processed: true,
@@ -262,13 +276,7 @@ export class OnlineTopUpCallbackService {
         )
 
         await this.releasePendingIntent(client, pending.id, credit.id, eventId)
-        await this.recordEvent(client, {
-          eventId,
-          pendingId: pending.id,
-          walletId: pending.walletId,
-          status: 'credited',
-          raw: parsed.data,
-        })
+        await this.finalizeEvent(client, eventId, 'credited')
 
         this.logger.log(
           `Online top-up ${pending.id} credited as ${credit.id} for wallet ${pending.walletId}`,
@@ -334,6 +342,75 @@ export class OnlineTopUpCallbackService {
     }
   }
 
+  /**
+   * Atomically claim `event_id` before verify/credit/pending mutations.
+   * `RETURNING` distinguishes a new claim from a duplicate; callers must
+   * stop when no row is inserted unless the stored row is still
+   * `processing` for the same pending order (crash resume).
+   */
+  private async claimEvent(
+    client: QueryClient,
+    input: {
+      eventId: string
+      pendingId: string
+      walletId: string
+      raw: unknown
+    },
+  ): Promise<{ inserted: boolean; existing: CallbackEventRow | null }> {
+    try {
+      const inserted = await client.query(
+        `INSERT INTO wallet_topup_callback_events
+           (event_id, pending_transaction_id, wallet_id, status, raw)
+         VALUES ($1, $2, $3, 'processing', $4::jsonb)
+         ON CONFLICT (event_id) DO NOTHING
+         RETURNING event_id, pending_transaction_id, wallet_id, status`,
+        [input.eventId, input.pendingId, input.walletId, JSON.stringify(input.raw)],
+      )
+      if (inserted.rows.length > 0) {
+        return { inserted: true, existing: mapEvent(inserted.rows[0] as Parameters<typeof mapEvent>[0]) }
+      }
+    } catch (error) {
+      if (!isPgUniqueViolation(error, CALLBACK_EVENT_UNIQUE)) throw error
+    }
+
+    const existing = await this.loadEvent(client, input.eventId)
+    return { inserted: false, existing }
+  }
+
+  private async loadEvent(client: QueryClient, eventId: string): Promise<CallbackEventRow | null> {
+    const result = await client.query(
+      `SELECT event_id, pending_transaction_id, wallet_id, status
+         FROM wallet_topup_callback_events
+        WHERE event_id = $1`,
+      [eventId],
+    )
+    if (result.rows.length === 0) return null
+    return mapEvent(result.rows[0] as Parameters<typeof mapEvent>[0])
+  }
+
+  private async alreadyProcessedResult(
+    client: QueryClient,
+    existing: CallbackEventRow,
+  ): Promise<HandleProviderCallbackResult> {
+    if (existing.status === 'unpaid' || existing.status === 'processing') {
+      return {
+        ok: true,
+        processed: false,
+        credited: false,
+        transactionId: existing.pendingTransactionId,
+        creditTransactionId: null,
+      }
+    }
+    const credit = await this.findExistingCredit(client, existing.pendingTransactionId)
+    return {
+      ok: true,
+      processed: false,
+      credited: true,
+      transactionId: existing.pendingTransactionId,
+      creditTransactionId: credit?.id ?? null,
+    }
+  }
+
   private async findExistingCredit(
     client: QueryClient,
     pendingId: string,
@@ -396,28 +473,18 @@ export class OnlineTopUpCallbackService {
     )
   }
 
-  private async recordEvent(
+  private async finalizeEvent(
     client: QueryClient,
-    input: {
-      eventId: string
-      pendingId: string
-      walletId: string
-      status: 'credited' | 'unpaid' | 'duplicate'
-      raw: unknown
-    },
+    eventId: string,
+    status: Exclude<CallbackEventStatus, 'processing'>,
   ): Promise<void> {
-    try {
-      await client.query(
-        `INSERT INTO wallet_topup_callback_events
-           (event_id, pending_transaction_id, wallet_id, status, raw)
-         VALUES ($1, $2, $3, $4, $5::jsonb)
-         ON CONFLICT (event_id) DO NOTHING`,
-        [input.eventId, input.pendingId, input.walletId, input.status, JSON.stringify(input.raw)],
-      )
-    } catch (error) {
-      if (isPgUniqueViolation(error, CALLBACK_EVENT_UNIQUE)) return
-      throw error
-    }
+    await client.query(
+      `UPDATE wallet_topup_callback_events
+          SET status = $2
+        WHERE event_id = $1
+          AND status = 'processing'`,
+      [eventId, status],
+    )
   }
 }
 
@@ -438,6 +505,20 @@ function readStoredAuthority(pending: TransactionRow): string | null {
     return gateway.authority
   }
   return null
+}
+
+function mapEvent(row: {
+  event_id: string
+  pending_transaction_id: string
+  wallet_id: string
+  status: string
+}): CallbackEventRow {
+  return {
+    eventId: row.event_id,
+    pendingTransactionId: row.pending_transaction_id,
+    walletId: row.wallet_id,
+    status: row.status as CallbackEventStatus,
+  }
 }
 
 function mapTransaction(row: {

@@ -26,6 +26,7 @@ vi.mock('@barghsa/db', () => ({
 const SECRET = 'whsec-test'
 const MERCHANT = 'merchant-1'
 const TX_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+const OTHER_TX_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
 const CREDIT_ID = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const PROFILE_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const AUTHORITY = 'auth-pending-1'
@@ -105,9 +106,21 @@ function rejectionBody(error: unknown): Record<string, unknown> {
   throw new Error(`expected HttpException, got ${String(error)}`)
 }
 
+function claimedEventRow(overrides: Record<string, unknown> = {}) {
+  return {
+    event_id: EVENT_ID,
+    pending_transaction_id: TX_ID,
+    wallet_id: PROFILE_ID,
+    status: 'processing',
+    ...overrides,
+  }
+}
+
 function scriptClient(opts: {
   pending?: ReturnType<typeof makePendingRow> | null
   existingCredit?: { id: string } | null
+  claimInserted?: boolean
+  existingEvent?: ReturnType<typeof claimedEventRow> | null
 }) {
   mockClient.query.mockImplementation(async (sql: string) => {
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
@@ -117,13 +130,31 @@ function scriptClient(opts: {
       return { rows: opts.pending ? [opts.pending] : [] }
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
-      return { rows: opts.existingCredit ? [makePendingRow({ id: opts.existingCredit.id, state: 'Completed', idempotency_key: onlineTopUpCreditIdempotencyKey(TX_ID) })] : [] }
+      return {
+        rows: opts.existingCredit
+          ? [
+              makePendingRow({
+                id: opts.existingCredit.id,
+                state: 'Completed',
+                idempotency_key: onlineTopUpCreditIdempotencyKey(
+                  opts.pending?.id ? String(opts.pending.id) : TX_ID,
+                ),
+              }),
+            ]
+          : [],
+      }
     }
-    if (sql.includes('UPDATE wallet_transactions')) {
+    if (sql.includes('UPDATE wallet_transactions') || sql.includes('UPDATE wallet_topup_callback_events')) {
       return { rows: [], rowCount: 1 }
     }
     if (sql.includes('INSERT INTO wallet_topup_callback_events')) {
-      return { rows: [], rowCount: 1 }
+      if (opts.claimInserted === false) {
+        return { rows: [], rowCount: 0 }
+      }
+      return { rows: [claimedEventRow()], rowCount: 1 }
+    }
+    if (sql.includes('FROM wallet_topup_callback_events')) {
+      return { rows: opts.existingEvent ? [opts.existingEvent] : [] }
     }
     return { rows: [] }
   })
@@ -224,6 +255,59 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes("SET state = 'Released'"),
     )
     expect(updates).toHaveLength(1)
+    const claim = mockClient.query.mock.calls.find((call) =>
+      String(call[0]).includes('INSERT INTO wallet_topup_callback_events'),
+    )
+    expect(claim).toBeDefined()
+    expect(String(claim![0])).toContain('RETURNING')
+  })
+
+  it('claims the event id before gateway verify or wallet credit', async () => {
+    const order: string[] = []
+    mockClient.query.mockImplementation(async (sql: string) => {
+      if (sql.includes('INSERT INTO wallet_topup_callback_events')) {
+        order.push('claim')
+        return { rows: [claimedEventRow()], rowCount: 1 }
+      }
+      if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+        return { rows: [] }
+      }
+      if (sql.includes('FROM wallet_transactions WHERE id =')) {
+        return { rows: [makePendingRow()] }
+      }
+      if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+        return { rows: [] }
+      }
+      if (sql.includes('UPDATE wallet_transactions') || sql.includes('UPDATE wallet_topup_callback_events')) {
+        return { rows: [], rowCount: 1 }
+      }
+      return { rows: [] }
+    })
+    const { service, credit, verifyPayment } = makeService()
+    verifyPayment.mockImplementation(async () => {
+      order.push('verify')
+      return { paid: true, providerRefId: 'psp-ref-1' }
+    })
+    credit.mockImplementation(async () => {
+      order.push('credit')
+      return {
+        id: CREDIT_ID,
+        walletId: PROFILE_ID,
+        type: 'topup',
+        amount: BigInt(AMOUNT),
+        state: 'Completed',
+        idempotencyKey: onlineTopUpCreditIdempotencyKey(TX_ID),
+        refId: AUTHORITY,
+        description: 'Online wallet top-up',
+        metadata: {},
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    })
+    await service.handle(signedInput(payload()))
+    expect(order.indexOf('claim')).toBeGreaterThanOrEqual(0)
+    expect(order.indexOf('claim')).toBeLessThan(order.indexOf('verify'))
+    expect(order.indexOf('claim')).toBeLessThan(order.indexOf('credit'))
   })
 
   it('does not credit when the server-side verify reports unpaid', async () => {
@@ -236,7 +320,12 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   })
 
   it('replays a duplicate event id after credit without calling credit again', async () => {
-    scriptClient({ pending: makePendingRow({ state: 'Released' }), existingCredit: { id: CREDIT_ID } })
+    scriptClient({
+      pending: makePendingRow({ state: 'Released' }),
+      existingCredit: { id: CREDIT_ID },
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'credited' }),
+    })
     const { service, credit, verifyPayment } = makeService()
     const result = await service.handle(signedInput(payload()))
     expect(result).toMatchObject({
@@ -246,5 +335,47 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     })
     expect(credit).not.toHaveBeenCalled()
     expect(verifyPayment).not.toHaveBeenCalled()
+  })
+
+  it('does not credit a different order that reuses a claimed event id', async () => {
+    scriptClient({
+      pending: makePendingRow({ id: OTHER_TX_ID }),
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'credited', pending_transaction_id: TX_ID }),
+    })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload({ merchantOrderId: OTHER_TX_ID })))
+    expect(result).toMatchObject({
+      processed: false,
+      transactionId: TX_ID,
+    })
+    expect(credit).not.toHaveBeenCalled()
+    expect(verifyPayment).not.toHaveBeenCalled()
+    const creditUpdates = mockClient.query.mock.calls.filter((call) =>
+      String(call[0]).includes("SET state = 'Released'"),
+    )
+    expect(creditUpdates).toHaveLength(0)
+  })
+
+  it('resumes a processing claim for the same order after a crash', async () => {
+    scriptClient({
+      pending: makePendingRow(),
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'processing' }),
+    })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: true,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalled()
+    expect(credit).toHaveBeenCalledWith(
+      PROFILE_ID,
+      BigInt(AMOUNT),
+      expect.objectContaining({ type: 'topup' }),
+      onlineTopUpCreditIdempotencyKey(TX_ID),
+    )
   })
 })
