@@ -22,6 +22,7 @@ const DTO = {
   canDecide: true,
   staffDecision: null,
   creditTransactionId: null,
+  overpayment: null,
 }
 
 const adminReq = {
@@ -50,7 +51,17 @@ function makeController() {
     canDecide: false,
     auditId: 'audit-2',
   })
-  const service = { listPending, get, confirm, reject }
+  const previewAllocation = vi.fn().mockResolvedValue({
+    transactionId: TX_ID,
+    invoiceId: '11111111-1111-7111-8111-111111111111',
+    invoiceState: 'Unpaid',
+    receiptAmount: '250000',
+    remaining: '100000',
+    invoiceAllocation: '100000',
+    walletCreditAmount: '150000',
+    isOverpayment: true,
+  })
+  const service = { listPending, get, confirm, reject, previewAllocation }
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') }
   const controller = new BankReceiptConfirmationController(
     service as never,
@@ -119,6 +130,20 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
       transactionId: TX_ID,
       actorUserId: 'admin-1',
       ip: '127.0.0.1',
+      invoiceId: null,
+      correlationId: 'corr-1',
+    })
+  })
+
+  it('forwards a confirm invoiceId for overpayment allocation', async () => {
+    const { controller, service } = makeController()
+    const invoiceId = '11111111-1111-7111-8111-111111111111'
+    await controller.confirm(adminReq, TX_ID, { invoiceId })
+    expect(service.confirm).toHaveBeenCalledWith({
+      transactionId: TX_ID,
+      actorUserId: 'admin-1',
+      ip: '127.0.0.1',
+      invoiceId,
       correlationId: 'corr-1',
     })
   })
@@ -133,5 +158,21 @@ describe('bank-receipt confirmation permission gate (T-04.2.02.04)', () => {
       ip: '127.0.0.1',
       correlationId: 'corr-1',
     })
+  })
+
+  it('previews allocation for a valid invoiceId', async () => {
+    const { controller, service } = makeController()
+    const invoiceId = '11111111-1111-7111-8111-111111111111'
+    await controller.allocation(adminReq, TX_ID, invoiceId)
+    expect(service.previewAllocation).toHaveBeenCalledWith(TX_ID, invoiceId)
+  })
+
+  it('rejects allocation preview without a UUID invoiceId', async () => {
+    const { controller, service } = makeController()
+    const rejection = await controller
+      .allocation(adminReq, TX_ID, 'not-an-invoice')
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(service.previewAllocation).not.toHaveBeenCalled()
   })
 })

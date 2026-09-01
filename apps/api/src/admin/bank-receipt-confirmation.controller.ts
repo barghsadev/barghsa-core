@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common'
@@ -15,13 +16,16 @@ import { z } from 'zod'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   BANK_RECEIPT_CONFIRM_PERMISSION,
+  BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  parseOptionalInvoiceId,
 } from '@barghsa/shared/finance'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
 import {
   BankReceiptConfirmationService,
+  type BankReceiptAllocationPreviewDto,
   type BankReceiptReviewDto,
 } from '../wallet/bank-receipt-confirmation.service.js'
 
@@ -52,8 +56,11 @@ function assertUuid(id: string, label = 'transactionId'): void {
  * Staff bank-receipt top-up review API (T-04.2.02.04 / S-04.2.02).
  *
  * Finance staff list Pending receipts, inspect the scan, and confirm or
- * reject with a customer-visible reason. Confirm credits the wallet via
- * `WalletService.credit()`. Reject never changes posted or reserved balance.
+ * reject with a customer-visible reason. Confirm without an invoice
+ * credits the full receipt via `WalletService.credit()`. Confirm with
+ * an invoice allocates up to remaining onto the invoice and credits
+ * only the excess to the wallet (T-04.2.02.05). Reject never changes
+ * posted or reserved balance.
  *
  * Security:
  * - Every route requires an authenticated session with the
@@ -93,6 +100,35 @@ export class BankReceiptConfirmationController {
     return { items }
   }
 
+  @Get(':transactionId/allocation')
+  @ApiOperation({
+    summary: 'Preview invoice vs wallet split for a bank receipt (staff)',
+    description:
+      'If the receipt exceeds invoice remaining, the excess is a wallet credit and the invoice is not over-settled.',
+  })
+  @ApiParam({ name: 'transactionId', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Allocation preview (invoice remaining vs excess).' })
+  @ApiResponse({ status: 400, description: 'invoiceId missing or not a UUID' })
+  @ApiResponse({ status: 403, description: 'Finance permission required' })
+  @ApiResponse({ status: 404, description: 'Receipt or invoice not found' })
+  async allocation(
+    @Req() req: AuthenticatedRequest,
+    @Param('transactionId') transactionId: string,
+    @Query('invoiceId') invoiceId: string,
+  ): Promise<BankReceiptAllocationPreviewDto> {
+    this.assertConfirmPermission(req)
+    assertUuid(transactionId)
+    const parsed = parseOptionalInvoiceId({ invoiceId })
+    if (!parsed.ok || !parsed.invoiceId) {
+      httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID(),
+        400,
+      )
+    }
+    return this.service.previewAllocation(transactionId, parsed.invoiceId)
+  }
+
   @Get(':transactionId')
   @ApiOperation({ summary: 'Get a bank-receipt top-up for staff review' })
   @ApiParam({ name: 'transactionId', format: 'uuid' })
@@ -112,26 +148,46 @@ export class BankReceiptConfirmationController {
   @HttpCode(200)
   @RequiresStepUp()
   @ApiOperation({
-    summary: 'Confirm a bank-receipt top-up and credit the wallet',
+    summary: 'Confirm a bank-receipt top-up',
     description:
-      'Calls WalletService.credit() with a stable idempotency key derived from the pending ledger id.',
+      'Without invoiceId, credits the full amount via WalletService.credit(). With invoiceId, settles min(receipt, remaining) on the invoice and credits only the excess to the wallet with a distinct idempotency key.',
   })
   @ApiParam({ name: 'transactionId', format: 'uuid' })
-  @ApiResponse({ status: 200, description: 'Wallet credited; pending intent released.' })
+  @ApiBody({
+    required: false,
+    schema: {
+      type: 'object',
+      properties: {
+        invoiceId: {
+          type: 'string',
+          format: 'uuid',
+          description:
+            'Optional invoice to apply the receipt against. Excess over remaining is credited to the wallet.',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Receipt confirmed; wallet credited and/or invoice allocated.' })
   @ApiResponse({ status: 403, description: 'Permission or step-up required' })
   @ApiResponse({ status: 404, description: 'Receipt not found' })
   @ApiResponse({ status: 409, description: 'Receipt is not awaiting confirmation' })
   async confirm(
     @Req() req: AuthenticatedRequest,
     @Param('transactionId') transactionId: string,
+    @Body() body?: Record<string, unknown>,
   ): Promise<BankReceiptReviewDto> {
     this.assertConfirmPermission(req)
     assertUuid(transactionId)
+    const parsed = parseOptionalInvoiceId(body ?? {})
+    if (!parsed.ok) {
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400)
+    }
     const correlationId = this.correlationId.getCorrelationId()
     return this.service.confirm({
       transactionId,
       actorUserId: req.session.userId,
       ip: requestIp(req),
+      invoiceId: parsed.invoiceId,
       ...(correlationId ? { correlationId } : {}),
     })
   }

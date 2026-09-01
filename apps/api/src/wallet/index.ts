@@ -12,6 +12,7 @@ export { WalletController } from './wallet.controller.js'
 export { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
 export type {
   BankReceiptReviewDto,
+  BankReceiptAllocationPreviewDto,
   ConfirmBankReceiptInput,
   RejectBankReceiptInput,
 } from './bank-receipt-confirmation.service.js'

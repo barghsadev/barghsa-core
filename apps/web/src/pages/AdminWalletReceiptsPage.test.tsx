@@ -5,6 +5,7 @@ import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js'
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const TX_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
 
 function receiptDto(transactionId: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -81,6 +82,21 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
               }),
           }
         }
+        if (url.includes(`/${TX_A}/allocation?`) && method === 'GET') {
+          return {
+            ok: true,
+            json: async () => ({
+              transactionId: TX_A,
+              invoiceId: INVOICE_ID,
+              invoiceState: 'Unpaid',
+              receiptAmount: '250000',
+              remaining: '100000',
+              invoiceAllocation: '100000',
+              walletCreditAmount: '150000',
+              isOverpayment: true,
+            }),
+          }
+        }
         return { ok: false, status: 404, json: async () => ({ message: 'not found' }) }
       }),
     )
@@ -142,5 +158,42 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(
       fetchMock.mock.calls.some(([url]) => String(url).endsWith('/reject')),
     ).toBe(false)
+  })
+
+  it('previews overpayment and confirms with the invoice id', async () => {
+    await act(async () => {
+      root.render(<AdminWalletReceiptsPage />)
+    })
+    await flush()
+
+    const invoiceInput = container.querySelector('#apply-invoice-id') as HTMLInputElement | null
+    expect(invoiceInput).toBeTruthy()
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(invoiceInput, INVOICE_ID)
+      invoiceInput!.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await flush()
+    await flush()
+
+    expect(container.textContent).toContain('The receipt exceeds the invoice remaining')
+    expect(container.textContent).toContain('Excess credited to wallet')
+
+    const confirm = Array.from(container.querySelectorAll('button')).find(
+      (btn) => btn.textContent === 'Confirm and credit wallet',
+    )
+    await act(async () => {
+      confirm!.click()
+    })
+    await flush()
+
+    const fetchMock = vi.mocked(fetch)
+    const confirmCall = fetchMock.mock.calls.find(
+      ([url, init]) =>
+        String(url).endsWith(`/${TX_A}/confirm`) &&
+        (init as RequestInit | undefined)?.method === 'POST',
+    )
+    expect(confirmCall).toBeTruthy()
+    expect((confirmCall?.[1] as RequestInit).body).toBe(JSON.stringify({ invoiceId: INVOICE_ID }))
   })
 })

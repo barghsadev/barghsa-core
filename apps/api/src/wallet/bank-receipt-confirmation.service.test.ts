@@ -4,9 +4,12 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   BANK_RECEIPT_CONFIRM_ERRORS,
   BANK_RECEIPT_CONFIRMED_EVENT,
+  BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
+  BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
   bankReceiptCreditIdempotencyKey,
+  bankReceiptOverpaymentCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
 import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
 import type { WalletService } from './wallet.service.js'
@@ -26,10 +29,14 @@ vi.mock('@barghsa/db', () => ({
 }))
 
 const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+const OTHER_PROFILE = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const CREDIT_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
+const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
 const ACTOR_ID = 'staff-1'
 const AMOUNT = 250_000n
+const OVERPAY_RECEIPT = 1_200_000n
+const INVOICE_REMAINING = 400_000n
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
 const NOW = new Date('2026-09-02T08:00:00.000Z')
 
@@ -79,6 +86,17 @@ function makeWalletService() {
   }
 }
 
+function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
+  return {
+    id: INVOICE_ID,
+    profile_id: PROFILE_ID,
+    state: 'Unpaid',
+    total_amount: '1000000',
+    paid_amount: '600000',
+    ...overrides,
+  }
+}
+
 type ScriptOptions = {
   locked?: ReturnType<typeof makePendingRow> | null
   released?: ReturnType<typeof makePendingRow> | null
@@ -86,6 +104,8 @@ type ScriptOptions = {
   listed?: ReturnType<typeof makePendingRow>[]
   getRow?: ReturnType<typeof makePendingRow> | null
   existingCredit?: ReturnType<typeof makePendingRow> | null
+  invoice?: ReturnType<typeof makeInvoiceRow> | null
+  invoiceUpdated?: boolean
 }
 
 function script(opts: ScriptOptions = {}) {
@@ -143,6 +163,14 @@ function script(opts: ScriptOptions = {}) {
             }),
         ],
       }
+    }
+    if (sql.includes('FROM invoices')) {
+      if (opts.invoice === null) return { rows: [] }
+      return { rows: [opts.invoice ?? makeInvoiceRow()] }
+    }
+    if (sql.includes('UPDATE invoices')) {
+      if (opts.invoiceUpdated === false) return { rows: [] }
+      return { rows: [{ id: INVOICE_ID }] }
     }
     if (sql.includes('INSERT INTO audit_log')) {
       return { rows: [] }
@@ -223,6 +251,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(result.state).toBe('Released')
     expect(result.canDecide).toBe(false)
     expect(result.creditTransactionId).toBe(CREDIT_ID)
+    expect(result.overpayment).toBeNull()
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO audit_log')),
     ).toBe(true)
@@ -293,6 +322,112 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       })
       .catch((error: unknown) => error)
     expect((rejection as HttpException).getStatus()).toBe(409)
+    expect(walletService.credit).not.toHaveBeenCalled()
+  })
+
+  it('credits only the excess when the receipt exceeds invoice remaining', async () => {
+    script({
+      locked: makePendingRow({ amount: OVERPAY_RECEIPT.toString() }),
+      invoice: makeInvoiceRow({ total_amount: '1000000', paid_amount: '600000' }),
+    })
+    const result = await service.confirm({
+      transactionId: TX_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      invoiceId: INVOICE_ID,
+      now: NOW,
+    })
+    expect(walletService.credit).toHaveBeenCalledTimes(1)
+    expect(walletService.credit).toHaveBeenCalledWith(
+      PROFILE_ID,
+      OVERPAY_RECEIPT - INVOICE_REMAINING,
+      expect.objectContaining({
+        type: 'topup',
+        description: BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
+      }),
+      bankReceiptOverpaymentCreditIdempotencyKey(TX_ID),
+      mockClient,
+    )
+    expect(
+      mockClient.query.mock.calls.some(
+        ([sql, params]) =>
+          String(sql).includes('UPDATE invoices') &&
+          Array.isArray(params) &&
+          params[1] === INVOICE_REMAINING.toString(),
+      ),
+    ).toBe(true)
+    expect(result.overpayment).toMatchObject({
+      invoiceId: INVOICE_ID,
+      remainingBefore: INVOICE_REMAINING.toString(),
+      invoiceAllocation: INVOICE_REMAINING.toString(),
+      walletCreditAmount: (OVERPAY_RECEIPT - INVOICE_REMAINING).toString(),
+    })
+    const audit = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audit?.[1]?.[3]).toContain('"walletCreditAmount":"800000"')
+  })
+
+  it('does not credit the wallet when the receipt equals invoice remaining', async () => {
+    script({
+      locked: makePendingRow({ amount: INVOICE_REMAINING.toString() }),
+      invoice: makeInvoiceRow({ total_amount: '1000000', paid_amount: '600000' }),
+    })
+    const result = await service.confirm({
+      transactionId: TX_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      invoiceId: INVOICE_ID,
+      now: NOW,
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(result.overpayment).toMatchObject({
+      invoiceAllocation: INVOICE_REMAINING.toString(),
+      walletCreditAmount: '0',
+      overpaymentCreditTransactionId: null,
+    })
+  })
+
+  it('credits the full receipt to the wallet when the invoice is already paid', async () => {
+    script({
+      invoice: makeInvoiceRow({ state: 'Paid', total_amount: '1000000', paid_amount: '1000000' }),
+    })
+    await service.confirm({
+      transactionId: TX_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      invoiceId: INVOICE_ID,
+      now: NOW,
+    })
+    expect(walletService.credit).toHaveBeenCalledWith(
+      PROFILE_ID,
+      AMOUNT,
+      expect.objectContaining({ description: BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION }),
+      bankReceiptOverpaymentCreditIdempotencyKey(TX_ID),
+      mockClient,
+    )
+    expect(mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices'))).toBe(
+      false,
+    )
+  })
+
+  it('rejects an invoice that belongs to a different profile', async () => {
+    script({ invoice: makeInvoiceRow({ profile_id: OTHER_PROFILE }) })
+    const rejection = await service
+      .confirm({
+        transactionId: TX_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        invoiceId: INVOICE_ID,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.CONFLICT_STATE.code,
+      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.PROFILE_MISMATCH(),
+    })
     expect(walletService.credit).not.toHaveBeenCalled()
   })
 })
