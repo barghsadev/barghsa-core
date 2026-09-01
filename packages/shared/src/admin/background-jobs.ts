@@ -50,6 +50,7 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'invoice_overdue_scan', label: 'Invoice overdue scan' },
   { key: 'invoice_reminder_scheduler', label: 'Invoice reminder scheduler' },
   { key: 'invoice_reminder_sender', label: 'Invoice reminder sender' },
+  { key: 'wallet_reconciliation_scan', label: 'Wallet ledger reconciliation' },
 ] as const
 
 /** A known background job type key. */
