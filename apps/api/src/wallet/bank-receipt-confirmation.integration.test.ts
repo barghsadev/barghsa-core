@@ -18,17 +18,22 @@ import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { v7 as uuidv7 } from 'uuid'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import {
   BANK_RECEIPT_CONFIRMED_EVENT,
+  BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
   bankReceiptCreditIdempotencyKey,
+  bankReceiptOverpaymentCreditIdempotencyKey,
   bankReceiptTopUpMetadata,
 } from '@barghsa/shared/finance'
 import { WalletService } from './wallet.service.js'
 import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
+import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
+import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -61,8 +66,21 @@ const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0005_create_audit_log.sql',
 )
+const INVOICES_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql',
+)
+const PAID_OVERDUE_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql',
+)
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const ACTOR_USER_ID = 'staff-bank-receipt-confirm'
 const AMOUNT = 250_000n
 const NOW = new Date('2026-09-02T08:00:00.000Z')
@@ -81,7 +99,11 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
-    service = new BankReceiptConfirmationService(walletService, null)
+    service = new BankReceiptConfirmationService(
+      walletService,
+      null,
+      new InvoiceStateMachineService(new InvoiceAuditRepository()),
+    )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`
@@ -93,8 +115,25 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ATTACHMENT_UNIQUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [PROFILE_A])
-    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A])
+    await ctx.pool.query(`
+      CREATE TYPE invoice_state AS ENUM (
+        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
+        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
+      )
+    `)
+    await ctx.pool.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
+      PROFILE_A,
+      PROFILE_B,
+    ])
     await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID])
   }, 60_000)
 
@@ -128,6 +167,46 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       ],
     )
     return result.rows[0]!.id
+  }
+
+  async function insertInvoice(opts: {
+    profileId?: string
+    total: bigint
+    paid?: bigint
+    state?: string
+  }): Promise<string> {
+    const id = uuidv7()
+    await ctx.pool.query(
+      `INSERT INTO invoices (id, profile_id, state, total_amount, paid_amount)
+       VALUES ($1, $2, $3::invoice_state, $4::bigint, $5::bigint)`,
+      [
+        id,
+        opts.profileId ?? PROFILE_A,
+        opts.state ?? 'Unpaid',
+        opts.total.toString(),
+        (opts.paid ?? 0n).toString(),
+      ],
+    )
+    return id
+  }
+
+  async function invoiceSettlement(
+    invoiceId: string,
+  ): Promise<{ paid: bigint; state: string; paidAt: Date | null }> {
+    const result = await ctx.pool.query<{
+      paid_amount: string
+      state: string
+      paid_at: Date | null
+    }>(`SELECT paid_amount, state, paid_at FROM invoices WHERE id = $1`, [invoiceId])
+    return {
+      paid: BigInt(result.rows[0]!.paid_amount),
+      state: result.rows[0]!.state,
+      paidAt: result.rows[0]!.paid_at,
+    }
+  }
+
+  async function invoicePaid(invoiceId: string): Promise<bigint> {
+    return (await invoiceSettlement(invoiceId)).paid
   }
 
   async function walletBalances(): Promise<{ posted: bigint; reserved: bigint }> {
@@ -350,5 +429,166 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       [BANK_RECEIPT_CONFIRMED_EVENT, pendingId],
     )
     expect(audit.rows).toHaveLength(0)
+  })
+
+  it('credits only the excess to the wallet when the receipt exceeds invoice remaining', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 600_000n, state: 'Unpaid' })
+    const pendingId = await insertPending('overpay', 1_200_000n)
+    const before = await walletBalances()
+
+    const result = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+
+    expect(result.state).toBe('Released')
+    expect(result.overpayment).toMatchObject({
+      invoiceId,
+      remainingBefore: '400000',
+      invoiceAllocation: '400000',
+      walletCreditAmount: '800000',
+    })
+    expect(result.creditTransactionId).toBe(result.overpayment?.overpaymentCreditTransactionId)
+
+    expect(await invoicePaid(invoiceId)).toBe(1_000_000n)
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.state).toBe('Paid')
+    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
+    const after = await walletBalances()
+    expect(after.posted).toBe(before.posted + 800_000n)
+
+    const topUpCredit = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptCreditIdempotencyKey(pendingId)],
+    )
+    expect(topUpCredit.rows).toHaveLength(0)
+
+    const overpayCredit = await ctx.pool.query<{ amount: string; state: string }>(
+      `SELECT amount, state FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptOverpaymentCreditIdempotencyKey(pendingId)],
+    )
+    expect(overpayCredit.rows).toHaveLength(1)
+    expect(overpayCredit.rows[0]!.state).toBe('Completed')
+    expect(BigInt(overpayCredit.rows[0]!.amount)).toBe(800_000n)
+
+    const second = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    expect(second.creditTransactionId).toBe(result.creditTransactionId)
+    expect(await invoicePaid(invoiceId)).toBe(1_000_000n)
+    expect((await invoiceSettlement(invoiceId)).state).toBe('Paid')
+    expect((await walletBalances()).posted).toBe(after.posted)
+  })
+
+  it('does not credit the wallet when the receipt equals remaining', async () => {
+    const invoiceId = await insertInvoice({ total: 500_000n, paid: 0n })
+    const pendingId = await insertPending('exact', 500_000n)
+    const before = await walletBalances()
+    const result = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    expect(result.overpayment?.walletCreditAmount).toBe('0')
+    expect(result.overpayment?.overpaymentCreditTransactionId).toBeNull()
+    expect(await invoicePaid(invoiceId)).toBe(500_000n)
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.state).toBe('Paid')
+    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
+    expect((await walletBalances()).posted).toBe(before.posted)
+  })
+
+  it('marks a partial allocation PartiallyFunded and leaves paid_at unset', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 0n, state: 'Unpaid' })
+    const pendingId = await insertPending('partial', 300_000n)
+    const before = await walletBalances()
+    const result = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    expect(result.overpayment?.invoiceAllocation).toBe('300000')
+    expect(result.overpayment?.walletCreditAmount).toBe('0')
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(300_000n)
+    expect(settled.state).toBe('PartiallyFunded')
+    expect(settled.paidAt).toBeNull()
+    expect((await walletBalances()).posted).toBe(before.posted)
+
+    const confirmAudit = await ctx.pool.query<{ event: string }>(
+      `SELECT event FROM audit_log
+        WHERE event = 'invoice.confirm_bank_receipt'
+          AND metadata::jsonb ->> 'invoiceId' = $1`,
+      [invoiceId],
+    )
+    expect(confirmAudit.rows).toHaveLength(1)
+  })
+
+  it('rejects invoice-linked confirmation against an Overdue invoice', async () => {
+    const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' })
+    const pendingId = await insertPending('overdue-blocked', 400_000n)
+    const before = await walletBalances()
+    const rejection = await service
+      .confirm({
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Overdue'),
+    })
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(0n)
+    expect(settled.state).toBe('Overdue')
+    expect(settled.paidAt).toBeNull()
+    expect((await walletBalances()).posted).toBe(before.posted)
+    const pending = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [pendingId],
+    )
+    expect(pending.rows[0]!.state).toBe('Pending')
+  })
+
+  it('rolls back invoice paid_amount when overpayment confirm audit fails', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 250_000n })
+    const pendingId = await insertPending('overpay-audit-fail', 900_000n)
+    const beforePaid = await invoicePaid(invoiceId)
+    const beforeWallet = await walletBalances()
+
+    const failure = await service
+      .confirm({
+        transactionId: pendingId,
+        actorUserId: 'missing-staff',
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+
+    expect(failure).toBeInstanceOf(Error)
+    expect(await invoicePaid(invoiceId)).toBe(beforePaid)
+    expect((await invoiceSettlement(invoiceId)).state).toBe('Unpaid')
+    expect((await walletBalances()).posted).toBe(beforeWallet.posted)
+    const pending = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [pendingId],
+    )
+    expect(pending.rows[0]!.state).toBe('Pending')
   })
 })

@@ -322,6 +322,7 @@ describe('transitionName', () => {
 
   it('returns null for illegal pairs', () => {
     expect(transitionName('Draft', 'Paid')).toBeNull()
+    expect(transitionName('Overdue', 'PaymentUnderReview')).toBeNull()
     expect(transitionName('Cancelled', 'Draft')).toBeNull()
     expect(transitionName('Refunded', 'Draft')).toBeNull()
   })

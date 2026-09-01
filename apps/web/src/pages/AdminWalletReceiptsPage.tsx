@@ -16,7 +16,7 @@ import {
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 import { formatIrr } from '../lib/customer-invoices.js'
-import { isImageAttachment, isPdfAttachment } from '../lib/bank-receipt-confirmation.js'
+import { isImageAttachment, isPdfAttachment, isTransactionUuid } from '../lib/bank-receipt-confirmation.js'
 
 /**
  * Staff bank-receipt confirmation queue (T-04.2.02.04).
@@ -50,6 +50,26 @@ interface BankReceiptReviewDto {
   canDecide: boolean
   staffDecision: StaffDecision | null
   creditTransactionId: string | null
+  overpayment: OverpaymentSnapshot | null
+}
+
+interface OverpaymentSnapshot {
+  invoiceId: string
+  remainingBefore: string
+  invoiceAllocation: string
+  walletCreditAmount: string
+  overpaymentCreditTransactionId: string | null
+}
+
+interface AllocationPreview {
+  transactionId: string
+  invoiceId: string
+  invoiceState: string
+  receiptAmount: string
+  remaining: string
+  invoiceAllocation: string
+  walletCreditAmount: string
+  isOverpayment: boolean
 }
 
 type PendingAction = { kind: 'confirm' } | { kind: 'reject'; reason: string }
@@ -173,6 +193,9 @@ export default function AdminWalletReceiptsPage() {
   const [error, setError] = useState<string | null>(null)
   const [clientIssue, setClientIssue] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  const [invoiceId, setInvoiceId] = useState('')
+  const [allocation, setAllocation] = useState<AllocationPreview | null>(null)
+  const [allocationError, setAllocationError] = useState<string | null>(null)
 
   const [stepUpOpen, setStepUpOpen] = useState(false)
   const [stepUpPassword, setStepUpPassword] = useState('')
@@ -218,6 +241,9 @@ export default function AdminWalletReceiptsPage() {
     }
     const fromList = items.find((row) => row.transactionId === selectedId)
     if (fromList) setSelected(fromList)
+    setInvoiceId('')
+    setAllocation(null)
+    setAllocationError(null)
     let cancelled = false
     void (async () => {
       try {
@@ -233,6 +259,45 @@ export default function AdminWalletReceiptsPage() {
       cancelled = true
     }
   }, [selectedId, items])
+
+  useEffect(() => {
+    const trimmed = invoiceId.trim()
+    if (!selected || !trimmed) {
+      setAllocation(null)
+      setAllocationError(null)
+      return
+    }
+    if (!isTransactionUuid(trimmed)) {
+      setAllocation(null)
+      setAllocationError(t('admin.walletReceipts.error.invoiceId', locale))
+      return
+    }
+    let cancelled = false
+    setAllocationError(null)
+    void (async () => {
+      try {
+        const res = await fetch(
+          `/api/admin/wallet/bank-receipt-top-ups/${selected.transactionId}/allocation?invoiceId=${encodeURIComponent(trimmed)}`,
+        )
+        const data: unknown = await res.json().catch(() => null)
+        if (cancelled) return
+        if (!res.ok) {
+          setAllocation(null)
+          setAllocationError(errorMessage(data, t('admin.walletReceipts.error.allocation', locale)))
+          return
+        }
+        setAllocation(data as AllocationPreview)
+      } catch {
+        if (!cancelled) {
+          setAllocation(null)
+          setAllocationError(t('admin.walletReceipts.error.allocation', locale))
+        }
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [invoiceId, selected, locale])
 
   useEffect(() => {
     if (!stepUpOpen) return
@@ -252,7 +317,12 @@ export default function AdminWalletReceiptsPage() {
     const res = await fetch(path, {
       method: 'POST',
       headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: action.kind === 'reject' ? JSON.stringify({ reason: action.reason }) : '{}',
+      body:
+        action.kind === 'reject'
+          ? JSON.stringify({ reason: action.reason })
+          : JSON.stringify(
+              isTransactionUuid(invoiceId) ? { invoiceId: invoiceId.trim() } : {},
+            ),
     })
     const data: unknown = await res.json().catch(() => null)
     if (isStepUpRequired(res, data)) return 'step_up'
@@ -261,12 +331,17 @@ export default function AdminWalletReceiptsPage() {
       return 'error'
     }
     const dto = data as BankReceiptReviewDto
+    const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n
     setStatus(
       action.kind === 'confirm'
-        ? t('admin.walletReceipts.confirmed', locale)
+        ? overpay
+          ? t('admin.walletReceipts.overpaymentConfirmed', locale)
+          : t('admin.walletReceipts.confirmed', locale)
         : t('admin.walletReceipts.rejected', locale),
     )
     setReason('')
+    setInvoiceId('')
+    setAllocation(null)
     setClientIssue(null)
     setItems((current) => {
       const remaining = current.filter((row) => row.transactionId !== dto.transactionId)
@@ -296,6 +371,12 @@ export default function AdminWalletReceiptsPage() {
   }
 
   function handleConfirm() {
+    const trimmed = invoiceId.trim()
+    if (trimmed && !isTransactionUuid(trimmed)) {
+      setClientIssue(t('admin.walletReceipts.error.invoiceId', locale))
+      return
+    }
+    setClientIssue(null)
     void runAction({ kind: 'confirm' })
   }
 
@@ -506,6 +587,81 @@ export default function AdminWalletReceiptsPage() {
 
               {selected.canDecide ? (
                 <div className="space-y-4 border-t border-gray-100 pt-4">
+                  <div>
+                    <label
+                      htmlFor="apply-invoice-id"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      {t('admin.walletReceipts.invoiceId', locale)}
+                    </label>
+                    <input
+                      id="apply-invoice-id"
+                      name="invoiceId"
+                      type="text"
+                      dir="ltr"
+                      inputMode="text"
+                      autoComplete="off"
+                      spellCheck={false}
+                      value={invoiceId}
+                      onChange={(e) => setInvoiceId(e.target.value)}
+                      placeholder={t('admin.walletReceipts.invoiceIdPlaceholder', locale)}
+                      aria-describedby="apply-invoice-hint"
+                      className="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm"
+                    />
+                    <p id="apply-invoice-hint" className="text-xs text-gray-500 mt-1">
+                      {t('admin.walletReceipts.invoiceIdHint', locale)}
+                    </p>
+                  </div>
+
+                  {allocationError && (
+                    <p className="text-sm text-red-600" role="alert">
+                      {allocationError}
+                    </p>
+                  )}
+
+                  {allocation && (
+                    <dl
+                      className="rounded border border-amber-200 bg-amber-50 p-3 text-sm space-y-1"
+                      aria-live="polite"
+                    >
+                      <div>
+                        <dt className="text-gray-600">
+                          {t('admin.walletReceipts.remaining', locale)}
+                        </dt>
+                        <dd className="font-medium">
+                          {formatIrr(allocation.remaining, locale)} {selected.currency}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-gray-600">
+                          {t('admin.walletReceipts.invoiceAllocation', locale)}
+                        </dt>
+                        <dd className="font-medium">
+                          {formatIrr(allocation.invoiceAllocation, locale)} {selected.currency}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-gray-600">
+                          {t('admin.walletReceipts.overpaymentCredit', locale)}
+                        </dt>
+                        <dd className="font-medium">
+                          {formatIrr(allocation.walletCreditAmount, locale)} {selected.currency}
+                        </dd>
+                      </div>
+                      {allocation.isOverpayment && (
+                        <p className="text-amber-900 pt-1">
+                          {t('admin.walletReceipts.overpaymentPreview', locale)}
+                        </p>
+                      )}
+                    </dl>
+                  )}
+
+                  {clientIssue && (
+                    <p className="text-sm text-red-600" role="alert">
+                      {clientIssue}
+                    </p>
+                  )}
+
                   <button
                     type="button"
                     onClick={handleConfirm}

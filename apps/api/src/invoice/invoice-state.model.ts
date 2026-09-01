@@ -62,7 +62,7 @@ export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
  *   - ConfirmBankReceipt: PaymentUnderReview → Unpaid/PartiallyFunded/Paid
  *   - PayFromWallet:      Unpaid, Partially  → Paid
  *   - MarkOverdue:        Unpaid, Partially  → Overdue
- *   - Cancel:             Unpaid, Overdue, Draft → Cancelled
+ *   - Cancel:             Unpaid, Overdue, Draft, Partially → Cancelled
  *   - PartialRefund:      Paid, PartiallyRefunded → PartiallyRefunded
  *   - FullRefund:         Paid               → Refunded
  */

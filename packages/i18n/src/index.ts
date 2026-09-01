@@ -1116,6 +1116,16 @@ export const fa: I18nDictionary = {
   'admin.walletReceipts.stepUp.cancel': 'انصراف',
   'admin.walletReceipts.stepUp.verifying': 'در حال تأیید…',
   'admin.walletReceipts.stepUp.failed': 'تأیید هویت ناموفق بود. رمز عبور را بررسی کنید.',
+  'admin.walletReceipts.invoiceId': 'شناسه فاکتور (اختیاری)',
+  'admin.walletReceipts.invoiceIdPlaceholder': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+  'admin.walletReceipts.invoiceIdHint': 'اگر رسید بابت فاکتور است، شناسه را وارد کنید. مبلغ مازاد بر مانده فاکتور به‌صورت اعتبار جداگانه به کیف پول واریز می‌شود و فاکتور بیش از مانده تسویه نمی‌شود.',
+  'admin.walletReceipts.remaining': 'مانده فاکتور',
+  'admin.walletReceipts.invoiceAllocation': 'سهم فاکتور',
+  'admin.walletReceipts.overpaymentCredit': 'مازاد واریزی به کیف پول',
+  'admin.walletReceipts.overpaymentPreview': 'مبلغ رسید از مانده فاکتور بیشتر است. مازاد به‌صورت اعتبار تأییدشده به کیف پول واریز می‌شود.',
+  'admin.walletReceipts.overpaymentConfirmed': 'رسید تأیید شد. سهم فاکتور تا مانده اعمال شد و مازاد به کیف پول واریز گردید.',
+  'admin.walletReceipts.error.invoiceId': 'شناسه فاکتور باید یک UUID معتبر باشد',
+  'admin.walletReceipts.error.allocation': 'محاسبه مانده فاکتور ناموفق بود',
 
   // ── Notification Center (T-05.02.03) ─────────────────────
   'notifications.title': 'مرکز اطلاع‌رسانی',
@@ -2227,6 +2237,16 @@ export const en: I18nDictionary = {
     'admin.walletReceipts.stepUp.cancel': 'Cancel',
     'admin.walletReceipts.stepUp.verifying': 'Verifying…',
     'admin.walletReceipts.stepUp.failed': 'Verification failed. Check your password and try again.',
+    'admin.walletReceipts.invoiceId': 'Invoice ID (optional)',
+    'admin.walletReceipts.invoiceIdPlaceholder': 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+    'admin.walletReceipts.invoiceIdHint': 'If this receipt is toward an invoice, enter its ID. Amount above the invoice remaining is credited to the wallet as a separate verified credit; the invoice is never over-settled.',
+    'admin.walletReceipts.remaining': 'Invoice remaining',
+    'admin.walletReceipts.invoiceAllocation': 'Applied to invoice',
+    'admin.walletReceipts.overpaymentCredit': 'Excess credited to wallet',
+    'admin.walletReceipts.overpaymentPreview': 'The receipt exceeds the invoice remaining. Excess will be credited to the wallet as a verified credit.',
+    'admin.walletReceipts.overpaymentConfirmed': 'Receipt confirmed. The invoice was settled up to remaining and the excess was credited to the wallet.',
+    'admin.walletReceipts.error.invoiceId': 'Invoice ID must be a valid UUID',
+    'admin.walletReceipts.error.allocation': 'Could not calculate the invoice remaining',
 
     // ── Notification Center (T-05.02.03) ─────────────────────
     'notifications.title': 'Notification Center',
