@@ -14,6 +14,7 @@ export { DualApprovalController, RejectApprovalRequestSchema } from './dual-appr
 export { DueAtOverrideController } from './due-at-override.controller.js'
 export { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
 export { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
+export { BankReceiptConfirmationController } from './bank-receipt-confirmation.controller.js'
 export {
   ReconciliationExceptionsController,
   ResolutionNoteSchema,

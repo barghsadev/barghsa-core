@@ -3,6 +3,7 @@ import { WalletController } from './wallet.controller.js'
 import { WalletService } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
+import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
 import { OnlineTopUpCallbackController } from './online-topup-callback.controller.js'
 import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
@@ -16,12 +17,13 @@ import { ProfilesModule } from '../profiles/index.js'
     WalletService,
     OnlineTopUpService,
     BankReceiptTopUpService,
+    BankReceiptConfirmationService,
     OnlineTopUpCallbackService,
     {
       provide: PAYMENT_GATEWAY,
       useFactory: () => createPaymentGatewayFromEnv(),
     },
   ],
-  exports: [WalletService],
+  exports: [WalletService, BankReceiptConfirmationService],
 })
 export class WalletModule {}
