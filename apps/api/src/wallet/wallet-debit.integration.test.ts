@@ -20,6 +20,8 @@
  *   8. Reusing a credit or reservation idempotency key, or retrying a debit
  *      with a different amount/refId, is ConflictException and does not
  *      mutate the wallet.
+ *   9. A first-time debit with an uppercase walletId spelling posts against
+ *      the canonical UUID and still reserve-then-completes once.
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
  * schema-scoped Testcontainers pool.
@@ -200,6 +202,35 @@ describe('WalletService.debit — real PostgreSQL (T-04.2.01.04)', () => {
       (row) => row.idempotency_key === 'debit-idem-1',
     )
     expect(matching).toHaveLength(1)
+  })
+
+  it('posts a first-time debit with an uppercase walletId against the canonical UUID', async () => {
+    const before = await fetchWallet(PROFILE_A)
+    const tx = await service.debit(
+      PROFILE_A.toUpperCase(),
+      2_500n,
+      { type: 'payment', refId: 'inv-case-first' },
+      'debit-uuid-case-first',
+    )
+
+    expect(tx.walletId).toBe(PROFILE_A)
+    expect(tx.amount).toBe(-2_500n)
+    expect(tx.state).toBe('Completed')
+
+    const after = await fetchWallet(PROFILE_A)
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance) - 2_500n)
+    expect(BigInt(after.reserved_balance)).toBe(BigInt(before.reserved_balance))
+    expect(after.version).toBe(before.version + 2)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'debit-uuid-case-first'),
+    ).toEqual([
+      expect.objectContaining({
+        id: tx.id,
+        amount: '-2500',
+        state: 'Completed',
+        ref_id: 'inv-case-first',
+      }),
+    ])
   })
 
   it('retries the same idempotency key with uppercase/lowercase UUID spellings without changing the balance', async () => {

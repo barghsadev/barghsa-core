@@ -338,8 +338,10 @@ export class WalletService {
    *   4. Atomically reserve (`reserved_balance += amount` with
    *      `WHERE version = X AND available >= amount`) then complete
    *      (`posted_balance -= amount`, `reserved_balance -= amount` with
-   *      `WHERE version = X+1`).
-   *   5. INSERT a Completed ledger row (negative amount).
+   *      `WHERE version = X+1`). Both UPDATEs bind the wallet row's
+   *      canonical `profile_id`.
+   *   5. INSERT a Completed ledger row (negative amount) using the
+   *      wallet row's canonical `profile_id`.
    *
    * Unique `idempotency_key` is the last-line duplicate guard.
    */
@@ -402,14 +404,14 @@ export class WalletService {
 
       const reserveResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance + $1,
+         SET reserved_balance = reserved_balance + $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND (posted_balance - reserved_balance) >= $1
+           AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
-        [amount, walletId, wallet.version],
+        [amount, canonicalWalletId, wallet.version],
       )
       if (reserveResult.rows.length === 0) {
         throw new ConflictException(
@@ -420,16 +422,16 @@ export class WalletService {
 
       const completeResult = await client.query(
         `UPDATE wallets
-         SET posted_balance = posted_balance - $1,
-             reserved_balance = reserved_balance - $1,
+         SET posted_balance = posted_balance - $1::bigint,
+             reserved_balance = reserved_balance - $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND reserved_balance >= $1
-           AND posted_balance >= $1
+           AND reserved_balance >= $1::bigint
+           AND posted_balance >= $1::bigint
          RETURNING *`,
-        [amount, walletId, reservedWallet.version],
+        [amount, canonicalWalletId, reservedWallet.version],
       )
       if (completeResult.rows.length === 0) {
         throw new ConflictException(
@@ -443,7 +445,7 @@ export class WalletService {
          VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6, COALESCE($7::jsonb, '{}'::jsonb))
          RETURNING *`,
         [
-          walletId,
+          canonicalWalletId,
           ref.type,
           -amount,
           idempotencyKey,
