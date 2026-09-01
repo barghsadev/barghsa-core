@@ -18,6 +18,8 @@ const req = {
   session: { userId: 'user-1' },
 } as unknown as AuthenticatedRequest
 
+const RECEIPT_KEY = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+
 function makeController() {
   const getAccessibleProfile = vi.fn().mockResolvedValue({ id: PROFILE_ID })
   const initiate = vi.fn().mockResolvedValue({
@@ -26,12 +28,21 @@ function makeController() {
     state: 'Pending',
     redirectUrl: 'https://pay.test/start?authority=abc',
   })
+  const submit = vi.fn().mockResolvedValue({
+    transactionId: 'tx-receipt-1',
+    amount: 250_000n,
+    state: 'Pending',
+    paymentDate: '2026-08-15',
+    payerReference: 'TRK-998877',
+    attachmentKey: RECEIPT_KEY,
+  })
   const controller = new WalletController(
     {} as never,
     { getAccessibleProfile } as never,
     { initiate } as never,
+    { submit } as never,
   )
-  return { controller, getAccessibleProfile, initiate }
+  return { controller, getAccessibleProfile, initiate, submit }
 }
 
 function rejectionBody(error: unknown): Record<string, unknown> {
@@ -129,5 +140,89 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       state: 'Pending',
       redirectUrl: 'https://pay.test/start?authority=abc',
     })
+  })
+})
+
+describe('WalletController bank-receipt top-up (T-04.2.02.03)', () => {
+  const body = {
+    amount: 250_000,
+    paymentDate: '2026-08-15',
+    payerReference: 'TRK-998877',
+    attachmentKey: RECEIPT_KEY,
+    customerNote: 'Branch transfer',
+  }
+
+  it('rejects a non-UUID profileId before calling the service', async () => {
+    const { controller, submit, getAccessibleProfile } = makeController()
+    const rejection = await controller
+      .submitBankReceiptTopUp('not-a-uuid', body, 'idem-1', req)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.VALIDATION_PARSE_ZOD.code,
+    })
+    expect(getAccessibleProfile).not.toHaveBeenCalled()
+    expect(submit).not.toHaveBeenCalled()
+  })
+
+  it('returns 404 when the profile is not accessible', async () => {
+    const { controller, submit, getAccessibleProfile } = makeController()
+    getAccessibleProfile.mockResolvedValue(null)
+    await expect(
+      controller.submitBankReceiptTopUp(PROFILE_ID, body, 'idem-1', req),
+    ).rejects.toBeInstanceOf(NotFoundException)
+    expect(submit).not.toHaveBeenCalled()
+  })
+
+  it('rejects a missing required field', async () => {
+    const { controller, submit } = makeController()
+    const rejection = await controller
+      .submitBankReceiptTopUp(PROFILE_ID, { amount: 250_000 }, 'idem-1', req)
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.VALIDATION_PARSE_ZOD.code,
+    })
+    expect(submit).not.toHaveBeenCalled()
+  })
+
+  it('rejects a missing idempotency key', async () => {
+    const { controller, submit } = makeController()
+    const rejection = await controller
+      .submitBankReceiptTopUp(PROFILE_ID, body, undefined, req)
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+    })
+    expect(submit).not.toHaveBeenCalled()
+  })
+
+  it('submits a pending bank-receipt top-up without a gateway redirect', async () => {
+    const { controller, submit } = makeController()
+    const result = await controller.submitBankReceiptTopUp(
+      PROFILE_ID,
+      body,
+      'from-header',
+      req,
+    )
+    expect(submit).toHaveBeenCalledWith({
+      profileId: PROFILE_ID,
+      amount: 250_000,
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey: RECEIPT_KEY,
+      customerNote: 'Branch transfer',
+      idempotencyKey: 'from-header',
+    })
+    expect(result).toEqual({
+      ok: true,
+      transactionId: 'tx-receipt-1',
+      amount: 250_000,
+      currency: 'IRR',
+      state: 'Pending',
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey: RECEIPT_KEY,
+    })
+    expect(result).not.toHaveProperty('redirectUrl')
   })
 })

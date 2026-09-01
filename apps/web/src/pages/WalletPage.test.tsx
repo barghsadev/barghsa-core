@@ -19,7 +19,13 @@ function setInputValue(el: HTMLInputElement, value: string) {
   el.dispatchEvent(new Event('input', { bubbles: true }))
 }
 
-describe('WalletPage (T-04.2.02.01)', () => {
+function setTextAreaValue(el: HTMLTextAreaElement, value: string) {
+  const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set
+  setter?.call(el, value)
+  el.dispatchEvent(new Event('input', { bubbles: true }))
+}
+
+describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
   let container: HTMLDivElement
   let root: Root
   let fetchMock: ReturnType<typeof vi.fn>
@@ -251,5 +257,126 @@ describe('WalletPage (T-04.2.02.01)', () => {
     expect(topUpCall).toBeTruthy()
     expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({ amount: 250000 })
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc')
+  })
+
+  it('submits a bank receipt top-up after uploading the file and does not redirect', async () => {
+    const attachmentKey = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return jsonResponse({ activeProfileId: PROFILE_ID })
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}/bank-receipt-top-ups`) && method === 'POST') {
+        return jsonResponse(
+          {
+            ok: true,
+            transactionId: 'tx-receipt-1',
+            amount: 250000,
+            currency: 'IRR',
+            state: 'Pending',
+            attachmentKey,
+          },
+          201,
+        )
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
+        return jsonResponse({ balance: 1_500_000, currency: 'IRR' })
+      }
+      if (url.endsWith('/api/upload/presigned-url') && method === 'POST') {
+        return jsonResponse({
+          key: attachmentKey,
+          presignedUrl: 'https://s3.test/put',
+          expiresIn: 3600,
+        })
+      }
+      if (url === 'https://s3.test/put' && method === 'PUT') {
+        return { ok: true, status: 200, json: async () => ({}) }
+      }
+      if (url.includes('/verify') && method === 'POST') {
+        return jsonResponse({ key: attachmentKey, exists: true, status: 'confirmed' })
+      }
+      if (url.includes('/record') && method === 'POST') {
+        return jsonResponse({ key: attachmentKey, status: 'recorded' })
+      }
+      return jsonResponse({}, 404)
+    })
+
+    await renderPage()
+    const amount = container.querySelector('[data-testid="wallet-receipt-amount"]') as HTMLInputElement
+    const date = container.querySelector('[data-testid="wallet-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector('[data-testid="wallet-receipt-payer-ref"]') as HTMLInputElement
+    const note = container.querySelector('[data-testid="wallet-receipt-note"]') as HTMLTextAreaElement
+    const fileInput = container.querySelector('[data-testid="wallet-receipt-file"]') as HTMLInputElement
+    const form = container.querySelector('[data-testid="wallet-receipt-form"]') as HTMLFormElement
+
+    await act(async () => {
+      setInputValue(amount, '250000')
+      setInputValue(date, '2026-08-15')
+      setInputValue(payer, 'TRK-998877')
+      setTextAreaValue(note, 'Branch transfer')
+      const file = new File(['%PDF-1.4 receipt'], 'receipt.pdf', { type: 'application/pdf' })
+      Object.defineProperty(fileInput, 'files', { configurable: true, value: [file] })
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    for (let i = 0; i < 20; i++) {
+      await flushFetches()
+      if (container.querySelector('[data-testid="wallet-receipt-success"]')) break
+    }
+
+    const submitCall = fetchMock.mock.calls.find(([url, init]) => {
+      return (
+        String(url).includes('/bank-receipt-top-ups') &&
+        (init as RequestInit | undefined)?.method === 'POST'
+      )
+    })
+    expect(submitCall).toBeTruthy()
+    expect(JSON.parse(String((submitCall![1] as RequestInit).body))).toEqual({
+      amount: 250000,
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey,
+      customerNote: 'Branch transfer',
+    })
+    expect(new Headers((submitCall![1] as RequestInit).headers).get('Idempotency-Key')).toBeTruthy()
+    expect(assign).not.toHaveBeenCalled()
+    expect(container.querySelector('[data-testid="wallet-receipt-success"]')?.textContent).toContain(
+      'pending finance confirmation',
+    )
+    const balance = container.querySelector('[data-testid="wallet-balance"]')?.textContent ?? ''
+    expect(balance.replace(/[^\d]/g, '')).toBe('1500000')
+  })
+
+  it('does not submit a bank receipt without a file', async () => {
+    await renderPage()
+    const amount = container.querySelector('[data-testid="wallet-receipt-amount"]') as HTMLInputElement
+    const date = container.querySelector('[data-testid="wallet-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector('[data-testid="wallet-receipt-payer-ref"]') as HTMLInputElement
+    const form = container.querySelector('[data-testid="wallet-receipt-form"]') as HTMLFormElement
+
+    await act(async () => {
+      setInputValue(amount, '250000')
+      setInputValue(date, '2026-08-15')
+      setInputValue(payer, 'TRK-998877')
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flushFetches()
+
+    expect(
+      fetchMock.mock.calls.some(([url, init]) => {
+        return (
+          String(url).includes('/bank-receipt-top-ups') &&
+          (init as RequestInit | undefined)?.method === 'POST'
+        )
+      }),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="wallet-receipt-error"]')?.textContent).toContain(
+      'valid receipt file',
+    )
   })
 })

@@ -668,9 +668,9 @@ export const fa: I18nDictionary = {
   'dashboard.overview.balanceInToman': '≈ {amount} تومان',
   'dashboard.overview.lowBalanceWarning': 'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
 
-  // ── Wallet top-up (T-04.2.02.01) ─────────────────────────
+  // ── Wallet top-up (T-04.2.02.01 / T-04.2.02.03) ──────────
   'wallet.page.title': 'کیف پول',
-  'wallet.page.subtitle': 'موجودی پروفایل فعال را افزایش دهید. تا پیش از تأیید درگاه، موجودی تغییر نمی‌کند.',
+  'wallet.page.subtitle': 'موجودی پروفایل فعال را افزایش دهید. شارژ آنلاین پس از تأیید درگاه و رسید بانکی پس از تأیید مالی اعمال می‌شود.',
   'wallet.page.currentBalance': 'موجودی قابل استفاده',
   'wallet.page.amountLabel': 'مبلغ شارژ (ریال)',
   'wallet.page.amountHint': 'سقف هر تراکنش آنلاین توسط مدیر تعیین می‌شود. در صورت رد شدن، مبلغ کمتری وارد کنید.',
@@ -684,6 +684,23 @@ export const fa: I18nDictionary = {
   'wallet.page.gatewayError': 'درگاه پرداخت در دسترس نیست. دوباره تلاش کنید.',
   'wallet.page.conflict': 'این درخواست قبلاً با مبلغ دیگری ثبت شده است. صفحه را تازه کنید.',
   'wallet.page.retry': 'تلاش دوباره',
+  'wallet.page.onlineTitle': 'شارژ آنلاین',
+  'wallet.page.receiptTitle': 'شارژ با رسید بانکی',
+  'wallet.page.receiptSubtitle': 'رسید را بارگذاری کنید. تا تأیید واحد مالی، موجودی تغییر نمی‌کند.',
+  'wallet.page.receiptAmountLabel': 'مبلغ واریز (ریال)',
+  'wallet.page.receiptDateLabel': 'تاریخ واریز',
+  'wallet.page.receiptPayerRefLabel': 'شماره پیگیری / مرجع پرداخت',
+  'wallet.page.receiptFileLabel': 'تصویر یا فایل رسید',
+  'wallet.page.receiptFileHint': 'PDF، JPG، PNG یا WebP. سقف ۱۰ مگابایت برای سند و ۲۰ مگابایت برای تصویر.',
+  'wallet.page.receiptNoteLabel': 'یادداشت (اختیاری)',
+  'wallet.page.receiptSubmit': 'ارسال رسید',
+  'wallet.page.receiptSubmitting': 'در حال ارسال رسید…',
+  'wallet.page.receiptSuccess': 'رسید ثبت شد و در انتظار تأیید مالی است. موجودی هنوز افزایش نیافته است.',
+  'wallet.page.receiptInvalidDate': 'تاریخ واریز باید یک روز تقویمی معتبر و نه در آینده باشد.',
+  'wallet.page.receiptInvalidPayerRef': 'شماره پیگیری را وارد کنید.',
+  'wallet.page.receiptInvalidFile': 'یک فایل رسید معتبر (PDF یا تصویر) انتخاب کنید.',
+  'wallet.page.receiptUploadError': 'بارگذاری فایل رسید انجام نشد. دوباره تلاش کنید.',
+  'wallet.page.receiptGenericError': 'ارسال رسید با خطا مواجه شد. دوباره تلاش کنید.',
 
   // ── TOS Page ─────────────────────────────────────────────
   'tos.page.title': 'قوانین استفاده',
@@ -1741,9 +1758,9 @@ export const en: I18nDictionary = {
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
 
-  // ── Wallet top-up (T-04.2.02.01) ─────────────────────────
+  // ── Wallet top-up (T-04.2.02.01 / T-04.2.02.03) ──────────
   'wallet.page.title': 'Wallet',
-  'wallet.page.subtitle': 'Top up the active profile wallet. The balance is credited only after the payment provider confirms.',
+  'wallet.page.subtitle': 'Top up the active profile wallet. Online payments credit after the provider confirms; bank receipts stay pending until finance confirms.',
   'wallet.page.currentBalance': 'Available balance',
   'wallet.page.amountLabel': 'Top-up amount (IRR)',
   'wallet.page.amountHint': 'Each online top-up is capped by the admin-configured limit. If rejected, retry with a smaller amount.',
@@ -1757,6 +1774,23 @@ export const en: I18nDictionary = {
   'wallet.page.gatewayError': 'The payment gateway is unavailable. Please try again.',
   'wallet.page.conflict': 'This request was already started with a different amount. Refresh the page.',
   'wallet.page.retry': 'Try again',
+  'wallet.page.onlineTitle': 'Online top-up',
+  'wallet.page.receiptTitle': 'Bank receipt top-up',
+  'wallet.page.receiptSubtitle': 'Upload a transfer receipt. The balance stays unchanged until finance confirms it.',
+  'wallet.page.receiptAmountLabel': 'Transfer amount (IRR)',
+  'wallet.page.receiptDateLabel': 'Transfer date',
+  'wallet.page.receiptPayerRefLabel': 'Payer / tracking reference',
+  'wallet.page.receiptFileLabel': 'Receipt image or PDF',
+  'wallet.page.receiptFileHint': 'PDF, JPG, PNG, or WebP. Max 10 MB for documents and 20 MB for images.',
+  'wallet.page.receiptNoteLabel': 'Note (optional)',
+  'wallet.page.receiptSubmit': 'Submit receipt',
+  'wallet.page.receiptSubmitting': 'Submitting receipt…',
+  'wallet.page.receiptSuccess': 'Receipt submitted and pending finance confirmation. The balance has not increased yet.',
+  'wallet.page.receiptInvalidDate': 'Enter a real calendar date that is not in the future.',
+  'wallet.page.receiptInvalidPayerRef': 'Enter the payer or tracking reference from the slip.',
+  'wallet.page.receiptInvalidFile': 'Choose a valid receipt file (PDF or image).',
+  'wallet.page.receiptUploadError': 'Could not upload the receipt file. Please try again.',
+  'wallet.page.receiptGenericError': 'Could not submit the bank receipt. Please try again.',
 
   // ── TOS Page ─────────────────────────────────────────────
   'tos.page.title': 'Terms of Service',

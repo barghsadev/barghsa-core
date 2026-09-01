@@ -22,10 +22,22 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
 import { WalletService } from './wallet.service.js'
 import { ProfilesService } from '../profiles/profiles.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
+import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
 
 const InitiateBodySchema = z
   .object({
     amount: z.union([z.number(), z.string()]),
+    idempotencyKey: z.string().min(1).optional(),
+  })
+  .strict()
+
+const BankReceiptBodySchema = z
+  .object({
+    amount: z.union([z.number(), z.string()]),
+    paymentDate: z.string().min(1),
+    payerReference: z.string().min(1),
+    attachmentKey: z.string().min(1),
+    customerNote: z.string().optional(),
     idempotencyKey: z.string().min(1).optional(),
   })
   .strict()
@@ -41,6 +53,7 @@ export class WalletController {
     private readonly walletService: WalletService,
     private readonly profilesService: ProfilesService,
     private readonly onlineTopUpService: OnlineTopUpService,
+    private readonly bankReceiptTopUpService: BankReceiptTopUpService,
   ) {}
 
   /**
@@ -155,6 +168,74 @@ export class WalletController {
       currency: 'IRR',
       state: result.state,
       redirectUrl: result.redirectUrl,
+    }
+  }
+
+  /**
+   * POST /api/wallet/:profileId/bank-receipt-top-ups
+   *
+   * Bank-receipt top-up (T-04.2.02.03): customer submits amount, date,
+   * payer reference, attachment, and optional note. Creates a Pending
+   * ledger row. The wallet is not credited until staff confirmation.
+   */
+  @Post(':profileId/bank-receipt-top-ups')
+  @HttpCode(201)
+  @RateLimit({ namespace: 'wallet:bank-receipt-top-up:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Submit a bank-receipt wallet top-up (Pending until staff confirm)' })
+  @ApiHeader({ name: 'Idempotency-Key', required: true })
+  @ApiResponse({ status: 201, description: 'Pending bank-receipt top-up created; balance unchanged.' })
+  @ApiResponse({ status: 400, description: 'Invalid amount, date, payer reference, or attachment' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found or not accessible' })
+  @ApiResponse({ status: 409, description: 'Idempotency key already used for a different operation' })
+  async submitBankReceiptTopUp(
+    @Param('profileId') profileId: string,
+    @Body() rawBody: unknown,
+    @Headers('idempotency-key') idempotencyHeader: string | undefined,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    assertUuid(profileId, 'profileId')
+    await this.assertProfileAccess(req, profileId)
+
+    const parsed = BankReceiptBodySchema.safeParse(rawBody ?? {})
+    if (!parsed.success) {
+      httpError(
+        ErrorCodes.VALIDATION_PARSE_ZOD,
+        'Bank receipt top-up body must include amount, paymentDate, payerReference, and attachmentKey',
+      )
+    }
+
+    const idempotencyKey = (idempotencyHeader ?? parsed.data.idempotencyKey ?? '').trim()
+    if (!idempotencyKey) {
+      httpError(
+        ErrorCodes.VALIDATION_INPUT_MISSING,
+        'Idempotency-Key header (or idempotencyKey in the body) is required',
+      )
+    }
+
+    const result = await this.bankReceiptTopUpService.submit({
+      profileId,
+      amount: parsed.data.amount,
+      paymentDate: parsed.data.paymentDate,
+      payerReference: parsed.data.payerReference,
+      attachmentKey: parsed.data.attachmentKey,
+      customerNote: parsed.data.customerNote,
+      idempotencyKey,
+    })
+
+    this.logger.log(
+      `Bank receipt top-up ${result.transactionId} submitted for profile ${profileId} by user ${req.session.userId}`,
+    )
+
+    return {
+      ok: true,
+      transactionId: result.transactionId,
+      amount: Number(result.amount),
+      currency: 'IRR',
+      state: result.state,
+      paymentDate: result.paymentDate,
+      payerReference: result.payerReference,
+      attachmentKey: result.attachmentKey,
     }
   }
 

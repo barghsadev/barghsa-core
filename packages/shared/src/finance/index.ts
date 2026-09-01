@@ -7,6 +7,7 @@
 export * from './dual-approval-config.js'
 export * from './approval-request.js'
 export * from './wallet-topup-config.js'
+export * from './wallet-bank-receipt-topup.js'
 export * from './green-electricity-config.js'
 export * from './green-electricity-safety.js'
 export * from './vat-config.js'
