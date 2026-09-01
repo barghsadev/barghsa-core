@@ -41,6 +41,25 @@ function mapSubmitError(status: number, message: string): PageError {
   return 'generic'
 }
 
+/**
+ * Map Persian (`۰`–`۹`) and Arabic-Indic (`٠`–`٩`) digits to ASCII, then keep
+ * decimal digits only so localized keyboards can enter an IRR amount.
+ */
+function normalizeIrrAmountDigits(raw: string): string {
+  let ascii = ''
+  for (const ch of raw) {
+    const code = ch.codePointAt(0) ?? 0
+    if (code >= 0x06f0 && code <= 0x06f9) {
+      ascii += String(code - 0x06f0)
+    } else if (code >= 0x0660 && code <= 0x0669) {
+      ascii += String(code - 0x0660)
+    } else {
+      ascii += ch
+    }
+  }
+  return ascii.replace(/[^\d]/g, '')
+}
+
 /** Browser redirects must be https destinations without embedded credentials. */
 function isSafeGatewayRedirectUrl(raw: string): boolean {
   try {
@@ -75,7 +94,7 @@ export function WalletPage() {
   const [submitting, setSubmitting] = useState(false)
   const [idempotencyKey, setIdempotencyKey] = useState(newIdempotencyKey)
 
-  const amountDigits = amountInput.replace(/[^\d]/g, '')
+  const amountDigits = normalizeIrrAmountDigits(amountInput)
   const amountValue = amountDigits === '' ? null : Number(amountDigits)
   const tomanPreview = useMemo(() => {
     if (amountValue === null || !Number.isSafeInteger(amountValue)) return null
@@ -235,7 +254,7 @@ export function WalletPage() {
                   aria-invalid={error === 'invalid-amount' || error === 'limit-exceeded'}
                   aria-describedby="top-up-amount-hint"
                   onChange={(event) => {
-                    setAmountInput(event.target.value.replace(/[^\d]/g, ''))
+                    setAmountInput(normalizeIrrAmountDigits(event.target.value))
                     if (error === 'invalid-amount' || error === 'limit-exceeded') setError(null)
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"

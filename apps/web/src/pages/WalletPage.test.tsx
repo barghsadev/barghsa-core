@@ -204,4 +204,52 @@ describe('WalletPage (T-04.2.02.01)', () => {
     expect(container.querySelector('[data-testid="wallet-page"]')?.getAttribute('dir')).toBe('rtl')
     expect(container.textContent).toContain('کیف پول')
   })
+
+  it('submits a normalized IRR amount when Persian numerals are entered in the Persian locale', async () => {
+    document.documentElement.lang = 'fa'
+    await renderPage()
+    const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
+    const form = input.closest('form') as HTMLFormElement
+
+    await act(async () => {
+      setInputValue(input, '۲۵۰٬۰۰۰')
+    })
+    expect(input.value).toBe('250000')
+
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flushFetches()
+
+    const topUpCall = fetchMock.mock.calls.find(([url, init]) => {
+      return String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
+    })
+    expect(topUpCall).toBeTruthy()
+    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({ amount: 250000 })
+    expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc')
+  })
+
+  it('submits a normalized IRR amount when Arabic-Indic numerals are entered in the Persian locale', async () => {
+    document.documentElement.lang = 'fa'
+    await renderPage()
+    const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
+    const form = input.closest('form') as HTMLFormElement
+
+    await act(async () => {
+      setInputValue(input, '٢٥٠٠٠٠')
+    })
+    expect(input.value).toBe('250000')
+
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flushFetches()
+
+    const topUpCall = fetchMock.mock.calls.find(([url, init]) => {
+      return String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST'
+    })
+    expect(topUpCall).toBeTruthy()
+    expect(JSON.parse(String((topUpCall![1] as RequestInit).body))).toEqual({ amount: 250000 })
+    expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc')
+  })
 })
