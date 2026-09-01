@@ -41,6 +41,21 @@ function mapSubmitError(status: number, message: string): PageError {
   return 'generic'
 }
 
+/** Browser redirects must be https destinations without embedded credentials. */
+function isSafeGatewayRedirectUrl(raw: string): boolean {
+  try {
+    const url = new URL(raw)
+    return (
+      url.protocol === 'https:' &&
+      url.username === '' &&
+      url.password === '' &&
+      url.hostname.length > 0
+    )
+  } catch {
+    return false
+  }
+}
+
 /**
  * Customer wallet top-up page (T-04.2.02.01).
  *
@@ -136,6 +151,10 @@ export function WalletPage() {
           setIdempotencyKey(newIdempotencyKey())
         }
         setError(next)
+        return
+      }
+      if (!isSafeGatewayRedirectUrl(payload.redirectUrl)) {
+        setError('gateway')
         return
       }
       window.location.assign(payload.redirectUrl)

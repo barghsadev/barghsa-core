@@ -115,6 +115,39 @@ describe('WalletPage (T-04.2.02.01)', () => {
     expect(assign).toHaveBeenCalledWith('https://pay.test/start?authority=abc')
   })
 
+  it('does not redirect when the API returns a non-https URL', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return jsonResponse({ activeProfileId: PROFILE_ID })
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
+        return jsonResponse({ balance: 0, currency: 'IRR' })
+      }
+      if (url.includes('/top-ups') && method === 'POST') {
+        return jsonResponse({ redirectUrl: 'javascript:alert(1)' }, 201)
+      }
+      return jsonResponse({}, 404)
+    })
+
+    await renderPage()
+    const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
+    const form = input.closest('form') as HTMLFormElement
+    await act(async () => {
+      setInputValue(input, '250000')
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flushFetches()
+
+    expect(assign).not.toHaveBeenCalled()
+    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
+      'The payment gateway is unavailable',
+    )
+  })
+
   it('shows the limit-exceeded error and does not redirect', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input)

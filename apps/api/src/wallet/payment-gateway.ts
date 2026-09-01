@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { isIP } from 'node:net'
 
 /**
  * Payment gateway port used by online wallet top-up initiation
@@ -19,6 +20,8 @@ export const DEFAULT_ZARINPAL_REQUEST_URL =
   'https://payment.zarinpal.com/pg/v4/payment/request.json'
 export const DEFAULT_ZARINPAL_START_PAY_URL = 'https://payment.zarinpal.com/pg/StartPay'
 export const DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS = 15_000
+export const DEFAULT_DEV_CALLBACK_ORIGIN = 'http://localhost:4000'
+export const DEFAULT_DEV_START_URL = 'https://pay.sandbox.local/start'
 
 export type PaymentGatewayAdapterName = 'zarinpal' | 'http' | 'redirect'
 
@@ -57,17 +60,157 @@ export type PaymentGatewayFetch = (
   json: () => Promise<unknown>
 }>
 
-export function resolvePaymentGatewayCallbackUrl(): string {
-  const base = (
-    process.env.API_PUBLIC_URL ??
-    process.env.APP_PUBLIC_URL ??
-    'http://localhost:4000'
-  ).replace(/\/$/, '')
-  return `${base}${ONLINE_TOPUP_CALLBACK_PATH}`
+function isProductionEnv(env: NodeJS.ProcessEnv): boolean {
+  return env.NODE_ENV === 'production'
 }
 
-export function resolvePaymentGatewayStartUrl(): string {
-  return process.env.PAYMENT_GATEWAY_START_URL ?? 'https://pay.sandbox.local/start'
+function normalizeHost(host: string): string {
+  return host.trim().toLowerCase().replace(/\.$/, '')
+}
+
+function uniqueHosts(hosts: readonly string[]): string[] {
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const host of hosts) {
+    const normalized = normalizeHost(host)
+    if (!normalized || seen.has(normalized)) continue
+    seen.add(normalized)
+    out.push(normalized)
+  }
+  return out
+}
+
+function hostnameOf(raw: string): string | null {
+  try {
+    const host = normalizeHost(new URL(raw).hostname)
+    return host || null
+  } catch {
+    return null
+  }
+}
+
+function hostsFromConfiguredUrls(urls: readonly (string | undefined)[]): string[] {
+  return uniqueHosts(
+    urls.flatMap((raw) => {
+      if (!raw) return []
+      const host = hostnameOf(raw)
+      return host ? [host] : []
+    }),
+  )
+}
+
+function parseAbsoluteUrl(raw: string, label: string): URL {
+  let url: URL
+  try {
+    url = new URL(raw)
+  } catch {
+    throw new Error(`${label} is not a valid absolute URL`)
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    throw new Error(`${label} uses an unsupported URL scheme`)
+  }
+  if (url.username || url.password) {
+    throw new Error(`${label} must not include credentials`)
+  }
+  if (!url.hostname) {
+    throw new Error(`${label} must include a hostname`)
+  }
+  return url
+}
+
+function isNonPublicCallbackHostname(hostname: string): boolean {
+  const host = normalizeHost(hostname)
+  if (!host) return true
+  if (host === 'localhost' || host.endsWith('.localhost')) return true
+  return isIP(host) !== 0
+}
+
+function stripTrailingSlash(value: string): string {
+  return value.replace(/\/$/, '')
+}
+
+function assertHttpsUrl(raw: string, label: string): URL {
+  const url = parseAbsoluteUrl(raw, label)
+  if (url.protocol !== 'https:') {
+    throw new Error(`${label} must be an https URL`)
+  }
+  return url
+}
+
+/**
+ * Parses a browser-facing gateway URL and accepts only HTTPS destinations
+ * whose host is on the configured allow-list. Credentials and unsupported
+ * schemes are rejected.
+ */
+export function assertSafePaymentGatewayUrl(
+  raw: string,
+  allowedHosts: readonly string[],
+  label: string,
+): URL {
+  const url = assertHttpsUrl(raw, label)
+  const host = normalizeHost(url.hostname)
+  const allowed = uniqueHosts(allowedHosts)
+  if (!allowed.includes(host)) {
+    throw new Error(`${label} host "${host}" is not in the payment gateway host allow-list`)
+  }
+  return url
+}
+
+export function resolvePaymentGatewayAllowedHosts(
+  env: NodeJS.ProcessEnv = process.env,
+  configuredUrls: readonly (string | undefined)[] = [],
+): string[] {
+  const fromEnv = (env.PAYMENT_GATEWAY_ALLOWED_HOSTS ?? '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+  return uniqueHosts([...fromEnv, ...hostsFromConfiguredUrls(configuredUrls)])
+}
+
+/**
+ * Public origin the PSP will call after checkout. Production fails closed
+ * unless `API_PUBLIC_URL` or `APP_PUBLIC_URL` is an explicit public HTTPS
+ * origin. Development may omit both and uses localhost.
+ */
+export function resolvePaymentGatewayCallbackUrl(
+  env: NodeJS.ProcessEnv = process.env,
+): string {
+  const raw = (env.API_PUBLIC_URL ?? env.APP_PUBLIC_URL ?? '').trim()
+  const production = isProductionEnv(env)
+
+  if (!raw) {
+    if (production) {
+      throw new Error(
+        'API_PUBLIC_URL or APP_PUBLIC_URL is required in production so the payment provider can reach the top-up callback',
+      )
+    }
+    return `${DEFAULT_DEV_CALLBACK_ORIGIN}${ONLINE_TOPUP_CALLBACK_PATH}`
+  }
+
+  const url = parseAbsoluteUrl(raw, 'API_PUBLIC_URL/APP_PUBLIC_URL')
+  if (production) {
+    if (url.protocol !== 'https:') {
+      throw new Error(
+        'API_PUBLIC_URL/APP_PUBLIC_URL must be a public https origin in production',
+      )
+    }
+    if (isNonPublicCallbackHostname(url.hostname)) {
+      throw new Error(
+        'API_PUBLIC_URL/APP_PUBLIC_URL must be a public hostname in production (not localhost or an IP address)',
+      )
+    }
+  } else if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+    throw new Error('API_PUBLIC_URL/APP_PUBLIC_URL must be an http(s) origin')
+  }
+
+  return `${url.origin}${ONLINE_TOPUP_CALLBACK_PATH}`
+}
+
+export function resolvePaymentGatewayStartUrl(
+  env: NodeJS.ProcessEnv = process.env,
+): string {
+  const raw = env.PAYMENT_GATEWAY_START_URL?.trim()
+  return raw && raw.length > 0 ? raw : DEFAULT_DEV_START_URL
 }
 
 export function resolvePaymentGatewayAdapterName(
@@ -81,10 +224,6 @@ export function resolvePaymentGatewayAdapterName(
     )
   }
   return env.NODE_ENV === 'production' ? 'zarinpal' : 'redirect'
-}
-
-function isProductionEnv(env: NodeJS.ProcessEnv): boolean {
-  return env.NODE_ENV === 'production'
 }
 
 function resolveTimeoutMs(env: NodeJS.ProcessEnv): number {
@@ -104,18 +243,36 @@ function resolveTimeoutMs(env: NodeJS.ProcessEnv): number {
  * default). Production must use zarinpal or http.
  */
 export function createRedirectPaymentGateway(
-  options: { startUrl?: string } = {},
+  options: {
+    startUrl?: string
+    allowedHosts?: readonly string[]
+    env?: NodeJS.ProcessEnv
+  } = {},
 ): PaymentGateway {
-  const startUrl = options.startUrl ?? resolvePaymentGatewayStartUrl()
+  const startUrlRaw = options.startUrl ?? resolvePaymentGatewayStartUrl(options.env)
+  const allowedHosts =
+    options.allowedHosts ??
+    resolvePaymentGatewayAllowedHosts(options.env ?? {}, [startUrlRaw])
+  const startUrl = assertSafePaymentGatewayUrl(
+    startUrlRaw,
+    allowedHosts,
+    'PAYMENT_GATEWAY_START_URL',
+  )
+
   return {
     async startPayment(request) {
       const authority = randomUUID()
-      const url = new URL(startUrl)
+      const url = new URL(startUrl.href)
       url.searchParams.set('authority', authority)
       url.searchParams.set('amount', request.amountIrR.toString())
       url.searchParams.set('orderId', request.merchantOrderId)
       url.searchParams.set('callbackUrl', request.callbackUrl)
-      return { authority, redirectUrl: url.toString() }
+      const redirectUrl = assertSafePaymentGatewayUrl(
+        url.toString(),
+        allowedHosts,
+        'payment gateway redirectUrl',
+      ).href
+      return { authority, redirectUrl }
     },
   }
 }
@@ -144,10 +301,25 @@ export function createHttpPaymentGateway(options: {
   startUrl?: string
   timeoutMs?: number
   fetchImpl?: PaymentGatewayFetch
+  allowedHosts?: readonly string[]
 }): PaymentGateway {
   const fetchImpl = options.fetchImpl ?? (fetch as PaymentGatewayFetch)
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS
-  const startUrl = options.startUrl?.replace(/\/$/, '')
+  const startUrlRaw = options.startUrl ? stripTrailingSlash(options.startUrl) : undefined
+  const allowedHosts =
+    options.allowedHosts ??
+    resolvePaymentGatewayAllowedHosts({}, [options.requestUrl, startUrlRaw])
+
+  assertHttpsUrl(options.requestUrl, 'PAYMENT_GATEWAY_REQUEST_URL')
+  const startUrl = startUrlRaw
+    ? stripTrailingSlash(
+        assertSafePaymentGatewayUrl(
+          startUrlRaw,
+          allowedHosts,
+          'PAYMENT_GATEWAY_START_URL',
+        ).href,
+      )
+    : undefined
 
   return {
     async startPayment(request) {
@@ -188,17 +360,24 @@ export function createHttpPaymentGateway(options: {
       const redirectFromProvider =
         typeof record?.redirectUrl === 'string' ? record.redirectUrl.trim() : ''
       if (redirectFromProvider) {
-        return { authority, redirectUrl: redirectFromProvider }
+        const redirectUrl = assertSafePaymentGatewayUrl(
+          redirectFromProvider,
+          allowedHosts,
+          'payment gateway redirectUrl',
+        ).href
+        return { authority, redirectUrl }
       }
       if (!startUrl) {
         throw new Error(
           'Payment gateway response did not include redirectUrl and PAYMENT_GATEWAY_START_URL is not set',
         )
       }
-      return {
-        authority,
-        redirectUrl: `${startUrl}/${encodeURIComponent(authority)}`,
-      }
+      const redirectUrl = assertSafePaymentGatewayUrl(
+        `${startUrl}/${encodeURIComponent(authority)}`,
+        allowedHosts,
+        'payment gateway redirectUrl',
+      ).href
+      return { authority, redirectUrl }
     },
   }
 }
@@ -214,11 +393,24 @@ export function createZarinpalPaymentGateway(options: {
   startPayUrl?: string
   timeoutMs?: number
   fetchImpl?: PaymentGatewayFetch
+  allowedHosts?: readonly string[]
 }): PaymentGateway {
   const fetchImpl = options.fetchImpl ?? (fetch as PaymentGatewayFetch)
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS
   const requestUrl = options.requestUrl ?? DEFAULT_ZARINPAL_REQUEST_URL
-  const startPayUrl = (options.startPayUrl ?? DEFAULT_ZARINPAL_START_PAY_URL).replace(/\/$/, '')
+  const startPayUrlRaw = stripTrailingSlash(options.startPayUrl ?? DEFAULT_ZARINPAL_START_PAY_URL)
+  const allowedHosts =
+    options.allowedHosts ??
+    resolvePaymentGatewayAllowedHosts({}, [requestUrl, startPayUrlRaw])
+
+  assertHttpsUrl(requestUrl, 'PAYMENT_GATEWAY_REQUEST_URL')
+  const startPayUrl = stripTrailingSlash(
+    assertSafePaymentGatewayUrl(
+      startPayUrlRaw,
+      allowedHosts,
+      'PAYMENT_GATEWAY_START_URL',
+    ).href,
+  )
 
   return {
     async startPayment(request) {
@@ -261,10 +453,12 @@ export function createZarinpalPaymentGateway(options: {
         throw new Error(`ZarinPal request rejected: ${message}`)
       }
 
-      return {
-        authority,
-        redirectUrl: `${startPayUrl}/${encodeURIComponent(authority)}`,
-      }
+      const redirectUrl = assertSafePaymentGatewayUrl(
+        `${startPayUrl}/${encodeURIComponent(authority)}`,
+        allowedHosts,
+        'payment gateway redirectUrl',
+      ).href
+      return { authority, redirectUrl }
     },
   }
 }
@@ -277,7 +471,7 @@ export interface CreatePaymentGatewayFromEnvOptions {
 /**
  * Selects the registered payment adapter from env. Production refuses
  * the local redirect builder and fails closed when merchant/API
- * credentials are missing.
+ * credentials or a public HTTPS callback origin are missing.
  */
 export function createPaymentGatewayFromEnv(
   options: CreatePaymentGatewayFromEnvOptions = {},
@@ -285,6 +479,7 @@ export function createPaymentGatewayFromEnv(
   const env = options.env ?? process.env
   const adapter = resolvePaymentGatewayAdapterName(env)
   const timeoutMs = resolveTimeoutMs(env)
+  resolvePaymentGatewayCallbackUrl(env)
 
   if (adapter === 'redirect') {
     if (isProductionEnv(env)) {
@@ -292,9 +487,13 @@ export function createPaymentGatewayFromEnv(
         'PAYMENT_GATEWAY_ADAPTER=redirect is not allowed in production. Configure zarinpal (PAYMENT_GATEWAY_MERCHANT_ID) or http (PAYMENT_GATEWAY_REQUEST_URL and PAYMENT_GATEWAY_API_KEY).',
       )
     }
-    return createRedirectPaymentGateway(
-      env.PAYMENT_GATEWAY_START_URL ? { startUrl: env.PAYMENT_GATEWAY_START_URL } : {},
-    )
+    const startUrl = env.PAYMENT_GATEWAY_START_URL?.trim()
+    const resolvedStart = startUrl && startUrl.length > 0 ? startUrl : resolvePaymentGatewayStartUrl(env)
+    const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [resolvedStart])
+    return createRedirectPaymentGateway({
+      startUrl: resolvedStart,
+      allowedHosts,
+    })
   }
 
   if (adapter === 'zarinpal') {
@@ -306,9 +505,14 @@ export function createPaymentGatewayFromEnv(
     }
     const zarinpalRequestUrl = env.PAYMENT_GATEWAY_REQUEST_URL?.trim()
     const startPayUrl = env.PAYMENT_GATEWAY_START_URL?.trim()
+    const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [
+      zarinpalRequestUrl || DEFAULT_ZARINPAL_REQUEST_URL,
+      startPayUrl || DEFAULT_ZARINPAL_START_PAY_URL,
+    ])
     return createZarinpalPaymentGateway({
       merchantId,
       timeoutMs,
+      allowedHosts,
       ...(zarinpalRequestUrl ? { requestUrl: zarinpalRequestUrl } : {}),
       ...(startPayUrl ? { startPayUrl } : {}),
       ...(options.fetchImpl ? { fetchImpl: options.fetchImpl } : {}),
@@ -323,10 +527,12 @@ export function createPaymentGatewayFromEnv(
     )
   }
   const startUrl = env.PAYMENT_GATEWAY_START_URL?.trim()
+  const allowedHosts = resolvePaymentGatewayAllowedHosts(env, [requestUrl, startUrl])
   return createHttpPaymentGateway({
     requestUrl,
     apiKey,
     timeoutMs,
+    allowedHosts,
     ...(startUrl ? { startUrl } : {}),
     ...(options.fetchImpl ? { fetchImpl: options.fetchImpl } : {}),
   })
