@@ -1,4 +1,4 @@
-import { Injectable, Logger, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
+import { Injectable, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
@@ -68,10 +68,20 @@ export interface WalletDebitRef {
   metadata?: unknown
 }
 
+/**
+ * Reservation reference payload (T-04.2.01.05).
+ *
+ * Optional pointer at the originating domain entity (invoice, order, …)
+ * held during the payment flow.
+ */
+export interface WalletReserveRef {
+  refId?: string | null
+  description?: string | null
+  metadata?: unknown
+}
+
 @Injectable()
 export class WalletService {
-  private readonly logger = new Logger(WalletService.name)
-
   /**
    * Get a wallet by profile ID. Returns null if no wallet exists yet.
    */
@@ -109,51 +119,6 @@ export class WalletService {
     }
 
     return mapWallet(result.rows[0])
-  }
-
-  /**
-   * Execute a money-mutating operation inside an atomic transaction.
-   * Handles idempotency, optimistic locking, and error recovery.
-   */
-  private async executeWalletTx<T>(
-    walletId: string,
-    idempotencyKey: string,
-    fn: (client: any, wallet: any) => Promise<T>,
-  ): Promise<T> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    try {
-      await client.query('BEGIN')
-
-      // Lock the wallet row
-      const walletResult = await client.query(
-        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
-      if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${walletId}`)
-      }
-
-      // Check idempotency INSIDE the transaction (after FOR UPDATE lock)
-      const idemResult = await client.query(
-        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey],
-      )
-      if (idemResult.rows.length > 0) {
-        await client.query('COMMIT')
-        return mapTransaction(idemResult.rows[0]) as unknown as T
-      }
-
-      const result = await fn(client, walletResult.rows[0])
-
-      await client.query('COMMIT')
-      return result
-    } catch (error) {
-      await client.query('ROLLBACK')
-      throw error
-    } finally {
-      client.release()
-    }
   }
 
   /**
@@ -423,18 +388,71 @@ export class WalletService {
   }
 
   /**
-   * Reserve amount in wallet for pending payment. Reduces available balance.
+   * Reserve funds on a wallet for a pending payment (T-04.2.01.05).
+   *
+   * In one DB transaction:
+   *   1. `SELECT … FOR UPDATE` the wallet row.
+   *   2. Return the existing ledger row when `idempotencyKey` already
+   *      posted as the same live reservation (matching type, amount,
+   *      and refId in state Reserved). Collisions with credits, debits,
+   *      or a released/different reservation throw ConflictException.
+   *   3. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
+   *   4. UPDATE `reserved_balance` with
+   *      `WHERE version = X AND (posted_balance - reserved_balance) >= amount`.
+   *   5. INSERT a Reserved ledger row (positive amount, type reservation)
+   *      using the wallet row's canonical `profile_id`.
+   *
+   * Unique `idempotency_key` is the last-line duplicate guard.
+   * `idempotencyKey` is required because ledger rows cannot omit it.
    */
   async reserve(
     walletId: string,
     amount: bigint,
     idempotencyKey: string,
-    ref?: { refId?: string; description?: string },
+    ref?: WalletReserveRef,
   ): Promise<TransactionRow> {
     if (amount <= 0n) throw new BadRequestException('Reserve amount must be positive')
+    if (!idempotencyKey.trim()) {
+      throw new BadRequestException('Idempotency key is required')
+    }
 
-    return this.executeWalletTx(walletId, idempotencyKey, async (client, wallet) => {
-      const available = wallet.posted_balance - wallet.reserved_balance
+    const pool = getDbPool()
+    const client = await pool.connect()
+    // PostgreSQL UUID columns return canonical lowercase; callers may pass
+    // any valid spelling. Ownership checks must use the row's profile_id.
+    let canonicalWalletId: string | undefined
+    try {
+      await client.query('BEGIN')
+
+      const walletResult = await client.query(
+        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
+        [walletId],
+      )
+      if (walletResult.rows.length === 0) {
+        throw new NotFoundException(`Wallet not found: ${walletId}`)
+      }
+      const wallet = walletResult.rows[0] as {
+        version: number
+        profile_id: string
+        posted_balance: string | number | bigint
+        reserved_balance: string | number | bigint
+      }
+      canonicalWalletId = wallet.profile_id
+
+      const idemResult = await client.query(
+        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+        [idempotencyKey],
+      )
+      if (idemResult.rows.length > 0) {
+        const existing = idemResult.rows[0]!
+        assertMatchingReserveReplay(existing, canonicalWalletId, amount, ref)
+        await client.query('COMMIT')
+        return mapTransaction(existing)
+      }
+
+      const posted = BigInt(wallet.posted_balance)
+      const reserved = BigInt(wallet.reserved_balance)
+      const available = posted - reserved
       if (available < amount) {
         throw new BadRequestException(
           `Insufficient balance for reservation: available=${available.toString()}, required=${amount.toString()}`,
@@ -446,80 +464,146 @@ export class WalletService {
          SET reserved_balance = reserved_balance + $1,
              version = version + 1,
              updated_at = NOW()
-         WHERE profile_id = $2 AND version = $3
+         WHERE profile_id = $2
+           AND version = $3
+           AND (posted_balance - reserved_balance) >= $1
          RETURNING *`,
-        [amount, walletId, wallet.version],
+        [amount, canonicalWalletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new ConflictException('Concurrent wallet modification detected during reserve')
+        throw new ConflictException(
+          'Wallet reserve rejected: version mismatch or insufficient availableBalance',
+        )
       }
 
       const txResult = await client.query(
-        `INSERT INTO wallet_transactions (wallet_id, type, amount, state, idempotency_key, ref_id, description)
-         VALUES ($1, 'reservation', $2::bigint, 'Reserved', $3, $4, $5)
+        `INSERT INTO wallet_transactions
+           (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+         VALUES ($1, 'reservation', $2::bigint, 'Reserved', $3, $4, $5, COALESCE($6::jsonb, '{}'::jsonb))
          RETURNING *`,
-        [walletId, amount, idempotencyKey, ref?.refId ?? null, ref?.description ?? null],
+        [
+          canonicalWalletId,
+          amount,
+          idempotencyKey,
+          ref?.refId ?? null,
+          ref?.description ?? null,
+          ref?.metadata === undefined ? null : JSON.stringify(ref.metadata),
+        ],
       )
 
+      await client.query('COMMIT')
       return mapTransaction(txResult.rows[0])
-    })
+    } catch (error) {
+      await client.query('ROLLBACK')
+      if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
+        const existing = await pool.query(
+          `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+          [idempotencyKey],
+        )
+        if (existing.rows.length === 0 || canonicalWalletId === undefined) {
+          throw new ConflictException('Idempotency key already used')
+        }
+        const committed = existing.rows[0]!
+        assertMatchingReserveReplay(committed, canonicalWalletId, amount, ref)
+        return mapTransaction(committed)
+      }
+      throw error
+    } finally {
+      client.release()
+    }
   }
 
   /**
-   * Release a previous reservation. Reduces reserved balance without affecting posted balance.
+   * Release a previous reservation (T-04.2.01.05).
+   *
+   * In one DB transaction:
+   *   1. `SELECT … FOR UPDATE` the reservation ledger row.
+   *   2. NotFound when missing. Conflict when the row is not a
+   *      reservation. Idempotent: a row already in Released is returned
+   *      without a second reserved_balance decrement.
+   *   3. `SELECT … FOR UPDATE` the wallet.
+   *   4. UPDATE `reserved_balance -= amount` with
+   *      `WHERE version = X AND reserved_balance >= amount`.
+   *   5. Advance the reservation `state` to Released. Posted balance is
+   *      unchanged, so available balance rises by the released amount.
    */
-  async release(reservationId: string): Promise<{ released: boolean; walletId: string; amount: bigint }> {
-    const pool = getDbPool()
+  async release(reservationId: string): Promise<TransactionRow> {
+    if (!reservationId.trim()) {
+      throw new BadRequestException('Reservation id is required')
+    }
 
+    const pool = getDbPool()
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
 
-      // Lock and re-check the reservation inside the transaction
       const reservationResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
         [reservationId],
       )
       if (reservationResult.rows.length === 0) {
-        await client.query('COMMIT')
         throw new NotFoundException(`Reservation not found: ${reservationId}`)
       }
-      const reservation = reservationResult.rows[0]!
-      if (reservation.state !== 'Reserved') {
+      const reservation = reservationResult.rows[0]! as {
+        id: string
+        wallet_id: string
+        type: string
+        amount: string | number | bigint
+        state: string
+      }
+      if (reservation.type !== 'reservation') {
+        throw new ConflictException('Ledger row is not a reservation')
+      }
+      if (reservation.state === 'Released') {
         await client.query('COMMIT')
-        // Already released — return idempotent success
-        return { released: false, walletId: reservation.wallet_id, amount: BigInt(reservation.amount) }
+        return mapTransaction(reservationResult.rows[0])
+      }
+      if (reservation.state !== 'Reserved') {
+        throw new ConflictException(
+          `Reservation cannot be released from state ${reservation.state}`,
+        )
+      }
+
+      const amount = BigInt(reservation.amount)
+      if (amount <= 0n) {
+        throw new ConflictException('Reservation amount must be positive')
       }
 
       const walletResult = await client.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
         [reservation.wallet_id],
       )
-      const wallet = walletResult.rows[0]
+      if (walletResult.rows.length === 0) {
+        throw new NotFoundException(`Wallet not found: ${reservation.wallet_id}`)
+      }
+      const wallet = walletResult.rows[0] as { version: number; profile_id: string }
 
       const updateResult = await client.query(
         `UPDATE wallets
          SET reserved_balance = reserved_balance - $1,
              version = version + 1,
              updated_at = NOW()
-         WHERE profile_id = $2 AND version = $3
+         WHERE profile_id = $2
+           AND version = $3
+           AND reserved_balance >= $1
          RETURNING *`,
-        [reservation.amount, reservation.wallet_id, wallet.version],
+        [amount, wallet.profile_id, wallet.version],
       )
       if (updateResult.rows.length === 0) {
-        throw new ConflictException('Concurrent wallet modification detected during release')
+        throw new ConflictException(
+          'Wallet release rejected: version mismatch or reservedBalance shortfall',
+        )
       }
 
-      await client.query(
-        `UPDATE wallet_transactions SET state = 'Released' WHERE id = $1`,
+      const releasedResult = await client.query(
+        `UPDATE wallet_transactions SET state = 'Released' WHERE id = $1 RETURNING *`,
         [reservationId],
       )
 
       await client.query('COMMIT')
-      return { released: true, walletId: reservation.wallet_id, amount: BigInt(reservation.amount) }
+      return mapTransaction(releasedResult.rows[0])
     } catch (error) {
       await client.query('ROLLBACK')
-      this.logger.error(`Release failed: ${error}`)
       throw error
     } finally {
       client.release()
@@ -676,6 +760,33 @@ function assertMatchingDebitReplay(
     BigInt(existing.amount) === -amount &&
     existingRefId === expectedRefId
   if (!isSameDebit) {
+    throw new ConflictException('Idempotency key already used for a different wallet operation')
+  }
+}
+
+/**
+ * Idempotent reserve replay is only valid for the same live reservation:
+ * same wallet, type reservation, positive amount, refId, and Reserved
+ * state. A colliding credit, debit, or released/different reservation
+ * must not be returned as a successful hold.
+ */
+function assertMatchingReserveReplay(
+  existing: WalletLedgerIdempotencyRow,
+  canonicalWalletId: string,
+  amount: bigint,
+  ref?: WalletReserveRef,
+): void {
+  if (existing.wallet_id !== canonicalWalletId) {
+    throw new ConflictException('Idempotency key already used for a different wallet')
+  }
+  const existingRefId = existing.ref_id ?? null
+  const expectedRefId = ref?.refId ?? null
+  const isSameReservation =
+    existing.state === 'Reserved' &&
+    existing.type === 'reservation' &&
+    BigInt(existing.amount) === amount &&
+    existingRefId === expectedRefId
+  if (!isSameReservation) {
     throw new ConflictException('Idempotency key already used for a different wallet operation')
   }
 }
