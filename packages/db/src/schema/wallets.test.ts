@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { sql } from 'drizzle-orm'
-import { getTableConfig } from 'drizzle-orm/pg-core'
+import { getTableConfig, type PgTable } from 'drizzle-orm/pg-core'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '../test/testDb'
@@ -11,6 +11,29 @@ import {
   walletTransactions,
   wallets,
 } from './wallets.js'
+
+/**
+ * Schema-push-shaped CREATE TABLE from Drizzle column SQL types + FKs.
+ * PostgreSQL rejects this when a UUID column references TEXT (or vice versa).
+ */
+function drizzleSchemaPushCreateTableSql(table: PgTable): string {
+  const config = getTableConfig(table)
+  const columnSql = config.columns.map((column) => {
+    const pieces = [`${column.name} ${column.getSQLType()}`]
+    if (column.notNull) pieces.push('NOT NULL')
+    if (column.primary) pieces.push('PRIMARY KEY')
+    return pieces.join(' ')
+  })
+  const fkSql = config.foreignKeys.map((fk) => {
+    const ref = fk.reference()
+    const fromCols = ref.columns.map((column) => column.name).join(', ')
+    const toTable = getTableConfig(ref.foreignTable).name
+    const toCols = ref.foreignColumns.map((column) => column.name).join(', ')
+    const onDelete = fk.onDelete ? ` ON DELETE ${fk.onDelete.toUpperCase()}` : ''
+    return `FOREIGN KEY (${fromCols}) REFERENCES ${toTable} (${toCols})${onDelete}`
+  })
+  return `CREATE TABLE ${config.name} (${[...columnSql, ...fkSql].join(', ')})`
+}
 
 const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
 const MIGRATION_PATH = resolve(
@@ -34,6 +57,7 @@ describe('wallet_transactions schema (T-04.2.01.02)', () => {
   it('declares the domain columns expected by WalletService', () => {
     const columns = Object.keys(walletTransactions)
     for (const column of [
+      'id',
       'walletId',
       'type',
       'amount',
@@ -42,9 +66,47 @@ describe('wallet_transactions schema (T-04.2.01.02)', () => {
       'refId',
       'description',
       'metadata',
+      'createdAt',
+      'updatedAt',
     ]) {
       expect(columns).toContain(column)
     }
+  })
+
+  it('maps id and walletId as UUID columns matching migration 0068', () => {
+    const byName = Object.fromEntries(
+      getTableConfig(walletTransactions).columns.map((column) => [column.name, column]),
+    )
+    expect(byName.id?.getSQLType()).toBe('uuid')
+    expect(byName.wallet_id?.getSQLType()).toBe('uuid')
+    expect(byName.amount?.getSQLType()).toBe('bigint')
+    expect(byName.metadata?.getSQLType()).toBe('jsonb')
+  })
+
+  it('walletId and wallets.profileId share the same UUID SQL type', () => {
+    const walletId = getTableConfig(walletTransactions).columns.find(
+      (column) => column.name === 'wallet_id',
+    )
+    const profileId = getTableConfig(wallets).columns.find(
+      (column) => column.name === 'profile_id',
+    )
+    expect(walletId?.getSQLType()).toBe('uuid')
+    expect(profileId?.getSQLType()).toBe('uuid')
+    expect(walletId?.getSQLType()).toBe(profileId?.getSQLType())
+  })
+
+  it('schema FK pair wallet_id → wallets.profile_id uses matching SQL types', () => {
+    const walletFk = getTableConfig(walletTransactions).foreignKeys.find(
+      (fk) => fk.reference().foreignTable === wallets,
+    )
+    expect(walletFk).toBeDefined()
+    const { columns, foreignColumns } = walletFk!.reference()
+    expect(columns).toHaveLength(1)
+    expect(foreignColumns).toHaveLength(1)
+    expect(columns[0]!.name).toBe('wallet_id')
+    expect(foreignColumns[0]!.name).toBe('profile_id')
+    expect(columns[0]!.getSQLType()).toBe(foreignColumns[0]!.getSQLType())
+    expect(columns[0]!.getSQLType()).toBe('uuid')
   })
 
   it('exports the closed type and state enumerations', () => {
@@ -369,5 +431,74 @@ describe('wallet_transactions PostgreSQL enforcement (T-04.2.01.02)', () => {
     await expect(insertTx({ amount: 0 })).rejects.toMatchObject({
       code: '23514',
     })
+  })
+})
+
+describe('wallet_transactions schema-push SQL vs PostgreSQL (T-04.2.01.02)', () => {
+  let ctx: IsolatedTestDb
+
+  beforeAll(async () => {
+    ctx = await createIsolatedTestDb()
+    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
+    await ctx.pool.query(uuidSql)
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS profiles (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+  })
+
+  afterAll(async () => {
+    await ctx.pool.end()
+    await dropTestSchema(ctx.schemaName)
+  })
+
+  it('accepts a UUID wallet_id → UUID wallets.profile_id foreign key', async () => {
+    const walletsSql = drizzleSchemaPushCreateTableSql(wallets)
+    const txSql = drizzleSchemaPushCreateTableSql(walletTransactions)
+    expect(walletsSql).toMatch(/profile_id uuid/i)
+    expect(txSql).toMatch(/wallet_id uuid/i)
+
+    await ctx.pool.query(walletsSql)
+    await ctx.pool.query(txSql)
+
+    const cols = await ctx.db.execute<{ column_name: string; udt_name: string }>(sql`
+      SELECT column_name, udt_name
+      FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND (
+          (table_name = 'wallets' AND column_name = 'profile_id')
+          OR (table_name = 'wallet_transactions' AND column_name = 'wallet_id')
+        )
+      ORDER BY table_name, column_name
+    `)
+    expect(cols.rows).toEqual([
+      { column_name: 'wallet_id', udt_name: 'uuid' },
+      { column_name: 'profile_id', udt_name: 'uuid' },
+    ])
+
+    const fks = await ctx.pool.query<{
+      from_col: string
+      to_table: string
+      to_col: string
+    }>(
+      `SELECT
+         kcu.column_name AS from_col,
+         ccu.table_name AS to_table,
+         ccu.column_name AS to_col
+       FROM information_schema.table_constraints tc
+       JOIN information_schema.key_column_usage kcu
+         ON tc.constraint_name = kcu.constraint_name
+        AND tc.table_schema = kcu.table_schema
+       JOIN information_schema.constraint_column_usage ccu
+         ON tc.constraint_name = ccu.constraint_name
+        AND tc.table_schema = ccu.table_schema
+       WHERE tc.table_schema = current_schema()
+         AND tc.table_name = 'wallet_transactions'
+         AND tc.constraint_type = 'FOREIGN KEY'`,
+    )
+    expect(fks.rows).toEqual([
+      { from_col: 'wallet_id', to_table: 'wallets', to_col: 'profile_id' },
+    ])
   })
 })

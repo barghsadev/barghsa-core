@@ -144,11 +144,17 @@ export class WalletService {
    * SET posted_balance = posted_balance + delta,
    *     version = version + 1
    * WHERE profile_id = X AND version = expectedVersion
+   *   [AND posted_balance >= 0]  -- when requireNonNegativePostedBalance
    * ```
    *
    * The wallets PK is `profile_id` (the task text's `id`). A matching
    * version applies `delta` (positive or negative) and bumps `version`
    * atomically; a stale `expectedVersion` matches zero rows.
+   *
+   * `requireNonNegativePostedBalance` is the T-04.2.01.03 credit guard:
+   * refuse to post onto a wallet whose `posted_balance` is already
+   * negative. The default (false) keeps this primitive matching
+   * T-04.2.01.06 (`WHERE id = X AND version = expectedVersion` only).
    *
    * This is the locking primitive, not a standalone money-moving
    * command. Callers that change customer funds must also write the
@@ -158,14 +164,15 @@ export class WalletService {
    * run against the shared pool.
    *
    * @returns the updated wallet row
-   * @throws ConflictException when zero rows match (version mismatch
-   *   or missing wallet)
+   * @throws ConflictException when zero rows match (version mismatch,
+   *   missing wallet, or posted_balance < 0 when that guard is on)
    */
   async applyPostedBalanceDelta(
     walletId: string,
     delta: bigint,
     expectedVersion: number,
     client?: WalletQueryClient,
+    options?: { requireNonNegativePostedBalance?: boolean },
   ): Promise<WalletRow> {
     if (!walletId.trim()) {
       throw new BadRequestException('Wallet id is required')
@@ -177,6 +184,9 @@ export class WalletService {
       throw new BadRequestException('Expected version must be a non-negative integer')
     }
 
+    const postedGuard = options?.requireNonNegativePostedBalance
+      ? '\n         AND posted_balance >= 0'
+      : ''
     const queryable = client ?? getDbPool()
     const result = await queryable.query(
       `UPDATE wallets
@@ -184,7 +194,7 @@ export class WalletService {
            version = version + 1,
            updated_at = NOW()
        WHERE profile_id = $2
-         AND version = $3
+         AND version = $3${postedGuard}
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
       [delta, walletId, expectedVersion],
     )
@@ -207,12 +217,11 @@ export class WalletService {
    *      row's canonical `profile_id`.
    *   4. UPDATE `posted_balance` via `applyPostedBalanceDelta`
    *      (`posted_balance + amount`, `version + 1`,
-   *      `WHERE profile_id = X AND version = expectedVersion`).
-   *      A wallet whose `posted_balance` is already negative is
-   *      rejected before the lock update (T-04.2.01.03 invariant).
+   *      `WHERE profile_id = X AND version = expectedVersion
+   *       AND posted_balance >= 0`).
    *
    * The version predicate is optimistic locking; the non-negative
-   * `posted_balance` check refuses to post onto a corrupt wallet.
+   * `posted_balance` predicate refuses to post onto a corrupt wallet.
    * Unique `idempotency_key` is the last-line duplicate guard.
    */
   async credit(
@@ -247,7 +256,6 @@ export class WalletService {
       const wallet = walletResult.rows[0] as {
         version: number
         profile_id: string
-        posted_balance: string | number | bigint
       }
       canonicalWalletId = wallet.profile_id
 
@@ -260,12 +268,6 @@ export class WalletService {
         assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref)
         await client.query('COMMIT')
         return mapTransaction(existing)
-      }
-
-      if (BigInt(wallet.posted_balance) < 0n) {
-        throw new ConflictException(
-          'Wallet credit rejected: version mismatch or postedBalance < 0',
-        )
       }
 
       const txResult = await client.query(
@@ -290,6 +292,7 @@ export class WalletService {
           amount,
           wallet.version,
           client,
+          { requireNonNegativePostedBalance: true },
         )
       } catch (error) {
         if (error instanceof ConflictException) {
@@ -335,8 +338,10 @@ export class WalletService {
    *   4. Atomically reserve (`reserved_balance += amount` with
    *      `WHERE version = X AND available >= amount`) then complete
    *      (`posted_balance -= amount`, `reserved_balance -= amount` with
-   *      `WHERE version = X+1`).
-   *   5. INSERT a Completed ledger row (negative amount).
+   *      `WHERE version = X+1`). Both UPDATEs bind the wallet row's
+   *      canonical `profile_id`.
+   *   5. INSERT a Completed ledger row (negative amount) using the
+   *      wallet row's canonical `profile_id`.
    *
    * Unique `idempotency_key` is the last-line duplicate guard.
    */
@@ -399,14 +404,14 @@ export class WalletService {
 
       const reserveResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance + $1,
+         SET reserved_balance = reserved_balance + $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND (posted_balance - reserved_balance) >= $1
+           AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
-        [amount, walletId, wallet.version],
+        [amount, canonicalWalletId, wallet.version],
       )
       if (reserveResult.rows.length === 0) {
         throw new ConflictException(
@@ -417,16 +422,16 @@ export class WalletService {
 
       const completeResult = await client.query(
         `UPDATE wallets
-         SET posted_balance = posted_balance - $1,
-             reserved_balance = reserved_balance - $1,
+         SET posted_balance = posted_balance - $1::bigint,
+             reserved_balance = reserved_balance - $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND reserved_balance >= $1
-           AND posted_balance >= $1
+           AND reserved_balance >= $1::bigint
+           AND posted_balance >= $1::bigint
          RETURNING *`,
-        [amount, walletId, reservedWallet.version],
+        [amount, canonicalWalletId, reservedWallet.version],
       )
       if (completeResult.rows.length === 0) {
         throw new ConflictException(
@@ -440,7 +445,7 @@ export class WalletService {
          VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6, COALESCE($7::jsonb, '{}'::jsonb))
          RETURNING *`,
         [
-          walletId,
+          canonicalWalletId,
           ref.type,
           -amount,
           idempotencyKey,
@@ -483,7 +488,8 @@ export class WalletService {
    *      or a released/different reservation throw ConflictException.
    *   3. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
    *   4. UPDATE `reserved_balance` with
-   *      `WHERE version = X AND (posted_balance - reserved_balance) >= amount`.
+   *      `WHERE profile_id = canonical AND version = X
+   *       AND (posted_balance - reserved_balance) >= amount`.
    *   5. INSERT a Reserved ledger row (positive amount, type reservation)
    *      using the wallet row's canonical `profile_id`.
    *
@@ -546,12 +552,12 @@ export class WalletService {
 
       const updateResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance + $1,
+         SET reserved_balance = reserved_balance + $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND (posted_balance - reserved_balance) >= $1
+           AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
         [amount, canonicalWalletId, wallet.version],
       )
@@ -608,9 +614,11 @@ export class WalletService {
    *      without a second reserved_balance decrement.
    *   3. `SELECT … FOR UPDATE` the wallet.
    *   4. UPDATE `reserved_balance -= amount` with
-   *      `WHERE version = X AND reserved_balance >= amount`.
-   *   5. Advance the reservation `state` to Released. Posted balance is
-   *      unchanged, so available balance rises by the released amount.
+   *      `WHERE profile_id = canonical AND version = X
+   *       AND reserved_balance >= amount`.
+   *   5. Advance the reservation `state` to Released using the locked
+   *      row's canonical `id`. Posted balance is unchanged, so available
+   *      balance rises by the released amount.
    */
   async release(reservationId: string): Promise<TransactionRow> {
     if (!reservationId.trim()) {
@@ -636,6 +644,9 @@ export class WalletService {
         amount: string | number | bigint
         state: string
       }
+      // PostgreSQL UUID columns return canonical lowercase; callers may pass
+      // any valid spelling. Mutations must use the locked row's id.
+      const canonicalReservationId = reservation.id
       if (reservation.type !== 'reservation') {
         throw new ConflictException('Ledger row is not a reservation')
       }
@@ -662,17 +673,18 @@ export class WalletService {
         throw new NotFoundException(`Wallet not found: ${reservation.wallet_id}`)
       }
       const wallet = walletResult.rows[0] as { version: number; profile_id: string }
+      const canonicalWalletId = wallet.profile_id
 
       const updateResult = await client.query(
         `UPDATE wallets
-         SET reserved_balance = reserved_balance - $1,
+         SET reserved_balance = reserved_balance - $1::bigint,
              version = version + 1,
              updated_at = NOW()
          WHERE profile_id = $2
            AND version = $3
-           AND reserved_balance >= $1
+           AND reserved_balance >= $1::bigint
          RETURNING *`,
-        [amount, wallet.profile_id, wallet.version],
+        [amount, canonicalWalletId, wallet.version],
       )
       if (updateResult.rows.length === 0) {
         throw new ConflictException(
@@ -681,9 +693,19 @@ export class WalletService {
       }
 
       const releasedResult = await client.query(
-        `UPDATE wallet_transactions SET state = 'Released' WHERE id = $1 RETURNING *`,
-        [reservationId],
+        `UPDATE wallet_transactions
+         SET state = 'Released'
+         WHERE id = $1
+           AND type = 'reservation'
+           AND state = 'Reserved'
+         RETURNING *`,
+        [canonicalReservationId],
       )
+      if (releasedResult.rows.length === 0) {
+        throw new ConflictException(
+          'Wallet release rejected: reservation state changed concurrently',
+        )
+      }
 
       await client.query('COMMIT')
       return mapTransaction(releasedResult.rows[0])

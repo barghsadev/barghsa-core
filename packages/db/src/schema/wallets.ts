@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core'
 import { uuidv7, irrAmount, timestamptz } from '../types'
 import { profiles } from './profiles'
@@ -22,7 +23,7 @@ import { profiles } from './profiles'
  * Optimistic locking via `version` column — every mutation increments it.
  *
  * Columns:
- *   - `profileId` — PK, FK → profiles.id (one wallet per profile).
+ *   - `profileId` — PK, UUID, FK → profiles.id (one wallet per profile).
  *   - `postedBalance` — int8, default 0. Cumulative net balance.
  *   - `reservedBalance` — int8, default 0. Amount reserved in payment flow.
  *   - `version` — monotonic optimistic lock integer.
@@ -38,8 +39,11 @@ import { profiles } from './profiles'
 export const wallets = pgTable(
   'wallets',
   {
-    /** Primary key = profile id. One wallet per profile. */
-    profileId: text('profile_id')
+    /**
+     * Primary key = profile id. One wallet per profile.
+     * UUID, matching `profiles.id` and migration 0068 (`profile_id UUID`).
+     */
+    profileId: uuid('profile_id')
       .primaryKey()
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
@@ -134,8 +138,8 @@ export const walletTransactions = pgTable(
     /** UUIDv7 opaque transaction identifier. */
     id: uuidv7('id').primaryKey().notNull(),
 
-    /** Foreign key to the wallet (profile). */
-    walletId: text('wallet_id')
+    /** Foreign key to the wallet (profile). UUID, matching wallets.profile_id. */
+    walletId: uuid('wallet_id')
       .notNull()
       .references(() => wallets.profileId, { onDelete: 'restrict' }),
 
