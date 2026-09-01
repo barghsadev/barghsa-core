@@ -221,22 +221,24 @@ export class WalletController {
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
       idempotencyKey,
+      actorId: req.session.userId,
     })
 
     this.logger.log(
       `Bank receipt top-up ${result.transactionId} submitted for profile ${profileId} by user ${req.session.userId}`,
     )
 
-    return {
+    const response: BankReceiptTopUpResponse = {
       ok: true,
       transactionId: result.transactionId,
-      amount: Number(result.amount),
+      amount: result.amount.toString(),
       currency: 'IRR',
       state: result.state,
       paymentDate: result.paymentDate,
       payerReference: result.payerReference,
       attachmentKey: result.attachmentKey,
     }
+    return response
   }
 
   @Get(':profileId/transactions')
@@ -260,6 +262,18 @@ export class WalletController {
       })),
     }
   }
+}
+
+/** Bank-receipt top-up JSON: int8 amounts are decimal strings, never JS numbers. */
+export interface BankReceiptTopUpResponse {
+  ok: true
+  transactionId: string
+  amount: string
+  currency: 'IRR'
+  state: 'Pending'
+  paymentDate: string
+  payerReference: string
+  attachmentKey: string
 }
 
 function httpError(

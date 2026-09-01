@@ -11,6 +11,8 @@
  *   4. A colliding key with a different receipt is ConflictException.
  *   5. A missing storage_records row is rejected before insert.
  *   6. Concurrent same-key retries insert exactly one Pending row.
+ *   7. An active receipt becomes immutable in the same transaction,
+ *      so the storage delete path cannot physically remove it.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -20,6 +22,12 @@ import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import { BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance'
+import {
+  ImmutableRecordDeleteError,
+  ImmutableStorageRecordService,
+  type DbAdapter,
+  type StorageProvider,
+} from '@barghsa/shared/storage'
 import { WalletService } from './wallet.service.js'
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
 
@@ -49,8 +57,10 @@ const WALLET_TX_MIGRATION = resolve(
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const ACTOR_ID = 'user-customer-1'
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
 const OTHER_ATTACHMENT = 'uploads/image/bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb.jpg'
+const PROTECTED_ATTACHMENT = 'uploads/document/dddddddd-dddd-4ddd-8ddd-dddddddddddd.pdf'
 
 describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
   let ctx: IsolatedTestDb
@@ -74,7 +84,10 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
       CREATE TABLE IF NOT EXISTS storage_records (
         storage_key TEXT PRIMARY KEY,
         status TEXT NOT NULL DEFAULT 'active'
-          CHECK (status IN ('active', 'immutable', 'removed'))
+          CHECK (status IN ('active', 'immutable', 'removed')),
+        signed_at TIMESTAMPTZ,
+        signed_by TEXT,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
@@ -133,6 +146,7 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
       attachmentKey: ATTACHMENT,
       customerNote: 'Branch transfer',
       idempotencyKey: 'bank-receipt-happy',
+      actorId: ACTOR_ID,
       ...overrides,
     }
   }
@@ -241,5 +255,63 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     expect(a.transactionId).toBe(b.transactionId)
     const ledger = await fetchLedger(PROFILE_A)
     expect(ledger.filter((row) => row.idempotency_key === key)).toHaveLength(1)
+  })
+
+  it('freezes the receipt as immutable so it cannot be physically deleted after Pending is committed', async () => {
+    await ctx.pool.query(
+      `INSERT INTO storage_records (storage_key, status) VALUES ($1, 'active')`,
+      [PROTECTED_ATTACHMENT],
+    )
+
+    await service.submit(
+      payload({
+        idempotencyKey: 'bank-receipt-lock-evidence',
+        attachmentKey: PROTECTED_ATTACHMENT,
+      }),
+    )
+
+    const stored = await ctx.pool.query<{ status: string; signed_by: string | null }>(
+      `SELECT status, signed_by FROM storage_records WHERE storage_key = $1`,
+      [PROTECTED_ATTACHMENT],
+    )
+    expect(stored.rows[0]).toMatchObject({
+      status: 'immutable',
+      signed_by: ACTOR_ID,
+    })
+
+    const deleteObject = vi.fn()
+    const adapter: DbAdapter = {
+      createStorageRecord: async () => undefined,
+      getStorageRecordStatus: async (storageKey) => {
+        const result = await ctx.pool.query<{ status: 'active' | 'immutable' | 'removed' }>(
+          `SELECT status FROM storage_records WHERE storage_key = $1`,
+          [storageKey],
+        )
+        return result.rows[0]?.status ?? null
+      },
+      markStorageRecordImmutable: async () => undefined,
+      softDeleteStorageRecord: async (storageKey) => {
+        await ctx.pool.query(
+          `UPDATE storage_records SET status = 'removed' WHERE storage_key = $1`,
+          [storageKey],
+        )
+      },
+      updateStorageRecordMetadata: async () => undefined,
+    }
+    const storageService = new ImmutableStorageRecordService(
+      { deleteObject } as unknown as StorageProvider,
+      adapter,
+    )
+
+    await expect(storageService.deleteRecord(PROTECTED_ATTACHMENT)).rejects.toBeInstanceOf(
+      ImmutableRecordDeleteError,
+    )
+    expect(deleteObject).not.toHaveBeenCalled()
+
+    const afterDelete = await ctx.pool.query<{ status: string }>(
+      `SELECT status FROM storage_records WHERE storage_key = $1`,
+      [PROTECTED_ATTACHMENT],
+    )
+    expect(afterDelete.rows[0]?.status).toBe('removed')
   })
 })

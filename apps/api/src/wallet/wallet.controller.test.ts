@@ -212,11 +212,12 @@ describe('WalletController bank-receipt top-up (T-04.2.02.03)', () => {
       attachmentKey: RECEIPT_KEY,
       customerNote: 'Branch transfer',
       idempotencyKey: 'from-header',
+      actorId: 'user-1',
     })
     expect(result).toEqual({
       ok: true,
       transactionId: 'tx-receipt-1',
-      amount: 250_000,
+      amount: '250000',
       currency: 'IRR',
       state: 'Pending',
       paymentDate: '2026-08-15',
@@ -224,5 +225,36 @@ describe('WalletController bank-receipt top-up (T-04.2.02.03)', () => {
       attachmentKey: RECEIPT_KEY,
     })
     expect(result).not.toHaveProperty('redirectUrl')
+  })
+
+  it('serializes an int8 amount above Number.MAX_SAFE_INTEGER as a decimal string', async () => {
+    const unsafeAmount = 9_007_199_254_740_993n
+    const { controller, submit } = makeController()
+    submit.mockResolvedValue({
+      transactionId: 'tx-receipt-unsafe',
+      amount: unsafeAmount,
+      state: 'Pending',
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey: RECEIPT_KEY,
+    })
+
+    const result = await controller.submitBankReceiptTopUp(
+      PROFILE_ID,
+      { ...body, amount: unsafeAmount.toString() },
+      'idem-unsafe',
+      req,
+    )
+
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        amount: unsafeAmount.toString(),
+        actorId: 'user-1',
+      }),
+    )
+    expect(result.amount).toBe('9007199254740993')
+    expect(typeof result.amount).toBe('string')
+    expect(result.amount).not.toBe(Number(unsafeAmount))
+    expect(Number(unsafeAmount)).toBe(9_007_199_254_740_992)
   })
 })

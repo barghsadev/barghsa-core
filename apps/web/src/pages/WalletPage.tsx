@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { t, type Locale } from '@barghsa/i18n'
+import { parseBankReceiptTopUpAmountIrR } from '@barghsa/shared/finance'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 
@@ -31,7 +32,7 @@ type ReceiptError =
 const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024
 const IMAGE_MAX_BYTES = 20 * 1024 * 1024
 
-function formatAmount(amount: number, locale: Locale): string {
+function formatAmount(amount: number | bigint, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
@@ -223,11 +224,14 @@ export function WalletPage() {
   }, [amountValue])
 
   const receiptAmountDigits = normalizeIrrAmountDigits(receiptAmountInput)
-  const receiptAmountValue = receiptAmountDigits === '' ? null : Number(receiptAmountDigits)
+  const receiptAmountIrR = useMemo(
+    () => parseBankReceiptTopUpAmountIrR(receiptAmountDigits),
+    [receiptAmountDigits],
+  )
   const receiptTomanPreview = useMemo(() => {
-    if (receiptAmountValue === null || !Number.isSafeInteger(receiptAmountValue)) return null
-    return Math.round(receiptAmountValue / 10)
-  }, [receiptAmountValue])
+    if (receiptAmountIrR === null) return null
+    return receiptAmountIrR / 10n
+  }, [receiptAmountIrR])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -316,11 +320,7 @@ export function WalletPage() {
     event.preventDefault()
     if (!profileId || receiptSubmitting) return
 
-    if (
-      receiptAmountValue === null ||
-      !Number.isSafeInteger(receiptAmountValue) ||
-      receiptAmountValue <= 0
-    ) {
+    if (receiptAmountIrR === null) {
       setReceiptError('invalid-amount')
       setReceiptSuccess(false)
       return
@@ -360,7 +360,7 @@ export function WalletPage() {
           'Idempotency-Key': receiptIdempotencyKey,
         }),
         body: JSON.stringify({
-          amount: receiptAmountValue,
+          amount: receiptAmountIrR.toString(),
           paymentDate: receiptDate,
           payerReference: receiptPayerRef.trim(),
           attachmentKey,
@@ -369,9 +369,11 @@ export function WalletPage() {
       })
       const payload = (await res.json().catch(() => ({}))) as {
         state?: string
+        amount?: unknown
         message?: string
       }
-      if (!res.ok || payload.state !== 'Pending') {
+      const confirmedAmount = parseBankReceiptTopUpAmountIrR(payload.amount)
+      if (!res.ok || payload.state !== 'Pending' || confirmedAmount !== receiptAmountIrR) {
         const next = mapReceiptSubmitError(res.status)
         if (next === 'conflict') setReceiptIdempotencyKey(newIdempotencyKey())
         setReceiptError(next)

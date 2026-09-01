@@ -28,6 +28,7 @@ export interface SubmitBankReceiptTopUpInput {
   attachmentKey: unknown
   customerNote?: unknown
   idempotencyKey: string
+  actorId: string
 }
 
 export interface SubmitBankReceiptTopUpResult {
@@ -53,9 +54,10 @@ interface QueryClient {
  *   1. Validate amount, payment date, payer reference, attachment key,
  *      and optional note. Amount has **no configured maximum**.
  *   2. Ensure the profile wallet exists.
- *   3. Confirm the attachment is a live `storage_records` object
- *      (`active` or `immutable`) so a fabricated key cannot enter the
- *      ledger.
+ *   3. Lock the `storage_records` row in the same DB transaction and
+ *      transition an `active` receipt to `immutable` (recording the
+ *      submitting actor) so the evidence cannot be physically deleted
+ *      after the Pending ledger row is committed.
  *   4. Insert a Pending `topup` ledger row (does not change balances).
  *
  * Wallet credit is deferred to staff confirmation (T-04.2.02.04).
@@ -92,13 +94,13 @@ export class BankReceiptTopUpService {
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys)
       try {
-        await this.assertAttachmentRecord(client, parsed.receipt.attachmentKey)
         const pending = await this.insertOrReusePending(
           client,
           input.profileId,
           parsed.amountIrR,
           idempotencyKey,
           parsed.receipt,
+          input.actorId,
         )
         this.logger.log(
           `Bank receipt top-up ${pending.id} pending for wallet ${pending.walletId}`,
@@ -120,14 +122,17 @@ export class BankReceiptTopUpService {
   }
 
   /**
-   * The attachment must already exist in `storage_records` as a live
-   * object. Upload type/size is enforced at presign/verify; this check
-   * stops a client from pointing the Pending row at a key that was
-   * never recorded.
+   * Lock the receipt storage row and freeze an `active` object as
+   * `immutable` so later physical deletes are rejected. Already
+   * immutable keys are left unchanged (idempotent retry).
    */
-  private async assertAttachmentRecord(client: QueryClient, attachmentKey: string): Promise<void> {
+  private async lockAndProtectAttachment(
+    client: QueryClient,
+    attachmentKey: string,
+    actorId: string,
+  ): Promise<void> {
     const result = await client.query(
-      `SELECT status FROM storage_records WHERE storage_key = $1`,
+      `SELECT status FROM storage_records WHERE storage_key = $1 FOR UPDATE`,
       [attachmentKey],
     )
     if (result.rows.length === 0) {
@@ -143,6 +148,32 @@ export class BankReceiptTopUpService {
         'Bank receipt attachment is no longer available',
       )
     }
+    if (status === 'immutable') {
+      return
+    }
+    if (status !== 'active') {
+      throw httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID,
+        'Bank receipt attachment is no longer available',
+      )
+    }
+
+    const updated = await client.query(
+      `UPDATE storage_records
+          SET status = 'immutable',
+              signed_at = NOW(),
+              signed_by = $2,
+              updated_at = NOW()
+        WHERE storage_key = $1
+          AND status = 'active'`,
+      [attachmentKey, actorId],
+    )
+    if ((updated.rowCount ?? 0) < 1) {
+      throw httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID,
+        'Bank receipt attachment could not be locked for review',
+      )
+    }
   }
 
   private async insertOrReusePending(
@@ -151,6 +182,7 @@ export class BankReceiptTopUpService {
     amountIrR: bigint,
     idempotencyKey: string,
     receipt: BankReceiptTopUpDetails,
+    actorId: string,
   ): Promise<TransactionRow> {
     let canonicalWalletId: string | undefined
     try {
@@ -164,6 +196,8 @@ export class BankReceiptTopUpService {
         throw new NotFoundException(`Wallet not found: ${profileId}`)
       }
       canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id
+
+      await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId)
 
       const idemResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE`,
@@ -214,6 +248,14 @@ export class BankReceiptTopUpService {
           amountIrR,
           receipt,
         )
+        await client.query('BEGIN')
+        try {
+          await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId)
+          await client.query('COMMIT')
+        } catch (protectError) {
+          await client.query('ROLLBACK')
+          throw protectError
+        }
         return mapTransaction(committed as Parameters<typeof mapTransaction>[0])
       }
       throw error

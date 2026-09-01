@@ -272,7 +272,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
           {
             ok: true,
             transactionId: 'tx-receipt-1',
-            amount: 250000,
+            amount: '250000',
             currency: 'IRR',
             state: 'Pending',
             attachmentKey,
@@ -335,7 +335,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     })
     expect(submitCall).toBeTruthy()
     expect(JSON.parse(String((submitCall![1] as RequestInit).body))).toEqual({
-      amount: 250000,
+      amount: '250000',
       paymentDate: '2026-08-15',
       payerReference: 'TRK-998877',
       attachmentKey,

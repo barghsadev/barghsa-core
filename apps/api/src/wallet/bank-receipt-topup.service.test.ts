@@ -22,6 +22,7 @@ vi.mock('@barghsa/db', () => ({
 const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const IDEM = 'idem-bank-receipt-1'
+const ACTOR_ID = 'user-1'
 const AMOUNT = 250_000n
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
 
@@ -78,6 +79,9 @@ function scriptClient(opts: ScriptOptions = {}) {
       if (opts.storageStatus === null) return { rows: [] }
       return { rows: [{ status: opts.storageStatus ?? 'active' }] }
     }
+    if (sql.includes('UPDATE storage_records')) {
+      return { rows: [], rowCount: 1 }
+    }
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }
@@ -102,6 +106,7 @@ function submitInput(overrides: Record<string, unknown> = {}) {
     attachmentKey: RECEIPT.attachmentKey,
     customerNote: RECEIPT.customerNote,
     idempotencyKey: IDEM,
+    actorId: ACTOR_ID,
     ...overrides,
   }
 }
@@ -185,6 +190,19 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       channel: BANK_RECEIPT_TOPUP_CHANNEL,
       receipt: RECEIPT,
     })
+    const protect = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('UPDATE storage_records'),
+    )
+    expect(protect?.[1]).toEqual([ATTACHMENT, ACTOR_ID])
+  })
+
+  it('does not rewrite an already-immutable receipt', async () => {
+    scriptClient({ storageStatus: 'immutable' })
+    const result = await service.submit(submitInput())
+    expect(result.state).toBe('Pending')
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE storage_records')),
+    ).toBe(false)
   })
 
   it('reuses a matching in-flight Pending row for the same idempotency key', async () => {
