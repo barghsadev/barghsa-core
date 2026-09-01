@@ -539,4 +539,28 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     })
     expect(walletService.credit).not.toHaveBeenCalled()
   })
+
+  it('conflicts when confirming against an Overdue invoice', async () => {
+    script({ invoice: makeInvoiceRow({ state: 'Overdue', paid_amount: '0' }) })
+    const rejection = await service
+      .confirm({
+        transactionId: TX_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        invoiceId: INVOICE_ID,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.CONFLICT_STATE.code,
+      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Overdue'),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices')),
+    ).toBe(false)
+  })
 })

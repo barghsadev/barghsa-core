@@ -93,14 +93,13 @@ describe('canTransition', () => {
     expect(canTransition('Paid', 'Unpaid')).toBe(false)
   })
 
-  it('Overdue can go to PaymentUnderReview and Cancelled', () => {
-    const allowed = ['PaymentUnderReview', 'Cancelled'] as InvoiceState[]
-    for (const to of allowed) {
-      expect(canTransition('Overdue', to)).toBe(true)
-    }
+  it('Overdue can only go to Cancelled', () => {
     for (const to of INVOICE_STATES) {
-      if (allowed.includes(to)) continue
-      expect(canTransition('Overdue', to)).toBe(false)
+      if (to === 'Cancelled') {
+        expect(canTransition('Overdue', to)).toBe(true)
+      } else {
+        expect(canTransition('Overdue', to)).toBe(false)
+      }
     }
   })
 
@@ -317,13 +316,13 @@ describe('transitionName', () => {
     expect(transitionName('PartiallyFunded', 'Cancelled')).toBe('Cancel')
     expect(transitionName('Paid', 'PartiallyRefunded')).toBe('PartialRefund')
     expect(transitionName('Paid', 'Refunded')).toBe('FullRefund')
-    expect(transitionName('Overdue', 'PaymentUnderReview')).toBe('SubmitBankReceipt')
     expect(transitionName('Overdue', 'Cancelled')).toBe('Cancel')
     expect(transitionName('PartiallyRefunded', 'PartiallyRefunded')).toBe('PartialRefund')
   })
 
   it('returns null for illegal pairs', () => {
     expect(transitionName('Draft', 'Paid')).toBeNull()
+    expect(transitionName('Overdue', 'PaymentUnderReview')).toBeNull()
     expect(transitionName('Cancelled', 'Draft')).toBeNull()
     expect(transitionName('Refunded', 'Draft')).toBeNull()
   })

@@ -58,7 +58,7 @@ export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
  *
  * Derived directly from the S-04.1.01 transition table:
  *   - Issue:              Draft              → Unpaid
- *   - SubmitBankReceipt:  Unpaid, Partially, Overdue → PaymentUnderReview
+ *   - SubmitBankReceipt:  Unpaid, Partially  → PaymentUnderReview
  *   - ConfirmBankReceipt: PaymentUnderReview → Unpaid/PartiallyFunded/Paid
  *   - PayFromWallet:      Unpaid, Partially  → Paid
  *   - MarkOverdue:        Unpaid, Partially  → Overdue
@@ -74,7 +74,7 @@ export const ALLOWED_TRANSITIONS: Readonly<
   PaymentUnderReview: ['Unpaid', 'PartiallyFunded', 'Paid'],
   PartiallyFunded: ['PaymentUnderReview', 'Paid', 'Overdue', 'Cancelled'],
   Paid: ['PartiallyRefunded', 'Refunded'],
-  Overdue: ['PaymentUnderReview', 'Cancelled'],
+  Overdue: ['Cancelled'],
   Cancelled: [],
   PartiallyRefunded: ['PartiallyRefunded'],
   Refunded: [],
@@ -103,7 +103,7 @@ export const TRANSITION_BY_PAIR: Readonly<
     Cancelled: 'Cancel',
   },
   Paid: { PartiallyRefunded: 'PartialRefund', Refunded: 'FullRefund' },
-  Overdue: { PaymentUnderReview: 'SubmitBankReceipt', Cancelled: 'Cancel' },
+  Overdue: { Cancelled: 'Cancel' },
   Cancelled: {},
   PartiallyRefunded: { PartiallyRefunded: 'PartialRefund' },
   Refunded: {},

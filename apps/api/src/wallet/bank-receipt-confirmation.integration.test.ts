@@ -23,6 +23,7 @@ import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import {
   BANK_RECEIPT_CONFIRMED_EVENT,
+  BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
   bankReceiptCreditIdempotencyKey,
@@ -534,20 +535,34 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(confirmAudit.rows).toHaveLength(1)
   })
 
-  it('settles an Overdue invoice to Paid through ConfirmBankReceipt', async () => {
+  it('rejects invoice-linked confirmation against an Overdue invoice', async () => {
     const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' })
-    const pendingId = await insertPending('overdue-full', 400_000n)
-    await service.confirm({
-      transactionId: pendingId,
-      actorUserId: ACTOR_USER_ID,
-      ip: '10.0.0.9',
-      invoiceId,
-      now: NOW,
+    const pendingId = await insertPending('overdue-blocked', 400_000n)
+    const before = await walletBalances()
+    const rejection = await service
+      .confirm({
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Overdue'),
     })
     const settled = await invoiceSettlement(invoiceId)
-    expect(settled.paid).toBe(400_000n)
-    expect(settled.state).toBe('Paid')
-    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
+    expect(settled.paid).toBe(0n)
+    expect(settled.state).toBe('Overdue')
+    expect(settled.paidAt).toBeNull()
+    expect((await walletBalances()).posted).toBe(before.posted)
+    const pending = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [pendingId],
+    )
+    expect(pending.rows[0]!.state).toBe('Pending')
   })
 
   it('rolls back invoice paid_amount when overpayment confirm audit fails', async () => {

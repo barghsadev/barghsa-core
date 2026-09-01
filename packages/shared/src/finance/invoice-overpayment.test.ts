@@ -53,6 +53,13 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
         remainingForBankReceiptSettlement({
           totalAmount: 1_000_000n,
           paidAmount: 0n,
+          state: 'Overdue',
+        }),
+      ).toBe(0n)
+      expect(
+        remainingForBankReceiptSettlement({
+          totalAmount: 1_000_000n,
+          paidAmount: 0n,
           state: 'Paid',
         }),
       ).toBe(0n)

@@ -131,9 +131,11 @@ export interface RejectBankReceiptInput {
  *   3. When an invoice is supplied: lock it, allocate
  *      `min(receipt, remaining)` onto `paid_amount` (never over-settle),
  *      transition the invoice through the validated ConfirmBankReceipt
- *      path (SubmitBankReceipt into PaymentUnderReview when needed, then
- *      confirm to Paid or PartiallyFunded, setting paid_at on full
- *      settlement), and credit only the excess via a *separate*
+ *      path (SubmitBankReceipt from Unpaid/PartiallyFunded into
+ *      PaymentUnderReview when needed, then confirm to Paid or
+ *      PartiallyFunded, setting paid_at on full settlement). Overdue
+ *      invoices are rejected with conflict — they cannot SubmitBankReceipt.
+ *      Excess is credited via a *separate*
  *      `WalletService.credit()` with
  *      `bankReceiptOverpaymentCreditIdempotencyKey`.
  *   4. Release the Pending intent and append an audit row.
@@ -226,6 +228,7 @@ export class BankReceiptConfirmationService {
         409,
       )
     }
+    this.assertInvoiceAcceptsBankReceiptAllocation(invoice.state)
     const remaining = remainingForBankReceiptSettlement({
       totalAmount: BigInt(invoice.total_amount),
       paidAmount: BigInt(invoice.paid_amount),
@@ -525,6 +528,7 @@ export class BankReceiptConfirmationService {
         409,
       )
     }
+    this.assertInvoiceAcceptsBankReceiptAllocation(invoice.state)
     const remaining = remainingForBankReceiptSettlement({
       totalAmount: BigInt(invoice.total_amount),
       paidAmount: BigInt(invoice.paid_amount),
@@ -584,6 +588,16 @@ export class BankReceiptConfirmationService {
     }
   }
 
+  private assertInvoiceAcceptsBankReceiptAllocation(state: string): void {
+    if (state === 'Overdue') {
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(state),
+        409,
+      )
+    }
+  }
+
   private async lockInvoice(client: WalletQueryClient, invoiceId: string): Promise<InvoiceRow> {
     const result = await client.query(
       `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount
@@ -625,9 +639,10 @@ export class BankReceiptConfirmationService {
   /**
    * After paid_amount is incremented, take the validated ConfirmBankReceipt
    * path so state and paid_at match the post-allocation amount.
-   * Unpaid / PartiallyFunded / Overdue first SubmitBankReceipt into
+   * Unpaid / PartiallyFunded first SubmitBankReceipt into
    * PaymentUnderReview; ConfirmBankReceipt then lands on Paid or
-   * PartiallyFunded and sets paid_at on full settlement.
+   * PartiallyFunded and sets paid_at on full settlement. Overdue is
+   * illegal for SubmitBankReceipt and is rejected before this path.
    */
   private async confirmInvoiceAfterAllocation(
     client: WalletQueryClient,
@@ -668,6 +683,13 @@ export class BankReceiptConfirmationService {
     }
 
     let from: InvoiceState = input.invoice.state
+    if (from !== 'PaymentUnderReview' && from !== 'Unpaid' && from !== 'PartiallyFunded') {
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(from),
+        409,
+      )
+    }
     if (from !== 'PaymentUnderReview') {
       await this.invoiceStateMachine.transition(
         input.invoice.id,

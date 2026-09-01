@@ -14,14 +14,15 @@ import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
 
 /**
  * Invoice states that can still absorb a bank-receipt allocation.
- * Paid / Cancelled / Refunded / Draft contribute remaining = 0, so the
- * whole receipt becomes a wallet credit.
+ * S-04.1.01 permits SubmitBankReceipt only from Unpaid / PartiallyFunded
+ * (and ConfirmBankReceipt from PaymentUnderReview). Overdue may only
+ * Cancel. Paid / Cancelled / Refunded / Draft contribute remaining = 0,
+ * so the whole receipt becomes a wallet credit.
  */
 export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
   'Unpaid',
   'PaymentUnderReview',
   'PartiallyFunded',
-  'Overdue',
 ] as const
 
 export type BankReceiptSettleableInvoiceState =
@@ -38,6 +39,8 @@ export const BANK_RECEIPT_OVERPAYMENT_ERRORS = {
   PROFILE_MISMATCH: () => 'Invoice does not belong to this wallet profile',
   CANNOT_OVERSETTLE: () =>
     'Invoice remaining changed; the receipt would over-settle the invoice',
+  INVOICE_STATE_NOT_SETTLEABLE: (state: string) =>
+    `Invoice in state '${state}' cannot receive a bank-receipt allocation`,
 } as const
 
 const UUID_RE =
