@@ -4,6 +4,7 @@ export {
   type WalletCreditRef,
   type WalletDebitRef,
   type WalletReserveRef,
+  type WalletQueryClient,
   type TransactionRow,
   type WalletRow,
 } from './wallet.service.js'

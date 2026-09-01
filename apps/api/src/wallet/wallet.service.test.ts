@@ -112,7 +112,8 @@ describe('WalletService', () => {
      *   1: SELECT … FOR UPDATE
      *   2: SELECT by idempotency_key
      *   3: INSERT wallet_transactions
-     *   4: UPDATE wallets … WHERE version = X AND posted_balance >= 0
+     *   4. UPDATE wallets … applyPostedBalanceDelta
+     *      (posted_balance + amount, version + 1, WHERE version = expectedVersion)
      *   5: COMMIT
      */
     it('inserts a Completed ledger row and updates postedBalance under version + postedBalance >= 0', async () => {
@@ -159,7 +160,7 @@ describe('WalletService', () => {
       expect(updateCall![0]).toContain('posted_balance = posted_balance + $1')
       expect(updateCall![0]).toContain('version = version + 1')
       expect(updateCall![0]).toMatch(/version = \$3/)
-      expect(updateCall![0]).toContain('posted_balance >= 0')
+      expect(updateCall![0]).not.toContain('posted_balance >= 0')
       expect(updateCall![1]).toEqual([100000n, 'profile-1', 1])
 
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
@@ -298,7 +299,25 @@ describe('WalletService', () => {
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
 
-    it('rejects the credit when UPDATE matches no row (version mismatch or postedBalance < 0)', async () => {
+    it('rejects the credit when postedBalance is already negative without updating', async () => {
+      const wallet = makeWalletRow({ posted_balance: '-1' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('version mismatch or postedBalance < 0')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects the credit when UPDATE matches no row (version mismatch)', async () => {
       const wallet = makeWalletRow()
       mockClient.query
         .mockResolvedValueOnce({ rows: [] })
@@ -1474,6 +1493,84 @@ describe('WalletService', () => {
         'version mismatch or reservedBalance shortfall',
       )
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+  })
+
+  describe('applyPostedBalanceDelta (T-04.2.01.06)', () => {
+    it('updates postedBalance by delta and increments version when expectedVersion matches', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [makeWalletRow({ version: 2, posted_balance: '1100000', available_balance: '900000' })],
+      })
+
+      const result = await service.applyPostedBalanceDelta('profile-1', 100000n, 1)
+
+      expect(result.postedBalance).toBe(1100000n)
+      expect(result.version).toBe(2)
+      expect(result.availableBalance).toBe(900000n)
+      expect(mockPool.query).toHaveBeenCalledTimes(1)
+      const [sql, params] = mockPool.query.mock.calls[0]!
+      expect(sql).toContain('posted_balance = posted_balance + $1')
+      expect(sql).toContain('version = version + 1')
+      expect(sql).toMatch(/WHERE profile_id = \$2/)
+      expect(sql).toMatch(/AND version = \$3/)
+      expect(sql).not.toContain('posted_balance >= 0')
+      expect(params).toEqual([100000n, 'profile-1', 1])
+    })
+
+    it('applies a negative delta (postedBalance + -amount) under the same version predicate', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [makeWalletRow({ version: 2, posted_balance: '900000', available_balance: '700000' })],
+      })
+
+      const result = await service.applyPostedBalanceDelta('profile-1', -100000n, 1)
+
+      expect(result.postedBalance).toBe(900000n)
+      expect(result.version).toBe(2)
+      expect(mockPool.query.mock.calls[0]![1]).toEqual([-100000n, 'profile-1', 1])
+    })
+
+    it('uses the caller-supplied client so the UPDATE participates in an open transaction', async () => {
+      mockClient.query.mockResolvedValue({
+        rows: [makeWalletRow({ version: 2, posted_balance: '1100000' })],
+      })
+
+      await service.applyPostedBalanceDelta('profile-1', 100000n, 1, mockClient)
+
+      expect(mockClient.query).toHaveBeenCalledTimes(1)
+      expect(mockPool.query).not.toHaveBeenCalled()
+      expect(mockClient.query.mock.calls[0]![1]).toEqual([100000n, 'profile-1', 1])
+    })
+
+    it('throws ConflictException when no row matches expectedVersion', async () => {
+      mockPool.query.mockResolvedValue({ rows: [] })
+
+      await expect(service.applyPostedBalanceDelta('profile-1', 100000n, 1)).rejects.toThrow(
+        'Wallet optimistic lock failed: version mismatch',
+      )
+    })
+
+    it('rejects a blank wallet id without querying', async () => {
+      await expect(service.applyPostedBalanceDelta('   ', 100n, 0)).rejects.toThrow(
+        'Wallet id is required',
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
+    })
+
+    it('rejects a zero delta without querying', async () => {
+      await expect(service.applyPostedBalanceDelta('profile-1', 0n, 0)).rejects.toThrow(
+        'Posted-balance delta must be non-zero',
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
+    })
+
+    it('rejects a non-integer or negative expectedVersion without querying', async () => {
+      await expect(service.applyPostedBalanceDelta('profile-1', 100n, 1.5)).rejects.toThrow(
+        'Expected version must be a non-negative integer',
+      )
+      await expect(service.applyPostedBalanceDelta('profile-1', 100n, -1)).rejects.toThrow(
+        'Expected version must be a non-negative integer',
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
     })
   })
 
