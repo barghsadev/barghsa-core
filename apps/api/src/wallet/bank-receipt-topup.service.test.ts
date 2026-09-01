@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ConflictException, HttpException, NotFoundException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance'
+import { BANK_RECEIPT_STORAGE_PURPOSE, BANK_RECEIPT_TOPUP_CHANNEL } from '@barghsa/shared/finance'
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
 import type { WalletService } from './wallet.service.js'
 
@@ -31,6 +31,13 @@ const RECEIPT = {
   payerReference: 'TRK-998877',
   attachmentKey: ATTACHMENT,
   customerNote: 'Branch transfer',
+}
+
+const VALID_STORAGE_METADATA = {
+  verified: true,
+  uploadedBy: ACTOR_ID,
+  profileId: PROFILE_ID,
+  purpose: BANK_RECEIPT_STORAGE_PURPOSE,
 }
 
 function makePendingRow(overrides: Record<string, unknown> = {}) {
@@ -63,7 +70,9 @@ function makeWalletService() {
 type ScriptOptions = {
   wallet?: { profile_id: string } | null
   storageStatus?: string | null
+  storageMetadata?: Record<string, unknown> | null
   existing?: ReturnType<typeof makePendingRow> | null
+  existingAttachment?: ReturnType<typeof makePendingRow> | null
   insert?: ReturnType<typeof makePendingRow> | Error
 }
 
@@ -77,7 +86,15 @@ function scriptClient(opts: ScriptOptions = {}) {
     }
     if (sql.includes('FROM storage_records')) {
       if (opts.storageStatus === null) return { rows: [] }
-      return { rows: [{ status: opts.storageStatus ?? 'active' }] }
+      return {
+        rows: [
+          {
+            status: opts.storageStatus ?? 'active',
+            metadata:
+              opts.storageMetadata === undefined ? VALID_STORAGE_METADATA : opts.storageMetadata,
+          },
+        ],
+      }
     }
     if (sql.includes('UPDATE storage_records')) {
       return { rows: [], rowCount: 1 }
@@ -85,6 +102,9 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }
+    }
+    if (sql.includes('FROM wallet_transactions WHERE receipt_attachment_key')) {
+      return { rows: opts.existingAttachment ? [opts.existingAttachment] : [] }
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existing ? [opts.existing] : [] }
@@ -170,6 +190,61 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     expect(walletService.credit).not.toHaveBeenCalled()
   })
 
+  it('rejects an unverified storage record', async () => {
+    scriptClient({
+      storageMetadata: { ...VALID_STORAGE_METADATA, verified: false },
+    })
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: 'Bank receipt attachment has not been verified',
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
+    ).toBe(false)
+  })
+
+  it('rejects a storage record owned by a different user and profile', async () => {
+    scriptClient({
+      storageMetadata: {
+        ...VALID_STORAGE_METADATA,
+        uploadedBy: 'other-user',
+        profileId: 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb',
+      },
+    })
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: 'Bank receipt attachment does not belong to this account',
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
+    ).toBe(false)
+  })
+
+  it('rejects a storage record recorded for a different purpose', async () => {
+    scriptClient({
+      storageMetadata: { ...VALID_STORAGE_METADATA, purpose: 'contract' },
+    })
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: 'Bank receipt attachment was not uploaded as a bank receipt',
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
+    ).toBe(false)
+  })
+
+  it('rejects reuse of an attachment already backing another Pending top-up', async () => {
+    scriptClient({
+      existingAttachment: makePendingRow({ idempotency_key: 'other-idem' }),
+    })
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
+    ).toBe(false)
+  })
+
   it('inserts a Pending topup and does not credit the wallet', async () => {
     scriptClient()
     const result = await service.submit(submitInput())
@@ -186,6 +261,7 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       String(sql).includes('INSERT INTO wallet_transactions'),
     )
     expect(insert?.[1]?.[3]).toBe('Bank receipt wallet top-up')
+    expect(insert?.[1]?.[5]).toBe(ATTACHMENT)
     expect(JSON.parse(String(insert?.[1]?.[4]))).toMatchObject({
       channel: BANK_RECEIPT_TOPUP_CHANNEL,
       receipt: RECEIPT,

@@ -17,6 +17,19 @@ import { parseOnlineTopUpAmountIrR } from './wallet-topup-config.js'
 /** Channel discriminator stored on the Pending ledger row metadata. */
 export const BANK_RECEIPT_TOPUP_CHANNEL = 'bank_receipt' as const
 
+/**
+ * Intended-purpose value persisted on `storage_records.metadata` when a
+ * customer uploads a bank-receipt scan. Top-up submission requires this
+ * exact purpose so an unrelated verified object cannot back a claim.
+ */
+export const BANK_RECEIPT_STORAGE_PURPOSE = 'bank_receipt' as const
+
+export type BankReceiptStorageRejection =
+  | 'missing'
+  | 'unverified'
+  | 'wrong_owner'
+  | 'wrong_purpose'
+
 /** Human-readable description written on the Pending ledger row. */
 export const BANK_RECEIPT_TOPUP_DESCRIPTION = 'Bank receipt wallet top-up'
 
@@ -247,4 +260,52 @@ export function receiptDetailsMatch(
     stored.attachmentKey === receipt.attachmentKey &&
     (stored.customerNote ?? null) === receipt.customerNote
   )
+}
+
+/**
+ * Authoritative storage-record provenance written after upload
+ * verification succeeds. `verified` is never inferred from row
+ * existence — the record endpoint must persist this payload.
+ */
+export function bankReceiptStorageProvenance(input: {
+  uploadedBy: string
+  profileId?: string
+  purpose?: string
+  verifiedAt?: string
+}): Record<string, unknown> {
+  return {
+    verified: true,
+    verifiedAt: input.verifiedAt ?? new Date().toISOString(),
+    uploadedBy: input.uploadedBy,
+    profileId: input.profileId ?? null,
+    purpose: input.purpose ?? BANK_RECEIPT_STORAGE_PURPOSE,
+  }
+}
+
+/**
+ * Require a verified bank-receipt object owned by the submitting actor
+ * or bound to the accessible profile. Unverified, other-purpose, and
+ * other-owner keys are distinct rejections for tests and API messages.
+ */
+export function evaluateBankReceiptStorageMetadata(
+  metadata: unknown,
+  actorId: string,
+  profileId: string,
+): { ok: true } | { ok: false; reason: BankReceiptStorageRejection } {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+    return { ok: false, reason: 'missing' }
+  }
+  const record = metadata as Record<string, unknown>
+  if (record.verified !== true) {
+    return { ok: false, reason: 'unverified' }
+  }
+  if (record.purpose !== BANK_RECEIPT_STORAGE_PURPOSE) {
+    return { ok: false, reason: 'wrong_purpose' }
+  }
+  const uploadedBy = typeof record.uploadedBy === 'string' ? record.uploadedBy : ''
+  const boundProfile = typeof record.profileId === 'string' ? record.profileId : ''
+  if (uploadedBy !== actorId && boundProfile !== profileId) {
+    return { ok: false, reason: 'wrong_owner' }
+  }
+  return { ok: true }
 }

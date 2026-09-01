@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { parseOnlineTopUpAmountIrR } from './wallet-topup-config.js'
 import {
+  BANK_RECEIPT_STORAGE_PURPOSE,
   BANK_RECEIPT_TOPUP_CHANNEL,
+  bankReceiptStorageProvenance,
   bankReceiptTopUpMetadata,
+  evaluateBankReceiptStorageMetadata,
   isBankReceiptTopUpMetadata,
   parseBankReceiptAttachmentKey,
   parseBankReceiptCustomerNote,
@@ -155,5 +158,50 @@ describe('bank receipt metadata helpers (T-04.2.02.03)', () => {
       receiptDetailsMatch(metadata, { ...receipt, payerReference: 'other' }),
     ).toBe(false)
     expect(isBankReceiptTopUpMetadata({ channel: 'online' })).toBe(false)
+  })
+})
+
+describe('evaluateBankReceiptStorageMetadata (T-04.2.02.03)', () => {
+  const actorId = 'user-1'
+  const profileId = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+  const valid = bankReceiptStorageProvenance({ uploadedBy: actorId, profileId })
+
+  it('accepts a verified receipt owned by the actor', () => {
+    expect(evaluateBankReceiptStorageMetadata(valid, actorId, profileId)).toEqual({ ok: true })
+  })
+
+  it('accepts a verified receipt bound to the accessible profile', () => {
+    expect(
+      evaluateBankReceiptStorageMetadata(
+        { ...valid, uploadedBy: 'other-user' },
+        actorId,
+        profileId,
+      ),
+    ).toEqual({ ok: true })
+  })
+
+  it('rejects missing, unverified, wrong-purpose, and wrong-owner metadata', () => {
+    expect(evaluateBankReceiptStorageMetadata(null, actorId, profileId)).toEqual({
+      ok: false,
+      reason: 'missing',
+    })
+    expect(
+      evaluateBankReceiptStorageMetadata({ ...valid, verified: false }, actorId, profileId),
+    ).toEqual({ ok: false, reason: 'unverified' })
+    expect(
+      evaluateBankReceiptStorageMetadata({ ...valid, purpose: 'contract' }, actorId, profileId),
+    ).toEqual({ ok: false, reason: 'wrong_purpose' })
+    expect(
+      evaluateBankReceiptStorageMetadata(
+        { ...valid, uploadedBy: 'other-user', profileId: 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb' },
+        actorId,
+        profileId,
+      ),
+    ).toEqual({ ok: false, reason: 'wrong_owner' })
+  })
+
+  it('uses the bank_receipt storage purpose constant', () => {
+    expect(valid.purpose).toBe(BANK_RECEIPT_STORAGE_PURPOSE)
+    expect(BANK_RECEIPT_STORAGE_PURPOSE).toBe('bank_receipt')
   })
 })

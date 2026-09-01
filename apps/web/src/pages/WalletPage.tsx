@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { t, type Locale } from '@barghsa/i18n'
-import { parseBankReceiptTopUpAmountIrR } from '@barghsa/shared/finance'
+import { parseBankReceiptTopUpAmountIrR, BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 
@@ -123,7 +123,7 @@ function isAllowedReceiptFile(file: File): boolean {
   return file.size > 0 && file.size <= max
 }
 
-async function uploadReceiptAttachment(file: File): Promise<string | null> {
+async function uploadReceiptAttachment(file: File, profileId: string): Promise<string | null> {
   const category = receiptCategoryForFile(file)
   if (category === null) return null
   const presignRes = await fetch('/api/upload/presigned-url', {
@@ -179,6 +179,8 @@ async function uploadReceiptAttachment(file: File): Promise<string | null> {
       contentType: file.type || undefined,
       fileSize: file.size,
       category,
+      purpose: BANK_RECEIPT_STORAGE_PURPOSE,
+      profileId,
     }),
   })
   if (!recordRes.ok) return null
@@ -345,7 +347,7 @@ export function WalletPage() {
     setReceiptError(null)
     setReceiptSuccess(false)
     try {
-      const attachmentKey = await uploadReceiptAttachment(receiptFile)
+      const attachmentKey = await uploadReceiptAttachment(receiptFile, profileId)
       if (!attachmentKey) {
         setReceiptError('upload')
         return

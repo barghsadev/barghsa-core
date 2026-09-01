@@ -341,6 +341,14 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       attachmentKey,
       customerNote: 'Branch transfer',
     })
+    const recordCall = fetchMock.mock.calls.find(([url, init]) => {
+      return String(url).includes('/record') && (init as RequestInit | undefined)?.method === 'POST'
+    })
+    expect(recordCall).toBeTruthy()
+    expect(JSON.parse(String((recordCall![1] as RequestInit).body))).toMatchObject({
+      purpose: 'bank_receipt',
+      profileId: PROFILE_ID,
+    })
     expect(new Headers((submitCall![1] as RequestInit).headers).get('Idempotency-Key')).toBeTruthy()
     expect(assign).not.toHaveBeenCalled()
     expect(container.querySelector('[data-testid="wallet-receipt-success"]')?.textContent).toContain(
