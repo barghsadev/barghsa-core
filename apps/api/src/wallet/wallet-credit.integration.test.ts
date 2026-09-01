@@ -13,6 +13,9 @@
  *   4. A wallet whose posted_balance is already negative is rejected
  *      and left unchanged (no ledger row).
  *   5. A missing wallet is NotFound.
+ *   6. Reusing a debit or reservation idempotency key, or retrying a credit
+ *      with a different amount/type/refId, is ConflictException and does not
+ *      mutate the wallet.
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
  * schema-scoped Testcontainers pool.
@@ -262,5 +265,106 @@ describe('WalletService.credit — real PostgreSQL (T-04.2.01.03)', () => {
     await expect(
       service.credit(PROFILE_A, 0n, { type: 'topup' }, 'credit-zero'),
     ).rejects.toBeInstanceOf(BadRequestException)
+  })
+
+  it('rejects credit that reuses a debit idempotency key without changing the balance', async () => {
+    await ctx.pool.query(
+      `UPDATE wallets SET posted_balance = 50_000, reserved_balance = 0, version = 0 WHERE profile_id = $1`,
+      [PROFILE_B],
+    )
+    await ctx.pool.query(`DELETE FROM wallet_transactions WHERE wallet_id = $1`, [PROFILE_B])
+
+    const debitTx = await service.debit(
+      PROFILE_B,
+      1_000n,
+      { type: 'payment' },
+      'credit-reuses-debit-key',
+    )
+    const afterDebit = await fetchWallet(PROFILE_B)
+
+    await expect(
+      service.credit(PROFILE_B, 1_000n, { type: 'topup' }, 'credit-reuses-debit-key'),
+    ).rejects.toBeInstanceOf(ConflictException)
+
+    const afterAttempt = await fetchWallet(PROFILE_B)
+    expect(afterAttempt.posted_balance).toBe(afterDebit.posted_balance)
+    expect(afterAttempt.reserved_balance).toBe(afterDebit.reserved_balance)
+    expect(afterAttempt.version).toBe(afterDebit.version)
+    expect(debitTx.amount).toBe(-1_000n)
+    expect(
+      (await fetchLedger(PROFILE_B)).filter((row) => row.idempotency_key === 'credit-reuses-debit-key'),
+    ).toHaveLength(1)
+  })
+
+  it('rejects credit that reuses a reservation idempotency key without completing a credit', async () => {
+    await service.reserve(PROFILE_A, 1_000n, 'credit-reuses-reserve-key')
+    const afterReserve = await fetchWallet(PROFILE_A)
+
+    await expect(
+      service.credit(PROFILE_A, 1_000n, { type: 'topup' }, 'credit-reuses-reserve-key'),
+    ).rejects.toBeInstanceOf(ConflictException)
+
+    const afterAttempt = await fetchWallet(PROFILE_A)
+    expect(afterAttempt.posted_balance).toBe(afterReserve.posted_balance)
+    expect(afterAttempt.reserved_balance).toBe(afterReserve.reserved_balance)
+    expect(afterAttempt.version).toBe(afterReserve.version)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'credit-reuses-reserve-key'),
+    ).toEqual([
+      expect.objectContaining({
+        type: 'reservation',
+        state: 'Reserved',
+        idempotency_key: 'credit-reuses-reserve-key',
+      }),
+    ])
+  })
+
+  it('rejects a same-key credit with a different amount without changing the balance', async () => {
+    const first = await service.credit(
+      PROFILE_A,
+      2_000n,
+      { type: 'topup', refId: 'evt-amt' },
+      'credit-mismatch-amount',
+    )
+    const afterFirst = await fetchWallet(PROFILE_A)
+
+    await expect(
+      service.credit(PROFILE_A, 3_000n, { type: 'topup', refId: 'evt-amt' }, 'credit-mismatch-amount'),
+    ).rejects.toBeInstanceOf(ConflictException)
+
+    const afterAttempt = await fetchWallet(PROFILE_A)
+    expect(afterAttempt.posted_balance).toBe(afterFirst.posted_balance)
+    expect(afterAttempt.version).toBe(afterFirst.version)
+    expect(first.amount).toBe(2_000n)
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'credit-mismatch-amount'),
+    ).toHaveLength(1)
+  })
+
+  it('rejects a same-key credit with a different refId without changing the balance', async () => {
+    const first = await service.credit(
+      PROFILE_A,
+      1_500n,
+      { type: 'refund', refId: 'refund-ref-a' },
+      'credit-mismatch-ref',
+    )
+    const afterFirst = await fetchWallet(PROFILE_A)
+
+    await expect(
+      service.credit(PROFILE_A, 1_500n, { type: 'refund', refId: 'refund-ref-b' }, 'credit-mismatch-ref'),
+    ).rejects.toBeInstanceOf(ConflictException)
+
+    const afterAttempt = await fetchWallet(PROFILE_A)
+    expect(afterAttempt.posted_balance).toBe(afterFirst.posted_balance)
+    expect(afterAttempt.version).toBe(afterFirst.version)
+    expect(first.refId).toBe('refund-ref-a')
+    expect(
+      (await fetchLedger(PROFILE_A)).filter((row) => row.idempotency_key === 'credit-mismatch-ref'),
+    ).toEqual([
+      expect.objectContaining({
+        amount: '1500',
+        ref_id: 'refund-ref-a',
+      }),
+    ])
   })
 })

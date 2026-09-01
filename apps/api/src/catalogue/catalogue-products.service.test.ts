@@ -543,9 +543,11 @@ describe('CatalogueProductsService (T-09.12.01)', () => {
       const open = priceVersionRow({ effective_from: '2026-08-01T00:00:00.000Z' })
       const p = productRow({ price: '1500000' }) // current price stays old
       wireAddPriceDb(router, p, open)
-      // Future-dated (2026-09-01 > now): the new version is recorded but the
+      // Future-dated (2027-01-01 > now): the new version is recorded but the
       // current price is NOT promoted ahead of its effective date.
-      const result = await service.addPrice(priceInput())
+      const result = await service.addPrice(
+        priceInput({ effectiveFrom: '2027-01-01T00:00:00.000Z' }),
+      )
 
       expect(result.price).toBe('1500000')
       expect(router.queries('INSERT INTO product_price_versions').length).toBe(1)

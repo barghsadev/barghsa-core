@@ -165,6 +165,32 @@ describe('WalletService', () => {
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
     })
 
+    it('inserts the ledger row against the wallet row canonical profile_id', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: canonical })] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ profile_id: canonical, version: 2, posted_balance: '1100000' })],
+        })
+
+      await service.credit(
+        canonical.toUpperCase(),
+        100000n,
+        { type: 'topup', refId: 'evt-1', description: 'online top-up' },
+        'idem-canonical-insert',
+      )
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![1][0]).toBe(canonical)
+    })
+
     it('returns the existing transaction on idempotent retry without mutating the wallet', async () => {
       const wallet = makeWalletRow()
       const existingTx = makeTxRow()
@@ -340,6 +366,132 @@ describe('WalletService', () => {
 
       expect(result.id).toBe('tx-001')
       expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects credit that reuses a debit idempotency key without mutating the wallet', async () => {
+      const wallet = makeWalletRow()
+      const debitTx = makeTxRow({ type: 'payment', amount: '-100000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [debitTx] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects credit that reuses a reservation idempotency key', async () => {
+      const wallet = makeWalletRow()
+      const reservation = makeTxRow({
+        type: 'reservation',
+        amount: '100000',
+        state: 'Reserved',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects a same-key credit with a different amount', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({ type: 'topup', amount: '100000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      await expect(
+        service.credit('profile-1', 200000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects a same-key credit with a different ledger type', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({ type: 'topup', amount: '100000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'refund' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects a same-key credit with a different refId', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({
+        type: 'topup',
+        amount: '100000',
+        state: 'Completed',
+        ref_id: 'evt-1',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup', refId: 'evt-2' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects unique-index race recovery when the existing row is a debit', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ type: 'payment', amount: '-100000', state: 'Completed' })],
+      })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects unique-index race recovery when the existing credit has a different amount', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ type: 'topup', amount: '50000', state: 'Completed' })],
+      })
+
+      await expect(
+        service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
   })
