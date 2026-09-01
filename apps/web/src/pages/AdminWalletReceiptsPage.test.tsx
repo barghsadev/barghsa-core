@@ -49,6 +49,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
         const url = String(input)
         const method = (init?.method ?? 'GET').toUpperCase()
+        if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
+          return { ok: true, json: async () => ({ limitIrR: 2_000_000_000, version: 0 }) }
+        }
         if (url.endsWith('/api/admin/wallet/bank-receipt-top-ups') && method === 'GET') {
           return {
             ok: true,

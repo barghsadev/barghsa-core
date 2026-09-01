@@ -51,7 +51,11 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         )
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
-        return jsonResponse({ balance: 1_500_000, currency: 'IRR' })
+        return jsonResponse({
+          balance: 1_500_000,
+          currency: 'IRR',
+          onlineTopUpLimit: 2_000_000_000,
+        })
       }
       return jsonResponse({}, 404)
     })
@@ -96,6 +100,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(balance.replace(/[^\d]/g, '')).toBe('1500000')
     expect(balance).toContain('IRR')
     expect(container.querySelector('[data-testid="wallet-page"]')?.getAttribute('dir')).toBe('ltr')
+    expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain('2,000,000,000')
   })
 
   it('posts the amount and redirects the browser to the gateway', async () => {
@@ -152,6 +157,46 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
       'The payment gateway is unavailable',
     )
+  })
+
+  it('blocks submit client-side when the amount exceeds the advertised onlineTopUpLimit', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return jsonResponse({ activeProfileId: PROFILE_ID })
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
+        return jsonResponse({
+          balance: 0,
+          currency: 'IRR',
+          onlineTopUpLimit: 50_000,
+          configVersion: 2,
+        })
+      }
+      return jsonResponse({}, 404)
+    })
+
+    await renderPage()
+    const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
+    const form = input.closest('form') as HTMLFormElement
+    await act(async () => {
+      setInputValue(input, '50001')
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
+      'Amount exceeds the online top-up limit',
+    )
+    expect(assign).not.toHaveBeenCalled()
   })
 
   it('shows the limit-exceeded error and does not redirect', async () => {

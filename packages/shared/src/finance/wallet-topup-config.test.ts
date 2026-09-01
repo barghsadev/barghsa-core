@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest'
 import {
   DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
   validateWalletTopUpLimitConfig,
   toWalletTopUpLimitConfig,
+  toOnlineTopUpLimitSnapshot,
   isValidWalletTopUpLimit,
   isOnlineWalletTopUpAllowed,
   parseOnlineTopUpAmountIrR,
@@ -18,6 +20,10 @@ describe('wallet-topup-config contract constants (T-09.10.01)', () => {
 
   it('stores under the finance.wallet_top_up_limit app_config key', () => {
     expect(WALLET_TOP_UP_LIMIT_CONFIG_KEY).toBe('finance.wallet_top_up_limit')
+  })
+
+  it('uses a stable advisory-lock namespace so submission and admin writes share a lock', () => {
+    expect(WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE).toBe('barghsa.finance.wallet_top_up_limit')
   })
 })
 
@@ -170,6 +176,25 @@ describe('isOnlineWalletTopUpAllowed (T-09.10.01)', () => {
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2.5 }, 100)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, 100.5)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, '100' as never)).toBe(false)
+  })
+})
+
+describe('toOnlineTopUpLimitSnapshot (T-04.2.02.06)', () => {
+  it('records onlineTopUpLimit and a non-negative integer config version', () => {
+    expect(toOnlineTopUpLimitSnapshot({ limitIrR: 50_000 }, 4)).toEqual({
+      onlineTopUpLimit: 50_000,
+      configVersion: 4,
+    })
+  })
+
+  it('treats a missing or invalid version as 0 (unpersisted default)', () => {
+    expect(toOnlineTopUpLimitSnapshot(DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, null)).toEqual({
+      onlineTopUpLimit: 2_000_000_000,
+      configVersion: 0,
+    })
+    expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, undefined).configVersion).toBe(0)
+    expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, -1).configVersion).toBe(0)
+    expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, 1.5).configVersion).toBe(0)
   })
 })
 

@@ -22,6 +22,11 @@ const RECEIPT_KEY = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
 
 function makeController() {
   const getAccessibleProfile = vi.fn().mockResolvedValue({ id: PROFILE_ID })
+  const getWallet = vi.fn().mockResolvedValue(null)
+  const resolveOnlineTopUpLimit = vi.fn().mockResolvedValue({
+    onlineTopUpLimit: 2_000_000_000,
+    configVersion: 0,
+  })
   const initiate = vi.fn().mockResolvedValue({
     transactionId: 'tx-1',
     amount: 100_000n,
@@ -37,12 +42,12 @@ function makeController() {
     attachmentKey: RECEIPT_KEY,
   })
   const controller = new WalletController(
-    {} as never,
+    { getWallet, resolveOnlineTopUpLimit } as never,
     { getAccessibleProfile } as never,
     { initiate } as never,
     { submit } as never,
   )
-  return { controller, getAccessibleProfile, initiate, submit }
+  return { controller, getAccessibleProfile, initiate, submit, getWallet, resolveOnlineTopUpLimit }
 }
 
 function rejectionBody(error: unknown): Record<string, unknown> {
@@ -53,6 +58,26 @@ function rejectionBody(error: unknown): Record<string, unknown> {
 }
 
 describe('WalletController online top-up (T-04.2.02.01)', () => {
+  it('returns the versioned onlineTopUpLimit with the wallet balance', async () => {
+    const { controller, getWallet, resolveOnlineTopUpLimit } = makeController()
+    getWallet.mockResolvedValue({
+      availableBalance: 1_500_000n,
+      postedBalance: 1_500_000n,
+      reservedBalance: 0n,
+    })
+    resolveOnlineTopUpLimit.mockResolvedValue({
+      onlineTopUpLimit: 50_000,
+      configVersion: 4,
+    })
+    await expect(controller.getWallet(PROFILE_ID, req)).resolves.toEqual({
+      balance: 1_500_000,
+      postedBalance: 1_500_000,
+      reservedBalance: 0,
+      currency: 'IRR',
+      onlineTopUpLimit: 50_000,
+      configVersion: 4,
+    })
+  })
   it('rejects a non-UUID profileId before calling the service', async () => {
     const { controller, initiate, getAccessibleProfile } = makeController()
     const rejection = await controller

@@ -9,6 +9,7 @@ interface WalletBalance {
   postedBalance?: number
   reservedBalance?: number
   currency: string
+  onlineTopUpLimit?: number
 }
 
 type PageError =
@@ -281,6 +282,14 @@ export function WalletPage() {
       return
     }
 
+    if (
+      typeof wallet?.onlineTopUpLimit === 'number' &&
+      (wallet.onlineTopUpLimit === 0 || amountValue > wallet.onlineTopUpLimit)
+    ) {
+      setError('limit-exceeded')
+      return
+    }
+
     setSubmitting(true)
     setError(null)
     try {
@@ -492,7 +501,14 @@ export function WalletPage() {
                   className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
                 <p id="top-up-amount-hint" className="mt-2 text-sm text-gray-500">
-                  {t('wallet.page.amountHint', locale)}
+                  {wallet?.onlineTopUpLimit === 0
+                    ? t('wallet.page.amountHintBlocked', locale)
+                    : t('wallet.page.amountHint', locale).replace(
+                        '{limit}',
+                        typeof wallet?.onlineTopUpLimit === 'number'
+                          ? formatAmount(wallet.onlineTopUpLimit, locale)
+                          : '—',
+                      )}
                 </p>
                 {tomanPreview !== null && (
                   <p className="mt-1 text-sm text-gray-500" data-testid="wallet-toman">

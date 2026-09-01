@@ -17,6 +17,7 @@ import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 import { formatIrr } from '../lib/customer-invoices.js'
 import { isImageAttachment, isPdfAttachment, isTransactionUuid } from '../lib/bank-receipt-confirmation.js'
+import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js'
 
 /**
  * Staff bank-receipt confirmation queue (T-04.2.02.04).
@@ -453,6 +454,8 @@ export default function AdminWalletReceiptsPage() {
         <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
         <p className="text-gray-600 mt-2">{t('admin.walletReceipts.description', locale)}</p>
       </header>
+
+      <WalletTopUpLimitConfigPanel />
 
       {error && (
         <div
