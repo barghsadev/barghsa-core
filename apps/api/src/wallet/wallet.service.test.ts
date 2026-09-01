@@ -1774,7 +1774,7 @@ describe('WalletService', () => {
     })
   })
 
-  describe('validateOnlineTopUpAmount (T-09.10.01)', () => {
+  describe('validateOnlineTopUpAmount (T-04.2.02.06)', () => {
     beforeEach(() => {
       mockPool.query.mockReset()
     })
@@ -1789,9 +1789,12 @@ describe('WalletService', () => {
       expect(mockPool.query).not.toHaveBeenCalled()
     })
 
-    it('uses the 2,000,000,000 IRR default when no limit is persisted', async () => {
+    it('uses the 2,000,000,000 IRR default at version 0 when no limit is persisted', async () => {
       mockPool.query.mockResolvedValue({ rows: [] })
-      await expect(service.validateOnlineTopUpAmount(2_000_000_000n)).resolves.toBeUndefined()
+      await expect(service.validateOnlineTopUpAmount(2_000_000_000n)).resolves.toEqual({
+        onlineTopUpLimit: 2_000_000_000,
+        configVersion: 0,
+      })
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringContaining('app_config'),
         ['finance.wallet_top_up_limit'],
@@ -1805,17 +1808,52 @@ describe('WalletService', () => {
       )
     })
 
-    it('enforces a persisted admin limit', async () => {
-      mockPool.query.mockResolvedValue({ rows: [{ value: { limit_irr: 1_000_000_000 } }] })
-      await expect(service.validateOnlineTopUpAmount(1_000_000_000n)).resolves.toBeUndefined()
+    it('enforces a persisted admin limit and returns its version', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [{ value: { limit_irr: 1_000_000_000 }, version: 3 }],
+      })
+      await expect(service.validateOnlineTopUpAmount(1_000_000_000n)).resolves.toEqual({
+        onlineTopUpLimit: 1_000_000_000,
+        configVersion: 3,
+      })
       await expect(service.validateOnlineTopUpAmount(1_000_000_001n)).rejects.toThrow(
         'exceeds the configured per-transaction limit',
       )
     })
 
     it('blocks everything when the configured limit is 0', async () => {
-      mockPool.query.mockResolvedValue({ rows: [{ value: { limit_irr: 0 } }] })
+      mockPool.query.mockResolvedValue({ rows: [{ value: { limit_irr: 0 }, version: 2 }] })
       await expect(service.validateOnlineTopUpAmount(1n)).rejects.toThrow('exceeds')
+    })
+
+    it('locks the versioned config row when a submission client is provided', async () => {
+      mockClient.query.mockResolvedValueOnce({
+        rows: [{ value: { limit_irr: 75_000 }, version: 8 }],
+      })
+      await expect(service.validateOnlineTopUpAmount(75_000n, mockClient)).resolves.toEqual({
+        onlineTopUpLimit: 75_000,
+        configVersion: 8,
+      })
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('FOR UPDATE'),
+        ['finance.wallet_top_up_limit'],
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
+    })
+
+    it('reads the versioned config cache when no submission client is provided', async () => {
+      const getWithVersion = vi.fn().mockResolvedValue({
+        value: { limit_irr: 250_000 },
+        version: 5,
+        fresh: true,
+      })
+      const cached = new WalletService({ getWithVersion } as never)
+      await expect(cached.validateOnlineTopUpAmount(250_000n)).resolves.toEqual({
+        onlineTopUpLimit: 250_000,
+        configVersion: 5,
+      })
+      expect(getWithVersion).toHaveBeenCalledWith('finance.wallet_top_up_limit')
+      expect(mockPool.query).not.toHaveBeenCalled()
     })
   })
 })

@@ -1,4 +1,4 @@
-import { Injectable, Logger, HttpException } from '@nestjs/common'
+import { Injectable, Logger, HttpException, Optional } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
 import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db'
@@ -21,7 +21,6 @@ import {
   toWalletTopUpLimitConfig,
   validateWalletTopUpLimitConfig,
   isValidWalletTopUpLimit,
-  type WalletTopUpLimitConfig,
   GREEN_ELECTRICITY_CONFIG_KEY,
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
   toGreenElectricityConfig,
@@ -55,6 +54,7 @@ import {
   type EscalationPolicies,
 } from '@barghsa/shared/admin'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 
 /**
  * Supported activation methods for new staff users.
@@ -391,6 +391,10 @@ function parseRoleChangeMetadata(raw: unknown): RoleChangeMetadata | null {
 @Injectable()
 export class AdminService {
   private readonly logger = new Logger(AdminService.name)
+
+  constructor(
+    @Optional() private readonly configCache?: ConfigCacheService,
+  ) {}
 
   /**
    * Create a new staff user.
@@ -1199,30 +1203,38 @@ export class AdminService {
 
   /**
    * Get the current admin-configurable per-transaction online wallet top-up
-   * limit from `app_config`.
+   * limit from `app_config`, including the per-key config version
+   * (T-04.2.02.06).
    *
-   * Returns the 2,000,000,000 IRR default when no admin value has been
-   * persisted yet (T-09.10.01). A persisted row that does not normalize to a
-   * *valid* config means the stored value is corrupt; fail open to the
-   * default limit but make the corruption observable so it cannot silently
-   * change the enforced ceiling.
+   * Returns the 2,000,000,000 IRR default at version `0` when no admin
+   * value has been persisted yet (T-09.10.01). A persisted row that does
+   * not normalize to a *valid* config means the stored value is corrupt;
+   * fail open to the default limit but make the corruption observable so
+   * it cannot silently change the enforced ceiling.
    */
-  async getWalletTopUpLimitConfig(): Promise<WalletTopUpLimitConfig> {
+  async getWalletTopUpLimitConfig(): Promise<{ limitIrR: number; version: number }> {
     const pool = getDbPool()
     const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
+      `SELECT value, version FROM app_config WHERE key = $1`,
       [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
     )
-    if (result.rows.length === 0) return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
+    if (result.rows.length === 0) {
+      return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: 0 }
+    }
     const config = toWalletTopUpLimitConfig(result.rows[0]!.value)
     const persisted = result.rows[0]!.value as Record<string, unknown> | null
     const persistedValue = persisted?.limit_irr ?? persisted?.limitIrR
+    const version = Number(result.rows[0]!.version)
     if (!isValidWalletTopUpLimit(persistedValue)) {
       this.logger.warn(
         `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving default limit`,
       )
+      return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: Number.isFinite(version) ? version : 0 }
     }
-    return config
+    return {
+      ...config,
+      version: Number.isFinite(version) && version >= 0 ? version : 0,
+    }
   }
 
   /**
@@ -1246,7 +1258,7 @@ export class AdminService {
     input: unknown,
     actorUserId: string,
     ip: string,
-  ): Promise<WalletTopUpLimitConfig> {
+  ): Promise<{ limitIrR: number; version: number }> {
     const validation = validateWalletTopUpLimitConfig(input)
     if (!validation.ok) {
       throw new HttpException(
@@ -1328,10 +1340,12 @@ export class AdminService {
 
       await client.query('COMMIT')
 
+      await this.configCache?.invalidate(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
+
       this.logger.log(
-        `Online wallet top-up limit set to IRR ${config.limitIrR} by ${actorUserId}`,
+        `Online wallet top-up limit set to IRR ${config.limitIrR} (version ${newVersion}) by ${actorUserId}`,
       )
-      return config
+      return { ...config, version: newVersion }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`)

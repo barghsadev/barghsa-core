@@ -6,6 +6,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -96,7 +97,14 @@ export class OnlineTopUpService {
       )
     }
 
-    await this.walletService.validateOnlineTopUpAmount(input.amountIrR)
+    try {
+      await this.walletService.validateOnlineTopUpAmount(input.amountIrR)
+    } catch (err) {
+      // A tightened admin limit must not block idempotent replay of a
+      // Pending row already accepted under the previous config version.
+      // New inserts still fail closed via the in-lock re-check.
+      if (!(err instanceof BadRequestException)) throw err
+    }
     await this.walletService.createWallet(input.profileId)
 
     const pool = getDbPool()
@@ -284,6 +292,12 @@ export class OnlineTopUpService {
         return mapTransaction(existing as Parameters<typeof mapTransaction>[0])
       }
 
+      // Re-read the versioned `onlineTopUpLimit` under FOR UPDATE so a
+      // concurrent admin change cannot sneak in between the fail-fast
+      // check and this insert (T-04.2.02.06). Existing Pending retries
+      // above keep the limit that was enforced at original submission.
+      const snapshot = await this.walletService.validateOnlineTopUpAmount(amountIrR, client)
+
       const txResult = await client.query(
         `INSERT INTO wallet_transactions
            (wallet_id, type, amount, state, idempotency_key, description, metadata)
@@ -294,7 +308,11 @@ export class OnlineTopUpService {
           amountIrR.toString(),
           idempotencyKey,
           ONLINE_TOPUP_DESCRIPTION,
-          JSON.stringify({ channel: 'online' }),
+          JSON.stringify({
+            channel: 'online',
+            onlineTopUpLimit: snapshot.onlineTopUpLimit,
+            configVersion: snapshot.configVersion,
+          }),
         ],
       )
 

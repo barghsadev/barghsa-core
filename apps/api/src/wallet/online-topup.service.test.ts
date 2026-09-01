@@ -39,7 +39,7 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
     idempotency_key: IDEM,
     ref_id: null,
     description: 'Online wallet top-up',
-    metadata: { channel: 'online' },
+    metadata: { channel: 'online', onlineTopUpLimit: 2_000_000_000, configVersion: 0 },
     created_at: new Date('2026-09-01'),
     updated_at: new Date('2026-09-01'),
     ...overrides,
@@ -48,7 +48,10 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
 
 function makeWalletService() {
   return {
-    validateOnlineTopUpAmount: vi.fn().mockResolvedValue(undefined),
+    validateOnlineTopUpAmount: vi.fn().mockResolvedValue({
+      onlineTopUpLimit: 2_000_000_000,
+      configVersion: 0,
+    }),
     createWallet: vi.fn().mockResolvedValue({ profileId: PROFILE_ID }),
   }
 }
@@ -166,14 +169,37 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('enforces the online top-up limit before creating a Pending row', async () => {
+    scriptClient()
     walletService.validateOnlineTopUpAmount.mockRejectedValue(
       new BadRequestException('Online top-up amount 2000000001 IRR exceeds the configured per-transaction limit of 2000000000 IRR'),
     )
     await expect(
       service.initiate({ profileId: PROFILE_ID, amountIrR: 2_000_000_001n, idempotencyKey: IDEM }),
     ).rejects.toBeInstanceOf(BadRequestException)
-    expect(walletService.createWallet).not.toHaveBeenCalled()
-    expect(mockPool.connect).not.toHaveBeenCalled()
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO wallet_transactions'),
+      expect.anything(),
+    )
+    expect(gateway.startPayment).not.toHaveBeenCalled()
+  })
+
+  it('re-enforces the versioned onlineTopUpLimit inside the submission transaction', async () => {
+    scriptClient()
+    walletService.validateOnlineTopUpAmount
+      .mockResolvedValueOnce({ onlineTopUpLimit: 2_000_000_000, configVersion: 0 })
+      .mockRejectedValueOnce(
+        new BadRequestException(
+          'Online top-up amount 100000 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        ),
+      )
+    await expect(
+      service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
+    ).rejects.toBeInstanceOf(BadRequestException)
+    expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(2, AMOUNT, mockClient)
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO wallet_transactions'),
+      expect.anything(),
+    )
     expect(gateway.startPayment).not.toHaveBeenCalled()
   })
 
@@ -205,7 +231,8 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       idempotencyKey: IDEM,
     })
 
-    expect(walletService.validateOnlineTopUpAmount).toHaveBeenCalledWith(AMOUNT)
+    expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(1, AMOUNT)
+    expect(walletService.validateOnlineTopUpAmount).toHaveBeenNthCalledWith(2, AMOUNT, mockClient)
     expect(walletService.createWallet).toHaveBeenCalledWith(PROFILE_ID)
     expect(result).toEqual({
       transactionId: TX_ID,
@@ -223,7 +250,17 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     )
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
-      expect.arrayContaining([PROFILE_ID, AMOUNT.toString(), IDEM]),
+      [
+        PROFILE_ID,
+        AMOUNT.toString(),
+        IDEM,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          onlineTopUpLimit: 2_000_000_000,
+          configVersion: 0,
+        }),
+      ],
     )
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining('ref_id = $3'),

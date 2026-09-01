@@ -171,6 +171,8 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
     expect(row!.ref_id).toBe(`auth-${row!.id}`)
     expect(row!.metadata).toMatchObject({
       channel: 'online',
+      onlineTopUpLimit: 2_000_000_000,
+      configVersion: 0,
       gateway: {
         authority: `auth-${row!.id}`,
         redirectUrl: result.redirectUrl,
@@ -223,6 +225,66 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         idempotencyKey: 'online-topup-at-admin',
       })
       expect(ok.amount).toBe(50_000n)
+      const ledger = await fetchLedger(PROFILE_A)
+      const row = ledger.find((entry) => entry.idempotency_key === 'online-topup-at-admin')
+      expect(row!.metadata).toMatchObject({
+        channel: 'online',
+        onlineTopUpLimit: 50_000,
+        configVersion: 1,
+      })
+    } finally {
+      await ctx.pool.query(`DELETE FROM app_config WHERE key = 'finance.wallet_top_up_limit'`)
+    }
+  })
+
+  it('uses a later config version at the next submission and keeps in-flight Pending rows', async () => {
+    await ctx.pool.query(
+      `INSERT INTO app_config (key, value, version) VALUES ('finance.wallet_top_up_limit', $1::jsonb, 1)`,
+      [JSON.stringify({ limit_irr: 80_000 })],
+    )
+    try {
+      const first = await service.initiate({
+        profileId: PROFILE_A,
+        amountIrR: 80_000n,
+        idempotencyKey: 'online-topup-before-tighten',
+      })
+      expect(first.amount).toBe(80_000n)
+
+      await ctx.pool.query(
+        `UPDATE app_config
+         SET value = $1::jsonb, version = version + 1, updated_at = NOW()
+         WHERE key = 'finance.wallet_top_up_limit'`,
+        [JSON.stringify({ limit_irr: 10_000 })],
+      )
+
+      const replay = await service.initiate({
+        profileId: PROFILE_A,
+        amountIrR: 80_000n,
+        idempotencyKey: 'online-topup-before-tighten',
+      })
+      expect(replay.transactionId).toBe(first.transactionId)
+
+      await expect(
+        service.initiate({
+          profileId: PROFILE_A,
+          amountIrR: 10_001n,
+          idempotencyKey: 'online-topup-after-tighten',
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException)
+
+      const next = await service.initiate({
+        profileId: PROFILE_A,
+        amountIrR: 10_000n,
+        idempotencyKey: 'online-topup-after-tighten-ok',
+      })
+      expect(next.amount).toBe(10_000n)
+      const ledger = await fetchLedger(PROFILE_A)
+      expect(
+        ledger.find((row) => row.idempotency_key === 'online-topup-before-tighten')!.metadata,
+      ).toMatchObject({ onlineTopUpLimit: 80_000, configVersion: 1 })
+      expect(
+        ledger.find((row) => row.idempotency_key === 'online-topup-after-tighten-ok')!.metadata,
+      ).toMatchObject({ onlineTopUpLimit: 10_000, configVersion: 2 })
     } finally {
       await ctx.pool.query(`DELETE FROM app_config WHERE key = 'finance.wallet_top_up_limit'`)
     }

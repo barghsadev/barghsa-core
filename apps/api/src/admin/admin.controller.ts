@@ -1866,9 +1866,10 @@ export class AdminController {
    * GET /api/admin/config/wallet-top-up-limit
    *
    * Returns the current admin-configurable per-transaction online wallet
-   * top-up limit as `{ limitIrR }`. Falls back to `{ limitIrR: 2_000_000_000 }`
-   * (2,000,000,000 IRR) when no value is persisted.
-   * Permission: `admin:financial:edit` (T-09.10.01).
+   * top-up limit as `{ limitIrR, version }`. Falls back to
+   * `{ limitIrR: 2_000_000_000, version: 0 }` (2,000,000,000 IRR) when no
+   * value is persisted.
+   * Permission: `admin:financial:edit` (T-09.10.01 / T-04.2.02.06).
    */
   @Get('config/wallet-top-up-limit')
   @ApiOperation({ summary: 'Get the online wallet top-up limit configuration (admin)' })
@@ -1879,6 +1880,7 @@ export class AdminController {
       type: 'object',
       properties: {
         limitIrR: { type: 'number', example: 2000000000 },
+        version: { type: 'number', example: 0 },
       },
     },
   })
@@ -1920,6 +1922,7 @@ export class AdminController {
       type: 'object',
       properties: {
         limitIrR: { type: 'number' },
+        version: { type: 'number' },
       },
     },
   })

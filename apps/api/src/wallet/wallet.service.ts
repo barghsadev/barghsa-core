@@ -1,12 +1,15 @@
-import { Injectable, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
+import { Injectable, Optional, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
   toWalletTopUpLimitConfig,
+  toOnlineTopUpLimitSnapshot,
   isOnlineWalletTopUpAllowed,
-  type WalletTopUpLimitConfig,
+  isValidWalletTopUpLimit,
+  type OnlineTopUpLimitSnapshot,
 } from '@barghsa/shared/finance'
+import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'
 const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency'
@@ -95,6 +98,10 @@ export interface WalletQueryClient {
 
 @Injectable()
 export class WalletService {
+  constructor(
+    @Optional() private readonly configCache?: ConfigCacheService,
+  ) {}
+
   /**
    * Get a wallet by profile ID. Returns null if no wallet exists yet.
    */
@@ -752,41 +759,93 @@ export class WalletService {
   }
 
   /**
+   * Resolve the versioned admin `onlineTopUpLimit` (T-04.2.02.06).
+   *
+   * When `client` is supplied (the submission transaction), the row is
+   * locked with `FOR UPDATE` so a concurrent admin write cannot change the
+   * ceiling after this read and before the Pending ledger insert.
+   * Otherwise the versioned config cache is used, falling back to a
+   * plain `app_config` read. Missing rows serve the 2e9 IRR default at
+   * config version `0`.
+   */
+  async resolveOnlineTopUpLimit(client?: WalletQueryClient): Promise<OnlineTopUpLimitSnapshot> {
+    if (client) {
+      const result = await client.query(
+        `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+      )
+      return snapshotFromConfigRow(result.rows[0])
+    }
+
+    if (this.configCache) {
+      const fetched = await this.configCache.getWithVersion<unknown>(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
+      if (fetched.value == null) {
+        return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
+      }
+      return snapshotFromConfigValue(fetched.value, fetched.version)
+    }
+
+    const pool = getDbPool()
+    const result = await pool.query(
+      `SELECT value, version FROM app_config WHERE key = $1`,
+      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+    )
+    return snapshotFromConfigRow(result.rows[0])
+  }
+
+  /**
    * Enforce the admin-configured per-transaction online wallet top-up limit
-   * (T-09.10.01).
+   * (T-09.10.01 / T-04.2.02.06).
    *
-   * The online top-up initiation flow (S-04.2.02, T-04.2.02.01) must call
-   * this **before** creating a Pending top-up transaction, so no single
-   * online top-up can exceed the admin-configured ceiling. Reads the
-   * `finance.wallet_top_up_limit` value from `app_config`, falling back to
-   * the 2,000,000,000 IRR default when nothing is persisted, and rejects
-   * amounts over it with a 400.
+   * The online top-up initiation flow must call this **before** creating a
+   * Pending top-up, and again inside the submission transaction so the
+   * locked versioned config is the ceiling that is snapshotted onto the
+   * ledger row. Rejects amounts over the current `onlineTopUpLimit` with
+   * a 400.
    *
+   * @returns the versioned snapshot that was enforced
    * @throws BadRequestException when the amount is non-positive or exceeds
    *   the configured limit.
    */
-  async validateOnlineTopUpAmount(amountIrR: bigint): Promise<void> {
+  async validateOnlineTopUpAmount(
+    amountIrR: bigint,
+    client?: WalletQueryClient,
+  ): Promise<OnlineTopUpLimitSnapshot> {
     if (amountIrR <= 0n) {
       throw new BadRequestException('Online top-up amount must be positive')
     }
-    const limit = await this.getOnlineTopUpLimitConfig()
-    if (!isOnlineWalletTopUpAllowed(limit, amountIrR)) {
+    const snapshot = await this.resolveOnlineTopUpLimit(client)
+    if (!isOnlineWalletTopUpAllowed({ limitIrR: snapshot.onlineTopUpLimit }, amountIrR)) {
       throw new BadRequestException(
-        `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured per-transaction limit of ${limit.limitIrR} IRR`,
+        `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured per-transaction limit of ${snapshot.onlineTopUpLimit} IRR`,
       )
     }
+    return snapshot
   }
+}
 
-  /** Read the current online top-up limit config (default 2e9 IRR when unset). */
-  private async getOnlineTopUpLimitConfig(): Promise<WalletTopUpLimitConfig> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-    )
-    if (result.rows.length === 0) return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
-    return toWalletTopUpLimitConfig(result.rows[0]!.value)
+function snapshotFromConfigRow(row: unknown): OnlineTopUpLimitSnapshot {
+  if (!row || typeof row !== 'object') {
+    return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
   }
+  const rec = row as { value?: unknown; version?: unknown }
+  return snapshotFromConfigValue(rec.value, rec.version)
+}
+
+function snapshotFromConfigValue(
+  value: unknown,
+  version: unknown,
+): OnlineTopUpLimitSnapshot {
+  const config = toWalletTopUpLimitConfig(value)
+  const persisted =
+    value && typeof value === 'object'
+      ? (value as Record<string, unknown>).limit_irr ?? (value as Record<string, unknown>).limitIrR
+      : undefined
+  if (persisted !== undefined && !isValidWalletTopUpLimit(persisted)) {
+    return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
+  }
+  const numericVersion = typeof version === 'number' ? version : Number(version)
+  return toOnlineTopUpLimitSnapshot(config, Number.isFinite(numericVersion) ? numericVersion : 0)
 }
 
 function mapWallet(row: any): WalletRow {

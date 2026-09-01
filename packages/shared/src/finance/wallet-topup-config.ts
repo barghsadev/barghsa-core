@@ -117,8 +117,37 @@ export function toWalletTopUpLimitConfig(input: unknown): WalletTopUpLimitConfig
 }
 
 /**
+ * Snapshot of the versioned `onlineTopUpLimit` that was enforced when a
+ * Pending online top-up was submitted (T-04.2.02.06).
+ *
+ * `onlineTopUpLimit` is the per-transaction ceiling in IRR. `configVersion`
+ * is `app_config.version` for {@link WALLET_TOP_UP_LIMIT_CONFIG_KEY}, or
+ * `0` when the default is used because nothing is persisted yet.
+ */
+export interface OnlineTopUpLimitSnapshot {
+  onlineTopUpLimit: number
+  configVersion: number
+}
+
+/**
+ * Build the submission snapshot from a resolved limit config and its
+ * per-key `app_config` version.
+ */
+export function toOnlineTopUpLimitSnapshot(
+  config: WalletTopUpLimitConfig,
+  version: number | null | undefined,
+): OnlineTopUpLimitSnapshot {
+  const configVersion =
+    typeof version === 'number' && Number.isSafeInteger(version) && version >= 0 ? version : 0
+  return {
+    onlineTopUpLimit: config.limitIrR,
+    configVersion,
+  }
+}
+
+/**
  * Whether a proposed online top-up amount is permitted under a limit config
- * (the check T-04.2.02.01 must run before creating a Pending top-up).
+ * (the check T-04.2.02.01 / T-04.2.02.06 must run before creating a Pending top-up).
  *
  * Fail-closed: a corrupt/absent limit config, a non-integer amount, or a
  * non-positive amount is never allowed, and a configured `0` limit blocks

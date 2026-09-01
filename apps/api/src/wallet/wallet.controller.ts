@@ -76,12 +76,22 @@ export class WalletController {
     await this.assertProfileAccess(req, profileId)
     this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`)
     const wallet = await this.walletService.getWallet(profileId)
-    if (!wallet) return { balance: 0, currency: 'IRR' }
+    const limit = await this.walletService.resolveOnlineTopUpLimit()
+    if (!wallet) {
+      return {
+        balance: 0,
+        currency: 'IRR',
+        onlineTopUpLimit: limit.onlineTopUpLimit,
+        configVersion: limit.configVersion,
+      }
+    }
     return {
       balance: Number(wallet.availableBalance),
       postedBalance: Number(wallet.postedBalance),
       reservedBalance: Number(wallet.reservedBalance),
       currency: 'IRR',
+      onlineTopUpLimit: limit.onlineTopUpLimit,
+      configVersion: limit.configVersion,
     }
   }
 
