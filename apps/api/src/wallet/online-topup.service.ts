@@ -39,6 +39,14 @@ interface GatewaySessionMeta {
   redirectUrl: string
 }
 
+interface InitializingGatewayClaim {
+  claimId: string
+  providerIdempotencyKey: string
+  merchantOrderId: string
+  amountIrR: string
+  callbackUrl: string
+}
+
 interface QueryClient {
   query: (
     text: string,
@@ -56,8 +64,11 @@ interface QueryClient {
  *      + Pending-row claim) so concurrent retries cannot start two PSP
  *      sessions.
  *   4. Insert a Pending `topup` ledger row (does not change balances).
- *   5. Start a payment-gateway session and persist authority/redirect
- *      with a compare-and-set update.
+ *   5. Claim gateway start at most once, persist the provider idempotency
+ *      key (transaction id), then start a payment-gateway session and
+ *      compare-and-set persist authority/redirect. An initializing claim
+ *      without an authority is recovered with the same provider key —
+ *      never overwritten into a second payable session.
  *
  * Wallet credit is intentionally deferred to the authenticated provider
  * callback (T-04.2.02.02). Browser redirect is not proof of payment.
@@ -101,28 +112,57 @@ export class OnlineTopUpService {
           return toResult(pending, existing.redirectUrl)
         }
 
-        const claimId = randomUUID()
-        const claimed = await this.claimGatewayInitialization(client, pending.id, claimId)
-        if (!claimed) {
-          const stored = await this.loadStoredSession(client, pending.id)
-          if (stored) return toResult(pending, stored.redirectUrl)
-          throw httpError(
-            ErrorCodes.PROVIDER_DOWNSTREAM,
-            'Payment gateway session is already being initialized',
-            502,
+        const callbackUrl = resolvePaymentGatewayCallbackUrl()
+        let recovered = readInitializingClaim(pending.metadata, pending.id, callbackUrl)
+        let claimId: string
+        let ownsFreshClaim = false
+
+        if (recovered) {
+          claimId = recovered.claimId
+        } else {
+          claimId = randomUUID()
+          const claimed = await this.claimGatewayInitialization(
+            client,
+            pending.id,
+            claimId,
+            input.amountIrR,
+            callbackUrl,
           )
+          if (claimed) {
+            ownsFreshClaim = true
+          } else {
+            const stored = await this.loadStoredSession(client, pending.id)
+            if (stored) return toResult(pending, stored.redirectUrl)
+            recovered = await this.loadInitializingClaim(client, pending.id, callbackUrl)
+            if (!recovered) {
+              throw httpError(
+                ErrorCodes.PROVIDER_DOWNSTREAM,
+                'Payment gateway session is already being initialized',
+                502,
+              )
+            }
+            claimId = recovered.claimId
+          }
         }
 
+        const providerIdempotencyKey = recovered?.providerIdempotencyKey ?? pending.id
+        const startAmount =
+          recovered?.amountIrR && recovered.amountIrR.length > 0
+            ? BigInt(recovered.amountIrR)
+            : input.amountIrR
         let session: PaymentGatewayStartResult
         try {
           session = await this.paymentGateway.startPayment({
-            amountIrR: input.amountIrR,
-            merchantOrderId: pending.id,
+            amountIrR: startAmount,
+            merchantOrderId: recovered?.merchantOrderId ?? pending.id,
             description: ONLINE_TOPUP_DESCRIPTION,
-            callbackUrl: resolvePaymentGatewayCallbackUrl(),
+            callbackUrl: recovered?.callbackUrl ?? callbackUrl,
+            idempotencyKey: providerIdempotencyKey,
           })
         } catch (error) {
-          await this.releaseGatewayClaim(client, pending.id, claimId)
+          if (ownsFreshClaim) {
+            await this.releaseGatewayClaim(client, pending.id, claimId)
+          }
           this.logger.error(
             `Payment gateway start failed for pending top-up ${pending.id}`,
             error instanceof Error ? error.stack : undefined,
@@ -134,12 +174,26 @@ export class OnlineTopUpService {
           )
         }
 
-        const persisted = await this.persistGatewaySession(
-          client,
-          pending.id,
-          claimId,
-          session,
-        )
+        let persisted: GatewaySessionMeta | null
+        try {
+          persisted = await this.persistGatewaySession(
+            client,
+            pending.id,
+            claimId,
+            session,
+            providerIdempotencyKey,
+          )
+        } catch (error) {
+          this.logger.error(
+            `Failed to persist payment gateway session for pending top-up ${pending.id}`,
+            error instanceof Error ? error.stack : undefined,
+          )
+          throw httpError(
+            ErrorCodes.PROVIDER_DOWNSTREAM,
+            'Payment gateway session could not be stored',
+            502,
+          )
+        }
         if (persisted) {
           return toResult(pending, persisted.redirectUrl)
         }
@@ -238,13 +292,15 @@ export class OnlineTopUpService {
     client: QueryClient,
     transactionId: string,
     claimId: string,
+    amountIrR: bigint,
+    callbackUrl: string,
   ): Promise<boolean> {
     const result = await client.query(
       `UPDATE wallet_transactions
        SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
        WHERE id = $1
          AND state = 'Pending'
-         AND COALESCE(metadata #>> '{gateway,authority}', '') = ''
+         AND metadata -> 'gateway' IS NULL
        RETURNING id`,
       [
         transactionId,
@@ -252,6 +308,10 @@ export class OnlineTopUpService {
           gateway: {
             status: 'initializing',
             claimId,
+            providerIdempotencyKey: transactionId,
+            merchantOrderId: transactionId,
+            amountIrR: amountIrR.toString(),
+            callbackUrl,
           },
         }),
       ],
@@ -264,6 +324,7 @@ export class OnlineTopUpService {
     transactionId: string,
     claimId: string,
     session: PaymentGatewayStartResult,
+    providerIdempotencyKey: string,
   ): Promise<GatewaySessionMeta | null> {
     const result = await client.query(
       `UPDATE wallet_transactions
@@ -282,6 +343,7 @@ export class OnlineTopUpService {
             authority: session.authority,
             redirectUrl: session.redirectUrl,
             claimId,
+            providerIdempotencyKey,
           },
         }),
         session.authority,
@@ -321,6 +383,23 @@ export class OnlineTopUpService {
     if (result.rows.length === 0) return null
     return readGatewaySession((result.rows[0] as { metadata: unknown }).metadata)
   }
+
+  private async loadInitializingClaim(
+    client: QueryClient,
+    transactionId: string,
+    callbackUrl: string,
+  ): Promise<InitializingGatewayClaim | null> {
+    const result = await client.query(
+      `SELECT metadata FROM wallet_transactions WHERE id = $1`,
+      [transactionId],
+    )
+    if (result.rows.length === 0) return null
+    return readInitializingClaim(
+      (result.rows[0] as { metadata: unknown }).metadata,
+      transactionId,
+      callbackUrl,
+    )
+  }
 }
 
 export function onlineTopUpAdvisoryLockKeys(idempotencyKey: string): [number, number] {
@@ -345,6 +424,42 @@ function readGatewaySession(metadata: unknown): GatewaySessionMeta | null {
   if (typeof record.authority !== 'string' || record.authority.length === 0) return null
   if (typeof record.redirectUrl !== 'string' || record.redirectUrl.length === 0) return null
   return { authority: record.authority, redirectUrl: record.redirectUrl }
+}
+
+function readInitializingClaim(
+  metadata: unknown,
+  transactionId: string,
+  fallbackCallbackUrl: string,
+): InitializingGatewayClaim | null {
+  if (!metadata || typeof metadata !== 'object') return null
+  const gateway = (metadata as { gateway?: unknown }).gateway
+  if (!gateway || typeof gateway !== 'object') return null
+  const record = gateway as {
+    authority?: unknown
+    claimId?: unknown
+    providerIdempotencyKey?: unknown
+    merchantOrderId?: unknown
+    amountIrR?: unknown
+    callbackUrl?: unknown
+  }
+  if (typeof record.authority === 'string' && record.authority.length > 0) return null
+  if (typeof record.claimId !== 'string' || record.claimId.length === 0) return null
+  return {
+    claimId: record.claimId,
+    providerIdempotencyKey:
+      typeof record.providerIdempotencyKey === 'string' && record.providerIdempotencyKey.length > 0
+        ? record.providerIdempotencyKey
+        : transactionId,
+    merchantOrderId:
+      typeof record.merchantOrderId === 'string' && record.merchantOrderId.length > 0
+        ? record.merchantOrderId
+        : transactionId,
+    amountIrR: typeof record.amountIrR === 'string' ? record.amountIrR : '',
+    callbackUrl:
+      typeof record.callbackUrl === 'string' && record.callbackUrl.length > 0
+        ? record.callbackUrl
+        : fallbackCallbackUrl,
+  }
 }
 
 function assertMatchingPendingTopUp(

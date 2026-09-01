@@ -18,6 +18,7 @@ const START_REQUEST = {
   merchantOrderId: 'tx-001',
   description: 'Online wallet top-up',
   callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+  idempotencyKey: 'tx-001',
 }
 
 const PRODUCTION_CALLBACK_ENV = {
@@ -55,13 +56,21 @@ describe('RedirectPaymentGateway (T-04.2.02.01)', () => {
     )
   })
 
-  it('issues a distinct authority on every start', async () => {
+  it('reuses the same authority when the provider idempotency key is repeated', async () => {
     const gateway = createRedirectPaymentGateway({
       startUrl: 'https://pay.example.test/checkout',
     })
     const first = await gateway.startPayment(START_REQUEST)
     const second = await gateway.startPayment(START_REQUEST)
-    expect(first.authority).not.toBe(second.authority)
+    expect(first.authority).toBe(second.authority)
+    expect(first.redirectUrl).toBe(second.redirectUrl)
+
+    const other = await gateway.startPayment({
+      ...START_REQUEST,
+      merchantOrderId: 'tx-002',
+      idempotencyKey: 'tx-002',
+    })
+    expect(other.authority).not.toBe(first.authority)
   })
 
   it('rejects a non-https configured start URL', () => {
@@ -217,7 +226,10 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
       'https://payment.zarinpal.com/pg/v4/payment/request.json',
       expect.objectContaining({
         method: 'POST',
-        headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'Idempotency-Key': 'tx-001',
+        }),
       }),
     )
     const posted = JSON.parse((fetchImpl as ReturnType<typeof vi.fn>).mock.calls[0]![1].body as string)
@@ -226,7 +238,7 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
       amount: 250000,
       callback_url: START_REQUEST.callbackUrl,
       description: START_REQUEST.description,
-      metadata: { order_id: 'tx-001' },
+      metadata: { order_id: 'tx-001', idempotency_key: 'tx-001' },
     })
   })
 
@@ -282,6 +294,7 @@ describe('HTTP payment gateway (T-04.2.02.01)', () => {
         headers: expect.objectContaining({
           Authorization: 'Bearer secret-key',
           'X-API-KEY': 'secret-key',
+          'Idempotency-Key': 'tx-001',
         }),
       }),
     )
@@ -289,6 +302,7 @@ describe('HTTP payment gateway (T-04.2.02.01)', () => {
     expect(posted).toEqual({
       amount: 250000,
       orderId: 'tx-001',
+      idempotencyKey: 'tx-001',
       callbackUrl: START_REQUEST.callbackUrl,
       description: START_REQUEST.description,
     })

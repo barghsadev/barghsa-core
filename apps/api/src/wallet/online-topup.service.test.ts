@@ -66,6 +66,7 @@ type ScriptOptions = {
   insert?: ReturnType<typeof makePendingRow> | Error
   claimRowCount?: number
   persistRowCount?: number
+  persistError?: Error | boolean
 }
 
 function scriptClient(opts: ScriptOptions = {}) {
@@ -94,6 +95,9 @@ function scriptClient(opts: ScriptOptions = {}) {
       return { rows: [], rowCount: 1 }
     }
     if (sql.includes('ref_id = $3')) {
+      if (opts.persistError) {
+        throw opts.persistError instanceof Error ? opts.persistError : new Error('db down')
+      }
       const rowCount = opts.persistRowCount ?? 1
       return {
         rowCount,
@@ -111,7 +115,7 @@ function scriptClient(opts: ScriptOptions = {}) {
             : [],
       }
     }
-    if (sql.includes("'{gateway,authority}'") && sql.includes('SET metadata')) {
+    if (sql.includes("metadata -> 'gateway' IS NULL")) {
       const rowCount = opts.claimRowCount ?? 1
       return { rowCount, rows: rowCount > 0 ? [{ id: TX_ID }] : [] }
     }
@@ -208,6 +212,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       expect.objectContaining({
         amountIrR: AMOUNT,
         merchantOrderId: TX_ID,
+        idempotencyKey: TX_ID,
       }),
     )
     expect(mockClient.query).toHaveBeenCalledWith(
@@ -328,6 +333,82 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining("- 'gateway'"),
       expect.any(Array),
+    )
+  })
+
+  it('leaves the initializing claim when persist fails after startPayment succeeds', async () => {
+    scriptClient({ persistError: true })
+
+    const rejection = await service
+      .initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM })
+      .catch((e: unknown) => e)
+
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(502)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.PROVIDER_DOWNSTREAM.code,
+      message: 'Payment gateway session could not be stored',
+    })
+    expect(gateway.startPayment).toHaveBeenCalledTimes(1)
+    expect(gateway.startPayment).toHaveBeenCalledWith(
+      expect.objectContaining({ idempotencyKey: TX_ID }),
+    )
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining("metadata -> 'gateway' IS NULL"),
+      expect.any(Array),
+    )
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining("- 'gateway'"),
+      expect.any(Array),
+    )
+  })
+
+  it('recovers an initializing claim after crash without overwriting it or minting a new provider key', async () => {
+    const claimId = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+    scriptClient({
+      existing: makePendingRow({
+        metadata: {
+          channel: 'online',
+          gateway: {
+            status: 'initializing',
+            claimId,
+            providerIdempotencyKey: TX_ID,
+            merchantOrderId: TX_ID,
+            amountIrR: AMOUNT.toString(),
+            callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+          },
+        },
+      }),
+    })
+
+    const result = await service.initiate({
+      profileId: PROFILE_ID,
+      amountIrR: AMOUNT,
+      idempotencyKey: IDEM,
+    })
+
+    expect(result.redirectUrl).toBe(REDIRECT)
+    expect(gateway.startPayment).toHaveBeenCalledTimes(1)
+    expect(gateway.startPayment).toHaveBeenCalledWith(
+      expect.objectContaining({
+        amountIrR: AMOUNT,
+        merchantOrderId: TX_ID,
+        idempotencyKey: TX_ID,
+        callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+      }),
+    )
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining("metadata -> 'gateway' IS NULL"),
+      expect.any(Array),
+    )
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('ref_id = $3'),
+      expect.arrayContaining([
+        TX_ID,
+        expect.stringContaining(claimId),
+        'auth-1',
+        claimId,
+      ]),
     )
   })
 })

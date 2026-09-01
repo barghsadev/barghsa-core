@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto'
+import { createHash } from 'node:crypto'
 import { isIP } from 'node:net'
 
 /**
@@ -33,6 +33,11 @@ export interface PaymentGatewayStartRequest {
   description: string
   /** Server callback URL the provider should invoke on completion. */
   callbackUrl: string
+  /**
+   * Stable provider idempotency key tied to the Pending transaction id.
+   * Adapters must reuse the same payable session when this key is repeated.
+   */
+  idempotencyKey: string
 }
 
 export interface PaymentGatewayStartResult {
@@ -44,6 +49,26 @@ export interface PaymentGatewayStartResult {
 
 export interface PaymentGateway {
   startPayment(request: PaymentGatewayStartRequest): Promise<PaymentGatewayStartResult>
+}
+
+const AUTHORITY_NAMESPACE = 'barghsa.payment-gateway.authority.v1'
+
+/**
+ * Deterministic UUID derived from the provider idempotency key so the
+ * local redirect adapter can safely retry after a crash without minting
+ * a second payable session.
+ */
+export function stablePaymentAuthority(idempotencyKey: string): string {
+  const digest = createHash('sha256')
+    .update(AUTHORITY_NAMESPACE)
+    .update('\0')
+    .update(idempotencyKey)
+    .digest()
+  const bytes = Buffer.from(digest.subarray(0, 16))
+  bytes[6] = (bytes[6]! & 0x0f) | 0x50
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80
+  const hex = bytes.toString('hex')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
 }
 
 export type PaymentGatewayFetch = (
@@ -261,7 +286,7 @@ export function createRedirectPaymentGateway(
 
   return {
     async startPayment(request) {
-      const authority = randomUUID()
+      const authority = stablePaymentAuthority(request.idempotencyKey)
       const url = new URL(startUrl.href)
       url.searchParams.set('authority', authority)
       url.searchParams.set('amount', request.amountIrR.toString())
@@ -329,12 +354,14 @@ export function createHttpPaymentGateway(options: {
         headers: {
           Authorization: `Bearer ${options.apiKey}`,
           'X-API-KEY': options.apiKey,
+          'Idempotency-Key': request.idempotencyKey,
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
         body: JSON.stringify({
           amount,
           orderId: request.merchantOrderId,
+          idempotencyKey: request.idempotencyKey,
           callbackUrl: request.callbackUrl,
           description: request.description,
         }),
@@ -420,13 +447,17 @@ export function createZarinpalPaymentGateway(options: {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
+          'Idempotency-Key': request.idempotencyKey,
         },
         body: JSON.stringify({
           merchant_id: options.merchantId,
           amount,
           callback_url: request.callbackUrl,
           description: request.description,
-          metadata: { order_id: request.merchantOrderId },
+          metadata: {
+            order_id: request.merchantOrderId,
+            idempotency_key: request.idempotencyKey,
+          },
         }),
         signal: AbortSignal.timeout(timeoutMs),
       })

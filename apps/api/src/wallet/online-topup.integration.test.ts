@@ -12,6 +12,9 @@
  *   4. A colliding key with a different amount is ConflictException.
  *   5. Concurrent same-key retries call startPayment once and keep
  *      metadata.authority aligned with ref_id.
+ *   6. A crash after startPayment succeeds but before persist is recovered
+ *      with the same provider idempotency key and does not mint a second
+ *      payable session.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -314,6 +317,100 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       gateway: {
         authority: row.ref_id,
         redirectUrl: first.redirectUrl,
+      },
+    })
+  })
+
+  it('recovers a crash after startPayment before persist without creating a second provider session', async () => {
+    const sessions = new Map<
+      string,
+      { authority: string; redirectUrl: string }
+    >()
+    let startCallsLocal = 0
+    const idempotentGateway: PaymentGateway = {
+      async startPayment(request) {
+        if (!request.idempotencyKey) {
+          throw new Error('provider idempotency key is required')
+        }
+        startCallsLocal += 1
+        const existing = sessions.get(request.idempotencyKey)
+        if (existing) return existing
+        const session = {
+          authority: `auth-crash-${request.idempotencyKey}`,
+          redirectUrl: `https://pay.test/start?authority=auth-crash-${request.idempotencyKey}`,
+        }
+        sessions.set(request.idempotencyKey, session)
+        return session
+      },
+    }
+    const recoverService = new OnlineTopUpService(walletService, idempotentGateway)
+
+    const inserted = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        '9000',
+        'online-topup-crash-before-persist',
+        'Online wallet top-up',
+        JSON.stringify({ channel: 'online' }),
+      ],
+    )
+    const transactionId = inserted.rows[0]!.id
+    const claimId = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
+    const seeded = {
+      authority: `auth-crash-${transactionId}`,
+      redirectUrl: `https://pay.test/start?authority=auth-crash-${transactionId}`,
+    }
+    sessions.set(transactionId, seeded)
+
+    await ctx.pool.query(
+      `UPDATE wallet_transactions
+       SET metadata = $2::jsonb
+       WHERE id = $1`,
+      [
+        transactionId,
+        JSON.stringify({
+          channel: 'online',
+          gateway: {
+            status: 'initializing',
+            claimId,
+            providerIdempotencyKey: transactionId,
+            merchantOrderId: transactionId,
+            amountIrR: '9000',
+            callbackUrl: 'http://localhost:4000/api/wallet/top-ups/callback',
+          },
+        }),
+      ],
+    )
+
+    const result = await recoverService.initiate({
+      profileId: PROFILE_A,
+      amountIrR: 9_000n,
+      idempotencyKey: 'online-topup-crash-before-persist',
+    })
+
+    expect(result.transactionId).toBe(transactionId)
+    expect(result.redirectUrl).toBe(seeded.redirectUrl)
+    expect(startCallsLocal).toBe(1)
+    expect(sessions.size).toBe(1)
+
+    const ledger = await fetchLedger(PROFILE_A)
+    const matching = ledger.filter(
+      (row) => row.idempotency_key === 'online-topup-crash-before-persist',
+    )
+    expect(matching).toHaveLength(1)
+    const row = matching[0]!
+    expect(row.ref_id).toBe(seeded.authority)
+    expect(row.metadata).toMatchObject({
+      channel: 'online',
+      gateway: {
+        authority: seeded.authority,
+        redirectUrl: seeded.redirectUrl,
+        claimId,
+        providerIdempotencyKey: transactionId,
       },
     })
   })
