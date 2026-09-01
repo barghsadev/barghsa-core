@@ -327,372 +327,171 @@
     "04-invoices-wallet-contracts.md#T-04.1.05.02",
     "04-invoices-wallet-contracts.md#T-04.1.05.03",
     "04-invoices-wallet-contracts.md#T-04.1.05.04",
+    "04-invoices-wallet-contracts.md#T-04.2.01.01",
     "04-invoices-wallet-contracts.md#T-04.2.01.02",
-    "04-invoices-wallet-contracts.md#T-04.2.01.04"
+    "04-invoices-wallet-contracts.md#T-04.2.01.03",
+    "04-invoices-wallet-contracts.md#T-04.2.01.04",
+    "04-invoices-wallet-contracts.md#T-04.2.01.05",
+    "04-invoices-wallet-contracts.md#T-04.2.01.06",
+    "04-invoices-wallet-contracts.md#T-04.2.01.07",
+    "04-invoices-wallet-contracts.md#T-04.2.01.08",
+    "04-invoices-wallet-contracts.md#T-04.2.02.01",
+    "04-invoices-wallet-contracts.md#T-04.2.02.02",
+    "04-invoices-wallet-contracts.md#T-04.2.02.03"
   ],
   "last_error": "",
   "notes": null,
-  "last_updated": "2026-08-31T05:57:49Z",
+  "last_updated": "2026-09-01T21:38:11Z",
   "status_history": [
     {
       "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:57:49Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T21:38:11Z"
     },
     {
       "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:55:35Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T21:35:13Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:52:11Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T21:30:21Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:47:21Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T21:10:57Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:43:20Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T21:06:46Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T20:57:19Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T20:53:36Z"
     },
     {
       "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
-      "at": "2026-08-31T05:36:32Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+      "at": "2026-09-01T20:43:47Z"
     },
     {
       "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "at": "2026-08-31T05:30:34Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:37:10Z"
     },
     {
       "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "at": "2026-08-31T05:28:26Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:34:55Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "at": "2026-08-31T05:25:20Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:30:31Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:23:02Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:18:53Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:08:31Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T20:04:04Z"
+    },
+    {
+      "status": "fixing",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T19:52:15Z"
+    },
+    {
+      "status": "in_review",
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T19:48:00Z"
     },
     {
       "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
-      "at": "2026-08-31T05:21:07Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+      "at": "2026-09-01T19:32:00Z"
     },
     {
       "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T05:15:47Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T19:29:08Z"
     },
     {
       "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T05:13:28Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T19:26:07Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T05:09:23Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T19:21:12Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T05:03:18Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T19:06:31Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:59:26Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T19:02:34Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:48:42Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:51:58Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:45:30Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:48:01Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:40:38Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:42:17Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:36:39Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
-      "at": "2026-08-31T04:26:53Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T04:19:46Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T04:17:31Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T04:13:49Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:38:41Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T04:04:23Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T04:00:57Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:27:06Z"
     },
     {
       "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T03:42:43Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:09:51Z"
     },
     {
       "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T03:39:17Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
-      "at": "2026-08-31T03:30:25Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T03:24:30Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T03:22:16Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T03:18:51Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T03:06:22Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T03:03:04Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
-      "at": "2026-08-31T02:55:27Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
-      "at": "2026-08-31T02:49:29Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
-      "at": "2026-08-31T02:47:03Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
-      "at": "2026-08-31T02:44:05Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
-      "at": "2026-08-31T02:39:00Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
-      "at": "2026-08-31T02:33:42Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
-      "at": "2026-08-31T02:31:35Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
-      "at": "2026-08-31T02:28:15Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
-      "at": "2026-08-31T02:21:21Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T02:13:42Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T02:11:32Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T02:07:26Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:55:27Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:52:16Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:45:57Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:42:18Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:30:18Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:27:00Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:17:34Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:13:22Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:04:42Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T01:01:01Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T00:55:29Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T00:51:26Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T00:44:38Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T00:40:00Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
-      "at": "2026-08-31T00:26:00Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
-      "at": "2026-08-31T00:23:25Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
-      "at": "2026-08-31T00:21:04Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
-      "at": "2026-08-31T00:17:53Z"
-    },
-    {
-      "status": "building",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
-      "at": "2026-08-31T00:12:00Z"
-    },
-    {
-      "status": "idle",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-31T00:09:25Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-31T00:07:09Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-31T00:03:33Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-30T23:58:09Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-30T23:56:37Z"
-    },
-    {
-      "status": "fixing",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-30T23:51:56Z"
-    },
-    {
-      "status": "in_review",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-30T23:48:33Z"
-    },
-    {
-      "status": "approved",
-      "task_key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
-      "at": "2026-08-30T23:36:38Z"
+      "task_key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+      "at": "2026-09-01T18:23:31Z"
     }
   ],
   "current_pr_number": null,
