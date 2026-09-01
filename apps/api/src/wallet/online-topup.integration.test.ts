@@ -10,6 +10,8 @@
  *   3. Retrying with the same idempotency key returns the original
  *      Pending row and does not insert a second transaction.
  *   4. A colliding key with a different amount is ConflictException.
+ *   5. Concurrent same-key retries call startPayment once and keep
+ *      metadata.authority aligned with ref_id.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -271,5 +273,48 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         idempotencyKey: 'online-topup-collision',
       }),
     ).rejects.toBeInstanceOf(ConflictException)
+  })
+
+  it('serializes concurrent same-key retries to a single gateway session', async () => {
+    let localStarts = 0
+    const slowGateway: PaymentGateway = {
+      async startPayment(request) {
+        localStarts += 1
+        await new Promise((resolve) => setTimeout(resolve, 150))
+        return {
+          authority: `auth-once-${request.merchantOrderId}`,
+          redirectUrl: `https://pay.test/start?authority=auth-once-${request.merchantOrderId}`,
+        }
+      },
+    }
+    const concurrentService = new OnlineTopUpService(walletService, slowGateway)
+    const input = {
+      profileId: PROFILE_A,
+      amountIrR: 8_000n,
+      idempotencyKey: 'online-topup-concurrent',
+    }
+
+    const [first, second] = await Promise.all([
+      concurrentService.initiate(input),
+      concurrentService.initiate(input),
+    ])
+
+    expect(localStarts).toBe(1)
+    expect(first.transactionId).toBe(second.transactionId)
+    expect(first.redirectUrl).toBe(second.redirectUrl)
+    expect(first.redirectUrl).toBe(`https://pay.test/start?authority=auth-once-${first.transactionId}`)
+
+    const ledger = await fetchLedger(PROFILE_A)
+    const matching = ledger.filter((row) => row.idempotency_key === 'online-topup-concurrent')
+    expect(matching).toHaveLength(1)
+    const row = matching[0]!
+    expect(row.ref_id).toBe(`auth-once-${row.id}`)
+    expect(row.metadata).toMatchObject({
+      channel: 'online',
+      gateway: {
+        authority: row.ref_id,
+        redirectUrl: first.redirectUrl,
+      },
+    })
   })
 })

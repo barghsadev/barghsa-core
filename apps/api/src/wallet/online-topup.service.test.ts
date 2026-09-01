@@ -60,6 +60,78 @@ function makeGateway(overrides: Partial<PaymentGateway> = {}): PaymentGateway {
   }
 }
 
+type ScriptOptions = {
+  wallet?: { profile_id: string } | null
+  existing?: ReturnType<typeof makePendingRow> | null
+  insert?: ReturnType<typeof makePendingRow> | Error
+  claimRowCount?: number
+  persistRowCount?: number
+}
+
+function scriptClient(opts: ScriptOptions = {}) {
+  mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+      return { rows: [] }
+    }
+    if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
+      return { rows: [] }
+    }
+    if (sql.includes('FROM wallets')) {
+      if (opts.wallet === null) return { rows: [] }
+      return { rows: [opts.wallet ?? { profile_id: PROFILE_ID }] }
+    }
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+      if (sql.includes('FOR UPDATE') && opts.insert instanceof Error) {
+        return { rows: [] }
+      }
+      return { rows: opts.existing ? [opts.existing] : [] }
+    }
+    if (sql.includes('INSERT INTO wallet_transactions')) {
+      if (opts.insert instanceof Error) throw opts.insert
+      return { rows: [opts.insert ?? makePendingRow()] }
+    }
+    if (sql.includes("metadata") && sql.includes("- 'gateway'")) {
+      return { rows: [], rowCount: 1 }
+    }
+    if (sql.includes('ref_id = $3')) {
+      const rowCount = opts.persistRowCount ?? 1
+      return {
+        rowCount,
+        rows:
+          rowCount > 0
+            ? [
+                {
+                  ref_id: 'auth-1',
+                  metadata: {
+                    channel: 'online',
+                    gateway: { authority: 'auth-1', redirectUrl: REDIRECT, claimId: 'claim' },
+                  },
+                },
+              ]
+            : [],
+      }
+    }
+    if (sql.includes("'{gateway,authority}'") && sql.includes('SET metadata')) {
+      const rowCount = opts.claimRowCount ?? 1
+      return { rowCount, rows: rowCount > 0 ? [{ id: TX_ID }] : [] }
+    }
+    if (sql.includes('SELECT metadata FROM wallet_transactions')) {
+      return {
+        rows: [
+          {
+            metadata:
+              opts.existing?.metadata ?? {
+                channel: 'online',
+                gateway: { authority: 'auth-1', redirectUrl: REDIRECT },
+              },
+          },
+        ],
+      }
+    }
+    return { rows: [] }
+  })
+}
+
 describe('OnlineTopUpService (T-04.2.02.01)', () => {
   let walletService: ReturnType<typeof makeWalletService>
   let gateway: PaymentGateway
@@ -75,16 +147,6 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     gateway = makeGateway()
     service = new OnlineTopUpService(walletService as unknown as WalletService, gateway)
   })
-
-  function scriptFirstInsert() {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] }) // FOR UPDATE
-      .mockResolvedValueOnce({ rows: [] }) // idempotency miss
-      .mockResolvedValueOnce({ rows: [makePendingRow()] }) // INSERT
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
-    mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
-  }
 
   it('rejects a blank idempotency key before touching the wallet or gateway', async () => {
     await expect(
@@ -108,15 +170,10 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
 
   it('inserts the Pending row against the locked wallet canonical profile_id', async () => {
     const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: canonical }] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({
-        rows: [makePendingRow({ id: TX_ID, wallet_id: canonical })],
-      })
-      .mockResolvedValueOnce({ rows: [] })
-    mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
+    scriptClient({
+      wallet: { profile_id: canonical },
+      insert: makePendingRow({ id: TX_ID, wallet_id: canonical }),
+    })
 
     await service.initiate({
       profileId: canonical.toUpperCase(),
@@ -132,7 +189,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('creates a Pending top-up, starts the gateway, and does not credit the wallet', async () => {
-    scriptFirstInsert()
+    scriptClient()
     const result = await service.initiate({
       profileId: PROFILE_ID,
       amountIrR: AMOUNT,
@@ -157,25 +214,23 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
       expect.arrayContaining([PROFILE_ID, AMOUNT.toString(), IDEM]),
     )
-    expect(mockPool.query).toHaveBeenCalledWith(
-      expect.stringContaining('UPDATE wallet_transactions'),
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('ref_id = $3'),
       expect.arrayContaining([TX_ID, expect.stringContaining('auth-1'), 'auth-1']),
+    )
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('pg_advisory_lock'),
+      expect.any(Array),
     )
   })
 
   it('replays a matching Pending row with an existing redirect without calling the gateway again', async () => {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] })
-      .mockResolvedValueOnce({
-        rows: [
-          makePendingRow({
-            metadata: { channel: 'online', gateway: { authority: 'auth-1', redirectUrl: REDIRECT } },
-            ref_id: 'auth-1',
-          }),
-        ],
-      })
-      .mockResolvedValueOnce({ rows: [] })
+    scriptClient({
+      existing: makePendingRow({
+        metadata: { channel: 'online', gateway: { authority: 'auth-1', redirectUrl: REDIRECT } },
+        ref_id: 'auth-1',
+      }),
+    })
 
     const result = await service.initiate({
       profileId: PROFILE_ID,
@@ -188,12 +243,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('retries gateway start for a matching Pending row that has no redirect yet', async () => {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] })
-      .mockResolvedValueOnce({ rows: [makePendingRow()] })
-      .mockResolvedValueOnce({ rows: [] })
-    mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
+    scriptClient({ existing: makePendingRow() })
 
     const result = await service.initiate({
       profileId: PROFILE_ID,
@@ -206,10 +256,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('rejects a colliding idempotency key used for a different amount', async () => {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] })
-      .mockResolvedValueOnce({ rows: [makePendingRow({ amount: '50000' })] })
+    scriptClient({ existing: makePendingRow({ amount: '50000' }) })
 
     await expect(
       service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
@@ -218,10 +265,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('rejects a colliding completed credit idempotency key', async () => {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] })
-      .mockResolvedValueOnce({ rows: [makePendingRow({ state: 'Completed' })] })
+    scriptClient({ existing: makePendingRow({ state: 'Completed' }) })
 
     await expect(
       service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
@@ -233,18 +277,11 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       code: '23505',
       constraint: 'idx_wallet_tx_idempotency',
     })
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ profile_id: PROFILE_ID }] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockRejectedValueOnce(uniqueError)
-      .mockResolvedValueOnce({ rows: [] }) // ROLLBACK
-    mockPool.query.mockResolvedValue({
-      rows: [
-        makePendingRow({
-          metadata: { channel: 'online', gateway: { authority: 'auth-1', redirectUrl: REDIRECT } },
-        }),
-      ],
+    scriptClient({
+      insert: uniqueError,
+      existing: makePendingRow({
+        metadata: { channel: 'online', gateway: { authority: 'auth-1', redirectUrl: REDIRECT } },
+      }),
     })
 
     const result = await service.initiate({
@@ -258,19 +295,21 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   })
 
   it('throws NotFound when the wallet row is missing after createWallet', async () => {
-    mockClient.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] }) // ROLLBACK
+    scriptClient({ wallet: null })
 
     await expect(
       service.initiate({ profileId: PROFILE_ID, amountIrR: AMOUNT, idempotencyKey: IDEM }),
     ).rejects.toBeInstanceOf(NotFoundException)
     expect(gateway.startPayment).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('pg_advisory_unlock'),
+      expect.any(Array),
+    )
+    expect(mockClient.release).toHaveBeenCalled()
   })
 
   it('surfaces a gateway failure as PROVIDER_DOWNSTREAM and leaves the Pending row', async () => {
-    scriptFirstInsert()
+    scriptClient()
     gateway.startPayment = vi.fn().mockRejectedValue(new Error('psp down'))
 
     const rejection = await service
@@ -284,6 +323,10 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     })
     expect(mockClient.query).toHaveBeenCalledWith(
       expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
+      expect.any(Array),
+    )
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining("- 'gateway'"),
       expect.any(Array),
     )
   })

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { WalletController } from './wallet.controller.js'
 import { WalletService } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
-import { PAYMENT_GATEWAY, createRedirectPaymentGateway } from './payment-gateway.js'
+import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
 import { SessionModule } from '../session/index.js'
 import { ProfilesModule } from '../profiles/index.js'
 
@@ -14,7 +14,7 @@ import { ProfilesModule } from '../profiles/index.js'
     OnlineTopUpService,
     {
       provide: PAYMENT_GATEWAY,
-      useFactory: () => createRedirectPaymentGateway(),
+      useFactory: () => createPaymentGatewayFromEnv(),
     },
   ],
   exports: [WalletService],
