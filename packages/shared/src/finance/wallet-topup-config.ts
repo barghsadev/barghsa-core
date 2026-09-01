@@ -34,6 +34,17 @@ export const DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG: WalletTopUpLimitConfig = {
 export const WALLET_TOP_UP_LIMIT_CONFIG_KEY = 'finance.wallet_top_up_limit'
 
 /**
+ * Transaction-scoped advisory lock namespace for {@link WALLET_TOP_UP_LIMIT_CONFIG_KEY}.
+ *
+ * `SELECT … FOR UPDATE` locks nothing when the `app_config` row is absent, so
+ * both the online top-up submission transaction and the admin first-write
+ * must take `pg_advisory_xact_lock(hashtext(namespace), hashtext(key))`
+ * before reading or upserting. That serializes the absent-row/first-write
+ * race (T-04.2.02.06).
+ */
+export const WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE = 'barghsa.finance.wallet_top_up_limit'
+
+/**
  * Result of validating a proposed online wallet top-up limit for the admin
  * write path. `ok: true` when the config may be persisted; otherwise
  * `issues` carries one or more human-readable descriptions (English, used as

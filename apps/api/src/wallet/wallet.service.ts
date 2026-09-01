@@ -2,6 +2,7 @@ import { Injectable, Optional, BadRequestException, ConflictException, NotFoundE
 import { getDbPool } from '@barghsa/db'
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
   DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
   toWalletTopUpLimitConfig,
   toOnlineTopUpLimitSnapshot,
@@ -761,15 +762,19 @@ export class WalletService {
   /**
    * Resolve the versioned admin `onlineTopUpLimit` (T-04.2.02.06).
    *
-   * When `client` is supplied (the submission transaction), the row is
-   * locked with `FOR UPDATE` so a concurrent admin write cannot change the
-   * ceiling after this read and before the Pending ledger insert.
-   * Otherwise the versioned config cache is used, falling back to a
-   * plain `app_config` read. Missing rows serve the 2e9 IRR default at
-   * config version `0`.
+   * When `client` is supplied (the submission transaction), an always-present
+   * transaction-scoped advisory lock is taken before `SELECT … FOR UPDATE`.
+   * `FOR UPDATE` locks nothing when the key is absent, so the advisory lock
+   * is what serializes a first admin write against this read. Otherwise the
+   * versioned config cache is used, falling back to a plain `app_config`
+   * read. Missing rows serve the 2e9 IRR default at config version `0`.
    */
   async resolveOnlineTopUpLimit(client?: WalletQueryClient): Promise<OnlineTopUpLimitSnapshot> {
     if (client) {
+      await client.query(
+        `SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`,
+        [WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE, WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+      )
       const result = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
         [WALLET_TOP_UP_LIMIT_CONFIG_KEY],

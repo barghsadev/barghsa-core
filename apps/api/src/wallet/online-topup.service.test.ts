@@ -79,7 +79,11 @@ type ScriptOptions = {
 
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
-    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+    if (
+      sql.includes('pg_advisory_lock') ||
+      sql.includes('pg_advisory_unlock') ||
+      sql.includes('pg_advisory_xact_lock')
+    ) {
       return { rows: [] }
     }
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {

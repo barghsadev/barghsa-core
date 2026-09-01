@@ -292,10 +292,11 @@ export class OnlineTopUpService {
         return mapTransaction(existing as Parameters<typeof mapTransaction>[0])
       }
 
-      // Re-read the versioned `onlineTopUpLimit` under FOR UPDATE so a
-      // concurrent admin change cannot sneak in between the fail-fast
-      // check and this insert (T-04.2.02.06). Existing Pending retries
-      // above keep the limit that was enforced at original submission.
+      // Re-read the versioned `onlineTopUpLimit` under the shared advisory
+      // lock + FOR UPDATE so a concurrent first admin write cannot sneak
+      // in between the fail-fast check and this insert (T-04.2.02.06).
+      // Existing Pending retries above keep the limit that was enforced
+      // at original submission.
       const snapshot = await this.walletService.validateOnlineTopUpAmount(amountIrR, client)
 
       const txResult = await client.query(

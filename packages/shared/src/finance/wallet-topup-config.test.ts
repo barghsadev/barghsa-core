@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
   validateWalletTopUpLimitConfig,
   toWalletTopUpLimitConfig,
   toOnlineTopUpLimitSnapshot,
@@ -19,6 +20,10 @@ describe('wallet-topup-config contract constants (T-09.10.01)', () => {
 
   it('stores under the finance.wallet_top_up_limit app_config key', () => {
     expect(WALLET_TOP_UP_LIMIT_CONFIG_KEY).toBe('finance.wallet_top_up_limit')
+  })
+
+  it('uses a stable advisory-lock namespace so submission and admin writes share a lock', () => {
+    expect(WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE).toBe('barghsa.finance.wallet_top_up_limit')
   })
 })
 

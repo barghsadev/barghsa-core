@@ -17,6 +17,7 @@ import {
   isValidDualApprovalThreshold,
   type DualApprovalConfig,
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
   DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
   toWalletTopUpLimitConfig,
   validateWalletTopUpLimitConfig,
@@ -1285,10 +1286,20 @@ export class AdminService {
     try {
       await client.query('BEGIN')
 
+      // SELECT ... FOR UPDATE locks nothing when the config row does not
+      // yet exist. Take the same transaction-scoped advisory lock the
+      // online top-up submission path uses so a concurrent first write
+      // cannot commit a tighter ceiling after a submission has already
+      // observed the default (T-04.2.02.06).
+      await client.query(
+        `SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`,
+        [WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE, WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+      )
+
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value that is being replaced — read it before
-      // the upsert mutates it. Concurrent writers serialize on this row lock,
-      // so no limit change can be dropped from the audit trail.
+      // the upsert mutates it. Concurrent writers serialize on this row lock
+      // once the row exists, and on the advisory lock when it does not.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
         [WALLET_TOP_UP_LIMIT_CONFIG_KEY],

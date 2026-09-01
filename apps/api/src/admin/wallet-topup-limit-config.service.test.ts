@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import type { AdminService as AdminServiceType } from './admin.service.js'
-import { DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG } from '@barghsa/shared/finance'
-import { WALLET_TOP_UP_LIMIT_CONFIG_KEY } from '@barghsa/shared/finance'
+import {
+  DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+} from '@barghsa/shared/finance'
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -131,10 +134,11 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     const { pool, mockConnect } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
-    // Call order: BEGIN, SELECT ... FOR UPDATE (no existing row),
+    // Call order: BEGIN, advisory xact lock, SELECT ... FOR UPDATE (no existing row),
     // INSERT RETURNING version, config_version, audit_log, COMMIT
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // pg_advisory_xact_lock
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -147,25 +151,30 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
       '127.0.0.1',
     )
 
-    // BEGIN, SELECT ... FOR UPDATE, INSERT app_config, UPDATE config_version,
-    // INSERT audit_log, COMMIT
+    // BEGIN, advisory lock, SELECT ... FOR UPDATE, INSERT app_config,
+    // UPDATE config_version, INSERT audit_log, COMMIT
     expect(mockConnect).toHaveBeenCalledTimes(1)
     const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]))
     expect(queries[0]!).toMatch(/BEGIN/)
-    expect(queries[1]!).toMatch(/SELECT.*app_config.*FOR UPDATE/)
-    expect(queries[2]!).toMatch(/INSERT INTO app_config/)
-    expect(queries[3]!).toMatch(/config_version/)
-    expect(queries[4]!).toMatch(/audit_log/)
-    expect(queries[5]!).toMatch(/COMMIT/)
+    expect(queries[1]!).toMatch(/pg_advisory_xact_lock/)
+    expect(queries[2]!).toMatch(/SELECT.*app_config.*FOR UPDATE/)
+    expect(queries[3]!).toMatch(/INSERT INTO app_config/)
+    expect(queries[4]!).toMatch(/config_version/)
+    expect(queries[5]!).toMatch(/audit_log/)
+    expect(queries[6]!).toMatch(/COMMIT/)
+    expect((client.query.mock.calls[1] as unknown[])[1]).toEqual([
+      WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+      WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+    ])
 
     // The stored value is snake_case and carries the correct key
-    const appConfigQuery = client.query.mock.calls[2]!
+    const appConfigQuery = client.query.mock.calls[3]!
     expect((appConfigQuery[1] as unknown[])[0]).toBe(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
     const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string)
     expect(stored).toEqual({ limit_irr: 1_000_000_000 })
 
     // The audit metadata records the same key and new value
-    const auditQuery = client.query.mock.calls[4]!
+    const auditQuery = client.query.mock.calls[5]!
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string)
     expect(auditMetadata).toEqual({
       key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
@@ -183,10 +192,11 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     const { mockConnect } = await loadService()
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
-    // Call order: BEGIN, SELECT ... FOR UPDATE (existing row),
+    // Call order: BEGIN, advisory xact lock, SELECT ... FOR UPDATE (existing row),
     // INSERT RETURNING version, config_version, audit_log, COMMIT
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // pg_advisory_xact_lock
       .mockResolvedValueOnce({ rows: [{ value: { limit_irr: 5_000_000_000 }, version: 3 }] })
       .mockResolvedValueOnce({ rows: [{ version: 4 }] })
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -199,7 +209,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
       '127.0.0.1',
     )
 
-    const auditQuery = client.query.mock.calls[4]!
+    const auditQuery = client.query.mock.calls[5]!
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string)
     expect(auditMetadata).toEqual({
       key: WALLET_TOP_UP_LIMIT_CONFIG_KEY,
@@ -216,6 +226,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     mockConnect.mockResolvedValue(client)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // pg_advisory_xact_lock
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -235,6 +246,7 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     const { client } = mockClient()
     mockConnect.mockResolvedValue(client)
     client.query
+      .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [{ version: 2 }] })

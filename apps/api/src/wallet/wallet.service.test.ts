@@ -1,4 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import {
+  WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+  WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+} from '@barghsa/shared/finance'
 import { WalletService } from './wallet.service.js'
 
 const mockPool = {
@@ -1827,18 +1831,44 @@ describe('WalletService', () => {
     })
 
     it('locks the versioned config row when a submission client is provided', async () => {
-      mockClient.query.mockResolvedValueOnce({
-        rows: [{ value: { limit_irr: 75_000 }, version: 8 }],
-      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [{ value: { limit_irr: 75_000 }, version: 8 }],
+        })
       await expect(service.validateOnlineTopUpAmount(75_000n, mockClient)).resolves.toEqual({
         onlineTopUpLimit: 75_000,
         configVersion: 8,
       })
-      expect(mockClient.query).toHaveBeenCalledWith(
+      expect(mockClient.query).toHaveBeenNthCalledWith(
+        1,
+        expect.stringContaining('pg_advisory_xact_lock'),
+        [WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE, WALLET_TOP_UP_LIMIT_CONFIG_KEY],
+      )
+      expect(mockClient.query).toHaveBeenNthCalledWith(
+        2,
         expect.stringContaining('FOR UPDATE'),
-        ['finance.wallet_top_up_limit'],
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
       )
       expect(mockPool.query).not.toHaveBeenCalled()
+    })
+
+    it('takes the advisory lock before FOR UPDATE so an absent config row still serializes', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+      await expect(service.validateOnlineTopUpAmount(2_000_000_000n, mockClient)).resolves.toEqual({
+        onlineTopUpLimit: 2_000_000_000,
+        configVersion: 0,
+      })
+      const lockIdx = mockClient.query.mock.calls.findIndex((c: unknown[]) =>
+        String(c[0]).includes('pg_advisory_xact_lock'),
+      )
+      const forUpdateIdx = mockClient.query.mock.calls.findIndex((c: unknown[]) =>
+        String(c[0]).includes('FOR UPDATE'),
+      )
+      expect(lockIdx).toBeGreaterThan(-1)
+      expect(forUpdateIdx).toBeGreaterThan(lockIdx)
     })
 
     it('reads the versioned config cache when no submission client is provided', async () => {

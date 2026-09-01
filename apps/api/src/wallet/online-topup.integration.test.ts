@@ -14,8 +14,9 @@
  *      metadata.authority aligned with ref_id.
  *   6. A crash after startPayment succeeds but before persist is recovered
  *      via provider inquiry and does not mint a second payable session.
- *   7. If the provider creates a session but the client times out, retry
- *      recovers that authority and cannot create a second one.
+ *   8. A first admin write cannot commit a tighter ceiling while a
+ *      submission has already observed the absent-row default
+ *      (T-04.2.02.06).
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -24,9 +25,11 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
-import { WalletService } from './wallet.service.js'
+import { WalletService, type WalletQueryClient } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
 import type { PaymentGateway } from './payment-gateway.js'
+import { AdminService } from '../admin/admin.service.js'
+import { WALLET_TOP_UP_LIMIT_CONFIG_KEY } from '@barghsa/shared/finance'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -52,20 +55,28 @@ const WALLET_TX_MIGRATION = resolve(
   '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
 )
 
+const AUDIT_LOG_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0005_create_audit_log.sql',
+)
+
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const ADMIN_ACTOR = 'topup-limit-admin'
 
 describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
   let ctx: IsolatedTestDb
   let walletService: WalletService
   let gateway: PaymentGateway
   let service: OnlineTopUpService
+  let adminService: AdminService
   let startCalls: number
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4)
+    ctx = await createIsolatedTestDb('test_', 6)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
+    adminService = new AdminService()
     startCalls = 0
     gateway = {
       async startPayment(request) {
@@ -99,8 +110,21 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
+    await ctx.pool.query(`
+      CREATE TABLE IF NOT EXISTS config_version (
+        id TEXT PRIMARY KEY DEFAULT 'global',
+        version INTEGER NOT NULL DEFAULT 1,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
+    await ctx.pool.query(
+      `INSERT INTO config_version (id, version) VALUES ('global', 1) ON CONFLICT (id) DO NOTHING`,
+    )
+    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`)
+    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A])
+    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ADMIN_ACTOR])
   }, 60_000)
 
   afterAll(async () => {
@@ -569,4 +593,79 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       },
     })
   })
+
+  it('serializes a first admin write against an in-flight submission when the config row is absent', async () => {
+    await ctx.pool.query(`DELETE FROM app_config WHERE key = $1`, [WALLET_TOP_UP_LIMIT_CONFIG_KEY])
+
+    class GateAfterLockedReadWalletService extends WalletService {
+      private resolveRead = (): void => {}
+      private resolveContinue = (): void => {}
+      readonly readReleased: Promise<void>
+      readonly continueInsert: Promise<void>
+
+      constructor() {
+        super()
+        this.readReleased = new Promise((resolve) => {
+          this.resolveRead = resolve
+        })
+        this.continueInsert = new Promise((resolve) => {
+          this.resolveContinue = resolve
+        })
+      }
+
+      releaseInsert(): void {
+        this.resolveContinue()
+      }
+
+      override async resolveOnlineTopUpLimit(client?: WalletQueryClient) {
+        const snapshot = await super.resolveOnlineTopUpLimit(client)
+        if (client) {
+          this.resolveRead()
+          await this.continueInsert
+        }
+        return snapshot
+      }
+    }
+
+    const gatedWallet = new GateAfterLockedReadWalletService()
+    const gatedService = new OnlineTopUpService(gatedWallet, gateway)
+
+    const initiatePromise = gatedService.initiate({
+      profileId: PROFILE_A,
+      amountIrR: 100_000n,
+      idempotencyKey: 'online-topup-absent-row-race',
+    })
+
+    await gatedWallet.readReleased
+
+    let adminSettled = false
+    const adminPromise = adminService
+      .setWalletTopUpLimitConfig({ limit_irr: 50_000 }, ADMIN_ACTOR, '127.0.0.1')
+      .finally(() => {
+        adminSettled = true
+      })
+
+    const blockedUntil = Date.now() + 500
+    while (Date.now() < blockedUntil) {
+      expect(adminSettled).toBe(false)
+      await new Promise((resolve) => setTimeout(resolve, 25))
+    }
+
+    gatedWallet.releaseInsert()
+
+    const pending = await initiatePromise
+    expect(pending.amount).toBe(100_000n)
+
+    const written = await adminPromise
+    expect(written).toEqual({ limitIrR: 50_000, version: 1 })
+    expect(adminSettled).toBe(true)
+
+    const ledger = await fetchLedger(PROFILE_A)
+    const row = ledger.find((entry) => entry.idempotency_key === 'online-topup-absent-row-race')
+    expect(row!.metadata).toMatchObject({
+      channel: 'online',
+      onlineTopUpLimit: 2_000_000_000,
+      configVersion: 0,
+    })
+  }, 20_000)
 })
