@@ -11,13 +11,16 @@
  *      succeeds; posted_balance equals start + the winner's delta.
  *   4. A negative delta decreases posted_balance under the same predicate.
  *   5. A missing wallet is ConflictException (zero rows matched).
+ *   6. Mixed-case UUID spellings address the same `profile_id` row
+ *      (`WHERE profile_id = $2::uuid`).
+ *   7. A non-UUID wallet id is BadRequestException and mutates nothing.
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
  * schema-scoped Testcontainers pool.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { ConflictException } from '@nestjs/common'
+import { BadRequestException, ConflictException } from '@nestjs/common'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { v7 as uuidv7 } from 'uuid'
@@ -170,5 +173,34 @@ describe('WalletService.applyPostedBalanceDelta — real PostgreSQL (T-04.2.01.0
     await expect(service.applyPostedBalanceDelta(missing, 100n, 0)).rejects.toBeInstanceOf(
       ConflictException,
     )
+  })
+
+  it('applies the delta when walletId uses a mixed-case UUID spelling', async () => {
+    const before = await fetchWallet(PROFILE_A)
+    const updated = await service.applyPostedBalanceDelta(
+      PROFILE_A.toUpperCase(),
+      15_000n,
+      before.version,
+    )
+
+    expect(updated.profileId).toBe(PROFILE_A)
+    expect(updated.postedBalance).toBe(BigInt(before.posted_balance) + 15_000n)
+    expect(updated.version).toBe(before.version + 1)
+
+    const after = await fetchWallet(PROFILE_A)
+    expect(BigInt(after.posted_balance)).toBe(updated.postedBalance)
+    expect(after.version).toBe(updated.version)
+  })
+
+  it('rejects a non-UUID wallet id without mutating any wallet', async () => {
+    const beforeA = await fetchWallet(PROFILE_A)
+    const beforeB = await fetchWallet(PROFILE_B)
+
+    await expect(service.applyPostedBalanceDelta('not-a-uuid', 100n, 0)).rejects.toBeInstanceOf(
+      BadRequestException,
+    )
+
+    expect(await fetchWallet(PROFILE_A)).toEqual(beforeA)
+    expect(await fetchWallet(PROFILE_B)).toEqual(beforeB)
   })
 })

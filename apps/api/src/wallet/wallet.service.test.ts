@@ -191,6 +191,13 @@ describe('WalletService', () => {
       )
       expect(insertCall).toBeDefined()
       expect(insertCall![1][0]).toBe(canonical)
+
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toMatch(/WHERE profile_id = \$2::uuid/)
+      expect(updateCall![1][1]).toBe(canonical)
     })
 
     it('returns the existing transaction on idempotent retry without mutating the wallet', async () => {
@@ -1637,10 +1644,11 @@ describe('WalletService', () => {
       expect(result.availableBalance).toBe(900000n)
       expect(mockPool.query).toHaveBeenCalledTimes(1)
       const [sql, params] = mockPool.query.mock.calls[0]!
-      expect(sql).toContain('posted_balance = posted_balance + $1')
+      expect(sql).toContain('posted_balance = posted_balance + $1::bigint')
       expect(sql).toContain('version = version + 1')
-      expect(sql).toMatch(/WHERE profile_id = \$2/)
+      expect(sql).toMatch(/WHERE profile_id = \$2::uuid/)
       expect(sql).toMatch(/AND version = \$3/)
+      expect(sql).not.toContain('reserved_balance =')
       expect(sql).not.toContain('posted_balance >= 0')
       expect(params).toEqual([100000n, 'profile-1', 1])
     })
@@ -1656,6 +1664,7 @@ describe('WalletService', () => {
 
       const [sql, params] = mockPool.query.mock.calls[0]!
       expect(sql).toContain('posted_balance >= 0')
+      expect(sql).toMatch(/WHERE profile_id = \$2::uuid/)
       expect(sql).toMatch(/AND version = \$3/)
       expect(params).toEqual([100000n, 'profile-1', 1])
     })
@@ -1689,6 +1698,16 @@ describe('WalletService', () => {
 
       await expect(service.applyPostedBalanceDelta('profile-1', 100000n, 1)).rejects.toThrow(
         'Wallet optimistic lock failed: version mismatch',
+      )
+    })
+
+    it('maps PostgreSQL invalid UUID input to BadRequestException', async () => {
+      mockPool.query.mockRejectedValue(
+        Object.assign(new Error('invalid input syntax for type uuid'), { code: '22P02' }),
+      )
+
+      await expect(service.applyPostedBalanceDelta('not-a-uuid', 100n, 0)).rejects.toThrow(
+        'Wallet id must be a UUID',
       )
     })
 

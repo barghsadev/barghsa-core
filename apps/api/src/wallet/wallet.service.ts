@@ -9,6 +9,7 @@ import {
 } from '@barghsa/shared/finance'
 
 const PG_UNIQUE_VIOLATION = '23505'
+const PG_INVALID_TEXT_REPRESENTATION = '22P02'
 const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency'
 
 /** Ledger types that post as a credit (positive amount, money in). */
@@ -143,12 +144,14 @@ export class WalletService {
    * UPDATE wallets
    * SET posted_balance = posted_balance + delta,
    *     version = version + 1
-   * WHERE profile_id = X AND version = expectedVersion
+   * WHERE profile_id = $2::uuid AND version = expectedVersion
    *   [AND posted_balance >= 0]  -- when requireNonNegativePostedBalance
    * ```
    *
-   * The wallets PK is `profile_id` (the task text's `id`). A matching
-   * version applies `delta` (positive or negative) and bumps `version`
+   * The wallets PK is `profile_id` (the task text's `id`). After
+   * T-04.2.01.02 that column is UUID, so the predicate casts `$2::uuid`
+   * and mixed-case spellings address the same row. A matching version
+   * applies `delta` (positive or negative) and bumps `version`
    * atomically; a stale `expectedVersion` matches zero rows.
    *
    * `requireNonNegativePostedBalance` is the T-04.2.01.03 credit guard:
@@ -164,6 +167,7 @@ export class WalletService {
    * run against the shared pool.
    *
    * @returns the updated wallet row
+   * @throws BadRequestException when `walletId` is not a UUID
    * @throws ConflictException when zero rows match (version mismatch,
    *   missing wallet, or posted_balance < 0 when that guard is on)
    */
@@ -188,16 +192,24 @@ export class WalletService {
       ? '\n         AND posted_balance >= 0'
       : ''
     const queryable = client ?? getDbPool()
-    const result = await queryable.query(
-      `UPDATE wallets
-       SET posted_balance = posted_balance + $1::bigint,
-           version = version + 1,
-           updated_at = NOW()
-       WHERE profile_id = $2
-         AND version = $3${postedGuard}
-       RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
-      [delta, walletId, expectedVersion],
-    )
+    let result: { rows: unknown[]; rowCount?: number | null }
+    try {
+      result = await queryable.query(
+        `UPDATE wallets
+         SET posted_balance = posted_balance + $1::bigint,
+             version = version + 1,
+             updated_at = NOW()
+         WHERE profile_id = $2::uuid
+           AND version = $3${postedGuard}
+         RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
+        [delta, walletId, expectedVersion],
+      )
+    } catch (error) {
+      if (isPgInvalidTextRepresentation(error)) {
+        throw new BadRequestException('Wallet id must be a UUID')
+      }
+      throw error
+    }
     if (result.rows.length === 0) {
       throw new ConflictException('Wallet optimistic lock failed: version mismatch')
     }
@@ -903,4 +915,9 @@ function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
   const pgError = error as { code?: string; constraint?: string }
   if (pgError.code !== PG_UNIQUE_VIOLATION) return false
   return constraint === undefined || pgError.constraint === constraint
+}
+
+function isPgInvalidTextRepresentation(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+  return (error as { code?: string }).code === PG_INVALID_TEXT_REPRESENTATION
 }
