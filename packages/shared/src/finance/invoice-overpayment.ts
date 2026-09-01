@@ -101,6 +101,18 @@ export function remainingForBankReceiptSettlement(input: {
 }
 
 /**
+ * Durable invoice state after a positive bank-receipt allocation.
+ * Callers then take the validated ConfirmBankReceipt path
+ * (SubmitBankReceipt into PaymentUnderReview when needed, then confirm).
+ */
+export function invoiceStateAfterBankReceiptAllocation(input: {
+  paidAmount: bigint
+  totalAmount: bigint
+}): 'Paid' | 'PartiallyFunded' {
+  return input.paidAmount >= input.totalAmount ? 'Paid' : 'PartiallyFunded'
+}
+
+/**
  * Split a confirmed receipt into invoice settlement vs wallet excess.
  *
  * `invoiceAllocation = min(receiptAmount, remaining)`

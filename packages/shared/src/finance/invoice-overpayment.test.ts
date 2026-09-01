@@ -7,6 +7,7 @@ import {
   bankReceiptOverpaymentCreditMetadata,
   bankReceiptOverpaymentSnapshot,
   invoiceRemainingAmount,
+  invoiceStateAfterBankReceiptAllocation,
   parseOptionalInvoiceId,
   readBankReceiptOverpaymentSnapshot,
   remainingForBankReceiptSettlement,
@@ -62,6 +63,38 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
           state: 'Cancelled',
         }),
       ).toBe(0n)
+    })
+  })
+
+  describe('invoiceStateAfterBankReceiptAllocation', () => {
+    it('returns Paid when confirmed amount covers the total', () => {
+      expect(
+        invoiceStateAfterBankReceiptAllocation({
+          paidAmount: 1_000_000n,
+          totalAmount: 1_000_000n,
+        }),
+      ).toBe('Paid')
+      expect(
+        invoiceStateAfterBankReceiptAllocation({
+          paidAmount: 1_000_001n,
+          totalAmount: 1_000_000n,
+        }),
+      ).toBe('Paid')
+    })
+
+    it('returns PartiallyFunded when confirmed amount is still below total', () => {
+      expect(
+        invoiceStateAfterBankReceiptAllocation({
+          paidAmount: 1n,
+          totalAmount: 1_000_000n,
+        }),
+      ).toBe('PartiallyFunded')
+      expect(
+        invoiceStateAfterBankReceiptAllocation({
+          paidAmount: 999_999n,
+          totalAmount: 1_000_000n,
+        }),
+      ).toBe('PartiallyFunded')
     })
   })
 

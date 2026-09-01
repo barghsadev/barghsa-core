@@ -93,13 +93,14 @@ describe('canTransition', () => {
     expect(canTransition('Paid', 'Unpaid')).toBe(false)
   })
 
-  it('Overdue can only go to Cancelled', () => {
+  it('Overdue can go to PaymentUnderReview and Cancelled', () => {
+    const allowed = ['PaymentUnderReview', 'Cancelled'] as InvoiceState[]
+    for (const to of allowed) {
+      expect(canTransition('Overdue', to)).toBe(true)
+    }
     for (const to of INVOICE_STATES) {
-      if (to === 'Cancelled') {
-        expect(canTransition('Overdue', to)).toBe(true)
-      } else {
-        expect(canTransition('Overdue', to)).toBe(false)
-      }
+      if (allowed.includes(to)) continue
+      expect(canTransition('Overdue', to)).toBe(false)
     }
   })
 
@@ -316,6 +317,7 @@ describe('transitionName', () => {
     expect(transitionName('PartiallyFunded', 'Cancelled')).toBe('Cancel')
     expect(transitionName('Paid', 'PartiallyRefunded')).toBe('PartialRefund')
     expect(transitionName('Paid', 'Refunded')).toBe('FullRefund')
+    expect(transitionName('Overdue', 'PaymentUnderReview')).toBe('SubmitBankReceipt')
     expect(transitionName('Overdue', 'Cancelled')).toBe('Cancel')
     expect(transitionName('PartiallyRefunded', 'PartiallyRefunded')).toBe('PartialRefund')
   })

@@ -31,6 +31,8 @@ import {
 } from '@barghsa/shared/finance'
 import { WalletService } from './wallet.service.js'
 import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
+import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
+import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -67,6 +69,14 @@ const INVOICES_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql',
 )
+const PAID_OVERDUE_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql',
+)
+const ADJUSTMENT_KIND_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
@@ -88,7 +98,11 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
-    service = new BankReceiptConfirmationService(walletService, null)
+    service = new BankReceiptConfirmationService(
+      walletService,
+      null,
+      new InvoiceStateMachineService(new InvoiceAuditRepository()),
+    )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`
@@ -112,6 +126,8 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       )
     `)
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
@@ -173,12 +189,23 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     return id
   }
 
+  async function invoiceSettlement(
+    invoiceId: string,
+  ): Promise<{ paid: bigint; state: string; paidAt: Date | null }> {
+    const result = await ctx.pool.query<{
+      paid_amount: string
+      state: string
+      paid_at: Date | null
+    }>(`SELECT paid_amount, state, paid_at FROM invoices WHERE id = $1`, [invoiceId])
+    return {
+      paid: BigInt(result.rows[0]!.paid_amount),
+      state: result.rows[0]!.state,
+      paidAt: result.rows[0]!.paid_at,
+    }
+  }
+
   async function invoicePaid(invoiceId: string): Promise<bigint> {
-    const result = await ctx.pool.query<{ paid_amount: string }>(
-      `SELECT paid_amount FROM invoices WHERE id = $1`,
-      [invoiceId],
-    )
-    return BigInt(result.rows[0]!.paid_amount)
+    return (await invoiceSettlement(invoiceId)).paid
   }
 
   async function walletBalances(): Promise<{ posted: bigint; reserved: bigint }> {
@@ -426,6 +453,9 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(result.creditTransactionId).toBe(result.overpayment?.overpaymentCreditTransactionId)
 
     expect(await invoicePaid(invoiceId)).toBe(1_000_000n)
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.state).toBe('Paid')
+    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
     const after = await walletBalances()
     expect(after.posted).toBe(before.posted + 800_000n)
 
@@ -452,6 +482,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     })
     expect(second.creditTransactionId).toBe(result.creditTransactionId)
     expect(await invoicePaid(invoiceId)).toBe(1_000_000n)
+    expect((await invoiceSettlement(invoiceId)).state).toBe('Paid')
     expect((await walletBalances()).posted).toBe(after.posted)
   })
 
@@ -469,7 +500,54 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(result.overpayment?.walletCreditAmount).toBe('0')
     expect(result.overpayment?.overpaymentCreditTransactionId).toBeNull()
     expect(await invoicePaid(invoiceId)).toBe(500_000n)
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.state).toBe('Paid')
+    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
     expect((await walletBalances()).posted).toBe(before.posted)
+  })
+
+  it('marks a partial allocation PartiallyFunded and leaves paid_at unset', async () => {
+    const invoiceId = await insertInvoice({ total: 1_000_000n, paid: 0n, state: 'Unpaid' })
+    const pendingId = await insertPending('partial', 300_000n)
+    const before = await walletBalances()
+    const result = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    expect(result.overpayment?.invoiceAllocation).toBe('300000')
+    expect(result.overpayment?.walletCreditAmount).toBe('0')
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(300_000n)
+    expect(settled.state).toBe('PartiallyFunded')
+    expect(settled.paidAt).toBeNull()
+    expect((await walletBalances()).posted).toBe(before.posted)
+
+    const confirmAudit = await ctx.pool.query<{ event: string }>(
+      `SELECT event FROM audit_log
+        WHERE event = 'invoice.confirm_bank_receipt'
+          AND metadata::jsonb ->> 'invoiceId' = $1`,
+      [invoiceId],
+    )
+    expect(confirmAudit.rows).toHaveLength(1)
+  })
+
+  it('settles an Overdue invoice to Paid through ConfirmBankReceipt', async () => {
+    const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' })
+    const pendingId = await insertPending('overdue-full', 400_000n)
+    await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(400_000n)
+    expect(settled.state).toBe('Paid')
+    expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
   })
 
   it('rolls back invoice paid_amount when overpayment confirm audit fails', async () => {
@@ -490,6 +568,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
 
     expect(failure).toBeInstanceOf(Error)
     expect(await invoicePaid(invoiceId)).toBe(beforePaid)
+    expect((await invoiceSettlement(invoiceId)).state).toBe('Unpaid')
     expect((await walletBalances()).posted).toBe(beforeWallet.posted)
     const pending = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,

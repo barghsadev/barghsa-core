@@ -13,6 +13,7 @@ import {
 } from '@barghsa/shared/finance'
 import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
 import type { WalletService } from './wallet.service.js'
+import type { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
 
 const mockPool = {
   query: vi.fn(),
@@ -93,6 +94,7 @@ function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
     state: 'Unpaid',
     total_amount: '1000000',
     paid_amount: '600000',
+    refunded_amount: '0',
     ...overrides,
   }
 }
@@ -195,6 +197,7 @@ function script(opts: ScriptOptions = {}) {
 
 describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
   let walletService: ReturnType<typeof makeWalletService>
+  let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> }
   let service: BankReceiptConfirmationService
 
   beforeEach(() => {
@@ -204,7 +207,20 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     mockClient.query.mockReset()
     mockPool.query.mockReset()
     walletService = makeWalletService()
-    service = new BankReceiptConfirmationService(walletService as unknown as WalletService, null)
+    invoiceStateMachine = {
+      transition: vi.fn().mockResolvedValue({
+        invoiceId: INVOICE_ID,
+        fromState: 'Unpaid',
+        toState: 'Paid',
+        transition: 'ConfirmBankReceipt',
+        auditId: 'invoice-audit-1',
+      }),
+    }
+    service = new BankReceiptConfirmationService(
+      walletService as unknown as WalletService,
+      null,
+      invoiceStateMachine as unknown as InvoiceStateMachineService,
+    )
   })
 
   it('lists pending bank-receipt top-ups and skips credit', async () => {
@@ -248,6 +264,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       bankReceiptCreditIdempotencyKey(TX_ID),
       mockClient,
     )
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
     expect(result.state).toBe('Released')
     expect(result.canDecide).toBe(false)
     expect(result.creditTransactionId).toBe(CREDIT_ID)
@@ -362,6 +379,30 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       invoiceAllocation: INVOICE_REMAINING.toString(),
       walletCreditAmount: (OVERPAY_RECEIPT - INVOICE_REMAINING).toString(),
     })
+    expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
+      1,
+      INVOICE_ID,
+      'Unpaid',
+      'PaymentUnderReview',
+      expect.objectContaining({
+        actorUserId: ACTOR_ID,
+        client: mockClient,
+        now: NOW,
+      }),
+    )
+    expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
+      2,
+      INVOICE_ID,
+      'PaymentUnderReview',
+      'Paid',
+      expect.objectContaining({
+        financials: expect.objectContaining({
+          paidAmount: 1_000_000n,
+          totalAmount: 1_000_000n,
+          incomingPaidAmount: 1_000_000n,
+        }),
+      }),
+    )
     const audit = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO audit_log'),
     )
@@ -386,6 +427,73 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       walletCreditAmount: '0',
       overpaymentCreditTransactionId: null,
     })
+    expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
+      INVOICE_ID,
+      'PaymentUnderReview',
+      'Paid',
+      expect.objectContaining({
+        financials: expect.objectContaining({ paidAmount: 1_000_000n }),
+      }),
+    )
+  })
+
+  it('confirms a partial allocation to PartiallyFunded without setting Paid', async () => {
+    script({
+      locked: makePendingRow({ amount: '300000' }),
+      invoice: makeInvoiceRow({ paid_amount: '0' }),
+    })
+    const result = await service.confirm({
+      transactionId: TX_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      invoiceId: INVOICE_ID,
+      now: NOW,
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(result.overpayment).toMatchObject({
+      invoiceAllocation: '300000',
+      walletCreditAmount: '0',
+    })
+    expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
+      1,
+      INVOICE_ID,
+      'Unpaid',
+      'PaymentUnderReview',
+      expect.any(Object),
+    )
+    expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
+      2,
+      INVOICE_ID,
+      'PaymentUnderReview',
+      'PartiallyFunded',
+      expect.objectContaining({
+        financials: expect.objectContaining({
+          paidAmount: 300_000n,
+          totalAmount: 1_000_000n,
+        }),
+      }),
+    )
+  })
+
+  it('confirms PaymentUnderReview directly without SubmitBankReceipt', async () => {
+    script({
+      locked: makePendingRow({ amount: '1000000' }),
+      invoice: makeInvoiceRow({ state: 'PaymentUnderReview', paid_amount: '0' }),
+    })
+    await service.confirm({
+      transactionId: TX_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      invoiceId: INVOICE_ID,
+      now: NOW,
+    })
+    expect(invoiceStateMachine.transition).toHaveBeenCalledTimes(1)
+    expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
+      INVOICE_ID,
+      'PaymentUnderReview',
+      'Paid',
+      expect.any(Object),
+    )
   })
 
   it('credits the full receipt to the wallet when the invoice is already paid', async () => {
@@ -409,6 +517,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices'))).toBe(
       false,
     )
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
   })
 
   it('rejects an invoice that belongs to a different profile', async () => {

@@ -9,9 +9,10 @@ import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
 import { SessionModule } from '../session/index.js'
 import { ProfilesModule } from '../profiles/index.js'
+import { InvoiceModule } from '../invoice/invoice.module.js'
 
 @Module({
-  imports: [SessionModule, ProfilesModule],
+  imports: [SessionModule, ProfilesModule, InvoiceModule],
   controllers: [WalletController, OnlineTopUpCallbackController],
   providers: [
     WalletService,

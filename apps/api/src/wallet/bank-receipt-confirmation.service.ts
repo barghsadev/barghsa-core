@@ -24,6 +24,7 @@ import {
   bankReceiptOverpaymentCreditMetadata,
   bankReceiptOverpaymentSnapshot,
   bankReceiptStaffDecisionMetadata,
+  invoiceStateAfterBankReceiptAllocation,
   isBankReceiptChannel,
   isPendingBankReceiptTopUp,
   parseBankReceiptRejectReason,
@@ -36,6 +37,12 @@ import {
 } from '@barghsa/shared/finance'
 import type { StorageProvider } from '@barghsa/shared/storage'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
+import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
+import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
+import {
+  isInvoiceState,
+  type InvoiceState,
+} from '../invoice/invoice-state.model.js'
 import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js'
 
 const ATTACHMENT_URL_TTL_SECONDS = 15 * 60
@@ -61,6 +68,7 @@ interface InvoiceRow {
   state: string
   total_amount: string | number | bigint
   paid_amount: string | number | bigint
+  refunded_amount: string | number | bigint
 }
 
 /** Public DTO for the staff review UI. */
@@ -122,11 +130,15 @@ export interface RejectBankReceiptInput {
  *      `WalletService.credit()` with the top-up idempotency key.
  *   3. When an invoice is supplied: lock it, allocate
  *      `min(receipt, remaining)` onto `paid_amount` (never over-settle),
- *      and credit only the excess via a *separate* `WalletService.credit()`
- *      with `bankReceiptOverpaymentCreditIdempotencyKey`.
+ *      transition the invoice through the validated ConfirmBankReceipt
+ *      path (SubmitBankReceipt into PaymentUnderReview when needed, then
+ *      confirm to Paid or PartiallyFunded, setting paid_at on full
+ *      settlement), and credit only the excess via a *separate*
+ *      `WalletService.credit()` with
+ *      `bankReceiptOverpaymentCreditIdempotencyKey`.
  *   4. Release the Pending intent and append an audit row.
- *   Credit, invoice allocation, pending release, and audit commit or
- *   roll back together.
+ *   Credit, invoice allocation, state transition, pending release, and
+ *   audit commit or roll back together.
  *
  * Reject: mark the Pending row `Rejected` with a customer-visible reason
  * and never call credit. Rejected submissions never increase balance.
@@ -134,13 +146,19 @@ export interface RejectBankReceiptInput {
 @Injectable()
 export class BankReceiptConfirmationService {
   private readonly logger = new Logger(BankReceiptConfirmationService.name)
+  private readonly invoiceStateMachine: InvoiceStateMachineService
 
   constructor(
     private readonly walletService: WalletService,
     @Optional()
     @Inject(STORAGE_PROVIDER)
     private readonly storage: StorageProvider | null = null,
-  ) {}
+    @Optional()
+    invoiceStateMachine?: InvoiceStateMachineService,
+  ) {
+    this.invoiceStateMachine =
+      invoiceStateMachine ?? new InvoiceStateMachineService(new InvoiceAuditRepository())
+  }
 
   async listPending(): Promise<BankReceiptReviewDto[]> {
     const pool = getDbPool()
@@ -194,7 +212,7 @@ export class BankReceiptConfirmationService {
       )
     }
     const invoiceResult = await pool.query(
-      `SELECT id, profile_id, state, total_amount, paid_amount FROM invoices WHERE id = $1`,
+      `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount FROM invoices WHERE id = $1`,
       [invoiceId],
     )
     const invoice = (invoiceResult.rows as InvoiceRow[])[0]
@@ -287,6 +305,10 @@ export class BankReceiptConfirmationService {
             pending,
             invoiceId,
             actorUserId: input.actorUserId,
+            ip: input.ip,
+            ...(input.correlationId !== undefined
+              ? { correlationId: input.correlationId }
+              : {}),
             confirmedAt: now,
           })
           creditId = applied.creditId
@@ -490,6 +512,8 @@ export class BankReceiptConfirmationService {
       pending: LedgerRow & { walletId: string; amount: bigint }
       invoiceId: string
       actorUserId: string
+      ip: string
+      correlationId?: string
       confirmedAt: Date
     },
   ): Promise<{ creditId: string | null; overpayment: BankReceiptOverpaymentSnapshot }> {
@@ -513,6 +537,14 @@ export class BankReceiptConfirmationService {
 
     if (allocation.invoiceAllocation > 0n) {
       await this.applyInvoiceAllocation(client, invoice.id, allocation.invoiceAllocation)
+      await this.confirmInvoiceAfterAllocation(client, {
+        invoice,
+        paidAfter: BigInt(invoice.paid_amount) + allocation.invoiceAllocation,
+        actorUserId: input.actorUserId,
+        ip: input.ip,
+        ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
+        now: input.confirmedAt,
+      })
     }
 
     let overpaymentCreditId: string | null = null
@@ -554,7 +586,7 @@ export class BankReceiptConfirmationService {
 
   private async lockInvoice(client: WalletQueryClient, invoiceId: string): Promise<InvoiceRow> {
     const result = await client.query(
-      `SELECT id, profile_id, state, total_amount, paid_amount
+      `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount
          FROM invoices
         WHERE id = $1
         FOR UPDATE`,
@@ -588,6 +620,71 @@ export class BankReceiptConfirmationService {
         409,
       )
     }
+  }
+
+  /**
+   * After paid_amount is incremented, take the validated ConfirmBankReceipt
+   * path so state and paid_at match the post-allocation amount.
+   * Unpaid / PartiallyFunded / Overdue first SubmitBankReceipt into
+   * PaymentUnderReview; ConfirmBankReceipt then lands on Paid or
+   * PartiallyFunded and sets paid_at on full settlement.
+   */
+  private async confirmInvoiceAfterAllocation(
+    client: WalletQueryClient,
+    input: {
+      invoice: InvoiceRow
+      paidAfter: bigint
+      actorUserId: string
+      ip: string
+      correlationId?: string
+      now: Date
+    },
+  ): Promise<void> {
+    if (!isInvoiceState(input.invoice.state)) {
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        `Invoice ${input.invoice.id} is in an unknown state: ${input.invoice.state}`,
+        409,
+      )
+    }
+    const totalAmount = BigInt(input.invoice.total_amount)
+    const destination = invoiceStateAfterBankReceiptAllocation({
+      paidAmount: input.paidAfter,
+      totalAmount,
+    })
+    const financials = {
+      paidAmount: input.paidAfter,
+      totalAmount,
+      refundedAmount: BigInt(input.invoice.refunded_amount),
+      incomingPaidAmount: input.paidAfter,
+    }
+    const transitionOpts = {
+      actorUserId: input.actorUserId,
+      ip: input.ip,
+      ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
+      now: input.now,
+      client,
+      financials,
+    }
+
+    let from: InvoiceState = input.invoice.state
+    if (from !== 'PaymentUnderReview') {
+      await this.invoiceStateMachine.transition(
+        input.invoice.id,
+        from,
+        'PaymentUnderReview',
+        {
+          ...transitionOpts,
+          reason: 'Bank receipt applied to invoice',
+        },
+      )
+      from = 'PaymentUnderReview'
+    }
+
+    await this.invoiceStateMachine.transition(input.invoice.id, from, destination, {
+      ...transitionOpts,
+      reason: 'Bank receipt confirmed against invoice',
+    })
   }
 
   private async findExistingCredit(pendingId: string): Promise<TransactionRow | null> {

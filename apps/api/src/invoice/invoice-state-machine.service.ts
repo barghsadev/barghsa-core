@@ -248,7 +248,7 @@ export class InvoiceStateMachineService {
     adjustmentKind?: string | null,
   ): boolean {
     if (adjustmentKind === 'credit') return false
-    return from === 'Unpaid' || from === 'PartiallyFunded'
+    return from === 'Unpaid' || from === 'PartiallyFunded' || from === 'Overdue'
   }
 
   canConfirmBankReceipt(from: InvoiceState): boolean {
