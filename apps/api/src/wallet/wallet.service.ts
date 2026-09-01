@@ -144,11 +144,17 @@ export class WalletService {
    * SET posted_balance = posted_balance + delta,
    *     version = version + 1
    * WHERE profile_id = X AND version = expectedVersion
+   *   [AND posted_balance >= 0]  -- when requireNonNegativePostedBalance
    * ```
    *
    * The wallets PK is `profile_id` (the task text's `id`). A matching
    * version applies `delta` (positive or negative) and bumps `version`
    * atomically; a stale `expectedVersion` matches zero rows.
+   *
+   * `requireNonNegativePostedBalance` is the T-04.2.01.03 credit guard:
+   * refuse to post onto a wallet whose `posted_balance` is already
+   * negative. The default (false) keeps this primitive matching
+   * T-04.2.01.06 (`WHERE id = X AND version = expectedVersion` only).
    *
    * This is the locking primitive, not a standalone money-moving
    * command. Callers that change customer funds must also write the
@@ -158,14 +164,15 @@ export class WalletService {
    * run against the shared pool.
    *
    * @returns the updated wallet row
-   * @throws ConflictException when zero rows match (version mismatch
-   *   or missing wallet)
+   * @throws ConflictException when zero rows match (version mismatch,
+   *   missing wallet, or posted_balance < 0 when that guard is on)
    */
   async applyPostedBalanceDelta(
     walletId: string,
     delta: bigint,
     expectedVersion: number,
     client?: WalletQueryClient,
+    options?: { requireNonNegativePostedBalance?: boolean },
   ): Promise<WalletRow> {
     if (!walletId.trim()) {
       throw new BadRequestException('Wallet id is required')
@@ -177,6 +184,9 @@ export class WalletService {
       throw new BadRequestException('Expected version must be a non-negative integer')
     }
 
+    const postedGuard = options?.requireNonNegativePostedBalance
+      ? '\n         AND posted_balance >= 0'
+      : ''
     const queryable = client ?? getDbPool()
     const result = await queryable.query(
       `UPDATE wallets
@@ -184,7 +194,7 @@ export class WalletService {
            version = version + 1,
            updated_at = NOW()
        WHERE profile_id = $2
-         AND version = $3
+         AND version = $3${postedGuard}
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
       [delta, walletId, expectedVersion],
     )
@@ -207,12 +217,11 @@ export class WalletService {
    *      row's canonical `profile_id`.
    *   4. UPDATE `posted_balance` via `applyPostedBalanceDelta`
    *      (`posted_balance + amount`, `version + 1`,
-   *      `WHERE profile_id = X AND version = expectedVersion`).
-   *      A wallet whose `posted_balance` is already negative is
-   *      rejected before the lock update (T-04.2.01.03 invariant).
+   *      `WHERE profile_id = X AND version = expectedVersion
+   *       AND posted_balance >= 0`).
    *
    * The version predicate is optimistic locking; the non-negative
-   * `posted_balance` check refuses to post onto a corrupt wallet.
+   * `posted_balance` predicate refuses to post onto a corrupt wallet.
    * Unique `idempotency_key` is the last-line duplicate guard.
    */
   async credit(
@@ -247,7 +256,6 @@ export class WalletService {
       const wallet = walletResult.rows[0] as {
         version: number
         profile_id: string
-        posted_balance: string | number | bigint
       }
       canonicalWalletId = wallet.profile_id
 
@@ -260,12 +268,6 @@ export class WalletService {
         assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref)
         await client.query('COMMIT')
         return mapTransaction(existing)
-      }
-
-      if (BigInt(wallet.posted_balance) < 0n) {
-        throw new ConflictException(
-          'Wallet credit rejected: version mismatch or postedBalance < 0',
-        )
       }
 
       const txResult = await client.query(
@@ -290,6 +292,7 @@ export class WalletService {
           amount,
           wallet.version,
           client,
+          { requireNonNegativePostedBalance: true },
         )
       } catch (error) {
         if (error instanceof ConflictException) {
