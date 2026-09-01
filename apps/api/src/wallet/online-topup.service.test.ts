@@ -106,6 +106,31 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     expect(gateway.startPayment).not.toHaveBeenCalled()
   })
 
+  it('inserts the Pending row against the locked wallet canonical profile_id', async () => {
+    const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+    mockClient.query
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ profile_id: canonical }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({
+        rows: [makePendingRow({ id: TX_ID, wallet_id: canonical })],
+      })
+      .mockResolvedValueOnce({ rows: [] })
+    mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
+
+    await service.initiate({
+      profileId: canonical.toUpperCase(),
+      amountIrR: AMOUNT,
+      idempotencyKey: IDEM,
+    })
+
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining("VALUES ($1, 'topup', $2::bigint, 'Pending'"),
+      expect.arrayContaining([canonical, AMOUNT.toString(), IDEM]),
+    )
+    expect(walletService.createWallet).toHaveBeenCalledWith(canonical.toUpperCase())
+  })
+
   it('creates a Pending top-up, starts the gateway, and does not credit the wallet', async () => {
     scriptFirstInsert()
     const result = await service.initiate({

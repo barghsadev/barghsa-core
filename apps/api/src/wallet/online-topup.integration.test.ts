@@ -237,6 +237,27 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
     expect(ledger.filter((row) => row.idempotency_key === 'online-topup-retry')).toHaveLength(1)
   })
 
+  it('retries the same idempotency key with uppercase/lowercase UUID spellings', async () => {
+    const first = await service.initiate({
+      profileId: PROFILE_A,
+      amountIrR: 7_000n,
+      idempotencyKey: 'online-topup-uuid-case',
+    })
+    const second = await service.initiate({
+      profileId: PROFILE_A.toUpperCase(),
+      amountIrR: 7_000n,
+      idempotencyKey: 'online-topup-uuid-case',
+    })
+
+    expect(second.transactionId).toBe(first.transactionId)
+    expect(second.redirectUrl).toBe(first.redirectUrl)
+
+    const ledger = await fetchLedger(PROFILE_A)
+    const matching = ledger.filter((row) => row.idempotency_key === 'online-topup-uuid-case')
+    expect(matching).toHaveLength(1)
+    expect(matching[0]!.id).toBe(first.transactionId)
+  })
+
   it('rejects a colliding idempotency key with a different amount', async () => {
     await service.initiate({
       profileId: PROFILE_A,

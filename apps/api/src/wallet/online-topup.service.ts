@@ -117,6 +117,9 @@ export class OnlineTopUpService {
   ): Promise<TransactionRow> {
     const pool = getDbPool()
     const client = await pool.connect()
+    // PostgreSQL UUID columns return canonical lowercase; callers may pass
+    // any valid spelling. The Pending ledger row must use the locked
+    // wallet's `profile_id`, matching credit/debit/reserve.
     let canonicalWalletId: string | undefined
     try {
       await client.query('BEGIN')
