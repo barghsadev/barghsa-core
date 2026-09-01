@@ -115,6 +115,18 @@ describe('drizzle migrate() applies wallet_transactions (T-04.2.01.02)', () => {
     expect(byName.id?.column_default).toContain('uuid_generate_v7')
     expect(byName.state?.column_default).toContain('Pending')
     expect(byName.metadata?.column_default).toContain('{}')
+
+    const walletPk = await ctx.db.execute<{
+      column_name: string
+      udt_name: string
+    }>(sql`
+      SELECT column_name, udt_name
+      FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'wallets'
+        AND column_name = 'profile_id'
+    `)
+    expect(walletPk.rows[0]).toEqual({ column_name: 'profile_id', udt_name: 'uuid' })
   })
 
   it('enforces type/state/amount CHECKs and unique idempotency via migrate()', async () => {
