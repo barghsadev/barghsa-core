@@ -113,7 +113,8 @@ describe('WalletService', () => {
      *   2: SELECT by idempotency_key
      *   3: INSERT wallet_transactions
      *   4. UPDATE wallets … applyPostedBalanceDelta
-     *      (posted_balance + amount, version + 1, WHERE version = expectedVersion)
+     *      (posted_balance + amount, version + 1,
+     *      WHERE version = expectedVersion AND posted_balance >= 0)
      *   5: COMMIT
      */
     it('inserts a Completed ledger row and updates postedBalance under version + postedBalance >= 0', async () => {
@@ -160,7 +161,7 @@ describe('WalletService', () => {
       expect(updateCall![0]).toContain('posted_balance = posted_balance + $1')
       expect(updateCall![0]).toContain('version = version + 1')
       expect(updateCall![0]).toMatch(/version = \$3/)
-      expect(updateCall![0]).not.toContain('posted_balance >= 0')
+      expect(updateCall![0]).toContain('posted_balance >= 0')
       expect(updateCall![1]).toEqual([100000n, 'profile-1', 1])
 
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
@@ -299,22 +300,25 @@ describe('WalletService', () => {
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
 
-    it('rejects the credit when postedBalance is already negative without updating', async () => {
+    it('rejects the credit when UPDATE matches no row (postedBalance < 0)', async () => {
       const wallet = makeWalletRow({ posted_balance: '-1' })
       mockClient.query
         .mockResolvedValueOnce({ rows: [] })
         .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeTxRow()] })
         .mockResolvedValueOnce({ rows: [] })
 
       await expect(
         service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
       ).rejects.toThrow('version mismatch or postedBalance < 0')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-      expect(
-        mockClient.query.mock.calls.some(
-          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
-        ),
-      ).toBe(false)
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('posted_balance >= 0')
+      expect(updateCall![0]).toMatch(/version = \$3/)
     })
 
     it('rejects the credit when UPDATE matches no row (version mismatch)', async () => {
@@ -330,6 +334,11 @@ describe('WalletService', () => {
         service.credit('profile-1', 100000n, { type: 'topup' }, 'idem-001'),
       ).rejects.toThrow('version mismatch or postedBalance < 0')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('posted_balance >= 0')
     })
 
     it('returns the committed ledger row when INSERT races on the unique idempotency index', async () => {
@@ -1514,6 +1523,21 @@ describe('WalletService', () => {
       expect(sql).toMatch(/WHERE profile_id = \$2/)
       expect(sql).toMatch(/AND version = \$3/)
       expect(sql).not.toContain('posted_balance >= 0')
+      expect(params).toEqual([100000n, 'profile-1', 1])
+    })
+
+    it('adds posted_balance >= 0 when requireNonNegativePostedBalance is set (T-04.2.01.03)', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [makeWalletRow({ version: 2, posted_balance: '1100000', available_balance: '900000' })],
+      })
+
+      await service.applyPostedBalanceDelta('profile-1', 100000n, 1, undefined, {
+        requireNonNegativePostedBalance: true,
+      })
+
+      const [sql, params] = mockPool.query.mock.calls[0]!
+      expect(sql).toContain('posted_balance >= 0')
+      expect(sql).toMatch(/AND version = \$3/)
       expect(params).toEqual([100000n, 'profile-1', 1])
     })
 
