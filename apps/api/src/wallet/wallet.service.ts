@@ -223,12 +223,17 @@ export class WalletService {
    * The version predicate is optimistic locking; the non-negative
    * `posted_balance` predicate refuses to post onto a corrupt wallet.
    * Unique `idempotency_key` is the last-line duplicate guard.
+   *
+   * Pass `client` to participate in an open caller-owned transaction
+   * (no BEGIN/COMMIT/ROLLBACK/release). Omit it to run against a
+   * dedicated pool connection with its own transaction.
    */
   async credit(
     walletId: string,
     amount: bigint,
     ref: WalletCreditRef,
     idempotencyKey: string,
+    client?: WalletQueryClient,
   ): Promise<TransactionRow> {
     if (amount <= 0n) throw new BadRequestException('Credit amount must be positive')
     if (!idempotencyKey.trim()) {
@@ -239,14 +244,18 @@ export class WalletService {
     }
 
     const pool = getDbPool()
-    const client = await pool.connect()
+    const ownsTransaction = client === undefined
+    const ownedClient = ownsTransaction ? await pool.connect() : undefined
+    const queryable: WalletQueryClient = client ?? ownedClient!
     // PostgreSQL UUID columns return canonical lowercase; callers may pass
     // any valid spelling. Ownership checks must use the row's profile_id.
     let canonicalWalletId: string | undefined
     try {
-      await client.query('BEGIN')
+      if (ownsTransaction) {
+        await queryable.query('BEGIN')
+      }
 
-      const walletResult = await client.query(
+      const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
         [walletId],
       )
@@ -259,18 +268,20 @@ export class WalletService {
       }
       canonicalWalletId = wallet.profile_id
 
-      const idemResult = await client.query(
+      const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
         [idempotencyKey],
       )
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0]!
+        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow
         assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref)
-        await client.query('COMMIT')
+        if (ownsTransaction) {
+          await queryable.query('COMMIT')
+        }
         return mapTransaction(existing)
       }
 
-      const txResult = await client.query(
+      const txResult = await queryable.query(
         `INSERT INTO wallet_transactions
            (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
          VALUES ($1, $2, $3::bigint, 'Completed', $4, $5, $6, COALESCE($7::jsonb, '{}'::jsonb))
@@ -291,7 +302,7 @@ export class WalletService {
           canonicalWalletId,
           amount,
           wallet.version,
-          client,
+          queryable,
           { requireNonNegativePostedBalance: true },
         )
       } catch (error) {
@@ -303,25 +314,29 @@ export class WalletService {
         throw error
       }
 
-      await client.query('COMMIT')
+      if (ownsTransaction) {
+        await queryable.query('COMMIT')
+      }
       return mapTransaction(txResult.rows[0])
     } catch (error) {
-      await client.query('ROLLBACK')
-      if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
-        const existing = await pool.query(
-          `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-          [idempotencyKey],
-        )
-        if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-          throw new ConflictException('Idempotency key already used')
+      if (ownsTransaction) {
+        await queryable.query('ROLLBACK')
+        if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
+          const existing = await pool.query(
+            `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+            [idempotencyKey],
+          )
+          if (existing.rows.length === 0 || canonicalWalletId === undefined) {
+            throw new ConflictException('Idempotency key already used')
+          }
+          const committed = existing.rows[0]!
+          assertMatchingCreditReplay(committed, canonicalWalletId, amount, ref)
+          return mapTransaction(committed)
         }
-        const committed = existing.rows[0]!
-        assertMatchingCreditReplay(committed, canonicalWalletId, amount, ref)
-        return mapTransaction(committed)
       }
       throw error
     } finally {
-      client.release()
+      ownedClient?.release()
     }
   }
 

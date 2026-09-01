@@ -522,6 +522,46 @@ describe('WalletService', () => {
       ).rejects.toThrow('Idempotency key already used for a different wallet operation')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
+
+    it('participates in a caller-provided client without beginning or committing', async () => {
+      const wallet = makeWalletRow()
+      const external = {
+        query: vi.fn()
+          .mockResolvedValueOnce({ rows: [wallet] })
+          .mockResolvedValueOnce({ rows: [] })
+          .mockResolvedValueOnce({ rows: [makeTxRow()] })
+          .mockResolvedValueOnce({
+            rows: [makeWalletRow({ version: 2, posted_balance: '1100000' })],
+          }),
+      }
+
+      const result = await service.credit(
+        'profile-1',
+        100000n,
+        { type: 'topup', refId: 'evt-1' },
+        'idem-001',
+        external,
+      )
+
+      expect(result.state).toBe('Completed')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+      expect(external.query).not.toHaveBeenCalledWith('BEGIN')
+      expect(external.query).not.toHaveBeenCalledWith('COMMIT')
+      expect(external.query).not.toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('does not roll back a caller-provided client when credit fails', async () => {
+      const external = {
+        query: vi.fn().mockResolvedValueOnce({ rows: [] }),
+      }
+
+      await expect(
+        service.credit('missing', 100n, { type: 'topup' }, 'k', external),
+      ).rejects.toThrow('Wallet not found: missing')
+
+      expect(external.query).not.toHaveBeenCalledWith('ROLLBACK')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
   })
 
   describe('debit (T-04.2.01.04)', () => {

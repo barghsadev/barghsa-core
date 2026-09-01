@@ -23,14 +23,16 @@ import { UploadPolicyController } from './upload-policy.controller.js'
 import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js'
 import { ContractElectricityLimitsController } from './contract-electricity-limits.controller.js'
 import { InvoiceModule } from '../invoice/invoice.module.js'
+import { WalletModule } from '../wallet/index.js'
 import { TosModule } from '../tos/tos.module.js'
 import { CorrelationIdProvider } from '../common/index.js'
 import { DueAtOverrideController } from './due-at-override.controller.js'
 import { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
+import { BankReceiptConfirmationController } from './bank-receipt-confirmation.controller.js'
 
 @Module({
-  imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule, InvoiceModule],
+  imports: [SessionModule, forwardRef(() => TosModule), NotificationsModule, InvoiceModule, WalletModule],
   controllers: [
     AdminController,
     DualApprovalController,
@@ -44,6 +46,7 @@ import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js
     ContractElectricityLimitsController,
     DueAtOverrideController,
     ReminderOffsetToggleController,
+    BankReceiptConfirmationController,
   ],
   providers: [
     AdminService,
