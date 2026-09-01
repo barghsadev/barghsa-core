@@ -408,7 +408,7 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
         type: 'topup',
         refId: 'psp-ref-1',
         metadata: expect.objectContaining({
-          eventId: zarinpalReturnEventId(TX_ID, AUTHORITY),
+          eventId: zarinpalReturnEventId(TX_ID, AUTHORITY, 'paid'),
           authority: AUTHORITY,
         }),
       }),
@@ -417,7 +417,7 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     const claim = mockClient.query.mock.calls.find((call) =>
       String(call[0]).includes('INSERT INTO wallet_topup_callback_events'),
     )
-    expect(claim?.[1]?.[0]).toBe(zarinpalReturnEventId(TX_ID, AUTHORITY))
+    expect(claim?.[1]?.[0]).toBe(zarinpalReturnEventId(TX_ID, AUTHORITY, 'paid'))
   })
 
   it('does not credit a ZarinPal GET return with Status=NOK', async () => {
@@ -431,6 +431,100 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     expect(result).toMatchObject({ processed: true, credited: false })
     expect(verifyPayment).not.toHaveBeenCalled()
     expect(credit).not.toHaveBeenCalled()
+    const claim = mockClient.query.mock.calls.find((call) =>
+      String(call[0]).includes('INSERT INTO wallet_topup_callback_events'),
+    )
+    expect(claim?.[1]?.[0]).toBe(zarinpalReturnEventId(TX_ID, AUTHORITY, 'cancelled'))
+  })
+
+  it('credits a ZarinPal OK return after an earlier NOK for the same order and authority', async () => {
+    const claimedIds: string[] = []
+    mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
+      if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+        return { rows: [] }
+      }
+      if (sql.includes('FROM wallet_transactions WHERE id =')) {
+        const state = claimedIds.includes(zarinpalReturnEventId(TX_ID, AUTHORITY, 'cancelled'))
+          ? 'Failed'
+          : 'Pending'
+        return { rows: [makePendingRow({ state })] }
+      }
+      if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+        return { rows: [] }
+      }
+      if (sql.includes('UPDATE wallet_transactions') || sql.includes('UPDATE wallet_topup_callback_events')) {
+        return { rows: [], rowCount: 1 }
+      }
+      if (sql.includes('INSERT INTO wallet_topup_callback_events')) {
+        const eventId = String(params?.[0])
+        if (claimedIds.includes(eventId)) {
+          return { rows: [], rowCount: 0 }
+        }
+        claimedIds.push(eventId)
+        return { rows: [claimedEventRow({ event_id: eventId })], rowCount: 1 }
+      }
+      if (sql.includes('FROM wallet_topup_callback_events')) {
+        const eventId = String(params?.[0])
+        return {
+          rows: [
+            claimedEventRow({
+              event_id: eventId,
+              status: eventId === zarinpalReturnEventId(TX_ID, AUTHORITY, 'cancelled')
+                ? 'unpaid'
+                : 'processing',
+            }),
+          ],
+        }
+      }
+      return { rows: [] }
+    })
+    const { service, credit, verifyPayment } = makeService()
+    const nok = await service.handleZarinpalReturn({
+      orderId: TX_ID,
+      authority: AUTHORITY,
+      status: 'NOK',
+    })
+    expect(nok).toMatchObject({ processed: true, credited: false })
+    expect(verifyPayment).not.toHaveBeenCalled()
+    expect(credit).not.toHaveBeenCalled()
+
+    const ok = await service.handleZarinpalReturn({
+      orderId: TX_ID,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(ok).toMatchObject({
+      processed: true,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalledTimes(1)
+    expect(credit).toHaveBeenCalledTimes(1)
+    expect(claimedIds).toEqual([
+      zarinpalReturnEventId(TX_ID, AUTHORITY, 'cancelled'),
+      zarinpalReturnEventId(TX_ID, AUTHORITY, 'paid'),
+    ])
+  })
+
+  it('re-verifies a later paid delivery after the same event id was finalized unpaid', async () => {
+    scriptClient({
+      pending: makePendingRow({ state: 'Failed' }),
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'unpaid' }),
+    })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: true,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalled()
+    expect(credit).toHaveBeenCalled()
+    const reopen = mockClient.query.mock.calls.find((call) =>
+      String(call[0]).includes("SET status = 'processing'"),
+    )
+    expect(reopen).toBeDefined()
   })
 
   it('rejects a ZarinPal GET return whose Authority does not match the pending order', async () => {

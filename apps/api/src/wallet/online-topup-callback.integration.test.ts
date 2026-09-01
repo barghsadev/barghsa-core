@@ -397,7 +397,7 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
 
     const event = await ctx.pool.query<{ status: string }>(
       `SELECT status FROM wallet_topup_callback_events WHERE event_id = $1`,
-      [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY)],
+      [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY, 'paid')],
     )
     expect(event.rows).toHaveLength(1)
     expect(event.rows[0]?.status).toBe('credited')
@@ -411,5 +411,69 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
     expect(replay.credited).toBe(true)
     const afterReplay = await fetchWallet()
     expect(afterReplay.posted_balance).toBe(after.posted_balance)
+  })
+
+  it('credits a ZarinPal OK return after an earlier NOK for the same order and authority', async () => {
+    const pendingZarinpal = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5, $6::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        AMOUNT.toString(),
+        'online-topup-callback-int-zarinpal-nok-ok',
+        AUTHORITY,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+        }),
+      ],
+    )
+    const zarinpalPendingId = pendingZarinpal.rows[0]!.id
+    const before = await fetchWallet()
+
+    const nok = await service.handleZarinpalReturn({
+      orderId: zarinpalPendingId,
+      authority: AUTHORITY,
+      status: 'NOK',
+    })
+    expect(nok).toMatchObject({ processed: true, credited: false })
+
+    const afterNok = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [zarinpalPendingId],
+    )
+    expect(afterNok.rows[0]?.state).toBe('Failed')
+
+    const unpaidEvent = await ctx.pool.query<{ status: string }>(
+      `SELECT status FROM wallet_topup_callback_events WHERE event_id = $1`,
+      [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY, 'cancelled')],
+    )
+    expect(unpaidEvent.rows[0]?.status).toBe('unpaid')
+
+    const ok = await service.handleZarinpalReturn({
+      orderId: zarinpalPendingId,
+      authority: AUTHORITY,
+      status: 'OK',
+    })
+    expect(ok).toMatchObject({ processed: true, credited: true })
+
+    const after = await fetchWallet()
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance) + AMOUNT)
+
+    const credit = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE idempotency_key = $1`,
+      [onlineTopUpCreditIdempotencyKey(zarinpalPendingId)],
+    )
+    expect(credit.rows).toHaveLength(1)
+    expect(credit.rows[0]?.state).toBe('Completed')
+
+    const paidEvent = await ctx.pool.query<{ status: string }>(
+      `SELECT status FROM wallet_topup_callback_events WHERE event_id = $1`,
+      [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY, 'paid')],
+    )
+    expect(paidEvent.rows[0]?.status).toBe('credited')
   })
 })

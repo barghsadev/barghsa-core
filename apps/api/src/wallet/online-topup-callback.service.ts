@@ -103,6 +103,9 @@ const CallbackBodySchema = z
  *   1. Claims the provider event id before any business side effect
  *      (atomic INSERT … ON CONFLICT DO NOTHING RETURNING). Duplicate
  *      event ids stop here, including replays bound to another order.
+ *      A terminal unpaid claim for the same order is reopened when a
+ *      later paid delivery arrives so browser NOK cannot suppress
+ *      server-side verify.
  *   2. Checks order id, amount, and authority against the Pending top-up.
  *   3. Confirms payment with the gateway server-side.
  *   4. Credits the wallet via `WalletService.credit()` using a stable
@@ -223,7 +226,7 @@ export class OnlineTopUpCallbackService {
       statusUpper === 'OK' ? 'paid' : statusUpper === 'NOK' ? 'cancelled' : 'failed'
 
     return this.processVerifiedPayload({
-      eventId: zarinpalReturnEventId(orderId, authority),
+      eventId: zarinpalReturnEventId(orderId, authority, status),
       merchantOrderId: orderId,
       authority,
       status,
@@ -263,16 +266,21 @@ export class OnlineTopUpCallbackService {
               'Payment callback event id could not be claimed',
             )
           }
-          const resumeSameOrder =
-            existing.status === 'processing' && existing.pendingTransactionId === pending.id
-          if (!resumeSameOrder) {
+          const sameOrder = existing.pendingTransactionId === pending.id
+          const resumeCrash = sameOrder && existing.status === 'processing'
+          const resumeUnpaidForPaid =
+            sameOrder && existing.status === 'unpaid' && input.status === 'paid'
+          if (!resumeCrash && !resumeUnpaidForPaid) {
             return this.alreadyProcessedResult(client, existing)
+          }
+          if (resumeUnpaidForPaid) {
+            await this.reopenUnpaidEvent(client, input.eventId, input.raw)
           }
         }
 
         const alreadyCredited = await this.findExistingCredit(client, pending.id)
         if (alreadyCredited) {
-          if (pending.state === 'Pending') {
+          if (pending.state === 'Pending' || pending.state === 'Failed') {
             await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId)
           }
           await this.finalizeEvent(client, input.eventId, 'duplicate')
@@ -418,7 +426,11 @@ export class OnlineTopUpCallbackService {
    * Atomically claim `event_id` before verify/credit/pending mutations.
    * `RETURNING` distinguishes a new claim from a duplicate; callers must
    * stop when no row is inserted unless the stored row is still
-   * `processing` for the same pending order (crash resume).
+   * `processing` for the same pending order (crash resume), or is a
+   * terminal `unpaid` claim for the same order with an incoming `paid`
+   * status. Browser-reported unpaid must not suppress later server
+   * verification; `WalletService.credit()` idempotency remains the
+   * duplicate-credit guard.
    */
   private async claimEvent(
     client: QueryClient,
@@ -545,6 +557,26 @@ export class OnlineTopUpCallbackService {
     )
   }
 
+  /**
+   * Re-open a terminal unpaid claim so a later paid delivery can run
+   * `verifyPayment` and credit. `finalizeEvent` only writes from
+   * `processing`.
+   */
+  private async reopenUnpaidEvent(
+    client: QueryClient,
+    eventId: string,
+    raw: unknown,
+  ): Promise<void> {
+    await client.query(
+      `UPDATE wallet_topup_callback_events
+          SET status = 'processing',
+              raw = $2::jsonb
+        WHERE event_id = $1
+          AND status = 'unpaid'`,
+      [eventId, JSON.stringify(raw)],
+    )
+  }
+
   private async finalizeEvent(
     client: QueryClient,
     eventId: string,
@@ -564,9 +596,18 @@ export function onlineTopUpCreditIdempotencyKey(pendingTransactionId: string): s
   return `wallet-online-topup-credit:${pendingTransactionId}`
 }
 
-/** Stable event id for ZarinPal GET returns (no provider-issued event header). */
-export function zarinpalReturnEventId(orderId: string, authority: string): string {
-  return `zarinpal-return:${orderId}:${authority}`
+/**
+ * Stable event id for ZarinPal GET returns (no provider-issued event
+ * header). Terminal Status is part of the identity so a browser
+ * `NOK` cannot claim the same id as a later `OK` and suppress
+ * `verifyPayment`.
+ */
+export function zarinpalReturnEventId(
+  orderId: string,
+  authority: string,
+  terminalStatus: 'paid' | 'failed' | 'cancelled',
+): string {
+  return `zarinpal-return:${orderId}:${authority}:${terminalStatus}`
 }
 
 export function onlineTopUpCallbackLockKeys(merchantOrderId: string): [number, number] {
