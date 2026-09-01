@@ -3,6 +3,7 @@ export {
   WalletService,
   type WalletCreditRef,
   type WalletDebitRef,
+  type WalletReserveRef,
   type TransactionRow,
   type WalletRow,
 } from './wallet.service.js'

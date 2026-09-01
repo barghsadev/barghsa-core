@@ -998,23 +998,482 @@ describe('WalletService', () => {
     })
   })
 
-  describe('reserve', () => {
-    it('reserves amount', async () => {
+  describe('reserve (T-04.2.01.05)', () => {
+    /**
+     * Query sequence for a first-time reserve:
+     *   0: BEGIN
+     *   1: SELECT … FOR UPDATE
+     *   2: SELECT by idempotency_key
+     *   3: UPDATE wallets … reserved_balance += amount
+     *   4: INSERT wallet_transactions (positive amount, Reserved)
+     *   5: COMMIT
+     */
+    it('inserts a Reserved ledger row and increases reservedBalance under version + available check', async () => {
       const wallet = makeWalletRow()
-
+      const reservation = makeTxRow({
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+        idempotency_key: 'idem-res-1',
+      })
       mockClient.query
-        .mockResolvedValueOnce({ rows: [] })                    // 0: BEGIN
-        .mockResolvedValueOnce({ rows: [wallet] })              // 1: SELECT FOR UPDATE
-        .mockResolvedValueOnce({ rows: [] })                    // 2: idempotency check
-        .mockResolvedValueOnce({                                 // 3: UPDATE wallets
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
           rows: [makeWalletRow({ reserved_balance: '250000', version: 2 })],
         })
-        .mockResolvedValueOnce({ rows: [makeTxRow({ type: 'reservation', state: 'Reserved' })] }) // 4: INSERT
+        .mockResolvedValueOnce({ rows: [reservation] })
 
-      const result = await service.reserve('profile-1', 50000n, 'idem-res-1')
+      const result = await service.reserve(
+        'profile-1',
+        50000n,
+        'idem-res-1',
+        { refId: 'inv-1', description: 'hold for payment' },
+      )
 
       expect(result.type).toBe('reservation')
       expect(result.state).toBe('Reserved')
+      expect(result.amount).toBe(50000n)
+
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('reserved_balance = reserved_balance + $1')
+      expect(updateCall![0]).toContain('version = version + 1')
+      expect(updateCall![0]).toContain('(posted_balance - reserved_balance) >= $1')
+      expect(updateCall![1]).toEqual([50000n, 'profile-1', 1])
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![0]).toContain("'reservation'")
+      expect(insertCall![0]).toContain("'Reserved'")
+      expect(insertCall![1]).toEqual([
+        'profile-1',
+        50000n,
+        'idem-res-1',
+        'inv-1',
+        'hold for payment',
+        null,
+      ])
+
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('inserts the ledger row against the wallet row canonical profile_id', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ profile_id: canonical, reserved_balance: '250000', version: 2 })],
+        })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: canonical, type: 'reservation', state: 'Reserved' })] })
+
+      await service.reserve(canonical.toUpperCase(), 50000n, 'idem-canonical-reserve')
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![1][0]).toBe(canonical)
+    })
+
+    it('returns the existing reservation on idempotent retry without mutating the wallet', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({ type: 'reservation', amount: '50000', state: 'Reserved' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      const result = await service.reserve('profile-1', 50000n, 'idem-001')
+
+      expect(result.id).toBe('tx-001')
+      expect(result.state).toBe('Reserved')
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('treats uppercase and lowercase walletId spellings as the same owner on retry', async () => {
+      const canonical = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      const wallet = makeWalletRow({ profile_id: canonical })
+      const existingTx = makeTxRow({
+        wallet_id: canonical,
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+        idempotency_key: 'idem-case',
+      })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      const result = await service.reserve(canonical.toUpperCase(), 50000n, 'idem-case')
+
+      expect(result.id).toBe('tx-001')
+      expect(result.walletId).toBe(canonical)
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('rejects when availableBalance is below the reserve amount', async () => {
+      const lowWallet = makeWalletRow({ posted_balance: '50000', reserved_balance: '0' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [lowWallet] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.reserve('profile-1', 100000n, 'idem-002')).rejects.toThrow(
+        'Insufficient balance for reservation',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects when reserved funds leave availableBalance below the reserve amount', async () => {
+      const wallet = makeWalletRow({ posted_balance: '1000000', reserved_balance: '900000' })
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.reserve('profile-1', 200000n, 'idem-reserved')).rejects.toThrow(
+        'Insufficient balance for reservation: available=100000, required=200000',
+      )
+    })
+
+    it('rejects a colliding idempotency key owned by another wallet', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ wallet_id: 'profile-other', type: 'reservation', state: 'Reserved' })] })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects reserve that reuses a credit idempotency key without mutating the wallet', async () => {
+      const wallet = makeWalletRow()
+      const creditTx = makeTxRow({ type: 'topup', amount: '50000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [creditTx] })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet operation',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects reserve that reuses a debit idempotency key', async () => {
+      const wallet = makeWalletRow()
+      const debitTx = makeTxRow({ type: 'payment', amount: '-50000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [debitTx] })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet operation',
+      )
+    })
+
+    it('rejects replay of a reservation that has already been released', async () => {
+      const wallet = makeWalletRow()
+      const released = makeTxRow({ type: 'reservation', amount: '50000', state: 'Released' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [released] })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet operation',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects a same-key reserve with a different amount', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({ type: 'reservation', amount: '50000', state: 'Reserved' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      await expect(service.reserve('profile-1', 200000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet operation',
+      )
+    })
+
+    it('rejects a same-key reserve with a different refId', async () => {
+      const wallet = makeWalletRow()
+      const existingTx = makeTxRow({
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+        ref_id: 'inv-1',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existingTx] })
+
+      await expect(
+        service.reserve('profile-1', 50000n, 'idem-001', { refId: 'inv-2' }),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+    })
+
+    it('rejects zero or negative reserve without opening a transaction', async () => {
+      await expect(service.reserve('profile-1', 0n, 'k')).rejects.toThrow(
+        'Reserve amount must be positive',
+      )
+      await expect(service.reserve('profile-1', -100n, 'k')).rejects.toThrow(
+        'Reserve amount must be positive',
+      )
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a blank idempotency key', async () => {
+      await expect(service.reserve('profile-1', 100n, '   ')).rejects.toThrow(
+        'Idempotency key is required',
+      )
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('throws NotFound when the wallet row is missing', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.reserve('missing', 100n, 'k')).rejects.toThrow('Wallet not found: missing')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the reserve when UPDATE matches no row', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'version mismatch or insufficient availableBalance',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('returns the committed ledger row when INSERT races on the unique idempotency index', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ reserved_balance: '250000', version: 2 })],
+        })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ type: 'reservation', amount: '50000', state: 'Reserved' })],
+      })
+
+      const result = await service.reserve('profile-1', 50000n, 'idem-001')
+
+      expect(result.id).toBe('tx-001')
+      expect(result.state).toBe('Reserved')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects unique-index race recovery when the existing row is a credit', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ reserved_balance: '250000', version: 2 })],
+        })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({
+        rows: [makeTxRow({ type: 'topup', amount: '50000', state: 'Completed' })],
+      })
+
+      await expect(service.reserve('profile-1', 50000n, 'idem-001')).rejects.toThrow(
+        'Idempotency key already used for a different wallet operation',
+      )
+    })
+  })
+
+  describe('release (T-04.2.01.05)', () => {
+    /**
+     * Query sequence for a first-time release:
+     *   0: BEGIN
+     *   1: SELECT reservation … FOR UPDATE
+     *   2: SELECT wallet … FOR UPDATE
+     *   3: UPDATE wallets … reserved_balance -= amount
+     *   4: UPDATE wallet_transactions SET state = Released
+     *   5: COMMIT
+     */
+    it('decrements reservedBalance and advances the reservation to Released', async () => {
+      const reservation = makeTxRow({
+        id: 'res-001',
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+      })
+      const released = { ...reservation, state: 'Released' }
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+        .mockResolvedValueOnce({ rows: [makeWalletRow()] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ reserved_balance: '150000', version: 2 })],
+        })
+        .mockResolvedValueOnce({ rows: [released] })
+
+      const result = await service.release('res-001')
+
+      expect(result.id).toBe('res-001')
+      expect(result.state).toBe('Released')
+      expect(result.amount).toBe(50000n)
+
+      const walletUpdate = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(walletUpdate).toBeDefined()
+      expect(walletUpdate![0]).toContain('reserved_balance = reserved_balance - $1')
+      expect(walletUpdate![0]).toContain('reserved_balance >= $1')
+      expect(walletUpdate![1]).toEqual([50000n, 'profile-1', 1])
+
+      const txUpdate = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes("SET state = 'Released'"),
+      )
+      expect(txUpdate).toBeDefined()
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('returns the existing row on idempotent re-release without mutating the wallet', async () => {
+      const released = makeTxRow({
+        id: 'res-001',
+        type: 'reservation',
+        amount: '50000',
+        state: 'Released',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [released] })
+
+      const result = await service.release('res-001')
+
+      expect(result.state).toBe('Released')
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('throws NotFound when the reservation is missing and rolls back', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.release('missing-res')).rejects.toThrow('Reservation not found: missing-res')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+    })
+
+    it('rejects release of a non-reservation ledger row', async () => {
+      const payment = makeTxRow({ id: 'pay-001', type: 'payment', amount: '-50000', state: 'Completed' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [payment] })
+
+      await expect(service.release('pay-001')).rejects.toThrow('Ledger row is not a reservation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects release from a non-Reserved, non-Released state', async () => {
+      const pending = makeTxRow({ id: 'res-001', type: 'reservation', amount: '50000', state: 'Pending' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [pending] })
+
+      await expect(service.release('res-001')).rejects.toThrow(
+        'Reservation cannot be released from state Pending',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects a blank reservation id without opening a transaction', async () => {
+      await expect(service.release('   ')).rejects.toThrow('Reservation id is required')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('throws NotFound when the wallet row is missing', async () => {
+      const reservation = makeTxRow({
+        id: 'res-001',
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.release('res-001')).rejects.toThrow('Wallet not found: profile-1')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects the release when the wallet UPDATE matches no row', async () => {
+      const reservation = makeTxRow({
+        id: 'res-001',
+        type: 'reservation',
+        amount: '50000',
+        state: 'Reserved',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [reservation] })
+        .mockResolvedValueOnce({ rows: [makeWalletRow()] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(service.release('res-001')).rejects.toThrow(
+        'version mismatch or reservedBalance shortfall',
+      )
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
   })
 
