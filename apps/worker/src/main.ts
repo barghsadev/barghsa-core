@@ -15,6 +15,11 @@ import {
   INVOICE_REMINDER_SEND_JOB_TYPE,
   sendDueInvoiceReminders,
 } from './invoices/reminder-sender.js';
+import {
+  DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS,
+  WALLET_RECONCILIATION_JOB_TYPE,
+  reconcileWalletBalances,
+} from './wallet/reconciliation-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
@@ -445,8 +450,60 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(reminderSender));
   process.on('SIGINT', () => clearInterval(reminderSender));
 
+  // ── Wallet ledger reconciliation (S-04.2.01, T-04.2.01.08) ───────────
+  // Hourly cron: compare each wallet's cached posted/reserved balances
+  // against the ledger sums and open a finance-queue exception on drift.
+  const walletReconcileRaw = Number(
+    process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? String(DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS),
+  );
+  const WALLET_RECONCILIATION_SCAN_MS =
+    Number.isFinite(walletReconcileRaw) && walletReconcileRaw >= 1000
+      ? walletReconcileRaw
+      : DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS;
+  if (WALLET_RECONCILIATION_SCAN_MS !== walletReconcileRaw) {
+    logger.warn(
+      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`,
+    );
+  }
+  let walletReconcileInFlight = false;
+  const walletReconciler = setInterval(async () => {
+    if (draining || walletReconcileInFlight) return;
+    walletReconcileInFlight = true;
+    try {
+      const result = await reconcileWalletBalances();
+      if (result.reported > 0 || result.errors.length > 0) {
+        logger.info(
+          `Wallet reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+        );
+      }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: WALLET_RECONCILIATION_JOB_TYPE,
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, reported: result.reported },
+        });
+      } else {
+        await recordJobSuccess(WALLET_RECONCILIATION_JOB_TYPE);
+      }
+    } catch (err) {
+      logger.error(`Wallet reconciliation failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: WALLET_RECONCILIATION_JOB_TYPE,
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
+    } finally {
+      walletReconcileInFlight = false;
+    }
+  }, WALLET_RECONCILIATION_SCAN_MS);
+  walletReconciler.unref();
+
+  process.on('SIGTERM', () => clearInterval(walletReconciler));
+  process.on('SIGINT', () => clearInterval(walletReconciler));
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation active',
   );
 }
 
