@@ -1,9 +1,34 @@
-import { Controller, Get, Post, Param, Req, UseGuards, Logger, NotFoundException } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  HttpException,
+  Logger,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { z } from 'zod'
+import { ErrorCodes } from '@barghsa/shared/errors'
+import { parseOnlineTopUpAmountIrR } from '@barghsa/shared/finance'
 import { SessionAuthGuard } from '../session/session.guard.js'
+import type { AuthenticatedRequest } from '../session/session.guard.js'
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
 import { WalletService } from './wallet.service.js'
 import { ProfilesService } from '../profiles/profiles.service.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+import { OnlineTopUpService } from './online-topup.service.js'
+
+const InitiateBodySchema = z
+  .object({
+    amount: z.union([z.number(), z.string()]),
+    idempotencyKey: z.string().min(1).optional(),
+  })
+  .strict()
 
 @ApiTags('Wallet')
 @ApiBearerAuth()
@@ -15,6 +40,7 @@ export class WalletController {
   constructor(
     private readonly walletService: WalletService,
     private readonly profilesService: ProfilesService,
+    private readonly onlineTopUpService: OnlineTopUpService,
   ) {}
 
   /**
@@ -62,6 +88,76 @@ export class WalletController {
     }
   }
 
+  /**
+   * POST /api/wallet/:profileId/top-ups
+   *
+   * Online top-up initiation (T-04.2.02.01): validate the per-transaction
+   * limit, insert a Pending ledger row, and return the payment-gateway
+   * redirect URL. The wallet is not credited here.
+   */
+  @Post(':profileId/top-ups')
+  @HttpCode(201)
+  @RateLimit({ namespace: 'wallet:top-up:user', limit: 10, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Start an online wallet top-up and redirect to the payment gateway' })
+  @ApiHeader({ name: 'Idempotency-Key', required: true })
+  @ApiResponse({ status: 201, description: 'Pending top-up created; client must redirect to redirectUrl.' })
+  @ApiResponse({ status: 400, description: 'Invalid amount or over the configured limit' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @ApiResponse({ status: 404, description: 'Profile not found or not accessible' })
+  @ApiResponse({ status: 409, description: 'Idempotency key already used for a different operation' })
+  async initiateOnlineTopUp(
+    @Param('profileId') profileId: string,
+    @Body() rawBody: unknown,
+    @Headers('idempotency-key') idempotencyHeader: string | undefined,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    assertUuid(profileId, 'profileId')
+    await this.assertProfileAccess(req, profileId)
+
+    const parsed = InitiateBodySchema.safeParse(rawBody ?? {})
+    if (!parsed.success) {
+      httpError(
+        ErrorCodes.VALIDATION_PARSE_ZOD,
+        'Online top-up body must include a numeric amount',
+      )
+    }
+
+    const amountIrR = parseOnlineTopUpAmountIrR(parsed.data.amount)
+    if (amountIrR === null) {
+      httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID,
+        'Online top-up amount must be a positive integer IRR value',
+      )
+    }
+
+    const idempotencyKey = (idempotencyHeader ?? parsed.data.idempotencyKey ?? '').trim()
+    if (!idempotencyKey) {
+      httpError(
+        ErrorCodes.VALIDATION_INPUT_MISSING,
+        'Idempotency-Key header (or idempotencyKey in the body) is required',
+      )
+    }
+
+    const result = await this.onlineTopUpService.initiate({
+      profileId,
+      amountIrR,
+      idempotencyKey,
+    })
+
+    this.logger.log(
+      `Online top-up ${result.transactionId} initiated for profile ${profileId} by user ${req.session.userId}`,
+    )
+
+    return {
+      ok: true,
+      transactionId: result.transactionId,
+      amount: Number(result.amount),
+      currency: 'IRR',
+      state: result.state,
+      redirectUrl: result.redirectUrl,
+    }
+  }
+
   @Get(':profileId/transactions')
   @ApiOperation({ summary: 'Get wallet transaction history' })
   async getTransactions(
@@ -82,5 +178,20 @@ export class WalletController {
         createdAt: tx.createdAt,
       })),
     }
+  }
+}
+
+function httpError(
+  def: { code: string; httpStatus: number },
+  message: string,
+  statusCode = def.httpStatus,
+): never {
+  throw new HttpException({ statusCode, error: def.code, message }, statusCode)
+}
+
+function assertUuid(id: string, label: string): void {
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  if (!parsed.success) {
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD, `Invalid ${label}: expected a UUID`)
   }
 }

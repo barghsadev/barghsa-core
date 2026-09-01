@@ -6,6 +6,7 @@ import {
   toWalletTopUpLimitConfig,
   isValidWalletTopUpLimit,
   isOnlineWalletTopUpAllowed,
+  parseOnlineTopUpAmountIrR,
 } from './wallet-topup-config.js'
 
 // ─── Contract constants ──────────────────────────────────────────────
@@ -169,5 +170,38 @@ describe('isOnlineWalletTopUpAllowed (T-09.10.01)', () => {
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2.5 }, 100)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, 100.5)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, '100' as never)).toBe(false)
+  })
+})
+
+// ─── Tests — parseOnlineTopUpAmountIrR (T-04.2.02.01) ────────────────
+
+describe('parseOnlineTopUpAmountIrR (T-04.2.02.01)', () => {
+  it('accepts a positive safe integer, bigint, or digit string', () => {
+    expect(parseOnlineTopUpAmountIrR(100_000)).toBe(100_000n)
+    expect(parseOnlineTopUpAmountIrR(2_000_000_000n)).toBe(2_000_000_000n)
+    expect(parseOnlineTopUpAmountIrR('1500000')).toBe(1_500_000n)
+    expect(parseOnlineTopUpAmountIrR(' 42 ')).toBe(42n)
+  })
+
+  it('rejects zero, negative, fractional, padded, and non-numeric values', () => {
+    expect(parseOnlineTopUpAmountIrR(0)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(0n)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(-1)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(-1n)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(1.5)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR('01')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR('0')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR('1e3')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR('100.0')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR('abc')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(true)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(null)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(undefined)).toBeNull()
+    expect(parseOnlineTopUpAmountIrR({})).toBeNull()
+  })
+
+  it('rejects amounts that cannot fit in signed int8', () => {
+    expect(parseOnlineTopUpAmountIrR('9223372036854775808')).toBeNull()
+    expect(parseOnlineTopUpAmountIrR(9_223_372_036_854_775_807n + 1n)).toBeNull()
   })
 })

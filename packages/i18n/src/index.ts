@@ -665,6 +665,23 @@ export const fa: I18nDictionary = {
   'dashboard.overview.balanceInToman': '≈ {amount} تومان',
   'dashboard.overview.lowBalanceWarning': 'موجودی کیف پول شما برای پرداخت صورتحساب‌های جاری کافی نیست',
 
+  // ── Wallet top-up (T-04.2.02.01) ─────────────────────────
+  'wallet.page.title': 'کیف پول',
+  'wallet.page.subtitle': 'موجودی پروفایل فعال را افزایش دهید. تا پیش از تأیید درگاه، موجودی تغییر نمی‌کند.',
+  'wallet.page.currentBalance': 'موجودی قابل استفاده',
+  'wallet.page.amountLabel': 'مبلغ شارژ (ریال)',
+  'wallet.page.amountHint': 'سقف هر تراکنش آنلاین توسط مدیر تعیین می‌شود. در صورت رد شدن، مبلغ کمتری وارد کنید.',
+  'wallet.page.tomanPreview': '≈ {amount} تومان',
+  'wallet.page.submit': 'پرداخت آنلاین',
+  'wallet.page.submitting': 'در حال انتقال به درگاه…',
+  'wallet.page.noProfile': 'پروفایل فعالی یافت نشد. ابتدا یک پروفایل بسازید یا انتخاب کنید.',
+  'wallet.page.loadError': 'بارگذاری کیف پول با خطا مواجه شد.',
+  'wallet.page.limitExceeded': 'مبلغ از سقف مجاز شارژ آنلاین بیشتر است. مبلغ کمتری وارد کنید.',
+  'wallet.page.invalidAmount': 'مبلغ باید یک عدد صحیح مثبت به ریال باشد.',
+  'wallet.page.gatewayError': 'درگاه پرداخت در دسترس نیست. دوباره تلاش کنید.',
+  'wallet.page.conflict': 'این درخواست قبلاً با مبلغ دیگری ثبت شده است. صفحه را تازه کنید.',
+  'wallet.page.retry': 'تلاش دوباره',
+
   // ── TOS Page ─────────────────────────────────────────────
   'tos.page.title': 'قوانین استفاده',
   'tos.page.lastUpdated': 'آخرین به‌روزرسانی: {date}',
@@ -1717,6 +1734,23 @@ export const en: I18nDictionary = {
   'dashboard.overview.viewDashboard': 'View Dashboard',
   'dashboard.overview.supportTicket': 'Support Ticket',
   'dashboard.overview.profileBadge': 'Profile: {name}',
+
+  // ── Wallet top-up (T-04.2.02.01) ─────────────────────────
+  'wallet.page.title': 'Wallet',
+  'wallet.page.subtitle': 'Top up the active profile wallet. The balance is credited only after the payment provider confirms.',
+  'wallet.page.currentBalance': 'Available balance',
+  'wallet.page.amountLabel': 'Top-up amount (IRR)',
+  'wallet.page.amountHint': 'Each online top-up is capped by the admin-configured limit. If rejected, retry with a smaller amount.',
+  'wallet.page.tomanPreview': '≈ {amount} Toman',
+  'wallet.page.submit': 'Pay online',
+  'wallet.page.submitting': 'Redirecting to the payment gateway…',
+  'wallet.page.noProfile': 'No active profile found. Create or select a profile first.',
+  'wallet.page.loadError': 'Could not load the wallet.',
+  'wallet.page.limitExceeded': 'Amount exceeds the online top-up limit. Retry with a smaller amount.',
+  'wallet.page.invalidAmount': 'Enter a positive whole-rial amount.',
+  'wallet.page.gatewayError': 'The payment gateway is unavailable. Please try again.',
+  'wallet.page.conflict': 'This request was already started with a different amount. Refresh the page.',
+  'wallet.page.retry': 'Try again',
 
   // ── TOS Page ─────────────────────────────────────────────
   'tos.page.title': 'Terms of Service',
