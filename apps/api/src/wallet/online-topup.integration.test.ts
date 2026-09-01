@@ -78,6 +78,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       async recoverPayment() {
         return null
       },
+      async verifyPayment() {
+        return { paid: true, providerRefId: 'ref-1' }
+      },
     }
     service = new OnlineTopUpService(walletService, gateway)
 
@@ -296,6 +299,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       async recoverPayment() {
         return null
       },
+      async verifyPayment() {
+        return { paid: true, providerRefId: 'ref-1' }
+      },
     }
     const concurrentService = new OnlineTopUpService(walletService, slowGateway)
     const input = {
@@ -353,6 +359,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       async recoverPayment(request) {
         recoverCallsLocal += 1
         return sessions.get(request.idempotencyKey) ?? null
+      },
+      async verifyPayment() {
+        return { paid: true, providerRefId: 'ref-1' }
       },
     }
     const recoverService = new OnlineTopUpService(walletService, reconcilingGateway)
@@ -445,6 +454,9 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       },
       async recoverPayment(request) {
         return sessions.get(request.idempotencyKey) ?? null
+      },
+      async verifyPayment() {
+        return { paid: true, providerRefId: 'ref-1' }
       },
     }
     const timeoutService = new OnlineTopUpService(walletService, timeoutGateway)

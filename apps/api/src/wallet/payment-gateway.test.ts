@@ -11,8 +11,10 @@ import {
   resolvePaymentGatewayAdapterName,
   resolvePaymentGatewayAllowedHosts,
   resolvePaymentGatewayCallbackUrl,
+  resolvePaymentGatewayMerchantId,
   resolvePaymentGatewayStartUrl,
   resolveZarinpalUnverifiedUrl,
+  resolveZarinpalVerifyUrl,
   type PaymentGatewayFetch,
 } from './payment-gateway.js'
 
@@ -74,6 +76,29 @@ describe('RedirectPaymentGateway (T-04.2.02.01)', () => {
       idempotencyKey: 'tx-002',
     })
     expect(other.authority).not.toBe(first.authority)
+  })
+
+  it('confirms payment server-side only when the authority matches the merchant order', async () => {
+    const gateway = createRedirectPaymentGateway({
+      startUrl: 'https://pay.example.test/checkout',
+    })
+    const started = await gateway.startPayment(START_REQUEST)
+    await expect(
+      gateway.verifyPayment({
+        amountIrR: START_REQUEST.amountIrR,
+        merchantOrderId: START_REQUEST.merchantOrderId,
+        authority: started.authority,
+        idempotencyKey: START_REQUEST.idempotencyKey,
+      }),
+    ).resolves.toEqual({ paid: true, providerRefId: started.authority })
+    await expect(
+      gateway.verifyPayment({
+        amountIrR: START_REQUEST.amountIrR,
+        merchantOrderId: START_REQUEST.merchantOrderId,
+        authority: 'not-the-authority',
+        idempotencyKey: START_REQUEST.idempotencyKey,
+      }),
+    ).resolves.toEqual({ paid: false, providerRefId: null })
   })
 
   it('recovers the same deterministic authority without creating a new session', async () => {
@@ -270,6 +295,39 @@ describe('ZarinPal payment gateway (T-04.2.02.01)', () => {
     await expect(gateway.startPayment(START_REQUEST)).rejects.toBeInstanceOf(
       PaymentGatewayRejectedError,
     )
+  })
+
+  it('confirms payment via verify.json with merchant_id, amount, and authority', async () => {
+    const fetchImpl: PaymentGatewayFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: { code: 100, ref_id: 123456789, message: 'Verified' },
+        errors: [],
+      }),
+    })
+    const gateway = createZarinpalPaymentGateway({
+      merchantId: '11111111-1111-1111-1111-111111111111',
+      fetchImpl,
+    })
+    await expect(
+      gateway.verifyPayment({
+        amountIrR: START_REQUEST.amountIrR,
+        merchantOrderId: START_REQUEST.merchantOrderId,
+        authority: 'A00000000000000000000000000000000001',
+        idempotencyKey: START_REQUEST.idempotencyKey,
+      }),
+    ).resolves.toEqual({ paid: true, providerRefId: '123456789' })
+    expect(fetchImpl).toHaveBeenCalledWith(
+      'https://payment.zarinpal.com/pg/v4/payment/verify.json',
+      expect.objectContaining({ method: 'POST' }),
+    )
+    const posted = JSON.parse((fetchImpl as ReturnType<typeof vi.fn>).mock.calls[0]![1].body as string)
+    expect(posted).toEqual({
+      merchant_id: '11111111-1111-1111-1111-111111111111',
+      amount: 250000,
+      authority: 'A00000000000000000000000000000000001',
+    })
   })
 
   it('rejects a non-https configured StartPay URL', () => {
@@ -587,6 +645,18 @@ describe('createPaymentGatewayFromEnv (T-04.2.02.01)', () => {
         env: { ...PRODUCTION_CALLBACK_ENV, PAYMENT_GATEWAY_ADAPTER: 'http' },
       }),
     ).toThrow(/PAYMENT_GATEWAY_REQUEST_URL/)
+  })
+
+  it('resolves merchant id and ZarinPal verify.json from env / request URL', () => {
+    expect(resolvePaymentGatewayMerchantId({ NODE_ENV: 'test' })).toBe('barghsa-dev-merchant')
+    expect(
+      resolvePaymentGatewayMerchantId({
+        PAYMENT_GATEWAY_MERCHANT_ID: '11111111-1111-1111-1111-111111111111',
+      }),
+    ).toBe('11111111-1111-1111-1111-111111111111')
+    expect(
+      resolveZarinpalVerifyUrl('https://payment.zarinpal.com/pg/v4/payment/request.json'),
+    ).toBe('https://payment.zarinpal.com/pg/v4/payment/verify.json')
   })
 
   it('registers zarinpal when merchant id and a public https callback origin are present', async () => {

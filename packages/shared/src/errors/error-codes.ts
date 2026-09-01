@@ -264,6 +264,24 @@ export const ErrorCodes = {
     messageKey: 'error.provider.rate_limited',
     severity: 'warn' as ErrorSeverity,
   },
+  PROVIDER_CALLBACK_INVALID: {
+    code: 'PROVIDER:CALLBACK:INVALID',
+    httpStatus: 401,
+    messageKey: 'error.provider.callback.invalid',
+    severity: 'warn' as ErrorSeverity,
+  },
+  PROVIDER_CALLBACK_REPLAYED: {
+    code: 'PROVIDER:CALLBACK:REPLAYED',
+    httpStatus: 401,
+    messageKey: 'error.provider.callback.replayed',
+    severity: 'warn' as ErrorSeverity,
+  },
+  PROVIDER_CALLBACK_UNCONFIGURED: {
+    code: 'PROVIDER:CALLBACK:UNCONFIGURED',
+    httpStatus: 503,
+    messageKey: 'error.provider.callback.unconfigured',
+    severity: 'error' as ErrorSeverity,
+  },
 
   // ── Internal ────────────────────────────────────────────
   INTERNAL_SERVER: {

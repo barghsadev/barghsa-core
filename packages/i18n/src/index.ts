@@ -79,6 +79,9 @@ export const fa: I18nDictionary = {
   'error.provider.downstream': 'خطا در سرویس خارجی',
   'error.provider.timeout': 'مدت زمان انتظار برای سرویس خارجی به پایان رسید',
   'error.provider.rate_limited': 'سرویس خارجی محدودیت نرخ دارد',
+  'error.provider.callback.invalid': 'بازگشت درگاه پرداخت نامعتبر است',
+  'error.provider.callback.replayed': 'بازگشت درگاه پرداخت منقضی یا تکراری است',
+  'error.provider.callback.unconfigured': 'راز امضای بازگشت درگاه پرداخت پیکربندی نشده است',
 
   // ── Auth Pages — Register (submission errors) ───────────
   'auth.register.submitting': 'در حال ثبت‌نام…',
@@ -1160,6 +1163,9 @@ export const en: I18nDictionary = {
   'error.provider.downstream': 'External service error',
   'error.provider.timeout': 'External service timed out',
   'error.provider.rate_limited': 'External service is rate-limited',
+  'error.provider.callback.invalid': 'Payment provider callback is invalid',
+  'error.provider.callback.replayed': 'Payment provider callback is expired or replayed',
+  'error.provider.callback.unconfigured': 'Payment provider callback signing secret is not configured',
 
   // ── Auth Pages — Register (submission errors) ───────────
   'auth.register.submitting': 'Registering…',
