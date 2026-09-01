@@ -218,6 +218,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         refId: TX_ID,
       }),
       bankReceiptCreditIdempotencyKey(TX_ID),
+      mockClient,
     )
     expect(result.state).toBe('Released')
     expect(result.canDecide).toBe(false)

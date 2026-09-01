@@ -10,6 +10,8 @@
  *      never changes posted or reserved balance.
  *   4. Confirm after reject (and reject after confirm) is Conflict.
  *   5. Audit insert failure rolls back the pending-state change.
+ *   6. Confirm audit-insert failure also rolls back the wallet credit
+ *      (posted balance, Completed ledger row, and receipt stay unchanged).
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -311,5 +313,42 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(pending.rows[0]!.state).toBe('Pending')
     const after = await walletBalances()
     expect(after.posted).toBe(before.posted)
+  })
+
+  it('rolls back credit, balance, and receipt when confirm audit insert fails', async () => {
+    const pendingId = await insertPending('confirm-audit-fail')
+    const before = await walletBalances()
+    const failure = await service
+      .confirm({
+        transactionId: pendingId,
+        actorUserId: 'missing-staff',
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+
+    expect(failure).toBeInstanceOf(Error)
+
+    const pending = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [pendingId],
+    )
+    expect(pending.rows[0]!.state).toBe('Pending')
+
+    const credits = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptCreditIdempotencyKey(pendingId)],
+    )
+    expect(credits.rows).toHaveLength(0)
+
+    const after = await walletBalances()
+    expect(after.posted).toBe(before.posted)
+    expect(after.reserved).toBe(before.reserved)
+
+    const audit = await ctx.pool.query(
+      `SELECT id FROM audit_log WHERE event = $1 AND metadata::jsonb ->> 'transactionId' = $2`,
+      [BANK_RECEIPT_CONFIRMED_EVENT, pendingId],
+    )
+    expect(audit.rows).toHaveLength(0)
   })
 })

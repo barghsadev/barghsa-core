@@ -27,16 +27,9 @@ import {
 } from '@barghsa/shared/finance'
 import type { StorageProvider } from '@barghsa/shared/storage'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
-import { WalletService, type TransactionRow } from './wallet.service.js'
+import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js'
 
 const ATTACHMENT_URL_TTL_SECONDS = 15 * 60
-
-interface QueryClient {
-  query: (
-    text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
-}
 
 interface LedgerRow {
   id: string
@@ -92,11 +85,13 @@ export interface RejectBankReceiptInput {
 /**
  * Staff confirmation of bank-receipt wallet top-ups (T-04.2.02.04).
  *
- * Confirm:
+ * Confirm (one DB transaction):
  *   1. Lock the Pending `topup` ledger row.
- *   2. Credit the wallet via `WalletService.credit()` with a derived
- *      idempotency key (posted balance comes only from the Completed row).
+ *   2. Credit the wallet via `WalletService.credit()` on this client
+ *      with a derived idempotency key (posted balance comes only from
+ *      the Completed row).
  *   3. Release the Pending intent and append an audit row.
+ *   Credit, pending release, and audit commit or roll back together.
  *
  * Reject: mark the Pending row `Rejected` with a customer-visible reason
  * and never call credit. Rejected submissions never increase balance.
@@ -208,6 +203,7 @@ export class BankReceiptConfirmationService {
             }),
           },
           bankReceiptCreditIdempotencyKey(pending.id),
+          client,
         )
 
         const decision = bankReceiptStaffDecisionMetadata({
@@ -345,7 +341,7 @@ export class BankReceiptConfirmationService {
   }
 
   private async lockBankReceipt(
-    client: QueryClient,
+    client: WalletQueryClient,
     transactionId: string,
   ): Promise<LedgerRow & { walletId: string; amount: bigint }> {
     const result = await client.query(
@@ -377,7 +373,7 @@ export class BankReceiptConfirmationService {
   }
 
   private async releasePending(
-    client: QueryClient,
+    client: WalletQueryClient,
     pendingId: string,
     decision: Record<string, unknown>,
   ): Promise<LedgerRow | null> {
@@ -396,7 +392,7 @@ export class BankReceiptConfirmationService {
   }
 
   private async markRejected(
-    client: QueryClient,
+    client: WalletQueryClient,
     pendingId: string,
     decision: Record<string, unknown>,
   ): Promise<LedgerRow | null> {
@@ -415,7 +411,7 @@ export class BankReceiptConfirmationService {
   }
 
   private async recordAudit(
-    client: QueryClient,
+    client: WalletQueryClient,
     entry: {
       event: string
       actorUserId: string
