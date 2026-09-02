@@ -63,6 +63,7 @@ const CHARGEBACK_MIGRATION = resolve(
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const PROFILE_C = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const SECRET = 'integration-chargeback-secret'
 const MERCHANT = 'barghsa-test-merchant'
 const AMOUNT = 25_000n
@@ -95,10 +96,15 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     await ctx.pool.query(readFileSync(AVAILABLE_CHECK_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(CHARGEBACK_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
-    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2), ($3)`, [
       PROFILE_A,
       PROFILE_B,
+      PROFILE_C,
+    ])
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2), ($3)`, [
+      PROFILE_A,
+      PROFILE_B,
+      PROFILE_C,
     ])
 
     pendingId = uuidv7()
@@ -319,5 +325,71 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       [credit.id],
     )
     expect(reversals.rows).toHaveLength(0)
+  })
+
+  it('maps an authority-only notification when the credit has a distinct provider ref', async () => {
+    const pendingC = uuidv7()
+    const authorityC = 'auth-chargeback-c'
+    const providerRefC = 'psp-chargeback-ref-c'
+    const credit = await walletService.credit(
+      PROFILE_C,
+      AMOUNT,
+      {
+        type: 'topup',
+        refId: providerRefC,
+        description: 'Online wallet top-up',
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: pendingC,
+          authority: authorityC,
+        },
+      },
+      onlineTopUpCreditIdempotencyKey(pendingC),
+    )
+    expect(credit.refId).toBe(providerRefC)
+    expect(credit.refId).not.toBe(authorityC)
+
+    const result = await service.handle(
+      signed(
+        {
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          authority: authorityC,
+          amountIrR: AMOUNT.toString(),
+        },
+        'evt-cb-authority-only',
+      ),
+    )
+    expect(result).toMatchObject({
+      mapped: true,
+      reversed: true,
+      originalTransactionId: credit.id,
+      matchMethod: 'authority',
+      status: 'reversed',
+    })
+
+    const original = await ctx.pool.query<{ type: string; amount: string; state: string }>(
+      `SELECT type, amount::text AS amount, state FROM wallet_transactions WHERE id = $1`,
+      [credit.id],
+    )
+    expect(original.rows[0]).toMatchObject({
+      type: 'topup',
+      amount: AMOUNT.toString(),
+      state: 'Completed',
+    })
+    const reversal = await ctx.pool.query<{
+      type: string
+      amount: string
+      reverses_transaction_id: string
+    }>(
+      `SELECT type, amount::text AS amount, reverses_transaction_id
+         FROM wallet_transactions WHERE id = $1`,
+      [result.reversalTransactionId],
+    )
+    expect(reversal.rows[0]).toMatchObject({
+      type: 'reversal',
+      amount: (-AMOUNT).toString(),
+      reverses_transaction_id: credit.id,
+    })
   })
 })

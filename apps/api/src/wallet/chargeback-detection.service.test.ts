@@ -342,4 +342,40 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     expect(result.matchMethod).toBe('provider_ref_id')
     expect(reverseTransaction).toHaveBeenCalled()
   })
+
+  it('maps an authority-only notification when the credit has a distinct provider ref', async () => {
+    const { service, reverseTransaction } = makeService()
+    scriptClient({
+      credit: makeCreditRow({
+        idempotency_key: 'credit-other',
+        ref_id: PROVIDER_REF,
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: PENDING_ID,
+          authority: AUTHORITY,
+        },
+      }),
+    })
+    const result = await service.handle(
+      signedInput(
+        payload({
+          merchantOrderId: undefined,
+          providerRefId: undefined,
+        }),
+      ),
+    )
+    expect(PROVIDER_REF).not.toBe(AUTHORITY)
+    expect(result).toMatchObject({
+      mapped: true,
+      reversed: true,
+      originalTransactionId: CREDIT_ID,
+      matchMethod: 'authority',
+      status: 'reversed',
+    })
+    expect(reverseTransaction).toHaveBeenCalledWith(
+      CREDIT_ID,
+      WALLET_CHARGEBACK_REASON,
+      `wallet-chargeback-reversal:${EVENT_ID}`,
+    )
+  })
 })

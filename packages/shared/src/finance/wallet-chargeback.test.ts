@@ -219,6 +219,21 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
     expect(byAuthority?.method).toBe('authority')
   })
 
+  it('maps an authority-only notification when refId is a distinct provider capture ref', () => {
+    const credit = candidate()
+    expect(credit.refId).toBe(PROVIDER_REF)
+    expect(credit.refId).not.toBe(AUTHORITY)
+
+    const match = matchChargebackToTopUp(
+      notification({
+        merchantOrderId: null,
+        providerRefId: null,
+      }),
+      [credit],
+    )
+    expect(match).toEqual({ original: credit, method: 'authority' })
+  })
+
   it('does not fall through when a present order id does not match', () => {
     expect(
       matchChargebackToTopUp(
@@ -255,15 +270,17 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
 
   it('reads pending id and authority from credit metadata', () => {
     expect(topUpPendingTransactionId(candidate())).toBe(PENDING_ID)
+    expect(topUpAuthority(candidate())).toBe(AUTHORITY)
     expect(topUpAuthority(candidate({ refId: null }))).toBe(AUTHORITY)
     expect(
       topUpAuthority(
         candidate({
-          refId: null,
+          refId: PROVIDER_REF,
           metadata: { gateway: { authority: 'auth-from-gateway' } },
         }),
       ),
     ).toBe('auth-from-gateway')
+    expect(topUpAuthority(candidate({ metadata: {} }))).toBe(PROVIDER_REF)
     expect(chargebackAmountMatchesTopUp(AMOUNT, AMOUNT)).toBe(true)
     expect(chargebackAmountMatchesTopUp(AMOUNT, -AMOUNT)).toBe(true)
     expect(chargebackAmountMatchesTopUp(AMOUNT, 1n)).toBe(false)

@@ -251,22 +251,25 @@ export function topUpPendingTransactionId(
 export function topUpAuthority(
   candidate: ChargebackTopUpCandidate,
 ): string | null {
+  if (candidate.metadata && typeof candidate.metadata === 'object') {
+    const meta = candidate.metadata as {
+      authority?: unknown
+      gateway?: { authority?: unknown }
+    }
+    if (typeof meta.authority === 'string' && meta.authority.length > 0) {
+      return meta.authority
+    }
+    if (
+      typeof meta.gateway?.authority === 'string' &&
+      meta.gateway.authority.length > 0
+    ) {
+      return meta.gateway.authority
+    }
+  }
+  // Successful online credits store providerRefId in refId. Treat it as an
+  // authority-compatible fallback only when no stored authority exists.
   if (typeof candidate.refId === 'string' && candidate.refId.length > 0) {
     return candidate.refId
-  }
-  if (!candidate.metadata || typeof candidate.metadata !== 'object') return null
-  const meta = candidate.metadata as {
-    authority?: unknown
-    gateway?: { authority?: unknown }
-  }
-  if (typeof meta.authority === 'string' && meta.authority.length > 0) {
-    return meta.authority
-  }
-  if (
-    typeof meta.gateway?.authority === 'string' &&
-    meta.gateway.authority.length > 0
-  ) {
-    return meta.gateway.authority
   }
   return null
 }
