@@ -1118,6 +1118,61 @@ describe('WalletService', () => {
       ).rejects.toThrow('Idempotency key already used for a different wallet operation')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
+
+    it('participates in a caller-provided client without beginning or committing', async () => {
+      const wallet = makeWalletRow()
+      const debitTx = makeTxRow({
+        type: 'payment',
+        amount: '-100000',
+        state: 'Completed',
+      })
+      const external = {
+        query: vi.fn()
+          .mockResolvedValueOnce({ rows: [wallet] })
+          .mockResolvedValueOnce({ rows: [] })
+          .mockResolvedValueOnce({
+            rows: [makeWalletRow({ version: 2, reserved_balance: '300000' })],
+          })
+          .mockResolvedValueOnce({
+            rows: [
+              makeWalletRow({
+                version: 3,
+                posted_balance: '900000',
+                reserved_balance: '200000',
+              }),
+            ],
+          })
+          .mockResolvedValueOnce({ rows: [debitTx] }),
+      }
+
+      const result = await service.debit(
+        'profile-1',
+        100000n,
+        { type: 'payment', refId: 'inv-1' },
+        'idem-debit-001',
+        external,
+      )
+
+      expect(result.state).toBe('Completed')
+      expect(result.amount).toBe(-100000n)
+      expect(mockPool.connect).not.toHaveBeenCalled()
+      expect(external.query).not.toHaveBeenCalledWith('BEGIN')
+      expect(external.query).not.toHaveBeenCalledWith('COMMIT')
+      expect(external.query).not.toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('does not roll back a caller-provided client when debit fails', async () => {
+      const external = {
+        query: vi.fn().mockResolvedValueOnce({ rows: [] }),
+      }
+
+      await expect(
+        service.debit('missing', 100n, { type: 'payment' }, 'k', external),
+      ).rejects.toThrow('Wallet not found: missing')
+
+      expect(external.query).not.toHaveBeenCalledWith('ROLLBACK')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
   })
 
   describe('reserve (T-04.2.01.05)', () => {

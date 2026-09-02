@@ -4,6 +4,7 @@ import { WalletService } from './wallet.service.js'
 import { OnlineTopUpService } from './online-topup.service.js'
 import { BankReceiptTopUpService } from './bank-receipt-topup.service.js'
 import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
+import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
 import { OnlineTopUpCallbackController } from './online-topup-callback.controller.js'
 import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
@@ -19,12 +20,13 @@ import { InvoiceModule } from '../invoice/invoice.module.js'
     OnlineTopUpService,
     BankReceiptTopUpService,
     BankReceiptConfirmationService,
+    PayInvoiceWithWalletService,
     OnlineTopUpCallbackService,
     {
       provide: PAYMENT_GATEWAY,
       useFactory: () => createPaymentGatewayFromEnv(),
     },
   ],
-  exports: [WalletService, BankReceiptConfirmationService],
+  exports: [WalletService, BankReceiptConfirmationService, PayInvoiceWithWalletService],
 })
 export class WalletModule {}
