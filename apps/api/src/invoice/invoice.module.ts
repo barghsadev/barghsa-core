@@ -13,6 +13,7 @@ import { CancelAndReplaceInvoiceService } from './cancel-and-replace-invoice.ser
 import { CreateAdjustmentInvoiceService } from './create-adjustment-invoice.service.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 import { CustomerInvoiceController } from './customer-invoice.controller.js'
+import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
 import { SessionModule } from '../session/session.module.js'
 
 @Module({
@@ -32,6 +33,7 @@ import { SessionModule } from '../session/session.module.js'
     CancelAndReplaceInvoiceService,
     CreateAdjustmentInvoiceService,
     CustomerInvoiceDetailsService,
+    InvoiceBankReceiptUploadService,
   ],
   exports: [
     InvoiceStateMachineService,
@@ -47,6 +49,7 @@ import { SessionModule } from '../session/session.module.js'
     CancelAndReplaceInvoiceService,
     CreateAdjustmentInvoiceService,
     CustomerInvoiceDetailsService,
+    InvoiceBankReceiptUploadService,
   ],
 })
 export class InvoiceModule {}
