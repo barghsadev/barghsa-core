@@ -108,6 +108,7 @@ type ScriptOptions = {
   existingCredit?: ReturnType<typeof makePendingRow> | null
   invoice?: ReturnType<typeof makeInvoiceRow> | null
   invoiceUpdated?: boolean
+  wallet?: { profile_id: string } | null
 }
 
 function script(opts: ScriptOptions = {}) {
@@ -121,6 +122,13 @@ function script(opts: ScriptOptions = {}) {
     if (sql.includes('FROM wallet_transactions WHERE id = $1 FOR UPDATE')) {
       if (opts.locked === null) return { rows: [] }
       return { rows: [opts.locked ?? makePendingRow()] }
+    }
+    if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
+      if (opts.wallet === null) return { rows: [] }
+      return { rows: [{ profile_id: PROFILE_ID }] }
+    }
+    if (sql.includes('WHERE idempotency_key')) {
+      return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
     }
     if (sql.includes("SET state = 'Released'")) {
       return {
@@ -403,6 +411,15 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         }),
       }),
     )
+    const sqlOrder = mockClient.query.mock.calls.map(([sql]) => String(sql))
+    const walletLockAt = sqlOrder.findIndex(
+      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE'),
+    )
+    const invoiceLockAt = sqlOrder.findIndex(
+      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE'),
+    )
+    expect(walletLockAt).toBeGreaterThanOrEqual(0)
+    expect(invoiceLockAt).toBeGreaterThan(walletLockAt)
     const audit = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO audit_log'),
     )
@@ -562,5 +579,26 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices')),
     ).toBe(false)
+  })
+
+  it('returns 404 when the wallet is missing during invoice-linked confirm', async () => {
+    script({
+      locked: makePendingRow({ amount: OVERPAY_RECEIPT.toString() }),
+      invoice: makeInvoiceRow(),
+      wallet: null,
+    })
+    const rejection = await service
+      .confirm({
+        transactionId: TX_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        invoiceId: INVOICE_ID,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(404)
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
   })
 })
