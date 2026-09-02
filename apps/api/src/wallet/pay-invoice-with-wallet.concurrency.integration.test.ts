@@ -22,6 +22,14 @@
  *   9. Concurrent remaining debits of a PartiallyFunded invoice settle once.
  *  10. A concurrent wallet credit (wallet-row lock) and pay-from-wallet
  *      debit complete without deadlock; postedBalance reflects both.
+ *  11. Concurrent retries against a live in-flight (NULL) claim all
+ *      409 without debiting.
+ *  12. Concurrent retries reclaim an expired in-flight claim exactly
+ *      once (one Paid original, the rest replay).
+ *  13. Three invoices racing for funds that cover two remainings: two
+ *      settle Paid, one fails insufficient, two ledger rows.
+ *  14. A concurrent wallet reserve and pay-from-wallet debit of the
+ *      last available rial: exactly one succeeds, no deadlock.
  *
  * Sequential locking/idempotency coverage lives in
  * `pay-invoice-with-wallet.integration.test.ts` (T-04.2.03.02 / T-04.2.03.03).
@@ -267,6 +275,19 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
       [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
     )
     return Number(result.rows[0]?.n ?? '0')
+  }
+
+  async function seedInFlightClaim(
+    key: string,
+    entityId: string,
+    expiresAt: Date,
+  ): Promise<void> {
+    await ctx.pool.query(
+      `INSERT INTO idempotency_keys
+         (idempotency_key, entity_type, entity_id, expires_at)
+       VALUES ($1, $2, $3, $4)`,
+      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE, entityId, expiresAt],
+    )
   }
 
   function pay(
@@ -639,5 +660,133 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
       BigInt(before.posted_balance) - TOTAL + creditAmount,
     )
     expect(await fetchLedger(profileId)).toHaveLength(2)
+  })
+
+  it('rejects concurrent retries while an in-flight claim has not persisted', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
+    const before = await fetchWallet(profileId)
+    const key = `pay-in-flight-race-${invoiceId}`
+    await seedInFlightClaim(key, invoiceId, new Date('2026-09-03T08:00:00.000Z'))
+
+    const settled = await Promise.allSettled([
+      pay(invoiceId, profileId, key),
+      pay(invoiceId, profileId, key),
+      pay(invoiceId, profileId, key),
+    ])
+
+    expect(fulfilledResults(settled)).toHaveLength(0)
+    const lost = rejectedReasons(settled)
+    expect(lost).toHaveLength(3)
+    for (const reason of lost) {
+      expect(reason).toBeInstanceOf(ConflictException)
+      expect(String((reason as Error).message)).toContain(
+        PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT(),
+      )
+    }
+
+    expect(await fetchWallet(profileId)).toEqual(before)
+    expect((await fetchInvoice(invoiceId)).state).toBe('Unpaid')
+    expect(await fetchLedger(profileId)).toEqual([])
+    expect(await fetchAudit(invoiceId)).toEqual([])
+    expect(await fetchIdempotencyCount(key)).toBe(1)
+  })
+
+  it('lets exactly one concurrent retry reclaim an expired in-flight claim', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
+    const before = await fetchWallet(profileId)
+    const key = `pay-expired-reclaim-race-${invoiceId}`
+    await seedInFlightClaim(key, invoiceId, new Date('2026-09-01T08:00:00.000Z'))
+
+    const settled = await Promise.allSettled([
+      pay(invoiceId, profileId, key),
+      pay(invoiceId, profileId, key),
+      pay(invoiceId, profileId, key),
+    ])
+
+    const won = fulfilledResults(settled)
+    const lost = rejectedReasons(settled)
+    expect(lost).toHaveLength(0)
+    expect(won).toHaveLength(3)
+
+    const originals = won.filter((row) => row.replayed === false)
+    const replays = won.filter((row) => row.replayed === true)
+    expect(originals).toHaveLength(1)
+    expect(replays).toHaveLength(2)
+    expect(new Set(won.map((row) => row.walletTransaction.id)).size).toBe(1)
+
+    const wallet = await fetchWallet(profileId)
+    expect(BigInt(wallet.posted_balance)).toBe(BigInt(before.posted_balance) - TOTAL)
+    expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
+    expect(await fetchLedger(profileId)).toHaveLength(1)
+    expect(await fetchIdempotencyCount(key)).toBe(1)
+  })
+
+  it('lets two of three concurrent invoice payments succeed when funds cover two remainings', async () => {
+    const profileId = await seedWallet({ posted: TOTAL * 2n })
+    const invoiceA = await seedInvoice(profileId)
+    const invoiceB = await seedInvoice(profileId)
+    const invoiceC = await seedInvoice(profileId)
+
+    const settled = await Promise.allSettled([
+      pay(invoiceA, profileId, `pay-two-of-three-a-${invoiceA}`),
+      pay(invoiceB, profileId, `pay-two-of-three-b-${invoiceB}`),
+      pay(invoiceC, profileId, `pay-two-of-three-c-${invoiceC}`),
+    ])
+
+    const won = fulfilledResults(settled)
+    const lost = rejectedReasons(settled)
+    expect(won).toHaveLength(2)
+    expect(lost).toHaveLength(1)
+    expect(won.every((row) => row.toState === 'Paid' && row.replayed === false)).toBe(true)
+    expect(lost[0]).toBeInstanceOf(BadRequestException)
+    expect(String((lost[0] as Error).message)).toContain(
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(0n, TOTAL),
+    )
+
+    const states = [
+      (await fetchInvoice(invoiceA)).state,
+      (await fetchInvoice(invoiceB)).state,
+      (await fetchInvoice(invoiceC)).state,
+    ]
+    expect(states.filter((state) => state === 'Paid')).toHaveLength(2)
+    expect(states.filter((state) => state === 'Unpaid')).toHaveLength(1)
+    expect(BigInt((await fetchWallet(profileId)).posted_balance)).toBe(0n)
+    expect(await fetchLedger(profileId)).toHaveLength(2)
+  })
+
+  it('lets exactly one of a concurrent reserve and remaining debit succeed', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: TOTAL })
+    const before = await fetchWallet(profileId)
+
+    const [paid, reserved] = await Promise.allSettled([
+      pay(invoiceId, profileId, `pay-vs-reserve-${invoiceId}`),
+      walletService.reserve(profileId, 1n, `reserve-vs-pay-${invoiceId}`),
+    ])
+    expect((paid.status === 'fulfilled') !== (reserved.status === 'fulfilled')).toBe(true)
+
+    const wallet = await fetchWallet(profileId)
+    const invoice = await fetchInvoice(invoiceId)
+    const ledger = await fetchLedger(profileId)
+    expect(ledger).toHaveLength(1)
+
+    if (paid.status === 'fulfilled') {
+      expect(invoice.state).toBe('Paid')
+      expect(BigInt(wallet.posted_balance)).toBe(BigInt(before.posted_balance) - TOTAL)
+      expect(BigInt(wallet.reserved_balance)).toBe(0n)
+      expect(ledger[0]?.type).toBe('payment')
+      expect(reserved.status).toBe('rejected')
+      if (reserved.status === 'rejected') {
+        expect(reserved.reason).toBeInstanceOf(BadRequestException)
+      }
+    } else {
+      expect(invoice.state).toBe('Unpaid')
+      expect(BigInt(wallet.posted_balance)).toBe(BigInt(before.posted_balance))
+      expect(BigInt(wallet.reserved_balance)).toBe(1n)
+      expect(ledger[0]?.type).toBe('reservation')
+      expect(paid.reason).toBeInstanceOf(BadRequestException)
+      expect(String(paid.reason)).toContain(
+        PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(TOTAL - 1n, TOTAL),
+      )
+    }
   })
 })
