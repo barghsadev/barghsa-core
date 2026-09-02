@@ -7,7 +7,8 @@
  *   2. Opens one DB transaction and claims
  *      `idempotency_keys (idempotencyKey, entityType)` first. A retry
  *      that finds a cached JSON response returns it and never debits.
- *      An in-flight NULL response is rejected (409).
+ *      An in-flight NULL response is rejected (409) unless `expires_at`
+ *      has passed, in which case the row is reclaimed.
  *   3. `SELECT … FOR UPDATE`s the wallet first, then the invoice
  *      (stable lock order vs other wallet mutations).
  *   4. Rejects missing wallets/invoices, other profiles (404), credit
@@ -58,6 +59,7 @@ import {
   walletAvailableBalance,
   type PayInvoiceWithWalletCachedResponse,
 } from '@barghsa/shared/finance'
+import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
 import {
@@ -118,14 +120,18 @@ interface LockedWalletRow {
 export class PayInvoiceWithWalletService {
   private readonly logger = new Logger(PayInvoiceWithWalletService.name)
   private readonly invoiceStateMachine: InvoiceStateMachineService
+  private readonly idempotencyKeys: IdempotencyKeysRepository
 
   constructor(
     private readonly walletService: WalletService,
     @Optional()
     invoiceStateMachine?: InvoiceStateMachineService,
+    @Optional()
+    idempotencyKeys?: IdempotencyKeysRepository,
   ) {
     this.invoiceStateMachine =
       invoiceStateMachine ?? new InvoiceStateMachineService(new InvoiceAuditRepository())
+    this.idempotencyKeys = idempotencyKeys ?? new IdempotencyKeysRepository()
   }
 
   /**
@@ -153,15 +159,21 @@ export class PayInvoiceWithWalletService {
     try {
       await client.query('BEGIN')
 
-      const claim = await this.claimOrLoadIdempotency(client, {
+      const claim = await this.idempotencyKeys.claimOrLoad(client, {
         key,
+        entityType: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
         entityId: ids.invoiceId,
         expiresAt: idempotencyKeyExpiresAt(now),
+        now,
       })
       if (claim.kind === 'cached') {
-        this.assertCachedMatchesRequest(claim.response, ids.invoiceId, ids.profileId)
+        const parsed = parsePayInvoiceWithWalletCache(claim.response)
+        if (!parsed) {
+          throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+        }
+        this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId)
         await client.query('COMMIT')
-        return resultFromCache(claim.response)
+        return resultFromCache(parsed)
       }
       if (claim.kind === 'in_flight') {
         throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
@@ -549,80 +561,18 @@ export class PayInvoiceWithWalletService {
     return mapLedger(row as Record<string, unknown>)
   }
 
-  /**
-   * Claim `(idempotencyKey, invoice_wallet_payment)` or load the cached
-   * response. INSERT … ON CONFLICT DO NOTHING is serialized by the
-   * unique index; the loser `SELECT … FOR UPDATE`s the winner's row.
-   */
-  private async claimOrLoadIdempotency(
-    client: WalletQueryClient,
-    input: { key: string; entityId: string; expiresAt: Date },
-  ): Promise<
-    | { kind: 'claimed' }
-    | { kind: 'cached'; response: PayInvoiceWithWalletCachedResponse }
-    | { kind: 'in_flight' }
-  > {
-    const inserted = await this.insertIdempotencyClaim(client, input)
-    if (inserted) return { kind: 'claimed' }
-
-    const existing = await client.query(
-      `SELECT entity_id, response
-         FROM idempotency_keys
-        WHERE idempotency_key = $1 AND entity_type = $2
-        FOR UPDATE`,
-      [input.key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
-    )
-    const row = existing.rows[0] as { entity_id: string | null; response: unknown } | undefined
-    if (!row) {
-      const retried = await this.insertIdempotencyClaim(client, input)
-      if (retried) return { kind: 'claimed' }
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
-    }
-    if (row.response == null) {
-      return { kind: 'in_flight' }
-    }
-    const parsed = parsePayInvoiceWithWalletCache(row.response)
-    if (!parsed) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
-    }
-    return { kind: 'cached', response: parsed }
-  }
-
-  private async insertIdempotencyClaim(
-    client: WalletQueryClient,
-    input: { key: string; entityId: string; expiresAt: Date },
-  ): Promise<boolean> {
-    const result = await client.query(
-      `INSERT INTO idempotency_keys
-         (idempotency_key, entity_type, entity_id, expires_at)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (idempotency_key, entity_type) DO NOTHING
-       RETURNING id`,
-      [input.key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE, input.entityId, input.expiresAt],
-    )
-    return result.rows.length > 0
-  }
-
   private async persistCachedResult(
     client: WalletQueryClient,
     idempotencyKey: string,
     entityId: string,
     result: PayInvoiceWithWalletResult,
   ): Promise<void> {
-    const snapshot = serializePayInvoiceWithWalletCache(result)
-    await client.query(
-      `UPDATE idempotency_keys
-          SET response = $3::jsonb,
-              entity_id = $4,
-              updated_at = NOW()
-        WHERE idempotency_key = $1 AND entity_type = $2`,
-      [
-        idempotencyKey,
-        INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
-        JSON.stringify(snapshot),
-        entityId,
-      ],
-    )
+    await this.idempotencyKeys.persistResponse(client, {
+      key: idempotencyKey,
+      entityType: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+      entityId,
+      response: serializePayInvoiceWithWalletCache(result),
+    })
   }
 }
 

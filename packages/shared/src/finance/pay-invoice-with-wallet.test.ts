@@ -9,6 +9,7 @@ import {
   availableCoversRemaining,
   cachedWalletPaymentMatchesRequest,
   idempotencyKeyExpiresAt,
+  isExpiredInFlightIdempotencyClaim,
   isMatchingWalletInvoicePayment,
   isWalletPayableInvoiceState,
   parsePayInvoiceWithWalletCache,
@@ -282,6 +283,44 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
 
     it('computes a 24h expiresAt from now', () => {
       expect(idempotencyKeyExpiresAt(now).getTime() - now.getTime()).toBe(IDEMPOTENCY_KEY_TTL_MS)
+    })
+
+    it('reclaims only in-flight rows whose expiresAt has passed', () => {
+      expect(
+        isExpiredInFlightIdempotencyClaim({
+          response: null,
+          expiresAt: new Date(now.getTime() - 1),
+          now,
+        }),
+      ).toBe(true)
+      expect(
+        isExpiredInFlightIdempotencyClaim({
+          response: null,
+          expiresAt: now,
+          now,
+        }),
+      ).toBe(true)
+      expect(
+        isExpiredInFlightIdempotencyClaim({
+          response: null,
+          expiresAt: new Date(now.getTime() + 1),
+          now,
+        }),
+      ).toBe(false)
+      expect(
+        isExpiredInFlightIdempotencyClaim({
+          response: snapshot,
+          expiresAt: new Date(now.getTime() - 1),
+          now,
+        }),
+      ).toBe(false)
+      expect(
+        isExpiredInFlightIdempotencyClaim({
+          response: null,
+          expiresAt: null,
+          now,
+        }),
+      ).toBe(false)
     })
   })
 })

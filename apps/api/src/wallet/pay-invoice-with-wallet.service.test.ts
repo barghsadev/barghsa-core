@@ -130,6 +130,8 @@ function paymentQueries(opts: {
   idempotencyInsert?: Record<string, unknown>[]
   /** Rows returned by SELECT … FOR UPDATE on idempotency_keys. */
   idempotencySelect?: Record<string, unknown>[]
+  /** Rows returned by reclaiming an expired in-flight claim. */
+  idempotencyReclaim?: Record<string, unknown>[]
 } = {}) {
   const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice
   const wallet = opts.wallet === undefined ? walletRow() : opts.wallet
@@ -137,12 +139,16 @@ function paymentQueries(opts: {
   const paidOk = opts.paidOk ?? true
   const idempotencyInsert = opts.idempotencyInsert ?? [{ id: 'idem-claim-1' }]
   const idempotencySelect = opts.idempotencySelect ?? []
+  const idempotencyReclaim = opts.idempotencyReclaim ?? []
   mockQuery((sql) => {
     if (sql.includes('INSERT INTO idempotency_keys')) {
       return { rows: idempotencyInsert }
     }
     if (sql.includes('FROM idempotency_keys')) {
       return { rows: idempotencySelect }
+    }
+    if (sql.includes('UPDATE idempotency_keys') && sql.includes('response IS NULL')) {
+      return { rows: idempotencyReclaim }
     }
     if (sql.includes('UPDATE idempotency_keys')) {
       return { rows: [] }
@@ -457,6 +463,27 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
     expect(walletService.debit).not.toHaveBeenCalled()
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+  })
+
+  it('reclaims an expired in-flight claim and pays without a second debit key', async () => {
+    paymentQueries({
+      idempotencyInsert: [],
+      idempotencySelect: [
+        {
+          entity_id: INVOICE_ID,
+          response: null,
+          expires_at: new Date('2026-09-01T08:00:00.000Z'),
+        },
+      ],
+      idempotencyReclaim: [{ id: 'idem-reclaim-1' }],
+    })
+
+    const result = await pay()
+
+    expect(result.replayed).toBe(false)
+    expect(result.toState).toBe('Paid')
+    expect(walletService.debit).toHaveBeenCalledTimes(1)
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
   })
 
   it('settles an Unpaid invoice when a matching debit already exists (heal)', async () => {
