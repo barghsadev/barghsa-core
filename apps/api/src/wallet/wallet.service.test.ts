@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { BadRequestException } from '@nestjs/common'
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
@@ -2253,6 +2254,18 @@ describe('WalletService', () => {
       await expect(service.validateOnlineTopUpAmount(1_000_000_001n)).rejects.toThrow(
         'exceeds the configured per-transaction limit',
       )
+      try {
+        await service.validateOnlineTopUpAmount(1_000_000_001n)
+        throw new Error('expected over-limit rejection')
+      } catch (err) {
+        expect(err).toBeInstanceOf(BadRequestException)
+        expect((err as BadRequestException).getResponse()).toEqual({
+          message:
+            'Online top-up amount 1000000001 IRR exceeds the configured per-transaction limit of 1000000000 IRR',
+          onlineTopUpLimit: 1_000_000_000,
+          configVersion: 3,
+        })
+      }
     })
 
     it('blocks everything when the configured limit is 0', async () => {

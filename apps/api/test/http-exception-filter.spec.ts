@@ -152,6 +152,53 @@ describe('HttpExceptionFilter', () => {
     });
   });
 
+  it('forwards the versioned onlineTopUpLimit snapshot on an over-limit 400', () => {
+    const exception = new HttpException(
+      {
+        message:
+          'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        onlineTopUpLimit: 50_000,
+        configVersion: 2,
+      },
+      HttpStatus.BAD_REQUEST,
+    );
+    const { json, status, host } = createMockHost(400, {});
+
+    filter.catch(exception, host);
+
+    expect(status).toHaveBeenCalledWith(400);
+    expect(json).toHaveBeenCalledWith({
+      error: {
+        code: 'VALIDATION:INPUT:INVALID',
+        message:
+          'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        onlineTopUpLimit: 50_000,
+        configVersion: 2,
+      },
+    });
+  });
+
+  it('does not forward an invalid onlineTopUpLimit on a generic 400', () => {
+    const exception = new HttpException(
+      {
+        message: 'Bad input',
+        onlineTopUpLimit: -1,
+        configVersion: 2,
+      },
+      HttpStatus.BAD_REQUEST,
+    );
+    const { json, host } = createMockHost(400, {});
+
+    filter.catch(exception, host);
+
+    expect(json).toHaveBeenCalledWith({
+      error: {
+        code: 'VALIDATION:INPUT:INVALID',
+        message: 'Bad input',
+      },
+    });
+  });
+
   it('returns 401 for unauthorized — uses raw HttpException message for 4xx', () => {
     const exception = new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     const { json, status, host } = createMockHost(401, {});

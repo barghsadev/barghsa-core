@@ -282,7 +282,15 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       }
       if (url.includes('/top-ups')) {
         return jsonResponse(
-          { message: 'Online top-up amount 100000 IRR exceeds the configured per-transaction limit of 50000 IRR' },
+          {
+            error: {
+              code: 'VALIDATION:INPUT:INVALID',
+              message:
+                'Online top-up amount 100000 IRR exceeds the configured per-transaction limit of 50000 IRR',
+              onlineTopUpLimit: 50_000,
+              configVersion: 2,
+            },
+          },
           400,
         )
       }
@@ -303,6 +311,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
       'Amount exceeds the online top-up limit',
     )
+    expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain('50,000')
     expect(assign).not.toHaveBeenCalled()
   })
 

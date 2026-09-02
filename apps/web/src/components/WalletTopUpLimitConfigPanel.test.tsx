@@ -124,6 +124,9 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
       ),
     ).toBe(false)
     expect(container.textContent).toContain('Limit must be an integer between 0 and')
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-input"]')?.getAttribute('aria-invalid'),
+    ).toBe('true')
   })
 
   it('hides the panel when the admin is not allowed to read the config', async () => {
@@ -138,5 +141,19 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
     await renderPanel()
     expect(container.querySelector('[data-testid="wallet-top-up-limit-panel"]')).toBeNull()
     expect(container.textContent).not.toContain('Failed to load')
+  })
+
+  it('renders the Persian copy and RTL dir for the versioned config panel', async () => {
+    document.documentElement.lang = 'fa'
+    await renderPanel()
+    const panel = container.querySelector('[data-testid="wallet-top-up-limit-panel"]') as HTMLElement
+    expect(panel.getAttribute('dir')).toBe('rtl')
+    expect(panel.textContent).toContain('سقف شارژ آنلاین کیف پول')
+    expect(panel.textContent).toContain('تغییر این سقف فقط روی شارژهای آنلاین بعدی اثر می‌گذارد')
+    expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
+      'نسخه پیکربندی: 0',
+    )
+    const input = container.querySelector('[data-testid="wallet-top-up-limit-input"]') as HTMLInputElement
+    expect(input.getAttribute('dir')).toBe('ltr')
   })
 })

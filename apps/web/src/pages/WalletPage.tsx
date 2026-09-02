@@ -4,6 +4,7 @@ import {
   parseBankReceiptTopUpAmountIrR,
   BANK_RECEIPT_STORAGE_PURPOSE,
   isValidWalletTopUpLimit,
+  readOnlineTopUpLimitFromErrorBody,
 } from '@barghsa/shared/finance'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
@@ -64,6 +65,17 @@ function mapSubmitError(status: number, message: string): PageError {
   if (status === 400 && /exceeds/i.test(message)) return 'limit-exceeded'
   if (status === 400) return 'invalid-amount'
   return 'generic'
+}
+
+function submitErrorMessage(payload: unknown): string {
+  if (!payload || typeof payload !== 'object') return ''
+  const rec = payload as { message?: unknown; error?: unknown }
+  if (typeof rec.message === 'string' && rec.message) return rec.message
+  if (rec.error && typeof rec.error === 'object') {
+    const nested = rec.error as { message?: unknown }
+    if (typeof nested.message === 'string' && nested.message) return nested.message
+  }
+  return ''
 }
 
 function mapReceiptSubmitError(status: number): ReceiptError {
@@ -315,11 +327,28 @@ export function WalletPage() {
       const payload = (await res.json().catch(() => ({}))) as {
         redirectUrl?: string
         message?: string
+        onlineTopUpLimit?: number
+        configVersion?: number
+        error?: { message?: string; onlineTopUpLimit?: number; configVersion?: number }
       }
       if (!res.ok || typeof payload.redirectUrl !== 'string' || !payload.redirectUrl) {
-        const next = mapSubmitError(res.status, payload.message ?? '')
+        const next = mapSubmitError(res.status, submitErrorMessage(payload))
         if (next === 'limit-exceeded' || next === 'invalid-amount' || next === 'conflict') {
           setIdempotencyKey(newIdempotencyKey())
+        }
+        if (next === 'limit-exceeded') {
+          const enforced = readOnlineTopUpLimitFromErrorBody(payload)
+          if (enforced) {
+            setWallet((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    onlineTopUpLimit: enforced.onlineTopUpLimit,
+                    configVersion: enforced.configVersion,
+                  }
+                : prev,
+            )
+          }
         }
         setError(next)
         return
@@ -502,6 +531,7 @@ export function WalletPage() {
                   type="text"
                   inputMode="numeric"
                   autoComplete="off"
+                  dir="ltr"
                   value={amountInput}
                   disabled={submitting}
                   aria-invalid={error === 'invalid-amount' || error === 'limit-exceeded'}

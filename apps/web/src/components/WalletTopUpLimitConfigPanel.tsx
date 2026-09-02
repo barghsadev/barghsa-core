@@ -43,6 +43,7 @@ function formatGroupedIrr(digits: string, locale: Locale): string {
 
 export default function WalletTopUpLimitConfigPanel() {
   const locale = useLocale()
+  const isRtl = locale === 'fa'
   const [config, setConfig] = useState<WalletTopUpLimitDto | null>(null)
   const [limitDigits, setLimitDigits] = useState('')
   const [loading, setLoading] = useState(true)
@@ -129,17 +130,30 @@ export default function WalletTopUpLimitConfigPanel() {
 
   if (loading && !config) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500" role="status">
+      <div
+        className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500"
+        role="status"
+        dir={isRtl ? 'rtl' : 'ltr'}
+      >
         {t('admin.walletLimit.loading', locale)}
       </div>
     )
   }
+
+  const describedBy = [
+    tomanPreview !== null ? 'online-top-up-limit-toman' : null,
+    'online-top-up-limit-warning',
+    clientIssue ? 'online-top-up-limit-error' : null,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <section
       className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
       data-testid="wallet-top-up-limit-panel"
       aria-labelledby="wallet-top-up-limit-heading"
+      dir={isRtl ? 'rtl' : 'ltr'}
     >
       <div>
         <h2 id="wallet-top-up-limit-heading" className="text-lg font-semibold">
@@ -183,7 +197,8 @@ export default function WalletTopUpLimitConfigPanel() {
               setClientIssue(null)
             }}
             className="w-full border border-gray-300 rounded px-3 py-2"
-            aria-describedby="online-top-up-limit-toman online-top-up-limit-warning"
+            aria-invalid={clientIssue !== null}
+            aria-describedby={describedBy}
           />
           {tomanPreview !== null && (
             <p id="online-top-up-limit-toman" className="mt-1 text-sm text-gray-500" data-testid="wallet-top-up-limit-toman">
@@ -196,7 +211,7 @@ export default function WalletTopUpLimitConfigPanel() {
         </div>
 
         {clientIssue && (
-          <p className="text-sm text-red-600" role="alert">
+          <p id="online-top-up-limit-error" className="text-sm text-red-600" role="alert">
             {clientIssue}
           </p>
         )}

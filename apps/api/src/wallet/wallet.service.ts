@@ -8,6 +8,7 @@ import {
   toOnlineTopUpLimitSnapshot,
   isOnlineWalletTopUpAllowed,
   isValidWalletTopUpLimit,
+  onlineTopUpLimitExceededMessage,
   type OnlineTopUpLimitSnapshot,
   WALLET_REVERSAL_ERRORS,
   WALLET_REVERSAL_POSTED_STATE,
@@ -1073,7 +1074,9 @@ export class WalletService {
    * Pending top-up, and again inside the submission transaction so the
    * locked versioned config is the ceiling that is snapshotted onto the
    * ledger row. Rejects amounts over the current `onlineTopUpLimit` with
-   * a 400.
+   * a 400 whose body includes the versioned snapshot that was enforced, so
+   * the customer form can refresh the advertised ceiling and retry with a
+   * reduced amount.
    *
    * @returns the versioned snapshot that was enforced
    * @throws BadRequestException when the amount is non-positive or exceeds
@@ -1088,9 +1091,11 @@ export class WalletService {
     }
     const snapshot = await this.resolveOnlineTopUpLimit(client)
     if (!isOnlineWalletTopUpAllowed({ limitIrR: snapshot.onlineTopUpLimit }, amountIrR)) {
-      throw new BadRequestException(
-        `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured per-transaction limit of ${snapshot.onlineTopUpLimit} IRR`,
-      )
+      throw new BadRequestException({
+        message: onlineTopUpLimitExceededMessage(amountIrR, snapshot),
+        onlineTopUpLimit: snapshot.onlineTopUpLimit,
+        configVersion: snapshot.configVersion,
+      })
     }
     return snapshot
   }

@@ -11,6 +11,7 @@ import { ZodError } from 'zod';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
+import { readOnlineTopUpLimitFromErrorBody } from '@barghsa/shared/finance';
 import { correlationIdStorage } from './correlation-id.middleware.js';
 
 /**
@@ -27,6 +28,10 @@ function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDe
  * a stable, machine-readable error response shape.
  *
  * Response shape:  { error: { code, message, correlationId? } }
+ *
+ * Over-limit online top-up 400s also include `onlineTopUpLimit` and
+ * `configVersion` on `error` so the customer form can retry with a reduced
+ * amount against the ceiling that was actually enforced.
  *
  * Never exposes stack traces, raw database errors, or internal provider details.
  * 5xx errors always use localized messages from the error code key — never
@@ -70,6 +75,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (correlationId) {
       (body.error as Record<string, unknown>).correlationId = correlationId;
+    }
+
+    if (exception instanceof HttpException) {
+      const snapshot = readOnlineTopUpLimitFromErrorBody(exception.getResponse());
+      if (snapshot) {
+        const error = body.error as Record<string, unknown>;
+        error.onlineTopUpLimit = snapshot.onlineTopUpLimit;
+        error.configVersion = snapshot.configVersion;
+      }
     }
 
     response.status(httpStatus).json(body);

@@ -242,6 +242,20 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
           idempotencyKey: 'online-topup-over-admin',
         }),
       ).rejects.toBeInstanceOf(BadRequestException)
+      try {
+        await service.initiate({
+          profileId: PROFILE_A,
+          amountIrR: 50_001n,
+          idempotencyKey: 'online-topup-over-admin-body',
+        })
+        throw new Error('expected over-limit rejection')
+      } catch (err) {
+        expect(err).toBeInstanceOf(BadRequestException)
+        expect((err as BadRequestException).getResponse()).toMatchObject({
+          onlineTopUpLimit: 50_000,
+          configVersion: 1,
+        })
+      }
 
       const ok = await service.initiate({
         profileId: PROFILE_A,
