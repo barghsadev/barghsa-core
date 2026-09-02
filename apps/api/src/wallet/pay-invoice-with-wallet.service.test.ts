@@ -598,4 +598,52 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
   })
+
+  it('rejects a debit that is not the exact remaining payment without settling', async () => {
+    walletService.debit.mockResolvedValue(debitRow({ amount: -999_999n }))
+    paymentQueries()
+
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+    expect(
+      mockClient.query.mock.calls.some(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
+      ),
+    ).toBe(false)
+  })
+
+  it('maps WalletService.debit idempotency collisions to the payment collision error', async () => {
+    walletService.debit.mockRejectedValue(
+      new ConflictException('Idempotency key already used for a different wallet'),
+    )
+    paymentQueries()
+
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+  })
+
+  it('rejects Draft invoices without debiting', async () => {
+    paymentQueries({ invoice: invoiceRow({ state: 'Draft' }) })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Draft'))
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+  })
+
+  it('canonicalizes mixed-case ids before locking', async () => {
+    paymentQueries()
+    const result = await pay({
+      invoiceId: INVOICE_ID.toUpperCase(),
+      profileId: PROFILE_ID.toUpperCase(),
+    })
+    expect(result.invoiceId).toBe(INVOICE_ID)
+    expect(result.profileId).toBe(PROFILE_ID)
+    const walletLock = mockClient.query.mock.calls.find(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets'),
+    )
+    expect(walletLock?.[1]).toEqual([PROFILE_ID])
+  })
 })

@@ -5,7 +5,8 @@
  * amount. It is enabled only from Unpaid / PartiallyFunded (not credit
  * notes) when `availableBalance >= remaining`. The service method
  * `payInvoiceWithWallet` uses these helpers for remaining, eligibility,
- * available-balance gating, ledger metadata, the wallet-side
+ * available-balance gating, **exact remaining debit verification**
+ * (T-04.2.03.01), ledger metadata, the wallet-side
  * `wallet.invoice_payment` audit snapshot (T-04.2.03.02), and the
  * `(idempotencyKey, entityType)` cached-response contract
  * (T-04.2.03.03). The DB transaction claims that unique row, then
@@ -229,6 +230,33 @@ export function isMatchingWalletInvoicePayment(input: {
     input.refId === input.invoiceId &&
     input.amount < 0n
   )
+}
+
+/**
+ * A wallet payment may settle the invoice only when the posted debit is
+ * the exact remaining amount (S-04.2.03 / T-04.2.03.01). Partial or
+ * oversized ledger rows must not flip the invoice to Paid.
+ */
+export function isExactRemainingWalletDebit(input: {
+  walletId: string
+  expectedWalletId: string
+  invoiceId: string
+  type: string
+  state: string
+  refId: string | null
+  amount: bigint
+  remaining: bigint
+}): boolean {
+  return (
+    input.remaining > 0n &&
+    input.amount === -input.remaining &&
+    isMatchingWalletInvoicePayment(input)
+  )
+}
+
+/** True when WalletService.debit rejected a colliding idempotency key. */
+export function isWalletDebitIdempotencyCollision(message: string): boolean {
+  return message.includes('Idempotency key already used')
 }
 
 export interface PayInvoiceWithWalletCachedLedger {
