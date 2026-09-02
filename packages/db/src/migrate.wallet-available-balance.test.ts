@@ -3,7 +3,11 @@ import { sql } from 'drizzle-orm'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
+import {
+  createIsolatedTestDb,
+  dropTestSchema,
+  seedBankReceiptsPrerequisites,
+} from './test/testDb'
 import type { IsolatedTestDb } from './test/testDb'
 
 /**
@@ -70,6 +74,7 @@ describe('drizzle migrate() applies wallets available-balance CHECK (T-04.2.01.0
     // 0068 also created wallet_transactions. Later journal tags (0070)
     // FK that table, so a post-0068 schema must include it.
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
+    await seedBankReceiptsPrerequisites(ctx.pool)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

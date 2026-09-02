@@ -23,11 +23,11 @@ const MIGRATION = readFileSync(MIGRATION_PATH, 'utf8')
  * Drift guard + real-PostgreSQL enforcement for bank_receipts
  * (T-04.3.01.01).
  *
- * CHECKs, lookup indexes, the unique attachment index, the optional
- * users FK, and the `updated_at` trigger live in hand-written migration
- * 0078. This file asserts the migration still declares them, that the
- * Drizzle schema matches the S-04.3.01 column set, and that PostgreSQL
- * actually enforces the invariants.
+ * CHECKs, lookup indexes, the unique attachment index, the
+ * `confirmed_by` users FK, and the `updated_at` trigger live in
+ * hand-written migration 0078. This file asserts the migration still
+ * declares them, that the Drizzle schema matches the S-04.3.01 column
+ * set, and that PostgreSQL actually enforces the invariants.
  */
 describe('bank_receipts schema (T-04.3.01.01)', () => {
   it('declares the domain columns expected by later receipt workers', () => {
@@ -137,13 +137,16 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
     expect(MIGRATION).toContain('payment_date DATE NOT NULL')
   })
 
-  it('migration 0078 is idempotent and guarded when invoices are missing', () => {
+  it('migration 0078 is idempotent and fails closed when FK targets are missing', () => {
     expect(MIGRATION).toContain('CREATE TABLE IF NOT EXISTS bank_receipts')
-    expect(MIGRATION).toContain("to_regclass('invoices') IS NULL")
-    expect(MIGRATION).toContain("to_regclass('profiles') IS NULL")
+    expect(MIGRATION).not.toMatch(/to_regclass\('invoices'\)/)
+    expect(MIGRATION).not.toMatch(/to_regclass\('profiles'\)/)
+    expect(MIGRATION).not.toMatch(/to_regclass\('users'\)/)
+    expect(MIGRATION).toContain('REFERENCES invoices(id) ON DELETE RESTRICT')
+    expect(MIGRATION).toContain('REFERENCES profiles(id) ON DELETE RESTRICT')
+    expect(MIGRATION).toContain('REFERENCES users(user_id) ON DELETE RESTRICT')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_bank_receipts_invoice_id')
     expect(MIGRATION).toContain('CREATE UNIQUE INDEX IF NOT EXISTS uq_bank_receipts_attachment_key')
-    expect(MIGRATION).toContain("to_regclass('bank_receipts') IS NULL")
     expect(MIGRATION).toContain('DROP TRIGGER IF EXISTS trg_bank_receipts_updated_at')
   })
 

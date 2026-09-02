@@ -78,6 +78,12 @@ describe('drizzle migrate() applies invoice order-type replacement unique index 
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
     `)
+    // 0078 (bank_receipts) is journaled after this head and needs users.
+    await ctx.db.execute(sql`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY
+      )
+    `)
 
     await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())

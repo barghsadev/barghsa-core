@@ -3,7 +3,11 @@ import { sql } from 'drizzle-orm'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
+import {
+  createIsolatedTestDb,
+  dropTestSchema,
+  seedBankReceiptsPrerequisites,
+} from './test/testDb'
 import type { IsolatedTestDb } from './test/testDb'
 
 /**
@@ -61,6 +65,7 @@ describe('drizzle migrate() applies wallet reversal original CHECK (T-04.2.04.01
        VALUES ($1, 'reversal', -250000, 'Completed', 'legacy-unlinked-before-0077')`,
       [walletId],
     )
+    await seedBankReceiptsPrerequisites(ctx.pool)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

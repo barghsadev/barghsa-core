@@ -152,3 +152,46 @@ describe('drizzle migrate() applies bank_receipts (T-04.3.01.01)', () => {
     expect(fks.rows).toHaveLength(1)
   })
 })
+
+describe('drizzle migrate() fails closed when bank_receipts FKs are missing', () => {
+  it('does not record 0078 when invoices are absent', async () => {
+    const ctx = await createIsolatedTestDb()
+    try {
+      await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+      await ctx.pool.query(`
+        CREATE TABLE IF NOT EXISTS __drizzle_migrations (
+          id SERIAL PRIMARY KEY,
+          hash text NOT NULL,
+          created_at bigint
+        )
+      `)
+      await ctx.pool.query(
+        `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
+        ['prior-journal-head-0077', PRIOR_JOURNAL_HEAD_WHEN],
+      )
+
+      await expect(
+        migrate(ctx.db, {
+          migrationsFolder: DRIZZLE_FOLDER,
+          migrationsSchema: ctx.schemaName,
+        }),
+      ).rejects.toThrow()
+
+      const recorded = await ctx.pool.query<{ created_at: string }>(
+        `SELECT created_at::text AS created_at
+           FROM __drizzle_migrations
+          WHERE created_at > $1`,
+        [PRIOR_JOURNAL_HEAD_WHEN],
+      )
+      expect(recorded.rows).toHaveLength(0)
+
+      const rel = await ctx.pool.query<{ rel: string | null }>(
+        `SELECT to_regclass('bank_receipts')::text AS rel`,
+      )
+      expect(rel.rows[0]?.rel).toBeNull()
+    } finally {
+      await ctx.pool.end()
+      await dropTestSchema(ctx.schemaName)
+    }
+  }, 60_000)
+})

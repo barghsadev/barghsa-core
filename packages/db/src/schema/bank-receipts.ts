@@ -50,8 +50,9 @@ export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number]
  *   - `rejectionReason?` — set iff Rejected.
  *   - `createdAt` / `updatedAt` — audit columns.
  *
- * CHECKs, lookup indexes, the unique attachment index, the optional
- * `users` FK, and the `updated_at` trigger live in migration 0078.
+ * CHECKs, lookup indexes, the unique attachment index, the
+ * `confirmed_by` → `users` FK, and the `updated_at` trigger live in
+ * migration 0078.
  */
 export const bankReceipts = pgTable(
   'bank_receipts',
@@ -155,8 +156,7 @@ export const bankReceipts = pgTable(
 )
 
 /**
- * SQL to create the bank_receipts table (migration 0078 source, without
- * the invoices/profiles existence guard used in the journaled file).
+ * SQL to create the bank_receipts table (migration 0078 source).
  */
 export const createBankReceiptsTable = sql`
   CREATE TABLE IF NOT EXISTS bank_receipts (
@@ -202,7 +202,9 @@ export const createBankReceiptsTable = sql`
         AND confirmed_at IS NULL
         AND rejection_reason IS NULL
       )
-    )
+    ),
+    CONSTRAINT fk_bank_receipts_confirmed_by
+      FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT
   );
 
   CREATE INDEX IF NOT EXISTS idx_bank_receipts_invoice_id ON bank_receipts (invoice_id);
