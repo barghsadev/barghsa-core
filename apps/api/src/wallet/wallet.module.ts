@@ -7,6 +7,8 @@ import { BankReceiptConfirmationService } from './bank-receipt-confirmation.serv
 import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
 import { OnlineTopUpCallbackController } from './online-topup-callback.controller.js'
 import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
+import { ChargebackDetectionController } from './chargeback-detection.controller.js'
+import { ChargebackDetectionService } from './chargeback-detection.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
 import { SessionModule } from '../session/index.js'
 import { ProfilesModule } from '../profiles/index.js'
@@ -14,7 +16,7 @@ import { InvoiceModule } from '../invoice/invoice.module.js'
 
 @Module({
   imports: [SessionModule, ProfilesModule, InvoiceModule],
-  controllers: [WalletController, OnlineTopUpCallbackController],
+  controllers: [WalletController, OnlineTopUpCallbackController, ChargebackDetectionController],
   providers: [
     WalletService,
     OnlineTopUpService,
@@ -22,6 +24,7 @@ import { InvoiceModule } from '../invoice/invoice.module.js'
     BankReceiptConfirmationService,
     PayInvoiceWithWalletService,
     OnlineTopUpCallbackService,
+    ChargebackDetectionService,
     {
       provide: PAYMENT_GATEWAY,
       useFactory: () => createPaymentGatewayFromEnv(),

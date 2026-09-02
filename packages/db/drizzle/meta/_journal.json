@@ -197,6 +197,13 @@
       "when": 1789344000000,
       "tag": "0074_wallet_tx_reverses_transaction",
       "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "7",
+      "when": 1789430400000,
+      "tag": "0075_create_wallet_chargeback_events",
+      "breakpoints": true
     }
   ]
 }
