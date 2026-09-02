@@ -203,8 +203,14 @@ export default function AdminWalletReceiptsPage() {
   const [stepUpError, setStepUpError] = useState<string | null>(null)
   const [stepUpSubmitting, setStepUpSubmitting] = useState(false)
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null)
+  const [reasonInvalid, setReasonInvalid] = useState(false)
   const stepUpDialogRef = useRef<HTMLDivElement | null>(null)
   const stepUpPasswordRef = useRef<HTMLInputElement | null>(null)
+  const confirmButtonRef = useRef<HTMLButtonElement | null>(null)
+  const rejectButtonRef = useRef<HTMLButtonElement | null>(null)
+  const statusRef = useRef<HTMLParagraphElement | null>(null)
+  const stepUpTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const restoreTriggerRef = useRef(false)
   const stepUpSubmittingRef = useRef(false)
   stepUpSubmittingRef.current = stepUpSubmitting
 
@@ -309,6 +315,18 @@ export default function AdminWalletReceiptsPage() {
     return restore
   }, [stepUpOpen])
 
+  useEffect(() => {
+    if (stepUpOpen || !restoreTriggerRef.current) return
+    restoreTriggerRef.current = false
+    const trigger = stepUpTriggerRef.current
+    stepUpTriggerRef.current = null
+    if (trigger && document.body.contains(trigger) && !trigger.disabled) {
+      trigger.focus()
+      return
+    }
+    statusRef.current?.focus()
+  }, [stepUpOpen, selectedId, status])
+
   async function postDecision(action: PendingAction): Promise<'step_up' | 'ok' | 'error'> {
     if (!selected) return 'error'
     const path =
@@ -344,6 +362,7 @@ export default function AdminWalletReceiptsPage() {
     setInvoiceId('')
     setAllocation(null)
     setClientIssue(null)
+    setReasonInvalid(false)
     setItems((current) => {
       const remaining = current.filter((row) => row.transactionId !== dto.transactionId)
       setSelectedId(remaining[0]?.transactionId ?? null)
@@ -359,6 +378,9 @@ export default function AdminWalletReceiptsPage() {
     try {
       const outcome = await postDecision(action)
       if (outcome === 'step_up') {
+        restoreTriggerRef.current = true
+        stepUpTriggerRef.current =
+          action.kind === 'confirm' ? confirmButtonRef.current : rejectButtonRef.current
         setPendingAction(action)
         setStepUpPassword('')
         setStepUpError(null)
@@ -374,9 +396,11 @@ export default function AdminWalletReceiptsPage() {
   function handleConfirm() {
     const trimmed = invoiceId.trim()
     if (trimmed && !isTransactionUuid(trimmed)) {
+      setReasonInvalid(false)
       setClientIssue(t('admin.walletReceipts.error.invoiceId', locale))
       return
     }
+    setReasonInvalid(false)
     setClientIssue(null)
     void runAction({ kind: 'confirm' })
   }
@@ -385,9 +409,11 @@ export default function AdminWalletReceiptsPage() {
     e.preventDefault()
     const parsed = parseBankReceiptRejectReason({ reason })
     if (!parsed.ok) {
+      setReasonInvalid(true)
       setClientIssue(t('admin.walletReceipts.error.reason', locale))
       return
     }
+    setReasonInvalid(false)
     setClientIssue(null)
     void runAction({ kind: 'reject', reason: parsed.reason })
   }
@@ -467,7 +493,12 @@ export default function AdminWalletReceiptsPage() {
       )}
 
       {status && (
-        <p className="text-sm text-green-700" role="status">
+        <p
+          ref={statusRef}
+          className="text-sm text-green-700"
+          role="status"
+          tabIndex={-1}
+        >
           {status}
         </p>
       )}
@@ -496,6 +527,7 @@ export default function AdminWalletReceiptsPage() {
                     setSelectedId(row.transactionId)
                     setStatus(null)
                     setClientIssue(null)
+                    setReasonInvalid(false)
                     setReason('')
                   }}
                   className={`w-full text-start rounded px-3 py-2 text-sm ${
@@ -660,15 +692,22 @@ export default function AdminWalletReceiptsPage() {
                   )}
 
                   {clientIssue && (
-                    <p className="text-sm text-red-600" role="alert">
+                    <p
+                      id={reasonInvalid ? 'reject-reason-error' : 'wallet-receipt-client-issue'}
+                      className="text-sm text-red-600"
+                      role="alert"
+                    >
                       {clientIssue}
                     </p>
                   )}
 
                   <button
+                    ref={confirmButtonRef}
                     type="button"
+                    data-testid="wallet-receipt-confirm"
                     onClick={handleConfirm}
                     disabled={acting}
+                    aria-busy={acting}
                     className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
                   >
                     {acting
@@ -692,25 +731,34 @@ export default function AdminWalletReceiptsPage() {
                         name="reason"
                         required
                         aria-required="true"
-                        aria-describedby="reject-reason-hint"
+                        aria-invalid={reasonInvalid}
+                        aria-describedby={
+                          reasonInvalid
+                            ? 'reject-reason-error reject-reason-hint'
+                            : 'reject-reason-hint'
+                        }
                         maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
                         rows={3}
                         value={reason}
-                        onChange={(e) => setReason(e.target.value)}
+                        onChange={(e) => {
+                          setReason(e.target.value)
+                          if (reasonInvalid) {
+                            setReasonInvalid(false)
+                            setClientIssue(null)
+                          }
+                        }}
                         className="w-full border border-gray-300 rounded px-3 py-2"
                       />
                       <p id="reject-reason-hint" className="text-xs text-gray-500 mt-1">
                         {t('admin.walletReceipts.reasonHint', locale)}
                       </p>
                     </div>
-                    {clientIssue && (
-                      <p className="text-sm text-red-600" role="alert">
-                        {clientIssue}
-                      </p>
-                    )}
                     <button
+                      ref={rejectButtonRef}
                       type="submit"
+                      data-testid="wallet-receipt-reject"
                       disabled={acting}
+                      aria-busy={acting}
                       className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
                     >
                       {acting
@@ -762,24 +810,31 @@ export default function AdminWalletReceiptsPage() {
               <input
                 ref={stepUpPasswordRef}
                 id="wallet-receipt-step-up-password"
+                data-testid="wallet-receipt-step-up-password"
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 required
                 aria-required="true"
+                aria-invalid={Boolean(stepUpError)}
+                aria-describedby={stepUpError ? 'wallet-receipt-step-up-error' : undefined}
                 value={stepUpPassword}
-                onChange={(e) => setStepUpPassword(e.target.value)}
+                onChange={(e) => {
+                  setStepUpPassword(e.target.value)
+                  if (stepUpError) setStepUpError(null)
+                }}
                 className="w-full border border-gray-300 rounded px-3 py-2"
               />
             </div>
             {stepUpError && (
-              <p className="text-sm text-red-600" role="alert">
+              <p id="wallet-receipt-step-up-error" className="text-sm text-red-600" role="alert">
                 {stepUpError}
               </p>
             )}
             <div className="flex items-center gap-3">
               <button
                 type="submit"
+                data-testid="wallet-receipt-step-up-submit"
                 disabled={stepUpSubmitting || !stepUpPassword.trim()}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
               >
@@ -789,6 +844,7 @@ export default function AdminWalletReceiptsPage() {
               </button>
               <button
                 type="button"
+                data-testid="wallet-receipt-step-up-cancel"
                 onClick={cancelStepUp}
                 disabled={stepUpSubmitting}
                 className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 disabled:opacity-50"
