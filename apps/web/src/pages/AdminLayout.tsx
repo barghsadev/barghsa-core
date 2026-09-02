@@ -1,10 +1,13 @@
 import { Outlet } from '@tanstack/react-router'
+import { t } from '@barghsa/i18n'
 import { TosBanner } from '../components/TosBanner.js'
+import { useLocale } from '../hooks/useLocale.js'
 
 /**
  * Admin layout with sidebar — renders lazy child routes via Outlet.
  */
 export default function AdminLayout() {
+  const locale = useLocale()
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <TosBanner />
@@ -22,7 +25,7 @@ export default function AdminLayout() {
               <li><a href="/admin/tos" className="text-blue-600 hover:underline">Terms of Service</a></li>
               <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
               <li><a href="/admin/invoices" className="text-blue-600 hover:underline">Invoices</a></li>
-              <li><a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">Wallet receipts</a></li>
+              <li><a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">{t('admin.walletReceipts.nav', locale)}</a></li>
               <li><a href="/admin/providers" className="text-blue-600 hover:underline">Email Providers</a></li>
               <li><a href="/admin/roles" className="text-blue-600 hover:underline">Roles &amp; Permissions</a></li>
               <li className="pt-2 mt-2 border-t border-gray-100">
