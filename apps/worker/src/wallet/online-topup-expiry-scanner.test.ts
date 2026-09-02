@@ -1,23 +1,27 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import type { Pool } from 'pg'
 import {
   DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS,
   ONLINE_TOPUP_CHANNEL,
+  ONLINE_TOPUP_EXPIRY_AUDIT_EVENT,
   ONLINE_TOPUP_EXPIRY_REASON,
+  ONLINE_TOPUP_EXPIRY_TRANSITION,
 } from '@barghsa/shared/finance'
 import {
   DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE,
   FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL,
   ONLINE_TOPUP_EXPIRY_JOB_TYPE,
   expireStaleOnlineTopUps,
+  resolveOnlineTopUpExpiryActor,
 } from './online-topup-expiry-scanner.js'
 
 /**
  * Online top-up expiry scanner unit tests (S-04.2.02, T-04.2.02.07).
  *
  * `expireStaleOnlineTopUps` is exercised with an injected fake pool so the
- * candidate query, per-row lock + eligibility re-check, and Rejected
- * update are covered DB-free.
+ * candidate query, per-row lock + eligibility re-check, Rejected
+ * update, and `wallet.online_topup.expired` audit insert are covered
+ * DB-free.
  */
 
 interface FakeDb {
@@ -47,6 +51,8 @@ const TTL = DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS
 const PAST = new Date(NOW.getTime() - TTL - 1_000)
 const TX_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const WALLET_ID = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const ACTOR = 'system-actor-001'
+const CORRELATION = 'corr-online-expiry-001'
 
 function scanOptions(db: FakeDb, overrides: Record<string, unknown> = {}) {
   const logger = { warn: vi.fn(), info: vi.fn() }
@@ -55,6 +61,9 @@ function scanOptions(db: FakeDb, overrides: Record<string, unknown> = {}) {
     now: () => NOW,
     logger,
     ttlMs: TTL,
+    actorUserId: ACTOR,
+    correlationId: CORRELATION,
+    newId: () => 'audit-1',
     ...overrides,
   }
 }
@@ -90,6 +99,9 @@ function defaultHandler(
     if (sql.includes("SET state = 'Rejected'")) {
       return { rows: [], rowCount: 1 }
     }
+    if (sql.includes('INSERT INTO audit_log')) {
+      return { rows: [] }
+    }
     return { rows: [] }
   }
 }
@@ -117,7 +129,7 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     expect(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL).toContain('LIMIT $3')
   })
 
-  it('rejects an expired online Pending top-up and stamps expiry metadata', async () => {
+  it('rejects an expired online Pending top-up, stamps expiry metadata, and writes audit', async () => {
     const db = makeFakeDb(defaultHandler())
     const result = await expireStaleOnlineTopUps(scanOptions(db))
 
@@ -140,6 +152,23 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     })
     expect(update!.sql).toContain("COALESCE(metadata, '{}'::jsonb) || $2::jsonb")
     expect(update!.sql).toContain("AND state = 'Pending'")
+
+    const audit = db.calls.find((c) => c.sql.includes('INSERT INTO audit_log'))
+    expect(audit!.params[0]).toBe('audit-1')
+    expect(audit!.params[1]).toBe(ACTOR)
+    expect(audit!.params[2]).toBe('wallet.online_topup.expired')
+    expect(JSON.parse(String(audit!.params[3]))).toEqual({
+      transactionId: TX_ID,
+      walletId: WALLET_ID,
+      fromState: 'Pending',
+      toState: 'Rejected',
+      transition: ONLINE_TOPUP_EXPIRY_TRANSITION,
+      reason: ONLINE_TOPUP_EXPIRY_REASON,
+      ttlMs: TTL,
+    })
+    expect(audit!.params[4]).toBe(CORRELATION)
+    expect(audit!.params[5]).toBeNull()
+    expect(audit!.params[6]).toBe(NOW)
     expect(db.calls.some((c) => c.sql === 'COMMIT')).toBe(true)
   })
 
@@ -151,6 +180,7 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     const result = await expireStaleOnlineTopUps(scanOptions(db))
     expect(result).toMatchObject({ scanned: 1, rejected: 0, skipped: 1, errors: [] })
     expect(db.calls.some((c) => c.sql.includes("SET state = 'Rejected'"))).toBe(false)
+    expect(db.calls.some((c) => c.sql.includes('INSERT INTO audit_log'))).toBe(false)
     expect(db.calls.some((c) => c.sql === 'ROLLBACK')).toBe(true)
   })
 
@@ -188,6 +218,7 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
         if (params?.[0] === 'tx-boom') throw new Error('deadlock')
         return { rows: [], rowCount: 1 }
       }
+      if (sql.includes('INSERT INTO audit_log')) return { rows: [] }
       return { rows: [] }
     })
 
@@ -205,6 +236,22 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     expect(result.truncated).toBe(true)
     expect(result.scanned).toBe(2)
     expect(result.rejected).toBe(2)
+  })
+
+  it('aborts without rejecting when no system actor can be resolved', async () => {
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('FROM users')) return { rows: [] }
+      return { rows: [pendingCandidate()] }
+    })
+    const logger = { warn: vi.fn(), info: vi.fn() }
+    const result = await expireStaleOnlineTopUps(
+      scanOptions(db, { actorUserId: undefined, logger }),
+    )
+    expect(result.rejected).toBe(0)
+    expect(result.scanned).toBe(0)
+    expect(result.errors[0]).toMatch(/no system actor/)
+    expect(logger.warn).toHaveBeenCalled()
+    expect(db.calls.some((c) => c.sql.includes("SET state = 'Rejected'"))).toBe(false)
   })
 
   it('locks each candidate with FOR UPDATE SKIP LOCKED', async () => {
@@ -225,5 +272,57 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
       errors: [],
     })
     expect(db.pool.connect).not.toHaveBeenCalled()
+  })
+})
+
+describe('resolveOnlineTopUpExpiryActor (T-04.2.02.07)', () => {
+  const originalEnv = process.env['WORKER_SYSTEM_ACTOR_USER_ID']
+
+  afterEach(() => {
+    if (originalEnv === undefined) {
+      delete process.env['WORKER_SYSTEM_ACTOR_USER_ID']
+    } else {
+      process.env['WORKER_SYSTEM_ACTOR_USER_ID'] = originalEnv
+    }
+  })
+
+  beforeEach(() => {
+    delete process.env['WORKER_SYSTEM_ACTOR_USER_ID']
+  })
+
+  it('returns an explicit actor without querying users', async () => {
+    const db = makeFakeDb(() => ({ rows: [] }))
+    await expect(
+      resolveOnlineTopUpExpiryActor(db.pool as unknown as Pool, 'explicit-1'),
+    ).resolves.toBe('explicit-1')
+    expect(db.calls).toEqual([])
+  })
+
+  it('uses WORKER_SYSTEM_ACTOR_USER_ID when that user exists', async () => {
+    process.env['WORKER_SYSTEM_ACTOR_USER_ID'] = 'env-actor'
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('WHERE user_id = $1')) return { rows: [{ user_id: 'env-actor' }] }
+      return { rows: [] }
+    })
+    await expect(resolveOnlineTopUpExpiryActor(db.pool as unknown as Pool)).resolves.toBe(
+      'env-actor',
+    )
+  })
+
+  it('falls back to the oldest platform admin when the env actor is missing', async () => {
+    process.env['WORKER_SYSTEM_ACTOR_USER_ID'] = 'missing'
+    const db = makeFakeDb((sql) => {
+      if (sql.includes('WHERE user_id = $1')) return { rows: [] }
+      if (sql.includes('is_admin = TRUE')) return { rows: [{ user_id: 'admin-oldest' }] }
+      return { rows: [] }
+    })
+    await expect(resolveOnlineTopUpExpiryActor(db.pool as unknown as Pool)).resolves.toBe(
+      'admin-oldest',
+    )
+  })
+
+  it('returns null when no actor can be resolved', async () => {
+    const db = makeFakeDb(() => ({ rows: [] }))
+    await expect(resolveOnlineTopUpExpiryActor(db.pool as unknown as Pool)).resolves.toBeNull()
   })
 })

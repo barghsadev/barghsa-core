@@ -242,6 +242,16 @@ export const walletTransactions = pgTable(
       columns: [table.reversesTransactionId],
       foreignColumns: [table.id],
     }).onDelete('restrict'),
+    /**
+     * Online Pending top-up TTL expiry candidate index (T-04.2.02.07).
+     * Matches the worker cron predicate so ticks drain oldest-created
+     * intents without scanning bank-receipt or non-Pending rows.
+     */
+    onlinePendingExpiryIdx: index('idx_wallet_tx_online_pending_created')
+      .on(table.createdAt, table.id)
+      .where(
+        sql`${table.type} = 'topup' AND ${table.state} = 'Pending' AND (${table.metadata}->>'channel') = 'online'`,
+      ),
   }),
 )
 
