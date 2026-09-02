@@ -57,7 +57,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
   let ctx: IsolatedTestDb
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 2)
+    ctx = await createIsolatedTestDb('test_', 8)
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS profiles (
@@ -315,6 +315,142 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       actorUserId: ACTOR_USER_ID,
     })
     expect(second).toMatchObject({ scanned: 0, rejected: 0, skipped: 0, errors: [] })
+
+    const row = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [expiredId],
+    )
+    expect(row.rows[0]?.state).toBe('Rejected')
+
+    const audits = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n FROM audit_log WHERE event = $1`,
+      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT],
+    )
+    expect(audits.rows[0]?.n).toBe('1')
+  })
+
+  it('drains a truncated batch on the next tick, oldest first', async () => {
+    const first = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+      authority: 'auth-drain-1',
+    })
+    const second = await insertTopUp({
+      walletId: WALLET_B,
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_LATE,
+      authority: 'auth-drain-2',
+    })
+    const thirdCreatedAt = new Date(EXPIRED_LATE.getTime() + 1_000)
+    const third = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: thirdCreatedAt,
+      authority: 'auth-drain-3',
+    })
+
+    const firstPass = await expireStaleOnlineTopUps({
+      pool: ctx.pool,
+      now: () => NOW,
+      ttlMs: TTL,
+      batchSize: 2,
+      actorUserId: ACTOR_USER_ID,
+    })
+    expect(firstPass).toMatchObject({ scanned: 2, rejected: 2, truncated: true, errors: [] })
+
+    const afterFirst = await ctx.pool.query<{ id: string; state: string }>(
+      `SELECT id, state FROM wallet_transactions WHERE id IN ($1, $2, $3) ORDER BY created_at ASC, id ASC`,
+      [first, second, third],
+    )
+    expect(afterFirst.rows).toEqual([
+      { id: first, state: 'Rejected' },
+      { id: second, state: 'Rejected' },
+      { id: third, state: 'Pending' },
+    ])
+
+    const secondPass = await expireStaleOnlineTopUps({
+      pool: ctx.pool,
+      now: () => NOW,
+      ttlMs: TTL,
+      batchSize: 2,
+      actorUserId: ACTOR_USER_ID,
+    })
+    expect(secondPass).toMatchObject({ scanned: 1, rejected: 1, truncated: false, errors: [] })
+
+    const leftover = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [third],
+    )
+    expect(leftover.rows[0]?.state).toBe('Rejected')
+  })
+
+  it('skips a candidate held by FOR UPDATE SKIP LOCKED and leaves it Pending', async () => {
+    const expiredId = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+      authority: 'auth-held',
+    })
+
+    const holder = await ctx.pool.connect()
+    try {
+      await holder.query('BEGIN')
+      const locked = await holder.query<{ id: string }>(
+        `SELECT id FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
+        [expiredId],
+      )
+      expect(locked.rows).toHaveLength(1)
+
+      const scan = await expireStaleOnlineTopUps({
+        pool: ctx.pool,
+        now: () => NOW,
+        ttlMs: TTL,
+        actorUserId: ACTOR_USER_ID,
+      })
+      expect(scan).toMatchObject({ scanned: 1, rejected: 0, skipped: 1, errors: [] })
+
+      const stillPending = await holder.query<{ state: string }>(
+        `SELECT state FROM wallet_transactions WHERE id = $1`,
+        [expiredId],
+      )
+      expect(stillPending.rows[0]?.state).toBe('Pending')
+    } finally {
+      await holder.query('ROLLBACK').catch(() => {})
+      holder.release()
+    }
+  })
+
+  it('rejects an expired row exactly once when two scanners overlap', async () => {
+    const expiredId = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: EXPIRED_EARLY,
+      authority: 'auth-race',
+    })
+
+    const [first, second] = await Promise.all([
+      expireStaleOnlineTopUps({
+        pool: ctx.pool,
+        now: () => NOW,
+        ttlMs: TTL,
+        actorUserId: ACTOR_USER_ID,
+        correlationId: 'corr-race-a',
+      }),
+      expireStaleOnlineTopUps({
+        pool: ctx.pool,
+        now: () => NOW,
+        ttlMs: TTL,
+        actorUserId: ACTOR_USER_ID,
+        correlationId: 'corr-race-b',
+      }),
+    ])
+
+    expect(first.errors).toEqual([])
+    expect(second.errors).toEqual([])
+    expect(first.rejected + second.rejected).toBe(1)
+    expect(first.scanned + second.scanned).toBeGreaterThanOrEqual(1)
 
     const row = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
