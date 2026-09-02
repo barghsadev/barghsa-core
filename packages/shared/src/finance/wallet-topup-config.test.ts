@@ -6,6 +6,8 @@ import {
   validateWalletTopUpLimitConfig,
   toWalletTopUpLimitConfig,
   toOnlineTopUpLimitSnapshot,
+  onlineTopUpLimitExceededMessage,
+  readOnlineTopUpLimitFromErrorBody,
   isValidWalletTopUpLimit,
   isOnlineWalletTopUpAllowed,
   parseOnlineTopUpAmountIrR,
@@ -195,6 +197,47 @@ describe('toOnlineTopUpLimitSnapshot (T-04.2.02.06)', () => {
     expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, undefined).configVersion).toBe(0)
     expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, -1).configVersion).toBe(0)
     expect(toOnlineTopUpLimitSnapshot({ limitIrR: 1 }, 1.5).configVersion).toBe(0)
+  })
+})
+
+describe('online top-up limit exceeded 400 body (T-04.2.02.06)', () => {
+  it('names the amount and the versioned ceiling that was enforced', () => {
+    expect(
+      onlineTopUpLimitExceededMessage(100_001n, { onlineTopUpLimit: 100_000, configVersion: 4 }),
+    ).toBe(
+      'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 100000 IRR',
+    )
+  })
+
+  it('reads a valid snapshot from a 400 body so the client can retry with a reduced amount', () => {
+    expect(
+      readOnlineTopUpLimitFromErrorBody({
+        message: 'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+        onlineTopUpLimit: 50_000,
+        configVersion: 2,
+      }),
+    ).toEqual({ onlineTopUpLimit: 50_000, configVersion: 2 })
+    expect(
+      readOnlineTopUpLimitFromErrorBody({
+        error: {
+          code: 'VALIDATION:INPUT:INVALID',
+          message: 'Online top-up amount 100001 IRR exceeds the configured per-transaction limit of 50000 IRR',
+          onlineTopUpLimit: 50_000,
+          configVersion: 2,
+        },
+      }),
+    ).toEqual({ onlineTopUpLimit: 50_000, configVersion: 2 })
+  })
+
+  it('fails closed on a missing or invalid ceiling in the error body', () => {
+    expect(readOnlineTopUpLimitFromErrorBody(null)).toBeNull()
+    expect(readOnlineTopUpLimitFromErrorBody({ message: 'exceeds' })).toBeNull()
+    expect(
+      readOnlineTopUpLimitFromErrorBody({ onlineTopUpLimit: -1, configVersion: 1 }),
+    ).toBeNull()
+    expect(
+      readOnlineTopUpLimitFromErrorBody({ onlineTopUpLimit: '50000', configVersion: 1 }),
+    ).toBeNull()
   })
 })
 

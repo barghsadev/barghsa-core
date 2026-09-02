@@ -157,6 +157,44 @@ export function toOnlineTopUpLimitSnapshot(
 }
 
 /**
+ * English server message for an over-limit online top-up (T-04.2.02.06).
+ * The HTTP 400 body also carries {@link OnlineTopUpLimitSnapshot} so the
+ * customer form can refresh the advertised ceiling and retry with a
+ * reduced amount without scraping this string.
+ */
+export function onlineTopUpLimitExceededMessage(
+  amountIrR: bigint,
+  snapshot: OnlineTopUpLimitSnapshot,
+): string {
+  return (
+    `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured ` +
+    `per-transaction limit of ${snapshot.onlineTopUpLimit} IRR`
+  )
+}
+
+/**
+ * Read the versioned ceiling from a 400 submission body so a stale
+ * advertised GET can be replaced with the limit that was actually
+ * enforced (T-04.2.02.06).
+ */
+export function readOnlineTopUpLimitFromErrorBody(raw: unknown): OnlineTopUpLimitSnapshot | null {
+  if (!raw || typeof raw !== 'object') return null
+  const o = raw as Record<string, unknown>
+  const nested =
+    o.error && typeof o.error === 'object' ? (o.error as Record<string, unknown>) : null
+  const candidate = isValidWalletTopUpLimit(o.onlineTopUpLimit)
+    ? o
+    : nested && isValidWalletTopUpLimit(nested.onlineTopUpLimit)
+      ? nested
+      : null
+  if (!candidate) return null
+  return toOnlineTopUpLimitSnapshot(
+    { limitIrR: candidate.onlineTopUpLimit as number },
+    candidate.configVersion as number,
+  )
+}
+
+/**
  * Whether a proposed online top-up amount is permitted under a limit config
  * (the check T-04.2.02.01 / T-04.2.02.06 must run before creating a Pending top-up).
  *
