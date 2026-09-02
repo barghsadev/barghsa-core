@@ -9,6 +9,15 @@
  *   3. Duplicate event ids do not post a second reversal.
  *   4. An untraceable notification is stored as unmatched without
  *      rewriting wallet history.
+ *   5. A stuck `processing` claim resumes and still reverses once.
+ *   6. A processing retry that reuses the event id with a different
+ *      locator or amount is rejected and never reverses another top-up.
+ *   6b. A corrected locator after an unmatched event is rejected and
+ *      never remapped or reversed.
+ *   7. Concurrent retries of the same event id serialize to one reversal.
+ *   8. Concurrent distinct event ids for one top-up share one reversal.
+ *   9. Concurrent handlers complete when the pool max equals handler
+ *      count (no nested checkout while the advisory lock is held).
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -61,6 +70,9 @@ const CHARGEBACK_MIGRATION = resolve(
   '../../../../packages/db/drizzle/0075_create_wallet_chargeback_events.sql',
 )
 
+const CONCURRENT_HANDLERS = 4
+const POOL_DEADLOCK_TIMEOUT_MS = 8_000
+
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const PROFILE_C = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
@@ -78,7 +90,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
   let creditId: string
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4)
+    ctx = await createIsolatedTestDb('test_', CONCURRENT_HANDLERS)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new ChargebackDetectionService(walletService, {
@@ -392,4 +404,414 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       reverses_transaction_id: credit.id,
     })
   })
+
+  async function seedCompletedTopUp(profileId: string, pending: string, authority: string, providerRef: string) {
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId])
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId])
+    return walletService.credit(
+      profileId,
+      AMOUNT,
+      {
+        type: 'topup',
+        refId: providerRef,
+        description: 'Online wallet top-up',
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: pending,
+          authority,
+        },
+      },
+      onlineTopUpCreditIdempotencyKey(pending),
+    )
+  }
+
+  it('resumes a stuck processing claim without rewriting the original credit', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-resume-processing',
+      'psp-resume-processing',
+    )
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events (event_id, status, raw)
+       VALUES ($1, 'processing', $2::jsonb)`,
+      [
+        'evt-cb-resume-processing',
+        JSON.stringify({
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: pending,
+          providerRefId: null,
+          authority: null,
+          amountIrR: AMOUNT.toString(),
+          reason: WALLET_CHARGEBACK_REASON,
+        }),
+      ],
+    )
+
+    const result = await service.handle(
+      signed(
+        {
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: pending,
+          amountIrR: AMOUNT.toString(),
+        },
+        'evt-cb-resume-processing',
+      ),
+    )
+    expect(result).toMatchObject({
+      processed: true,
+      mapped: true,
+      reversed: true,
+      originalTransactionId: credit.id,
+      status: 'reversed',
+    })
+    const original = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [credit.id],
+    )
+    expect(original.rows[0]?.state).toBe('Completed')
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
+  })
+
+  it('rejects a processing retry that reuses the event id with a different locator', async () => {
+    const claimedPending = uuidv7()
+    const otherPending = uuidv7()
+    const claimedCredit = await seedCompletedTopUp(
+      uuidv7(),
+      claimedPending,
+      'auth-claimed-payload',
+      'psp-claimed-payload',
+    )
+    const otherCredit = await seedCompletedTopUp(
+      uuidv7(),
+      otherPending,
+      'auth-other-payload',
+      'psp-other-payload',
+    )
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events (event_id, status, raw)
+       VALUES ($1, 'processing', $2::jsonb)`,
+      [
+        'evt-cb-payload-mismatch',
+        JSON.stringify({
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: claimedPending,
+          providerRefId: null,
+          authority: null,
+          amountIrR: AMOUNT.toString(),
+          reason: WALLET_CHARGEBACK_REASON,
+        }),
+      ],
+    )
+
+    const rejection = await service
+      .handle(
+        signed(
+          {
+            type: 'chargeback',
+            merchantId: MERCHANT,
+            merchantOrderId: otherPending,
+            amountIrR: AMOUNT.toString(),
+          },
+          'evt-cb-payload-mismatch',
+        ),
+      )
+      .catch((error: unknown) => error)
+
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+      message: 'Payment chargeback event payload does not match the claimed notification',
+    })
+
+    const claimedReversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [claimedCredit.id],
+    )
+    const otherReversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [otherCredit.id],
+    )
+    expect(claimedReversals.rows).toHaveLength(0)
+    expect(otherReversals.rows).toHaveLength(0)
+
+    const event = await ctx.pool.query<{ status: string; original_transaction_id: string | null }>(
+      `SELECT status, original_transaction_id
+         FROM wallet_chargeback_events
+        WHERE event_id = 'evt-cb-payload-mismatch'`,
+    )
+    expect(event.rows[0]).toMatchObject({
+      status: 'processing',
+      original_transaction_id: null,
+    })
+  })
+
+  it('rejects a corrected locator after an unmatched event instead of remapping', async () => {
+    const unmatchedPending = uuidv7()
+    const mappedPending = uuidv7()
+    const mappedCredit = await seedCompletedTopUp(
+      uuidv7(),
+      mappedPending,
+      'auth-corrected-locator',
+      'psp-corrected-locator',
+    )
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events (event_id, status, raw)
+       VALUES ($1, 'unmatched', $2::jsonb)`,
+      [
+        'evt-cb-unmatched-corrected',
+        JSON.stringify({
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: unmatchedPending,
+          providerRefId: null,
+          authority: null,
+          amountIrR: AMOUNT.toString(),
+          reason: WALLET_CHARGEBACK_REASON,
+        }),
+      ],
+    )
+
+    const rejection = await service
+      .handle(
+        signed(
+          {
+            type: 'chargeback',
+            merchantId: MERCHANT,
+            merchantOrderId: mappedPending,
+            amountIrR: AMOUNT.toString(),
+          },
+          'evt-cb-unmatched-corrected',
+        ),
+      )
+      .catch((error: unknown) => error)
+
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+      message: 'Payment chargeback event payload does not match the claimed notification',
+    })
+
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [mappedCredit.id],
+    )
+    expect(reversals.rows).toHaveLength(0)
+
+    const event = await ctx.pool.query<{
+      status: string
+      original_transaction_id: string | null
+    }>(
+      `SELECT status, original_transaction_id
+         FROM wallet_chargeback_events
+        WHERE event_id = 'evt-cb-unmatched-corrected'`,
+    )
+    expect(event.rows[0]).toMatchObject({
+      status: 'unmatched',
+      original_transaction_id: null,
+    })
+  })
+
+  it.each(['reversed', 'unresolved'] as const)(
+    'rejects a payload mismatch against a terminal %s event',
+    async (status) => {
+      const claimedPending = uuidv7()
+      const otherPending = uuidv7()
+      const otherCredit = await seedCompletedTopUp(
+        uuidv7(),
+        otherPending,
+        `auth-terminal-${status}`,
+        `psp-terminal-${status}`,
+      )
+      const eventId = `evt-cb-terminal-${status}`
+      await ctx.pool.query(
+        `INSERT INTO wallet_chargeback_events (
+           event_id, status, original_transaction_id, wallet_id, match_method, raw
+         ) VALUES ($1, $2, $3, $4, 'merchant_order_id', $5::jsonb)`,
+        [
+          eventId,
+          status,
+          status === 'unresolved' ? otherCredit.id : null,
+          status === 'unresolved' ? otherCredit.walletId : null,
+          JSON.stringify({
+            type: 'chargeback',
+            merchantId: MERCHANT,
+            merchantOrderId: claimedPending,
+            providerRefId: null,
+            authority: null,
+            amountIrR: AMOUNT.toString(),
+            reason: WALLET_CHARGEBACK_REASON,
+          }),
+        ],
+      )
+
+      const rejection = await service
+        .handle(
+          signed(
+            {
+              type: 'chargeback',
+              merchantId: MERCHANT,
+              merchantOrderId: otherPending,
+              amountIrR: AMOUNT.toString(),
+            },
+            eventId,
+          ),
+        )
+        .catch((error: unknown) => error)
+
+      expect(rejection).toBeInstanceOf(HttpException)
+      expect((rejection as HttpException).getResponse()).toMatchObject({
+        error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+        message: 'Payment chargeback event payload does not match the claimed notification',
+      })
+
+      const reversals = await ctx.pool.query(
+        `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+        [otherCredit.id],
+      )
+      expect(reversals.rows).toHaveLength(0)
+
+      const event = await ctx.pool.query<{ status: string }>(
+        `SELECT status FROM wallet_chargeback_events WHERE event_id = $1`,
+        [eventId],
+      )
+      expect(event.rows[0]?.status).toBe(status)
+    },
+  )
+
+  it('serializes concurrent retries of the same event id to a single reversal', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-concurrent-event',
+      'psp-concurrent-event',
+    )
+    const body = {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: pending,
+      amountIrR: AMOUNT.toString(),
+    }
+    const [first, second] = await Promise.all([
+      service.handle(signed(body, 'evt-cb-concurrent-same')),
+      service.handle(signed(body, 'evt-cb-concurrent-same')),
+    ])
+    expect([first.status, second.status]).toEqual(['reversed', 'reversed'])
+    expect(new Set([first.processed, second.processed])).toEqual(new Set([true, false]))
+    expect(first.originalTransactionId ?? second.originalTransactionId).toBe(credit.id)
+    expect(first.reversalTransactionId).toBe(second.reversalTransactionId)
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
+    const events = await ctx.pool.query(
+      `SELECT status FROM wallet_chargeback_events WHERE event_id = 'evt-cb-concurrent-same'`,
+    )
+    expect(events.rows).toHaveLength(1)
+    expect(events.rows[0]).toMatchObject({ status: 'reversed' })
+  })
+
+  it('maps two concurrent event ids for the same top-up to one compensating reversal', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-concurrent-distinct',
+      'psp-concurrent-distinct',
+    )
+    const body = {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: pending,
+      amountIrR: AMOUNT.toString(),
+    }
+    const [first, second] = await Promise.all([
+      service.handle(signed(body, 'evt-cb-concurrent-a')),
+      service.handle(signed(body, 'evt-cb-concurrent-b')),
+    ])
+    expect(first.mapped).toBe(true)
+    expect(second.mapped).toBe(true)
+    expect(first.reversed).toBe(true)
+    expect(second.reversed).toBe(true)
+    expect(first.originalTransactionId).toBe(credit.id)
+    expect(second.originalTransactionId).toBe(credit.id)
+    const reversalIds = new Set([first.reversalTransactionId, second.reversalTransactionId])
+    expect(reversalIds.size).toBe(1)
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
+  })
+
+  it(
+    'completes concurrent handlers when the pool max equals the handler count',
+    async () => {
+      const cases = await Promise.all(
+        Array.from({ length: CONCURRENT_HANDLERS }, async (_, index) => {
+          const pending = uuidv7()
+          const credit = await seedCompletedTopUp(
+            uuidv7(),
+            pending,
+            `auth-pool-bound-${index}`,
+            `psp-pool-bound-${index}`,
+          )
+          return { credit, pending, eventId: `evt-cb-pool-bound-${index}` }
+        }),
+      )
+
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
+      const deadlock = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(
+            new Error(
+              `chargeback handlers deadlocked: pool max ${CONCURRENT_HANDLERS} did not finish within ${POOL_DEADLOCK_TIMEOUT_MS}ms`,
+            ),
+          )
+        }, POOL_DEADLOCK_TIMEOUT_MS)
+      })
+
+      const results = await Promise.race([
+        Promise.all(
+          cases.map((entry) =>
+            service.handle(
+              signed(
+                {
+                  type: 'chargeback',
+                  merchantId: MERCHANT,
+                  merchantOrderId: entry.pending,
+                  amountIrR: AMOUNT.toString(),
+                },
+                entry.eventId,
+              ),
+            ),
+          ),
+        ),
+        deadlock,
+      ]).finally(() => {
+        if (timeoutId !== undefined) clearTimeout(timeoutId)
+      })
+
+      expect(results).toHaveLength(CONCURRENT_HANDLERS)
+      for (const [index, result] of results.entries()) {
+        expect(result.status).toBe('reversed')
+        expect(result.originalTransactionId).toBe(cases[index]!.credit.id)
+        expect(result.reversalTransactionId).toBeTruthy()
+      }
+    },
+    15_000,
+  )
 })

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto'
+import { createHash, timingSafeEqual } from 'node:crypto'
 import {
   BadRequestException,
   ConflictException,
@@ -16,6 +16,7 @@ import {
   chargebackCreditIdempotencyKey,
   chargebackReversalIdempotencyKey,
   matchChargebackToTopUp,
+  parseChargebackNotification,
   parseChargebackNotificationJson,
   type ChargebackMatchMethod,
   type ChargebackTopUpCandidate,
@@ -63,6 +64,7 @@ interface ChargebackEventRow {
   walletId: string | null
   status: WalletChargebackEventStatus
   matchMethod: ChargebackMatchMethod | null
+  raw: unknown
 }
 
 interface QueryClient {
@@ -181,6 +183,7 @@ export class ChargebackDetectionService {
               'Payment chargeback event id could not be claimed',
             )
           }
+          assertClaimedNotificationMatches(existing.raw, notification)
           if (existing.status !== 'processing') {
             await this.alertIfUnresolved(client, existing.status, eventId, notification, {
               walletId: existing.walletId,
@@ -240,11 +243,24 @@ export class ChargebackDetectionService {
 
         let reversal: TransactionRow
         try {
-          reversal = await this.walletService.reverseTransaction(
-            match.original.id,
-            notification.reason,
-            chargebackReversalIdempotencyKey(eventId),
-          )
+          // Reverse on the advisory-lock client so this handler never
+          // checks out a second pooled connection while the lock is held.
+          reversal = await withLockClientTransaction(client, async () => {
+            const posted = await this.walletService.reverseTransaction(
+              match.original.id,
+              notification.reason,
+              chargebackReversalIdempotencyKey(eventId),
+              client,
+            )
+            await this.finalizeEvent(client, eventId, {
+              status: 'reversed',
+              originalTransactionId: match.original.id,
+              reversalTransactionId: posted.id,
+              walletId: match.original.walletId,
+              matchMethod: match.method,
+            })
+            return posted
+          })
         } catch (error) {
           if (isAlreadyReversedError(error, match.original.id)) {
             const raced = await this.findExistingReversal(client, match.original.id)
@@ -297,13 +313,6 @@ export class ChargebackDetectionService {
           throw error
         }
 
-        await this.finalizeEvent(client, eventId, {
-          status: 'reversed',
-          originalTransactionId: match.original.id,
-          reversalTransactionId: reversal.id,
-          walletId: match.original.walletId,
-          matchMethod: match.method,
-        })
         this.logger.log(
           `Chargeback ${eventId} reversed top-up ${match.original.id} as ${reversal.id}`,
         )
@@ -344,7 +353,7 @@ export class ChargebackDetectionService {
          VALUES ($1, 'processing', $2::jsonb)
          ON CONFLICT (event_id) DO NOTHING
          RETURNING event_id, original_transaction_id, reversal_transaction_id,
-                   wallet_id, status, match_method`,
+                   wallet_id, status, match_method, raw`,
         [eventId, JSON.stringify(chargebackEventRaw(notification))],
       )
       if (inserted.rows.length > 0) {
@@ -367,7 +376,7 @@ export class ChargebackDetectionService {
   ): Promise<ChargebackEventRow | null> {
     const result = await client.query(
       `SELECT event_id, original_transaction_id, reversal_transaction_id,
-              wallet_id, status, match_method
+              wallet_id, status, match_method, raw
          FROM wallet_chargeback_events
         WHERE event_id = $1`,
       [eventId],
@@ -488,6 +497,30 @@ export class ChargebackDetectionService {
   }
 }
 
+/**
+ * Run `fn` in a transaction on the session that already holds the
+ * chargeback advisory lock. `WalletService.reverseTransaction` must use
+ * this same client so the handler never waits on a nested pool checkout.
+ */
+async function withLockClientTransaction<T>(
+  client: QueryClient,
+  fn: () => Promise<T>,
+): Promise<T> {
+  await client.query('BEGIN')
+  try {
+    const result = await fn()
+    await client.query('COMMIT')
+    return result
+  } catch (error) {
+    try {
+      await client.query('ROLLBACK')
+    } catch {
+      // Preserve the original reversal/mapping error.
+    }
+    throw error
+  }
+}
+
 function chargebackEventRaw(notification: ParsedChargebackNotification): Record<string, unknown> {
   return {
     type: notification.type,
@@ -497,6 +530,31 @@ function chargebackEventRaw(notification: ParsedChargebackNotification): Record<
     authority: notification.authority,
     amountIrR: notification.amountIrR.toString(),
     reason: notification.reason,
+  }
+}
+
+function chargebackPayloadDigest(notification: ParsedChargebackNotification): Buffer {
+  return createHash('sha256')
+    .update(JSON.stringify(chargebackEventRaw(notification)))
+    .digest()
+}
+
+function assertClaimedNotificationMatches(
+  storedRaw: unknown,
+  notification: ParsedChargebackNotification,
+): void {
+  const claimed = parseChargebackNotification(storedRaw)
+  const digestMatches =
+    claimed.ok &&
+    timingSafeEqual(
+      chargebackPayloadDigest(claimed.notification),
+      chargebackPayloadDigest(notification),
+    )
+  if (!digestMatches) {
+    httpError(
+      ErrorCodes.PROVIDER_CALLBACK_INVALID,
+      'Payment chargeback event payload does not match the claimed notification',
+    )
   }
 }
 
@@ -526,6 +584,7 @@ function mapEvent(row: {
   wallet_id: string | null
   status: string
   match_method: string | null
+  raw?: unknown
 }): ChargebackEventRow {
   return {
     eventId: row.event_id,
@@ -534,6 +593,7 @@ function mapEvent(row: {
     walletId: row.wallet_id,
     status: row.status as WalletChargebackEventStatus,
     matchMethod: row.match_method as ChargebackMatchMethod | null,
+    raw: row.raw ?? null,
   }
 }
 

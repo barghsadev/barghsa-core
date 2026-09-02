@@ -1,11 +1,16 @@
 import { describe, it, expect, vi } from 'vitest'
 import { ChargebackDetectionController } from './chargeback-detection.controller.js'
+import { ONLINE_TOPUP_CHARGEBACK_PATH } from './payment-gateway.js'
 
 vi.mock('../rate-limit/rate-limit.decorator.js', () => ({
   RateLimit: () => () => {},
 }))
 
 describe('ChargebackDetectionController (T-04.2.04.02)', () => {
+  it('advertises the HMAC chargeback path next to the callback path', () => {
+    expect(ONLINE_TOPUP_CHARGEBACK_PATH).toBe('/api/wallet/top-ups/chargeback')
+  })
+
   it('passes raw body and signature headers to the chargeback service', async () => {
     const handle = vi.fn().mockResolvedValue({
       ok: true,

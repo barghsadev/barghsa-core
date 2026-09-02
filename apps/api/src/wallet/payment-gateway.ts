@@ -16,6 +16,12 @@ export const PAYMENT_GATEWAY = Symbol('PAYMENT_GATEWAY')
 /** Path the provider will call after payment (implemented in T-04.2.02.02). */
 export const ONLINE_TOPUP_CALLBACK_PATH = '/api/wallet/top-ups/callback'
 
+/**
+ * HMAC-authenticated path the provider posts chargeback / reversal
+ * notifications to (T-04.2.04.02). Query params are never proof.
+ */
+export const ONLINE_TOPUP_CHARGEBACK_PATH = '/api/wallet/top-ups/chargeback'
+
 export const DEFAULT_ZARINPAL_REQUEST_URL =
   'https://payment.zarinpal.com/pg/v4/payment/request.json'
 export const DEFAULT_ZARINPAL_START_PAY_URL = 'https://payment.zarinpal.com/pg/StartPay'

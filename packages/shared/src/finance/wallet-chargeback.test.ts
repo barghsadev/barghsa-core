@@ -10,6 +10,7 @@ import {
   chargebackAmountMatchesTopUp,
   chargebackCreditIdempotencyKey,
   chargebackReversalIdempotencyKey,
+  hasChargebackLocator,
   isChargebackMatchMethod,
   isChargebackNotificationType,
   isUnresolvedChargebackStatus,
@@ -147,6 +148,20 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         providerRefId: 'ref-9',
       }),
     ).toMatchObject({ ok: true, notification: { type: 'reversal' } })
+    expect(
+      parseChargebackNotification({
+        type: 'chargeback',
+        merchantId: 'm',
+        amountIrR: 1,
+      }),
+    ).toMatchObject({
+      ok: true,
+      notification: {
+        merchantOrderId: null,
+        providerRefId: null,
+        authority: null,
+      },
+    })
   })
 
   it('rejects malformed JSON, unknown types, and invalid amounts', () => {
@@ -232,6 +247,29 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
       [credit],
     )
     expect(match).toEqual({ original: credit, method: 'authority' })
+  })
+
+  it('does not map a locator-less notification even when candidates exist', () => {
+    expect(hasChargebackLocator(notification())).toBe(true)
+    expect(
+      hasChargebackLocator(
+        notification({
+          merchantOrderId: null,
+          providerRefId: null,
+          authority: null,
+        }),
+      ),
+    ).toBe(false)
+    expect(
+      matchChargebackToTopUp(
+        notification({
+          merchantOrderId: null,
+          providerRefId: null,
+          authority: null,
+        }),
+        [candidate()],
+      ),
+    ).toBeNull()
   })
 
   it('does not fall through when a present order id does not match', () => {

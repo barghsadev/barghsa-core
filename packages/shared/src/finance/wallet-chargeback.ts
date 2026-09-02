@@ -228,6 +228,17 @@ export function parseChargebackNotificationJson(
   return parseChargebackNotification(parsed)
 }
 
+/** True when the notification carries at least one original-top-up locator. */
+export function hasChargebackLocator(
+  notification: ParsedChargebackNotification,
+): boolean {
+  return Boolean(
+    notification.merchantOrderId ||
+      notification.providerRefId ||
+      notification.authority,
+  )
+}
+
 /**
  * Chargeback amount is the original capture (positive). Top-up credits
  * post positive; match either the credit or its absolute value.
@@ -286,6 +297,8 @@ export function matchChargebackToTopUp(
   notification: ParsedChargebackNotification,
   candidates: readonly ChargebackTopUpCandidate[],
 ): ChargebackTopUpMatch | null {
+  if (!hasChargebackLocator(notification)) return null
+
   const completed = candidates.filter(
     (row) => row.type === 'topup' && row.state === 'Completed',
   )

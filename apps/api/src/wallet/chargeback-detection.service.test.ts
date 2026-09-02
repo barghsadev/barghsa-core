@@ -5,7 +5,10 @@ import {
   WALLET_CHARGEBACK_REASON,
   chargebackCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
-import { ChargebackDetectionService } from './chargeback-detection.service.js'
+import {
+  ChargebackDetectionService,
+  chargebackEventLockKeys,
+} from './chargeback-detection.service.js'
 import type { ChargebackAlertService } from './chargeback-alert.service.js'
 import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js'
 import { signPaymentCallback } from './payment-callback-verifier.js'
@@ -90,6 +93,15 @@ function claimedEventRow(overrides: Record<string, unknown> = {}) {
     wallet_id: null,
     status: 'processing',
     match_method: null,
+    raw: {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: PENDING_ID,
+      providerRefId: PROVIDER_REF,
+      authority: AUTHORITY,
+      amountIrR: String(AMOUNT),
+      reason: WALLET_CHARGEBACK_REASON,
+    },
     ...overrides,
   }
 }
@@ -133,7 +145,13 @@ function scriptClient(opts: {
   existingReversal?: { id: string } | null
 }) {
   mockClient.query.mockImplementation(async (sql: string) => {
-    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+    if (
+      sql.includes('pg_advisory_lock') ||
+      sql.includes('pg_advisory_unlock') ||
+      sql === 'BEGIN' ||
+      sql === 'COMMIT' ||
+      sql === 'ROLLBACK'
+    ) {
       return { rows: [] }
     }
     if (sql.includes('INSERT INTO wallet_chargeback_events')) {
@@ -175,6 +193,11 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     )
   })
 
+  it('derives a stable advisory lock pair from the provider event id', () => {
+    expect(chargebackEventLockKeys(EVENT_ID)).toEqual(chargebackEventLockKeys(EVENT_ID))
+    expect(chargebackEventLockKeys(EVENT_ID)).not.toEqual(chargebackEventLockKeys('evt-other'))
+  })
+
   it('rejects a chargeback when the signing secret is missing', async () => {
     const service = new ChargebackDetectionService({ reverseTransaction: vi.fn() } as never, {
       webhookSecret: '',
@@ -184,6 +207,20 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     expect(rejectionBody(rejection)).toMatchObject({
       error: ErrorCodes.PROVIDER_CALLBACK_UNCONFIGURED.code,
     })
+  })
+
+  it('rejects missing signature headers before mapping or reversing', async () => {
+    const { service, reverseTransaction } = makeService()
+    const rejection = await service
+      .handle({
+        headers: { eventId: EVENT_ID, timestamp: undefined, signature: undefined },
+        rawBody: payload(),
+      })
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(reverseTransaction).not.toHaveBeenCalled()
   })
 
   it('rejects a tampered signature before mapping or reversing', async () => {
@@ -258,6 +295,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       CREDIT_ID,
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
     )
   })
 
@@ -296,6 +334,133 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       status: 'reversed',
     })
     expect(reverseTransaction).not.toHaveBeenCalled()
+  })
+
+  it('resumes a stuck processing claim and reverses the original top-up', async () => {
+    const { service, reverseTransaction } = makeService()
+    scriptClient({
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'processing' }),
+      credit: makeCreditRow(),
+    })
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: true,
+      mapped: true,
+      reversed: true,
+      originalTransactionId: CREDIT_ID,
+      status: 'reversed',
+    })
+    expect(reverseTransaction).toHaveBeenCalledWith(
+      CREDIT_ID,
+      WALLET_CHARGEBACK_REASON,
+      `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
+    )
+  })
+
+  it.each([
+    [{ merchantOrderId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }, 'locator'],
+    [{ amountIrR: 1 }, 'amount'],
+    [{ providerRefId: 'psp-other-ref' }, 'merchant payload locator'],
+  ] as const)(
+    'rejects a processing retry that reuses the event id with a changed %s',
+    async (overrides, _changedField) => {
+      const { service, reverseTransaction } = makeService()
+      scriptClient({
+        claimInserted: false,
+        existingEvent: claimedEventRow({ status: 'processing' }),
+        credit: makeCreditRow(),
+      })
+      const rejection = await service
+        .handle(signedInput(payload({ ...overrides })))
+        .catch((error: unknown) => error)
+      expect(rejectionBody(rejection)).toMatchObject({
+        error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+        message: 'Payment chargeback event payload does not match the claimed notification',
+      })
+      expect(reverseTransaction).not.toHaveBeenCalled()
+    },
+  )
+
+  it.each([
+    [
+      'reversed',
+      {
+        status: 'reversed',
+        original_transaction_id: CREDIT_ID,
+        reversal_transaction_id: REVERSAL_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+      },
+    ],
+    ['unmatched', { status: 'unmatched' }],
+    [
+      'unresolved',
+      {
+        status: 'unresolved',
+        original_transaction_id: CREDIT_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+      },
+    ],
+  ] as const)(
+    'rejects a payload mismatch against a terminal %s event',
+    async (_status, eventOverrides) => {
+      const notifyUnresolved = vi.fn()
+      const { service, reverseTransaction } = makeService({ notifyUnresolved } as never)
+      scriptClient({
+        claimInserted: false,
+        existingEvent: claimedEventRow({ ...eventOverrides }),
+        credit: makeCreditRow({
+          id: 'ffffffff-ffff-7fff-8fff-ffffffffffff',
+          idempotency_key: chargebackCreditIdempotencyKey(
+            'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee',
+          ),
+        }),
+      })
+      const rejection = await service
+        .handle(
+          signedInput(
+            payload({ merchantOrderId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }),
+          ),
+        )
+        .catch((error: unknown) => error)
+      expect(rejectionBody(rejection)).toMatchObject({
+        error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+        message: 'Payment chargeback event payload does not match the claimed notification',
+      })
+      expect(reverseTransaction).not.toHaveBeenCalled()
+      expect(notifyUnresolved).not.toHaveBeenCalled()
+    },
+  )
+
+  it('rejects a corrected locator after an unmatched event instead of remapping', async () => {
+    const correctedOrderId = 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee'
+    const notifyUnresolved = vi.fn()
+    const { service, reverseTransaction } = makeService({ notifyUnresolved } as never)
+    scriptClient({
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'unmatched' }),
+      credit: makeCreditRow({
+        id: 'ffffffff-ffff-7fff-8fff-ffffffffffff',
+        idempotency_key: chargebackCreditIdempotencyKey(correctedOrderId),
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: correctedOrderId,
+          authority: AUTHORITY,
+        },
+      }),
+    })
+    const rejection = await service
+      .handle(signedInput(payload({ merchantOrderId: correctedOrderId })))
+      .catch((error: unknown) => error)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+      message: 'Payment chargeback event payload does not match the claimed notification',
+    })
+    expect(reverseTransaction).not.toHaveBeenCalled()
+    expect(notifyUnresolved).not.toHaveBeenCalled()
   })
 
   it('does not reverse again when the original is already reversed', async () => {
@@ -444,6 +609,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       CREDIT_ID,
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
     )
   })
 })
