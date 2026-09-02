@@ -263,6 +263,24 @@ export function idempotencyKeyExpiresAt(
   return new Date(now.getTime() + ttlMs)
 }
 
+/**
+ * An in-flight claim (`response` NULL) whose `expiresAt` has passed
+ * may be reclaimed. Successful cached responses are never expired here
+ * so a retry after TTL still returns the original result.
+ */
+export function isExpiredInFlightIdempotencyClaim(input: {
+  response: unknown
+  expiresAt: Date | string | null | undefined
+  now: Date
+}): boolean {
+  if (input.response != null) return false
+  if (input.expiresAt == null) return false
+  const expiresAt =
+    input.expiresAt instanceof Date ? input.expiresAt : new Date(input.expiresAt)
+  if (Number.isNaN(expiresAt.getTime())) return false
+  return expiresAt.getTime() <= input.now.getTime()
+}
+
 export function serializePayInvoiceWithWalletCache(input: {
   invoiceId: string
   profileId: string

@@ -35,6 +35,10 @@ describe('idempotency_keys schema (T-04.2.03.03)', () => {
     )
     expect(unique).toBeDefined()
     expect(unique!.config.unique).toBe(true)
+    const uniqueColumns = unique!.config.columns as Array<{ name?: string } | string>
+    expect(
+      uniqueColumns.map((column) => (typeof column === 'string' ? column : column.name)),
+    ).toEqual(['idempotency_key', 'entity_type'])
   })
 
   it('migration 0073 still declares the unique index on (idempotency_key, entity_type)', () => {
