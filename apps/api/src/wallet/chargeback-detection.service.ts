@@ -183,6 +183,7 @@ export class ChargebackDetectionService {
               'Payment chargeback event id could not be claimed',
             )
           }
+          assertClaimedNotificationMatches(existing.raw, notification)
           if (existing.status !== 'processing') {
             await this.alertIfUnresolved(client, existing.status, eventId, notification, {
               walletId: existing.walletId,
@@ -190,7 +191,6 @@ export class ChargebackDetectionService {
             })
             return alreadyProcessedResult(existing)
           }
-          assertClaimedNotificationMatches(existing.raw, notification)
         }
 
         const candidates = await this.loadCandidates(client, notification)

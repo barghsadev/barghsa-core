@@ -375,6 +375,86 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     },
   )
 
+  it.each([
+    [
+      'reversed',
+      {
+        status: 'reversed',
+        original_transaction_id: CREDIT_ID,
+        reversal_transaction_id: REVERSAL_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+      },
+    ],
+    ['unmatched', { status: 'unmatched' }],
+    [
+      'unresolved',
+      {
+        status: 'unresolved',
+        original_transaction_id: CREDIT_ID,
+        wallet_id: PROFILE_ID,
+        match_method: 'merchant_order_id',
+      },
+    ],
+  ] as const)(
+    'rejects a payload mismatch against a terminal %s event',
+    async (_status, eventOverrides) => {
+      const notifyUnresolved = vi.fn()
+      const { service, reverseTransaction } = makeService({ notifyUnresolved } as never)
+      scriptClient({
+        claimInserted: false,
+        existingEvent: claimedEventRow({ ...eventOverrides }),
+        credit: makeCreditRow({
+          id: 'ffffffff-ffff-7fff-8fff-ffffffffffff',
+          idempotency_key: chargebackCreditIdempotencyKey(
+            'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee',
+          ),
+        }),
+      })
+      const rejection = await service
+        .handle(
+          signedInput(
+            payload({ merchantOrderId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }),
+          ),
+        )
+        .catch((error: unknown) => error)
+      expect(rejectionBody(rejection)).toMatchObject({
+        error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+        message: 'Payment chargeback event payload does not match the claimed notification',
+      })
+      expect(reverseTransaction).not.toHaveBeenCalled()
+      expect(notifyUnresolved).not.toHaveBeenCalled()
+    },
+  )
+
+  it('rejects a corrected locator after an unmatched event instead of remapping', async () => {
+    const correctedOrderId = 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee'
+    const notifyUnresolved = vi.fn()
+    const { service, reverseTransaction } = makeService({ notifyUnresolved } as never)
+    scriptClient({
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'unmatched' }),
+      credit: makeCreditRow({
+        id: 'ffffffff-ffff-7fff-8fff-ffffffffffff',
+        idempotency_key: chargebackCreditIdempotencyKey(correctedOrderId),
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: correctedOrderId,
+          authority: AUTHORITY,
+        },
+      }),
+    })
+    const rejection = await service
+      .handle(signedInput(payload({ merchantOrderId: correctedOrderId })))
+      .catch((error: unknown) => error)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+      message: 'Payment chargeback event payload does not match the claimed notification',
+    })
+    expect(reverseTransaction).not.toHaveBeenCalled()
+    expect(notifyUnresolved).not.toHaveBeenCalled()
+  })
+
   it('does not reverse again when the original is already reversed', async () => {
     const { service, reverseTransaction } = makeService()
     scriptClient({
