@@ -4,7 +4,9 @@ import {
   ONLINE_TOPUP_CALLBACK_OPEN_STATES,
   ONLINE_TOPUP_CHANNEL,
   ONLINE_TOPUP_EXPIRED_STATE,
+  ONLINE_TOPUP_EXPIRY_AUDIT_EVENT,
   ONLINE_TOPUP_EXPIRY_REASON,
+  ONLINE_TOPUP_EXPIRY_TRANSITION,
   ONLINE_TOPUP_INTENT_RELEASE_STATES,
   isEligibleForOnlineTopUpExpiry,
   isOnlineTopUpCallbackOpenState,
@@ -29,6 +31,8 @@ describe('online top-up expiry contract (T-04.2.02.07)', () => {
     expect(DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS).toBe(30 * 60 * 1000)
     expect(ONLINE_TOPUP_EXPIRED_STATE).toBe('Rejected')
     expect(ONLINE_TOPUP_EXPIRY_REASON).toBe('Pending online top-up expired beyond TTL')
+    expect(ONLINE_TOPUP_EXPIRY_AUDIT_EVENT).toBe('wallet.online_topup.expired')
+    expect(ONLINE_TOPUP_EXPIRY_TRANSITION).toBe('expire_pending')
     expect(ONLINE_TOPUP_CALLBACK_OPEN_STATES).toEqual([
       'Pending',
       'Failed',

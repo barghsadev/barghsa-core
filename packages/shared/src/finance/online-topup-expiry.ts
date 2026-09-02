@@ -31,6 +31,12 @@ export const ONLINE_TOPUP_EXPIRED_STATE = 'Rejected' as const
 export const ONLINE_TOPUP_EXPIRY_REASON =
   'Pending online top-up expired beyond TTL' as const
 
+/** Canonical audit event when the expiry cron auto-rejects a Pending top-up. */
+export const ONLINE_TOPUP_EXPIRY_AUDIT_EVENT = 'wallet.online_topup.expired' as const
+
+/** Transition name recorded on the expiry audit row. */
+export const ONLINE_TOPUP_EXPIRY_TRANSITION = 'expire_pending' as const
+
 /**
  * States that may still receive an authenticated provider callback after
  * initiation. `Rejected` is included so TTL expiry stays reconcilable.

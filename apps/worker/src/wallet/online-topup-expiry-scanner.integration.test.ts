@@ -17,7 +17,9 @@ import type { IsolatedTestDb } from '@barghsa/db/test'
 import {
   DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS,
   ONLINE_TOPUP_CHANNEL,
+  ONLINE_TOPUP_EXPIRY_AUDIT_EVENT,
   ONLINE_TOPUP_EXPIRY_REASON,
+  ONLINE_TOPUP_EXPIRY_TRANSITION,
 } from '@barghsa/shared/finance'
 import {
   FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL,
@@ -32,9 +34,18 @@ const WALLET_TX_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
 )
+const AUDIT_LOG_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0005_create_audit_log.sql',
+)
+const EXPIRY_IDX_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql',
+)
 
 const WALLET_A = '11111111-1111-7111-8111-111111111111'
 const WALLET_B = '22222222-2222-7222-8222-222222222222'
+const ACTOR_USER_ID = 'online-expiry-scanner-actor'
 const NOW = new Date('2026-09-02T12:00:00.000Z')
 const TTL = DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS
 const CUTOFF = new Date(NOW.getTime() - TTL)
@@ -52,12 +63,21 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS profiles (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
     )`)
+    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (
+      user_id TEXT PRIMARY KEY
+    )`)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(EXPIRY_IDX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [WALLET_A, WALLET_B])
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES ($1, 0, 0, 0), ($2, 0, 0, 0)`,
       [WALLET_A, WALLET_B],
+    )
+    await ctx.pool.query(
+      `INSERT INTO users (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
+      [ACTOR_USER_ID],
     )
   }, 60_000)
 
@@ -67,6 +87,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
   })
 
   beforeEach(async () => {
+    await ctx.pool.query('DELETE FROM audit_log')
     await ctx.pool.query('DELETE FROM wallet_transactions')
   })
 
@@ -174,6 +195,21 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
     expect(result.rows[0]?.id).toBe(first)
   })
 
+  it('does not treat created_at equal to the cutoff as expired (exclusive TTL)', async () => {
+    const onCutoff = await insertTopUp({
+      state: 'Pending',
+      channel: ONLINE_TOPUP_CHANNEL,
+      createdAt: CUTOFF,
+      authority: 'auth-boundary',
+    })
+    const result = await ctx.pool.query<{ id: string }>(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL, [
+      ONLINE_TOPUP_CHANNEL,
+      CUTOFF,
+      200,
+    ])
+    expect(result.rows.some((row) => row.id === onCutoff)).toBe(false)
+  })
+
   it('rejects expired online Pendings, preserves gateway authority, and leaves balances and bank receipts untouched', async () => {
     const expiredId = await insertTopUp({
       state: 'Pending',
@@ -198,6 +234,8 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       now: () => NOW,
       ttlMs: TTL,
       batchSize: 50,
+      actorUserId: ACTOR_USER_ID,
+      correlationId: 'corr-online-expiry-pg',
     })
 
     expect(scan.errors).toEqual([])
@@ -237,6 +275,21 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       [WALLET_A],
     )
     expect(wallet.rows[0]).toMatchObject({ posted_balance: '0', reserved_balance: '0' })
+
+    const audit = await ctx.pool.query<{ event: string; metadata: string }>(
+      `SELECT event, metadata FROM audit_log WHERE metadata LIKE $1`,
+      [`%${expiredId}%`],
+    )
+    expect(audit.rows[0]?.event).toBe(ONLINE_TOPUP_EXPIRY_AUDIT_EVENT)
+    expect(JSON.parse(audit.rows[0]!.metadata)).toMatchObject({
+      transactionId: expiredId,
+      walletId: WALLET_A,
+      fromState: 'Pending',
+      toState: 'Rejected',
+      transition: ONLINE_TOPUP_EXPIRY_TRANSITION,
+      reason: ONLINE_TOPUP_EXPIRY_REASON,
+      ttlMs: TTL,
+    })
   })
 
   it('is idempotent: a second pass does not re-reject or change metadata', async () => {
@@ -251,6 +304,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       pool: ctx.pool,
       now: () => NOW,
       ttlMs: TTL,
+      actorUserId: ACTOR_USER_ID,
     })
     expect(first.rejected).toBe(1)
 
@@ -258,6 +312,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       pool: ctx.pool,
       now: () => NOW,
       ttlMs: TTL,
+      actorUserId: ACTOR_USER_ID,
     })
     expect(second).toMatchObject({ scanned: 0, rejected: 0, skipped: 0, errors: [] })
 
@@ -266,5 +321,11 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       [expiredId],
     )
     expect(row.rows[0]?.state).toBe('Rejected')
+
+    const audits = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n FROM audit_log WHERE event = $1`,
+      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT],
+    )
+    expect(audits.rows[0]?.n).toBe('1')
   })
 })
