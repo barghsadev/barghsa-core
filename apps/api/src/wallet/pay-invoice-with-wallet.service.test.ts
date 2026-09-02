@@ -256,6 +256,7 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         type: 'payment',
         refId: INVOICE_ID,
         description: PAY_INVOICE_WITH_WALLET_DESCRIPTION,
+        expectedVersion: 3,
       }),
       IDEMPOTENCY_KEY,
       mockClient,
@@ -307,7 +308,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     const paidUpdate = mockClient.query.mock.calls.find(
       (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
     )
-    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000'])
+    expect(paidUpdate?.[0]).toContain('AND state = $3')
+    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000', 'Unpaid'])
 
     const cacheWrite = mockClient.query.mock.calls.find(
       (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
@@ -342,7 +344,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(sqlCalls[walletIdx]).toContain('posted_balance')
     expect(sqlCalls[walletIdx]).toContain('reserved_balance')
     expect(sqlCalls[walletIdx]).toContain('available_balance')
-    expect(sqlCalls[walletIdx]).toContain('FOR UPDATE')
+    expect(sqlCalls[walletIdx]).toContain('FOR UPDATE OF wallets')
+    expect(sqlCalls[invoiceIdx]).toContain('FOR UPDATE OF invoices')
   })
 
   it('debits only the remaining amount on a PartiallyFunded invoice', async () => {
@@ -374,10 +377,18 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(walletService.debit).toHaveBeenCalledWith(
       PROFILE_ID,
       400_000n,
-      expect.objectContaining({ type: 'payment', refId: INVOICE_ID }),
+      expect.objectContaining({
+        type: 'payment',
+        refId: INVOICE_ID,
+        expectedVersion: 3,
+      }),
       IDEMPOTENCY_KEY,
       mockClient,
     )
+    const paidUpdate = mockClient.query.mock.calls.find(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
+    )
+    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '400000', 'PartiallyFunded'])
   })
 
   it('rejects when locked availableBalance is below remaining without debiting', async () => {
@@ -581,6 +592,16 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
       }),
     ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID())
     expect(mockPool.connect).not.toHaveBeenCalled()
+  })
+
+  it('rolls back the debit when the locked invoice state UPDATE matches no row', async () => {
+    paymentQueries({ paidOk: false })
+
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID())
+    expect(walletService.debit).toHaveBeenCalledTimes(1)
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
   })
 
   it('rolls back when the invoice transition fails after the wallet debit', async () => {

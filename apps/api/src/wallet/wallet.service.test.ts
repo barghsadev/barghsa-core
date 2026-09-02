@@ -621,7 +621,12 @@ describe('WalletService', () => {
       const result = await service.debit(
         'profile-1',
         100000n,
-        { type: 'payment', refId: 'inv-1', description: 'invoice settlement' },
+        {
+          type: 'payment',
+          refId: 'inv-1',
+          description: 'invoice settlement',
+          expectedVersion: 1,
+        },
         'idem-debit-001',
       )
 
@@ -954,6 +959,29 @@ describe('WalletService', () => {
         service.debit('missing', 100n, { type: 'payment' }, 'k'),
       ).rejects.toThrow('Wallet not found: missing')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects when the locked version differs from expectedVersion (T-04.2.03.02)', async () => {
+      const wallet = makeWalletRow({ version: 1 })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.debit(
+          'profile-1',
+          100000n,
+          { type: 'payment', expectedVersion: 99 },
+          'idem-001',
+        ),
+      ).rejects.toThrow('Wallet optimistic lock failed: version mismatch')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
     })
 
     it('rejects the debit when the reserve UPDATE matches no row', async () => {

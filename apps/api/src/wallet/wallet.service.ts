@@ -78,12 +78,17 @@ export interface WalletCreditRef {
  *
  * `type` is the ledger discriminator; `refId` optionally points at the
  * originating domain entity (invoice, order, …).
+ *
+ * `expectedVersion` is the caller’s `SELECT … FOR UPDATE` snapshot
+ * (T-04.2.03.02). When set, debit rejects a locked row whose `version`
+ * differs — optimistic second line of defense after the row lock.
  */
 export interface WalletDebitRef {
   type: WalletDebitType
   refId?: string | null
   description?: string | null
   metadata?: unknown
+  expectedVersion?: number
 }
 
 /**
@@ -387,13 +392,15 @@ export class WalletService {
    *      as the same Completed debit (matching type, amount, and refId).
    *      Collisions with credits, reservations, or a different debit command
    *      throw ConflictException — they must not report success.
-   *   3. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
-   *   4. Atomically reserve (`reserved_balance += amount` with
+   *   3. When `ref.expectedVersion` is set (pay-from-wallet FOR UPDATE
+   *      snapshot, T-04.2.03.02), reject if the locked `version` differs.
+   *   4. Reject when `availableBalance` (`posted - reserved`) is below `amount`.
+   *   5. Atomically reserve (`reserved_balance += amount` with
    *      `WHERE version = X AND available >= amount`) then complete
    *      (`posted_balance -= amount`, `reserved_balance -= amount` with
    *      `WHERE version = X+1`). Both UPDATEs bind the wallet row's
    *      canonical `profile_id`.
-   *   5. INSERT a Completed ledger row (negative amount) using the
+   *   6. INSERT a Completed ledger row (negative amount) using the
    *      wallet row's canonical `profile_id`.
    *
    * Unique `idempotency_key` is the last-line duplicate guard.
@@ -456,6 +463,13 @@ export class WalletService {
           await queryable.query('COMMIT')
         }
         return mapTransaction(existing)
+      }
+
+      if (
+        ref.expectedVersion !== undefined &&
+        Number(wallet.version) !== Number(ref.expectedVersion)
+      ) {
+        throw new ConflictException('Wallet optimistic lock failed: version mismatch')
       }
 
       const posted = BigInt(wallet.posted_balance)
