@@ -71,6 +71,7 @@ type ScriptOptions = {
   wallet?: { profile_id: string } | null
   storageStatus?: string | null
   storageMetadata?: Record<string, unknown> | null
+  claimType?: string | null
   existing?: ReturnType<typeof makePendingRow> | null
   existingAttachment?: ReturnType<typeof makePendingRow> | null
   insert?: ReturnType<typeof makePendingRow> | Error
@@ -98,6 +99,11 @@ function scriptClient(opts: ScriptOptions = {}) {
     }
     if (sql.includes('UPDATE storage_records')) {
       return { rows: [], rowCount: 1 }
+    }
+    if (sql.includes('bank_receipt_attachment_claims')) {
+      if (sql.includes('INSERT')) return { rows: [] }
+      if (opts.claimType === null) return { rows: [] }
+      return { rows: [{ claim_type: opts.claimType ?? 'wallet_topup' }] }
     }
     if (sql.includes('FROM wallets')) {
       if (opts.wallet === null) return { rows: [] }
@@ -239,6 +245,14 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     scriptClient({
       existingAttachment: makePendingRow({ idempotency_key: 'other-idem' }),
     })
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),
+    ).toBe(false)
+  })
+
+  it('rejects an attachment already claimed by an invoice receipt', async () => {
+    scriptClient({ claimType: 'invoice_receipt' })
     await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO wallet_transactions')),

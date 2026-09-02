@@ -64,6 +64,10 @@ const ATTACHMENT_UNIQUE_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0072_wallet_tx_receipt_attachment_unique.sql',
 )
+const ATTACHMENT_CLAIMS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
@@ -94,6 +98,7 @@ describe('BankReceiptTopUpService — real PostgreSQL (T-04.2.02.03)', () => {
     `)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ATTACHMENT_UNIQUE_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ATTACHMENT_CLAIMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS storage_records (
         storage_key TEXT PRIMARY KEY,

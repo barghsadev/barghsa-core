@@ -1,8 +1,8 @@
-import { createHash } from 'node:crypto'
 import { ConflictException, HttpException, Injectable, Logger } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
+  bankReceiptAttachmentAdvisoryLockKeys,
   canCustomerSubmitInvoiceBankReceipt,
   evaluateBankReceiptStorageMetadata,
   evaluateInvoiceBankReceiptStoredFile,
@@ -11,6 +11,7 @@ import {
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance'
+import { claimBankReceiptAttachment } from '../finance/claim-bank-receipt-attachment.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'
@@ -94,9 +95,12 @@ interface StorageLockRow {
  *      reference, attachment key, and optional note.
  *   2. Resolve the caller's active profile (same isolation as invoice
  *      details). Missing invoices, other profiles, and drafts 404.
- *   3. Lock the attachment, require verified owner+purpose provenance,
- *      and reject disallowed file type/size from the storage record.
- *   4. Insert a `Submitted` `bank_receipts` row. Unique attachment_key
+ *   3. Lock the attachment (shared namespace with wallet top-up),
+ *      require verified owner+purpose provenance, and reject
+ *      disallowed file type/size from the storage record.
+ *   4. Claim the storage key as `invoice_receipt`. A wallet top-up
+ *      claim is rejected; same-flow retries continue.
+ *   5. Insert a `Submitted` `bank_receipts` row. Unique attachment_key
  *      is the retry identity: matching details return the original row.
  *
  * Invoice state and wallet credit are deferred to later tasks.
@@ -125,10 +129,10 @@ export class InvoiceBankReceiptUploadService {
     }
 
     const pool = getDbPool()
-    const client = await pool.connect()
-    const attachmentLockKeys = invoiceBankReceiptAttachmentAdvisoryLockKeys(
+    const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(
       parsed.receipt.attachmentKey,
     )
+    const client = await pool.connect()
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', attachmentLockKeys)
       try {
@@ -165,6 +169,7 @@ export class InvoiceBankReceiptUploadService {
 
       const invoice = await this.lockInvoice(client, invoiceId, profileId)
       await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId)
+      await claimBankReceiptAttachment(client, receipt.attachmentKey, 'invoice_receipt')
 
       const existing = await client.query(
         `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
@@ -330,15 +335,6 @@ export class InvoiceBankReceiptUploadService {
       )
     }
   }
-}
-
-export function invoiceBankReceiptAttachmentAdvisoryLockKeys(
-  attachmentKey: string,
-): [number, number] {
-  const digest = createHash('sha256')
-    .update(`invoice-bank-receipt-attachment:${attachmentKey}`)
-    .digest()
-  return [digest.readInt32BE(0), digest.readInt32BE(4)]
 }
 
 function assertReusableSubmitted(

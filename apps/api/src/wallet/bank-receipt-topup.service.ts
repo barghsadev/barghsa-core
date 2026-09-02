@@ -10,6 +10,7 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   BANK_RECEIPT_TOPUP_DESCRIPTION,
+  bankReceiptAttachmentAdvisoryLockKeys,
   bankReceiptTopUpMetadata,
   evaluateBankReceiptStorageMetadata,
   parseBankReceiptTopUpSubmission,
@@ -17,6 +18,7 @@ import {
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance'
+import { claimBankReceiptAttachment } from '../finance/claim-bank-receipt-attachment.js'
 import { WalletService, type TransactionRow } from './wallet.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'
@@ -64,12 +66,15 @@ interface QueryClient {
  *   1. Validate amount, payment date, payer reference, attachment key,
  *      and optional note. Amount has **no configured maximum**.
  *   2. Ensure the profile wallet exists.
- *   3. Lock the `storage_records` row in the same DB transaction,
- *      require a verified receipt owned by the actor (or bound to the
+ *   3. Lock the `storage_records` row in the same DB transaction
+ *      (shared attachment lock with invoice upload), require a
+ *      verified receipt owned by the actor (or bound to the
  *      accessible profile), and transition an `active` object to
  *      `immutable` so the evidence cannot be physically deleted after
  *      the Pending ledger row is committed.
- *   4. Insert a Pending `topup` ledger row (does not change balances)
+ *   4. Claim the storage key as `wallet_topup`. An invoice-receipt
+ *      claim is rejected; same-flow retries continue.
+ *   5. Insert a Pending `topup` ledger row (does not change balances)
  *      with a uniquely constrained `receipt_attachment_key`.
  *
  * Wallet credit is deferred to staff confirmation (T-04.2.02.04).
@@ -101,9 +106,9 @@ export class BankReceiptTopUpService {
     await this.walletService.createWallet(input.profileId)
 
     const pool = getDbPool()
-    const client = await pool.connect()
     const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(parsed.receipt.attachmentKey)
     const idempotencyLockKeys = bankReceiptTopUpAdvisoryLockKeys(idempotencyKey)
+    const client = await pool.connect()
     try {
       // Attachment first, then idempotency, so concurrent different-key
       // submissions of the same file cannot deadlock.
@@ -226,6 +231,7 @@ export class BankReceiptTopUpService {
       canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id
 
       await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId)
+      await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup')
 
       const idemResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE`,
@@ -288,6 +294,7 @@ export class BankReceiptTopUpService {
         await client.query('BEGIN')
         try {
           await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId)
+          await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup')
           await client.query('COMMIT')
         } catch (protectError) {
           await client.query('ROLLBACK')
@@ -310,12 +317,7 @@ export function bankReceiptTopUpAdvisoryLockKeys(idempotencyKey: string): [numbe
   return [digest.readInt32BE(0), digest.readInt32BE(4)]
 }
 
-export function bankReceiptAttachmentAdvisoryLockKeys(attachmentKey: string): [number, number] {
-  const digest = createHash('sha256')
-    .update(`wallet-bank-receipt-attachment:${attachmentKey}`)
-    .digest()
-  return [digest.readInt32BE(0), digest.readInt32BE(4)]
-}
+export { bankReceiptAttachmentAdvisoryLockKeys }
 
 function assertMatchingPendingBankReceipt(
   existing: {

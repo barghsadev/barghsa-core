@@ -63,6 +63,7 @@ type ScriptOptions = {
   contentType?: string | null
   category?: string | null
   fileName?: string | null
+  claimType?: string | null
   existing?: ReturnType<typeof makeReceiptRow> | null
   insert?: ReturnType<typeof makeReceiptRow> | Error
 }
@@ -106,6 +107,11 @@ function scriptClient(opts: ScriptOptions = {}) {
     }
     if (sql.includes('UPDATE storage_records')) {
       return { rows: [], rowCount: 1 }
+    }
+    if (sql.includes('bank_receipt_attachment_claims')) {
+      if (sql.includes('INSERT')) return { rows: [] }
+      if (opts.claimType === null) return { rows: [] }
+      return { rows: [{ claim_type: opts.claimType ?? 'invoice_receipt' }] }
     }
     if (sql.includes('FROM bank_receipts')) {
       return { rows: opts.existing ? [opts.existing] : [] }
@@ -243,6 +249,14 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   it('conflicts when the same attachment was used with different details', async () => {
     scriptClient({ existing: makeReceiptRow({ amount: '1' }) })
     await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+  })
+
+  it('conflicts when the attachment is already claimed by a wallet top-up', async () => {
+    scriptClient({ claimType: 'wallet_topup' })
+    await expect(service.submit(submitInput())).rejects.toBeInstanceOf(ConflictException)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
   })
 
   it('404s when the invoice is not on the active profile', async () => {

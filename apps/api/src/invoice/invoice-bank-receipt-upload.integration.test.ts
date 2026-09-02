@@ -57,6 +57,10 @@ const BANK_RECEIPTS_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0078_create_bank_receipts.sql',
 )
+const ATTACHMENT_CLAIMS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
@@ -114,6 +118,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(BANK_RECEIPTS_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(ATTACHMENT_CLAIMS_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS storage_records (
         storage_key TEXT PRIMARY KEY,
@@ -143,7 +148,9 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   })
 
   beforeEach(async () => {
-    await ctx.pool.query(`TRUNCATE bank_receipts, invoices, storage_records CASCADE`)
+    await ctx.pool.query(
+      `TRUNCATE bank_receipts, bank_receipt_attachment_claims, invoices, storage_records CASCADE`,
+    )
     await ctx.pool.query(
       `INSERT INTO invoices (id, profile_id, state, total_amount)
        VALUES ($1, $2, 'Unpaid', 5000000), ($3, $4, 'Paid', 1000000)`,
@@ -225,6 +232,12 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       [attachment],
     )
     expect(storage.rows[0]!.status).toBe('immutable')
+
+    const claim = await ctx.pool.query<{ claim_type: string }>(
+      `SELECT claim_type FROM bank_receipt_attachment_claims WHERE storage_key = $1`,
+      [attachment],
+    )
+    expect(claim.rows[0]!.claim_type).toBe('invoice_receipt')
   })
 
   it('rejects a zero amount before insert', async () => {
@@ -307,5 +320,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     expect(a.receiptId).toBe(b.receiptId)
     const count = await ctx.pool.query(`SELECT count(*)::int AS n FROM bank_receipts`)
     expect(count.rows[0]!.n).toBe(1)
+    const claims = await ctx.pool.query(`SELECT count(*)::int AS n FROM bank_receipt_attachment_claims`)
+    expect(claims.rows[0]!.n).toBe(1)
   })
 })
