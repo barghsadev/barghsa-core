@@ -356,8 +356,16 @@ export function serializePayInvoiceWithWalletCache(input: {
 export function parsePayInvoiceWithWalletCache(
   raw: unknown,
 ): PayInvoiceWithWalletCachedResponse | null {
-  if (!raw || typeof raw !== 'object') return null
-  const row = raw as Record<string, unknown>
+  let value: unknown = raw
+  if (typeof value === 'string') {
+    try {
+      value = JSON.parse(value) as unknown
+    } catch {
+      return null
+    }
+  }
+  if (!value || typeof value !== 'object') return null
+  const row = value as Record<string, unknown>
   if (typeof row.invoiceId !== 'string' || typeof row.profileId !== 'string') return null
   if (typeof row.fromState !== 'string' || row.toState !== 'Paid') return null
   if (typeof row.remainingPaid !== 'string' || typeof row.auditId !== 'string') return null
@@ -398,5 +406,8 @@ export function cachedWalletPaymentMatchesRequest(
   invoiceId: string,
   profileId: string,
 ): boolean {
-  return cached.invoiceId === invoiceId && cached.profileId === profileId
+  return (
+    cached.invoiceId.toLowerCase() === invoiceId.toLowerCase() &&
+    cached.profileId.toLowerCase() === profileId.toLowerCase()
+  )
 }

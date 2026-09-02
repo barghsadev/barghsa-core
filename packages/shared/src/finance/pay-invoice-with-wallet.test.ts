@@ -308,12 +308,21 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
       expect(snapshot.walletTransaction.amount).toBe('-1000000')
       expect(snapshot.walletTransaction.createdAt).toBe(now.toISOString())
       expect(parsePayInvoiceWithWalletCache(snapshot)).toEqual(snapshot)
+      expect(parsePayInvoiceWithWalletCache(JSON.stringify(snapshot))).toEqual(snapshot)
+      expect(parsePayInvoiceWithWalletCache('not-json')).toBeNull()
       expect(parsePayInvoiceWithWalletCache(null)).toBeNull()
       expect(parsePayInvoiceWithWalletCache({ invoiceId: INVOICE_ID })).toBeNull()
     })
 
     it('matches only the original invoice and profile', () => {
       expect(cachedWalletPaymentMatchesRequest(snapshot, INVOICE_ID, PROFILE_ID)).toBe(true)
+      expect(
+        cachedWalletPaymentMatchesRequest(
+          snapshot,
+          INVOICE_ID.toUpperCase(),
+          PROFILE_ID.toUpperCase(),
+        ),
+      ).toBe(true)
       expect(
         cachedWalletPaymentMatchesRequest(
           snapshot,

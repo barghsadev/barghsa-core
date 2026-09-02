@@ -7,7 +7,10 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { INVOICE_WALLET_PAYMENT_ENTITY_TYPE } from '@barghsa/shared/finance'
-import { IdempotencyKeysRepository } from './idempotency-keys.repository.js'
+import {
+  IDEMPOTENCY_CACHE_PERSIST_FAILED,
+  IdempotencyKeysRepository,
+} from './idempotency-keys.repository.js'
 
 const NOW = new Date('2026-09-02T08:00:00.000Z')
 const EXPIRES = new Date('2026-09-03T08:00:00.000Z')
@@ -89,8 +92,8 @@ describe('IdempotencyKeysRepository (T-04.2.03.03)', () => {
     expect(client.query.mock.calls[2]?.[0]).toContain('response IS NULL')
   })
 
-  it('persists the cached JSONB response onto the claimed row', async () => {
-    client.query.mockResolvedValueOnce({ rows: [] })
+  it('persists the cached JSONB response onto the claimed in-flight row', async () => {
+    client.query.mockResolvedValueOnce({ rows: [{ id: 'persist-1' }] })
     const response = { invoiceId: ENTITY_ID, toState: 'Paid' }
 
     await repo.persistResponse(client, {
@@ -100,9 +103,27 @@ describe('IdempotencyKeysRepository (T-04.2.03.03)', () => {
       response,
     })
 
-    expect(client.query).toHaveBeenCalledWith(
-      expect.stringContaining('SET response = $3::jsonb'),
-      [KEY, INVOICE_WALLET_PAYMENT_ENTITY_TYPE, JSON.stringify(response), ENTITY_ID],
-    )
+    expect(client.query.mock.calls[0]?.[0]).toContain('SET response = $3::jsonb')
+    expect(client.query.mock.calls[0]?.[0]).toContain('AND response IS NULL')
+    expect(client.query.mock.calls[0]?.[0]).toContain('RETURNING id')
+    expect(client.query.mock.calls[0]?.[1]).toEqual([
+      KEY,
+      INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+      JSON.stringify(response),
+      ENTITY_ID,
+    ])
+  })
+
+  it('fails closed when the in-flight claim row is gone', async () => {
+    client.query.mockResolvedValueOnce({ rows: [] })
+
+    await expect(
+      repo.persistResponse(client, {
+        key: KEY,
+        entityType: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+        entityId: ENTITY_ID,
+        response: { invoiceId: ENTITY_ID, toState: 'Paid' },
+      }),
+    ).rejects.toThrow(IDEMPOTENCY_CACHE_PERSIST_FAILED)
   })
 })
