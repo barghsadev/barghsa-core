@@ -237,7 +237,7 @@ export const invoices = pgTable(
      * Superkey of the primary key so child tables can composite-FK
      * `(invoice_id, profile_id) → invoices(id, profile_id)` and reject
      * a receipt whose profile does not own the invoice (T-04.3.01.01).
-     * Migration 0078 adds the matching UNIQUE constraint.
+     * Declared on `createInvoicesTable`; migration 0078 backfills it.
      */
     idProfileUnique: unique('uq_invoices_id_profile_id').on(table.id, table.profileId),
     /**
@@ -331,7 +331,9 @@ export const createInvoicesTable = sql`
         adjustment_kind IS NULL
         OR adjustment_kind IN ('charge', 'credit')
       )
-    )
+    ),
+    -- Superkey for child composite FKs (T-04.3.01.01 / bank_receipts).
+    CONSTRAINT uq_invoices_id_profile_id UNIQUE (id, profile_id)
   );
 
   CREATE INDEX IF NOT EXISTS idx_invoices_profile_id ON invoices (profile_id);

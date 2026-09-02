@@ -3,12 +3,27 @@ import { sql } from 'drizzle-orm'
 import { getTableConfig } from 'drizzle-orm/pg-core'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from '../test/testDb'
+import { createIsolatedTestDb, dropTestSchema, seedBankReceiptsPrerequisites } from '../test/testDb'
 import type { IsolatedTestDb } from '../test/testDb'
-import { bankReceipts } from './bank-receipts.js'
-import { invoices } from './invoices.js'
+import { bankReceipts, createBankReceiptsTable } from './bank-receipts.js'
+import { createInvoicesTable, invoices } from './invoices.js'
 import { profiles } from './profiles.js'
 import { users } from './users.js'
+
+function sqlToString(query: { queryChunks: readonly unknown[] }): string {
+  return query.queryChunks
+    .map((chunk) => {
+      if (typeof chunk === 'string') return chunk
+      if (chunk && typeof chunk === 'object' && 'value' in chunk) {
+        const value = (chunk as { value: unknown }).value
+        if (Array.isArray(value) && value.every((part) => typeof part === 'string')) {
+          return value.join('')
+        }
+      }
+      return ''
+    })
+    .join('')
+}
 
 const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
 const INVOICES_MIGRATION = resolve(
@@ -179,6 +194,20 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_bank_receipts_invoice_id')
     expect(MIGRATION).toContain('CREATE UNIQUE INDEX IF NOT EXISTS uq_bank_receipts_attachment_key')
     expect(MIGRATION).toContain('DROP TRIGGER IF EXISTS trg_bank_receipts_updated_at')
+  })
+
+  it('createBankReceiptsTable adds uq_invoices_id_profile_id before CREATE TABLE', () => {
+    const helperSql = sqlToString(createBankReceiptsTable)
+    const uniquePos = helperSql.indexOf('uq_invoices_id_profile_id UNIQUE (id, profile_id)')
+    const createPos = helperSql.indexOf('CREATE TABLE IF NOT EXISTS bank_receipts')
+    expect(uniquePos).toBeGreaterThanOrEqual(0)
+    expect(createPos).toBeGreaterThan(uniquePos)
+  })
+
+  it('createInvoicesTable declares uq_invoices_id_profile_id', () => {
+    expect(sqlToString(createInvoicesTable)).toContain(
+      'CONSTRAINT uq_invoices_id_profile_id UNIQUE (id, profile_id)',
+    )
   })
 
   it('migration 0078 is registered in the Drizzle journal so migrate() applies it', () => {
@@ -525,4 +554,92 @@ describe('bank_receipts PostgreSQL enforcement (T-04.3.01.01)', () => {
     await expect(ctx.pool.query(migrationSql)).resolves.toBeDefined()
     await expect(insertReceipt({ amount: 0 })).rejects.toMatchObject({ code: '23514' })
   })
+})
+
+async function seedGreenfieldInvoiceParents(pool: IsolatedTestDb['pool']): Promise<void> {
+  const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
+  await pool.query(uuidSql)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      user_id TEXT PRIMARY KEY
+    )
+  `)
+  await pool.query(`
+    CREATE TYPE invoice_state AS ENUM (
+      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
+      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
+    )
+  `)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS profiles (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+    )
+  `)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+    )
+  `)
+}
+
+describe('bank_receipts exported helpers (T-04.3.01.01)', () => {
+  it('createInvoicesTable then createBankReceiptsTable succeeds on PostgreSQL', async () => {
+    const ctx = await createIsolatedTestDb()
+    try {
+      await seedGreenfieldInvoiceParents(ctx.pool)
+      await expect(ctx.pool.query(sqlToString(createInvoicesTable))).resolves.toBeDefined()
+      await expect(ctx.pool.query(sqlToString(createBankReceiptsTable))).resolves.toBeDefined()
+
+      const rel = await ctx.pool.query<{ rel: string | null }>(
+        `SELECT to_regclass('bank_receipts')::text AS rel`,
+      )
+      expect(rel.rows[0]?.rel).toMatch(/bank_receipts$/)
+
+      const unique = await ctx.pool.query<{ conname: string }>(
+        `SELECT conname FROM pg_constraint
+          WHERE conrelid = 'invoices'::regclass
+            AND conname = 'uq_invoices_id_profile_id'`,
+      )
+      expect(unique.rows).toHaveLength(1)
+
+      const fk = await ctx.pool.query<{ conname: string }>(
+        `SELECT conname FROM pg_constraint
+          WHERE conrelid = 'bank_receipts'::regclass
+            AND conname = 'fk_bank_receipts_invoice_profile'`,
+      )
+      expect(fk.rows).toHaveLength(1)
+    } finally {
+      await ctx.pool.end()
+      await dropTestSchema(ctx.schemaName)
+    }
+  }, 60_000)
+
+  it('createBankReceiptsTable adds the invoices unique when invoices lacks it', async () => {
+    const ctx = await createIsolatedTestDb()
+    try {
+      await seedBankReceiptsPrerequisites(ctx.pool)
+      const before = await ctx.pool.query<{ conname: string }>(
+        `SELECT conname FROM pg_constraint
+          WHERE conrelid = 'invoices'::regclass
+            AND conname = 'uq_invoices_id_profile_id'`,
+      )
+      expect(before.rows).toHaveLength(0)
+
+      await expect(ctx.pool.query(sqlToString(createBankReceiptsTable))).resolves.toBeDefined()
+
+      const after = await ctx.pool.query<{ conname: string }>(
+        `SELECT conname FROM pg_constraint
+          WHERE conrelid = 'invoices'::regclass
+            AND conname = 'uq_invoices_id_profile_id'`,
+      )
+      expect(after.rows).toHaveLength(1)
+      const rel = await ctx.pool.query<{ rel: string | null }>(
+        `SELECT to_regclass('bank_receipts')::text AS rel`,
+      )
+      expect(rel.rows[0]?.rel).toMatch(/bank_receipts$/)
+    } finally {
+      await ctx.pool.end()
+      await dropTestSchema(ctx.schemaName)
+    }
+  }, 60_000)
 })

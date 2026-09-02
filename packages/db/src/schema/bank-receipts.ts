@@ -170,8 +170,24 @@ export const bankReceipts = pgTable(
 
 /**
  * SQL to create the bank_receipts table (migration 0078 source).
+ *
+ * The composite FK requires `uq_invoices_id_profile_id` on invoices.
+ * Greenfield `createInvoicesTable` declares that unique; this DO-block
+ * still adds it when invoices was created without it (e.g. 0052).
  */
 export const createBankReceiptsTable = sql`
+  DO $$
+  BEGIN
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_constraint
+      WHERE conname = 'uq_invoices_id_profile_id'
+        AND conrelid = 'invoices'::regclass
+    ) THEN
+      ALTER TABLE invoices
+        ADD CONSTRAINT uq_invoices_id_profile_id UNIQUE (id, profile_id);
+    END IF;
+  END $$;
+
   CREATE TABLE IF NOT EXISTS bank_receipts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
     invoice_id UUID NOT NULL,
