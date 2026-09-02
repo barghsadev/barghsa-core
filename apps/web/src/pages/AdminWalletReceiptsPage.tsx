@@ -20,11 +20,13 @@ import { isImageAttachment, isPdfAttachment, isTransactionUuid } from '../lib/ba
 import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js'
 
 /**
- * Staff bank-receipt confirmation queue (T-04.2.02.04).
+ * Staff bank-receipt confirmation queue (T-04.2.02.04 / T-04.2.02.05).
  *
  * Finance staff review a Pending wallet top-up receipt, then confirm
- * (credits via WalletService.credit()) or reject with a customer-visible
- * reason. Confirm and reject require step-up authentication.
+ * or reject with a customer-visible reason. Confirm without an invoice
+ * credits the full amount via WalletService.credit(). Confirm with an
+ * invoice settles min(receipt, remaining) and credits only the excess
+ * to the wallet. Confirm and reject require step-up authentication.
  */
 
 interface StaffDecision {
@@ -73,7 +75,9 @@ interface AllocationPreview {
   isOverpayment: boolean
 }
 
-type PendingAction = { kind: 'confirm' } | { kind: 'reject'; reason: string }
+type PendingAction =
+  | { kind: 'confirm'; invoiceId: string | null }
+  | { kind: 'reject'; reason: string }
 
 function readErrorCode(data: unknown): string | null {
   if (!data || typeof data !== 'object') return null
@@ -198,6 +202,7 @@ export default function AdminWalletReceiptsPage() {
   const [invoiceId, setInvoiceId] = useState('')
   const [allocation, setAllocation] = useState<AllocationPreview | null>(null)
   const [allocationError, setAllocationError] = useState<string | null>(null)
+  const [allocationLoading, setAllocationLoading] = useState(false)
 
   const [stepUpOpen, setStepUpOpen] = useState(false)
   const [stepUpPassword, setStepUpPassword] = useState('')
@@ -271,15 +276,19 @@ export default function AdminWalletReceiptsPage() {
     if (!selected || !trimmed) {
       setAllocation(null)
       setAllocationError(null)
+      setAllocationLoading(false)
       return
     }
     if (!isTransactionUuid(trimmed)) {
       setAllocation(null)
       setAllocationError(t('admin.walletReceipts.error.invoiceId', locale))
+      setAllocationLoading(false)
       return
     }
     let cancelled = false
+    setAllocation(null)
     setAllocationError(null)
+    setAllocationLoading(true)
     void (async () => {
       try {
         const res = await fetch(
@@ -298,6 +307,8 @@ export default function AdminWalletReceiptsPage() {
           setAllocation(null)
           setAllocationError(t('admin.walletReceipts.error.allocation', locale))
         }
+      } finally {
+        if (!cancelled) setAllocationLoading(false)
       }
     })()
     return () => {
@@ -339,7 +350,7 @@ export default function AdminWalletReceiptsPage() {
         action.kind === 'reject'
           ? JSON.stringify({ reason: action.reason })
           : JSON.stringify(
-              isTransactionUuid(invoiceId) ? { invoiceId: invoiceId.trim() } : {},
+              action.invoiceId ? { invoiceId: action.invoiceId } : {},
             ),
     })
     const data: unknown = await res.json().catch(() => null)
@@ -397,9 +408,19 @@ export default function AdminWalletReceiptsPage() {
       setClientIssue(t('admin.walletReceipts.error.invoiceId', locale))
       return
     }
+    if (trimmed && isTransactionUuid(trimmed) && (allocationLoading || allocationError || !allocation)) {
+      setReasonInvalid(false)
+      setClientIssue(
+        allocationError ?? t('admin.walletReceipts.error.allocationPending', locale),
+      )
+      return
+    }
     setReasonInvalid(false)
     setClientIssue(null)
-    void runAction({ kind: 'confirm' })
+    void runAction({
+      kind: 'confirm',
+      invoiceId: isTransactionUuid(trimmed) ? trimmed : null,
+    })
   }
 
   function handleReject(e: FormEvent) {
@@ -707,13 +728,19 @@ export default function AdminWalletReceiptsPage() {
                     type="button"
                     data-testid="wallet-receipt-confirm"
                     onClick={handleConfirm}
-                    disabled={acting}
-                    aria-busy={acting}
+                    disabled={
+                      acting ||
+                      (isTransactionUuid(invoiceId.trim()) &&
+                        (allocationLoading || !!allocationError || !allocation))
+                    }
+                    aria-busy={acting || allocationLoading}
                     className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
                   >
                     {acting
                       ? t('admin.walletReceipts.saving', locale)
-                      : t('admin.walletReceipts.confirm', locale)}
+                      : allocation?.isOverpayment
+                        ? t('admin.walletReceipts.confirmOverpayment', locale)
+                        : t('admin.walletReceipts.confirm', locale)}
                   </button>
 
                   <form onSubmit={handleReject} className="space-y-3" noValidate>

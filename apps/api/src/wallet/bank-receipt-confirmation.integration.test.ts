@@ -14,7 +14,8 @@
  *      (posted balance, Completed ledger row, and receipt stay unchanged).
  *   7. Overpayment (T-04.2.02.05): receipt > remaining credits only the
  *      excess via a distinct idempotency key; concurrent allocations
- *      never over-settle paid_amount.
+ *      never over-settle paid_amount. Closed invoices (Cancelled, …)
+ *      conflict instead of silently crediting the wallet.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -536,6 +537,68 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       [invoiceId],
     )
     expect(confirmAudit.rows).toHaveLength(1)
+  })
+
+  it('credits the full receipt to the wallet when the linked invoice is already Paid', async () => {
+    const invoiceId = await insertInvoice({
+      total: 500_000n,
+      paid: 500_000n,
+      state: 'Paid',
+    })
+    const pendingId = await insertPending('paid-excess', 200_000n)
+    const before = await walletBalances()
+    const result = await service.confirm({
+      transactionId: pendingId,
+      actorUserId: ACTOR_USER_ID,
+      ip: '10.0.0.9',
+      invoiceId,
+      now: NOW,
+    })
+    expect(result.overpayment).toMatchObject({
+      invoiceId,
+      remainingBefore: '0',
+      invoiceAllocation: '0',
+      walletCreditAmount: '200000',
+    })
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(500_000n)
+    expect(settled.state).toBe('Paid')
+    expect((await walletBalances()).posted).toBe(before.posted + 200_000n)
+    const overpayCredit = await ctx.pool.query<{ amount: string }>(
+      `SELECT amount FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptOverpaymentCreditIdempotencyKey(pendingId)],
+    )
+    expect(overpayCredit.rows).toHaveLength(1)
+    expect(BigInt(overpayCredit.rows[0]!.amount)).toBe(200_000n)
+  })
+
+  it('rejects invoice-linked confirmation against a Cancelled invoice', async () => {
+    const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Cancelled' })
+    const pendingId = await insertPending('cancelled-blocked', 400_000n)
+    const before = await walletBalances()
+    const rejection = await service
+      .confirm({
+        transactionId: pendingId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Cancelled'),
+    })
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(0n)
+    expect(settled.state).toBe('Cancelled')
+    expect((await walletBalances()).posted).toBe(before.posted)
+    const pending = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [pendingId],
+    )
+    expect(pending.rows[0]!.state).toBe('Pending')
   })
 
   it('rejects invoice-linked confirmation against an Overdue invoice', async () => {

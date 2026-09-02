@@ -26,6 +26,7 @@ import {
   bankReceiptStaffDecisionMetadata,
   invoiceStateAfterBankReceiptAllocation,
   isBankReceiptChannel,
+  isBankReceiptInvoiceLinkAllowedState,
   isPendingBankReceiptTopUp,
   parseBankReceiptRejectReason,
   readBankReceiptOverpaymentSnapshot,
@@ -134,9 +135,11 @@ export interface RejectBankReceiptInput {
  *      transition the invoice through the validated ConfirmBankReceipt
  *      path (SubmitBankReceipt from Unpaid/PartiallyFunded into
  *      PaymentUnderReview when needed, then confirm to Paid or
- *      PartiallyFunded, setting paid_at on full settlement). Overdue
- *      invoices are rejected with conflict — they cannot SubmitBankReceipt.
- *      Excess is credited via a *separate*
+ *      PartiallyFunded, setting paid_at on full settlement). Closed
+ *      invoices (Overdue, Draft, Cancelled, Refunded, PartiallyRefunded)
+ *      are rejected with conflict — they cannot absorb a receipt.
+ *      Paid invoices have remaining 0, so the whole receipt is wallet
+ *      excess. Excess is credited via a *separate*
  *      `WalletService.credit()` with
  *      `bankReceiptOverpaymentCreditIdempotencyKey`. Invoice-linked
  *      confirms lock the wallet row before the invoice (same order as
@@ -598,13 +601,12 @@ export class BankReceiptConfirmationService {
   }
 
   private assertInvoiceAcceptsBankReceiptAllocation(state: string): void {
-    if (state === 'Overdue') {
-      httpError(
-        ErrorCodes.CONFLICT_STATE.code,
-        BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(state),
-        409,
-      )
-    }
+    if (isBankReceiptInvoiceLinkAllowedState(state)) return
+    httpError(
+      ErrorCodes.CONFLICT_STATE.code,
+      BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(state),
+      409,
+    )
   }
 
   private async lockWallet(client: WalletQueryClient, walletId: string): Promise<void> {

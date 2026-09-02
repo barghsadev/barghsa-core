@@ -16,8 +16,8 @@ import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
  * Invoice states that can still absorb a bank-receipt allocation.
  * S-04.1.01 permits SubmitBankReceipt only from Unpaid / PartiallyFunded
  * (and ConfirmBankReceipt from PaymentUnderReview). Overdue may only
- * Cancel. Paid / Cancelled / Refunded / Draft contribute remaining = 0,
- * so the whole receipt becomes a wallet credit.
+ * Cancel. Paid is not settleable here: remaining is 0, so a linked
+ * receipt is entirely verified wallet excess.
  */
 export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
   'Unpaid',
@@ -27,6 +27,24 @@ export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
 
 export type BankReceiptSettleableInvoiceState =
   (typeof BANK_RECEIPT_SETTLEABLE_INVOICE_STATES)[number]
+
+/**
+ * Invoice states staff may bind a receipt to for overpayment handling.
+ *
+ * Settleable states receive `min(receipt, remaining)` on the invoice;
+ * any excess is a separate wallet credit. Paid has remaining 0, so the
+ * whole receipt is verified wallet excess and the invoice is untouched.
+ * Draft / Overdue / Cancelled / Refunded / PartiallyRefunded conflict —
+ * they have no payable remaining, and silently crediting the wallet
+ * would hide a misapplied receipt.
+ */
+export const BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES = [
+  ...BANK_RECEIPT_SETTLEABLE_INVOICE_STATES,
+  'Paid',
+] as const
+
+export type BankReceiptInvoiceLinkAllowedState =
+  (typeof BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES)[number]
 
 /** Human-readable description on the Completed overpayment credit row. */
 export const BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION =
@@ -89,10 +107,18 @@ export function isBankReceiptSettleableInvoiceState(
   return (BANK_RECEIPT_SETTLEABLE_INVOICE_STATES as readonly string[]).includes(state)
 }
 
+export function isBankReceiptInvoiceLinkAllowedState(
+  state: string,
+): state is BankReceiptInvoiceLinkAllowedState {
+  return (BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES as readonly string[]).includes(state)
+}
+
 /**
  * Remaining that a bank receipt may allocate onto an invoice. Non-settleable
- * states (Paid, Cancelled, …) return 0 so the receipt cannot over-settle
- * and the full amount is treated as wallet excess.
+ * states (including Paid) return 0 so the receipt cannot over-settle
+ * and the full amount is treated as wallet excess. Callers must still
+ * reject invoice links that are not in
+ * {@link BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES}.
  */
 export function remainingForBankReceiptSettlement(input: {
   totalAmount: bigint
