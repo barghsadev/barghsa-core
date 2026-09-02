@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { InAppNotificationTransport } from './in-app-transport.js'
+import { InAppNotificationTransport, relativeLinkRoute } from './in-app-transport.js'
 import type { NotificationSendPayload } from '@barghsa/shared/notifications'
 
 /**
@@ -73,7 +73,7 @@ describe('InAppNotificationTransport', () => {
     expect(inserts[0]!.params[5]).toBe('/admin')
   })
 
-  it('ignores absolute or protocol-relative link_route values', async () => {
+  it('ignores absolute, protocol-relative, and backslash-hijacked link_route values', async () => {
     const { pool, inserts } = makePool()
     const transport = new InAppNotificationTransport(pool)
 
@@ -88,6 +88,12 @@ describe('InAppNotificationTransport', () => {
       payload: { link_route: '//evil.example/admin' },
     })
     expect(inserts[1]!.params[5]).toBeNull()
+
+    await transport.send({
+      ...basePayload,
+      payload: { link_route: '/\\evil.example/admin' },
+    })
+    expect(inserts[2]!.params[5]).toBeNull()
   })
 
   it('serializes an empty payload as an empty object', async () => {
@@ -119,5 +125,47 @@ describe('InAppNotificationTransport', () => {
   it('exposes the in_app channel', () => {
     const transport = new InAppNotificationTransport()
     expect(transport.channel).toBe('in_app')
+  })
+})
+
+describe('relativeLinkRoute', () => {
+  it('accepts same-origin relative paths used by finance and wallet alerts', () => {
+    expect(relativeLinkRoute({ link_route: '/admin' })).toBe('/admin')
+    expect(relativeLinkRoute({ link_route: '/wallet' })).toBe('/wallet')
+    expect(relativeLinkRoute({ link_route: '/admin/wallet' })).toBe('/admin/wallet')
+  })
+
+  it('rejects absolute and protocol-relative URLs', () => {
+    expect(relativeLinkRoute({ link_route: 'https://evil.example/admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: 'http://evil.example/admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '//evil.example/admin' })).toBeNull()
+  })
+
+  it('rejects backslash host hijacks that URL parsers treat as //evil.example', () => {
+    expect(relativeLinkRoute({ link_route: '/\\evil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\\evil.example/admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\\\\evil.example/admin' })).toBeNull()
+  })
+
+  it('rejects percent-encoded backslash and slash hijacks', () => {
+    expect(relativeLinkRoute({ link_route: '/%5cevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%5Cevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%5cevil.example/admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%255cevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%2fevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%2f%2fevil.example' })).toBeNull()
+  })
+
+  it('rejects whitespace and control-character variants', () => {
+    expect(relativeLinkRoute({ link_route: ' /admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/admin ' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\tevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\nevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\r\nevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\u0000admin' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/admin\u0007' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/\u000bevil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%09evil.example' })).toBeNull()
+    expect(relativeLinkRoute({ link_route: '/%00admin' })).toBeNull()
   })
 })
