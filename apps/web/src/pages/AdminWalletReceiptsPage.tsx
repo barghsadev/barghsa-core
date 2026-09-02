@@ -185,6 +185,7 @@ function formatDate(value: string | null, locale: Locale): string {
 
 export default function AdminWalletReceiptsPage() {
   const locale = useLocale()
+  const isRtl = locale === 'fa'
   const [items, setItems] = useState<BankReceiptReviewDto[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null)
@@ -211,8 +212,6 @@ export default function AdminWalletReceiptsPage() {
   const statusRef = useRef<HTMLParagraphElement | null>(null)
   const stepUpTriggerRef = useRef<HTMLButtonElement | null>(null)
   const restoreTriggerRef = useRef(false)
-  const stepUpSubmittingRef = useRef(false)
-  stepUpSubmittingRef.current = stepUpSubmitting
 
   const loadQueue = useCallback(async () => {
     setError(null)
@@ -363,11 +362,9 @@ export default function AdminWalletReceiptsPage() {
     setAllocation(null)
     setClientIssue(null)
     setReasonInvalid(false)
-    setItems((current) => {
-      const remaining = current.filter((row) => row.transactionId !== dto.transactionId)
-      setSelectedId(remaining[0]?.transactionId ?? null)
-      return remaining
-    })
+    const remaining = items.filter((row) => row.transactionId !== dto.transactionId)
+    setItems(remaining)
+    setSelectedId(remaining[0]?.transactionId ?? null)
     return 'ok'
   }
 
@@ -475,7 +472,11 @@ export default function AdminWalletReceiptsPage() {
   }
 
   return (
-    <div className="max-w-5xl space-y-6">
+    <div
+      className="max-w-5xl space-y-6"
+      dir={isRtl ? 'rtl' : 'ltr'}
+      data-testid="admin-wallet-receipts-page"
+    >
       <header>
         <h1 className="text-2xl font-bold">{t('admin.walletReceipts.title', locale)}</h1>
         <p className="text-gray-600 mt-2">{t('admin.walletReceipts.description', locale)}</p>
@@ -784,6 +785,7 @@ export default function AdminWalletReceiptsPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="wallet-receipt-step-up-title"
+          aria-describedby="wallet-receipt-step-up-description"
           data-testid="wallet-receipt-step-up-dialog"
           onKeyDown={onStepUpKeyDown}
           onMouseDown={(event) => {
@@ -797,7 +799,7 @@ export default function AdminWalletReceiptsPage() {
             <h3 id="wallet-receipt-step-up-title" className="text-lg font-semibold text-gray-900">
               {t('admin.walletReceipts.stepUp.title', locale)}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p id="wallet-receipt-step-up-description" className="text-sm text-gray-600">
               {t('admin.walletReceipts.stepUp.description', locale)}
             </p>
             <div>
