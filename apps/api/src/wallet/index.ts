@@ -29,6 +29,8 @@ export type {
 } from './online-topup.service.js'
 export { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 export { OnlineTopUpCallbackController } from './online-topup-callback.controller.js'
+export { ChargebackDetectionService } from './chargeback-detection.service.js'
+export { ChargebackDetectionController } from './chargeback-detection.controller.js'
 export {
   PAYMENT_CALLBACK_CONFIG,
   onlineTopUpCreditIdempotencyKey,
@@ -41,6 +43,7 @@ export type {
 export {
   PAYMENT_GATEWAY,
   ONLINE_TOPUP_CALLBACK_PATH,
+  ONLINE_TOPUP_CHARGEBACK_PATH,
   PaymentGatewayRejectedError,
   createRedirectPaymentGateway,
   createHttpPaymentGateway,

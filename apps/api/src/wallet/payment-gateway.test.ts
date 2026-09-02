@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   ONLINE_TOPUP_CALLBACK_PATH,
+  ONLINE_TOPUP_CHARGEBACK_PATH,
   PaymentGatewayRejectedError,
   assertSafePaymentGatewayUrl,
   createHttpPaymentGateway,
@@ -131,6 +132,13 @@ describe('RedirectPaymentGateway (T-04.2.02.01)', () => {
         API_PUBLIC_URL: 'https://api.barghsa.test/',
       }),
     ).toBe(`https://api.barghsa.test${ONLINE_TOPUP_CALLBACK_PATH}`)
+  })
+})
+
+describe('ONLINE_TOPUP_CHARGEBACK_PATH (T-04.2.04.02)', () => {
+  it('is the HMAC chargeback receiver next to the callback path', () => {
+    expect(ONLINE_TOPUP_CHARGEBACK_PATH).toBe('/api/wallet/top-ups/chargeback')
+    expect(ONLINE_TOPUP_CHARGEBACK_PATH).not.toBe(ONLINE_TOPUP_CALLBACK_PATH)
   })
 })
 

@@ -5,7 +5,10 @@ import {
   WALLET_CHARGEBACK_REASON,
   chargebackCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
-import { ChargebackDetectionService } from './chargeback-detection.service.js'
+import {
+  ChargebackDetectionService,
+  chargebackEventLockKeys,
+} from './chargeback-detection.service.js'
 import type { ChargebackAlertService } from './chargeback-alert.service.js'
 import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js'
 import { signPaymentCallback } from './payment-callback-verifier.js'
@@ -175,6 +178,11 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     )
   })
 
+  it('derives a stable advisory lock pair from the provider event id', () => {
+    expect(chargebackEventLockKeys(EVENT_ID)).toEqual(chargebackEventLockKeys(EVENT_ID))
+    expect(chargebackEventLockKeys(EVENT_ID)).not.toEqual(chargebackEventLockKeys('evt-other'))
+  })
+
   it('rejects a chargeback when the signing secret is missing', async () => {
     const service = new ChargebackDetectionService({ reverseTransaction: vi.fn() } as never, {
       webhookSecret: '',
@@ -184,6 +192,20 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     expect(rejectionBody(rejection)).toMatchObject({
       error: ErrorCodes.PROVIDER_CALLBACK_UNCONFIGURED.code,
     })
+  })
+
+  it('rejects missing signature headers before mapping or reversing', async () => {
+    const { service, reverseTransaction } = makeService()
+    const rejection = await service
+      .handle({
+        headers: { eventId: EVENT_ID, timestamp: undefined, signature: undefined },
+        rawBody: payload(),
+      })
+      .catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(reverseTransaction).not.toHaveBeenCalled()
   })
 
   it('rejects a tampered signature before mapping or reversing', async () => {
@@ -296,6 +318,28 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       status: 'reversed',
     })
     expect(reverseTransaction).not.toHaveBeenCalled()
+  })
+
+  it('resumes a stuck processing claim and reverses the original top-up', async () => {
+    const { service, reverseTransaction } = makeService()
+    scriptClient({
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'processing' }),
+      credit: makeCreditRow(),
+    })
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: true,
+      mapped: true,
+      reversed: true,
+      originalTransactionId: CREDIT_ID,
+      status: 'reversed',
+    })
+    expect(reverseTransaction).toHaveBeenCalledWith(
+      CREDIT_ID,
+      WALLET_CHARGEBACK_REASON,
+      `wallet-chargeback-reversal:${EVENT_ID}`,
+    )
   })
 
   it('does not reverse again when the original is already reversed', async () => {

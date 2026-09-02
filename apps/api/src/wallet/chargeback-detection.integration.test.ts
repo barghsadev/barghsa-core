@@ -9,6 +9,9 @@
  *   3. Duplicate event ids do not post a second reversal.
  *   4. An untraceable notification is stored as unmatched without
  *      rewriting wallet history.
+ *   5. A stuck `processing` claim resumes and still reverses once.
+ *   6. Concurrent retries of the same event id serialize to one reversal.
+ *   7. Concurrent distinct event ids for one top-up share one reversal.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -78,7 +81,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
   let creditId: string
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4)
+    ctx = await createIsolatedTestDb('test_', 8)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new ChargebackDetectionService(walletService, {
@@ -391,5 +394,138 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       amount: (-AMOUNT).toString(),
       reverses_transaction_id: credit.id,
     })
+  })
+
+  async function seedCompletedTopUp(profileId: string, pending: string, authority: string, providerRef: string) {
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId])
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId])
+    return walletService.credit(
+      profileId,
+      AMOUNT,
+      {
+        type: 'topup',
+        refId: providerRef,
+        description: 'Online wallet top-up',
+        metadata: {
+          channel: 'online',
+          pendingTransactionId: pending,
+          authority,
+        },
+      },
+      onlineTopUpCreditIdempotencyKey(pending),
+    )
+  }
+
+  it('resumes a stuck processing claim without rewriting the original credit', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-resume-processing',
+      'psp-resume-processing',
+    )
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events (event_id, status, raw)
+       VALUES ('evt-cb-resume-processing', 'processing', '{}'::jsonb)`,
+    )
+
+    const result = await service.handle(
+      signed(
+        {
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: pending,
+          amountIrR: AMOUNT.toString(),
+        },
+        'evt-cb-resume-processing',
+      ),
+    )
+    expect(result).toMatchObject({
+      processed: true,
+      mapped: true,
+      reversed: true,
+      originalTransactionId: credit.id,
+      status: 'reversed',
+    })
+    const original = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [credit.id],
+    )
+    expect(original.rows[0]?.state).toBe('Completed')
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
+  })
+
+  it('serializes concurrent retries of the same event id to a single reversal', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-concurrent-event',
+      'psp-concurrent-event',
+    )
+    const body = {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: pending,
+      amountIrR: AMOUNT.toString(),
+    }
+    const [first, second] = await Promise.all([
+      service.handle(signed(body, 'evt-cb-concurrent-same')),
+      service.handle(signed(body, 'evt-cb-concurrent-same')),
+    ])
+    expect([first.status, second.status]).toEqual(['reversed', 'reversed'])
+    expect(new Set([first.processed, second.processed])).toEqual(new Set([true, false]))
+    expect(first.originalTransactionId ?? second.originalTransactionId).toBe(credit.id)
+    expect(first.reversalTransactionId).toBe(second.reversalTransactionId)
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
+    const events = await ctx.pool.query(
+      `SELECT status FROM wallet_chargeback_events WHERE event_id = 'evt-cb-concurrent-same'`,
+    )
+    expect(events.rows).toHaveLength(1)
+    expect(events.rows[0]).toMatchObject({ status: 'reversed' })
+  })
+
+  it('maps two concurrent event ids for the same top-up to one compensating reversal', async () => {
+    const profileId = uuidv7()
+    const pending = uuidv7()
+    const credit = await seedCompletedTopUp(
+      profileId,
+      pending,
+      'auth-concurrent-distinct',
+      'psp-concurrent-distinct',
+    )
+    const body = {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: pending,
+      amountIrR: AMOUNT.toString(),
+    }
+    const [first, second] = await Promise.all([
+      service.handle(signed(body, 'evt-cb-concurrent-a')),
+      service.handle(signed(body, 'evt-cb-concurrent-b')),
+    ])
+    expect(first.mapped).toBe(true)
+    expect(second.mapped).toBe(true)
+    expect(first.reversed).toBe(true)
+    expect(second.reversed).toBe(true)
+    expect(first.originalTransactionId).toBe(credit.id)
+    expect(second.originalTransactionId).toBe(credit.id)
+    const reversalIds = new Set([first.reversalTransactionId, second.reversalTransactionId])
+    expect(reversalIds.size).toBe(1)
+    const reversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [credit.id],
+    )
+    expect(reversals.rows).toHaveLength(1)
   })
 })
