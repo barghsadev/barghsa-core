@@ -24,10 +24,12 @@ const MIGRATION = readFileSync(MIGRATION_PATH, 'utf8')
  * (T-04.3.01.01).
  *
  * CHECKs, lookup indexes, the unique attachment index, the
- * `confirmed_by` users FK, and the `updated_at` trigger live in
- * hand-written migration 0078. This file asserts the migration still
- * declares them, that the Drizzle schema matches the S-04.3.01 column
- * set, and that PostgreSQL actually enforces the invariants.
+ * composite invoice/profile FK, the `confirmed_by` users FK, and the
+ * `updated_at` trigger live in hand-written migration 0078. This file
+ * asserts the migration still declares them, that the Drizzle schema
+ * matches the S-04.3.01 column set, and that PostgreSQL actually
+ * enforces the invariants (including rejecting a mismatched
+ * invoice/profile pair).
  */
 describe('bank_receipts schema (T-04.3.01.01)', () => {
   it('declares the domain columns expected by later receipt workers', () => {
@@ -72,17 +74,39 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
     ])
   })
 
-  it('invoice_id and profile_id restrict deletes; confirmed_by references users', () => {
+  it('invoice_id+profile_id composite FK binds the receipt to the invoice owner', () => {
     const fks = getTableConfig(bankReceipts).foreignKeys
     const invoiceFk = fks.find((fk) => fk.reference().foreignTable === invoices)
     const profileFk = fks.find((fk) => fk.reference().foreignTable === profiles)
     const userFk = fks.find((fk) => fk.reference().foreignTable === users)
     expect(invoiceFk).toBeDefined()
     expect(invoiceFk!.onDelete).toBe('restrict')
+    expect(invoiceFk!.reference().columns.map((c) => c.name)).toEqual([
+      'invoice_id',
+      'profile_id',
+    ])
+    expect(invoiceFk!.reference().foreignColumns.map((c) => c.name)).toEqual([
+      'id',
+      'profile_id',
+    ])
     expect(profileFk).toBeDefined()
     expect(profileFk!.onDelete).toBe('restrict')
     expect(userFk).toBeDefined()
     expect(userFk!.onDelete).toBe('restrict')
+  })
+
+  it('invoices declares unique (id, profile_id) as the composite FK target', () => {
+    const config = getTableConfig(invoices)
+    const uniqueConstraint = config.uniqueConstraints.find(
+      (constraint) => (constraint.name ?? constraint.getName()) === 'uq_invoices_id_profile_id',
+    )
+    const uniqueIndex = config.indexes.find(
+      (idx) => idx.config.name === 'uq_invoices_id_profile_id',
+    )
+    expect(uniqueConstraint ?? uniqueIndex).toBeDefined()
+    if (uniqueConstraint) {
+      expect(uniqueConstraint.columns.map((c) => c.name)).toEqual(['id', 'profile_id'])
+    }
   })
 
   it('Drizzle schema declares the CHECKs and unique attachment index', () => {
@@ -118,7 +142,11 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
 
   it('migration 0078 still declares the constraints the table relies on', () => {
     expect(MIGRATION).toContain('CREATE TABLE IF NOT EXISTS bank_receipts')
-    expect(MIGRATION).toContain('REFERENCES invoices(id) ON DELETE RESTRICT')
+    expect(MIGRATION).toContain('uq_invoices_id_profile_id UNIQUE (id, profile_id)')
+    expect(MIGRATION).toContain('fk_bank_receipts_invoice_profile')
+    expect(MIGRATION).toContain(
+      'FOREIGN KEY (invoice_id, profile_id)\n    REFERENCES invoices(id, profile_id) ON DELETE RESTRICT',
+    )
     expect(MIGRATION).toContain('REFERENCES profiles(id) ON DELETE RESTRICT')
     expect(MIGRATION).toContain('CHECK (amount > 0)')
     expect(MIGRATION).toContain(
@@ -142,7 +170,10 @@ describe('bank_receipts schema (T-04.3.01.01)', () => {
     expect(MIGRATION).not.toMatch(/to_regclass\('invoices'\)/)
     expect(MIGRATION).not.toMatch(/to_regclass\('profiles'\)/)
     expect(MIGRATION).not.toMatch(/to_regclass\('users'\)/)
-    expect(MIGRATION).toContain('REFERENCES invoices(id) ON DELETE RESTRICT')
+    expect(MIGRATION).toContain('uq_invoices_id_profile_id')
+    expect(MIGRATION).toContain(
+      'FOREIGN KEY (invoice_id, profile_id)\n    REFERENCES invoices(id, profile_id) ON DELETE RESTRICT',
+    )
     expect(MIGRATION).toContain('REFERENCES profiles(id) ON DELETE RESTRICT')
     expect(MIGRATION).toContain('REFERENCES users(user_id) ON DELETE RESTRICT')
     expect(MIGRATION).toContain('CREATE INDEX IF NOT EXISTS idx_bank_receipts_invoice_id')
@@ -417,6 +448,17 @@ describe('bank_receipts PostgreSQL enforcement (T-04.3.01.01)', () => {
     await expect(
       insertReceipt({ profileId: '99999999-9999-4999-8999-999999999999' }),
     ).rejects.toMatchObject({ code: '23503' })
+  })
+
+  it('rejects a receipt whose profile does not own the referenced invoice', async () => {
+    const other = await ctx.db.execute<{ id: string }>(sql`
+      INSERT INTO profiles (id) VALUES (uuid_generate_v7()) RETURNING id
+    `)
+    const otherProfileId = other.rows[0]!.id
+    await expect(insertReceipt({ profileId: otherProfileId })).rejects.toMatchObject({
+      code: '23503',
+      message: expect.stringContaining('fk_bank_receipts_invoice_profile'),
+    })
   })
 
   it('rejects Confirmed with an unknown staff user', async () => {

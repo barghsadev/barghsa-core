@@ -5,9 +5,10 @@
 -- note). Finance staff later confirms or rejects it. Settlement,
 -- overpayment wallet credit, and dual-approval are later tasks.
 --
--- invoice_id    → invoices.id (RESTRICT)
--- profile_id    → profiles.id (RESTRICT)
--- confirmed_by  → users.user_id (RESTRICT)
+-- invoice_id + profile_id → invoices(id, profile_id) (RESTRICT)
+--   so a receipt cannot attach to another profile's invoice.
+-- profile_id              → profiles.id (RESTRICT)
+-- confirmed_by            → users.user_id (RESTRICT)
 --
 -- States: Submitted → UnderReview → Confirmed | Rejected
 -- Confirm/reject are also allowed from Submitted.
@@ -21,6 +22,7 @@
 --     confirmation columns NULL;
 --   - in-flight rows keep confirmation and rejection columns NULL;
 --   - one attachment_key backs at most one receipt;
+--   - receipt (invoice_id, profile_id) must match invoices(id, profile_id);
 --   - lookup indexes on invoice_id, profile_id, and state;
 --   - updated_at maintained by trigger.
 --
@@ -28,16 +30,32 @@
 -- migration so Drizzle never records 0078 as applied. Prior journal
 -- entries must establish those tables; isolated migrate() tests seed
 -- them before migrate() rather than no-op'ing this file.
--- Idempotent: CREATE TABLE IF NOT EXISTS + IF NOT EXISTS indexes +
--- DROP TRIGGER IF EXISTS.
+-- Idempotent: unique-constraint DO-block + CREATE TABLE IF NOT EXISTS +
+-- composite-FK DO-block + IF NOT EXISTS indexes + DROP TRIGGER IF EXISTS.
 --
 -- Rollback:
 --   DROP TABLE IF EXISTS bank_receipts CASCADE;
+--   ALTER TABLE invoices DROP CONSTRAINT IF EXISTS uq_invoices_id_profile_id;
 --   DROP FUNCTION IF EXISTS update_bank_receipts_updated_at();
+
+-- Composite FK target: invoices(id) is already unique (PK). PostgreSQL
+-- still needs a UNIQUE constraint on (id, profile_id) before a child
+-- table can REFERENCES that pair.
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'uq_invoices_id_profile_id'
+      AND conrelid = 'invoices'::regclass
+  ) THEN
+    ALTER TABLE invoices
+      ADD CONSTRAINT uq_invoices_id_profile_id UNIQUE (id, profile_id);
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS bank_receipts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-  invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,
+  invoice_id UUID NOT NULL,
   profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
   amount BIGINT NOT NULL
     CONSTRAINT chk_bank_receipts_amount_positive
@@ -79,9 +97,29 @@ CREATE TABLE IF NOT EXISTS bank_receipts (
       AND rejection_reason IS NULL
     )
   ),
+  CONSTRAINT fk_bank_receipts_invoice_profile
+    FOREIGN KEY (invoice_id, profile_id)
+    REFERENCES invoices(id, profile_id) ON DELETE RESTRICT,
   CONSTRAINT fk_bank_receipts_confirmed_by
     FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT
 );
+
+-- Backfill the composite FK when bank_receipts already existed without it
+-- (CREATE TABLE IF NOT EXISTS is a no-op on a prior 0078 shape).
+DO $$
+BEGIN
+  IF to_regclass('bank_receipts') IS NOT NULL
+     AND NOT EXISTS (
+       SELECT 1 FROM pg_constraint
+       WHERE conname = 'fk_bank_receipts_invoice_profile'
+         AND conrelid = 'bank_receipts'::regclass
+     ) THEN
+    ALTER TABLE bank_receipts
+      ADD CONSTRAINT fk_bank_receipts_invoice_profile
+      FOREIGN KEY (invoice_id, profile_id)
+      REFERENCES invoices(id, profile_id) ON DELETE RESTRICT;
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_bank_receipts_invoice_id ON bank_receipts (invoice_id);
 CREATE INDEX IF NOT EXISTS idx_bank_receipts_profile_id ON bank_receipts (profile_id);

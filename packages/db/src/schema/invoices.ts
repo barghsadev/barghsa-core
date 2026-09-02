@@ -6,6 +6,7 @@ import {
   jsonb,
   text,
   pgTable,
+  unique,
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
@@ -232,6 +233,13 @@ export const invoices = pgTable(
       .where(
         sql`${table.replacesInvoiceId} IS NULL AND ${table.adjustmentForInvoiceId} IS NULL`,
       ),
+    /**
+     * Superkey of the primary key so child tables can composite-FK
+     * `(invoice_id, profile_id) → invoices(id, profile_id)` and reject
+     * a receipt whose profile does not own the invoice (T-04.3.01.01).
+     * Migration 0078 adds the matching UNIQUE constraint.
+     */
+    idProfileUnique: unique('uq_invoices_id_profile_id').on(table.id, table.profileId),
     /**
      * Self-FK: replacement invoice → cancelled original (T-04.1.05.01).
      * Declared here rather than on the column to avoid circular type

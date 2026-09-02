@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm'
 import {
   check,
   date,
+  foreignKey,
   index,
   pgTable,
   text,
@@ -38,8 +39,9 @@ export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number]
  *
  * Columns:
  *   - `id` — UUIDv7 primary key.
- *   - `invoiceId` — FK → invoices.id (RESTRICT).
- *   - `profileId` — FK → profiles.id (RESTRICT).
+ *   - `invoiceId` / `profileId` — composite FK → invoices(id, profile_id)
+ *     (RESTRICT) so a receipt cannot attach to another profile's invoice.
+ *     `profileId` also FKs → profiles.id (RESTRICT).
  *   - `amount` — positive int8 IRR.
  *   - `paymentDate` — calendar date of the bank transfer (`YYYY-MM-DD`).
  *   - `payerReference` — bank slip / tracking reference.
@@ -51,20 +53,21 @@ export type BankReceiptState = (typeof BANK_RECEIPT_STATES)[number]
  *   - `createdAt` / `updatedAt` — audit columns.
  *
  * CHECKs, lookup indexes, the unique attachment index, the
- * `confirmed_by` → `users` FK, and the `updated_at` trigger live in
- * migration 0078.
+ * composite `(invoice_id, profile_id)` FK, the `confirmed_by` →
+ * `users` FK, and the `updated_at` trigger live in migration 0078.
  */
 export const bankReceipts = pgTable(
   'bank_receipts',
   {
     ...baseColumns,
 
-    /** Invoice this receipt is offered against. */
-    invoiceId: uuidv7('invoice_id')
-      .notNull()
-      .references(() => invoices.id, { onDelete: 'restrict' }),
+    /**
+     * Invoice this receipt is offered against. Bound to `profileId`
+     * via `fk_bank_receipts_invoice_profile` (composite FK).
+     */
+    invoiceId: uuidv7('invoice_id').notNull(),
 
-    /** Customer profile that submitted the receipt. */
+    /** Customer profile that submitted the receipt. Must own the invoice. */
     profileId: uuidv7('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
@@ -152,6 +155,16 @@ export const bankReceipts = pgTable(
     profileIdIdx: index('idx_bank_receipts_profile_id').on(table.profileId),
     stateIdx: index('idx_bank_receipts_state').on(table.state),
     attachmentUnique: uniqueIndex('uq_bank_receipts_attachment_key').on(table.attachmentKey),
+    /**
+     * Receipt profile must own the referenced invoice (T-04.3.01.01).
+     * Independent invoice_id / profile_id FKs would accept a cross-tenant
+     * pair; this composite FK rejects it. Requires uq_invoices_id_profile_id.
+     */
+    invoiceProfileFk: foreignKey({
+      name: 'fk_bank_receipts_invoice_profile',
+      columns: [table.invoiceId, table.profileId],
+      foreignColumns: [invoices.id, invoices.profileId],
+    }).onDelete('restrict'),
   }),
 )
 
@@ -161,7 +174,7 @@ export const bankReceipts = pgTable(
 export const createBankReceiptsTable = sql`
   CREATE TABLE IF NOT EXISTS bank_receipts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    invoice_id UUID NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,
+    invoice_id UUID NOT NULL,
     profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     amount BIGINT NOT NULL
       CONSTRAINT chk_bank_receipts_amount_positive
@@ -203,6 +216,9 @@ export const createBankReceiptsTable = sql`
         AND rejection_reason IS NULL
       )
     ),
+    CONSTRAINT fk_bank_receipts_invoice_profile
+      FOREIGN KEY (invoice_id, profile_id)
+      REFERENCES invoices(id, profile_id) ON DELETE RESTRICT,
     CONSTRAINT fk_bank_receipts_confirmed_by
       FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT
   );

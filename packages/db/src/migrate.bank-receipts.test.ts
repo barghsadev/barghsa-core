@@ -132,7 +132,7 @@ describe('drizzle migrate() applies bank_receipts (T-04.3.01.01)', () => {
     expect(rows.rows.map((row) => Number(row.created_at))).toContain(migrationWhen)
   })
 
-  it('creates the unique attachment index and confirmed_by users FK', async () => {
+  it('creates the unique attachment index, confirmed_by FK, and invoice-profile composite FK', async () => {
     const indexes = await ctx.pool.query<{ indexname: string; indexdef: string }>(
       `SELECT indexname, indexdef
          FROM pg_indexes
@@ -147,9 +147,24 @@ describe('drizzle migrate() applies bank_receipts (T-04.3.01.01)', () => {
       `SELECT conname
          FROM pg_constraint
         WHERE conrelid = 'bank_receipts'::regclass
-          AND conname = 'fk_bank_receipts_confirmed_by'`,
+          AND conname IN (
+            'fk_bank_receipts_confirmed_by',
+            'fk_bank_receipts_invoice_profile'
+          )
+        ORDER BY conname`,
     )
-    expect(fks.rows).toHaveLength(1)
+    expect(fks.rows.map((row) => row.conname)).toEqual([
+      'fk_bank_receipts_confirmed_by',
+      'fk_bank_receipts_invoice_profile',
+    ])
+
+    const invoiceUnique = await ctx.pool.query<{ conname: string }>(
+      `SELECT conname
+         FROM pg_constraint
+        WHERE conrelid = 'invoices'::regclass
+          AND conname = 'uq_invoices_id_profile_id'`,
+    )
+    expect(invoiceUnique.rows).toHaveLength(1)
   })
 })
 
