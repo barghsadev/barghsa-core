@@ -320,6 +320,35 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     expect(credit).not.toHaveBeenCalled()
   })
 
+  it('credits a TTL-expired Rejected online top-up so expiry stays reconcilable', async () => {
+    scriptClient({ pending: makePendingRow({ state: 'Rejected' }) })
+    const { service, credit, verifyPayment } = makeService()
+    const result = await service.handle(signedInput(payload()))
+    expect(result).toMatchObject({
+      processed: true,
+      credited: true,
+      creditTransactionId: CREDIT_ID,
+    })
+    expect(verifyPayment).toHaveBeenCalled()
+    expect(credit).toHaveBeenCalled()
+    const updates = mockClient.query.mock.calls.filter((call) =>
+      String(call[0]).includes("SET state = 'Released'"),
+    )
+    expect(updates).toHaveLength(1)
+    expect(String(updates[0]![0])).toContain("'Rejected'")
+  })
+
+  it('rejects a Completed merchant order that is no longer awaiting confirmation', async () => {
+    scriptClient({ pending: makePendingRow({ state: 'Completed' }) })
+    const { service, credit, verifyPayment } = makeService()
+    const rejection = await service.handle(signedInput(payload())).catch((e: unknown) => e)
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+    })
+    expect(credit).not.toHaveBeenCalled()
+    expect(verifyPayment).not.toHaveBeenCalled()
+  })
+
   it('replays a duplicate event id after credit without calling credit again', async () => {
     scriptClient({
       pending: makePendingRow({ state: 'Released' }),

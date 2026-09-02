@@ -19,6 +19,7 @@ import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { ONLINE_TOPUP_EXPIRY_REASON } from '@barghsa/shared/finance'
 import { WalletService } from './wallet.service.js'
 import {
   OnlineTopUpCallbackService,
@@ -475,5 +476,55 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       [zarinpalReturnEventId(zarinpalPendingId, AUTHORITY, 'paid')],
     )
     expect(paidEvent.rows[0]?.status).toBe('credited')
+  })
+
+  it('credits a TTL-expired Rejected online top-up using the stored provider authority', async () => {
+    const expired = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata)
+       VALUES ($1, 'topup', $2::bigint, 'Rejected', $3, $4, $5, $6::jsonb)
+       RETURNING id`,
+      [
+        PROFILE_A,
+        AMOUNT.toString(),
+        'online-topup-callback-int-expired',
+        AUTHORITY,
+        'Online wallet top-up',
+        JSON.stringify({
+          channel: 'online',
+          gateway: { authority: AUTHORITY, redirectUrl: 'https://pay.test/start' },
+          expiry: {
+            rejectedAt: '2026-09-02T12:00:00.000Z',
+            reason: ONLINE_TOPUP_EXPIRY_REASON,
+            ttlMs: 1_800_000,
+          },
+        }),
+      ],
+    )
+    const expiredId = expired.rows[0]!.id
+    const before = await fetchWallet()
+
+    const result = await service.handle(
+      signed(
+        {
+          merchantOrderId: expiredId,
+          merchantId: MERCHANT,
+          authority: AUTHORITY,
+          amountIrR: AMOUNT.toString(),
+          status: 'paid',
+        },
+        'evt-int-expired-ttl',
+      ),
+    )
+
+    expect(result).toMatchObject({ processed: true, credited: true })
+    const after = await fetchWallet()
+    expect(BigInt(after.posted_balance)).toBe(BigInt(before.posted_balance) + AMOUNT)
+
+    const intent = await ctx.pool.query<{ state: string }>(
+      `SELECT state FROM wallet_transactions WHERE id = $1`,
+      [expiredId],
+    )
+    expect(intent.rows[0]?.state).toBe('Released')
   })
 })

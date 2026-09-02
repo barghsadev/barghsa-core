@@ -9,7 +9,11 @@ import {
 import { z } from 'zod'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { parseOnlineTopUpAmountIrR } from '@barghsa/shared/finance'
+import {
+  isOnlineTopUpCallbackOpenState,
+  isOnlineTopUpIntentReleasable,
+  parseOnlineTopUpAmountIrR,
+} from '@barghsa/shared/finance'
 import { WalletService, type TransactionRow } from './wallet.service.js'
 import {
   PAYMENT_GATEWAY,
@@ -111,7 +115,10 @@ const CallbackBodySchema = z
  *   4. Credits the wallet via `WalletService.credit()` using a stable
  *      idempotency key derived from the pending transaction id.
  *   5. Releases the original Pending intent so it does not post twice
- *      (posted balance comes only from the Completed credit row).
+ *      (posted balance comes only from the Completed credit row). A
+ *      TTL-expired `Rejected` intent is still reconcilable here: the
+ *      expiry cron never credits, and provider authority stays on the
+ *      row.
  */
 @Injectable()
 export class OnlineTopUpCallbackService {
@@ -280,7 +287,7 @@ export class OnlineTopUpCallbackService {
 
         const alreadyCredited = await this.findExistingCredit(client, pending.id)
         if (alreadyCredited) {
-          if (pending.state === 'Pending' || pending.state === 'Failed') {
+          if (isOnlineTopUpIntentReleasable(pending.state)) {
             await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId)
           }
           await this.finalizeEvent(client, input.eventId, 'duplicate')
@@ -414,7 +421,7 @@ export class OnlineTopUpCallbackService {
         'Payment callback authority does not match merchant order',
       )
     }
-    if (pending.state !== 'Pending' && pending.state !== 'Released' && pending.state !== 'Failed') {
+    if (!isOnlineTopUpCallbackOpenState(pending.state)) {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
         'Payment callback merchant order is not awaiting confirmation',
@@ -519,7 +526,7 @@ export class OnlineTopUpCallbackService {
            metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
        WHERE id = $1
          AND type = 'topup'
-         AND state IN ('Pending', 'Failed')`,
+         AND state IN ('Pending', 'Failed', 'Rejected')`,
       [
         pendingId,
         JSON.stringify({

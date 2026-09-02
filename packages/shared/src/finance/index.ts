@@ -7,6 +7,7 @@
 export * from './dual-approval-config.js'
 export * from './approval-request.js'
 export * from './wallet-topup-config.js'
+export * from './online-topup-expiry.js'
 export * from './wallet-bank-receipt-topup.js'
 export * from './wallet-bank-receipt-confirmation.js'
 export * from './invoice-overpayment.js'
