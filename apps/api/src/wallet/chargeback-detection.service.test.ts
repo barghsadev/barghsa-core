@@ -93,6 +93,15 @@ function claimedEventRow(overrides: Record<string, unknown> = {}) {
     wallet_id: null,
     status: 'processing',
     match_method: null,
+    raw: {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: PENDING_ID,
+      providerRefId: PROVIDER_REF,
+      authority: AUTHORITY,
+      amountIrR: String(AMOUNT),
+      reason: WALLET_CHARGEBACK_REASON,
+    },
     ...overrides,
   }
 }
@@ -341,6 +350,30 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       `wallet-chargeback-reversal:${EVENT_ID}`,
     )
   })
+
+  it.each([
+    [{ merchantOrderId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }, 'locator'],
+    [{ amountIrR: 1 }, 'amount'],
+    [{ providerRefId: 'psp-other-ref' }, 'merchant payload locator'],
+  ] as const)(
+    'rejects a processing retry that reuses the event id with a changed %s',
+    async (overrides, _changedField) => {
+      const { service, reverseTransaction } = makeService()
+      scriptClient({
+        claimInserted: false,
+        existingEvent: claimedEventRow({ status: 'processing' }),
+        credit: makeCreditRow(),
+      })
+      const rejection = await service
+        .handle(signedInput(payload({ ...overrides })))
+        .catch((error: unknown) => error)
+      expect(rejectionBody(rejection)).toMatchObject({
+        error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+        message: 'Payment chargeback event payload does not match the claimed notification',
+      })
+      expect(reverseTransaction).not.toHaveBeenCalled()
+    },
+  )
 
   it('does not reverse again when the original is already reversed', async () => {
     const { service, reverseTransaction } = makeService()

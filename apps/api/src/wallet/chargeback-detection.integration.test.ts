@@ -10,8 +10,10 @@
  *   4. An untraceable notification is stored as unmatched without
  *      rewriting wallet history.
  *   5. A stuck `processing` claim resumes and still reverses once.
- *   6. Concurrent retries of the same event id serialize to one reversal.
- *   7. Concurrent distinct event ids for one top-up share one reversal.
+ *   6. A processing retry that reuses the event id with a different
+ *      locator or amount is rejected and never reverses another top-up.
+ *   7. Concurrent retries of the same event id serialize to one reversal.
+ *   8. Concurrent distinct event ids for one top-up share one reversal.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -427,7 +429,19 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     )
     await ctx.pool.query(
       `INSERT INTO wallet_chargeback_events (event_id, status, raw)
-       VALUES ('evt-cb-resume-processing', 'processing', '{}'::jsonb)`,
+       VALUES ($1, 'processing', $2::jsonb)`,
+      [
+        'evt-cb-resume-processing',
+        JSON.stringify({
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: pending,
+          providerRefId: null,
+          authority: null,
+          amountIrR: AMOUNT.toString(),
+          reason: WALLET_CHARGEBACK_REASON,
+        }),
+      ],
     )
 
     const result = await service.handle(
@@ -458,6 +472,80 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       [credit.id],
     )
     expect(reversals.rows).toHaveLength(1)
+  })
+
+  it('rejects a processing retry that reuses the event id with a different locator', async () => {
+    const claimedPending = uuidv7()
+    const otherPending = uuidv7()
+    const claimedCredit = await seedCompletedTopUp(
+      uuidv7(),
+      claimedPending,
+      'auth-claimed-payload',
+      'psp-claimed-payload',
+    )
+    const otherCredit = await seedCompletedTopUp(
+      uuidv7(),
+      otherPending,
+      'auth-other-payload',
+      'psp-other-payload',
+    )
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events (event_id, status, raw)
+       VALUES ($1, 'processing', $2::jsonb)`,
+      [
+        'evt-cb-payload-mismatch',
+        JSON.stringify({
+          type: 'chargeback',
+          merchantId: MERCHANT,
+          merchantOrderId: claimedPending,
+          providerRefId: null,
+          authority: null,
+          amountIrR: AMOUNT.toString(),
+          reason: WALLET_CHARGEBACK_REASON,
+        }),
+      ],
+    )
+
+    const rejection = await service
+      .handle(
+        signed(
+          {
+            type: 'chargeback',
+            merchantId: MERCHANT,
+            merchantOrderId: otherPending,
+            amountIrR: AMOUNT.toString(),
+          },
+          'evt-cb-payload-mismatch',
+        ),
+      )
+      .catch((error: unknown) => error)
+
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
+      message: 'Payment chargeback event payload does not match the claimed notification',
+    })
+
+    const claimedReversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [claimedCredit.id],
+    )
+    const otherReversals = await ctx.pool.query(
+      `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      [otherCredit.id],
+    )
+    expect(claimedReversals.rows).toHaveLength(0)
+    expect(otherReversals.rows).toHaveLength(0)
+
+    const event = await ctx.pool.query<{ status: string; original_transaction_id: string | null }>(
+      `SELECT status, original_transaction_id
+         FROM wallet_chargeback_events
+        WHERE event_id = 'evt-cb-payload-mismatch'`,
+    )
+    expect(event.rows[0]).toMatchObject({
+      status: 'processing',
+      original_transaction_id: null,
+    })
   })
 
   it('serializes concurrent retries of the same event id to a single reversal', async () => {
