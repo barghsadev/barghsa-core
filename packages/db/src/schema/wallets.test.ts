@@ -497,8 +497,16 @@ describe('wallet_transactions schema-push SQL vs PostgreSQL (T-04.2.01.02)', () 
          AND tc.table_name = 'wallet_transactions'
          AND tc.constraint_type = 'FOREIGN KEY'`,
     )
-    expect(fks.rows).toEqual([
-      { from_col: 'wallet_id', to_table: 'wallets', to_col: 'profile_id' },
-    ])
+    expect(fks.rows).toEqual(
+      expect.arrayContaining([
+        { from_col: 'wallet_id', to_table: 'wallets', to_col: 'profile_id' },
+        {
+          from_col: 'reverses_transaction_id',
+          to_table: 'wallet_transactions',
+          to_col: 'id',
+        },
+      ]),
+    )
+    expect(fks.rows).toHaveLength(2)
   })
 })

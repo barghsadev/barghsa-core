@@ -352,6 +352,7 @@ function mapTransaction(row: {
   ref_id?: string | null
   description?: string | null
   metadata?: unknown
+  reverses_transaction_id?: string | null
   created_at: Date
   updated_at: Date
 }): TransactionRow {
@@ -365,6 +366,7 @@ function mapTransaction(row: {
     refId: row.ref_id ?? null,
     description: row.description ?? null,
     metadata: row.metadata ?? null,
+    reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }

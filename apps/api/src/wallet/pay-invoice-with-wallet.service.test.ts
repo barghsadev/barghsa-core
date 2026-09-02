@@ -87,6 +87,7 @@ function debitRow(overrides: Record<string, unknown> = {}) {
       remainingBefore: 1_000_000n,
       paidAmountAfter: 1_000_000n,
     }),
+    reversesTransactionId: null,
     createdAt: NOW,
     updatedAt: NOW,
     ...overrides,

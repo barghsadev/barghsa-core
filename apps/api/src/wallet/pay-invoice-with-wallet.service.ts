@@ -569,6 +569,7 @@ function resultFromCache(cached: PayInvoiceWithWalletCachedResponse): PayInvoice
       refId: tx.refId,
       description: tx.description,
       metadata: tx.metadata,
+      reversesTransactionId: null,
       createdAt: new Date(tx.createdAt),
       updatedAt: new Date(tx.updatedAt),
     },
@@ -588,6 +589,8 @@ function mapLedger(row: Record<string, unknown>): TransactionRow {
     refId: row.ref_id == null ? null : String(row.ref_id),
     description: row.description == null ? null : String(row.description),
     metadata: row.metadata ?? null,
+    reversesTransactionId:
+      row.reverses_transaction_id == null ? null : String(row.reverses_transaction_id),
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
   }
