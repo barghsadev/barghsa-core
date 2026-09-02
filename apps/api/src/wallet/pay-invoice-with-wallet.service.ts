@@ -17,8 +17,12 @@
  *      from the `FOR UPDATE` snapshot).
  *   5. Debits the exact remaining amount (`type: payment`, `refId` =
  *      invoice id) on the same client so wallet + invoice commit together.
- *      `WalletService.debit` re-locks the wallet and applies the
- *      optimistic `version` predicate as a second line of defense.
+ *      The returned ledger row must be a Completed payment of `-remaining`
+ *      for this invoice; colliding debit keys are mapped to the wallet
+ *      payment collision error so Paid is never written after a partial
+ *      or unrelated debit. `WalletService.debit` re-locks the wallet and
+ *      applies the optimistic `version` predicate as a second line of
+ *      defense.
  *   6. Inserts `wallet.invoice_payment` audit (posted before/after,
  *      remaining, ledger id) then sets `paid_amount` to the total and
  *      transitions Unpaid / PartiallyFunded → Paid through the state
@@ -49,7 +53,9 @@ import {
   availableCoversRemaining,
   cachedWalletPaymentMatchesRequest,
   idempotencyKeyExpiresAt,
+  isExactRemainingWalletDebit,
   isMatchingWalletInvoicePayment,
+  isWalletDebitIdempotencyCollision,
   parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
   payInvoiceWithWalletAuditMetadata,
@@ -218,22 +224,12 @@ export class PayInvoiceWithWalletService {
       const postedBefore = BigInt(wallet.posted_balance)
       const reserved = BigInt(wallet.reserved_balance)
       const available = this.lockedAvailableBalance(wallet)
-      const debit = await this.walletService.debit(
-        invoice.profile_id,
+      const debit = await this.debitExactRemaining(client, {
+        invoice,
         remaining,
-        {
-          type: 'payment',
-          refId: invoice.id,
-          description: PAY_INVOICE_WITH_WALLET_DESCRIPTION,
-          metadata: payInvoiceWithWalletMetadata({
-            invoiceId: invoice.id,
-            remainingBefore: remaining,
-            paidAmountAfter: paidAfter,
-          }),
-        },
-        key,
-        client,
-      )
+        paidAfter,
+        idempotencyKey: key,
+      })
 
       await this.recordWalletPaymentAudit(client, {
         invoice,
@@ -317,6 +313,66 @@ export class PayInvoiceWithWalletService {
     )
     const locked = BigInt(wallet.available_balance)
     return locked === derived ? locked : derived
+  }
+
+  /**
+   * Debit the locked remaining amount on the caller transaction.
+   * Rejects colliding idempotency keys and ledger rows that are not an
+   * exact remaining payment so the invoice is never marked Paid after a
+   * partial or unrelated debit (T-04.2.03.01).
+   */
+  private async debitExactRemaining(
+    client: WalletQueryClient,
+    input: {
+      invoice: LockedInvoiceRow
+      remaining: bigint
+      paidAfter: bigint
+      idempotencyKey: string
+    },
+  ): Promise<TransactionRow> {
+    let debit: TransactionRow
+    try {
+      debit = await this.walletService.debit(
+        input.invoice.profile_id,
+        input.remaining,
+        {
+          type: 'payment',
+          refId: input.invoice.id,
+          description: PAY_INVOICE_WITH_WALLET_DESCRIPTION,
+          metadata: payInvoiceWithWalletMetadata({
+            invoiceId: input.invoice.id,
+            remainingBefore: input.remaining,
+            paidAmountAfter: input.paidAfter,
+          }),
+        },
+        input.idempotencyKey,
+        client,
+      )
+    } catch (error) {
+      if (
+        error instanceof ConflictException &&
+        isWalletDebitIdempotencyCollision(conflictMessage(error))
+      ) {
+        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+      }
+      throw error
+    }
+
+    if (
+      !isExactRemainingWalletDebit({
+        walletId: debit.walletId,
+        expectedWalletId: input.invoice.profile_id,
+        invoiceId: input.invoice.id,
+        type: debit.type,
+        state: debit.state,
+        refId: debit.refId,
+        amount: debit.amount,
+        remaining: input.remaining,
+      })
+    ) {
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    }
+    return debit
   }
 
   private assertAvailableBalance(wallet: LockedWalletRow, remaining: bigint): void {
@@ -630,6 +686,17 @@ function optionalAudit(options: { ip?: string; correlationId?: string }): {
     ...(options.ip !== undefined ? { ip: options.ip } : {}),
     ...(options.correlationId !== undefined ? { correlationId: options.correlationId } : {}),
   }
+}
+
+function conflictMessage(error: ConflictException): string {
+  const response = error.getResponse()
+  if (typeof response === 'string') return response
+  if (typeof response === 'object' && response !== null && 'message' in response) {
+    const message = (response as { message: unknown }).message
+    if (typeof message === 'string') return message
+    if (Array.isArray(message)) return message.map(String).join(' ')
+  }
+  return error.message
 }
 
 function toDate(value: Date | string | null): Date | null {

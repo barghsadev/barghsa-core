@@ -10,7 +10,9 @@ import {
   cachedWalletPaymentMatchesRequest,
   idempotencyKeyExpiresAt,
   isExpiredInFlightIdempotencyClaim,
+  isExactRemainingWalletDebit,
   isMatchingWalletInvoicePayment,
+  isWalletDebitIdempotencyCollision,
   isWalletPayableInvoiceState,
   parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
@@ -171,6 +173,46 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
         previousState: 'PartiallyFunded',
         newState: 'Paid',
       })
+    })
+  })
+
+  describe('isExactRemainingWalletDebit', () => {
+    const base = {
+      walletId: PROFILE_ID,
+      expectedWalletId: PROFILE_ID,
+      invoiceId: INVOICE_ID,
+      type: 'payment',
+      state: 'Completed',
+      refId: INVOICE_ID,
+      amount: -750_000n,
+      remaining: 750_000n,
+    }
+
+    it('accepts only a Completed payment debit of the exact remaining amount', () => {
+      expect(isExactRemainingWalletDebit(base)).toBe(true)
+      expect(isExactRemainingWalletDebit({ ...base, amount: -749_999n })).toBe(false)
+      expect(isExactRemainingWalletDebit({ ...base, amount: -750_001n })).toBe(false)
+      expect(isExactRemainingWalletDebit({ ...base, remaining: 0n })).toBe(false)
+      expect(isExactRemainingWalletDebit({ ...base, type: 'topup', amount: 750_000n })).toBe(
+        false,
+      )
+    })
+  })
+
+  describe('isWalletDebitIdempotencyCollision', () => {
+    it('matches WalletService.debit collision messages', () => {
+      expect(
+        isWalletDebitIdempotencyCollision(
+          'Idempotency key already used for a different wallet operation',
+        ),
+      ).toBe(true)
+      expect(
+        isWalletDebitIdempotencyCollision('Idempotency key already used for a different wallet'),
+      ).toBe(true)
+      expect(isWalletDebitIdempotencyCollision(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())).toBe(
+        true,
+      )
+      expect(isWalletDebitIdempotencyCollision('Insufficient balance')).toBe(false)
     })
   })
 
