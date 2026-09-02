@@ -5,7 +5,8 @@
  * amount. It is enabled only from Unpaid / PartiallyFunded (not credit
  * notes) when `availableBalance >= remaining`. The service method
  * `payInvoiceWithWallet` uses these helpers for remaining, eligibility,
- * available-balance gating, ledger metadata, and the
+ * available-balance gating, ledger metadata, the wallet-side
+ * `wallet.invoice_payment` audit snapshot (T-04.2.03.02), and the
  * `(idempotencyKey, entityType)` cached-response contract
  * (T-04.2.03.03). The DB transaction claims that unique row, then
  * `SELECT … FOR UPDATE`s the wallet and invoice before debiting.
@@ -30,6 +31,13 @@ export type WalletPayableInvoiceState =
 /** Human-readable description on the Completed payment debit row. */
 export const PAY_INVOICE_WITH_WALLET_DESCRIPTION =
   'Wallet payment of invoice remaining balance'
+
+/**
+ * Append-only audit event for the wallet side of a pay-from-wallet
+ * settlement (T-04.2.03.02 / C-04.CC.04). Inserted in the same
+ * transaction as the `wallet_transactions` debit.
+ */
+export const WALLET_INVOICE_PAYMENT_EVENT = 'wallet.invoice_payment' as const
 
 /**
  * `idempotency_keys.entity_type` for `payInvoiceWithWallet`
@@ -160,6 +168,48 @@ export function payInvoiceWithWalletMetadata(input: {
     invoiceId: input.invoiceId,
     remainingBefore: input.remainingBefore.toString(),
     paidAmountAfter: input.paidAmountAfter.toString(),
+  }
+}
+
+/**
+ * `audit_log.metadata` for `wallet.invoice_payment`. Amounts are decimal
+ * strings so the JSONB snapshot never uses floating point.
+ */
+export function payInvoiceWithWalletAuditMetadata(input: {
+  invoiceId: string
+  profileId: string
+  walletTransactionId: string
+  remainingPaid: bigint
+  postedBalanceBefore: bigint
+  postedBalanceAfter: bigint
+  reservedBalance: bigint
+  availableBalance: bigint
+  fromState: string
+}): {
+  entityType: 'wallet'
+  entityId: string
+  invoiceId: string
+  walletTransactionId: string
+  remainingPaid: string
+  postedBalanceBefore: string
+  postedBalanceAfter: string
+  reservedBalance: string
+  availableBalance: string
+  previousState: string
+  newState: 'Paid'
+} {
+  return {
+    entityType: 'wallet',
+    entityId: input.profileId,
+    invoiceId: input.invoiceId,
+    walletTransactionId: input.walletTransactionId,
+    remainingPaid: input.remainingPaid.toString(),
+    postedBalanceBefore: input.postedBalanceBefore.toString(),
+    postedBalanceAfter: input.postedBalanceAfter.toString(),
+    reservedBalance: input.reservedBalance.toString(),
+    availableBalance: input.availableBalance.toString(),
+    previousState: input.fromState,
+    newState: 'Paid',
   }
 }
 

@@ -12,15 +12,18 @@
  *      (stable lock order vs other wallet mutations).
  *   4. Rejects missing wallets/invoices, other profiles (404), credit
  *      notes, non-PayFromWallet states, not-yet-payable dates, remaining
- *      0, and insufficient derived availableBalance (`posted − reserved`).
+ *      0, and insufficient locked availableBalance (`posted − reserved`
+ *      from the `FOR UPDATE` snapshot).
  *   5. Debits the exact remaining amount (`type: payment`, `refId` =
  *      invoice id) on the same client so wallet + invoice commit together.
  *      `WalletService.debit` re-locks the wallet and applies the
  *      optimistic `version` predicate as a second line of defense.
- *   6. Sets `paid_amount` to the total and transitions Unpaid /
- *      PartiallyFunded → Paid through the state machine (audit + paid_at)
- *      in the same transaction as the wallet_transactions insert, then
- *      writes the cached JSONB response onto the claimed idempotency row.
+ *   6. Inserts `wallet.invoice_payment` audit (posted before/after,
+ *      remaining, ledger id) then sets `paid_amount` to the total and
+ *      transitions Unpaid / PartiallyFunded → Paid through the state
+ *      machine (invoice audit + paid_at) in the same transaction as the
+ *      wallet_transactions insert, then writes the cached JSONB
+ *      response onto the claimed idempotency row.
  *
  * Retrying with the same idempotency key returns the original Paid result
  * and never debits twice. The unique index
@@ -35,17 +38,20 @@ import {
   NotFoundException,
   Optional,
 } from '@nestjs/common'
+import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
+  WALLET_INVOICE_PAYMENT_EVENT,
   availableCoversRemaining,
   cachedWalletPaymentMatchesRequest,
   idempotencyKeyExpiresAt,
   isMatchingWalletInvoicePayment,
   parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
+  payInvoiceWithWalletAuditMetadata,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
   serializePayInvoiceWithWalletCache,
@@ -104,6 +110,7 @@ interface LockedWalletRow {
   profile_id: string
   posted_balance: string | number | bigint
   reserved_balance: string | number | bigint
+  available_balance: string | number | bigint
   version: number
 }
 
@@ -196,6 +203,9 @@ export class PayInvoiceWithWalletService {
       this.assertAvailableBalance(wallet, remaining)
 
       const paidAfter = paidAmount + remaining
+      const postedBefore = BigInt(wallet.posted_balance)
+      const reserved = BigInt(wallet.reserved_balance)
+      const available = this.lockedAvailableBalance(wallet)
       const debit = await this.walletService.debit(
         invoice.profile_id,
         remaining,
@@ -212,6 +222,18 @@ export class PayInvoiceWithWalletService {
         key,
         client,
       )
+
+      await this.recordWalletPaymentAudit(client, {
+        invoice,
+        debitId: debit.id,
+        remaining,
+        postedBefore,
+        reserved,
+        available,
+        actorUserId,
+        now,
+        ...optionalAudit(options),
+      })
 
       const transition = await this.settleInvoice(client, {
         invoice,
@@ -276,11 +298,17 @@ export class PayInvoiceWithWalletService {
     }
   }
 
-  private assertAvailableBalance(wallet: LockedWalletRow, remaining: bigint): void {
-    const available = walletAvailableBalance(
+  private lockedAvailableBalance(wallet: LockedWalletRow): bigint {
+    const derived = walletAvailableBalance(
       BigInt(wallet.posted_balance),
       BigInt(wallet.reserved_balance),
     )
+    const locked = BigInt(wallet.available_balance)
+    return locked === derived ? locked : derived
+  }
+
+  private assertAvailableBalance(wallet: LockedWalletRow, remaining: bigint): void {
+    const available = this.lockedAvailableBalance(wallet)
     if (!availableCoversRemaining(available, remaining)) {
       throw new BadRequestException(
         PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(available, remaining),
@@ -414,6 +442,54 @@ export class PayInvoiceWithWalletService {
       ...(input.ip !== undefined ? { ip: input.ip } : {}),
       ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
     })
+  }
+
+  /**
+   * Wallet-side append-only audit for the debit. Must run on the same
+   * client as the `wallet_transactions` insert so a later invoice
+   * failure rolls this row back with the ledger.
+   */
+  private async recordWalletPaymentAudit(
+    client: WalletQueryClient,
+    input: {
+      invoice: LockedInvoiceRow
+      debitId: string
+      remaining: bigint
+      postedBefore: bigint
+      reserved: bigint
+      available: bigint
+      actorUserId: string
+      now: Date
+      ip?: string
+      correlationId?: string
+    },
+  ): Promise<string> {
+    const auditId = uuidv7()
+    const metadata = payInvoiceWithWalletAuditMetadata({
+      invoiceId: input.invoice.id,
+      profileId: input.invoice.profile_id,
+      walletTransactionId: input.debitId,
+      remainingPaid: input.remaining,
+      postedBalanceBefore: input.postedBefore,
+      postedBalanceAfter: input.postedBefore - input.remaining,
+      reservedBalance: input.reserved,
+      availableBalance: input.available,
+      fromState: input.invoice.state,
+    })
+    await client.query(
+      `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        auditId,
+        input.actorUserId,
+        WALLET_INVOICE_PAYMENT_EVENT,
+        JSON.stringify(metadata),
+        input.correlationId ?? null,
+        input.ip ?? null,
+        input.now,
+      ],
+    )
+    return auditId
   }
 
   private async lockWallet(client: WalletQueryClient, profileId: string): Promise<LockedWalletRow> {

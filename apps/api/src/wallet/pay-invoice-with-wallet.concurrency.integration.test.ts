@@ -34,6 +34,7 @@ import type { IsolatedTestDb } from '@barghsa/db/test'
 import {
   PAY_INVOICE_WITH_WALLET_ERRORS,
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+  WALLET_INVOICE_PAYMENT_EVENT,
 } from '@barghsa/shared/finance'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
@@ -321,6 +322,7 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
 
     expect(await fetchLedger(profileId)).toHaveLength(1)
     expect(await fetchAudit(invoiceId)).toEqual([
+      expect.objectContaining({ event: WALLET_INVOICE_PAYMENT_EVENT }),
       expect.objectContaining({ event: 'invoice.pay_from_wallet' }),
     ])
   })
@@ -363,7 +365,7 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
     expect(wallet.version).toBe(before.version + 2)
     expect(await fetchLedger(profileId)).toHaveLength(1)
     expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
-    expect(await fetchAudit(invoiceId)).toHaveLength(1)
+    expect(await fetchAudit(invoiceId)).toHaveLength(2)
 
     const cached = await ctx.pool.query<{ n: string }>(
       `SELECT COUNT(*)::text AS n FROM idempotency_keys
@@ -492,7 +494,7 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
     expect(paidA !== paidB).toBe(true)
     expect(BigInt((await fetchWallet(profileId)).posted_balance)).toBe(0n)
     expect(await fetchLedger(profileId)).toHaveLength(1)
-    expect(await fetchAudit(won[0]!.invoiceId)).toHaveLength(1)
+    expect(await fetchAudit(won[0]!.invoiceId)).toHaveLength(2)
     expect(await fetchAudit(won[0]!.invoiceId === invoiceA ? invoiceB : invoiceA)).toEqual([])
   })
 

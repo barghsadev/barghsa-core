@@ -5,13 +5,15 @@
  * Proves against actual PostgreSQL that one transaction:
  *   1. Claims `idempotency_keys (idempotencyKey, entityType)` first.
  *   2. `SELECT … FOR UPDATE`s the wallet then the invoice.
- *   3. Validates derived availableBalance (`posted − reserved`).
- *   4. Debits the wallet, marks the invoice Paid, inserts a
- *      wallet_transactions payment row and an invoice audit row together.
+ *   3. Validates locked availableBalance (`posted − reserved`).
+ *   4. Debits the wallet, inserts `wallet.invoice_payment` audit,
+ *      marks the invoice Paid, and writes a wallet_transactions payment
+ *      row plus the invoice `pay_from_wallet` audit together.
  *   5. Caches the JSON result so a retry with the same key returns it
  *      and never posts a second debit.
  *   6. Rolls every one of those writes back when availableBalance is
  *      insufficient (including when reserved funds consume posted).
+ *   7. `pg_locks` shows RowShareLock on wallets and invoices before debit.
  *
  * Concurrent races belong to T-04.2.03.04
  * (`pay-invoice-with-wallet.concurrency.integration.test.ts`). Wiring: only
@@ -26,7 +28,11 @@ import { resolve } from 'node:path'
 import { v7 as uuidv7 } from 'uuid'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
-import { PAY_INVOICE_WITH_WALLET_ERRORS, INVOICE_WALLET_PAYMENT_ENTITY_TYPE } from '@barghsa/shared/finance'
+import {
+  INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+  PAY_INVOICE_WITH_WALLET_ERRORS,
+  WALLET_INVOICE_PAYMENT_EVENT,
+} from '@barghsa/shared/finance'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
 import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
@@ -273,8 +279,55 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
       }),
     ])
     expect(await fetchAudit(invoiceId)).toEqual([
+      expect.objectContaining({ event: WALLET_INVOICE_PAYMENT_EVENT }),
       expect.objectContaining({ event: 'invoice.pay_from_wallet' }),
     ])
+  })
+
+  it('holds FOR UPDATE row locks on wallets and invoices before debiting', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
+    const seen: Array<{ relname: string; mode: string }> = []
+    const inner = new WalletService()
+    const probing = {
+      debit: async (
+        walletId: string,
+        amount: bigint,
+        ref: Parameters<WalletService['debit']>[2],
+        idempotencyKey: string,
+        client?: Parameters<WalletService['debit']>[4],
+      ) => {
+        if (!client) throw new Error('expected transactional client')
+        const locks = await client.query(
+          `SELECT c.relname, l.mode
+             FROM pg_locks l
+             JOIN pg_class c ON c.oid = l.relation
+            WHERE l.pid = pg_backend_pid()
+              AND l.locktype = 'relation'
+              AND l.granted
+              AND c.relname IN ('wallets', 'invoices')`,
+        )
+        seen.push(...(locks.rows as Array<{ relname: string; mode: string }>))
+        return inner.debit(walletId, amount, ref, idempotencyKey, client)
+      },
+    }
+    const probeService = new PayInvoiceWithWalletService(
+      probing as unknown as WalletService,
+      new InvoiceStateMachineService(new InvoiceAuditRepository()),
+    )
+
+    await probeService.payInvoiceWithWallet(invoiceId, profileId, `pay-lock-pg-${invoiceId}`, {
+      actorUserId: ACTOR_USER_ID,
+      now: NOW,
+      ip: '203.0.113.10',
+    })
+
+    const modes = (rel: string) => seen.filter((row) => row.relname === rel).map((row) => row.mode)
+    expect(modes('wallets').some((mode) => mode.includes('Share') || mode.includes('Exclusive'))).toBe(
+      true,
+    )
+    expect(modes('invoices').some((mode) => mode.includes('Share') || mode.includes('Exclusive'))).toBe(
+      true,
+    )
   })
 
   it('settles a PartiallyFunded remaining amount without touching reserved funds', async () => {

@@ -16,6 +16,7 @@ import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
+  WALLET_INVOICE_PAYMENT_EVENT,
   payInvoiceWithWalletMetadata,
   serializePayInvoiceWithWalletCache,
 } from '@barghsa/shared/finance'
@@ -159,6 +160,9 @@ function paymentQueries(opts: {
       if (!paidOk) return { rows: [] }
       return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
     }
+    if (sql.includes('INSERT INTO audit_log')) {
+      return { rows: [] }
+    }
     throw new Error(`unexpected sql: ${sql}`)
   })
 }
@@ -270,6 +274,30 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(mockClient.query).not.toHaveBeenCalledWith('ROLLBACK')
     expect(mockClient.release).toHaveBeenCalledOnce()
 
+    const walletAudit = mockClient.query.mock.calls.find(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
+    )
+    expect(walletAudit?.[1]?.[2]).toBe(WALLET_INVOICE_PAYMENT_EVENT)
+    expect(JSON.parse(String(walletAudit?.[1]?.[3]))).toMatchObject({
+      entityType: 'wallet',
+      entityId: PROFILE_ID,
+      invoiceId: INVOICE_ID,
+      walletTransactionId: TX_ID,
+      remainingPaid: '1000000',
+      postedBalanceBefore: '2000000',
+      postedBalanceAfter: '1000000',
+      previousState: 'Unpaid',
+      newState: 'Paid',
+    })
+    const debitIdx = mockClient.query.mock.calls.findIndex(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
+    )
+    const paidUpdateIdx = mockClient.query.mock.calls.findIndex(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
+    )
+    expect(debitIdx).toBeGreaterThan(-1)
+    expect(debitIdx).toBeLessThan(paidUpdateIdx)
+
     const paidUpdate = mockClient.query.mock.calls.find(
       (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
     )
@@ -307,6 +335,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(sqlCalls[claimIdx]).toContain('ON CONFLICT (idempotency_key, entity_type)')
     expect(sqlCalls[walletIdx]).toContain('posted_balance')
     expect(sqlCalls[walletIdx]).toContain('reserved_balance')
+    expect(sqlCalls[walletIdx]).toContain('available_balance')
+    expect(sqlCalls[walletIdx]).toContain('FOR UPDATE')
   })
 
   it('debits only the remaining amount on a PartiallyFunded invoice', async () => {
@@ -356,6 +386,11 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+    expect(
+      mockClient.query.mock.calls.some(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
+      ),
+    ).toBe(false)
     expect(
       mockClient.query.mock.calls.some(
         (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
