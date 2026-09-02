@@ -10,8 +10,12 @@
  * `reverses_transaction_id` (unique when present) is the last-line
  * guard that one original can be reversed at most once. CHECK
  * `chk_wallet_tx_reversal_original` requires that pointer on every
- * `reversal` row and forbids it on every other type. Client
- * `idempotencyKey` is the retry guard.
+ * `reversal` row and forbids it on every other type. Migration 0077
+ * adds that CHECK as NOT VALID so legacy unlinked reversal rows (legal
+ * under 0074 / credit-debit) cannot block deploy; VALIDATE is a later
+ * contract-phase migration after operators reconcile
+ * `wallet_tx_reversal_check_violations`. Client `idempotencyKey` is
+ * the retry guard.
  *
  * @module finance
  */

@@ -88,7 +88,7 @@ describe('wallet_transactions reverses_transaction_id schema (T-04.2.04.01)', ()
     expect(entry!.when).toBeGreaterThan(prior!.when)
   })
 
-  it('migration 0077 still declares the reversal-original CHECK', () => {
+  it('migration 0077 still declares the reversal-original CHECK as NOT VALID', () => {
     expect(CHECK_MIGRATION).toContain('chk_wallet_tx_reversal_original')
     expect(CHECK_MIGRATION).toMatch(
       /type = 'reversal' AND reverses_transaction_id IS NOT NULL/,
@@ -97,6 +97,9 @@ describe('wallet_transactions reverses_transaction_id schema (T-04.2.04.01)', ()
       /type <> 'reversal' AND reverses_transaction_id IS NULL/,
     )
     expect(CHECK_MIGRATION).toContain("column_name = 'reverses_transaction_id'")
+    expect(CHECK_MIGRATION).toContain('NOT VALID')
+    expect(CHECK_MIGRATION).toMatch(/\) NOT VALID;/)
+    expect(CHECK_MIGRATION).toContain('wallet_tx_reversal_check_violations')
   })
 
   it('migration 0077 is registered in the Drizzle journal so migrate() applies it', () => {
@@ -222,5 +225,104 @@ describe('wallet_transactions reverses_transaction_id PostgreSQL enforcement (T-
         reversesTransactionId: original.rows[0]!.id,
       }),
     ).rejects.toMatchObject({ code: '23514' })
+  })
+
+  it('adds the reversal-original CHECK as NOT VALID', async () => {
+    const row = await ctx.pool.query<{ convalidated: boolean }>(
+      `SELECT convalidated
+         FROM pg_constraint
+        WHERE conname = 'chk_wallet_tx_reversal_original'
+          AND conrelid = 'wallet_transactions'::regclass`,
+    )
+    expect(row.rows).toHaveLength(1)
+    expect(row.rows[0]!.convalidated).toBe(false)
+  })
+})
+
+/**
+ * Upgrade-path test: `type = 'reversal'` rows without
+ * `reverses_transaction_id` were legal under 0074 / WalletService.
+ * Migration 0077 must not fail on them: it reports the rows and adds
+ * the CHECK as NOT VALID so new writes are still enforced.
+ */
+describe('wallet_transactions reversal CHECK upgrade from 0074 rows (T-04.2.04.01)', () => {
+  let ctx: IsolatedTestDb
+  let walletId: string
+
+  beforeAll(async () => {
+    ctx = await createIsolatedTestDb()
+    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(`
+      CREATE TABLE IF NOT EXISTS profiles (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+      )
+    `)
+    await ctx.pool.query(readFileSync(TABLE_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
+    const profile = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO profiles DEFAULT VALUES RETURNING id`,
+    )
+    walletId = profile.rows[0]!.id
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [walletId])
+  }, 60_000)
+
+  afterAll(async () => {
+    await ctx.pool.end()
+    await dropTestSchema(ctx.schemaName)
+  })
+
+  it('reports legacy unlinked reversals and does not fail the migration', async () => {
+    const legacy = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key, reverses_transaction_id)
+       VALUES ($1, 'reversal', -1000, 'Completed', 'legacy-unlinked-reversal', NULL)
+       RETURNING id`,
+      [walletId],
+    )
+    const legacyId = legacy.rows[0]!.id
+
+    await expect(
+      ctx.pool.query(readFileSync(REVERSAL_CHECK_MIGRATION, 'utf-8').trim()),
+    ).resolves.toBeDefined()
+
+    const stillThere = await ctx.pool.query<{ id: string; type: string }>(
+      `SELECT id, type FROM wallet_transactions WHERE id = $1`,
+      [legacyId],
+    )
+    expect(stillThere.rows[0]).toEqual({ id: legacyId, type: 'reversal' })
+
+    const reported = await ctx.pool.query<{ transaction_id: string; type: string }>(
+      `SELECT transaction_id, type
+         FROM wallet_tx_reversal_check_violations
+        WHERE transaction_id = $1`,
+      [legacyId],
+    )
+    expect(reported.rows).toHaveLength(1)
+    expect(reported.rows[0]!.type).toBe('reversal')
+
+    const constraint = await ctx.pool.query<{ convalidated: boolean }>(
+      `SELECT convalidated
+         FROM pg_constraint
+        WHERE conname = 'chk_wallet_tx_reversal_original'
+          AND conrelid = 'wallet_transactions'::regclass`,
+    )
+    expect(constraint.rows[0]!.convalidated).toBe(false)
+
+    await expect(
+      ctx.pool.query(
+        `INSERT INTO wallet_transactions
+           (wallet_id, type, amount, state, idempotency_key)
+         VALUES ($1, 'reversal', -500, 'Completed', 'new-unlinked-reversal')`,
+        [walletId],
+      ),
+    ).rejects.toMatchObject({ code: '23514' })
+
+    await expect(
+      ctx.pool.query(readFileSync(REVERSAL_CHECK_MIGRATION, 'utf-8').trim()),
+    ).resolves.toBeDefined()
+    const again = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n FROM wallet_tx_reversal_check_violations`,
+    )
+    expect(Number(again.rows[0]?.n)).toBe(1)
   })
 })

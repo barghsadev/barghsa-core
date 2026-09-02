@@ -50,6 +50,18 @@ describe('drizzle migrate() applies wallet reversal original CHECK (T-04.2.04.01
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
 
+    const profile = await ctx.pool.query<{ id: string }>(
+      `INSERT INTO profiles DEFAULT VALUES RETURNING id`,
+    )
+    const walletId = profile.rows[0]!.id
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [walletId])
+    await ctx.pool.query(
+      `INSERT INTO wallet_transactions
+         (wallet_id, type, amount, state, idempotency_key)
+       VALUES ($1, 'reversal', -250000, 'Completed', 'legacy-unlinked-before-0077')`,
+      [walletId],
+    )
+
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
         id SERIAL PRIMARY KEY,
@@ -73,9 +85,12 @@ describe('drizzle migrate() applies wallet reversal original CHECK (T-04.2.04.01
     await dropTestSchema(ctx.schemaName)
   })
 
-  it('adds chk_wallet_tx_reversal_original through the journaled migrate() path', async () => {
-    const constraints = await ctx.db.execute<{ conname: string }>(sql`
-      SELECT con.conname
+  it('adds chk_wallet_tx_reversal_original as NOT VALID through the journaled migrate() path', async () => {
+    const constraints = await ctx.db.execute<{
+      conname: string
+      convalidated: boolean
+    }>(sql`
+      SELECT con.conname, con.convalidated
       FROM pg_constraint con
       JOIN pg_class rel ON rel.oid = con.conrelid
       JOIN pg_namespace nsp ON nsp.oid = rel.relnamespace
@@ -84,6 +99,26 @@ describe('drizzle migrate() applies wallet reversal original CHECK (T-04.2.04.01
         AND con.conname = 'chk_wallet_tx_reversal_original'
     `)
     expect(constraints.rows).toHaveLength(1)
+    expect(constraints.rows[0]!.convalidated).toBe(false)
+  })
+
+  it('keeps a legacy unlinked reversal and reports it instead of failing migrate()', async () => {
+    const leftover = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n
+         FROM wallet_transactions
+        WHERE type = 'reversal'
+          AND reverses_transaction_id IS NULL
+          AND idempotency_key = 'legacy-unlinked-before-0077'`,
+    )
+    expect(Number(leftover.rows[0]?.n)).toBe(1)
+
+    const reported = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n
+         FROM wallet_tx_reversal_check_violations
+        WHERE type = 'reversal'
+          AND reverses_transaction_id IS NULL`,
+    )
+    expect(Number(reported.rows[0]?.n)).toBe(1)
   })
 
   it('records 0077 in the migrator bookkeeping table', async () => {
