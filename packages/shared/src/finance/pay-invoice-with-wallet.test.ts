@@ -4,6 +4,7 @@ import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
+  WALLET_INVOICE_PAYMENT_EVENT,
   WALLET_PAYABLE_INVOICE_STATES,
   availableCoversRemaining,
   cachedWalletPaymentMatchesRequest,
@@ -12,6 +13,7 @@ import {
   isWalletPayableInvoiceState,
   parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
+  payInvoiceWithWalletAuditMetadata,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
   serializePayInvoiceWithWalletCache,
@@ -137,6 +139,37 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
         paidAmountAfter: '1000000',
       })
       expect(PAY_INVOICE_WITH_WALLET_DESCRIPTION).toContain('Wallet payment')
+    })
+  })
+
+  describe('payInvoiceWithWalletAuditMetadata', () => {
+    it('serializes locked balances and the debit as decimal strings', () => {
+      expect(WALLET_INVOICE_PAYMENT_EVENT).toBe('wallet.invoice_payment')
+      expect(
+        payInvoiceWithWalletAuditMetadata({
+          invoiceId: INVOICE_ID,
+          profileId: PROFILE_ID,
+          walletTransactionId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+          remainingPaid: 400_000n,
+          postedBalanceBefore: 1_500_000n,
+          postedBalanceAfter: 1_100_000n,
+          reservedBalance: 0n,
+          availableBalance: 1_500_000n,
+          fromState: 'PartiallyFunded',
+        }),
+      ).toEqual({
+        entityType: 'wallet',
+        entityId: PROFILE_ID,
+        invoiceId: INVOICE_ID,
+        walletTransactionId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+        remainingPaid: '400000',
+        postedBalanceBefore: '1500000',
+        postedBalanceAfter: '1100000',
+        reservedBalance: '0',
+        availableBalance: '1500000',
+        previousState: 'PartiallyFunded',
+        newState: 'Paid',
+      })
     })
   })
 
