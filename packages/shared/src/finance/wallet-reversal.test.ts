@@ -5,6 +5,7 @@ import {
   WALLET_REVERSAL_ERRORS,
   WALLET_REVERSAL_POSTED_STATE,
   WALLET_REVERSAL_TYPE,
+  WALLET_TX_REVERSAL_ORIGINAL_CONSTRAINT,
   WALLET_TX_REVERSES_CONSTRAINT,
   availableCoversReversal,
   availableRequiredForReversal,
@@ -26,6 +27,9 @@ describe('wallet reversal helpers (T-04.2.04.01)', () => {
     expect(WALLET_REVERSAL_POSTED_STATE).toBe('Completed')
     expect(REVERSIBLE_WALLET_LEDGER_STATE).toBe('Completed')
     expect(WALLET_TX_REVERSES_CONSTRAINT).toBe('uq_wallet_tx_reverses_transaction')
+    expect(WALLET_TX_REVERSAL_ORIGINAL_CONSTRAINT).toBe(
+      'chk_wallet_tx_reversal_original',
+    )
     expect(REVERSIBLE_WALLET_LEDGER_TYPES).toEqual([
       'topup',
       'payment',
@@ -138,6 +142,9 @@ describe('wallet reversal helpers (T-04.2.04.01)', () => {
     )
     expect(WALLET_REVERSAL_ERRORS.INSUFFICIENT_BALANCE(1n, 2n)).toBe(
       'Insufficient balance: available=1, required=2',
+    )
+    expect(WALLET_REVERSAL_ERRORS.USE_REVERSE_TRANSACTION()).toMatch(
+      /reverseTransaction/,
     )
   })
 })

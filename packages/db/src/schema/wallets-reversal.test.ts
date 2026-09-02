@@ -16,8 +16,13 @@ const REVERSAL_MIGRATION = resolve(
   __dirname,
   '../../drizzle/0074_wallet_tx_reverses_transaction.sql',
 )
+const REVERSAL_CHECK_MIGRATION = resolve(
+  __dirname,
+  '../../drizzle/0077_wallet_tx_reversal_original_check.sql',
+)
 const JOURNAL_PATH = resolve(__dirname, '../../drizzle/meta/_journal.json')
 const MIGRATION = readFileSync(REVERSAL_MIGRATION, 'utf8')
+const CHECK_MIGRATION = readFileSync(REVERSAL_CHECK_MIGRATION, 'utf8')
 
 /**
  * Drift guard + real-PostgreSQL enforcement for the reversal original
@@ -49,6 +54,13 @@ describe('wallet_transactions reverses_transaction_id schema (T-04.2.04.01)', ()
     expect(named!.reference().foreignColumns[0]?.name).toBe('id')
   })
 
+  it('Drizzle schema declares the reversal-original CHECK', () => {
+    const found = getTableConfig(walletTransactions).checks.find(
+      (item) => String(item.name) === 'chk_wallet_tx_reversal_original',
+    )
+    expect(found).toBeDefined()
+  })
+
   it('migration 0074 still declares the column, FK, and partial unique index', () => {
     expect(MIGRATION).toContain('ADD COLUMN IF NOT EXISTS reverses_transaction_id UUID')
     expect(MIGRATION).toContain('fk_wallet_tx_reverses_transaction')
@@ -75,6 +87,33 @@ describe('wallet_transactions reverses_transaction_id schema (T-04.2.04.01)', ()
     expect(prior).toBeDefined()
     expect(entry!.when).toBeGreaterThan(prior!.when)
   })
+
+  it('migration 0077 still declares the reversal-original CHECK', () => {
+    expect(CHECK_MIGRATION).toContain('chk_wallet_tx_reversal_original')
+    expect(CHECK_MIGRATION).toMatch(
+      /type = 'reversal' AND reverses_transaction_id IS NOT NULL/,
+    )
+    expect(CHECK_MIGRATION).toMatch(
+      /type <> 'reversal' AND reverses_transaction_id IS NULL/,
+    )
+    expect(CHECK_MIGRATION).toContain("column_name = 'reverses_transaction_id'")
+  })
+
+  it('migration 0077 is registered in the Drizzle journal so migrate() applies it', () => {
+    const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
+      entries: Array<{ tag: string; idx: number; when: number }>
+    }
+    const entry = journal.entries.find(
+      (row) => row.tag === '0077_wallet_tx_reversal_original_check',
+    )
+    expect(entry).toBeDefined()
+    expect(entry!.idx).toBe(77)
+    const prior = journal.entries.find(
+      (row) => row.tag === '0076_wallet_tx_online_pending_expiry_idx',
+    )
+    expect(prior).toBeDefined()
+    expect(entry!.when).toBeGreaterThan(prior!.when)
+  })
 })
 
 describe('wallet_transactions reverses_transaction_id PostgreSQL enforcement (T-04.2.04.01)', () => {
@@ -91,6 +130,7 @@ describe('wallet_transactions reverses_transaction_id PostgreSQL enforcement (T-
     `)
     await ctx.pool.query(readFileSync(TABLE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REVERSAL_CHECK_MIGRATION, 'utf-8').trim())
     const profile = await ctx.pool.query<{ id: string }>(
       `INSERT INTO profiles DEFAULT VALUES RETURNING id`,
     )
@@ -156,5 +196,31 @@ describe('wallet_transactions reverses_transaction_id PostgreSQL enforcement (T-
       WHERE reverses_transaction_id IS NULL
     `)
     expect(Number(count.rows[0]?.n)).toBeGreaterThanOrEqual(2)
+  })
+
+  it('refuses a reversal row without an original pointer', async () => {
+    await expect(
+      insertLedger({
+        type: 'reversal',
+        amount: -1000,
+        idempotencyKey: 'rev-missing-original',
+      }),
+    ).rejects.toMatchObject({ code: '23514' })
+  })
+
+  it('refuses a non-reversal row that points at an original', async () => {
+    const original = await insertLedger({
+      type: 'topup',
+      amount: 1000,
+      idempotencyKey: 'orig-pointer-forbidden',
+    })
+    await expect(
+      insertLedger({
+        type: 'compensating',
+        amount: -1000,
+        idempotencyKey: 'comp-with-pointer',
+        reversesTransactionId: original.rows[0]!.id,
+      }),
+    ).rejects.toMatchObject({ code: '23514' })
   })
 })
