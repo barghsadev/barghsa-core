@@ -10,6 +10,7 @@ export {
 } from './wallet.service.js'
 export { WalletController } from './wallet.controller.js'
 export { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
+export { ChargebackAlertService } from './chargeback-alert.service.js'
 export { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
 export type {
   PayInvoiceWithWalletOptions,

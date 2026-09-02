@@ -9,6 +9,7 @@ import { OnlineTopUpCallbackController } from './online-topup-callback.controlle
 import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
 import { ChargebackDetectionController } from './chargeback-detection.controller.js'
 import { ChargebackDetectionService } from './chargeback-detection.service.js'
+import { ChargebackAlertService } from './chargeback-alert.service.js'
 import { PAYMENT_GATEWAY, createPaymentGatewayFromEnv } from './payment-gateway.js'
 import { SessionModule } from '../session/index.js'
 import { ProfilesModule } from '../profiles/index.js'
@@ -25,11 +26,17 @@ import { InvoiceModule } from '../invoice/invoice.module.js'
     PayInvoiceWithWalletService,
     OnlineTopUpCallbackService,
     ChargebackDetectionService,
+    ChargebackAlertService,
     {
       provide: PAYMENT_GATEWAY,
       useFactory: () => createPaymentGatewayFromEnv(),
     },
   ],
-  exports: [WalletService, BankReceiptConfirmationService, PayInvoiceWithWalletService],
+  exports: [
+    WalletService,
+    BankReceiptConfirmationService,
+    PayInvoiceWithWalletService,
+    ChargebackAlertService,
+  ],
 })
 export class WalletModule {}

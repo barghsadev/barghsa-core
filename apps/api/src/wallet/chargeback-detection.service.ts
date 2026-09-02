@@ -20,9 +20,11 @@ import {
   type ChargebackMatchMethod,
   type ChargebackTopUpCandidate,
   type ParsedChargebackNotification,
+  needsFinanceChargebackAlert,
   type WalletChargebackEventStatus,
 } from '@barghsa/shared/finance'
 import { WalletService, type TransactionRow } from './wallet.service.js'
+import { ChargebackAlertService } from './chargeback-alert.service.js'
 import {
   resolvePaymentGatewayMerchantId,
   resolvePaymentGatewayWebhookSecret,
@@ -78,6 +80,9 @@ interface QueryClient {
  * the original Completed top-up credit. A unique match drives
  * `WalletService.reverseTransaction`; an untraceable notification is
  * recorded as an unmatched exception without rewriting wallet history.
+ * Unmatched / reversal-failed outcomes enqueue an immediate finance
+ * alert (T-04.2.04.03) so staff are pushed a warning and the dashboard
+ * can surface the open exception.
  */
 @Injectable()
 export class ChargebackDetectionService {
@@ -88,6 +93,8 @@ export class ChargebackDetectionService {
     @Optional()
     @Inject(PAYMENT_CALLBACK_CONFIG)
     private readonly injectedConfig?: PaymentCallbackConfig,
+    @Optional()
+    private readonly alertService?: ChargebackAlertService,
   ) {}
 
   async handle(input: HandleChargebackInput): Promise<HandleChargebackResult> {
@@ -175,6 +182,10 @@ export class ChargebackDetectionService {
             )
           }
           if (existing.status !== 'processing') {
+            await this.alertIfUnresolved(client, existing.status, eventId, notification, {
+              walletId: existing.walletId,
+              originalTransactionId: existing.originalTransactionId,
+            })
             return alreadyProcessedResult(existing)
           }
         }
@@ -190,6 +201,10 @@ export class ChargebackDetectionService {
             matchMethod: null,
           })
           this.logger.warn(`Chargeback ${eventId} could not be mapped to an original top-up`)
+          await this.alertIfUnresolved(client, 'unmatched', eventId, notification, {
+            walletId: null,
+            originalTransactionId: null,
+          })
           return {
             ok: true,
             processed: true,
@@ -264,6 +279,10 @@ export class ChargebackDetectionService {
             this.logger.warn(
               `Chargeback ${eventId} mapped to ${match.original.id} but reversal could not post`,
             )
+            await this.alertIfUnresolved(client, 'unresolved', eventId, notification, {
+              walletId: match.original.walletId,
+              originalTransactionId: match.original.id,
+            })
             return {
               ok: true,
               processed: true,
@@ -417,6 +436,24 @@ export class ChargebackDetectionService {
     )
     if (result.rows.length === 0) return null
     return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0])
+  }
+
+  private async alertIfUnresolved(
+    client: QueryClient,
+    status: WalletChargebackEventStatus,
+    eventId: string,
+    notification: ParsedChargebackNotification,
+    refs: { walletId: string | null; originalTransactionId: string | null },
+  ): Promise<void> {
+    if (!this.alertService) return
+    if (!needsFinanceChargebackAlert(status)) return
+    await this.alertService.notifyUnresolved(client, {
+      eventId,
+      status,
+      notification,
+      walletId: refs.walletId,
+      originalTransactionId: refs.originalTransactionId,
+    })
   }
 
   private async finalizeEvent(
