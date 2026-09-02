@@ -72,6 +72,7 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
         event_id: EVENT_ID,
         status: 'unmatched',
         amount_irr: '75000',
+        link_route: '/admin',
       }),
       ['in_app', 'email'],
       'queued',

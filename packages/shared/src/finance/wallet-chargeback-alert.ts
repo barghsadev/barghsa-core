@@ -37,6 +37,18 @@ export const FINANCE_CHARGEBACK_ALERT_CHANNELS: readonly NotificationChannel[] =
 /** Newest unresolved events returned on the dashboard warning. */
 export const FINANCE_CHARGEBACK_WARNING_LIMIT = 20
 
+/**
+ * In-app push deep-link: the admin dashboard warning for the same
+ * unresolved set. Absolute URLs are rejected by the in-app transport.
+ */
+export const FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE = '/admin' as const
+
+/** i18n keys the in-app transport derives as `notifications.<eventKey>.*`. */
+export const FINANCE_CHARGEBACK_ALERT_TITLE_I18N_KEY =
+  'notifications.finance.chargeback_unresolved.title' as const
+export const FINANCE_CHARGEBACK_ALERT_BODY_I18N_KEY =
+  'notifications.finance.chargeback_unresolved.body' as const
+
 export const CHARGEBACK_UNRESOLVED_STATUS_LABELS: Record<
   WalletChargebackUnresolvedStatus,
   { fa: string; en: string }
@@ -79,6 +91,8 @@ export interface FinanceChargebackAlertPayload {
   wallet_id: string
   original_transaction_id: string
   reason: string
+  /** Relative admin-dashboard route persisted onto the in-app push row. */
+  link_route: typeof FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE
 }
 
 export function buildFinanceChargebackAlertPayload(
@@ -94,6 +108,7 @@ export function buildFinanceChargebackAlertPayload(
     wallet_id: input.walletId ?? '',
     original_transaction_id: input.originalTransactionId ?? '',
     reason: input.notification.reason,
+    link_route: FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE,
   }
 }
 

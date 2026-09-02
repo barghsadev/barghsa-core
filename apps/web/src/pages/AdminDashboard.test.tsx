@@ -94,6 +94,57 @@ describe('AdminDashboard chargeback warning (T-04.2.04.03)', () => {
     expect(banner?.textContent).toContain('evt-unmatched')
     expect(banner?.textContent).toContain('150000')
     expect(banner?.getAttribute('aria-live')).toBe('assertive')
+    expect(container.querySelector('div[dir="ltr"]')).toBeTruthy()
+    const eventId = container.querySelector('span[dir="ltr"]')
+    expect(eventId?.textContent).toBe('evt-unmatched')
+    const chargebackCall = vi.mocked(fetch).mock.calls.find((call) =>
+      String(call[0]).includes('/api/admin/wallet/chargebacks/unresolved-warning'),
+    )
+    expect(chargebackCall?.[1]).toMatchObject({ credentials: 'include' })
+  })
+
+  it('renders the warning in RTL Persian with the event id forced LTR', async () => {
+    document.documentElement.lang = 'fa'
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url.endsWith('/api/crm/dashboard/pending-verification')) {
+          return { ok: true, json: async () => ({ count: 0, profiles: [] }) }
+        }
+        if (url.endsWith('/api/admin/wallet/chargebacks/unresolved-warning')) {
+          return {
+            ok: true,
+            json: async () => ({
+              count: 1,
+              unmatchedCount: 1,
+              reversalFailedCount: 0,
+              items: [
+                {
+                  eventId: 'evt-fa',
+                  status: 'unmatched',
+                  amountIrR: '150000',
+                  walletId: null,
+                  originalTransactionId: null,
+                  reason: 'provider chargeback',
+                  createdAt: '2026-09-02T06:00:00.000Z',
+                },
+              ],
+            }),
+          }
+        }
+        return { ok: false, status: 404, json: async () => ({}) }
+      }),
+    )
+
+    await act(async () => {
+      root.render(<AdminDashboard />)
+    })
+    await flush()
+
+    expect(container.querySelector('div[dir="rtl"]')).toBeTruthy()
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('شارژبک حل‌نشده')
+    expect(container.querySelector('span[dir="ltr"]')?.textContent).toBe('evt-fa')
   })
 
   it('hides the warning when every chargeback is resolved', async () => {

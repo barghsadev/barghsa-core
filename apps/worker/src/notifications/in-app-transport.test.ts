@@ -55,6 +55,39 @@ describe('InAppNotificationTransport', () => {
     expect(p[3]).toBe('notifications.profile_verified.body')
     // Payload interpolation vars are serialized to JSONB.
     expect(JSON.parse(p[4] as string)).toEqual({ name: 'Morteza' })
+    expect(p[5]).toBeNull()
+  })
+
+  it('persists a same-origin relative link_route from the dispatch payload', async () => {
+    const { pool, inserts } = makePool()
+    const transport = new InAppNotificationTransport(pool)
+
+    await transport.send({
+      ...basePayload,
+      eventKey: 'finance.chargeback_unresolved',
+      payload: { event_id: 'evt-1', link_route: '/admin' },
+    })
+
+    expect(inserts[0]!.params[2]).toBe('notifications.finance.chargeback_unresolved.title')
+    expect(inserts[0]!.params[3]).toBe('notifications.finance.chargeback_unresolved.body')
+    expect(inserts[0]!.params[5]).toBe('/admin')
+  })
+
+  it('ignores absolute or protocol-relative link_route values', async () => {
+    const { pool, inserts } = makePool()
+    const transport = new InAppNotificationTransport(pool)
+
+    await transport.send({
+      ...basePayload,
+      payload: { link_route: 'https://evil.example/admin' },
+    })
+    expect(inserts[0]!.params[5]).toBeNull()
+
+    await transport.send({
+      ...basePayload,
+      payload: { link_route: '//evil.example/admin' },
+    })
+    expect(inserts[1]!.params[5]).toBeNull()
   })
 
   it('serializes an empty payload as an empty object', async () => {

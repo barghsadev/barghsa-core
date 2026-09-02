@@ -46,6 +46,7 @@ export default function AdminDashboard() {
   const [chargebacksLoading, setChargebacksLoading] = useState(true)
   const [chargebacksError, setChargebacksError] = useState(false)
   const locale = useLocale()
+  const isRtl = locale === 'fa'
 
   useEffect(() => {
     let cancelled = false
@@ -53,7 +54,9 @@ export default function AdminDashboard() {
 
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/crm/dashboard/pending-verification')
+        const res = await fetch('/api/crm/dashboard/pending-verification', {
+          credentials: 'include',
+        })
         if (!res.ok) throw new Error('Failed to fetch')
         const json = await res.json() as PendingVerificationData
         if (!cancelled) {
@@ -71,7 +74,9 @@ export default function AdminDashboard() {
 
     const fetchChargebacks = async () => {
       try {
-        const res = await fetch('/api/admin/wallet/chargebacks/unresolved-warning')
+        const res = await fetch('/api/admin/wallet/chargebacks/unresolved-warning', {
+          credentials: 'include',
+        })
         if (!res.ok) throw new Error('Failed to fetch')
         const json = await res.json() as UnresolvedChargebackWarning
         if (!cancelled) {
@@ -103,7 +108,7 @@ export default function AdminDashboard() {
   const showChargebackWarning = !chargebacksLoading && !chargebacksError && (chargebacks?.count ?? 0) > 0
 
   return (
-    <div>
+    <div dir={isRtl ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-bold mb-4">{t('dashboard.admin.title', locale)}</h1>
       <p className="text-gray-600 mb-6">{t('dashboard.admin.description', locale)}</p>
 
@@ -149,10 +154,10 @@ export default function AdminDashboard() {
                     : ''}
                 </p>
                 <p className="text-xs text-gray-600">
-                  {t('dashboard.admin.chargebackWarning.eventId', locale).replace(
-                    '{id}',
-                    item.eventId,
-                  )}
+                  {t('dashboard.admin.chargebackWarning.eventId', locale).replace('{id}', '')}
+                  <span className="font-mono" dir="ltr">
+                    {item.eventId}
+                  </span>
                 </p>
               </li>
             ))}

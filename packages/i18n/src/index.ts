@@ -1176,6 +1176,9 @@ export const fa: I18nDictionary = {
   'notifications.type.system': 'سیستم',
   'notifications.error.load': 'خطا در بارگذاری اعلان‌ها',
   'notifications.unread': 'فقط خوانده‌نشده',
+  'notifications.finance.chargeback_unresolved.title': 'هشدار مالی — شارژبک حل‌نشده',
+  'notifications.finance.chargeback_unresolved.body':
+    'یک شارژبک ارائه‌دهنده نیاز به بررسی فوری دارد. وضعیت: {{status_label_fa}}. مبلغ: {{amount_irr}} ریال. شناسه رویداد: {{event_id}}',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -2325,6 +2328,9 @@ export const en: I18nDictionary = {
     'notifications.type.system': 'System',
     'notifications.error.load': 'Failed to load notifications',
     'notifications.unread': 'Unread only',
+    'notifications.finance.chargeback_unresolved.title': 'Finance alert — unresolved chargeback',
+    'notifications.finance.chargeback_unresolved.body':
+      'A provider chargeback needs immediate finance review. Status: {{status_label_en}}. Amount: {{amount_irr}} IRR. Event id: {{event_id}}',
   };
 
 /** Supported locale codes */

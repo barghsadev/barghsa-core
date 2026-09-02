@@ -23,9 +23,9 @@ import type {
  *   convention placeholder until the template engine (T-05.04.02) and the
  *   template registry land; the keys resolve at render time in the UI.
  * - `params`      ← payload.payload (interpolation variables).
- * - `link_route` / `link_params` ← left NULL: the dispatch payload carries no
- *   navigation metadata yet. The API writer (T-05.02.02) can extend the send
- *   contract when link routing is needed.
+ * - `link_route`  ← payload.payload.link_route when it is a same-origin
+ *   relative path (must start with `/` and must not contain `://`).
+ *   `link_params` stays NULL until a caller needs search params.
  *
  * The returned `providerRef` is the inserted row id, giving the outbox /
  * delivery-log a stable handle back to the in-app row. Errors are re-thrown
@@ -48,11 +48,12 @@ export class InAppNotificationTransport implements INotificationTransport {
     }
 
     const pool = this.pool ?? getDbPool()
+    const linkRoute = relativeLinkRoute(payload.payload)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
-         (profile_id, type, title_i18n_key, body_i18n_key, params)
-       VALUES ($1, $2, $3, $4, $5)
+         (profile_id, type, title_i18n_key, body_i18n_key, params, link_route)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id`,
       [
         payload.profileId,
@@ -60,6 +61,7 @@ export class InAppNotificationTransport implements INotificationTransport {
         `notifications.${payload.eventKey}.title`,
         `notifications.${payload.eventKey}.body`,
         JSON.stringify(payload.payload ?? {}),
+        linkRoute,
       ],
     )
 
@@ -70,4 +72,16 @@ export class InAppNotificationTransport implements INotificationTransport {
 
     return { providerRef: id, status: 'delivered' }
   }
+}
+
+/**
+ * Persist only same-origin relative paths so a crafted payload cannot
+ * turn the notification-center click into an open redirect.
+ */
+export function relativeLinkRoute(payload: Record<string, unknown> | undefined): string | null {
+  const candidate = payload?.link_route
+  if (typeof candidate !== 'string') return null
+  if (!candidate.startsWith('/')) return null
+  if (candidate.startsWith('//') || candidate.includes('://')) return null
+  return candidate
 }
