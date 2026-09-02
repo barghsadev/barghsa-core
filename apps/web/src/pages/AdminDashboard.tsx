@@ -3,7 +3,7 @@
  */
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ShieldCheck } from 'lucide-react'
+import { AlertTriangle, ShieldCheck } from 'lucide-react'
 import { t } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
 
@@ -21,10 +21,30 @@ interface PendingVerificationData {
   profiles: PendingVerificationProfile[]
 }
 
+interface UnresolvedChargebackItem {
+  eventId: string
+  status: 'unmatched' | 'unresolved'
+  amountIrR: string | null
+  walletId: string | null
+  originalTransactionId: string | null
+  reason: string | null
+  createdAt: string
+}
+
+interface UnresolvedChargebackWarning {
+  count: number
+  unmatchedCount: number
+  reversalFailedCount: number
+  items: UnresolvedChargebackItem[]
+}
+
 export default function AdminDashboard() {
   const [data, setData] = useState<PendingVerificationData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
+  const [chargebacks, setChargebacks] = useState<UnresolvedChargebackWarning | null>(null)
+  const [chargebacksLoading, setChargebacksLoading] = useState(true)
+  const [chargebacksError, setChargebacksError] = useState(false)
   const locale = useLocale()
 
   useEffect(() => {
@@ -49,8 +69,30 @@ export default function AdminDashboard() {
       }
     }
 
+    const fetchChargebacks = async () => {
+      try {
+        const res = await fetch('/api/admin/wallet/chargebacks/unresolved-warning')
+        if (!res.ok) throw new Error('Failed to fetch')
+        const json = await res.json() as UnresolvedChargebackWarning
+        if (!cancelled) {
+          setChargebacks(json)
+          setChargebacksLoading(false)
+          setChargebacksError(false)
+        }
+      } catch {
+        if (!cancelled) {
+          setChargebacksLoading(false)
+          setChargebacksError(true)
+        }
+      }
+    }
+
     fetchData()
-    intervalId = setInterval(fetchData, 30_000)
+    fetchChargebacks()
+    intervalId = setInterval(() => {
+      fetchData()
+      fetchChargebacks()
+    }, 30_000)
 
     return () => {
       cancelled = true
@@ -58,10 +100,65 @@ export default function AdminDashboard() {
     }
   }, [])
 
+  const showChargebackWarning = !chargebacksLoading && !chargebacksError && (chargebacks?.count ?? 0) > 0
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">{t('dashboard.admin.title', locale)}</h1>
       <p className="text-gray-600 mb-6">{t('dashboard.admin.description', locale)}</p>
+
+      {chargebacksError ? (
+        <p className="mb-6 text-sm text-red-600" role="status">
+          {t('dashboard.admin.chargebackWarning.error', locale)}
+        </p>
+      ) : null}
+
+      {showChargebackWarning && chargebacks ? (
+        <section
+          className="mb-6 max-w-2xl rounded-lg border border-red-300 bg-red-50 p-5"
+          role="alert"
+          aria-live="assertive"
+          aria-label={t('dashboard.admin.chargebackWarning.aria.banner', locale)}
+        >
+          <div className="mb-3 flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
+              <AlertTriangle className="h-5 w-5 text-red-700" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-red-900">
+                {t('dashboard.admin.chargebackWarning.title', locale)}
+              </h2>
+              <p className="text-sm text-red-800">
+                {t('dashboard.admin.chargebackWarning.summary', locale)
+                  .replace('{count}', String(chargebacks.count))
+                  .replace('{unmatched}', String(chargebacks.unmatchedCount))
+                  .replace('{failed}', String(chargebacks.reversalFailedCount))}
+              </p>
+            </div>
+          </div>
+          <ul className="space-y-2">
+            {chargebacks.items.map((item) => (
+              <li
+                key={item.eventId}
+                className="rounded-md border border-red-200 bg-white px-3 py-2 text-sm text-gray-800"
+              >
+                <p className="font-medium">
+                  {t(`dashboard.admin.chargebackWarning.status.${item.status}`, locale)}
+                  {item.amountIrR
+                    ? ` · ${t('dashboard.admin.chargebackWarning.amount', locale).replace('{amount}', item.amountIrR)}`
+                    : ''}
+                </p>
+                <p className="text-xs text-gray-600">
+                  {t('dashboard.admin.chargebackWarning.eventId', locale).replace(
+                    '{id}',
+                    item.eventId,
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* Pending verification widget */}
       <div

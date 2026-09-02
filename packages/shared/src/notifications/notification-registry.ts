@@ -130,6 +130,15 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
     securityPinned: false,
     category: 'system',
   },
+
+  // Staff-only finance alert: a provider chargeback could not be mapped
+  // or its compensating reversal could not post (T-04.2.04.03). Immediate
+  // so the quiet window cannot delay a money-at-risk exception.
+  'finance.chargeback_unresolved': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
 } as const
 
 /**

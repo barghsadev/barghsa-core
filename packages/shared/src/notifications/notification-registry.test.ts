@@ -22,6 +22,7 @@ describe('notification type registry & classification (T-05.03.01)', () => {
       expect(classifyNotificationType('payment.wallet_topup_completed')).toBe('immediate')
       expect(classifyNotificationType('contract.cancelled')).toBe('immediate')
       expect(classifyNotificationType('contract.changes_requested')).toBe('immediate')
+      expect(classifyNotificationType('finance.chargeback_unresolved')).toBe('immediate')
     })
 
     it('defaults non-security business events to daytime', () => {

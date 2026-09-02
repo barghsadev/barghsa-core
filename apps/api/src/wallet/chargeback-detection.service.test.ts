@@ -6,6 +6,7 @@ import {
   chargebackCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
 import { ChargebackDetectionService } from './chargeback-detection.service.js'
+import type { ChargebackAlertService } from './chargeback-alert.service.js'
 import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js'
 import { signPaymentCallback } from './payment-callback-verifier.js'
 import type { WalletService } from './wallet.service.js'
@@ -93,7 +94,7 @@ function claimedEventRow(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function makeService() {
+function makeService(alertService?: ChargebackAlertService) {
   const reverseTransaction = vi.fn().mockResolvedValue({
     id: REVERSAL_ID,
     walletId: PROFILE_ID,
@@ -109,10 +110,14 @@ function makeService() {
     updatedAt: new Date(),
   })
   const walletService = { reverseTransaction } as unknown as WalletService
-  const service = new ChargebackDetectionService(walletService, {
-    webhookSecret: SECRET,
-    merchantId: MERCHANT,
-  })
+  const service = new ChargebackDetectionService(
+    walletService,
+    {
+      webhookSecret: SECRET,
+      merchantId: MERCHANT,
+    },
+    alertService,
+  )
   return { service, reverseTransaction }
 }
 
@@ -325,6 +330,69 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       originalTransactionId: CREDIT_ID,
       status: 'unresolved',
     })
+  })
+
+  it('pushes a finance alert when the chargeback stays unmatched', async () => {
+    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 })
+    const { service } = makeService({ notifyUnresolved } as never)
+    scriptClient({ credit: null })
+    await service.handle(signedInput(payload()))
+    expect(notifyUnresolved).toHaveBeenCalledWith(
+      mockClient,
+      expect.objectContaining({
+        eventId: EVENT_ID,
+        status: 'unmatched',
+        walletId: null,
+        originalTransactionId: null,
+      }),
+    )
+  })
+
+  it('pushes a finance alert when the mapped reversal cannot post', async () => {
+    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 1 })
+    const reverseTransaction = vi.fn().mockRejectedValue(
+      new BadRequestException('Insufficient balance: available=0, required=100000'),
+    )
+    const service = new ChargebackDetectionService(
+      { reverseTransaction } as never,
+      { webhookSecret: SECRET, merchantId: MERCHANT },
+      { notifyUnresolved } as never,
+    )
+    scriptClient({ credit: makeCreditRow() })
+    await service.handle(signedInput(payload()))
+    expect(notifyUnresolved).toHaveBeenCalledWith(
+      mockClient,
+      expect.objectContaining({
+        eventId: EVENT_ID,
+        status: 'unresolved',
+        walletId: PROFILE_ID,
+        originalTransactionId: CREDIT_ID,
+      }),
+    )
+  })
+
+  it('does not alert finance when the original top-up is reversed', async () => {
+    const notifyUnresolved = vi.fn()
+    const { service } = makeService({ notifyUnresolved } as never)
+    scriptClient({ credit: makeCreditRow() })
+    await service.handle(signedInput(payload()))
+    expect(notifyUnresolved).not.toHaveBeenCalled()
+  })
+
+  it('re-attempts the finance alert on a duplicate unmatched webhook', async () => {
+    const notifyUnresolved = vi.fn().mockResolvedValue({ recipients: 1, inserted: 0 })
+    const { service, reverseTransaction } = makeService({ notifyUnresolved } as never)
+    scriptClient({
+      claimInserted: false,
+      existingEvent: claimedEventRow({ status: 'unmatched' }),
+    })
+    const result = await service.handle(signedInput(payload()))
+    expect(result.status).toBe('unmatched')
+    expect(reverseTransaction).not.toHaveBeenCalled()
+    expect(notifyUnresolved).toHaveBeenCalledWith(
+      mockClient,
+      expect.objectContaining({ eventId: EVENT_ID, status: 'unmatched' }),
+    )
   })
 
   it('maps by provider ref when merchant order id is omitted', async () => {

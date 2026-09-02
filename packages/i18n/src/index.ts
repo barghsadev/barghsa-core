@@ -825,6 +825,15 @@ export const fa: I18nDictionary = {
   'dashboard.admin.pendingVerification.aria.count': 'تعداد پروفایل‌های منتظر تأیید',
   'dashboard.admin.pendingVerification.aria.showAll': 'نمایش همه پروفایل‌های منتظر تأیید',
   'dashboard.admin.pendingVerification.loading': 'در حال بارگذاری…',
+  'dashboard.admin.chargebackWarning.title': 'شارژبک حل‌نشده',
+  'dashboard.admin.chargebackWarning.summary':
+    '{count} مورد نیازمند بررسی فوری است ({unmatched} بدون تطبیق، {failed} برگشت ناموفق). این هشدار تا زمان حل شدن باقی می‌ماند.',
+  'dashboard.admin.chargebackWarning.error': 'بارگذاری هشدار شارژبک ناموفق بود',
+  'dashboard.admin.chargebackWarning.aria.banner': 'هشدار شارژبک‌های حل‌نشده',
+  'dashboard.admin.chargebackWarning.status.unmatched': 'بدون تطبیق با شارژ اصلی',
+  'dashboard.admin.chargebackWarning.status.unresolved': 'برگشت در دفتر کل ثبت نشد',
+  'dashboard.admin.chargebackWarning.amount': '{amount} ریال',
+  'dashboard.admin.chargebackWarning.eventId': 'شناسه رویداد: {id}',
 
   // ── Admin — Notification Templates (T-09.04.01) ─────────────
   'admin.notifications.title': 'قالب‌های اعلان',
@@ -1963,6 +1972,15 @@ export const en: I18nDictionary = {
     'dashboard.admin.pendingVerification.aria.count': 'Number of profiles awaiting verification',
     'dashboard.admin.pendingVerification.aria.showAll': 'Show all profiles awaiting verification',
     'dashboard.admin.pendingVerification.loading': 'Loading…',
+    'dashboard.admin.chargebackWarning.title': 'Unresolved chargebacks',
+    'dashboard.admin.chargebackWarning.summary':
+      '{count} chargeback(s) need immediate finance review ({unmatched} unmatched, {failed} reversal failed). This warning stays until they are resolved.',
+    'dashboard.admin.chargebackWarning.error': 'Failed to load chargeback warning',
+    'dashboard.admin.chargebackWarning.aria.banner': 'Unresolved chargeback warning',
+    'dashboard.admin.chargebackWarning.status.unmatched': 'Unmatched to original top-up',
+    'dashboard.admin.chargebackWarning.status.unresolved': 'Reversal could not post',
+    'dashboard.admin.chargebackWarning.amount': '{amount} IRR',
+    'dashboard.admin.chargebackWarning.eventId': 'Event id: {id}',
 
     // ── Admin — Notification Templates (T-09.04.01) ─────────────
     'admin.notifications.title': 'Notification Templates',

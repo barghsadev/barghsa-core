@@ -459,6 +459,26 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     ],
   },
   {
+    eventKey: 'finance.chargeback_unresolved',
+    faSubject: 'هشدار مالی — شارژبک حل‌نشده',
+    enSubject: 'Finance alert — unresolved chargeback',
+    faBody:
+      'یک شارژبک ارائه‌دهنده نیاز به بررسی فوری دارد.\n\nشناسه رویداد: {{event_id}}\nوضعیت: {{status_label_fa}}\nمبلغ (ریال): {{amount_irr}}\nکیف پول: {{wallet_id}}\nتراکنش اصلی: {{original_transaction_id}}\nدلیل: {{reason}}',
+    enBody:
+      'A provider chargeback needs immediate finance review.\n\nEvent id: {{event_id}}\nStatus: {{status_label_en}}\nAmount (IRR): {{amount_irr}}\nWallet: {{wallet_id}}\nOriginal transaction: {{original_transaction_id}}\nReason: {{reason}}',
+    channels: ['in_app', 'email'],
+    variables: [
+      { name: 'event_id', description: 'شناسه رویداد ارائه‌دهنده / Provider event id' },
+      { name: 'status', description: 'وضعیت شارژبک / Chargeback status' },
+      { name: 'status_label_fa', description: 'برچسب فارسی وضعیت / Persian status label' },
+      { name: 'status_label_en', description: 'English status label' },
+      { name: 'amount_irr', description: 'مبلغ به ریال / Amount in IRR' },
+      { name: 'wallet_id', description: 'شناسه کیف پول / Wallet id' },
+      { name: 'original_transaction_id', description: 'شناسه تراکنش اصلی / Original transaction id' },
+      { name: 'reason', description: 'دلیل شارژبک / Chargeback reason' },
+    ],
+  },
+  {
     eventKey: 'admin.service_escalated',
     faSubject: 'ارتقای فوریت — {{service_type_name_fa}}',
     enSubject: 'Escalation — {{service_type_name_en}}',
