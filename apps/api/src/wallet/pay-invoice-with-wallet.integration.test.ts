@@ -1,13 +1,16 @@
 /**
  * Real-PostgreSQL integration tests for PayInvoiceWithWalletService
- * locking (T-04.2.03.02).
+ * locking and idempotency (T-04.2.03.02 / T-04.2.03.03).
  *
  * Proves against actual PostgreSQL that one transaction:
- *   1. `SELECT … FOR UPDATE`s the wallet then the invoice.
- *   2. Validates derived availableBalance (`posted − reserved`).
- *   3. Debits the wallet, marks the invoice Paid, inserts a
+ *   1. Claims `idempotency_keys (idempotencyKey, entityType)` first.
+ *   2. `SELECT … FOR UPDATE`s the wallet then the invoice.
+ *   3. Validates derived availableBalance (`posted − reserved`).
+ *   4. Debits the wallet, marks the invoice Paid, inserts a
  *      wallet_transactions payment row and an invoice audit row together.
- *   4. Rolls every one of those writes back when availableBalance is
+ *   5. Caches the JSON result so a retry with the same key returns it
+ *      and never posts a second debit.
+ *   6. Rolls every one of those writes back when availableBalance is
  *      insufficient (including when reserved funds consume posted).
  *
  * Concurrent races belong to T-04.2.03.04. Wiring: only `getDbPool()` is
@@ -21,7 +24,7 @@ import { resolve } from 'node:path'
 import { v7 as uuidv7 } from 'uuid'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
-import { PAY_INVOICE_WITH_WALLET_ERRORS } from '@barghsa/shared/finance'
+import { PAY_INVOICE_WITH_WALLET_ERRORS, INVOICE_WALLET_PAYMENT_ENTITY_TYPE } from '@barghsa/shared/finance'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
 import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
@@ -70,12 +73,16 @@ const WALLET_AVAILABLE_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql',
 )
+const IDEMPOTENCY_KEYS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0073_create_idempotency_keys.sql',
+)
 
 const ACTOR_USER_ID = 'actor-pay-wallet-lock'
 const NOW = new Date('2026-09-02T08:00:00.000Z')
 const TOTAL = 1_000_000n
 
-describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02)', () => {
+describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2.03.03)', () => {
   let ctx: IsolatedTestDb
   let service: PayInvoiceWithWalletService
 
@@ -114,6 +121,7 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02)', () =>
     await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(WALLET_AVAILABLE_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(IDEMPOTENCY_KEYS_MIGRATION, 'utf-8').trim())
 
     await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID])
   }, 60_000)
@@ -331,5 +339,68 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02)', () =>
     )
     expect((await fetchInvoice(invoiceId)).state).toBe('Unpaid')
     expect(await fetchAudit(invoiceId)).toEqual([])
+  })
+
+  it('returns the cached result on retry and never debits twice', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
+    const key = `pay-idem-retry-${invoiceId}`
+
+    const first = await pay(invoiceId, profileId, key)
+    const afterFirst = await fetchWallet(profileId)
+    const second = await pay(invoiceId, profileId, key)
+
+    expect(second.replayed).toBe(true)
+    expect(second.walletTransaction.id).toBe(first.walletTransaction.id)
+    expect(second.remainingPaid).toBe(first.remainingPaid)
+    expect(second.toState).toBe('Paid')
+    expect(await fetchWallet(profileId)).toEqual(afterFirst)
+    expect(await fetchLedger(profileId)).toHaveLength(1)
+    expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
+
+    const cached = await ctx.pool.query<{
+      entity_type: string
+      entity_id: string | null
+      remaining: string | null
+    }>(
+      `SELECT entity_type, entity_id, response->>'remainingPaid' AS remaining
+         FROM idempotency_keys
+        WHERE idempotency_key = $1 AND entity_type = $2`,
+      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
+    )
+    expect(cached.rows).toEqual([
+      {
+        entity_type: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+        entity_id: invoiceId,
+        remaining: '1000000',
+      },
+    ])
+  })
+
+  it('rejects the same key used for a different invoice after a successful payment', async () => {
+    const first = await seedPayable({ posted: 1_500_000n })
+    const second = await seedPayable({ posted: 1_500_000n })
+    const key = `pay-idem-collision-${first.invoiceId}`
+
+    await pay(first.invoiceId, first.profileId, key)
+    await expect(pay(second.invoiceId, second.profileId, key)).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION(),
+    )
+    expect((await fetchInvoice(second.invoiceId)).state).toBe('Unpaid')
+    expect(await fetchLedger(second.profileId)).toEqual([])
+  })
+
+  it('does not leave an idempotency claim after a rolled-back insufficient-balance attempt', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 100_000n })
+    const key = `pay-idem-rollback-${invoiceId}`
+
+    await expect(pay(invoiceId, profileId, key)).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(100_000n, TOTAL),
+    )
+
+    const cached = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n FROM idempotency_keys WHERE idempotency_key = $1`,
+      [key],
+    )
+    expect(cached.rows[0]?.n).toBe('0')
   })
 })

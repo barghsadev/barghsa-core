@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import {
+  IDEMPOTENCY_KEY_TTL_MS,
+  INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
   WALLET_PAYABLE_INVOICE_STATES,
   availableCoversRemaining,
+  cachedWalletPaymentMatchesRequest,
+  idempotencyKeyExpiresAt,
   isMatchingWalletInvoicePayment,
   isWalletPayableInvoiceState,
+  parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
+  serializePayInvoiceWithWalletCache,
   walletAvailableBalance,
 } from './pay-invoice-with-wallet.js'
 
@@ -194,6 +200,55 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
           amount: -750_000n,
         }),
       ).toBe(false)
+    })
+  })
+
+  describe('idempotency cache snapshot (T-04.2.03.03)', () => {
+    const now = new Date('2026-09-02T08:00:00.000Z')
+    const snapshot = serializePayInvoiceWithWalletCache({
+      invoiceId: INVOICE_ID,
+      profileId: PROFILE_ID,
+      fromState: 'Unpaid',
+      remainingPaid: 1_000_000n,
+      auditId: 'audit-1',
+      walletTransaction: {
+        id: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+        walletId: PROFILE_ID,
+        type: 'payment',
+        amount: -1_000_000n,
+        state: 'Completed',
+        idempotencyKey: 'pay-1',
+        refId: INVOICE_ID,
+        description: PAY_INVOICE_WITH_WALLET_DESCRIPTION,
+        metadata: { purpose: 'invoice_payment' },
+        createdAt: now,
+        updatedAt: now,
+      },
+    })
+
+    it('round-trips bigint amounts and Date fields as strings', () => {
+      expect(INVOICE_WALLET_PAYMENT_ENTITY_TYPE).toBe('invoice_wallet_payment')
+      expect(snapshot.remainingPaid).toBe('1000000')
+      expect(snapshot.walletTransaction.amount).toBe('-1000000')
+      expect(snapshot.walletTransaction.createdAt).toBe(now.toISOString())
+      expect(parsePayInvoiceWithWalletCache(snapshot)).toEqual(snapshot)
+      expect(parsePayInvoiceWithWalletCache(null)).toBeNull()
+      expect(parsePayInvoiceWithWalletCache({ invoiceId: INVOICE_ID })).toBeNull()
+    })
+
+    it('matches only the original invoice and profile', () => {
+      expect(cachedWalletPaymentMatchesRequest(snapshot, INVOICE_ID, PROFILE_ID)).toBe(true)
+      expect(
+        cachedWalletPaymentMatchesRequest(
+          snapshot,
+          '22222222-2222-7222-8222-222222222222',
+          PROFILE_ID,
+        ),
+      ).toBe(false)
+    })
+
+    it('computes a 24h expiresAt from now', () => {
+      expect(idempotencyKeyExpiresAt(now).getTime() - now.getTime()).toBe(IDEMPOTENCY_KEY_TTL_MS)
     })
   })
 })

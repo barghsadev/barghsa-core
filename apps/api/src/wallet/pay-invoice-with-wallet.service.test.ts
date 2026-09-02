@@ -1,19 +1,23 @@
 /**
- * Unit tests for PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02).
+ * Unit tests for PayInvoiceWithWalletService
+ * (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03).
  *
  * Mocks `getDbPool`, `WalletService.debit`, and invoice transitions.
- * Covers: wallet+invoice `FOR UPDATE` lock order, availableBalance gate,
- * full remaining debit + Paid, PartiallyFunded remaining, insufficient
- * balance rollback, idempotent replay, profile isolation, credit notes,
- * non-payable states, and debit joining the same client.
+ * Covers: idempotency_keys claim + cached retry, wallet+invoice
+ * `FOR UPDATE` lock order, availableBalance gate, full remaining debit
+ * + Paid, PartiallyFunded remaining, insufficient balance rollback,
+ * ledger heal, profile isolation, credit notes, non-payable states,
+ * and debit joining the same client.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ConflictException, NotFoundException } from '@nestjs/common'
 import {
+  INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
   payInvoiceWithWalletMetadata,
+  serializePayInvoiceWithWalletCache,
 } from '@barghsa/shared/finance'
 import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
 import type { WalletService } from './wallet.service.js'
@@ -120,12 +124,27 @@ function paymentQueries(opts: {
   wallet?: Record<string, unknown> | null
   ledger?: Record<string, unknown>[]
   paidOk?: boolean
+  /** Rows returned by INSERT … ON CONFLICT DO NOTHING RETURNING. Default: claimed. */
+  idempotencyInsert?: Record<string, unknown>[]
+  /** Rows returned by SELECT … FOR UPDATE on idempotency_keys. */
+  idempotencySelect?: Record<string, unknown>[]
 } = {}) {
   const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice
   const wallet = opts.wallet === undefined ? walletRow() : opts.wallet
   const ledger = opts.ledger ?? []
   const paidOk = opts.paidOk ?? true
+  const idempotencyInsert = opts.idempotencyInsert ?? [{ id: 'idem-claim-1' }]
+  const idempotencySelect = opts.idempotencySelect ?? []
   mockQuery((sql) => {
+    if (sql.includes('INSERT INTO idempotency_keys')) {
+      return { rows: idempotencyInsert }
+    }
+    if (sql.includes('FROM idempotency_keys')) {
+      return { rows: idempotencySelect }
+    }
+    if (sql.includes('UPDATE idempotency_keys')) {
+      return { rows: [] }
+    }
     if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
       return { rows: wallet ? [wallet] : [] }
     }
@@ -143,7 +162,18 @@ function paymentQueries(opts: {
   })
 }
 
-describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
+function cachedResponse(invoiceId = INVOICE_ID, profileId = PROFILE_ID) {
+  return serializePayInvoiceWithWalletCache({
+    invoiceId,
+    profileId,
+    fromState: 'Unpaid',
+    remainingPaid: 1_000_000n,
+    auditId: 'audit-1',
+    walletTransaction: debitRow({ refId: invoiceId, walletId: profileId }),
+  })
+}
+
+describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03)', () => {
   let walletService: { debit: ReturnType<typeof vi.fn> }
   let invoiceStateMachine: {
     canPayFromWallet: ReturnType<typeof vi.fn>
@@ -243,6 +273,18 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
       (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
     )
     expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000'])
+
+    const cacheWrite = mockClient.query.mock.calls.find(
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
+    )
+    expect(cacheWrite?.[1]?.[0]).toBe(IDEMPOTENCY_KEY)
+    expect(cacheWrite?.[1]?.[1]).toBe(INVOICE_WALLET_PAYMENT_ENTITY_TYPE)
+    expect(JSON.parse(String(cacheWrite?.[1]?.[2]))).toMatchObject({
+      invoiceId: INVOICE_ID,
+      profileId: PROFILE_ID,
+      remainingPaid: '1000000',
+      toState: 'Paid',
+    })
   })
 
   it('SELECT … FOR UPDATE locks the wallet before the invoice', async () => {
@@ -250,13 +292,20 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
 
     await pay()
 
-    const sqlCalls = mockClient.query.mock.calls
-      .map((c) => String(c[0]))
-      .filter((sql) => sql.includes('FOR UPDATE'))
-    expect(sqlCalls[0]).toMatch(/FROM wallets[\s\S]*FOR UPDATE/)
-    expect(sqlCalls[1]).toMatch(/FROM invoices[\s\S]*FOR UPDATE/)
-    expect(sqlCalls[0]).toContain('posted_balance')
-    expect(sqlCalls[0]).toContain('reserved_balance')
+    const sqlCalls = mockClient.query.mock.calls.map((c) => String(c[0]))
+    const claimIdx = sqlCalls.findIndex((sql) => sql.includes('INSERT INTO idempotency_keys'))
+    const walletIdx = sqlCalls.findIndex(
+      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE'),
+    )
+    const invoiceIdx = sqlCalls.findIndex(
+      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE'),
+    )
+    expect(claimIdx).toBeGreaterThan(-1)
+    expect(claimIdx).toBeLessThan(walletIdx)
+    expect(walletIdx).toBeLessThan(invoiceIdx)
+    expect(sqlCalls[claimIdx]).toContain('ON CONFLICT (idempotency_key, entity_type)')
+    expect(sqlCalls[walletIdx]).toContain('posted_balance')
+    expect(sqlCalls[walletIdx]).toContain('reserved_balance')
   })
 
   it('debits only the remaining amount on a PartiallyFunded invoice', async () => {
@@ -325,10 +374,10 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
   })
 
-  it('returns the original result on idempotent retry without debiting again', async () => {
+  it('returns the cached result on idempotent retry without debiting again', async () => {
     paymentQueries({
-      invoice: invoiceRow({ state: 'Paid', paid_amount: '1000000' }),
-      ledger: [ledgerSqlRow()],
+      idempotencyInsert: [],
+      idempotencySelect: [{ entity_id: INVOICE_ID, response: cachedResponse() }],
     })
 
     const result = await pay()
@@ -340,6 +389,38 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
     expect(walletService.debit).not.toHaveBeenCalled()
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
     expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    expect(
+      mockClient.query.mock.calls.some(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets'),
+      ),
+    ).toBe(false)
+  })
+
+  it('rejects a retry that reuses the key for a different invoice', async () => {
+    paymentQueries({
+      idempotencyInsert: [],
+      idempotencySelect: [
+        {
+          entity_id: '22222222-2222-7222-8222-222222222222',
+          response: cachedResponse('22222222-2222-7222-8222-222222222222'),
+        },
+      ],
+    })
+
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+  })
+
+  it('rejects an in-flight idempotency claim without debiting', async () => {
+    paymentQueries({
+      idempotencyInsert: [],
+      idempotencySelect: [{ entity_id: INVOICE_ID, response: null }],
+    })
+
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
   })
 
   it('settles an Unpaid invoice when a matching debit already exists (heal)', async () => {
@@ -359,6 +440,28 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
       expect.objectContaining({ client: mockClient }),
     )
     expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+  })
+
+  it('replays a matching ledger row when the invoice is already Paid (heal cache)', async () => {
+    paymentQueries({
+      invoice: invoiceRow({ state: 'Paid', paid_amount: '1000000' }),
+      ledger: [ledgerSqlRow()],
+    })
+
+    const result = await pay()
+
+    expect(result.replayed).toBe(true)
+    expect(result.toState).toBe('Paid')
+    expect(result.remainingPaid).toBe(1_000_000n)
+    expect(result.walletTransaction.id).toBe(TX_ID)
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    expect(
+      mockClient.query.mock.calls.some(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
+      ),
+    ).toBe(true)
   })
 
   it('rejects a colliding idempotency key that belongs to another operation', async () => {
