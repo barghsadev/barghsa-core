@@ -13,8 +13,10 @@
  *   6. Rolls every one of those writes back when availableBalance is
  *      insufficient (including when reserved funds consume posted).
  *
- * Concurrent races belong to T-04.2.03.04. Wiring: only `getDbPool()` is
- * stubbed, handing the service the schema-scoped Testcontainers pool.
+ * Concurrent races belong to T-04.2.03.04
+ * (`pay-invoice-with-wallet.concurrency.integration.test.ts`). Wiring: only
+ * `getDbPool()` is stubbed, handing the service the schema-scoped
+ * Testcontainers pool.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
