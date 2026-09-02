@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { t, type Locale } from '@barghsa/i18n'
-import { parseBankReceiptTopUpAmountIrR, BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
+import {
+  parseBankReceiptTopUpAmountIrR,
+  BANK_RECEIPT_STORAGE_PURPOSE,
+  isValidWalletTopUpLimit,
+} from '@barghsa/shared/finance'
 import { useLocale } from '../hooks/useLocale.js'
 import { withCsrf } from '../lib/csrf.js'
 
@@ -10,6 +14,13 @@ interface WalletBalance {
   reservedBalance?: number
   currency: string
   onlineTopUpLimit?: number
+  configVersion?: number
+}
+
+/** Advertised per-transaction ceiling, or `null` when GET did not return a valid limit. */
+function advertisedOnlineTopUpLimit(wallet: WalletBalance | null): number | null {
+  if (!wallet || !isValidWalletTopUpLimit(wallet.onlineTopUpLimit)) return null
+  return wallet.onlineTopUpLimit
 }
 
 type PageError =
@@ -282,10 +293,8 @@ export function WalletPage() {
       return
     }
 
-    if (
-      typeof wallet?.onlineTopUpLimit === 'number' &&
-      (wallet.onlineTopUpLimit === 0 || amountValue > wallet.onlineTopUpLimit)
-    ) {
+    const limitIrR = advertisedOnlineTopUpLimit(wallet)
+    if (limitIrR === null || limitIrR === 0 || amountValue > limitIrR) {
       setError('limit-exceeded')
       return
     }
@@ -405,6 +414,9 @@ export function WalletPage() {
     }
   }
 
+  const advertisedLimit = advertisedOnlineTopUpLimit(wallet)
+  const onlineSubmitDisabled = submitting || advertisedLimit === null || advertisedLimit === 0
+
   const errorMessage =
     error === null
       ? null
@@ -501,13 +513,11 @@ export function WalletPage() {
                   className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
                 <p id="top-up-amount-hint" className="mt-2 text-sm text-gray-500">
-                  {wallet?.onlineTopUpLimit === 0
+                  {advertisedLimit === 0
                     ? t('wallet.page.amountHintBlocked', locale)
                     : t('wallet.page.amountHint', locale).replace(
                         '{limit}',
-                        typeof wallet?.onlineTopUpLimit === 'number'
-                          ? formatAmount(wallet.onlineTopUpLimit, locale)
-                          : '—',
+                        advertisedLimit !== null ? formatAmount(advertisedLimit, locale) : '—',
                       )}
                 </p>
                 {tomanPreview !== null && (
@@ -522,7 +532,7 @@ export function WalletPage() {
               <button
                 type="submit"
                 data-testid="wallet-submit"
-                disabled={submitting}
+                disabled={onlineSubmitDisabled}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-dark disabled:opacity-60"
               >
                 {submitting ? t('wallet.page.submitting', locale) : t('wallet.page.submit', locale)}

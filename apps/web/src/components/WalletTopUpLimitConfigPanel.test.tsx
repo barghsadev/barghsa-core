@@ -72,6 +72,12 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
     expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
       'Config version: 0',
     )
+    const get = fetchMock.mock.calls.find(
+      ([url, init]) =>
+        String(url).endsWith('/api/admin/config/wallet-top-up-limit') &&
+        (init as RequestInit | undefined)?.method !== 'PUT',
+    )
+    expect(get?.[1]).toMatchObject({ credentials: 'include' })
   })
 
   it('PUTs a new integer limit and shows the saved version', async () => {
@@ -118,5 +124,19 @@ describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
       ),
     ).toBe(false)
     expect(container.textContent).toContain('Limit must be an integer between 0 and')
+  })
+
+  it('hides the panel when the admin is not allowed to read the config', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
+        return jsonResponse({ message: 'Admin role required' }, 403)
+      }
+      return jsonResponse({}, 404)
+    })
+    await renderPanel()
+    expect(container.querySelector('[data-testid="wallet-top-up-limit-panel"]')).toBeNull()
+    expect(container.textContent).not.toContain('Failed to load')
   })
 })

@@ -134,7 +134,12 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         return jsonResponse({ activeProfileId: PROFILE_ID })
       }
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
-        return jsonResponse({ balance: 0, currency: 'IRR' })
+        return jsonResponse({
+          balance: 0,
+          currency: 'IRR',
+          onlineTopUpLimit: 2_000_000_000,
+          configVersion: 0,
+        })
       }
       if (url.includes('/top-ups') && method === 'POST') {
         return jsonResponse({ redirectUrl: 'javascript:alert(1)' }, 201)
@@ -199,7 +204,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     expect(assign).not.toHaveBeenCalled()
   })
 
-  it('shows the limit-exceeded error and does not redirect', async () => {
+  it('blocks submit client-side when the wallet GET omits onlineTopUpLimit', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input)
       const method = (init?.method ?? 'GET').toUpperCase()
@@ -209,9 +214,75 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
       if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
         return jsonResponse({ balance: 0, currency: 'IRR' })
       }
+      return jsonResponse({}, 404)
+    })
+
+    await renderPage()
+    const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
+    const form = input.closest('form') as HTMLFormElement
+    await act(async () => {
+      setInputValue(input, '1000')
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).includes('/top-ups') && (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="wallet-error"]')?.textContent).toContain(
+      'Amount exceeds the online top-up limit',
+    )
+    expect(container.querySelector('[data-testid="wallet-submit"]')).toHaveProperty('disabled', true)
+    expect(assign).not.toHaveBeenCalled()
+  })
+
+  it('disables submit when the advertised onlineTopUpLimit is the 0 kill switch', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return jsonResponse({ activeProfileId: PROFILE_ID })
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
+        return jsonResponse({
+          balance: 0,
+          currency: 'IRR',
+          onlineTopUpLimit: 0,
+          configVersion: 3,
+        })
+      }
+      return jsonResponse({}, 404)
+    })
+
+    await renderPage()
+    expect(container.querySelector('#top-up-amount-hint')?.textContent).toContain(
+      'Online top-ups are currently blocked',
+    )
+    expect(container.querySelector('[data-testid="wallet-submit"]')).toHaveProperty('disabled', true)
+  })
+
+  it('shows the limit-exceeded error from the server when the advertised limit is stale', async () => {
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return jsonResponse({ activeProfileId: PROFILE_ID })
+      }
+      if (url.includes(`/api/wallet/${PROFILE_ID}`) && method === 'GET') {
+        return jsonResponse({
+          balance: 0,
+          currency: 'IRR',
+          onlineTopUpLimit: 2_000_000_000,
+          configVersion: 0,
+        })
+      }
       if (url.includes('/top-ups')) {
         return jsonResponse(
-          { message: 'Online top-up amount 2000000001 IRR exceeds the configured per-transaction limit of 2000000000 IRR' },
+          { message: 'Online top-up amount 100000 IRR exceeds the configured per-transaction limit of 50000 IRR' },
           400,
         )
       }
@@ -222,7 +293,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
     const input = container.querySelector('[data-testid="wallet-amount"]') as HTMLInputElement
     const form = input.closest('form') as HTMLFormElement
     await act(async () => {
-      setInputValue(input, '2000000001')
+      setInputValue(input, '100000')
     })
     await act(async () => {
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
