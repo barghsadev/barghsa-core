@@ -1,14 +1,15 @@
 /**
- * Unit tests for PayInvoiceWithWalletService (T-04.2.03.01).
+ * Unit tests for PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02).
  *
  * Mocks `getDbPool`, `WalletService.debit`, and invoice transitions.
- * Covers: full remaining debit + Paid, PartiallyFunded remaining,
- * insufficient balance rollback, idempotent replay, profile isolation,
- * credit notes, non-payable states, and debit joining the same client.
+ * Covers: wallet+invoice `FOR UPDATE` lock order, availableBalance gate,
+ * full remaining debit + Paid, PartiallyFunded remaining, insufficient
+ * balance rollback, idempotent replay, profile isolation, credit notes,
+ * non-payable states, and debit joining the same client.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
+import { ConflictException, NotFoundException } from '@nestjs/common'
 import {
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
@@ -50,6 +51,19 @@ function invoiceRow(overrides: Record<string, unknown> = {}) {
     refunded_amount: '0',
     adjustment_kind: null,
     payable_from: new Date('2026-08-01T00:00:00.000Z'),
+    ...overrides,
+  }
+}
+
+function walletRow(overrides: Record<string, unknown> = {}) {
+  const posted = (overrides.posted_balance as string | undefined) ?? '2000000'
+  const reserved = (overrides.reserved_balance as string | undefined) ?? '0'
+  return {
+    profile_id: PROFILE_ID,
+    posted_balance: posted,
+    reserved_balance: reserved,
+    version: 3,
+    available_balance: (BigInt(posted) - BigInt(reserved)).toString(),
     ...overrides,
   }
 }
@@ -101,7 +115,35 @@ function mockQuery(handler: (sql: string, params?: unknown[]) => unknown) {
   })
 }
 
-describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
+function paymentQueries(opts: {
+  invoice?: Record<string, unknown> | null
+  wallet?: Record<string, unknown> | null
+  ledger?: Record<string, unknown>[]
+  paidOk?: boolean
+} = {}) {
+  const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice
+  const wallet = opts.wallet === undefined ? walletRow() : opts.wallet
+  const ledger = opts.ledger ?? []
+  const paidOk = opts.paidOk ?? true
+  mockQuery((sql) => {
+    if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
+      return { rows: wallet ? [wallet] : [] }
+    }
+    if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
+      return { rows: invoice ? [invoice] : [] }
+    }
+    if (sql.includes('FROM wallet_transactions')) {
+      return { rows: ledger }
+    }
+    if (sql.includes('SET paid_amount')) {
+      if (!paidOk) return { rows: [] }
+      return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
+    }
+    throw new Error(`unexpected sql: ${sql}`)
+  })
+}
+
+describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02)', () => {
   let walletService: { debit: ReturnType<typeof vi.fn> }
   let invoiceStateMachine: {
     canPayFromWallet: ReturnType<typeof vi.fn>
@@ -150,18 +192,7 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
   }
 
   it('debits the exact remaining amount and marks the invoice Paid in one transaction', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow()] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      if (sql.includes('SET paid_amount')) {
-        return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries()
 
     const result = await pay()
 
@@ -214,6 +245,20 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
     expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000'])
   })
 
+  it('SELECT … FOR UPDATE locks the wallet before the invoice', async () => {
+    paymentQueries()
+
+    await pay()
+
+    const sqlCalls = mockClient.query.mock.calls
+      .map((c) => String(c[0]))
+      .filter((sql) => sql.includes('FOR UPDATE'))
+    expect(sqlCalls[0]).toMatch(/FROM wallets[\s\S]*FOR UPDATE/)
+    expect(sqlCalls[1]).toMatch(/FROM invoices[\s\S]*FOR UPDATE/)
+    expect(sqlCalls[0]).toContain('posted_balance')
+    expect(sqlCalls[0]).toContain('reserved_balance')
+  })
+
   it('debits only the remaining amount on a PartiallyFunded invoice', async () => {
     walletService.debit.mockResolvedValue(
       debitRow({
@@ -232,17 +277,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
       transition: 'PayFromWallet',
       auditId: 'audit-partial',
     })
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow({ state: 'PartiallyFunded', paid_amount: '600000' })] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      if (sql.includes('SET paid_amount')) {
-        return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+    paymentQueries({
+      invoice: invoiceRow({ state: 'PartiallyFunded', paid_amount: '600000' }),
     })
 
     const result = await pay()
@@ -258,21 +294,15 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
     )
   })
 
-  it('rolls back the invoice when debit rejects insufficient availableBalance', async () => {
-    walletService.debit.mockRejectedValue(
-      new BadRequestException('Insufficient balance: available=100000, required=1000000'),
-    )
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow()] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+  it('rejects when locked availableBalance is below remaining without debiting', async () => {
+    paymentQueries({
+      wallet: walletRow({ posted_balance: '100000', reserved_balance: '0' }),
     })
 
-    await expect(pay()).rejects.toThrow('Insufficient balance')
+    await expect(pay()).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(100_000n, 1_000_000n),
+    )
+    expect(walletService.debit).not.toHaveBeenCalled()
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
@@ -283,17 +313,22 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
     ).toBe(false)
   })
 
+  it('rejects when reserved funds leave availableBalance below remaining', async () => {
+    paymentQueries({
+      wallet: walletRow({ posted_balance: '1000000', reserved_balance: '1' }),
+    })
+
+    await expect(pay()).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(999_999n, 1_000_000n),
+    )
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+  })
+
   it('returns the original result on idempotent retry without debiting again', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return {
-          rows: [invoiceRow({ state: 'Paid', paid_amount: '1000000' })],
-        }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [ledgerSqlRow()] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+    paymentQueries({
+      invoice: invoiceRow({ state: 'Paid', paid_amount: '1000000' }),
+      ledger: [ledgerSqlRow()],
     })
 
     const result = await pay()
@@ -308,17 +343,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
   })
 
   it('settles an Unpaid invoice when a matching debit already exists (heal)', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow()] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [ledgerSqlRow()] }
-      }
-      if (sql.includes('SET paid_amount')) {
-        return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+    paymentQueries({
+      ledger: [ledgerSqlRow()],
     })
 
     const result = await pay()
@@ -336,14 +362,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
   })
 
   it('rejects a colliding idempotency key that belongs to another operation', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow()] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [ledgerSqlRow({ type: 'topup', amount: '1000000', ref_id: null })] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+    paymentQueries({
+      ledger: [ledgerSqlRow({ type: 'topup', amount: '1000000', ref_id: null })],
     })
 
     await expect(pay()).rejects.toThrow('Idempotency key already used for a different wallet operation')
@@ -351,58 +371,35 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
   })
 
+  it('returns 404 when the wallet is missing', async () => {
+    paymentQueries({ wallet: null })
+    await expect(pay()).rejects.toThrow(`Wallet not found: ${PROFILE_ID}`)
+    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM invoices'),
+      ),
+    ).toBe(false)
+  })
+
   it('returns 404 when the invoice is missing or belongs to another profile', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries({ invoice: null })
     await expect(pay()).rejects.toBeInstanceOf(NotFoundException)
 
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow({ profile_id: OTHER_PROFILE })] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries({ invoice: invoiceRow({ profile_id: OTHER_PROFILE }) })
     await expect(pay()).rejects.toThrow(`Invoice not found: ${INVOICE_ID}`)
     expect(walletService.debit).not.toHaveBeenCalled()
   })
 
   it('rejects credit notes, Overdue, and invoices that are not yet payable', async () => {
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow({ adjustment_kind: 'credit' })] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries({ invoice: invoiceRow({ adjustment_kind: 'credit' }) })
     await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(INVOICE_ID))
 
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow({ state: 'Overdue' })] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries({ invoice: invoiceRow({ state: 'Overdue' }) })
     await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Overdue'))
 
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return {
-          rows: [invoiceRow({ payable_from: new Date('2026-12-01T00:00:00.000Z') })],
-        }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
+    paymentQueries({
+      invoice: invoiceRow({ payable_from: new Date('2026-12-01T00:00:00.000Z') }),
     })
     await expect(pay()).rejects.toThrow('Invoice is not payable until')
     expect(walletService.debit).not.toHaveBeenCalled()
@@ -422,18 +419,7 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01)', () => {
 
   it('rolls back when the invoice transition fails after the wallet debit', async () => {
     invoiceStateMachine.transition.mockRejectedValue(new ConflictException('state conflict'))
-    mockQuery((sql) => {
-      if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-        return { rows: [invoiceRow()] }
-      }
-      if (sql.includes('FROM wallet_transactions')) {
-        return { rows: [] }
-      }
-      if (sql.includes('SET paid_amount')) {
-        return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
-      }
-      throw new Error(`unexpected sql: ${sql}`)
-    })
+    paymentQueries()
 
     await expect(pay()).rejects.toThrow('state conflict')
     expect(walletService.debit).toHaveBeenCalledWith(

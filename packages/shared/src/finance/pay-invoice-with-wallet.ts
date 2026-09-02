@@ -1,11 +1,12 @@
 /**
- * Wallet-to-invoice payment helpers (S-04.2.03, T-04.2.03.01).
+ * Wallet-to-invoice payment helpers (S-04.2.03, T-04.2.03.01 / T-04.2.03.02).
  *
  * A wallet payment is a single full debit of the invoice remaining
  * amount. It is enabled only from Unpaid / PartiallyFunded (not credit
  * notes) when `availableBalance >= remaining`. The service method
  * `payInvoiceWithWallet` uses these helpers for remaining, eligibility,
- * and ledger metadata.
+ * available-balance gating, and ledger metadata. The DB transaction
+ * `SELECT … FOR UPDATE`s the wallet and invoice before that check.
  *
  * @module finance
  */
@@ -90,6 +91,29 @@ export function remainingForWalletPayment(input: {
   if (input.adjustmentKind === 'credit') return 0n
   if (!isWalletPayableInvoiceState(input.state)) return 0n
   return invoiceRemainingAmount(input.totalAmount, input.paidAmount)
+}
+
+/**
+ * Derived available balance (`posted − reserved`). Never stored
+ * (T-04.2.01.01 / T-04.2.03.02).
+ */
+export function walletAvailableBalance(
+  postedBalance: bigint,
+  reservedBalance: bigint,
+): bigint {
+  return postedBalance - reservedBalance
+}
+
+/**
+ * A wallet payment is enabled only when the locked wallet's derived
+ * availableBalance covers the exact remaining invoice amount
+ * (T-04.2.03.02 / S-04.2.03). `remaining <= 0` is not payable.
+ */
+export function availableCoversRemaining(
+  available: bigint,
+  remaining: bigint,
+): boolean {
+  return remaining > 0n && available >= remaining
 }
 
 export function parsePayInvoiceWithWalletIds(

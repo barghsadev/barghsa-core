@@ -1,23 +1,26 @@
 /**
  * PayInvoiceWithWalletService — settle an invoice with a single full
- * wallet debit (T-04.2.03.01 / S-04.2.03).
+ * wallet debit (T-04.2.03.01 / T-04.2.03.02 / S-04.2.03).
  *
  * `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)`:
  *   1. Validates UUIDs and a non-blank idempotency key.
- *   2. Opens one DB transaction and `SELECT … FOR UPDATE` the invoice.
- *   3. Rejects missing invoices, other profiles (404), credit notes,
- *      non-PayFromWallet states, not-yet-payable dates, remaining 0,
- *      and (via `WalletService.debit`) insufficient availableBalance.
+ *   2. Opens one DB transaction and `SELECT … FOR UPDATE`s the wallet
+ *      first, then the invoice (stable lock order vs other wallet
+ *      mutations that already lock the wallet row).
+ *   3. Rejects missing wallets/invoices, other profiles (404), credit
+ *      notes, non-PayFromWallet states, not-yet-payable dates, remaining
+ *      0, and insufficient derived availableBalance (`posted − reserved`).
  *   4. Debits the exact remaining amount (`type: payment`, `refId` =
  *      invoice id) on the same client so wallet + invoice commit together.
+ *      `WalletService.debit` re-locks the wallet and applies the
+ *      optimistic `version` predicate as a second line of defense.
  *   5. Sets `paid_amount` to the total and transitions Unpaid /
- *      PartiallyFunded → Paid through the state machine (audit + paid_at).
+ *      PartiallyFunded → Paid through the state machine (audit + paid_at)
+ *      in the same transaction as the wallet_transactions insert.
  *
  * Retrying with the same idempotency key returns the original Paid result
- * and never debits twice. T-04.2.03.02 / T-04.2.03.03 deepen locking
- * and the dedicated `(idempotencyKey, entityType)` unique index; this
- * method already joins `WalletService.debit` (wallet FOR UPDATE +
- * `idx_wallet_tx_idempotency`) and the invoice row lock.
+ * and never debits twice. T-04.2.03.03 adds the dedicated
+ * `(idempotencyKey, entityType)` unique index.
  */
 
 import {
@@ -32,10 +35,12 @@ import { getDbPool } from '@barghsa/db'
 import {
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
+  availableCoversRemaining,
   isMatchingWalletInvoicePayment,
   parsePayInvoiceWithWalletIds,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
+  walletAvailableBalance,
 } from '@barghsa/shared/finance'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
@@ -85,6 +90,13 @@ interface LockedInvoiceRow {
   payable_from: Date | string | null
 }
 
+interface LockedWalletRow {
+  profile_id: string
+  posted_balance: string | number | bigint
+  reserved_balance: string | number | bigint
+  version: number
+}
+
 @Injectable()
 export class PayInvoiceWithWalletService {
   private readonly logger = new Logger(PayInvoiceWithWalletService.name)
@@ -123,6 +135,9 @@ export class PayInvoiceWithWalletService {
     try {
       await client.query('BEGIN')
 
+      // Wallet first, then invoice: every other money mutation already
+      // locks the wallet row, so this order cannot deadlock against them.
+      const wallet = await this.lockWallet(client, ids.profileId)
       const invoice = await this.lockInvoice(client, ids.invoiceId)
       if (invoice.profile_id.toLowerCase() !== ids.profileId) {
         throw new NotFoundException(`Invoice not found: ${ids.invoiceId}`)
@@ -152,6 +167,7 @@ export class PayInvoiceWithWalletService {
       }
 
       this.assertPayable(invoice, remaining, now)
+      this.assertAvailableBalance(wallet, remaining)
 
       const paidAfter = paidAmount + remaining
       const debit = await this.walletService.debit(
@@ -228,6 +244,18 @@ export class PayInvoiceWithWalletService {
     if (payableFrom && now < payableFrom) {
       throw new BadRequestException(
         PAY_INVOICE_WITH_WALLET_ERRORS.NOT_YET_PAYABLE(payableFrom.toISOString()),
+      )
+    }
+  }
+
+  private assertAvailableBalance(wallet: LockedWalletRow, remaining: bigint): void {
+    const available = walletAvailableBalance(
+      BigInt(wallet.posted_balance),
+      BigInt(wallet.reserved_balance),
+    )
+    if (!availableCoversRemaining(available, remaining)) {
+      throw new BadRequestException(
+        PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(available, remaining),
       )
     }
   }
@@ -343,6 +371,22 @@ export class PayInvoiceWithWalletService {
       ...(input.ip !== undefined ? { ip: input.ip } : {}),
       ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
     })
+  }
+
+  private async lockWallet(client: WalletQueryClient, profileId: string): Promise<LockedWalletRow> {
+    const result = await client.query(
+      `SELECT profile_id, posted_balance, reserved_balance, version,
+              (posted_balance - reserved_balance) AS available_balance
+         FROM wallets
+        WHERE profile_id = $1
+        FOR UPDATE`,
+      [profileId],
+    )
+    const row = (result.rows as LockedWalletRow[])[0]
+    if (!row) {
+      throw new NotFoundException(`Wallet not found: ${profileId}`)
+    }
+    return row
   }
 
   private async lockInvoice(client: WalletQueryClient, invoiceId: string): Promise<LockedInvoiceRow> {

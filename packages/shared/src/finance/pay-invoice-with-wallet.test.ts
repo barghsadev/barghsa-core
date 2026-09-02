@@ -3,17 +3,19 @@ import {
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
   WALLET_PAYABLE_INVOICE_STATES,
+  availableCoversRemaining,
   isMatchingWalletInvoicePayment,
   isWalletPayableInvoiceState,
   parsePayInvoiceWithWalletIds,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
+  walletAvailableBalance,
 } from './pay-invoice-with-wallet.js'
 
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
 const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 
-describe('pay invoice with wallet helpers (T-04.2.03.01)', () => {
+describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => {
   describe('isWalletPayableInvoiceState', () => {
     it('allows Unpaid and PartiallyFunded only', () => {
       expect(WALLET_PAYABLE_INVOICE_STATES).toEqual(['Unpaid', 'PartiallyFunded'])
@@ -74,6 +76,18 @@ describe('pay invoice with wallet helpers (T-04.2.03.01)', () => {
           state: 'Unpaid',
         }),
       ).toBe(0n)
+    })
+  })
+
+  describe('walletAvailableBalance / availableCoversRemaining', () => {
+    it('derives posted minus reserved and gates the remaining debit', () => {
+      expect(walletAvailableBalance(1_000_000n, 250_000n)).toBe(750_000n)
+      expect(walletAvailableBalance(1_000_000n, 0n)).toBe(1_000_000n)
+      expect(availableCoversRemaining(1_000_000n, 1_000_000n)).toBe(true)
+      expect(availableCoversRemaining(1_000_001n, 1_000_000n)).toBe(true)
+      expect(availableCoversRemaining(999_999n, 1_000_000n)).toBe(false)
+      expect(availableCoversRemaining(1_000_000n, 0n)).toBe(false)
+      expect(availableCoversRemaining(0n, 1n)).toBe(false)
     })
   })
 
