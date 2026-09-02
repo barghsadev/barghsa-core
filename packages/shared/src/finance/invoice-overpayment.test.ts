@@ -10,6 +10,7 @@ import {
   invoiceStateAfterBankReceiptAllocation,
   parseOptionalInvoiceId,
   readBankReceiptOverpaymentSnapshot,
+  isBankReceiptInvoiceLinkAllowedState,
   remainingForBankReceiptSettlement,
 } from './invoice-overpayment.js'
 
@@ -70,6 +71,20 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
           state: 'Cancelled',
         }),
       ).toBe(0n)
+    })
+  })
+
+  describe('isBankReceiptInvoiceLinkAllowedState', () => {
+    it('allows payable states and Paid (remaining-0 excess), not closed states', () => {
+      expect(isBankReceiptInvoiceLinkAllowedState('Unpaid')).toBe(true)
+      expect(isBankReceiptInvoiceLinkAllowedState('PaymentUnderReview')).toBe(true)
+      expect(isBankReceiptInvoiceLinkAllowedState('PartiallyFunded')).toBe(true)
+      expect(isBankReceiptInvoiceLinkAllowedState('Paid')).toBe(true)
+      expect(isBankReceiptInvoiceLinkAllowedState('Overdue')).toBe(false)
+      expect(isBankReceiptInvoiceLinkAllowedState('Draft')).toBe(false)
+      expect(isBankReceiptInvoiceLinkAllowedState('Cancelled')).toBe(false)
+      expect(isBankReceiptInvoiceLinkAllowedState('Refunded')).toBe(false)
+      expect(isBankReceiptInvoiceLinkAllowedState('PartiallyRefunded')).toBe(false)
     })
   })
 

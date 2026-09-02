@@ -238,6 +238,12 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
 
     expect(container.textContent).toContain('The receipt exceeds the invoice remaining')
     expect(container.textContent).toContain('Excess credited to wallet')
+    expect(
+      (container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement).textContent,
+    ).toContain('Confirm: settle invoice and credit excess')
+    expect(
+      (container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement).disabled,
+    ).toBe(false)
 
     await act(async () => {
       ;(container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement).click()
@@ -252,6 +258,119 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     )
     expect(confirmCall).toBeTruthy()
     expect((confirmCall?.[1] as RequestInit).body).toBe(JSON.stringify({ invoiceId: INVOICE_ID }))
+  })
+
+  it('does not confirm against an invoice when allocation preview fails', async () => {
+    const fetchMock = vi.mocked(fetch)
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.includes(`/${TX_A}/allocation?`) && method === 'GET') {
+        return {
+          ok: false,
+          status: 409,
+          json: async () => ({ message: 'Invoice in state \'Cancelled\' cannot receive a bank-receipt allocation' }),
+        } as Response
+      }
+      return defaultFetch(input, init)
+    })
+
+    await act(async () => {
+      root.render(<AdminWalletReceiptsPage />)
+    })
+    await flush()
+
+    const invoiceInput = container.querySelector('#apply-invoice-id') as HTMLInputElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(invoiceInput, INVOICE_ID)
+      invoiceInput.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await flush()
+    await flush()
+
+    expect(container.textContent).toContain('cannot receive a bank-receipt allocation')
+    const confirm = container.querySelector(
+      '[data-testid="wallet-receipt-confirm"]',
+    ) as HTMLButtonElement
+    expect(confirm.disabled).toBe(true)
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).endsWith('/confirm') && (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+  })
+
+  it('retries step-up confirm with the invoice id captured at first click', async () => {
+    let confirmCalls = 0
+    const fetchMock = vi.mocked(fetch)
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith(`/${TX_A}/confirm`) && method === 'POST') {
+        confirmCalls += 1
+        expect(JSON.parse(String(init?.body))).toEqual({ invoiceId: INVOICE_ID })
+        if (confirmCalls === 1) return stepUpForbidden()
+        return {
+          ok: true,
+          json: async () =>
+            receiptDto(TX_A, {
+              state: 'Released',
+              canDecide: false,
+              overpayment: {
+                invoiceId: INVOICE_ID,
+                remainingBefore: '100000',
+                invoiceAllocation: '100000',
+                walletCreditAmount: '150000',
+                overpaymentCreditTransactionId: 'credit-overpay',
+              },
+            }),
+        } as Response
+      }
+      if (url.endsWith('/api/auth/step-up') && method === 'POST') {
+        return { ok: true, json: async () => ({ message: 'ok' }) } as Response
+      }
+      return defaultFetch(input, init)
+    })
+
+    await act(async () => {
+      root.render(<AdminWalletReceiptsPage />)
+    })
+    await flush()
+
+    const invoiceInput = container.querySelector('#apply-invoice-id') as HTMLInputElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(invoiceInput, INVOICE_ID)
+      invoiceInput.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await flush()
+    await flush()
+
+    await act(async () => {
+      ;(container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement).click()
+    })
+    await flush()
+
+    expect(confirmCalls).toBe(1)
+    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull()
+
+    const password = container.querySelector(
+      '[data-testid="wallet-receipt-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(password, 'secret')
+      password.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="wallet-receipt-step-up-submit"]') as HTMLButtonElement).click()
+    })
+    await flush()
+
+    expect(confirmCalls).toBe(2)
+    expect(container.textContent).toContain('the excess was credited to the wallet')
   })
 
   it('opens a step-up challenge on confirm, then retries after verification', async () => {

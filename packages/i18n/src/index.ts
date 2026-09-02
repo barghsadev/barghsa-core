@@ -1124,6 +1124,7 @@ export const fa: I18nDictionary = {
   'admin.walletReceipts.attachmentAlt': 'اسکن رسید بانکی',
   'admin.walletReceipts.openAttachment': 'مشاهده فایل رسید',
   'admin.walletReceipts.confirm': 'تأیید و واریز به کیف پول',
+  'admin.walletReceipts.confirmOverpayment': 'تأیید: تسویه فاکتور و واریز مازاد به کیف پول',
   'admin.walletReceipts.reject': 'رد رسید',
   'admin.walletReceipts.reason': 'دلیل رد (قابل‌نمایش برای مشتری)',
   'admin.walletReceipts.reasonHint': 'این متن برای مشتری نمایش داده می‌شود و در سابقه حسابرسی ذخیره می‌گردد.',
@@ -1152,6 +1153,7 @@ export const fa: I18nDictionary = {
   'admin.walletReceipts.overpaymentConfirmed': 'رسید تأیید شد. سهم فاکتور تا مانده اعمال شد و مازاد به کیف پول واریز گردید.',
   'admin.walletReceipts.error.invoiceId': 'شناسه فاکتور باید یک UUID معتبر باشد',
   'admin.walletReceipts.error.allocation': 'محاسبه مانده فاکتور ناموفق بود',
+  'admin.walletReceipts.error.allocationPending': 'صبر کنید تا پیش‌نمایش مانده فاکتور آماده شود',
 
   // ── Notification Center (T-05.02.03) ─────────────────────
   'notifications.title': 'مرکز اطلاع‌رسانی',
@@ -2271,6 +2273,7 @@ export const en: I18nDictionary = {
     'admin.walletReceipts.attachmentAlt': 'Bank receipt scan',
     'admin.walletReceipts.openAttachment': 'Open receipt file',
     'admin.walletReceipts.confirm': 'Confirm and credit wallet',
+    'admin.walletReceipts.confirmOverpayment': 'Confirm: settle invoice and credit excess',
     'admin.walletReceipts.reject': 'Reject receipt',
     'admin.walletReceipts.reason': 'Rejection reason (customer-visible)',
     'admin.walletReceipts.reasonHint': 'This text is shown to the customer and stored in the audit trail.',
@@ -2299,6 +2302,7 @@ export const en: I18nDictionary = {
     'admin.walletReceipts.overpaymentConfirmed': 'Receipt confirmed. The invoice was settled up to remaining and the excess was credited to the wallet.',
     'admin.walletReceipts.error.invoiceId': 'Invoice ID must be a valid UUID',
     'admin.walletReceipts.error.allocation': 'Could not calculate the invoice remaining',
+    'admin.walletReceipts.error.allocationPending': 'Wait for the invoice remaining preview before confirming',
 
     // ── Notification Center (T-05.02.03) ─────────────────────
     'notifications.title': 'Notification Center',
