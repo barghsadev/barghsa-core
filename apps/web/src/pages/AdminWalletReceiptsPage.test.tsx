@@ -136,6 +136,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(container.textContent).toContain('Staff wallet receipt review')
     expect(container.textContent).toContain('TRK-aaaa')
     expect(container.textContent).toContain('250,000')
+    expect(container.querySelector('[data-testid="admin-wallet-receipts-page"]')?.getAttribute('dir')).toBe(
+      'ltr',
+    )
 
     const confirm = container.querySelector(
       '[data-testid="wallet-receipt-confirm"]',
@@ -341,6 +344,115 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(document.activeElement).toBe(confirm)
   })
 
+  it('opens a step-up challenge on reject, then retries after verification', async () => {
+    let rejectCalls = 0
+    const fetchMock = vi.mocked(fetch)
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith(`/${TX_A}/reject`) && method === 'POST') {
+        rejectCalls += 1
+        if (rejectCalls === 1) return stepUpForbidden()
+        return {
+          ok: true,
+          json: async () =>
+            receiptDto(TX_A, {
+              state: 'Rejected',
+              canDecide: false,
+            }),
+        } as Response
+      }
+      if (url.endsWith('/api/auth/step-up') && method === 'POST') {
+        expect(JSON.parse(String(init?.body))).toEqual({ password: 'secret' })
+        return { ok: true, json: async () => ({ message: 'ok' }) } as Response
+      }
+      return defaultFetch(input, init)
+    })
+
+    await act(async () => {
+      root.render(<AdminWalletReceiptsPage />)
+    })
+    await flush()
+
+    const textarea = container.querySelector('#reject-reason') as HTMLTextAreaElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set
+      setter?.call(textarea, 'Illegible scan')
+      textarea.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await act(async () => {
+      textarea.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flush()
+
+    expect(rejectCalls).toBe(1)
+    const dialog = container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')
+    expect(dialog).not.toBeNull()
+    expect(dialog?.getAttribute('aria-describedby')).toBe('wallet-receipt-step-up-description')
+    expect(container.textContent).toContain('Verification required')
+
+    const password = container.querySelector(
+      '[data-testid="wallet-receipt-step-up-password"]',
+    ) as HTMLInputElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(password, 'secret')
+      password.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await act(async () => {
+      ;(container.querySelector('[data-testid="wallet-receipt-step-up-submit"]') as HTMLButtonElement).click()
+    })
+    await flush()
+
+    expect(rejectCalls).toBe(2)
+    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull()
+    expect(container.textContent).toContain('Receipt rejected; balance unchanged')
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).endsWith('/confirm') && (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+  })
+
+  it('restores focus to reject when the step-up dialog is cancelled', async () => {
+    const fetchMock = vi.mocked(fetch)
+    fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith(`/${TX_A}/reject`) && method === 'POST') return stepUpForbidden()
+      return defaultFetch(input, init)
+    })
+
+    await act(async () => {
+      root.render(<AdminWalletReceiptsPage />)
+    })
+    await flush()
+
+    const textarea = container.querySelector('#reject-reason') as HTMLTextAreaElement
+    const reject = container.querySelector(
+      '[data-testid="wallet-receipt-reject"]',
+    ) as HTMLButtonElement
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set
+      setter?.call(textarea, 'Payer name does not match')
+      textarea.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    await act(async () => {
+      textarea.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    await flush()
+    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).not.toBeNull()
+
+    await act(async () => {
+      ;(container.querySelector('[data-testid="wallet-receipt-step-up-cancel"]') as HTMLButtonElement).click()
+    })
+    await flush()
+
+    expect(container.querySelector('[data-testid="wallet-receipt-step-up-dialog"]')).toBeNull()
+    expect(document.activeElement).toBe(reject)
+  })
+
   it('renders Persian copy when the document language is fa', async () => {
     document.documentElement.lang = 'fa'
     await act(async () => {
@@ -350,5 +462,8 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(container.textContent).toContain('بررسی رسید شارژ کیف پول')
     expect(container.textContent).toContain('تأیید و واریز به کیف پول')
     expect(container.textContent).toContain('رد رسید')
+    expect(container.querySelector('[data-testid="admin-wallet-receipts-page"]')?.getAttribute('dir')).toBe(
+      'rtl',
+    )
   })
 })
