@@ -9,6 +9,18 @@ import {
   isOnlineWalletTopUpAllowed,
   isValidWalletTopUpLimit,
   type OnlineTopUpLimitSnapshot,
+  WALLET_REVERSAL_ERRORS,
+  WALLET_REVERSAL_POSTED_STATE,
+  WALLET_REVERSAL_TYPE,
+  WALLET_TX_REVERSES_CONSTRAINT,
+  availableCoversReversal,
+  availableRequiredForReversal,
+  isMatchingReversalReplay,
+  isReversibleWalletLedgerState,
+  isReversibleWalletLedgerType,
+  isWalletTransactionUuid,
+  reversalAmount,
+  walletReversalMetadata,
 } from '@barghsa/shared/finance'
 import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 
@@ -42,6 +54,7 @@ export interface TransactionRow {
   refId: string | null
   description: string | null
   metadata: unknown | null
+  reversesTransactionId: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -164,6 +177,9 @@ export class WalletService {
    * negative. The default (false) keeps this primitive matching
    * T-04.2.01.06 (`WHERE id = X AND version = expectedVersion` only).
    *
+   * `requireAvailableAtLeast` is the T-04.2.04.01 reversal debit guard:
+   * refuse when derived available balance cannot cover a posted debit.
+   *
    * This is the locking primitive, not a standalone money-moving
    * command. Callers that change customer funds must also write the
    * matching ledger row in the same transaction (S-04.2.01).
@@ -173,14 +189,17 @@ export class WalletService {
    *
    * @returns the updated wallet row
    * @throws ConflictException when zero rows match (version mismatch,
-   *   missing wallet, or posted_balance < 0 when that guard is on)
+   *   missing wallet, posted_balance < 0, or available shortfall)
    */
   async applyPostedBalanceDelta(
     walletId: string,
     delta: bigint,
     expectedVersion: number,
     client?: WalletQueryClient,
-    options?: { requireNonNegativePostedBalance?: boolean },
+    options?: {
+      requireNonNegativePostedBalance?: boolean
+      requireAvailableAtLeast?: bigint
+    },
   ): Promise<WalletRow> {
     if (!walletId.trim()) {
       throw new BadRequestException('Wallet id is required')
@@ -195,6 +214,15 @@ export class WalletService {
     const postedGuard = options?.requireNonNegativePostedBalance
       ? '\n         AND posted_balance >= 0'
       : ''
+    const availableFloor = options?.requireAvailableAtLeast
+    const availableGuard =
+      availableFloor !== undefined
+        ? '\n         AND (posted_balance - reserved_balance) >= $4::bigint'
+        : ''
+    const params: unknown[] =
+      availableFloor !== undefined
+        ? [delta, walletId, expectedVersion, availableFloor]
+        : [delta, walletId, expectedVersion]
     const queryable = client ?? getDbPool()
     const result = await queryable.query(
       `UPDATE wallets
@@ -202,9 +230,9 @@ export class WalletService {
            version = version + 1,
            updated_at = NOW()
        WHERE profile_id = $2
-         AND version = $3${postedGuard}
+         AND version = $3${postedGuard}${availableGuard}
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
-      [delta, walletId, expectedVersion],
+      params,
     )
     if (result.rows.length === 0) {
       throw new ConflictException('Wallet optimistic lock failed: version mismatch')
@@ -756,6 +784,224 @@ export class WalletService {
   }
 
   /**
+   * Reverse a posted ledger row (T-04.2.04.01 / S-04.2.04).
+   *
+   * Never rewrites the original amount. In one DB transaction:
+   *   1. `SELECT … FOR UPDATE` the original ledger row, then the wallet.
+   *   2. Return the existing reversal when `idempotencyKey` already posted
+   *      the same Completed compensating row (matching original, amount,
+   *      and reason). Collisions throw ConflictException.
+   *   3. Refuse a second reversal of the same original (unique
+   *      `reverses_transaction_id`).
+   *   4. INSERT a Completed `reversal` row with the opposite signed amount.
+   *   5. UPDATE `posted_balance` by that same delta under optimistic
+   *      locking. Reversing a credit also requires
+   *      `availableBalance >= original.amount`.
+   *
+   * Pass `client` to participate in an open caller-owned transaction
+   * (no BEGIN/COMMIT/ROLLBACK/release). Omit it to run against a
+   * dedicated pool connection with its own transaction.
+   */
+  async reverseTransaction(
+    originalTransactionId: string,
+    reason: string,
+    idempotencyKey: string,
+    client?: WalletQueryClient,
+  ): Promise<TransactionRow> {
+    const trimmedReason = reason.trim()
+    if (!isWalletTransactionUuid(originalTransactionId)) {
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.ORIGINAL_ID_REQUIRED())
+    }
+    if (!trimmedReason) {
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.REASON_REQUIRED())
+    }
+    if (!idempotencyKey.trim()) {
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_REQUIRED())
+    }
+
+    const pool = getDbPool()
+    const ownsTransaction = client === undefined
+    const ownedClient = ownsTransaction ? await pool.connect() : undefined
+    const queryable: WalletQueryClient = client ?? ownedClient!
+    let canonicalWalletId: string | undefined
+    let canonicalOriginalId: string | undefined
+    let originalAmount: bigint | undefined
+    try {
+      if (ownsTransaction) {
+        await queryable.query('BEGIN')
+      }
+
+      const originalResult = await queryable.query(
+        `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
+        [originalTransactionId],
+      )
+      if (originalResult.rows.length === 0) {
+        throw new NotFoundException(WALLET_REVERSAL_ERRORS.NOT_FOUND(originalTransactionId))
+      }
+      const original = originalResult.rows[0] as {
+        id: string
+        wallet_id: string
+        type: string
+        amount: string | number | bigint
+        state: string
+        ref_id: string | null
+      }
+      canonicalOriginalId = original.id
+      originalAmount = BigInt(original.amount)
+
+      if (!isReversibleWalletLedgerType(original.type)) {
+        throw new BadRequestException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_TYPE(original.type))
+      }
+      if (!isReversibleWalletLedgerState(original.state)) {
+        throw new ConflictException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_STATE(original.state))
+      }
+
+      const walletResult = await queryable.query(
+        `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
+        [original.wallet_id],
+      )
+      if (walletResult.rows.length === 0) {
+        throw new NotFoundException(`Wallet not found: ${original.wallet_id}`)
+      }
+      const wallet = walletResult.rows[0] as {
+        version: number
+        profile_id: string
+        posted_balance: string | number | bigint
+        reserved_balance: string | number | bigint
+      }
+      canonicalWalletId = wallet.profile_id
+
+      const idemResult = await queryable.query(
+        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+        [idempotencyKey],
+      )
+      if (idemResult.rows.length > 0) {
+        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow
+        assertMatchingReversalReplay(
+          existing,
+          canonicalWalletId,
+          canonicalOriginalId,
+          originalAmount,
+          trimmedReason,
+        )
+        if (ownsTransaction) {
+          await queryable.query('COMMIT')
+        }
+        return mapTransaction(existing)
+      }
+
+      const existingReversal = await queryable.query(
+        `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+        [canonicalOriginalId],
+      )
+      if (existingReversal.rows.length > 0) {
+        throw new ConflictException(WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId))
+      }
+
+      const posted = BigInt(wallet.posted_balance)
+      const reserved = BigInt(wallet.reserved_balance)
+      const available = posted - reserved
+      if (!availableCoversReversal(available, originalAmount)) {
+        throw new BadRequestException(
+          WALLET_REVERSAL_ERRORS.INSUFFICIENT_BALANCE(
+            available,
+            availableRequiredForReversal(originalAmount),
+          ),
+        )
+      }
+
+      const compensatingAmount = reversalAmount(originalAmount)
+      const metadata = walletReversalMetadata({
+        originalTransactionId: canonicalOriginalId,
+        originalType: original.type,
+        originalAmount,
+        originalRefId: original.ref_id,
+        reason: trimmedReason,
+      })
+
+      const txResult = await queryable.query(
+        `INSERT INTO wallet_transactions
+           (wallet_id, type, amount, state, idempotency_key, ref_id, description, metadata, reverses_transaction_id)
+         VALUES ($1, $2, $3::bigint, $4, $5, $6, $7, COALESCE($8::jsonb, '{}'::jsonb), $9)
+         RETURNING *`,
+        [
+          canonicalWalletId,
+          WALLET_REVERSAL_TYPE,
+          compensatingAmount,
+          WALLET_REVERSAL_POSTED_STATE,
+          idempotencyKey,
+          original.ref_id,
+          trimmedReason,
+          JSON.stringify(metadata),
+          canonicalOriginalId,
+        ],
+      )
+
+      const availableFloor = availableRequiredForReversal(originalAmount)
+      try {
+        await this.applyPostedBalanceDelta(
+          canonicalWalletId,
+          compensatingAmount,
+          wallet.version,
+          queryable,
+          {
+            requireNonNegativePostedBalance: true,
+            ...(availableFloor > 0n ? { requireAvailableAtLeast: availableFloor } : {}),
+          },
+        )
+      } catch (error) {
+        if (error instanceof ConflictException) {
+          throw new ConflictException(
+            'Wallet reversal rejected: version mismatch or availableBalance shortfall',
+          )
+        }
+        throw error
+      }
+
+      if (ownsTransaction) {
+        await queryable.query('COMMIT')
+      }
+      return mapTransaction(txResult.rows[0])
+    } catch (error) {
+      if (ownsTransaction) {
+        await queryable.query('ROLLBACK')
+        if (
+          canonicalWalletId !== undefined &&
+          canonicalOriginalId !== undefined &&
+          originalAmount !== undefined &&
+          (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT) ||
+            isPgUniqueViolation(error, WALLET_TX_REVERSES_CONSTRAINT))
+        ) {
+          const existing = await pool.query(
+            `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+            [idempotencyKey],
+          )
+          if (existing.rows.length > 0) {
+            const committed = existing.rows[0]!
+            assertMatchingReversalReplay(
+              committed,
+              canonicalWalletId,
+              canonicalOriginalId,
+              originalAmount,
+              trimmedReason,
+            )
+            return mapTransaction(committed)
+          }
+          if (isPgUniqueViolation(error, WALLET_TX_REVERSES_CONSTRAINT)) {
+            throw new ConflictException(
+              WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId),
+            )
+          }
+          throw new ConflictException('Idempotency key already used')
+        }
+      }
+      throw error
+    } finally {
+      ownedClient?.release()
+    }
+  }
+
+  /**
    * Get transaction history for a wallet.
    */
   async getTransactions(
@@ -890,6 +1136,7 @@ function mapTransaction(row: any): TransactionRow {
     refId: row.ref_id ?? null,
     description: row.description ?? null,
     metadata: row.metadata ?? null,
+    reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -909,6 +1156,8 @@ type WalletLedgerIdempotencyRow = {
   amount: string | number | bigint
   state: string
   ref_id?: string | null
+  description?: string | null
+  reverses_transaction_id?: string | null
 }
 
 /**
@@ -989,6 +1238,41 @@ function assertMatchingReserveReplay(
     existingRefId === expectedRefId
   if (!isSameReservation) {
     throw new ConflictException('Idempotency key already used for a different wallet operation')
+  }
+}
+
+/**
+ * Idempotent reversal replay is only valid for the same Completed
+ * compensating row of the same original.
+ */
+function assertMatchingReversalReplay(
+  existing: WalletLedgerIdempotencyRow,
+  canonicalWalletId: string,
+  originalTransactionId: string,
+  originalAmount: bigint,
+  reason: string,
+): void {
+  if (existing.wallet_id !== canonicalWalletId) {
+    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_WALLET())
+  }
+  const matches = isMatchingReversalReplay(
+    {
+      walletId: existing.wallet_id,
+      type: existing.type,
+      amount: BigInt(existing.amount),
+      state: existing.state,
+      reversesTransactionId: existing.reverses_transaction_id ?? null,
+      description: existing.description ?? null,
+    },
+    {
+      walletId: canonicalWalletId,
+      originalTransactionId,
+      originalAmount,
+      reason,
+    },
+  )
+  if (!matches) {
+    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_COLLISION())
   }
 }
 

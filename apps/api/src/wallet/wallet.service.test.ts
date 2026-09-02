@@ -1759,6 +1759,22 @@ describe('WalletService', () => {
       expect(params).toEqual([100000n, 'profile-1', 1])
     })
 
+    it('adds available-balance floor when requireAvailableAtLeast is set (T-04.2.04.01)', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [makeWalletRow({ version: 2, posted_balance: '900000', available_balance: '700000' })],
+      })
+
+      await service.applyPostedBalanceDelta('profile-1', -100000n, 1, undefined, {
+        requireNonNegativePostedBalance: true,
+        requireAvailableAtLeast: 100000n,
+      })
+
+      const [sql, params] = mockPool.query.mock.calls[0]!
+      expect(sql).toContain('posted_balance >= 0')
+      expect(sql).toContain('(posted_balance - reserved_balance) >= $4::bigint')
+      expect(params).toEqual([-100000n, 'profile-1', 1, 100000n])
+    })
+
     it('applies a negative delta (postedBalance + -amount) under the same version predicate', async () => {
       mockPool.query.mockResolvedValue({
         rows: [makeWalletRow({ version: 2, posted_balance: '900000', available_balance: '700000' })],
@@ -1813,6 +1829,315 @@ describe('WalletService', () => {
         'Expected version must be a non-negative integer',
       )
       expect(mockPool.query).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('reverseTransaction (T-04.2.04.01)', () => {
+    const ORIGINAL_ID = '11111111-1111-7111-8111-111111111111'
+
+    function makeOriginalRow(overrides: Record<string, unknown> = {}) {
+      return {
+        id: ORIGINAL_ID,
+        wallet_id: 'profile-1',
+        type: 'topup',
+        amount: '100000',
+        state: 'Completed',
+        idempotency_key: 'orig-key',
+        ref_id: 'evt-1',
+        description: 'online top-up',
+        metadata: {},
+        reverses_transaction_id: null,
+        created_at: new Date('2026-01-01'),
+        updated_at: new Date('2026-01-01'),
+        ...overrides,
+      }
+    }
+
+    function makeReversalRow(overrides: Record<string, unknown> = {}) {
+      return makeTxRow({
+        id: 'rev-001',
+        type: 'reversal',
+        amount: '-100000',
+        state: 'Completed',
+        idempotency_key: 'rev-idem-001',
+        ref_id: 'evt-1',
+        description: 'provider chargeback',
+        reverses_transaction_id: ORIGINAL_ID,
+        ...overrides,
+      })
+    }
+
+    /**
+     * Query sequence for a first-time reversal:
+     *   0: BEGIN
+     *   1: SELECT original FOR UPDATE
+     *   2: SELECT wallet FOR UPDATE
+     *   3: SELECT by idempotency_key
+     *   4: SELECT existing reversal by reverses_transaction_id
+     *   5: INSERT wallet_transactions
+     *   6: UPDATE wallets … applyPostedBalanceDelta
+     *   7: COMMIT
+     */
+    it('inserts a Completed reversal of a credit and decrements postedBalance', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeReversalRow()] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, posted_balance: '900000' })],
+        })
+
+      const result = await service.reverseTransaction(
+        ORIGINAL_ID,
+        'provider chargeback',
+        'rev-idem-001',
+      )
+
+      expect(result.type).toBe('reversal')
+      expect(result.state).toBe('Completed')
+      expect(result.amount).toBe(-100000n)
+      expect(result.reversesTransactionId).toBe(ORIGINAL_ID)
+      expect(result.description).toBe('provider chargeback')
+
+      const insertCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+      )
+      expect(insertCall).toBeDefined()
+      expect(insertCall![1]).toEqual([
+        'profile-1',
+        'reversal',
+        -100000n,
+        'Completed',
+        'rev-idem-001',
+        'evt-1',
+        'provider chargeback',
+        expect.stringContaining('"originalTransactionId":"11111111-1111-7111-8111-111111111111"'),
+        ORIGINAL_ID,
+      ])
+
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall).toBeDefined()
+      expect(updateCall![0]).toContain('(posted_balance - reserved_balance) >= $4::bigint')
+      expect(updateCall![1]).toEqual([-100000n, 'profile-1', 1, 100000n])
+    })
+
+    it('inserts a Completed reversal of a debit and increments postedBalance', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeOriginalRow({ type: 'payment', amount: '-100000', ref_id: 'inv-1' })],
+        })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [
+            makeReversalRow({
+              amount: '100000',
+              ref_id: 'inv-1',
+              description: 'payment reversed',
+            }),
+          ],
+        })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, posted_balance: '1100000' })],
+        })
+
+      const result = await service.reverseTransaction(
+        ORIGINAL_ID,
+        'payment reversed',
+        'rev-idem-001',
+      )
+
+      expect(result.amount).toBe(100000n)
+      const updateCall = mockClient.query.mock.calls.find(
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+      )
+      expect(updateCall![0]).not.toContain('$4::bigint')
+      expect(updateCall![1]).toEqual([100000n, 'profile-1', 1])
+    })
+
+    it('returns the existing reversal on idempotent retry without mutating the wallet', async () => {
+      const wallet = makeWalletRow()
+      const existing = makeReversalRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [existing] })
+
+      const result = await service.reverseTransaction(
+        ORIGINAL_ID,
+        'provider chargeback',
+        'rev-idem-001',
+      )
+
+      expect(result.id).toBe('rev-001')
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO wallet_transactions'),
+        ),
+      ).toBe(false)
+      expect(
+        mockClient.query.mock.calls.some(
+          (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE wallets'),
+        ),
+      ).toBe(false)
+    })
+
+    it('rejects a second reversal of the same original with a different key', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [{ id: 'rev-existing' }] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'provider chargeback', 'other-key'),
+      ).rejects.toThrow('has already been reversed')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects reversing a reservation', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeOriginalRow({ type: 'reservation', state: 'Reserved' })],
+        })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'oops', 'rev-idem-001'),
+      ).rejects.toThrow("Ledger type 'reservation' cannot be reversed")
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('rejects reversing a reversal', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({
+          rows: [makeOriginalRow({ type: 'reversal', amount: '-100000' })],
+        })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'oops', 'rev-idem-001'),
+      ).rejects.toThrow("Ledger type 'reversal' cannot be reversed")
+    })
+
+    it('rejects a Pending original', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow({ state: 'Pending' })] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'oops', 'rev-idem-001'),
+      ).rejects.toThrow("Ledger row in state 'Pending' cannot be reversed")
+    })
+
+    it('rejects insufficient available balance when reversing a credit', async () => {
+      const wallet = makeWalletRow({ posted_balance: '100000', reserved_balance: '50000' })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow({ amount: '100000' })] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'provider chargeback', 'rev-idem-001'),
+      ).rejects.toThrow('Insufficient balance: available=50000, required=100000')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('throws NotFound when the original row is missing', async () => {
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'provider chargeback', 'rev-idem-001'),
+      ).rejects.toThrow(`Wallet transaction not found: ${ORIGINAL_ID}`)
+    })
+
+    it('rejects a blank reason and a non-UUID original without opening a transaction', async () => {
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, '   ', 'rev-idem-001'),
+      ).rejects.toThrow('Reversal reason is required')
+      await expect(
+        service.reverseTransaction('not-a-uuid', 'reason', 'rev-idem-001'),
+      ).rejects.toThrow('Original transaction id must be a UUID')
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'reason', '   '),
+      ).rejects.toThrow('Idempotency key is required')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects a same-key collision with a different wallet operation', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [makeTxRow({ type: 'topup', amount: '100000' })] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'provider chargeback', 'idem-001'),
+      ).rejects.toThrow('Idempotency key already used for a different wallet operation')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('returns the committed reversal when INSERT races on the unique idempotency index', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'idx_wallet_tx_idempotency',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({ rows: [makeReversalRow()] })
+
+      const result = await service.reverseTransaction(
+        ORIGINAL_ID,
+        'provider chargeback',
+        'rev-idem-001',
+      )
+
+      expect(result.id).toBe('rev-001')
+      expect(result.type).toBe('reversal')
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('conflicts when INSERT races on the unique original pointer with a different key', async () => {
+      const wallet = makeWalletRow()
+      const duplicate = Object.assign(new Error('duplicate key'), {
+        code: '23505',
+        constraint: 'uq_wallet_tx_reverses_transaction',
+      })
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockRejectedValueOnce(duplicate)
+      mockPool.query.mockResolvedValue({ rows: [] })
+
+      await expect(
+        service.reverseTransaction(ORIGINAL_ID, 'provider chargeback', 'other-key'),
+      ).rejects.toThrow('has already been reversed')
     })
   })
 

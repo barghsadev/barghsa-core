@@ -58,6 +58,7 @@ interface LedgerRow {
   description?: string | null
   metadata?: unknown
   receipt_attachment_key?: string | null
+  reverses_transaction_id?: string | null
   created_at: Date
   updated_at: Date
 }
@@ -881,6 +882,7 @@ function mapTransaction(row: LedgerRow): TransactionRow {
     refId: row.ref_id ?? null,
     description: row.description ?? null,
     metadata: row.metadata ?? null,
+    reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }

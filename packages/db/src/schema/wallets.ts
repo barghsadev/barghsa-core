@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm'
 import {
   check,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -183,6 +184,14 @@ export const walletTransactions = pgTable(
      */
     receiptAttachmentKey: text('receipt_attachment_key'),
 
+    /**
+     * Original ledger row this compensating reversal undoes
+     * (T-04.2.04.01). NULL for non-reversal rows. FK and partial unique
+     * index `uq_wallet_tx_reverses_transaction` (migration 0074) are
+     * declared below. The original row is not rewritten.
+     */
+    reversesTransactionId: uuid('reverses_transaction_id'),
+
     /** When the transaction was created. */
     createdAt: timestamptz('created_at')
       .defaultNow()
@@ -216,6 +225,23 @@ export const walletTransactions = pgTable(
     receiptAttachmentUnique: uniqueIndex('uq_wallet_tx_receipt_attachment')
       .on(table.receiptAttachmentKey)
       .where(sql`${table.receiptAttachmentKey} IS NOT NULL`),
+    /**
+     * One original ledger row may be reversed at most once
+     * (T-04.2.04.01). Non-reversal rows leave the column NULL.
+     */
+    reversesTransactionUnique: uniqueIndex('uq_wallet_tx_reverses_transaction')
+      .on(table.reversesTransactionId)
+      .where(sql`${table.reversesTransactionId} IS NOT NULL`),
+    /**
+     * Self-FK: reversal row → original ledger row (T-04.2.04.01).
+     * Declared here rather than on the column to avoid circular type
+     * inference on the table initializer.
+     */
+    reversesTransactionFk: foreignKey({
+      name: 'fk_wallet_tx_reverses_transaction',
+      columns: [table.reversesTransactionId],
+      foreignColumns: [table.id],
+    }).onDelete('restrict'),
   }),
 )
 
