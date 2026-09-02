@@ -49,12 +49,20 @@ export default function WalletTopUpLimitConfigPanel() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [forbidden, setForbidden] = useState(false)
   const [clientIssue, setClientIssue] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/admin/config/wallet-top-up-limit')
+      setForbidden(false)
+      const res = await fetch('/api/admin/config/wallet-top-up-limit', {
+        credentials: 'include',
+      })
+      if (res.status === 403) {
+        setForbidden(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = (await res.json()) as WalletTopUpLimitDto
       setConfig(data)
@@ -113,6 +121,10 @@ export default function WalletTopUpLimitConfigPanel() {
     } finally {
       setSaving(false)
     }
+  }
+
+  if (forbidden) {
+    return null
   }
 
   if (loading && !config) {
