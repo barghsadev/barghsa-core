@@ -11,6 +11,7 @@ import {
   DEFAULT_ONLINE_TOPUP_EXPIRY_BATCH_SIZE,
   FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL,
   ONLINE_TOPUP_EXPIRY_JOB_TYPE,
+  REJECT_EXPIRED_ONLINE_TOPUP_SQL,
   expireStaleOnlineTopUps,
   resolveOnlineTopUpExpiryActor,
 } from './online-topup-expiry-scanner.js'
@@ -150,8 +151,11 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
         ttlMs: TTL,
       },
     })
+    expect(update!.params[2]).toBe(ONLINE_TOPUP_CHANNEL)
     expect(update!.sql).toContain("COALESCE(metadata, '{}'::jsonb) || $2::jsonb")
     expect(update!.sql).toContain("AND state = 'Pending'")
+    expect(update!.sql).toContain("metadata->>'channel' = $3")
+    expect(REJECT_EXPIRED_ONLINE_TOPUP_SQL).toContain("metadata->>'channel' = $3")
 
     const audit = db.calls.find((c) => c.sql.includes('INSERT INTO audit_log'))
     expect(audit!.params[0]).toBe('audit-1')
@@ -259,6 +263,28 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     await expireStaleOnlineTopUps(scanOptions(db))
     const lock = db.calls.find((c) => c.sql.includes('FOR UPDATE SKIP LOCKED'))
     expect(lock!.params).toEqual([TX_ID])
+  })
+
+  it('uses ONLINE_TOPUP_PENDING_TTL_MS when ttlMs is omitted', async () => {
+    const previous = process.env['ONLINE_TOPUP_PENDING_TTL_MS']
+    process.env['ONLINE_TOPUP_PENDING_TTL_MS'] = '15000'
+    try {
+      const db = makeFakeDb(defaultHandler())
+      const options = scanOptions(db)
+      delete (options as { ttlMs?: number }).ttlMs
+      await expireStaleOnlineTopUps(options)
+
+      const find = db.calls.find((c) => c.sql.includes('created_at < $2'))
+      expect((find!.params[1] as Date).toISOString()).toBe(
+        new Date(NOW.getTime() - 15_000).toISOString(),
+      )
+    } finally {
+      if (previous === undefined) {
+        delete process.env['ONLINE_TOPUP_PENDING_TTL_MS']
+      } else {
+        process.env['ONLINE_TOPUP_PENDING_TTL_MS'] = previous
+      }
+    }
   })
 
   it('is a no-op when no expired online Pending top-ups exist', async () => {

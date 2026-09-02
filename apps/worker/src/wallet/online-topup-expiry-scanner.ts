@@ -120,12 +120,17 @@ const LOCK_TOPUP_SQL = `SELECT id, wallet_id, type, state, created_at, metadata
         WHERE id = $1
         FOR UPDATE SKIP LOCKED`
 
-const REJECT_EXPIRED_SQL = `UPDATE wallet_transactions
+/**
+ * Compare-and-set reject. Channel is bound again so a locked row that
+ * is no longer an online intent cannot be stamped Rejected.
+ */
+export const REJECT_EXPIRED_ONLINE_TOPUP_SQL = `UPDATE wallet_transactions
         SET state = '${ONLINE_TOPUP_EXPIRED_STATE}',
             metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
         WHERE id = $1
           AND type = 'topup'
-          AND state = 'Pending'`
+          AND state = 'Pending'
+          AND metadata->>'channel' = $3`
 
 const INSERT_AUDIT_SQL = `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`
@@ -271,7 +276,7 @@ async function rejectOneExpired(
     return false
   }
 
-  const updated = await client.query(REJECT_EXPIRED_SQL, [
+  const updated = await client.query(REJECT_EXPIRED_ONLINE_TOPUP_SQL, [
     row.id,
     JSON.stringify({
       expiry: {
@@ -280,6 +285,7 @@ async function rejectOneExpired(
         ttlMs: input.ttlMs,
       },
     }),
+    ONLINE_TOPUP_CHANNEL,
   ])
   if ((updated.rowCount ?? 0) !== 1) return false
 
