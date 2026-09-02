@@ -293,6 +293,18 @@ describe('WalletService', () => {
       expect(mockPool.connect).not.toHaveBeenCalled()
     })
 
+    it('rejects reversal credits so reverseTransaction remains the only writer (T-04.2.04.01)', async () => {
+      await expect(
+        service.credit(
+          'profile-1',
+          100n,
+          { type: 'reversal' } as unknown as { type: 'topup' },
+          'k',
+        ),
+      ).rejects.toThrow('Ledger type reversal must be posted via reverseTransaction')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
     it('throws NotFound when the wallet row is missing', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] })
@@ -865,7 +877,7 @@ describe('WalletService', () => {
         .mockResolvedValueOnce({ rows: [existingTx] })
 
       await expect(
-        service.debit('profile-1', 100000n, { type: 'reversal' }, 'idem-001'),
+        service.debit('profile-1', 100000n, { type: 'compensating' }, 'idem-001'),
       ).rejects.toThrow('Idempotency key already used for a different wallet operation')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
     })
@@ -917,6 +929,18 @@ describe('WalletService', () => {
           'k',
         ),
       ).rejects.toThrow('Debit type must be one of')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+    })
+
+    it('rejects reversal debits so reverseTransaction remains the only writer (T-04.2.04.01)', async () => {
+      await expect(
+        service.debit(
+          'profile-1',
+          100n,
+          { type: 'reversal' } as unknown as { type: 'payment' },
+          'k',
+        ),
+      ).rejects.toThrow('Ledger type reversal must be posted via reverseTransaction')
       expect(mockPool.connect).not.toHaveBeenCalled()
     })
 
@@ -2118,6 +2142,32 @@ describe('WalletService', () => {
       expect(result.id).toBe('rev-001')
       expect(result.type).toBe('reversal')
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    })
+
+    it('uses the caller-supplied client so the reversal participates in an open transaction', async () => {
+      const wallet = makeWalletRow()
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [makeOriginalRow()] })
+        .mockResolvedValueOnce({ rows: [wallet] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [] })
+        .mockResolvedValueOnce({ rows: [makeReversalRow()] })
+        .mockResolvedValueOnce({
+          rows: [makeWalletRow({ version: 2, posted_balance: '900000' })],
+        })
+
+      const result = await service.reverseTransaction(
+        ORIGINAL_ID,
+        'provider chargeback',
+        'rev-idem-001',
+        mockClient,
+      )
+
+      expect(result.type).toBe('reversal')
+      expect(mockPool.connect).not.toHaveBeenCalled()
+      expect(mockClient.query).not.toHaveBeenCalledWith('BEGIN')
+      expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+      expect(mockClient.query).not.toHaveBeenCalledWith('ROLLBACK')
     })
 
     it('conflicts when INSERT races on the unique original pointer with a different key', async () => {

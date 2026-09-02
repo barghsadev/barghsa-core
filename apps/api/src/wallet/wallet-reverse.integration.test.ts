@@ -18,6 +18,9 @@
  *      a credit reversal and leaves the wallet/ledger unchanged.
  *   8. Reservations, reversals, and non-Completed rows cannot reverse.
  *   9. A missing original is NotFound.
+ *  10. A caller-owned client posts the reversal in that transaction and
+ *      rolls back with the caller — the original and wallet are unchanged.
+ *
  *
  * Wiring: only `getDbPool()` is stubbed, handing the service the
  * schema-scoped Testcontainers pool.
@@ -63,6 +66,10 @@ const REVERSAL_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0074_wallet_tx_reverses_transaction.sql',
 )
+const REVERSAL_CHECK_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0077_wallet_tx_reversal_original_check.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
@@ -86,6 +93,7 @@ describe('WalletService.reverseTransaction — real PostgreSQL (T-04.2.04.01)', 
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AVAILABLE_CHECK_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(REVERSAL_CHECK_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2), ($3)`, [
       PROFILE_A,
       PROFILE_B,
@@ -359,5 +367,42 @@ describe('WalletService.reverseTransaction — real PostgreSQL (T-04.2.04.01)', 
     await expect(
       service.reverseTransaction(uuidv7(), 'missing', `rev-missing-${uuidv7()}`),
     ).rejects.toBeInstanceOf(NotFoundException)
+  })
+
+  it('posts on a caller-owned transaction and rolls back with the caller', async () => {
+    await seedPosted(PROFILE_A, 0n)
+    const original = await service.credit(
+      PROFILE_A,
+      40_000n,
+      { type: 'topup' },
+      `rev-client-orig-${uuidv7()}`,
+    )
+    const before = await fetchWallet(PROFILE_A)
+    const ledgerBefore = await fetchLedger(PROFILE_A)
+    const client = await ctx.pool.connect()
+    try {
+      await client.query('BEGIN')
+      const reversal = await service.reverseTransaction(
+        original.id,
+        'provider chargeback',
+        `rev-client-key-${uuidv7()}`,
+        client,
+      )
+      expect(reversal.type).toBe('reversal')
+      expect(reversal.reversesTransactionId).toBe(original.id)
+      const inTxn = await client.query<{ posted_balance: string; version: number }>(
+        `SELECT posted_balance::text AS posted_balance, version
+         FROM wallets WHERE profile_id = $1`,
+        [PROFILE_A],
+      )
+      expect(BigInt(inTxn.rows[0]!.posted_balance)).toBe(BigInt(before.posted_balance) - 40_000n)
+      await client.query('ROLLBACK')
+    } finally {
+      client.release()
+    }
+
+    const after = await fetchWallet(PROFILE_A)
+    expect(after).toEqual(before)
+    expect(await fetchLedger(PROFILE_A)).toEqual(ledgerBefore)
   })
 })

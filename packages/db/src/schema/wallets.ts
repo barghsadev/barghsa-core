@@ -187,8 +187,10 @@ export const walletTransactions = pgTable(
     /**
      * Original ledger row this compensating reversal undoes
      * (T-04.2.04.01). NULL for non-reversal rows. FK and partial unique
-     * index `uq_wallet_tx_reverses_transaction` (migration 0074) are
-     * declared below. The original row is not rewritten.
+     * index `uq_wallet_tx_reverses_transaction` (migration 0074) plus
+     * CHECK `chk_wallet_tx_reversal_original` (migration 0077, NOT VALID;
+     * VALIDATE is a later contract-phase migration) are declared below.
+     * The original row is not rewritten.
      */
     reversesTransactionId: uuid('reverses_transaction_id'),
 
@@ -213,6 +215,19 @@ export const walletTransactions = pgTable(
       sql`${table.state} IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')`,
     ),
     amountNonzero: check('chk_wallet_transactions_amount_nonzero', sql`${table.amount} <> 0`),
+    /**
+     * A `reversal` row is a compensating correction of one original
+     * (T-04.2.04.01). The pointer is required for that type and forbidden
+     * on every other type so unmatched `compensating` exceptions stay
+     * general and credit/debit cannot mint an unlinked reversal.
+     * Migration 0077 adds this CHECK as NOT VALID; VALIDATE is a later
+     * contract-phase migration after legacy unlinked reversal rows are
+     * reconciled.
+     */
+    reversalOriginalCheck: check(
+      'chk_wallet_tx_reversal_original',
+      sql`(${table.type} = 'reversal' AND ${table.reversesTransactionId} IS NOT NULL) OR (${table.type} <> 'reversal' AND ${table.reversesTransactionId} IS NULL)`,
+    ),
     walletIdIdx: index('idx_wallet_tx_wallet_id').on(table.walletId),
     stateIdx: index('idx_wallet_tx_state').on(table.state),
     typeIdx: index('idx_wallet_tx_type').on(table.type),
@@ -227,7 +242,9 @@ export const walletTransactions = pgTable(
       .where(sql`${table.receiptAttachmentKey} IS NOT NULL`),
     /**
      * One original ledger row may be reversed at most once
-     * (T-04.2.04.01). Non-reversal rows leave the column NULL.
+     * (T-04.2.04.01). Non-reversal rows leave the column NULL; CHECK
+     * `chk_wallet_tx_reversal_original` (migration 0077) forbids mixing
+     * the pointer with any other type.
      */
     reversesTransactionUnique: uniqueIndex('uq_wallet_tx_reverses_transaction')
       .on(table.reversesTransactionId)

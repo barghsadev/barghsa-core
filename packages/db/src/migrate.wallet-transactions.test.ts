@@ -146,6 +146,7 @@ describe('drizzle migrate() applies wallet_transactions (T-04.2.01.02)', () => {
       'chk_wallet_transactions_amount_nonzero',
       'chk_wallet_transactions_state',
       'chk_wallet_transactions_type',
+      'chk_wallet_tx_reversal_original',
     ])
 
     const indexes = await ctx.pool.query<{ indexname: string }>(

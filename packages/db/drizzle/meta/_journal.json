@@ -211,6 +211,13 @@
       "when": 1789516800000,
       "tag": "0076_wallet_tx_online_pending_expiry_idx",
       "breakpoints": true
+    },
+    {
+      "idx": 77,
+      "version": "7",
+      "when": 1789603200000,
+      "tag": "0077_wallet_tx_reversal_original_check",
+      "breakpoints": true
     }
   ]
 }

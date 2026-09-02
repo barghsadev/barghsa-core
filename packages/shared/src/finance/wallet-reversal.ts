@@ -8,8 +8,14 @@
  * is adjusted by that same delta.
  *
  * `reverses_transaction_id` (unique when present) is the last-line
- * guard that one original can be reversed at most once. Client
- * `idempotencyKey` is the retry guard.
+ * guard that one original can be reversed at most once. CHECK
+ * `chk_wallet_tx_reversal_original` requires that pointer on every
+ * `reversal` row and forbids it on every other type. Migration 0077
+ * adds that CHECK as NOT VALID so legacy unlinked reversal rows (legal
+ * under 0074 / credit-debit) cannot block deploy; VALIDATE is a later
+ * contract-phase migration after operators reconcile
+ * `wallet_tx_reversal_check_violations`. Client `idempotencyKey` is
+ * the retry guard.
  *
  * @module finance
  */
@@ -41,6 +47,14 @@ export const REVERSIBLE_WALLET_LEDGER_STATE = 'Completed' as const
 /** Unique partial index on `wallet_transactions.reverses_transaction_id`. */
 export const WALLET_TX_REVERSES_CONSTRAINT = 'uq_wallet_tx_reverses_transaction'
 
+/**
+ * Table CHECK: `type = 'reversal'` iff `reverses_transaction_id` is set
+ * (T-04.2.04.01). Non-reversal rows, including unmatched `compensating`
+ * exceptions, leave the pointer NULL.
+ */
+export const WALLET_TX_REVERSAL_ORIGINAL_CONSTRAINT =
+  'chk_wallet_tx_reversal_original'
+
 export const WALLET_REVERSAL_ERRORS = {
   ORIGINAL_ID_REQUIRED: () => 'Original transaction id must be a UUID',
   REASON_REQUIRED: () => 'Reversal reason is required',
@@ -58,6 +72,8 @@ export const WALLET_REVERSAL_ERRORS = {
     'Idempotency key already used for a different wallet operation',
   IDEMPOTENCY_WALLET: () =>
     'Idempotency key already used for a different wallet',
+  USE_REVERSE_TRANSACTION: () =>
+    'Ledger type reversal must be posted via reverseTransaction',
 } as const
 
 const UUID_RE =

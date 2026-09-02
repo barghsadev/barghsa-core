@@ -28,11 +28,11 @@ const PG_UNIQUE_VIOLATION = '23505'
 const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency'
 
 /** Ledger types that post as a credit (positive amount, money in). */
-const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating', 'reversal'] as const
+const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating'] as const
 type WalletCreditType = (typeof WALLET_CREDIT_TYPES)[number]
 
 /** Ledger types that post as a debit (negative amount, money out). */
-const WALLET_DEBIT_TYPES = ['payment', 'compensating', 'reversal'] as const
+const WALLET_DEBIT_TYPES = ['payment', 'compensating'] as const
 type WalletDebitType = (typeof WALLET_DEBIT_TYPES)[number]
 
 export interface WalletRow {
@@ -275,6 +275,7 @@ export class WalletService {
     if (!idempotencyKey.trim()) {
       throw new BadRequestException('Idempotency key is required')
     }
+    assertNotReversalLedgerType(ref.type)
     if (!isWalletCreditType(ref.type)) {
       throw new BadRequestException(`Credit type must be one of: ${WALLET_CREDIT_TYPES.join(', ')}`)
     }
@@ -411,6 +412,7 @@ export class WalletService {
     if (!idempotencyKey.trim()) {
       throw new BadRequestException('Idempotency key is required')
     }
+    assertNotReversalLedgerType(ref.type)
     if (!isWalletDebitType(ref.type)) {
       throw new BadRequestException(`Debit type must be one of: ${WALLET_DEBIT_TYPES.join(', ')}`)
     }
@@ -798,6 +800,10 @@ export class WalletService {
    *      locking. Reversing a credit also requires
    *      `availableBalance >= original.amount`.
    *
+   * `credit()` and `debit()` refuse `type: 'reversal'`. This method is
+   * the only WalletService writer for compensating reversal rows, so the
+   * unique original pointer cannot be skipped.
+   *
    * Pass `client` to participate in an open caller-owned transaction
    * (no BEGIN/COMMIT/ROLLBACK/release). Omit it to run against a
    * dedicated pool connection with its own transaction.
@@ -1148,6 +1154,17 @@ function isWalletCreditType(type: string): type is WalletCreditType {
 
 function isWalletDebitType(type: string): type is WalletDebitType {
   return (WALLET_DEBIT_TYPES as readonly string[]).includes(type)
+}
+
+/**
+ * `reversal` rows are compensating corrections of a specific original
+ * (T-04.2.04.01). credit()/debit() must not post them without the unique
+ * `reverses_transaction_id` pointer reverseTransaction maintains.
+ */
+function assertNotReversalLedgerType(type: string): void {
+  if (type === WALLET_REVERSAL_TYPE) {
+    throw new BadRequestException(WALLET_REVERSAL_ERRORS.USE_REVERSE_TRANSACTION())
+  }
 }
 
 type WalletLedgerIdempotencyRow = {
