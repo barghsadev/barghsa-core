@@ -20,6 +20,11 @@ import {
   WALLET_RECONCILIATION_JOB_TYPE,
   reconcileWalletBalances,
 } from './wallet/reconciliation-scanner.js';
+import {
+  DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS,
+  ONLINE_TOPUP_EXPIRY_JOB_TYPE,
+  expireStaleOnlineTopUps,
+} from './wallet/online-topup-expiry-scanner.js';
 import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
 
 /**
@@ -502,8 +507,61 @@ async function main(): Promise<void> {
   process.on('SIGTERM', () => clearInterval(walletReconciler));
   process.on('SIGINT', () => clearInterval(walletReconciler));
 
+  // ── Online top-up Pending TTL expiry (S-04.2.02, T-04.2.02.07) ──────
+  // Minute cron: online Pending top-ups older than the TTL are
+  // auto-rejected. Provider authority stays on metadata so a later
+  // authenticated callback can still credit.
+  const onlineTopUpExpiryRaw = Number(
+    process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? String(DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS),
+  );
+  const ONLINE_TOPUP_EXPIRY_SCAN_MS =
+    Number.isFinite(onlineTopUpExpiryRaw) && onlineTopUpExpiryRaw >= 1000
+      ? onlineTopUpExpiryRaw
+      : DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS;
+  if (ONLINE_TOPUP_EXPIRY_SCAN_MS !== onlineTopUpExpiryRaw) {
+    logger.warn(
+      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`,
+    );
+  }
+  let onlineTopUpExpiryInFlight = false;
+  const onlineTopUpExpiryScanner = setInterval(async () => {
+    if (draining || onlineTopUpExpiryInFlight) return;
+    onlineTopUpExpiryInFlight = true;
+    try {
+      const result = await expireStaleOnlineTopUps();
+      if (result.rejected > 0 || result.errors.length > 0) {
+        logger.info(
+          `Online top-up expiry: rejected=${result.rejected} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+        );
+      }
+      if (result.errors.length > 0) {
+        await recordJobFailure({
+          jobType: ONLINE_TOPUP_EXPIRY_JOB_TYPE,
+          error: result.errors.map((e) => String(e)).join('; '),
+          errorCategory: 'transient',
+          payload: { errors: result.errors.length, rejected: result.rejected },
+        });
+      } else {
+        await recordJobSuccess(ONLINE_TOPUP_EXPIRY_JOB_TYPE);
+      }
+    } catch (err) {
+      logger.error(`Online top-up expiry failed: ${(err as Error)?.message ?? String(err)}`);
+      await recordJobFailure({
+        jobType: ONLINE_TOPUP_EXPIRY_JOB_TYPE,
+        error: (err as Error)?.message ?? String(err),
+        errorCategory: 'transient',
+      });
+    } finally {
+      onlineTopUpExpiryInFlight = false;
+    }
+  }, ONLINE_TOPUP_EXPIRY_SCAN_MS);
+  onlineTopUpExpiryScanner.unref();
+
+  process.on('SIGTERM', () => clearInterval(onlineTopUpExpiryScanner));
+  process.on('SIGINT', () => clearInterval(onlineTopUpExpiryScanner));
+
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry active',
   );
 }
 
