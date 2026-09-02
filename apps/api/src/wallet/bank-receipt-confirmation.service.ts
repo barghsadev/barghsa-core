@@ -138,7 +138,9 @@ export interface RejectBankReceiptInput {
  *      invoices are rejected with conflict — they cannot SubmitBankReceipt.
  *      Excess is credited via a *separate*
  *      `WalletService.credit()` with
- *      `bankReceiptOverpaymentCreditIdempotencyKey`.
+ *      `bankReceiptOverpaymentCreditIdempotencyKey`. Invoice-linked
+ *      confirms lock the wallet row before the invoice (same order as
+ *      `payInvoiceWithWallet`) so concurrent settlement cannot deadlock.
  *   4. Release the Pending intent and append an audit row.
  *   Credit, invoice allocation, state transition, pending release, and
  *   audit commit or roll back together.
@@ -263,8 +265,11 @@ export class BankReceiptConfirmationService {
         const pending = await this.lockBankReceipt(client, input.transactionId)
 
         if (pending.state === 'Released') {
-          const existing = await this.findExistingCredit(pending.id)
-          const existingOverpayment = await this.findExistingOverpaymentCredit(pending.id)
+          const existing = await this.findExistingCredit(client, pending.id)
+          const existingOverpayment = await this.findExistingOverpaymentCredit(
+            client,
+            pending.id,
+          )
           const overpayment = readBankReceiptOverpaymentSnapshot(pending.metadata)
           if (!existing && !existingOverpayment && !overpayment) {
             await client.query('ROLLBACK')
@@ -521,6 +526,9 @@ export class BankReceiptConfirmationService {
       confirmedAt: Date
     },
   ): Promise<{ creditId: string | null; overpayment: BankReceiptOverpaymentSnapshot }> {
+    // Wallet first, then invoice — same order as payInvoiceWithWallet so
+    // concurrent wallet debit and receipt allocation cannot deadlock.
+    await this.lockWallet(client, input.pending.walletId)
     const invoice = await this.lockInvoice(client, input.invoiceId)
     if (invoice.profile_id !== input.pending.walletId) {
       httpError(
@@ -596,6 +604,16 @@ export class BankReceiptConfirmationService {
         BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(state),
         409,
       )
+    }
+  }
+
+  private async lockWallet(client: WalletQueryClient, walletId: string): Promise<void> {
+    const result = await client.query(
+      `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE`,
+      [walletId],
+    )
+    if (result.rows.length === 0) {
+      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Wallet not found: ${walletId}`, 404)
     }
   }
 
@@ -710,20 +728,26 @@ export class BankReceiptConfirmationService {
     })
   }
 
-  private async findExistingCredit(pendingId: string): Promise<TransactionRow | null> {
-    const pool = getDbPool()
-    const result = await pool.query(`SELECT * FROM wallet_transactions WHERE idempotency_key = $1`, [
-      bankReceiptCreditIdempotencyKey(pendingId),
-    ])
+  private async findExistingCredit(
+    client: WalletQueryClient,
+    pendingId: string,
+  ): Promise<TransactionRow | null> {
+    const result = await client.query(
+      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptCreditIdempotencyKey(pendingId)],
+    )
     if (result.rows.length === 0) return null
     return mapTransaction(result.rows[0] as LedgerRow)
   }
 
-  private async findExistingOverpaymentCredit(pendingId: string): Promise<TransactionRow | null> {
-    const pool = getDbPool()
-    const result = await pool.query(`SELECT * FROM wallet_transactions WHERE idempotency_key = $1`, [
-      bankReceiptOverpaymentCreditIdempotencyKey(pendingId),
-    ])
+  private async findExistingOverpaymentCredit(
+    client: WalletQueryClient,
+    pendingId: string,
+  ): Promise<TransactionRow | null> {
+    const result = await client.query(
+      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
+      [bankReceiptOverpaymentCreditIdempotencyKey(pendingId)],
+    )
     if (result.rows.length === 0) return null
     return mapTransaction(result.rows[0] as LedgerRow)
   }

@@ -12,6 +12,9 @@
  *   5. Audit insert failure rolls back the pending-state change.
  *   6. Confirm audit-insert failure also rolls back the wallet credit
  *      (posted balance, Completed ledger row, and receipt stay unchanged).
+ *   7. Overpayment (T-04.2.02.05): receipt > remaining credits only the
+ *      excess via a distinct idempotency key; concurrent allocations
+ *      never over-settle paid_amount.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -96,7 +99,7 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
   let service: BankReceiptConfirmationService
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4)
+    ctx = await createIsolatedTestDb('test_', 8)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new BankReceiptConfirmationService(
@@ -590,5 +593,62 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       [pendingId],
     )
     expect(pending.rows[0]!.state).toBe('Pending')
+  })
+
+  it('splits concurrent overpayments without over-settling the invoice', async () => {
+    const invoiceId = await insertInvoice({ total: 500_000n, paid: 0n, state: 'Unpaid' })
+    const firstId = await insertPending('race-a', 400_000n)
+    const secondId = await insertPending('race-b', 400_000n)
+    const before = await walletBalances()
+
+    const settled = await Promise.allSettled([
+      service.confirm({
+        transactionId: firstId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      }),
+      service.confirm({
+        transactionId: secondId,
+        actorUserId: ACTOR_USER_ID,
+        ip: '10.0.0.9',
+        invoiceId,
+        now: NOW,
+      }),
+    ])
+
+    const won = settled.filter(
+      (row): row is PromiseFulfilledResult<Awaited<ReturnType<typeof service.confirm>>> =>
+        row.status === 'fulfilled',
+    )
+    expect(won).toHaveLength(2)
+    expect(settled.every((row) => row.status === 'fulfilled')).toBe(true)
+
+    const invoiceAllocations = won.map((row) => BigInt(row.value.overpayment?.invoiceAllocation ?? '0'))
+    const walletCredits = won.map((row) => BigInt(row.value.overpayment?.walletCreditAmount ?? '0'))
+    expect(invoiceAllocations.reduce((sum, value) => sum + value, 0n)).toBe(500_000n)
+    expect(walletCredits.reduce((sum, value) => sum + value, 0n)).toBe(300_000n)
+    expect(walletCredits.some((value) => value > 0n)).toBe(true)
+
+    const settledInvoice = await invoiceSettlement(invoiceId)
+    expect(settledInvoice.paid).toBe(500_000n)
+    expect(settledInvoice.state).toBe('Paid')
+    expect(settledInvoice.paidAt?.toISOString()).toBe(NOW.toISOString())
+
+    const after = await walletBalances()
+    expect(after.posted).toBe(before.posted + 300_000n)
+
+    const overpayCredits = await ctx.pool.query<{ amount: string }>(
+      `SELECT amount FROM wallet_transactions
+        WHERE idempotency_key IN ($1, $2)
+        ORDER BY amount DESC`,
+      [
+        bankReceiptOverpaymentCreditIdempotencyKey(firstId),
+        bankReceiptOverpaymentCreditIdempotencyKey(secondId),
+      ],
+    )
+    expect(overpayCredits.rows).toHaveLength(1)
+    expect(BigInt(overpayCredits.rows[0]!.amount)).toBe(300_000n)
   })
 })
