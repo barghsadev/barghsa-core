@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { WALLET_CHARGEBACK_REASON } from './wallet-chargeback.js'
 import {
   CHARGEBACK_UNRESOLVED_STATUS_LABELS,
+  FINANCE_CHARGEBACK_ALERT_BODY_I18N_KEY,
   FINANCE_CHARGEBACK_ALERT_CHANNELS,
+  FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE,
   FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
   FINANCE_CHARGEBACK_ALERT_PERMISSION,
   FINANCE_CHARGEBACK_ALERT_ROLE_ID,
+  FINANCE_CHARGEBACK_ALERT_TITLE_I18N_KEY,
   FINANCE_CHARGEBACK_WARNING_LIMIT,
   buildFinanceChargebackAlertPayload,
   emptyUnresolvedChargebackWarning,
@@ -22,6 +25,13 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
     )
     expect(FINANCE_CHARGEBACK_ALERT_ROLE_ID).toBe('role-finance')
     expect(FINANCE_CHARGEBACK_ALERT_CHANNELS).toEqual(['in_app', 'email'])
+    expect(FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE).toBe('/admin')
+    expect(FINANCE_CHARGEBACK_ALERT_TITLE_I18N_KEY).toBe(
+      'notifications.finance.chargeback_unresolved.title',
+    )
+    expect(FINANCE_CHARGEBACK_ALERT_BODY_I18N_KEY).toBe(
+      'notifications.finance.chargeback_unresolved.body',
+    )
     expect(FINANCE_CHARGEBACK_WARNING_LIMIT).toBe(20)
     expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unmatched.en).toContain('unmatched')
     expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unresolved.fa).toContain('برگشت')
@@ -66,6 +76,7 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
       wallet_id: '',
       original_transaction_id: '',
       reason: WALLET_CHARGEBACK_REASON,
+      link_route: '/admin',
     })
   })
 

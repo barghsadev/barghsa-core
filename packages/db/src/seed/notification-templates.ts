@@ -476,6 +476,7 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
       { name: 'wallet_id', description: 'شناسه کیف پول / Wallet id' },
       { name: 'original_transaction_id', description: 'شناسه تراکنش اصلی / Original transaction id' },
       { name: 'reason', description: 'دلیل شارژبک / Chargeback reason' },
+      { name: 'link_route', description: 'مسیر داشبورد ادمین / Admin dashboard route' },
     ],
   },
   {
