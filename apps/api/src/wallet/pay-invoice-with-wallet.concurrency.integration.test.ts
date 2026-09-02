@@ -338,18 +338,25 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
 
     const won = fulfilledResults(settled)
     const lost = rejectedReasons(settled)
-    expect(won.length).toBeGreaterThanOrEqual(1)
-    for (const reason of lost) {
-      expect(reason).toBeInstanceOf(ConflictException)
-      expect(String((reason as Error).message)).toContain(
-        PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT(),
-      )
-    }
+    expect(lost).toHaveLength(0)
+    expect(won).toHaveLength(3)
 
-    const txIds = new Set(won.map((row) => row.walletTransaction.id))
-    expect(txIds.size).toBe(1)
-    expect(won.every((row) => row.toState === 'Paid')).toBe(true)
-    expect(won.filter((row) => row.replayed === false)).toHaveLength(1)
+    const originals = won.filter((row) => row.replayed === false)
+    const replays = won.filter((row) => row.replayed === true)
+    expect(originals).toHaveLength(1)
+    expect(replays).toHaveLength(2)
+
+    const original = originals[0]!
+    const txId = original.walletTransaction.id
+    expect(new Set(won.map((row) => row.walletTransaction.id)).size).toBe(1)
+    for (const row of won) {
+      expect(row).toMatchObject({
+        invoiceId,
+        toState: 'Paid',
+        remainingPaid: TOTAL,
+        walletTransaction: expect.objectContaining({ id: txId }),
+      })
+    }
 
     const wallet = await fetchWallet(profileId)
     expect(BigInt(wallet.posted_balance)).toBe(BigInt(before.posted_balance) - TOTAL)
