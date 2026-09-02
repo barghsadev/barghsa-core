@@ -183,6 +183,13 @@
       "when": 1789171200000,
       "tag": "0072_wallet_tx_receipt_attachment_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1789257600000,
+      "tag": "0073_create_idempotency_keys",
+      "breakpoints": true
     }
   ]
 }

@@ -1,26 +1,30 @@
 /**
  * PayInvoiceWithWalletService — settle an invoice with a single full
- * wallet debit (T-04.2.03.01 / T-04.2.03.02 / S-04.2.03).
+ * wallet debit (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03 / S-04.2.03).
  *
  * `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)`:
  *   1. Validates UUIDs and a non-blank idempotency key.
- *   2. Opens one DB transaction and `SELECT … FOR UPDATE`s the wallet
- *      first, then the invoice (stable lock order vs other wallet
- *      mutations that already lock the wallet row).
- *   3. Rejects missing wallets/invoices, other profiles (404), credit
+ *   2. Opens one DB transaction and claims
+ *      `idempotency_keys (idempotencyKey, entityType)` first. A retry
+ *      that finds a cached JSON response returns it and never debits.
+ *      An in-flight NULL response is rejected (409).
+ *   3. `SELECT … FOR UPDATE`s the wallet first, then the invoice
+ *      (stable lock order vs other wallet mutations).
+ *   4. Rejects missing wallets/invoices, other profiles (404), credit
  *      notes, non-PayFromWallet states, not-yet-payable dates, remaining
  *      0, and insufficient derived availableBalance (`posted − reserved`).
- *   4. Debits the exact remaining amount (`type: payment`, `refId` =
+ *   5. Debits the exact remaining amount (`type: payment`, `refId` =
  *      invoice id) on the same client so wallet + invoice commit together.
  *      `WalletService.debit` re-locks the wallet and applies the
  *      optimistic `version` predicate as a second line of defense.
- *   5. Sets `paid_amount` to the total and transitions Unpaid /
+ *   6. Sets `paid_amount` to the total and transitions Unpaid /
  *      PartiallyFunded → Paid through the state machine (audit + paid_at)
- *      in the same transaction as the wallet_transactions insert.
+ *      in the same transaction as the wallet_transactions insert, then
+ *      writes the cached JSONB response onto the claimed idempotency row.
  *
  * Retrying with the same idempotency key returns the original Paid result
- * and never debits twice. T-04.2.03.03 adds the dedicated
- * `(idempotencyKey, entityType)` unique index.
+ * and never debits twice. The unique index
+ * `uq_idempotency_keys_key_entity_type` is the last-line duplicate guard.
  */
 
 import {
@@ -33,14 +37,20 @@ import {
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import {
+  INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
   PAY_INVOICE_WITH_WALLET_ERRORS,
   availableCoversRemaining,
+  cachedWalletPaymentMatchesRequest,
+  idempotencyKeyExpiresAt,
   isMatchingWalletInvoicePayment,
+  parsePayInvoiceWithWalletCache,
   parsePayInvoiceWithWalletIds,
   payInvoiceWithWalletMetadata,
   remainingForWalletPayment,
+  serializePayInvoiceWithWalletCache,
   walletAvailableBalance,
+  type PayInvoiceWithWalletCachedResponse,
 } from '@barghsa/shared/finance'
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
@@ -130,10 +140,25 @@ export class PayInvoiceWithWalletService {
     }
 
     const now = options.now ?? new Date()
+    const key = idempotencyKey.trim()
     const pool = getDbPool()
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+
+      const claim = await this.claimOrLoadIdempotency(client, {
+        key,
+        entityId: ids.invoiceId,
+        expiresAt: idempotencyKeyExpiresAt(now),
+      })
+      if (claim.kind === 'cached') {
+        this.assertCachedMatchesRequest(claim.response, ids.invoiceId, ids.profileId)
+        await client.query('COMMIT')
+        return resultFromCache(claim.response)
+      }
+      if (claim.kind === 'in_flight') {
+        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
+      }
 
       // Wallet first, then invoice: every other money mutation already
       // locks the wallet row, so this order cannot deadlock against them.
@@ -153,7 +178,7 @@ export class PayInvoiceWithWalletService {
         adjustmentKind: invoice.adjustment_kind,
       })
 
-      const existing = await this.findLedgerByIdempotencyKey(client, idempotencyKey.trim())
+      const existing = await this.findLedgerByIdempotencyKey(client, key)
       if (existing) {
         return await this.replayOrReject({
           client,
@@ -162,6 +187,7 @@ export class PayInvoiceWithWalletService {
           remaining,
           actorUserId,
           now,
+          idempotencyKey: key,
           ...optionalAudit(options),
         })
       }
@@ -183,7 +209,7 @@ export class PayInvoiceWithWalletService {
             paidAmountAfter: paidAfter,
           }),
         },
-        idempotencyKey.trim(),
+        key,
         client,
       )
 
@@ -196,11 +222,7 @@ export class PayInvoiceWithWalletService {
         ...optionalAudit(options),
       })
 
-      await client.query('COMMIT')
-      this.logger.log(
-        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`,
-      )
-      return {
+      const result: PayInvoiceWithWalletResult = {
         invoiceId: invoice.id,
         profileId: invoice.profile_id,
         fromState: transition.fromState,
@@ -210,6 +232,12 @@ export class PayInvoiceWithWalletService {
         auditId: transition.auditId,
         replayed: false,
       }
+      await this.persistCachedResult(client, key, invoice.id, result)
+      await client.query('COMMIT')
+      this.logger.log(
+        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`,
+      )
+      return result
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       throw error
@@ -260,6 +288,16 @@ export class PayInvoiceWithWalletService {
     }
   }
 
+  private assertCachedMatchesRequest(
+    cached: PayInvoiceWithWalletCachedResponse,
+    invoiceId: string,
+    profileId: string,
+  ): void {
+    if (!cachedWalletPaymentMatchesRequest(cached, invoiceId, profileId)) {
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    }
+  }
+
   private async replayOrReject(input: {
     client: WalletQueryClient
     invoice: LockedInvoiceRow
@@ -267,6 +305,7 @@ export class PayInvoiceWithWalletService {
     remaining: bigint
     actorUserId: string
     now: Date
+    idempotencyKey: string
     ip?: string
     correlationId?: string
   }): Promise<PayInvoiceWithWalletResult> {
@@ -280,13 +319,12 @@ export class PayInvoiceWithWalletService {
       amount: input.existing.amount,
     })
     if (!matching) {
-      throw new ConflictException('Idempotency key already used for a different wallet operation')
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
     }
 
     const debitAmount = -input.existing.amount
     if (input.invoice.state === 'Paid') {
-      await input.client.query('COMMIT')
-      return {
+      const result: PayInvoiceWithWalletResult = {
         invoiceId: input.invoice.id,
         profileId: input.invoice.profile_id,
         fromState: 'Paid',
@@ -296,10 +334,13 @@ export class PayInvoiceWithWalletService {
         auditId: '',
         replayed: true,
       }
+      await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result)
+      await input.client.query('COMMIT')
+      return result
     }
 
     if (input.remaining > 0n && debitAmount !== input.remaining) {
-      throw new ConflictException('Idempotency key already used for a different wallet operation')
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
     }
 
     this.assertPayable(input.invoice, input.remaining > 0n ? input.remaining : debitAmount, input.now)
@@ -313,8 +354,7 @@ export class PayInvoiceWithWalletService {
       now: input.now,
       ...optionalAudit(input),
     })
-    await input.client.query('COMMIT')
-    return {
+    const result: PayInvoiceWithWalletResult = {
       invoiceId: input.invoice.id,
       profileId: input.invoice.profile_id,
       fromState: transition.fromState,
@@ -324,6 +364,9 @@ export class PayInvoiceWithWalletService {
       auditId: transition.auditId,
       replayed: true,
     }
+    await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result)
+    await input.client.query('COMMIT')
+    return result
   }
 
   private async settleInvoice(
@@ -428,6 +471,109 @@ export class PayInvoiceWithWalletService {
     const row = result.rows[0]
     if (!row || typeof row !== 'object') return null
     return mapLedger(row as Record<string, unknown>)
+  }
+
+  /**
+   * Claim `(idempotencyKey, invoice_wallet_payment)` or load the cached
+   * response. INSERT … ON CONFLICT DO NOTHING is serialized by the
+   * unique index; the loser `SELECT … FOR UPDATE`s the winner's row.
+   */
+  private async claimOrLoadIdempotency(
+    client: WalletQueryClient,
+    input: { key: string; entityId: string; expiresAt: Date },
+  ): Promise<
+    | { kind: 'claimed' }
+    | { kind: 'cached'; response: PayInvoiceWithWalletCachedResponse }
+    | { kind: 'in_flight' }
+  > {
+    const inserted = await this.insertIdempotencyClaim(client, input)
+    if (inserted) return { kind: 'claimed' }
+
+    const existing = await client.query(
+      `SELECT entity_id, response
+         FROM idempotency_keys
+        WHERE idempotency_key = $1 AND entity_type = $2
+        FOR UPDATE`,
+      [input.key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
+    )
+    const row = existing.rows[0] as { entity_id: string | null; response: unknown } | undefined
+    if (!row) {
+      const retried = await this.insertIdempotencyClaim(client, input)
+      if (retried) return { kind: 'claimed' }
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
+    }
+    if (row.response == null) {
+      return { kind: 'in_flight' }
+    }
+    const parsed = parsePayInvoiceWithWalletCache(row.response)
+    if (!parsed) {
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+    }
+    return { kind: 'cached', response: parsed }
+  }
+
+  private async insertIdempotencyClaim(
+    client: WalletQueryClient,
+    input: { key: string; entityId: string; expiresAt: Date },
+  ): Promise<boolean> {
+    const result = await client.query(
+      `INSERT INTO idempotency_keys
+         (idempotency_key, entity_type, entity_id, expires_at)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (idempotency_key, entity_type) DO NOTHING
+       RETURNING id`,
+      [input.key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE, input.entityId, input.expiresAt],
+    )
+    return result.rows.length > 0
+  }
+
+  private async persistCachedResult(
+    client: WalletQueryClient,
+    idempotencyKey: string,
+    entityId: string,
+    result: PayInvoiceWithWalletResult,
+  ): Promise<void> {
+    const snapshot = serializePayInvoiceWithWalletCache(result)
+    await client.query(
+      `UPDATE idempotency_keys
+          SET response = $3::jsonb,
+              entity_id = $4,
+              updated_at = NOW()
+        WHERE idempotency_key = $1 AND entity_type = $2`,
+      [
+        idempotencyKey,
+        INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+        JSON.stringify(snapshot),
+        entityId,
+      ],
+    )
+  }
+}
+
+function resultFromCache(cached: PayInvoiceWithWalletCachedResponse): PayInvoiceWithWalletResult {
+  const tx = cached.walletTransaction
+  const fromState: InvoiceState = isInvoiceState(cached.fromState) ? cached.fromState : 'Paid'
+  return {
+    invoiceId: cached.invoiceId,
+    profileId: cached.profileId,
+    fromState,
+    toState: 'Paid',
+    remainingPaid: BigInt(cached.remainingPaid),
+    walletTransaction: {
+      id: tx.id,
+      walletId: tx.walletId,
+      type: tx.type,
+      amount: BigInt(tx.amount),
+      state: tx.state,
+      idempotencyKey: tx.idempotencyKey,
+      refId: tx.refId,
+      description: tx.description,
+      metadata: tx.metadata,
+      createdAt: new Date(tx.createdAt),
+      updatedAt: new Date(tx.updatedAt),
+    },
+    auditId: cached.auditId,
+    replayed: true,
   }
 }
 
