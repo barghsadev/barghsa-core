@@ -9,6 +9,7 @@
  *   4. The same key is allowed under a different entityType.
  *   5. An in-flight NULL response is reported until expires_at.
  *   6. An expired in-flight row is reclaimed and can cache a new result.
+ *   7. persistResponse refuses to overwrite a successful cached JSON row.
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
@@ -17,7 +18,10 @@ import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import { INVOICE_WALLET_PAYMENT_ENTITY_TYPE } from '@barghsa/shared/finance'
-import { IdempotencyKeysRepository } from './idempotency-keys.repository.js'
+import {
+  IDEMPOTENCY_CACHE_PERSIST_FAILED,
+  IdempotencyKeysRepository,
+} from './idempotency-keys.repository.js'
 
 const UUIDV7_MIGRATION = resolve(
   __dirname,
@@ -205,5 +209,37 @@ describe('IdempotencyKeysRepository — real PostgreSQL (T-04.2.03.03)', () => {
     } finally {
       retryClient.release()
     }
+  })
+
+  it('refuses to overwrite a successful cached response', async () => {
+    const key = 'pay-no-overwrite'
+    const original = { invoiceId: ENTITY_ID, toState: 'Paid', remainingPaid: '1' }
+    await ctx.pool.query(
+      `INSERT INTO idempotency_keys (idempotency_key, entity_type, entity_id, response)
+       VALUES ($1, $2, $3, $4::jsonb)`,
+      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE, ENTITY_ID, JSON.stringify(original)],
+    )
+
+    const client = await ctx.pool.connect()
+    try {
+      await expect(
+        repo.persistResponse(client, {
+          key,
+          entityType: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
+          entityId: ENTITY_ID,
+          response: { invoiceId: ENTITY_ID, toState: 'Paid', remainingPaid: '999' },
+        }),
+      ).rejects.toThrow(IDEMPOTENCY_CACHE_PERSIST_FAILED)
+    } finally {
+      client.release()
+    }
+
+    const row = await ctx.pool.query<{ remaining: string }>(
+      `SELECT response->>'remainingPaid' AS remaining
+         FROM idempotency_keys
+        WHERE idempotency_key = $1 AND entity_type = $2`,
+      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
+    )
+    expect(row.rows[0]?.remaining).toBe('1')
   })
 })

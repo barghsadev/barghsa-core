@@ -132,6 +132,8 @@ function paymentQueries(opts: {
   idempotencySelect?: Record<string, unknown>[]
   /** Rows returned by reclaiming an expired in-flight claim. */
   idempotencyReclaim?: Record<string, unknown>[]
+  /** Rows returned by persisting the cached JSONB response. */
+  idempotencyPersist?: Record<string, unknown>[]
 } = {}) {
   const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice
   const wallet = opts.wallet === undefined ? walletRow() : opts.wallet
@@ -140,6 +142,7 @@ function paymentQueries(opts: {
   const idempotencyInsert = opts.idempotencyInsert ?? [{ id: 'idem-claim-1' }]
   const idempotencySelect = opts.idempotencySelect ?? []
   const idempotencyReclaim = opts.idempotencyReclaim ?? []
+  const idempotencyPersist = opts.idempotencyPersist ?? [{ id: 'idem-persist-1' }]
   mockQuery((sql) => {
     if (sql.includes('INSERT INTO idempotency_keys')) {
       return { rows: idempotencyInsert }
@@ -147,11 +150,11 @@ function paymentQueries(opts: {
     if (sql.includes('FROM idempotency_keys')) {
       return { rows: idempotencySelect }
     }
-    if (sql.includes('UPDATE idempotency_keys') && sql.includes('response IS NULL')) {
+    if (sql.includes('UPDATE idempotency_keys') && sql.includes('expires_at')) {
       return { rows: idempotencyReclaim }
     }
     if (sql.includes('UPDATE idempotency_keys')) {
-      return { rows: [] }
+      return { rows: idempotencyPersist }
     }
     if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
       return { rows: wallet ? [wallet] : [] }
@@ -314,6 +317,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     const cacheWrite = mockClient.query.mock.calls.find(
       (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
     )
+    expect(cacheWrite?.[0]).toContain('AND response IS NULL')
+    expect(cacheWrite?.[0]).toContain('RETURNING id')
     expect(cacheWrite?.[1]?.[0]).toBe(IDEMPOTENCY_KEY)
     expect(cacheWrite?.[1]?.[1]).toBe(INVOICE_WALLET_PAYMENT_ENTITY_TYPE)
     expect(JSON.parse(String(cacheWrite?.[1]?.[2]))).toMatchObject({
@@ -592,6 +597,15 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
       }),
     ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID())
     expect(mockPool.connect).not.toHaveBeenCalled()
+  })
+
+  it('rolls back the debit when the idempotency cache persist matches no in-flight row', async () => {
+    paymentQueries({ idempotencyPersist: [] })
+
+    await expect(pay()).rejects.toThrow('Idempotency cache row missing')
+    expect(walletService.debit).toHaveBeenCalledTimes(1)
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
   })
 
   it('rolls back the debit when the locked invoice state UPDATE matches no row', async () => {

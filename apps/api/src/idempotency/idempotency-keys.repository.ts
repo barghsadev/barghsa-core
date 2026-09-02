@@ -11,7 +11,9 @@
  *   - reclaims an expired in-flight row whose `expires_at` has passed.
  *
  * Successful cached responses are never treated as expired so a retry
- * after TTL still cannot debit twice.
+ * after TTL still cannot debit twice. persistResponse only writes onto
+ * an in-flight (NULL response) row and fails closed if that row is gone,
+ * so a debit cannot commit without a retryable cache.
  */
 
 import { Injectable } from '@nestjs/common'
@@ -47,6 +49,10 @@ export interface PersistIdempotencyResponseInput {
   entityId: string
   response: unknown
 }
+
+/** Thrown when the claimed in-flight row is gone before the cache write. */
+export const IDEMPOTENCY_CACHE_PERSIST_FAILED =
+  'Idempotency cache row missing for claimed (idempotencyKey, entityType)'
 
 @Injectable()
 export class IdempotencyKeysRepository {
@@ -101,14 +107,20 @@ export class IdempotencyKeysRepository {
     client: IdempotencyQueryClient,
     input: PersistIdempotencyResponseInput,
   ): Promise<void> {
-    await client.query(
+    const result = await client.query(
       `UPDATE idempotency_keys
           SET response = $3::jsonb,
               entity_id = $4,
               updated_at = NOW()
-        WHERE idempotency_key = $1 AND entity_type = $2`,
+        WHERE idempotency_key = $1
+          AND entity_type = $2
+          AND response IS NULL
+        RETURNING id`,
       [input.key, input.entityType, JSON.stringify(input.response), input.entityId],
     )
+    if (result.rows.length === 0) {
+      throw new Error(IDEMPOTENCY_CACHE_PERSIST_FAILED)
+    }
   }
 
   private async insertClaim(
