@@ -144,6 +144,10 @@ export class ChargebackAlertService {
   }
 }
 
+export const SELECT_FINANCE_CHARGEBACK_OUTBOX_ID_SQL = `SELECT id FROM notification_outbox
+   WHERE idempotency_key = $1
+   LIMIT 1`
+
 export async function enqueueFinanceChargebackAlert(
   client: QueryClient,
   input: {
@@ -163,34 +167,85 @@ export async function enqueueFinanceChargebackAlert(
       ? 'urgent'
       : 'normal'
 
-  const insertResult = await client.query(
-    `INSERT INTO notification_outbox
-       (profile_id, user_id, event_key, payload, channels, status,
-        idempotency_key, max_attempts, scheduled_for)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-     ON CONFLICT (idempotency_key) DO NOTHING
-     RETURNING id`,
-    [
-      input.profileId,
-      input.userId,
-      FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
-      input.payload,
-      channels,
-      'queued',
-      idempotencyKey,
-      DEFAULT_MAX_ATTEMPTS,
-      null,
-    ],
-  )
-  const row = insertResult.rows[0] as { id: string } | undefined
-  if (!row) return { outboxId: null, inserted: false }
+  return withLocalTransaction(client, async () => {
+    const insertResult = await client.query(
+      `INSERT INTO notification_outbox
+         (profile_id, user_id, event_key, payload, channels, status,
+          idempotency_key, max_attempts, scheduled_for)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (idempotency_key) DO NOTHING
+       RETURNING id`,
+      [
+        input.profileId,
+        input.userId,
+        FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
+        input.payload,
+        channels,
+        'queued',
+        idempotencyKey,
+        DEFAULT_MAX_ATTEMPTS,
+        null,
+      ],
+    )
+    const insertedRow = insertResult.rows[0] as { id: string } | undefined
+    let outboxId = insertedRow?.id
+    const inserted = Boolean(outboxId)
+    if (!outboxId) {
+      const existing = await client.query(SELECT_FINANCE_CHARGEBACK_OUTBOX_ID_SQL, [
+        idempotencyKey,
+      ])
+      outboxId = (existing.rows[0] as { id: string } | undefined)?.id
+      if (!outboxId) return { outboxId: null, inserted: false }
+    }
 
+    await insertFinanceChargebackAlertJobs(client, {
+      outboxId,
+      channels,
+      priority,
+    })
+    return { outboxId, inserted }
+  })
+}
+
+/**
+ * Chargeback detection uses a session client in autocommit mode, so the
+ * outbox row and its jobs must share an explicit transaction. A later
+ * retry still repairs missing jobs if a previous process committed the
+ * outbox without them.
+ */
+async function withLocalTransaction<T>(
+  client: QueryClient,
+  fn: () => Promise<T>,
+): Promise<T> {
+  await client.query('BEGIN')
+  try {
+    const result = await fn()
+    await client.query('COMMIT')
+    return result
+  } catch (error) {
+    try {
+      await client.query('ROLLBACK')
+    } catch {
+      // Connection may already be aborted; the caller still releases it.
+    }
+    throw error
+  }
+}
+
+async function insertFinanceChargebackAlertJobs(
+  client: QueryClient,
+  input: {
+    outboxId: string
+    channels: string[]
+    priority: 'urgent' | 'normal'
+  },
+): Promise<void> {
   const jobValues: unknown[] = []
   const placeholders: string[] = []
-  channels.forEach((channel, i) => {
+  input.channels.forEach((channel, i) => {
     const base = i * 5
     placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`)
-    jobValues.push(row.id, channel, 'queued', priority, DEFAULT_MAX_ATTEMPTS)
+    jobValues.push(input.outboxId, channel, 'queued', input.priority, DEFAULT_MAX_ATTEMPTS)
   })
   await client.query(
     `INSERT INTO notification_job
@@ -199,7 +254,6 @@ export async function enqueueFinanceChargebackAlert(
      ON CONFLICT (outbox_id, channel) DO NOTHING`,
     jobValues,
   )
-  return { outboxId: row.id, inserted: true }
 }
 
 function mapWarningItem(row: {

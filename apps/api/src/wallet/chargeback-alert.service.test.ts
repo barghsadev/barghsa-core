@@ -5,6 +5,7 @@ import {
   COUNT_UNRESOLVED_CHARGEBACKS_SQL,
   FIND_FINANCE_ALERT_RECIPIENTS_SQL,
   LIST_UNRESOLVED_CHARGEBACKS_SQL,
+  SELECT_FINANCE_CHARGEBACK_OUTBOX_ID_SQL,
   enqueueFinanceChargebackAlert,
 } from './chargeback-alert.service.js'
 
@@ -93,6 +94,9 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       'urgent',
       5,
     ])
+    expect(client.query.mock.calls.map((call) => call[0])).toEqual(
+      expect.arrayContaining(['BEGIN', 'COMMIT']),
+    )
   })
 
   it('skips reversed chargebacks and does not write the outbox', async () => {
@@ -109,11 +113,14 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
     expect(client.query).not.toHaveBeenCalled()
   })
 
-  it('is a no-op insert when the same event is already alerted to that profile', async () => {
+  it('reuses the existing outbox and upserts jobs when the idempotency key already exists', async () => {
     const client = {
       query: vi.fn(async (sql: string, _params?: unknown[]) => {
         if (sql.includes('INSERT INTO notification_outbox')) {
           return { rows: [], rowCount: 0 }
+        }
+        if (sql.includes(SELECT_FINANCE_CHARGEBACK_OUTBOX_ID_SQL) || sql.includes('WHERE idempotency_key = $1')) {
+          return { rows: [{ id: 'outbox-existing' }] }
         }
         return { rows: [] }
       }),
@@ -124,10 +131,71 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
       eventId: EVENT_ID,
       payload: { event_id: EVENT_ID },
     })
-    expect(result).toEqual({ outboxId: null, inserted: false })
-    expect(client.query.mock.calls.some((call) => String(call[0]).includes('notification_job'))).toBe(
-      false,
+    expect(result).toEqual({ outboxId: 'outbox-existing', inserted: false })
+    const jobCall = client.query.mock.calls.find((call) =>
+      String(call[0]).includes('INSERT INTO notification_job'),
     )
+    expect(jobCall?.[1]?.[0]).toBe('outbox-existing')
+    expect(jobCall?.[1]?.[5]).toBe('outbox-existing')
+  })
+
+  it('creates missing notification jobs when a retry follows a failed job insert', async () => {
+    let outboxPersisted = false
+    let jobInserts = 0
+    const client = {
+      query: vi.fn(async (sql: string, _params?: unknown[]) => {
+        if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
+          return { rows: [] }
+        }
+        if (sql.includes('INSERT INTO notification_outbox')) {
+          if (outboxPersisted) return { rows: [], rowCount: 0 }
+          outboxPersisted = true
+          return { rows: [{ id: 'outbox-1' }], rowCount: 1 }
+        }
+        if (sql.includes('WHERE idempotency_key = $1')) {
+          return { rows: outboxPersisted ? [{ id: 'outbox-1' }] : [] }
+        }
+        if (sql.includes('INSERT INTO notification_job')) {
+          jobInserts += 1
+          if (jobInserts === 1) {
+            throw new Error('simulated job insert failure')
+          }
+          return { rows: [], rowCount: 2 }
+        }
+        return { rows: [] }
+      }),
+    }
+    const input = {
+      profileId: PROFILE_ID,
+      userId: USER_ID,
+      eventId: EVENT_ID,
+      payload: { event_id: EVENT_ID },
+    }
+
+    await expect(enqueueFinanceChargebackAlert(client, input)).rejects.toThrow(
+      'simulated job insert failure',
+    )
+    expect(outboxPersisted).toBe(true)
+    expect(client.query.mock.calls.some((call) => call[0] === 'ROLLBACK')).toBe(true)
+
+    const retry = await enqueueFinanceChargebackAlert(client, input)
+    expect(retry).toEqual({ outboxId: 'outbox-1', inserted: false })
+    const jobCalls = client.query.mock.calls.filter((call) =>
+      String(call[0]).includes('INSERT INTO notification_job'),
+    )
+    expect(jobCalls).toHaveLength(2)
+    expect(jobCalls[1]?.[1]).toEqual([
+      'outbox-1',
+      'in_app',
+      'queued',
+      'urgent',
+      5,
+      'outbox-1',
+      'email',
+      'queued',
+      'urgent',
+      5,
+    ])
   })
 
   it('aggregates unmatched and reversal-failed rows for the dashboard warning', async () => {
