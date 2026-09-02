@@ -243,11 +243,24 @@ export class ChargebackDetectionService {
 
         let reversal: TransactionRow
         try {
-          reversal = await this.walletService.reverseTransaction(
-            match.original.id,
-            notification.reason,
-            chargebackReversalIdempotencyKey(eventId),
-          )
+          // Reverse on the advisory-lock client so this handler never
+          // checks out a second pooled connection while the lock is held.
+          reversal = await withLockClientTransaction(client, async () => {
+            const posted = await this.walletService.reverseTransaction(
+              match.original.id,
+              notification.reason,
+              chargebackReversalIdempotencyKey(eventId),
+              client,
+            )
+            await this.finalizeEvent(client, eventId, {
+              status: 'reversed',
+              originalTransactionId: match.original.id,
+              reversalTransactionId: posted.id,
+              walletId: match.original.walletId,
+              matchMethod: match.method,
+            })
+            return posted
+          })
         } catch (error) {
           if (isAlreadyReversedError(error, match.original.id)) {
             const raced = await this.findExistingReversal(client, match.original.id)
@@ -300,13 +313,6 @@ export class ChargebackDetectionService {
           throw error
         }
 
-        await this.finalizeEvent(client, eventId, {
-          status: 'reversed',
-          originalTransactionId: match.original.id,
-          reversalTransactionId: reversal.id,
-          walletId: match.original.walletId,
-          matchMethod: match.method,
-        })
         this.logger.log(
           `Chargeback ${eventId} reversed top-up ${match.original.id} as ${reversal.id}`,
         )
@@ -488,6 +494,30 @@ export class ChargebackDetectionService {
         input.matchMethod,
       ],
     )
+  }
+}
+
+/**
+ * Run `fn` in a transaction on the session that already holds the
+ * chargeback advisory lock. `WalletService.reverseTransaction` must use
+ * this same client so the handler never waits on a nested pool checkout.
+ */
+async function withLockClientTransaction<T>(
+  client: QueryClient,
+  fn: () => Promise<T>,
+): Promise<T> {
+  await client.query('BEGIN')
+  try {
+    const result = await fn()
+    await client.query('COMMIT')
+    return result
+  } catch (error) {
+    try {
+      await client.query('ROLLBACK')
+    } catch {
+      // Preserve the original reversal/mapping error.
+    }
+    throw error
   }
 }
 

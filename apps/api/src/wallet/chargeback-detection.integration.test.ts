@@ -16,6 +16,8 @@
  *      never remapped or reversed.
  *   7. Concurrent retries of the same event id serialize to one reversal.
  *   8. Concurrent distinct event ids for one top-up share one reversal.
+ *   9. Concurrent handlers complete when the pool max equals handler
+ *      count (no nested checkout while the advisory lock is held).
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -68,6 +70,9 @@ const CHARGEBACK_MIGRATION = resolve(
   '../../../../packages/db/drizzle/0075_create_wallet_chargeback_events.sql',
 )
 
+const CONCURRENT_HANDLERS = 4
+const POOL_DEADLOCK_TIMEOUT_MS = 8_000
+
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
 const PROFILE_C = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
@@ -85,7 +90,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
   let creditId: string
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8)
+    ctx = await createIsolatedTestDb('test_', CONCURRENT_HANDLERS)
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new ChargebackDetectionService(walletService, {
@@ -751,4 +756,62 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     )
     expect(reversals.rows).toHaveLength(1)
   })
+
+  it(
+    'completes concurrent handlers when the pool max equals the handler count',
+    async () => {
+      const cases = await Promise.all(
+        Array.from({ length: CONCURRENT_HANDLERS }, async (_, index) => {
+          const pending = uuidv7()
+          const credit = await seedCompletedTopUp(
+            uuidv7(),
+            pending,
+            `auth-pool-bound-${index}`,
+            `psp-pool-bound-${index}`,
+          )
+          return { credit, pending, eventId: `evt-cb-pool-bound-${index}` }
+        }),
+      )
+
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
+      const deadlock = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(
+            new Error(
+              `chargeback handlers deadlocked: pool max ${CONCURRENT_HANDLERS} did not finish within ${POOL_DEADLOCK_TIMEOUT_MS}ms`,
+            ),
+          )
+        }, POOL_DEADLOCK_TIMEOUT_MS)
+      })
+
+      const results = await Promise.race([
+        Promise.all(
+          cases.map((entry) =>
+            service.handle(
+              signed(
+                {
+                  type: 'chargeback',
+                  merchantId: MERCHANT,
+                  merchantOrderId: entry.pending,
+                  amountIrR: AMOUNT.toString(),
+                },
+                entry.eventId,
+              ),
+            ),
+          ),
+        ),
+        deadlock,
+      ]).finally(() => {
+        if (timeoutId !== undefined) clearTimeout(timeoutId)
+      })
+
+      expect(results).toHaveLength(CONCURRENT_HANDLERS)
+      for (const [index, result] of results.entries()) {
+        expect(result.status).toBe('reversed')
+        expect(result.originalTransactionId).toBe(cases[index]!.credit.id)
+        expect(result.reversalTransactionId).toBeTruthy()
+      }
+    },
+    15_000,
+  )
 })

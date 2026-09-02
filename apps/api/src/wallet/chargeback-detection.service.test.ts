@@ -145,7 +145,13 @@ function scriptClient(opts: {
   existingReversal?: { id: string } | null
 }) {
   mockClient.query.mockImplementation(async (sql: string) => {
-    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+    if (
+      sql.includes('pg_advisory_lock') ||
+      sql.includes('pg_advisory_unlock') ||
+      sql === 'BEGIN' ||
+      sql === 'COMMIT' ||
+      sql === 'ROLLBACK'
+    ) {
       return { rows: [] }
     }
     if (sql.includes('INSERT INTO wallet_chargeback_events')) {
@@ -289,6 +295,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       CREDIT_ID,
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
     )
   })
 
@@ -348,6 +355,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       CREDIT_ID,
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
     )
   })
 
@@ -601,6 +609,7 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       CREDIT_ID,
       WALLET_CHARGEBACK_REASON,
       `wallet-chargeback-reversal:${EVENT_ID}`,
+      mockClient,
     )
   })
 })
