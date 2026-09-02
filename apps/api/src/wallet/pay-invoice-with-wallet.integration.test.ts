@@ -4,16 +4,19 @@
  *
  * Proves against actual PostgreSQL that one transaction:
  *   1. Claims `idempotency_keys (idempotencyKey, entityType)` first.
- *   2. `SELECT … FOR UPDATE`s the wallet then the invoice.
+ *   2. `SELECT … FOR UPDATE OF wallets` then `… OF invoices`.
  *   3. Validates locked availableBalance (`posted − reserved`).
- *   4. Debits the wallet, inserts `wallet.invoice_payment` audit,
- *      marks the invoice Paid, and writes a wallet_transactions payment
+ *   4. Debits the wallet bound to the locked `version`, inserts
+ *      `wallet.invoice_payment` audit, marks the invoice Paid under the
+ *      locked `state` predicate, and writes a wallet_transactions payment
  *      row plus the invoice `pay_from_wallet` audit together.
  *   5. Caches the JSON result so a retry with the same key returns it
  *      and never posts a second debit.
  *   6. Rolls every one of those writes back when availableBalance is
  *      insufficient (including when reserved funds consume posted).
- *   7. `pg_locks` shows RowShareLock on wallets and invoices before debit.
+ *   7. Before debit, `pg_locks` shows RowShareLock on wallets and invoices
+ *      and a second connection’s `SELECT … FOR UPDATE NOWAIT` on those
+ *      rows fails with lock_not_available (55P03).
  *
  * Concurrent races belong to T-04.2.03.04
  * (`pay-invoice-with-wallet.concurrency.integration.test.ts`). Wiring: only
@@ -287,6 +290,7 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
   it('holds FOR UPDATE row locks on wallets and invoices before debiting', async () => {
     const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
     const seen: Array<{ relname: string; mode: string }> = []
+    const nowait: { wallet?: string; invoice?: string } = {}
     const inner = new WalletService()
     const probing = {
       debit: async (
@@ -297,6 +301,7 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
         client?: Parameters<WalletService['debit']>[4],
       ) => {
         if (!client) throw new Error('expected transactional client')
+        expect(ref.expectedVersion).toBe(0)
         const locks = await client.query(
           `SELECT c.relname, l.mode
              FROM pg_locks l
@@ -307,6 +312,33 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
               AND c.relname IN ('wallets', 'invoices')`,
         )
         seen.push(...(locks.rows as Array<{ relname: string; mode: string }>))
+
+        const blocker = await ctx.pool.connect()
+        try {
+          await blocker.query('BEGIN')
+          try {
+            await blocker.query(
+              `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE NOWAIT`,
+              [profileId],
+            )
+          } catch (error) {
+            nowait.wallet = pgErrCode(error)
+          }
+          await blocker.query('ROLLBACK')
+          await blocker.query('BEGIN')
+          try {
+            await blocker.query(
+              `SELECT id FROM invoices WHERE id = $1 FOR UPDATE NOWAIT`,
+              [invoiceId],
+            )
+          } catch (error) {
+            nowait.invoice = pgErrCode(error)
+          }
+          await blocker.query('ROLLBACK')
+        } finally {
+          blocker.release()
+        }
+
         return inner.debit(walletId, amount, ref, idempotencyKey, client)
       },
     }
@@ -322,12 +354,10 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     })
 
     const modes = (rel: string) => seen.filter((row) => row.relname === rel).map((row) => row.mode)
-    expect(modes('wallets').some((mode) => mode.includes('Share') || mode.includes('Exclusive'))).toBe(
-      true,
-    )
-    expect(modes('invoices').some((mode) => mode.includes('Share') || mode.includes('Exclusive'))).toBe(
-      true,
-    )
+    expect(modes('wallets')).toContain('RowShareLock')
+    expect(modes('invoices')).toContain('RowShareLock')
+    expect(nowait.wallet).toBe('55P03')
+    expect(nowait.invoice).toBe('55P03')
   })
 
   it('settles a PartiallyFunded remaining amount without touching reserved funds', async () => {
@@ -459,3 +489,10 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     expect(cached.rows[0]?.n).toBe('0')
   })
 })
+
+function pgErrCode(error: unknown): string {
+  if (typeof error === 'object' && error !== null && 'code' in error) {
+    return String((error as { code: unknown }).code)
+  }
+  return ''
+}

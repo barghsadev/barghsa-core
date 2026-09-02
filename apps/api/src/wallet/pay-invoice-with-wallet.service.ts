@@ -9,26 +9,25 @@
  *      that finds a cached JSON response returns it and never debits.
  *      An in-flight NULL response is rejected (409) unless `expires_at`
  *      has passed, in which case the row is reclaimed.
- *   3. `SELECT … FOR UPDATE`s the wallet first, then the invoice
- *      (stable lock order vs other wallet mutations).
+ *   3. `SELECT … FOR UPDATE OF wallets` then `… OF invoices` (stable
+ *      lock order vs other wallet mutations). Available balance is
+ *      taken from that locked snapshot (`posted − reserved`).
  *   4. Rejects missing wallets/invoices, other profiles (404), credit
  *      notes, non-PayFromWallet states, not-yet-payable dates, remaining
- *      0, and insufficient locked availableBalance (`posted − reserved`
- *      from the `FOR UPDATE` snapshot).
+ *      0, and insufficient locked availableBalance.
  *   5. Debits the exact remaining amount (`type: payment`, `refId` =
  *      invoice id) on the same client so wallet + invoice commit together.
- *      The returned ledger row must be a Completed payment of `-remaining`
- *      for this invoice; colliding debit keys are mapped to the wallet
- *      payment collision error so Paid is never written after a partial
- *      or unrelated debit. `WalletService.debit` re-locks the wallet and
- *      applies the optimistic `version` predicate as a second line of
- *      defense.
+ *      The debit is bound to the locked wallet `version` (optimistic
+ *      second line of defense). The returned ledger row must be a
+ *      Completed payment of `-remaining` for this invoice; colliding
+ *      debit keys are mapped to the wallet payment collision error so
+ *      Paid is never written after a partial or unrelated debit.
  *   6. Inserts `wallet.invoice_payment` audit (posted before/after,
- *      remaining, ledger id) then sets `paid_amount` to the total and
- *      transitions Unpaid / PartiallyFunded → Paid through the state
- *      machine (invoice audit + paid_at) in the same transaction as the
- *      wallet_transactions insert, then writes the cached JSONB
- *      response onto the claimed idempotency row.
+ *      remaining, ledger id) then sets `paid_amount` under the locked
+ *      invoice `state` predicate and transitions Unpaid / PartiallyFunded
+ *      → Paid through the state machine (invoice audit + paid_at) in the
+ *      same transaction as the `wallet_transactions` insert, then writes
+ *      the cached JSONB response onto the claimed idempotency row.
  *
  * Retrying with the same idempotency key returns the original Paid result
  * and never debits twice. The unique index
@@ -229,6 +228,7 @@ export class PayInvoiceWithWalletService {
         remaining,
         paidAfter,
         idempotencyKey: key,
+        expectedVersion: wallet.version,
       })
 
       await this.recordWalletPaymentAudit(client, {
@@ -316,10 +316,10 @@ export class PayInvoiceWithWalletService {
   }
 
   /**
-   * Debit the locked remaining amount on the caller transaction.
-   * Rejects colliding idempotency keys and ledger rows that are not an
-   * exact remaining payment so the invoice is never marked Paid after a
-   * partial or unrelated debit (T-04.2.03.01).
+   * Debit the locked remaining amount on the caller transaction, bound
+   * to the `FOR UPDATE` wallet `version`. Rejects colliding idempotency
+   * keys and ledger rows that are not an exact remaining payment so the
+   * invoice is never marked Paid after a partial or unrelated debit.
    */
   private async debitExactRemaining(
     client: WalletQueryClient,
@@ -328,6 +328,7 @@ export class PayInvoiceWithWalletService {
       remaining: bigint
       paidAfter: bigint
       idempotencyKey: string
+      expectedVersion: number
     },
   ): Promise<TransactionRow> {
     let debit: TransactionRow
@@ -344,6 +345,7 @@ export class PayInvoiceWithWalletService {
             remainingBefore: input.remaining,
             paidAmountAfter: input.paidAfter,
           }),
+          expectedVersion: input.expectedVersion,
         },
         input.idempotencyKey,
         client,
@@ -488,9 +490,10 @@ export class PayInvoiceWithWalletService {
           SET paid_amount = paid_amount + $2::bigint,
               updated_at = NOW()
         WHERE id = $1
+          AND state = $3
           AND paid_amount + $2::bigint <= total_amount
         RETURNING paid_amount, total_amount`,
-      [input.invoice.id, input.remaining.toString()],
+      [input.invoice.id, input.remaining.toString(), fromState],
     )
     if (updated.rows.length === 0) {
       throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID())
@@ -566,7 +569,7 @@ export class PayInvoiceWithWalletService {
               (posted_balance - reserved_balance) AS available_balance
          FROM wallets
         WHERE profile_id = $1
-        FOR UPDATE`,
+        FOR UPDATE OF wallets`,
       [profileId],
     )
     const row = (result.rows as LockedWalletRow[])[0]
@@ -582,7 +585,7 @@ export class PayInvoiceWithWalletService {
               adjustment_kind, payable_from
          FROM invoices
         WHERE id = $1
-        FOR UPDATE`,
+        FOR UPDATE OF invoices`,
       [invoiceId],
     )
     const row = (result.rows as LockedInvoiceRow[])[0]
