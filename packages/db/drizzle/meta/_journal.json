@@ -218,6 +218,13 @@
       "when": 1789603200000,
       "tag": "0077_wallet_tx_reversal_original_check",
       "breakpoints": true
+    },
+    {
+      "idx": 78,
+      "version": "7",
+      "when": 1789689600000,
+      "tag": "0078_create_bank_receipts",
+      "breakpoints": true
     }
   ]
 }

@@ -23,8 +23,16 @@
  */
 
 import { drizzle } from 'drizzle-orm/node-postgres'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { Pool } from 'pg'
 import { randomUUID } from 'node:crypto'
+
+const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
+const INVOICES_MIGRATION = resolve(
+  __dirname,
+  '../../drizzle/0052_add_invoice_amount_check_constraints.sql',
+)
 
 export interface IsolatedTestDb {
   /** The PostgreSQL schema name (e.g. `test_a1b2c3d4`). */
@@ -55,6 +63,46 @@ function getManagementPool(): Pool {
     )
   }
   return new Pool({ connectionString: url, max: MANAGEMENT_POOL_MAX })
+}
+
+/**
+ * FK targets required by journaled migration 0078 (`bank_receipts`).
+ *
+ * Isolated `migrate()` tests that skip earlier journal entries must
+ * seed these before `migrate()`. Production 0078 fails closed when
+ * `invoices`, `profiles`, or `users` are missing so Drizzle cannot
+ * record a successful no-op.
+ */
+export async function seedBankReceiptsPrerequisites(pool: Pool): Promise<void> {
+  await pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      user_id TEXT PRIMARY KEY
+    )
+  `)
+  await pool.query(`
+    DO $seed$
+    BEGIN
+      CREATE TYPE invoice_state AS ENUM (
+        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
+        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
+      );
+    EXCEPTION
+      WHEN duplicate_object THEN NULL;
+    END
+    $seed$
+  `)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS profiles (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+    )
+  `)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+    )
+  `)
+  await pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
 }
 
 /**

@@ -3,7 +3,11 @@ import { sql } from 'drizzle-orm'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
+import {
+  createIsolatedTestDb,
+  dropTestSchema,
+  seedBankReceiptsPrerequisites,
+} from './test/testDb'
 import type { IsolatedTestDb } from './test/testDb'
 
 /**
@@ -47,6 +51,7 @@ describe('drizzle migrate() applies wallet_chargeback_events (T-04.2.04.02)', ()
       )
     `)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
+    await seedBankReceiptsPrerequisites(ctx.pool)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

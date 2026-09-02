@@ -3,7 +3,11 @@ import { sql } from 'drizzle-orm'
 import { migrate } from 'drizzle-orm/node-postgres/migrator'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
+import {
+  createIsolatedTestDb,
+  dropTestSchema,
+  seedBankReceiptsPrerequisites,
+} from './test/testDb'
 import type { IsolatedTestDb } from './test/testDb'
 
 /**
@@ -40,6 +44,9 @@ describe('drizzle migrate() applies idempotency_keys (T-04.2.03.03)', () => {
 
     ctx = await createIsolatedTestDb()
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    // 0078 (bank_receipts) is journaled after this head and fails closed
+    // unless invoices / profiles / users already exist.
+    await seedBankReceiptsPrerequisites(ctx.pool)
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (

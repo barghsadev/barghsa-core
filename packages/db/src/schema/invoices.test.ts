@@ -317,6 +317,13 @@ describe('Invoice order-type unique index excludes replacements (T-04.1.05.02)',
     expect(createInvoicesTable).toBeDefined()
   })
 
+  it('createInvoicesTable SQL declares uq_invoices_id_profile_id', () => {
+    const schemaSql = readFileSync(resolve(__dirname, './invoices.ts'), 'utf8')
+    expect(schemaSql).toContain(
+      'CONSTRAINT uq_invoices_id_profile_id UNIQUE (id, profile_id)',
+    )
+  })
+
   it('migration 0065 rewrites the unique index as partial and is idempotent', () => {
     expect(ORDER_TYPE_REPLACEMENT_MIGRATION).toContain(
       'DROP INDEX IF EXISTS uq_invoices_order_id_type',
