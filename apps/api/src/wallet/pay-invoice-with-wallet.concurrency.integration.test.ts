@@ -16,6 +16,12 @@
  *      one settles Paid, the other fails, one ledger row.
  *   6. Two invoices racing when funds cover both remaining amounts: both
  *      settle Paid and postedBalance equals start minus the sum.
+ *   7. The same idempotency key racing on two invoices: one settles Paid,
+ *      the other is an idempotency collision and stays Unpaid.
+ *   8. Distinct-key losers roll back their `idempotency_keys` claims.
+ *   9. Concurrent remaining debits of a PartiallyFunded invoice settle once.
+ *  10. A concurrent wallet credit (wallet-row lock) and pay-from-wallet
+ *      debit complete without deadlock; postedBalance reflects both.
  *
  * Sequential locking/idempotency coverage lives in
  * `pay-invoice-with-wallet.integration.test.ts` (T-04.2.03.02 / T-04.2.03.03).
@@ -97,12 +103,14 @@ const TOTAL = 1_000_000n
 describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)', () => {
   let ctx: IsolatedTestDb
   let service: PayInvoiceWithWalletService
+  let walletService: WalletService
 
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 8)
     poolHolder.pool = ctx.pool
+    walletService = new WalletService()
     service = new PayInvoiceWithWalletService(
-      new WalletService(),
+      walletService,
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
     )
 
@@ -252,6 +260,15 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
     return result.rows
   }
 
+  async function fetchIdempotencyCount(key: string): Promise<number> {
+    const result = await ctx.pool.query<{ n: string }>(
+      `SELECT COUNT(*)::text AS n FROM idempotency_keys
+        WHERE idempotency_key = $1 AND entity_type = $2`,
+      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
+    )
+    return Number(result.rows[0]?.n ?? '0')
+  }
+
   function pay(
     invoiceId: string,
     profileId: string,
@@ -286,11 +303,16 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
   it('lets exactly one of three concurrent distinct-key payments succeed', async () => {
     const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
     const before = await fetchWallet(profileId)
+    const keys = [
+      `pay-race-a-${invoiceId}`,
+      `pay-race-b-${invoiceId}`,
+      `pay-race-c-${invoiceId}`,
+    ]
 
     const settled = await Promise.allSettled([
-      pay(invoiceId, profileId, `pay-race-a-${invoiceId}`),
-      pay(invoiceId, profileId, `pay-race-b-${invoiceId}`),
-      pay(invoiceId, profileId, `pay-race-c-${invoiceId}`),
+      pay(invoiceId, profileId, keys[0]!),
+      pay(invoiceId, profileId, keys[1]!),
+      pay(invoiceId, profileId, keys[2]!),
     ])
 
     const won = fulfilledResults(settled)
@@ -325,6 +347,15 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
       expect.objectContaining({ event: WALLET_INVOICE_PAYMENT_EVENT }),
       expect.objectContaining({ event: 'invoice.pay_from_wallet' }),
     ])
+
+    const winnerKey = won[0]!.walletTransaction.idempotencyKey
+    expect(keys).toContain(winnerKey)
+    expect(await fetchIdempotencyCount(winnerKey)).toBe(1)
+    for (const key of keys) {
+      if (key !== winnerKey) {
+        expect(await fetchIdempotencyCount(key)).toBe(0)
+      }
+    }
   })
 
   it('returns the original result for concurrent retries of the same idempotency key', async () => {
@@ -366,13 +397,7 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
     expect(await fetchLedger(profileId)).toHaveLength(1)
     expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
     expect(await fetchAudit(invoiceId)).toHaveLength(2)
-
-    const cached = await ctx.pool.query<{ n: string }>(
-      `SELECT COUNT(*)::text AS n FROM idempotency_keys
-        WHERE idempotency_key = $1 AND entity_type = $2`,
-      [key, INVOICE_WALLET_PAYMENT_ENTITY_TYPE],
-    )
-    expect(cached.rows[0]?.n).toBe('1')
+    expect(await fetchIdempotencyCount(key)).toBe(1)
   })
 
   it('replays a sequential duplicate idempotency key and never debits twice', async () => {
@@ -517,6 +542,102 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
       BigInt(before.posted_balance) - TOTAL * 2n,
     )
     expect((await fetchWallet(profileId)).version).toBe(before.version + 4)
+    expect(await fetchLedger(profileId)).toHaveLength(2)
+  })
+
+  it('rejects a concurrent same-key collision on a different invoice', async () => {
+    const first = await seedPayable({ posted: 1_500_000n })
+    const second = await seedPayable({ posted: 1_500_000n })
+    const key = `pay-idem-collision-race-${first.invoiceId}`
+
+    const settled = await Promise.allSettled([
+      pay(first.invoiceId, first.profileId, key),
+      pay(second.invoiceId, second.profileId, key),
+    ])
+
+    const won = fulfilledResults(settled)
+    const lost = rejectedReasons(settled)
+    expect(won).toHaveLength(1)
+    expect(lost).toHaveLength(1)
+    expect(won[0]!.replayed).toBe(false)
+    expect(won[0]!.toState).toBe('Paid')
+    expect(lost[0]).toBeInstanceOf(ConflictException)
+    expect(String((lost[0] as Error).message)).toContain(
+      PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION(),
+    )
+
+    const paidFirst = (await fetchInvoice(first.invoiceId)).state === 'Paid'
+    const paidSecond = (await fetchInvoice(second.invoiceId)).state === 'Paid'
+    expect(paidFirst !== paidSecond).toBe(true)
+    const winner = paidFirst ? first : second
+    const loser = paidFirst ? second : first
+    expect(await fetchLedger(winner.profileId)).toHaveLength(1)
+    expect(await fetchLedger(loser.profileId)).toEqual([])
+    expect((await fetchInvoice(loser.invoiceId)).state).toBe('Unpaid')
+    expect(await fetchIdempotencyCount(key)).toBe(1)
+  })
+
+  it('lets exactly one concurrent remaining debit succeed on a PartiallyFunded invoice', async () => {
+    const remaining = 400_000n
+    const { profileId, invoiceId } = await seedPayable({
+      posted: 500_000n,
+      paid: 600_000n,
+      state: 'PartiallyFunded',
+    })
+    const before = await fetchWallet(profileId)
+
+    const settled = await Promise.allSettled([
+      pay(invoiceId, profileId, `pay-partial-race-a-${invoiceId}`),
+      pay(invoiceId, profileId, `pay-partial-race-b-${invoiceId}`),
+    ])
+
+    const won = fulfilledResults(settled)
+    const lost = rejectedReasons(settled)
+    expect(won).toHaveLength(1)
+    expect(lost).toHaveLength(1)
+    expect(won[0]).toMatchObject({
+      fromState: 'PartiallyFunded',
+      toState: 'Paid',
+      remainingPaid: remaining,
+      replayed: false,
+    })
+    expect(lost[0]).toBeInstanceOf(ConflictException)
+    expect(String((lost[0] as Error).message)).toContain(
+      PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID(),
+    )
+
+    expect(BigInt((await fetchWallet(profileId)).posted_balance)).toBe(
+      BigInt(before.posted_balance) - remaining,
+    )
+    const invoice = await fetchInvoice(invoiceId)
+    expect(invoice.state).toBe('Paid')
+    expect(BigInt(invoice.paid_amount)).toBe(TOTAL)
+    expect(await fetchLedger(profileId)).toHaveLength(1)
+  })
+
+  it('does not deadlock when a wallet credit races a pay-from-wallet debit', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1_500_000n })
+    const creditAmount = 100_000n
+    const before = await fetchWallet(profileId)
+
+    const [paid, credited] = await Promise.all([
+      pay(invoiceId, profileId, `pay-vs-credit-${invoiceId}`),
+      walletService.credit(
+        profileId,
+        creditAmount,
+        { type: 'topup' },
+        `credit-vs-pay-${invoiceId}`,
+      ),
+    ])
+
+    expect(paid.toState).toBe('Paid')
+    expect(paid.replayed).toBe(false)
+    expect(credited.amount).toBe(creditAmount)
+    expect(credited.type).toBe('topup')
+    expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
+    expect(BigInt((await fetchWallet(profileId)).posted_balance)).toBe(
+      BigInt(before.posted_balance) - TOTAL + creditAmount,
+    )
     expect(await fetchLedger(profileId)).toHaveLength(2)
   })
 })
