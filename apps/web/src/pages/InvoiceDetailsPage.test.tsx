@@ -309,6 +309,60 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     )
   })
 
+  it('does not submit a receipt when a decimal amount would otherwise concatenate to a valid integer', async () => {
+    const payload = replacementPayload()
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
+        return { ok: true, status: 200, json: async () => payload }
+      }
+      if (url.endsWith('/api/profiles')) {
+        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) }
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />)
+    })
+
+    const amount = container.querySelector(
+      '[data-testid="invoice-receipt-amount"]',
+    ) as HTMLInputElement
+    const date = container.querySelector('[data-testid="invoice-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector(
+      '[data-testid="invoice-receipt-payer-ref"]',
+    ) as HTMLInputElement
+    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement
+    const nativeInput = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+
+    await act(async () => {
+      nativeInput?.call(amount, '12.5')
+      amount.dispatchEvent(new Event('input', { bubbles: true }))
+      amount.dispatchEvent(new Event('change', { bubbles: true }))
+      nativeInput?.call(date, '2026-08-15')
+      date.dispatchEvent(new Event('input', { bubbles: true }))
+      nativeInput?.call(payer, 'TRK-1')
+      payer.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    expect(amount.value).toBe('12.5')
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).includes('/bank-receipts') &&
+          (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="invoice-receipt-error"]')?.textContent).toContain(
+      'positive integer',
+    )
+  })
+
   it('uploads a valid receipt and posts a Submitted bank receipt', async () => {
     const payload = replacementPayload()
     const attachmentKey = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'

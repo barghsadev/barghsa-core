@@ -26,9 +26,16 @@ export type InvoiceReceiptError =
   | 'no-profile'
   | 'generic'
 
+/** Western comma and Arabic thousands separator (U+066C). */
+const IRR_THOUSANDS_SEPARATORS = /[,٬]/g
+/** Integer with explicit thousands grouping, e.g. `250,000` or `1٬234٬567`. */
+const IRR_THOUSANDS_GROUPED = /^[0-9]{1,3}(?:[,٬][0-9]{3})+$/
+
 /**
- * Map Persian (`۰`–`۹`) and Arabic-Indic (`٠`–`٩`) digits to ASCII, then
- * keep decimal digits only so localized keyboards can enter an IRR amount.
+ * Map Persian (`۰`–`۹`) and Arabic-Indic (`٠`–`٩`) digits to ASCII.
+ * Strip only well-formed thousands grouping; preserve every other character
+ * so later integer validation can reject decimals, signs, exponents, and
+ * pasted text instead of concatenating leftover digit groups into a new amount.
  */
 export function normalizeIrrAmountDigits(raw: string): string {
   let ascii = ''
@@ -42,7 +49,11 @@ export function normalizeIrrAmountDigits(raw: string): string {
       ascii += ch
     }
   }
-  return ascii.replace(/[^\d]/g, '')
+  const trimmed = ascii.trim()
+  if (IRR_THOUSANDS_GROUPED.test(trimmed)) {
+    return trimmed.replace(IRR_THOUSANDS_SEPARATORS, '')
+  }
+  return trimmed
 }
 
 export function utcTodayIso(now: Date = new Date()): string {
