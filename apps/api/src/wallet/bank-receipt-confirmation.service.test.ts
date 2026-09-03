@@ -381,6 +381,26 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(walletService.credit).not.toHaveBeenCalled()
   })
 
+  it('conflicts when the profile owner cannot be notified on confirm — does not credit or release', async () => {
+    script({ profile: null })
+    const rejection = await service
+      .confirm({
+        transactionId: TX_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Released'")),
+    ).toBe(false)
+  })
+
   it('conflicts when the profile owner cannot be notified on reject', async () => {
     script({ profile: null })
     const rejection = await service

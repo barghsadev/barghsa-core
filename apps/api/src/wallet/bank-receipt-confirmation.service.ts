@@ -324,6 +324,16 @@ export class BankReceiptConfirmationService {
           )
         }
 
+        const ownerUserId = await this.loadProfileOwnerUserId(client, pending.walletId)
+        if (!ownerUserId) {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE(),
+            409,
+          )
+        }
+
         const receipt = readReceiptDetails(pending.metadata)
         const invoiceId = input.invoiceId ?? null
         let creditId: string | null = null
@@ -365,23 +375,21 @@ export class BankReceiptConfirmationService {
 
         let notificationOutboxId: string | null = null
         if (creditId) {
-          const ownerUserId = await this.loadProfileOwnerUserId(client, pending.walletId)
-          if (ownerUserId) {
-            const creditedAmount =
-              overpayment?.walletCreditAmount ?? pending.amount.toString()
-            const notify = await this.enqueueCustomerNotice(client, {
-              eventKey: BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
-              idempotencyKey: bankReceiptTopUpCompletedNotificationIdempotencyKey(pending.id),
-              profileId: pending.walletId,
-              userId: ownerUserId,
-              payload: buildBankReceiptTopUpCompletedNotificationPayload({
-                amount: creditedAmount,
-                creditTransactionId: creditId,
-                pendingTransactionId: pending.id,
-              }),
-            })
-            notificationOutboxId = notify.outboxId
-          }
+          // ownerUserId is guaranteed non-null: validated above before any credit was applied
+          const creditedAmount =
+            overpayment?.walletCreditAmount ?? pending.amount.toString()
+          const notify = await this.enqueueCustomerNotice(client, {
+            eventKey: BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+            idempotencyKey: bankReceiptTopUpCompletedNotificationIdempotencyKey(pending.id),
+            profileId: pending.walletId,
+            userId: ownerUserId!,
+            payload: buildBankReceiptTopUpCompletedNotificationPayload({
+              amount: creditedAmount,
+              creditTransactionId: creditId,
+              pendingTransactionId: pending.id,
+            }),
+          })
+          notificationOutboxId = notify.outboxId
         }
 
         const decision = {
