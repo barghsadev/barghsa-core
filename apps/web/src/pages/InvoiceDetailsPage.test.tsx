@@ -212,4 +212,257 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
 
     expect(container.textContent).toContain('Invoice not found')
   })
+
+  it('shows the bank-receipt upload form for an unpaid invoice', async () => {
+    const payload = replacementPayload()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`)) {
+          return { ok: true, status: 200, json: async () => payload }
+        }
+        if (url.endsWith('/api/profiles')) {
+          return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) }
+        }
+        return { ok: false, status: 404, json: async () => ({}) }
+      }),
+    )
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />)
+    })
+
+    expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeTruthy()
+    expect(container.textContent).toContain('Submit a bank receipt')
+  })
+
+  it('hides the bank-receipt upload form for a paid invoice', async () => {
+    const payload = adjustmentPayload()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        status: 200,
+        json: async () => payload,
+      })),
+    )
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={ORIGINAL_ID} />)
+    })
+
+    expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull()
+  })
+
+  it('does not submit a receipt when the amount is zero', async () => {
+    const payload = replacementPayload()
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
+        return { ok: true, status: 200, json: async () => payload }
+      }
+      if (url.endsWith('/api/profiles')) {
+        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) }
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />)
+    })
+
+    const amount = container.querySelector(
+      '[data-testid="invoice-receipt-amount"]',
+    ) as HTMLInputElement
+    const date = container.querySelector('[data-testid="invoice-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector(
+      '[data-testid="invoice-receipt-payer-ref"]',
+    ) as HTMLInputElement
+    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement
+
+    await act(async () => {
+      amount.value = '0'
+      amount.dispatchEvent(new Event('input', { bubbles: true }))
+      amount.dispatchEvent(new Event('change', { bubbles: true }))
+      date.value = '2026-08-15'
+      date.dispatchEvent(new Event('input', { bubbles: true }))
+      date.dispatchEvent(new Event('change', { bubbles: true }))
+      payer.value = 'TRK-1'
+      payer.dispatchEvent(new Event('input', { bubbles: true }))
+      payer.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).includes('/bank-receipts') &&
+          (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="invoice-receipt-error"]')?.textContent).toContain(
+      'positive integer',
+    )
+  })
+
+  it('does not submit a receipt when a decimal amount would otherwise concatenate to a valid integer', async () => {
+    const payload = replacementPayload()
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && (init?.method ?? 'GET') === 'GET') {
+        return { ok: true, status: 200, json: async () => payload }
+      }
+      if (url.endsWith('/api/profiles')) {
+        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) }
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />)
+    })
+
+    const amount = container.querySelector(
+      '[data-testid="invoice-receipt-amount"]',
+    ) as HTMLInputElement
+    const date = container.querySelector('[data-testid="invoice-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector(
+      '[data-testid="invoice-receipt-payer-ref"]',
+    ) as HTMLInputElement
+    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement
+    const nativeInput = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+
+    await act(async () => {
+      nativeInput?.call(amount, '12.5')
+      amount.dispatchEvent(new Event('input', { bubbles: true }))
+      amount.dispatchEvent(new Event('change', { bubbles: true }))
+      nativeInput?.call(date, '2026-08-15')
+      date.dispatchEvent(new Event('input', { bubbles: true }))
+      nativeInput?.call(payer, 'TRK-1')
+      payer.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    expect(amount.value).toBe('12.5')
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+
+    expect(
+      fetchMock.mock.calls.some(
+        ([url, init]) =>
+          String(url).includes('/bank-receipts') &&
+          (init as RequestInit | undefined)?.method === 'POST',
+      ),
+    ).toBe(false)
+    expect(container.querySelector('[data-testid="invoice-receipt-error"]')?.textContent).toContain(
+      'positive integer',
+    )
+  })
+
+  it('uploads a valid receipt and posts a Submitted bank receipt', async () => {
+    const payload = replacementPayload()
+    const attachmentKey = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}`) && method === 'GET') {
+        return { ok: true, status: 200, json: async () => payload }
+      }
+      if (url.endsWith('/api/profiles') && method === 'GET') {
+        return { ok: true, status: 200, json: async () => ({ activeProfileId: ORIGINAL_ID }) }
+      }
+      if (url.endsWith('/api/upload/presigned-url') && method === 'POST') {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ key: attachmentKey, presignedUrl: 'https://s3.test/put' }),
+        }
+      }
+      if (url === 'https://s3.test/put' && method === 'PUT') {
+        return { ok: true, status: 200, json: async () => ({}) }
+      }
+      if (url.includes('/verify') && method === 'POST') {
+        return { ok: true, status: 200, json: async () => ({ status: 'confirmed' }) }
+      }
+      if (url.includes('/record') && method === 'POST') {
+        return { ok: true, status: 200, json: async () => ({ status: 'recorded' }) }
+      }
+      if (url.endsWith(`/api/invoices/${REPLACEMENT_ID}/bank-receipts`) && method === 'POST') {
+        return {
+          ok: true,
+          status: 201,
+          json: async () => ({
+            ok: true,
+            receiptId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+            amount: '250000',
+            state: 'Submitted',
+            attachmentKey,
+          }),
+        }
+      }
+      return { ok: false, status: 404, json: async () => ({}) }
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await act(async () => {
+      root.render(<InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />)
+    })
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    const amount = container.querySelector(
+      '[data-testid="invoice-receipt-amount"]',
+    ) as HTMLInputElement
+    const date = container.querySelector('[data-testid="invoice-receipt-date"]') as HTMLInputElement
+    const payer = container.querySelector(
+      '[data-testid="invoice-receipt-payer-ref"]',
+    ) as HTMLInputElement
+    const fileInput = container.querySelector(
+      '[data-testid="invoice-receipt-file"]',
+    ) as HTMLInputElement
+    const form = container.querySelector('[data-testid="invoice-receipt-form"]') as HTMLFormElement
+
+    const nativeInput = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+    await act(async () => {
+      nativeInput?.call(amount, '250000')
+      amount.dispatchEvent(new Event('input', { bubbles: true }))
+      nativeInput?.call(date, '2026-08-15')
+      date.dispatchEvent(new Event('input', { bubbles: true }))
+      nativeInput?.call(payer, 'TRK-998877')
+      payer.dispatchEvent(new Event('input', { bubbles: true }))
+      const file = new File(['%PDF-1.4 receipt'], 'receipt.pdf', { type: 'application/pdf' })
+      Object.defineProperty(fileInput, 'files', { configurable: true, value: [file] })
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }))
+    })
+    await act(async () => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    for (let i = 0; i < 20; i++) {
+      await act(async () => {
+        await Promise.resolve()
+      })
+      if (container.querySelector('[data-testid="invoice-receipt-success"]')) break
+    }
+
+    const submitCall = fetchMock.mock.calls.find(
+      ([url, init]) =>
+        String(url).includes('/bank-receipts') &&
+        (init as RequestInit | undefined)?.method === 'POST',
+    )
+    expect(submitCall).toBeTruthy()
+    expect(JSON.parse(String((submitCall![1] as RequestInit).body))).toEqual({
+      amount: '250000',
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-998877',
+      attachmentKey,
+    })
+    expect(container.querySelector('[data-testid="invoice-receipt-success"]')?.textContent).toContain(
+      'pending finance confirmation',
+    )
+  })
 })

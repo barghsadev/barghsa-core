@@ -1,6 +1,7 @@
 export { InvoiceModule } from './invoice.module.js'
 export { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 export { CustomerInvoiceController } from './customer-invoice.controller.js'
+export { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
 export type {
   CustomerInvoiceDetailsDto,
   CustomerInvoiceListDto,

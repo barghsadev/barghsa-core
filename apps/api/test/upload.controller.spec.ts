@@ -510,6 +510,7 @@ describe('UploadController', () => {
       expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
         expect.objectContaining({
           storageKey: 'uploads/document/some-uuid.pdf',
+          fileSize: 18,
           metadata: expect.objectContaining({
             verified: true,
             uploadedBy: 'user-1',
@@ -518,6 +519,69 @@ describe('UploadController', () => {
           }),
         }),
       );
+    });
+
+    it('persists trusted object size instead of a client-declared fileSize', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue(pdfObject());
+      mockImmutableService.createRecord.mockResolvedValue(undefined);
+
+      await controller.recordUpload(
+        'uploads/document/some-uuid.pdf',
+        { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
+        req,
+      );
+
+      expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
+        expect.objectContaining({ fileSize: 18 }),
+      );
+    });
+
+    it('refuses to record a large object when the declared fileSize is forged small', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        ...pdfObject(),
+        contentLength: 10 * 1024 * 1024 + 1,
+      });
+
+      await expect(
+        controller.recordUpload(
+          'uploads/document/some-uuid.pdf',
+          { fileName: 'receipt.pdf', fileSize: 4096, purpose: 'bank_receipt' },
+          req,
+        ),
+      ).rejects.toThrow(BadRequestException);
+      expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
+    });
+
+    it('refuses to record when the trusted object size exceeds the category limit', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        ...pdfObject(),
+        contentLength: 10 * 1024 * 1024 + 1,
+      });
+
+      await expect(
+        controller.recordUpload(
+          'uploads/document/some-uuid.pdf',
+          { fileName: 'receipt.pdf', purpose: 'bank_receipt' },
+          req,
+        ),
+      ).rejects.toThrow(BadRequestException);
+      expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
+    });
+
+    it('refuses to record when trusted object size is unavailable', async () => {
+      vi.mocked(storage.getObject).mockResolvedValue({
+        ...pdfObject(),
+        contentLength: undefined,
+      });
+
+      await expect(
+        controller.recordUpload(
+          'uploads/document/some-uuid.pdf',
+          { fileName: 'receipt.pdf', fileSize: 18, purpose: 'bank_receipt' },
+          req,
+        ),
+      ).rejects.toThrow(BadRequestException);
+      expect(mockImmutableService.createRecord).not.toHaveBeenCalled();
     });
 
     it('refuses to record when the object was never uploaded', async () => {

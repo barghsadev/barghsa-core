@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n'
+import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance'
 import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react'
 import { useLocale } from '../hooks/useLocale.js'
 import {
@@ -13,6 +14,7 @@ import {
   type CustomerInvoiceDetails,
   type CustomerInvoiceNode,
 } from '../lib/customer-invoices.js'
+import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js'
 
 interface InvoiceDetailsPageProps {
   invoiceId: string
@@ -144,6 +146,13 @@ function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
           showExplanation
         />
       ))}
+
+      {canCustomerSubmitInvoiceBankReceipt({
+        state: viewed.state,
+        adjustmentKind: viewed.adjustmentKind,
+      }) ? (
+        <InvoiceBankReceiptUploadForm invoiceId={viewed.invoiceId} />
+      ) : null}
     </section>
   )
 }

@@ -23,8 +23,20 @@ function makeController() {
   const getForUser = vi.fn().mockResolvedValue(DETAILS)
   const listForUser = vi.fn().mockResolvedValue(LIST)
   const service = { getForUser, listForUser }
-  const controller = new CustomerInvoiceController(service as never)
-  return { controller, service }
+  const submit = vi.fn().mockResolvedValue({
+    receiptId: 'cccccccc-cccc-7ccc-8ccc-cccccccccccc',
+    invoiceId: INVOICE_ID,
+    profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
+    amount: 250_000n,
+    state: 'Submitted',
+    paymentDate: '2026-08-15',
+    payerReference: 'TRK-1',
+    attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+    customerNote: null,
+  })
+  const bankReceiptUpload = { submit }
+  const controller = new CustomerInvoiceController(service as never, bankReceiptUpload as never)
+  return { controller, service, bankReceiptUpload }
 }
 
 function rejectionBody(error: unknown): Record<string, unknown> {
@@ -57,5 +69,56 @@ describe('CustomerInvoiceController (T-04.1.05.04)', () => {
     const result = await controller.list(req)
     expect(service.listForUser).toHaveBeenCalledWith('user-1')
     expect(result.invoices).toHaveLength(1)
+  })
+})
+
+describe('CustomerInvoiceController bank receipt upload (T-04.3.01.02)', () => {
+  const body = {
+    amount: '250000',
+    paymentDate: '2026-08-15',
+    payerReference: 'TRK-1',
+    attachmentKey: 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+  }
+
+  it('rejects a non-UUID invoiceId before calling the upload service', async () => {
+    const { controller, bankReceiptUpload } = makeController()
+    const rejection = await controller
+      .submitBankReceipt(req, 'not-a-uuid', body)
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(bankReceiptUpload.submit).not.toHaveBeenCalled()
+  })
+
+  it('rejects a body missing required fields', async () => {
+    const { controller, bankReceiptUpload } = makeController()
+    const rejection = await controller
+      .submitBankReceipt(req, INVOICE_ID, { amount: 1 })
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 400 })
+    expect(rejectionBody(rejection)).toMatchObject({
+      error: ErrorCodes.VALIDATION_PARSE_ZOD.code,
+    })
+    expect(bankReceiptUpload.submit).not.toHaveBeenCalled()
+  })
+
+  it('returns a Submitted receipt with amount as a decimal string', async () => {
+    const { controller, bankReceiptUpload } = makeController()
+    const result = await controller.submitBankReceipt(req, INVOICE_ID, body)
+    expect(bankReceiptUpload.submit).toHaveBeenCalledWith({
+      userId: 'user-1',
+      invoiceId: INVOICE_ID,
+      amount: '250000',
+      paymentDate: '2026-08-15',
+      payerReference: 'TRK-1',
+      attachmentKey: body.attachmentKey,
+      customerNote: undefined,
+    })
+    expect(result).toMatchObject({
+      ok: true,
+      state: 'Submitted',
+      amount: '250000',
+      currency: 'IRR',
+      invoiceId: INVOICE_ID,
+    })
   })
 })
