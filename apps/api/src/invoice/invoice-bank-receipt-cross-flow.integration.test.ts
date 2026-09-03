@@ -23,6 +23,7 @@ import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.s
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 import { WalletService } from '../wallet/wallet.service.js'
 import { BankReceiptTopUpService } from '../wallet/bank-receipt-topup.service.js'
+import type { StorageProvider } from '@barghsa/shared/storage'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -77,6 +78,31 @@ function receiptKey(suffix: string): string {
   return `uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-${pad}.pdf`
 }
 
+function cancellableBody(): ReadableStream {
+  return new ReadableStream({
+    start(controller) {
+      controller.close()
+    },
+  })
+}
+
+function matchingStorageProvider(): StorageProvider {
+  return {
+    putObject: async () => {},
+    getObject: async () => ({
+      body: cancellableBody(),
+      contentType: 'application/pdf',
+      contentLength: 4096,
+      metadata: {},
+      etag: undefined,
+    }),
+    deleteObject: async () => {},
+    presignedPutUrl: async () => '',
+    presignedGetUrl: async () => '',
+    listObjects: async () => ({ items: [], isTruncated: false, continuationToken: undefined }),
+  }
+}
+
 describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.01.02)', () => {
   let ctx: IsolatedTestDb
   let invoiceUpload: InvoiceBankReceiptUploadService
@@ -85,7 +111,10 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
-    invoiceUpload = new InvoiceBankReceiptUploadService(new CustomerInvoiceDetailsService())
+    invoiceUpload = new InvoiceBankReceiptUploadService(
+      new CustomerInvoiceDetailsService(),
+      matchingStorageProvider(),
+    )
     walletTopUp = new BankReceiptTopUpService(new WalletService())
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())

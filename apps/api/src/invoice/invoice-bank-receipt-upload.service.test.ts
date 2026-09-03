@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ConflictException, HttpException } from '@nestjs/common'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
+import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage'
 import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
 import type { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 
@@ -137,9 +138,48 @@ function submitInput(overrides: Record<string, unknown> = {}) {
   }
 }
 
+function cancellableBody(): ReadableStream {
+  return new ReadableStream({
+    start(controller) {
+      controller.close()
+    },
+  })
+}
+
+function storageWithContentLength(
+  contentLength: number | 'unknown' | 'missing' = 4096,
+): StorageProvider {
+  return {
+    putObject: vi.fn(),
+    getObject: vi.fn(async (key: string) => {
+      if (contentLength === 'missing') {
+        throw new StorageObjectNotFound(key)
+      }
+      return {
+        body: cancellableBody(),
+        contentType: 'application/pdf',
+        contentLength: contentLength === 'unknown' ? undefined : contentLength,
+        metadata: {},
+        etag: undefined,
+      }
+    }),
+    deleteObject: vi.fn(),
+    presignedPutUrl: vi.fn(),
+    presignedGetUrl: vi.fn(),
+    listObjects: vi.fn(),
+  }
+}
+
 describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   let customerInvoices: { resolveActiveProfileId: ReturnType<typeof vi.fn> }
   let service: InvoiceBankReceiptUploadService
+
+  function buildService(contentLength: number | 'unknown' | 'missing' = 4096) {
+    service = new InvoiceBankReceiptUploadService(
+      customerInvoices as unknown as CustomerInvoiceDetailsService,
+      storageWithContentLength(contentLength),
+    )
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -149,9 +189,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     customerInvoices = {
       resolveActiveProfileId: vi.fn().mockResolvedValue(PROFILE_ID),
     }
-    service = new InvoiceBankReceiptUploadService(
-      customerInvoices as unknown as CustomerInvoiceDetailsService,
-    )
+    buildService()
   })
 
   it('rejects a non-positive amount before touching the database', async () => {
@@ -191,12 +229,56 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   })
 
   it('rejects an oversize stored file', async () => {
-    scriptClient({ fileSize: 10 * 1024 * 1024 + 1 })
+    const oversize = 10 * 1024 * 1024 + 1
+    scriptClient({ fileSize: oversize })
+    buildService(oversize)
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
       message: expect.stringMatching(/size/i),
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
+  })
+
+  it('rejects a large object when the recorded fileSize is forged small', async () => {
+    scriptClient({ fileSize: 4096 })
+    buildService(10 * 1024 * 1024 + 1)
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: expect.stringMatching(/size/i),
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
+  })
+
+  it('rejects submission when trusted object size is unavailable', async () => {
+    scriptClient({ fileSize: 4096 })
+    buildService('unknown')
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: expect.stringMatching(/verif/i),
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
+  })
+
+  it('rejects when recorded size differs from a still-allowed actual size', async () => {
+    scriptClient({ fileSize: 1024 })
+    buildService(2048)
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: expect.stringMatching(/match/i),
     })
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),

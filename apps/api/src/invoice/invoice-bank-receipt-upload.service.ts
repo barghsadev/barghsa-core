@@ -1,4 +1,11 @@
-import { ConflictException, HttpException, Injectable, Logger } from '@nestjs/common'
+import {
+  ConflictException,
+  HttpException,
+  Inject,
+  Injectable,
+  Logger,
+  Optional,
+} from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
@@ -7,13 +14,16 @@ import {
   evaluateInvoiceBankReceiptStoredFile,
   invoiceBankReceiptDetailsMatch,
   parseInvoiceBankReceiptSubmission,
+  parsePositiveByteCount,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance'
+import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage'
 import {
   bankReceiptAttachmentAdvisoryLockKeys,
   claimBankReceiptAttachment,
 } from '../finance/claim-bank-receipt-attachment.js'
+import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'
@@ -30,6 +40,8 @@ const FILE_REJECTION_MESSAGE = {
   type: 'Bank receipt file must be a PDF, JPEG, PNG, or WebP',
   size: 'Bank receipt file exceeds the allowed size for its type',
   empty: 'Bank receipt file is missing or empty',
+  size_unverified: 'Bank receipt file size could not be verified from storage',
+  size_mismatch: 'Bank receipt file size does not match the uploaded object',
 } as const
 
 export interface SubmitInvoiceBankReceiptInput {
@@ -99,7 +111,8 @@ interface StorageLockRow {
  *      details). Missing invoices, other profiles, and drafts 404.
  *   3. Lock the attachment (shared namespace with wallet top-up),
  *      require verified owner+purpose provenance, and reject
- *      disallowed file type/size from the storage record.
+ *      disallowed file type/size using the object's trusted storage
+ *      Content-Length — never the client-supplied storage_records.file_size.
  *   4. Claim the storage key as `invoice_receipt`. A wallet top-up
  *      claim is rejected; same-flow retries continue.
  *   5. Insert a `Submitted` `bank_receipts` row. Unique attachment_key
@@ -111,7 +124,12 @@ interface StorageLockRow {
 export class InvoiceBankReceiptUploadService {
   private readonly logger = new Logger(InvoiceBankReceiptUploadService.name)
 
-  constructor(private readonly customerInvoices: CustomerInvoiceDetailsService) {}
+  constructor(
+    private readonly customerInvoices: CustomerInvoiceDetailsService,
+    @Optional()
+    @Inject(STORAGE_PROVIDER)
+    private readonly storage: StorageProvider | null = null,
+  ) {}
 
   async submit(input: SubmitInvoiceBankReceiptInput): Promise<SubmitInvoiceBankReceiptResult> {
     const parsed = parseInvoiceBankReceiptSubmission({
@@ -299,15 +317,25 @@ export class InvoiceBankReceiptUploadService {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, STORAGE_REJECTION_MESSAGE[provenance.reason])
     }
 
+    const trustedFileSize = await this.readTrustedObjectByteCount(attachmentKey)
+    if (trustedFileSize === null) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified)
+    }
+
     const file = evaluateInvoiceBankReceiptStoredFile({
       attachmentKey,
-      fileSize: row.file_size,
+      fileSize: trustedFileSize,
       contentType: row.content_type,
       category: row.category,
       fileName: row.file_name,
     })
     if (!file.ok) {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE[file.reason])
+    }
+
+    const recordedFileSize = row.file_size == null ? null : parsePositiveByteCount(row.file_size)
+    if (row.file_size != null && recordedFileSize !== trustedFileSize) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_mismatch)
     }
 
     if (row.status === 'immutable') {
@@ -335,6 +363,21 @@ export class InvoiceBankReceiptUploadService {
         ErrorCodes.VALIDATION_INPUT_INVALID,
         'Bank receipt attachment could not be locked for review',
       )
+    }
+  }
+
+  private async readTrustedObjectByteCount(attachmentKey: string): Promise<number | null> {
+    if (!this.storage) return null
+    try {
+      const object = await this.storage.getObject(attachmentKey)
+      try {
+        return parseTrustedContentLength(object.contentLength)
+      } finally {
+        await object.body.cancel().catch(() => {})
+      }
+    } catch (error) {
+      if (error instanceof StorageObjectNotFound) return null
+      throw error
     }
   }
 }
@@ -396,4 +439,11 @@ function httpError(
   statusCode = def.httpStatus,
 ): never {
   throw new HttpException({ statusCode, error: def.code, message }, statusCode)
+}
+
+function parseTrustedContentLength(contentLength: number | undefined): number | null {
+  if (typeof contentLength !== 'number' || !Number.isSafeInteger(contentLength) || contentLength < 0) {
+    return null
+  }
+  return contentLength
 }

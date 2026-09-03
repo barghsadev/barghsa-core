@@ -195,9 +195,10 @@ export function evaluateInvoiceBankReceiptClientFile(input: {
 }
 
 /**
- * Authoritative type/size check against the stored object record.
- * Missing size fails closed. Declared MIME/category/name, when present,
- * must agree with the attachment key.
+ * Authoritative type/size check against the stored object. `fileSize` must
+ * be the trusted object byte count from storage metadata, not a
+ * client-declared value. Missing size fails closed. Declared
+ * MIME/category/name, when present, must agree with the attachment key.
  */
 export function evaluateInvoiceBankReceiptStoredFile(input: {
   attachmentKey: string

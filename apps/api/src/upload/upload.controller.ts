@@ -227,8 +227,9 @@ export class UploadController {
    * Record a completed upload in the storage_records table for immutability tracking.
    *
    * Re-runs object verification so a direct API client cannot create an
-   * `active` record independently of the verify seam. Persists uploader
-   * identity and optional intended purpose in authoritative metadata.
+   * `active` record independently of the verify seam. Persists the
+   * object's trusted storage Content-Length (not a client-declared
+   * size), uploader identity, and optional intended purpose.
    */
   @Post(':key/record')
   @HttpCode(HttpStatus.OK)
@@ -262,6 +263,7 @@ export class UploadController {
     }
 
     let detectedContentType: string
+    let actualFileSize: number
     try {
       const inspected = await this.inspectUploadedObject(key, category);
       if (inspected.kind !== 'confirmed') {
@@ -271,6 +273,35 @@ export class UploadController {
         });
       }
       detectedContentType = inspected.detected
+      const trustedSize = parseTrustedContentLength(inspected.contentLength)
+      if (trustedSize === null || trustedSize === 0) {
+        throw new BadRequestException({
+          message: 'Uploaded object size could not be determined from storage',
+        });
+      }
+      if (body.fileSize !== undefined && body.fileSize !== null) {
+        if (
+          typeof body.fileSize !== 'number' ||
+          !Number.isSafeInteger(body.fileSize) ||
+          body.fileSize !== trustedSize
+        ) {
+          throw new BadRequestException({
+            message: 'Declared file size does not match the uploaded object',
+            declaredBytes: body.fileSize,
+            actualBytes: trustedSize,
+          });
+        }
+      }
+      const policy = await this.policyResolver.resolveEffective(category);
+      if (!effectiveAllowsSize(policy, trustedSize)) {
+        throw new BadRequestException({
+          message: `File size exceeds maximum of ${policy.maxSizeBytes / (1024 * 1024)} MB for category "${category}"`,
+          maxSizeBytes: policy.maxSizeBytes,
+          actualBytes: trustedSize,
+          policySource: policy.source,
+        });
+      }
+      actualFileSize = trustedSize
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new BadRequestException({
@@ -294,7 +325,7 @@ export class UploadController {
       storageKey: key,
       fileName: body.fileName,
       contentType: body.contentType ?? detectedContentType,
-      fileSize: body.fileSize,
+      fileSize: actualFileSize,
       category: body.category ?? category,
       metadata: {
         verified: true,
@@ -321,7 +352,7 @@ export class UploadController {
     key: string,
     category: string,
   ): Promise<
-    | { kind: 'confirmed'; detected: string }
+    | { kind: 'confirmed'; detected: string; contentLength: number | undefined }
     | { kind: 'type_mismatch'; detected: string | null; allowed: readonly string[] }
   > {
     const object = await this.storage!.getObject(key);
@@ -330,7 +361,7 @@ export class UploadController {
     const candidates = sniffContentTypes(sample);
     const detected = pickDetectedContentType(candidates, policy.allowedMimeTypes);
     if (detected !== null) {
-      return { kind: 'confirmed', detected };
+      return { kind: 'confirmed', detected, contentLength: object.contentLength };
     }
     return {
       kind: 'type_mismatch',
@@ -415,4 +446,11 @@ export class UploadController {
       );
     }
   }
+}
+
+function parseTrustedContentLength(contentLength: number | undefined): number | null {
+  if (typeof contentLength !== 'number' || !Number.isSafeInteger(contentLength) || contentLength < 0) {
+    return null;
+  }
+  return contentLength;
 }

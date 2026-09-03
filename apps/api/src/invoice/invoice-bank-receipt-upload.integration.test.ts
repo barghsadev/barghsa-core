@@ -6,13 +6,15 @@
  *   1. A valid receipt inserts a `Submitted` bank_receipts row and
  *      leaves the invoice state unchanged.
  *   2. Amount must be positive; zero is rejected before insert.
- *   3. Stored file type and size are enforced from storage_records.
+ *   3. Stored file type and size are enforced from the trusted storage
+ *      object size (not a client-declared storage_records.file_size).
  *   4. Retrying the same attachment with matching details returns the
  *      original Submitted row.
  *   5. A colliding attachment with different details is a conflict.
  *   6. Concurrent same-attachment submissions insert exactly one row.
  *   7. An active receipt becomes immutable in the same transaction.
  *   8. Other-profile invoices 404; Paid invoices 409.
+ *   9. A large object with a forged small recorded fileSize is rejected.
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest'
@@ -25,6 +27,7 @@ import { BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
+import type { StorageProvider } from '@barghsa/shared/storage'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -74,14 +77,43 @@ function receiptKey(suffix: string): string {
   return `uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-${pad}.pdf`
 }
 
+function cancellableBody(): ReadableStream {
+  return new ReadableStream({
+    start(controller) {
+      controller.close()
+    },
+  })
+}
+
+function storageProviderWithSizes(sizes: Map<string, number | undefined>): StorageProvider {
+  return {
+    putObject: async () => {},
+    getObject: async (key: string) => ({
+      body: cancellableBody(),
+      contentType: 'application/pdf',
+      contentLength: sizes.has(key) ? sizes.get(key) : 4096,
+      metadata: {},
+      etag: undefined,
+    }),
+    deleteObject: async () => {},
+    presignedPutUrl: async () => '',
+    presignedGetUrl: async () => '',
+    listObjects: async () => ({ items: [], isTruncated: false, continuationToken: undefined }),
+  }
+}
+
 describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', () => {
   let ctx: IsolatedTestDb
   let service: InvoiceBankReceiptUploadService
+  const objectSizes = new Map<string, number | undefined>()
 
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
-    service = new InvoiceBankReceiptUploadService(new CustomerInvoiceDetailsService())
+    service = new InvoiceBankReceiptUploadService(
+      new CustomerInvoiceDetailsService(),
+      storageProviderWithSizes(objectSizes),
+    )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(`
@@ -148,6 +180,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   })
 
   beforeEach(async () => {
+    objectSizes.clear()
     await ctx.pool.query(
       `TRUNCATE bank_receipts, bank_receipt_attachment_claims, invoices, storage_records CASCADE`,
     )
@@ -190,6 +223,12 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
         overrides.fileName === undefined ? 'slip.pdf' : overrides.fileName,
       ],
     )
+    if (!objectSizes.has(storageKey)) {
+      objectSizes.set(
+        storageKey,
+        overrides.fileSize === undefined ? 4096 : (overrides.fileSize ?? undefined),
+      )
+    }
   }
 
   function payload(overrides: Record<string, unknown> = {}) {
@@ -257,6 +296,20 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+    })
+    const count = await ctx.pool.query(`SELECT count(*)::int AS n FROM bank_receipts`)
+    expect(count.rows[0]!.n).toBe(0)
+  })
+
+  it('rejects a large object when the recorded fileSize is forged small', async () => {
+    const attachment = receiptKey('forgedsize01')
+    await insertReceiptFile(attachment, { fileSize: 4096 })
+    objectSizes.set(attachment, 10 * 1024 * 1024 + 1)
+    const rejection = await service.submit(payload({ attachmentKey: attachment })).catch((e: unknown) => e)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: expect.stringMatching(/size/i),
     })
     const count = await ctx.pool.query(`SELECT count(*)::int AS n FROM bank_receipts`)
     expect(count.rows[0]!.n).toBe(0)
