@@ -72,6 +72,49 @@ describe('bank receipt staff confirmation contract (T-04.2.02.04)', () => {
       link_route: '/wallet',
     })
     expect(
+      buildBankReceiptTopUpCompletedNotificationPayload({
+        amount: '800000',
+        creditTransactionId: 'credit-overpay',
+        pendingTransactionId: PENDING_ID,
+        overpayment: {
+          invoiceId: '11111111-1111-7111-8111-111111111111',
+          remainingBefore: '400000',
+          invoiceAllocation: '400000',
+          walletCreditAmount: '800000',
+          overpaymentCreditTransactionId: 'credit-overpay',
+        },
+      }),
+    ).toEqual({
+      amount: '800000',
+      transactionId: 'credit-overpay',
+      pending_transaction_id: PENDING_ID,
+      link_route: '/wallet',
+      invoice_id: '11111111-1111-7111-8111-111111111111',
+      invoice_allocation: '400000',
+      remaining_before: '400000',
+      wallet_credit_amount: '800000',
+      is_overpayment: true,
+    })
+    expect(
+      buildBankReceiptTopUpCompletedNotificationPayload({
+        amount: '250000',
+        creditTransactionId: 'credit-1',
+        pendingTransactionId: PENDING_ID,
+        overpayment: {
+          invoiceId: '11111111-1111-7111-8111-111111111111',
+          remainingBefore: '250000',
+          invoiceAllocation: '250000',
+          walletCreditAmount: '0',
+          overpaymentCreditTransactionId: null,
+        },
+      }),
+    ).toEqual({
+      amount: '250000',
+      transactionId: 'credit-1',
+      pending_transaction_id: PENDING_ID,
+      link_route: '/wallet',
+    })
+    expect(
       buildBankReceiptTopUpFailedNotificationPayload({
         amount: '250000',
         reason: 'Illegible scan',

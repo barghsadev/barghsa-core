@@ -12,6 +12,10 @@
  */
 
 import type { NotificationChannel } from '../notifications/notification-transport.js'
+import {
+  bankReceiptOverpaymentCompletedNoticeFields,
+  type BankReceiptOverpaymentSnapshot,
+} from './invoice-overpayment.js'
 import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
 
 /** Capability gate documented on the staff API (mapped to isAdmin today). */
@@ -214,6 +218,11 @@ export interface BankReceiptTopUpCompletedNotificationPayload {
   transactionId: string
   pending_transaction_id: string
   link_route: string
+  invoice_id?: string
+  invoice_allocation?: string
+  remaining_before?: string
+  wallet_credit_amount?: string
+  is_overpayment?: true
 }
 
 export interface BankReceiptTopUpFailedNotificationPayload {
@@ -227,12 +236,15 @@ export function buildBankReceiptTopUpCompletedNotificationPayload(input: {
   amount: string
   creditTransactionId: string
   pendingTransactionId: string
+  overpayment?: BankReceiptOverpaymentSnapshot | null
 }): BankReceiptTopUpCompletedNotificationPayload {
+  const overpaymentFields = bankReceiptOverpaymentCompletedNoticeFields(input.overpayment)
   return {
     amount: input.amount,
     transactionId: input.creditTransactionId,
     pending_transaction_id: input.pendingTransactionId,
     link_route: BANK_RECEIPT_CUSTOMER_WALLET_ROUTE,
+    ...(overpaymentFields ?? {}),
   }
 }
 

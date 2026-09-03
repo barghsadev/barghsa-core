@@ -166,7 +166,9 @@ export interface RejectBankReceiptInput {
  * transaction; reject fails closed if the profile has no notifiable owner.
  *
  * Confirm also enqueues `payment.wallet_topup_completed` when a wallet
- * credit actually posts (full top-up or invoice excess).
+ * credit actually posts (full top-up or invoice excess). Excess notices
+ * report the wallet credit amount — not the receipt face value — and
+ * include the invoice/wallet split on the payload.
  */
 @Injectable()
 export class BankReceiptConfirmationService {
@@ -378,6 +380,7 @@ export class BankReceiptConfirmationService {
                 amount: creditedAmount,
                 creditTransactionId: creditId,
                 pendingTransactionId: pending.id,
+                ...(overpayment ? { overpayment } : {}),
               }),
             })
             notificationOutboxId = notify.outboxId

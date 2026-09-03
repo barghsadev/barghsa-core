@@ -18,7 +18,10 @@
  *      never over-settle paid_amount. Closed invoices (Cancelled, …)
  *      conflict instead of silently crediting the wallet.
  *   8. Confirm notifies the customer via payment.wallet_topup_completed
- *      in the same transaction as WalletService.credit().
+ *      in the same transaction as WalletService.credit(). Overpayment
+ *      notices report the excess wallet credit (not the receipt face
+ *      value) and include the invoice/wallet split. Exact remaining
+ *      settlement does not enqueue a wallet completed notice.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -547,6 +550,30 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(overpayCredit.rows[0]!.state).toBe('Completed')
     expect(BigInt(overpayCredit.rows[0]!.amount)).toBe(800_000n)
 
+    const outbox = await ctx.pool.query<{
+      event_key: string
+      payload: Record<string, unknown>
+    }>(
+      `SELECT event_key, payload
+         FROM notification_outbox
+        WHERE idempotency_key = $1`,
+      [bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId)],
+    )
+    expect(outbox.rows).toHaveLength(1)
+    expect(outbox.rows[0]!.event_key).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY)
+    expect(outbox.rows[0]!.payload).toMatchObject({
+      amount: '800000',
+      transactionId: result.creditTransactionId,
+      pending_transaction_id: pendingId,
+      invoice_id: invoiceId,
+      invoice_allocation: '400000',
+      remaining_before: '400000',
+      wallet_credit_amount: '800000',
+      is_overpayment: true,
+    })
+    expect(outbox.rows[0]!.payload.amount).not.toBe('1200000')
+    expect(result.notificationOutboxId).toBeTruthy()
+
     const second = await service.confirm({
       transactionId: pendingId,
       actorUserId: ACTOR_USER_ID,
@@ -578,6 +605,12 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(settled.state).toBe('Paid')
     expect(settled.paidAt?.toISOString()).toBe(NOW.toISOString())
     expect((await walletBalances()).posted).toBe(before.posted)
+    expect(result.notificationOutboxId).toBeUndefined()
+    const outbox = await ctx.pool.query(
+      `SELECT id FROM notification_outbox WHERE idempotency_key = $1`,
+      [bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId)],
+    )
+    expect(outbox.rows).toHaveLength(0)
   })
 
   it('marks a partial allocation PartiallyFunded and leaves paid_at unset', async () => {
