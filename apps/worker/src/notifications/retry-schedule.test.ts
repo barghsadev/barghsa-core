@@ -104,6 +104,7 @@ describe('per-type registry', () => {
     expect(priorityForType('auth.otp_sent')).toBe('urgent')
     expect(priorityForType('auth.new_device_login')).toBe('urgent')
     expect(priorityForType('payment.invoice_paid')).toBe('urgent')
+    expect(priorityForType('payment.bank_receipt_rejected')).toBe('urgent')
     expect(priorityForType('contract.cancelled')).toBe('urgent')
     // daytime classification → normal
     expect(priorityForType('contract.created')).toBe('normal')

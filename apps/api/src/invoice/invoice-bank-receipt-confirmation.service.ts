@@ -9,18 +9,27 @@ import {
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { classifyNotificationType } from '@barghsa/shared/notifications'
 import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRM_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
   INVOICE_BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
+  INVOICE_BANK_RECEIPT_REJECT_CHANNELS,
+  INVOICE_BANK_RECEIPT_REJECT_ERRORS,
+  INVOICE_BANK_RECEIPT_REJECTED_EVENT,
+  INVOICE_BANK_RECEIPT_REJECTED_NOTIFICATION_EVENT_KEY,
   allocateReceiptAgainstInvoice,
   bankReceiptOverpaymentSnapshot,
+  buildInvoiceBankReceiptRejectedNotificationPayload,
   invoiceBankReceiptOverpaymentCreditIdempotencyKey,
   invoiceBankReceiptOverpaymentCreditMetadata,
+  invoiceBankReceiptRejectedNotificationIdempotencyKey,
   invoiceStateAfterBankReceiptAllocation,
   isBankReceiptInvoiceLinkAllowedState,
   isInvoiceBankReceiptConfirmableState,
+  isInvoiceBankReceiptRejectableState,
+  parseInvoiceBankReceiptRejectReason,
   readInvoiceBankReceiptOverpaymentFromCreditMetadata,
   remainingForBankReceiptSettlement,
   type BankReceiptOverpaymentSnapshot,
@@ -89,14 +98,17 @@ export interface InvoiceBankReceiptConfirmDto {
   customerNote: string | null
   submittedAt: string
   canConfirm: boolean
+  canReject: boolean
   confirmedBy: string | null
   confirmedAt: string | null
+  rejectionReason: string | null
   invoiceState: string | null
   remaining: string | null
   invoiceAllocation: string | null
   walletCreditAmount: string | null
   overpayment: BankReceiptOverpaymentSnapshot | null
   auditId?: string
+  notificationOutboxId?: string
 }
 
 export interface InvoiceBankReceiptAllocationPreviewDto {
@@ -117,6 +129,17 @@ export interface ConfirmInvoiceBankReceiptInput {
   correlationId?: string
   now?: Date
 }
+
+export interface RejectInvoiceBankReceiptInput {
+  receiptId: string
+  raw: Record<string, unknown>
+  actorUserId: string
+  ip: string
+  correlationId?: string
+  now?: Date
+}
+
+const CUSTOMER_NOTIFICATION_MAX_ATTEMPTS = 5
 
 /**
  * Staff confirmation of invoice bank receipts (T-04.3.01.03).
@@ -139,6 +162,16 @@ export interface ConfirmInvoiceBankReceiptInput {
  *   Allocation, state transition, wallet credit, receipt confirm, and
  *   audit commit or roll back together. Re-confirm of an already
  *   Confirmed receipt is idempotent.
+ *
+ * Reject (T-04.3.01.04, one DB transaction, same advisory lock as confirm):
+ *   1. Parse a customer-visible reason before locking.
+ *   2. Lock the Submitted / UnderReview row.
+ *   3. Write `Rejected` + `rejection_reason`. Never touch `paid_amount`
+ *      or the wallet.
+ *   4. Enqueue `payment.bank_receipt_rejected` (in-app + email) to the
+ *      profile owner. Receipt reject and notify intent commit together.
+ *   5. Append an audit row.
+ *   Re-reject with the same reason is idempotent.
  */
 @Injectable()
 export class InvoiceBankReceiptConfirmationService {
@@ -390,6 +423,118 @@ export class InvoiceBankReceiptConfirmationService {
     }
   }
 
+  async reject(input: RejectInvoiceBankReceiptInput): Promise<InvoiceBankReceiptConfirmDto> {
+    const parsed = parseInvoiceBankReceiptRejectReason(input.raw)
+    if (!parsed.ok) {
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.message, 400)
+    }
+
+    const now = input.now ?? new Date()
+    const pool = getDbPool()
+    const client = await pool.connect()
+    const lockKeys = invoiceBankReceiptConfirmationLockKeys(input.receiptId)
+    try {
+      await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys)
+      try {
+        await client.query('BEGIN')
+        const receipt = await this.lockReceipt(client, input.receiptId)
+
+        if (receipt.state === 'Rejected') {
+          if (receipt.rejection_reason === parsed.reason) {
+            await client.query('COMMIT')
+            return this.toDto(receipt)
+          }
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_REJECTED(),
+            409,
+          )
+        }
+
+        if (receipt.state === 'Confirmed') {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_CONFIRMED(),
+            409,
+          )
+        }
+
+        if (!isInvoiceBankReceiptRejectableState(receipt.state)) {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            INVOICE_BANK_RECEIPT_REJECT_ERRORS.NOT_REJECTABLE(receipt.state),
+            409,
+          )
+        }
+
+        const ownerUserId = await this.loadProfileOwnerUserId(client, receipt.profileId)
+        if (!ownerUserId) {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            INVOICE_BANK_RECEIPT_REJECT_ERRORS.OWNER_UNNOTIFIABLE(),
+            409,
+          )
+        }
+
+        const updated = await this.markRejected(client, receipt.id, parsed.reason)
+        const notify = await this.enqueueCustomerRejectionNotice(client, {
+          receiptId: receipt.id,
+          invoiceId: receipt.invoiceId,
+          profileId: receipt.profileId,
+          userId: ownerUserId,
+          amount: receipt.amount.toString(),
+          reason: parsed.reason,
+          rejectedAt: now,
+        })
+        const auditId = await this.recordAudit(client, {
+          event: INVOICE_BANK_RECEIPT_REJECTED_EVENT,
+          actorUserId: input.actorUserId,
+          ip: input.ip,
+          correlationId: input.correlationId,
+          metadata: {
+            receiptId: receipt.id,
+            invoiceId: receipt.invoiceId,
+            profileId: receipt.profileId,
+            amount: receipt.amount.toString(),
+            reason: parsed.reason,
+            customerVisible: true,
+            previousState: receipt.state,
+            newState: 'Rejected',
+            notificationOutboxId: notify.outboxId,
+          },
+          occurredAt: now,
+        })
+        await client.query('COMMIT')
+
+        this.logger.log(
+          `Invoice bank receipt ${receipt.id} rejected against invoice ${receipt.invoiceId}`,
+        )
+        return this.toDto(
+          updated ?? {
+            ...receipt,
+            state: 'Rejected',
+            rejection_reason: parsed.reason,
+          },
+          {
+            auditId,
+            ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
+          },
+        )
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => undefined)
+        throw error
+      } finally {
+        await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys)
+      }
+    } finally {
+      client.release()
+    }
+  }
+
   private async lockReceipt(
     client: WalletQueryClient,
     receiptId: string,
@@ -580,6 +725,110 @@ export class InvoiceBankReceiptConfirmationService {
     return (result.rows as BankReceiptRow[])[0] ?? null
   }
 
+  private async markRejected(
+    client: WalletQueryClient,
+    receiptId: string,
+    reason: string,
+  ): Promise<BankReceiptRow | null> {
+    const result = await client.query(
+      `UPDATE bank_receipts
+          SET state = 'Rejected',
+              rejection_reason = $2
+        WHERE id = $1
+          AND state IN ('Submitted', 'UnderReview')
+        RETURNING ${RECEIPT_SELECT}`,
+      [receiptId, reason],
+    )
+    return (result.rows as BankReceiptRow[])[0] ?? null
+  }
+
+  private async loadProfileOwnerUserId(
+    client: WalletQueryClient,
+    profileId: string,
+  ): Promise<string | null> {
+    const result = await client.query(
+      `SELECT user_id FROM profiles WHERE id = $1`,
+      [profileId],
+    )
+    const userId = (result.rows[0] as { user_id?: string | null } | undefined)?.user_id
+    return typeof userId === 'string' && userId.length > 0 ? userId : null
+  }
+
+  private async enqueueCustomerRejectionNotice(
+    client: WalletQueryClient,
+    input: {
+      receiptId: string
+      invoiceId: string
+      profileId: string
+      userId: string
+      amount: string
+      reason: string
+      rejectedAt: Date
+    },
+  ): Promise<{ outboxId: string | null; inserted: boolean }> {
+    const channels = [...INVOICE_BANK_RECEIPT_REJECT_CHANNELS]
+    const idempotencyKey = invoiceBankReceiptRejectedNotificationIdempotencyKey(input.receiptId)
+    const priority =
+      classifyNotificationType(INVOICE_BANK_RECEIPT_REJECTED_NOTIFICATION_EVENT_KEY) ===
+      'immediate'
+        ? 'urgent'
+        : 'normal'
+    const payload = buildInvoiceBankReceiptRejectedNotificationPayload({
+      receiptId: input.receiptId,
+      invoiceId: input.invoiceId,
+      amount: input.amount,
+      reason: input.reason,
+      rejectedAt: input.rejectedAt,
+    })
+
+    const insertResult = await client.query(
+      `INSERT INTO notification_outbox
+         (profile_id, user_id, event_key, payload, channels, status,
+          idempotency_key, max_attempts, scheduled_for)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (idempotency_key) DO NOTHING
+       RETURNING id`,
+      [
+        input.profileId,
+        input.userId,
+        INVOICE_BANK_RECEIPT_REJECTED_NOTIFICATION_EVENT_KEY,
+        payload,
+        channels,
+        'queued',
+        idempotencyKey,
+        CUSTOMER_NOTIFICATION_MAX_ATTEMPTS,
+        null,
+      ],
+    )
+    const insertedRow = insertResult.rows[0] as { id: string } | undefined
+    let outboxId = insertedRow?.id
+    const inserted = Boolean(outboxId)
+    if (!outboxId) {
+      const existing = await client.query(
+        `SELECT id FROM notification_outbox WHERE idempotency_key = $1 LIMIT 1`,
+        [idempotencyKey],
+      )
+      outboxId = (existing.rows[0] as { id: string } | undefined)?.id
+      if (!outboxId) return { outboxId: null, inserted: false }
+    }
+
+    const jobValues: unknown[] = []
+    const placeholders: string[] = []
+    channels.forEach((channel, i) => {
+      const base = i * 5
+      placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`)
+      jobValues.push(outboxId, channel, 'queued', priority, CUSTOMER_NOTIFICATION_MAX_ATTEMPTS)
+    })
+    await client.query(
+      `INSERT INTO notification_job
+         (outbox_id, channel, status, priority, max_attempts)
+       VALUES ${placeholders.join(', ')}
+       ON CONFLICT (outbox_id, channel) DO NOTHING`,
+      jobValues,
+    )
+    return { outboxId, inserted }
+  }
+
   private async findExistingOverpaymentCredit(
     client: WalletQueryClient,
     receiptId: string,
@@ -756,6 +1005,7 @@ export class InvoiceBankReceiptConfirmationService {
       auditId?: string
       invoiceState?: string | null
       remaining?: string | null
+      notificationOutboxId?: string
     } = {},
   ): Promise<InvoiceBankReceiptConfirmDto> {
     const overpayment = extra.overpayment ?? null
@@ -773,14 +1023,19 @@ export class InvoiceBankReceiptConfirmationService {
       customerNote: row.customer_note,
       submittedAt: toIso(row.created_at),
       canConfirm: isInvoiceBankReceiptConfirmableState(row.state),
+      canReject: isInvoiceBankReceiptRejectableState(row.state),
       confirmedBy: row.confirmed_by,
       confirmedAt: row.confirmed_at ? toIso(row.confirmed_at) : null,
+      rejectionReason: row.rejection_reason,
       invoiceState: extra.invoiceState ?? null,
       remaining: extra.remaining ?? overpayment?.remainingBefore ?? null,
       invoiceAllocation: overpayment?.invoiceAllocation ?? null,
       walletCreditAmount: overpayment?.walletCreditAmount ?? null,
       overpayment,
       ...(extra.auditId ? { auditId: extra.auditId } : {}),
+      ...(extra.notificationOutboxId
+        ? { notificationOutboxId: extra.notificationOutboxId }
+        : {}),
     }
   }
 

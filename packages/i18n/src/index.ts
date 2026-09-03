@@ -1198,6 +1198,9 @@ export const fa: I18nDictionary = {
   'notifications.finance.chargeback_unresolved.title': 'هشدار مالی — شارژبک حل‌نشده',
   'notifications.finance.chargeback_unresolved.body':
     'یک شارژبک ارائه‌دهنده نیاز به بررسی فوری دارد. وضعیت: {{status_label_fa}}. مبلغ: {{amount_irr}} ریال. شناسه رویداد: {{event_id}}',
+  'notifications.payment.bank_receipt_rejected.title': 'رد رسید بانکی',
+  'notifications.payment.bank_receipt_rejected.body':
+    'رسید بانکی شما رد شد. مبلغ: {{amount_irr}} ریال. دلیل: {{reason}}',
 };
 
 /** English (en) dictionary for the Barghsa platform */
@@ -2369,6 +2372,9 @@ export const en: I18nDictionary = {
     'notifications.finance.chargeback_unresolved.title': 'Finance alert — unresolved chargeback',
     'notifications.finance.chargeback_unresolved.body':
       'A provider chargeback needs immediate finance review. Status: {{status_label_en}}. Amount: {{amount_irr}} IRR. Event id: {{event_id}}',
+    'notifications.payment.bank_receipt_rejected.title': 'Bank receipt rejected',
+    'notifications.payment.bank_receipt_rejected.body':
+      'Your bank receipt was rejected. Amount: {{amount_irr}} IRR. Reason: {{reason}}',
   };
 
 /** Supported locale codes */

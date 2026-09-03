@@ -17,6 +17,7 @@ describe('notification type registry & classification (T-05.03.01)', () => {
 
     it('classifies payment, refund and contract-cancellation events as immediate', () => {
       expect(classifyNotificationType('payment.invoice_paid')).toBe('immediate')
+      expect(classifyNotificationType('payment.bank_receipt_rejected')).toBe('immediate')
       expect(classifyNotificationType('payment.refund_completed')).toBe('immediate')
       expect(classifyNotificationType('payment.refund_failed')).toBe('immediate')
       expect(classifyNotificationType('payment.wallet_topup_completed')).toBe('immediate')

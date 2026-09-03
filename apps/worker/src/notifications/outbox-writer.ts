@@ -38,7 +38,9 @@ export interface EnqueueOutboxInput {
    * delivery (e.g. invoice reminders keyed by invoice + offset). For
    * `payment.invoice_reminder` only, per-channel provider keys at dispatch
    * also fold this value in so distinct outbox rows never collide at the
-   * transport. Pre-existing events keep the legacy digest
+   * transport. The same fold applies to `payment.bank_receipt_rejected`
+   * so two rejected receipts for one profile stay distinct. Pre-existing
+   * events keep the legacy digest
    * sha256(eventKey:channel:profileId) so in-flight retries after deploy
    * cannot redeliver (T-05.01.04).
    */
@@ -72,19 +74,19 @@ export function deriveIdempotencyKey(eventKey: string, profileId: string): strin
  * already attempted before this deploy presents the same key on retry.
  */
 export const CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS: ReadonlySet<string> =
-  new Set(['payment.invoice_reminder'])
+  new Set(['payment.invoice_reminder', 'payment.bank_receipt_rejected'])
 
 /**
  * Per-channel idempotency key (T-05.01.04).
  *
- * Legacy (every event except `payment.invoice_reminder`):
+ * Legacy (events not in CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS):
  *   sha256(eventKey:channel:profileId)
  *
- * Reminder events (new rows only; none exist in production yet):
+ * Folded events (`payment.invoice_reminder`, `payment.bank_receipt_rejected`):
  *   sha256(eventKey:channel:profileId:outboxIdempotencyKey)
  *
- * The outbox key is folded in only for reminder events so two queued
- * reminders for the same profile (different invoices or offsets) receive
+ * The outbox key is folded in only for those events so two queued
+ * deliveries for the same profile (different invoices/receipts) receive
  * distinct provider keys, while a retry of one row stays stable. Pre-existing
  * events omit the outbox key so a queued/retrying row created before this
  * deploy cannot change the key presented to the transport.

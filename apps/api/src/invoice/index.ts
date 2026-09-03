@@ -7,6 +7,7 @@ export type {
   InvoiceBankReceiptConfirmDto,
   InvoiceBankReceiptAllocationPreviewDto,
   ConfirmInvoiceBankReceiptInput,
+  RejectInvoiceBankReceiptInput,
 } from './invoice-bank-receipt-confirmation.service.js'
 export type {
   CustomerInvoiceDetailsDto,

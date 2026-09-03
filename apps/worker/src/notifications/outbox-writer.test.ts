@@ -111,6 +111,15 @@ describe('deriveChannelIdempotencyKey', () => {
     expect(a).not.toBe(b)
     expect(a).toBe(aRetry)
   })
+
+  it('folds the outbox key into bank-receipt rejection channel keys', () => {
+    const eventKey = 'payment.bank_receipt_rejected'
+    expect(CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(eventKey)).toBe(true)
+    const a = deriveChannelIdempotencyKey(eventKey, 'email', 'profile-1', 'receipt-a')
+    const b = deriveChannelIdempotencyKey(eventKey, 'email', 'profile-1', 'receipt-b')
+    expect(a).not.toBe(b)
+    expect(a).toBe(deriveChannelIdempotencyKey(eventKey, 'email', 'profile-1', 'receipt-a'))
+  })
 })
 
 describe('enqueueOutbox', () => {
