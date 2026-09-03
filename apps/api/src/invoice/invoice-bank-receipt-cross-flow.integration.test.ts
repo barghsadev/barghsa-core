@@ -23,7 +23,7 @@ import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.s
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 import { WalletService } from '../wallet/wallet.service.js'
 import { BankReceiptTopUpService } from '../wallet/bank-receipt-topup.service.js'
-import type { StorageProvider } from '@barghsa/shared/storage'
+import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -78,24 +78,37 @@ function receiptKey(suffix: string): string {
   return `uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-${pad}.pdf`
 }
 
-function cancellableBody(): ReadableStream {
+function pdfBytes(size = 4096): Uint8Array {
+  const bytes = new Uint8Array(size)
+  bytes.set(new TextEncoder().encode('%PDF-1.4\n'))
+  return bytes
+}
+
+function bytesBody(bytes: Uint8Array): ReadableStream<Uint8Array> {
   return new ReadableStream({
     start(controller) {
+      if (bytes.byteLength > 0) controller.enqueue(bytes)
       controller.close()
     },
   })
 }
 
-function matchingStorageProvider(): StorageProvider {
+function memoryStorage(objects: Map<string, Uint8Array>): StorageProvider {
   return {
-    putObject: async () => {},
-    getObject: async () => ({
-      body: cancellableBody(),
-      contentType: 'application/pdf',
-      contentLength: 4096,
-      metadata: {},
-      etag: undefined,
-    }),
+    putObject: async (key, body) => {
+      if (body instanceof Uint8Array) objects.set(key, body)
+    },
+    getObject: async (key) => {
+      const bytes = objects.get(key)
+      if (!bytes) throw new StorageObjectNotFound(key)
+      return {
+        body: bytesBody(bytes),
+        contentType: 'application/pdf',
+        contentLength: bytes.byteLength,
+        metadata: {},
+        etag: undefined,
+      }
+    },
     deleteObject: async () => {},
     presignedPutUrl: async () => '',
     presignedGetUrl: async () => '',
@@ -107,13 +120,14 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
   let ctx: IsolatedTestDb
   let invoiceUpload: InvoiceBankReceiptUploadService
   let walletTopUp: BankReceiptTopUpService
+  const objects = new Map<string, Uint8Array>()
 
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
     invoiceUpload = new InvoiceBankReceiptUploadService(
       new CustomerInvoiceDetailsService(),
-      matchingStorageProvider(),
+      memoryStorage(objects),
     )
     walletTopUp = new BankReceiptTopUpService(new WalletService())
 
@@ -185,6 +199,7 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
   }, 60_000)
 
   beforeEach(async () => {
+    objects.clear()
     await ctx.pool.query(
       `TRUNCATE bank_receipts, bank_receipt_attachment_claims, wallet_transactions,
                 invoices, storage_records CASCADE`,
@@ -211,6 +226,7 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
         }),
       ],
     )
+    objects.set(storageKey, pdfBytes(4096))
   }
 
   function invoicePayload(attachmentKey: string) {
@@ -303,8 +319,7 @@ describe('bank-receipt attachment cross-flow claims — real PostgreSQL (T-04.3.
     const claims = await claimRows(attachment)
     expect(claims).toHaveLength(1)
     const receipts = await ctx.pool.query<{ n: number }>(
-      `SELECT count(*)::int AS n FROM bank_receipts WHERE attachment_key = $1`,
-      [attachment],
+      `SELECT count(*)::int AS n FROM bank_receipts`,
     )
     const walletTx = await ctx.pool.query<{ n: number }>(
       `SELECT count(*)::int AS n FROM wallet_transactions WHERE receipt_attachment_key = $1`,

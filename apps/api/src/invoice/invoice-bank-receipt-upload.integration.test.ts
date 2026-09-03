@@ -6,13 +6,15 @@
  *   1. A valid receipt inserts a `Submitted` bank_receipts row and
  *      leaves the invoice state unchanged.
  *   2. Amount must be positive; zero is rejected before insert.
- *   3. Stored file type and size are enforced from the trusted storage
- *      object size (not a client-declared storage_records.file_size).
+ *   3. Stored file type is sniffed from object bytes at submit, not the
+ *      recorded MIME. Size uses the actual byte count (capped).
  *   4. Retrying the same attachment with matching details returns the
  *      original Submitted row.
  *   5. A colliding attachment with different details is a conflict.
  *   6. Concurrent same-attachment submissions insert exactly one row.
- *   7. An active receipt becomes immutable in the same transaction.
+ *   7. Submit copies bytes to a server-only sealed key and freezes both
+ *      records; overwriting the original PUT object afterwards cannot
+ *      change the stored receipt.
  *   8. Other-profile invoices 404; Paid invoices 409.
  *   9. A large object with a forged small recorded fileSize is rejected.
  */
@@ -23,11 +25,11 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
-import { BANK_RECEIPT_STORAGE_PURPOSE } from '@barghsa/shared/finance'
+import { BANK_RECEIPT_STORAGE_PURPOSE, sealedInvoiceBankReceiptAttachmentKey } from '@barghsa/shared/finance'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
-import type { StorageProvider } from '@barghsa/shared/storage'
+import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage'
 
 const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
 
@@ -77,24 +79,43 @@ function receiptKey(suffix: string): string {
   return `uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-${pad}.pdf`
 }
 
-function cancellableBody(): ReadableStream {
+function pdfBytes(size = 4096): Uint8Array {
+  const bytes = new Uint8Array(size)
+  bytes.set(new TextEncoder().encode('%PDF-1.4\n'))
+  return bytes
+}
+
+function zipBytes(size = 4096): Uint8Array {
+  const bytes = new Uint8Array(size)
+  bytes.set(new Uint8Array([0x50, 0x4b, 0x03, 0x04]))
+  return bytes
+}
+
+function bytesBody(bytes: Uint8Array): ReadableStream<Uint8Array> {
   return new ReadableStream({
     start(controller) {
+      if (bytes.byteLength > 0) controller.enqueue(bytes)
       controller.close()
     },
   })
 }
 
-function storageProviderWithSizes(sizes: Map<string, number | undefined>): StorageProvider {
+function memoryStorage(objects: Map<string, Uint8Array>): StorageProvider {
   return {
-    putObject: async () => {},
-    getObject: async (key: string) => ({
-      body: cancellableBody(),
-      contentType: 'application/pdf',
-      contentLength: sizes.has(key) ? sizes.get(key) : 4096,
-      metadata: {},
-      etag: undefined,
-    }),
+    putObject: async (key, body) => {
+      if (body instanceof Uint8Array) objects.set(key, body)
+    },
+    getObject: async (key) => {
+      const bytes = objects.get(key)
+      if (!bytes) throw new StorageObjectNotFound(key)
+      return {
+        body: bytesBody(bytes),
+        contentType: 'application/pdf',
+        contentLength: bytes.byteLength,
+        metadata: {},
+        etag: undefined,
+      }
+    },
     deleteObject: async () => {},
     presignedPutUrl: async () => '',
     presignedGetUrl: async () => '',
@@ -105,14 +126,14 @@ function storageProviderWithSizes(sizes: Map<string, number | undefined>): Stora
 describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', () => {
   let ctx: IsolatedTestDb
   let service: InvoiceBankReceiptUploadService
-  const objectSizes = new Map<string, number | undefined>()
+  const objects = new Map<string, Uint8Array>()
 
   beforeAll(async () => {
     ctx = await createIsolatedTestDb('test_', 4)
     poolHolder.pool = ctx.pool
     service = new InvoiceBankReceiptUploadService(
       new CustomerInvoiceDetailsService(),
-      storageProviderWithSizes(objectSizes),
+      memoryStorage(objects),
     )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
@@ -180,7 +201,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   })
 
   beforeEach(async () => {
-    objectSizes.clear()
+    objects.clear()
     await ctx.pool.query(
       `TRUNCATE bank_receipts, bank_receipt_attachment_claims, invoices, storage_records CASCADE`,
     )
@@ -200,6 +221,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       category?: string | null
       fileName?: string | null
       status?: string
+      bytes?: Uint8Array
     } = {},
   ): Promise<void> {
     const metadata = {
@@ -209,6 +231,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       purpose: BANK_RECEIPT_STORAGE_PURPOSE,
       ...overrides.metadata,
     }
+    const fileSize = overrides.fileSize === undefined ? 4096 : overrides.fileSize
     await ctx.pool.query(
       `INSERT INTO storage_records
          (storage_key, status, metadata, file_size, content_type, category, file_name)
@@ -217,18 +240,14 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
         storageKey,
         overrides.status ?? 'active',
         JSON.stringify(metadata),
-        overrides.fileSize === undefined ? 4096 : overrides.fileSize,
+        fileSize,
         overrides.contentType === undefined ? 'application/pdf' : overrides.contentType,
         overrides.category === undefined ? 'document' : overrides.category,
         overrides.fileName === undefined ? 'slip.pdf' : overrides.fileName,
       ],
     )
-    if (!objectSizes.has(storageKey)) {
-      objectSizes.set(
-        storageKey,
-        overrides.fileSize === undefined ? 4096 : (overrides.fileSize ?? undefined),
-      )
-    }
+    const bytes = overrides.bytes ?? pdfBytes(typeof fileSize === 'number' ? fileSize : 4096)
+    objects.set(storageKey, bytes)
   }
 
   function payload(overrides: Record<string, unknown> = {}) {
@@ -252,7 +271,9 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     expect(result.state).toBe('Submitted')
     expect(result.amount).toBe(250_000n)
     expect(result.invoiceId).toBe(INVOICE_A)
-    expect(result.attachmentKey).toBe(attachment)
+    const sealed = sealedInvoiceBankReceiptAttachmentKey(attachment)
+    expect(sealed).toBeTruthy()
+    expect(result.attachmentKey).toBe(sealed)
 
     const invoice = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM invoices WHERE id = $1`,
@@ -260,17 +281,23 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     )
     expect(invoice.rows[0]!.state).toBe('Unpaid')
 
-    const stored = await ctx.pool.query<{ state: string; confirmed_by: string | null }>(
-      `SELECT state, confirmed_by FROM bank_receipts WHERE id = $1`,
+    const stored = await ctx.pool.query<{ state: string; confirmed_by: string | null; attachment_key: string }>(
+      `SELECT state, confirmed_by, attachment_key FROM bank_receipts WHERE id = $1`,
       [result.receiptId],
     )
-    expect(stored.rows[0]).toMatchObject({ state: 'Submitted', confirmed_by: null })
+    expect(stored.rows[0]).toMatchObject({
+      state: 'Submitted',
+      confirmed_by: null,
+      attachment_key: sealed,
+    })
 
-    const storage = await ctx.pool.query<{ status: string }>(
-      `SELECT status FROM storage_records WHERE storage_key = $1`,
-      [attachment],
+    const storage = await ctx.pool.query<{ storage_key: string; status: string }>(
+      `SELECT storage_key, status FROM storage_records WHERE storage_key = ANY($1::text[])`,
+      [[attachment, sealed]],
     )
-    expect(storage.rows[0]!.status).toBe('immutable')
+    expect(storage.rows).toHaveLength(2)
+    expect(storage.rows.every((row) => row.status === 'immutable')).toBe(true)
+    expect(objects.get(sealed!)?.subarray(0, 5)).toEqual(new TextEncoder().encode('%PDF-'))
 
     const claim = await ctx.pool.query<{ claim_type: string }>(
       `SELECT claim_type FROM bank_receipt_attachment_claims WHERE storage_key = $1`,
@@ -304,7 +331,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
   it('rejects a large object when the recorded fileSize is forged small', async () => {
     const attachment = receiptKey('forgedsize01')
     await insertReceiptFile(attachment, { fileSize: 4096 })
-    objectSizes.set(attachment, 10 * 1024 * 1024 + 1)
+    objects.set(attachment, pdfBytes(10 * 1024 * 1024 + 1))
     const rejection = await service.submit(payload({ attachmentKey: attachment })).catch((e: unknown) => e)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
@@ -315,12 +342,27 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
     expect(count.rows[0]!.n).toBe(0)
   })
 
-  it('rejects a stored ZIP even when the key claims to be a PDF', async () => {
+  it('rejects ZIP bytes even when the recorded content type is still PDF', async () => {
     const attachment = receiptKey('zipfile00001')
-    await insertReceiptFile(attachment, { contentType: 'application/zip' })
+    await insertReceiptFile(attachment, { contentType: 'application/pdf', bytes: zipBytes(4096) })
     await expect(service.submit(payload({ attachmentKey: attachment }))).rejects.toMatchObject({
       status: 400,
     })
+    const count = await ctx.pool.query(`SELECT count(*)::int AS n FROM bank_receipts`)
+    expect(count.rows[0]!.n).toBe(0)
+  })
+
+  it('keeps the sealed copy when the original upload is overwritten after submit', async () => {
+    const attachment = receiptKey('overwrite001')
+    await insertReceiptFile(attachment)
+    const first = await service.submit(payload({ attachmentKey: attachment }))
+    const sealed = first.attachmentKey
+    objects.set(attachment, zipBytes(4096))
+    const retry = await service.submit(payload({ attachmentKey: attachment }))
+    expect(retry.receiptId).toBe(first.receiptId)
+    expect(retry.attachmentKey).toBe(sealed)
+    expect(objects.get(sealed)?.subarray(0, 5)).toEqual(new TextEncoder().encode('%PDF-'))
+    expect(objects.get(attachment)?.subarray(0, 4)).toEqual(new Uint8Array([0x50, 0x4b, 0x03, 0x04]))
   })
 
   it('returns the original row on matching retry of the same attachment', async () => {

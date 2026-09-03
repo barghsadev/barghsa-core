@@ -46,6 +46,13 @@ export const INVOICE_BANK_RECEIPT_FILE_ACCEPT =
   '.pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp'
 
 /**
+ * Server-only prefix for the immutable copy created at submit. Presigned
+ * PUT URLs are issued only under `uploads/<category>/`, so the client
+ * cannot overwrite this key with the original upload URL.
+ */
+export const INVOICE_BANK_RECEIPT_SEALED_PREFIX = 'receipts/submitted/'
+
+/**
  * Invoice states from which a customer may submit a bank receipt.
  * Same set as staff settleable states: Unpaid, PaymentUnderReview,
  * PartiallyFunded. Credit notes are rejected separately.
@@ -111,6 +118,30 @@ export function invoiceBankReceiptCategoryFromKey(
   if (attachmentKey.startsWith('uploads/document/')) return 'document'
   if (attachmentKey.startsWith('uploads/image/')) return 'image'
   return null
+}
+
+/**
+ * Deterministic immutable key for a verified customer upload. Uses the
+ * same UUID filename so retries reseal to the same object; the prefix is
+ * not client-writable via presign.
+ */
+export function sealedInvoiceBankReceiptAttachmentKey(
+  uploadKey: string,
+): string | null {
+  const parsed = parseBankReceiptAttachmentKey(uploadKey)
+  if (parsed === null) return null
+  const slash = parsed.lastIndexOf('/')
+  const fileName = parsed.slice(slash + 1)
+  if (fileName.length === 0 || fileName.includes('/') || fileName.includes('..')) {
+    return null
+  }
+  return `${INVOICE_BANK_RECEIPT_SEALED_PREFIX}${fileName}`
+}
+
+/** Keys that may identify a receipt row for a customer-submitted upload. */
+export function invoiceBankReceiptLookupKeys(uploadKey: string): string[] {
+  const sealed = sealedInvoiceBankReceiptAttachmentKey(uploadKey)
+  return sealed === null ? [uploadKey] : [uploadKey, sealed]
 }
 
 export function invoiceBankReceiptExtensionFromName(name: unknown): string | null {
@@ -331,6 +362,15 @@ export function parseInvoiceBankReceiptSubmission(
   }
 }
 
+export function invoiceBankReceiptAttachmentKeysMatch(
+  storedKey: string,
+  submittedUploadKey: string,
+): boolean {
+  if (storedKey === submittedUploadKey) return true
+  const sealed = sealedInvoiceBankReceiptAttachmentKey(submittedUploadKey)
+  return sealed !== null && storedKey === sealed
+}
+
 export function invoiceBankReceiptDetailsMatch(
   row: {
     amount: string | number | bigint
@@ -346,7 +386,7 @@ export function invoiceBankReceiptDetailsMatch(
     BigInt(row.amount) === amountIrR &&
     row.paymentDate === receipt.paymentDate &&
     row.payerReference === receipt.payerReference &&
-    row.attachmentKey === receipt.attachmentKey &&
+    invoiceBankReceiptAttachmentKeysMatch(row.attachmentKey, receipt.attachmentKey) &&
     (row.customerNote ?? null) === receipt.customerNote
   )
 }

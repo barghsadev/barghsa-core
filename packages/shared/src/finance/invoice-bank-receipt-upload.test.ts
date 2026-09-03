@@ -5,9 +5,12 @@ import {
   canCustomerSubmitInvoiceBankReceipt,
   evaluateInvoiceBankReceiptClientFile,
   evaluateInvoiceBankReceiptStoredFile,
+  invoiceBankReceiptAttachmentKeysMatch,
   invoiceBankReceiptCategoryFromClientFile,
+  invoiceBankReceiptDetailsMatch,
   parseInvoiceBankReceiptAmountIrR,
   parseInvoiceBankReceiptSubmission,
+  sealedInvoiceBankReceiptAttachmentKey,
 } from './invoice-bank-receipt-upload.js'
 import { parseOnlineTopUpAmountIrR } from './wallet-topup-config.js'
 
@@ -218,5 +221,39 @@ describe('invoiceBankReceiptCategoryFromClientFile (T-04.3.01.02)', () => {
     expect(invoiceBankReceiptCategoryFromClientFile({ name: 'a.gif', type: 'image/gif' })).toBe(
       null,
     )
+  })
+})
+
+describe('sealedInvoiceBankReceiptAttachmentKey (T-04.3.01.02)', () => {
+  it('maps a presigned upload key to a server-only submitted prefix', () => {
+    expect(sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT)).toBe(
+      'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+    )
+    expect(invoiceBankReceiptAttachmentKeysMatch(
+      'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+      ATTACHMENT,
+    )).toBe(true)
+    expect(sealedInvoiceBankReceiptAttachmentKey('uploads/document/../secret.pdf')).toBeNull()
+  })
+
+  it('treats a sealed stored key as the same receipt as the original upload', () => {
+    expect(
+      invoiceBankReceiptDetailsMatch(
+        {
+          amount: 250_000,
+          paymentDate: '2026-08-15',
+          payerReference: 'TRK-998877',
+          attachmentKey: 'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf',
+          customerNote: 'Branch transfer',
+        },
+        250_000n,
+        {
+          paymentDate: '2026-08-15',
+          payerReference: 'TRK-998877',
+          attachmentKey: ATTACHMENT,
+          customerNote: 'Branch transfer',
+        },
+      ),
+    ).toBe(true)
   })
 })

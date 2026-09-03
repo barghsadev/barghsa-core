@@ -26,6 +26,7 @@ const RECEIPT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const ACTOR_ID = 'user-1'
 const AMOUNT = 250_000n
 const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+const SEALED = 'receipts/submitted/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
 
 const RECEIPT = {
   paymentDate: '2026-08-15',
@@ -70,7 +71,7 @@ type ScriptOptions = {
 }
 
 function scriptClient(opts: ScriptOptions = {}) {
-  mockClient.query.mockImplementation(async (sql: string) => {
+  mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] }
     }
@@ -119,7 +120,9 @@ function scriptClient(opts: ScriptOptions = {}) {
     }
     if (sql.includes('INSERT INTO bank_receipts')) {
       if (opts.insert instanceof Error) throw opts.insert
-      return { rows: [opts.insert ?? makeReceiptRow()] }
+      const attachmentKey =
+        Array.isArray(params) && typeof params[5] === 'string' ? params[5] : ATTACHMENT
+      return { rows: [opts.insert ?? makeReceiptRow({ attachment_key: attachmentKey })] }
     }
     return { rows: [] }
   })
@@ -138,27 +141,43 @@ function submitInput(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function cancellableBody(): ReadableStream {
+function pdfBytes(size = 4096): Uint8Array {
+  const bytes = new Uint8Array(size)
+  bytes.set(new TextEncoder().encode('%PDF-1.4\n'))
+  return bytes
+}
+
+function zipBytes(size = 4096): Uint8Array {
+  const bytes = new Uint8Array(size)
+  bytes.set(new Uint8Array([0x50, 0x4b, 0x03, 0x04]))
+  return bytes
+}
+
+function bytesBody(bytes: Uint8Array): ReadableStream<Uint8Array> {
   return new ReadableStream({
     start(controller) {
+      if (bytes.byteLength > 0) controller.enqueue(bytes)
       controller.close()
     },
   })
 }
 
-function storageWithContentLength(
-  contentLength: number | 'unknown' | 'missing' = 4096,
+function storageWithObjects(
+  objects: Map<string, Uint8Array>,
+  options: { missing?: boolean } = {},
 ): StorageProvider {
   return {
-    putObject: vi.fn(),
+    putObject: vi.fn(async (key: string, body: ReadableStream | Blob | Uint8Array | string) => {
+      if (body instanceof Uint8Array) objects.set(key, body)
+    }),
     getObject: vi.fn(async (key: string) => {
-      if (contentLength === 'missing') {
-        throw new StorageObjectNotFound(key)
-      }
+      if (options.missing) throw new StorageObjectNotFound(key)
+      const bytes = objects.get(key)
+      if (!bytes) throw new StorageObjectNotFound(key)
       return {
-        body: cancellableBody(),
+        body: bytesBody(bytes),
         contentType: 'application/pdf',
-        contentLength: contentLength === 'unknown' ? undefined : contentLength,
+        contentLength: bytes.byteLength,
         metadata: {},
         etag: undefined,
       }
@@ -173,11 +192,16 @@ function storageWithContentLength(
 describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   let customerInvoices: { resolveActiveProfileId: ReturnType<typeof vi.fn> }
   let service: InvoiceBankReceiptUploadService
+  let objects: Map<string, Uint8Array>
+  let storage: StorageProvider
 
-  function buildService(contentLength: number | 'unknown' | 'missing' = 4096) {
+  function buildService(seed: Uint8Array | 'missing' = pdfBytes(4096)) {
+    objects = new Map()
+    if (seed !== 'missing') objects.set(ATTACHMENT, seed)
+    storage = storageWithObjects(objects, { missing: seed === 'missing' })
     service = new InvoiceBankReceiptUploadService(
       customerInvoices as unknown as CustomerInvoiceDetailsService,
-      storageWithContentLength(contentLength),
+      storage,
     )
   }
 
@@ -200,17 +224,21 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     expect(mockPool.connect).not.toHaveBeenCalled()
   })
 
-  it('creates a Submitted receipt and does not change invoice state', async () => {
+  it('creates a Submitted receipt bound to a sealed copy, not the mutable upload key', async () => {
     scriptClient()
     const result = await service.submit(submitInput())
     expect(result.state).toBe('Submitted')
     expect(result.amount).toBe(AMOUNT)
     expect(result.invoiceId).toBe(INVOICE_ID)
+    expect(result.attachmentKey).toBe(SEALED)
     const insert = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO bank_receipts'),
     )
     expect(insert?.[1]?.[2]).toBe(AMOUNT.toString())
+    expect(insert?.[1]?.[5]).toBe(SEALED)
     expect(insert?.[0]).toContain("'Submitted'")
+    expect(storage.putObject).toHaveBeenCalledWith(SEALED, expect.any(Uint8Array), 'application/pdf')
+    expect(objects.get(SEALED)?.subarray(0, 5)).toEqual(new TextEncoder().encode('%PDF-'))
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices')),
     ).toBe(false)
@@ -231,7 +259,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   it('rejects an oversize stored file', async () => {
     const oversize = 10 * 1024 * 1024 + 1
     scriptClient({ fileSize: oversize })
-    buildService(oversize)
+    buildService(pdfBytes(oversize))
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
@@ -245,7 +273,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
 
   it('rejects a large object when the recorded fileSize is forged small', async () => {
     scriptClient({ fileSize: 4096 })
-    buildService(10 * 1024 * 1024 + 1)
+    buildService(pdfBytes(10 * 1024 * 1024 + 1))
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
@@ -257,9 +285,9 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     ).toBe(false)
   })
 
-  it('rejects submission when trusted object size is unavailable', async () => {
+  it('rejects submission when the stored object is missing', async () => {
     scriptClient({ fileSize: 4096 })
-    buildService('unknown')
+    buildService('missing')
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
@@ -273,7 +301,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
 
   it('rejects when recorded size differs from a still-allowed actual size', async () => {
     scriptClient({ fileSize: 1024 })
-    buildService(2048)
+    buildService(pdfBytes(2048))
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
     expect(rejection).toBeInstanceOf(HttpException)
     expect((rejection as HttpException).getResponse()).toMatchObject({
@@ -285,9 +313,31 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     ).toBe(false)
   })
 
-  it('rejects a stored file whose MIME is not a receipt type', async () => {
-    scriptClient({ contentType: 'application/zip' })
-    await expect(service.submit(submitInput())).rejects.toMatchObject({ status: 400 })
+  it('rejects ZIP bytes even when the recorded content type is still PDF', async () => {
+    scriptClient({ contentType: 'application/pdf' })
+    buildService(zipBytes(4096))
+    const rejection = await service.submit(submitInput()).catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: expect.stringMatching(/PDF|JPEG|PNG|WebP/i),
+    })
+    expect(storage.putObject).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
+  })
+
+  it('does not recopy a mutable upload when the sealed receipt already exists', async () => {
+    scriptClient({ existing: makeReceiptRow({ attachment_key: SEALED }) })
+    objects.set(ATTACHMENT, zipBytes(4096))
+    const result = await service.submit(submitInput())
+    expect(result.receiptId).toBe(RECEIPT_ID)
+    expect(result.attachmentKey).toBe(SEALED)
+    expect(storage.putObject).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts')),
+    ).toBe(false)
   })
 
   it('rejects an invoice in a non-submittable state', async () => {

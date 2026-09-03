@@ -12,11 +12,16 @@ import {
   canCustomerSubmitInvoiceBankReceipt,
   evaluateBankReceiptStorageMetadata,
   evaluateInvoiceBankReceiptStoredFile,
+  INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY,
   invoiceBankReceiptDetailsMatch,
+  invoiceBankReceiptLookupKeys,
+  invoiceBankReceiptMaxBytes,
   parseInvoiceBankReceiptSubmission,
   parsePositiveByteCount,
+  sealedInvoiceBankReceiptAttachmentKey,
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
+  type InvoiceBankReceiptFileCategory,
 } from '@barghsa/shared/finance'
 import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage'
 import {
@@ -24,6 +29,11 @@ import {
   claimBankReceiptAttachment,
 } from '../finance/claim-bank-receipt-attachment.js'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
+import {
+  pickDetectedContentType,
+  sniffContentTypes,
+  SNIFF_SAMPLE_BYTES,
+} from '../upload/content-type-sniffer.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'
@@ -101,6 +111,13 @@ interface StorageLockRow {
   file_name: string | null
 }
 
+interface SealedAttachment {
+  sealedKey: string
+  bytes: Uint8Array
+  detectedContentType: string
+  category: InvoiceBankReceiptFileCategory
+}
+
 /**
  * Customer invoice bank-receipt upload (T-04.3.01.02 / S-04.3.01).
  *
@@ -109,14 +126,17 @@ interface StorageLockRow {
  *      reference, attachment key, and optional note.
  *   2. Resolve the caller's active profile (same isolation as invoice
  *      details). Missing invoices, other profiles, and drafts 404.
- *   3. Lock the attachment (shared namespace with wallet top-up),
- *      require verified owner+purpose provenance, and reject
- *      disallowed file type/size using the object's trusted storage
- *      Content-Length — never the client-supplied storage_records.file_size.
- *   4. Claim the storage key as `invoice_receipt`. A wallet top-up
- *      claim is rejected; same-flow retries continue.
- *   5. Insert a `Submitted` `bank_receipts` row. Unique attachment_key
- *      is the retry identity: matching details return the original row.
+ *   3. Lock the attachment (shared namespace with wallet top-up) and
+ *      require verified owner+purpose provenance.
+ *   4. Claim the customer upload key as `invoice_receipt`. A wallet
+ *      top-up claim is rejected; same-flow retries continue.
+ *   5. Reuse an existing Submitted row keyed by the upload or sealed
+ *      copy. Do not re-copy after a receipt exists — the original PUT
+ *      URL may have been reused.
+ *   6. Otherwise read the object bytes, magic-byte sniff them, copy
+ *      that buffer to a server-only `receipts/submitted/` key the
+ *      client cannot overwrite, freeze both records, and insert a
+ *      `Submitted` row that references the sealed key.
  *
  * Invoice state and wallet credit are deferred to later tasks.
  */
@@ -184,27 +204,28 @@ export class InvoiceBankReceiptUploadService {
     amountIrR: bigint,
     receipt: BankReceiptTopUpDetails,
   ): Promise<BankReceiptRow> {
+    const lookupKeys = invoiceBankReceiptLookupKeys(receipt.attachmentKey)
     try {
       await client.query('BEGIN')
 
       const invoice = await this.lockInvoice(client, invoiceId, profileId)
-      await this.lockAndProtectAttachment(client, receipt.attachmentKey, actorId, profileId)
+      const storageRow = await this.lockAttachmentProvenance(
+        client,
+        receipt.attachmentKey,
+        actorId,
+        profileId,
+      )
       await claimBankReceiptAttachment(client, receipt.attachmentKey, 'invoice_receipt')
 
-      const existing = await client.query(
-        `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
-                payer_reference, attachment_key, customer_note, state
-           FROM bank_receipts
-          WHERE attachment_key = $1
-          FOR UPDATE`,
-        [receipt.attachmentKey],
-      )
-      if (existing.rows.length > 0) {
-        const row = existing.rows[0] as BankReceiptRow
-        assertReusableSubmitted(row, invoiceId, profileId, amountIrR, receipt)
+      const existing = await this.findReceiptByKeys(client, lookupKeys)
+      if (existing) {
+        assertReusableSubmitted(existing, invoiceId, profileId, amountIrR, receipt)
         await client.query('COMMIT')
-        return row
+        return existing
       }
+
+      const sealed = await this.sealAttachmentBytes(receipt.attachmentKey, storageRow)
+      await this.persistSealedStorageRecords(client, actorId, receipt.attachmentKey, storageRow, sealed)
 
       const inserted = await client.query(
         `INSERT INTO bank_receipts
@@ -220,7 +241,7 @@ export class InvoiceBankReceiptUploadService {
           amountIrR.toString(),
           receipt.paymentDate,
           receipt.payerReference,
-          receipt.attachmentKey,
+          sealed.sealedKey,
           receipt.customerNote,
         ],
       )
@@ -230,22 +251,30 @@ export class InvoiceBankReceiptUploadService {
     } catch (error) {
       await client.query('ROLLBACK')
       if (isPgUniqueViolation(error, BANK_RECEIPTS_ATTACHMENT_CONSTRAINT)) {
-        const committed = await client.query(
-          `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
-                  payer_reference, attachment_key, customer_note, state
-             FROM bank_receipts
-            WHERE attachment_key = $1`,
-          [receipt.attachmentKey],
-        )
-        if (committed.rows.length === 0) {
+        const committed = await this.findReceiptByKeys(client, lookupKeys, false)
+        if (!committed) {
           throw new ConflictException('This bank receipt attachment has already been submitted')
         }
-        const row = committed.rows[0] as BankReceiptRow
-        assertReusableSubmitted(row, invoiceId, profileId, amountIrR, receipt)
-        return row
+        assertReusableSubmitted(committed, invoiceId, profileId, amountIrR, receipt)
+        return committed
       }
       throw error
     }
+  }
+
+  private async findReceiptByKeys(
+    client: QueryClient,
+    lookupKeys: string[],
+    forUpdate = true,
+  ): Promise<BankReceiptRow | null> {
+    const result = await client.query(
+      `SELECT id, invoice_id, profile_id, amount, to_char(payment_date, 'YYYY-MM-DD') AS payment_date,
+              payer_reference, attachment_key, customer_note, state
+         FROM bank_receipts
+        WHERE attachment_key = ANY($1::text[])${forUpdate ? ' FOR UPDATE' : ''}`,
+      [lookupKeys],
+    )
+    return result.rows.length > 0 ? (result.rows[0] as BankReceiptRow) : null
   }
 
   private async lockInvoice(
@@ -285,12 +314,12 @@ export class InvoiceBankReceiptUploadService {
     return invoice
   }
 
-  private async lockAndProtectAttachment(
+  private async lockAttachmentProvenance(
     client: QueryClient,
     attachmentKey: string,
     actorId: string,
     profileId: string,
-  ): Promise<void> {
+  ): Promise<StorageLockRow> {
     const result = await client.query(
       `SELECT status, metadata, file_size, content_type, category, file_name
          FROM storage_records
@@ -311,21 +340,60 @@ export class InvoiceBankReceiptUploadService {
         'Bank receipt attachment is no longer available',
       )
     }
+    if (row.status !== 'active' && row.status !== 'immutable') {
+      throw httpError(
+        ErrorCodes.VALIDATION_INPUT_INVALID,
+        'Bank receipt attachment is no longer available',
+      )
+    }
 
     const provenance = evaluateBankReceiptStorageMetadata(row.metadata, actorId, profileId)
     if (!provenance.ok) {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, STORAGE_REJECTION_MESSAGE[provenance.reason])
     }
+    return row
+  }
 
-    const trustedFileSize = await this.readTrustedObjectByteCount(attachmentKey)
-    if (trustedFileSize === null) {
+  private async sealAttachmentBytes(
+    attachmentKey: string,
+    row: StorageLockRow,
+  ): Promise<SealedAttachment> {
+    const sealedKey = sealedInvoiceBankReceiptAttachmentKey(attachmentKey)
+    if (sealedKey === null) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.type)
+    }
+
+    const keyCategory: InvoiceBankReceiptFileCategory = attachmentKey.startsWith(
+      'uploads/image/',
+    )
+      ? 'image'
+      : 'document'
+    const cap = invoiceBankReceiptMaxBytes(keyCategory)
+
+    const read = await this.readObjectBytesCapped(attachmentKey, cap)
+    if (read === null) {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified)
+    }
+    if (read.bytes.byteLength === 0) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.empty)
+    }
+    if (read.truncated) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size)
+    }
+
+    const sample = read.bytes.subarray(0, Math.min(read.bytes.byteLength, SNIFF_SAMPLE_BYTES))
+    const detected = pickDetectedContentType(
+      sniffContentTypes(sample),
+      INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory],
+    )
+    if (detected === null) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.type)
     }
 
     const file = evaluateInvoiceBankReceiptStoredFile({
       attachmentKey,
-      fileSize: trustedFileSize,
-      contentType: row.content_type,
+      fileSize: read.bytes.byteLength,
+      contentType: detected,
       category: row.category,
       fileName: row.file_name,
     })
@@ -334,29 +402,51 @@ export class InvoiceBankReceiptUploadService {
     }
 
     const recordedFileSize = row.file_size == null ? null : parsePositiveByteCount(row.file_size)
-    if (row.file_size != null && recordedFileSize !== trustedFileSize) {
+    if (row.file_size != null && recordedFileSize !== read.bytes.byteLength) {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_mismatch)
     }
 
-    if (row.status === 'immutable') {
-      return
+    if (!this.storage) {
+      throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified)
     }
-    if (row.status !== 'active') {
-      throw httpError(
-        ErrorCodes.VALIDATION_INPUT_INVALID,
-        'Bank receipt attachment is no longer available',
-      )
+    await this.storage.putObject(sealedKey, read.bytes, detected)
+
+    return {
+      sealedKey,
+      bytes: read.bytes,
+      detectedContentType: detected,
+      category: keyCategory,
     }
+  }
+
+  private async persistSealedStorageRecords(
+    client: QueryClient,
+    actorId: string,
+    originalKey: string,
+    original: StorageLockRow,
+    sealed: SealedAttachment,
+  ): Promise<void> {
+    const originalMetadata = metadataRecord(original.metadata)
+    originalMetadata.sealedAttachmentKey = sealed.sealedKey
 
     const updated = await client.query(
       `UPDATE storage_records
           SET status = 'immutable',
+              file_size = $3,
+              content_type = $4,
+              metadata = $5::jsonb,
               signed_at = NOW(),
               signed_by = $2,
               updated_at = NOW()
         WHERE storage_key = $1
-          AND status = 'active'`,
-      [attachmentKey, actorId],
+          AND status IN ('active', 'immutable')`,
+      [
+        originalKey,
+        actorId,
+        sealed.bytes.byteLength,
+        sealed.detectedContentType,
+        JSON.stringify(originalMetadata),
+      ],
     )
     if ((updated.rowCount ?? 0) < 1) {
       throw httpError(
@@ -364,17 +454,46 @@ export class InvoiceBankReceiptUploadService {
         'Bank receipt attachment could not be locked for review',
       )
     }
+
+    await client.query(
+      `INSERT INTO storage_records
+         (storage_key, status, metadata, file_size, content_type, category, file_name,
+          signed_at, signed_by, updated_at)
+       VALUES ($1, 'immutable', $2::jsonb, $3, $4, $5, $6, NOW(), $7, NOW())
+       ON CONFLICT (storage_key) DO UPDATE
+          SET status = 'immutable',
+              metadata = EXCLUDED.metadata,
+              file_size = EXCLUDED.file_size,
+              content_type = EXCLUDED.content_type,
+              category = EXCLUDED.category,
+              file_name = EXCLUDED.file_name,
+              signed_at = NOW(),
+              signed_by = EXCLUDED.signed_by,
+              updated_at = NOW()`,
+      [
+        sealed.sealedKey,
+        JSON.stringify({
+          ...originalMetadata,
+          sourceAttachmentKey: originalKey,
+          sealedAttachmentKey: sealed.sealedKey,
+        }),
+        sealed.bytes.byteLength,
+        sealed.detectedContentType,
+        sealed.category,
+        original.file_name,
+        actorId,
+      ],
+    )
   }
 
-  private async readTrustedObjectByteCount(attachmentKey: string): Promise<number | null> {
+  private async readObjectBytesCapped(
+    attachmentKey: string,
+    maxBytes: number,
+  ): Promise<{ bytes: Uint8Array; truncated: boolean } | null> {
     if (!this.storage) return null
     try {
       const object = await this.storage.getObject(attachmentKey)
-      try {
-        return parseTrustedContentLength(object.contentLength)
-      } finally {
-        await object.body.cancel().catch(() => {})
-      }
+      return await readCappedBytes(object.body, maxBytes)
     } catch (error) {
       if (error instanceof StorageObjectNotFound) return null
       throw error
@@ -441,9 +560,117 @@ function httpError(
   throw new HttpException({ statusCode, error: def.code, message }, statusCode)
 }
 
-function parseTrustedContentLength(contentLength: number | undefined): number | null {
-  if (typeof contentLength !== 'number' || !Number.isSafeInteger(contentLength) || contentLength < 0) {
-    return null
+function metadataRecord(raw: unknown): Record<string, unknown> {
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    return { ...(raw as Record<string, unknown>) }
   }
-  return contentLength
+  if (typeof raw === 'string') {
+    try {
+      const parsed: unknown = JSON.parse(raw)
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        return { ...(parsed as Record<string, unknown>) }
+      }
+    } catch {
+      return {}
+    }
+  }
+  return {}
+}
+
+async function readCappedBytes(
+  body: unknown,
+  maxBytes: number,
+): Promise<{ bytes: Uint8Array; truncated: boolean }> {
+  const web = asWebReadableStream(body)
+  if (web) return readWebStreamCapped(web, maxBytes)
+  if (isAsyncIterable(body)) return readAsyncIterableCapped(body, maxBytes)
+  throw new TypeError('Storage object body is not readable')
+}
+
+function asWebReadableStream(body: unknown): ReadableStream<Uint8Array> | null {
+  if (body && typeof body === 'object') {
+    const candidate = body as {
+      getReader?: unknown
+      transformToWebStream?: () => ReadableStream<Uint8Array>
+    }
+    if (typeof candidate.getReader === 'function') {
+      return body as ReadableStream<Uint8Array>
+    }
+    if (typeof candidate.transformToWebStream === 'function') {
+      return candidate.transformToWebStream()
+    }
+  }
+  return null
+}
+
+function isAsyncIterable(value: unknown): value is AsyncIterable<Uint8Array | Buffer | string> {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Symbol.asyncIterator in value &&
+    typeof (value as AsyncIterable<unknown>)[Symbol.asyncIterator] === 'function'
+  )
+}
+
+async function readWebStreamCapped(
+  stream: ReadableStream<Uint8Array>,
+  maxBytes: number,
+): Promise<{ bytes: Uint8Array; truncated: boolean }> {
+  const reader = stream.getReader()
+  const chunks: Uint8Array[] = []
+  let total = 0
+  let truncated = false
+  try {
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) break
+      if (!value) continue
+      chunks.push(value)
+      total += value.byteLength
+      if (total > maxBytes) {
+        truncated = true
+        break
+      }
+    }
+  } finally {
+    await reader.cancel().catch(() => {})
+  }
+  return { bytes: concatBytes(chunks, truncated ? maxBytes + 1 : total), truncated }
+}
+
+async function readAsyncIterableCapped(
+  body: AsyncIterable<Uint8Array | Buffer | string>,
+  maxBytes: number,
+): Promise<{ bytes: Uint8Array; truncated: boolean }> {
+  const chunks: Uint8Array[] = []
+  let total = 0
+  let truncated = false
+  for await (const chunk of body) {
+    const bytes = toUint8Array(chunk)
+    chunks.push(bytes)
+    total += bytes.byteLength
+    if (total > maxBytes) {
+      truncated = true
+      break
+    }
+  }
+  return { bytes: concatBytes(chunks, truncated ? maxBytes + 1 : total), truncated }
+}
+
+function toUint8Array(chunk: Uint8Array | Buffer | string): Uint8Array {
+  if (typeof chunk === 'string') return new TextEncoder().encode(chunk)
+  return chunk instanceof Uint8Array ? chunk : new Uint8Array(chunk)
+}
+
+function concatBytes(chunks: Uint8Array[], total: number): Uint8Array {
+  const out = new Uint8Array(total)
+  let offset = 0
+  for (const chunk of chunks) {
+    const take = Math.min(chunk.byteLength, total - offset)
+    if (take <= 0) break
+    out.set(chunk.subarray(0, take), offset)
+    offset += take
+    if (offset >= total) break
+  }
+  return out
 }
