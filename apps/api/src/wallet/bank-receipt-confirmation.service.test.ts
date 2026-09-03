@@ -8,6 +8,8 @@ import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
+  BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+  BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
   bankReceiptCreditIdempotencyKey,
   bankReceiptOverpaymentCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
@@ -35,6 +37,7 @@ const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const CREDIT_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
 const ACTOR_ID = 'staff-1'
+const CUSTOMER_USER_ID = 'customer-1'
 const AMOUNT = 250_000n
 const OVERPAY_RECEIPT = 1_200_000n
 const INVOICE_REMAINING = 400_000n
@@ -109,6 +112,8 @@ type ScriptOptions = {
   invoice?: ReturnType<typeof makeInvoiceRow> | null
   invoiceUpdated?: boolean
   wallet?: { profile_id: string } | null
+  profile?: { userId: string } | null
+  outboxInserted?: boolean
 }
 
 function script(opts: ScriptOptions = {}) {
@@ -127,7 +132,7 @@ function script(opts: ScriptOptions = {}) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [{ profile_id: PROFILE_ID }] }
     }
-    if (sql.includes('WHERE idempotency_key')) {
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
     }
     if (sql.includes("SET state = 'Released'")) {
@@ -182,6 +187,20 @@ function script(opts: ScriptOptions = {}) {
       if (opts.invoiceUpdated === false) return { rows: [] }
       return { rows: [{ id: INVOICE_ID }] }
     }
+    if (sql.includes('FROM profiles WHERE id')) {
+      if (opts.profile === null) return { rows: [] }
+      return { rows: [{ user_id: opts.profile?.userId ?? CUSTOMER_USER_ID }] }
+    }
+    if (sql.includes('INSERT INTO notification_outbox')) {
+      if (opts.outboxInserted === false) return { rows: [] }
+      return { rows: [{ id: 'outbox-1' }] }
+    }
+    if (sql.includes('FROM notification_outbox WHERE idempotency_key')) {
+      return { rows: [{ id: 'outbox-1' }] }
+    }
+    if (sql.includes('INSERT INTO notification_job')) {
+      return { rows: [] }
+    }
     if (sql.includes('INSERT INTO audit_log')) {
       return { rows: [] }
     }
@@ -192,7 +211,7 @@ function script(opts: ScriptOptions = {}) {
     if (sql.includes("metadata->>'channel'")) {
       return { rows: opts.listed ?? [makePendingRow()] }
     }
-    if (sql.includes('WHERE idempotency_key')) {
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
     }
     if (sql.includes('FROM wallet_transactions WHERE id')) {
@@ -277,6 +296,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(result.canDecide).toBe(false)
     expect(result.creditTransactionId).toBe(CREDIT_ID)
     expect(result.overpayment).toBeNull()
+    expect(result.notificationOutboxId).toBe('outbox-1')
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO audit_log')),
     ).toBe(true)
@@ -284,6 +304,11 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       String(sql).includes('INSERT INTO audit_log'),
     )
     expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_CONFIRMED_EVENT)
+    const outbox = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO notification_outbox'),
+    )
+    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID)
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY)
   })
 
   it('rejects a receipt without calling credit', async () => {
@@ -303,6 +328,12 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       String(sql).includes('INSERT INTO audit_log'),
     )
     expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_REJECTED_EVENT)
+    const outbox = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO notification_outbox'),
+    )
+    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID)
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY)
+    expect(result.notificationOutboxId).toBe('outbox-1')
   })
 
   it('requires a customer-visible reject reason before locking', async () => {
@@ -348,6 +379,27 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       .catch((error: unknown) => error)
     expect((rejection as HttpException).getStatus()).toBe(409)
     expect(walletService.credit).not.toHaveBeenCalled()
+  })
+
+  it('conflicts when the profile owner cannot be notified on reject', async () => {
+    script({ profile: null })
+    const rejection = await service
+      .reject({
+        transactionId: TX_ID,
+        raw: { reason: 'Illegible scan' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
   })
 
   it('credits only the excess when the receipt exceeds invoice remaining', async () => {

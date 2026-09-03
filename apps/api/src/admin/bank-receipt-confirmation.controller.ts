@@ -57,10 +57,11 @@ function assertUuid(id: string, label = 'transactionId'): void {
  *
  * Finance staff list Pending receipts, inspect the scan, and confirm or
  * reject with a customer-visible reason. Confirm without an invoice
- * credits the full receipt via `WalletService.credit()`. Confirm with
- * an invoice allocates up to remaining onto the invoice and credits
- * only the excess to the wallet (T-04.2.02.05). Reject never changes
- * posted or reserved balance.
+ * credits the full receipt via `WalletService.credit()` and notifies
+ * the customer. Confirm with an invoice allocates up to remaining onto
+ * the invoice and credits only the excess to the wallet (T-04.2.02.05).
+ * Reject never changes posted or reserved balance and notifies the
+ * customer with the reason.
  *
  * Security:
  * - Every route requires an authenticated session with the
@@ -197,7 +198,7 @@ export class BankReceiptConfirmationController {
   @RequiresStepUp()
   @ApiOperation({
     summary: 'Reject a bank-receipt top-up with a customer-visible reason',
-    description: 'Marks the Pending ledger row Rejected. Never credits the wallet.',
+    description: 'Marks the Pending ledger row Rejected and notifies the customer. Never credits the wallet.',
   })
   @ApiParam({ name: 'transactionId', format: 'uuid' })
   @ApiBody({

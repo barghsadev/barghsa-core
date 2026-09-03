@@ -6,8 +6,9 @@
  *   1. Confirm calls WalletService.credit(), increments posted_balance,
  *      and releases the Pending intent.
  *   2. Retrying confirm is idempotent (one Completed credit row).
- *   3. Reject stores a customer-visible reason, never credits, and
- *      never changes posted or reserved balance.
+ *   3. Reject stores a customer-visible reason, never credits, notifies
+ *      the customer via payment.wallet_topup_failed, and never changes
+ *      posted or reserved balance.
  *   4. Confirm after reject (and reject after confirm) is Conflict.
  *   5. Audit insert failure rolls back the pending-state change.
  *   6. Confirm audit-insert failure also rolls back the wallet credit
@@ -16,6 +17,8 @@
  *      excess via a distinct idempotency key; concurrent allocations
  *      never over-settle paid_amount. Closed invoices (Cancelled, …)
  *      conflict instead of silently crediting the wallet.
+ *   8. Confirm notifies the customer via payment.wallet_topup_completed
+ *      in the same transaction as WalletService.credit().
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -30,8 +33,12 @@ import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
+  BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+  BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
   bankReceiptCreditIdempotencyKey,
   bankReceiptOverpaymentCreditIdempotencyKey,
+  bankReceiptTopUpCompletedNotificationIdempotencyKey,
+  bankReceiptTopUpFailedNotificationIdempotencyKey,
   bankReceiptTopUpMetadata,
 } from '@barghsa/shared/finance'
 import { WalletService } from './wallet.service.js'
@@ -82,9 +89,14 @@ const ADJUSTMENT_KIND_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
 )
+const OUTBOX_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0025_create_notification_outbox.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
+const CUSTOMER_USER_ID = 'customer-bank-receipt-owner'
 const ACTOR_USER_ID = 'staff-bank-receipt-confirm'
 const AMOUNT = 250_000n
 const NOW = new Date('2026-09-02T08:00:00.000Z')
@@ -110,12 +122,13 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`)
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
+        user_id TEXT NOT NULL REFERENCES users(user_id)
       )
     `)
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`)
     await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ATTACHMENT_UNIQUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
@@ -133,12 +146,20 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
+    await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1), ($2)`, [
+      CUSTOMER_USER_ID,
+      ACTOR_USER_ID,
+    ])
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2), ($3, $2)`, [
+      PROFILE_A,
+      CUSTOMER_USER_ID,
+      PROFILE_B,
+    ])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
       PROFILE_B,
     ])
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID])
   }, 60_000)
 
   afterAll(async () => {
@@ -269,6 +290,31 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       previousState: 'Pending',
       newState: 'Released',
     })
+
+    const outbox = await ctx.pool.query<{
+      event_key: string
+      user_id: string
+      channels: string[]
+      payload: Record<string, unknown>
+    }>(
+      `SELECT event_key, user_id, channels, payload
+         FROM notification_outbox
+        WHERE idempotency_key = $1`,
+      [bankReceiptTopUpCompletedNotificationIdempotencyKey(pendingId)],
+    )
+    expect(outbox.rows).toHaveLength(1)
+    expect(outbox.rows[0]).toMatchObject({
+      event_key: BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+      user_id: CUSTOMER_USER_ID,
+    })
+    expect(outbox.rows[0]!.channels).toEqual(['in_app', 'email'])
+    expect(outbox.rows[0]!.payload).toMatchObject({
+      amount: AMOUNT.toString(),
+      transactionId: credit.rows[0]!.id,
+      pending_transaction_id: pendingId,
+      link_route: '/wallet',
+    })
+    expect(result.notificationOutboxId).toBeTruthy()
   })
 
   it('retries confirm without a second credit', async () => {
@@ -333,6 +379,29 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       customerVisible: true,
       newState: 'Rejected',
     })
+
+    const outbox = await ctx.pool.query<{
+      event_key: string
+      user_id: string
+      payload: Record<string, unknown>
+    }>(
+      `SELECT event_key, user_id, payload
+         FROM notification_outbox
+        WHERE idempotency_key = $1`,
+      [bankReceiptTopUpFailedNotificationIdempotencyKey(pendingId)],
+    )
+    expect(outbox.rows).toHaveLength(1)
+    expect(outbox.rows[0]).toMatchObject({
+      event_key: BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
+      user_id: CUSTOMER_USER_ID,
+    })
+    expect(outbox.rows[0]!.payload).toMatchObject({
+      amount: AMOUNT.toString(),
+      reason: 'Payer name does not match the profile',
+      pending_transaction_id: pendingId,
+      link_route: '/wallet',
+    })
+    expect(result.notificationOutboxId).toBeTruthy()
   })
 
   it('refuses confirm after reject and reject after confirm', async () => {
