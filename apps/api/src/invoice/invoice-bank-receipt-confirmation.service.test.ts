@@ -107,7 +107,13 @@ type ScriptOptions = {
   profile?: { userId: string } | null
   outboxInserted?: boolean
   threshold?: unknown
-  pendingApproval?: { id: string; initiator_id: string; status: string } | null
+  pendingApproval?: {
+    id: string
+    initiator_id: string
+    status: string
+    review_reason?: string | null
+    reviewer_id?: string | null
+  } | null
   underReview?: ReturnType<typeof makeReceiptRow> | null
 }
 
@@ -812,5 +818,56 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
     ).toBe(false)
+  })
+
+  it('does not restart dual approval after the latest request was rejected', async () => {
+    const reviewReason = 'Payer name does not match'
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'rejected',
+        review_reason: reviewReason,
+        reviewer_id: SECOND_ACTOR,
+      },
+      rejected: makeReceiptRow({
+        amount: String(THRESHOLD),
+        state: 'Rejected',
+        rejection_reason: reviewReason,
+      }),
+    })
+    const rejection = await service
+      .confirm({
+        receiptId: RECEIPT_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.CONFLICT_STATE.code,
+      message: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.APPROVAL_REJECTED(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO approval_requests'),
+      ),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(true)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
+    ).toBe(false)
+    const audit = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_REJECTED_EVENT)
   })
 })

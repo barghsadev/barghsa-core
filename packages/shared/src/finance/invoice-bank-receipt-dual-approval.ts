@@ -17,12 +17,17 @@
  * approval is disabled. A present-but-corrupt row is **not** treated as
  * disabled — callers must fail the confirmation closed.
  *
+ * A DualApprovalService rejection of the latest request is terminal for
+ * that receipt: confirmation must not create a replacement pending
+ * request. The receipt is synchronized to `Rejected` instead.
+ *
  * @module finance
  */
 
 import {
   isValidDualApprovalThreshold,
 } from './dual-approval-config.js'
+import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from './wallet-bank-receipt-confirmation.js'
 
 /** Approval-request action covering bank-payment confirmations (T-09.07.01). */
 export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE =
@@ -41,7 +46,31 @@ export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS = {
     'A second, different finance staff member must confirm this receipt because its amount meets the dual-approval threshold',
   CONFIG_CORRUPT: () =>
     'Dual-approval threshold configuration is invalid; invoice bank-receipt confirmation is blocked',
+  APPROVAL_REJECTED: () =>
+    'Invoice bank-receipt dual approval was rejected; confirmation cannot restart the approval workflow',
 } as const
+
+/** Fallback customer-visible reason when the approval-request review reason is blank. */
+export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON =
+  'Dual-approval request was rejected' as const
+
+/**
+ * Map a DualApprovalService review reason onto a `bank_receipts.rejection_reason`.
+ * Blank values fall back to {@link INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON}
+ * so the receipt CHECK constraint always receives a non-empty reason.
+ */
+export function invoiceBankReceiptReasonFromDualApprovalRejection(
+  reviewReason: string | null | undefined,
+): string {
+  const trimmed = typeof reviewReason === 'string' ? reviewReason.trim() : ''
+  if (trimmed.length === 0) {
+    return INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON
+  }
+  if (trimmed.length > BANK_RECEIPT_REJECT_REASON_MAX_LENGTH) {
+    return trimmed.slice(0, BANK_RECEIPT_REJECT_REASON_MAX_LENGTH)
+  }
+  return trimmed
+}
 
 /** Result of reading the persisted dual-approval threshold for this gate. */
 export type InvoiceBankReceiptDualApprovalThresholdRead =

@@ -12,6 +12,9 @@
  *   6. A corrupt stored threshold fails closed.
  *   7. Rejecting a parked receipt cancels the pending approval request
  *      without crediting the wallet.
+ *   8. DualApprovalService rejection of the pending request is durable:
+ *      a later confirm does not mint a replacement request and
+ *      synchronizes the receipt to Rejected.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -23,11 +26,14 @@ import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
 import type { IsolatedTestDb } from '@barghsa/db/test'
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+  INVOICE_BANK_RECEIPT_CONFIRM_ERRORS,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
+  INVOICE_BANK_RECEIPT_REJECTED_EVENT,
 } from '@barghsa/shared/finance'
+import { DualApprovalService } from '../admin/dual-approval.service.js'
 import { WalletService } from '../wallet/wallet.service.js'
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
@@ -113,7 +119,12 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     )
 
     await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`)
+    await ctx.pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        user_id TEXT PRIMARY KEY,
+        username TEXT
+      )
+    `)
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
@@ -147,10 +158,13 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1), ($2), ($3)`, [
+    await ctx.pool.query(`INSERT INTO users (user_id, username) VALUES ($1, $2), ($3, $4), ($5, $6)`, [
       FIRST_STAFF,
+      'first-finance',
       SECOND_STAFF,
+      'second-finance',
       CUSTOMER_USER_ID,
+      'customer-dual',
     ])
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
       PROFILE_A,
@@ -466,5 +480,83 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const requests = await pendingApprovals(receiptId)
     expect(requests).toHaveLength(1)
     expect(requests[0]!.status).toBe('rejected')
+  })
+
+  it('does not restart confirmation after DualApprovalService rejects the request', async () => {
+    await setThreshold(Number(THRESHOLD))
+    const invoiceId = await insertInvoice({ total: 2_000_000n })
+    const receiptId = await insertReceipt({
+      invoiceId,
+      amount: THRESHOLD,
+      suffix: 'queue-reject',
+    })
+    const beforeWallet = await walletPosted()
+    await service.confirm({
+      receiptId,
+      actorUserId: FIRST_STAFF,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    const pending = await pendingApprovals(receiptId)
+    expect(pending).toHaveLength(1)
+    expect(pending[0]!.status).toBe('pending')
+
+    const dualApproval = new DualApprovalService({
+      create: vi.fn().mockResolvedValue({ id: 'n-1' }),
+    } as never)
+    await dualApproval.rejectApprovalRequest(
+      pending[0]!.id,
+      SECOND_STAFF,
+      '10.0.0.9',
+      'Payer name does not match',
+    )
+
+    expect(await receiptState(receiptId)).toBe('UnderReview')
+    const afterQueueReject = await pendingApprovals(receiptId)
+    expect(afterQueueReject).toHaveLength(1)
+    expect(afterQueueReject[0]!.status).toBe('rejected')
+
+    const retry = await service
+      .confirm({
+        receiptId,
+        actorUserId: FIRST_STAFF,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(retry).toBeInstanceOf(HttpException)
+    expect((retry as HttpException).getStatus()).toBe(409)
+    expect((retry as HttpException).getResponse()).toMatchObject({
+      message: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.APPROVAL_REJECTED(),
+    })
+    expect(await receiptState(receiptId)).toBe('Rejected')
+    expect((await invoicePaid(invoiceId)).paid).toBe(0n)
+    expect(await walletPosted()).toBe(beforeWallet)
+
+    const afterConfirm = await pendingApprovals(receiptId)
+    expect(afterConfirm).toHaveLength(1)
+    expect(afterConfirm[0]!.status).toBe('rejected')
+
+    const rejectedAudit = await ctx.pool.query<{ event: string }>(
+      `SELECT event FROM audit_log
+        WHERE event = $1 AND metadata::jsonb ->> 'receiptId' = $2`,
+      [INVOICE_BANK_RECEIPT_REJECTED_EVENT, receiptId],
+    )
+    expect(rejectedAudit.rows).toHaveLength(1)
+
+    const secondRetry = await service
+      .confirm({
+        receiptId,
+        actorUserId: SECOND_STAFF,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(secondRetry).toBeInstanceOf(HttpException)
+    expect((secondRetry as HttpException).getStatus()).toBe(409)
+    expect((secondRetry as HttpException).getResponse()).toMatchObject({
+      message: INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_REJECTED(),
+    })
+    expect(await pendingApprovals(receiptId)).toHaveLength(1)
   })
 })

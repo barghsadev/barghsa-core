@@ -5,12 +5,15 @@ import {
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REASON,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON,
   INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
   invoiceBankReceiptDualApprovalDetails,
+  invoiceBankReceiptReasonFromDualApprovalRejection,
   invoiceBankReceiptRequiresDualApproval,
   readInvoiceBankReceiptDualApprovalThreshold,
   receiptIdFromInvoiceBankReceiptDualApprovalDetails,
 } from './invoice-bank-receipt-dual-approval.js'
+import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from './wallet-bank-receipt-confirmation.js'
 
 const RECEIPT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
@@ -37,6 +40,28 @@ describe('invoice bank receipt dual-approval contract (T-04.3.01.05)', () => {
     )
     expect(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.CONFIG_CORRUPT()).toContain(
       'invalid',
+    )
+    expect(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.APPROVAL_REJECTED()).toContain(
+      'cannot restart',
+    )
+  })
+
+  it('maps DualApprovalService review reasons onto a receipt rejection reason', () => {
+    expect(invoiceBankReceiptReasonFromDualApprovalRejection(undefined)).toBe(
+      INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON,
+    )
+    expect(invoiceBankReceiptReasonFromDualApprovalRejection(null)).toBe(
+      INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON,
+    )
+    expect(invoiceBankReceiptReasonFromDualApprovalRejection('   ')).toBe(
+      INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON,
+    )
+    expect(invoiceBankReceiptReasonFromDualApprovalRejection('  Payer mismatch  ')).toBe(
+      'Payer mismatch',
+    )
+    const overlong = 'x'.repeat(BANK_RECEIPT_REJECT_REASON_MAX_LENGTH + 12)
+    expect(invoiceBankReceiptReasonFromDualApprovalRejection(overlong)).toHaveLength(
+      BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
     )
   })
 
