@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -9,10 +10,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { z } from 'zod'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance'
+import {
+  BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION,
+} from '@barghsa/shared/finance'
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
@@ -46,24 +50,26 @@ function assertUuid(id: string, label = 'receiptId'): void {
 }
 
 /**
- * Staff invoice bank-receipt confirmation API (T-04.3.01.03 / S-04.3.01).
+ * Staff invoice bank-receipt confirmation and rejection API
+ * (T-04.3.01.03 / T-04.3.01.04 / S-04.3.01).
  *
  * Finance staff list Submitted / UnderReview receipts, inspect the scan,
- * preview the invoice vs wallet split, and confirm. Confirm allocates
- * `min(receipt, remaining)` onto the invoice and credits only the excess
- * to the profile wallet via a distinct `WalletService.credit()`
- * idempotency key. Staff cannot over-settle `paid_amount`.
+ * preview the invoice vs wallet split, confirm, or reject with a
+ * customer-visible reason. Confirm allocates `min(receipt, remaining)`
+ * onto the invoice and credits only the excess to the profile wallet via
+ * a distinct `WalletService.credit()` idempotency key. Staff cannot
+ * over-settle `paid_amount`. Reject stores `rejection_reason`, never
+ * changes invoice or wallet balances, and notifies the customer.
  *
- * Rejection is T-04.3.01.04. Dual-approval for large amounts is
- * T-04.3.01.05.
+ * Dual-approval for large amounts is T-04.3.01.05.
  *
  * Security:
  * - Every route requires an authenticated session with the
  *   `admin:finance:invoices:bank-receipt-confirm` capability. Today the
  *   session model exposes only `req.session.isAdmin` (platform admin);
  *   granular staff-role permissions arrive with C-04.CC.03.
- * - Confirm requires recent step-up verification (`@RequiresStepUp()`)
- *   — payment confirmation is a financial action.
+ * - Confirm and reject require recent step-up verification
+ *   (`@RequiresStepUp()`) — payment confirmation is a financial action.
  */
 @ApiTags('Admin · Invoice bank receipts')
 @ApiBearerAuth()
@@ -157,6 +163,52 @@ export class InvoiceBankReceiptConfirmationController {
     const correlationId = this.correlationId.getCorrelationId()
     return this.service.confirm({
       receiptId,
+      actorUserId: req.session.userId,
+      ip: requestIp(req),
+      ...(correlationId ? { correlationId } : {}),
+    })
+  }
+
+  @Post(':receiptId/reject')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @ApiOperation({
+    summary: 'Reject an invoice bank receipt with a customer-visible reason',
+    description:
+      'Marks the receipt Rejected, stores the reason, and notifies the customer. Never changes invoice paid amount or wallet balance.',
+  })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['reason'],
+      properties: {
+        reason: {
+          type: 'string',
+          minLength: 1,
+          maxLength: BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+          description: 'Customer-visible rejection reason',
+          example: 'Payer name does not match the profile',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Receipt rejected; customer notified; balances unchanged.' })
+  @ApiResponse({ status: 400, description: 'Reason missing or invalid' })
+  @ApiResponse({ status: 403, description: 'Permission or step-up required' })
+  @ApiResponse({ status: 404, description: 'Receipt not found' })
+  @ApiResponse({ status: 409, description: 'Receipt is not awaiting review' })
+  async reject(
+    @Req() req: AuthenticatedRequest,
+    @Param('receiptId') receiptId: string,
+    @Body() body: Record<string, unknown>,
+  ): Promise<InvoiceBankReceiptConfirmDto> {
+    this.assertConfirmPermission(req)
+    assertUuid(receiptId)
+    const correlationId = this.correlationId.getCorrelationId()
+    return this.service.reject({
+      receiptId,
+      raw: body,
       actorUserId: req.session.userId,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),

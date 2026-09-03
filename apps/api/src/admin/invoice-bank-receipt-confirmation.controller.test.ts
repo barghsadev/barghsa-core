@@ -22,8 +22,10 @@ const DTO = {
   customerNote: 'Branch transfer',
   submittedAt: '2026-09-01T10:00:00.000Z',
   canConfirm: true,
+  canReject: true,
   confirmedBy: null,
   confirmedAt: null,
+  rejectionReason: null,
   invoiceState: 'Unpaid',
   remaining: '1000000',
   invoiceAllocation: '250000',
@@ -52,6 +54,14 @@ function makeController() {
     confirmedAt: '2026-09-03T08:00:00.000Z',
     auditId: 'audit-1',
   })
+  const reject = vi.fn().mockResolvedValue({
+    ...DTO,
+    state: 'Rejected',
+    canConfirm: false,
+    canReject: false,
+    rejectionReason: 'Illegible scan',
+    auditId: 'audit-2',
+  })
   const previewAllocation = vi.fn().mockResolvedValue({
     receiptId: RECEIPT_ID,
     invoiceId: INVOICE_ID,
@@ -62,7 +72,7 @@ function makeController() {
     walletCreditAmount: '150000',
     isOverpayment: true,
   })
-  const service = { listPending, get, confirm, previewAllocation }
+  const service = { listPending, get, confirm, reject, previewAllocation }
   const correlationId = { getCorrelationId: vi.fn().mockReturnValue('corr-1') }
   const controller = new InvoiceBankReceiptConfirmationController(
     service as never,
@@ -78,7 +88,7 @@ function rejectionBody(error: unknown): Record<string, unknown> {
   throw new Error(`expected HttpException, got ${String(error)}`)
 }
 
-describe('invoice bank-receipt confirmation permission gate (T-04.3.01.03)', () => {
+describe('invoice bank-receipt confirmation and rejection permission gate (T-04.3.01.03 / T-04.3.01.04)', () => {
   it('rejects non-admin on list with AUTHZ_FORBIDDEN', async () => {
     const { controller, service } = makeController()
     const rejection = await controller.list(nonAdminReq).catch((e: unknown) => e)
@@ -98,6 +108,15 @@ describe('invoice bank-receipt confirmation permission gate (T-04.3.01.03)', () 
     const rejection = await controller.confirm(nonAdminReq, RECEIPT_ID).catch((e: unknown) => e)
     expect(rejection).toMatchObject({ status: 403 })
     expect(service.confirm).not.toHaveBeenCalled()
+  })
+
+  it('rejects non-admin on reject with AUTHZ_FORBIDDEN', async () => {
+    const { controller, service } = makeController()
+    const rejection = await controller
+      .reject(nonAdminReq, RECEIPT_ID, { reason: 'Mismatch' })
+      .catch((e: unknown) => e)
+    expect(rejection).toMatchObject({ status: 403 })
+    expect(service.reject).not.toHaveBeenCalled()
   })
 
   it('rejects a non-UUID receipt id before calling the service', async () => {
@@ -122,6 +141,18 @@ describe('invoice bank-receipt confirmation permission gate (T-04.3.01.03)', () 
     await controller.confirm(adminReq, RECEIPT_ID)
     expect(service.confirm).toHaveBeenCalledWith({
       receiptId: RECEIPT_ID,
+      actorUserId: 'admin-1',
+      ip: '127.0.0.1',
+      correlationId: 'corr-1',
+    })
+  })
+
+  it('forwards the reject body, actor, ip, and correlation id', async () => {
+    const { controller, service } = makeController()
+    await controller.reject(adminReq, RECEIPT_ID, { reason: 'Illegible scan' })
+    expect(service.reject).toHaveBeenCalledWith({
+      receiptId: RECEIPT_ID,
+      raw: { reason: 'Illegible scan' },
       actorUserId: 'admin-1',
       ip: '127.0.0.1',
       correlationId: 'corr-1',

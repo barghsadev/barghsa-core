@@ -6,6 +6,9 @@ import {
   INVOICE_BANK_RECEIPT_CONFIRM_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
   INVOICE_BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
+  INVOICE_BANK_RECEIPT_REJECT_ERRORS,
+  INVOICE_BANK_RECEIPT_REJECTED_EVENT,
+  INVOICE_BANK_RECEIPT_REJECTED_NOTIFICATION_EVENT_KEY,
   invoiceBankReceiptOverpaymentCreditIdempotencyKey,
 } from '@barghsa/shared/finance'
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
@@ -91,12 +94,15 @@ function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
 type ScriptOptions = {
   locked?: ReturnType<typeof makeReceiptRow> | null
   confirmed?: ReturnType<typeof makeReceiptRow> | null
+  rejected?: ReturnType<typeof makeReceiptRow> | null
   listed?: ReturnType<typeof makeReceiptRow>[]
   getRow?: ReturnType<typeof makeReceiptRow> | null
   existingCredit?: Record<string, unknown> | null
   invoice?: ReturnType<typeof makeInvoiceRow> | null
   invoiceUpdated?: boolean
   wallet?: { profile_id: string } | null
+  profile?: { userId: string } | null
+  outboxInserted?: boolean
 }
 
 function script(opts: ScriptOptions = {}) {
@@ -118,7 +124,7 @@ function script(opts: ScriptOptions = {}) {
       if (opts.wallet === null) return { rows: [] }
       return { rows: [{ profile_id: PROFILE_ID }] }
     }
-    if (sql.includes('WHERE idempotency_key')) {
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
     }
     if (sql.includes("SET state = 'Confirmed'")) {
@@ -132,6 +138,31 @@ function script(opts: ScriptOptions = {}) {
             }),
         ],
       }
+    }
+    if (sql.includes("SET state = 'Rejected'")) {
+      return {
+        rows: [
+          opts.rejected ??
+            makeReceiptRow({
+              state: 'Rejected',
+              rejection_reason: 'Illegible scan',
+            }),
+        ],
+      }
+    }
+    if (sql.includes('FROM profiles WHERE id')) {
+      if (opts.profile === null) return { rows: [] }
+      return { rows: [{ user_id: opts.profile?.userId ?? 'customer-1' }] }
+    }
+    if (sql.includes('INSERT INTO notification_outbox')) {
+      if (opts.outboxInserted === false) return { rows: [] }
+      return { rows: [{ id: 'outbox-1' }] }
+    }
+    if (sql.includes('FROM notification_outbox WHERE idempotency_key')) {
+      return { rows: [{ id: 'outbox-1' }] }
+    }
+    if (sql.includes('INSERT INTO notification_job')) {
+      return { rows: [] }
     }
     if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
       if (opts.invoice === null) return { rows: [] }
@@ -155,7 +186,7 @@ function script(opts: ScriptOptions = {}) {
     if (sql.includes("state IN ('Submitted', 'UnderReview')")) {
       return { rows: opts.listed ?? [makeReceiptRow()] }
     }
-    if (sql.includes('WHERE idempotency_key')) {
+    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
     }
     if (sql.includes('FROM bank_receipts WHERE id')) {
@@ -170,7 +201,7 @@ function script(opts: ScriptOptions = {}) {
   })
 }
 
-describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03)', () => {
+describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', () => {
   let walletService: ReturnType<typeof makeWalletService>
   let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> }
   let service: InvoiceBankReceiptConfirmationService
@@ -433,5 +464,141 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03)', () => {
     expect((rejection as HttpException).getResponse()).toMatchObject({
       message: INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.CREDIT_NOTE(),
     })
+  })
+
+  it('rejects a Submitted receipt, stores the reason, and notifies the customer', async () => {
+    script()
+    const result = await service.reject({
+      receiptId: RECEIPT_ID,
+      raw: { reason: '  Illegible scan  ' },
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(result.state).toBe('Rejected')
+    expect(result.canReject).toBe(false)
+    expect(result.rejectionReason).toBe('Illegible scan')
+    const update = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes("SET state = 'Rejected'"),
+    )
+    expect(update?.[1]).toEqual([RECEIPT_ID, 'Illegible scan'])
+    const outbox = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO notification_outbox'),
+    )
+    expect(outbox?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_REJECTED_NOTIFICATION_EVENT_KEY)
+    expect(outbox?.[1]?.[1]).toBe('customer-1')
+    const audit = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_REJECTED_EVENT)
+  })
+
+  it('requires a customer-visible reject reason before locking', async () => {
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: '   ' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+      message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.BAD_REASON(),
+    })
+    expect(mockPool.connect).not.toHaveBeenCalled()
+    expect(walletService.credit).not.toHaveBeenCalled()
+  })
+
+  it('conflicts when rejecting an already confirmed receipt', async () => {
+    script({
+      locked: makeReceiptRow({
+        state: 'Confirmed',
+        confirmed_by: ACTOR_ID,
+        confirmed_at: NOW,
+      }),
+    })
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: 'Too late' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_CONFIRMED(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
+  })
+
+  it('returns the existing Rejected receipt when the reason matches', async () => {
+    script({
+      locked: makeReceiptRow({ state: 'Rejected', rejection_reason: 'Illegible scan' }),
+    })
+    const result = await service.reject({
+      receiptId: RECEIPT_ID,
+      raw: { reason: 'Illegible scan' },
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(result.state).toBe('Rejected')
+    expect(result.rejectionReason).toBe('Illegible scan')
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO notification_outbox'),
+      ),
+    ).toBe(false)
+  })
+
+  it('conflicts when re-rejecting with a different reason', async () => {
+    script({
+      locked: makeReceiptRow({ state: 'Rejected', rejection_reason: 'Illegible scan' }),
+    })
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: 'Wrong amount' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: INVOICE_BANK_RECEIPT_CONFIRM_ERRORS.ALREADY_REJECTED(),
+    })
+  })
+
+  it('conflicts when the profile owner cannot be notified', async () => {
+    script({ profile: null })
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: 'Illegible scan' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      message: INVOICE_BANK_RECEIPT_REJECT_ERRORS.OWNER_UNNOTIFIABLE(),
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
   })
 })

@@ -120,6 +120,24 @@ export const NOTIFICATION_TEMPLATE_SEED: SeedEventDefinition[] = [
     ],
   },
   {
+    eventKey: 'payment.bank_receipt_rejected',
+    faSubject: 'رد رسید بانکی',
+    enSubject: 'Bank receipt rejected',
+    faBody:
+      'رسید بانکی شما برای قبض رد شد.\n\nشماره قبض: {{invoice_id}}\nمبلغ (ریال): {{amount_irr}}\nدلیل: {{reason}}\n\nمی‌توانید رسید اصلاح‌شده را دوباره بارگذاری کنید.',
+    enBody:
+      'Your bank receipt for this invoice was rejected.\n\nInvoice: {{invoice_id}}\nAmount (IRR): {{amount_irr}}\nReason: {{reason}}\n\nYou can upload a corrected receipt.',
+    channels: ['email', 'in_app'],
+    variables: [
+      { name: 'receipt_id', description: 'شناسه رسید / Receipt id' },
+      { name: 'invoice_id', description: 'شناسه قبض / Invoice id' },
+      { name: 'amount_irr', description: 'مبلغ به ریال / Amount in IRR' },
+      { name: 'reason', description: 'دلیل رد / Rejection reason' },
+      { name: 'rejected_at', description: 'زمان رد / Rejection time' },
+      { name: 'link_route', description: 'مسیر جزئیات قبض / Invoice detail route' },
+    ],
+  },
+  {
     eventKey: 'payment.invoice_paid',
     faSubject: 'پرداخت قبض',
     enSubject: 'Invoice paid',
