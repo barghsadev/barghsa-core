@@ -30,6 +30,8 @@ import { DueAtOverrideController } from './due-at-override.controller.js'
 import { ReminderOffsetToggleController } from './reminder-offset-toggle.controller.js'
 import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
 import { BankReceiptConfirmationController } from './bank-receipt-confirmation.controller.js'
+import { InvoiceBankReceiptConfirmationController } from './invoice-bank-receipt-confirmation.controller.js'
+import { InvoiceBankReceiptConfirmationService } from '../invoice/invoice-bank-receipt-confirmation.service.js'
 import { ChargebackAlertController } from './chargeback-alert.controller.js'
 
 @Module({
@@ -48,9 +50,11 @@ import { ChargebackAlertController } from './chargeback-alert.controller.js'
     DueAtOverrideController,
     ReminderOffsetToggleController,
     BankReceiptConfirmationController,
+    InvoiceBankReceiptConfirmationController,
     ChargebackAlertController,
   ],
   providers: [
+    InvoiceBankReceiptConfirmationService,
     AdminService,
     BrandConfigService,
     DualApprovalService,

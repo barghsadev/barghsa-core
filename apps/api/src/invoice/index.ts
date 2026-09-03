@@ -2,6 +2,12 @@ export { InvoiceModule } from './invoice.module.js'
 export { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 export { CustomerInvoiceController } from './customer-invoice.controller.js'
 export { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
+export { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
+export type {
+  InvoiceBankReceiptConfirmDto,
+  InvoiceBankReceiptAllocationPreviewDto,
+  ConfirmInvoiceBankReceiptInput,
+} from './invoice-bank-receipt-confirmation.service.js'
 export type {
   CustomerInvoiceDetailsDto,
   CustomerInvoiceListDto,
