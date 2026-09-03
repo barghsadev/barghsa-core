@@ -254,3 +254,37 @@ export function readBankReceiptOverpaymentSnapshot(
         : null,
   }
 }
+
+/**
+ * Customer-notice fields for a verified excess credit. Null when the
+ * receipt did not produce a wallet credit (exact remaining or underpay).
+ * `amount` on the completed notice must be this excess — never the
+ * full receipt face value, which would overstate the wallet credit.
+ */
+export interface BankReceiptOverpaymentCompletedNoticeFields {
+  invoice_id: string
+  invoice_allocation: string
+  remaining_before: string
+  wallet_credit_amount: string
+  is_overpayment: true
+}
+
+export function bankReceiptOverpaymentCompletedNoticeFields(
+  overpayment: BankReceiptOverpaymentSnapshot | null | undefined,
+): BankReceiptOverpaymentCompletedNoticeFields | null {
+  if (!overpayment) return null
+  let excess: bigint
+  try {
+    excess = BigInt(overpayment.walletCreditAmount)
+  } catch {
+    return null
+  }
+  if (excess <= 0n) return null
+  return {
+    invoice_id: overpayment.invoiceId,
+    invoice_allocation: overpayment.invoiceAllocation,
+    remaining_before: overpayment.remainingBefore,
+    wallet_credit_amount: overpayment.walletCreditAmount,
+    is_overpayment: true,
+  }
+}

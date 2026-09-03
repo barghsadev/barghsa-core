@@ -5,6 +5,7 @@ import {
   allocateReceiptAgainstInvoice,
   bankReceiptOverpaymentCreditIdempotencyKey,
   bankReceiptOverpaymentCreditMetadata,
+  bankReceiptOverpaymentCompletedNoticeFields,
   bankReceiptOverpaymentSnapshot,
   invoiceRemainingAmount,
   invoiceStateAfterBankReceiptAllocation,
@@ -228,6 +229,39 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
       invoiceId: INVOICE_ID,
       invoiceAllocation: '400000',
       walletCreditAmount: '800000',
+    })
+  })
+
+  describe('bankReceiptOverpaymentCompletedNoticeFields', () => {
+    it('returns the excess split for the customer completed notice', () => {
+      expect(
+        bankReceiptOverpaymentCompletedNoticeFields({
+          invoiceId: INVOICE_ID,
+          remainingBefore: '400000',
+          invoiceAllocation: '400000',
+          walletCreditAmount: '800000',
+          overpaymentCreditTransactionId: 'credit-overpay',
+        }),
+      ).toEqual({
+        invoice_id: INVOICE_ID,
+        invoice_allocation: '400000',
+        remaining_before: '400000',
+        wallet_credit_amount: '800000',
+        is_overpayment: true,
+      })
+    })
+
+    it('is null when there is no excess wallet credit', () => {
+      expect(bankReceiptOverpaymentCompletedNoticeFields(null)).toBeNull()
+      expect(
+        bankReceiptOverpaymentCompletedNoticeFields({
+          invoiceId: INVOICE_ID,
+          remainingBefore: '500000',
+          invoiceAllocation: '500000',
+          walletCreditAmount: '0',
+          overpaymentCreditTransactionId: null,
+        }),
+      ).toBeNull()
     })
   })
 })

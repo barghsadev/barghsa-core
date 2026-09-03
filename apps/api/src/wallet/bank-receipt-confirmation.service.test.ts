@@ -476,6 +476,22 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       String(sql).includes('INSERT INTO audit_log'),
     )
     expect(audit?.[1]?.[3]).toContain('"walletCreditAmount":"800000"')
+    expect(result.notificationOutboxId).toBe('outbox-1')
+    const outbox = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO notification_outbox'),
+    )
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY)
+    expect(outbox?.[1]?.[3]).toMatchObject({
+      amount: '800000',
+      transactionId: CREDIT_ID,
+      pending_transaction_id: TX_ID,
+      invoice_id: INVOICE_ID,
+      invoice_allocation: '400000',
+      remaining_before: '400000',
+      wallet_credit_amount: '800000',
+      is_overpayment: true,
+    })
+    expect(outbox?.[1]?.[3]).not.toMatchObject({ amount: OVERPAY_RECEIPT.toString() })
   })
 
   it('does not credit the wallet when the receipt equals invoice remaining', async () => {
@@ -496,6 +512,12 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       walletCreditAmount: '0',
       overpaymentCreditTransactionId: null,
     })
+    expect(result.notificationOutboxId).toBeUndefined()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO notification_outbox'),
+      ),
+    ).toBe(false)
     expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
       INVOICE_ID,
       'PaymentUnderReview',
@@ -587,6 +609,17 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       false,
     )
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    const paidOutbox = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO notification_outbox'),
+    )
+    expect(paidOutbox?.[1]?.[3]).toMatchObject({
+      amount: AMOUNT.toString(),
+      invoice_id: INVOICE_ID,
+      invoice_allocation: '0',
+      remaining_before: '0',
+      wallet_credit_amount: AMOUNT.toString(),
+      is_overpayment: true,
+    })
   })
 
   it('rejects an invoice that belongs to a different profile', async () => {
