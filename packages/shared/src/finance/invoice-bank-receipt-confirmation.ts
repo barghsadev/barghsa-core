@@ -9,7 +9,9 @@
  * customer-visible reason, never changes invoice or wallet balances, and
  * enqueues a customer notification.
  *
- * Dual-approval (T-04.3.01.05) is a later task.
+ * Dual-approval (T-04.3.01.05): amounts at or above the admin-configured
+ * threshold require a second, different finance staff confirmation before
+ * the receipt can settle.
  *
  * @module finance
  */

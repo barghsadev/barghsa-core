@@ -22,17 +22,27 @@ import {
   allocateReceiptAgainstInvoice,
   bankReceiptOverpaymentSnapshot,
   buildInvoiceBankReceiptRejectedNotificationPayload,
+  DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REASON,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
+  invoiceBankReceiptDualApprovalDetails,
   invoiceBankReceiptOverpaymentCreditIdempotencyKey,
   invoiceBankReceiptOverpaymentCreditMetadata,
   invoiceBankReceiptRejectedNotificationIdempotencyKey,
+  invoiceBankReceiptRequiresDualApproval,
   invoiceStateAfterBankReceiptAllocation,
   isBankReceiptInvoiceLinkAllowedState,
   isInvoiceBankReceiptConfirmableState,
   isInvoiceBankReceiptRejectableState,
   parseInvoiceBankReceiptRejectReason,
+  readInvoiceBankReceiptDualApprovalThreshold,
   readInvoiceBankReceiptOverpaymentFromCreditMetadata,
+  receiptIdFromInvoiceBankReceiptDualApprovalDetails,
   remainingForBankReceiptSettlement,
   type BankReceiptOverpaymentSnapshot,
+  type InvoiceBankReceiptDualApprovalThresholdRead,
 } from '@barghsa/shared/finance'
 import type { StorageProvider } from '@barghsa/shared/storage'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
@@ -107,6 +117,11 @@ export interface InvoiceBankReceiptConfirmDto {
   invoiceAllocation: string | null
   walletCreditAmount: string | null
   overpayment: BankReceiptOverpaymentSnapshot | null
+  requiresDualApproval: boolean
+  dualApprovalPending: boolean
+  dualApprovalRequestId: string | null
+  dualApprovalInitiatedBy: string | null
+  dualApprovalThresholdIrR: string | null
   auditId?: string
   notificationOutboxId?: string
 }
@@ -157,11 +172,20 @@ const CUSTOMER_NOTIFICATION_MAX_ATTEMPTS = 5
  *      have remaining 0, so the whole receipt is wallet excess.
  *   4. Excess is credited via a separate `WalletService.credit()` with
  *      `invoiceBankReceiptOverpaymentCreditIdempotencyKey`.
- *   5. Mark the receipt Confirmed (`confirmed_by` / `confirmedAt`) and
+ *   5. Dual-approval (T-04.3.01.05): if the receipt amount is ≥ the
+ *      admin-configured `finance.dual_approval_threshold` (and the
+ *      threshold is enabled), the first finance staff confirmation
+ *      parks the receipt in UnderReview and inserts a pending
+ *      `bank_payment_confirmation` approval request. A second, different
+ *      finance staff member must confirm before steps 3–4 and 6 run.
+ *      Missing / zero threshold disables the gate. A corrupt stored
+ *      threshold fails closed.
+ *   6. Mark the receipt Confirmed (`confirmed_by` / `confirmedAt`) and
  *      append an audit row.
  *   Allocation, state transition, wallet credit, receipt confirm, and
  *   audit commit or roll back together. Re-confirm of an already
- *   Confirmed receipt is idempotent.
+ *   Confirmed receipt is idempotent. Same-staff retry of a parked
+ *   dual-approval confirm is idempotent and does not settle.
  *
  * Reject (T-04.3.01.04, one DB transaction, same advisory lock as confirm):
  *   1. Parse a customer-visible reason before locking.
@@ -199,8 +223,18 @@ export class InvoiceBankReceiptConfirmationService {
         ORDER BY created_at ASC`,
     )
     const items: InvoiceBankReceiptConfirmDto[] = []
+    const dualByReceipt = await this.loadPendingDualApprovalsByReceiptIds(
+      pool,
+      result.rows.map((row) => (row as BankReceiptRow).id),
+    )
+    const thresholdRead = await this.loadDualApprovalThreshold(pool)
     for (const row of result.rows as BankReceiptRow[]) {
-      items.push(await this.toDto(row))
+      const pending = dualByReceipt.get(row.id)
+      items.push(
+        await this.toDto(row, {
+          ...dualApprovalExtrasFromRead(thresholdRead, BigInt(row.amount), pending),
+        }),
+      )
     }
     return items
   }
@@ -220,7 +254,8 @@ export class InvoiceBankReceiptConfirmationService {
       )
     }
     const extra = await this.loadCurrentAllocation(pool, row)
-    return this.toDto(row, extra)
+    const dual = await this.loadDualApprovalDtoExtras(pool, row)
+    return this.toDto(row, { ...extra, ...dual })
   }
 
   async previewAllocation(receiptId: string): Promise<InvoiceBankReceiptAllocationPreviewDto> {
@@ -307,6 +342,54 @@ export class InvoiceBankReceiptConfirmationService {
           )
         }
 
+        const thresholdRead = await this.loadDualApprovalThreshold(client)
+        if (thresholdRead.status === 'corrupt') {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.CONFIG_CORRUPT(),
+            409,
+          )
+        }
+
+        const latestRequest = await this.lockLatestDualApprovalRequest(client, receipt.id)
+        const requiresDual = invoiceBankReceiptRequiresDualApproval(
+          thresholdRead,
+          receipt.amount,
+        )
+
+        if (latestRequest?.status === 'pending') {
+          if (latestRequest.initiatorId === input.actorUserId) {
+            const parked = await this.ensureUnderReview(client, receipt.id)
+            await client.query('COMMIT')
+            return this.toDto(parked ?? { ...receipt, state: 'UnderReview' }, {
+              ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
+            })
+          }
+          await this.markDualApprovalApproved(
+            client,
+            latestRequest.id,
+            input.actorUserId,
+            now,
+          )
+        } else if (latestRequest?.status !== 'approved' && requiresDual) {
+          const parked = await this.parkForDualApproval(client, {
+            receipt,
+            actorUserId: input.actorUserId,
+            ip: input.ip,
+            ...(input.correlationId !== undefined
+              ? { correlationId: input.correlationId }
+              : {}),
+            now,
+            thresholdRead,
+          })
+          await client.query('COMMIT')
+          this.logger.log(
+            `Invoice bank receipt ${receipt.id} parked for dual approval by ${input.actorUserId}`,
+          )
+          return parked
+        }
+
         await this.ensureAndLockWallet(client, receipt.profileId)
         const invoice = await this.lockInvoice(client, receipt.invoiceId)
         if (invoice.profile_id !== receipt.profileId) {
@@ -381,6 +464,16 @@ export class InvoiceBankReceiptConfirmationService {
           input.actorUserId,
           now,
         )
+        const dualSettled = dualApprovalExtrasFromRead(
+          thresholdRead,
+          receipt.amount,
+          latestRequest
+            ? {
+                ...latestRequest,
+                status: latestRequest.status === 'pending' ? 'approved' : latestRequest.status,
+              }
+            : null,
+        )
         const auditId = await this.recordAudit(client, {
           event: INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
           actorUserId: input.actorUserId,
@@ -397,6 +490,11 @@ export class InvoiceBankReceiptConfirmationService {
             walletCreditAmount: overpayment.walletCreditAmount,
             remainingBefore: overpayment.remainingBefore,
             overpaymentCreditTransactionId: overpayment.overpaymentCreditTransactionId,
+            dualApprovalRequestId: dualSettled.dualApprovalRequestId,
+            dualApprovalInitiatedBy: dualSettled.dualApprovalInitiatedBy,
+            secondConfirmedBy: dualSettled.dualApprovalInitiatedBy
+              ? input.actorUserId
+              : null,
           },
           occurredAt: now,
         })
@@ -411,6 +509,8 @@ export class InvoiceBankReceiptConfirmationService {
           auditId,
           invoiceState: destination,
           remaining: remainingAfter(remaining, allocation.invoiceAllocation),
+          ...dualSettled,
+          dualApprovalPending: false,
         })
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined)
@@ -481,6 +581,12 @@ export class InvoiceBankReceiptConfirmationService {
         }
 
         const updated = await this.markRejected(client, receipt.id, parsed.reason)
+        await this.markPendingDualApprovalRejected(client, {
+          receiptId: receipt.id,
+          reviewerUserId: input.actorUserId,
+          reason: parsed.reason,
+          now,
+        })
         const notify = await this.enqueueCustomerRejectionNotice(client, {
           receiptId: receipt.id,
           invoiceId: receipt.invoiceId,
@@ -533,6 +639,215 @@ export class InvoiceBankReceiptConfirmationService {
     } finally {
       client.release()
     }
+  }
+
+  private async parkForDualApproval(
+    client: WalletQueryClient,
+    input: {
+      receipt: BankReceiptRow & { invoiceId: string; profileId: string; amount: bigint }
+      actorUserId: string
+      ip: string
+      correlationId?: string
+      now: Date
+      thresholdRead: InvoiceBankReceiptDualApprovalThresholdRead
+    },
+  ): Promise<InvoiceBankReceiptConfirmDto> {
+    const requestId = uuidv7()
+    const details = invoiceBankReceiptDualApprovalDetails({
+      receiptId: input.receipt.id,
+      invoiceId: input.receipt.invoiceId,
+      profileId: input.receipt.profileId,
+    })
+    await client.query(
+      `INSERT INTO approval_requests
+         (id, action_type, amount_irr, initiator_id, reason, details, status, created_at, updated_at)
+       VALUES ($1, $2, $3::bigint, $4, $5, $6::jsonb, 'pending', $7, $7)`,
+      [
+        requestId,
+        INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        input.receipt.amount.toString(),
+        input.actorUserId,
+        INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REASON,
+        JSON.stringify(details),
+        input.now,
+      ],
+    )
+    const parked = await this.ensureUnderReview(client, input.receipt.id)
+    await this.recordAudit(client, {
+      event: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
+      actorUserId: input.actorUserId,
+      ip: input.ip,
+      correlationId: input.correlationId,
+      metadata: {
+        receiptId: input.receipt.id,
+        invoiceId: input.receipt.invoiceId,
+        profileId: input.receipt.profileId,
+        amount: input.receipt.amount.toString(),
+        previousState: input.receipt.state,
+        newState: 'UnderReview',
+        dualApprovalRequestId: requestId,
+        dualApprovalInitiatedBy: input.actorUserId,
+        dualApprovalThresholdIrR: thresholdIrRLabel(input.thresholdRead),
+      },
+      occurredAt: input.now,
+    })
+    const pending: DualApprovalRequestSummary = {
+      id: requestId,
+      initiatorId: input.actorUserId,
+      status: 'pending',
+    }
+    return this.toDto(parked ?? { ...input.receipt, state: 'UnderReview' }, {
+      ...dualApprovalExtrasFromRead(input.thresholdRead, input.receipt.amount, pending),
+    })
+  }
+
+  private async ensureUnderReview(
+    client: WalletQueryClient,
+    receiptId: string,
+  ): Promise<BankReceiptRow | null> {
+    const result = await client.query(
+      `UPDATE bank_receipts
+          SET state = 'UnderReview'
+        WHERE id = $1
+          AND state IN ('Submitted', 'UnderReview')
+        RETURNING ${RECEIPT_SELECT}`,
+      [receiptId],
+    )
+    return (result.rows as BankReceiptRow[])[0] ?? null
+  }
+
+  private async loadDualApprovalThreshold(
+    queryable: WalletQueryClient,
+  ): Promise<InvoiceBankReceiptDualApprovalThresholdRead> {
+    const result = await queryable.query(
+      `SELECT value FROM app_config WHERE key = $1`,
+      [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY],
+    )
+    const raw = result.rows[0] as { value?: unknown } | undefined
+    return readInvoiceBankReceiptDualApprovalThreshold(
+      raw === undefined ? undefined : raw.value,
+    )
+  }
+
+  private async lockLatestDualApprovalRequest(
+    client: WalletQueryClient,
+    receiptId: string,
+  ): Promise<DualApprovalRequestSummary | null> {
+    const result = await client.query(
+      `SELECT id, initiator_id, status
+         FROM approval_requests
+        WHERE action_type = $1
+          AND details->>'receiptId' = $2
+        ORDER BY created_at DESC
+        LIMIT 1
+        FOR UPDATE`,
+      [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE, receiptId],
+    )
+    return toDualApprovalSummary(result.rows[0])
+  }
+
+  private async markDualApprovalApproved(
+    client: WalletQueryClient,
+    requestId: string,
+    reviewerUserId: string,
+    now: Date,
+  ): Promise<void> {
+    await client.query(
+      `UPDATE approval_requests
+          SET status = 'approved',
+              reviewer_id = $2,
+              reviewed_at = $3,
+              updated_at = $3
+        WHERE id = $1
+          AND status = 'pending'`,
+      [requestId, reviewerUserId, now],
+    )
+  }
+
+  private async markPendingDualApprovalRejected(
+    client: WalletQueryClient,
+    input: {
+      receiptId: string
+      reviewerUserId: string
+      reason: string
+      now: Date
+    },
+  ): Promise<void> {
+    await client.query(
+      `UPDATE approval_requests
+          SET status = 'rejected',
+              reviewer_id = $2,
+              review_reason = $3,
+              reviewed_at = $4,
+              updated_at = $4
+        WHERE action_type = $1
+          AND status = 'pending'
+          AND details->>'receiptId' = $5`,
+      [
+        INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        input.reviewerUserId,
+        input.reason,
+        input.now,
+        input.receiptId,
+      ],
+    )
+  }
+
+  private async loadPendingDualApprovalsByReceiptIds(
+    queryable: WalletQueryClient,
+    receiptIds: string[],
+  ): Promise<Map<string, DualApprovalRequestSummary>> {
+    const pending = new Map<string, DualApprovalRequestSummary>()
+    if (receiptIds.length === 0) return pending
+    const result = await queryable.query(
+      `SELECT id, initiator_id, status, details
+         FROM approval_requests
+        WHERE action_type = $1
+          AND status = 'pending'
+          AND details->>'receiptId' = ANY($2::text[])`,
+      [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE, receiptIds],
+    )
+    for (const row of result.rows as Array<{
+      id: string
+      initiator_id: string
+      status: string
+      details: unknown
+    }>) {
+      const receiptId = receiptIdFromInvoiceBankReceiptDualApprovalDetails(row.details)
+      if (!receiptId) continue
+      pending.set(receiptId, {
+        id: row.id,
+        initiatorId: row.initiator_id,
+        status: row.status,
+      })
+    }
+    return pending
+  }
+
+  private async loadDualApprovalDtoExtras(
+    queryable: WalletQueryClient,
+    row: BankReceiptRow,
+  ): Promise<DualApprovalDtoExtras> {
+    const thresholdRead = await this.loadDualApprovalThreshold(queryable)
+    const latest = await this.loadLatestDualApprovalRequest(queryable, row.id)
+    const pending = latest?.status === 'pending' ? latest : null
+    return dualApprovalExtrasFromRead(thresholdRead, BigInt(row.amount), pending)
+  }
+
+  private async loadLatestDualApprovalRequest(
+    queryable: WalletQueryClient,
+    receiptId: string,
+  ): Promise<DualApprovalRequestSummary | null> {
+    const result = await queryable.query(
+      `SELECT id, initiator_id, status
+         FROM approval_requests
+        WHERE action_type = $1
+          AND details->>'receiptId' = $2
+        ORDER BY created_at DESC
+        LIMIT 1`,
+      [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE, receiptId],
+    )
+    return toDualApprovalSummary(result.rows[0])
   }
 
   private async lockReceipt(
@@ -1006,6 +1321,11 @@ export class InvoiceBankReceiptConfirmationService {
       invoiceState?: string | null
       remaining?: string | null
       notificationOutboxId?: string
+      requiresDualApproval?: boolean
+      dualApprovalPending?: boolean
+      dualApprovalRequestId?: string | null
+      dualApprovalInitiatedBy?: string | null
+      dualApprovalThresholdIrR?: string | null
     } = {},
   ): Promise<InvoiceBankReceiptConfirmDto> {
     const overpayment = extra.overpayment ?? null
@@ -1032,6 +1352,11 @@ export class InvoiceBankReceiptConfirmationService {
       invoiceAllocation: overpayment?.invoiceAllocation ?? null,
       walletCreditAmount: overpayment?.walletCreditAmount ?? null,
       overpayment,
+      requiresDualApproval: extra.requiresDualApproval ?? false,
+      dualApprovalPending: extra.dualApprovalPending ?? false,
+      dualApprovalRequestId: extra.dualApprovalRequestId ?? null,
+      dualApprovalInitiatedBy: extra.dualApprovalInitiatedBy ?? null,
+      dualApprovalThresholdIrR: extra.dualApprovalThresholdIrR ?? null,
       ...(extra.auditId ? { auditId: extra.auditId } : {}),
       ...(extra.notificationOutboxId
         ? { notificationOutboxId: extra.notificationOutboxId }
@@ -1075,6 +1400,58 @@ function invoiceStateAfterConfirm(
 function remainingAfter(remainingBefore: bigint, invoiceAllocation: bigint): string {
   const left = remainingBefore - invoiceAllocation
   return (left > 0n ? left : 0n).toString()
+}
+
+interface DualApprovalRequestSummary {
+  id: string
+  initiatorId: string
+  status: string
+}
+
+interface DualApprovalDtoExtras {
+  requiresDualApproval: boolean
+  dualApprovalPending: boolean
+  dualApprovalRequestId: string | null
+  dualApprovalInitiatedBy: string | null
+  dualApprovalThresholdIrR: string | null
+}
+
+function dualApprovalExtrasFromRead(
+  read: InvoiceBankReceiptDualApprovalThresholdRead,
+  amountIrR: bigint,
+  pending: DualApprovalRequestSummary | null | undefined,
+): DualApprovalDtoExtras {
+  const isPending = pending != null && pending.status === 'pending'
+  const requires =
+    isPending ||
+    read.status === 'corrupt' ||
+    invoiceBankReceiptRequiresDualApproval(read, amountIrR)
+  return {
+    requiresDualApproval: requires,
+    dualApprovalPending: isPending,
+    dualApprovalRequestId: pending?.id ?? null,
+    dualApprovalInitiatedBy: pending?.initiatorId ?? null,
+    dualApprovalThresholdIrR: thresholdIrRLabel(read),
+  }
+}
+
+function thresholdIrRLabel(read: InvoiceBankReceiptDualApprovalThresholdRead): string | null {
+  if (read.status === 'enabled') return String(read.thresholdIrR)
+  if (read.status === 'disabled') return '0'
+  return null
+}
+
+function toDualApprovalSummary(row: unknown): DualApprovalRequestSummary | null {
+  if (!row || typeof row !== 'object') return null
+  const record = row as { id?: unknown; initiator_id?: unknown; status?: unknown }
+  if (typeof record.id !== 'string' || typeof record.initiator_id !== 'string') {
+    return null
+  }
+  return {
+    id: record.id,
+    initiatorId: record.initiator_id,
+    status: typeof record.status === 'string' ? record.status : 'pending',
+  }
 }
 
 function toIso(value: Date | string): string {

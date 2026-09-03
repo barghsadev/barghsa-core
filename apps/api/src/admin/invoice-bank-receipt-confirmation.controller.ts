@@ -61,7 +61,9 @@ function assertUuid(id: string, label = 'receiptId'): void {
  * over-settle `paid_amount`. Reject stores `rejection_reason`, never
  * changes invoice or wallet balances, and notifies the customer.
  *
- * Dual-approval for large amounts is T-04.3.01.05.
+ * Dual-approval for amounts at or above the admin-configured threshold
+ * (T-04.3.01.05) parks the first confirmation until a second, different
+ * finance staff member confirms.
  *
  * Security:
  * - Every route requires an authenticated session with the
@@ -144,12 +146,13 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiOperation({
     summary: 'Confirm an invoice bank receipt',
     description:
-      'Settles min(receipt, remaining) on the linked invoice and credits only the excess to the profile wallet with a distinct idempotency key. Marks the receipt Confirmed.',
+      'If the receipt amount is below the dual-approval threshold (or dual approval is disabled), settles min(receipt, remaining) on the linked invoice and credits only the excess to the profile wallet. Amounts at or above the admin-configured threshold park the receipt until a second, different finance staff member confirms.',
   })
   @ApiParam({ name: 'receiptId', format: 'uuid' })
   @ApiResponse({
     status: 200,
-    description: 'Receipt confirmed; invoice allocated and/or wallet credited.',
+    description:
+      'Receipt confirmed, or parked in UnderReview awaiting a second finance staff confirmation.',
   })
   @ApiResponse({ status: 403, description: 'Permission or step-up required' })
   @ApiResponse({ status: 404, description: 'Receipt not found' })
