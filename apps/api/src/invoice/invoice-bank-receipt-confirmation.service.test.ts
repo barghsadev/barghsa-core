@@ -17,6 +17,7 @@ import {
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import type { WalletService } from '../wallet/wallet.service.js'
 import type { InvoiceStateMachineService } from './invoice-state-machine.service.js'
+import { APPROVAL_REQUEST_APPROVED_EVENT } from '../admin/dual-approval-resolution.js'
 
 const mockPool = {
   query: vi.fn(),
@@ -113,6 +114,8 @@ type ScriptOptions = {
     status: string
     review_reason?: string | null
     reviewer_id?: string | null
+    action_type?: string
+    amount_irr?: string
   } | null
   underReview?: ReturnType<typeof makeReceiptRow> | null
 }
@@ -766,7 +769,13 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
       locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
       invoice: makeInvoiceRow({ paid_amount: '0', total_amount: '1000000' }),
       threshold: { threshold_irr: THRESHOLD },
-      pendingApproval: { id: REQUEST_ID, initiator_id: ACTOR_ID, status: 'pending' },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
       confirmed: makeReceiptRow({
         amount: String(THRESHOLD),
         state: 'Confirmed',
@@ -787,13 +796,19 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     expect(result.confirmedBy).toBe(SECOND_ACTOR)
     expect(
       mockClient.query.mock.calls.some(([sql]) =>
-        String(sql).includes("SET status = 'approved'"),
+        String(sql).includes('UPDATE approval_requests'),
       ),
     ).toBe(true)
-    const audit = mockClient.query.mock.calls.find(([sql]) =>
+    const audits = mockClient.query.mock.calls.filter(([sql]) =>
       String(sql).includes('INSERT INTO audit_log'),
     )
-    expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_CONFIRMED_EVENT)
+    expect(audits.map((call) => call[1]?.[2])).toEqual([
+      APPROVAL_REQUEST_APPROVED_EVENT,
+      INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
+    ])
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"requestId":"${REQUEST_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"initiatorUserId":"${ACTOR_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"reviewerUserId":"${SECOND_ACTOR}"`)
   })
 
   it('fails closed when the stored dual-approval threshold is corrupt', async () => {

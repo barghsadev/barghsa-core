@@ -16,6 +16,7 @@ import {
 } from '@barghsa/shared/finance'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { NotificationsService } from '../notifications/notifications.service.js'
+import { applyApprovalRequestResolutionOnClient } from './dual-approval-resolution.js'
 
 /**
  * The financial actions covered by the dual-approval workflow, exposed for
@@ -67,7 +68,11 @@ const MAX_LIST_LIMIT = 200
  * - {@link approveApprovalRequest}/{@link rejectApprovalRequest} — resolution
  *   by a second authorized user. A request can only be resolved by a user
  *   different from its initiator, only while `pending`, and a rejection
- *   always requires a reason.
+ *   always requires a reason. The status change and canonical
+ *   `approval_request_approved` / `approval_request_rejected` audit row are
+ *   written by {@link applyApprovalRequestResolutionOnClient} so other
+ *   transactional callers (invoice bank-receipt confirmation) share the
+ *   same invariants and audit event.
  *
  * Every transition writes an `audit_log` row (approval_request_created /
  * approval_request_approved / approval_request_rejected) in the same
@@ -335,61 +340,18 @@ export class DualApprovalService {
         )
       }
 
-      if (row.status !== 'pending') {
-        await client.query('ROLLBACK')
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: `Approval request is already ${row.status}`,
-          },
-          409,
-        )
-      }
-
-      if (row.initiator_id === reviewerUserId) {
-        await client.query('ROLLBACK')
-        throw new HttpException(
-          {
-            statusCode: 403,
-            error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-            message: 'A user cannot approve or reject their own approval request',
-          },
-          403,
-        )
-      }
-
-      const newStatus = decision === 'approve' ? 'approved' : 'rejected'
-      await client.query(
-        `UPDATE approval_requests
-         SET status = $1, reviewer_id = $2, review_reason = $3, reviewed_at = $4, updated_at = $4
-         WHERE id = $5`,
-        [newStatus, reviewerUserId, reviewReason, now, requestId],
-      )
-
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          uuidv7(),
-          reviewerUserId,
-          decision === 'approve' ? 'approval_request_approved' : 'approval_request_rejected',
-          JSON.stringify({
-            requestId,
-            actionType: row.action_type,
-            // BIGINT arrives as a string from pg; normalize to a number so
-            // both approval_request_created and the *_approved/_rejected
-            // events emit type-consistent audit metadata.
-            amountIrR: Number(row.amount_irr),
-            initiatorUserId: row.initiator_id,
-            reviewerUserId,
-            ...(reviewReason !== null ? { reviewReason } : {}),
-          }),
-          uuidv7(),
-          ip,
-          now,
-        ],
-      )
+      await applyApprovalRequestResolutionOnClient(client, {
+        requestId,
+        reviewerUserId,
+        ip,
+        decision,
+        reviewReason,
+        now,
+        initiatorId: row.initiator_id,
+        status: row.status,
+        actionType: row.action_type,
+        amountIrR: row.amount_irr,
+      })
 
       await client.query('COMMIT')
 
@@ -411,8 +373,12 @@ export class DualApprovalService {
 
       return dto
     } catch (error) {
+      try {
+        await client.query('ROLLBACK')
+      } catch {
+        // Already rolled back, or the test client is not a thenable.
+      }
       if (error instanceof HttpException) throw error
-      await client.query('ROLLBACK').catch(() => {})
       this.logger.error(`Failed to resolve approval request: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code, message: 'Failed to resolve approval request' },

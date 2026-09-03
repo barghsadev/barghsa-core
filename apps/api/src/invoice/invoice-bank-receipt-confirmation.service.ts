@@ -47,6 +47,7 @@ import {
 } from '@barghsa/shared/finance'
 import type { StorageProvider } from '@barghsa/shared/storage'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
+import { applyApprovalRequestResolutionOnClient } from '../admin/dual-approval-resolution.js'
 import { InvoiceAuditRepository } from './invoice-audit.repository.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
 import {
@@ -179,6 +180,10 @@ const CUSTOMER_NOTIFICATION_MAX_ATTEMPTS = 5
  *      parks the receipt in UnderReview and inserts a pending
  *      `bank_payment_confirmation` approval request. A second, different
  *      finance staff member must confirm before steps 3–4 and 6 run.
+ *      The second confirmation resolves the pending approval request
+ *      through applyApprovalRequestResolutionOnClient so the canonical
+ *      approval_request_approved audit row is written in the same
+ *      transaction as settlement.
  *      Missing / zero threshold disables the gate. A corrupt stored
  *      threshold fails closed.
  *   6. Mark the receipt Confirmed (`confirmed_by` / `confirmedAt`) and
@@ -367,12 +372,22 @@ export class InvoiceBankReceiptConfirmationService {
               ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
             })
           }
-          await this.markDualApprovalApproved(
-            client,
-            latestRequest.id,
-            input.actorUserId,
+          await applyApprovalRequestResolutionOnClient(client, {
+            requestId: latestRequest.id,
+            reviewerUserId: input.actorUserId,
+            ip: input.ip,
+            decision: 'approve',
+            reviewReason: null,
             now,
-          )
+            initiatorId: latestRequest.initiatorId,
+            status: latestRequest.status,
+            actionType:
+              latestRequest.actionType ?? INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+            amountIrR: latestRequest.amountIrR ?? receipt.amount,
+            ...(input.correlationId !== undefined
+              ? { correlationId: input.correlationId }
+              : {}),
+          })
         } else if (latestRequest?.status === 'rejected') {
           await this.synchronizeReceiptWithRejectedDualApproval(client, {
             receipt,
@@ -755,7 +770,7 @@ export class InvoiceBankReceiptConfirmationService {
     receiptId: string,
   ): Promise<DualApprovalRequestSummary | null> {
     const result = await client.query(
-      `SELECT id, initiator_id, status, review_reason, reviewer_id
+      `SELECT id, initiator_id, status, review_reason, reviewer_id, action_type, amount_irr
          FROM approval_requests
         WHERE action_type = $1
           AND details->>'receiptId' = $2
@@ -765,24 +780,6 @@ export class InvoiceBankReceiptConfirmationService {
       [INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE, receiptId],
     )
     return toDualApprovalSummary(result.rows[0])
-  }
-
-  private async markDualApprovalApproved(
-    client: WalletQueryClient,
-    requestId: string,
-    reviewerUserId: string,
-    now: Date,
-  ): Promise<void> {
-    await client.query(
-      `UPDATE approval_requests
-          SET status = 'approved',
-              reviewer_id = $2,
-              reviewed_at = $3,
-              updated_at = $3
-        WHERE id = $1
-          AND status = 'pending'`,
-      [requestId, reviewerUserId, now],
-    )
   }
 
   private async markPendingDualApprovalRejected(
@@ -1491,6 +1488,8 @@ interface DualApprovalRequestSummary {
   status: string
   reviewReason?: string | null
   reviewerId?: string | null
+  actionType?: string
+  amountIrR?: string | number | bigint
 }
 
 interface DualApprovalDtoExtras {
@@ -1534,17 +1533,26 @@ function toDualApprovalSummary(row: unknown): DualApprovalRequestSummary | null 
     status?: unknown
     review_reason?: unknown
     reviewer_id?: unknown
+    action_type?: unknown
+    amount_irr?: unknown
   }
   if (typeof record.id !== 'string' || typeof record.initiator_id !== 'string') {
     return null
   }
-  return {
+  const summary: DualApprovalRequestSummary = {
     id: record.id,
     initiatorId: record.initiator_id,
     status: typeof record.status === 'string' ? record.status : 'pending',
     reviewReason: typeof record.review_reason === 'string' ? record.review_reason : null,
     reviewerId: typeof record.reviewer_id === 'string' ? record.reviewer_id : null,
   }
+  if (typeof record.action_type === 'string') {
+    summary.actionType = record.action_type
+  }
+  if (record.amount_irr !== undefined && record.amount_irr !== null) {
+    summary.amountIrR = record.amount_irr as string | number | bigint
+  }
+  return summary
 }
 
 function toIso(value: Date | string): string {

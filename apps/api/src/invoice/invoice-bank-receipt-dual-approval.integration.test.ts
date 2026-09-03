@@ -34,6 +34,7 @@ import {
   INVOICE_BANK_RECEIPT_REJECTED_EVENT,
 } from '@barghsa/shared/finance'
 import { DualApprovalService } from '../admin/dual-approval.service.js'
+import { APPROVAL_REQUEST_APPROVED_EVENT } from '../admin/dual-approval-resolution.js'
 import { WalletService } from '../wallet/wallet.service.js'
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
@@ -361,6 +362,24 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const after = await pendingApprovals(receiptId)
     expect(after).toHaveLength(1)
     expect(after[0]!.status).toBe('approved')
+    expect(after[0]!.id).toBe(requests[0]!.id)
+
+    const resolutionAudit = await ctx.pool.query<{ event: string; metadata: string }>(
+      `SELECT event, metadata::text AS metadata FROM audit_log
+        WHERE event = $1 AND metadata::jsonb ->> 'requestId' = $2`,
+      [APPROVAL_REQUEST_APPROVED_EVENT, requests[0]!.id],
+    )
+    expect(resolutionAudit.rows).toHaveLength(1)
+    const resolutionMeta = JSON.parse(resolutionAudit.rows[0]!.metadata) as {
+      initiatorUserId: string
+      reviewerUserId: string
+      actionType: string
+      amountIrR: number
+    }
+    expect(resolutionMeta.initiatorUserId).toBe(FIRST_STAFF)
+    expect(resolutionMeta.reviewerUserId).toBe(SECOND_STAFF)
+    expect(resolutionMeta.actionType).toBe(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE)
+    expect(resolutionMeta.amountIrR).toBe(Number(THRESHOLD))
 
     const confirmedAudit = await ctx.pool.query<{ event: string }>(
       `SELECT event FROM audit_log
