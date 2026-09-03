@@ -5,6 +5,9 @@ import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRM_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS,
+  INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT,
   INVOICE_BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
   INVOICE_BANK_RECEIPT_REJECT_ERRORS,
   INVOICE_BANK_RECEIPT_REJECTED_EVENT,
@@ -14,6 +17,10 @@ import {
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import type { WalletService } from '../wallet/wallet.service.js'
 import type { InvoiceStateMachineService } from './invoice-state-machine.service.js'
+import {
+  APPROVAL_REQUEST_APPROVED_EVENT,
+  APPROVAL_REQUEST_REJECTED_EVENT,
+} from '../admin/dual-approval-resolution.js'
 
 const mockPool = {
   query: vi.fn(),
@@ -103,6 +110,22 @@ type ScriptOptions = {
   wallet?: { profile_id: string } | null
   profile?: { userId: string } | null
   outboxInserted?: boolean
+  threshold?: unknown
+  pendingApproval?: {
+    id: string
+    initiator_id: string
+    status: string
+    review_reason?: string | null
+    reviewer_id?: string | null
+    action_type?: string
+    amount_irr?: string
+  } | null
+  underReview?: ReturnType<typeof makeReceiptRow> | null
+}
+
+function thresholdRows(opts: ScriptOptions): { rows: Array<{ value: unknown }> } {
+  if (opts.threshold === undefined) return { rows: [] }
+  return { rows: [{ value: opts.threshold }] }
 }
 
 function script(opts: ScriptOptions = {}) {
@@ -116,6 +139,28 @@ function script(opts: ScriptOptions = {}) {
     if (sql.includes('FROM bank_receipts WHERE id = $1 FOR UPDATE')) {
       if (opts.locked === null) return { rows: [] }
       return { rows: [opts.locked ?? makeReceiptRow()] }
+    }
+    if (sql.includes('FROM app_config')) {
+      return thresholdRows(opts)
+    }
+    if (sql.includes('FROM approval_requests')) {
+      return { rows: opts.pendingApproval ? [opts.pendingApproval] : [] }
+    }
+    if (sql.includes('INSERT INTO approval_requests')) {
+      return { rows: [] }
+    }
+    if (sql.includes('UPDATE approval_requests')) {
+      return { rows: [] }
+    }
+    if (sql.includes("SET state = 'UnderReview'")) {
+      return {
+        rows: [
+          opts.underReview ??
+            makeReceiptRow({
+              state: 'UnderReview',
+            }),
+        ],
+      }
     }
     if (sql.includes('INSERT INTO wallets')) {
       return { rows: [] }
@@ -185,6 +230,12 @@ function script(opts: ScriptOptions = {}) {
   mockPool.query.mockImplementation(async (sql: string) => {
     if (sql.includes("state IN ('Submitted', 'UnderReview')")) {
       return { rows: opts.listed ?? [makeReceiptRow()] }
+    }
+    if (sql.includes('FROM app_config')) {
+      return thresholdRows(opts)
+    }
+    if (sql.includes('FROM approval_requests')) {
+      return { rows: opts.pendingApproval ? [opts.pendingApproval] : [] }
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
@@ -600,5 +651,328 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
     ).toBe(false)
+  })
+})
+
+describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', () => {
+  let walletService: ReturnType<typeof makeWalletService>
+  let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> }
+  let service: InvoiceBankReceiptConfirmationService
+  const SECOND_ACTOR = 'staff-2'
+  const REQUEST_ID = 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee'
+  const THRESHOLD = 200_000
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockPool.connect.mockResolvedValue(mockClient)
+    mockClient.release.mockImplementation(() => {})
+    mockClient.query.mockReset()
+    mockPool.query.mockReset()
+    walletService = makeWalletService()
+    invoiceStateMachine = {
+      transition: vi.fn().mockResolvedValue({
+        invoiceId: INVOICE_ID,
+        fromState: 'Unpaid',
+        toState: 'Paid',
+        transition: 'ConfirmBankReceipt',
+        auditId: 'invoice-audit-1',
+      }),
+    }
+    service = new InvoiceBankReceiptConfirmationService(
+      walletService as unknown as WalletService,
+      null,
+      invoiceStateMachine as unknown as InvoiceStateMachineService,
+    )
+  })
+
+  it('settles immediately when the amount is below the threshold', async () => {
+    script({
+      locked: makeReceiptRow({ amount: '199999' }),
+      invoice: makeInvoiceRow({ paid_amount: '0', total_amount: '1000000' }),
+      threshold: { threshold_irr: THRESHOLD },
+    })
+    const result = await service.confirm({
+      receiptId: RECEIPT_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(result.state).toBe('Confirmed')
+    expect(result.dualApprovalPending).toBe(false)
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO approval_requests'),
+      ),
+    ).toBe(false)
+  })
+
+  it('parks the first confirmation when the amount equals the threshold', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD) }),
+      threshold: { threshold_irr: THRESHOLD },
+      underReview: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+    })
+    const result = await service.confirm({
+      receiptId: RECEIPT_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(result.state).toBe('UnderReview')
+    expect(result.dualApprovalPending).toBe(true)
+    expect(result.requiresDualApproval).toBe(true)
+    expect(result.dualApprovalInitiatedBy).toBe(ACTOR_ID)
+    expect(result.dualApprovalThresholdIrR).toBe(String(THRESHOLD))
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    const insert = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO approval_requests'),
+    )
+    expect(insert?.[1]?.[1]).toBe(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE)
+    expect(insert?.[1]?.[3]).toBe(ACTOR_ID)
+    const audit = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
+    ).toBe(false)
+  })
+
+  it('does not settle when the same staff retries a parked dual-approval confirm', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: { id: REQUEST_ID, initiator_id: ACTOR_ID, status: 'pending' },
+      underReview: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+    })
+    const result = await service.confirm({
+      receiptId: RECEIPT_ID,
+      actorUserId: ACTOR_ID,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(result.state).toBe('UnderReview')
+    expect(result.dualApprovalPending).toBe(true)
+    expect(result.dualApprovalRequestId).toBe(REQUEST_ID)
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO approval_requests'),
+      ),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
+    ).toBe(false)
+  })
+
+  it('lets a second finance staff member complete the parked confirmation', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      invoice: makeInvoiceRow({ paid_amount: '0', total_amount: '1000000' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
+      confirmed: makeReceiptRow({
+        amount: String(THRESHOLD),
+        state: 'Confirmed',
+        confirmed_by: SECOND_ACTOR,
+        confirmed_at: NOW,
+      }),
+    })
+    const result = await service.confirm({
+      receiptId: RECEIPT_ID,
+      actorUserId: SECOND_ACTOR,
+      ip: '10.0.0.9',
+      now: NOW,
+    })
+    expect(result.state).toBe('Confirmed')
+    expect(result.dualApprovalPending).toBe(false)
+    expect(result.dualApprovalRequestId).toBe(REQUEST_ID)
+    expect(result.dualApprovalInitiatedBy).toBe(ACTOR_ID)
+    expect(result.confirmedBy).toBe(SECOND_ACTOR)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('UPDATE approval_requests'),
+      ),
+    ).toBe(true)
+    const audits = mockClient.query.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audits.map((call) => call[1]?.[2])).toEqual([
+      APPROVAL_REQUEST_APPROVED_EVENT,
+      INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
+    ])
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"requestId":"${REQUEST_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"initiatorUserId":"${ACTOR_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"reviewerUserId":"${SECOND_ACTOR}"`)
+  })
+
+  it('resolves a parked receipt reject through the canonical approval-request path', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
+      rejected: makeReceiptRow({
+        amount: String(THRESHOLD),
+        state: 'Rejected',
+        rejection_reason: 'Payer name does not match',
+      }),
+    })
+    const result = await service.reject({
+      receiptId: RECEIPT_ID,
+      raw: { reason: 'Payer name does not match' },
+      actorUserId: SECOND_ACTOR,
+      ip: '10.0.0.9',
+      now: NOW,
+      correlationId: 'corr-reject-parked',
+    })
+    expect(result.state).toBe('Rejected')
+    expect(walletService.credit).not.toHaveBeenCalled()
+    const approvalUpdate = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('UPDATE approval_requests'),
+    )
+    expect(approvalUpdate?.[1]).toEqual([
+      'rejected',
+      SECOND_ACTOR,
+      'Payer name does not match',
+      NOW,
+      REQUEST_ID,
+    ])
+    const audits = mockClient.query.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audits.map((call) => call[1]?.[2])).toEqual([
+      APPROVAL_REQUEST_REJECTED_EVENT,
+      INVOICE_BANK_RECEIPT_REJECTED_EVENT,
+    ])
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"requestId":"${REQUEST_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"initiatorUserId":"${ACTOR_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"reviewerUserId":"${SECOND_ACTOR}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain('"reviewReason":"Payer name does not match"')
+    expect(audits[0]?.[1]?.[4]).toBe('corr-reject-parked')
+    expect(String(audits[1]?.[1]?.[3])).toContain(`"dualApprovalRequestId":"${REQUEST_ID}"`)
+  })
+
+  it('forbids the initiator from rejecting their own pending dual-approval request', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
+    })
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: 'Changed my mind' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(403)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('UPDATE approval_requests'),
+      ),
+    ).toBe(false)
+  })
+
+  it('fails closed when the stored dual-approval threshold is corrupt', async () => {
+    script({
+      threshold: { threshold_irr: -5 },
+    })
+    const rejection = await service
+      .confirm({
+        receiptId: RECEIPT_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.CONFLICT_STATE.code,
+      message: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.CONFIG_CORRUPT(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
+    ).toBe(false)
+  })
+
+  it('does not restart dual approval after the latest request was rejected', async () => {
+    const reviewReason = 'Payer name does not match'
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'rejected',
+        review_reason: reviewReason,
+        reviewer_id: SECOND_ACTOR,
+      },
+      rejected: makeReceiptRow({
+        amount: String(THRESHOLD),
+        state: 'Rejected',
+        rejection_reason: reviewReason,
+      }),
+    })
+    const rejection = await service
+      .confirm({
+        receiptId: RECEIPT_ID,
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(409)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.CONFLICT_STATE.code,
+      message: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS.APPROVAL_REJECTED(),
+    })
+    expect(walletService.credit).not.toHaveBeenCalled()
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('INSERT INTO approval_requests'),
+      ),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(true)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Confirmed'")),
+    ).toBe(false)
+    const audit = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audit?.[1]?.[2]).toBe(INVOICE_BANK_RECEIPT_REJECTED_EVENT)
   })
 })

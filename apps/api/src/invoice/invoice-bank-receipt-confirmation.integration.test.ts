@@ -77,6 +77,10 @@ const BANK_RECEIPTS_MIGRATION = resolve(
   __dirname,
   '../../../../packages/db/drizzle/0078_create_bank_receipts.sql',
 )
+const APPROVAL_REQUESTS_MIGRATION = resolve(
+  __dirname,
+  '../../../../packages/db/drizzle/0036_create_approval_requests.sql',
+)
 
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
@@ -127,6 +131,15 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
     await ctx.pool.query(readFileSync(BANK_RECEIPTS_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(APPROVAL_REQUESTS_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(`
+      CREATE TABLE IF NOT EXISTS app_config (
+        key TEXT PRIMARY KEY,
+        value JSONB NOT NULL,
+        version INTEGER NOT NULL DEFAULT 1,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `)
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B])
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
