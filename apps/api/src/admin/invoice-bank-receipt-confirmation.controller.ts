@@ -1,0 +1,165 @@
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { z } from 'zod'
+import { ErrorCodes } from '@barghsa/shared/errors'
+import { INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance'
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
+import {
+  InvoiceBankReceiptConfirmationService,
+  type InvoiceBankReceiptAllocationPreviewDto,
+  type InvoiceBankReceiptConfirmDto,
+} from '../invoice/invoice-bank-receipt-confirmation.service.js'
+
+function httpError(
+  code: string,
+  message: string,
+  statusCode = 400,
+  details?: unknown,
+): never {
+  throw new HttpException(
+    { statusCode, error: code, message, ...(details ? { details } : {}) },
+    statusCode,
+  )
+}
+
+function requestIp(req: AuthenticatedRequest): string {
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+}
+
+function assertUuid(id: string, label = 'receiptId'): void {
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  if (!parsed.success) {
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+  }
+}
+
+/**
+ * Staff invoice bank-receipt confirmation API (T-04.3.01.03 / S-04.3.01).
+ *
+ * Finance staff list Submitted / UnderReview receipts, inspect the scan,
+ * preview the invoice vs wallet split, and confirm. Confirm allocates
+ * `min(receipt, remaining)` onto the invoice and credits only the excess
+ * to the profile wallet via a distinct `WalletService.credit()`
+ * idempotency key. Staff cannot over-settle `paid_amount`.
+ *
+ * Rejection is T-04.3.01.04. Dual-approval for large amounts is
+ * T-04.3.01.05.
+ *
+ * Security:
+ * - Every route requires an authenticated session with the
+ *   `admin:finance:invoices:bank-receipt-confirm` capability. Today the
+ *   session model exposes only `req.session.isAdmin` (platform admin);
+ *   granular staff-role permissions arrive with C-04.CC.03.
+ * - Confirm requires recent step-up verification (`@RequiresStepUp()`)
+ *   — payment confirmation is a financial action.
+ */
+@ApiTags('Admin · Invoice bank receipts')
+@ApiBearerAuth()
+@UseGuards(SessionAuthGuard, StepUpGuard)
+@Controller('api/admin/invoices/bank-receipts')
+export class InvoiceBankReceiptConfirmationController {
+  constructor(
+    private readonly service: InvoiceBankReceiptConfirmationService,
+    private readonly correlationId: CorrelationIdProvider,
+  ) {}
+
+  private assertConfirmPermission(req: AuthenticatedRequest): void {
+    if (!(req.session.isAdmin ?? false)) {
+      httpError(
+        ErrorCodes.AUTHZ_FORBIDDEN.code,
+        `Admin role required (${INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION})`,
+        HttpStatus.FORBIDDEN,
+      )
+    }
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'List invoice bank receipts awaiting finance confirmation' })
+  @ApiResponse({ status: 200, description: 'Submitted / UnderReview receipts.' })
+  @ApiResponse({ status: 403, description: 'Finance permission required' })
+  async list(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ items: InvoiceBankReceiptConfirmDto[] }> {
+    this.assertConfirmPermission(req)
+    const items = await this.service.listPending()
+    return { items }
+  }
+
+  @Get(':receiptId/allocation')
+  @ApiOperation({
+    summary: 'Preview invoice vs wallet split for an invoice bank receipt (staff)',
+    description:
+      'If the receipt exceeds invoice remaining, the excess is a wallet credit and the invoice is not over-settled.',
+  })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Allocation preview (invoice remaining vs excess).' })
+  @ApiResponse({ status: 403, description: 'Finance permission required' })
+  @ApiResponse({ status: 404, description: 'Receipt or invoice not found' })
+  @ApiResponse({ status: 409, description: 'Invoice cannot receive a bank-receipt allocation' })
+  async allocation(
+    @Req() req: AuthenticatedRequest,
+    @Param('receiptId') receiptId: string,
+  ): Promise<InvoiceBankReceiptAllocationPreviewDto> {
+    this.assertConfirmPermission(req)
+    assertUuid(receiptId)
+    return this.service.previewAllocation(receiptId)
+  }
+
+  @Get(':receiptId')
+  @ApiOperation({ summary: 'Get an invoice bank receipt for staff review' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Receipt details including a short-lived preview URL.' })
+  @ApiResponse({ status: 403, description: 'Finance permission required' })
+  @ApiResponse({ status: 404, description: 'Receipt not found' })
+  async get(
+    @Req() req: AuthenticatedRequest,
+    @Param('receiptId') receiptId: string,
+  ): Promise<InvoiceBankReceiptConfirmDto> {
+    this.assertConfirmPermission(req)
+    assertUuid(receiptId)
+    return this.service.get(receiptId)
+  }
+
+  @Post(':receiptId/confirm')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @ApiOperation({
+    summary: 'Confirm an invoice bank receipt',
+    description:
+      'Settles min(receipt, remaining) on the linked invoice and credits only the excess to the profile wallet with a distinct idempotency key. Marks the receipt Confirmed.',
+  })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Receipt confirmed; invoice allocated and/or wallet credited.',
+  })
+  @ApiResponse({ status: 403, description: 'Permission or step-up required' })
+  @ApiResponse({ status: 404, description: 'Receipt not found' })
+  @ApiResponse({ status: 409, description: 'Receipt is not awaiting confirmation' })
+  async confirm(
+    @Req() req: AuthenticatedRequest,
+    @Param('receiptId') receiptId: string,
+  ): Promise<InvoiceBankReceiptConfirmDto> {
+    this.assertConfirmPermission(req)
+    assertUuid(receiptId)
+    const correlationId = this.correlationId.getCorrelationId()
+    return this.service.confirm({
+      receiptId,
+      actorUserId: req.session.userId,
+      ip: requestIp(req),
+      ...(correlationId ? { correlationId } : {}),
+    })
+  }
+}
