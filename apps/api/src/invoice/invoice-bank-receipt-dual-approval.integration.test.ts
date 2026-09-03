@@ -10,8 +10,9 @@
  *   4. A second, different finance staff member settles the receipt.
  *   5. A missing / zero threshold disables the gate.
  *   6. A corrupt stored threshold fails closed.
- *   7. Rejecting a parked receipt cancels the pending approval request
- *      without crediting the wallet.
+ *   7. Rejecting a parked receipt resolves the pending approval request
+ *      through the canonical dual-approval path (different reviewer +
+ *      approval_request_rejected audit) without crediting the wallet.
  *   8. DualApprovalService rejection of the pending request is durable:
  *      a later confirm does not mint a replacement request and
  *      synchronizes the receipt to Rejected.
@@ -33,8 +34,12 @@ import {
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
   INVOICE_BANK_RECEIPT_REJECTED_EVENT,
 } from '@barghsa/shared/finance'
+import { ErrorCodes } from '@barghsa/shared/errors'
 import { DualApprovalService } from '../admin/dual-approval.service.js'
-import { APPROVAL_REQUEST_APPROVED_EVENT } from '../admin/dual-approval-resolution.js'
+import {
+  APPROVAL_REQUEST_APPROVED_EVENT,
+  APPROVAL_REQUEST_REJECTED_EVENT,
+} from '../admin/dual-approval-resolution.js'
 import { WalletService } from '../wallet/wallet.service.js'
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
@@ -471,7 +476,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(await pendingApprovals(receiptId)).toHaveLength(0)
   })
 
-  it('rejects a parked receipt and cancels the pending approval request', async () => {
+  it('rejects a parked receipt through the canonical dual-approval resolution', async () => {
     await setThreshold(Number(THRESHOLD))
     const invoiceId = await insertInvoice({ total: 2_000_000n })
     const receiptId = await insertReceipt({
@@ -486,6 +491,23 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       ip: '10.0.0.9',
       now: NOW,
     })
+    const initiatorReject = await service
+      .reject({
+        receiptId,
+        raw: { reason: 'Changed my mind' },
+        actorUserId: FIRST_STAFF,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(initiatorReject).toBeInstanceOf(HttpException)
+    expect((initiatorReject as HttpException).getStatus()).toBe(403)
+    expect((initiatorReject as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
+    expect(await receiptState(receiptId)).toBe('UnderReview')
+    expect((await pendingApprovals(receiptId))[0]!.status).toBe('pending')
+
     const rejected = await service.reject({
       receiptId,
       raw: { reason: 'Payer name does not match' },
@@ -499,6 +521,21 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     const requests = await pendingApprovals(receiptId)
     expect(requests).toHaveLength(1)
     expect(requests[0]!.status).toBe('rejected')
+
+    const resolutionAudit = await ctx.pool.query<{ event: string; metadata: string }>(
+      `SELECT event, metadata::text AS metadata FROM audit_log
+        WHERE event = $1 AND metadata::jsonb ->> 'requestId' = $2`,
+      [APPROVAL_REQUEST_REJECTED_EVENT, requests[0]!.id],
+    )
+    expect(resolutionAudit.rows).toHaveLength(1)
+    const resolutionMeta = JSON.parse(resolutionAudit.rows[0]!.metadata) as {
+      initiatorUserId: string
+      reviewerUserId: string
+      reviewReason: string
+    }
+    expect(resolutionMeta.initiatorUserId).toBe(FIRST_STAFF)
+    expect(resolutionMeta.reviewerUserId).toBe(SECOND_STAFF)
+    expect(resolutionMeta.reviewReason).toBe('Payer name does not match')
   })
 
   it('does not restart confirmation after DualApprovalService rejects the request', async () => {

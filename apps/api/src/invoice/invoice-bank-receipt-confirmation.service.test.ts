@@ -17,7 +17,10 @@ import {
 import { InvoiceBankReceiptConfirmationService } from './invoice-bank-receipt-confirmation.service.js'
 import type { WalletService } from '../wallet/wallet.service.js'
 import type { InvoiceStateMachineService } from './invoice-state-machine.service.js'
-import { APPROVAL_REQUEST_APPROVED_EVENT } from '../admin/dual-approval-resolution.js'
+import {
+  APPROVAL_REQUEST_APPROVED_EVENT,
+  APPROVAL_REQUEST_REJECTED_EVENT,
+} from '../admin/dual-approval-resolution.js'
 
 const mockPool = {
   query: vi.fn(),
@@ -809,6 +812,93 @@ describe('InvoiceBankReceiptConfirmationService dual-approval (T-04.3.01.05)', (
     expect(String(audits[0]?.[1]?.[3])).toContain(`"requestId":"${REQUEST_ID}"`)
     expect(String(audits[0]?.[1]?.[3])).toContain(`"initiatorUserId":"${ACTOR_ID}"`)
     expect(String(audits[0]?.[1]?.[3])).toContain(`"reviewerUserId":"${SECOND_ACTOR}"`)
+  })
+
+  it('resolves a parked receipt reject through the canonical approval-request path', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      threshold: { threshold_irr: THRESHOLD },
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
+      rejected: makeReceiptRow({
+        amount: String(THRESHOLD),
+        state: 'Rejected',
+        rejection_reason: 'Payer name does not match',
+      }),
+    })
+    const result = await service.reject({
+      receiptId: RECEIPT_ID,
+      raw: { reason: 'Payer name does not match' },
+      actorUserId: SECOND_ACTOR,
+      ip: '10.0.0.9',
+      now: NOW,
+      correlationId: 'corr-reject-parked',
+    })
+    expect(result.state).toBe('Rejected')
+    expect(walletService.credit).not.toHaveBeenCalled()
+    const approvalUpdate = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('UPDATE approval_requests'),
+    )
+    expect(approvalUpdate?.[1]).toEqual([
+      'rejected',
+      SECOND_ACTOR,
+      'Payer name does not match',
+      NOW,
+      REQUEST_ID,
+    ])
+    const audits = mockClient.query.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO audit_log'),
+    )
+    expect(audits.map((call) => call[1]?.[2])).toEqual([
+      APPROVAL_REQUEST_REJECTED_EVENT,
+      INVOICE_BANK_RECEIPT_REJECTED_EVENT,
+    ])
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"requestId":"${REQUEST_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"initiatorUserId":"${ACTOR_ID}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain(`"reviewerUserId":"${SECOND_ACTOR}"`)
+    expect(String(audits[0]?.[1]?.[3])).toContain('"reviewReason":"Payer name does not match"')
+    expect(audits[0]?.[1]?.[4]).toBe('corr-reject-parked')
+    expect(String(audits[1]?.[1]?.[3])).toContain(`"dualApprovalRequestId":"${REQUEST_ID}"`)
+  })
+
+  it('forbids the initiator from rejecting their own pending dual-approval request', async () => {
+    script({
+      locked: makeReceiptRow({ amount: String(THRESHOLD), state: 'UnderReview' }),
+      pendingApproval: {
+        id: REQUEST_ID,
+        initiator_id: ACTOR_ID,
+        status: 'pending',
+        action_type: INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+        amount_irr: String(THRESHOLD),
+      },
+    })
+    const rejection = await service
+      .reject({
+        receiptId: RECEIPT_ID,
+        raw: { reason: 'Changed my mind' },
+        actorUserId: ACTOR_ID,
+        ip: '10.0.0.9',
+        now: NOW,
+      })
+      .catch((error: unknown) => error)
+    expect(rejection).toBeInstanceOf(HttpException)
+    expect((rejection as HttpException).getStatus()).toBe(403)
+    expect((rejection as HttpException).getResponse()).toMatchObject({
+      error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+    })
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
+    ).toBe(false)
+    expect(
+      mockClient.query.mock.calls.some(([sql]) =>
+        String(sql).includes('UPDATE approval_requests'),
+      ),
+    ).toBe(false)
   })
 
   it('fails closed when the stored dual-approval threshold is corrupt', async () => {

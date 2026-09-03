@@ -196,11 +196,16 @@ const CUSTOMER_NOTIFICATION_MAX_ATTEMPTS = 5
  * Reject (T-04.3.01.04, one DB transaction, same advisory lock as confirm):
  *   1. Parse a customer-visible reason before locking.
  *   2. Lock the Submitted / UnderReview row.
- *   3. Write `Rejected` + `rejection_reason`. Never touch `paid_amount`
+ *   3. If a pending dual-approval request exists, lock it and resolve
+ *      through applyApprovalRequestResolutionOnClient (decision reject)
+ *      so the different-reviewer check and canonical
+ *      approval_request_rejected audit row apply. The initiator cannot
+ *      reject their own request.
+ *   4. Write `Rejected` + `rejection_reason`. Never touch `paid_amount`
  *      or the wallet.
- *   4. Enqueue `payment.bank_receipt_rejected` (in-app + email) to the
+ *   5. Enqueue `payment.bank_receipt_rejected` (in-app + email) to the
  *      profile owner. Receipt reject and notify intent commit together.
- *   5. Append an audit row.
+ *   6. Append an audit row.
  *   Re-reject with the same reason is idempotent.
  */
 @Injectable()
@@ -616,13 +621,18 @@ export class InvoiceBankReceiptConfirmationService {
           )
         }
 
-        const updated = await this.markRejected(client, receipt.id, parsed.reason)
-        await this.markPendingDualApprovalRejected(client, {
+        const dualResolved = await this.resolvePendingDualApprovalOnReject(client, {
           receiptId: receipt.id,
+          receiptAmount: receipt.amount,
           reviewerUserId: input.actorUserId,
+          ip: input.ip,
           reason: parsed.reason,
           now,
+          ...(input.correlationId !== undefined
+            ? { correlationId: input.correlationId }
+            : {}),
         })
+        const updated = await this.markRejected(client, receipt.id, parsed.reason)
         const notify = await this.enqueueCustomerRejectionNotice(client, {
           receiptId: receipt.id,
           invoiceId: receipt.invoiceId,
@@ -647,6 +657,8 @@ export class InvoiceBankReceiptConfirmationService {
             previousState: receipt.state,
             newState: 'Rejected',
             notificationOutboxId: notify.outboxId,
+            dualApprovalRequestId: dualResolved?.id ?? null,
+            dualApprovalInitiatedBy: dualResolved?.initiatorId ?? null,
           },
           occurredAt: now,
         })
@@ -782,33 +794,54 @@ export class InvoiceBankReceiptConfirmationService {
     return toDualApprovalSummary(result.rows[0])
   }
 
-  private async markPendingDualApprovalRejected(
+  /**
+   * Resolve a pending dual-approval request through the canonical
+   * DualApprovalService path so receipt reject cannot skip the
+   * different-reviewer check or the approval_request_rejected audit.
+   * Already-resolved requests are left as-is; the receipt reject still
+   * proceeds for a previously rejected request.
+   */
+  private async resolvePendingDualApprovalOnReject(
     client: WalletQueryClient,
     input: {
       receiptId: string
+      receiptAmount: bigint
       reviewerUserId: string
+      ip: string
       reason: string
       now: Date
+      correlationId?: string
     },
-  ): Promise<void> {
-    await client.query(
-      `UPDATE approval_requests
-          SET status = 'rejected',
-              reviewer_id = $2,
-              review_reason = $3,
-              reviewed_at = $4,
-              updated_at = $4
-        WHERE action_type = $1
-          AND status = 'pending'
-          AND details->>'receiptId' = $5`,
-      [
-        INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
-        input.reviewerUserId,
-        input.reason,
-        input.now,
-        input.receiptId,
-      ],
+  ): Promise<DualApprovalRequestSummary | null> {
+    const latestRequest = await this.lockLatestDualApprovalRequest(
+      client,
+      input.receiptId,
     )
+    if (latestRequest?.status !== 'pending') {
+      return latestRequest
+    }
+    await applyApprovalRequestResolutionOnClient(client, {
+      requestId: latestRequest.id,
+      reviewerUserId: input.reviewerUserId,
+      ip: input.ip,
+      decision: 'reject',
+      reviewReason: input.reason,
+      now: input.now,
+      initiatorId: latestRequest.initiatorId,
+      status: latestRequest.status,
+      actionType:
+        latestRequest.actionType ?? INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE,
+      amountIrR: latestRequest.amountIrR ?? input.receiptAmount,
+      ...(input.correlationId !== undefined
+        ? { correlationId: input.correlationId }
+        : {}),
+    })
+    return {
+      ...latestRequest,
+      status: 'rejected',
+      reviewerId: input.reviewerUserId,
+      reviewReason: input.reason,
+    }
   }
 
   /**
