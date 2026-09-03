@@ -24,9 +24,11 @@ import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPan
  *
  * Finance staff review a Pending wallet top-up receipt, then confirm
  * or reject with a customer-visible reason. Confirm without an invoice
- * credits the full amount via WalletService.credit(). Confirm with an
- * invoice settles min(receipt, remaining) and credits only the excess
- * to the wallet. Confirm and reject require step-up authentication.
+ * credits the full amount via WalletService.credit() and notifies the
+ * customer. Confirm with an invoice settles min(receipt, remaining) and
+ * credits only the excess to the wallet. Reject never increases balance
+ * and sends the reason to the customer. Confirm and reject require
+ * step-up authentication.
  */
 
 interface StaffDecision {

@@ -5,11 +5,19 @@ import {
   BANK_RECEIPT_CONFIRM_PERMISSION,
   BANK_RECEIPT_CONFIRMED_EVENT,
   BANK_RECEIPT_CREDIT_DESCRIPTION,
+  BANK_RECEIPT_CUSTOMER_WALLET_ROUTE,
+  BANK_RECEIPT_NOTIFY_CHANNELS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
+  BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+  BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
   bankReceiptCreditIdempotencyKey,
   bankReceiptCreditMetadata,
   bankReceiptStaffDecisionMetadata,
+  bankReceiptTopUpCompletedNotificationIdempotencyKey,
+  bankReceiptTopUpFailedNotificationIdempotencyKey,
+  buildBankReceiptTopUpCompletedNotificationPayload,
+  buildBankReceiptTopUpFailedNotificationPayload,
   isPendingBankReceiptTopUp,
   parseBankReceiptRejectReason,
   readBankReceiptStaffDecision,
@@ -34,6 +42,48 @@ describe('bank receipt staff confirmation contract (T-04.2.02.04)', () => {
     expect(BANK_RECEIPT_CONFIRMED_EVENT).toBe('wallet.bank_receipt.confirmed')
     expect(BANK_RECEIPT_REJECTED_EVENT).toBe('wallet.bank_receipt.rejected')
     expect(BANK_RECEIPT_CREDIT_DESCRIPTION).toBe('Bank receipt wallet top-up')
+  })
+
+  it('keys customer notices per pending receipt and deep-links the wallet', () => {
+    expect(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY).toBe(
+      'payment.wallet_topup_completed',
+    )
+    expect(BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY).toBe(
+      'payment.wallet_topup_failed',
+    )
+    expect(BANK_RECEIPT_NOTIFY_CHANNELS).toEqual(['in_app', 'email'])
+    expect(BANK_RECEIPT_CUSTOMER_WALLET_ROUTE).toBe('/wallet')
+    expect(bankReceiptTopUpCompletedNotificationIdempotencyKey(PENDING_ID)).toBe(
+      `payment.wallet_topup_completed:${PENDING_ID}`,
+    )
+    expect(bankReceiptTopUpFailedNotificationIdempotencyKey(PENDING_ID)).toBe(
+      `payment.wallet_topup_failed:${PENDING_ID}`,
+    )
+    expect(
+      buildBankReceiptTopUpCompletedNotificationPayload({
+        amount: '250000',
+        creditTransactionId: 'credit-1',
+        pendingTransactionId: PENDING_ID,
+      }),
+    ).toEqual({
+      amount: '250000',
+      transactionId: 'credit-1',
+      pending_transaction_id: PENDING_ID,
+      link_route: '/wallet',
+    })
+    expect(
+      buildBankReceiptTopUpFailedNotificationPayload({
+        amount: '250000',
+        reason: 'Illegible scan',
+        pendingTransactionId: PENDING_ID,
+      }),
+    ).toEqual({
+      amount: '250000',
+      reason: 'Illegible scan',
+      pending_transaction_id: PENDING_ID,
+      link_route: '/wallet',
+    })
+    expect(BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE()).toMatch(/cannot be notified/)
   })
 
   describe('parseBankReceiptRejectReason', () => {

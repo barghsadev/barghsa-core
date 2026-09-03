@@ -3,12 +3,15 @@
  *
  * Finance staff review a Pending bank-receipt top-up, then confirm or
  * reject it. Confirm calls `WalletService.credit()` with a stable
- * idempotency key derived from the pending ledger id. Reject stores a
- * customer-visible reason and never increases wallet balance.
+ * idempotency key derived from the pending ledger id, then notifies the
+ * customer via `payment.wallet_topup_completed`. Reject stores a
+ * customer-visible reason, never increases wallet balance, and notifies
+ * via `payment.wallet_topup_failed`.
  *
  * @module finance
  */
 
+import type { NotificationChannel } from '../notifications/notification-transport.js'
 import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
 
 /** Capability gate documented on the staff API (mapped to isAdmin today). */
@@ -38,7 +41,28 @@ export const BANK_RECEIPT_CONFIRM_ERRORS = {
   NOT_BANK_RECEIPT: () => 'Transaction is not a pending bank-receipt top-up',
   ALREADY_CONFIRMED: () => 'Bank receipt top-up has already been confirmed',
   ALREADY_REJECTED: () => 'Bank receipt top-up has already been rejected',
+  OWNER_UNNOTIFIABLE: () =>
+    'Bank receipt top-up cannot be rejected because the customer owner cannot be notified',
 } as const
+
+/**
+ * Customer notification events (E-05 registry). Distinct from the audit
+ * events so template lookup stays on the `payment.*` namespace.
+ */
+export const BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY =
+  'payment.wallet_topup_completed' as const
+
+export const BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY =
+  'payment.wallet_topup_failed' as const
+
+/** In-app is the customer push; email is the durable fallback. */
+export const BANK_RECEIPT_NOTIFY_CHANNELS: readonly NotificationChannel[] = [
+  'in_app',
+  'email',
+]
+
+/** Customer wallet history deep-link persisted onto the in-app push. */
+export const BANK_RECEIPT_CUSTOMER_WALLET_ROUTE = '/wallet' as const
 
 export type BankReceiptStaffDecision = 'confirmed' | 'rejected'
 
@@ -168,5 +192,59 @@ export function bankReceiptCreditMetadata(input: {
     confirmedBy: input.confirmedBy,
     confirmedAt: input.confirmedAt.toISOString(),
     receipt: input.receipt ?? null,
+  }
+}
+
+/** Outbox idempotency key: one completed notice per pending receipt. */
+export function bankReceiptTopUpCompletedNotificationIdempotencyKey(
+  pendingTransactionId: string,
+): string {
+  return `${BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY}:${pendingTransactionId}`
+}
+
+/** Outbox idempotency key: one failure notice per pending receipt. */
+export function bankReceiptTopUpFailedNotificationIdempotencyKey(
+  pendingTransactionId: string,
+): string {
+  return `${BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY}:${pendingTransactionId}`
+}
+
+export interface BankReceiptTopUpCompletedNotificationPayload {
+  amount: string
+  transactionId: string
+  pending_transaction_id: string
+  link_route: string
+}
+
+export interface BankReceiptTopUpFailedNotificationPayload {
+  amount: string
+  reason: string
+  pending_transaction_id: string
+  link_route: string
+}
+
+export function buildBankReceiptTopUpCompletedNotificationPayload(input: {
+  amount: string
+  creditTransactionId: string
+  pendingTransactionId: string
+}): BankReceiptTopUpCompletedNotificationPayload {
+  return {
+    amount: input.amount,
+    transactionId: input.creditTransactionId,
+    pending_transaction_id: input.pendingTransactionId,
+    link_route: BANK_RECEIPT_CUSTOMER_WALLET_ROUTE,
+  }
+}
+
+export function buildBankReceiptTopUpFailedNotificationPayload(input: {
+  amount: string
+  reason: string
+  pendingTransactionId: string
+}): BankReceiptTopUpFailedNotificationPayload {
+  return {
+    amount: input.amount,
+    reason: input.reason,
+    pending_transaction_id: input.pendingTransactionId,
+    link_route: BANK_RECEIPT_CUSTOMER_WALLET_ROUTE,
   }
 }

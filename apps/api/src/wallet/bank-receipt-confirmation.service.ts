@@ -9,14 +9,18 @@ import {
 } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { classifyNotificationType } from '@barghsa/shared/notifications'
 import {
   BANK_RECEIPT_CONFIRM_ERRORS,
   BANK_RECEIPT_CONFIRMED_EVENT,
   BANK_RECEIPT_CREDIT_DESCRIPTION,
+  BANK_RECEIPT_NOTIFY_CHANNELS,
   BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   BANK_RECEIPT_REJECTED_EVENT,
   BANK_RECEIPT_TOPUP_CHANNEL,
+  BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+  BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
   allocateReceiptAgainstInvoice,
   bankReceiptCreditIdempotencyKey,
   bankReceiptCreditMetadata,
@@ -24,6 +28,10 @@ import {
   bankReceiptOverpaymentCreditMetadata,
   bankReceiptOverpaymentSnapshot,
   bankReceiptStaffDecisionMetadata,
+  bankReceiptTopUpCompletedNotificationIdempotencyKey,
+  bankReceiptTopUpFailedNotificationIdempotencyKey,
+  buildBankReceiptTopUpCompletedNotificationPayload,
+  buildBankReceiptTopUpFailedNotificationPayload,
   invoiceStateAfterBankReceiptAllocation,
   isBankReceiptChannel,
   isBankReceiptInvoiceLinkAllowedState,
@@ -34,7 +42,9 @@ import {
   remainingForBankReceiptSettlement,
   type BankReceiptOverpaymentSnapshot,
   type BankReceiptStaffDecisionSnapshot,
+  type BankReceiptTopUpCompletedNotificationPayload,
   type BankReceiptTopUpDetails,
+  type BankReceiptTopUpFailedNotificationPayload,
 } from '@barghsa/shared/finance'
 import type { StorageProvider } from '@barghsa/shared/storage'
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js'
@@ -47,6 +57,7 @@ import {
 import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js'
 
 const ATTACHMENT_URL_TTL_SECONDS = 15 * 60
+const CUSTOMER_NOTIFICATION_MAX_ATTEMPTS = 5
 
 interface LedgerRow {
   id: string
@@ -91,6 +102,7 @@ export interface BankReceiptReviewDto {
   creditTransactionId: string | null
   overpayment: BankReceiptOverpaymentSnapshot | null
   auditId?: string
+  notificationOutboxId?: string
 }
 
 export interface BankReceiptAllocationPreviewDto {
@@ -150,6 +162,11 @@ export interface RejectBankReceiptInput {
  *
  * Reject: mark the Pending row `Rejected` with a customer-visible reason
  * and never call credit. Rejected submissions never increase balance.
+ * The reason is enqueued on `payment.wallet_topup_failed` in the same
+ * transaction; reject fails closed if the profile has no notifiable owner.
+ *
+ * Confirm also enqueues `payment.wallet_topup_completed` when a wallet
+ * credit actually posts (full top-up or invoice excess).
  */
 @Injectable()
 export class BankReceiptConfirmationService {
@@ -346,6 +363,27 @@ export class BankReceiptConfirmationService {
           creditId = credit.id
         }
 
+        let notificationOutboxId: string | null = null
+        if (creditId) {
+          const ownerUserId = await this.loadProfileOwnerUserId(client, pending.walletId)
+          if (ownerUserId) {
+            const creditedAmount =
+              overpayment?.walletCreditAmount ?? pending.amount.toString()
+            const notify = await this.enqueueCustomerNotice(client, {
+              eventKey: BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY,
+              idempotencyKey: bankReceiptTopUpCompletedNotificationIdempotencyKey(pending.id),
+              profileId: pending.walletId,
+              userId: ownerUserId,
+              payload: buildBankReceiptTopUpCompletedNotificationPayload({
+                amount: creditedAmount,
+                creditTransactionId: creditId,
+                pendingTransactionId: pending.id,
+              }),
+            })
+            notificationOutboxId = notify.outboxId
+          }
+        }
+
         const decision = {
           ...bankReceiptStaffDecisionMetadata({
             decision: 'confirmed',
@@ -372,6 +410,7 @@ export class BankReceiptConfirmationService {
             creditTransactionId: creditId,
             previousState: 'Pending',
             newState: 'Released',
+            notificationOutboxId,
             ...(overpayment
               ? {
                   invoiceId: overpayment.invoiceId,
@@ -395,6 +434,7 @@ export class BankReceiptConfirmationService {
           creditTransactionId: creditId,
           overpayment,
           auditId,
+          ...(notificationOutboxId ? { notificationOutboxId } : {}),
         })
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined)
@@ -455,6 +495,16 @@ export class BankReceiptConfirmationService {
           )
         }
 
+        const ownerUserId = await this.loadProfileOwnerUserId(client, pending.walletId)
+        if (!ownerUserId) {
+          await client.query('ROLLBACK')
+          httpError(
+            ErrorCodes.CONFLICT_STATE.code,
+            BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE(),
+            409,
+          )
+        }
+
         const decision = bankReceiptStaffDecisionMetadata({
           decision: 'rejected',
           actorUserId: input.actorUserId,
@@ -462,6 +512,17 @@ export class BankReceiptConfirmationService {
           reason: parsed.reason,
         })
         const updated = await this.markRejected(client, pending.id, decision)
+        const notify = await this.enqueueCustomerNotice(client, {
+          eventKey: BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
+          idempotencyKey: bankReceiptTopUpFailedNotificationIdempotencyKey(pending.id),
+          profileId: pending.walletId,
+          userId: ownerUserId,
+          payload: buildBankReceiptTopUpFailedNotificationPayload({
+            amount: pending.amount.toString(),
+            reason: parsed.reason,
+            pendingTransactionId: pending.id,
+          }),
+        })
         const auditId = await this.recordAudit(client, {
           event: BANK_RECEIPT_REJECTED_EVENT,
           actorUserId: input.actorUserId,
@@ -475,6 +536,7 @@ export class BankReceiptConfirmationService {
             customerVisible: true,
             previousState: 'Pending',
             newState: 'Rejected',
+            notificationOutboxId: notify.outboxId,
           },
           occurredAt: now,
         })
@@ -483,7 +545,10 @@ export class BankReceiptConfirmationService {
         this.logger.log(
           `Bank receipt top-up ${pending.id} rejected for wallet ${pending.walletId}`,
         )
-        return this.toDto(updated ?? pending, { auditId })
+        return this.toDto(updated ?? pending, {
+          auditId,
+          ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
+        })
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined)
         throw error
@@ -792,6 +857,82 @@ export class BankReceiptConfirmationService {
     return (result.rows as LedgerRow[])[0] ?? null
   }
 
+  private async loadProfileOwnerUserId(
+    client: WalletQueryClient,
+    profileId: string,
+  ): Promise<string | null> {
+    const result = await client.query(
+      `SELECT user_id FROM profiles WHERE id = $1`,
+      [profileId],
+    )
+    const userId = (result.rows[0] as { user_id?: string | null } | undefined)?.user_id
+    return typeof userId === 'string' && userId.length > 0 ? userId : null
+  }
+
+  private async enqueueCustomerNotice(
+    client: WalletQueryClient,
+    input: {
+      eventKey: string
+      idempotencyKey: string
+      profileId: string
+      userId: string
+      payload:
+        | BankReceiptTopUpCompletedNotificationPayload
+        | BankReceiptTopUpFailedNotificationPayload
+    },
+  ): Promise<{ outboxId: string | null; inserted: boolean }> {
+    const channels = [...BANK_RECEIPT_NOTIFY_CHANNELS]
+    const priority =
+      classifyNotificationType(input.eventKey) === 'immediate' ? 'urgent' : 'normal'
+
+    const insertResult = await client.query(
+      `INSERT INTO notification_outbox
+         (profile_id, user_id, event_key, payload, channels, status,
+          idempotency_key, max_attempts, scheduled_for)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (idempotency_key) DO NOTHING
+       RETURNING id`,
+      [
+        input.profileId,
+        input.userId,
+        input.eventKey,
+        input.payload,
+        channels,
+        'queued',
+        input.idempotencyKey,
+        CUSTOMER_NOTIFICATION_MAX_ATTEMPTS,
+        null,
+      ],
+    )
+    const insertedRow = insertResult.rows[0] as { id: string } | undefined
+    let outboxId = insertedRow?.id
+    const inserted = Boolean(outboxId)
+    if (!outboxId) {
+      const existing = await client.query(
+        `SELECT id FROM notification_outbox WHERE idempotency_key = $1 LIMIT 1`,
+        [input.idempotencyKey],
+      )
+      outboxId = (existing.rows[0] as { id: string } | undefined)?.id
+      if (!outboxId) return { outboxId: null, inserted: false }
+    }
+
+    const jobValues: unknown[] = []
+    const placeholders: string[] = []
+    channels.forEach((channel, i) => {
+      const base = i * 5
+      placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`)
+      jobValues.push(outboxId, channel, 'queued', priority, CUSTOMER_NOTIFICATION_MAX_ATTEMPTS)
+    })
+    await client.query(
+      `INSERT INTO notification_job
+         (outbox_id, channel, status, priority, max_attempts)
+       VALUES ${placeholders.join(', ')}
+       ON CONFLICT (outbox_id, channel) DO NOTHING`,
+      jobValues,
+    )
+    return { outboxId, inserted }
+  }
+
   private async recordAudit(
     client: WalletQueryClient,
     entry: {
@@ -826,6 +967,7 @@ export class BankReceiptConfirmationService {
       creditTransactionId?: string | null
       overpayment?: BankReceiptOverpaymentSnapshot | null
       auditId?: string
+      notificationOutboxId?: string
     } = {},
   ): Promise<BankReceiptReviewDto> {
     const receipt = readReceiptDetails(row.metadata)
@@ -856,6 +998,9 @@ export class BankReceiptConfirmationService {
       creditTransactionId,
       overpayment,
       ...(extra.auditId ? { auditId: extra.auditId } : {}),
+      ...(extra.notificationOutboxId
+        ? { notificationOutboxId: extra.notificationOutboxId }
+        : {}),
     }
   }
 
