@@ -267,4 +267,61 @@ describe('AdminService.setWalletTopUpLimitConfig (T-09.10.01)', () => {
     expect(invalidate).toHaveBeenCalledWith(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
     expect(pool.connect).toHaveBeenCalledTimes(1)
   })
+
+  it('rejects a stale expected_version with 409 and does not upsert', async () => {
+    const { mockConnect } = await loadService()
+    const { client } = mockClient()
+    mockConnect.mockResolvedValue(client)
+    client.query
+      .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // pg_advisory_xact_lock
+      .mockResolvedValueOnce({ rows: [{ value: { limit_irr: 50_000 }, version: 4 }] })
+      .mockResolvedValueOnce({ rows: [] }) // ROLLBACK
+
+    await expect(
+      service.setWalletTopUpLimitConfig(
+        { limit_irr: 10_000, expected_version: 3 },
+        'admin-1',
+        '127.0.0.1',
+      ),
+    ).rejects.toMatchObject({ status: 409 })
+
+    const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]))
+    expect(queries.some((sql) => /INSERT INTO app_config/.test(sql))).toBe(false)
+    expect(queries.some((sql) => /ROLLBACK/.test(sql))).toBe(true)
+  })
+
+  it('accepts a matching expected_version of 0 on the first write', async () => {
+    const { mockConnect } = await loadService()
+    const { client } = mockClient()
+    mockConnect.mockResolvedValue(client)
+    client.query
+      .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // pg_advisory_xact_lock
+      .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
+      .mockResolvedValueOnce({ rows: [{ version: 1 }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+
+    await expect(
+      service.setWalletTopUpLimitConfig(
+        { limit_irr: 80_000, expected_version: 0 },
+        'admin-1',
+        '127.0.0.1',
+      ),
+    ).resolves.toEqual({ limitIrR: 80_000, version: 1 })
+  })
+
+  it('rejects a non-integer expected_version with 400 before connecting', async () => {
+    const { pool } = await loadService()
+    await expect(
+      service.setWalletTopUpLimitConfig(
+        { limit_irr: 80_000, expected_version: 1.5 },
+        'admin-1',
+        '127.0.0.1',
+      ),
+    ).rejects.toMatchObject({ status: 400 })
+    expect(pool.connect).not.toHaveBeenCalled()
+  })
 })

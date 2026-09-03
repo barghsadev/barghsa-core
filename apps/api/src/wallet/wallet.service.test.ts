@@ -2356,5 +2356,36 @@ describe('WalletService', () => {
       expect(getWithVersion).toHaveBeenCalledWith('finance.wallet_top_up_limit')
       expect(mockPool.query).not.toHaveBeenCalled()
     })
+
+    it('fails closed when a persisted limit row is corrupt', async () => {
+      mockPool.query.mockResolvedValue({
+        rows: [{ value: { limit_irr: 'corrupted' }, version: 6 }],
+      })
+      await expect(service.validateOnlineTopUpAmount(1n)).rejects.toThrow(
+        'Online top-up limit configuration is unavailable',
+      )
+      try {
+        await service.validateOnlineTopUpAmount(1n)
+        throw new Error('expected unavailable rejection')
+      } catch (err) {
+        expect(err).toBeInstanceOf(BadRequestException)
+        expect((err as BadRequestException).getResponse()).toEqual({
+          message: 'Online top-up limit configuration is unavailable',
+        })
+      }
+    })
+
+    it('fails closed from the versioned config cache when the cached value is corrupt', async () => {
+      const getWithVersion = vi.fn().mockResolvedValue({
+        value: { limit_irr: -1 },
+        version: 3,
+        fresh: true,
+      })
+      const cached = new WalletService({ getWithVersion } as never)
+      await expect(cached.validateOnlineTopUpAmount(1n)).rejects.toThrow(
+        'Online top-up limit configuration is unavailable',
+      )
+      expect(mockPool.query).not.toHaveBeenCalled()
+    })
   })
 })

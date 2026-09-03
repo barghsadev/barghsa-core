@@ -1894,9 +1894,11 @@ export class AdminController {
    * PUT /api/admin/config/wallet-top-up-limit
    *
    * Persists a new per-transaction online wallet top-up limit. Body:
-   * `{ limit_irr }`. Validated server-side: integer IRR between 0 and
+   * `{ limit_irr, expected_version? }`. Validated server-side: integer IRR between 0 and
    * `Number.MAX_SAFE_INTEGER` (0 = all online top-ups blocked). Changes are
-   * versioned and audited (config_change).
+   * versioned and audited (config_change). Optional `expected_version` is
+   * compared against the locked `app_config.version` (or `0` when absent)
+   * so a stale admin editor cannot clobber a later write (T-04.2.02.06).
    * Permission: `admin:financial:edit` (T-09.10.01).
    *
    * Step-up on this mutation is deliberately deferred, matching the other
@@ -1912,6 +1914,7 @@ export class AdminController {
       required: ['limit_irr'],
       properties: {
         limit_irr: { type: 'number', example: 2000000000, minimum: 0 },
+        expected_version: { type: 'number', example: 0, minimum: 0 },
       },
     },
   })
@@ -1928,6 +1931,7 @@ export class AdminController {
   })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
+  @ApiResponse({ status: 409, description: 'Stale expected_version' })
   async setWalletTopUpLimit(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
     this.assertFinancialThresholdPermission(req)
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'

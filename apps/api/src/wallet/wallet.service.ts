@@ -3,12 +3,10 @@ import { getDbPool } from '@barghsa/db'
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
-  DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
-  toWalletTopUpLimitConfig,
-  toOnlineTopUpLimitSnapshot,
+  resolveOnlineTopUpLimitSnapshot,
   isOnlineWalletTopUpAllowed,
-  isValidWalletTopUpLimit,
   onlineTopUpLimitExceededMessage,
+  ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE,
   type OnlineTopUpLimitSnapshot,
   WALLET_REVERSAL_ERRORS,
   WALLET_REVERSAL_POSTED_STATE,
@@ -1050,8 +1048,12 @@ export class WalletService {
    * is what serializes a first admin write against this read. Otherwise the
    * versioned config cache is used, falling back to a plain `app_config`
    * read. Missing rows serve the 2e9 IRR default at config version `0`.
+   * A persisted row that cannot be read as a valid integer IRR ceiling
+   * returns `null` so GET can omit the cap and submission can fail closed.
    */
-  async resolveOnlineTopUpLimit(client?: WalletQueryClient): Promise<OnlineTopUpLimitSnapshot> {
+  async resolveOnlineTopUpLimit(
+    client?: WalletQueryClient,
+  ): Promise<OnlineTopUpLimitSnapshot | null> {
     if (client) {
       await client.query(
         `SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`,
@@ -1066,9 +1068,6 @@ export class WalletService {
 
     if (this.configCache) {
       const fetched = await this.configCache.getWithVersion<unknown>(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
-      if (fetched.value == null) {
-        return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
-      }
       return snapshotFromConfigValue(fetched.value, fetched.version)
     }
 
@@ -1090,7 +1089,8 @@ export class WalletService {
    * ledger row. Rejects amounts over the current `onlineTopUpLimit` with
    * a 400 whose body includes the versioned snapshot that was enforced, so
    * the customer form can refresh the advertised ceiling and retry with a
-   * reduced amount.
+   * reduced amount. A corrupt persisted row fails closed (400, no snapshot)
+   * instead of substituting the 2e9 default.
    *
    * @returns the versioned snapshot that was enforced
    * @throws BadRequestException when the amount is non-positive or exceeds
@@ -1104,6 +1104,11 @@ export class WalletService {
       throw new BadRequestException('Online top-up amount must be positive')
     }
     const snapshot = await this.resolveOnlineTopUpLimit(client)
+    if (snapshot === null) {
+      throw new BadRequestException({
+        message: ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE,
+      })
+    }
     if (!isOnlineWalletTopUpAllowed({ limitIrR: snapshot.onlineTopUpLimit }, amountIrR)) {
       throw new BadRequestException({
         message: onlineTopUpLimitExceededMessage(amountIrR, snapshot),
@@ -1115,9 +1120,9 @@ export class WalletService {
   }
 }
 
-function snapshotFromConfigRow(row: unknown): OnlineTopUpLimitSnapshot {
+function snapshotFromConfigRow(row: unknown): OnlineTopUpLimitSnapshot | null {
   if (!row || typeof row !== 'object') {
-    return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
+    return snapshotFromConfigValue(null, 0)
   }
   const rec = row as { value?: unknown; version?: unknown }
   return snapshotFromConfigValue(rec.value, rec.version)
@@ -1126,17 +1131,9 @@ function snapshotFromConfigRow(row: unknown): OnlineTopUpLimitSnapshot {
 function snapshotFromConfigValue(
   value: unknown,
   version: unknown,
-): OnlineTopUpLimitSnapshot {
-  const config = toWalletTopUpLimitConfig(value)
-  const persisted =
-    value && typeof value === 'object'
-      ? (value as Record<string, unknown>).limit_irr ?? (value as Record<string, unknown>).limitIrR
-      : undefined
-  if (persisted !== undefined && !isValidWalletTopUpLimit(persisted)) {
-    return toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0)
-  }
-  const numericVersion = typeof version === 'number' ? version : Number(version)
-  return toOnlineTopUpLimitSnapshot(config, Number.isFinite(numericVersion) ? numericVersion : 0)
+): OnlineTopUpLimitSnapshot | null {
+  const resolved = resolveOnlineTopUpLimitSnapshot(value, version)
+  return resolved.ok ? resolved.snapshot : null
 }
 
 function mapWallet(row: any): WalletRow {

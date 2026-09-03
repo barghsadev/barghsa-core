@@ -1124,6 +1124,7 @@ export const fa: I18nDictionary = {
   'admin.walletLimit.invalid': 'سقف باید یک عدد صحیح بین ۰ و {max} باشد',
   'admin.walletLimit.current': 'سقف فعلی',
   'admin.walletLimit.version': 'نسخه پیکربندی: {version}',
+  'admin.walletLimit.conflict': 'سقف توسط ادمین دیگری به‌روز شده است. مقدار فعلی بارگذاری شد؛ دوباره ذخیره کنید.',
 
   // ── Staff bank-receipt confirmation (T-04.2.02.04) ──────
   'admin.walletReceipts.nav': 'رسیدهای کیف پول',
@@ -2298,6 +2299,7 @@ export const en: I18nDictionary = {
     'admin.walletLimit.invalid': 'Limit must be an integer between 0 and {max}',
     'admin.walletLimit.current': 'Current limit',
     'admin.walletLimit.version': 'Config version: {version}',
+    'admin.walletLimit.conflict': 'The limit was updated by another admin. The current value was reloaded; save again.',
 
     // ── Staff bank-receipt confirmation (T-04.2.02.04) ──────
     'admin.walletReceipts.nav': 'Wallet receipts',

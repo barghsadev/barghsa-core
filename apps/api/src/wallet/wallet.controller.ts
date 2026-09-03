@@ -77,12 +77,18 @@ export class WalletController {
     this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`)
     const wallet = await this.walletService.getWallet(profileId)
     const limit = await this.walletService.resolveOnlineTopUpLimit()
+    const limitFields =
+      limit === null
+        ? {}
+        : {
+            onlineTopUpLimit: limit.onlineTopUpLimit,
+            configVersion: limit.configVersion,
+          }
     if (!wallet) {
       return {
         balance: 0,
         currency: 'IRR',
-        onlineTopUpLimit: limit.onlineTopUpLimit,
-        configVersion: limit.configVersion,
+        ...limitFields,
       }
     }
     return {
@@ -90,8 +96,7 @@ export class WalletController {
       postedBalance: Number(wallet.postedBalance),
       reservedBalance: Number(wallet.reservedBalance),
       currency: 'IRR',
-      onlineTopUpLimit: limit.onlineTopUpLimit,
-      configVersion: limit.configVersion,
+      ...limitFields,
     }
   }
 
