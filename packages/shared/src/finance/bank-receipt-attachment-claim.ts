@@ -10,8 +10,6 @@
  * @module finance
  */
 
-import { createHash } from 'node:crypto'
-
 /** Claim owners stored on `bank_receipt_attachment_claims.claim_type`. */
 export const BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES = [
   'wallet_topup',
@@ -23,27 +21,15 @@ export type BankReceiptAttachmentClaimType =
 
 /**
  * Advisory-lock namespace shared by wallet top-up and invoice receipt
- * submission. Both flows must hash this prefix plus the storage key so
- * concurrent cross-flow claims serialize on one lock.
+ * submission. Server-side SHA-256 of this prefix plus the storage key
+ * produces the `pg_advisory_lock` pair; keep hashing off this package
+ * so the finance barrel stays browser-safe.
  */
 export const BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE = 'bank-receipt-attachment'
 
 export type BankReceiptAttachmentClaimVerdict =
   | { ok: true }
   | { ok: false; reason: 'missing' | 'other_flow' }
-
-/**
- * Session-scoped `pg_advisory_lock` pair for one attachment key.
- * Wallet top-up and invoice upload must pass these exact integers.
- */
-export function bankReceiptAttachmentAdvisoryLockKeys(
-  attachmentKey: string,
-): [number, number] {
-  const digest = createHash('sha256')
-    .update(`${BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE}:${attachmentKey}`)
-    .digest()
-  return [digest.readInt32BE(0), digest.readInt32BE(4)]
-}
 
 /**
  * Decide whether a locked claim row may be reused by `requested`.

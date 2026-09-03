@@ -2,7 +2,6 @@ import { ConflictException, HttpException, Injectable, Logger } from '@nestjs/co
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
-  bankReceiptAttachmentAdvisoryLockKeys,
   canCustomerSubmitInvoiceBankReceipt,
   evaluateBankReceiptStorageMetadata,
   evaluateInvoiceBankReceiptStoredFile,
@@ -11,7 +10,10 @@ import {
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance'
-import { claimBankReceiptAttachment } from '../finance/claim-bank-receipt-attachment.js'
+import {
+  bankReceiptAttachmentAdvisoryLockKeys,
+  claimBankReceiptAttachment,
+} from '../finance/claim-bank-receipt-attachment.js'
 import { CustomerInvoiceDetailsService } from './customer-invoice-details.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'

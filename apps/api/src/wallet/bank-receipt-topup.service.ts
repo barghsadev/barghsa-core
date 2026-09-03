@@ -10,7 +10,6 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import {
   BANK_RECEIPT_TOPUP_DESCRIPTION,
-  bankReceiptAttachmentAdvisoryLockKeys,
   bankReceiptTopUpMetadata,
   evaluateBankReceiptStorageMetadata,
   parseBankReceiptTopUpSubmission,
@@ -18,7 +17,10 @@ import {
   type BankReceiptStorageRejection,
   type BankReceiptTopUpDetails,
 } from '@barghsa/shared/finance'
-import { claimBankReceiptAttachment } from '../finance/claim-bank-receipt-attachment.js'
+import {
+  bankReceiptAttachmentAdvisoryLockKeys,
+  claimBankReceiptAttachment,
+} from '../finance/claim-bank-receipt-attachment.js'
 import { WalletService, type TransactionRow } from './wallet.service.js'
 
 const PG_UNIQUE_VIOLATION = '23505'

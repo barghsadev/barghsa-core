@@ -1,6 +1,29 @@
 import { describe, it, expect, vi } from 'vitest'
 import { ConflictException } from '@nestjs/common'
-import { claimBankReceiptAttachment } from './claim-bank-receipt-attachment.js'
+import {
+  bankReceiptAttachmentAdvisoryLockKeys,
+  claimBankReceiptAttachment,
+} from './claim-bank-receipt-attachment.js'
+
+const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
+
+describe('bankReceiptAttachmentAdvisoryLockKeys (T-04.3.01.02)', () => {
+  it('derives a stable lock pair so wallet and invoice serialize on the same key', () => {
+    const wallet = bankReceiptAttachmentAdvisoryLockKeys(ATTACHMENT)
+    const invoice = bankReceiptAttachmentAdvisoryLockKeys(ATTACHMENT)
+    expect(wallet).toEqual(invoice)
+    expect(wallet).toHaveLength(2)
+    expect(Number.isInteger(wallet[0])).toBe(true)
+    expect(Number.isInteger(wallet[1])).toBe(true)
+  })
+
+  it('does not collide lock pairs across different attachment keys', () => {
+    const other = 'uploads/document/bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb.pdf'
+    expect(bankReceiptAttachmentAdvisoryLockKeys(ATTACHMENT)).not.toEqual(
+      bankReceiptAttachmentAdvisoryLockKeys(other),
+    )
+  })
+})
 
 describe('claimBankReceiptAttachment (T-04.3.01.02)', () => {
   it('inserts then accepts a same-flow claim', async () => {

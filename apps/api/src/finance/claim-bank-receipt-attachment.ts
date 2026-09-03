@@ -1,8 +1,23 @@
+import { createHash } from 'node:crypto'
 import { ConflictException } from '@nestjs/common'
 import {
+  BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE,
   evaluateBankReceiptAttachmentClaim,
   type BankReceiptAttachmentClaimType,
 } from '@barghsa/shared/finance'
+
+/**
+ * Session-scoped `pg_advisory_lock` pair for one attachment key.
+ * Wallet top-up and invoice upload must pass these exact integers.
+ */
+export function bankReceiptAttachmentAdvisoryLockKeys(
+  attachmentKey: string,
+): [number, number] {
+  const digest = createHash('sha256')
+    .update(`${BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE}:${attachmentKey}`)
+    .digest()
+  return [digest.readInt32BE(0), digest.readInt32BE(4)]
+}
 
 interface QueryClient {
   query: (
