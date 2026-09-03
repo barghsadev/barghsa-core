@@ -78,6 +78,22 @@ describe('WalletController online top-up (T-04.2.02.01)', () => {
       configVersion: 4,
     })
   })
+
+  it('omits onlineTopUpLimit when the versioned config cannot be read', async () => {
+    const { controller, getWallet, resolveOnlineTopUpLimit } = makeController()
+    getWallet.mockResolvedValue({
+      availableBalance: 0n,
+      postedBalance: 0n,
+      reservedBalance: 0n,
+    })
+    resolveOnlineTopUpLimit.mockResolvedValue(null)
+    await expect(controller.getWallet(PROFILE_ID, req)).resolves.toEqual({
+      balance: 0,
+      postedBalance: 0,
+      reservedBalance: 0,
+      currency: 'IRR',
+    })
+  })
   it('rejects a non-UUID profileId before calling the service', async () => {
     const { controller, initiate, getAccessibleProfile } = makeController()
     const rejection = await controller

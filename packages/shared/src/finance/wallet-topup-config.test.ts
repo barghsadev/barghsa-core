@@ -6,6 +6,10 @@ import {
   validateWalletTopUpLimitConfig,
   toWalletTopUpLimitConfig,
   toOnlineTopUpLimitSnapshot,
+  resolveOnlineTopUpLimitSnapshot,
+  readExpectedWalletTopUpLimitVersion,
+  onlineTopUpLimitVersionConflictMessage,
+  ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE,
   onlineTopUpLimitExceededMessage,
   readOnlineTopUpLimitFromErrorBody,
   isValidWalletTopUpLimit,
@@ -178,6 +182,73 @@ describe('isOnlineWalletTopUpAllowed (T-09.10.01)', () => {
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2.5 }, 100)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, 100.5)).toBe(false)
     expect(isOnlineWalletTopUpAllowed({ limitIrR: 2_000_000_000 }, '100' as never)).toBe(false)
+  })
+})
+
+describe('resolveOnlineTopUpLimitSnapshot (T-04.2.02.06)', () => {
+  it('serves the default 2e9 IRR ceiling at version 0 when nothing is persisted', () => {
+    expect(resolveOnlineTopUpLimitSnapshot(null)).toEqual({
+      ok: true,
+      snapshot: { onlineTopUpLimit: 2_000_000_000, configVersion: 0 },
+    })
+    expect(resolveOnlineTopUpLimitSnapshot(undefined, 9)).toEqual({
+      ok: true,
+      snapshot: { onlineTopUpLimit: 2_000_000_000, configVersion: 0 },
+    })
+  })
+
+  it('returns the persisted integer limit and its config version', () => {
+    expect(resolveOnlineTopUpLimitSnapshot({ limit_irr: 50_000 }, 4)).toEqual({
+      ok: true,
+      snapshot: { onlineTopUpLimit: 50_000, configVersion: 4 },
+    })
+    expect(resolveOnlineTopUpLimitSnapshot({ limitIrR: 0 }, 2)).toEqual({
+      ok: true,
+      snapshot: { onlineTopUpLimit: 0, configVersion: 2 },
+    })
+  })
+
+  it('fails closed on a present but corrupt persisted value', () => {
+    expect(resolveOnlineTopUpLimitSnapshot({ limit_irr: '50000' }, 3)).toEqual({ ok: false })
+    expect(resolveOnlineTopUpLimitSnapshot({ limit_irr: -1 }, 1)).toEqual({ ok: false })
+    expect(resolveOnlineTopUpLimitSnapshot({ limit_irr: 1.5 }, 1)).toEqual({ ok: false })
+    expect(resolveOnlineTopUpLimitSnapshot({}, 1)).toEqual({ ok: false })
+    expect(resolveOnlineTopUpLimitSnapshot('50000', 1)).toEqual({ ok: false })
+  })
+})
+
+describe('readExpectedWalletTopUpLimitVersion (T-04.2.02.06)', () => {
+  it('treats a missing token as an unconstrained write', () => {
+    expect(readExpectedWalletTopUpLimitVersion({ limit_irr: 1 })).toEqual({
+      ok: true,
+      expectedVersion: undefined,
+    })
+  })
+
+  it('accepts a non-negative integer expected_version or expectedVersion', () => {
+    expect(readExpectedWalletTopUpLimitVersion({ expected_version: 0 })).toEqual({
+      ok: true,
+      expectedVersion: 0,
+    })
+    expect(readExpectedWalletTopUpLimitVersion({ expectedVersion: 4 })).toEqual({
+      ok: true,
+      expectedVersion: 4,
+    })
+  })
+
+  it('rejects a present but invalid expected version', () => {
+    expect(readExpectedWalletTopUpLimitVersion({ expected_version: -1 })).toEqual({ ok: false })
+    expect(readExpectedWalletTopUpLimitVersion({ expected_version: 1.5 })).toEqual({ ok: false })
+    expect(readExpectedWalletTopUpLimitVersion({ expected_version: '1' })).toEqual({ ok: false })
+  })
+})
+
+describe('onlineTopUpLimitVersionConflictMessage (T-04.2.02.06)', () => {
+  it('names the stale expected version and the locked current version', () => {
+    expect(onlineTopUpLimitVersionConflictMessage(2, 5)).toBe(
+      'Online top-up limit config version 2 is stale; current version is 5',
+    )
+    expect(ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE).toContain('unavailable')
   })
 })
 

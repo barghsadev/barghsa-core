@@ -107,8 +107,15 @@ export default function WalletTopUpLimitConfigPanel() {
         method: 'PUT',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ limit_irr: raw }),
+        body: JSON.stringify({
+          limit_irr: raw,
+          expected_version: config?.version ?? 0,
+        }),
       })
+      if (res.status === 409) {
+        await load()
+        throw new Error(t('admin.walletLimit.conflict', locale))
+      }
       if (!res.ok) {
         const errData = (await res.json().catch(() => ({}))) as { message?: string }
         throw new Error(errData.message ?? `HTTP ${res.status}`)

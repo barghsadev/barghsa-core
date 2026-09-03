@@ -141,6 +141,102 @@ export interface OnlineTopUpLimitSnapshot {
 }
 
 /**
+ * English server message when a persisted `onlineTopUpLimit` row exists but
+ * cannot be read as a valid integer IRR ceiling. Submission must fail closed
+ * rather than substituting the 2e9 default (T-04.2.02.06).
+ */
+export const ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE =
+  'Online top-up limit configuration is unavailable'
+
+/**
+ * Result of resolving a persisted `app_config` value into the versioned
+ * snapshot used at wallet GET and online top-up submission.
+ *
+ * `ok: true` with a snapshot when the key is absent (default 2e9 at version
+ * `0`) or the stored limit is a valid integer IRR amount. `ok: false` when
+ * a value is present but corrupt — callers must fail closed.
+ */
+export type OnlineTopUpLimitResolution =
+  | { ok: true; snapshot: OnlineTopUpLimitSnapshot }
+  | { ok: false }
+
+/**
+ * Resolve a persisted `finance.wallet_top_up_limit` value into the snapshot
+ * that submission and wallet GET must use (T-04.2.02.06).
+ *
+ * A missing value (`null` / `undefined`) serves the default 2,000,000,000
+ * IRR ceiling at config version `0`. A present value that is not a valid
+ * integer IRR limit fails closed so a corrupt row cannot silently raise
+ * the enforced ceiling to the default.
+ */
+export function resolveOnlineTopUpLimitSnapshot(
+  value: unknown,
+  version?: unknown,
+): OnlineTopUpLimitResolution {
+  if (value == null) {
+    return {
+      ok: true,
+      snapshot: toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0),
+    }
+  }
+  if (typeof value !== 'object') {
+    return { ok: false }
+  }
+  const o = value as Record<string, unknown>
+  const raw = o.limit_irr ?? o.limitIrR
+  if (!isValidWalletTopUpLimit(raw)) {
+    return { ok: false }
+  }
+  return {
+    ok: true,
+    snapshot: toOnlineTopUpLimitSnapshot({ limitIrR: raw }, version as number),
+  }
+}
+
+/**
+ * Read an optional optimistic-concurrency token from an admin write body.
+ *
+ * `expected_version` / `expectedVersion` is omitted when the caller does
+ * not want a compare-and-swap. When present it must be a non-negative
+ * safe integer matching `app_config.version` (or `0` when the row does
+ * not exist yet).
+ */
+export type ExpectedWalletTopUpLimitVersionResult =
+  | { ok: true; expectedVersion: number | undefined }
+  | { ok: false }
+
+export function readExpectedWalletTopUpLimitVersion(
+  input: unknown,
+): ExpectedWalletTopUpLimitVersionResult {
+  if (!input || typeof input !== 'object') {
+    return { ok: true, expectedVersion: undefined }
+  }
+  const o = input as Record<string, unknown>
+  if (!('expected_version' in o) && !('expectedVersion' in o)) {
+    return { ok: true, expectedVersion: undefined }
+  }
+  const raw = o.expected_version ?? o.expectedVersion
+  if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < 0) {
+    return { ok: false }
+  }
+  return { ok: true, expectedVersion: raw }
+}
+
+/**
+ * English server message when an admin write's expected config version
+ * does not match the locked row (T-04.2.02.06).
+ */
+export function onlineTopUpLimitVersionConflictMessage(
+  expectedVersion: number,
+  actualVersion: number,
+): string {
+  return (
+    `Online top-up limit config version ${expectedVersion} is stale; ` +
+    `current version is ${actualVersion}`
+  )
+}
+
+/**
  * Build the submission snapshot from a resolved limit config and its
  * per-key `app_config` version.
  */

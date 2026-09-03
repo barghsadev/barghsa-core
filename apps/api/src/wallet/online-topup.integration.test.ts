@@ -17,6 +17,8 @@
  *   8. A first admin write cannot commit a tighter ceiling while a
  *      submission has already observed the absent-row default
  *      (T-04.2.02.06).
+ *   9. A corrupt persisted onlineTopUpLimit row fails closed at submission
+ *      and does not insert a Pending row (T-04.2.02.06).
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
@@ -323,6 +325,42 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       expect(
         ledger.find((row) => row.idempotency_key === 'online-topup-after-tighten-ok')!.metadata,
       ).toMatchObject({ onlineTopUpLimit: 10_000, configVersion: 2 })
+    } finally {
+      await ctx.pool.query(`DELETE FROM app_config WHERE key = 'finance.wallet_top_up_limit'`)
+    }
+  })
+
+  it('fails closed at submission when the persisted onlineTopUpLimit row is corrupt', async () => {
+    await ctx.pool.query(
+      `INSERT INTO app_config (key, value, version) VALUES ('finance.wallet_top_up_limit', $1::jsonb, 7)`,
+      [JSON.stringify({ limit_irr: 'not-an-integer' })],
+    )
+    try {
+      await expect(
+        service.initiate({
+          profileId: PROFILE_A,
+          amountIrR: 1_000n,
+          idempotencyKey: 'online-topup-corrupt-limit',
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException)
+      try {
+        await service.initiate({
+          profileId: PROFILE_A,
+          amountIrR: 1_000n,
+          idempotencyKey: 'online-topup-corrupt-limit-body',
+        })
+        throw new Error('expected corrupt-config rejection')
+      } catch (err) {
+        expect(err).toBeInstanceOf(BadRequestException)
+        expect((err as BadRequestException).getResponse()).toMatchObject({
+          message: 'Online top-up limit configuration is unavailable',
+        })
+      }
+      const ledger = await fetchLedger(PROFILE_A)
+      expect(ledger.find((row) => row.idempotency_key === 'online-topup-corrupt-limit')).toBeUndefined()
+      expect(
+        ledger.find((row) => row.idempotency_key === 'online-topup-corrupt-limit-body'),
+      ).toBeUndefined()
     } finally {
       await ctx.pool.query(`DELETE FROM app_config WHERE key = 'finance.wallet_top_up_limit'`)
     }

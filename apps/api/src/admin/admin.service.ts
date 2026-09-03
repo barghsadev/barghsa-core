@@ -22,6 +22,8 @@ import {
   toWalletTopUpLimitConfig,
   validateWalletTopUpLimitConfig,
   isValidWalletTopUpLimit,
+  readExpectedWalletTopUpLimitVersion,
+  onlineTopUpLimitVersionConflictMessage,
   GREEN_ELECTRICITY_CONFIG_KEY,
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
   toGreenElectricityConfig,
@@ -1250,7 +1252,7 @@ export class AdminService {
    * the audit trail records the change with the previous value and both
    * version numbers.
    *
-   * @param input - raw request body ({ limit_irr })
+   * @param input - raw request body ({ limit_irr, expected_version? })
    * @param actorUserId - admin user performing the change (for audit)
    * @param ip - source IP (for audit)
    * @returns the persisted (camelCase) config
@@ -1267,6 +1269,18 @@ export class AdminService {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
+        },
+        400,
+      )
+    }
+
+    const expectedVersionResult = readExpectedWalletTopUpLimitVersion(input)
+    if (!expectedVersionResult.ok) {
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'expected_version must be a non-negative integer',
         },
         400,
       )
@@ -1306,8 +1320,29 @@ export class AdminService {
       )
       const previousValue =
         prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+      const previousVersionRaw =
+        prevResult.rows.length > 0 ? Number(prevResult.rows[0]!.version) : 0
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        Number.isSafeInteger(previousVersionRaw) && previousVersionRaw >= 0
+          ? previousVersionRaw
+          : 0
+
+      if (
+        expectedVersionResult.expectedVersion !== undefined &&
+        expectedVersionResult.expectedVersion !== previousVersion
+      ) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: ErrorCodes.CONFLICT_VERSION.code,
+            message: onlineTopUpLimitVersionConflictMessage(
+              expectedVersionResult.expectedVersion,
+              previousVersion,
+            ),
+          },
+          409,
+        )
+      }
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
@@ -1359,6 +1394,9 @@ export class AdminService {
       return { ...config, version: newVersion }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
+      if (error instanceof HttpException) {
+        throw error
+      }
       this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`)
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
