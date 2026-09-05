@@ -39,6 +39,8 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 export const CreateStaffUserSchema = z.object({
   username: z
     .string()
+    .trim()
+    .toLowerCase()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(255)
     .refine(
@@ -112,7 +114,7 @@ export interface CreateStaffUserApiResponse {
   username: string
   activationMethod: 'tempPassword' | 'link'
   temporaryPassword?: string
-  activationToken?: string
+  deliveryStatus?: 'queued'
   message: string
 }
 
@@ -176,6 +178,17 @@ export class AdminController {
     }
   }
 
+  @Post('users/:userId/resend-activation')
+  @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Replace a pending staff activation link' })
+  async resendStaffActivation(@Param('userId') userId: string, @Req() req: AuthenticatedRequest): Promise<{ deliveryStatus: 'queued' }> {
+    if (!hasStaffPermission(req,'admin:users:create')) throw new HttpException({ error:ErrorCodes.AUTHZ_FORBIDDEN.code },403)
+    if (!z.string().uuid().safeParse(userId).success) throw new HttpException({ error:ErrorCodes.VALIDATION_INPUT_INVALID.code },400)
+    return this.adminService.resendStaffActivation(userId,req.session.userId,req.ip ?? 'unknown')
+  }
+
   /**
    * POST /api/admin/users/create-staff
    *
@@ -216,7 +229,7 @@ export class AdminController {
         username: { type: 'string', description: 'Normalized username' },
         activationMethod: { type: 'string', enum: ['tempPassword', 'link'] },
         temporaryPassword: { type: 'string', description: 'Temporary password (shown once, only for tempPassword method)' },
-        activationToken: { type: 'string', description: 'Activation token for constructing the activation link (only for link method)' },
+        deliveryStatus: { type: 'string', enum: ['queued'], description: 'Activation email queued for delivery' },
         message: { type: 'string', description: 'Human-readable success message' },
       },
     },
@@ -291,8 +304,8 @@ export class AdminController {
       response.temporaryPassword = result.temporaryPassword
     }
 
-    if (result.activationMethod === 'link' && 'activationToken' in result) {
-      response.activationToken = result.activationToken
+    if (result.activationMethod === 'link' && 'deliveryStatus' in result) {
+      response.deliveryStatus = result.deliveryStatus
     }
 
     return response

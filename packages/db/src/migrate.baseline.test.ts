@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version', '0088_staff_activation_delivery'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -63,7 +63,7 @@ describe('complete production schema baseline', () => {
       // tables with the old migration journal and missing unjournaled schema.
       const oldSql = readFileSync(resolve(folder, '../0079_create_bank_receipt_attachment_claims.sql'), 'utf8')
       await pool.query(oldSql)
-      await pool.query('DROP TABLE auth_delivery_outbox')
+      await pool.query('DROP TABLE auth_delivery_outbox; DROP INDEX users_activation_token_idx')
       await pool.query('DROP FUNCTION bump_user_auth_version() CASCADE; DROP FUNCTION bind_otp_auth_version() CASCADE')
       await pool.query('ALTER TABLE users DROP COLUMN auth_version; ALTER TABLE otp_challenges DROP COLUMN auth_version')
       await pool.query('ALTER TABLE otp_challenges DROP COLUMN purpose CASCADE')

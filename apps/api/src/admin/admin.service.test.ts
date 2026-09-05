@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { HttpException } from '@nestjs/common'
 import type { AdminService as AdminServiceType } from './admin.service.js'
 import type { CreateStaffUserInput } from './admin.service.js'
@@ -41,9 +41,13 @@ let AdminService: typeof AdminServiceType
 let service: AdminServiceType
 
 beforeEach(() => {
+  vi.stubEnv('AUTH_DELIVERY_ENCRYPTION_KEY', 'staff-activation-test-key')
+  vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test')
   vi.resetModules()
   vi.restoreAllMocks()
 })
+
+afterEach(() => vi.unstubAllEnvs())
 
 // ─── Test data ────────────────────────────────────────────────────────
 
@@ -170,7 +174,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 // ─── Tests — link activation ──────────────────────────────────────────
 
 describe('AdminService.createStaffUser (link)', () => {
-  it('creates a staff user with activation token and returns it', async () => {
+  it('queues staff activation without returning its secret', async () => {
     const { pool, mockConnect } = mockPool()
     const { client, mockClientQuery, mockRelease } = mockClient()
 
@@ -196,8 +200,9 @@ describe('AdminService.createStaffUser (link)', () => {
     expect(result.userId).toBeTruthy()
     expect(result.username).toBe('newstaff2@example.com')
     expect(result.activationMethod).toBe('link')
-    expect(result).toHaveProperty('activationToken')
-    expect(result.message).toContain('activation token')
+    expect(result).not.toHaveProperty('activationToken')
+    expect(result).toHaveProperty('deliveryStatus', 'queued')
+    expect(result.message).toContain('queued')
     expect(mockRelease).toHaveBeenCalled()
   })
 
@@ -224,7 +229,7 @@ describe('AdminService.createStaffUser (link)', () => {
       '10.0.0.1',
     )
 
-    const insertProfileCall = mockClientQuery.mock.calls[2]
+    const insertProfileCall = mockClientQuery.mock.calls.find(call => String(call[0]).includes('INSERT INTO profiles'))
     expect(insertProfileCall).toBeDefined()
     const insertProfileSql = insertProfileCall![0]
     expect(insertProfileSql).toContain('profiles')

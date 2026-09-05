@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
@@ -26,14 +27,11 @@ import { Route as AppNotificationsRouteImport } from './routes/_app/notification
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
-import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
-import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
-import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
@@ -41,11 +39,14 @@ import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
+import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
 import { Route as AppElectricityIndexRouteImport } from './routes/_app/electricity/index'
 import { Route as AppElectricityOrderRouteImport } from './routes/_app/electricity/order'
+import { Route as AppInvoicesIndexRouteImport } from './routes/_app/invoices/index'
+import { Route as AppInvoicesInvoiceIdRouteImport } from './routes/_app/invoices/$invoiceId'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
 import { Route as AppSettingsAddressesRouteImport } from './routes/_app/settings/addresses'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
@@ -64,6 +65,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ActivateRoute = ActivateRouteImport.update({
+  id: '/activate',
+  path: '/activate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -141,16 +147,6 @@ const AppWalletRoute = AppWalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => AppRoute,
 } as any)
-const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
-  id: '/invoices/',
-  path: '/invoices/',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
-  id: '/invoices/$invoiceId',
-  path: '/invoices/$invoiceId',
-  getParentRoute: () => AppRoute,
-} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -174,11 +170,6 @@ const AdminGeographyRoute = AdminGeographyRouteImport.update({
 const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
   id: '/invoices',
   path: '/invoices',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
-  id: '/wallet-receipts',
-  path: '/wallet-receipts',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -216,6 +207,11 @@ const AdminVerificationRoute = AdminVerificationRouteImport.update({
   path: '/verification',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
+  id: '/wallet-receipts',
+  path: '/wallet-receipts',
+  getParentRoute: () => AdminRoute,
+} as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/complete',
   path: '/complete',
@@ -239,6 +235,16 @@ const AppElectricityIndexRoute = AppElectricityIndexRouteImport.update({
 const AppElectricityOrderRoute = AppElectricityOrderRouteImport.update({
   id: '/electricity/order',
   path: '/electricity/order',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesIndexRoute = AppInvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesInvoiceIdRoute = AppInvoicesInvoiceIdRouteImport.update({
+  id: '/invoices/$invoiceId',
+  path: '/invoices/$invoiceId',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
@@ -297,6 +303,7 @@ const AdminCrmProfilesProfileIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -312,13 +319,10 @@ export interface FileRoutesByFullPath {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
-  '/invoices/': typeof AppInvoicesIndexRoute
-  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -326,11 +330,13 @@ export interface FileRoutesByFullPath {
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -339,12 +345,14 @@ export interface FileRoutesByFullPath {
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity/': typeof AppElectricityIndexRoute
+  '/invoices/': typeof AppInvoicesIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activate': typeof ActivateRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRouteWithChildren
@@ -358,12 +366,9 @@ export interface FileRoutesByTo {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
-  '/invoices': typeof AppInvoicesIndexRoute
-  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -371,11 +376,13 @@ export interface FileRoutesByTo {
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
+  '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/settings/addresses': typeof AppSettingsAddressesRoute
   '/settings/profile': typeof AppSettingsProfileRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -384,6 +391,7 @@ export interface FileRoutesByTo {
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/electricity': typeof AppElectricityIndexRoute
+  '/invoices': typeof AppInvoicesIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/admin/crm': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/activate': typeof ActivateRoute
   '/admin': typeof AdminRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
@@ -407,13 +416,10 @@ export interface FileRoutesById {
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
-  '/_app/invoices/': typeof AppInvoicesIndexRoute
-  '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
-  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
@@ -421,11 +427,13 @@ export interface FileRoutesById {
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
+  '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
+  '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
   '/_app/settings/addresses': typeof AppSettingsAddressesRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
@@ -434,6 +442,7 @@ export interface FileRoutesById {
   '/onboarding/individual/$profileId': typeof OnboardingIndividualProfileIdRoute
   '/onboarding/legal/$profileId': typeof OnboardingLegalProfileIdRoute
   '/_app/electricity/': typeof AppElectricityIndexRoute
+  '/_app/invoices/': typeof AppInvoicesIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/admin/crm/': typeof AdminCrmIndexRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
@@ -442,6 +451,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activate'
     | '/admin'
     | '/forgot-password'
     | '/login'
@@ -457,13 +467,10 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
-    | '/invoices/'
-    | '/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
@@ -471,11 +478,13 @@ export interface FileRouteTypes {
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
     | '/register/'
     | '/electricity/order'
+    | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
@@ -484,12 +493,14 @@ export interface FileRouteTypes {
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity/'
+    | '/invoices/'
     | '/settings/'
     | '/admin/crm/'
     | '/admin/crm/profiles/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activate'
     | '/forgot-password'
     | '/login'
     | '/onboarding'
@@ -503,12 +514,9 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
-    | '/invoices'
-    | '/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/geography'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
@@ -516,11 +524,13 @@ export interface FileRouteTypes {
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin'
     | '/register'
     | '/electricity/order'
+    | '/invoices/$invoiceId'
     | '/settings/addresses'
     | '/settings/profile'
     | '/settings/security'
@@ -529,6 +539,7 @@ export interface FileRouteTypes {
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/electricity'
+    | '/invoices'
     | '/settings'
     | '/admin/crm'
     | '/admin/crm/profiles/$profileId'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/activate'
     | '/admin'
     | '/forgot-password'
     | '/login'
@@ -551,13 +563,10 @@ export interface FileRouteTypes {
     | '/_app/savings'
     | '/_app/videos'
     | '/_app/wallet'
-    | '/_app/invoices/'
-    | '/_app/invoices/$invoiceId'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
     | '/admin/invoices'
-    | '/admin/wallet-receipts'
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
@@ -565,11 +574,13 @@ export interface FileRouteTypes {
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
+    | '/admin/wallet-receipts'
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
     | '/register/'
     | '/_app/electricity/order'
+    | '/_app/invoices/$invoiceId'
     | '/_app/settings/addresses'
     | '/_app/settings/profile'
     | '/_app/settings/security'
@@ -578,6 +589,7 @@ export interface FileRouteTypes {
     | '/onboarding/individual/$profileId'
     | '/onboarding/legal/$profileId'
     | '/_app/electricity/'
+    | '/_app/invoices/'
     | '/_app/settings/'
     | '/admin/crm/'
     | '/admin/crm/profiles/$profileId'
@@ -586,6 +598,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ActivateRoute: typeof ActivateRoute
   AdminRoute: typeof AdminRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
@@ -609,6 +622,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/activate': {
+      id: '/activate'
+      path: '/activate'
+      fullPath: '/activate'
+      preLoaderRoute: typeof ActivateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -716,20 +736,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWalletRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/invoices/': {
-      id: '/_app/invoices/'
-      path: '/invoices'
-      fullPath: '/invoices/'
-      preLoaderRoute: typeof AppInvoicesIndexRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/invoices/$invoiceId': {
-      id: '/_app/invoices/$invoiceId'
-      path: '/invoices/$invoiceId'
-      fullPath: '/invoices/$invoiceId'
-      preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -763,13 +769,6 @@ declare module '@tanstack/react-router' {
       path: '/invoices'
       fullPath: '/admin/invoices'
       preLoaderRoute: typeof AdminInvoicesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/wallet-receipts': {
-      id: '/admin/wallet-receipts'
-      path: '/wallet-receipts'
-      fullPath: '/admin/wallet-receipts'
-      preLoaderRoute: typeof AdminWalletReceiptsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/notifications': {
@@ -821,6 +820,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVerificationRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/wallet-receipts': {
+      id: '/admin/wallet-receipts'
+      path: '/wallet-receipts'
+      fullPath: '/admin/wallet-receipts'
+      preLoaderRoute: typeof AdminWalletReceiptsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/onboarding/complete': {
       id: '/onboarding/complete'
       path: '/complete'
@@ -854,6 +860,20 @@ declare module '@tanstack/react-router' {
       path: '/electricity/order'
       fullPath: '/electricity/order'
       preLoaderRoute: typeof AppElectricityOrderRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/': {
+      id: '/_app/invoices/'
+      path: '/invoices'
+      fullPath: '/invoices/'
+      preLoaderRoute: typeof AppInvoicesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices/$invoiceId': {
+      id: '/_app/invoices/$invoiceId'
+      path: '/invoices/$invoiceId'
+      fullPath: '/invoices/$invoiceId'
+      preLoaderRoute: typeof AppInvoicesInvoiceIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/': {
@@ -938,15 +958,15 @@ interface AppRouteChildren {
   AppSavingsRoute: typeof AppSavingsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
-  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
-  AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
+  AppInvoicesInvoiceIdRoute: typeof AppInvoicesInvoiceIdRoute
   AppSettingsAddressesRoute: typeof AppSettingsAddressesRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppSettingsTimezoneRoute: typeof AppSettingsTimezoneRoute
   AppSettingsUsernameRoute: typeof AppSettingsUsernameRoute
   AppElectricityIndexRoute: typeof AppElectricityIndexRoute
+  AppInvoicesIndexRoute: typeof AppInvoicesIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
 }
 
@@ -959,15 +979,15 @@ const AppRouteChildren: AppRouteChildren = {
   AppSavingsRoute: AppSavingsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
-  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
-  AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
+  AppInvoicesInvoiceIdRoute: AppInvoicesInvoiceIdRoute,
   AppSettingsAddressesRoute: AppSettingsAddressesRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppSettingsTimezoneRoute: AppSettingsTimezoneRoute,
   AppSettingsUsernameRoute: AppSettingsUsernameRoute,
   AppElectricityIndexRoute: AppElectricityIndexRoute,
+  AppInvoicesIndexRoute: AppInvoicesIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
 }
 
@@ -992,7 +1012,6 @@ interface AdminRouteChildren {
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminGeographyRoute: typeof AdminGeographyRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
-  AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminRolesRoute: typeof AdminRolesRoute
@@ -1000,6 +1019,7 @@ interface AdminRouteChildren {
   AdminTosRoute: typeof AdminTosRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
+  AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -1008,7 +1028,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminGeographyRoute: AdminGeographyRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
-  AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminProvidersRoute: AdminProvidersRoute,
   AdminRolesRoute: AdminRolesRoute,
@@ -1016,6 +1035,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminTosRoute: AdminTosRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
+  AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -1054,6 +1074,7 @@ const RegisterRouteWithChildren = RegisterRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ActivateRoute: ActivateRoute,
   AdminRoute: AdminRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,

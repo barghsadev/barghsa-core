@@ -41,7 +41,7 @@ export async function startHttpFixture(testDatabaseUrl: string) {
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
       env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString(),
-        NODE_ENV: 'test', AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only', REDIS_URL: '', REDIS_HOST: '', S3_BUCKET: '', S3_REGION: '' },
+        NODE_ENV: 'test', APP_PUBLIC_URL: 'https://app.example.test', AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only', REDIS_URL: '', REDIS_HOST: '', S3_BUCKET: '', S3_REGION: '' },
     })
     for (const stream of [child.stdout, child.stderr]) stream?.on('data', (data) => { output = (output + String(data)).slice(-20000) })
     const base = await new Promise<string>((resolvePort, reject) => {

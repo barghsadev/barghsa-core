@@ -516,6 +516,30 @@ export class AuthService {
     }
   }
 
+  async activateStaff(token: string, newPassword: string, ip: string): Promise<{ activated: true }> {
+    const tokenHash = createHash('sha256').update(token).digest('hex')
+    const passwordHash = await argon2.hash(newPassword)
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      const account = await client.query<{ user_id: string }>(`SELECT user_id FROM users
+        WHERE activation_token=$1 AND activation_token_expires_at > NOW() AND is_staff=true AND disabled_at IS NULL FOR UPDATE`, [tokenHash])
+      if (account.rows.length !== 1) throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+      const userId = account.rows[0]!.user_id
+      await client.query(`UPDATE users SET password_hash=$1,must_change_password=false,activation_token=NULL,
+        activation_token_expires_at=NULL,updated_at=NOW() WHERE user_id=$2`, [passwordHash, userId])
+      await client.query('UPDATE sessions SET revoked_at=NOW() WHERE user_id=$1 AND revoked_at IS NULL', [userId])
+      await client.query('UPDATE refresh_tokens SET consumed_at=NOW() WHERE user_id=$1 AND consumed_at IS NULL', [userId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'staff_user_activated',$3,$4,$5,NOW())`, [uuidv7(),userId,JSON.stringify({ targetUserId: userId }),uuidv7(),ip])
+      await client.query('COMMIT')
+      return { activated: true }
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {})
+      throw error
+    } finally { client.release() }
+  }
+
   /**
    * Complete login after OTP verification (T-02.01.03).
    *

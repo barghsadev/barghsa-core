@@ -35,7 +35,11 @@ export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool))
     SELECT c.purpose,c.destination FROM otp_challenges c JOIN auth_delivery_outbox d ON d.challenge_id=c.challenge_id
     WHERE d.id=$1 AND c.otp_hash=d.code_hash AND c.consumed_at IS NULL
       AND c.expires_at > NOW() AND d.expires_at > NOW() AND c.attempts_remaining > 0
-      AND (c.user_id IS NULL OR EXISTS (SELECT 1 FROM users u WHERE u.user_id=c.user_id AND u.auth_version=c.auth_version AND u.disabled_at IS NULL))`, [row.id])
+      AND (c.user_id IS NULL OR EXISTS (SELECT 1 FROM users u WHERE u.user_id=c.user_id AND u.auth_version=c.auth_version AND u.disabled_at IS NULL))
+    UNION ALL
+    SELECT 'staff_activation' AS purpose,u.username AS destination FROM auth_delivery_outbox d JOIN users u ON u.user_id=d.user_id
+    WHERE d.id=$1 AND d.kind='staff_activation' AND u.activation_token=d.code_hash AND u.is_staff=true
+      AND u.disabled_at IS NULL AND u.activation_token_expires_at > NOW() AND d.expires_at > NOW()`, [row.id])
   const challenge = valid.rows[0]
   if (!challenge) {
     await finish('cancelled')
@@ -49,7 +53,7 @@ export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool))
     const payload = decryptAuthDelivery(row.id, row.encrypted_payload ?? '') as Partial<AuthMessage> | null
     if (!payload || typeof payload.code !== 'string' || payload.destination !== challenge.destination ||
       createHash('sha256').update(payload.code).digest('hex') !== row.code_hash) throw new Error('Invalid auth delivery payload')
-    const ref = await send({ id: row.id, code: payload.code, destination: challenge.destination, purpose: challenge.purpose })
+    const ref = await send({ id: row.id, code: payload.code, destination: challenge.destination, purpose: challenge.purpose, ...(typeof payload.activationUrl === 'string' ? { activationUrl: payload.activationUrl } : {}) })
     await finish('sent', ref)
     return 'sent'
   } catch {

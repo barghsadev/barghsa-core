@@ -142,6 +142,10 @@ export const fa: I18nDictionary = {
 
   // ── Auth Pages — Forgot Password ─────────────────────────
   'auth.otp.error.deliveryUnavailable': 'ارسال کد تأیید در دسترس نیست. لطفاً کمی بعد دوباره تلاش کنید',
+  'auth.activate.title': 'فعال‌سازی حساب کاربری',
+  'auth.activate.submit': 'فعال‌سازی حساب',
+  'auth.activate.success': 'حساب شما فعال شد',
+  'auth.activate.invalid': 'پیوند فعال‌سازی نامعتبر یا منقضی شده است. از مدیر سامانه پیوند جدید بخواهید.',
   'auth.resetPassword.title': 'بازیابی رمز عبور',
   'auth.resetPassword.newPassword': 'رمز عبور جدید',
   'auth.resetPassword.confirmPassword': 'تکرار رمز عبور جدید',
@@ -1354,6 +1358,10 @@ export const en: I18nDictionary = {
 
   // ── Auth Pages — Forgot Password ─────────────────────────
   'auth.otp.error.deliveryUnavailable': 'Verification code delivery is unavailable. Please try again shortly.',
+  'auth.activate.title': 'Activate your account',
+  'auth.activate.submit': 'Activate account',
+  'auth.activate.success': 'Your account is active',
+  'auth.activate.invalid': 'This activation link is invalid or expired. Ask your administrator for a new link.',
   'auth.resetPassword.title': 'Reset password',
   'auth.resetPassword.newPassword': 'New password',
   'auth.resetPassword.confirmPassword': 'Confirm new password',

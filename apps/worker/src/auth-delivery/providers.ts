@@ -12,25 +12,31 @@ export interface AuthMessage {
   destination: string
   code: string
   purpose: string
+  activationUrl?: string
 }
 
 /** Dependencies are supplied by controlled provider tests, never by request data. */
 export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
   return async (message: AuthMessage): Promise<string> => {
-    if (!/^\d{6}$/.test(message.code)) throw new Error('Invalid auth message')
+    const activation = message.purpose === 'staff_activation'
+    if (!(activation ? /^[a-f0-9]{64}$/.test(message.code) && typeof message.activationUrl === 'string' : /^\d{6}$/.test(message.code))) throw new Error('Invalid auth message')
     const email = message.destination.includes('@')
     const providers = await pool.query<{ transport: string; config: unknown }>(email
       ? "SELECT transport, config FROM email_provider_configs WHERE status='active' AND last_test_status='passed' AND degraded=false"
       : "SELECT transport, config FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'")
     const provider = providers.rows[0]
     if (!provider) throw new Error('Auth provider unavailable')
-    const text = `کد تأیید برق‌آسا: ${message.code}\nBarghsa verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`
+    if (activation && !email) throw new Error('Activation requires email')
+    const subject = activation ? 'فعال‌سازی حساب برق‌آسا / Activate your Barghsa account' : 'کد تأیید برق‌آسا / Barghsa verification code'
+    const text = activation ? `برای فعال‌سازی حساب و تعیین رمز عبور، این پیوند را باز کنید. اعتبار: ۲۴ ساعت.
+Open this link to activate your account and set your password. It expires in 24 hours.
+${message.activationUrl}` : `کد تأیید برق‌آسا: ${message.code}\nBarghsa verification code: ${message.code}\nاین کد را با کسی به اشتراک نگذارید. Do not share this code.`
     if (provider.transport === 'resend' && email) {
       const config = ResendConfigSchema.parse(provider.config)
       const response = await request('https://api.resend.com/emails', {
         method: 'POST', redirect: 'error', signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Bearer ${decryptProviderSecret(config.api_key)}`, 'Content-Type': 'application/json', 'Idempotency-Key': message.id },
-        body: JSON.stringify({ from: config.from_email, to: [message.destination], subject: 'کد تأیید برق‌آسا / Barghsa verification code', text, reply_to: config.reply_to }),
+        body: JSON.stringify({ from: config.from_email, to: [message.destination], subject, text, reply_to: config.reply_to }),
       })
       if (!response.ok) throw new Error('Auth provider rejected message')
       const body = await response.json() as { id?: unknown }
@@ -56,7 +62,7 @@ export function createAuthSender(pool: Pool, request: typeof fetch = fetch) {
       try {
         const sent = await transport.sendMail({
           from: { name: config.from_name ?? 'Barghsa', address: config.from_email },
-          to: message.destination, replyTo: config.reply_to, subject: 'کد تأیید برق‌آسا / Barghsa verification code', text,
+          to: message.destination, replyTo: config.reply_to, subject, text,
           messageId: `<${message.id}@${config.from_email.split('@')[1]}>`,
           headers: { 'Resend-Idempotency-Key': message.id },
         })

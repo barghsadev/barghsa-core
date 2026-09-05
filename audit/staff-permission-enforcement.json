@@ -428,5 +428,10 @@
     "file": "apps/api/src/tickets/tickets.controller.ts",
     "method": "addComment",
     "permission": "tickets:write"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "resendStaffActivation",
+    "permission": "admin:users:create"
   }
 ]

@@ -67,7 +67,7 @@ export const users = pgTable(
     /** Staff membership does not grant any permission by itself. */
     isStaff: boolean('is_staff').notNull().default(false),
 
-    /** Time-limited activation token for staff user 'link' activation method (T-05.03.01). */
+    /** SHA-256 hash of the time-limited staff activation token (T-05.03.01). */
     activationToken: text('activation_token'),
 
     /** Expiry of the activation token (24h from creation, T-05.03.01). */

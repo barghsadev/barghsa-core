@@ -1,3 +1,5 @@
+import { createHash, randomBytes, randomUUID } from 'node:crypto'
+import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery'
 import { Injectable, Logger, HttpException, Optional } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import * as argon2 from 'argon2'
@@ -126,7 +128,7 @@ export interface CreateStaffUserInput {
 
 /**
  * Result of creating a staff user.
- * Depending on activationMethod, either a temporary password or an activation token.
+ * Depending on activationMethod, either a temporary password or a queued activation email.
  */
 export type CreateStaffUserResult = {
   userId: string
@@ -134,7 +136,7 @@ export type CreateStaffUserResult = {
   activationMethod: ActivationMethod
 } & (
   | { temporaryPassword: string; activationToken?: never; message: string }
-  | { activationToken: string; temporaryPassword?: never; message: string }
+  | { deliveryStatus: 'queued'; temporaryPassword?: never; message: string }
 )
 
 // ─── Staff user list & disable types (T-10.01.01) ────────────────────
@@ -399,6 +401,45 @@ export class AdminService {
     @Optional() private readonly configCache?: ConfigCacheService,
   ) {}
 
+  private prepareStaffActivation(username: string): { tokenHash: string; expiresAt: Date; id: string; payload: string } {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+      throw new HttpException({ error: 'VALIDATION:INPUT:INVALID', message: 'Link activation requires an email address' }, 400)
+    }
+    const rawToken = randomBytes(32).toString('hex')
+    const tokenHash = createHash('sha256').update(rawToken).digest('hex')
+    try {
+      const origin = new URL(process.env.APP_PUBLIC_URL ?? '')
+      if (origin.protocol !== 'https:' && !(process.env.NODE_ENV !== 'production' && origin.protocol === 'http:' && ['localhost','127.0.0.1'].includes(origin.hostname))) throw new Error('Invalid public URL')
+      const link = new URL('/activate', origin.origin)
+      link.hash = new URLSearchParams({ token: rawToken }).toString()
+      const id = randomUUID()
+      return { id,tokenHash,expiresAt:new Date(Date.now()+24*60*60*1000),payload:encryptAuthDelivery(id,{code:rawToken,destination:username,activationUrl:link.toString()}) }
+    } catch {
+      throw new HttpException({ statusCode:503,error:ErrorCodes.AUTH_DELIVERY_UNAVAILABLE.code },503)
+    }
+  }
+
+  async resendStaffActivation(userId: string, actorUserId: string, ip: string): Promise<{ deliveryStatus: 'queued' }> {
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      const found = await client.query<{ username: string }>(`SELECT username FROM users WHERE user_id=$1 AND is_staff=true
+        AND disabled_at IS NULL AND activation_token IS NOT NULL AND must_change_password=true FOR UPDATE`, [userId])
+      if (found.rows.length !== 1) throw new HttpException({ error:'VALIDATION:INPUT:INVALID',message:'Staff activation is not pending' },409)
+      const recent = await client.query(`SELECT 1 FROM auth_delivery_outbox WHERE user_id=$1 AND kind='staff_activation' AND created_at>NOW()-INTERVAL '1 minute'`,[userId])
+      if (recent.rows.length) throw new HttpException({ error:'AUTH:OTP:RATE_LIMITED' },429)
+      const delivery = this.prepareStaffActivation(found.rows[0]!.username)
+      await client.query('UPDATE users SET activation_token=$1,activation_token_expires_at=$2,updated_at=NOW() WHERE user_id=$3',[delivery.tokenHash,delivery.expiresAt,userId])
+      await client.query(`INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
+        VALUES ($1,'staff_activation',$2,$3,$4,$5)`,[delivery.id,userId,delivery.tokenHash,delivery.payload,delivery.expiresAt])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'staff_activation_reissued',$3,$4,$5,NOW())`,[uuidv7(),actorUserId,JSON.stringify({targetUserId:userId}),uuidv7(),ip])
+      await client.query('COMMIT')
+      return { deliveryStatus:'queued' }
+    } catch (error) { await client.query('ROLLBACK').catch(() => {}); throw error }
+    finally { client.release() }
+  }
+
   /**
    * Create a new staff user.
    *
@@ -465,6 +506,7 @@ export class AdminService {
     let activationToken: string | null = null
     let activationTokenExpiresAt: Date | null = null
     let temporaryPassword: string | null = null
+    let activationDelivery: { id: string; payload: string } | undefined
 
     if (input.activationMethod === 'tempPassword') {
       temporaryPassword = generateTemporaryPassword()
@@ -475,8 +517,10 @@ export class AdminService {
       const strongPassword = generateTemporaryPassword()
       passwordHash = await argon2.hash(strongPassword)
       mustChangePassword = true
-      activationToken = uuidv7()
-      activationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      const prepared = this.prepareStaffActivation(input.username)
+      activationToken = prepared.tokenHash
+      activationTokenExpiresAt = prepared.expiresAt
+      activationDelivery = { id: prepared.id, payload: prepared.payload }
     }
 
     const client = await pool.connect()
@@ -512,6 +556,12 @@ export class AdminService {
           },
           500,
         )
+      }
+
+      if (activationDelivery) {
+        await client.query(`INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
+          VALUES ($1,'staff_activation',$2,$3,$4,$5)`,
+        [activationDelivery.id,userId,activationToken,activationDelivery.payload,activationTokenExpiresAt])
       }
 
       // ── 4. Auto-create verified individual profile ──────────────────
@@ -576,8 +626,8 @@ export class AdminService {
         userId,
         username: input.username,
         activationMethod: 'link',
-        activationToken: activationToken!,
-        message: 'Staff user created with activation token. Email delivery is not yet configured — use the activation token to construct the activation link.',
+        deliveryStatus: 'queued',
+        message: 'Staff user created. Activation link queued for email delivery.',
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {

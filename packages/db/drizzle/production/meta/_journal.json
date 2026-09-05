@@ -57,6 +57,13 @@
       "when": 1790467200000,
       "tag": "0087_authentication_version",
       "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1790553600000,
+      "tag": "0088_staff_activation_delivery",
+      "breakpoints": true
     }
   ]
 }

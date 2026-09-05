@@ -55,8 +55,8 @@ afterEach(async () => {
   vi.unstubAllEnvs()
 }, 15000)
 
-async function post(path: string, body: unknown) {
-  return fetch(`${fixture.base}/api/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+async function post(path: string, body: unknown, headers: Record<string, string> = {}) {
+  return fetch(`${fixture.base}/api/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) })
 }
 async function register() {
   const response = await post('auth/register', { username: 'delivery@example.test', password, tosVersionId: terms })
@@ -238,6 +238,77 @@ it('rechecks credentials while creating a trusted-device session', async () => {
     client.release()
     await loggingIn
   }
+})
+
+async function createStaff() {
+  await fixture.pool.query("UPDATE users SET is_admin=true WHERE user_id='provider-admin'")
+  const sessionId = randomUUID(), csrf = randomUUID()
+  await fixture.pool.query(`INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES ($1,'provider-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`, [sessionId,csrf,randomUUID()])
+  const response = await post('admin/users/create-staff', {
+    username: 'new-staff@example.test', firstName: 'New', lastName: 'Staff', roleIds: ['role-finance'], activationMethod: 'link',
+  }, { Cookie: `barghsa_session=${sessionId}`, 'X-CSRF-Token': csrf })
+  const body = await response.json() as { userId: string; deliveryStatus: string; activationToken?: string }
+  expect(response.status, JSON.stringify(body)).toBe(201)
+  expect(body.deliveryStatus).toBe('queued')
+  expect(body.activationToken).toBeUndefined()
+  return body.userId
+}
+
+it('creates staff with a queued link and consumes the delivered link only once', async () => {
+  const userId = await createStaff()
+  expect(await deliver()).toBe('sent')
+  expect(received).toHaveLength(1)
+  const link = received[0]!.text.match(/https:\/\/[^\s]+/)?.[0]
+  expect(link).toBeTruthy()
+  const token = new URLSearchParams(new URL(link!).hash.slice(1)).get('token')!
+  const account = (await fixture.pool.query('SELECT activation_token,is_admin,is_staff FROM users WHERE user_id=$1', [userId])).rows[0]
+  expect(account).toEqual({ activation_token: createHash('sha256').update(token).digest('hex'), is_admin: false, is_staff: true })
+  const newPassword = 'Activated-staff-password-123!'
+  const results = await Promise.all([1,2].map(() => post('auth/activate-staff', { token,newPassword })))
+  expect(results.map(result => result.status).sort()).toEqual([200,401])
+  const activated = (await fixture.pool.query('SELECT password_hash,activation_token,must_change_password FROM users WHERE user_id=$1', [userId])).rows[0]
+  expect(activated.activation_token).toBeNull()
+  expect(activated.must_change_password).toBe(false)
+  expect(await argon2.verify(activated.password_hash,newPassword)).toBe(true)
+  expect((await fixture.pool.query("SELECT count(*)::int AS count FROM audit_log WHERE event='staff_user_activated'")).rows[0].count).toBe(1)
+})
+
+it('does not send an expired activation and rolls back staff creation when queuing fails', async () => {
+  const userId = await createStaff()
+  await fixture.pool.query("UPDATE users SET activation_token_expires_at=NOW()-INTERVAL '1 second' WHERE user_id=$1", [userId])
+  expect(await deliver()).toBe('cancelled')
+  expect(received).toHaveLength(0)
+  await fixture.pool.query(`CREATE FUNCTION reject_staff_delivery() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION 'injected queue failure'; END; $$;
+    CREATE TRIGGER reject_staff_delivery BEFORE INSERT ON auth_delivery_outbox FOR EACH ROW EXECUTE FUNCTION reject_staff_delivery()`)
+  const session = (await fixture.pool.query("SELECT session_id,csrf_token FROM sessions WHERE user_id='provider-admin' LIMIT 1")).rows[0]
+  const response = await post('admin/users/create-staff', { username: 'rollback-staff@example.test',firstName:'Rollback',lastName:'Staff',roleIds:[],activationMethod:'link' },
+    { Cookie: `barghsa_session=${session.session_id}`, 'X-CSRF-Token': session.csrf_token })
+  expect(response.status).toBe(500)
+  expect((await fixture.pool.query("SELECT count(*)::int AS count FROM users WHERE username='rollback-staff@example.test'")).rows[0].count).toBe(0)
+})
+
+it('lets an administrator replace a pending activation and invalidates the previous link', async () => {
+  const userId = await createStaff()
+  expect(await deliver()).toBe('sent')
+  const first = new URLSearchParams(new URL(received[0]!.text.match(/https:\/\/[^\s]+/)![0]).hash.slice(1)).get('token')!
+  const session = (await fixture.pool.query("SELECT session_id,csrf_token FROM sessions WHERE user_id='provider-admin' LIMIT 1")).rows[0]
+  const headers = { Cookie: `barghsa_session=${session.session_id}`, 'X-CSRF-Token': session.csrf_token }
+  const tooSoon = await post(`admin/users/${userId}/resend-activation`, {},headers)
+  expect(tooSoon.status,await tooSoon.text()).toBe(429)
+  await fixture.pool.query("UPDATE auth_delivery_outbox SET created_at=NOW()-INTERVAL '2 minutes'")
+  const replaced = await post(`admin/users/${userId}/resend-activation`, {},headers)
+  expect(replaced.status,await replaced.text()).toBe(200)
+  const stale = await post('auth/activate-staff',{token:first,newPassword:'Activated-staff-password-123!'})
+  expect(stale.status,await stale.text()).toBe(401)
+  expect(await deliver()).toBe('sent')
+  const next = new URLSearchParams(new URL(received[1]!.text.match(/https:\/\/[^\s]+/)![0]).hash.slice(1)).get('token')!
+  expect(next).not.toBe(first)
+  const activated = await post('auth/activate-staff',{token:next,newPassword:'Activated-staff-password-123!'})
+  expect(activated.status,await activated.text()).toBe(200)
+  const afterActivation = await post(`admin/users/${userId}/resend-activation`,{},headers)
+  expect(afterActivation.status,await afterActivation.text()).toBe(409)
 })
 
 it('rolls back challenge creation if the delivery insert fails', async () => {

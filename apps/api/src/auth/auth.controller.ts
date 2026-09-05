@@ -380,6 +380,17 @@ export class AuthController {
    * - 5 attempts per IP per hour
    */
   @SkipCsrf()
+  @Post('activate-staff')
+  @HttpCode(200)
+  @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
+  @ApiOperation({ summary: 'Consume a staff activation link and set a password' })
+  async activateStaff(@Body() body: unknown, @Req() req: Request): Promise<{ activated: true }> {
+    const parsed = ResetPasswordSchema.pick({ newPassword: true }).extend({ token: z.string().regex(/^[a-f0-9]{64}$/) }).safeParse(body)
+    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400)
+    return this.authService.activateStaff(parsed.data.token, parsed.data.newPassword, req.ip ?? req.socket?.remoteAddress ?? 'unknown')
+  }
+
+  @SkipCsrf()
   @Post('forgot-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000, security: true })

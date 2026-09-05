@@ -11,6 +11,7 @@ The production journal starts with an additive baseline, followed by domain and 
 - 0082 restores foundation constraints, reference data and indexes that previously existed only in source helpers.
 - 0083 separates staff membership from platform administrator authority. Existing administrator flags are preserved for account review.
 - 0084 gives unchanged predefined CRM, Finance and Legal roles the concrete capabilities used by their domain endpoints. Customized permission sets remain unchanged for review.
+- 0088 queues staff activation links in the same encrypted outbox, indexes activation-token hashes, and invalidates pending links when credentials change. `APP_PUBLIC_URL` must point to the public web origin. Existing unconsumed staff links can be replaced through the administrator reissue endpoint.
 - 0087 binds account challenges and session creation to a credential version. Existing account codes without a snapshot are invalidated; credential/contact/disable changes invalidate outstanding codes without deleting history.
 - 0086 adds the encrypted authentication delivery outbox. Configure the same `AUTH_DELIVERY_ENCRYPTION_KEY` for API and worker before issuing new OTPs.
 - 0085 binds OTP challenges to an operation and, for existing-account actions, a user. Old unscoped codes are retained but invalidated; users must request a new code after rollout.
