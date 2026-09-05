@@ -44,9 +44,39 @@ interface JournalEntry { tag: string; when: number }
 interface AppliedMigration { id: string; hash: string; created_at: string }
 
 function journal(folder: string): JournalEntry[] {
-  return (JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8')) as {
-    entries: JournalEntry[]
-  }).entries
+  const value: unknown = JSON.parse(readFileSync(resolve(folder, 'meta/_journal.json'), 'utf8'))
+  const entries = (value as { entries?: unknown })?.entries
+  if (!Array.isArray(entries) || entries.length === 0) throw new Error('Migration journal must contain entries')
+  const tags = new Set<string>()
+  let previous = 0
+  for (const entry of entries) {
+    if (!entry || typeof entry.tag !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(entry.tag)
+      || tags.has(entry.tag) || !Number.isSafeInteger(entry.when) || entry.when <= previous) {
+      throw new Error('Migration journal requires unique tags and strictly increasing positive timestamps')
+    }
+    tags.add(entry.tag)
+    previous = entry.when
+  }
+  return entries as JournalEntry[]
+}
+
+function sqlHash(folder: string, entry: JournalEntry): string {
+  return createHash('sha256').update(readFileSync(resolve(folder, `${entry.tag}.sql`))).digest('hex')
+}
+
+function verifyHistory(entries: JournalEntry[], applied: AppliedMigration[], folder: string, requireAll: boolean): void {
+  const latest = applied.reduce((max, row) => BigInt(row.created_at) > max ? BigInt(row.created_at) : max, 0n)
+  if (latest > BigInt(entries.at(-1)!.when)) throw new Error('Database migration history is newer than this journal')
+  for (const entry of entries) {
+    const rows = applied.filter(row => row.created_at === String(entry.when))
+    const hash = sqlHash(folder, entry)
+    if (rows.length > 1 || (rows.length === 1 && rows[0]!.hash !== hash)) {
+      throw new Error(`Applied migration checksum/history mismatch: ${entry.tag}`)
+    }
+    if (!rows.length && (requireAll || BigInt(entry.when) <= latest)) {
+      throw new Error(`Migration ${entry.tag} is missing behind the database migration head`)
+    }
+  }
 }
 
 function metadataTable(schema: string): string {
@@ -78,8 +108,10 @@ export async function runMigrations(options: MigrationOptions = {}): Promise<Mig
     await client.query('SELECT pg_advisory_lock(hashtext($1))', [`barghsa:migrations:${schema}`])
     const entries = journal(folder)
     const before = await getAppliedMigrations(client, schema)
+    verifyHistory(entries, before, folder, false)
     await migrate(drizzle(client), { migrationsFolder: folder, migrationsSchema: schema })
     const after = await getAppliedMigrations(client, schema)
+    verifyHistory(entries, after, folder, true)
     const beforeIds = new Set(before.map((row) => row.id))
     const applied = after.filter((row) => !beforeIds.has(row.id)).map((row) => {
       const entry = entries.find((entry) => String(entry.when) === row.created_at)
@@ -109,7 +141,7 @@ export async function verifyMigrationVersion(expectedMigrationId: string, option
   const pool = createDirectDbPool(options.connection, { shared: false })
   try {
     const applied = await getAppliedMigrations(pool, options.migrationsSchema ?? 'drizzle')
-    const hash = createHash('sha256').update(readFileSync(resolve(folder, `${entry.tag}.sql`))).digest('hex')
+    const hash = sqlHash(folder, entry)
     return applied.some((row) => row.created_at === String(entry.when) && row.hash === hash)
   } finally {
     await pool.end()
