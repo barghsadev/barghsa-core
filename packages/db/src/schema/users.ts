@@ -61,6 +61,9 @@ export const users = pgTable(
     /** Admin flag — set for bootstrap admin user (T-02.04.03). */
     isAdmin: boolean('is_admin').notNull().default(false),
 
+    /** Staff membership does not grant any permission by itself. */
+    isStaff: boolean('is_staff').notNull().default(false),
+
     /** Time-limited activation token for staff user 'link' activation method (T-05.03.01). */
     activationToken: text('activation_token'),
 
@@ -104,6 +107,7 @@ export const createUsersTable = sql`
     locale TEXT NOT NULL DEFAULT 'fa',
     must_change_password BOOLEAN NOT NULL DEFAULT false,
     is_admin BOOLEAN NOT NULL DEFAULT false,
+    is_staff BOOLEAN NOT NULL DEFAULT false,
     last_accepted_tos_version TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -113,6 +117,7 @@ export const createUsersTable = sql`
 
   -- Migration: add email and mobile columns for T-03.03.04
   DO $$ BEGIN
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS is_staff BOOLEAN NOT NULL DEFAULT false;
     IF NOT EXISTS (
       SELECT 1 FROM information_schema.columns
       WHERE table_name = 'users' AND column_name = 'email'

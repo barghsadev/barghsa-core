@@ -54,6 +54,7 @@ describe('seed verification', () => {
         locale TEXT NOT NULL DEFAULT 'fa',
         must_change_password BOOLEAN NOT NULL DEFAULT false,
         is_admin BOOLEAN NOT NULL DEFAULT false,
+        is_staff BOOLEAN NOT NULL DEFAULT false,
         password_change_token TEXT,
         password_change_token_expires_at TIMESTAMPTZ,
         notification_preferences TEXT NOT NULL DEFAULT 'IN_APP',

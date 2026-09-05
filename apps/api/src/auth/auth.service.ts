@@ -160,7 +160,7 @@ export class AuthService {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
         `SELECT user_id, password_hash, must_change_password,
-                password_change_token, password_change_token_expires_at, is_admin, disabled_at
+                password_change_token, password_change_token_expires_at, is_admin, is_staff, disabled_at
          FROM users
          WHERE username = $1`,
         [input.username],
@@ -201,7 +201,7 @@ export class AuthService {
 
       // 3b. Extract user properties
       const userId = userResult.rows[0].user_id
-      const isStaff = userResult.rows[0].is_admin ?? false
+      const isStaff = userResult.rows[0].is_admin === true || userResult.rows[0].is_staff === true
 
       // 3b2. Reject disabled accounts (T-10.01.01). Checked *after* the
       // password verifies so account existence is not leaked to callers

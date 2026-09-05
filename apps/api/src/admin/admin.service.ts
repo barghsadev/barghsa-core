@@ -406,7 +406,7 @@ export class AdminService {
    * 1. Validate username uniqueness (optimistic pre-check + transaction guard)
    * 2. Generate password (tempPassword) or activation token (link)
    * 3. Hash password with Argon2id
-   * 4. Create user record with is_admin = true (in transaction — catches
+   * 4. Create staff membership without platform admin authority (transaction catches
    *    unique violation as a TOCTOU safety net)
    * 5. Auto-create an individual, verified profile (no address needed)
    * 6. Record audit event
@@ -442,7 +442,7 @@ export class AdminService {
 
     // ── 1b. Validate role IDs against predefined roles ─────────────────
     const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
-    const assignedRoleIds = input.roleIds ?? []
+    const assignedRoleIds = [...new Set(input.roleIds ?? [])]
     const invalidRoleIds = assignedRoleIds.filter((rid) => !validRoleIds.has(rid))
 
     if (invalidRoleIds.length > 0) {
@@ -486,9 +486,9 @@ export class AdminService {
 
       // ── 3. Create user record ──────────────────────────────────────
       const userResult = await client.query(
-        `INSERT INTO users (user_id, username, password_hash, is_admin, must_change_password,
+        `INSERT INTO users (user_id, username, password_hash, is_admin, is_staff, must_change_password,
                             activation_token, activation_token_expires_at, created_at, updated_at)
-         VALUES ($1, $2, $3, true, $4, $5, $6, $7, $8)
+         VALUES ($1, $2, $3, false, true, $4, $5, $6, $7, $8)
          RETURNING user_id, username`,
         [
           userId,
@@ -524,10 +524,10 @@ export class AdminService {
 
       // ── 4b. Assign initial roles ────────────────────────────────────
       if (assignedRoleIds.length > 0) {
-        const insertRoleValues = assignedRoleIds.map((rid) => `($1, '${rid.replace(/'/g, "''")}', $2)`).join(', ')
         await client.query(
-          `INSERT INTO user_roles (user_id, role_id, created_at) VALUES ${insertRoleValues}`,
-          [userId, now],
+          `INSERT INTO user_roles (user_id, role_id, created_at)
+           SELECT $1, role_id, $2 FROM unnest($3::text[]) AS role_id`,
+          [userId, now, assignedRoleIds],
         )
       }
 
@@ -640,6 +640,7 @@ export class AdminService {
     reason?: string,
   ): Promise<{ userId: string; roleIds: string[]; previousRoleIds: string[] }> {
     const pool = getDbPool()
+    roleIds = [...new Set(roleIds)]
 
     // ── 1. Validate that the target user exists ──────────────────────────
     const userResult = await pool.query(
@@ -675,6 +676,10 @@ export class AdminService {
     try {
       await client.query('BEGIN')
 
+      // Serialize replacement and session revocation with other account edits.
+      const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [targetUserId])
+      if (!locked.rows.length) throw new HttpException({ statusCode: 404, error: 'USER_NOT_FOUND' }, 404)
+
       // ── 3. Fetch current role set ─────────────────────────────────────
       const currentRolesResult = await client.query(
         `SELECT role_id FROM user_roles WHERE user_id = $1`,
@@ -682,16 +687,25 @@ export class AdminService {
       )
       const previousRoleIds = currentRolesResult.rows.map((r: { role_id: string }) => r.role_id)
 
+      if (previousRoleIds.length === roleIds.length && previousRoleIds.every((id: string) => roleIds.includes(id))) {
+        await client.query('COMMIT')
+        return { userId: targetUserId, roleIds, previousRoleIds }
+      }
+
       // ── 4. Replace role set (delete all, insert new) ──────────────────
       await client.query(`DELETE FROM user_roles WHERE user_id = $1`, [targetUserId])
 
       if (roleIds.length > 0) {
-        const insertValues = roleIds.map((rid) => `($1, '${rid.replace(/'/g, "''")}')`).join(', ')
         await client.query(
-          `INSERT INTO user_roles (user_id, role_id, created_at) VALUES ${insertValues}`,
-          [targetUserId],
+          `INSERT INTO user_roles (user_id, role_id, created_at)
+           SELECT $1, role_id, $2 FROM unnest($3::text[]) AS role_id`,
+          [targetUserId, now, roleIds],
         )
       }
+
+      await client.query('UPDATE users SET is_staff=true, updated_at=$2 WHERE user_id=$1', [targetUserId, now])
+      await client.query('UPDATE sessions SET revoked_at=$2, updated_at=$2 WHERE user_id=$1 AND revoked_at IS NULL', [targetUserId, now])
+      await client.query('UPDATE refresh_tokens SET consumed_at=$2 WHERE user_id=$1 AND consumed_at IS NULL', [targetUserId, now])
 
       // ── 5. Record audit event ─────────────────────────────────────────
       const auditId = uuidv7()
@@ -732,6 +746,7 @@ export class AdminService {
       })
 
       this.logger.error(`Failed to update roles for user ${targetUserId}: ${String(error)}`)
+      if (error instanceof HttpException) throw error
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff roles' },
         500,
@@ -2514,8 +2529,8 @@ export class AdminService {
   /**
    * List staff accounts for the admin staff management view.
    *
-   * "Staff" = users who are platform admins (`is_admin`) OR hold at least
-   * one staff role (`user_roles`), i.e. the accounts an admin manages —
+   * Staff membership persists when the last role is removed. Legacy platform
+   * admins and users holding staff roles are also included in this list,
    * deliberately separate from the CRM customer list. Each row carries the
    * default-profile name, aggregated role names, last successful login
    * (`last_login_at`), and account status derived from `disabled_at`.
@@ -2527,7 +2542,7 @@ export class AdminService {
     const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200)
     const offset = Math.max(Math.trunc(query.offset ?? 0), 0)
 
-    const staffWhere = `u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`
+    const staffWhere = `u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`
 
     const countResult = await pool.query<{ total: number }>(
       `SELECT COUNT(*)::int AS total
@@ -2625,7 +2640,7 @@ export class AdminService {
         `SELECT u.user_id, u.username, u.disabled_at
          FROM users u
          WHERE u.user_id = $1
-           AND (u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id))
+           AND (u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id))
          FOR UPDATE`,
         [input.userId],
       )

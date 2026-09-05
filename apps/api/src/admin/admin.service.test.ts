@@ -135,7 +135,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
     expect(mockRelease).toHaveBeenCalled()
   })
 
-  it('sets must_change_password=true and is_admin=true', async () => {
+  it('requires a password change without granting platform administration', async () => {
     const { pool, mockConnect } = mockPool()
     const { client, mockClientQuery } = mockClient()
 
@@ -161,7 +161,8 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
     const insertUserCall = mockClientQuery.mock.calls[1]
     expect(insertUserCall).toBeDefined()
     const insertValues = insertUserCall![1]
-    // is_admin is hardcoded true in SQL, must_change_password is parameter $4
+    expect(insertUserCall![0]).toContain('false, true, $4')
+    // Staff membership is true, platform administration false; password change is $4.
     expect(insertValues[3]).toBe(true)
   })
 })
@@ -395,6 +396,7 @@ describe('AdminService.updateStaffRoles', () => {
     mockConnect.mockResolvedValueOnce(client)
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: 'target-user' }] }) // lock user
       .mockResolvedValueOnce({ rows: [{ role_id: 'role-customer-support' }, { role_id: 'role-finance' }] }) // current roles
       .mockResolvedValueOnce(undefined) // DELETE old roles
       .mockResolvedValueOnce(undefined) // INSERT new roles
@@ -427,6 +429,7 @@ describe('AdminService.updateStaffRoles', () => {
     mockConnect.mockResolvedValueOnce(client)
     mockClientQuery
       .mockResolvedValueOnce(undefined) // BEGIN
+      .mockResolvedValueOnce({ rows: [{ user_id: 'target-user' }] }) // lock user
       .mockResolvedValueOnce({ rows: [{ role_id: 'role-admin' }] }) // current roles
       .mockResolvedValueOnce(undefined) // DELETE old roles
       // No INSERT (empty role set)

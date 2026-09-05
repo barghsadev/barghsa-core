@@ -24,7 +24,9 @@ export async function startHttpFixture(testDatabaseUrl: string) {
     }
     await pool?.end()
     try {
-      if (created) await management.query(`DROP DATABASE "${database}" WITH (FORCE)`)
+      // PostgreSQL waits for closing connections. FORCE can terminate a socket
+      // whose Pool.end() has returned before its TCP close event is delivered.
+      if (created) await management.query(`DROP DATABASE "${database}"`)
     } finally { await management.end() }
   }
 

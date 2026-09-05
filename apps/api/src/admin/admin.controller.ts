@@ -51,7 +51,7 @@ export const CreateStaffUserSchema = z.object({
     ),
   firstName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
   lastName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
-  roleIds: z.array(z.string().uuid()).optional().default([]),
+  roleIds: z.array(z.string().min(1).max(100)).max(50).optional().default([]),
   activationMethod: z.enum(['tempPassword', 'link']),
 })
 

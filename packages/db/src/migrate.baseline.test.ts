@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -61,10 +61,17 @@ describe('complete production schema baseline', () => {
       await pool.query('INSERT INTO drizzle.__drizzle_migrations(hash, created_at) VALUES ($1, $2)',
         [createHash('sha256').update(oldSql).digest('hex'), '1789776000000'])
       await pool.query('ALTER TABLE users DROP COLUMN password_change_token')
+      await pool.query('ALTER TABLE users DROP COLUMN is_staff')
+      await pool.query("INSERT INTO users(user_id, username, password_hash, is_admin) VALUES ('legacy-admin', 'legacy-admin@example.test', 'test-only', true)")
+      await pool.query("INSERT INTO user_roles(user_id, role_id) VALUES ('baseline-user', 'role-finance')")
       await pool.query('DROP TABLE sms_provider_configs')
       const oldHistory = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations')).rows
       const productsBefore = (await pool.query('SELECT * FROM products ORDER BY id')).rows
       expect((await runMigrations(options)).ok).toBe(true)
+      expect((await pool.query("SELECT is_admin, is_staff FROM users WHERE user_id='legacy-admin'")).rows[0])
+        .toEqual({ is_admin: true, is_staff: true })
+      expect((await pool.query("SELECT is_admin, is_staff FROM users WHERE user_id='baseline-user'")).rows[0])
+        .toEqual({ is_admin: false, is_staff: true })
       expect((await pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(productsBefore)
       expect((await pool.query('SELECT posted_balance::text AS balance FROM wallets WHERE profile_id=$1', [profile])).rows[0].balance)
         .toBe('9007199254740993')

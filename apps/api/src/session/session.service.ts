@@ -205,7 +205,7 @@ export class SessionService {
     try {
       const result = await pool.query(
         `SELECT s.session_id, s.user_id, s.csrf_token,
-                u.is_admin,
+                u.is_admin, u.disabled_at,
                 s.expires_at, s.idle_deadline, s.revoked_at,
                 s.step_up_verified_at
          FROM sessions s
@@ -222,7 +222,7 @@ export class SessionService {
       const row = result.rows[0]
 
       // Check revocation
-      if (row.revoked_at) {
+      if (row.revoked_at || row.disabled_at) {
         return null
       }
 

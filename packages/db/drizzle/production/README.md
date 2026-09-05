@@ -9,9 +9,12 @@ The production journal starts with an additive baseline, followed by domain and 
 - 0080 creates declared tables and adds missing columns. It corrects text references to UUID keys using explicit casts. Existing rows are retained; invalid IDs or missing required values fail the transaction and require a reviewed backfill.
 - 0081 restores domain constraints, indexes, triggers, provider tables and catalogue protections. It keeps the final invoice uniqueness rule without replaying intermediate rules or deleting duplicate reminders.
 - 0082 restores foundation constraints, reference data and indexes that previously existed only in source helpers.
+- 0083 separates staff membership from platform administrator authority. Existing administrator flags are preserved for account review.
 
 The runner holds a direct connection and an advisory lock throughout migration. Drizzle applies pending entries transactionally. A failure prevents successful version reporting. Repeating the command applies no additional entries.
 
 Schema generation uses the TypeScript loader and excludes test files. The retained snapshot describes the declared schema; supplemental SQL-only constraints and tables require manual migration review. Run `pnpm --filter @barghsa/db db:generate` after changing a declaration, and inspect the SQL before committing.
+
+Every journal timestamp must exceed the previous entry. The inherited journal contains future timestamps, so a freshly generated wall-clock timestamp may need adjustment before it can be applied as an upgrade.
 
 The baseline integration test creates an empty PostgreSQL database, migrates and seeds it twice, checks selected foreign keys and financial constraints, then upgrades a populated fixture with the old journal and missing schema. It checks product preservation, an exact balance above Number.MAX_SAFE_INTEGER and unchanged old migration records. This fixture is not a certification of every historical deployment shape. Test a restored production copy before rollout; incompatible legacy rows must be backfilled without fabricating identities or dropping business records.
