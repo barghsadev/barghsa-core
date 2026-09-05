@@ -15,6 +15,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ProfilesService } from './profiles.service.js'
 import { AgentsService } from './agents.service.js'
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js'
+import { z } from 'zod'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
@@ -233,6 +235,44 @@ export class ProfilesController {
     }
 
     return this.profilesService.verifyProfileApi(userId, profileId)
+  }
+
+  @Get('ownership-transfers')
+  @HttpCode(200)
+  async listOwnershipTransfers(@Req() req: AuthenticatedRequest) {
+    return this.agentsService.listOwnershipTransfers(req.session.userId)
+  }
+
+  @Post(':profileId/ownership-accept')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
+  async acceptOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.resolveOwnership(profileId,body,req,'accept')
+  }
+
+  @Post(':profileId/ownership-decline')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
+  async declineOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.resolveOwnership(profileId,body,req,'decline')
+  }
+
+  @Post(':profileId/ownership-cancel')
+  @HttpCode(200)
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
+  async cancelOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
+    return this.resolveOwnership(profileId,body,req,'cancel')
+  }
+
+  private resolveOwnership(profileId: string, body: unknown, req: AuthenticatedRequest, decision: 'accept'|'decline'|'cancel') {
+    const parsed=z.object({ transferId:z.uuid() }).safeParse(body)
+    if (!parsed.success || !z.uuid().safeParse(profileId).success) {
+      throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+    }
+    return this.agentsService.resolveOwnershipTransfer(profileId,parsed.data.transferId,req.session.userId,decision)
   }
 
   /**
@@ -649,6 +689,8 @@ export class ProfilesController {
    * Only one pending transfer per profile is allowed at a time.
    * Transfers expire after 7 days if not accepted.
    */
+  @RequiresStepUp()
+  @UseGuards(StepUpGuard)
   @Post(':profileId/transfer-ownership')
   @HttpCode(201)
   @RateLimit({ namespace: 'profiles:transfer-ownership:initiate', limit: 5, windowMs: 60_000 })
@@ -661,12 +703,13 @@ export class ProfilesController {
   @ApiResponse({ status: 409, description: 'A pending transfer already exists' })
   async initiateOwnershipTransfer(
     @Param('profileId') profileId: string,
-    @Body() body: { newOwnerUserId: string },
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest,
   ) {
     const userId = req.session.userId
 
-    if (!body.newOwnerUserId?.trim()) {
+    const parsed = z.object({newOwnerUserId:z.string().trim().min(1).max(128)}).safeParse(body)
+    if (!parsed.success || !z.uuid().safeParse(profileId).success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'newOwnerUserId is required' },
         400,
@@ -675,7 +718,7 @@ export class ProfilesController {
 
     const result = await this.agentsService.initiateOwnershipTransfer(
       profileId,
-      body.newOwnerUserId.trim(),
+      parsed.data.newOwnerUserId,
       userId,
     )
 

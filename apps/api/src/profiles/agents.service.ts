@@ -801,7 +801,7 @@ export class AgentsService {
     // ── Check: no pending transfer already exists ────────────────
     const pendingResult = await pool.query(
       `SELECT id FROM profile_ownership_transfers
-       WHERE profile_id = $1 AND status = 'Pending'`,
+       WHERE profile_id = $1 AND status = 'Pending' AND expires_at > NOW()`,
       [profileId],
     )
     if (pendingResult.rows.length > 0) {
@@ -819,6 +819,28 @@ export class AgentsService {
     try {
       await client.query('BEGIN')
       transactionStarted = true
+
+      // Recheck authority while holding the profile lock through the write.
+      const lockedProfile = await client.query(
+        `SELECT user_id FROM profiles WHERE id=$1 AND profile_type='LEGAL' AND NOT archived FOR UPDATE`, [profileId],
+      )
+      if (lockedProfile.rows[0]?.user_id !== userId) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409)
+      }
+      const target = await client.query(
+        `SELECT pa.id FROM profile_agents pa JOIN users u ON u.user_id=pa.user_id
+         WHERE pa.profile_id=$1 AND pa.user_id=$2 AND u.disabled_at IS NULL FOR SHARE OF pa,u`,
+        [profileId,newOwnerUserId],
+      )
+      if (!target.rows.length) throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409)
+      await client.query(
+        `WITH expired AS (
+           UPDATE profile_ownership_transfers SET status='Expired',updated_at=NOW()
+           WHERE profile_id=$1 AND status='Pending' AND expires_at<=clock_timestamp() RETURNING id
+         ) INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+           SELECT uuid_generate_v7(),$2,'ownership_transfer_expired',jsonb_build_object('transferId',id,'profileId',$1::text),uuid_generate_v7(),NOW() FROM expired`,
+        [profileId,userId],
+      )
 
       await client.query(
         `INSERT INTO profile_ownership_transfers (id, profile_id, from_user_id, to_user_id, status, expires_at, created_at, updated_at)
@@ -865,4 +887,76 @@ export class AgentsService {
 
     return { id: transferId }
   }
+
+  async listOwnershipTransfers(userId: string) {
+    const result = await getDbPool().query(
+      `SELECT t.id,t.profile_id,t.from_user_id,t.to_user_id,t.expires_at,
+              COALESCE(l.legal_name,p.id::text) AS profile_name
+       FROM profile_ownership_transfers t JOIN profiles p ON p.id=t.profile_id
+       LEFT JOIN legal_profiles l ON l.id=p.id
+       WHERE t.status='Pending' AND t.expires_at>NOW() AND NOT p.archived
+         AND (t.from_user_id=$1 OR t.to_user_id=$1) ORDER BY t.created_at DESC`, [userId],
+    )
+    return { transfers: result.rows.map(r=>({ id:r.id,profileId:r.profile_id,
+      fromUserId:r.from_user_id,toUserId:r.to_user_id,expiresAt:r.expires_at,profileName:r.profile_name })) }
+  }
+
+  async resolveOwnershipTransfer(profileId: string, transferId: string, userId: string,
+    decision: 'accept' | 'decline' | 'cancel'): Promise<{ status: string }> {
+    const client = await getDbPool().connect()
+    let committed = false
+    try {
+      await client.query('BEGIN')
+      // Every transfer decision locks the profile before the transfer itself.
+      const profile = (await client.query(
+        `SELECT user_id,profile_type,archived FROM profiles WHERE id=$1 FOR UPDATE`,[profileId],
+      )).rows[0]
+      const transfer = (await client.query(
+        `SELECT * FROM profile_ownership_transfers WHERE id=$1 AND profile_id=$2 FOR UPDATE`,[transferId,profileId],
+      )).rows[0]
+      if (!profile || !transfer || (decision==='cancel' ? transfer.from_user_id : transfer.to_user_id)!==userId) {
+        throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
+      }
+      if (transfer.status!=='Pending' || profile.user_id!==transfer.from_user_id || profile.profile_type!=='LEGAL' || profile.archived) {
+        throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code},409)
+      }
+      let targetExists = true
+      if (decision==='accept') {
+        const target = await client.query(
+          `SELECT pa.id FROM profile_agents pa JOIN users u ON u.user_id=pa.user_id
+           WHERE pa.profile_id=$1 AND pa.user_id=$2 AND u.disabled_at IS NULL FOR UPDATE OF pa FOR SHARE OF u`,
+          [profileId,transfer.to_user_id],
+        )
+        targetExists = target.rows.length > 0
+      }
+      // Check time after every possible lock wait, before applying ownership.
+      const expired = (await client.query('SELECT $1::timestamptz<=clock_timestamp() AS expired',[transfer.expires_at])).rows[0].expired
+      const status = expired ? 'Expired' : decision==='accept' ? 'Completed' : decision==='decline' ? 'Declined' : 'Cancelled'
+      if (status==='Completed') {
+        if (!targetExists) throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code},409)
+        // The profile changes owner, never acquires a second one. Both users
+        // choose their context again after applicable sessions are revoked.
+        await client.query('UPDATE profiles SET user_id=$2,is_default=false,updated_at=NOW() WHERE id=$1',[profileId,transfer.to_user_id])
+        await client.query("DELETE FROM profile_agents WHERE profile_id=$1 AND role='Owner'",[profileId])
+        await client.query(`UPDATE sessions SET revoked_at=NOW(),updated_at=NOW()
+          WHERE user_id=ANY($1::text[]) AND revoked_at IS NULL`,[[transfer.from_user_id,transfer.to_user_id]])
+        await client.query(`UPDATE refresh_tokens SET consumed_at=NOW()
+          WHERE user_id=ANY($1::text[]) AND consumed_at IS NULL`,[[transfer.from_user_id,transfer.to_user_id]])
+      }
+      await client.query(`UPDATE profile_ownership_transfers SET status=$2,updated_at=NOW(),
+        completed_at=CASE WHEN $2='Completed' THEN NOW() ELSE completed_at END,
+        declined_at=CASE WHEN $2='Declined' THEN NOW() ELSE declined_at END,
+        cancelled_at=CASE WHEN $2='Cancelled' THEN NOW() ELSE cancelled_at END WHERE id=$1`,[transferId,status])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES ($1,$2,$3,$4::jsonb,$5,NOW())`,[uuidv7(),userId,`ownership_transfer_${status.toLowerCase()}`,
+        JSON.stringify({profileId,transferId,fromUserId:transfer.from_user_id,toUserId:transfer.to_user_id}),uuidv7()])
+      await client.query('COMMIT'); committed=true
+      if (expired) throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code,message:'Ownership transfer expired'},409)
+      return {status}
+    } catch(error) {
+      if (!committed) await client.query('ROLLBACK').catch(()=>{})
+      throw error
+    } finally {client.release()}
+  }
+
 }

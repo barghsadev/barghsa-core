@@ -634,6 +634,10 @@ describe('AgentsService', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] })
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
+      // Locked authority and target rechecks, then expiry reconciliation
+      mockClient.query.mockResolvedValueOnce({ rows: [{ user_id: userId }] })
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'agent-1' }] })
+      mockClient.query.mockResolvedValueOnce({ rows: [] })
       // INSERT transfer
       mockClient.query.mockResolvedValueOnce(undefined)
       // INSERT audit log
