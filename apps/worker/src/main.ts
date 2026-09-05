@@ -1,3 +1,4 @@
+import { PollerGroup } from './jobs/poller-group.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
@@ -96,9 +97,10 @@ async function main(): Promise<void> {
     logger.info(`Worker health server listening on port ${port}`);
   });
 
-  // Track whether a job is in-flight.
+  const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
+
+  // Stop new jobs before waiting for running work.
   let draining = false;
-  let currentJob: Promise<void> | null = null;
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */
@@ -127,7 +129,7 @@ async function main(): Promise<void> {
     });
 
     // 2. Wait for the in-flight job to finish.
-    const waitForJob = currentJob ?? Promise.resolve();
+    const waitForJob = pollers.drain();
 
     // 3. Drain server, close pool, then exit.
     void Promise.all([closeServer, waitForJob])
@@ -165,8 +167,9 @@ async function main(): Promise<void> {
   // The in-app transport is mandatory and always registered so every row that
   // requests `in_app` delivery lands a durable `in_app_notifications` row.
   const transports = { in_app: new InAppNotificationTransport() };
-  const OUTBOX_POLL_MS = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
-  const outboxPoller = setInterval(async () => {
+  const outboxInterval = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
+  const OUTBOX_POLL_MS = Number.isFinite(outboxInterval) && outboxInterval >= 1000 ? outboxInterval : 2000;
+  const outboxPoller = pollers.every(async () => {
     if (draining) return;
     try {
       const r = await runOutboxPoll({ transports });
@@ -207,7 +210,7 @@ async function main(): Promise<void> {
     );
   }
   let breachScanInFlight = false;
-  const breachScanner = setInterval(async () => {
+  const breachScanner = pollers.every(async () => {
     if (draining || breachScanInFlight) return;
     breachScanInFlight = true;
     try {
@@ -261,7 +264,7 @@ async function main(): Promise<void> {
     );
   }
   let escalationScanInFlight = false;
-  const escalationScanner = setInterval(async () => {
+  const escalationScanner = pollers.every(async () => {
     if (draining || escalationScanInFlight) return;
     escalationScanInFlight = true;
     try {
@@ -314,7 +317,7 @@ async function main(): Promise<void> {
     );
   }
   let overdueScanInFlight = false;
-  const overdueScanner = setInterval(async () => {
+  const overdueScanner = pollers.every(async () => {
     if (draining || overdueScanInFlight) return;
     overdueScanInFlight = true;
     try {
@@ -367,7 +370,7 @@ async function main(): Promise<void> {
     );
   }
   let reminderScheduleInFlight = false;
-  const reminderScheduler = setInterval(async () => {
+  const reminderScheduler = pollers.every(async () => {
     if (draining || reminderScheduleInFlight) return;
     reminderScheduleInFlight = true;
     try {
@@ -419,7 +422,7 @@ async function main(): Promise<void> {
     );
   }
   let reminderSendInFlight = false;
-  const reminderSender = setInterval(async () => {
+  const reminderSender = pollers.every(async () => {
     if (draining || reminderSendInFlight) return;
     reminderSendInFlight = true;
     try {
@@ -471,7 +474,7 @@ async function main(): Promise<void> {
     );
   }
   let walletReconcileInFlight = false;
-  const walletReconciler = setInterval(async () => {
+  const walletReconciler = pollers.every(async () => {
     if (draining || walletReconcileInFlight) return;
     walletReconcileInFlight = true;
     try {
@@ -524,7 +527,7 @@ async function main(): Promise<void> {
     );
   }
   let onlineTopUpExpiryInFlight = false;
-  const onlineTopUpExpiryScanner = setInterval(async () => {
+  const onlineTopUpExpiryScanner = pollers.every(async () => {
     if (draining || onlineTopUpExpiryInFlight) return;
     onlineTopUpExpiryInFlight = true;
     try {
