@@ -421,14 +421,15 @@ export class AgentsService {
     // Query pending invitations matching this username, joined with profile and inviter info
     const result = await pool.query(
       `SELECT pi.id, pi.profile_id,
-              COALESCE(p.first_name || ' ' || p.last_name, p.id) AS profile_name,
+              COALESCE(lp.legal_name, NULLIF(concat_ws(' ', p.first_name, p.last_name), ''), p.id::text) AS profile_name,
               pi.role, pi.invited_by,
-              COALESCE(u.first_name || ' ' || u.last_name, u.username) AS inviter_name,
+              u.username AS inviter_name,
               pi.created_at, pi.expires_at
        FROM profile_invitations pi
        JOIN profiles p ON p.id = pi.profile_id
+       LEFT JOIN legal_profiles lp ON lp.id = p.id
        LEFT JOIN users u ON u.user_id = pi.invited_by
-       WHERE pi.username = $1 AND pi.status = 'Pending' AND pi.expires_at > NOW()
+       WHERE pi.username = $1 AND pi.status = 'Pending' AND (pi.expires_at IS NULL OR pi.expires_at > NOW()) AND NOT p.archived
        ORDER BY pi.created_at DESC`,
       [username],
     )

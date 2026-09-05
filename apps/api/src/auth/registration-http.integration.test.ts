@@ -96,3 +96,31 @@ it('preserves published content when draft edits race publication', async () => 
   expect(results.map(result => result.status).filter(status => status === 400 || status === 409)).toHaveLength(1)
   expect((await fixture.pool.query("SELECT count(*)::int AS count FROM audit_log WHERE event='tos_updated'")).rows[0].count).toBe(1)
 }, 15000)
+
+it('keeps invitations pending after registration until the user explicitly accepts', async () => {
+  await fixture.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES ('inviter','inviter@example.test','test-only')")
+  const profileId = (await fixture.pool.query("INSERT INTO profiles(user_id,profile_type,status) VALUES ('inviter','LEGAL','ACTIVE') RETURNING id")).rows[0].id
+  const inviteId = randomUUID()
+  await fixture.pool.query(`INSERT INTO profile_invitations(id,profile_id,username,role,invited_by,expires_at)
+    VALUES ($1,$2,'invitee@example.test','Finance','inviter',NOW()+INTERVAL '1 day')`, [inviteId, profileId])
+  const started = await post('auth/register', { username: 'invitee@example.test', password, tosVersionId: oldTerms })
+  expect(started.status).toBe(200)
+  const { challengeId } = await started.json() as { challengeId: string }
+  // This test isolates membership consent; delivery is covered by the mailbox suite.
+  await fixture.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2',
+    [createHash('sha256').update('123456').digest('hex'), challengeId])
+  const verified = await post('auth/register/verify', { challengeId, otp: '123456' })
+  const user = await verified.json() as { userId: string; csrfToken: string }
+  expect(verified.status, JSON.stringify(user)).toBe(200)
+  const headers = { Cookie: verified.headers.getSetCookie().map(cookie => cookie.split(';')[0]).join('; '), 'X-CSRF-Token': user.csrfToken }
+  expect((await fixture.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [inviteId])).rows[0].status).toBe('Pending')
+  expect((await fixture.pool.query('SELECT * FROM profile_agents WHERE user_id=$1', [user.userId])).rows).toEqual([])
+  expect((await fixture.pool.query("SELECT * FROM audit_log WHERE user_id=$1 AND event='invitation_accepted'", [user.userId])).rows).toEqual([])
+  const pending = await fetch(`${fixture.base}/api/invitations/pending`, { headers })
+  expect(pending.status, fixture.logs()).toBe(200)
+  expect(await pending.json()).toMatchObject({ invitations: [{ id: inviteId, role: 'Finance' }] })
+  const accepted = await post(`invitations/${inviteId}/accept`, {}, headers)
+  expect(accepted.status, await accepted.text()).toBe(200)
+  expect((await fixture.pool.query('SELECT role FROM profile_agents WHERE user_id=$1 AND profile_id=$2', [user.userId, profileId])).rows).toEqual([{ role: 'Finance' }])
+  expect((await fixture.pool.query('SELECT status FROM profile_invitations WHERE id=$1', [inviteId])).rows[0].status).toBe('Accepted')
+}, 15000)
