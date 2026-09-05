@@ -186,12 +186,18 @@ export class AgentsService {
     try {
       await client.query('BEGIN')
 
-      await client.query(
+      const changed = await client.query(
         `UPDATE profile_invitations
          SET status = 'Withdrawn', updated_at = NOW()
-         WHERE id = $1`,
+         WHERE id = $1 AND status='Pending'
+           AND (expires_at IS NULL OR expires_at>clock_timestamp())
+         RETURNING id`,
         [inviteId],
       )
+      if (changed.rowCount !== 1) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'Invitation changed or expired' }, 409)
+      }
 
       const correlationId = uuidv7()
       await client.query(
@@ -491,6 +497,14 @@ export class AgentsService {
 
     const invite = inviteResult.rows[0]
 
+    // Check the invitation belongs to this user (by username match)
+    if ((invite.username as string) !== username) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
     if (invite.status !== 'Pending') {
       throw new HttpException(
         {
@@ -502,13 +516,7 @@ export class AgentsService {
       )
     }
 
-    // Check the invitation belongs to this user (by username match)
-    if ((invite.username as string) !== username) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
-        404,
-      )
-    }
+
 
     // Check expiry
     if (invite.expires_at && new Date(invite.expires_at as Date) < new Date()) {
@@ -532,6 +540,19 @@ export class AgentsService {
       await client.query('BEGIN')
       transactionStarted = true
 
+      const claimed = await client.query(
+        `UPDATE profile_invitations SET status='Accepted',updated_at=NOW()
+         WHERE id=$1 AND status='Pending' AND (expires_at IS NULL OR expires_at>clock_timestamp())
+           AND username=(SELECT username FROM users WHERE user_id=$2 AND disabled_at IS NULL FOR SHARE)
+           AND profile_id=$3 AND role=$4
+           AND EXISTS (SELECT 1 FROM profiles WHERE id=$3 AND profile_type='LEGAL' AND NOT archived AND user_id<>$2)
+         RETURNING id`, [inviteId, userId, profileId, role],
+      )
+      if (claimed.rowCount !== 1) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'Invitation changed or expired' }, 409)
+      }
+
       // Check the user isn't already an agent of this profile (inside transaction to prevent TOCTOU race)
       const existingAgent = await client.query(
         `SELECT id FROM profile_agents WHERE profile_id = $1 AND user_id = $2 FOR UPDATE`,
@@ -551,14 +572,6 @@ export class AgentsService {
         `INSERT INTO profile_agents (id, profile_id, user_id, role, joined_at, created_at, updated_at)
          VALUES ($1, $2, $3, $4, NOW(), NOW(), NOW())`,
         [uuidv7(), profileId, userId, role],
-      )
-
-      // Update invitation status
-      await client.query(
-        `UPDATE profile_invitations
-         SET status = 'Accepted', updated_at = NOW()
-         WHERE id = $1`,
-        [inviteId],
       )
 
       // Audit log
@@ -630,6 +643,14 @@ export class AgentsService {
 
     const invite = inviteResult.rows[0]
 
+    // Check the invitation belongs to this user (by username match)
+    if ((invite.username as string) !== username) {
+      throw new HttpException(
+        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
+        404,
+      )
+    }
+
     if (invite.status !== 'Pending') {
       throw new HttpException(
         {
@@ -641,13 +662,7 @@ export class AgentsService {
       )
     }
 
-    // Check the invitation belongs to this user (by username match)
-    if ((invite.username as string) !== username) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Invitation not found' },
-        404,
-      )
-    }
+
 
     // Wrap state change and audit log in a transaction
     const client = await pool.connect()
@@ -656,12 +671,18 @@ export class AgentsService {
       await client.query('BEGIN')
       transactionStarted = true
 
-      await client.query(
+      const changed = await client.query(
         `UPDATE profile_invitations
          SET status = 'Declined', updated_at = NOW()
-         WHERE id = $1`,
+         WHERE id = $1 AND status='Pending'
+           AND (expires_at IS NULL OR expires_at>clock_timestamp())
+         RETURNING id`,
         [inviteId],
       )
+      if (changed.rowCount !== 1) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code,
+          message: 'Invitation changed or expired' }, 409)
+      }
 
       const correlationId = uuidv7()
       await client.query(

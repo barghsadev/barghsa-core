@@ -146,7 +146,7 @@ describe('AgentsService', () => {
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
       // Transaction: UPDATE invitation
-      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'inv-1' }], rowCount: 1 })
       // Transaction: INSERT audit log
       mockClient.query.mockResolvedValueOnce({ rows: [] })
       // Transaction: COMMIT
@@ -203,7 +203,7 @@ describe('AgentsService', () => {
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
       // Transaction: UPDATE
-      mockClient.query.mockResolvedValueOnce({ rows: [] })
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'inv-1' }], rowCount: 1 })
       // Transaction: INSERT audit
       mockClient.query.mockResolvedValueOnce({ rows: [] })
       // Transaction: COMMIT
@@ -440,11 +440,11 @@ describe('AgentsService', () => {
       })
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
+      // Claim pending invitation
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: inviteId }], rowCount: 1 })
       // Duplicate agent check (inside transaction)
       mockClient.query.mockResolvedValueOnce({ rows: [] })
       // INSERT profile_agents
-      mockClient.query.mockResolvedValueOnce(undefined)
-      // UPDATE invitation
       mockClient.query.mockResolvedValueOnce(undefined)
       // INSERT audit log
       mockClient.query.mockResolvedValueOnce(undefined)
@@ -518,6 +518,8 @@ describe('AgentsService', () => {
       })
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
+      // Claim pending invitation
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: inviteId }], rowCount: 1 })
       // Duplicate agent check (inside transaction): already exists
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'existing-agent' }] })
       // ROLLBACK from conflict handler
@@ -552,7 +554,7 @@ describe('AgentsService', () => {
       // Transaction: BEGIN
       mockClient.query.mockResolvedValueOnce(undefined)
       // UPDATE invitation
-      mockClient.query.mockResolvedValueOnce(undefined)
+      mockClient.query.mockResolvedValueOnce({ rows: [{ id: inviteId }], rowCount: 1 })
       // INSERT audit log
       mockClient.query.mockResolvedValueOnce(undefined)
       // COMMIT
