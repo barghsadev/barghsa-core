@@ -43,6 +43,13 @@
       "when": 1790294400000,
       "tag": "0085_otp_purpose_binding",
       "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "7",
+      "when": 1790380800000,
+      "tag": "0086_auth_delivery_outbox",
+      "breakpoints": true
     }
   ]
 }

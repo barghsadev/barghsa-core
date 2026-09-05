@@ -112,6 +112,12 @@ export const ErrorCodes = {
   },
 
   // ── OTP ────────────────────────────────────────────
+  AUTH_DELIVERY_UNAVAILABLE: {
+    code: 'AUTH:DELIVERY:UNAVAILABLE',
+    httpStatus: 503,
+    messageKey: 'auth.otp.error.deliveryUnavailable',
+    severity: 'error' as ErrorSeverity,
+  },
   AUTH_OTP_INVALID: {
     code: 'AUTH:OTP:INVALID',
     httpStatus: 401,

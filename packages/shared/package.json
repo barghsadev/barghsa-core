@@ -19,7 +19,8 @@
         "./finance": "./dist/finance/index.js",
         "./admin": "./dist/admin/index.js",
         "./promotions": "./dist/promotions/index.js",
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        "./auth-delivery": "./dist/auth-delivery/index.js"
     },
     "scripts": {
         "build": "tsc",

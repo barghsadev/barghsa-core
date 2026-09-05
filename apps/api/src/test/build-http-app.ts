@@ -5,6 +5,7 @@ import { resolve } from 'node:path'
 /** HTTP integration tests must never silently exercise stale compiled code. */
 export function setup(): void {
   const require = createRequire(__filename)
+  execFileSync('pnpm', ['--filter', '@barghsa/worker', 'build'], { cwd: resolve(__dirname, '../../../..'), stdio: 'pipe' })
   execFileSync(process.execPath, [require.resolve('@nestjs/cli/bin/nest.js'), 'build'], {
     cwd: resolve(__dirname, '../..'), stdio: 'pipe',
   })

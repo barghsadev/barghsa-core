@@ -141,6 +141,7 @@ export const fa: I18nDictionary = {
   'auth.otp.backToRegister': 'بازگشت به فرم ثبت‌نام',
 
   // ── Auth Pages — Forgot Password ─────────────────────────
+  'auth.otp.error.deliveryUnavailable': 'ارسال کد تأیید در دسترس نیست. لطفاً کمی بعد دوباره تلاش کنید',
   'auth.forgotPassword.title': 'فراموشی رمز عبور',
   'auth.forgotPassword.submit': 'ارسال کد تأیید',
   'auth.forgotPassword.submitting': 'در حال ارسال…',
@@ -1343,6 +1344,7 @@ export const en: I18nDictionary = {
   'auth.otp.backToRegister': 'Back to registration',
 
   // ── Auth Pages — Forgot Password ─────────────────────────
+  'auth.otp.error.deliveryUnavailable': 'Verification code delivery is unavailable. Please try again shortly.',
   'auth.forgotPassword.title': 'Forgot Password',
   'auth.forgotPassword.submit': 'Send verification code',
   'auth.forgotPassword.submitting': 'Sending…',

@@ -19,6 +19,7 @@ describe('OtpService', () => {
   let service: OtpService
 
   beforeEach(() => {
+    vi.stubEnv('AUTH_DELIVERY_ENCRYPTION_KEY', 'unit-test-delivery-key-only')
     vi.clearAllMocks()
     mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
     mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
@@ -289,7 +290,8 @@ describe('OtpService', () => {
     const ip = '192.168.1.1'
 
     beforeEach(() => {
-      vi.clearAllMocks()
+      vi.stubEnv('AUTH_DELIVERY_ENCRYPTION_KEY', 'unit-test-delivery-key-only')
+    vi.clearAllMocks()
       mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
       mockPool.query.mockResolvedValue({ rows: [], rowCount: 1 })
     })

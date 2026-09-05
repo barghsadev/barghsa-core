@@ -1,3 +1,4 @@
+import { getSmsirCredit, sendSmsirVerification } from '@barghsa/shared/auth-delivery'
 import { Injectable, Inject, Optional } from '@nestjs/common'
 import type { SmsirConfig } from './smsir-config.schema'
 
@@ -78,51 +79,14 @@ export const SMSIR_API_CLIENT = Symbol('SMSIR_API_CLIENT')
 
 export const SMSIR_API_BASE_ENV = 'SMSIR_API_BASE'
 const DEFAULT_SMSIR_BASE = 'https://api.sms.ir'
-const REQUEST_TIMEOUT_MS = 15_000
 
 const defaultApiClient: SmsirApiClientLike = {
   async getCredit(apiKey, baseUrl) {
-    const res = await fetch(`${baseUrl}/v1/credit`, {
-      headers: {
-        'x-api-key': apiKey,
-        accept: 'application/json',
-      },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    })
-    if (res.status === 200 || res.status === 201) {
-      const body = (await res.json()) as SmsirCreditResponse
-      return body
-    }
-    return { message: await safeApiError(res) }
+    return { credit: await getSmsirCredit(apiKey, baseUrl) }
   },
   async sendVerifyCode(apiKey, baseUrl, payload) {
-    const res = await fetch(`${baseUrl}/v1/send/verify`, {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'Content-Type': 'application/json',
-        accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    })
-    if (res.status === 200 || res.status === 201) {
-      const body = (await res.json()) as SmsirSendVerifyResponse
-      return body
-    }
-    return { message: await safeApiError(res) }
+    return { message_id: await sendSmsirVerification(apiKey, baseUrl, payload.mobile_number, payload.template_id, payload.parameters) }
   },
-}
-
-async function safeApiError(res: Response): Promise<string> {
-  let detail = ''
-  try {
-    const body = (await res.json()) as { message?: string; detail?: string }
-    detail = body.detail ?? body.message ?? ''
-  } catch {
-    /* non-JSON error body */
-  }
-  return `SMS.ir request failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`
 }
 
 @Injectable()

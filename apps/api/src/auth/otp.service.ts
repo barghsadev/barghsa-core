@@ -2,6 +2,7 @@ import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery'
 import type { PoolClient } from 'pg'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
@@ -67,11 +68,16 @@ export class OtpService {
     const challengeId = randomUUID()
     const expiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS)
 
+    const deliveryId = randomUUID()
+    const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination })
     const pool = getDbPool()
     await pool.query(
-      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null],
+      `WITH challenge AS (
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING challenge_id
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
+         SELECT $10,challenge_id,$3,$11,$7 FROM challenge`,
+      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null, deliveryId, encrypted],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -104,11 +110,16 @@ export class OtpService {
     const challengeId = randomUUID()
     const expiresAt = new Date(Date.now() + OtpService.OTP_TTL_MS)
 
+    const deliveryId = randomUUID()
+    const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination })
     const pool = getDbPool()
     await pool.query(
-      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt, purpose],
+      `WITH challenge AS (
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose)
+         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING challenge_id
+       ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
+         SELECT $8,challenge_id,$3,$9,$6 FROM challenge`,
+      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt, purpose, deliveryId, encrypted],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -178,12 +189,16 @@ export class OtpService {
 
     // NOTE: Intentionally do NOT reset attempts_remaining on resend —
     // prevents brute-force bypass via resend cycling (new OTP, same attempts budget)
+    const deliveryId = randomUUID()
+    const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination })
     const updated = await pool.query(
-      `UPDATE otp_challenges
+      `WITH challenge AS (UPDATE otp_challenges
        SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1, updated_at = NOW()
        WHERE challenge_id = $3 AND otp_hash = $4 AND consumed_at IS NULL
-         AND expires_at > NOW() AND attempts_remaining > 0`,
-      [otpHash, newExpiresAt, challengeId, otp_hash],
+         AND expires_at > NOW() AND attempts_remaining > 0 RETURNING challenge_id)
+       INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
+       SELECT $5,challenge_id,$1,$6,$2 FROM challenge`,
+      [otpHash, newExpiresAt, challengeId, otp_hash, deliveryId, encrypted],
     )
     if (updated.rowCount === 0) {
       throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
@@ -272,6 +287,12 @@ export class OtpService {
     this.logger.debug(`OTP verified for challenge ${challengeId}`)
 
     return { verified: true, challengeId }
+  }
+
+  private deliveryPayload(id: string, payload: { code: string; destination: string }): string {
+    try { return encryptAuthDelivery(id, payload) } catch {
+      throw new HttpException({ statusCode: 503, error: ErrorCodes.AUTH_DELIVERY_UNAVAILABLE.code }, 503)
+    }
   }
 
   private async enforceSendRateLimits(destination: string, ip: string): Promise<void> {

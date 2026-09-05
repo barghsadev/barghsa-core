@@ -436,3 +436,5 @@ export * from './schema/invoice-reminder-schedule'
 export * from './schema/invoice-reminder-offset-toggles'
 export * from './schema/bank-receipts'
 export * from './schema/bank-receipt-attachment-claims'
+
+export * from './schema/auth-delivery-outbox'

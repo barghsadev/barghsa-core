@@ -1,3 +1,4 @@
+import { runAuthDelivery } from './auth-delivery/runner.js';
 import { PollerGroup } from './jobs/poller-group.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { type Server as HttpServer, createServer } from 'node:http';
@@ -161,6 +162,15 @@ async function main(): Promise<void> {
   process.on('unhandledRejection', (reason) => {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
+
+  pollers.every(async () => {
+    const outcome = await runAuthDelivery(getDbPool());
+    if (outcome === 'retry' || outcome === 'dead') {
+      await recordJobFailure({ jobType: 'auth_delivery', error: 'delivery_failed', errorCategory: 'transient' });
+    } else if (outcome === 'sent') {
+      await recordJobSuccess('auth_delivery');
+    }
+  }, 1000);
 
   // ── Notification outbox poll loop (E-05, T-05.01.02 / T-05.02.01) ──────
   // Poll for due outbox rows, dispatch channels, and record outcomes.
