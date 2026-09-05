@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -54,9 +55,7 @@ function requestIp(req: AuthenticatedRequest): string {
  * Security posture (mirrors the S-09.12 admin controllers):
  * - Every route requires an authenticated session with the
  *   `admin:catalogue:edit` capability (same gate as the electricity
- *   ordering settings surface, T-09.10.02). Today the session model
- *   exposes only `req.session.isAdmin` (platform admin); granular
- *   staff-role permissions arrive with the role system (E-10).
+ *   ordering settings surface, T-09.10.02). Capabilities are read from current database roles.
  * - The mutation additionally requires recent step-up verification via
  *   `@RequiresStepUp()` (StepUpGuard) — consistent with the VAT and
  *   upload-policy mutation endpoints.
@@ -74,7 +73,7 @@ export class ContractElectricityLimitsController {
 
   /** Single enforcement point for the `admin:catalogue:edit` capability. */
   private assertElectricitySettingsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:catalogue:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage contract electricity limits',

@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -120,7 +121,7 @@ export class CrmV2Controller {
     @Param('profileId') profileId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:read')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -164,9 +165,7 @@ export class CrmV2Controller {
    * lastName, nationalId) and legal-entity fields are blocked for direct
    * editing — they require a verification case (T-05.02.05).
    *
-   * Note: Full RBAC permission enforcement (crm:edit role) is pending
-   * the role assignment system (T-09.05.01). Currently uses admin check
-   * isAdmin as a secure default — all system admins have crm:edit access.
+   * The crm:edit capability is resolved from current database roles.
    *
    * Audit: profile_updated with before/after diff.
    * Permission: admin or staff with crm:edit role required.
@@ -200,7 +199,7 @@ export class CrmV2Controller {
     @Body() dto: UpdateProfileDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -289,7 +288,7 @@ export class CrmV2Controller {
     @Body() dto: VerifyProfileDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:verify')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -377,7 +376,7 @@ export class CrmV2Controller {
     @Body() dto: ForcePasswordChangeDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -464,7 +463,7 @@ export class CrmV2Controller {
     @Body() dto: ExpireSessionsDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -559,7 +558,7 @@ export class CrmV2Controller {
     @Body() dto: DeleteProfileDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -656,10 +655,9 @@ export class CrmV2Controller {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
   async getPendingVerification(@Req() req: AuthenticatedRequest) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:verify')
 
     if (!isAdmin) {
-      // TODO(T-09.05.01): replace isAdmin check with crm:verify role check
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`,
       )

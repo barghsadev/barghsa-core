@@ -801,7 +801,7 @@ export class AdminService {
     const pool = getDbPool()
 
     const userResult = await pool.query(
-      `SELECT user_id, is_admin FROM users WHERE user_id = $1`,
+      `SELECT user_id, is_admin, disabled_at FROM users WHERE user_id = $1`,
       [targetUserId],
     )
     if (userResult.rows.length === 0) {
@@ -830,10 +830,14 @@ export class AdminService {
       for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p)
     }
 
-    if (isAdmin) {
+    if (userResult.rows[0]!.disabled_at) {
+      return { userId: targetUserId, isAdmin, roleIds, roleNames, permissions: [], isWildcard: false }
+    }
+
+    if (isAdmin || permissionSet.has('*')) {
       return {
         userId: targetUserId,
-        isAdmin: true,
+        isAdmin,
         roleIds,
         roleNames,
         permissions: [{ permission: '*', group: 'admin' }],

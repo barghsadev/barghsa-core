@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -93,7 +94,7 @@ export class VerificationCaseController {
     @Body() dto: CreateVerificationCaseDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:edit-identity')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
@@ -153,7 +154,7 @@ export class VerificationCaseController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:read')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
@@ -196,7 +197,7 @@ export class VerificationCaseController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:read')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
@@ -233,7 +234,7 @@ export class VerificationCaseController {
     @Param('caseId') caseId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:read')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },
@@ -302,7 +303,7 @@ export class VerificationCaseController {
     @Body() dto: ReviewVerificationCaseDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:verify')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Staff or admin role required' },

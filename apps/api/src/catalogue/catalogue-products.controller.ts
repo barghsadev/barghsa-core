@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -131,9 +132,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the S-09 admin controllers, e.g. T-09.11.04):
  * - Every route requires an authenticated session with the
- *   `admin:catalogue:edit` capability. Today the session model exposes
- *   only `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:catalogue:edit` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - All mutation endpoints additionally require recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — pricing and
@@ -152,7 +151,7 @@ export class CatalogueProductsController {
 
   /** Single enforcement point for the `admin:catalogue:edit` capability. */
   private assertCataloguePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:catalogue:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage the product catalogue',

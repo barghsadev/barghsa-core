@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -56,8 +57,7 @@ function httpError(code: string, message: string, statusCode = 409): never {
  * Admin endpoints for email provider configuration & lifecycle (E-05, T-05.06.01).
  *
  * Every route requires an authenticated session with the
- * `admin:notification-providers:edit` capability (T-09.06.01; currently mapped
- * to platform admin `req.session.isAdmin`). All mutation endpoints additionally
+ * `admin:notification-providers:edit` capability (T-09.06.01). All mutation endpoints additionally
  * require recent step-up verification via `@RequiresStepUp()` (StepUpGuard),
  * so a freshly-reauthenticated password/OTP is needed to create, update, test,
  * activate, disable, or roll back a provider configuration. Transport-specific
@@ -76,15 +76,11 @@ export class EmailProviderConfigController {
    * Permission gate for email-provider admin operations (T-09.06.01).
    *
    * The acceptance criteria require the `admin:notification-providers:edit`
-   * capability. Today the session model exposes only `isAdmin` (platform
-   * admin); granular staff-role permissions arrive with the role system
-   * (T-09.05). Until then, `admin:notification-providers:edit` maps to a
-   * platform admin session, matching the established `admin:notifications:edit`
-   * enforcement in AdminController. Centralized here so the capability check
+   * capability. Capabilities are read from current database roles.  Centralized here so the capability check
    * is a single enforcement point for all mutation endpoints.
    */
   private assertProviderEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:notification-providers:edit')) {
       httpError('AUTHZ:FORBIDDEN', 'Admin role required to manage notification providers', 403)
     }
   }

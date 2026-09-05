@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -49,10 +50,7 @@ const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key) as readonly string[]
  * - `POST /api/admin/failed-jobs/:id/resolve` — mark a job resolved.
  *
  * The list view is gated by the S-09.09 capability `admin:jobs:view`;
- * state transitions by `admin:jobs:retry`. Today the session model exposes
- * only `isAdmin` (platform admin); granular staff-role permissions arrive
- * with the role system. Until then both capabilities map to a platform admin
- * session, mirroring the S-09.09 reconciliation controller.
+ * state transitions by `admin:jobs:retry`. Capabilities are read from current database roles.
  */
 @ApiTags('Admin')
 @Controller('api/admin/failed-jobs')
@@ -65,11 +63,10 @@ export class FailedJobsController {
   /**
    * Permission gate for viewing the failed-jobs dashboard.
    *
-   * Capability `admin:jobs:view` maps to a platform admin session today;
-   * centralized here as a single enforcement point.
+   * Checks `admin:jobs:view` against current database roles.
    */
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to view background jobs`,
       )
@@ -87,10 +84,10 @@ export class FailedJobsController {
   /**
    * Permission gate for background-job state transitions.
    *
-   * Capability `admin:jobs:retry` maps to a platform admin session today.
+   * Checks `admin:jobs:retry` against current database roles.
    */
   private assertRetryPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to mutate a background job`,
       )

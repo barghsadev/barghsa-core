@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Controller,
   Get,
@@ -128,7 +129,7 @@ export class CrmController {
     @Query('order') order: string | undefined,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'crm:read')
 
     if (!isAdmin) {
       this.logger.warn(

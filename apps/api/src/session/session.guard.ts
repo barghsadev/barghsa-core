@@ -19,6 +19,7 @@ export interface AuthenticatedRequest extends Request {
     userId: string
     csrfToken: string
     isAdmin: boolean
+    permissions?: string[]
     stepUpVerifiedAt: Date | null
   }
 }
@@ -78,6 +79,7 @@ export class SessionAuthGuard implements CanActivate {
       userId: validated.userId,
       csrfToken: validated.csrfToken,
       isAdmin: validated.isAdmin,
+      permissions: validated.permissions ?? [],
       stepUpVerifiedAt: validated.stepUpVerifiedAt,
     }
 
@@ -128,6 +130,7 @@ export class SessionOptionalGuard implements CanActivate {
         userId: validated.userId,
         csrfToken: validated.csrfToken,
         isAdmin: validated.isAdmin,
+        permissions: validated.permissions ?? [],
         stepUpVerifiedAt: validated.stepUpVerifiedAt,
       }
     }

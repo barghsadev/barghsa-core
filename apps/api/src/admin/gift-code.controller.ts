@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -192,9 +193,7 @@ function assertListFilters(raw: {
  * Security posture (mirrors the S-09 admin controllers, e.g. the VAT
  * controller T-09.12.02):
  * - Every route requires an authenticated session with the
- *   `admin:promotions:edit` capability. Today the session model exposes
- *   only `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:promotions:edit` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - All mutation endpoints additionally require recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — gift codes
@@ -213,7 +212,7 @@ export class GiftCodeController {
 
   /** Single enforcement point for the `admin:promotions:edit` capability. */
   private assertPromotionsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:promotions:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage gift codes',

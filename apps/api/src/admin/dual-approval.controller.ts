@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -44,11 +45,7 @@ const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
  *   with a mandatory reason.
  *
  * The whole surface is gated by the S-09.07 capability
- * `admin:financial:edit`. Today the session model exposes only `isAdmin`
- * (platform admin); granular staff-role permissions arrive with the role
- * system. Until then the capability maps to a platform admin session,
- * mirroring the threshold config (T-09.07.01) and the S-09.06
- * notification-delivery controllers.
+ * `admin:financial:edit`. Capabilities are read from current database roles.
  */
 @ApiTags('Admin')
 @Controller('api/admin/approval-requests')
@@ -61,11 +58,10 @@ export class DualApprovalController {
   /**
    * Permission gate for the S-09.07 dual-approval surface.
    *
-   * Capability `admin:financial:edit` maps to a platform admin session
-   * today; centralized here as a single enforcement point.
+   * Checks `admin:financial:edit` against current database roles.
    */
   private assertFinancialEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:financial:edit')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`,
       )

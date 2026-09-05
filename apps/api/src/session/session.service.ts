@@ -8,6 +8,7 @@ import { randomBytes, createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { resolveStaffPermissions } from './staff-permissions.js'
 
 /** Session idle timeout: 30 minutes */
 export const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000
@@ -26,6 +27,7 @@ export interface ValidatedSession {
   userId: string
   csrfToken: string
   isAdmin: boolean
+  permissions?: string[]
   expiresAt: Date
   idleDeadline: Date
   stepUpVerifiedAt: Date | null
@@ -206,6 +208,9 @@ export class SessionService {
       const result = await pool.query(
         `SELECT s.session_id, s.user_id, s.csrf_token,
                 u.is_admin, u.disabled_at,
+                ARRAY(SELECT r.permissions FROM user_roles ur
+                      JOIN staff_roles r ON r.role_id=ur.role_id
+                      WHERE ur.user_id=u.user_id) AS role_permissions,
                 s.expires_at, s.idle_deadline, s.revoked_at,
                 s.step_up_verified_at
          FROM sessions s
@@ -252,6 +257,7 @@ export class SessionService {
         userId: row.user_id,
         csrfToken: row.csrf_token,
         isAdmin: row.is_admin ?? false,
+        permissions: resolveStaffPermissions(row.role_permissions),
         expiresAt: row.expires_at,
         idleDeadline: row.idle_deadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,

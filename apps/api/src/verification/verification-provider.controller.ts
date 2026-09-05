@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -56,7 +57,7 @@ export class VerificationProviderController {
   @ApiResponse({ status: 200, description: 'List of providers with status.' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   listProviders(@Req() req: AuthenticatedRequest) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:read')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -81,7 +82,7 @@ export class VerificationProviderController {
     @Param('providerId') providerId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:read')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -134,7 +135,7 @@ export class VerificationProviderController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:write')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -189,7 +190,7 @@ export class VerificationProviderController {
     @Param('providerId') providerId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:write')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -236,7 +237,7 @@ export class VerificationProviderController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ) {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'verification:write')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },

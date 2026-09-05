@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -89,9 +90,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the S-09 admin controllers):
  * - Every route requires an authenticated session with the
- *   `admin:documents:edit` capability. Today the session model exposes
- *   only `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system (E-10).
+ *   `admin:documents:edit` capability. Capabilities are read from current database roles.
  * - All mutation endpoints require recent step-up verification via
  *   `@RequiresStepUp()` — template uploads can inject markup that may
  *   be rendered in generated contracts, so writes are guarded.
@@ -109,7 +108,7 @@ export class ContractTemplateController {
 
   /** Single enforcement point for the `admin:documents:edit` capability. */
   private assertDocumentsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:documents:edit')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage contract templates',

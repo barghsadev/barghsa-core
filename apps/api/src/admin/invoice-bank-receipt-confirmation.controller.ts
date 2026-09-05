@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -67,9 +68,7 @@ function assertUuid(id: string, label = 'receiptId'): void {
  *
  * Security:
  * - Every route requires an authenticated session with the
- *   `admin:finance:invoices:bank-receipt-confirm` capability. Today the
- *   session model exposes only `req.session.isAdmin` (platform admin);
- *   granular staff-role permissions arrive with C-04.CC.03.
+ *   `admin:finance:invoices:bank-receipt-confirm` capability. Capabilities are read from current database roles.
  * - Confirm and reject require recent step-up verification
  *   (`@RequiresStepUp()`) — payment confirmation is a financial action.
  */
@@ -84,7 +83,7 @@ export class InvoiceBankReceiptConfirmationController {
   ) {}
 
   private assertConfirmPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:finance:invoices:bank-receipt-confirm')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION})`,

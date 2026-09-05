@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -144,7 +145,7 @@ export class TicketsController {
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    return this.ticketsService.updateTicketStatus(id, req.session.userId, body.status, req.session.isAdmin)
+    return this.ticketsService.updateTicketStatus(id, req.session.userId, body.status, hasStaffPermission(req, 'tickets:write'))
   }
 
   /**
@@ -161,7 +162,7 @@ export class TicketsController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    return this.ticketsService.listComments(id, req.session.userId, req.session.isAdmin)
+    return this.ticketsService.listComments(id, req.session.userId, hasStaffPermission(req, 'tickets:read'))
   }
 
   /**
@@ -189,12 +190,12 @@ export class TicketsController {
   ) {
     // Non-admin users cannot add internal notes
     const visibility = body.visibility ?? 'public'
-    if (visibility === 'internal' && !req.session.isAdmin) {
+    if (visibility === 'internal' && !hasStaffPermission(req, 'tickets:write')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can add internal notes' },
         403,
       )
     }
-    return this.ticketsService.addComment(id, req.session.userId, body.body, visibility, req.session.isAdmin)
+    return this.ticketsService.addComment(id, req.session.userId, body.body, visibility, hasStaffPermission(req, 'tickets:write'))
   }
 }

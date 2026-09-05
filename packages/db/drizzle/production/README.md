@@ -10,6 +10,7 @@ The production journal starts with an additive baseline, followed by domain and 
 - 0081 restores domain constraints, indexes, triggers, provider tables and catalogue protections. It keeps the final invoice uniqueness rule without replaying intermediate rules or deleting duplicate reminders.
 - 0082 restores foundation constraints, reference data and indexes that previously existed only in source helpers.
 - 0083 separates staff membership from platform administrator authority. Existing administrator flags are preserved for account review.
+- 0084 gives unchanged predefined CRM, Finance and Legal roles the concrete capabilities used by their domain endpoints. Customized permission sets remain unchanged for review.
 
 The runner holds a direct connection and an advisory lock throughout migration. Drizzle applies pending entries transactionally. A failure prevents successful version reporting. Repeating the command applies no additional entries.
 

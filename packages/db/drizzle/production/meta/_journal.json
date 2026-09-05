@@ -29,6 +29,13 @@
       "when": 1790121600000,
       "tag": "0083_staff_identity",
       "breakpoints": true
+    },
+    {
+      "idx": 84,
+      "version": "7",
+      "when": 1790208000000,
+      "tag": "0084_staff_capabilities",
+      "breakpoints": true
     }
   ]
 }

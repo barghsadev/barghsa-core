@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -57,9 +58,7 @@ function assertUuid(id: string, label = 'invoiceId'): void {
  *
  * Security:
  * - Every route requires an authenticated session with the
- *   `admin:finance:invoices:override-due-at` capability. Today the
- *   session model exposes only `req.session.isAdmin` (platform admin);
- *   granular staff-role permissions arrive with C-04.CC.03.
+ *   `admin:finance:invoices:override-due-at` capability. Capabilities are read from current database roles.
  * - The mutation additionally requires recent step-up verification
  *   (`@RequiresStepUp()`) — due-date changes are financial.
  */
@@ -75,7 +74,7 @@ export class DueAtOverrideController {
 
   /** Single enforcement point for the override permission. */
   private assertOverridePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:finance:invoices:override-due-at')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${DUE_AT_OVERRIDE_PERMISSION})`,

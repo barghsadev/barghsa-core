@@ -17,6 +17,7 @@ import {
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import { applyApprovalRequestResolutionOnClient } from './dual-approval-resolution.js'
+import { resolveStaffPermissions } from '../session/staff-permissions.js'
 
 /**
  * The financial actions covered by the dual-approval workflow, exposed for
@@ -412,10 +413,8 @@ export class DualApprovalService {
   /**
    * Notify all approval-eligible staff (in-app) about a new request.
    *
-   * Eligibility today mirrors the S-09.07 permission gate: platform admins
-   * (`is_admin`). When granular staff-role permissions land in the session,
-   * this must be extended to users holding `admin:financial:edit` via a
-   * role, excluding the initiator either way.
+   * Uses the same current capability as the approval endpoint, excluding
+   * disabled accounts and the initiator.
    */
   private async notifyEligibleStaff(
     requestId: string,
@@ -426,7 +425,12 @@ export class DualApprovalService {
     try {
       const pool = getDbPool()
       const result = await pool.query(
-        `SELECT user_id FROM users WHERE is_admin = TRUE AND user_id <> $1`,
+        `SELECT u.user_id, u.is_admin,
+                ARRAY(SELECT r.permissions FROM user_roles ur
+                      JOIN staff_roles r ON r.role_id=ur.role_id
+                      WHERE ur.user_id=u.user_id) AS role_permissions
+         FROM users u WHERE u.disabled_at IS NULL AND u.user_id <> $1
+           AND (u.is_admin=TRUE OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`,
         [initiatorUserId],
       )
 
@@ -436,7 +440,9 @@ export class DualApprovalService {
         'در صف تأیید بررسی کنید.'
       const link = '/app/admin/approval-requests'
 
-      for (const row of result.rows as { user_id: string }[]) {
+      for (const row of result.rows as { user_id: string; is_admin: boolean; role_permissions: unknown }[]) {
+        const permissions = resolveStaffPermissions(row.role_permissions)
+        if (!row.is_admin && !permissions.includes('*') && !permissions.includes('admin:financial:edit')) continue
         await this.notificationsService
           .create({ userId: row.user_id, type: 'general', title, body, link })
           .catch((error: unknown) => {

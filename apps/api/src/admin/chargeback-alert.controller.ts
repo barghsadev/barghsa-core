@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Controller,
   Get,
@@ -25,8 +26,7 @@ function httpError(code: string, message: string, statusCode = 400): never {
  * GET /api/admin/wallet/chargebacks/unresolved-warning returns the open
  * unmatched / reversal-failed set so the admin dashboard can show a
  * persistent warning. The capability is
- * `admin:finance:wallet:chargeback-alerts`; today that maps to a
- * platform admin session (granular finance roles arrive with C-04.CC.03).
+ * `admin:finance:wallet:chargeback-alerts`.
  */
 @ApiTags('Admin · Wallet chargebacks')
 @ApiBearerAuth()
@@ -36,7 +36,7 @@ export class ChargebackAlertController {
   constructor(private readonly alerts: ChargebackAlertService) {}
 
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:finance:wallet:chargeback-alerts')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${FINANCE_CHARGEBACK_ALERT_PERMISSION})`,

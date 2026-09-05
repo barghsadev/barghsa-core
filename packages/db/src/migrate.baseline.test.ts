@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -64,6 +64,7 @@ describe('complete production schema baseline', () => {
       await pool.query('ALTER TABLE users DROP COLUMN is_staff')
       await pool.query("INSERT INTO users(user_id, username, password_hash, is_admin) VALUES ('legacy-admin', 'legacy-admin@example.test', 'test-only', true)")
       await pool.query("INSERT INTO user_roles(user_id, role_id) VALUES ('baseline-user', 'role-finance')")
+      await pool.query(`UPDATE staff_roles SET permissions='["legal:read"]' WHERE role_id='role-legal-contracts'`)
       await pool.query('DROP TABLE sms_provider_configs')
       const oldHistory = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations')).rows
       const productsBefore = (await pool.query('SELECT * FROM products ORDER BY id')).rows
@@ -72,6 +73,7 @@ describe('complete production schema baseline', () => {
         .toEqual({ is_admin: true, is_staff: true })
       expect((await pool.query("SELECT is_admin, is_staff FROM users WHERE user_id='baseline-user'")).rows[0])
         .toEqual({ is_admin: false, is_staff: true })
+      expect((await pool.query("SELECT permissions FROM staff_roles WHERE role_id='role-legal-contracts'")).rows[0].permissions).toBe('["legal:read"]')
       expect((await pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(productsBefore)
       expect((await pool.query('SELECT posted_balance::text AS balance FROM wallets WHERE profile_id=$1', [profile])).rows[0].balance)
         .toBe('9007199254740993')

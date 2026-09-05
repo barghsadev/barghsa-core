@@ -1,0 +1,432 @@
+[
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertNotificationPermission",
+    "permission": "admin:notifications:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertNotificationDeliveryEditPermission",
+    "permission": "admin:notification-providers:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "createStaffUser",
+    "permission": "admin:users:create"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "updateStaffRoles",
+    "permission": "admin:roles:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listStaff",
+    "permission": "admin:staff:view"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "disableStaff",
+    "permission": "admin:staff:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listStaffAudit",
+    "permission": "admin:staff:view"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listRoles",
+    "permission": "admin:roles:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "getEffectivePermissions",
+    "permission": "staff:roles:view"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "getProfileVerificationMode",
+    "permission": "admin:config:read"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "setProfileVerificationMode",
+    "permission": "admin:config:write"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "getActiveBrandConfig",
+    "permission": "admin:branding:read"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listBrandConfigs",
+    "permission": "admin:branding:read"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "upsertBrandConfig",
+    "permission": "admin:branding:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "activateBrandConfig",
+    "permission": "admin:branding:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listTosVersions",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "getTosVersion",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "createTosVersion",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "updateTosVersion",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "publishTosVersion",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "deleteTosVersion",
+    "permission": "admin:tos:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listDeliveryLogs",
+    "permission": "admin:jobs:view"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "listDeadLetters",
+    "permission": "admin:jobs:view"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "retryDeadLetter",
+    "permission": "admin:jobs:retry"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "resolveDeadLetter",
+    "permission": "admin:jobs:retry"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "dismissDeadLetter",
+    "permission": "admin:jobs:retry"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertFinancialThresholdPermission",
+    "permission": "admin:financial:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertElectricitySettingsPermission",
+    "permission": "admin:catalogue:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertServiceTargetsEditPermission",
+    "permission": "admin:service-targets:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertEscalationEditPermission",
+    "permission": "admin:service-escalation:edit"
+  },
+  {
+    "file": "apps/api/src/admin/admin.controller.ts",
+    "method": "assertStaffTeamsEditPermission",
+    "permission": "admin:staff-teams:edit"
+  },
+  {
+    "file": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+    "method": "assertConfirmPermission",
+    "permission": "admin:finance:wallet:bank-receipt-confirm"
+  },
+  {
+    "file": "apps/api/src/admin/chargeback-alert.controller.ts",
+    "method": "assertViewPermission",
+    "permission": "admin:finance:wallet:chargeback-alerts"
+  },
+  {
+    "file": "apps/api/src/admin/contract-electricity-limits.controller.ts",
+    "method": "assertElectricitySettingsPermission",
+    "permission": "admin:catalogue:edit"
+  },
+  {
+    "file": "apps/api/src/admin/contract-template.controller.ts",
+    "method": "assertDocumentsPermission",
+    "permission": "admin:documents:edit"
+  },
+  {
+    "file": "apps/api/src/admin/dual-approval.controller.ts",
+    "method": "assertFinancialEditPermission",
+    "permission": "admin:financial:edit"
+  },
+  {
+    "file": "apps/api/src/admin/due-at-override.controller.ts",
+    "method": "assertOverridePermission",
+    "permission": "admin:finance:invoices:override-due-at"
+  },
+  {
+    "file": "apps/api/src/admin/failed-jobs.controller.ts",
+    "method": "assertViewPermission",
+    "permission": "admin:jobs:view"
+  },
+  {
+    "file": "apps/api/src/admin/failed-jobs.controller.ts",
+    "method": "assertRetryPermission",
+    "permission": "admin:jobs:retry"
+  },
+  {
+    "file": "apps/api/src/admin/failed-notifications.controller.ts",
+    "method": "assertViewPermission",
+    "permission": "admin:jobs:view"
+  },
+  {
+    "file": "apps/api/src/admin/failed-notifications.controller.ts",
+    "method": "assertRetryPermission",
+    "permission": "admin:jobs:retry"
+  },
+  {
+    "file": "apps/api/src/admin/gift-code.controller.ts",
+    "method": "assertPromotionsPermission",
+    "permission": "admin:promotions:edit"
+  },
+  {
+    "file": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+    "method": "assertConfirmPermission",
+    "permission": "admin:finance:invoices:bank-receipt-confirm"
+  },
+  {
+    "file": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+    "method": "assertViewPermission",
+    "permission": "admin:reconciliation:view"
+  },
+  {
+    "file": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+    "method": "assertResolvePermission",
+    "permission": "admin:reconciliation:resolve"
+  },
+  {
+    "file": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+    "method": "assertTogglePermission",
+    "permission": "admin:finance:invoices:reminder-offsets"
+  },
+  {
+    "file": "apps/api/src/admin/upload-policy.controller.ts",
+    "method": "assertUploadsPermission",
+    "permission": "admin:uploads:edit"
+  },
+  {
+    "file": "apps/api/src/admin/vat-config.controller.ts",
+    "method": "assertFinancePermission",
+    "permission": "admin:finance:edit"
+  },
+  {
+    "file": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+    "method": "assertAgentPermission",
+    "permission": "admin:ai:agents"
+  },
+  {
+    "file": "apps/api/src/ai-agents/ai-agents.controller.ts",
+    "method": "assertAgentPermission",
+    "permission": "admin:ai:agents"
+  },
+  {
+    "file": "apps/api/src/ai-models/ai-models.controller.ts",
+    "method": "assertAiModelsPermission",
+    "permission": "admin:ai:models"
+  },
+  {
+    "file": "apps/api/src/ai-policies/ai-policies.controller.ts",
+    "method": "assertPolicyPermission",
+    "permission": "admin:ai:policies"
+  },
+  {
+    "file": "apps/api/src/ai-policies/ai-policies.controller.ts",
+    "method": "assertPolicyPermission",
+    "permission": "admin:ai:policies"
+  },
+  {
+    "file": "apps/api/src/catalogue/catalogue-products.controller.ts",
+    "method": "assertCataloguePermission",
+    "permission": "admin:catalogue:edit"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "getProfileDetail",
+    "permission": "crm:read"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "updateProfile",
+    "permission": "crm:edit"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "verifyProfile",
+    "permission": "crm:verify"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "forcePasswordChange",
+    "permission": "admin:users:edit"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "expireSessions",
+    "permission": "admin:users:edit"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "deleteProfile",
+    "permission": "admin:users:edit"
+  },
+  {
+    "file": "apps/api/src/crm/crm-v2.controller.ts",
+    "method": "getPendingVerification",
+    "permission": "crm:verify"
+  },
+  {
+    "file": "apps/api/src/crm/crm.controller.ts",
+    "method": "listUsers",
+    "permission": "crm:read"
+  },
+  {
+    "file": "apps/api/src/crm/verification-case.controller.ts",
+    "method": "createCase",
+    "permission": "crm:edit-identity"
+  },
+  {
+    "file": "apps/api/src/crm/verification-case.controller.ts",
+    "method": "listCases",
+    "permission": "verification:read"
+  },
+  {
+    "file": "apps/api/src/crm/verification-case.controller.ts",
+    "method": "listProfileCases",
+    "permission": "verification:read"
+  },
+  {
+    "file": "apps/api/src/crm/verification-case.controller.ts",
+    "method": "getCase",
+    "permission": "verification:read"
+  },
+  {
+    "file": "apps/api/src/crm/verification-case.controller.ts",
+    "method": "reviewCase",
+    "permission": "crm:verify"
+  },
+  {
+    "file": "apps/api/src/geography/admin-geography.controller.ts",
+    "method": "requireAdmin",
+    "permission": "admin:geography:edit"
+  },
+  {
+    "file": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+    "method": "assertKbPermission",
+    "permission": "admin:ai:kb"
+  },
+  {
+    "file": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+    "method": "assertKbPermission",
+    "permission": "admin:ai:kb"
+  },
+  {
+    "file": "apps/api/src/provider-config/email-provider-config.controller.ts",
+    "method": "assertProviderEditPermission",
+    "permission": "admin:notification-providers:edit"
+  },
+  {
+    "file": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+    "method": "assertProviderEditPermission",
+    "permission": "admin:notification-providers:edit"
+  },
+  {
+    "file": "apps/api/src/verification/verification-provider.controller.ts",
+    "method": "listProviders",
+    "permission": "admin:config:read"
+  },
+  {
+    "file": "apps/api/src/verification/verification-provider.controller.ts",
+    "method": "getProviderConfig",
+    "permission": "admin:config:read"
+  },
+  {
+    "file": "apps/api/src/verification/verification-provider.controller.ts",
+    "method": "setProviderConfig",
+    "permission": "admin:config:write"
+  },
+  {
+    "file": "apps/api/src/verification/verification-provider.controller.ts",
+    "method": "resetCircuitBreaker",
+    "permission": "admin:config:write"
+  },
+  {
+    "file": "apps/api/src/verification/verification-provider.controller.ts",
+    "method": "runVerification",
+    "permission": "verification:write"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "listTickets",
+    "permission": "tickets:read"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "getTicket",
+    "permission": "tickets:read"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "assignTicket",
+    "permission": "tickets:write"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "updateTicketStatus",
+    "permission": "tickets:write"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "listComments",
+    "permission": "tickets:read"
+  },
+  {
+    "file": "apps/api/src/tickets/staff-tickets.controller.ts",
+    "method": "addComment",
+    "permission": "tickets:write"
+  },
+  {
+    "file": "apps/api/src/tickets/tickets.controller.ts",
+    "method": "updateTicketStatus",
+    "permission": "tickets:write"
+  },
+  {
+    "file": "apps/api/src/tickets/tickets.controller.ts",
+    "method": "listComments",
+    "permission": "tickets:read"
+  },
+  {
+    "file": "apps/api/src/tickets/tickets.controller.ts",
+    "method": "addComment",
+    "permission": "tickets:write"
+  }
+]

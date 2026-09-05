@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -73,9 +74,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the AI agents controller T-09.11.04):
  * - Every route requires an authenticated session with the
- *   `admin:ai:agents` capability. Today the session model exposes only
- *   `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:ai:agents` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - The assignment mutation additionally requires recent step-up
  *   verification via `@RequiresStepUp()` (StepUpGuard) — changing which
@@ -95,7 +94,7 @@ export class AgentSlotsController {
 
   /** Single enforcement point for the `admin:ai:agents` capability. */
   private assertAgentPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:ai:agents')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI agents',

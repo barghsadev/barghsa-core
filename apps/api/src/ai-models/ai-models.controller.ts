@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -72,9 +73,7 @@ function requestIp(req: AuthenticatedRequest): string {
  *
  * Security posture (mirrors the provider-config controllers T-09.06.x):
  * - Every route requires an authenticated session with the
- *   `admin:ai:models` capability. Today the session model exposes only
- *   `req.session.isAdmin` (platform admin); granular staff-role permissions
- *   arrive with the role system. Centralized in one enforcement point.
+ *   `admin:ai:models` capability. Capabilities are read from current database roles. Centralized in one enforcement point.
  * - All mutation endpoints additionally require recent step-up verification
  *   via `@RequiresStepUp()` (StepUpGuard).
  * - API tokens are write-only: they are accepted on create/update, encrypted
@@ -89,7 +88,7 @@ export class AiModelsController {
 
   /** Single enforcement point for the `admin:ai:models` capability. */
   private assertAiModelsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:ai:models')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI models',

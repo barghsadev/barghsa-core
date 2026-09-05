@@ -115,7 +115,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // COMMIT
     mockQuery
       .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS }) // threshold
-      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2' }] }) // eligible staff
+      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2', is_admin: true }] }) // eligible staff
       .mockResolvedValueOnce({
         rows: [
           {
@@ -170,7 +170,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     mockClientQuery.mockResolvedValue({ rows: [] }) // BEGIN/INSERT/INSERT/COMMIT
     mockQuery
       .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
-      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2' }, { user_id: 'admin-3' }] })
+      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2', is_admin: true }, { user_id: 'admin-3', is_admin: false, role_permissions: ['["admin:financial:edit"]'] }, { user_id: 'unqualified', is_admin: false, role_permissions: ['["tickets:read"]'] }] })
       .mockResolvedValueOnce({
         rows: [
           {

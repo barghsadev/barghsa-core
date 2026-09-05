@@ -6,7 +6,7 @@ SELECT u.user_id, u.username, u.is_admin, u.is_staff, u.disabled_at,
                  FROM user_roles ur WHERE ur.user_id=u.user_id), ARRAY[]::text[]) AS roles,
        EXISTS(SELECT 1 FROM audit_log a
               WHERE a.event='staff_user_created'
-                AND a.metadata->>'targetUserId'=u.user_id) AS created_by_staff_flow,
+                AND a.metadata::jsonb->>'targetUserId'=u.user_id) AS created_by_staff_flow,
        EXISTS(SELECT 1 FROM user_roles ur
               WHERE ur.user_id=u.user_id AND ur.role_id='role-admin') AS has_admin_role
 FROM users u

@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -57,10 +58,7 @@ const SEVERITIES = [...RECONCILIATION_SEVERITIES] as const
  *   resolved → closed (note required).
  *
  * The list view is gated by the S-09.09 capability `admin:reconciliation:view`;
- * state transitions by `admin:reconciliation:resolve`. Today the session model
- * exposes only `isAdmin` (platform admin); granular staff-role permissions
- * arrive with the role system. Until then both capabilities map to a platform
- * admin session, mirroring the S-09.07 / S-09.08 admin controllers.
+ * state transitions by `admin:reconciliation:resolve`. Capabilities are read from current database roles.
  */
 @ApiTags('Admin')
 @Controller('api/admin/reconciliation/items')
@@ -75,11 +73,10 @@ export class ReconciliationExceptionsController {
   /**
    * Permission gate for viewing the reconciliation review queue.
    *
-   * Capability `admin:reconciliation:view` maps to a platform admin session
-   * today; centralized here as a single enforcement point.
+   * Checks `admin:reconciliation:view` against current database roles.
    */
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:reconciliation:view')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to view reconciliation exceptions`,
       )
@@ -97,11 +94,10 @@ export class ReconciliationExceptionsController {
   /**
    * Permission gate for reconciliation state transitions.
    *
-   * Capability `admin:reconciliation:resolve` maps to a platform admin
-   * session today.
+   * Checks `admin:reconciliation:resolve` against current database roles.
    */
   private assertResolvePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:reconciliation:resolve')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to resolve a reconciliation exception`,
       )

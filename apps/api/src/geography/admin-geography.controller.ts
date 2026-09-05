@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -398,10 +399,8 @@ export class AdminGeographyController {
   // ---------------------------------------------------------------------------
 
   private requireAdmin(req: AuthenticatedRequest): void {
-    // Permission: admin:geography:edit (temporarily backed by isAdmin boolean
-    // until the granular permission framework supports per-action checks —
-    // see T-09.05.01 for the role-based permission system).
-    const isAdmin = req.session.isAdmin ?? false
+    // The capability is resolved from current database roles.
+    const isAdmin = hasStaffPermission(req, 'admin:geography:edit')
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Admin role required' },

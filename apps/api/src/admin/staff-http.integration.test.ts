@@ -1,5 +1,7 @@
 import { afterAll, beforeAll, expect, it } from 'vitest'
 import { createHash, randomUUID } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { startHttpFixture } from '../test/http-fixture.js'
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>
@@ -82,4 +84,52 @@ it('replaces roles through HTTP, revokes old sessions, and rejects disabled acco
   await http.pool.query('UPDATE users SET disabled_at=NOW() WHERE user_id=$1', [userId])
   expect((await fetch(`${http.base}/api/auth/sessions`, { headers: disabledSession })).status).toBe(401)
   expect((await fetch(`${http.base}/api/admin/staff`, { headers: adminHeaders })).status).toBe(200)
+})
+
+it('enforces the role matrix through real staff, finance, CRM, legal and administration routes', async () => {
+  const routes = ['/api/staff/tickets', '/api/crm/users', '/api/admin/wallet/bank-receipt-top-ups', '/api/admin/contract-templates', '/api/admin/roles']
+  const matrix: [string | null, number[]][] = [
+    [null, [403,403,403,403,403]],
+    ['role-customer-support', [200,403,403,403,403]],
+    ['role-crm-verification', [403,200,403,403,403]],
+    ['role-finance', [403,403,200,403,403]],
+    ['role-legal-contracts', [403,403,403,200,403]],
+    ['role-admin', [200,200,200,200,200]],
+  ]
+  for (const [role, expected] of matrix) {
+    const userId = randomUUID()
+    await http.pool.query('INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,$3,true)', [userId,`${userId}@example.test`,'test-only'])
+    if (role) await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId,role])
+    const headers = await session(userId)
+    for (const [index, route] of routes.entries()) {
+      const response = await fetch(`${http.base}${route}`, { headers })
+      expect(response.status, `${role} ${route}: ${await response.text()}\n${http.logs()}`).toBe(expected[index])
+    }
+    if (role !== 'role-admin') {
+      const escalated = await fetch(`${http.base}/api/admin/users/create-staff`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ username: `${randomUUID()}@example.test`, firstName: 'Blocked', lastName: 'Escalation', roleIds: ['role-admin'], activationMethod: 'tempPassword' }),
+      })
+      expect(escalated.status).toBe(403)
+    } else {
+      const response = await fetch(`${http.base}/api/admin/users/${userId}/effective-permissions`, { headers })
+      expect(await response.json()).toMatchObject({ isAdmin: false, isWildcard: true })
+    }
+  }
+  const review = await http.pool.query(readFileSync(resolve(__dirname, '../../../../audit/staff-administrator-review.sql'), 'utf8'))
+  expect(review.rows.map((row) => row.user_id)).toEqual(['bootstrap'])
+})
+
+it('reads permission changes on the next request without trusting a cached session grant', async () => {
+  const userId = randomUUID(), roleId = 'test-custom-support'
+  await http.pool.query('INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$2,$3,$4)',
+    [roleId,'Test custom support','Test fixture','["tickets:read"]'])
+  await http.pool.query('INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,$3,true)', [userId,`${userId}@example.test`,'test-only'])
+  await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [userId,roleId])
+  const headers = await session(userId)
+  expect((await fetch(`${http.base}/api/staff/tickets`, { headers })).status).toBe(200)
+  await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id=$1", [roleId])
+  expect((await fetch(`${http.base}/api/staff/tickets`, { headers })).status).toBe(403)
+  await http.pool.query("UPDATE staff_roles SET permissions='invalid JSON' WHERE role_id=$1", [roleId])
+  expect((await fetch(`${http.base}/api/staff/tickets`, { headers })).status).toBe(403)
 })

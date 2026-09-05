@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -55,7 +56,7 @@ export class StaffTicketsController {
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:read')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
@@ -94,7 +95,7 @@ export class StaffTicketsController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:read')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
@@ -121,7 +122,7 @@ export class StaffTicketsController {
     @Body() body: { assigneeId?: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:write')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can assign tickets' },
         403,
@@ -148,7 +149,7 @@ export class StaffTicketsController {
     @Body() body: { status: string },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:write')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can update ticket status' },
         403,
@@ -171,7 +172,7 @@ export class StaffTicketsController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:read')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,
@@ -201,7 +202,7 @@ export class StaffTicketsController {
     },
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!req.session.isAdmin) {
+    if (!hasStaffPermission(req, 'tickets:write')) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Only staff can access this endpoint' },
         403,

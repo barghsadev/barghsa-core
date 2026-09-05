@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Controller,
   Get,
@@ -51,8 +52,7 @@ const CHANNELS = [...NOTIFICATION_CHANNELS] as const
  *   remove from the active view.
  *
  * Permissions mirror the failed-jobs surface (T-09.09.02): viewing is gated
- * by `admin:jobs:view`, state transitions by `admin:jobs:retry`, both mapped
- * to a platform-admin session until the granular staff-role system lands.
+ * by `admin:jobs:view`, state transitions by `admin:jobs:retry`.
  */
 @ApiTags('Admin')
 @Controller('api/admin/failed-notifications')
@@ -63,7 +63,7 @@ export class FailedNotificationsController {
   constructor(private readonly failedNotificationsService: FailedNotificationsService) {}
 
   private assertViewPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to view dead-letter notifications`,
       )
@@ -79,7 +79,7 @@ export class FailedNotificationsController {
   }
 
   private assertRetryPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       this.logger.warn(
         `Non-admin user ${req.session.userId} attempted to mutate a dead-letter notification`,
       )

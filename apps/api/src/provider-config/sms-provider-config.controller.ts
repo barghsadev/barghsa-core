@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -65,8 +66,7 @@ function httpError(code: string, message: string, statusCode = 409): never {
  * Mirrors the email provider config controller (T-05.06.x / T-09.06.01) and
  * applies the same security posture:
  * - Every route requires an authenticated session with the
- *   `admin:notification-providers:edit` capability (mapped to platform admin
- *   `req.session.isAdmin` today, matching the email provider controller).
+ *   `admin:notification-providers:edit` capability from current database roles.
  * - All mutation endpoints additionally require recent step-up verification via
  *   `@RequiresStepUp()` (StepUpGuard).
  *
@@ -82,7 +82,7 @@ export class SmsProviderConfigController {
 
   /** Same capability gate as the email provider controller (T-09.06.01). */
   private assertProviderEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:notification-providers:edit')) {
       httpError('AUTHZ:FORBIDDEN', 'Admin role required to manage notification providers', 403)
     }
   }

@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -131,9 +132,7 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
  *
  * Security posture (mirrors the knowledge-bases controller T-09.11.02):
  * - Every route requires an authenticated session with the
- *   `admin:ai:policies` capability. Today the session model exposes only
- *   `req.session.isAdmin` (platform admin); granular staff-role
- *   permissions arrive with the role system. Centralized in one
+ *   `admin:ai:policies` capability. Capabilities are read from current database roles. Centralized in one
  *   enforcement point per controller.
  * - All mutation endpoints additionally require recent step-up verification
  *   via `@RequiresStepUp()` (StepUpGuard).
@@ -147,7 +146,7 @@ export class PoliciesController {
 
   /** Single enforcement point for the `admin:ai:policies` capability. */
   private assertPolicyPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:ai:policies')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI policies',
@@ -261,7 +260,7 @@ export class PolicyGroupsController {
   constructor(private readonly service: AiPoliciesService) {}
 
   private assertPolicyPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:ai:policies')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI policy groups',

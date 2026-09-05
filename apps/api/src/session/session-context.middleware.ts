@@ -20,6 +20,7 @@ export class SessionContextMiddleware implements NestMiddleware {
         (request as AuthenticatedRequest).session = {
           sessionId: session.sessionId, userId: session.userId,
           csrfToken: session.csrfToken, isAdmin: session.isAdmin,
+          permissions: session.permissions ?? [],
           stepUpVerifiedAt: session.stepUpVerifiedAt,
         }
       }

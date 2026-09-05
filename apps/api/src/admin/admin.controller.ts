@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -118,7 +119,7 @@ export interface CreateStaffUserApiResponse {
 /**
  * Admin controller for staff management endpoints.
  *
- * All routes require authentication with admin (isAdmin) privileges.
+ * Routes require authentication and the capability checked by each handler.
  * Routes are prefixed with /api/admin.
  *
  * @UseGuards(SessionAuthGuard) — requires valid authenticated session.
@@ -133,13 +134,12 @@ export class AdminController {
    * Permission gate for notification-template admin operations.
    *
    * The acceptance criteria for T-09.04.01 require the `admin:notifications:edit`
-   * capability. Today the session model exposes only `isAdmin` (platform admin);
-   * granular staff-role permissions arrive with the role system (T-09.05).
-   * Until then, `admin:notifications:edit` maps to a platform admin session.
+   * capability. Capabilities are read from current database roles.
+   *
    * Centralized here so the capability check is a single enforcement point.
    */
   private assertNotificationPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:notifications:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -160,15 +160,11 @@ export class AdminController {
    *
    * The S-09.06 notification-delivery surface (email providers, SMS.ir
    * providers, and the daytime delivery window) is protected by the
-   * `admin:notification-providers:edit` capability. Today the session model
-   * exposes only `isAdmin` (platform admin); granular staff-role permissions
-   * arrive with the role system (T-09.05). Until then the capability maps to a
-   * platform admin session, matching the email (T-09.06.01) and SMS (T-09.06.02)
-   * provider controllers. Centralized here as a single enforcement point so the
+   * `admin:notification-providers:edit` capability. Capabilities are read from current database roles.  Centralized here as a single enforcement point so the
    * whole S-09.06 surface uses one check.
    */
   private assertNotificationDeliveryEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:notification-providers:edit')) {
       throw new HttpException(
         {
           statusCode: 403,
@@ -234,7 +230,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest,
   ): Promise<CreateStaffUserApiResponse> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:users:create')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -351,7 +347,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest,
   ): Promise<UpdateStaffRolesResult> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:roles:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -403,9 +399,7 @@ export class AdminController {
    * includes the default-profile name, aggregated role names, last login,
    * and status (active/disabled).
    *
-   * Permission: `admin:staff:view` — mapped to a platform-admin session
-   * today, per the S-09/S-10 convention (granular staff-role permissions
-   * arrive with the role system).
+   * Permission: `admin:staff:view`.
    */
   @Get('staff')
   @ApiOperation({ summary: 'List staff accounts' })
@@ -430,7 +424,7 @@ export class AdminController {
     @Query('offset') offset: string | undefined,
     @Req() req: AuthenticatedRequest,
   ): Promise<StaffListResult> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:staff:view')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff accounts`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -453,8 +447,7 @@ export class AdminController {
    * until the account is re-enabled (re-enable is a later slice). Requires
    * step-up authentication.
    *
-   * Permission: `admin:staff:edit` — mapped to a platform-admin session
-   * today.
+   * Permission: `admin:staff:edit`.
    */
   @Post('staff/:userId/disable')
   @UseGuards(StepUpGuard)
@@ -484,7 +477,7 @@ export class AdminController {
     @Req() req: AuthenticatedRequest,
   ): Promise<DisableStaffResult> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:staff:edit')
 
     if (!isAdmin) {
       this.logger.warn(
@@ -512,8 +505,7 @@ export class AdminController {
    * what reason. Filterable by target staff user and by date range, and
    * paginated like the staff list.
    *
-   * Permission: `admin:staff:view` — mapped to a platform-admin session
-   * today, per the S-09/S-10 convention.
+   * Permission: `admin:staff:view`.
    */
   @Get('staff/audit')
   @ApiOperation({ summary: 'Staff permission audit timeline (role changes)' })
@@ -545,7 +537,7 @@ export class AdminController {
     @Query('offset') offset: string | undefined,
     @Req() req: AuthenticatedRequest,
   ): Promise<StaffAuditResult> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:staff:view')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read the staff permission audit`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -571,7 +563,7 @@ export class AdminController {
    * Lists all staff roles with their permission sets (T-09.05.01).
    * Roles are grouped by module on the client. Predefined roles are
    * shown read-only; custom role creation is a future extension.
-   * Permission: admin or staff with `admin:roles:edit` (currently admin only).
+   * Permission: admin or staff with `admin:roles:edit`.
    */
   @Get('roles')
   @ApiOperation({ summary: 'List staff roles and their permissions' })
@@ -582,7 +574,7 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listRoles(@Req() req: AuthenticatedRequest): Promise<StaffRoleDto[]> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:roles:edit')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff roles`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -598,7 +590,7 @@ export class AdminController {
    * Resolves the effective permission set for a staff user by taking the union
    * of permissions across their assigned roles (deny-by-default, additive).
    * Platform admins resolve to the wildcard set.
-   * Permission: admin or with `staff:roles:view` (currently: admin only).
+   * Permission: admin or with `staff:roles:view`.
    */
   @Get('users/:userId/effective-permissions')
   @ApiOperation({ summary: 'Get effective permissions for a staff user' })
@@ -614,7 +606,7 @@ export class AdminController {
     @Param('userId') userId: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<EffectivePermissionsResult> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'staff:roles:view')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read effective permissions`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -637,7 +629,7 @@ export class AdminController {
   async getProfileVerificationMode(
     @Req() req: AuthenticatedRequest,
   ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:read')
     if (!isAdmin) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read profile verification mode`)
       throw new HttpException(
@@ -670,7 +662,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const isAdmin = req.session.isAdmin ?? false
+    const isAdmin = hasStaffPermission(req, 'admin:config:write')
     if (!isAdmin) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to set profile verification mode`)
       throw new HttpException(
@@ -708,7 +700,7 @@ export class AdminController {
   async getActiveBrandConfig(
     @Req() req: AuthenticatedRequest,
   ): Promise<BrandConfigDto> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:branding:read')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read brand config`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -731,7 +723,7 @@ export class AdminController {
   async listBrandConfigs(
     @Req() req: AuthenticatedRequest,
   ): Promise<BrandConfigDto[]> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:branding:read')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to list brand configs`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -764,7 +756,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<BrandConfigDto> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:branding:edit')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to update brand config`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -805,7 +797,7 @@ export class AdminController {
   async activateBrandConfig(
     @Req() req: AuthenticatedRequest,
   ): Promise<BrandConfigDto> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:branding:edit')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -823,7 +815,7 @@ export class AdminController {
    * GET /api/admin/tos/versions
    *
    * Lists all TOS versions (draft + published).
-   * Permission: admin or staff with admin:tos:edit role (currently admin only).
+   * Permission: admin or staff with admin:tos:edit role.
    */
   @Get('tos/versions')
   @ApiOperation({ summary: 'List all TOS versions' })
@@ -832,7 +824,7 @@ export class AdminController {
   async listTosVersions(
     @Req() req: AuthenticatedRequest,
   ) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to list TOS versions`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -856,7 +848,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<TosVersionDetail> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -892,7 +884,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<TosVersionDetail> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -942,7 +934,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<TosVersionDetail> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1008,7 +1000,7 @@ export class AdminController {
     @Body() rawBody: unknown,
     @Req() req: AuthenticatedRequest,
   ): Promise<TosVersionDetail> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1046,7 +1038,7 @@ export class AdminController {
     @Param('id') id: string,
     @Req() req: AuthenticatedRequest,
   ): Promise<void> {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1065,7 +1057,7 @@ export class AdminController {
    *
    * Lists all notification templates with optional filtering by
    * locale, channel, or status.
-   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   * Permission: admin:notifications:edit.
    */
   @Get('notifications/templates')
   @ApiOperation({ summary: 'List notification templates' })
@@ -1357,7 +1349,7 @@ export class AdminController {
    *
    * Renders a template body against allow-listed variables with sample data,
    * without persisting anything. Used by the frontend preview pane.
-   * Permission: admin:notifications:edit (mapped to platform admin; granular staff roles land in T-09.05).
+   * Permission: admin:notifications:edit.
    */
   @Post('notifications/templates/preview')
   @UseGuards(StepUpGuard)
@@ -1439,8 +1431,7 @@ export class AdminController {
    * TEST_SEND_ALLOWLIST (dev/test only) — see T-05.04.04. When no destination
    * is supplied, the in-app default (the admin's own inbox) is used.
    * Out-of-app email/SMS transport is pending E-05 (T-05.06), so delivery is
-   * in-app today. Permission: admin:notifications:edit (mapped to platform
-   * admin; granular staff roles land in T-09.05).
+   * in-app today. Permission: admin:notifications:edit .
    */
   @Post('notifications/templates/:id/test-send')
   @HttpCode(200)
@@ -1516,7 +1507,7 @@ export class AdminController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read delivery logs`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -1568,7 +1559,7 @@ export class AdminController {
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(`Non-admin user ${req.session.userId} attempted to read dead-letters`)
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -1607,7 +1598,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async retryDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1638,7 +1629,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async resolveDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1669,7 +1660,7 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async dismissDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403,
@@ -1696,7 +1687,7 @@ export class AdminController {
    * Returns the current admin-configurable delivery window as
    * `{ timezone, startHour, endHour }`. Falls back to the default
    * 09:00–21:00 Asia/Tehran window when no value is persisted.
-   * Permission: `admin:notification-providers:edit` (today: platform admin).
+   * Permission: `admin:notification-providers:edit`.
    */
   @Get('config/delivery-window')
   @ApiOperation({ summary: 'Get the delivery window configuration (admin)' })
@@ -1771,15 +1762,11 @@ export class AdminController {
    * Permission gate for financial threshold configuration (S-09.07).
    *
    * The S-09.07 dual-approval/financial-threshold surface (T-09.07.01) is
-   * protected by the `admin:financial:edit` capability. Today the session
-   * model exposes only `isAdmin` (platform admin); granular staff-role
-   * permissions arrive with the role system (T-09.05). Until then the
-   * capability maps to a platform admin session, matching the S-09.06
-   * notification-delivery gates. Centralized here as a single enforcement
+   * protected by the `admin:financial:edit` capability. Capabilities are read from current database roles.  Centralized here as a single enforcement
    * point so the whole S-09.07 surface uses one check.
    */
   private assertFinancialThresholdPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:financial:edit')) {
       throw new HttpException(
         {
           statusCode: 403,
@@ -1797,7 +1784,7 @@ export class AdminController {
    * Returns the current admin-configurable dual-approval threshold as
    * `{ thresholdIrR }`. Falls back to `{ thresholdIrR: 0 }` (dual approval
    * disabled) when no value is persisted.
-   * Permission: `admin:financial:edit` (today: platform admin).
+   * Permission: `admin:financial:edit`.
    */
   @Get('config/dual-approval-threshold')
   @ApiOperation({ summary: 'Get the dual-approval threshold configuration (admin)' })
@@ -1942,15 +1929,11 @@ export class AdminController {
    * Permission gate for electricity-ordering settings (S-09.10).
    *
    * The S-09.10 mandatory green-electricity rules surface (T-09.10.02) is
-   * protected by the `admin:catalogue:edit` capability. Today the session
-   * model exposes only `isAdmin` (platform admin); granular staff-role
-   * permissions arrive with the role system (T-09.05). Until then the
-   * capability maps to a platform admin session, matching the S-09.06 /
-   * S-09.07 / S-09.08 gates. Centralized here as a single enforcement point
+   * protected by the `admin:catalogue:edit` capability. Capabilities are read from current database roles.  Centralized here as a single enforcement point
    * for the whole S-09.10 config surface.
    */
   private assertElectricitySettingsPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:catalogue:edit')) {
       throw new HttpException(
         {
           statusCode: 403,
@@ -2136,14 +2119,11 @@ export class AdminController {
    * Permission gate for service response target configuration (S-09.08).
    *
    * The S-09.08 service-targets surface (T-09.08.01) is protected by the
-   * `admin:service-targets:edit` capability. Today the session model exposes
-   * only `isAdmin` (platform admin); granular staff-role permissions arrive
-   * with the role system (T-09.05). Until then the capability maps to a
-   * platform admin session, matching the S-09.06 / S-09.07 gates. Centralized
+   * `admin:service-targets:edit` capability. Capabilities are read from current database roles.  Centralized
    * here as a single enforcement point for the whole S-09.08 config surface.
    */
   private assertServiceTargetsEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:service-targets:edit')) {
       throw new HttpException(
         {
           statusCode: 403,
@@ -2227,15 +2207,12 @@ export class AdminController {
    * T-09.08.03).
    *
    * The S-09.08 escalation-policy surface is protected by the
-   * `admin:service-escalation:edit` capability. Today the session model
-   * exposes only `isAdmin` (platform admin); granular staff-role permissions
-   * arrive with the role system (T-09.05). Until then the capability maps to
-   * a platform admin session, matching the S-09.08 service-targets gate.
+   * `admin:service-escalation:edit` capability. Capabilities are read from current database roles.
    * Centralized here as a single enforcement point for the escalation config
    * surface.
    */
   private assertEscalationEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:service-escalation:edit')) {
       throw new HttpException(
         {
           statusCode: 403,
@@ -2331,15 +2308,11 @@ export class AdminController {
    * T-09.08.02).
    *
    * The S-09.08 staff-teams surface is protected by the
-   * `admin:staff-teams:edit` capability. Today the session model exposes
-   * only `isAdmin` (platform admin); granular staff-role permissions arrive
-   * with the role system (T-09.05). Until then the capability maps to a
-   * platform admin session, matching the S-09.06 / S-09.07 / S-09.08
-   * gates. Centralized here as a single enforcement point for the whole
+   * `admin:staff-teams:edit` capability. Capabilities are read from current database roles.  Centralized here as a single enforcement point for the whole
    * staff-teams surface.
    */
   private assertStaffTeamsEditPermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:staff-teams:edit')) {
       throw new HttpException(
         {
           statusCode: 403,

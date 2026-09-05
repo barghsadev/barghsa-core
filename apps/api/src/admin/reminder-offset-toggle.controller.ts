@@ -1,3 +1,4 @@
+import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
   Controller,
@@ -41,9 +42,7 @@ function requestIp(req: AuthenticatedRequest): string {
  *
  * Security:
  * - Every route requires an authenticated session with the
- *   `admin:finance:invoices:reminder-offsets` capability. Today the
- *   session model exposes only `req.session.isAdmin` (platform admin);
- *   granular staff-role permissions arrive with C-04.CC.03.
+ *   `admin:finance:invoices:reminder-offsets` capability. Capabilities are read from current database roles.
  * - The mutation additionally requires recent step-up verification
  *   (`@RequiresStepUp()` / StepUpGuard). Disabling an offset can suppress
  *   payment reminders for an entire service type, so a stolen or unattended
@@ -58,7 +57,7 @@ export class ReminderOffsetToggleController {
   constructor(private readonly service: ReminderOffsetToggleService) {}
 
   private assertTogglePermission(req: AuthenticatedRequest): void {
-    if (!(req.session.isAdmin ?? false)) {
+    if (!hasStaffPermission(req, 'admin:finance:invoices:reminder-offsets')) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${REMINDER_OFFSET_TOGGLE_PERMISSION})`,
