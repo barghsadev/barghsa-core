@@ -204,8 +204,8 @@ export class LegalProfilesService {
 
       // Transition profile from DRAFT to ACTIVE
       await client.query(
-        `UPDATE profiles SET status = 'ACTIVE', updated_at = NOW() WHERE id = $1`,
-        [profileId],
+        `UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`,
+        [profileId, await this.profilesService.getVerificationMode() === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION'],
       )
 
       await client.query('COMMIT')

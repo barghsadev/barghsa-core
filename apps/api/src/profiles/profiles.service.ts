@@ -10,7 +10,7 @@ export interface ProfileRow {
   userId: string
   profileType: 'INDIVIDUAL' | 'LEGAL'
   isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'VERIFIED' | 'SUSPENDED'
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
   title: string | null
   firstName: string | null
   lastName: string | null
@@ -35,7 +35,7 @@ export interface ProfileDto {
   id: string
   profileType: 'INDIVIDUAL' | 'LEGAL'
   isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'VERIFIED' | 'SUSPENDED'
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
   title: string | null
   firstName: string | null
   lastName: string | null
@@ -65,7 +65,7 @@ function mapRow(row: Record<string, unknown>): ProfileRow {
     userId: row.user_id as string,
     profileType: row.profile_type as 'INDIVIDUAL' | 'LEGAL',
     isDefault: row.is_default as boolean,
-    status: row.status as 'DRAFT' | 'ACTIVE' | 'VERIFIED' | 'SUSPENDED',
+    status: row.status as 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED',
     title: (row.title as string) ?? null,
     firstName: (row.first_name as string) ?? null,
     lastName: (row.last_name as string) ?? null,
@@ -223,9 +223,7 @@ export class ProfilesService {
    * and the configured verification method. Returns the profile's current
    * verification status along with the enforcement context.
    *
-   * Config keys (sourced from app_config, defaulting when absent):
-   * - `verification.required` — boolean, default false
-   * - `verification.method` — 'api' | 'manual', default 'manual'
+   * Uses the canonical profile_verification_mode, with legacy fallback.
    *
    * Dependencies: T-03.01.01 (profiles), E-07 (verification settings UI).
    */
@@ -247,13 +245,9 @@ export class ProfilesService {
 
     const isVerified = defaultProfile.status === 'VERIFIED'
 
-    // Read verification enforcement config (default: not enforced)
-    const verificationRequired =
-      (await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY)) ?? false
-
-    // Read verification method config (default: manual)
-    const verificationMethod: 'api' | 'manual' =
-      (await this.configCache.get<'api' | 'manual'>(VERIFICATION_METHOD_KEY)) ?? 'manual'
+    const mode = await this.getVerificationMode()
+    const verificationRequired = mode !== 'DISABLED'
+    const verificationMethod = mode === 'API' ? 'api' : 'manual'
 
     return {
       activeProfileId: defaultProfile.id,
@@ -261,60 +255,32 @@ export class ProfilesService {
       isVerified,
       verificationRequired,
       verificationMethod,
-      canAutoVerify: !isVerified && verificationRequired && verificationMethod === 'api',
+      // No real provider has been selected. Never offer simulated approval.
+      canAutoVerify: false,
     }
   }
 
-  /**
-   * Auto-verify a profile via the API verification method.
-   *
-   * This is a lightweight stub that marks the profile as VERIFIED,
-   * intended for the `api` verification method (E-07 integration
-   * will replace this with an external API call).
-   *
-   * Only works when the system verification method is 'api' and
-   * the profile is not already verified.
-   */
-  async verifyProfileApi(userId: string, profileId: string): Promise<void> {
-    const pool = getDbPool()
+  /** Canonical admin setting takes precedence over legacy verification flags. */
+  async getVerificationMode(): Promise<'DISABLED' | 'MANUAL' | 'API'> {
+    const mode = await this.configCache.get<string>('profile_verification_mode')
+    if (mode === 'DISABLED' || mode === 'MANUAL' || mode === 'API') return mode
+    // An invalid explicit setting must not disable enforcement.
+    if (mode != null) return 'MANUAL'
+    const required = await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY)
+    if (required !== true) return 'DISABLED'
+    return await this.configCache.get<string>(VERIFICATION_METHOD_KEY) === 'api' ? 'API' : 'MANUAL'
+  }
 
+  /** External approval is unavailable until a real provider and durable result path exist. */
+  async verifyProfileApi(userId: string, profileId: string): Promise<never> {
     const profile = await this.getProfileById(profileId)
     if (!profile || profile.userId !== userId) {
-      throw new Error(`Profile ${profileId} not found for user ${userId}`)
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404)
     }
-
-    if (profile.status === 'VERIFIED') {
-      this.logger.debug(`Profile ${profileId} is already verified`)
-      return
-    }
-
-    // Verify the system method is 'api'
-    const method = await this.configCache.get<string>(VERIFICATION_METHOD_KEY)
-    const resolvedMethod = method ?? 'manual'
-    if (resolvedMethod !== 'api') {
-      throw new Error(
-        `Cannot auto-verify: verification method is '${resolvedMethod}', not 'api'`,
-      )
-    }
-
-    await pool.query(
-      `UPDATE profiles SET status = 'VERIFIED', updated_at = NOW() WHERE id = $1 AND user_id = $2`,
-      [profileId, userId],
-    )
-
-    this.logger.log(`Profile ${profileId} auto-verified for user ${userId}`)
-
-    // T-07.01.03: Send in-app verification notification
-    await this.notificationsService.create({
-      userId,
-      profileId,
-      type: 'profile_verified',
-      title: 'پروفایل شما تأیید شد',
-      body: `پروفایل شما با موفقیت تأیید شد. اکنون می‌توانید از تمام خدمات استفاده کنید.`,
-      link: '/app/settings/profile',
-    }).catch((err: Error) => {
-      this.logger.error(`Failed to send verification notification for user ${userId}: ${String(err)}`)
-    })
+    throw new HttpException({
+      error: ErrorCodes.VERIFICATION_PROVIDER_UNAVAILABLE.code,
+      message: 'Automatic identity verification is currently unavailable.',
+    }, 503)
   }
 
   /**
@@ -490,8 +456,8 @@ export class ProfilesService {
 
       // Transition profile from DRAFT to ACTIVE
       await client.query(
-        `UPDATE profiles SET status = 'ACTIVE', updated_at = NOW() WHERE id = $1`,
-        [profileId],
+        `UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`,
+        [profileId, await this.getVerificationMode() === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION'],
       )
 
       await client.query('COMMIT')
@@ -1080,8 +1046,7 @@ export class ProfilesService {
       await client.query('BEGIN')
 
       // Determine target status based on verification settings
-      const verificationRequired =
-        (await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY)) ?? false
+      const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED'
       const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE'
 
       // Set as default if user has no default profile yet
@@ -1089,7 +1054,7 @@ export class ProfilesService {
         `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
         [userId],
       )
-      const becomesDefault = existing.rows.length === 0
+      const becomesDefault = profile.isDefault || existing.rows.length === 0
 
       await client.query(
         `UPDATE profiles

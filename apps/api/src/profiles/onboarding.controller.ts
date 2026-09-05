@@ -224,7 +224,7 @@ export class OnboardingController {
       id: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-      status: 'ACTIVE',
+      status: profile.status,
       title: profile.title,
       firstName: profile.firstName,
       lastName: profile.lastName,
@@ -372,7 +372,7 @@ export class OnboardingController {
       id: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-      status: 'ACTIVE',
+      status: profile.status,
       title: profile.title,
     }
   }

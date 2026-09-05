@@ -22,8 +22,11 @@ export class VerificationProviderService implements OnModuleInit {
   private static readonly CONFIG_KEY_PREFIX = 'verification_provider_'
 
   onModuleInit(): void {
-    // Register built-in providers
-    this.registry.register(new StubVerificationProvider())
+    // A stub must never be registered in production, even with the flag set.
+    if (['development', 'test'].includes(process.env.NODE_ENV ?? '') &&
+        process.env.ENABLE_VERIFICATION_STUB === 'true') {
+      this.registry.register(new StubVerificationProvider())
+    }
     this.logger.log('VerificationProviderService initialised with built-in providers')
   }
 

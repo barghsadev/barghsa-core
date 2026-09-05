@@ -141,6 +141,7 @@ export const fa: I18nDictionary = {
   'auth.otp.backToRegister': 'بازگشت به فرم ثبت‌نام',
 
   // ── Auth Pages — Forgot Password ─────────────────────────
+  'profile.verification.error.providerUnavailable': 'تأیید خودکار هویت در حال حاضر در دسترس نیست.',
   'auth.otp.error.deliveryUnavailable': 'ارسال کد تأیید در دسترس نیست. لطفاً کمی بعد دوباره تلاش کنید',
   'auth.activate.title': 'فعال‌سازی حساب کاربری',
   'auth.activate.submit': 'فعال‌سازی حساب',
@@ -1357,6 +1358,7 @@ export const en: I18nDictionary = {
   'auth.otp.backToRegister': 'Back to registration',
 
   // ── Auth Pages — Forgot Password ─────────────────────────
+  'profile.verification.error.providerUnavailable': 'Automatic identity verification is currently unavailable.',
   'auth.otp.error.deliveryUnavailable': 'Verification code delivery is unavailable. Please try again shortly.',
   'auth.activate.title': 'Activate your account',
   'auth.activate.submit': 'Activate account',

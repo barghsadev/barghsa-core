@@ -64,6 +64,13 @@
       "when": 1790553600000,
       "tag": "0088_staff_activation_delivery",
       "breakpoints": true
+    },
+    {
+      "idx": 89,
+      "version": "7",
+      "when": 1790640000000,
+      "tag": "0089_pending_profile_verification",
+      "breakpoints": true
     }
   ]
 }

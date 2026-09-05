@@ -36,7 +36,7 @@ describe('ProfilesService', () => {
 
   describe('canPlaceCommercialOrder', () => {
     it('returns true when verification is not required', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(false)
+      vi.mocked(configCache.get).mockResolvedValue('DISABLED')
       mockPool.query.mockResolvedValue({
         rows: [
           {
@@ -59,7 +59,7 @@ describe('ProfilesService', () => {
     })
 
     it('returns false when verification is required and profile is not verified', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(true)
+      vi.mocked(configCache.get).mockResolvedValue('MANUAL')
       mockPool.query.mockResolvedValue({
         rows: [
           {
@@ -82,7 +82,7 @@ describe('ProfilesService', () => {
     })
 
     it('returns true when verification is required and profile is verified', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(true)
+      vi.mocked(configCache.get).mockResolvedValue('MANUAL')
       mockPool.query.mockResolvedValue({
         rows: [
           {
@@ -200,7 +200,7 @@ describe('ProfilesService', () => {
     })
 
     it('returns correct fields when profile exists and verification is not required', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(false)
+      vi.mocked(configCache.get).mockResolvedValue('DISABLED')
       mockPool.query.mockResolvedValue({
         rows: [
           {
@@ -225,10 +225,9 @@ describe('ProfilesService', () => {
       expect(result.canAutoVerify).toBe(false)
     })
 
-    it('returns canAutoVerify=true when method=api, enforcement=on, profile unverified', async () => {
+    it('keeps automatic verification unavailable when API mode requires verification', async () => {
       vi.mocked(configCache.get)
-        .mockResolvedValueOnce(true)  // verification.required
-        .mockResolvedValueOnce('api') // verification.method
+        .mockResolvedValueOnce('API')
 
       mockPool.query.mockResolvedValue({
         rows: [
@@ -251,7 +250,7 @@ describe('ProfilesService', () => {
       expect(result.isVerified).toBe(false)
       expect(result.verificationRequired).toBe(true)
       expect(result.verificationMethod).toBe('api')
-      expect(result.canAutoVerify).toBe(true)
+      expect(result.canAutoVerify).toBe(false)
     })
   })
 
@@ -277,10 +276,10 @@ describe('ProfilesService', () => {
 
       await expect(
         service.verifyProfileApi('user-1', 'prof-1'),
-      ).rejects.toThrow("Cannot auto-verify: verification method is 'manual', not 'api'")
+      ).rejects.toThrow('Automatic identity verification is currently unavailable.')
     })
 
-    it('updates profile to VERIFIED when method is api', async () => {
+    it('does not update or verify a profile without a real provider', async () => {
       vi.mocked(configCache.get).mockResolvedValue('api')
 
       mockPool.query
@@ -302,12 +301,8 @@ describe('ProfilesService', () => {
         })
         .mockResolvedValueOnce({ rowCount: 1 })
 
-      await service.verifyProfileApi('user-1', 'prof-1')
-
-      expect(mockPool.query).toHaveBeenCalledTimes(2)
-      const updateCall = mockPool.query.mock.calls[1]
-      expect(updateCall).toBeDefined()
-      expect(updateCall![0]).toContain("UPDATE profiles SET status = 'VERIFIED'")
+      await expect(service.verifyProfileApi('user-1', 'prof-1')).rejects.toThrow('Automatic identity verification is currently unavailable.')
+      expect(mockPool.query).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -327,7 +322,7 @@ describe('ProfilesService', () => {
     const activeRow = { ...draftRow, status: 'ACTIVE' }
 
     it('transitions DRAFT to ACTIVE when verification is not required', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(false)
+      vi.mocked(configCache.get).mockResolvedValue('DISABLED')
       // getProfileById: returns draft profile
       mockPool.query.mockResolvedValueOnce({ rows: [draftRow] })
       // connect() for transaction
@@ -356,7 +351,7 @@ describe('ProfilesService', () => {
     })
 
     it('transitions DRAFT to PENDING_VERIFICATION when verification is required', async () => {
-      vi.mocked(configCache.get).mockResolvedValue(true)
+      vi.mocked(configCache.get).mockResolvedValue('MANUAL')
       mockPool.query.mockResolvedValueOnce({ rows: [draftRow] })
       mockPool.connect.mockResolvedValue(mockClient)
       mockClient.query.mockResolvedValueOnce({}) // BEGIN

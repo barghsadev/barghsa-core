@@ -86,7 +86,7 @@ function metadataTable(schema: string): string {
 async function getAppliedMigrations(client: Pool | PoolClient, schema: string): Promise<AppliedMigration[]> {
   try {
     const result = await client.query<AppliedMigration>(
-      `SELECT id::text, hash, created_at::text FROM ${metadataTable(schema)} ORDER BY id ASC`,
+      `SELECT id::text, hash, created_at::text FROM ${metadataTable(schema)} ORDER BY created_at::bigint ASC, id::bigint ASC`,
     )
     return result.rows
   } catch (error) {

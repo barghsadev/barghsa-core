@@ -196,16 +196,13 @@ export class ProfilesController {
   /**
    * POST /api/profiles/:id/verify
    *
-   * Auto-verify a profile via the API method. Only works when the
-   * system verification method is 'api' and the profile is not yet
-   * verified. This is a stub pending E-07 verification settings
-   * integration and marks the profile as VERIFIED directly.
+   * External verification is unavailable until a real provider is configured.
    */
   @Post(':id/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:verify:user', limit: 10, windowMs: 60_000 })
   @ApiOperation({ summary: 'Auto-verify a profile via API method' })
-  @ApiResponse({ status: 200, description: 'Profile verified successfully.' })
+  @ApiResponse({ status: 503, description: 'Identity verification provider unavailable.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Verification not allowed' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
@@ -235,19 +232,7 @@ export class ProfilesController {
       )
     }
 
-    // Verify the system method is 'api' — the service handles this check
-    try {
-      await this.profilesService.verifyProfileApi(userId, profileId)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Verification failed'
-      throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message },
-        403,
-      )
-    }
-
-    this.logger.log(`Profile ${profileId} verified for user ${userId}`)
-    return { message: 'Profile verified successfully.' }
+    return this.profilesService.verifyProfileApi(userId, profileId)
   }
 
   /**

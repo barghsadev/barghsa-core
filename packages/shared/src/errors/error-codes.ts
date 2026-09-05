@@ -111,6 +111,13 @@ export const ErrorCodes = {
     severity: 'debug' as ErrorSeverity,
   },
 
+  VERIFICATION_PROVIDER_UNAVAILABLE: {
+    code: 'VERIFICATION:PROVIDER:UNAVAILABLE',
+    httpStatus: 503,
+    messageKey: 'profile.verification.error.providerUnavailable',
+    severity: 'error' as ErrorSeverity,
+  },
+
   // ── OTP ────────────────────────────────────────────
   AUTH_DELIVERY_UNAVAILABLE: {
     code: 'AUTH:DELIVERY:UNAVAILABLE',
