@@ -1,3 +1,4 @@
+import type { AgentPermission } from '@barghsa/shared/agent-permissions'
 import {
   Body,
   Controller,
@@ -60,8 +61,8 @@ export class WalletController {
    * Verify that the authenticated user has access to the given profile.
    * Throws NotFoundException if the profile doesn't belong to the user.
    */
-  private async assertProfileAccess(req: AuthenticatedRequest, profileId: string): Promise<void> {
-    const profile = await this.profilesService.getAccessibleProfile(req.session.userId, profileId)
+  private async assertProfileAccess(req: AuthenticatedRequest, profileId: string, permission: AgentPermission = 'wallet:view'): Promise<void> {
+    const profile = await this.profilesService.getAccessibleProfile(req.session.userId, profileId, permission)
     if (!profile) {
       throw new NotFoundException(`Profile ${profileId} not found or not accessible`)
     }
@@ -106,7 +107,7 @@ export class WalletController {
     @Param('profileId') profileId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    await this.assertProfileAccess(req, profileId)
+    await this.assertProfileAccess(req, profileId, 'wallet:charge')
     this.logger.debug(`Wallet creation: user=${req.session.userId} profile=${profileId}`)
     const wallet = await this.walletService.createWallet(profileId)
     return {
@@ -140,7 +141,7 @@ export class WalletController {
     @Req() req: AuthenticatedRequest,
   ) {
     assertUuid(profileId, 'profileId')
-    await this.assertProfileAccess(req, profileId)
+    await this.assertProfileAccess(req, profileId, 'wallet:charge')
 
     const parsed = InitiateBodySchema.safeParse(rawBody ?? {})
     if (!parsed.success) {
@@ -210,7 +211,7 @@ export class WalletController {
     @Req() req: AuthenticatedRequest,
   ) {
     assertUuid(profileId, 'profileId')
-    await this.assertProfileAccess(req, profileId)
+    await this.assertProfileAccess(req, profileId, 'bank-receipts:submit')
 
     const parsed = BankReceiptBodySchema.safeParse(rawBody ?? {})
     if (!parsed.success) {

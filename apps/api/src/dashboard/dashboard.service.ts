@@ -1,3 +1,5 @@
+import {hasAnyRolePermission,type AgentRole,type AgentPermission} from '@barghsa/shared/agent-permissions'
+import { activeProfileSql } from '../profiles/profile-context.js'
 import { Injectable } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance'
@@ -23,23 +25,20 @@ export class DashboardService {
   /**
    * Resolve the user's default profile ID, or null if they have none.
    */
-  private async getDefaultProfileId(userId: string): Promise<string | null> {
+  private async getDefaultProfileId(userId: string): Promise<{id:string;is_owner:boolean;roles:AgentRole[]} | null> {
     const pool = getDbPool()
-    const result = await pool.query<{ id: string }>(
-      `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
+    const result = await pool.query<{id:string;is_owner:boolean;roles:AgentRole[]}>(
+      activeProfileSql('profile:view'),
       [userId],
     )
-    return result.rows[0]?.id ?? null
+    return result.rows[0] ?? null
   }
 
   /**
    * Return the four quick-status counts for a given user's default profile.
    *
-   * In the current system a user has exactly one active profile, which is
-   * always their `is_default` profile, so resolving the default profile here
-   * satisfies the "scoped to active profile" acceptance criterion. If
-   * multi-active-profile support is added later, this should accept an
-   * explicit `profileId` from the request context instead.
+   * Selection is resolved against current membership. Each count also respects
+   * the selected profile's applicable operational or financial permission.
    *
    * The orders query returns both the active-contract and pending-order
    * counts in a single `GROUP BY status` pass; `activeContracts` is derived
@@ -56,33 +55,35 @@ export class DashboardService {
    *   are excluded — they reduce liability rather than adding a bill.
    */
   async getQuickStatusCounts(userId: string): Promise<QuickStatusCounts> {
-    const profileId = await this.getDefaultProfileId(userId)
+    const context = await this.getDefaultProfileId(userId)
+    const profileId=context?.id
     if (!profileId) {
       return { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 }
     }
 
     const pool = getDbPool()
 
+    const allowed=(permission:AgentPermission)=>context?.is_owner===true || hasAnyRolePermission(context?.roles ?? [],permission)
     const [ordersResult, ticketsResult, invoicesResult] = await Promise.all([
-      pool.query<{ status: string; cnt: number }>(
+      allowed('orders:view') ? pool.query<{ status: string; cnt: number }>(
         `SELECT status, COUNT(*)::int AS cnt
          FROM orders
          WHERE profile_id = $1 AND status IN ('CONFIRMED', 'PENDING')
          GROUP BY status`,
         [profileId],
-      ),
-      pool.query<{ cnt: number }>(
+      ) : Promise.resolve({rows:[]}),
+      allowed('orders:view') ? pool.query<{ cnt: number }>(
         `SELECT COUNT(*)::int AS cnt
          FROM tickets
          WHERE profile_id = $1 AND status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff')`,
         [profileId],
-      ),
-      pool.query<{ cnt: number }>(
+      ) : Promise.resolve({rows:[{cnt:0}]}),
+      allowed('invoices:view') ? pool.query<{ cnt: number }>(
         `SELECT COUNT(*)::int AS cnt
          FROM invoices
          WHERE profile_id = $1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
         [profileId],
-      ),
+      ) : Promise.resolve({rows:[{cnt:0}]}),
     ])
 
     const orderCounts: Record<string, number> = {}

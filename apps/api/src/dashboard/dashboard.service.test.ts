@@ -44,7 +44,7 @@ describe('DashboardService', () => {
 
     it('returns zeros when all count queries are empty', async () => {
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }) // profile lookup
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
         .mockResolvedValueOnce({ rows: [] }) // orders
         .mockResolvedValueOnce({ rows: [] }) // tickets
         .mockResolvedValueOnce({ rows: [] }) // invoices
@@ -61,7 +61,7 @@ describe('DashboardService', () => {
 
     it('returns correct counts for a user with data across modules', async () => {
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }) // profile lookup
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
         .mockResolvedValueOnce({
           // orders — grouped by status
           rows: [
@@ -84,7 +84,7 @@ describe('DashboardService', () => {
 
     it('excludes orders with other statuses (DRAFT, CANCELLED)', async () => {
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }) // profile lookup
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
         .mockResolvedValueOnce({
           rows: [
             // Only CONFIRMED and PENDING are counted
@@ -104,7 +104,7 @@ describe('DashboardService', () => {
 
     it('excludes tickets with terminal statuses (resolved, closed)', async () => {
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }) // profile lookup
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] }) // profile lookup
         .mockResolvedValueOnce({ rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)] })
         .mockResolvedValueOnce({ rows: [{ cnt: 0 }] }) // only open/in_progress/waiting are counted
         .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
@@ -116,7 +116,7 @@ describe('DashboardService', () => {
 
     it('excludes invoices with non-unpaid states (Paid, Cancelled, Draft)', async () => {
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] })
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-1', is_owner: true, roles: [] }] })
         .mockResolvedValueOnce({ rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)] })
         .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
         // Only Unpaid and Overdue invoices are counted
@@ -135,7 +135,7 @@ describe('DashboardService', () => {
     it('scopes counts to the correct profile (isolation test)', async () => {
       // Two different users with different profiles
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-a' }] })
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-a', is_owner: true, roles: [] }] })
         .mockResolvedValueOnce({ rows: [makeOrdersRow('CONFIRMED', 5), makeOrdersRow('PENDING', 1)] })
         .mockResolvedValueOnce({ rows: [{ cnt: 2 }] })
         .mockResolvedValueOnce({ rows: [{ cnt: 3 }] })
@@ -145,7 +145,7 @@ describe('DashboardService', () => {
 
       // Second call — different user, different profile
       mockQuery
-        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-b' }] })
+        .mockResolvedValueOnce({ rows: [{ id: 'prof-user-b', is_owner: true, roles: [] }] })
         .mockResolvedValueOnce({ rows: [makeOrdersRow('CONFIRMED', 0), makeOrdersRow('PENDING', 0)] })
         .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
         .mockResolvedValueOnce({ rows: [{ cnt: 0 }] })
@@ -155,7 +155,7 @@ describe('DashboardService', () => {
 
       // Verify each call scoped to the right profile id
       const profileQuery = mockQuery.mock.calls.filter(
-        (call: unknown[]) => (call[0] as string).includes('profiles WHERE'),
+        (call: unknown[]) => (call[0] as string).includes('FROM profiles p'),
       )
       expect(profileQuery).toHaveLength(2)
       expect(profileQuery[0]?.[1]).toEqual(['user-a'])

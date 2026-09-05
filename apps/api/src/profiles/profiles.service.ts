@@ -2,6 +2,7 @@ import { Injectable, Logger, HttpException } from '@nestjs/common'
 import type { PoolClient } from 'pg'
 import { getDbPool } from '@barghsa/db'
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
+import { hasAnyRolePermission, type AgentPermission, type AgentRole } from '@barghsa/shared/agent-permissions'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { ConfigCacheService } from '../config-cache/config-cache.service.js'
 import { NotificationsService } from '../notifications/notifications.service.js'
@@ -124,15 +125,18 @@ export class ProfilesService {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
-       FROM profiles
-       WHERE user_id = $1
-       ORDER BY is_default DESC, created_at ASC`,
+      `SELECT p.id,p.user_id,p.profile_type,(p.user_id=$1 AND p.is_default) AS is_default,
+              p.status,p.title,p.first_name,p.last_name,p.national_id,p.created_at,p.updated_at,
+              CASE WHEN c.user_id IS NULL THEN p.user_id=$1 AND p.is_default ELSE p.id=c.profile_id END AS is_active
+       FROM profiles p LEFT JOIN user_profile_contexts c ON c.user_id=$1
+       WHERE NOT p.archived AND (p.user_id=$1 OR (p.profile_type='LEGAL' AND EXISTS (
+         SELECT 1 FROM profile_agents pa WHERE pa.profile_id=p.id AND pa.user_id=$1 AND pa.role IN ('Manager','Finance','Legal'))))
+       ORDER BY is_active DESC NULLS LAST,p.created_at ASC`,
       [userId],
     )
 
     const profiles = result.rows.map(mapRow).map(mapToDto)
-    const defaultProfile = profiles.find((p) => p.isDefault)
+    const defaultProfile = result.rows.find((p) => p.is_active === true)
 
     return {
       profiles,
@@ -147,7 +151,7 @@ export class ProfilesService {
     const result = await pool.query(
       `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
        FROM profiles
-       WHERE id = $1`,
+       WHERE id = $1 AND NOT archived`,
       [profileId],
     )
 
@@ -158,28 +162,21 @@ export class ProfilesService {
   /**
    * Return a profile the user may activate as their active profile.
    *
-   * A user may switch to a profile when they own it (`user_id` matches), or
-   * when they are an active agent on it. Agent membership currently has no
-   * persistence layer (it arrives with the future profile-access epic), so
-   * this defaults to owner-only and returns `null` otherwise. Centralizing
-   * the check here keeps the controller and frontend unchanged when agent
-   * access is introduced.
+   * Owners may use all customer capabilities. Legal-profile agents need the
+   * specific current role permission requested by the caller.
    */
-  async getAccessibleProfile(userId: string, profileId: string): Promise<ProfileRow | null> {
+  async getAccessibleProfile(userId: string, profileId: string, permission: AgentPermission = 'profile:view'): Promise<ProfileRow | null> {
     const profile = await this.getProfileById(profileId)
     if (!profile) return null
-    // Owner access only for now; agent membership is a future extension.
-    const isOwner = profile.userId === userId
-    if (!isOwner) return null
-    return profile
+    if (profile.userId === userId) return profile
+    if (profile.profileType !== 'LEGAL') return null
+    const roles = await getDbPool().query(`SELECT role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal')`,[profileId,userId])
+    return hasAnyRolePermission(roles.rows.map(r=>r.role as AgentRole),permission) ? profile : null
   }
 
   /**
-   * Set a profile as the user's default within a transaction.
-   *
-   * Two updates (clear all defaults, then set one) are wrapped in a
-   * transaction to prevent concurrent requests from leaving the user
-   * with zero or multiple default profiles.
+   * Persist this user's selected profile without changing the owner's default.
+   * Recheck access under locks and audit selection in the same transaction.
    */
   async setDefaultProfile(userId: string, profileId: string): Promise<void> {
     const pool = getDbPool()
@@ -188,22 +185,17 @@ export class ProfilesService {
     try {
       await client.query('BEGIN')
 
-      // Clear any existing default for this user
-      await client.query(
-        `UPDATE profiles SET is_default = false, updated_at = NOW() WHERE user_id = $1`,
-        [userId],
-      )
-
-      // Set the specified profile as default
-      const result = await client.query(
-        `UPDATE profiles SET is_default = true, updated_at = NOW() WHERE id = $1 AND user_id = $2 RETURNING id`,
-        [profileId, userId],
-      )
-
-      if (result.rows.length === 0) {
-        await client.query('ROLLBACK')
-        throw new Error(`Profile ${profileId} not found for user ${userId}`)
+      const profile = (await client.query('SELECT user_id,profile_type FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',[profileId])).rows[0]
+      if (!profile) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE',[userId])
+      if (profile.user_id!==userId) {
+        const membership=await client.query(`SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal') FOR SHARE`,[profileId,userId])
+        if (profile.profile_type!=='LEGAL' || !membership.rows.length) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
       }
+      await client.query(`INSERT INTO user_profile_contexts(user_id,profile_id) VALUES ($1,$2)
+        ON CONFLICT (user_id) DO UPDATE SET profile_id=EXCLUDED.profile_id,updated_at=NOW()`,[userId,profileId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'profile_context_changed',jsonb_build_object('profileId',$2::text),uuid_generate_v7(),NOW())`,[userId,profileId])
 
       await client.query('COMMIT')
       this.logger.debug(`Default profile set to ${profileId} for user ${userId}`)
@@ -230,7 +222,8 @@ export class ProfilesService {
    */
   async getVerificationStatus(userId: string): Promise<VerificationStatusDto> {
     const profiles = await this.getProfilesByUserId(userId)
-    const defaultProfile = profiles.profiles.find((p) => p.isDefault)
+    const defaultProfile = profiles.profiles.find((p) => p.id === profiles.activeProfileId)
+    const mode = await this.getVerificationMode()
 
     if (!defaultProfile) {
       // No default profile — no verification context
@@ -238,15 +231,13 @@ export class ProfilesService {
         activeProfileId: null,
         profileStatus: null,
         isVerified: false,
-        verificationRequired: false,
-        verificationMethod: 'manual',
+        verificationRequired: mode !== 'DISABLED',
+        verificationMethod: mode === 'API' ? 'api' : 'manual',
         canAutoVerify: false,
       }
     }
 
     const isVerified = defaultProfile.status === 'VERIFIED'
-
-    const mode = await this.getVerificationMode()
     const verificationRequired = mode !== 'DISABLED'
     const verificationMethod = mode === 'API' ? 'api' : 'manual'
 
@@ -1083,6 +1074,7 @@ export class ProfilesService {
    */
   async canPlaceCommercialOrder(userId: string): Promise<boolean> {
     const status = await this.getVerificationStatus(userId)
+    if (!status.activeProfileId) return false
     // If verification is not required, commercial orders are allowed
     if (!status.verificationRequired) return true
     // If verification is required, the profile must be verified

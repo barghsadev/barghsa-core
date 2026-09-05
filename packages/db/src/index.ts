@@ -438,3 +438,4 @@ export * from './schema/bank-receipts'
 export * from './schema/bank-receipt-attachment-claims'
 
 export * from './schema/auth-delivery-outbox'
+export * from './schema/user-profile-contexts'

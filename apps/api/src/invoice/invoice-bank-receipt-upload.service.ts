@@ -163,7 +163,7 @@ export class InvoiceBankReceiptUploadService {
       throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, parsed.message)
     }
 
-    const profileId = await this.customerInvoices.resolveActiveProfileId(input.userId)
+    const profileId = await this.customerInvoices.resolveActiveProfileId(input.userId, 'bank-receipts:submit')
     if (!profileId) {
       throw httpError(ErrorCodes.NOT_FOUND_RESOURCE, 'No active profile', 404)
     }

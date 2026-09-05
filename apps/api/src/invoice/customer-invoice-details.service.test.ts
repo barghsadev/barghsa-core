@@ -337,13 +337,9 @@ describe('CustomerInvoiceDetailsService', () => {
   })
 
   function profilesQueryResult(sql: string): { rows: Array<{ id: string }> } {
-    expect(sql).toContain('AND archived = false')
-    expect(sql).toContain('ORDER BY is_default DESC, created_at ASC')
-    // Without the archived filter the default (archived) row would win
-    // `ORDER BY is_default DESC`. With the filter, only the live profile
-    // remains.
-    const excludesArchived = sql.includes('AND archived = false')
-    return { rows: [{ id: excludesArchived ? PROFILE_ID : ARCHIVED_DEFAULT_ID }] }
+    expect(sql).toContain('NOT p.archived')
+    expect(sql).toContain('p.id=c.profile_id')
+    return { rows: [{ id: PROFILE_ID }] }
   }
 
   it('404s when the caller has no active profile', async () => {
@@ -355,10 +351,10 @@ describe('CustomerInvoiceDetailsService', () => {
       message: 'No active profile',
     })
     const profileSql = mockPool.query.mock.calls[0]![0] as string
-    expect(profileSql).toContain('archived = false')
+    expect(profileSql).toContain('NOT p.archived')
   })
 
-  it('skips an archived default profile in favor of a non-archived profile', async () => {
+  it('resolves a selected non-archived profile', async () => {
     mockPool.query.mockImplementation(async (sql: string) => {
       if (sql.includes('FROM profiles')) {
         return profilesQueryResult(sql)
@@ -402,7 +398,7 @@ describe('CustomerInvoiceDetailsService', () => {
   it('404s when the user has only archived profiles', async () => {
     mockPool.query.mockImplementation(async (sql: string) => {
       if (sql.includes('FROM profiles')) {
-        expect(sql).toContain('archived = false')
+        expect(sql).toContain('NOT p.archived')
         return { rows: [] }
       }
       throw new Error(`unexpected query after archived-only profile lookup: ${sql}`)

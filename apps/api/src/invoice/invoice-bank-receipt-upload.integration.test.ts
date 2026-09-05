@@ -163,6 +163,12 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `)
+    // These receipt-boundary fixtures use a minimal schema; active-profile
+    // context itself is verified through the fully migrated HTTP fixture.
+    await ctx.pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS disabled_at TIMESTAMPTZ;
+      ALTER TABLE profiles ADD COLUMN IF NOT EXISTS profile_type TEXT NOT NULL DEFAULT 'INDIVIDUAL';
+      CREATE TABLE user_profile_contexts (user_id TEXT PRIMARY KEY,profile_id UUID);
+      CREATE TABLE profile_agents (profile_id UUID,user_id TEXT,role TEXT);`)
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()

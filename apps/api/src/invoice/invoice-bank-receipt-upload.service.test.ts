@@ -227,6 +227,7 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   it('creates a Submitted receipt bound to a sealed copy, not the mutable upload key', async () => {
     scriptClient()
     const result = await service.submit(submitInput())
+    expect(customerInvoices.resolveActiveProfileId).toHaveBeenCalledWith(ACTOR_ID, 'bank-receipts:submit')
     expect(result.state).toBe('Submitted')
     expect(result.amount).toBe(AMOUNT)
     expect(result.invoiceId).toBe(INVOICE_ID)

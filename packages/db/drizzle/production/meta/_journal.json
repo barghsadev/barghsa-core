@@ -71,6 +71,13 @@
       "when": 1790640000000,
       "tag": "0089_pending_profile_verification",
       "breakpoints": true
+    },
+    {
+      "idx": 90,
+      "version": "7",
+      "when": 1790726400000,
+      "tag": "0090_user_profile_context",
+      "breakpoints": true
     }
   ]
 }

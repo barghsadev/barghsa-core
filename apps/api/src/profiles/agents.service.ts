@@ -54,7 +54,7 @@ export class AgentsService {
     // Query active agents (joined users)
     const agentsResult = await pool.query(
       `SELECT pa.id, pa.user_id, pa.role, pa.joined_at, pa.created_at,
-              u.first_name, u.last_name, u.username
+              NULL::text AS first_name, NULL::text AS last_name, u.username
        FROM profile_agents pa
        LEFT JOIN users u ON u.user_id = pa.user_id
        WHERE pa.profile_id = $1
@@ -719,7 +719,10 @@ export class AgentsService {
   async getAgentRoles(profileId: string, userId: string): Promise<AgentRole[]> {
     const pool = getDbPool()
     const result = await pool.query(
-      `SELECT role FROM profile_agents WHERE profile_id = $1 AND user_id = $2`,
+      `SELECT 'Owner' AS role FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived
+       UNION ALL SELECT pa.role FROM profile_agents pa JOIN profiles p ON p.id=pa.profile_id
+       WHERE pa.profile_id=$1 AND pa.user_id=$2 AND NOT p.archived AND p.profile_type='LEGAL'
+         AND pa.role IN ('Manager','Finance','Legal')`,
       [profileId, userId],
     )
     return result.rows.map((row) => row.role as AgentRole)

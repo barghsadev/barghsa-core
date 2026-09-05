@@ -1,3 +1,4 @@
+import { activeProfileSql } from '../profiles/profile-context.js'
 import { Injectable, Logger, HttpException, Optional, Inject } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -162,16 +163,12 @@ export class NotificationCenterService {
   }
 
   /**
-   * Resolve the caller's active profile. The active profile is their default
-   * profile; falling back to their earliest profile when no default is set.
-   * Returns null when the user has no profiles at all (treated as empty center).
+   * Resolve the caller's authorized selection. Legacy owned defaults remain
+   * the initial selection until explicitly changed; invalid selections are null.
    */
   async resolveActiveProfileId(userId: string): Promise<string | null> {
     const result = await this.db.query(
-      `SELECT id FROM profiles
-       WHERE user_id = $1
-       ORDER BY is_default DESC, created_at ASC
-       LIMIT 1`,
+      activeProfileSql('profile:view'),
       [userId],
     )
     return (result.rows[0] as { id: string } | undefined)?.id ?? null
