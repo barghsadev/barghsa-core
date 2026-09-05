@@ -4,6 +4,7 @@ import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import { createServer, type Server } from 'node:http'
 import type { Pool } from 'pg'
+import * as argon2 from 'argon2'
 import { startHttpFixture } from '../test/http-fixture.js'
 
 // Global setup compiles both applications; exercise the shipped worker modules.
@@ -136,6 +137,31 @@ it('ends failed delivery after five attempts and erases the secret', async () =>
   expect((await fixture.pool.query('SELECT attempts,status,encrypted_payload,last_error FROM auth_delivery_outbox')).rows[0])
     .toEqual({ attempts: 5, status: 'dead', encrypted_payload: null, last_error: 'delivery_failed' })
   expect(received).toHaveLength(0)
+})
+
+it('resets a password using the delivered code and returns opaque IDs for unknown accounts', async () => {
+  const original = await argon2.hash(password)
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [original])
+  const known = await post('auth/forgot-password', { username: 'provider@example.test' })
+  const knownBody = await known.json() as { challengeId: string; sent: boolean; message: string }
+  expect(known.status, JSON.stringify(knownBody)).toBe(200)
+  const unknown = await post('auth/forgot-password', { username: 'unknown@example.test' })
+  const unknownBody = await unknown.json() as typeof knownBody
+  expect(unknown.status, JSON.stringify(unknownBody)).toBe(200)
+  expect(unknownBody).toEqual({ ...knownBody, challengeId: expect.any(String) })
+  expect(unknownBody.challengeId).not.toBe(knownBody.challengeId)
+  expect(unknownBody.challengeId).toMatch(/^[a-f0-9-]{36}$/)
+  expect(await deliver()).toBe('sent')
+  expect(received).toHaveLength(1)
+  const otp = received[0]!.text.match(/\d{6}/)?.[0]
+  const newPassword = 'Changed-delivery-password-123!'
+  const reset = await post('auth/reset-password', { challengeId: knownBody.challengeId, otp, newPassword })
+  expect(reset.status, await reset.text()).toBe(200)
+  const stored = (await fixture.pool.query("SELECT password_hash FROM users WHERE user_id='provider-admin'")).rows[0].password_hash
+  expect(await argon2.verify(stored, newPassword)).toBe(true)
+  expect(await argon2.verify(stored, password)).toBe(false)
+  const repeat = await post('auth/reset-password', { challengeId: knownBody.challengeId, otp, newPassword: 'Another-password-123!' })
+  expect(repeat.status, await repeat.text()).toBe(409)
 })
 
 it('rolls back challenge creation if the delivery insert fails', async () => {

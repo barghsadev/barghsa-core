@@ -501,53 +501,11 @@ export class AuthService {
     input: ForgotPasswordInput,
     ip: string,
   ): Promise<ForgotPasswordResponse> {
-    const pool = getDbPool()
-
-    try {
-      // Look up user by normalized username
-      const userResult = await pool.query(
-        `SELECT user_id, username FROM users WHERE username = $1`,
-        [input.username],
-      )
-
-      if (userResult.rows.length > 0) {
-        // User found — create OTP challenge linked to the user
-        const userId = userResult.rows[0].user_id
-
-        await this.otpService.createLoginChallenge(
-          userId,
-          input.username,
-          ip,
-          'password_reset',
-        )
-
-        this.logger.log(`Forgot-password OTP sent for user ${userId} from ${ip}`)
-      } else {
-        // User not found — still return generic success (no enumeration)
-        this.logger.log(
-          `Forgot-password requested for unknown username ${input.username} from ${ip}`,
-        )
-      }
-
-      // Always return generic success
-      return {
-        sent: true as const,
-        message: 'If an account exists, an OTP has been sent.',
-      }
-    } catch (err) {
-      // Re-throw rate-limit HttpExceptions
-      if (err instanceof HttpException) throw err
-
-      this.logger.error(
-        `Forgot-password failed for ${input.username}: ${String(err)}`,
-      )
-      throw new HttpException(
-        {
-          statusCode: ErrorCodes.INTERNAL_SERVER.httpStatus,
-          error: ErrorCodes.INTERNAL_SERVER.code,
-        },
-        ErrorCodes.INTERNAL_SERVER.httpStatus,
-      )
+    const { challengeId } = await this.otpService.createPasswordResetChallenge(input.username, ip)
+    return {
+      challengeId,
+      sent: true,
+      message: 'If an account exists, a verification code has been queued.',
     }
   }
 

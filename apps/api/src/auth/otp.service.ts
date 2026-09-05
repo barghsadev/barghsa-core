@@ -104,7 +104,23 @@ export class OtpService {
     purpose: 'login' | 'password_reset' = 'login',
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
+    return this.createAccountChallenge(userId, destination, purpose)
+  }
 
+  /** Apply identical quotas and return an opaque ID for both existing and unknown accounts. */
+  async createPasswordResetChallenge(destination: string, ip: string): Promise<{ challengeId: string }> {
+    await this.enforceSendRateLimits(destination, ip)
+    // Configuration failure must not reveal whether this destination has an account.
+    this.deliveryPayload(randomUUID(), { code: '000000', destination })
+    const found = await getDbPool().query<{ user_id: string }>(
+      'SELECT user_id FROM users WHERE username=$1', [destination],
+    )
+    const user = found.rows[0]
+    if (!user) return { challengeId: randomUUID() }
+    return this.createAccountChallenge(user.user_id, destination, 'password_reset')
+  }
+
+  private async createAccountChallenge(userId: string, destination: string, purpose: 'login' | 'password_reset'): Promise<OtpChallengeResult> {
     const otp = this.generateOtp()
     const otpHash = this.hashOtp(otp)
     const challengeId = randomUUID()

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import {
   Controller,
   Post,
@@ -391,6 +391,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
+        challengeId: { type: 'string', format: 'uuid' },
         sent: { type: 'boolean' },
         message: { type: 'string' },
       },
@@ -406,8 +407,9 @@ export class AuthController {
     if (!parsed.success) {
       // Always return generic success — never reveal invalid input
       return {
+        challengeId: randomUUID(),
         sent: true,
-        message: 'If an account exists, an OTP has been sent.',
+        message: 'If an account exists, a verification code has been queued.',
       }
     }
 
