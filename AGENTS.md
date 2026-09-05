@@ -21,6 +21,7 @@ A reviewer tick never merges. Any new commit invalidates the previous approval.
 ## Canonical files
 
 - `kanban/task-queue.json` — ordered generated queue
+- `kanban/queue-priority.json` — explicit task promotions applied to canonical epic order; validate both order and every generated field
 - `kanban/loop-state.json` — durable local runtime state
 - `kanban/epics/<file>` — canonical task context and acceptance criteria
 - `kanban/requirements-traceability.json` — generated coverage ledger

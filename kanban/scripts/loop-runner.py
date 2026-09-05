@@ -22,7 +22,9 @@ import time
 from pathlib import Path
 from typing import Any
 
-BASE = Path(os.environ.get("BARGHSA_LOOP_BASE", "/Users/majid/barghsa-core"))
+from build_backlog import task_context
+
+BASE = Path(os.environ.get("BARGHSA_LOOP_BASE", str(Path(__file__).resolve().parents[2])))
 STATE_FILE = BASE / "kanban/loop-state.json"
 QUEUE_FILE = BASE / "kanban/task-queue.json"
 EPICS_DIR = BASE / "kanban/epics"
@@ -118,24 +120,7 @@ def release_lock() -> None:
 
 
 def task_section(task: dict[str, Any]) -> str:
-    path = EPICS_DIR / task["fname"]
-    text = path.read_text()
-    heading_start = text.find(f"**{task['id']} —")
-    if heading_start >= 0:
-        following = text[heading_start + 2 :]
-        next_heading = following.find("\n**T-")
-        if next_heading >= 0:
-            return text[heading_start : heading_start + 2 + next_heading].strip()
-        return "\n".join(text[heading_start:].splitlines()[:80]).strip()
-
-    row_pattern = re.compile(
-        rf"^\|\s*{re.escape(task['id'])}\s*\|.*$", re.MULTILINE
-    )
-    row_match = row_pattern.search(text)
-    if row_match:
-        return row_match.group(0).strip()
-
-    raise RuntimeError(f"task section not found: {task['key']}")
+    return task_context(task, EPICS_DIR)
 
 
 def next_task(state: dict[str, Any]) -> dict[str, Any] | None:

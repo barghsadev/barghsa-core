@@ -26,6 +26,7 @@ KANBAN = ROOT / "kanban"
 EPICS_DIR = KANBAN / "epics"
 QUEUE_PATH = KANBAN / "task-queue.json"
 TRACE_PATH = KANBAN / "requirements-traceability.json"
+PRIORITY_PATH = KANBAN / "queue-priority.json"
 
 COMPLEXITIES = {"XS", "S", "M", "L", "XL"}
 TASK_ID_RE = re.compile(r"T-[0-9]+(?:\.[0-9]+){2,4}")
@@ -149,6 +150,71 @@ def parse_all_tasks() -> list[Task]:
     if duplicates:
         raise ValueError(f"duplicate task keys: {duplicates[:10]}")
     return tasks
+
+
+def validate_queue(on_disk: Any, tasks: list[Task]) -> None:
+    """Identity includes the payload and order, not just the set of keys."""
+    canonical = [task.as_json() for task in tasks]
+    if json.dumps(on_disk, sort_keys=True) != json.dumps(canonical, sort_keys=True):
+        raise ValueError("task-queue.json payload or ordering is stale; run --write")
+
+
+def prioritize_tasks(tasks: list[Task], rules: Any) -> list[Task]:
+    """Apply explicit, versioned dependency promotions without trusting queue edits."""
+    if not isinstance(rules, list):
+        raise ValueError("queue priority must be a list")
+    result = list(tasks)
+    by_key = {task.key: task for task in tasks}
+    promoted: set[str] = set()
+    for rule in rules:
+        if not isinstance(rule, dict) or set(rule) != {"before", "tasks"}:
+            raise ValueError("invalid queue priority rule")
+        anchor, keys = rule["before"], rule["tasks"]
+        if (not isinstance(anchor, str) or anchor not in by_key
+                or not isinstance(keys, list) or not keys
+                or any(not isinstance(key, str) or key not in by_key for key in keys)):
+            raise ValueError("queue priority references unknown tasks")
+        if anchor in keys or len(set(keys)) != len(keys) or promoted.intersection(keys):
+            raise ValueError("duplicate or self-referencing queue priority")
+        promoted.update(keys)
+        result = [task for task in result if task.key not in keys]
+        index = next(i for i, task in enumerate(result) if task.key == anchor)
+        result[index:index] = [by_key[key] for key in keys]
+    return result
+
+
+def queue_tasks(tasks: list[Task]) -> list[Task]:
+    return prioritize_tasks(tasks, json.loads(PRIORITY_PATH.read_text(encoding="utf-8")))
+
+
+def task_context(task: dict[str, Any], epics_dir: Path = EPICS_DIR) -> str:
+    """Extract any supported task format together with its story requirements."""
+    fname = task["fname"]
+    if Path(fname).name != fname or task["key"] != f"{fname}#{task['id']}":
+        raise ValueError("invalid qualified task identity")
+    lines = (epics_dir / fname).read_text(encoding="utf-8").splitlines()
+    starts = task_starts(lines)
+    matches = [i for i, (_, task_id, _) in enumerate(starts) if task_id == task["id"]]
+    if len(matches) != 1:
+        raise ValueError(f"expected one task section: {task['key']}")
+    position = matches[0]
+    start = starts[position][0]
+    end = starts[position + 1][0] if position + 1 < len(starts) else len(lines)
+    # A following story's introduction is not part of this task.
+    for i in range(start + 1, end):
+        heading = HEADING_RE.match(lines[i])
+        if heading and len(heading.group(1)) <= 3:
+            end = i
+            break
+    story = 0
+    for i in range(start):
+        heading = HEADING_RE.match(lines[i])
+        if heading and len(heading.group(1)) <= 3:
+            story = i
+    first_sibling = next((i for i, _, _ in starts if story <= i <= start), start)
+    intro = "\n".join(lines[story:first_sibling]).strip()
+    body = "\n".join(lines[start:end]).strip()
+    return "\n\n".join(part for part in (intro, body) if part)
 
 
 def section_entries(source: Path, rules: list[tuple[re.Pattern[str], list[str]]], prefix: str) -> list[dict[str, object]]:
@@ -281,7 +347,8 @@ def main() -> int:
         errors = validate_repository(tasks, trace)
         if errors:
             raise ValueError("; ".join(errors))
-        queue_text = serialized_queue(tasks)
+        ordered = queue_tasks(tasks)
+        queue_text = serialized_queue(ordered)
         trace_text = serialized_trace(trace)
         if args.write:
             QUEUE_PATH.write_text(queue_text, encoding="utf-8")
@@ -291,12 +358,7 @@ def main() -> int:
             if not QUEUE_PATH.exists():
                 raise ValueError("task-queue.json is missing; run --write")
             on_disk = json.loads(QUEUE_PATH.read_text(encoding="utf-8"))
-            canonical = json.loads(queue_text)
-            # Accept reordered queues: compare by sorted task-key identity.
-            if sorted(t["key"] for t in on_disk) != sorted(t["key"] for t in canonical):
-                raise ValueError("task-queue.json has different tasks than the backlog; run --write")
-            if len(on_disk) != len(canonical):
-                raise ValueError("task-queue.json has wrong task count; run --write")
+            validate_queue(on_disk, ordered)
             if not TRACE_PATH.exists() or TRACE_PATH.read_text(encoding="utf-8") != trace_text:
                 raise ValueError("requirements-traceability.json is stale; run --write")
             print(f"validated {len(tasks)} tasks and {len(trace['entries'])} traceability entries")
