@@ -477,6 +477,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce({ rows: [] })                // check existing main
         .mockResolvedValueOnce({ rows: [addressRow] })      // INSERT RETURNING
         .mockResolvedValueOnce(undefined)                          // COMMIT
@@ -497,6 +498,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] }) // check existing main
         .mockResolvedValueOnce({ rows: [{ ...addressRow, main_address: false }] }) // INSERT
         .mockResolvedValueOnce(undefined)                          // COMMIT
@@ -523,6 +525,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] })
         .mockResolvedValueOnce(undefined) // ROLLBACK (catch block)
 
@@ -558,6 +561,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce({ rows: [] }) // check existing main
         .mockRejectedValueOnce(fkError)
         .mockResolvedValueOnce(undefined) // ROLLBACK
@@ -603,6 +607,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce({ rows: [{ ...addressRow, full_address: '456 New Street' }] }) // UPDATE
         .mockResolvedValueOnce(undefined)                          // COMMIT
 
@@ -650,6 +655,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce(undefined) // ROLLBACK
 
       mockPool.connect.mockResolvedValue(mockClient)
@@ -692,12 +698,16 @@ describe('ProfilesService', () => {
       mockPool.query
         .mockResolvedValueOnce({ rows: [profileRow] })
         .mockResolvedValueOnce({ rows: [nonMainAddress] })
-        .mockResolvedValueOnce({ rows: [] })              // no orders linked
-        .mockResolvedValueOnce({})                         // DELETE
+
+      mockClient.query.mockResolvedValueOnce({}) // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] })
+        .mockResolvedValueOnce({ rowCount: 1, rows: [{ id: 'addr-1' }] })
+        .mockResolvedValueOnce({}) // audit
+        .mockResolvedValueOnce({}) // COMMIT
 
       await service.deleteAddress('user-1', 'prof-1', 'addr-1')
 
-      expect(mockPool.query.mock.calls[3]![0]).toContain('DELETE FROM addresses')
+      expect(mockClient.query.mock.calls[2]![0]).toContain('DELETE FROM addresses')
     })
 
     it('rejects deleting the main address', async () => {
@@ -762,6 +772,7 @@ describe('ProfilesService', () => {
 
       mockClient.query
         .mockResolvedValueOnce(undefined)                          // BEGIN
+        .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
         .mockResolvedValueOnce(undefined)                          // unset current main
         .mockResolvedValueOnce({ rows: [{ ...nonMainAddress, main_address: true }] }) // UPDATE
         .mockResolvedValueOnce(undefined)                          // COMMIT
@@ -773,9 +784,9 @@ describe('ProfilesService', () => {
       expect(result.mainAddress).toBe(true)
 
       // Verify unset call
-      expect(mockClient.query.mock.calls[1]![0]).toContain('main_address = false')
+      expect(mockClient.query.mock.calls[2]![0]).toContain('main_address = false')
       // Verify set call
-      expect(mockClient.query.mock.calls[2]![0]).toContain('main_address = true')
+      expect(mockClient.query.mock.calls[3]![0]).toContain('main_address = true')
     })
 
     it('is a no-op when the address is already main', async () => {

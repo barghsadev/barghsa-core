@@ -1,4 +1,5 @@
 import { Injectable, Logger, HttpException } from '@nestjs/common'
+import type { PoolClient } from 'pg'
 import { getDbPool } from '@barghsa/db'
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -502,6 +503,20 @@ export class ProfilesService {
    * automatically set as main. Otherwise it defaults to non-main.
    * Validation: province/city must exist, postal code format checked.
    */
+  async requireAddressEditor(userId: string, profileId: string, client?: PoolClient): Promise<ProfileRow> {
+    const db = client ?? getDbPool()
+    const result = await db.query(`SELECT * FROM profiles WHERE id=$1 AND NOT archived${client ? ' FOR UPDATE' : ''}`,[profileId])
+    const profile = result.rows[0]
+    if (profile) {
+      if (profile.user_id===userId) return mapRow(profile)
+      if (profile.profile_type==='LEGAL') {
+        const membership = await db.query(`SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager'${client ? ' FOR SHARE' : ''}`,[profileId,userId])
+        if (membership.rows.length) return mapRow(profile)
+      }
+    }
+    throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code,message:'Profile not found'},404)
+  }
+
   async createAddress(
     userId: string,
     profileId: string,
@@ -515,14 +530,8 @@ export class ProfilesService {
   ): Promise<AddressRow> {
     const pool = getDbPool()
 
-    // Verify the profile belongs to the user
-    const profile = await this.getProfileById(profileId)
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
-    }
+    await this.requireAddressEditor(userId,profileId)
+
 
     // Validate postal code
     if (!validatePostalCode(data.postalCode)) {
@@ -535,6 +544,7 @@ export class ProfilesService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await this.requireAddressEditor(userId,profileId,client)
 
       // Check if there's an existing main address
       const existingMain = await client.query(
@@ -543,7 +553,7 @@ export class ProfilesService {
       )
       const hasMainAddress = existingMain.rows.length > 0
 
-      const isMain = data.mainAddress === true && !hasMainAddress
+      const isMain = !hasMainAddress
 
       // If user explicitly requested main but one already exists, error
       if (data.mainAddress === true && hasMainAddress) {
@@ -564,6 +574,8 @@ export class ProfilesService {
         [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain],
       )
 
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
       await client.query('COMMIT')
       this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`)
       return mapAddressRow(result.rows[0])
@@ -587,7 +599,7 @@ export class ProfilesService {
    *
    * Only the address fields can be updated (province, city, full address,
    * postal code). The main address flag is updated via setMainAddress.
-   * Prevents updating addresses linked to orders (soft delete).
+   * Historical orders retain their copied address snapshot.
    */
   async updateAddress(
     userId: string,
@@ -602,14 +614,8 @@ export class ProfilesService {
   ): Promise<AddressRow> {
     const pool = getDbPool()
 
-    // Verify the profile belongs to the user
-    const profile = await this.getProfileById(profileId)
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
-    }
+    await this.requireAddressEditor(userId,profileId)
+
 
     // Verify the address belongs to the profile
     const existing = await this.getProfileAddresses(profileId)
@@ -632,6 +638,7 @@ export class ProfilesService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await this.requireAddressEditor(userId,profileId,client)
 
       const updates: string[] = []
       const params: unknown[] = []
@@ -678,6 +685,8 @@ export class ProfilesService {
         )
       }
 
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
       await client.query('COMMIT')
       this.logger.log(`Address ${addressId} updated for profile ${profileId}`)
       return mapAddressRow(result.rows[0])
@@ -700,9 +709,8 @@ export class ProfilesService {
    * Delete an address for a profile.
    *
    * If the address is the main address, the user must first set a new main
-   * address. If the address is linked to an order, soft delete is applied
-   * (the address is preserved for historical order accuracy). Otherwise
-   * the address is hard-deleted.
+   * address. Orders retain copied snapshot fields independently of the saved
+   * address, so removing the saved address preserves order history.
    */
   async deleteAddress(
     userId: string,
@@ -711,14 +719,8 @@ export class ProfilesService {
   ): Promise<void> {
     const pool = getDbPool()
 
-    // Verify the profile belongs to the user
-    const profile = await this.getProfileById(profileId)
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
-    }
+    await this.requireAddressEditor(userId,profileId)
+
 
     // Verify the address belongs to the profile
     const existing = await this.getProfileAddresses(profileId)
@@ -742,28 +744,21 @@ export class ProfilesService {
       )
     }
 
-    // Check if the address is linked to orders (soft delete)
-    const orderCheck = await pool.query(
-      `SELECT id FROM orders WHERE address_snapshot_id = $1 LIMIT 1`,
-      [addressId],
-    )
-
-    if (orderCheck.rows.length > 0) {
-      // TODO: soft-delete when orders table is ready — mark as deleted_at instead
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.CONFLICT_STATE.code,
-          message: 'This address is linked to an order and cannot be deleted.',
-        },
-        400,
+    // Orders own copied snapshot fields; deleting a saved address cannot
+    // alter historical order data. Serialize against main-address switching.
+    const client=await pool.connect()
+    try {
+      await client.query('BEGIN')
+      await this.requireAddressEditor(userId,profileId,client)
+      const deleted=await client.query(
+        `DELETE FROM addresses WHERE id=$1 AND profile_id=$2 AND NOT main_address RETURNING id`,[addressId,profileId],
       )
-    }
-
-    await pool.query(
-      `DELETE FROM addresses WHERE id = $1 AND profile_id = $2`,
-      [addressId, profileId],
-    )
+      if (deleted.rowCount!==1) throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code,message:'Address changed or is now the main address'},409)
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_deleted',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,addressId])
+      await client.query('COMMIT')
+    } catch(error) {await client.query('ROLLBACK').catch(()=>{});throw error}
+    finally {client.release()}
 
     this.logger.log(`Address ${addressId} deleted for profile ${profileId}`)
   }
@@ -782,14 +777,8 @@ export class ProfilesService {
   ): Promise<AddressRow> {
     const pool = getDbPool()
 
-    // Verify the profile belongs to the user
-    const profile = await this.getProfileById(profileId)
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-        404,
-      )
-    }
+    await this.requireAddressEditor(userId,profileId)
+
 
     // Verify the address belongs to the profile
     const existing = await this.getProfileAddresses(profileId)
@@ -809,6 +798,7 @@ export class ProfilesService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await this.requireAddressEditor(userId,profileId,client)
 
       // Unset the current main address
       await client.query(
@@ -831,6 +821,8 @@ export class ProfilesService {
         )
       }
 
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_main_changed',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
       await client.query('COMMIT')
       this.logger.log(`Address ${addressId} set as main for profile ${profileId}`)
       return mapAddressRow(result.rows[0])

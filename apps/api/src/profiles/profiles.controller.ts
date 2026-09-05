@@ -495,13 +495,7 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId
 
-    const profile = await this.profilesService.getProfileById(profileId)
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
-    }
+    await this.profilesService.requireAddressEditor(userId,profileId)
 
     const addresses = await this.profilesService.getProfileAddresses(profileId)
     return { addresses }
@@ -631,8 +625,7 @@ export class ProfilesController {
    * DELETE /api/profiles/:profileId/addresses/:addressId
    *
    * Deletes an address. The main address cannot be deleted without setting
-   * a new main first. Addresses linked to orders are soft-deleted (or
-   * blocked until soft-delete is implemented).
+   * a new main first. Historical order snapshots remain unchanged.
    */
   @Delete(':profileId/addresses/:addressId')
   @HttpCode(200)
