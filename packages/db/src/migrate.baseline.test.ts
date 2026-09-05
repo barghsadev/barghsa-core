@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -53,10 +53,18 @@ describe('complete production schema baseline', () => {
       await expect(pool.query('INSERT INTO wallets(profile_id, posted_balance) VALUES ($1, -1)', [profile])).rejects.toMatchObject({ code: '23514' })
       await pool.query('INSERT INTO wallets(profile_id, posted_balance) VALUES ($1, $2)', [profile, '9007199254740993'])
 
+      for (const purpose of ['unknown', 'login', 'registration']) {
+        await expect(pool.query(`INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at,purpose)
+          VALUES ($1,'invalid@example.test','test-hash',NOW()+INTERVAL '1 day',$2)`, [randomUUID(), purpose]))
+          .rejects.toMatchObject({ code: '23514' })
+      }
+
       // Representative deployed state: populated current product/finance
       // tables with the old migration journal and missing unjournaled schema.
       const oldSql = readFileSync(resolve(folder, '../0079_create_bank_receipt_attachment_claims.sql'), 'utf8')
       await pool.query(oldSql)
+      await pool.query('ALTER TABLE otp_challenges DROP COLUMN purpose CASCADE')
+      await pool.query("INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at) VALUES ('legacy-otp','old@example.test','test-hash',NOW()+INTERVAL '1 day')")
       await pool.query('DELETE FROM drizzle.__drizzle_migrations')
       await pool.query('INSERT INTO drizzle.__drizzle_migrations(hash, created_at) VALUES ($1, $2)',
         [createHash('sha256').update(oldSql).digest('hex'), '1789776000000'])
@@ -69,6 +77,7 @@ describe('complete production schema baseline', () => {
       const oldHistory = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations')).rows
       const productsBefore = (await pool.query('SELECT * FROM products ORDER BY id')).rows
       expect((await runMigrations(options)).ok).toBe(true)
+      expect((await pool.query("SELECT purpose,attempts_remaining,consumed_at IS NOT NULL AS consumed FROM otp_challenges WHERE challenge_id='legacy-otp'")).rows[0]).toEqual({ purpose: 'legacy_invalid', attempts_remaining: 0, consumed: true })
       expect((await pool.query("SELECT is_admin, is_staff FROM users WHERE user_id='legacy-admin'")).rows[0])
         .toEqual({ is_admin: true, is_staff: true })
       expect((await pool.query("SELECT is_admin, is_staff FROM users WHERE user_id='baseline-user'")).rows[0])

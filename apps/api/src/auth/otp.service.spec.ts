@@ -211,7 +211,7 @@ describe('OtpService', () => {
     it('resends successfully', async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 1 })
 
-      const result = await service.resendChallenge(challengeId, '127.0.0.1')
+      const result = await service.resendChallenge(challengeId, '127.0.0.1', 'registration')
       expect(result).toEqual({ challengeId })
 
       expect(mockPool.query.mock.calls).toHaveLength(2)
@@ -228,7 +228,7 @@ describe('OtpService', () => {
       mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
 
       await expect(
-        service.resendChallenge(challengeId, '127.0.0.1'),
+        service.resendChallenge(challengeId, '127.0.0.1', 'registration'),
       ).rejects.toThrow(HttpException)
     })
 
@@ -248,7 +248,7 @@ describe('OtpService', () => {
       mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
 
       try {
-        await service.resendChallenge(challengeId, '127.0.0.1')
+        await service.resendChallenge(challengeId, '127.0.0.1', 'registration')
         expect.unreachable()
       } catch (err) {
         const httpErr = err as any
@@ -273,7 +273,7 @@ describe('OtpService', () => {
       mockRateLimitService.checkSecurityRateLimit.mockResolvedValue({ allowed: true })
 
       try {
-        await service.resendChallenge(challengeId, '127.0.0.1')
+        await service.resendChallenge(challengeId, '127.0.0.1', 'registration')
         expect.unreachable()
       } catch (err) {
         const httpErr = err as any

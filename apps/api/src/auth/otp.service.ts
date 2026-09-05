@@ -5,6 +5,8 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import type { PoolClient } from 'pg'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
+export type OtpPurpose = 'registration' | 'login' | 'password_reset' | 'change_username' | 'add_email' | 'add_mobile'
+
 export interface OtpChallengeResult {
   challengeId: string
   destination: string
@@ -56,6 +58,7 @@ export class OtpService {
     ip: string,
     passwordHash?: string,
     tosVersionId?: string,
+    binding: { purpose: 'change_username' | 'add_email' | 'add_mobile'; userId: string } | undefined = undefined,
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
 
@@ -66,9 +69,9 @@ export class OtpService {
 
     const pool = getDbPool()
     await pool.query(
-      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt],
+      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -92,6 +95,7 @@ export class OtpService {
     userId: string,
     destination: string,
     ip: string,
+    purpose: 'login' | 'password_reset' = 'login',
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
 
@@ -102,9 +106,9 @@ export class OtpService {
 
     const pool = getDbPool()
     await pool.query(
-      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt],
+      `INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt, purpose],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -119,14 +123,15 @@ export class OtpService {
   async resendChallenge(
     challengeId: string,
     ip: string,
+    purpose: OtpPurpose,
   ): Promise<{ challengeId: string }> {
     const pool = getDbPool()
 
     const result = await pool.query(
       `SELECT challenge_id, destination, consumed_at, expires_at, resend_count, otp_hash, attempts_remaining
        FROM otp_challenges
-       WHERE challenge_id = $1`,
-      [challengeId],
+       WHERE challenge_id = $1 AND purpose = $2`,
+      [challengeId, purpose],
     )
 
     if (result.rows.length === 0) {

@@ -314,7 +314,7 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+    return this.otpService.resendChallenge(parsed.data.challengeId, ip, 'login')
   }
 
   /**
@@ -682,7 +682,7 @@ export class AuthController {
     }
 
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.otpService.resendChallenge(parsed.data.challengeId, ip)
+    return this.otpService.resendChallenge(parsed.data.challengeId, ip, 'registration')
   }
 
   /**

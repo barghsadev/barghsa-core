@@ -11,6 +11,7 @@ The production journal starts with an additive baseline, followed by domain and 
 - 0082 restores foundation constraints, reference data and indexes that previously existed only in source helpers.
 - 0083 separates staff membership from platform administrator authority. Existing administrator flags are preserved for account review.
 - 0084 gives unchanged predefined CRM, Finance and Legal roles the concrete capabilities used by their domain endpoints. Customized permission sets remain unchanged for review.
+- 0085 binds OTP challenges to an operation and, for existing-account actions, a user. Old unscoped codes are retained but invalidated; users must request a new code after rollout.
 
 The runner holds a direct connection and an advisory lock throughout migration. Drizzle applies pending entries transactionally. A failure prevents successful version reporting. Repeating the command applies no additional entries.
 

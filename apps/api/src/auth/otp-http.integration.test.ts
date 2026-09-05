@@ -1,11 +1,11 @@
-import { afterAll, beforeAll, expect, it } from 'vitest'
+import { afterEach, beforeEach, expect, it } from 'vitest'
 import { createHash, randomUUID } from 'node:crypto'
 import { startHttpFixture } from '../test/http-fixture.js'
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>
 let headers: Record<string, string>
 
-beforeAll(async () => {
+beforeEach(async () => {
   if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run')
   http = await startHttpFixture(process.env.TEST_DATABASE_URL)
   await http.pool.query("INSERT INTO users(user_id,username,email,password_hash) VALUES ('otp-user','otp-old@example.test','otp-old@example.test','test-only')")
@@ -15,13 +15,13 @@ beforeAll(async () => {
   headers = { Cookie: `barghsa_session=${sessionId}`, 'X-CSRF-Token': token, 'Content-Type': 'application/json' }
 }, 40000)
 
-afterAll(async () => { await http?.close() }, 15000)
+afterEach(async () => { await http?.close() }, 15000)
 
-async function challenge(destination: string) {
+async function challenge(destination: string, purpose = 'change_username', userId: string | null = 'otp-user') {
   const id = randomUUID()
   // Tests transaction behavior independently of provider delivery.
-  await http.pool.query(`INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at)
-    VALUES ($1,$2,$3,NOW()+INTERVAL '5 minutes')`, [id, destination, createHash('sha256').update('123456').digest('hex')])
+  await http.pool.query(`INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at,purpose,user_id,password_hash,tos_version_id)
+    VALUES ($1,$2,$3,NOW()+INTERVAL '5 minutes',$4,$5,'fixture-password','fixture-terms')`, [id, destination, createHash('sha256').update('123456').digest('hex'), purpose, userId])
   return id
 }
 
@@ -52,7 +52,7 @@ it('consumes username OTP in the account transaction and persists failed attempt
 }, 15000)
 
 it('allows exactly one concurrent contact verification and rejects reuse', async () => {
-  const id = await challenge('+989121234567')
+  const id = await challenge('+989121234567', 'add_mobile')
   const body = { contactType: 'mobile', contactValue: '+989121234567', otpChallengeId: id, otp: '123456' }
   const results = await Promise.all([post('add-contact', body), post('add-contact', body)])
   expect(results.map(result => result.status).sort()).toEqual([200, 409])
@@ -61,7 +61,7 @@ it('allows exactly one concurrent contact verification and rejects reuse', async
 }, 10000)
 
 it('does not overwrite or resend a challenge consumed while its update waits', async () => {
-  const id = await challenge('resend-race@example.test')
+  const id = await challenge('resend-race@example.test', 'registration', null)
   const client = await http.pool.connect()
   let resend: Promise<Response> | undefined
   try {
@@ -81,4 +81,35 @@ it('does not overwrite or resend a challenge consumed while its update waits', a
     client.release()
     await resend
   }
+}, 10000)
+
+it('rejects cross-purpose and cross-account codes without consuming them', async () => {
+  const login = await challenge('otp-old@example.test', 'login')
+  const reset = await challenge('otp-old@example.test', 'password_reset')
+  expect((await post('reset-password', { challengeId: login, otp: '123456', newPassword: 'Changed-test-password-123!' })).status).toBe(404)
+  expect((await post('login/verify', { challengeId: reset, otp: '123456' })).status).toBe(404)
+  expect((await post('register/verify', { challengeId: login, otp: '123456' })).status).toBe(404)
+  expect((await post('register/resend', { challengeId: login })).status).toBe(404)
+  expect((await post('login/resend', { challengeId: reset })).status).toBe(404)
+
+  await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES ('another-user','another@example.test','test-only')")
+  const otherUser = await challenge('other-new@example.test', 'change_username', 'another-user')
+  expect((await post('change-username', { newUsername: 'other-new@example.test', otpChallengeId: otherUser, otp: '123456' })).status).toBe(404)
+  const mobile = await challenge('bound@example.test', 'add_mobile')
+  expect((await post('add-contact', { contactType: 'email', contactValue: 'bound@example.test', otpChallengeId: mobile, otp: '123456' })).status).toBe(404)
+  expect((await http.pool.query('SELECT consumed_at,attempts_remaining FROM otp_challenges')).rows)
+    .toEqual(Array(4).fill({ consumed_at: null, attempts_remaining: 5 }))
+  const valid = await post('login/verify', { challengeId: login, otp: '123456' })
+  expect(valid.status, await valid.text() + http.logs()).toBe(200)
+}, 15000)
+
+it('issues account-bound contact and password-reset challenges through their actual routes', async () => {
+  expect((await post('change-username/send-otp', { newUsername: 'issued-change@example.test' })).status).toBe(200)
+  expect((await post('add-contact/send-otp', { contactType: 'mobile', contactValue: '+989129999999' })).status).toBe(200)
+  expect((await post('forgot-password', { username: 'otp-old@example.test' })).status).toBe(200)
+  expect((await http.pool.query('SELECT purpose,user_id,destination FROM otp_challenges ORDER BY purpose')).rows).toEqual([
+    { purpose: 'add_mobile', user_id: 'otp-user', destination: '+989129999999' },
+    { purpose: 'change_username', user_id: 'otp-user', destination: 'issued-change@example.test' },
+    { purpose: 'password_reset', user_id: 'otp-user', destination: 'otp-old@example.test' },
+  ])
 }, 10000)

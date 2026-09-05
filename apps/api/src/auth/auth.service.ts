@@ -518,6 +518,7 @@ export class AuthService {
           userId,
           input.username,
           ip,
+          'password_reset',
         )
 
         this.logger.log(`Forgot-password OTP sent for user ${userId} from ${ip}`)
@@ -578,7 +579,7 @@ export class AuthService {
         `SELECT challenge_id, destination, otp_hash, attempts_remaining,
                 expires_at, consumed_at, user_id
          FROM otp_challenges
-         WHERE challenge_id = $1
+         WHERE challenge_id = $1 AND purpose = 'login'
          FOR UPDATE`,
         [challengeId],
       )
@@ -770,7 +771,7 @@ export class AuthService {
         `SELECT challenge_id, destination, otp_hash, attempts_remaining,
                 expires_at, consumed_at, password_hash, tos_version_id
          FROM otp_challenges
-         WHERE challenge_id = $1
+         WHERE challenge_id = $1 AND purpose = 'registration'
          FOR UPDATE`,
         [challengeId],
       )
@@ -1037,7 +1038,7 @@ export class AuthService {
         `SELECT challenge_id, destination, otp_hash, attempts_remaining,
                 expires_at, consumed_at, user_id
          FROM otp_challenges
-         WHERE challenge_id = $1
+         WHERE challenge_id = $1 AND purpose = 'password_reset'
          FOR UPDATE`,
         [input.challengeId],
       )
@@ -1342,7 +1343,7 @@ export class AuthService {
     }
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(newUsername, ip)
+    return this.otpService.createChallenge(newUsername, ip, undefined, undefined, { purpose: 'change_username', userId })
   }
 
   /**
@@ -1368,9 +1369,9 @@ export class AuthService {
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
         `SELECT destination FROM otp_challenges
-         WHERE challenge_id = $1
+         WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
-        [challengeId],
+        [challengeId, userId, 'change_username'],
       )
 
       if (challengeResult.rows.length === 0) {
@@ -1568,7 +1569,7 @@ export class AuthService {
     }
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(contactValue, ip)
+    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, { purpose: contactType === 'email' ? 'add_email' : 'add_mobile', userId })
   }
 
   /**
@@ -1593,9 +1594,9 @@ export class AuthService {
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
         `SELECT destination FROM otp_challenges
-         WHERE challenge_id = $1
+         WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
-        [challengeId],
+        [challengeId, userId, contactType === 'email' ? 'add_email' : 'add_mobile'],
       )
 
       if (challengeResult.rows.length === 0) {

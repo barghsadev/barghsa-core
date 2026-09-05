@@ -40,7 +40,7 @@ it('keeps consent bound to the displayed publication and supports later re-accep
   const started = await post('auth/register', { username: 'consent@example.test', password, tosVersionId: oldTerms })
   const challenge = await started.json() as { challengeId: string }
   expect(started.status, JSON.stringify(challenge) + fixture.logs()).toBe(200)
-  expect((await fixture.pool.query('SELECT tos_version_id FROM otp_challenges WHERE challenge_id=$1', [challenge.challengeId])).rows[0].tos_version_id).toBe(oldTerms)
+  expect((await fixture.pool.query('SELECT tos_version_id,purpose,user_id FROM otp_challenges WHERE challenge_id=$1', [challenge.challengeId])).rows[0]).toEqual({ tos_version_id: oldTerms, purpose: 'registration', user_id: null })
   // This test isolates consent persistence. Provider delivery is tested separately once implemented.
   await fixture.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2',
     [createHash('sha256').update('123456').digest('hex'), challenge.challengeId])

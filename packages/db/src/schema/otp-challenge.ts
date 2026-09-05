@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { check, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 /**
  * OTP challenge table.
@@ -37,6 +37,9 @@ export const otpChallenges = pgTable(
     /** The destination (email or E.164 phone) the OTP was sent to. */
     destination: text('destination').notNull(),
 
+    /** Old unscoped challenges are never valid authorization for a new flow. */
+    purpose: text('purpose').notNull().default('legacy_invalid'),
+
     /** SHA-256 hash of the 6-digit OTP. Never store plaintext. */
     otpHash: text('otp_hash').notNull(),
 
@@ -69,6 +72,13 @@ export const otpChallenges = pgTable(
       .defaultNow()
       .notNull(),
   },
+  (table) => [check('otp_challenge_purpose_binding', sql`
+    ${table.purpose} = 'legacy_invalid'
+    OR (${table.purpose} = 'registration' AND ${table.userId} IS NULL
+        AND ${table.passwordHash} IS NOT NULL AND ${table.tosVersionId} IS NOT NULL)
+    OR (${table.purpose} IN ('login','password_reset','change_username','add_email','add_mobile')
+        AND ${table.userId} IS NOT NULL)
+  `)],
 )
 
 /**
@@ -79,6 +89,7 @@ export const createOtpChallengesTable = sql`
   CREATE TABLE IF NOT EXISTS otp_challenges (
     challenge_id TEXT PRIMARY KEY,
     destination TEXT NOT NULL,
+    purpose TEXT NOT NULL DEFAULT 'legacy_invalid',
     otp_hash TEXT NOT NULL,
     attempts_remaining INTEGER NOT NULL DEFAULT 5,
     resend_count INTEGER NOT NULL DEFAULT 0,
@@ -108,6 +119,8 @@ export const createOtpChallengesTable = sql`
       ALTER TABLE otp_challenges ADD COLUMN tos_version_id TEXT;
     END IF;
   END $$;
+
+  ALTER TABLE otp_challenges ADD COLUMN IF NOT EXISTS purpose TEXT NOT NULL DEFAULT 'legacy_invalid';
 
   -- Migration: add user_id column for login OTP challenges (T-02.01.03)
   DO $$ BEGIN
