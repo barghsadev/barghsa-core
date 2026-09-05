@@ -203,13 +203,13 @@ def task_context(task: dict[str, Any], epics_dir: Path = EPICS_DIR) -> str:
     # A following story's introduction is not part of this task.
     for i in range(start + 1, end):
         heading = HEADING_RE.match(lines[i])
-        if heading and len(heading.group(1)) <= 3:
+        if heading and (len(heading.group(1)) <= 3 or re.match(r"S-\d", heading.group(2))):
             end = i
             break
     story = 0
     for i in range(start):
         heading = HEADING_RE.match(lines[i])
-        if heading and len(heading.group(1)) <= 3:
+        if heading and (len(heading.group(1)) <= 3 or re.match(r"S-\d", heading.group(2))):
             story = i
     first_sibling = next((i for i, _, _ in starts if story <= i <= start), start)
     intro = "\n".join(lines[story:first_sibling]).strip()

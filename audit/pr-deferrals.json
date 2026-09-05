@@ -1,0 +1,1182 @@
+[
+  {
+    "pr": 301,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/301",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Dual-approval for high-value wallet top-ups is out of this task (owned by T-04.3.01.05 / C-04.CC.02 for invoice receipts)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 298,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/298",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.3.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Dual-approval for amounts ≥ admin threshold — deferred to T-04.3.01.05.",
+      "- [ ] Staff rejection API — deferred to T-04.3.01.04.",
+      "- [ ] Staff confirmation UI — not in this API-only task."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 297,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/297",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.3.01.02"
+    ],
+    "historical_deferrals": [
+      "- Remaining-balance / overpayment checks are deferred to staff confirmation (T-04.3.01.03)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 296,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/296",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.3.01.01"
+    ],
+    "historical_deferrals": [
+      "- Upload validation, staff APIs, dual-approval, wallet overpayment credit, and invoice Unpaid → Partially funded → Paid tracking are intentionally deferred to T-04.3.01.02–07."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 295,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/295",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.04.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Granular `admin:finance:wallet:chargeback-alerts` capability for non-admin Finance staff — not in this task. Recipients already include `role-finance`; the warning API still requires a platform admin session until C-04.CC.03."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 294,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/294",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.04.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03 (already on main). Unmatched/unresolved events remain the input to that alert path. Duplicate unmatched retries with an identical payload still re-attempt the alert; mismatched payloads are rejected first so alert data cannot be built from a different notification."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 291,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/291",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Full concurrent-racer matrix (two payers, one winner) belongs to T-04.2.03.04 — existing concurrency file still passes but is not this task’s scope.",
+      "- [ ] Idempotency cache unique index + retry contract belongs to T-04.2.03.03 — existing path is unchanged, not expanded here."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 290,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/290",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] HTTP/controller surface is not added; this task is the service method only.",
+      "- [ ] Concurrent payment integration tests remain T-04.2.03.04 (already on `main`)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 288,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/288",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.06"
+    ],
+    "historical_deferrals": [
+      "- [x] Admin-configurable `onlineTopUpLimit` with default 2,000,000,000 IRR — GET/PUT `/api/admin/config/wallet-top-up-limit`; missing rows serve the default at version `0`. Covered by existing admin/API tests; not re-implemented in this follow-up.",
+      "- [x] Versioned config — `app_config.version` increments on write, global `config_version` is bumped, and `ConfigCache.invalidate` runs after commit. Covered by existing admin service tests; not re-implemented in this follow-up."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 286,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/286",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 285,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/285",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.04.01"
+    ],
+    "historical_deferrals": [
+      "- The same migration copies violating rows into `wallet_tx_reversal_check_violations` (idempotent `ON CONFLICT DO NOTHING`) and documents the audited staff reconciliation procedure. VALIDATE is deferred to a later contract-phase migration after operators reconcile those rows. Ledger history is not rewritten automatically."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 282,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/282",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Concurrent payment races / duplicate idempotency-key unique index — covered by already-merged T-04.2.03.03 / T-04.2.03.04; not re-scoped here."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 278,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/278",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Dual-approval thresholds for bank-payment confirmation — owned by T-04.3.01.05 / C-04.CC.02, not this task."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 276,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/276",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.04.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Finance alert (push + dashboard) — not this task; owned by T-04.2.04.03. Unmatched/unresolved events are persisted for that follow-up.",
+      "- Finance alerting and dashboard warnings for unresolved chargebacks are deferred to T-04.2.04.03; this task only persists `unmatched` / `unresolved` events."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 275,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/275",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.04.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Finance alert on chargeback detection — owned by T-04.2.04.03, not this task.",
+      "- [ ] Provider chargeback inbound mapping — owned by T-04.2.04.02, not this task."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 273,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/273",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.03"
+    ],
+    "historical_deferrals": [
+      "- TTL cleanup of stale in-flight rows is not implemented in this task; `expires_at` is written (24h) for a later worker. Successful cached responses are kept so a retry after TTL still cannot debit twice."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 272,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/272",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Concurrent payment races / duplicate idempotency-key unique index — deferred to T-04.2.03.03 / T-04.2.03.04."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 271,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/271",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.03.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] T-04.2.03.02-style explicit dual `FOR UPDATE` + audit insert details beyond the current invoice lock + debit client join + state-machine audit — left for the follow-up task that owns that wording.",
+      "- [ ] Concurrent payment integration tests (T-04.2.03.04) not in this PR."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 267,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/267",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.04"
+    ],
+    "historical_deferrals": [
+      "- Dual-approval thresholds for bank-payment confirmation are owned by T-04.3.01.05 / C-04.CC.02 and are not implemented here."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 266,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/266",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.03"
+    ],
+    "historical_deferrals": [
+      "- Posted and reserved balances are unchanged. Credit is deferred to staff confirmation (`T-04.2.02.04`). Idempotent retries reuse the matching Pending row.",
+      "- [ ] Staff confirm/reject UI is out of scope (`T-04.2.02.04`) — this task only creates the Pending submission."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 259,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/259",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.02.01"
+    ],
+    "historical_deferrals": [
+      "- [x] The API returns a gateway `redirectUrl`; the wallet page assigns `window.location` to it only after HTTPS/no-credentials checks. Credit is deferred to the callback handler."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 254,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/254",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 252,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/252",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.2.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] HTTP/API surface for credit is unchanged — this task is the service method only (top-up/refund callers are later stories)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 249,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/249",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.05.03"
+    ],
+    "historical_deferrals": [
+      "- Migration 0067 is expand/migrate: nullable `adjustment_kind` + generated `accounting_amount`, deterministic backfill of existing linked rows (`metadata.kind` when charge/credit, otherwise `charge`), and the kind/link CHECK added as `NOT VALID`. VALIDATE is deferred until old writers are retired.",
+      "- [ ] Customer-facing invoice details page showing the correction chain — out of scope (T-04.1.05.04).",
+      "- [ ] Applying a credit as a wallet refund/payout — out of scope (S-04.4.01).",
+      "- [ ] `VALIDATE CONSTRAINT ck_invoices_adjustment_kind_matches_link` — deferred contract-phase migration after old writers that omit `adjustment_kind` are retired."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 248,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/248",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.05.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Staff HTTP API / UI for this command — not in this task (customer chain UI is T-04.1.05.04; adjustment invoices are T-04.1.05.03)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 241,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/241",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.04.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Unique index on `(invoiceId, offset, channel)` — out of scope (T-04.1.04.04).",
+      "- [ ] Admin per-offset toggle per service type — out of scope (T-04.1.04.05).",
+      "- [ ] ReminderSender dispatch via outbox — out of scope (T-04.1.04.03).",
+      "- [ ] Cancel future rows on Paid/Cancelled/Refunded — out of scope (T-04.1.04.06); this task only skips those states when inserting a new plan."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 240,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/240",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.04.01"
+    ],
+    "historical_deferrals": [
+      "- Enforces `sent_at` is set exactly when `status = 'sent'`, plus lookup indexes for cancel-by-invoice and due pickup. The `(invoiceId, offset, channel)` unique index is deferred to T-04.1.04.04."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 237,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/237",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Staff override permission + customer-visible reason in audit/metadata — deferred to T-04.1.03.03."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 236,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/236",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.03.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] `dueAt` calculation (`issuedAt + config_days`) — out of scope; owned by T-04.1.03.02.",
+      "- [ ] Staff override UI/API — out of scope; owned by T-04.1.03.03.",
+      "- [ ] Overdue cron — out of scope; owned by T-04.1.03.04."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 232,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/232",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.02.08"
+    ],
+    "historical_deferrals": [
+      "- [ ] Full snapshot replay integration test — owned by T-04.1.02.09, not this task."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 227,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/227",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.02.05"
+    ],
+    "historical_deferrals": [
+      "- `contractId` — existing nullable reference column (contracts table TBD); **FK deferred** until that table exists (documented existing pattern).",
+      "- `consultationId` — **NEW** nullable reference column (consultations table TBD); FK deferred, mirroring `contractId`. Carries the origin reference from day one; the actual FK constraint is added in the epic that creates the consultations table.",
+      "- [x] `contractId` / `consultationId` are deferred nullable refs (target tables TBD, per established pattern)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 225,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/225",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.02.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Wiring into concrete E-03 submission endpoints (`POST /electricity/orders/*`, saving-plan submission) — those XL tasks land later in E-03; the service is the seam they will call",
+      "- [ ] HTTP controller — pending (C-04.CC.03 follow-up, same as ManualInvoiceService)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 224,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/224",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.02.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] No HTTP controller yet — staff-facing endpoint awaits the C-04.CC.03 staff permissions matrix (kept service-layer to bound the PR)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 219,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/219",
+    "task_keys": [
+      "02-auth-users-admin.md#T-10.01.02"
+    ],
+    "historical_deferrals": [
+      "- Read-only slice: no schema changes, no migrations. UI timeline view deferred (same convention as T-10.01.01's deferred admin web UI).",
+      "- [ ] Timeline UI per user (\"Assigned [role] by [admin] on [date]\") — deferred with the admin web UI slice"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 218,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/218",
+    "task_keys": [
+      "02-auth-users-admin.md#T-10.01.01"
+    ],
+    "historical_deferrals": [
+      "Deferred (repo convention): admin web UI slice (table view, disable button + confirmation, fa/en dicts, RTL/a11y), re-enable endpoint.",
+      "- [ ] Admin web UI table + disable button — deferred UI slice (API contract ready)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 217,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/217",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.06"
+    ],
+    "historical_deferrals": [
+      "- [x] Changes affect new drafts only — documented in contract, endpoint description, and OpenAPI; enforcement deferred to consuming slices (T-03.06.01.02, T-04.6.01.01)",
+      "- [~] Admin web UI slice (number inputs per setting, \"changes apply to new orders only\" note, fa/en dicts, RTL/a11y) — deferred for all S-09.12 tasks per loop convention; API slice only"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 216,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/216",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.05"
+    ],
+    "historical_deferrals": [
+      "Not covered in this slice (deferred, consistent with sibling S-09.12 admin tasks): the admin web UI (table: category/formats/max size, edit modal with security warning, fa/en dicts, RTL/a11y) and server-side AV scanning of uploaded bytes (storage scan worker remains a separate concern)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 215,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/215",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.04"
+    ],
+    "historical_deferrals": [
+      "Deferred (UI slice per convention): template list with version history, drag & drop upload, placeholder extraction result display, edit metadata modal, fa/en dicts, RTL/a11y.",
+      "- [x] Download seam: `storageKey` returned on every version DTO for `presignedGetUrl`-style delivery (transport deferred to S-04.5.03 consumer)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 214,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/214",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.03"
+    ],
+    "historical_deferrals": [
+      "- [x] VAT calculated after gift discount on taxable lines — `computeGiftDiscount` is the single seam; invoice integration (not yet built) uses it; documented in shared contract.",
+      "- [ ] Admin web UI slice (list/search/filter, create/edit form, usage stats, toggle, high-value % warning, fa/en dicts, RTL/a11y) — deferred, matching the S-09 admin API-slice pattern used by T-09.12.01/02."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 213,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/213",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] UI slice (table: category/product, rate, effective from, status; future-effective add; override toggle; fa/en dicts, RTL/a11y) — deferred, consistent with T-09.12.01 precedent."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 212,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/212",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.12.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Tabbed admin web UI (list/add/edit per type, price history view, fa/en dicts, RTL/a11y) — deferred to the UI slice"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 211,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/211",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.11.05"
+    ],
+    "historical_deferrals": [
+      "- [ ] \"This agent is also used in [other slots]\" warning UI, per-slot dropdown — **deferred UI slice** (consistent with T-09.11.04's deferred web UI; `alsoUsedIn` data is already served). Also deferred: fa/en dictionaries + RTL/a11y for the admin UI."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 210,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/210",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.11.04"
+    ],
+    "historical_deferrals": [
+      "## Deferred (later slices of T-09.11.04 / T-09.11.05)",
+      "- [ ] Test chat UI (deferred slice)",
+      "- [ ] Web UI (deferred slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 209,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/209",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.11.03"
+    ],
+    "historical_deferrals": [
+      "- Web UI + fa/en dictionaries + RTL/a11y deferred (same split as T-09.11.02, per the review convention for these API slices).",
+      "- [ ] Web UI with type badges + per-policy structured editor + group management (deferred: API slice; UI/UX + fa/en dicts + RTL/a11y belong to the later UI pass)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 208,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/208",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.11.02"
+    ],
+    "historical_deferrals": [
+      "- `kb_documents.processing_status` (`pending|processing|ready|failed`) fixes the chunk/embed contract for the future worker; the actual chunking/embedding pipeline is supplied by the document-processing epic (E-05, T-05.09/T-05.11+, queue position 630+) — deferred like T-09.11.01's worker-async ping.",
+      "- [ ] Web UI + fa/en dictionaries + RTL/a11y slice — deferred (per T-09.11.01 precedent)",
+      "- [ ] Actual chunking/embedding worker — deferred to E-05 document-processing epic (not built; queue 630+)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 207,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/207",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.11.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Web UI table/form/test button — web app surface deferred (backend slice; consistent with prior S-09.10.x splits)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 206,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/206",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.10.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Per-order \"within limits\" enforcement (requiredGreenKwh vs product max) — owned by the E-03 ordering engine (`T-03.04.01.02`), not this admin-epic scope; the enforcement seam here is the hook it consumes.",
+      "- [ ] Web UI fa/en dictionary strings for the safety-status alert — web admin catalogue UI is T-09.12.x (not yet built); backend English messages follow the T-09.10.03 wording."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 205,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/205",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.10.02"
+    ],
+    "historical_deferrals": [
+      "This is the reviewable prerequisite slice of the **L**-sized T-09.10.02. The product-state fail-closed safety check (activation blocked if green product inactive/unpriced/incompatible; fail-closed if deactivated while rule active) depends on the products module and is deferred to **T-09.10.03**.",
+      "- [ ] Activation blocked / fail-closed on green product state — deferred to T-09.10.03 (products module not yet built)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 204,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/204",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.10.01"
+    ],
+    "historical_deferrals": [
+      "- [x] Validated on the online top-up path — `WalletService.validateOnlineTopUpAmount` enforcement seam, unit tested. The online top-up **endpoint** itself is `02-invoices-wallet-contracts.md#T-04.2.02.01` (S-04.2.02, not yet built); it will consume this seam + the shared guard.",
+      "## Deferred (documented)",
+      "- Web UI (number input with large-number/toman formatting + \"affects all future online top-ups\" warning) and fa/en i18n dict — admin config UI for this section not yet built.",
+      "- Step-up on the PUT mutation — deferred like the other admin config panels until the step-up challenge flow exists."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 203,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/203",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.09.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Web \"Failed notifications\" admin UI section — deferred (matches T-09.09.02, which shipped backend-only)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 200,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/200",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.09.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] UI table with filters/detail/resolve dialog — not yet built; epic scope is backend+notification and earlier S-09 slices deferred the UI. Follow-up.",
+      "- [ ] Link to related transactions / finance-producer wiring — deferred to the finance reconciliation system."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 198,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/198",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.08.02"
+    ],
+    "historical_deferrals": [
+      "Implements `02-auth-users-admin.md#T-09.08.02` (slice 1 — configuration surface). L task deliberately split: this PR delivers the admin-configurable teams + assignment rules data model and API; the worker auto-assignment engine (round-robin/expertise/load consumption) is a follow-up slice.",
+      "- [ ] Auto-assignment engine (worker consumption of rules) — follow-up slice",
+      "- [ ] UI (teams list, member management, rule editor per work type, priority reorder) — follow-up"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 197,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/197",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.08.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] UI table of service types with target input + note text (deferred — admin config UI not built yet, same as T-09.06/09.07)",
+      "Deferred (explicit): `consultation` service type until its module exists; step-up auth on config change (same follow-up as T-09.06/09.07); per-event i18n templates (template engine T-05.04.02); escalation choreography (T-09.08.03); admin UI."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 196,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/196",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.07.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] UI: \"Pending approvals\" in finance dashboard — deferred (finance module & dashboard do not exist yet; web surface will consume these endpoints when the finance module lands)",
+      "- [ ] Step-up auth on resolve — deferred (step-up flow design pending; noted in epic S-09.07)",
+      "- [ ] Role-permission eligibility (`admin:financial:edit` via staff roles) — deferred (sessions expose only `isAdmin`; documented in the service and gate)",
+      "Deferred from this slice and tracked in PR description: UI, step-up on resolution, role-based eligibility, and the finance-module threshold consumer (its own epic tasks)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 195,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/195",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.07.01"
+    ],
+    "historical_deferrals": [
+      "- [x] Step-up auth on the mutation: deferred — the web app has no step-up challenge flow yet and admin config panels use raw fetch; requiring it would regress the working save path (follow-up with T-09.06.01/02/03 step-up UI)",
+      "- [ ] Emergency override (reason + elevated permission + immediate alert + audit): deferred until the step-up flow and alert pipeline exist",
+      "- [ ] T-09.07.02 workflow consumption: not part of this task (finance module doesn't exist yet; the config contract documents the `> threshold && threshold > 0` semantics it must use)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 194,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/194",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.06.03"
+    ],
+    "historical_deferrals": [
+      "- **Step-up on the PUT is deliberately deferred.** `DeliveryWindowConfigPanel.tsx` (T-05.03.03) saves via raw `fetch` and the web app has no step-up challenge flow anywhere yet; requiring step-up server-side would regress the working admin save path. It will land together with the client-side step-up flow (same follow-up as the provider-config UI).",
+      "- [ ] Step-up on PUT — deferred (web app step-up flow does not exist; forcing it would break the existing T-05.03.03 panel)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 193,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/193",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.06.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Test send to admin's verified mobile number — live SMS.ir send endpoint is a follow-up; the connection tester checks credentials + account balance today.",
+      "- [ ] Admin UI (template mapping table, test-send preview) — follows in a separate UI PR."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 192,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/192",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.06.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Full admin UI provider-selector/activation UI covers the remaining XL slice (follow-up)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 186,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/186",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.06.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Admin UI (T-05.06.04) — separate task; API-only here",
+      "- [ ] Secret masking in UI (T-05.06.05) — encryption handled by a later task"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 183,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/183",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.05.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] \"Marketing never mixed with transactional templates\" — depends on the template rendering layer (T-05.04.x work) and outbox payload; not changed here."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 182,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/182",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.05.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Channel availability / opt-in enforcement rules — deferred to T-05.05.02 (this task is the data model only).",
+      "- [ ] Consent UI + audit logging — deferred to T-05.05.03."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 181,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/181",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.04.05"
+    ],
+    "historical_deferrals": [
+      "Note: seeding is implemented as a seeder in the db seed runner (consistent with the existing admin/products/geography seeders) rather than a raw DDL migration, since the schema already exists; the row data is initial version-1 active content inserted in one idempotent pass. No `Closes` reference — kanban task key used."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 180,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/180",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.04.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Out-of-app (email/SMS) transport — pending T-05.06 provider configuration; test-send delivers via in-app today"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 179,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/179",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.04.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Templates exist for all business events — storage/seeding is T-05.04.05 (out of scope)",
+      "- [ ] Versioning immutability — covered in T-05.04.01/backend (unchanged here)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 175,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/175",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Per-profile timezone from the `profiles` table — profiles currently have no timezone column; timezone is resolved from the admin window config. Adding a profile timezone attribute + per-user resolution is follow-up (ties to the admin UI in T-05.03.03)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 174,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/174",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.03.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Worker delivery-window scheduling (resolve timezone, set scheduled_for when outside window) — this is T-05.03.02 (explicitly out of scope for this task)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 170,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/170",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.02.01"
+    ],
+    "historical_deferrals": [
+      "\"same transaction\" is interpreted as **synchronously inline in the dispatch path** (as opposed to deferred/external like email/SMS): the adapter performs a direct local INSERT; the worker's shared transaction still wraps job/dead-letter/delivery-log bookkeeping."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 168,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/168",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.01.06"
+    ],
+    "historical_deferrals": [
+      "- [ ] Operational alerts for dead-letter accumulation — deferred to T-05.01.07 (metrics & alerting)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 164,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/164",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.01.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Live end-to-end dispatch against a running DB — integration/e2e level (not run in this tick)."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 163,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/163",
+    "task_keys": [
+      "05-notifications-documents-ai.md#T-05.01.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] In-app transport adapter writing to the notifications table synchronously — T-05.02.01 (separate task)",
+      "- [ ] Durable-outbox write pipeline wired into business transactions — T-05.01.02 (separate task)",
+      "- [ ] Graceful-shutdown lease release in worker loop — deferred; loop wiring is T-05.01.02/03"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 162,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/162",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.05.01"
+    ],
+    "historical_deferrals": [
+      "- [x] Predefined roles shown read-only (custom-role editing deferred to follow-up by design)",
+      "- [ ] Audit `role_permission_change` — not applicable this slice: predefined roles are read-only and there is no permission-mutation endpoint yet; the audit event will land with custom-role editing"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 161,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/161",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.04.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Frontend editor UI (next tick)",
+      "- [ ] Test send / preview functionality (next tick)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 156,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/156",
+    "task_keys": [
+      "02-auth-users-admin.md#T-09.01.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Email/notification template branding — follow-up (different PR / modules)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 154,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/154",
+    "task_keys": [
+      "02-auth-users-admin.md#T-08.01.03"
+    ],
+    "historical_deferrals": [
+      "- Reviewed by GLM-5.2. Major finding (activeContracts not implemented) was a false positive — the code correctly derives it from the orders CONFIRMED GROUP BY. Clarified JSDoc accordingly."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 150,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/150",
+    "task_keys": [
+      "04-invoices-wallet-contracts.md#T-04.1.01.01"
+    ],
+    "historical_deferrals": [
+      "Note: `contractId` is intentionally a plain `text` column (no FK) because the contracts table does not yet exist in the schema — it will be linked when the contracts epic (E-04.5) is implemented."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 146,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/146",
+    "task_keys": [
+      "02-auth-users-admin.md#T-07.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Full notification infrastructure (email/SMS transport, outbox, worker) belongs to E-05"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 140,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/140",
+    "task_keys": [
+      "02-auth-users-admin.md#T-06.01.03"
+    ],
+    "historical_deferrals": [
+      "- Staff ticket management endpoints (prerequisite slice, teams/auto-assignment deferred to T-09.08.02)",
+      "- [ ] Team assignment and auto-assignment rules (deferred to T-09.08.02)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 138,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/138",
+    "task_keys": [
+      "02-auth-users-admin.md#T-06.01.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] File attachments (document storage integration) — dependency on documents module, deferred to that integration (attachments field accepted in DTO, not yet persisted)",
+      "Task dependency is `documents module` — actual file-attachment persistence is deferred until the documents/storage link is implemented as documented."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 132,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/132",
+    "task_keys": [
+      "02-auth-users-admin.md#T-05.04.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Withdraw/withdraw fix already exists (T-05.04.01)",
+      "- [ ] Accept/decline UI (T-05.04.03 — separate task)",
+      "- [ ] Invitation expiry worker (follow-up)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 129,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/129",
+    "task_keys": [
+      "02-auth-users-admin.md#T-05.03.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Role assignment at creation (roleIds accepted but not persisted — role management is T-05.03.02 depending on T-09.05.01)",
+      "- [ ] Activation link email delivery (email transport — separate epic)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 127,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/127",
+    "task_keys": [
+      "02-auth-users-admin.md#T-05.02.05"
+    ],
+    "historical_deferrals": [
+      "- [ ] Frontend: Request correction button + case queue UI (follow-up)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 120,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/120",
+    "task_keys": [
+      "02-auth-users-admin.md#T-05.01.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Frontend CRM list page (next slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 115,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/115",
+    "task_keys": [
+      "02-auth-users-admin.md#T-03.04.01"
+    ],
+    "historical_deferrals": [
+      "- [ ] Order flow integration (T-03.04.02)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 106,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/106",
+    "task_keys": [
+      "02-auth-users-admin.md#T-03.02.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Frontend legal profile form UI (slice 2)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 92,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/92",
+    "task_keys": [
+      "02-auth-users-admin.md#T-02.02.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Wire step-up to specific sensitive endpoints (role changes, credentials, etc.) — Slice 2 (separate PR)",
+      "- [ ] Frontend step-up modal dialog — Slice 2"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 87,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/87",
+    "task_keys": [
+      "02-auth-users-admin.md#T-02.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] Device trust table and unique constraint created via schema migration"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 80,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/80",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-02.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Schema version health check (`verifyMigrationVersion()`) — exported for programmatic use"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 67,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/67",
+    "task_keys": [
+      "07-ui-ux-design.md#T-07.01.01.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] ComboBox`render` prop usage validated visually (no `asChild` in Base UI Popover)",
+      "- [ ] Validation round-trip tested with form submission"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 62,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/62",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.04.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] NGINX syntax validated (nginx binary not available locally — CI validates)",
+      "- [ ] Caddy syntax validated (caddy binary not available locally — CI validates)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 61,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/61",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.04.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Nonce generation in app — deferred; not needed in Report-Only mode"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 56,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/56",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Frontend upload flow (separate slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 52,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/52",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.02.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Redis acceleration fully wired (Redis module exists; composite store uses `REDIS_CLIENT` injection token)",
+      "- [ ] Integration tests with real PostgreSQL (requires Docker — covered by existing db testcontainers setup)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 48,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/48",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.05"
+    ],
+    "historical_deferrals": [
+      "- [ ] Quarterly cron scheduling (follow-up slice)",
+      "- [ ] Alert delivery mechanism (Slack/Webhook, follow-up slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 46,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/46",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.04"
+    ],
+    "historical_deferrals": [
+      "- [ ] Sequential scans vs index scans — acknowledged minor gap (acceptable follow-up)",
+      "- [ ] End-to-end validation requires a running PostgreSQL with `pg_stat_statements` loaded"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 45,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/45",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.03"
+    ],
+    "historical_deferrals": [
+      "- [x] Data preparation time measurement and reporting (true RTO deferred to next slice — needs pg_ctl start)",
+      "- [ ] Runbook documentation (deferred to next slice)",
+      "- [ ] Restore to isolated environment automation (deferred to next slice)",
+      "- [ ] RTO measurement recording in monitoring (deferred to next slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 44,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/44",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-04.01.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] GPG encryption of backups (deferred to next slice)",
+      "- [ ] Backup retention enforcement via lifecycle rules (deferred to next slice)",
+      "- [ ] pg_verifybackup integrity check (deferred to next slice)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 17,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/17",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-02.01.01"
+    ],
+    "historical_deferrals": [
+      "- [x] Query logging in development via Drizzle's `logger: true`; production logging via structured JSON only for slow queries (>200ms) — deferred to T-02.01.03"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 13,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/13",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-01.03.04"
+    ],
+    "historical_deferrals": [
+      "Currently login/register/dashboard/electricity ordering all share one Vite entry chunk (`index-*.js`), so individual per-route measurement is not possible until those routes get their own chunks via lazy-loading. The combined budget of **700 KB gzip** (sum of 150+300+250) serves as the guardrail until route-level splitting is implemented. Admin (500 KB) is independently tracked because admin routes are already lazy-loaded."
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 11,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/11",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-01.03.02"
+    ],
+    "historical_deferrals": [
+      "- [ ] Swagger OpenAPI spec generation at build time — verified via plugin config"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 8,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/8",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-01.02.03"
+    ],
+    "historical_deferrals": [
+      "- [ ] TypeScript project references work across package boundaries in VS Code (manual IDE verification)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  },
+  {
+    "pr": 7,
+    "url": "https://github.com/barghsadev/barghsa-core/pull/7",
+    "task_keys": [
+      "01-platform-infrastructure.md#T-01.02.02"
+    ],
+    "historical_deferrals": [
+      "- `turbo typecheck` — deferred (packages need typecheck scripts)"
+    ],
+    "status": "Historical statement; may have been closed by a later PR. Compare task register and current source."
+  }
+]

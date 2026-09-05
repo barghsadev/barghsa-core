@@ -1,0 +1,13 @@
+
+> @barghsa/shared@0.0.0 test /Users/majid/www/barghsa/barghsa-core/packages/shared
+> vitest run --passWithNoTests
+
+
+ RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/packages/shared
+
+
+ Test Files  44 passed (44)
+      Tests  620 passed (620)
+   Start at  23:04:49
+   Duration  1.90s (transform 2.36s, setup 0ms, import 5.08s, tests 765ms, environment 5ms)
+

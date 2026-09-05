@@ -1,0 +1,142 @@
+
+> barghsa-core@0.0.0 test /Users/majid/www/barghsa/barghsa-core
+> turbo test
+
+• turbo 2.10.11
+
+   • Packages in scope: @barghsa/api, @barghsa/db, @barghsa/i18n, @barghsa/shared, @barghsa/tsconfig, @barghsa/ui, @barghsa/web, @barghsa/worker
+   • Running test in 8 packages
+   • Remote caching disabled
+
+@barghsa/shared:build: cache miss, executing 93cf44696fe54af9
+@barghsa/i18n:build: cache miss, executing 8cbbb831c06a4f20
+@barghsa/i18n:test: cache miss, executing 92898320209e37ef
+@barghsa/shared:test: cache miss, executing a53fae175c2770ae
+@barghsa/ui:test: cache miss, executing 89b11df6a9132dfe
+@barghsa/ui:build: cache hit, suppressing logs 8c2ce04cbf3f911c
+@barghsa/i18n:build: 
+@barghsa/i18n:build: > @barghsa/i18n@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/i18n
+@barghsa/i18n:build: > tsc
+@barghsa/i18n:build: 
+@barghsa/i18n:test: 
+@barghsa/i18n:test: > @barghsa/i18n@0.0.0 test /Users/majid/www/barghsa/barghsa-core/packages/i18n
+@barghsa/i18n:test: > vitest run --passWithNoTests
+@barghsa/i18n:test: 
+@barghsa/shared:build: 
+@barghsa/shared:build: > @barghsa/shared@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/shared
+@barghsa/shared:build: > tsc
+@barghsa/shared:build: 
+@barghsa/shared:test: 
+@barghsa/shared:test: > @barghsa/shared@0.0.0 test /Users/majid/www/barghsa/barghsa-core/packages/shared
+@barghsa/shared:test: > vitest run --passWithNoTests
+@barghsa/shared:test: 
+@barghsa/ui:test: 
+@barghsa/ui:test: > @barghsa/ui@0.0.0 test /Users/majid/www/barghsa/barghsa-core/packages/ui
+@barghsa/ui:test: > vitest run --passWithNoTests
+@barghsa/ui:test: 
+@barghsa/db:test: cache miss, executing 7a5da2cd0b4916ca
+@barghsa/web:test: cache miss, executing b155bf93e3c40ee6
+@barghsa/db:build: cache miss, executing baf03d9d9d6b18e5
+@barghsa/i18n:test: 
+@barghsa/i18n:test:  RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/packages/i18n
+@barghsa/i18n:test: 
+@barghsa/ui:test: 
+@barghsa/ui:test:  RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/packages/ui
+@barghsa/ui:test: 
+@barghsa/i18n:test: No test files found, exiting with code 0
+@barghsa/i18n:test: 
+@barghsa/i18n:test: include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+@barghsa/i18n:test: exclude:  dist/**, node_modules/**, **/.git/**
+@barghsa/i18n:test: 
+@barghsa/ui:test: No test files found, exiting with code 0
+@barghsa/ui:test: 
+@barghsa/ui:test: include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+@barghsa/ui:test: exclude:  dist/**, node_modules/**, **/.git/**
+@barghsa/ui:test: 
+@barghsa/shared:test: 
+@barghsa/shared:test:  RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/packages/shared
+@barghsa/shared:test: 
+@barghsa/db:test: 
+@barghsa/db:test: > @barghsa/db@0.0.0 test /Users/majid/www/barghsa/barghsa-core/packages/db
+@barghsa/db:test: > vitest run --passWithNoTests
+@barghsa/db:test: 
+@barghsa/web:test: 
+@barghsa/web:test: > @barghsa/web@0.0.0 test /Users/majid/www/barghsa/barghsa-core/apps/web
+@barghsa/web:test: > vitest run --passWithNoTests
+@barghsa/web:test: 
+@barghsa/db:build: 
+@barghsa/db:build: > @barghsa/db@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/db
+@barghsa/db:build: > tsc -b
+@barghsa/db:build: 
+@barghsa/shared:test:  ✓ src/config-cache/config-cache.test.ts (24 tests) 14ms
+@barghsa/shared:test:  ✓ src/finance/invoice-overpayment.test.ts (17 tests) 7ms
+@barghsa/shared:test:  ✓ src/finance/wallet-topup-config.test.ts (38 tests) 12ms
+@barghsa/shared:test:  ✓ src/finance/invoice-bank-receipt-upload.test.ts (13 tests) 9ms
+@barghsa/web:test: 
+@barghsa/web:test:  RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/apps/web
+@barghsa/web:test: 
+@barghsa/db:test: 
+@barghsa/db:test:  RUN  v4.1.11 /Users/majid/www/barghsa/barghsa-core/packages/db
+@barghsa/db:test: 
+@barghsa/shared:test:  ✓ src/finance/green-electricity-config.test.ts (20 tests) 10ms
+@barghsa/shared:test:  ✓ src/finance/wallet-chargeback.test.ts (12 tests) 10ms
+@barghsa/shared:test:  ✓ src/finance/pay-invoice-with-wallet.test.ts (16 tests) 10ms
+@barghsa/shared:test:  ✓ src/finance/wallet-bank-receipt-confirmation.test.ts (11 tests) 15ms
+@barghsa/shared:test:  ✓ src/finance/wallet-bank-receipt-topup.test.ts (16 tests) 10ms
+@barghsa/shared:test:  ✓ src/promotions/gift-code.test.ts (22 tests) 14ms
+@barghsa/shared:test:  ✓ src/storage/immutable-storage.test.ts (13 tests) 36ms
+@barghsa/shared:test:  ✓ src/storage/storage.test.ts (22 tests) 21ms
+@barghsa/shared:test:  ✓ src/admin/escalation-policy.test.ts (20 tests) 6ms
+@barghsa/shared:test:  ✓ src/admin/contract-electricity-limits.test.ts (18 tests) 7ms
+@barghsa/shared:test:  ✓ src/finance/online-topup-expiry.test.ts (17 tests) 22ms
+@barghsa/shared:test:  ✓ src/finance/approval-request.test.ts (19 tests) 6ms
+@barghsa/shared:test:  ✓ src/finance/invoice-bank-receipt-confirmation.test.ts (10 tests) 10ms
+@barghsa/shared:test:  ✓ src/admin/staff-teams.test.ts (19 tests) 5ms
+@barghsa/shared:test:  ✓ src/finance/invoice-bank-receipt-dual-approval.test.ts (11 tests) 7ms
+@barghsa/shared:test:  ✓ src/validation/validation.test.ts (28 tests) 9ms
+@barghsa/shared:test:  ✓ src/rate-limit/composite-rate-limiter.test.ts (9 tests) 5ms
+@barghsa/shared:test:  ✓ src/finance/wallet-reversal.test.ts (9 tests) 5ms
+@barghsa/db:test: No test files found, exiting with code 0
+@barghsa/db:test: 
+@barghsa/db:test: include: **/*.{test,spec}.?(c|m)[jt]s?(x)
+@barghsa/db:test: exclude:  dist/**, node_modules/**, **/.git/**
+@barghsa/db:test: 
+@barghsa/shared:test:  ✓ src/finance/vat-config.test.ts (17 tests) 12ms
+@barghsa/shared:test:  ✓ src/finance/reminder-schedule.test.ts (18 tests) 20ms
+@barghsa/shared:test:  ✓ src/finance/wallet-reconciliation.test.ts (10 tests) 15ms
+@barghsa/db:test: 
+@barghsa/db:test: ⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+@barghsa/db:test: Error: Could not find a working container runtime strategy
+@barghsa/db:test:  ❯ getContainerRuntimeClient ../../node_modules/.pnpm/testcontainers@12.1.0/node_modules/testcontainers/build/container-runtime/clients/client.js:67:11
+@barghsa/db:test:  ❯ PostgreSqlContainer.start ../../node_modules/.pnpm/testcontainers@12.1.0/node_modules/testcontainers/build/generic-container/generic-container.js:62:24
+@barghsa/db:test:  ❯ PostgreSqlContainer.start ../../node_modules/.pnpm/@testcontainers+postgresql@12.1.0/node_modules/@testcontainers/postgresql/build/postgresql-container.js:119:47
+@barghsa/db:test:  ❯ Object.setup src/test/globalSetup.ts:24:19
+@barghsa/db:test:      22|  */
+@barghsa/db:test:      23| export async function setup(): Promise<void> {
+@barghsa/db:test:      24|   const started = await new PostgreSqlContainer('postgres:17-alpine')
+@barghsa/db:test:        |                   ^
+@barghsa/db:test:      25|     .withDatabase('barghsa_test')
+@barghsa/db:test:      26|     .withUsername('barghsa')
+@barghsa/db:test:  ❯ TestProject._initializeGlobalSetup ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:10813:21
+@barghsa/db:test:  ❯ Vitest.initializeGlobalSetup ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13812:35
+@barghsa/db:test:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13655:6
+@barghsa/db:test:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13684:11
+@barghsa/db:test:  ❯ ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:13546:19
+@barghsa/db:test:  ❯ startVitest ../../node_modules/.pnpm/vitest@4.1.11_@opentelemetry+api@1.9.1_@types+node@26.2.0_@vitest+coverage-v8@4.1.11_ji_36d50bf86b57dfd32c0ef7056b01f50a/node_modules/vitest/dist/chunks/cli-api.CnMVyzaz.js:14621:8
+@barghsa/db:test: 
+@barghsa/db:test: 
+@barghsa/db:test: 
+@barghsa/db:test: 
+@barghsa/shared:test:  ✓ src/finance/reminder-offset-toggles.test.ts (7 tests) 8ms
+@barghsa/db:test:  ELIFECYCLE  Test failed. See above for more details.
+@barghsa/shared:test:  ✓ src/finance/due-at.test.ts (17 tests) 8ms
+@barghsa/shared:test:  ELIFECYCLE  Test failed. See above for more details.
+@barghsa/db#test:  ERROR  command (/Users/majid/www/barghsa/barghsa-core/packages/db) /Users/majid/.nvm/versions/node/v24.11.1/bin/pnpm run test exited (1)
+
+ Tasks:    5 successful, 9 total
+Cached:    1 cached, 9 total
+  Time:    3.791s 
+Failed:    @barghsa/db#test
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Test failed. See above for more details.

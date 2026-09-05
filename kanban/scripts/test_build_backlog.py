@@ -35,10 +35,10 @@ class BacklogIdentityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / 'epic.md').write_text(
-                '### Story one\nRequired invariant\n'
+                '### E-01 Parent epic\n#### S-01.01 Story one\nRequired invariant\n'
                 '- **T-01.01.01:** First\n  - Complexity: S\n'
                 '- **T-01.01.02:** Second\n  - Notes: detail\n  - Complexity: M\n'
-                '### Story two\nUnrelated requirement\n'
+                '#### S-01.02 Story two\nUnrelated requirement\n'
                 '**T-01.02.01 — Third**\n- Complexity: S\n'
             )
             context = backlog.task_context({

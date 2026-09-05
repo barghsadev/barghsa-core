@@ -1,0 +1,205 @@
+[
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.01",
+    "requirement": "| **T-05.01.01 — Notification module scaffold** | M | P0 |\n| Create NestJS Notifications module. Define transport interface (`INotificationTransport`) with `send(payload)` returning `{providerRef, status}`. Define outbox table, job table schemas Drizzle ORM entities, and base worker structure. | | |",
+    "prs": [
+      163
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.02",
+    "requirement": "| **T-05.01.02 — Durable outbox table & write pipeline** | L | P0 |\n| Design `notification_outbox` table: `id` (UUIDv7), `event_key`, `profile_id`, `payload` (JSONB), `channels` (text[]), `status`, `idempotency_key` (UNIQUE), `created_at`, `locked_until`, `attempts`, `max_attempts`, `last_error`, `provider_ref`, `scheduled_for`. Write outbox rows in same PG transaction as business event. Outbox reader worker picks unlocked rows, claims lease, dispatches. | | |",
+    "prs": [
+      164
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.03",
+    "requirement": "| **T-05.01.03 — Job queue with retry schedule** | L | P0 |\n| Implement retry schedule in worker: 1min → 5min → 30min → 2hr → final. Exponential backoff with jitter (±20%). Configurable `max_attempts` per notification type. Worker marks `Failed` after max attempts exhausted; moves to dead-letter. Add queue priority for urgent (Immediate) vs daytime. | | |",
+    "prs": [
+      165
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.04",
+    "requirement": "| **T-05.01.04 — Idempotency for delivery** | M | P0 |\n| Idempotency key = `sha256(event_key + channel + profile_id)`. Ensure at-most-once logical delivery even with worker retries or duplicate outbox rows. Unique constraint on `notification_outbox.idempotency_key`. ON CONFLICT DO NOTHING on inserts. Provider-level idempotency for Resend and SMS.ir. | | |",
+    "prs": [
+      166
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.05",
+    "requirement": "| **T-05.01.05 — Status tracking & delivery logs** | M | P1 |\n| `notification_delivery_log` table: `id`, `notification_id` (FK), `channel`, `status`, `attempt_number`, `provider_ref`, `latency_ms`, `error_category`, `error_detail` (safe), `created_at`. Queryable in admin panel. Each delivery attempt creates a log row. | | |",
+    "prs": [
+      167
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.06",
+    "requirement": "| **T-05.01.06 — Dead-letter queue & admin UI** | M | P1 |\n| Dead-letter table inherits failed delivery data. Admin panel shows dead-letter deliveries with severity (error/critical), cause, attempt history. Actions: **Retry** (re-queues with same idempotency key), **Resolve** (marks final, no retry), **Dismiss**. Operational alerts for dead-letter accumulation. | | |",
+    "prs": [
+      168
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.01.07",
+    "requirement": "| **T-05.01.07 — Metrics & observability** | S | P1 |\n| Prometheus metrics: `notifications_outbox_age_seconds`, `notifications_delivery_attempts_total{channel,status}`, `notifications_queue_depth`, `notifications_dead_letter_count`. Grafana dashboard panel. | | |\n\n---\n\n### Story T-05.02: In-App Notification Center\n\n**Description:** Build the in-app notification UI where users see all their notifications with read/unread state, filtering, and navigation to related records.\n\n**Acceptance Criteria:**\n- Notification center accessible from app shell (header/menu)\n- Each notification shows: icon/type, title, body, timestamp (user timezone), read/unread indicator, and action link\n- Read / Mark all as read actions\n- Filter by type (all, unread only)\n- Cursor-based pagination (newer, older)\n- Business notifications open the correct profile-scoped record\n- Real-time or polling for new notification count badge\n- Performance: p95 load under 200ms for 50-notification page\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      169
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.02.01",
+    "requirement": "| **T-05.02.01 — Notification entity & in-app transport** | M | P0 |\n| `in_app_notifications` table: `id`, `profile_id`, `type`, `title_i18n_key`, `body_i18n_key`, `params` (JSONB — interpolation vars), `link_route`, `link_params`, `is_read`, `read_at`, `created_at`. Index on `(profile_id, created_at DESC)`. In-app transport adapter writes to this table synchronously (same transaction). | | |",
+    "prs": [
+      170
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.02.02",
+    "requirement": "| **T-05.02.02 — Notification center API** | M | P0 |\n| `GET /api/v1/notifications?cursor=&limit=&filter=unread` returns cursor-keyed list. `PATCH /api/v1/notifications/:id/read` marks single read. `PATCH /api/v1/notifications/read-all` marks all profile notifications read. Returns `{ data, next_cursor, unread_count }`. | | |",
+    "prs": [
+      171
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.02.03",
+    "requirement": "| **T-05.02.03 — Notification center UI** | L | P0 |\n| Bell icon in app header with unread count badge. Dropdown shows last 10 notifications with quick action. \"View all\" opens full notification center page. List items: icon per type (security, payment, contract, order, system), title, body, relative time. Click navigates to linked record. \"Mark all read\" in header. Empty state, loading skeleton. RTL support. | | |",
+    "prs": [
+      172
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.02.04",
+    "requirement": "| **T-05.02.04 — New-notification polling / SSE** | M | P1 |\n| Short-poll every 30s or SSE stream for real-time badge count. Optimistic mark-read (low-risk). Unread count in document title when tab is backgrounded. | | |\n\n---\n\n### Story T-05.03: Notification Classification & Delivery Window\n\n**Description:** Implement immediate vs daytime classification with admin-configurable quiet-hour window. Daytime messages queue outside the window.\n\n**Acceptance Criteria:**\n- Classification: immediate (bypass quiet hours) vs daytime (09:00–21:00 default)\n- Window is admin-configurable per timezone\n- Messages outside window remain queued; in-app appears immediately regardless\n- User timezone applied for scheduling\n- OTP, auth/security events must be immediate and cannot be reclassified\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      173
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.03.01",
+    "requirement": "| **T-05.03.01 — Notification type registry & classification** | M | P0 |\n| Each business event type registered with `classification: 'immediate' | 'daytime'`. Security, OTP, authentication, payment, refund, contract-cancellation → immediate. All others → daytime. Registry is code-defined, not admin-editable for security types. Add `scheduled_for` column to outbox; worker checks delivery window. | | |",
+    "prs": [
+      174
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.03.02",
+    "requirement": "| **T-05.03.02 — Delivery window logic** | S | P1 |\n| Worker resolves user timezone from profile. If `classification=daytime` and current time outside `[window_start, window_end]`, set `scheduled_for` to next window open and status→Scheduled. Re-check on wakeup. Window stored as `(timezone, start_hour, end_hour)` in admin config table. | | |",
+    "prs": [
+      175
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.03.03",
+    "requirement": "| **T-05.03.03 — Admin delivery-window configuration UI** | S | P1 |\n| Admin panel section under Notifications settings: start time selector, end time selector. Validated: start < end, range ≥ 4 hours (minimum sensible window). Changes take effect for new schedules; previously scheduled messages keep original timing. | | |\n\n---\n\n### Story T-05.04: Template Management (Persian & English)\n\n**Description:** Versioned notification templates in Persian and English with variable interpolation, preview, and test-send capability.\n\n**Acceptance Criteria:**\n- Templates stored per event type, per language (fa, en)\n- Each template versioned (immutable once active)\n- Variables: allow-listed, escaped, documented per template\n- Admins can preview rendered template with sample data\n- Admins can send test notification to an explicitly entered verified destination\n- Templates exist for all business events (see Appendix)\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      176
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.04.01",
+    "requirement": "| **T-05.04.01 — Template entity & CRUD API** | L | P0 |\n| `notification_templates` table: `id`, `event_key`, `language` (fa/en), `channel` (email/sms/in-app), `version` (auto-increment), `subject` (email subject or SMS title), `body` (content template), `variables` (JSONB of allowed variable names + descriptions), `is_active` (boolean), `created_by`, `supersedes_version`, `created_at`. Unique on `(event_key, language, channel, version)`. CRUD API with permission: admin only. | | |",
+    "prs": [
+      177
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.04.02",
+    "requirement": "| **T-05.04.02 — Variable interpolation & escaping** | M | P0 |\n| Template engine: `{{variable_name}}` syntax. Allow-list per template. Escape HTML for email/SMS output. Safe rendering that never exposes internal state or secrets. Unit tests for each template's variable contract. | | |",
+    "prs": [
+      178
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.04.03",
+    "requirement": "| **T-05.04.03 — Template preview** | S | P1 |\n| Admin UI: select event key, language, channel, version → see rendered subject and body with sample/last-known data. Show available variables and their descriptions. Highlight missing required variables. | | |",
+    "prs": [
+      179
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.04.04",
+    "requirement": "| **T-05.04.04 — Test-send** | M | P1 |\n| Admin enters an explicitly owned and verified destination (their own email/phone). Validate destination belongs to the admin or is an allow-listed test address (dev-only). Send through active provider. Log as test (no customer data). Record last_test_sent_at and last_test_status on template version. | | |",
+    "prs": [
+      180
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.04.05",
+    "requirement": "| **T-05.04.05 — Template seeding** | S | P1 |\n| Seed all initial templates (fa + en) for every business event defined in the Appendix. Migration script creates initial versions with `version=1, is_active=true`. | | |\n\n---\n\n### Story T-05.05: Mandatory Notifications & Marketing Consent\n\n**Description:** Separate transactional (mandatory) from marketing notifications. Enforce opt-in consent for marketing. Ensure security-critical notifications cannot be disabled.\n\n**Acceptance Criteria:**\n- Transactional notifications: always sent, external channel follows verified destinations\n- Marketing notifications: require explicit opt-in consent, separate from transactional\n- Mandatory list: OTP, auth/security, payment/refund result, contract cancellation, customer-action-required\n- User can toggle marketing consent in profile settings\n- Consent history recorded with timestamp and IP\n- Marketing never mixed with transactional templates\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      181
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.05.01",
+    "requirement": "| **T-05.05.01 — Notification category model** | M | P0 |\n| `notification_categories` table/enum: `mandatory_transactional`, `marketing`. `user_notification_preferences` table: `profile_id`, `channel` (email/sms/in-app), `marketing_opted_in` (boolean), `consent_granted_at`, `consent_revoked_at`, `updated_at`. Default: marketing off. | | |",
+    "prs": [
+      182
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.05.02",
+    "requirement": "| **T-05.05.02 — Channel availability rules** | M | P1 |\n| Worker checks: if category=mandatory → always deliver in-app. External channel sent only if profile has verified destination (email or phone). If category=marketing → check opt-in. If no opt-in, skip external entirely (in-app optionally delivered based on event configuration). | | |",
+    "prs": [
+      183
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.05.03",
+    "requirement": "| **T-05.05.03 — Consent UI in profile settings** | S | P1 |\n| User profile: Notification Preferences section. Toggle for \"Receive marketing notifications via email/SMS\". Show current opt-in state, last change date. Log consent changes in audit. | | |\n\n---\n\n### Story T-05.06: Email Provider Administration\n\n**Description:** Admin interface for configuring email delivery: SMTP or Resend. Draft → Test → Active → Rollback lifecycle with secrets management.\n\n**Acceptance Criteria:**\n- Two transport options: SMTP (TLS/STARTTLS) and Resend\n- Draft → Test → Active → Superseded lifecycle per provider configuration\n- Secrets: encrypted at rest, masked in UI/responses, write-only after entry\n- Test send to admin-owned destination before activation\n- Connection check on SMTP before activation\n- Rollback preserves previous Active version\n- Circuit breaker: transient failure threshold → pause channel, alert\n- At most one Active provider per channel per environment\n- Disabling the only OTP channel blocked unless alternative recovery path exists\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      184
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.01",
+    "requirement": "| **T-05.06.01 — Provider config entity & lifecycle** | L | P0 |\n| `email_provider_configs` table: `id`, `transport` (smtp/resend), `label`, `status` (draft/active/superseded/disabled), `config` (encrypted JSONB), `created_by`, `activated_at`, `last_test_at`, `last_test_status`, `last_test_error`, `supersedes_id`, `created_at`. Status machine: Draft (only editable) → after test-pass → Active (one per env). Active → Superseded (when new config activated). Active → Disabled (admin action). Disabling the only active config for OTP-required channel is blocked. | | |",
+    "prs": [
+      185
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.02",
+    "requirement": "| **T-05.06.02 — SMTP configuration** | M | P0 |\n| Config fields: `host`, `port` (default 587), `security` (TLS | STARTTLS), `username`, `password` (encrypted), `connection_timeout` (default 10s), `command_timeout` (default 15s), `from_name`, `from_email`, `reply_to`. Connection-test: attempt SMTP handshake with configured credentials; report success or specific error. Block private/internal network destinations unless deployment-level allow-list set. | | |",
+    "prs": [
+      186
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.03",
+    "requirement": "| **T-05.06.03 — Resend configuration** | M | P0 |\n| Config fields: `api_key` (encrypted), `from_name`, `from_email`, `reply_to`, `sending_domain`. Test: send through Resend API with admin's email. Validate domain verification. | | |",
+    "prs": [
+      187
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.04",
+    "requirement": "| **T-05.06.04 — Provider admin UI** | L | P0 |\n| Admin page: list of email providers with status badges. Create new → select transport → fill fields (secrets masked as `••••••••` after save). Draft state shows \"Test Connection\" button. Test result displayed. \"Activate\" button enabled only after test passes. Active provider shown with \"Disable\" and metadata (activated_at, activated_by, last_test, delivery rate if available). Superseded configs viewable but not editable — show \"Rollback to this version\" to create new Active from old version. Warning banner when only one provider exists and user tries to disable. | | |",
+    "prs": [
+      188
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.05",
+    "requirement": "| **T-05.06.05 — Secrets encryption & masking** | M | P0 |\n| Use NestJS built-in encryption or a KMS-integrated service. Encrypt at field level before storing in DB. Decrypt only in the outbox worker when sending. Mask in API responses: show last 4 characters only, replace rest with `*`. Never log secrets, never include in analytics, never return to frontend. | | |",
+    "prs": [
+      189
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.06",
+    "requirement": "| **T-05.06.06 — Circuit breaker for email** | M | P1 |\n| Track consecutive failures per provider. Threshold: 5 consecutive transient failures in 5 minutes. When tripped: mark provider as Degraded, stop sending through it, alert ops. Recovery: after 60s cooldown → allow one test send; if succeeds → reset breaker, else keep open. Health metric: `provider_email_health{provider_id}` 1=healthy 0=tripped. | | |",
+    "prs": [
+      190
+    ]
+  },
+  {
+    "key": "05-notifications-documents-ai.md#T-05.06.07",
+    "requirement": "| **T-05.06.07 — Email delivery callback handling** | S | P1 |\n| Webhook endpoints for Resend delivery/click/bounce/complaint events. Verify webhook signature. Update delivery log status. Hard bounce → suppress future non-essential email to that address. Complaint → suppress, create customer-correction operational task. Authenticated, replay-safe with idempotency key. | | |\n\n---\n\n### Story T-05.07: SMS.ir Provider Administration\n\n**Description:** Configure SMS.ir as the SMS transport. Handle template mapping, API integration, credit monitoring, and delivery feedback.\n\n**Acceptance Criteria:**\n- SMS.ir configuration: API key, sender line, timeout, throughput, low-credit threshold\n- Event-to-template mapping: map internal event key + language → SMS.ir TemplateId\n- Template variable mapping from Barghsa → SMS.ir parameters\n- Activation validates template IDs are well-formed, required variables supplied\n- Test send to admin-owned Iranian mobile number\n- Delivery status: accepted/delivered/failed when provider feedback available\n- Low credit alert: configurable threshold, alerts ops when below\n- Circuit breaker: transient failure threshold → pause SMS channel\n\n| Task | Complexity | Priority |\n|---|---|---|",
+    "prs": [
+      191
+    ]
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "head": "2f80d92df51556d47f778b5230e5eea577e2a8d4",
+  "counts": {
+    "repair_groups": 23,
+    "P0": 6,
+    "P1": 15,
+    "P2": 2,
+    "recorded_current_tasks": 322,
+    "pr_backed": 263,
+    "historical_skips": 58,
+    "queue_gaps": 737
+  },
+  "canonical_sha256": {
+    "kanban/loop-state.json": "d6559b457b51390a6920d424cb7f665819ad04687ebf4e3cd76c5db8ed8cf6e0",
+    "kanban/task-queue.json": "4f98208316abb7e028bb6064508065477297a93bd66bbf80abdc308285392458",
+    "kanban/epics/01-platform-infrastructure.md": "a88af361ec768ba000f729962b0120a99ab9954c713c077a3e18b2e4a68776b4",
+    "kanban/epics/02-auth-users-admin.md": "2246ae53eada331fc3f8d5434eaf4875477cf1d18a0994e6a3688eaf4fffff05",
+    "kanban/epics/03-core-business.md": "ab7d2420c453a2dfb0a52344ac01b7acc0f5d946a6b2c650a27d8a760bdfae68",
+    "kanban/epics/04-invoices-wallet-contracts.md": "ea7ae65b54842c21335523fece0b63a95443df3b5a593bd506e9e9ceaf77548f",
+    "kanban/epics/05-notifications-documents-ai.md": "7b2275c3c598e25714d530b5ba410bd98d903e752172a7f8b09b709dd02620be",
+    "kanban/epics/06-security-testing-observability.md": "12a6d9e13991c21726d7f6e68090594cd54dd7eacddad27f5951fc1623915675",
+    "kanban/epics/07-ui-ux-design.md": "b80a012e34fca296e89bc444cc62c386554e2776a325a4428b6697eb396291e5"
+  }
+}

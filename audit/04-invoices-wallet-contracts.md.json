@@ -1,0 +1,422 @@
+[
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.01",
+    "requirement": "| T-04.1.01.01 | Define invoice DB table with columns: `id` (UUIDv7), `profileId`, `orderId?`, `contractId?`, `state`, `totalAmount` (int8), `paidAmount` (int8, default 0), `refundedAmount` (int8, default 0), `issuedAt`, `payableFrom`, `dueAt`, `cancelledAt?`, `metadata` (JSONB for snapshots), timestamps | M |",
+    "prs": [
+      150
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.02",
+    "requirement": "| T-04.1.01.02 | Create `invoice_state` enum in DB matching all 9 states | S |",
+    "prs": [
+      151
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.03",
+    "requirement": "| T-04.1.01.03 | Implement `InvoiceStateMachine` service with guard methods, transition validation, audit event emission | L |",
+    "prs": [
+      152
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.04",
+    "requirement": "| T-04.1.01.04 | Add DB constraints: `CHECK (paidAmount <= totalAmount)`, `CHECK (refundedAmount <= paidAmount)` | M |",
+    "prs": [
+      220
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.05",
+    "requirement": "| T-04.1.01.05 | Write audit repository entry for every invoice state transition | M |",
+    "prs": [
+      221
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.01.06",
+    "requirement": "| T-04.1.01.06 | Integration tests: all happy-path transitions, every forbidden transition, concurrent state change rejection | L |\n\n---\n\n### S-04.1.02 — Invoice generation (manual & automatic)\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.1.02 | Staff can create manual invoices with custom lines; system auto-generates invoices from orders/contracts | L | S-04.1.01, E-03 (Orders) |\n\n#### Requirements\n\n- **Manual invoices:** Finance staff can create an invoice with N custom description+price lines, linked optionally to a profile and/or contract. No order required.\n- **Auto-generated invoices:** Order submission creates a linked invoice atomically (same DB transaction). Saving-plan orders, electricity orders (simple & advanced), consultation fee offers.\n- **Full upfront settlement:** An order creates one initial invoice for the complete amount. No installment schedules.\n- **Snapshots:** Invoice stores snapshot of prices, VAT rate, product composition, gift-code discount at time of creation.\n- **VAT calculation:** After discount on taxable lines; rate from category default or product override; rounded half-up to nearest IRR.\n- **Invoice lines table:** `invoiceId`, `description`, `quantity`, `unitPrice`, `lineTotal`, `vatRate`, `vatAmount`, `isTaxable`.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      222
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.01",
+    "requirement": "| T-04.1.02.01 | Create `invoice_lines` and `invoice_items` tables with proper foreign keys and constraints | M |",
+    "prs": [
+      223
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.02",
+    "requirement": "| T-04.1.02.02 | Build `ManualInvoiceService` — staff selects profile, adds lines, system calculates totals, issues invoice | L |",
+    "prs": [
+      224
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.03",
+    "requirement": "| T-04.1.02.03 | Build `AutoInvoiceService` — called by order/contract creation within same transaction; snapshot prices and terms | M |",
+    "prs": [
+      225
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.04",
+    "requirement": "| T-04.1.02.04 | Implement VAT calculation module with category default / product override resolution | L |",
+    "prs": [
+      226
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.05",
+    "requirement": "| T-04.1.02.05 | Link invoice to origin: nullable `orderId`, `contractId`, `consultationId` foreign keys | S |",
+    "prs": [
+      227
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.06",
+    "requirement": "| T-04.1.02.06 | Ensure idempotency: same order cannot produce duplicate invoices (unique `orderId` + `type` index) | M |",
+    "prs": [
+      228
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.07",
+    "requirement": "| T-04.1.02.07 | Implement `RoundingService.roundHalfUp(value: bigint, precision: number)` using half-up rounding rule (round half-up to nearest IRR); add table-driven unit tests with financial examples from product requirements | M |",
+    "prs": [
+      229
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.08",
+    "requirement": "| T-04.1.02.08 | Add `invoice_calculation_snapshot` JSONB column on invoices storing all calculation inputs, intermediate rounding steps, and final totals for reproducibility | S |",
+    "prs": [
+      232,
+      231
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.02.09",
+    "requirement": "| T-04.1.02.09 | Verify reproducibility: integration test that replays invoice calculation inputs from snapshot and asserts same totals | M |\n\n---\n\n### S-04.1.03 — Invoice due dates & staff override\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.1.03 | Admin-configured default due periods by service type; staff can override with reason | M | E-01 (Admin configuration), S-04.1.01 |\n\n#### Requirements\n\n- Admin configures default due period (in days) per service type (electricity, saving plan, consultation, manual).\n- Each invoice stores `issuedAt`, `payableFrom`, `dueAt`.\n- Staff override of `dueAt` requires explicit permission and a customer-visible reason stored in audit.\n- Overdue invoice remains payable unless explicitly Cancelled. No automatic late fees in v1.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      233
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.03.01",
+    "requirement": "| T-04.1.03.01 | Add `service_due_periods` admin config table (service type, default days, active period) | M |",
+    "prs": [
+      236
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.03.02",
+    "requirement": "| T-04.1.03.02 | Add `dueAt` calculation logic: `issuedAt + config_days` (or staff override) | S |",
+    "prs": [
+      237
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.03.03",
+    "requirement": "| T-04.1.03.03 | Build staff override UI/API: override input + reason field, stored in audit + invoice metadata | M |",
+    "prs": [
+      238
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.03.04",
+    "requirement": "| T-04.1.03.04 | Cron job: mark invoices past `dueAt` as Overdue if still Unpaid or Partially funded | M |\n\n---\n\n### S-04.1.04 — Payment reminders\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.1.04 | Multi-offset payment reminder schedule: 7, 3, 1 day before dueAt, on due, 1 & 7 days after | L | S-04.1.01, E-05 (Notifications) |\n\n#### Requirements\n\n- Default offsets (days relative to `dueAt`): `-7`, `-3`, `-1`, `0`, `+1`, `+7`.\n- Reminders sent in-app + enabled external channel (SMS/email per profile preferences).\n- Admin can enable/disable individual offsets per service type.\n- **Idempotent per (invoice, offset, channel):** same reminder never sent twice.\n- **Stop immediately** when invoice reaches Paid, Cancelled, or Refunded.\n- Use daytime delivery rules (09:00–21:00 profile timezone; queued outside window).\n- Reminder templates are versioned, localized (FA/EN).\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      239
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.01",
+    "requirement": "| T-04.1.04.01 | Design `invoice_reminder_schedule` table: `invoiceId`, `offset`, `channel`, `scheduledAt`, `sentAt?`, `status` | M |",
+    "prs": [
+      240
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.02",
+    "requirement": "| T-04.1.04.02 | Build `ReminderScheduler` worker: on invoice issue, compute reminder datetimes and insert schedule rows | M |",
+    "prs": [
+      241
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.03",
+    "requirement": "| T-04.1.04.03 | Build `ReminderSender` worker: cron every hour picks due reminders, checks invoice state, sends via outbox | M |",
+    "prs": [
+      243
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.04",
+    "requirement": "| T-04.1.04.04 | Enforce idempotency: unique index on (invoiceId, offset, channel) | S |",
+    "prs": [
+      244
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.05",
+    "requirement": "| T-04.1.04.05 | Admin toggle UI: enable/disable each offset per service type | M |",
+    "prs": [
+      245
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.04.06",
+    "requirement": "| T-04.1.04.06 | Stop reminders: when invoice enters Paid/Cancelled/Refunded, mark all future schedule rows as Cancelled | M |\n\n---\n\n### S-04.1.05 — Invoice corrections (cancel+replace & adjustment)\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.1.05 | Pre-payment corrections via cancel+replace; post-payment via adjustment invoice or refund/credit | L | S-04.1.01, S-04.4.01 (Refunds) |\n\n#### Requirements\n\n- **Before payment:** Staff cancels invoice (with reason), creates a linked corrected invoice. Customer sees the chain.\n- **After payment:** Corrections use an adjustment invoice (positive or negative amount) or refund/credit transaction. Never edit issued or paid lines.\n- **Linking:** Corrected invoice stores `replacesInvoiceId`; adjustment invoice stores `adjustmentForInvoiceId`.\n- **UI:** Customer sees original invoice, correction chain, explanation of changes.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      246
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.05.01",
+    "requirement": "| T-04.1.05.01 | Add `replacesInvoiceId` and `adjustmentForInvoiceId` nullable self-references on invoice table | S |",
+    "prs": [
+      247
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.05.02",
+    "requirement": "| T-04.1.05.02 | Build `cancelAndReplaceInvoice(invoiceId, reason, newLines)` — validates no payment, cancels, creates linked replacement | M |",
+    "prs": [
+      248
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.05.03",
+    "requirement": "| T-04.1.05.03 | Build `createAdjustmentInvoice(originalInvoiceId, amount, reason)` — positive = additional charge, negative = credit | M |",
+    "prs": [
+      249
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.1.05.04",
+    "requirement": "| T-04.1.05.04 | Customer-facing invoice details page shows original + linked corrections/replacements with explanations | M |\n\n---\n\n## E-04.2 — Wallet\n\n### S-04.2.01 — Wallet ledger & balances\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.2.01 | Per-profile wallet with posted, reserved, and available balances; immutable ledger; version-based concurrency | XL | E-01 (DB schema), E-02 (Auth — profile isolation) |\n\n#### Core rules\n\n- **One wallet per customer profile** (Individual or Legal), NOT per login user.\n- Profile switching changes the visible wallet.\n- **Ledger:** Every balance change is a ledger transaction. No direct wallet balance overwrite.\n- **Three derived balances:**\n  - `postedBalance` — sum of all completed credits minus completed debits\n  - `reservedBalance` — sum of all pending/active reservations\n  - `availableBalance` = `postedBalance - reservedBalance`\n- **No negative available balance** — enforced by DB constraints and application logic.\n- **Database locking/version checks** on every mutation.\n- **IRR only** — signed 64-bit integer.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      250
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.01",
+    "requirement": "| T-04.2.01.01 | Create `wallets` table: `profileId` (PK, FK), `postedBalance` (int8, default 0), `reservedBalance` (int8, default 0), `version` (int, optimistic lock), `updatedAt`. `availableBalance` is NOT stored — it is derived at query time as `postedBalance - reservedBalance` | M |",
+    "prs": [
+      149
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.02",
+    "requirement": "| T-04.2.01.02 | Create `wallet_transactions` table: `id` (UUIDv7), `walletId`, `type` (enum: topup, payment, refund, reservation, release, reversal, compensating), `amount` (int8, positive for credit, negative for debit), `state` (Pending, Reserved, Completed, Failed, Rejected, Released, Reversed), `idempotencyKey` (unique), `refId?`, `description?`, `metadata` (JSONB), timestamps | L |",
+    "prs": [
+      260,
+      251,
+      149
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.03",
+    "requirement": "| T-04.2.01.03 | Implement `WalletService.credit(walletId, amount, ref, idempotencyKey)` — inserts ledger row, updates postedBalance with `WHERE version = X AND postedBalance >= 0` | M |",
+    "prs": [
+      261,
+      254,
+      252
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.04",
+    "requirement": "| T-04.2.01.04 | Implement `WalletService.debit(walletId, amount, ref, idempotencyKey)` — checks availableBalance >= amount, atomically reserves then completes | L |",
+    "prs": [
+      262,
+      253
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.05",
+    "requirement": "| T-04.2.01.05 | Implement `WalletService.reserve(walletId, amount)` and `release(reservationId)` for payment flow | M |",
+    "prs": [
+      263,
+      255
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.06",
+    "requirement": "| T-04.2.01.06 | Implement optimistic locking: `UPDATE wallets SET postedBalance = postedBalance + delta, version = version + 1 WHERE id = X AND version = expectedVersion` | M |",
+    "prs": [
+      256
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.07",
+    "requirement": "| T-04.2.01.07 | Add DB constraint: `CHECK ((postedBalance - reservedBalance) >= 0)` via generated column or trigger — enforces nonnegative available balance on the derived value, NOT a stored column | M |",
+    "prs": [
+      257
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.01.08",
+    "requirement": "| T-04.2.01.08 | Scheduled reconciliation worker: compare ledger sum vs wallet balance, report mismatch to finance queue | M |\n\n---\n\n### S-04.2.02 — Wallet top-ups (online & bank receipt)\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.2.02 | Customers top up wallet via online payment (with provider callback) or bank receipt (staff confirmation) | L | S-04.2.01, S-04.3.01 (Bank receipts) |\n\n#### Requirements\n\n- **Online top-up:**\n  - Subject to admin-configured `onlineTopUpLimit` (default 2,000,000,000 IRR per transaction).\n  - Requires authenticated provider callback — browser redirect alone is insufficient proof.\n  - Pending top-ups expire safely after timeout; reconcilable later via provider reference.\n  - Transaction limit enforced at submission; retry with reduced amount.\n- **Bank receipt top-up:**\n  - No configured maximum.\n  - Customer submits receipt (amount, date, payer ref, attachment, note).\n  - Stays Pending until finance staff confirm. Rejected submissions never increase balance.\n  - Overpayment handling: excess credited to wallet via separate verified credit, not invoice over-settlement.\n- **Wallet credited only after** confirmed callback or staff confirmation.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      258
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.01",
+    "requirement": "| T-04.2.02.01 | Build online top-up initiation: validate limit, create Pending transaction, redirect to gateway | M |",
+    "prs": [
+      259
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.02",
+    "requirement": "| T-04.2.02.02 | Build provider callback handler: verify signature, replay window, event id, merchant context; apply credit via `WalletService.credit()` with idempotency key | L |",
+    "prs": [
+      265
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.03",
+    "requirement": "| T-04.2.02.03 | Build bank receipt top-up flow: customer uploads receipt → wallet transaction in Pending state | M |",
+    "prs": [
+      266
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.04",
+    "requirement": "| T-04.2.02.04 | Staff confirmation UI: review receipt, confirm or reject with reason; on confirm → `WalletService.credit()` | M |",
+    "prs": [
+      301,
+      286,
+      278,
+      267
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.05",
+    "requirement": "| T-04.2.02.05 | Overpayment handling: if receipt amount > invoice remaining, credit excess to wallet | M |",
+    "prs": [
+      302,
+      287,
+      279,
+      268
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.06",
+    "requirement": "| T-04.2.02.06 | Admin-configurable `onlineTopUpLimit` with versioned config, enforced at submission | M |",
+    "prs": [
+      303,
+      288,
+      280,
+      269
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.02.07",
+    "requirement": "| T-04.2.02.07 | Expiry cron: auto-reject online top-ups stuck in Pending beyond TTL | M |\n\n---\n\n### S-04.2.03 — Atomic wallet-to-invoice payment\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.2.03 | Pay an invoice with a single full wallet debit — atomic, idempotent, concurrent-safe | XL | S-04.2.01, S-04.1.01 |\n\n#### Requirements\n\n- **Single full debit:** Wallet deducts the exact remaining invoice amount in one transaction.\n- **Enabled only when** `availableBalance >= remainingInvoiceAmount`.\n- **Atomic:** Wallet debit and invoice state change in one DB transaction. If either fails, both roll back.\n- **Idempotent:** Retrying with same idempotency key returns original result, never debits twice.\n- **Concurrency:** Use `SELECT ... FOR UPDATE` on wallet row + invoice row within transaction. Optimistic version check as second line of defense.\n- **After payment:** Invoice state → `Paid`. Wallet postedBalance reduced.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      289,
+      281,
+      270
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.03.01",
+    "requirement": "| T-04.2.03.01 | Implement `payInvoiceWithWallet(invoiceId, profileId, idempotencyKey)` service method | L |",
+    "prs": [
+      290,
+      271
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.03.02",
+    "requirement": "| T-04.2.03.02 | Use DB transaction: `SELECT ... FOR UPDATE` on wallet and invoice, validate available balance, debit wallet, update invoice → Paid, insert wallet_transaction + audit | L |",
+    "prs": [
+      291,
+      282,
+      272
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.03.03",
+    "requirement": "| T-04.2.03.03 | Implement idempotency: unique index on `(idempotencyKey, entityType)`, return cached result on retry | M |",
+    "prs": [
+      292,
+      283,
+      273
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.03.04",
+    "requirement": "| T-04.2.03.04 | Integration tests: concurrent payment attempts (one succeeds, others fail), duplicate idempotency key, insufficient balance, race conditions | L |\n\n---\n\n### S-04.2.04 — Chargeback / reversal handling\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.2.04 | Handle provider-initiated chargebacks and reversals with explicit transactions + finance alert | M | S-04.2.01 |\n\n#### Requirements\n\n- Chargeback or reversed provider payment creates an explicit reversal/exception ledger transaction.\n- Never silently edit wallet history — use compensating transactions.\n- Alert finance team immediately on chargeback detection.\n- Reverse the specific original transaction when traceable; otherwise create a general exception.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      293,
+      284,
+      274
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.04.01",
+    "requirement": "| T-04.2.04.01 | Implement `reverseTransaction(originalTransactionId, reason, idempotencyKey)` — creates reversal transaction, adjusts balance | M |",
+    "prs": [
+      285,
+      275
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.04.02",
+    "requirement": "| T-04.2.04.02 | Build provider chargeback detection: parse inbound notification, validate signature, map to original top-up | M |",
+    "prs": [
+      294,
+      276
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.2.04.03",
+    "requirement": "| T-04.2.04.03 | Finance alert: push notification + dashboard warning for unresolved chargeback | M |\n\n---\n\n## E-04.3 — Bank Receipts & Payment Confirmation\n\n### S-04.3.01 — Bank receipt submission & confirmation\n\n| ID | Story | Complexity | Dependencies |\n|----|-------|------------|-------------|\n| S-04.3.01 | Customer submits bank receipts; finance staff confirms or rejects; overpayment auto-credited to wallet | L | S-04.1.01, S-04.2.01 |\n\n#### State machine for bank receipts\n\n**States:** `Submitted → (Under review) → Confirmed | Rejected`\n\n| Transition | From | To | Trigger | Rules |\n|------------|------|----|---------|-------|\n| Submit | — | Submitted | Customer uploads | Store amount, date, payer ref, attachment, note |\n| Review | Submitted | Under review | Staff picks up | Auto-assigned or manual |\n| Confirm | Submitted, Under review | Confirmed | Finance staff | Cannot exceed invoice remaining balance; dual-approval if ≥ threshold |\n| Reject | Submitted, Under review | Rejected | Finance staff | Store reason; notify customer; never affects balance |\n\n#### Overpayment rule\nIf confirmed amount > invoice remaining, excess amount creates a verified profile-wallet credit (separate from invoice settlement). Staff cannot over-settle the invoice.\n\n#### Tasks\n\n| ID | Task | Complexity |\n|----|------|------------|",
+    "prs": [
+      295,
+      277
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.3.01.01",
+    "requirement": "| T-04.3.01.01 | Create `bank_receipts` table: `id`, `invoiceId`, `profileId`, `amount`, `paymentDate`, `payerReference`, `attachmentKey`, `customerNote`, `state`, `confirmedBy?`, `confirmedAt?`, `rejectionReason?`, timestamps | M |",
+    "prs": [
+      296
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.3.01.02",
+    "requirement": "| T-04.3.01.02 | Customer upload flow: validation (amount positive, file type/size), create receipt in Submitted state | M |",
+    "prs": [
+      297
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.3.01.03",
+    "requirement": "| T-04.3.01.03 | Staff confirmation API: validate amount ≤ invoice remaining; if excess → auto-credit wallet; update invoice state; mark receipt Confirmed | L |",
+    "prs": [
+      298
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.3.01.04",
+    "requirement": "| T-04.3.01.04 | Staff rejection API: mark receipt Rejected, store reason, notify customer | M |",
+    "prs": [
+      299
+    ]
+  },
+  {
+    "key": "04-invoices-wallet-contracts.md#T-04.3.01.05",
+    "requirement": "| T-04.3.01.05 | Dual-approval check: if receipt amount ≥ admin-configured threshold, require second finance staff confirmation | L |",
+    "prs": [
+      300
+    ]
+  }
+]

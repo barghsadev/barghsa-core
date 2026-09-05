@@ -1,0 +1,330 @@
+✔ Select projects › @barghsa/web, @barghsa/ui
+✔ Scanned 173 files in 2.5s
+
+React Doctor — barghsa-core
+Score: 45 / 100 Critical
+
+237 issues
+Security: 5 warnings
+Bugs: 4 errors, 65 warnings
+Accessibility: 92 warnings
+Performance: 22 warnings
+Maintainability: 49 warnings
+
+⚠ Path containment check uses a string prefix
+  react-doctor/no-path-prefix-containment
+  server.js:66
+⚠ Many related useState calls ×12
+  react-doctor/prefer-useReducer
+  src/components/DeliveryWindowConfigPanel.tsx:50
+  src/pages/AdminEmailProvidersPage.tsx:223
+  src/pages/AdminNotificationsPage.tsx:150
+  src/pages/AdminStorageConfig.tsx:78
+  src/pages/AdminTosPage.tsx:24
+  src/pages/AdminWalletReceiptsPage.tsx:192
+  src/pages/InvoiceBankReceiptUploadForm.tsx:41
+  src/routes/_app/electricity/order.tsx:61
+  src/routes/_app/settings/addresses.tsx:53
+  src/routes/_app/settings/profile.tsx:92
+  src/routes/forgot-password.tsx:104
+  src/routes/login.tsx:88
+⚠ Control missing accessible label ×29
+  react-doctor/control-has-associated-label
+  src/components/DeliveryWindowConfigPanel.tsx:142
+  src/components/DeliveryWindowConfigPanel.tsx:157
+  src/components/DeliveryWindowConfigPanel.tsx:176
+  src/components/DeliveryWindowConfigPanel.tsx:192
+  src/pages/AdminBrandingConfig.tsx:92
+  src/pages/AdminBrandingConfig.tsx:306
+  src/pages/AdminBrandingConfig.tsx:353
+  src/pages/AdminEmailProvidersPage.tsx:484
+  src/pages/AdminEmailProvidersPage.tsx:497
+  src/pages/AdminGeographyPage.tsx:200
+  src/pages/AdminGeographyPage.tsx:398
+  src/pages/AdminNotificationsPage.tsx:420
+  src/pages/AdminNotificationsPage.tsx:440
+  src/pages/AdminNotificationsPage.tsx:449
+  src/pages/AdminNotificationsPage.tsx:459
+  src/pages/AdminNotificationsPage.tsx:487
+  src/pages/AdminNotificationsPage.tsx:513
+  src/pages/AdminNotificationsPage.tsx:536
+  src/pages/AdminNotificationsPage.tsx:577
+  src/pages/AdminStorageConfig.tsx:245
+  src/pages/AdminTosPage.tsx:195
+  src/pages/AdminTosPage.tsx:230
+  src/pages/AdminTosPage.tsx:244
+  src/pages/AdminTosPage.tsx:350
+  src/routes/_app/electricity/order.tsx:583
+  src/routes/_app/electricity/order.tsx:603
+  src/routes/_app/settings/addresses.tsx:450
+  src/routes/_app/settings/addresses.tsx:470
+  src/routes/_app/settings/index.tsx:377
+⚠ Label missing associated control ×38
+  react-doctor/label-has-associated-control
+  src/components/DeliveryWindowConfigPanel.tsx:154
+  src/components/DeliveryWindowConfigPanel.tsx:173
+  src/components/DeliveryWindowConfigPanel.tsx:189
+  src/pages/AdminBrandingConfig.tsx:91
+  src/pages/AdminBrandingConfig.tsx:256
+  src/pages/AdminBrandingConfig.tsx:267
+  src/pages/AdminBrandingConfig.tsx:305
+  src/pages/AdminBrandingConfig.tsx:334
+  src/pages/AdminBrandingConfig.tsx:352
+  src/pages/AdminEmailProvidersPage.tsx:481
+  src/pages/AdminEmailProvidersPage.tsx:494
+  src/pages/AdminEmailProvidersPage.tsx:793
+  src/pages/AdminGeographyPage.tsx:165
+  src/pages/AdminGeographyPage.tsx:181
+  src/pages/AdminGeographyPage.tsx:197
+  src/pages/AdminNotificationsPage.tsx:481
+  src/pages/AdminNotificationsPage.tsx:505
+  src/pages/AdminNotificationsPage.tsx:528
+  src/pages/AdminNotificationsPage.tsx:555
+  src/pages/AdminNotificationsPage.tsx:571
+  src/pages/AdminNotificationsPage.tsx:641
+  src/pages/AdminStorageConfig.tsx:200
+  src/pages/AdminStorageConfig.tsx:214
+  src/pages/AdminStorageConfig.tsx:228
+  src/pages/AdminStorageConfig.tsx:242
+  src/pages/AdminStorageConfig.tsx:288
+  src/pages/AdminStorageConfig.tsx:302
+  src/pages/AdminTosPage.tsx:212
+  src/pages/AdminTosPage.tsx:227
+  src/pages/AdminTosPage.tsx:241
+  src/routes/_app/electricity/order.tsx:580
+  src/routes/_app/electricity/order.tsx:600
+  src/routes/_app/electricity/order.tsx:621
+  src/routes/_app/electricity/order.tsx:636
+  src/routes/_app/settings/addresses.tsx:447
+  src/routes/_app/settings/addresses.tsx:467
+  src/routes/_app/settings/addresses.tsx:488
+  src/routes/_app/settings/addresses.tsx:503
+⚠ State initializer runs on every render
+  react-doctor/rerender-lazy-state-init
+  src/components/OtpInput.tsx:32
+⚠ Ref initializer runs on every render
+  react-doctor/rerender-lazy-ref-init
+  src/components/OtpInput.tsx:34
+⚠ Array index used as a key ×3
+  react-doctor/no-array-index-as-key
+  src/components/OtpInput.tsx:189
+  src/components/TosBanner.tsx:216
+  src/routes/onboarding/legal/$profileId.tsx:810
+⚠ Non-component export in component file ×6
+  react-doctor/only-export-components
+  src/components/PasswordField.tsx:21
+  src/components/ui/badge.tsx:52
+  src/components/ui/button.tsx:58
+  src/components/ui/tabs.tsx:80
+  src/components/ui/toast.tsx:231
+  src/components/ui/toast.tsx:232
+⚠ Data fetching inside an effect ×7
+  react-doctor/no-fetch-in-effect
+  src/components/ProfileSwitcher.tsx:83
+  src/components/ProfileSwitcher.tsx:89
+  src/pages/AdminBrandingConfig.tsx:128
+  src/pages/AdminStorageConfig.tsx:97
+  src/pages/AdminVerificationConfig.tsx:65
+  src/pages/CrmProfileDetail.tsx:157
+  src/routes/__root.tsx:94
+⚠ State update after await in an effect
+  react-doctor/no-set-state-after-await-in-effect
+  src/components/ProfileSwitcher.tsx:89
+⚠ fetch Response consumed without status check ×22
+  react-doctor/no-fetch-response-used-without-status-check
+  src/components/ReminderOffsetTogglePanel.tsx:127
+  src/lib/invoice-bank-receipt-upload.ts:89
+  src/lib/invoice-bank-receipt-upload.ts:122
+  src/lib/invoice-bank-receipt-upload.ts:158
+  src/pages/AdminWalletReceiptsPage.tsx:296
+  src/pages/AdminWalletReceiptsPage.tsx:348
+  src/pages/WalletPage.tsx:153
+  src/pages/WalletPage.tsx:186
+  src/pages/WalletPage.tsx:317
+  src/pages/WalletPage.tsx:403
+  src/routes/_app/settings/security.tsx:244
+  src/routes/forgot-password.tsx:218
+  src/routes/login.tsx:215
+  src/routes/login.tsx:361
+  src/routes/onboarding/individual/$profileId.tsx:70
+  src/routes/onboarding/individual/$profileId.tsx:97
+  src/routes/onboarding/individual/$profileId.tsx:207
+  src/routes/onboarding/legal/$profileId.tsx:98
+  src/routes/onboarding/legal/$profileId.tsx:163
+  src/routes/onboarding/legal/$profileId.tsx:301
+  src/routes/register/index.tsx:189
+  src/routes/register/verify.tsx:67
+⚠ Large component is hard to read and change ×19
+  react-doctor/no-giant-component
+  src/components/ReminderOffsetTogglePanel.tsx:203
+  src/pages/AdminBrandingConfig.tsx:117
+  src/pages/AdminEmailProvidersPage.tsx:223
+  src/pages/AdminNotificationsPage.tsx:150
+  src/pages/AdminTosPage.tsx:24
+  src/pages/AdminWalletReceiptsPage.tsx:192
+  src/pages/CrmProfileDetail.tsx:136
+  src/pages/WalletPage.tsx:223
+  src/routes/_app/electricity/order.tsx:61
+  src/routes/_app/settings/addresses.tsx:53
+  src/routes/_app/settings/index.tsx:46
+  src/routes/_app/settings/profile.tsx:92
+  src/routes/_app/settings/security.tsx:153
+  src/routes/_app/settings/username.tsx:55
+  src/routes/forgot-password.tsx:104
+  src/routes/login.tsx:88
+  src/routes/onboarding/individual/$profileId.tsx:38
+  src/routes/onboarding/legal/$profileId.tsx:50
+  src/routes/register/index.tsx:93
+✖ Ref mutated during render
+  react-doctor/no-ref-current-in-render
+  src/components/ReminderOffsetTogglePanel.tsx:221
+⚠ await inside a loop
+  react-doctor/async-await-in-loop
+  src/components/ReminderOffsetTogglePanel.tsx:356
+⚠ React function has high control-flow complexity ×19
+  react-doctor/no-high-complexity-react-function
+  src/components/TemplatePreviewPanel.tsx:78
+  src/pages/AdminBrandingConfig.tsx:117
+  src/pages/AdminNotificationsPage.tsx:150
+  src/pages/AdminTosPage.tsx:24
+  src/pages/AdminWalletReceiptsPage.tsx:192
+  src/pages/CrmProfileDetail.tsx:136
+  src/pages/NotificationCenterPage.tsx:32
+  src/pages/WalletPage.tsx:223
+  src/routes/_app/electricity/order.tsx:61
+  src/routes/_app/settings/index.tsx:46
+  src/routes/_app/settings/profile.tsx:92
+  src/routes/_app/settings/security.tsx:153
+  src/routes/_app/settings/timezone.tsx:123
+  src/routes/_app/settings/username.tsx:55
+  src/routes/forgot-password.tsx:104
+  src/routes/login.tsx:88
+  src/routes/onboarding/individual/$profileId.tsx:38
+  src/routes/onboarding/legal/$profileId.tsx:50
+  src/routes/register/index.tsx:93
+⚠ State adjusted after a prop changes ×4
+  react-doctor/no-adjust-state-on-prop-change
+  src/components/TemplatePreviewPanel.tsx:93
+  src/components/TemplatePreviewPanel.tsx:104
+  src/components/TemplatePreviewPanel.tsx:117
+  src/components/TemplatePreviewPanel.tsx:129
+⚠ Chained array iterations ×3
+  react-doctor/js-combine-iterations
+  src/components/TemplatePreviewPanel.tsx:100
+  src/components/TemplatePreviewPanel.tsx:111
+  src/lib/template-preview.ts:69
+⚠ Missing effect dependencies ×5
+  react-doctor/exhaustive-deps
+  src/components/TemplatePreviewPanel.tsx:105
+  src/components/TemplatePreviewPanel.tsx:118
+  src/pages/CrmProfileDetail.tsx:177
+  src/routes/onboarding/legal/$profileId.tsx:117
+  src/routes/onboarding/legal/$profileId.tsx:182
+⚠ Field relies on placeholder text for its label ×16
+  react-doctor/no-placeholder-only-field
+  src/pages/AdminBrandingConfig.tsx:98
+  src/pages/AdminBrandingConfig.tsx:257
+  src/pages/AdminBrandingConfig.tsx:268
+  src/pages/AdminBrandingConfig.tsx:335
+  src/pages/AdminGeographyPage.tsx:168
+  src/pages/AdminGeographyPage.tsx:184
+  src/pages/AdminGeographyPage.tsx:391
+  src/pages/AdminNotificationsPage.tsx:558
+  src/pages/AdminNotificationsPage.tsx:647
+  src/pages/AdminStorageConfig.tsx:203
+  src/pages/AdminStorageConfig.tsx:217
+  src/pages/AdminStorageConfig.tsx:231
+  src/pages/AdminStorageConfig.tsx:291
+  src/pages/AdminStorageConfig.tsx:305
+  src/pages/AdminTosPage.tsx:215
+  src/pages/CrmProfileDetail.tsx:901
+⚠ State only used in handlers ×15
+  react-doctor/rerender-state-only-in-handlers
+  src/pages/AdminBrandingConfig.tsx:125
+  src/pages/AdminEmailProvidersPage.tsx:234
+  src/pages/AdminWalletReceiptsPage.tsx:213
+  src/pages/InvoiceBankReceiptUploadForm.tsx:43
+  src/pages/InvoiceBankReceiptUploadForm.tsx:48
+  src/pages/WalletPage.tsx:233
+  src/pages/WalletPage.tsx:239
+  src/pages/WalletPage.tsx:243
+  src/routes/_app/electricity/order.tsx:66
+  src/routes/_app/settings/profile.tsx:99
+  src/routes/_app/settings/username.tsx:66
+  src/routes/_app/settings/username.tsx:75
+  src/routes/forgot-password.tsx:121
+  src/routes/login.tsx:106
+  src/routes/login.tsx:119
+⚠ Pure function rebuilt every render
+  react-doctor/prefer-module-scope-pure-function
+  src/pages/AdminEmailProvidersPage.tsx:420
+⚠ .map().filter(Boolean) loops twice
+  react-doctor/js-flatmap-filter
+  src/pages/AdminNotificationsPage.tsx:94
+⚠ Async mutating handler without re-entry guard ×4
+  react-doctor/no-async-event-handler-without-reentry-guard
+  src/pages/AdminNotificationsPage.tsx:270
+  src/pages/AdminNotificationsPage.tsx:348
+  src/pages/AdminTosPage.tsx:140
+  src/routes/login.tsx:316
+⚠ Effect promise .then sets state with no catch ×2
+  react-doctor/no-promise-then-side-effect-in-effect-without-catch
+  src/pages/AdminStorageConfig.tsx:98
+  src/pages/AdminVerificationConfig.tsx:66
+⚠ iframe missing sandbox attribute
+  react-doctor/iframe-missing-sandbox
+  src/pages/AdminWalletReceiptsPage.tsx:626
+⚠ Custom modal instead of dialog ×5
+  react-doctor/prefer-html-dialog
+  src/pages/CrmProfileDetail.tsx:836
+  src/pages/CrmProfileDetail.tsx:891
+  src/routes/_app/settings/addresses.tsx:426
+  src/routes/_app/settings/security.tsx:425
+  src/routes/_app/settings/security.tsx:485
+⚠ Interaction on static element
+  react-doctor/no-static-element-interactions
+  src/routes/_app/settings/addresses.tsx:422
+⚠ Crowded component file ×2
+  react-doctor/no-multi-component-file
+  src/routes/_app/settings/security.tsx:126
+  src/routes/_app/settings/security.tsx:153
+✖ State updater has side effects ×3
+  react-doctor/no-impure-state-updater
+  src/routes/forgot-password.tsx:135
+  src/routes/login.tsx:130
+  src/routes/register/verify.tsx:40
+⚠ Side effect inside a state updater function ×3
+  react-doctor/no-side-effect-in-state-updater-function
+  src/routes/forgot-password.tsx:138
+  src/routes/login.tsx:133
+  src/routes/register/verify.tsx:43
+⚠ Auth token in web storage ×3
+  react-doctor/auth-token-in-web-storage
+  src/routes/forgot-password.tsx:283
+  src/routes/forgot-password.tsx:284
+  src/routes/forgot-password.tsx:285
+⚠ Loading flag reset outside finally ×2
+  react-doctor/no-loading-flag-reset-outside-finally
+  src/routes/onboarding/complete.tsx:97
+  src/routes/terms.tsx:51
+⚠ Duplicated JSX structure ×2
+  react-doctor/duplicate-jsx-subtree
+  src/routes/support.tsx:21
+  src/routes/support.tsx:47
+⚠ Click handler missing keyboard handler
+  react-doctor/click-events-have-key-events
+  src/components/base-ui/data-table.tsx:251
+⚠ Role used instead of HTML tag
+  react-doctor/prefer-tag-over-role
+  src/components/ui/breadcrumb.tsx:66
+⚠ Icon-only Button without accessible name
+  react-doctor/shadcn-icon-button-requires-label
+  src/components/ui/toast.tsx:114
+  Full diagnostics written to /var/folders/8r/p92q622n7l3b3xwfbtvjs2tm0000gn/T/react-doctor-e91d1833-2229-4fe5-a77e-21044aeb1237
+
+React Doctor is not installed in this project.
+Ask the user if they would like to set it up, then run:
+
+  npx react-doctor install --yes
+
+This adds agent skill files, a `doctor` package script, and react-doctor as a dev dependency.

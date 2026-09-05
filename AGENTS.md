@@ -12,7 +12,7 @@
 
 Process one kanban task at a time while keeping build, review, and merge authority separate:
 
-1. Cursor builds, validates, commits, pushes, authors a meaningful PR, and records the handoff in `kanban/loop-state.json`.
+1. Cursor builds, validates, commits, pushes, authors a meaningful PR, and writes a separate external builder handoff.
 2. On a later tick, Codex reviews the committed PR HEAD and produces a strict structured review posted and read back from the PR.
 3. On another later tick, the deterministic supervisor verifies the durable approval, exact HEAD SHA, checks, and mergeability before merging.
 
@@ -22,7 +22,10 @@ A reviewer tick never merges. Any new commit invalidates the previous approval.
 
 - `kanban/task-queue.json` — ordered generated queue
 - `kanban/queue-priority.json` — explicit task promotions applied to canonical epic order; validate both order and every generated field
-- `kanban/loop-state.json` — durable local runtime state
+- `kanban/loop-state.json` — historical snapshot, never used for dispatch
+- `$BARGHSA_LOOP_STATE_DIR/state.json` — supervisor-owned cache of the dedicated `kanban-state` remote branch
+- `$BARGHSA_LOOP_STATE_DIR/builder-handoff.json` — builder-owned result, bound to the supervisor assignment
+- `kanban/STATE-PROTOCOL.md` — persistence, reconciliation and recovery procedure
 - `kanban/epics/<file>` — canonical task context and acceptance criteria
 - `kanban/requirements-traceability.json` — generated coverage ledger
 - `kanban/scripts/build_backlog.py` — queue/ledger generator and validator
@@ -50,7 +53,7 @@ Task IDs repeat across epic files. Always use `<fname>#<id>`, for example:
 
 | State | Owner | Permitted action | Next state |
 |---|---|---|---|
-| `idle` | Cursor | Start next task transaction | `building` |
+| `idle` | Supervisor | Reconcile PRs, persist immutable assignment, dispatch Cursor | `building` |
 | `building` | Cursor | Implement, test, commit, push, author/update PR | `in_review` |
 | `in_review` | Codex | Review exact PR HEAD and post structured artifact | `approved` or `fixing` |
 | `fixing` | Cursor | Fix same PR, rerun checks, push, invalidate old review | `in_review` |
@@ -58,14 +61,14 @@ Task IDs repeat across epic files. Always use `<fname>#<id>`, for example:
 | `blocked` | Human | Resolve manual blocker | explicit recovery |
 | `complete` | None | Queue exhausted | terminal |
 
-Only one active task and one loop-owned PR may exist.
+Only one active task and one loop-owned PR may exist. Every supervisor transition must be committed, pushed to the dedicated state branch, and read back before proceeding. The builder cannot change the selected identity or completion/event history. State defaults to `~/.local/state/barghsa-loop`; configure `BARGHSA_LOOP_STATE_DIR` outside the product checkout.
 
 ## Cursor contract: full build transaction
 
 The supervisor launches Cursor with the exact task block and required branch. Cursor owns all build-side actions:
 
 1. Reconcile git and GitHub. For a new task, create the required branch from current `origin/main`; for fixes, resume the same branch and PR.
-2. Set the active task fields and `status` (`building` or `fixing`) in `kanban/loop-state.json` before implementation.
+2. Read the supervisor assignment. Do not edit supervisor state. Write the separate handoff path named in the prompt, including its `assignment_id`.
 3. Implement only the selected task and directly required scaffolding.
 4. Run task-specific checks and every relevant available package/root check. Do not claim unavailable checks passed.
 5. Commit implementation with a meaningful conventional commit message.
@@ -91,7 +94,7 @@ The supervisor launches Cursor with the exact task block and required branch. Cu
 9. Mark the PR ready only after applicable validation passes.
 10. Read the PR back and record its number, URL, branch, exact 40-character HEAD SHA, and validation results.
 11. Set `status` to `in_review`; clear `review`, `reviewed_head_sha`, `review_comment_id`, `review_comment_url`, `review_comment_author`, `review_artifact_sha256`, and `review_nonce`; and leave truthful `last_error`.
-12. `kanban/loop-state.json` is runtime state: do not stage or commit it in the product PR. Stage implementation paths explicitly rather than using an indiscriminate `git add -A`.
+12. Do not stage or commit the historical `kanban/loop-state.json`, external state or handoff in the product PR. Stage implementation paths explicitly rather than using an indiscriminate `git add -A`.
 13. Do not return success until the pushed PR and state handoff have been read back and agree.
 
 The supervisor never commits implementation, pushes a builder branch, creates/edits a PR, writes its description, marks it ready, or repairs a failed Cursor handoff.
@@ -100,7 +103,7 @@ The supervisor never commits implementation, pushes a builder branch, creates/ed
 
 Before Codex can run, the supervisor requires:
 
-- state is exactly `in_review`;
+- handoff is exactly `in_review` and has the persisted assignment ID;
 - PR is open and not draft;
 - state PR number/URL/branch match GitHub;
 - `current_head_sha` equals the current PR `headRefOid`;

@@ -1,0 +1,66 @@
+
+> barghsa-core@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core
+> turbo typecheck
+
+• turbo 2.10.11
+
+   • Packages in scope: @barghsa/api, @barghsa/db, @barghsa/i18n, @barghsa/shared, @barghsa/tsconfig, @barghsa/ui, @barghsa/web, @barghsa/worker
+   • Running typecheck in 8 packages
+   • Remote caching disabled
+
+@barghsa/i18n:typecheck: cache miss, executing 373a906aea3e0d0b
+@barghsa/shared:build: cache miss, executing 93cf44696fe54af9
+@barghsa/i18n:build: cache miss, executing 8cbbb831c06a4f20
+@barghsa/ui:typecheck: cache miss, executing e346f28788312c63
+@barghsa/shared:typecheck: cache miss, executing 9f580ed8091b743b
+@barghsa/ui:build: cache hit, suppressing logs 8c2ce04cbf3f911c
+@barghsa/shared:typecheck: 
+@barghsa/shared:typecheck: > @barghsa/shared@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/packages/shared
+@barghsa/shared:typecheck: > tsc
+@barghsa/shared:typecheck: 
+@barghsa/i18n:build: 
+@barghsa/i18n:build: > @barghsa/i18n@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/i18n
+@barghsa/i18n:build: > tsc
+@barghsa/i18n:build: 
+@barghsa/shared:build: 
+@barghsa/shared:build: > @barghsa/shared@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/shared
+@barghsa/shared:build: > tsc
+@barghsa/shared:build: 
+@barghsa/i18n:typecheck: 
+@barghsa/i18n:typecheck: > @barghsa/i18n@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/packages/i18n
+@barghsa/i18n:typecheck: > tsc
+@barghsa/i18n:typecheck: 
+@barghsa/ui:typecheck: 
+@barghsa/ui:typecheck: > @barghsa/ui@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/packages/ui
+@barghsa/ui:typecheck: > tsc
+@barghsa/ui:typecheck: 
+@barghsa/db:typecheck: cache miss, executing 0daa7e2b0bb973d6
+@barghsa/web:typecheck: cache miss, executing 3073fc03d891278f
+@barghsa/db:build: cache miss, executing baf03d9d9d6b18e5
+@barghsa/web:typecheck: 
+@barghsa/web:typecheck: > @barghsa/web@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/apps/web
+@barghsa/web:typecheck: > tsc --noEmit
+@barghsa/web:typecheck: 
+@barghsa/db:typecheck: 
+@barghsa/db:typecheck: > @barghsa/db@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/packages/db
+@barghsa/db:typecheck: > tsc --noEmit
+@barghsa/db:typecheck: 
+@barghsa/db:build: 
+@barghsa/db:build: > @barghsa/db@0.0.0 build /Users/majid/www/barghsa/barghsa-core/packages/db
+@barghsa/db:build: > tsc -b
+@barghsa/db:build: 
+@barghsa/api:typecheck: cache miss, executing f3d577b15c91798d
+@barghsa/worker:typecheck: cache miss, executing be497aef967d9cc3
+@barghsa/worker:typecheck: 
+@barghsa/worker:typecheck: > @barghsa/worker@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/apps/worker
+@barghsa/worker:typecheck: > tsc --noEmit
+@barghsa/worker:typecheck: 
+@barghsa/api:typecheck: 
+@barghsa/api:typecheck: > @barghsa/api@0.0.0 typecheck /Users/majid/www/barghsa/barghsa-core/apps/api
+@barghsa/api:typecheck: > tsc --noEmit
+@barghsa/api:typecheck: 
+
+ Tasks:    11 successful, 11 total
+Cached:    1 cached, 11 total
+  Time:    7.999s 
+

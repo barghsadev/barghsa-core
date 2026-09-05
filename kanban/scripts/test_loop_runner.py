@@ -60,8 +60,91 @@ class LoopRunnerProtocolTests(unittest.TestCase):
     def successful_check(self):
         return {"name": "CI", "conclusion": "SUCCESS", "status": "COMPLETED"}
 
-    def test_fix_attempt_limit_allows_ten_rounds(self):
-        self.assertEqual(loop_runner.MAX_FIX_ATTEMPTS, 10)
+    def handoff(self):
+        result = {field: "" for field in loop_runner.HANDOFF_FIELDS}
+        result.update(self.state, assignment_id="attempt-one", review=None, review_comment_id=None)
+        return result
+
+    def test_handoff_cannot_replace_task_history_or_assignment(self):
+        assigned = dict(self.state, status="building", assignment={"id": "attempt-one"},
+                        build_completed_tasks=["earlier.md#T-1"], task_events=[{"disposition": "merged"}])
+        accepted = loop_runner.accept_handoff(assigned, self.handoff(), self.task, self.pr)
+        self.assertEqual(accepted["build_completed_tasks"], assigned["build_completed_tasks"])
+        self.assertEqual(accepted["assignment"], assigned["assignment"])
+        self.assertEqual(assigned["status"], "building")
+        for mutation in (
+            {"build_completed_tasks": []}, {"assignment_id": "old-attempt"},
+            {"current_task_key": "other.md#T-1"}, {"review_nonce": "old-review"},
+            {"current_pr_number": 232},
+        ):
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                loop_runner.accept_handoff(assigned, {**self.handoff(), **mutation}, self.task, self.pr)
+
+    def test_selector_rejects_stale_idle_and_completed_resumes(self):
+        for state in (
+            dict(self.state, status="idle"),
+            dict(self.state, status="building", build_completed_tasks=[self.task["key"]]),
+            {"status": "building"},
+        ):
+            with self.subTest(state=state), self.assertRaises(RuntimeError):
+                loop_runner.select_or_resume_task(state)
+
+    def test_dispatch_blocks_existing_loop_pr_and_ambiguous_merged_id(self):
+        prs = [{"number": 304, "state": "open", "head": {"ref": "feat/e04-another-task"}}]
+        self.assertIn("#304", " ".join(loop_runner.dispatch_conflicts(self.task, {}, prs)))
+        self.assertEqual(loop_runner.dispatch_conflicts(self.task, {"current_pr_number": 304}, prs), [])
+        prs = [{"number": 231, "state": "closed", "merged_at": "2026-09-01",
+                "title": f"Implement {self.task['id']}"}]
+        self.assertIn("reconcile", " ".join(loop_runner.dispatch_conflicts(self.task, {}, prs)))
+        prs[0]["title"] += "0"
+        self.assertEqual(loop_runner.dispatch_conflicts(self.task, {}, prs), [])
+
+    def test_partial_claims_block_new_dispatch_and_deferrals_are_not_completions(self):
+        with mock.patch.object(loop_runner, "load_json", return_value=[self.task]):
+            state = {"task_events": [{"task_key": self.task["key"], "disposition": "partial"}]}
+            with self.assertRaisesRegex(RuntimeError, "acceptance repair"):
+                loop_runner.next_task(state)
+            state["task_events"][0]["disposition"] = "deferred"
+            self.assertIsNone(loop_runner.next_task(state))
+            self.assertNotIn("build_completed_tasks", state)
+
+    def test_assignment_detects_task_and_requirement_changes(self):
+        with mock.patch.object(loop_runner, "load_json", return_value=[self.task]), \
+             mock.patch.object(loop_runner, "task_section", return_value="requirements"):
+            state = dict(self.state, assignment={"id": "attempt-one", "task_key": self.task["key"],
+                         "branch": self.state["current_branch"],
+                         "requirements_sha256": loop_runner.hashlib.sha256(b"requirements").hexdigest()})
+            self.assertEqual(loop_runner.assignment_errors(state), [])
+            self.assertTrue(loop_runner.assignment_errors(dict(state, current_task_key="other.md#T-1")))
+            with mock.patch.object(loop_runner, "task_section", return_value="changed requirement"):
+                self.assertIn("requirements changed", " ".join(loop_runner.assignment_errors(state)))
+
+    def test_wrong_builder_task_never_becomes_next_tick_review_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state_file, handoff_file, queue_file = [root / name for name in ("state.json", "handoff.json", "queue.json")]
+            state_file.write_text(json.dumps({"status": "idle", "build_completed_tasks": ["earlier.md#T-1"], "task_events": []}))
+            queue_file.write_text(json.dumps([self.task]))
+            def builder(_command, **_kwargs):
+                assignment = json.loads(state_file.read_text())["assignment"]
+                handoff_file.write_text(json.dumps({**self.handoff(), "assignment_id": assignment["id"],
+                                                  "current_task_key": "wrong.md#T-1"}))
+                return SimpleNamespace(returncode=0, stderr="")
+            with mock.patch.multiple(loop_runner, STATE_FILE=state_file, HANDOFF_FILE=handoff_file, QUEUE_FILE=queue_file, STORE=None), \
+                 mock.patch.object(loop_runner, "verify_dispatch_available"), \
+                 mock.patch.object(loop_runner, "task_section", return_value="requirements"), \
+                 mock.patch.object(loop_runner, "run", side_effect=builder), \
+                 mock.patch.object(loop_runner, "pr_snapshot", return_value=self.pr):
+                loop_runner.handle_cursor()
+                saved = json.loads(state_file.read_text())
+                self.assertEqual(saved["current_task_key"], self.task["key"])
+                self.assertEqual(saved["status"], "building")
+                self.assertEqual(saved["build_completed_tasks"], ["earlier.md#T-1"])
+                self.assertIn("invalid", saved["last_error"])
+                self.assertEqual(loop_runner.action_for_status(saved["status"]), "cursor_build")
+
+    def test_fix_attempt_limit_matches_three_round_contract(self):
+        self.assertEqual(loop_runner.MAX_FIX_ATTEMPTS, 3)
 
     def test_task_section_extracts_table_row_tasks(self):
         section = loop_runner.task_section(self.task)

@@ -1,0 +1,30 @@
+[
+  {
+    "key": "03-core-business.md#T-03.01.01.01",
+    "requirement": "| **T-03.01.01.01** | Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at` | M |",
+    "prs": [
+      144
+    ]
+  },
+  {
+    "key": "03-core-business.md#T-03.01.01.02",
+    "requirement": "| **T-03.01.01.02** | Create `product_price_versions` table for versioned pricing: `id`, `product_id` (FK), `price` (bigint), `vat_category_override` (FK nullable), `effective_from` (timestamptz), `effective_until` (timestamptz nullable), `created_by` (FK to users) | M |",
+    "prs": [
+      145
+    ]
+  },
+  {
+    "key": "03-core-business.md#T-03.01.01.03",
+    "requirement": "| **T-03.01.01.03** | Create `product_categories` table: `id`, `product_id` (FK), `category` (enum: `electricity_generation_station_consultation`, `electricity_saving_certificate_consultation`, `thermal_electricity`, `green_electricity`, `free_market_electricity`, `energy_saving_electricity`). Only for electricity and consultation types. | S |",
+    "prs": [
+      147
+    ]
+  },
+  {
+    "key": "03-core-business.md#T-03.01.01.04",
+    "requirement": "| **T-03.01.01.04** | Create `electricity_product_limits` table: `id`, `product_id` (FK to electricity products only), `min_kwh` (bigint, default 0 = no limit), `max_kwh` (bigint, default 0 = no limit) | S |",
+    "prs": [
+      148
+    ]
+  }
+]

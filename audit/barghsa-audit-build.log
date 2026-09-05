@@ -1,0 +1,115 @@
+
+> barghsa-core@0.0.0 build /Users/majid/www/barghsa/barghsa-core
+> turbo build
+
+• turbo 2.10.11
+
+   • Packages in scope: @barghsa/api, @barghsa/db, @barghsa/i18n, @barghsa/shared, @barghsa/tsconfig, @barghsa/ui, @barghsa/web, @barghsa/worker
+   • Running build in 8 packages
+   • Remote caching disabled
+
+@barghsa/i18n:build: cache hit, suppressing logs 8cbbb831c06a4f20
+@barghsa/ui:build: cache hit, suppressing logs 8c2ce04cbf3f911c
+@barghsa/shared:build: cache hit, suppressing logs 93cf44696fe54af9
+@barghsa/web:build: cache miss, executing af739f14b4fd3d82
+@barghsa/db:build: cache hit, suppressing logs baf03d9d9d6b18e5
+@barghsa/api:build: cache miss, executing d90588d54696483a
+@barghsa/worker:build: cache miss, executing 3caf01e4977b057a
+@barghsa/api:build: 
+@barghsa/api:build: > @barghsa/api@0.0.0 build /Users/majid/www/barghsa/barghsa-core/apps/api
+@barghsa/api:build: > nest build && pnpm generate:openapi
+@barghsa/api:build: 
+@barghsa/web:build: 
+@barghsa/web:build: > @barghsa/web@0.0.0 build /Users/majid/www/barghsa/barghsa-core/apps/web
+@barghsa/web:build: > vite build
+@barghsa/web:build: 
+@barghsa/worker:build: 
+@barghsa/worker:build: > @barghsa/worker@0.0.0 build /Users/majid/www/barghsa/barghsa-core/apps/worker
+@barghsa/worker:build: > tsc
+@barghsa/worker:build: 
+@barghsa/api:build: >  SWC  Running...
+@barghsa/api:build: Successfully compiled: 408 files with swc (361.53ms)
+@barghsa/web:build: vite v6.4.3 building for production...
+@barghsa/web:build: transforming...
+@barghsa/api:build: 
+@barghsa/api:build: > @barghsa/api@0.0.0 generate:openapi /Users/majid/www/barghsa/barghsa-core/apps/api
+@barghsa/api:build: > node dist/src/generate-openapi
+@barghsa/api:build: 
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [NestFactory] Starting Nest application...
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM    WARN [StorageModule] S3_BUCKET and/or S3_REGION not set — storage provider disabled. Upload endpoints will return 503.
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM    WARN [ProviderSecretsService] PROVIDER_CONFIG_ENCRYPTION_KEY is not set — secrets will be stored PLAINTEXT when provider configs are created. Set it to encrypt secrets at rest.
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM    WARN [ProviderSecretsService] PROVIDER_CONFIG_ENCRYPTION_KEY is not set — secrets will be stored PLAINTEXT when provider configs are created. Set it to encrypt secrets at rest.
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM    WARN [AiModelSecretsService] AI_MODEL_ENCRYPTION_KEY is not set — AI model tokens cannot be encrypted. Create/update of models with an API token will fail until the key is configured.
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] RedisModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] CspReportModule dependencies initialized +1ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] MetricsModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] PublicModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] ConfigCacheModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] RateLimitModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] UserSettingsModule dependencies initialized +1ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] HealthModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] SessionModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] TosModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] GeographyModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] TicketsModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] VerificationModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] DashboardModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] StorageModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] KnowledgeBasesModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AiPoliciesModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AiAgentsModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] CatalogueModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] EmailWebhookModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] UploadModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AppModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] NotificationsModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] CrmModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] OrdersModule dependencies initialized +1ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] InvoiceModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] ProviderConfigModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AiModelsModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] ProfilesModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AuthModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] WalletModule dependencies initialized +0ms
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [InstanceLoader] AdminModule dependencies initialized +0ms
+@barghsa/api:build: OpenAPI specification written to /Users/majid/www/barghsa/barghsa-core/apps/api/dist/openapi.json
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM    WARN [ShutdownService] Received unknown signal — starting graceful shutdown (30s deadline)
+@barghsa/api:build: [Nest] 99340  - 09/05/2026, 11:04:53 PM     LOG [ShutdownService] Database pool closed
+@barghsa/web:build: ✓ 3910 modules transformed.
+@barghsa/web:build: rendering chunks...
+@barghsa/web:build: computing gzip size...
+@barghsa/web:build: dist/index.html                                    0.33 kB │ gzip:   0.24 kB
+@barghsa/web:build: dist/.vite/manifest.json                           5.96 kB │ gzip:   0.88 kB
+@barghsa/web:build: dist/assets/CrmLayout-CrTNH0PT.js                  0.13 kB │ gzip:   0.13 kB
+@barghsa/web:build: dist/assets/DocumentsPage--I63ZVZD.js              0.27 kB │ gzip:   0.21 kB
+@barghsa/web:build: dist/assets/VideosPage-CoKnrrT3.js                 0.28 kB │ gzip:   0.22 kB
+@barghsa/web:build: dist/assets/AIChat-sVJcBMBi.js                     0.28 kB │ gzip:   0.22 kB
+@barghsa/web:build: dist/assets/ChartsPage-s9ugA75C.js                 0.28 kB │ gzip:   0.22 kB
+@barghsa/web:build: dist/assets/CrmProfileList-C5wYqeV8.js             0.45 kB │ gzip:   0.30 kB
+@barghsa/web:build: dist/assets/AdminLayout-C4Xv9YjC.js                2.41 kB │ gzip:   0.65 kB
+@barghsa/web:build: dist/assets/AdminVerificationConfig-DcR8WqIj.js    3.01 kB │ gzip:   1.35 kB
+@barghsa/web:build: dist/assets/TosBanner-X6GQHgHM.js                  3.03 kB │ gzip:   1.28 kB
+@barghsa/web:build: dist/assets/AdminDashboard-CnVuDRsC.js             4.81 kB │ gzip:   1.78 kB
+@barghsa/web:build: dist/assets/AdminRolesPage-EMdEqIAh.js             6.00 kB │ gzip:   1.90 kB
+@barghsa/web:build: dist/assets/AdminStorageConfig-BC37D24J.js         6.42 kB │ gzip:   1.79 kB
+@barghsa/web:build: dist/assets/AdminBrandingConfig-CnYV1tOJ.js        9.57 kB │ gzip:   2.74 kB
+@barghsa/web:build: dist/assets/AdminGeographyPage-Dy2A6yfH.js         9.78 kB │ gzip:   2.77 kB
+@barghsa/web:build: dist/assets/AdminTosPage-CrgpHnkx.js              11.47 kB │ gzip:   2.93 kB
+@barghsa/web:build: dist/assets/AdminEmailProvidersPage-BpSLmPJL.js   16.31 kB │ gzip:   3.65 kB
+@barghsa/web:build: dist/assets/AdminInvoicesPage-DKeGchEl.js         17.36 kB │ gzip:   5.29 kB
+@barghsa/web:build: dist/assets/CrmProfileDetail-Ymwjawio.js          20.19 kB │ gzip:   4.68 kB
+@barghsa/web:build: dist/assets/AdminWalletReceiptsPage-D5stqB0P.js   21.57 kB │ gzip:   6.02 kB
+@barghsa/web:build: dist/assets/AdminNotificationsPage-B28WM3Gx.js    33.75 kB │ gzip:   7.23 kB
+@barghsa/web:build: dist/assets/DashboardLayout-9YCO5jQ2.js           85.18 kB │ gzip:  29.55 kB
+@barghsa/web:build: dist/assets/index-BgixLmlj.js                    816.08 kB │ gzip: 220.58 kB
+@barghsa/web:build: 
+@barghsa/web:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+@barghsa/web:build: - Using dynamic import() to code-split the application
+@barghsa/web:build: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+@barghsa/web:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+@barghsa/web:build: ✓ built in 3.05s
+
+ Tasks:    7 successful, 7 total
+Cached:    4 cached, 7 total
+  Time:    5.447s 
+

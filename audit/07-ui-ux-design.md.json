@@ -1,0 +1,23 @@
+[
+  {
+    "key": "07-ui-ux-design.md#T-07.01.01.01",
+    "requirement": "| **T-07.01.01.01** | Initialize `packages/ui` with Tailwind CSS v4, PostCSS, autoprefixer. Configure `tailwind.config.ts` with extended color palette, font families (Vazirmatn for Persian, Inter for English), border-radius, spacing scale, and animation tokens. | M |",
+    "prs": [
+      65
+    ]
+  },
+  {
+    "key": "07-ui-ux-design.md#T-07.01.01.02",
+    "requirement": "| **T-07.01.01.02** | Install and configure shadcn/ui CLI: set `style: \"new-york\"`, `baseColor: \"zinc\"`, `cssVariables: true`. Generate initial component set: Button, Input, Label, Card, Badge, Dialog, DropdownMenu, Select, Separator, Sheet, Skeleton, Toast, Tooltip, Tabs, Avatar, Popover, Command, Switch, Progress, Slider, Textarea, Alert, Breadcrumb, ScrollArea, Calendar, Checkbox, RadioGroup, Sonner (toaster). | L |",
+    "prs": [
+      66
+    ]
+  },
+  {
+    "key": "07-ui-ux-design.md#T-07.01.01.03",
+    "requirement": "| **T-07.01.01.03** | Install and configure Base UI (by MUI — `@mui/base` / `@mui/base-ui`) for complex patterns: NumberField (with locale-aware formatting), DatePicker/DateRangePicker (with Jalali support), ComboBox (with search + keyboard nav), Select (with multi-select + chips), Table (sortable, selectable rows via useTable). | L |",
+    "prs": [
+      67
+    ]
+  }
+]

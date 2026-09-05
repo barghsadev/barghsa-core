@@ -23,9 +23,13 @@ from pathlib import Path
 from typing import Any
 
 from build_backlog import task_context
+from loop_state import StateStore, atomic_json
 
 BASE = Path(os.environ.get("BARGHSA_LOOP_BASE", str(Path(__file__).resolve().parents[2])))
-STATE_FILE = BASE / "kanban/loop-state.json"
+STATE_DIR = Path(os.environ.get("BARGHSA_LOOP_STATE_DIR", str(Path.home() / ".local/state/barghsa-loop")))
+STATE_FILE = STATE_DIR / "state.json"
+HANDOFF_FILE = STATE_DIR / "builder-handoff.json"
+STORE: StateStore | None = None
 QUEUE_FILE = BASE / "kanban/task-queue.json"
 EPICS_DIR = BASE / "kanban/epics"
 LOCK_FILE = Path("/tmp/barghsa-loop-runner.lock")
@@ -33,7 +37,7 @@ REVIEW_SCHEMA = BASE / "kanban/scripts/review-schema.json"
 BUILDER_MODEL = "cursor-grok-4.6-high"
 REVIEWER_MODEL = "gpt-5.6-sol"
 REVIEW_MARKER = "<!-- barghsa-codex-review:v1 -->"
-MAX_FIX_ATTEMPTS = 10
+MAX_FIX_ATTEMPTS = 3
 _LOCK_HANDLE: Any = None
 
 
@@ -46,7 +50,10 @@ def load_json(path: Path) -> Any:
 
 
 def save_json(path: Path, value: Any) -> None:
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n")
+    if path == STATE_FILE and STORE is not None:
+        STORE.save(value)
+    else:
+        atomic_json(path, value)
 
 
 def run(argv: list[str], *, timeout: int | None = None, check: bool = False) -> subprocess.CompletedProcess[str]:
@@ -125,7 +132,14 @@ def task_section(task: dict[str, Any]) -> str:
 
 def next_task(state: dict[str, Any]) -> dict[str, Any] | None:
     completed = set(state.get("build_completed_tasks", []))
-    return next((entry for entry in load_json(QUEUE_FILE) if entry["key"] not in completed), None)
+    dispositions = {event["task_key"]: event["disposition"] for event in state.get("task_events", [])}
+    for entry in load_json(QUEUE_FILE):
+        disposition = dispositions.get(entry["key"])
+        if disposition in {"partial", "blocked"}:
+            raise RuntimeError(f"task needs acceptance repair before new dispatch: {entry['key']}")
+        if entry["key"] not in completed and disposition not in {"deferred", "retired", "acceptance_verified", "merged"}:
+            return entry
+    return None
 
 
 def safe_branch(task: dict[str, Any]) -> str:
@@ -167,7 +181,7 @@ Exact task context:
 
 You own this complete transaction. Do not return success until every required artifact exists:
 1. Reconcile git/GitHub first. Use the required branch. For build, create it from current origin/main if absent. For fix, resume the existing branch/PR.
-2. Before implementation, update kanban/loop-state.json locally with the exact active task fields and `"status": "building"` (or keep `"status": "fixing"` while fixing). Do not stage or commit this runtime-state file.
+2. The supervisor has persisted your assignment. Do not edit supervisor state or kanban/loop-state.json. Write your result only to {HANDOFF_FILE}.
 3. Implement only this task and directly required scaffolding. Follow repository AGENTS.md and existing patterns.
 4. Run the task-specific checks and every relevant available root/package check. Record exact commands and truthful results.
 5. Use git commit with a meaningful conventional commit message. Do not leave implementation changes uncommitted.
@@ -179,7 +193,8 @@ You own this complete transaction. Do not return success until every required ar
    - `## Risks / limitations`: any known limits, otherwise `None`
 8. Mark the PR ready only after applicable validation passes.
 9. Read back the PR via gh and obtain its number, URL, head branch, and exact 40-character head SHA.
-10. Update kanban/loop-state.json locally to contain at least. Any fix commit invalidates the prior review: set `review` to null and clear `reviewed_head_sha`, `review_comment_id`, `review_comment_url`, `review_comment_author`, `review_artifact_sha256`, and `review_nonce` before the in_review handoff.
+10. Write {HANDOFF_FILE} as a JSON object containing only the fields below. Include assignment_id "{(state.get("assignment") or {}).get("id", "")}". Any fix commit invalidates the prior review: set `review` to null and clear `reviewed_head_sha`, `review_comment_id`, `review_comment_url`, `review_comment_author`, `review_artifact_sha256`, and `review_nonce` before the in_review handoff.
+   "assignment_id": "{(state.get("assignment") or {}).get("id", "")}",
    "status": "in_review",
    "current_task_key": "{task['key']}",
    "current_task_id": "{task['id']}",
@@ -197,7 +212,7 @@ You own this complete transaction. Do not return success until every required ar
    "review_nonce": "",
    "validation_results": [{{"command": "...", "status": "passed|failed|not_available", "summary": "..."}}],
    "last_error": ""
-11. IMPORTANT: kanban/loop-state.json is supervisor runtime state. Do not stage or commit kanban/loop-state.json. It must remain a local working-tree change after your implementation commit is pushed.
+11. Do not stage or commit kanban/loop-state.json or the external handoff file. Do not change the supervisor state, assignment or completion history.
 12. Verify the PR head SHA equals current_head_sha and the PR body is meaningful. Do not merely describe commands—execute them.
 
 Return a concise summary only after the transaction is complete. If blocked, leave truthful resumable state with last_error and do not create misleading artifacts.
@@ -260,7 +275,8 @@ def comments_snapshot(pr_url: str) -> list[dict[str, Any]]:
     if not match:
         raise RuntimeError(f"unsupported PR URL: {pr_url}")
     owner, repo, number = match.groups()
-    comments = gh_json(["api", f"repos/{owner}/{repo}/issues/{number}/comments"])
+    pages = gh_json(["api", "--paginate", "--slurp", f"repos/{owner}/{repo}/issues/{number}/comments?per_page=100"])
+    comments = [comment for page in pages for comment in page]
     return [
         {
             "body": item.get("body", ""),
@@ -632,60 +648,162 @@ def already_merged_finalization_errors(
 
 
 def select_or_resume_task(state: dict[str, Any]) -> tuple[dict[str, Any], str]:
-    if state.get("current_task_key"):
-        task = next(
-            (item for item in load_json(QUEUE_FILE) if item["key"] == state["current_task_key"]),
-            None,
-        )
+    key = state.get("current_task_key")
+    if key:
+        if state.get("status") == "idle":
+            raise RuntimeError("idle state retains an active task; explicit recovery required")
+        if key in state.get("build_completed_tasks", []):
+            raise RuntimeError("completed task cannot be resumed")
+        task = next((item for item in load_json(QUEUE_FILE) if item["key"] == key), None)
         if not task:
-            raise RuntimeError(f"active task not found in queue: {state['current_task_key']}")
+            raise RuntimeError(f"active task not found in queue: {key}")
         return task, "fix" if state.get("status") == "fixing" else "build"
+    if state.get("status") != "idle":
+        raise RuntimeError("active state has no assigned task")
     task = next_task(state)
     if not task:
         state["status"] = "complete"
         push_history(state, "complete")
         save_json(STATE_FILE, state)
         raise StopIteration
-    # Do not mutate state here. Cursor owns the idle → building transition,
-    # branch creation, PR creation, and final in_review handoff.
     return task, "build"
 
 
+def assignment_errors(state: dict[str, Any]) -> list[str]:
+    assignment = state.get("assignment")
+    if not isinstance(assignment, dict):
+        return ["supervisor assignment missing; reconcile legacy state before resuming"]
+    task = next((item for item in load_json(QUEUE_FILE) if item["key"] == assignment.get("task_key")), None)
+    if not task:
+        return ["assigned task is no longer in the canonical queue"]
+    expected = {
+        "current_task_key": task["key"], "current_task_id": task["id"],
+        "current_task_file": task["fname"], "current_branch": assignment.get("branch"),
+    }
+    errors = [f"assignment mismatch: {field}" for field, value in expected.items() if state.get(field) != value]
+    digest = hashlib.sha256(task_section(task).encode()).hexdigest()
+    if assignment.get("requirements_sha256") != digest:
+        errors.append("assigned requirements changed; explicit recovery required")
+    if assignment.get("branch") != safe_branch(task):
+        errors.append("assigned branch no longer matches canonical task")
+    if task["key"] in state.get("build_completed_tasks", []):
+        errors.append("assigned task is already merged")
+    return errors
+
+
+def record_task_event(state: dict[str, Any], disposition: str, **evidence: Any) -> None:
+    state.setdefault("task_events", []).append({
+        "task_key": state.get("current_task_key"), "disposition": disposition,
+        "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), **evidence,
+    })
+
+
+HANDOFF_FIELDS = {
+    "assignment_id", "status", "current_task_key", "current_task_id", "current_task_file",
+    "current_branch", "current_pr_number", "current_pr_url", "current_head_sha",
+    "validation_results", "review", "reviewed_head_sha", "review_comment_id",
+    "review_comment_url", "review_comment_author", "review_artifact_sha256", "review_nonce", "last_error",
+}
+
+
+def dispatch_conflicts(task: dict[str, Any], state: dict[str, Any], prs: list[dict[str, Any]]) -> list[str]:
+    """Legacy IDs can be ambiguous across epics. Block for reconciliation, never
+    infer task completion from title/branch matching alone.
+    """
+    conflicts = []
+    for pr in prs:
+        branch = (pr.get("head") or {}).get("ref", "")
+        if pr.get("state") == "open" and branch.startswith("feat/e") and pr.get("number") != state.get("current_pr_number"):
+            conflicts.append(f"loop-owned PR #{pr['number']} is already open")
+        scope = (pr.get("title") or "") + "\n" + (pr.get("body") or "")
+        mentions_id = re.search(r"(?<![\w.])" + re.escape(task["id"]) + r"(?![\w.])", scope)
+        if pr.get("merged_at") and (mentions_id or branch == safe_branch(task)):
+            conflicts.append(f"merged PR #{pr['number']} may already implement {task['key']}; reconcile its evidence")
+    return conflicts
+
+
+def verify_dispatch_available(task: dict[str, Any], state: dict[str, Any]) -> None:
+    pages = gh_json(["api", "--paginate", "--slurp", "repos/{owner}/{repo}/pulls?state=all&per_page=100"])
+    if not isinstance(pages, list) or any(not isinstance(page, list) for page in pages):
+        raise RuntimeError("GitHub PR reconciliation returned malformed pages")
+    conflicts = dispatch_conflicts(task, state, [pr for page in pages for pr in page])
+    if conflicts:
+        raise RuntimeError("; ".join(conflicts))
+
+
+def accept_handoff(state: dict[str, Any], handoff: dict[str, Any], task: dict[str, Any], pr: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(handoff, dict) or set(handoff) != HANDOFF_FIELDS:
+        raise ValueError("builder handoff fields do not match the contract")
+    if handoff["assignment_id"] != state["assignment"]["id"]:
+        raise ValueError("builder handoff is from another assignment")
+    if handoff.get("review_nonce"):
+        raise ValueError("builder handoff retains a review nonce")
+    if state.get("current_pr_number") and (
+        handoff["current_pr_number"] != state["current_pr_number"]
+        or handoff["current_pr_url"] != state["current_pr_url"]
+    ):
+        raise ValueError("builder replaced the assigned PR")
+    errors = validate_builder_handoff(handoff, pr, expected_task=task)
+    if errors:
+        raise ValueError("; ".join(errors))
+    result = dict(state)
+    result.update({key: value for key, value in handoff.items() if key != "assignment_id"})
+    return result
+
+
 def handle_cursor() -> None:
-    before = load_json(STATE_FILE)
+    state = load_json(STATE_FILE)
     try:
-        task, mode = select_or_resume_task(before)
+        task, mode = select_or_resume_task(state)
     except StopIteration:
         return
-    state = load_json(STATE_FILE)
-    if not state.get("current_branch"):
-        state = dict(state)
-        state["current_branch"] = safe_branch(task)
-    if mode == "fix" and state.get("fix_attempts", 0) >= MAX_FIX_ATTEMPTS:
+    verify_dispatch_available(task, state)
+    if mode == "fix" and state.get("fix_attempts", 0) > MAX_FIX_ATTEMPTS:
         state["status"] = "blocked"
-        state["last_error"] = "maximum fix attempts exceeded"
+        state["last_error"] = "three fix rounds failed review"
         push_history(state, "blocked")
         save_json(STATE_FILE, state)
         return
+    if not state.get("assignment"):
+        if state.get("status") != "idle":
+            raise RuntimeError("legacy active task requires explicit reconciliation")
+        state.update(current_task_key=task["key"], current_task_id=task["id"],
+                     current_task_file=task["fname"], current_branch=safe_branch(task), status="building")
+        state["assignment"] = {
+            "id": secrets.token_hex(32), "task_key": task["key"], "branch": safe_branch(task),
+            "requirements_sha256": hashlib.sha256(task_section(task).encode()).hexdigest(),
+        }
+        record_task_event(state, "partial", assignment=state["assignment"])
+        push_history(state, "building")
+        save_json(STATE_FILE, state)
+    errors = assignment_errors(state)
+    if errors:
+        raise RuntimeError("; ".join(errors))
+    # A prior handoff may belong to another task or an interrupted fix. Never
+    # consume it implicitly; the resumed builder must read back and publish it.
+    HANDOFF_FILE.unlink(missing_ok=True)
     prompt = build_cursor_prompt(task=task, task_section=task_section(task), state=state, mode=mode)
     result = run(builder_command(prompt), timeout=None)
+    if load_json(STATE_FILE) != state:
+        save_json(STATE_FILE, state)
+        raise RuntimeError("builder modified supervisor state; original assignment restored")
     if result.returncode:
-        state = load_json(STATE_FILE)
         state["last_error"] = f"Cursor failed ({result.returncode}): {result.stderr[-1000:]}"
         save_json(STATE_FILE, state)
         return
-    handoff = load_json(STATE_FILE)
-    pr_url = handoff.get("current_pr_url")
-    if not pr_url:
-        handoff["last_error"] = "Cursor returned without current_pr_url"
-        save_json(STATE_FILE, handoff)
+    try:
+        handoff = load_json(HANDOFF_FILE)
+        pr_url = handoff.get("current_pr_url")
+        if not isinstance(pr_url, str) or not pr_url:
+            raise ValueError("builder returned no PR URL")
+        pr = pr_snapshot(pr_url)
+        accepted = accept_handoff(state, handoff, task, pr)
+    except (ValueError, OSError, AttributeError) as exc:
+        state["last_error"] = f"Builder handoff invalid: {exc}"
+        save_json(STATE_FILE, state)
         return
-    pr = pr_snapshot(pr_url)
-    errors = validate_builder_handoff(handoff, pr, expected_task=task)
-    if errors:
-        handoff["last_error"] = "Builder handoff invalid: " + "; ".join(errors)
-        save_json(STATE_FILE, handoff)
-        return
+    push_history(accepted, "in_review")
+    save_json(STATE_FILE, accepted)
     log(f"verified Cursor handoff: PR #{pr['number']} at {pr['headRefOid']}")
 
 
@@ -840,6 +958,8 @@ def merge_command(pr_url: str, reviewed_head_sha: str) -> list[str]:
 
 def finalize_merged_state(state: dict[str, Any]) -> None:
     task_key = state["current_task_key"]
+    record_task_event(state, "merged", pr_url=state["current_pr_url"], head_sha=state["reviewed_head_sha"])
+    state["assignment"] = None
     completed = state.setdefault("build_completed_tasks", [])
     if task_key not in completed:
         completed.append(task_key)
@@ -961,14 +1081,27 @@ def validate_backlog() -> bool:
 
 
 def tick() -> None:
+    global STORE
     log("=== Barghsa ownership-separated loop tick ===")
     if not acquire_lock():
         log("lock exists; another tick owns the loop")
         return
     try:
+        if STATE_DIR.resolve().is_relative_to(BASE.resolve()):
+            raise RuntimeError("supervisor state must be outside the product checkout")
+        remote = run(["git", "remote", "get-url", "origin"], check=True).stdout.strip()
+        STORE = StateStore(STATE_DIR, remote)
+        STORE.read()
         if not validate_backlog():
             return
         state = load_json(STATE_FILE)
+        if state.get("current_task_key"):
+            errors = assignment_errors(state)
+            if errors:
+                state["status"] = "blocked"
+                state["last_error"] = "; ".join(errors)
+                save_json(STATE_FILE, state)
+                return
         action = action_for_status(state.get("status", "idle"))
         log(f"state={state.get('status')} action={action}")
         if action in {"cursor_build", "cursor_fix"}:
