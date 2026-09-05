@@ -110,6 +110,9 @@ export class SessionOptionalGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest()
 
+    // Discard middleware context if the session expired or was revoked before this guard.
+    delete (request as Partial<AuthenticatedRequest>).session
+
     const sessionId = request.cookies?.[SESSION_COOKIE_NAME]
 
     if (!sessionId || typeof sessionId !== 'string') {

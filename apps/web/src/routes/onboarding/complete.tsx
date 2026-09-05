@@ -1,3 +1,4 @@
+import { withCsrf } from '../../lib/csrf.js'
 import { useState } from 'react'
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -84,6 +85,7 @@ function OnboardingCompletePage() {
 
       if (profileId) {
         await fetch(`/api/onboarding/complete/${profileId}`, {
+          headers: withCsrf(),
           method: 'POST',
           credentials: 'include',
         }).catch(() => {

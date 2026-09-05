@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState } from 'react'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -34,7 +35,7 @@ function OnboardingPage() {
       const response = await fetch('/api/onboarding/start', {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ profileType: selectedType }),
       })
 

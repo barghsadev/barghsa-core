@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState, useEffect, useCallback } from 'react'
 import { t } from '@barghsa/i18n'
 import type { Locale } from '@barghsa/i18n'
@@ -97,6 +98,7 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
     setBusyId(id)
     try {
       const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
+        headers: withCsrf(),
         method: 'POST',
       })
       if (res.status === 403) {

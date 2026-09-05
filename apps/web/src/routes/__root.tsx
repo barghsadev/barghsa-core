@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
@@ -73,7 +74,7 @@ async function runProfileCheck(
         await fetch(`/api/profiles/${profile.id}/set-default`, {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
         })
       } catch {
         // Non-critical — silently fall through

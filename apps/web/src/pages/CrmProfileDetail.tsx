@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState, useEffect } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -205,7 +206,7 @@ export default function CrmProfileDetail() {
 
     fetch(`/api/crm/profiles/${profileId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         title: editFields.title === '' ? null : editFields.title,
         email: editFields.email === '' ? null : editFields.email,
@@ -242,7 +243,7 @@ export default function CrmProfileDetail() {
 
     fetch(`/api/crm/users/${data.user.userId}/force-password-change`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ reason: forcePwChangeReason }),
     })
       .then((res) => {
@@ -271,7 +272,7 @@ export default function CrmProfileDetail() {
 
     fetch(`/api/crm/users/${data.user.userId}/expire-sessions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withCsrf({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ reason: expireSessionsReason }),
     })
       .then((res) => {

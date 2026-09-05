@@ -3,12 +3,14 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  UnauthorizedException,
   Logger,
 } from '@nestjs/common'
 import type { Request } from 'express'
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { correlationIdStorage } from '../common/correlation-id.middleware.js'
 import type { AuthenticatedRequest } from './session.guard.js'
+import { SESSION_COOKIE_NAME } from './cookie.helper.js'
 
 /**
  * CSRF protection guard (T-02.02.03).
@@ -27,7 +29,7 @@ import type { AuthenticatedRequest } from './session.guard.js'
  * - Unauthenticated requests (no session) are exempt — CSRF requires a
  *   session to be meaningful. Auth endpoints that create sessions (login,
  *   register) are naturally exempt because they run before a session exists.
- * - This guard runs AFTER the SessionAuthGuard so `req.session` is populated.
+ * - SessionContextMiddleware loads the session before this global guard runs.
  * - Failures return 403 with correlation ID and are logged as security events.
  *
  * Usage in a controller (applied globally via APP_GUARD):
@@ -71,6 +73,9 @@ export class CsrfGuard implements CanActivate {
     // ── No session → nothing to validate ────────────────────────
     const authRequest = request as AuthenticatedRequest
     if (!authRequest.session) {
+      if (request.cookies?.[SESSION_COOKIE_NAME]) {
+        throw new UnauthorizedException({ statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code })
+      }
       return true
     }
 
@@ -111,8 +116,8 @@ export class CsrfGuard implements CanActivate {
 /**
  * Decorator to skip CSRF validation on a specific route handler.
  *
- * Use ONLY on auth endpoints that establish or destroy a session
- * (login, register, logout) where a CSRF token cannot exist yet.
+ * Use only when the route establishes authentication or has independent
+ * request authentication, such as a signed provider callback.
  *
  * ```ts
  * @SkipCsrf()

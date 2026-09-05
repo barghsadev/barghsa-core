@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { FormEvent } from 'react'
 import { t } from '@barghsa/i18n'
@@ -269,7 +270,7 @@ export default function AdminNotificationsPage() {
       if (dest) body.destination = dest
       const res = await fetch(`/api/admin/notifications/templates/${editId}/test-send`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(body),
       })
       if (!res.ok) {
@@ -311,7 +312,7 @@ export default function AdminNotificationsPage() {
 
         const res = await fetch(`/api/admin/notifications/templates/${editId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(updateBody),
         })
         if (!res.ok) {
@@ -322,7 +323,7 @@ export default function AdminNotificationsPage() {
         // Create new draft
         const res = await fetch('/api/admin/notifications/templates', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
         })
         if (!res.ok) {
@@ -346,6 +347,7 @@ export default function AdminNotificationsPage() {
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${publishId}/publish`, {
+        headers: withCsrf(),
         method: 'POST',
       })
       if (!res.ok) {
@@ -367,6 +369,7 @@ export default function AdminNotificationsPage() {
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}/unpublish`, {
+        headers: withCsrf(),
         method: 'POST',
       })
       if (!res.ok) {
@@ -384,6 +387,7 @@ export default function AdminNotificationsPage() {
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}`, {
+        headers: withCsrf(),
         method: 'DELETE',
       })
       if (!res.ok) {

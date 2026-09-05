@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n'
@@ -112,7 +113,7 @@ export function DefaultProfileModal() {
       const response = await fetch(`/api/profiles/${selectedId}/set-default`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
       })
 
       if (response.ok) {

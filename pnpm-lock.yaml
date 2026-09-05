@@ -59,6 +59,9 @@ importers:
       argon2:
         specifier: 0.45.1
         version: 0.45.1
+      cookie:
+        specifier: 0.7.2
+        version: 0.7.2
       ioredis:
         specifier: ^5.11.1
         version: 5.11.1
@@ -90,6 +93,9 @@ importers:
       '@nestjs/testing':
         specifier: 11.2.1
         version: 11.2.1(@nestjs/common@11.2.1(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@nestjs/platform-express@11.2.1)
+      '@playwright/test':
+        specifier: 1.62.1
+        version: 1.62.1
       '@swc/cli':
         specifier: ^0.6.0
         version: 0.6.0(@swc/core@1.16.1)(chokidar@4.0.3)
@@ -99,6 +105,9 @@ importers:
       '@testcontainers/postgresql':
         specifier: 12.1.0
         version: 12.1.0
+      '@types/cookie':
+        specifier: 0.6.0
+        version: 0.6.0
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.6
@@ -2414,6 +2423,9 @@ packages:
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
+  '@types/cookie@0.6.0':
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
@@ -7703,6 +7715,8 @@ snapshots:
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 26.2.0
+
+  '@types/cookie@0.6.0': {}
 
   '@types/deep-eql@4.0.2': {}
 

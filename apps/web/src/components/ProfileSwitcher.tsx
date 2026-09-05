@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -128,7 +129,7 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
       const response = await fetch(`/api/profiles/switch/${profileId}`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
       })
       if (!response.ok) {
         setError(t('dashboard.profile.switchError', locale))

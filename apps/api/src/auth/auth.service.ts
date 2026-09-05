@@ -390,7 +390,7 @@ export class AuthService {
 
       // 3. Check password history (last 5 passwords)
       const historyResult = await client.query(
-        `SELECT password_hash FROM password_history
+        `SELECT password_hash, version FROM password_history
          WHERE user_id = $1
          ORDER BY version DESC
          LIMIT 5`,
@@ -448,6 +448,19 @@ export class AuthService {
              updated_at = $2
          WHERE user_id = $3`,
         [newHash, now, user.user_id],
+      )
+
+      // Changing credentials invalidates every existing session and its CSRF
+      // token, including sessions opened before the forced-change flag was set.
+      await client.query(
+        `UPDATE sessions SET revoked_at = $1, updated_at = $1
+         WHERE user_id = $2 AND revoked_at IS NULL`,
+        [now, user.user_id],
+      )
+      await client.query(
+        `UPDATE refresh_tokens SET consumed_at = $1
+         WHERE user_id = $2 AND consumed_at IS NULL`,
+        [now, user.user_id],
       )
 
       await client.query('COMMIT')
@@ -1122,7 +1135,7 @@ export class AuthService {
 
       // 4. Check password history (last 5 passwords)
       const historyResult = await client.query(
-        `SELECT password_hash FROM password_history
+        `SELECT password_hash, version FROM password_history
          WHERE user_id = $1
          ORDER BY version DESC
          LIMIT 5`,

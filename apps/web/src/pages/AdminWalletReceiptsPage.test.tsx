@@ -2,7 +2,6 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ErrorCodes } from '@barghsa/shared/errors'
-import { setCsrfToken } from '../lib/csrf.js'
 import AdminWalletReceiptsPage from './AdminWalletReceiptsPage.js'
 
 const TX_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
@@ -114,7 +113,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     container = document.createElement('div')
     document.body.appendChild(container)
     root = createRoot(container)
-    setCsrfToken(CSRF)
+    document.cookie = `barghsa_csrf=${CSRF}; path=/`
     vi.stubGlobal('fetch', vi.fn(defaultFetch))
   })
 

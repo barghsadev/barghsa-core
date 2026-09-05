@@ -11,34 +11,21 @@ const CSRF_HEADER_NAME = 'X-CSRF-Token'
 /**
  * Read the CSRF token from the cookie set by the server.
  */
-function getCsrfFromCookie(): string | null {
-  const cookies = document.cookie.split('; ')
+export function getCsrfToken(): string | null {
+  if (typeof document === 'undefined') return null
+  const cookies = document.cookie.split(';')
   for (const cookie of cookies) {
-    const [name, ...rest] = cookie.split('=')
+    const [name, ...rest] = cookie.trim().split('=')
     if (name === CSRF_COOKIE_NAME) {
-      return decodeURIComponent(rest.join('='))
+      try { return decodeURIComponent(rest.join('=')) || null } catch { return null }
     }
   }
   return null
 }
 
 /**
- * Store the CSRF token received from the server during auth.
- * The server also sets it as an HttpOnly cookie, but this in-memory
- * value serves as a fast path for the frontend.
- */
-let csrfToken: string | null = null
-
-export function setCsrfToken(token: string): void {
-  csrfToken = token
-}
-
-export function getCsrfToken(): string | null {
-  return csrfToken ?? getCsrfFromCookie()
-}
-
-/**
  * Attach the CSRF token as a header to a fetch request.
+ * Read the current cookie each time, including changes made by other tabs.
  * Returns a new Headers object with the token added.
  */
 export function withCsrf(headers?: HeadersInit): Headers {
@@ -46,6 +33,8 @@ export function withCsrf(headers?: HeadersInit): Headers {
   const token = getCsrfToken()
   if (token) {
     h.set(CSRF_HEADER_NAME, token)
+  } else {
+    h.delete(CSRF_HEADER_NAME)
   }
   return h
 }

@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useEffect, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -96,7 +97,7 @@ export function VerificationBanner() {
       const response = await fetch(`/api/profiles/${currentStatus.activeProfileId}/verify`, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
       })
 
       if (response.ok) {

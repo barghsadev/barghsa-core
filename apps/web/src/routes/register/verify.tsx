@@ -6,7 +6,6 @@ import { Loader2Icon } from 'lucide-react'
 import { Button } from '@barghsa/ui'
 import { AuthLayout } from '../../components/AuthLayout.js'
 import { OtpInput } from '../../components/OtpInput.js'
-import { setCsrfToken } from '../../lib/csrf.js'
 
 export const Route = createFileRoute('/register/verify')({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -108,12 +107,6 @@ function OtpVerifyPage() {
         }
 
         // ── Success — user created, session set ────────────────────
-        // Store CSRF token for subsequent API calls
-        const csrfToken = body?.csrfToken as string | undefined
-        if (csrfToken) {
-          setCsrfToken(csrfToken)
-        }
-
         toast.success(t('auth.register.success', locale))
         // Redirect to app root (profile check middleware handles redirects)
         router.navigate({ to: '/' })

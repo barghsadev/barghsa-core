@@ -54,6 +54,7 @@ import {
   clearCsrfCookie,
 } from '../session/cookie.helper.js'
 import { SkipCsrf } from '../session/csrf.guard.js'
+import { RefreshCsrfGuard } from '../session/refresh-csrf.guard.js'
 import { SessionAuthGuard } from '../session/session.guard.js'
 import type { AuthenticatedRequest } from '../session/session.guard.js'
 
@@ -543,7 +544,6 @@ export class AuthController {
    * Rate limits:
    * - 10 logout attempts per IP per 60s
    */
-  @SkipCsrf()
   @Post('logout')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:logout:ip', limit: 10, windowMs: 60_000, security: true })
@@ -585,6 +585,7 @@ export class AuthController {
    * - 10 refresh attempts per IP per 60s
    */
   @SkipCsrf()
+  @UseGuards(RefreshCsrfGuard)
   @Post('refresh')
   @HttpCode(200)
   @RateLimit({ namespace: 'auth:refresh:ip', limit: 10, windowMs: 60_000, security: true })

@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState, useEffect, useCallback } from 'react'
 import type { FormEvent } from 'react'
 import { t } from '@barghsa/i18n'
@@ -100,7 +101,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
     try {
       const res = await fetch('/api/admin/config/delivery-window', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           timezone,
           start_hour: startHour,

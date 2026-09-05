@@ -1,3 +1,4 @@
+import { withCsrf } from '../../../lib/csrf.js'
 import { useState, useEffect, useCallback } from 'react'
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
@@ -207,7 +208,7 @@ function IndividualProfileFormPage() {
         const response = await fetch(`/api/onboarding/individual/${profileId}`, {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
             title: title.trim() || undefined,
             firstName: firstName.trim(),

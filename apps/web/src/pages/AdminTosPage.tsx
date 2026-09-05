@@ -1,3 +1,4 @@
+import { withCsrf } from '../lib/csrf.js'
 import { useState, useEffect, useCallback } from 'react'
 import type { FormEvent } from 'react'
 
@@ -103,7 +104,7 @@ export default function AdminTosPage() {
 
         const res = await fetch(`/api/admin/tos/versions/${editId}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
         })
         if (!res.ok) {
@@ -114,7 +115,7 @@ export default function AdminTosPage() {
         // Create new draft
         const res = await fetch('/api/admin/tos/versions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ versionId, contentFa, contentEn }),
         })
         if (!res.ok) {
@@ -139,7 +140,7 @@ export default function AdminTosPage() {
     try {
       const res = await fetch(`/api/admin/tos/versions/${publishId}/publish`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ changeType }),
       })
       if (!res.ok) {
@@ -160,7 +161,7 @@ export default function AdminTosPage() {
     if (!window.confirm('Discard this draft? This cannot be undone.')) return
 
     try {
-      const res = await fetch(`/api/admin/tos/versions/${id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/admin/tos/versions/${id}`, { headers: withCsrf(), method: 'DELETE' })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
         throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)

@@ -7,7 +7,6 @@ import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } f
 import { AuthLayout } from '../components/AuthLayout.js'
 import { PasswordField, evaluateStrength } from '../components/PasswordField.js'
 import { OtpInput } from '../components/OtpInput.js'
-import { setCsrfToken } from '../lib/csrf.js'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -272,11 +271,6 @@ function LoginPage() {
       }
 
       // ── Success (direct login) ────────────────────────────
-      const csrfToken = body?.csrfToken as string | undefined
-      if (csrfToken) {
-        setCsrfToken(csrfToken)
-      }
-
       const msg = t('auth.login.success', locale)
       toast.success(msg)
 
@@ -402,11 +396,6 @@ function LoginPage() {
         }
 
         // ── Success — OTP verified, session set ─────────────────
-        const csrfToken = body?.csrfToken as string | undefined
-        if (csrfToken) {
-          setCsrfToken(csrfToken)
-        }
-
         toast.success(t('auth.login.otpSuccess', locale))
         router.navigate({ to: '/' })
       } catch {

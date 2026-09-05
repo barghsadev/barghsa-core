@@ -4,7 +4,8 @@ export default createVitestConfig({
   test: {
     // Shared Testcontainers-backed PostgreSQL for real-DB integration tests
     // (see src/invoice/invoice-state-machine.integration.test.ts).
-    globalSetup: ['../../packages/db/src/test/globalSetup.ts'],
+    globalSetup: ['./src/test/build-http-app.ts', '../../packages/db/src/test/globalSetup.ts'],
+    exclude: ['dist/**', 'node_modules/**', 'e2e/**'],
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
     coverage: {

@@ -390,6 +390,18 @@ export class SessionService {
     }
   }
 
+  /** Check the session token without consuming the refresh credential or extending idle time. */
+  async validateRefreshCsrf(token: string, csrfToken: string): Promise<boolean> {
+    const tokenHash = createHash('sha256').update(token).digest('hex')
+    const result = await getDbPool().query<{ csrf_token: string }>(
+      `SELECT s.csrf_token FROM refresh_tokens r
+       JOIN sessions s ON s.session_id = r.session_id
+       WHERE r.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > NOW()`,
+      [tokenHash],
+    )
+    return result.rows.length === 1 && result.rows[0]!.csrf_token === csrfToken
+  }
+
   /**
    * Redeem a refresh token.
    *
@@ -402,7 +414,7 @@ export class SessionService {
    *    the session is still active, then issue a new refresh token.
    *
    * Returns the new refresh token and session ID.
-   * The caller should also update the CSRF token on the session.
+   * Refresh retains the session and its CSRF token; session rotation replaces both.
    */
   async redeemRefreshToken(token: string): Promise<RefreshResult> {
     const pool = getDbPool()

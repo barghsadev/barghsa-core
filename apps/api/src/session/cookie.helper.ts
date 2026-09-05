@@ -52,7 +52,7 @@ export const CSRF_COOKIE_NAME = 'barghsa_csrf'
 export function setCsrfCookie(res: Response, csrfToken: string): void {
   const isSecure = process.env.NODE_ENV === 'production'
   // Max age matches absolute session timeout (24h)
-  const maxAge = 24 * 60 * 60
+  const maxAge = 24 * 60 * 60 * 1000
 
   res.cookie(CSRF_COOKIE_NAME, csrfToken, {
     httpOnly: false,
