@@ -12,7 +12,7 @@ import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login
 import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
 import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
 import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
-import { OtpService } from './otp.service.js'
+import { OtpService, OtpAttemptRejected } from './otp.service.js'
 import { SessionService } from '../session/session.service.js'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 import { TosService } from '../tos/tos.service.js'
@@ -1394,7 +1394,7 @@ export class AuthService {
       }
 
       // 2. Verify OTP (consumes the challenge atomically)
-      await this.otpService.verifyChallenge(challengeId, otp, ip)
+      await this.otpService.verifyChallenge(challengeId, otp, ip, client)
 
       // 3. Re-check uniqueness inside the transaction
       const takenResult = await client.query(
@@ -1413,7 +1413,7 @@ export class AuthService {
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       const isNewEmail = emailRe.test(newUsername)
       const userResult = await client.query(
-        `SELECT email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
+        `SELECT username, email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
         [userId],
       )
 
@@ -1490,7 +1490,8 @@ export class AuthService {
 
       return { message: 'Username changed successfully.' }
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
+      // Verification is the first mutation; retain its failed-attempt counter.
+      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK')
       if (err instanceof HttpException) throw err
       this.logger.error(`Username change failed for user ${userId}: ${String(err)}`)
       throw new HttpException(
@@ -1618,7 +1619,7 @@ export class AuthService {
       }
 
       // 2. Verify OTP
-      await this.otpService.verifyChallenge(challengeId, otp, ip)
+      await this.otpService.verifyChallenge(challengeId, otp, ip, client)
 
       // 2. Re-check user doesn't already have this contact type
       const userResult = await client.query(
@@ -1672,7 +1673,8 @@ export class AuthService {
 
       return { message: 'Contact added successfully.' }
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
+      // Verification is the first mutation; retain its failed-attempt counter.
+      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK')
       if (err instanceof HttpException) throw err
       this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`)
       throw new HttpException(

@@ -2,11 +2,19 @@ import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import type { PoolClient } from 'pg'
 import { RateLimitService } from '../rate-limit/rate-limit.service.js'
 
 export interface OtpChallengeResult {
   challengeId: string
   destination: string
+}
+
+/** The caller must commit the failed attempt before returning this rejection. */
+export class OtpAttemptRejected extends HttpException {
+  constructor() {
+    super({ statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code }, 401)
+  }
 }
 
 @Injectable()
@@ -115,7 +123,7 @@ export class OtpService {
     const pool = getDbPool()
 
     const result = await pool.query(
-      `SELECT challenge_id, destination, consumed_at, expires_at, resend_count
+      `SELECT challenge_id, destination, consumed_at, expires_at, resend_count, otp_hash, attempts_remaining
        FROM otp_challenges
        WHERE challenge_id = $1`,
       [challengeId],
@@ -128,7 +136,7 @@ export class OtpService {
       )
     }
 
-    const { destination, consumed_at, expires_at, resend_count } = result.rows[0]
+    const { destination, consumed_at, expires_at, otp_hash, attempts_remaining } = result.rows[0]
 
     if (consumed_at) {
       throw new HttpException(
@@ -142,6 +150,10 @@ export class OtpService {
         { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
         401,
       )
+    }
+
+    if (attempts_remaining <= 0) {
+      throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code }, 401)
     }
 
     const perChallenge = await this.rateLimitService.checkSecurityRateLimit(
@@ -161,12 +173,16 @@ export class OtpService {
 
     // NOTE: Intentionally do NOT reset attempts_remaining on resend —
     // prevents brute-force bypass via resend cycling (new OTP, same attempts budget)
-    await pool.query(
+    const updated = await pool.query(
       `UPDATE otp_challenges
        SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1, updated_at = NOW()
-       WHERE challenge_id = $3`,
-      [otpHash, newExpiresAt, challengeId],
+       WHERE challenge_id = $3 AND otp_hash = $4 AND consumed_at IS NULL
+         AND expires_at > NOW() AND attempts_remaining > 0`,
+      [otpHash, newExpiresAt, challengeId, otp_hash],
     )
+    if (updated.rowCount === 0) {
+      throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
+    }
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
     if (process.env.NODE_ENV === 'development') {
@@ -181,13 +197,14 @@ export class OtpService {
     challengeId: string,
     otp: string,
     _ip: string,
+    client: Pick<PoolClient, 'query'>,
   ): Promise<{ verified: true; challengeId: string }> {
-    const pool = getDbPool()
+    // Use the caller transaction so consumption and the account change commit together.
 
-    const result = await pool.query(
+    const result = await client.query(
       `SELECT challenge_id, destination, otp_hash, attempts_remaining, expires_at, consumed_at
        FROM otp_challenges
-       WHERE challenge_id = $1`,
+       WHERE challenge_id = $1 FOR UPDATE`,
       [challengeId],
     )
 
@@ -223,20 +240,17 @@ export class OtpService {
 
     const submittedHash = this.hashOtp(otp)
     if (!this.compareOtpHashes(submittedHash, row.otp_hash)) {
-      await pool.query(
+      await client.query(
         `UPDATE otp_challenges
          SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
          WHERE challenge_id = $1 AND attempts_remaining > 0`,
         [challengeId],
       )
 
-      throw new HttpException(
-        { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
-        401,
-      )
+      throw new OtpAttemptRejected()
     }
 
-    const consumeResult = await pool.query(
+    const consumeResult = await client.query(
       `UPDATE otp_challenges
        SET consumed_at = NOW(), attempts_remaining = 0, updated_at = NOW()
        WHERE challenge_id = $1 AND consumed_at IS NULL`,

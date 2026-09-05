@@ -114,7 +114,7 @@ describe('OtpService', () => {
     })
 
     it('verifies a correct OTP', async () => {
-      const result = await service.verifyChallenge(challengeId, '123456', '127.0.0.1')
+      const result = await service.verifyChallenge(challengeId, '123456', '127.0.0.1', mockPool)
       expect(result).toEqual({ verified: true, challengeId })
 
       const calls = mockPool.query.mock.calls
@@ -125,7 +125,7 @@ describe('OtpService', () => {
 
     it('rejects an incorrect OTP and decrements attempts', async () => {
       await expect(
-        service.verifyChallenge(challengeId, '654321', '127.0.0.1'),
+        service.verifyChallenge(challengeId, '654321', '127.0.0.1', mockPool),
       ).rejects.toThrow(HttpException)
 
       const calls = mockPool.query.mock.calls
@@ -150,7 +150,7 @@ describe('OtpService', () => {
       })
 
       await expect(
-        service.verifyChallenge(challengeId, '123456', '127.0.0.1'),
+        service.verifyChallenge(challengeId, '123456', '127.0.0.1', mockPool),
       ).rejects.toThrow(HttpException)
     })
 
@@ -168,7 +168,7 @@ describe('OtpService', () => {
       })
 
       await expect(
-        service.verifyChallenge(challengeId, '123456', '127.0.0.1'),
+        service.verifyChallenge(challengeId, '123456', '127.0.0.1', mockPool),
       ).rejects.toThrow(HttpException)
     })
 
@@ -186,7 +186,7 @@ describe('OtpService', () => {
       })
 
       await expect(
-        service.verifyChallenge(challengeId, '123456', '127.0.0.1'),
+        service.verifyChallenge(challengeId, '123456', '127.0.0.1', mockPool),
       ).rejects.toThrow(HttpException)
     })
   })
