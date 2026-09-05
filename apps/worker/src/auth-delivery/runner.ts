@@ -34,7 +34,8 @@ export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool))
   const valid = await pool.query<{ purpose: string; destination: string }>(`
     SELECT c.purpose,c.destination FROM otp_challenges c JOIN auth_delivery_outbox d ON d.challenge_id=c.challenge_id
     WHERE d.id=$1 AND c.otp_hash=d.code_hash AND c.consumed_at IS NULL
-      AND c.expires_at > NOW() AND d.expires_at > NOW() AND c.attempts_remaining > 0`, [row.id])
+      AND c.expires_at > NOW() AND d.expires_at > NOW() AND c.attempts_remaining > 0
+      AND (c.user_id IS NULL OR EXISTS (SELECT 1 FROM users u WHERE u.user_id=c.user_id AND u.auth_version=c.auth_version AND u.disabled_at IS NULL))`, [row.id])
   const challenge = valid.rows[0]
   if (!challenge) {
     await finish('cancelled')

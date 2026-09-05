@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { createRequire } from 'node:module'
 import { resolve } from 'node:path'
 import { createServer, type Server } from 'node:http'
@@ -162,6 +162,82 @@ it('resets a password using the delivered code and returns opaque IDs for unknow
   expect(await argon2.verify(stored, password)).toBe(false)
   const repeat = await post('auth/reset-password', { challengeId: knownBody.challengeId, otp, newPassword: 'Another-password-123!' })
   expect(repeat.status, await repeat.text()).toBe(409)
+})
+
+it('rejects a delivered login code after credentials change, including a change racing verification', async () => {
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [await argon2.hash(password)])
+  const login = await post('auth/login', { username: 'provider@example.test', password })
+  const challenge = await login.json() as { challengeId: string }
+  expect(login.status, JSON.stringify(challenge)).toBe(200)
+  expect(await deliver()).toBe('sent')
+  const otp = received[0]!.text.match(/\d{6}/)?.[0]
+  const client = await fixture.pool.connect()
+  let verifying: Promise<Response> | undefined
+  try {
+    await client.query('BEGIN')
+    await client.query("UPDATE users SET password_hash='changed-credential-test' WHERE user_id='provider-admin'")
+    verifying = post('auth/login/verify', { challengeId: challenge.challengeId, otp })
+    await expect.poll(async () => (await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)).rows[0].count).toBe(1)
+    await client.query('COMMIT')
+    const result = await verifying
+    expect(result.status, await result.text()).toBe(401)
+    expect((await fixture.pool.query("SELECT count(*)::int AS count FROM sessions WHERE user_id='provider-admin'")).rows[0].count).toBe(0)
+  } finally {
+    await client.query('ROLLBACK')
+    client.release()
+    await verifying
+  }
+})
+
+it('allows only one password reset across two previously issued codes', async () => {
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [await argon2.hash(password)])
+  const credentials: Array<{ challengeId: string; otp: string | undefined; newPassword: string }> = []
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await fixture.pool.query('DELETE FROM security_rate_limit_counters')
+    const response = await post('auth/forgot-password', { username: 'provider@example.test' })
+    const body = await response.json() as { challengeId: string }
+    expect(response.status).toBe(200)
+    expect(await deliver()).toBe('sent')
+    credentials.push({ challengeId: body.challengeId, otp: received.at(-1)!.text.match(/\d{6}/)?.[0], newPassword: `Concurrent-new-password-${attempt}!` })
+  }
+  const results = await Promise.all(credentials.map(body => post('auth/reset-password', body)))
+  expect(results.map(result => result.status).sort()).toEqual([200, 401])
+  expect((await fixture.pool.query("SELECT count(*)::int AS count FROM password_history WHERE user_id='provider-admin'")).rows[0].count).toBe(1)
+})
+
+it('requires staff OTP even on a trusted device', async () => {
+  await fixture.pool.query("UPDATE users SET password_hash=$1,is_staff=true WHERE user_id='provider-admin'", [await argon2.hash(password)])
+  const fingerprint = 'trusted-staff-device'
+  await fixture.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
+    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`, [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')])
+  const response = await post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint } })
+  expect(response.status).toBe(200)
+  expect(await response.json()).toMatchObject({ requiresOtp: true, userIsStaff: true, challengeId: expect.any(String) })
+})
+
+it('rechecks credentials while creating a trusted-device session', async () => {
+  await fixture.pool.query("UPDATE users SET password_hash=$1 WHERE user_id='provider-admin'", [await argon2.hash(password)])
+  const fingerprint = 'trusted-customer-device'
+  await fixture.pool.query(`INSERT INTO device_trusts(id,user_id,device_fingerprint,trusted_at,expires_at)
+    VALUES ($1,'provider-admin',$2,NOW(),NOW()+INTERVAL '1 day')`, [randomUUID(), createHash('sha256').update(fingerprint).digest('hex')])
+  const client = await fixture.pool.connect()
+  let loggingIn: Promise<Response> | undefined
+  try {
+    await client.query('BEGIN')
+    await client.query("UPDATE users SET password_hash='changed-during-login' WHERE user_id='provider-admin'")
+    loggingIn = post('auth/login', { username: 'provider@example.test', password, deviceInfo: { fingerprint } })
+    await expect.poll(async () => (await fixture.pool.query(`SELECT count(*)::int AS count FROM pg_stat_activity
+      WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT auth_version,%'`)).rows[0].count).toBe(1)
+    await client.query('COMMIT')
+    const response = await loggingIn
+    expect(response.status, await response.text()).toBe(401)
+    expect((await fixture.pool.query("SELECT count(*)::int AS count FROM sessions WHERE user_id='provider-admin'")).rows[0].count).toBe(0)
+  } finally {
+    await client.query('ROLLBACK')
+    client.release()
+    await loggingIn
+  }
 })
 
 it('rolls back challenge creation if the delivery insert fails', async () => {

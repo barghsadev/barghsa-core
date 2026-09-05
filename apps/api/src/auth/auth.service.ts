@@ -163,7 +163,7 @@ export class AuthService {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
         `SELECT user_id, password_hash, must_change_password,
-                password_change_token, password_change_token_expires_at, is_admin, is_staff, disabled_at
+                password_change_token, password_change_token_expires_at, is_admin, is_staff, disabled_at, auth_version
          FROM users
          WHERE username = $1`,
         [input.username],
@@ -231,12 +231,16 @@ export class AuthService {
         const passwordChangeToken = uuidv7()
         const tokenExpiry = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
 
-        await pool.query(
+        const issued = await pool.query(
           `UPDATE users
            SET password_change_token = $1, password_change_token_expires_at = $2, updated_at = NOW()
-           WHERE user_id = $3`,
-          [passwordChangeToken, tokenExpiry, userId],
+           WHERE user_id = $3 AND auth_version = $4`,
+          [passwordChangeToken, tokenExpiry, userId, userResult.rows[0].auth_version],
         )
+
+        if (issued.rowCount === 0) {
+          throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+        }
 
         this.logger.log(`Password change required for user ${userId} from ${ip}`)
 
@@ -264,7 +268,7 @@ export class AuthService {
           [userId, deviceFingerprint],
         )
 
-        if (trustResult.rows.length > 0) {
+        if (trustResult.rows.length > 0 && !isStaff) {
           // Trusted device found — skip OTP for customers
           requiresOtp = false
         } else if (isStaff) {
@@ -284,6 +288,8 @@ export class AuthService {
           userId,
           input.username,
           ip,
+          'login',
+          userResult.rows[0].auth_version,
         )
 
         this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`)
@@ -300,6 +306,7 @@ export class AuthService {
         userId,
         isStaff,
         { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
+        userResult.rows[0].auth_version,
       )
 
       // Record last successful login (T-10.01.01) — best-effort; a failed
@@ -528,6 +535,7 @@ export class AuthService {
     const pool = getDbPool()
     const client = await pool.connect()
     let userId: string
+    let authVersion: number
 
     try {
       await client.query('BEGIN')
@@ -535,7 +543,7 @@ export class AuthService {
       // 1. Lock and fetch the challenge row
       const challengeResult = await client.query(
         `SELECT challenge_id, destination, otp_hash, attempts_remaining,
-                expires_at, consumed_at, user_id
+                expires_at, consumed_at, user_id, auth_version
          FROM otp_challenges
          WHERE challenge_id = $1 AND purpose = 'login'
          FOR UPDATE`,
@@ -602,6 +610,9 @@ export class AuthService {
         )
       }
 
+      await this.otpService.assertCurrentAccount(challengeRow.user_id, challengeRow.auth_version, client)
+      authVersion = challengeRow.auth_version
+
       // 2. Verify OTP inside the transaction
       const submittedHash = this.otpService.hashOtp(otp)
       if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
@@ -659,6 +670,7 @@ export class AuthService {
         userId,
         false,
         { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
+        authVersion,
       )
 
       // Record last successful login (T-10.01.01) — best-effort.
@@ -696,6 +708,7 @@ export class AuthService {
         expiresAt: session.expiresAt.toISOString(),
       }
     } catch (err) {
+      if (err instanceof HttpException) throw err
       this.logger.error(`Login OTP session creation failed for user ${userId}: ${String(err)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
@@ -994,7 +1007,7 @@ export class AuthService {
       // 1. Lock and fetch the challenge row
       const challengeResult = await client.query(
         `SELECT challenge_id, destination, otp_hash, attempts_remaining,
-                expires_at, consumed_at, user_id
+                expires_at, consumed_at, user_id, auth_version
          FROM otp_challenges
          WHERE challenge_id = $1 AND purpose = 'password_reset'
          FOR UPDATE`,
@@ -1096,6 +1109,8 @@ export class AuthService {
       }
 
       const userId = row.user_id
+
+      await this.otpService.assertCurrentAccount(userId, row.auth_version, client)
 
       // 4. Check password history (last 5 passwords)
       const historyResult = await client.query(
@@ -1266,7 +1281,7 @@ export class AuthService {
 
     // 1. Fetch current user
     const userResult = await pool.query(
-      `SELECT username FROM users WHERE user_id = $1`,
+      `SELECT username, auth_version FROM users WHERE user_id = $1`,
       [userId],
     )
 
@@ -1301,7 +1316,7 @@ export class AuthService {
     }
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(newUsername, ip, undefined, undefined, { purpose: 'change_username', userId })
+    return this.otpService.createChallenge(newUsername, ip, undefined, undefined, { purpose: 'change_username', userId, authVersion: userResult.rows[0].auth_version })
   }
 
   /**
@@ -1478,7 +1493,7 @@ export class AuthService {
 
     // 1. Check current user's contact fields
     const userResult = await pool.query(
-      `SELECT email, mobile FROM users WHERE user_id = $1`,
+      `SELECT email, mobile, auth_version FROM users WHERE user_id = $1`,
       [userId],
     )
 
@@ -1527,7 +1542,7 @@ export class AuthService {
     }
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, { purpose: contactType === 'email' ? 'add_email' : 'add_mobile', userId })
+    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, { purpose: contactType === 'email' ? 'add_email' : 'add_mobile', userId, authVersion: user.auth_version })
   }
 
   /**

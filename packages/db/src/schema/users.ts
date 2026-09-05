@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { pgTable, text, boolean, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, text, boolean, timestamp, integer } from 'drizzle-orm/pg-core'
 
 /**
  * Users table (T-01.02.03).
@@ -39,6 +39,9 @@ export const users = pgTable(
 
     /** Argon2id hash of the user's password. */
     passwordHash: text('password_hash').notNull(),
+
+    /** Changes whenever account credentials or verified destinations change. */
+    authVersion: integer('auth_version').notNull().default(0),
 
     /** Preferred locale: 'fa' or 'en'. Defaults to Persian. */
     locale: text('locale').notNull().default('fa'),

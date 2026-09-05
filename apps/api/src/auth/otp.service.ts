@@ -59,7 +59,7 @@ export class OtpService {
     ip: string,
     passwordHash?: string,
     tosVersionId?: string,
-    binding: { purpose: 'change_username' | 'add_email' | 'add_mobile'; userId: string } | undefined = undefined,
+    binding: { purpose: 'change_username' | 'add_email' | 'add_mobile'; userId: string; authVersion?: number } | undefined = undefined,
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
 
@@ -73,11 +73,11 @@ export class OtpService {
     const pool = getDbPool()
     await pool.query(
       `WITH challenge AS (
-         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING challenge_id
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12) RETURNING challenge_id
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
          SELECT $10,challenge_id,$3,$11,$7 FROM challenge`,
-      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null, deliveryId, encrypted],
+      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null, deliveryId, encrypted, binding?.authVersion ?? null],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -102,9 +102,10 @@ export class OtpService {
     destination: string,
     ip: string,
     purpose: 'login' | 'password_reset' = 'login',
+    authVersion?: number,
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
-    return this.createAccountChallenge(userId, destination, purpose)
+    return this.createAccountChallenge(userId, destination, purpose, authVersion)
   }
 
   /** Apply identical quotas and return an opaque ID for both existing and unknown accounts. */
@@ -112,15 +113,15 @@ export class OtpService {
     await this.enforceSendRateLimits(destination, ip)
     // Configuration failure must not reveal whether this destination has an account.
     this.deliveryPayload(randomUUID(), { code: '000000', destination })
-    const found = await getDbPool().query<{ user_id: string }>(
-      'SELECT user_id FROM users WHERE username=$1', [destination],
+    const found = await getDbPool().query<{ user_id: string; auth_version: number }>(
+      'SELECT user_id,auth_version FROM users WHERE username=$1', [destination],
     )
     const user = found.rows[0]
     if (!user) return { challengeId: randomUUID() }
-    return this.createAccountChallenge(user.user_id, destination, 'password_reset')
+    return this.createAccountChallenge(user.user_id, destination, 'password_reset', user.auth_version)
   }
 
-  private async createAccountChallenge(userId: string, destination: string, purpose: 'login' | 'password_reset'): Promise<OtpChallengeResult> {
+  private async createAccountChallenge(userId: string, destination: string, purpose: 'login' | 'password_reset', authVersion?: number): Promise<OtpChallengeResult> {
     const otp = this.generateOtp()
     const otpHash = this.hashOtp(otp)
     const challengeId = randomUUID()
@@ -131,11 +132,11 @@ export class OtpService {
     const pool = getDbPool()
     await pool.query(
       `WITH challenge AS (
-         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose)
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING challenge_id
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose, auth_version)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $10) RETURNING challenge_id
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
          SELECT $8,challenge_id,$3,$9,$6 FROM challenge`,
-      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt, purpose, deliveryId, encrypted],
+      [challengeId, destination, otpHash, userId, OtpService.MAX_ATTEMPTS, expiresAt, purpose, deliveryId, encrypted, authVersion ?? null],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -238,7 +239,7 @@ export class OtpService {
     // Use the caller transaction so consumption and the account change commit together.
 
     const result = await client.query(
-      `SELECT challenge_id, destination, otp_hash, attempts_remaining, expires_at, consumed_at
+      `SELECT challenge_id, destination, otp_hash, attempts_remaining, expires_at, consumed_at, user_id, auth_version
        FROM otp_challenges
        WHERE challenge_id = $1 FOR UPDATE`,
       [challengeId],
@@ -274,6 +275,8 @@ export class OtpService {
       )
     }
 
+    if (row.user_id) await this.assertCurrentAccount(row.user_id, row.auth_version, client)
+
     const submittedHash = this.hashOtp(otp)
     if (!this.compareOtpHashes(submittedHash, row.otp_hash)) {
       await client.query(
@@ -303,6 +306,14 @@ export class OtpService {
     this.logger.debug(`OTP verified for challenge ${challengeId}`)
 
     return { verified: true, challengeId }
+  }
+
+  /** The caller holds this account lock until its authentication change commits. */
+  async assertCurrentAccount(userId: string, version: unknown, client: Pick<PoolClient, 'query'>): Promise<void> {
+    const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
+    if (!Number.isInteger(version) || account.rows[0]?.auth_version !== version || account.rows[0]?.disabled_at) {
+      throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+    }
   }
 
   private deliveryPayload(id: string, payload: { code: string; destination: string }): string {

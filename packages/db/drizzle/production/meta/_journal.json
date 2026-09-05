@@ -50,6 +50,13 @@
       "when": 1790380800000,
       "tag": "0086_auth_delivery_outbox",
       "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "7",
+      "when": 1790467200000,
+      "tag": "0087_authentication_version",
+      "breakpoints": true
     }
   ]
 }

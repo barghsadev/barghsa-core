@@ -51,6 +51,7 @@ export const otpChallenges = pgTable(
 
     /** FK to users.user_id, set for login OTP challenges (T-02.01.03). */
     userId: text('user_id'),
+    authVersion: integer('auth_version'),
 
     /** Argon2id password hash, stored during register, consumed on OTP verify. */
     passwordHash: text('password_hash'),

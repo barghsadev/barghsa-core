@@ -90,6 +90,7 @@ export class SessionService {
     userId: string,
     isAdmin: boolean,
     deviceInfo?: DeviceInfo,
+    expectedAuthVersion?: number,
   ): Promise<CreatedSession> {
     const pool = getDbPool()
 
@@ -105,6 +106,12 @@ export class SessionService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      if (expectedAuthVersion !== undefined) {
+        const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
+        if (!Number.isInteger(expectedAuthVersion) || account.rows[0]?.auth_version !== expectedAuthVersion || account.rows[0]?.disabled_at) {
+          throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+        }
+      }
 
       // 1. Enforce session limit per user
       // Lock all active sessions for this user to prevent concurrent
@@ -171,6 +178,7 @@ export class SessionService {
       return { sessionId, csrfToken, refreshToken, expiresAt }
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
       this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
