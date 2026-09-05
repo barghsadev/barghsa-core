@@ -1,4 +1,4 @@
-import { text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core'
+import { uuid, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core'
 import { createTable } from '../base-table.js'
 import { users } from './users.js'
 import { profiles } from './profiles.js'
@@ -32,7 +32,7 @@ export const notifications = createTable('notifications', {
     .references(() => users.userId, { onDelete: 'cascade' }),
 
   /** Optional FK to the related profile, for context. */
-  profileId: text('profile_id')
+  profileId: uuid('profile_id')
     .references(() => profiles.id, { onDelete: 'set null' }),
 
   /** Notification type for categorisation and display. */

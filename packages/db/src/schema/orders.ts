@@ -36,12 +36,12 @@ export const orders = pgTable(
       .references(() => users.userId, { onDelete: 'restrict' }),
 
     /** Foreign key to the active profile. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
     /** Foreign key to the ordered product. */
-    productId: text('product_id')
+    productId: uuid('product_id')
       .notNull()
       .references(() => products.id, { onDelete: 'restrict' }),
 

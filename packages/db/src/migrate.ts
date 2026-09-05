@@ -23,10 +23,10 @@ import { createDirectDbPool, type DbPoolConfig } from './index.js'
 // Usage:
 //   pnpm db:migrate:run
 //   DATABASE_URL=postgresql://... pnpm db:migrate:run
-//   EXPECTED_MIGRATION_ID=0001 pnpm db:migrate:run   (enables post-run check)
+//   EXPECTED_MIGRATION_ID=0082 pnpm db:migrate:run   (enables post-run check)
 // ---------------------------------------------------------------------------
 
-const MIGRATIONS_FOLDER = resolve(__dirname, '..', 'drizzle')
+const MIGRATIONS_FOLDER = resolve(__dirname, '..', 'drizzle', 'production')
 
 export interface MigrationResult {
   ok: boolean

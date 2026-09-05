@@ -1,4 +1,4 @@
-import { pgTable, text, index } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { tosVersions } from './tos-versions.js'
 import { users } from './users.js'
@@ -30,7 +30,7 @@ export const tosAcceptances = pgTable(
       .references(() => users.userId, { onDelete: 'restrict' }),
 
     /** The TOS version that was accepted. */
-    versionId: text('version_id')
+    versionId: uuid('version_id')
       .notNull()
       .references(() => tosVersions.id, { onDelete: 'restrict' }),
 

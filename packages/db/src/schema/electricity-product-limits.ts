@@ -1,4 +1,5 @@
 import { uuid, bigint } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
 import { createTable } from '../base-table'
 import { products } from './products'
 
@@ -23,8 +24,8 @@ export const electricityProductLimits = createTable('electricity_product_limits'
     .references(() => products.id, { onDelete: 'restrict' }),
 
   /** Minimum kWh threshold. 0 means no limit (default). */
-  minKwh: bigint('min_kwh', { mode: 'bigint' }).notNull().default(0n),
+  minKwh: bigint('min_kwh', { mode: 'bigint' }).notNull().default(sql`0`),
 
   /** Maximum kWh threshold. 0 means no limit (default). */
-  maxKwh: bigint('max_kwh', { mode: 'bigint' }).notNull().default(0n),
+  maxKwh: bigint('max_kwh', { mode: 'bigint' }).notNull().default(sql`0`),
 })

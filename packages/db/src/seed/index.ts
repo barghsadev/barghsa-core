@@ -418,7 +418,7 @@ export async function runSeed(
   if (dbOverride) {
     db = dbOverride
   } else {
-    pool = createDirectDbPool()
+    pool = createDirectDbPool({}, { shared: false })
     db = drizzle(pool)
   }
 

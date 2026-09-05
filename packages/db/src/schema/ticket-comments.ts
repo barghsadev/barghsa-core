@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, timestamp, pgTable } from 'drizzle-orm/pg-core'
+import { uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { tickets } from './tickets'
 import { users } from './users'
@@ -22,7 +22,7 @@ export const ticketComments = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** Foreign key to the parent ticket. */
-    ticketId: text('ticket_id')
+    ticketId: uuid('ticket_id')
       .notNull()
       .references(() => tickets.id, { onDelete: 'cascade' }),
 
@@ -59,7 +59,7 @@ export const ticketComments = pgTable(
 export const createTicketCommentsTable = sql`
   CREATE TABLE IF NOT EXISTS ticket_comments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    ticket_id TEXT NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
+    ticket_id UUID NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
     author_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     body TEXT NOT NULL,
     visibility TEXT NOT NULL DEFAULT 'public' CHECK (visibility IN ('public', 'internal')),

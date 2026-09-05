@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { profiles } from './profiles'
 
@@ -27,7 +27,7 @@ export const profileInvitations = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the legal profile. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'cascade' }),
 
@@ -68,7 +68,7 @@ export const profileInvitations = pgTable(
 export const createProfileInvitationsTable = sql`
   CREATE TABLE IF NOT EXISTS profile_invitations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     username TEXT NOT NULL,
     role TEXT NOT NULL,
     invited_by TEXT NOT NULL,

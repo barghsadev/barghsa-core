@@ -9,8 +9,8 @@ import { defineConfig } from 'drizzle-kit'
  * - Connection string from `DATABASE_URL` environment variable
  */
 export default defineConfig({
-  schema: './src/schema/**/*.ts',
-  out: './drizzle',
+  schema: './src/schema/!(*.test).ts',
+  out: './drizzle/production',
   dialect: 'postgresql',
   dbCredentials: {
     url: process.env.DATABASE_URL ?? 'postgresql://localhost:5432/barghsa',

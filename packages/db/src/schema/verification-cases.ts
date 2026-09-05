@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { profiles } from './profiles.js'
 import { users } from './users.js'
 
@@ -23,7 +23,7 @@ export const verificationCases = pgTable(
     id: text('id').primaryKey(),
 
     /** The profile whose identity field is being corrected. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
@@ -82,7 +82,7 @@ export const verificationCases = pgTable(
 export const createVerificationCasesTable = sql`
   CREATE TABLE IF NOT EXISTS verification_cases (
     id TEXT PRIMARY KEY,
-    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
+    profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE RESTRICT,
     field_name TEXT NOT NULL,
     current_value TEXT,
     requested_value TEXT NOT NULL,

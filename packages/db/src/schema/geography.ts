@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { pgEnum, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, pgEnum, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 
 /**
@@ -57,7 +57,7 @@ export const cities = pgTable('cities', {
   id: uuidv7('id').primaryKey().notNull(),
 
   /** Foreign key to the parent province. */
-  provinceId: text('province_id').notNull(),
+  provinceId: uuid('province_id').notNull().references(() => provinces.id, { onDelete: 'restrict' }),
 
   /** City name in Persian. */
   nameFa: text('name_fa').notNull(),
@@ -94,7 +94,7 @@ export const createGeographyTables = sql`
 
   CREATE TABLE IF NOT EXISTS cities (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    province_id TEXT NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
+    province_id UUID NOT NULL REFERENCES provinces(id) ON DELETE RESTRICT,
     name_fa TEXT NOT NULL,
     name_en TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

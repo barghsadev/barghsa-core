@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, timestamp, pgTable } from 'drizzle-orm/pg-core'
+import { uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { users } from './users'
 import { profiles } from './profiles'
@@ -41,7 +41,7 @@ export const tickets = pgTable(
     body: text('body').notNull(),
 
     /** Optional FK to the profile this ticket relates to. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .references(() => profiles.id, { onDelete: 'set null' }),
 
     /** Optional related entity type discriminator. */

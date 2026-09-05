@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { text, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { profiles } from './profiles'
 import { users } from './users'
@@ -31,7 +31,7 @@ export const profileOwnershipTransfers = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the legal profile being transferred. */
-    profileId: text('profile_id')
+    profileId: uuid('profile_id')
       .notNull()
       .references(() => profiles.id, { onDelete: 'cascade' }),
 
@@ -86,7 +86,7 @@ export const profileOwnershipTransfers = pgTable(
 export const createProfileOwnershipTransfersTable = sql`
   CREATE TABLE IF NOT EXISTS profile_ownership_transfers (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-    profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+    profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
     from_user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
     to_user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE RESTRICT,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Declined', 'Expired', 'Cancelled')),
