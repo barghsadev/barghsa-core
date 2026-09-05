@@ -23,6 +23,7 @@ interface UserInfo {
 }
 
 interface CurrentTosResponse {
+  id: string
   content: string
   versionId: string
   updatedAt: string
@@ -89,6 +90,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
   const openReviewModal = useCallback(async () => {
     setShowModal(true)
     setLoadingTos(true)
+    setCurrentTos(null)
     setError(null)
 
     try {
@@ -126,7 +128,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
       const response = await fetch('/api/tos/accept', {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ versionId: currentTos.versionId }),
+        body: JSON.stringify({ versionId: currentTos.id }),
       })
 
       if (!response.ok) {
@@ -228,7 +230,7 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
             ) : (
               <Button
                 onClick={handleAccept}
-                disabled={accepting || !currentTos}
+                disabled={accepting || loadingTos || !!error || !currentTos}
               >
                 {accepting ? (
                   <>

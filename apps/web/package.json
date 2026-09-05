@@ -20,13 +20,14 @@
     "@barghsa/shared": "workspace:*",
     "@barghsa/ui": "workspace:*",
     "@tanstack/react-router": "^1.114.0",
+    "lucide-react": "1.34.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "lucide-react": "1.34.0",
     "sonner": "2.0.8"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
+    "@tailwindcss/vite": "4.3.0",
     "@tanstack/router-devtools": "^1.114.0",
     "@tanstack/router-plugin": "1.168.35",
     "@types/react": "^19.1.0",

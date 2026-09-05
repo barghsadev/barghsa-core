@@ -1,9 +1,9 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { t, type Locale } from '@barghsa/i18n'
 import { Loader2Icon } from 'lucide-react'
-import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
+import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription, Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@barghsa/ui'
 import { AuthLayout } from '../../components/AuthLayout.js'
 import { PasswordField } from '../../components/PasswordField.js'
 
@@ -100,6 +100,24 @@ function RegisterPage() {
   const [formattedHint, setFormattedHint] = useState<string | null>(null)
   const [touched, setTouched] = useState(false)
   const [tosAccepted, setTosAccepted] = useState(false)
+  const [currentTos, setCurrentTos] = useState<{ id: string; content: string; versionId: string } | null>(null)
+  const [tosError, setTosError] = useState(false)
+  useEffect(() => {
+    const controller = new AbortController()
+    setCurrentTos(null)
+    setTosAccepted(false)
+    setTosError(false)
+    void fetch(`/api/tos/current?locale=${locale}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Terms unavailable')
+        const terms = await response.json()
+        if (!terms.id || typeof terms.content !== 'string') throw new Error('Invalid terms')
+        if (!controller.signal.aborted) setCurrentTos(terms)
+      })
+      .catch(() => { if (!controller.signal.aborted) setTosError(true) })
+    return () => controller.abort()
+  }, [locale])
+
   const [tosSubmittedError, setTosSubmittedError] = useState<string | null>(null)
 
   // Submission state
@@ -167,7 +185,7 @@ function RegisterPage() {
     e.preventDefault()
     setFormError(null)
 
-    if (!tosAccepted) {
+    if (!tosAccepted || !currentTos) {
       setTosSubmittedError(t('auth.register.tosRequired', locale))
       return
     }
@@ -183,8 +201,7 @@ function RegisterPage() {
     setSubmitting(true)
 
     try {
-      // TODO: Replace with actual TOS version fetch once E-04 (TOS) is implemented
-      const tosVersionId = 'current'
+      const tosVersionId = currentTos.id
 
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -237,7 +254,7 @@ function RegisterPage() {
     } finally {
       setSubmitting(false)
     }
-  }, [username, password, tosAccepted, locale, router])
+  }, [username, password, tosAccepted, currentTos, locale, router])
 
   const handleTosChange = useCallback((checked: boolean | string) => {
     const isChecked = checked === true
@@ -247,7 +264,7 @@ function RegisterPage() {
     }
   }, [])
 
-  const isFormReady = isUsernameValid && password.length >= 8 && tosAccepted && !submitting
+  const isFormReady = isUsernameValid && password.length >= 8 && tosAccepted && !!currentTos && !submitting
 
   return (
     <AuthLayout
@@ -276,138 +293,148 @@ function RegisterPage() {
         </div>
       }
     >
-      <div className="space-y-6">
-        <div className="space-y-1.5">
-          <h1 className="text-xl font-semibold tracking-tight">
-            {t('auth.register.title', locale)}
-          </h1>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-          noValidate
-        >
-          {/* Form-level alert for server errors */}
-          {formError && (
-            <Alert variant="destructive" role="alert">
-              <AlertTitle className="sr-only">Error</AlertTitle>
-              <AlertDescription>{formError}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Unified username field */}
-          <div className="space-y-2">
-            <Label htmlFor="username">
-              {t('auth.register.emailLabel', locale)}
-            </Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder={t('auth.register.usernamePlaceholder', locale)}
-              autoComplete="username"
-              autoFocus
-              maxLength={255}
-              value={username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              disabled={submitting}
-              aria-invalid={touched && usernameError !== null}
-              aria-describedby={
-                usernameError
-                  ? 'username-error'
-                  : formattedHint
-                    ? 'username-hint'
-                    : undefined
-              }
-            />
-            {/* Error message */}
-            {touched && usernameError && (
-              <p
-                id="username-error"
-                className="text-sm text-destructive"
-                role="alert"
-              >
-                {usernameError}
-              </p>
-            )}
-            {/* Formatted mobile hint */}
-            {touched && !usernameError && formattedHint && (
-              <p
-                id="username-hint"
-                className="text-sm text-muted-foreground"
-              >
-                {formattedHint}
-              </p>
-            )}
+      <Dialog>
+        <div className="space-y-6">
+          <div className="space-y-1.5">
+            <h1 className="text-xl font-semibold tracking-tight">
+              {t('auth.register.title', locale)}
+            </h1>
           </div>
 
-          {/* Password field with visibility toggle and strength meter */}
-          {isUsernameValid && (
-            <PasswordField
-              id="password"
-              label={t('auth.register.passwordLabel', locale)}
-              locale={locale}
-              autoFocus={false}
-              value={password}
-              onChange={setPassword}
-              disabled={submitting}
-            />
-          )}
-
-          {/* TOS acceptance checkbox (T-01.01.04) */}
-          <div className="space-y-2">
-            <div className="flex items-start gap-3">
-              <Checkbox
-                id="tos"
-                checked={tosAccepted}
-                onCheckedChange={handleTosChange}
-                disabled={submitting}
-                aria-invalid={!!tosSubmittedError}
-                aria-describedby={tosSubmittedError ? 'tos-error' : undefined}
-                className="mt-0.5"
-              />
-              <Label htmlFor="tos" className="text-sm font-normal leading-relaxed">
-                {t('auth.register.tosPrefix', locale)}{' '}
-                <Link
-                  to="/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
-                  aria-label={t('auth.register.tosLinkText', locale)}
-                >
-                  {t('auth.register.tosLinkText', locale)}
-                </Link>{' '}
-                {t('auth.register.tosSuffix', locale)}
-              </Label>
-            </div>
-            {tosSubmittedError && (
-              <p
-                id="tos-error"
-                className="text-sm text-destructive"
-                role="alert"
-              >
-                {tosSubmittedError}
-              </p>
-            )}
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!isFormReady}
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+            noValidate
           >
-            {submitting ? (
-              <>
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                {t('auth.register.submitting', locale)}
-              </>
-            ) : (
-              t('auth.register.submit', locale)
+            {/* Form-level alert for server errors */}
+            {formError && (
+              <Alert variant="destructive" role="alert">
+                <AlertTitle className="sr-only">Error</AlertTitle>
+                <AlertDescription>{formError}</AlertDescription>
+              </Alert>
             )}
-          </Button>
-        </form>
-      </div>
+
+            {/* Unified username field */}
+            <div className="space-y-2">
+              <Label htmlFor="username">
+                {t('auth.register.emailLabel', locale)}
+              </Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder={t('auth.register.usernamePlaceholder', locale)}
+                autoComplete="username"
+                autoFocus
+                maxLength={255}
+                value={username}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                disabled={submitting}
+                aria-invalid={touched && usernameError !== null}
+                aria-describedby={
+                  usernameError
+                    ? 'username-error'
+                    : formattedHint
+                      ? 'username-hint'
+                      : undefined
+                }
+              />
+              {/* Error message */}
+              {touched && usernameError && (
+                <p
+                  id="username-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
+                  {usernameError}
+                </p>
+              )}
+              {/* Formatted mobile hint */}
+              {touched && !usernameError && formattedHint && (
+                <p
+                  id="username-hint"
+                  className="text-sm text-muted-foreground"
+                >
+                  {formattedHint}
+                </p>
+              )}
+            </div>
+
+            {/* Password field with visibility toggle and strength meter */}
+            {isUsernameValid && (
+              <PasswordField
+                id="password"
+                label={t('auth.register.passwordLabel', locale)}
+                locale={locale}
+                autoFocus={false}
+                value={password}
+                onChange={setPassword}
+                disabled={submitting}
+              />
+            )}
+
+            {/* TOS acceptance checkbox (T-01.01.04) */}
+            <div className="space-y-2">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="tos"
+                  aria-labelledby="tos-label"
+                  checked={tosAccepted}
+                  onCheckedChange={handleTosChange}
+                  disabled={submitting || !currentTos}
+                  aria-invalid={!!tosSubmittedError}
+                  aria-describedby={tosSubmittedError ? 'tos-error' : undefined}
+                  className="mt-0.5"
+                />
+                <div id="tos-label" className="text-sm font-normal leading-relaxed">
+                  {t('auth.register.tosPrefix', locale)}{' '}
+                  <DialogTrigger
+                    render={<button type="button" />}
+                    disabled={!currentTos}
+                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                    aria-label={t('auth.register.tosLinkText', locale)}
+                  >
+                    {t('auth.register.tosLinkText', locale)}
+                  </DialogTrigger>{' '}
+                  {t('auth.register.tosSuffix', locale)}
+                </div>
+              </div>
+              {tosError && <p role="alert" className="text-sm text-destructive">{t('tos.page.error', locale)}</p>}
+              {tosSubmittedError && (
+                <p
+                  id="tos-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
+                  {tosSubmittedError}
+                </p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={!isFormReady}
+            >
+              {submitting ? (
+                <>
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  {t('auth.register.submitting', locale)}
+                </>
+              ) : (
+                t('auth.register.submit', locale)
+              )}
+            </Button>
+          </form>
+        </div>
+        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+          <DialogHeader>
+            <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
+            <DialogDescription>{currentTos?.versionId}</DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed">{currentTos?.content}</div>
+        </DialogContent>
+      </Dialog>
     </AuthLayout>
   )
 }

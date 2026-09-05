@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @config "../tailwind.config.ts";
+@source "./";
+@source "../../../apps/web/src";
 
 /*
  * Barghsa Design System — Base Styles

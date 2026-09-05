@@ -76,10 +76,9 @@ export class AuthService {
     input: RegisterInput,
     ip: string,
   ): Promise<RegisterResponse> {
-    // ── Check username availability (stub until DB wiring) ──────────
-    // TODO: Replace with real DB query when user table is created
-    const usernameTaken = false
-    if (usernameTaken) {
+    const pool = getDbPool()
+    const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [input.username])
+    if (existing.rows.length) {
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
@@ -89,9 +88,13 @@ export class AuthService {
       )
     }
 
-    // ── Validate TOS version (stub until E-04 TOS admin is implemented) ──
-    const validTosVersions = new Set(['current'])
-    if (!validTosVersions.has(input.tosVersionId)) {
+    // Bind consent to the published version actually shown by the client.
+    const terms = await pool.query(
+      `SELECT id FROM tos_versions WHERE id::text=$1 AND is_active=true
+       AND status='published' AND published_at IS NOT NULL`,
+      [input.tosVersionId],
+    )
+    if (!terms.rows.length) {
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
@@ -928,12 +931,12 @@ export class AuthService {
       }
 
       // 5. Record TOS acceptance immutably in tos_acceptances (T-04.01.02)
-      // Look up the current active TOS version UUID for the acceptance record
+      // A newer publication must not change the terms this challenge accepted.
       const tosResult = await client.query(
         `SELECT id FROM tos_versions
-         WHERE is_active = true
-         ORDER BY published_at DESC
-         LIMIT 1`,
+         WHERE id::text=$1 AND status='published' AND published_at IS NOT NULL
+         FOR SHARE`,
+        [row.tos_version_id],
       )
 
       const tosVersionId = tosResult.rows.length > 0
@@ -948,8 +951,10 @@ export class AuthService {
           [acceptanceId, userId, tosVersionId, now, ip, userAgent ?? null],
         )
       } else {
-        this.logger.warn(
-          `No active TOS version found during registration for user ${userId} — acceptance not recorded`,
+        throw new HttpException(
+          { statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
+            error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code },
+          ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
         )
       }
 

@@ -156,7 +156,6 @@ export function PasswordField({
 }: PasswordFieldProps) {
   const [internalValue, setInternalValue] = useState('')
   const [visible, setVisible] = useState(false)
-  const [focused, setFocused] = useState(false)
 
   // Controlled or uncontrolled
   const isControlled = externalValue !== undefined
@@ -174,19 +173,11 @@ export function PasswordField({
   )
 
   const strength = evaluateStrength(value)
-  const showStrengthMeter = showStrength && focused && value.length > 0
+  const showStrengthMeter = showStrength && value.length > 0
   const meetsReq = meetsMinimumRequirements(value)
 
   const handleToggle = useCallback(() => {
     setVisible((v) => !v)
-  }, [])
-
-  const handleFocus = useCallback(() => {
-    setFocused(true)
-  }, [])
-
-  const handleBlur = useCallback(() => {
-    setFocused(false)
   }, [])
 
   const strengthLabel = t(STRENGTH_LABEL_KEYS[strength.level], locale)
@@ -205,8 +196,6 @@ export function PasswordField({
           disabled={disabled}
           value={value}
           onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           aria-invalid={!!error}
           aria-describedby={
             error

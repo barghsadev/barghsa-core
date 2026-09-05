@@ -62,7 +62,7 @@ function makeChallengeRow(overrides: Record<string, unknown> = {}) {
     expires_at: new Date(Date.now() + 300_000),
     consumed_at: null,
     password_hash: 'argon2id-hash-value',
-    tos_version_id: 'current',
+    tos_version_id: '00000000-0000-4000-8000-000000000001',
     ...overrides,
   };
 }
@@ -72,6 +72,11 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockQuery.mockReset();
+    mockQuery.mockImplementation(async (sql: string, params: unknown[]) => ({
+      rows: sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
+        ? [{ id: params[0] }] : [],
+    }));
     mockConnect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
     mockClient.query.mockImplementation(async (sql: string) => {
@@ -89,28 +94,25 @@ describe('AuthService', () => {
         {
           username: 'user@example.com',
           password: 'StrongPass1',
-          tosVersionId: 'current',
+          tosVersionId: '00000000-0000-4000-8000-000000000001',
         },
         '127.0.0.1',
       );
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', expect.stringContaining('$argon2id'), 'current');
+      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', expect.stringContaining('$argon2id'), '00000000-0000-4000-8000-000000000001');
     });
 
-    it('throws USERNAME_TAKEN when username is taken (stub)', async () => {
-      // For now the stub always returns false, so this test documents the expected behavior
-      const result = await service.register(
-        {
-          username: 'user@example.com',
-          password: 'StrongPass1',
-          tosVersionId: 'current',
-        },
-        '127.0.0.1',
-      );
-
-      expect(result).toHaveProperty('challengeId');
+    it('rejects an existing username without creating a challenge', async () => {
+      mockQuery.mockResolvedValueOnce({ rows: [{ user_id: 'existing' }] });
+      const error = await service.register({
+        username: 'user@example.com', password: 'StrongPass1',
+        tosVersionId: '00000000-0000-4000-8000-000000000001',
+      }, '127.0.0.1').catch(error => error);
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.getStatus()).toBe(409);
+      expect(mockCreateChallenge).not.toHaveBeenCalled();
     });
 
     it('throws TOS_NOT_ACCEPTED for invalid tosVersionId', async () => {
@@ -147,6 +149,7 @@ describe('AuthService', () => {
 
     it('creates user, session, and returns credentials on success', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -287,6 +290,7 @@ describe('AuthService', () => {
     it('throws 401 and decrements attempts on invalid OTP', async () => {
       let decrementCalled = false;
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -316,6 +320,7 @@ describe('AuthService', () => {
     it('rolls back on user INSERT failure and throws AUTH_REGISTER_FAILED', async () => {
       let rolledBack = false;
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import { resolve } from 'path'
 
@@ -34,6 +35,7 @@ export default defineConfig({
       autoCodeSplitting: false,
     }),
     react(),
+    tailwindcss(),
     immutableAssetsPlugin(),
   ],
   // CDN base URL — set CDN_URL for production builds so assets resolve via CDN

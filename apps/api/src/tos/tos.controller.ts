@@ -40,6 +40,7 @@ export class TosController {
     schema: {
       type: 'object',
       properties: {
+        id: { type: 'string', description: 'Immutable UUID used to record acceptance' },
         content: { type: 'string', description: 'TOS content in the requested locale' },
         versionId: { type: 'string', description: 'Version identifier, e.g. "v1"' },
         updatedAt: { type: 'string', format: 'date-time' },

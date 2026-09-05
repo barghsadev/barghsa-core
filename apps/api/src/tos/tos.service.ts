@@ -4,6 +4,7 @@ import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
 
 export interface CurrentTosResponse {
+  id: string
   content: string
   versionId: string
   updatedAt: Date | null
@@ -69,7 +70,7 @@ export class TosService {
     }>(
       `SELECT id, version_id, content_fa, content_en, is_active, published_at, created_at, updated_at
        FROM tos_versions
-       WHERE is_active = true
+       WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
        ORDER BY published_at DESC
        LIMIT 1`,
     )
@@ -84,6 +85,7 @@ export class TosService {
     const active = result.rows[0]!
 
     return {
+      id: active.id,
       content: locale === 'en' ? active.content_en : active.content_fa,
       versionId: active.version_id,
       updatedAt: active.updated_at,
@@ -108,7 +110,7 @@ export class TosService {
     // Get the current active TOS version id
     const activeResult = await pool.query<{ id: string }>(
       `SELECT id FROM tos_versions
-       WHERE is_active = true
+       WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
        ORDER BY published_at DESC
        LIMIT 1`,
     )
@@ -165,7 +167,7 @@ export class TosService {
 
       // 1. Verify the TOS version exists and is the current active version
       const versionResult = await client.query(
-        `SELECT id FROM tos_versions WHERE id = $1 AND is_active = true FOR UPDATE`,
+        `SELECT id FROM tos_versions WHERE id::text = $1 AND is_active = true AND status = 'published' AND published_at IS NOT NULL FOR UPDATE`,
         [versionId],
       )
 
@@ -378,7 +380,7 @@ export class TosService {
     const result = await pool.query<TosVersionDetail>(
       `UPDATE tos_versions
        SET ${setClauses.join(', ')}
-       WHERE id = $${paramIndex}
+       WHERE id = $${paramIndex} AND status = 'draft'
        RETURNING id, version_id AS "versionId", content_fa AS "contentFa",
                  content_en AS "contentEn", change_type AS "changeType",
                  status, is_active AS "isActive", published_at AS "publishedAt",
@@ -386,6 +388,10 @@ export class TosService {
                  updated_at AS "updatedAt"`,
       params,
     )
+
+    if (result.rows.length === 0) {
+      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_NOT_DRAFT' }, 409)
+    }
 
     this.logger.log(`TOS draft updated: ${id} by ${actorUserId}`)
 
@@ -432,6 +438,11 @@ export class TosService {
 
     try {
       await client.query('BEGIN')
+      // Serialize publication with draft edits and other publications of this version.
+      const locked = await client.query(`SELECT status FROM tos_versions WHERE id=$1 FOR UPDATE`, [id])
+      if (locked.rows[0]?.status !== 'draft') {
+        throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_ALREADY_PUBLISHED' }, 409)
+      }
 
       if (input.changeType === 'major') {
         // Deactivate the currently active version
@@ -532,7 +543,10 @@ export class TosService {
       )
     }
 
-    await pool.query(`DELETE FROM tos_versions WHERE id = $1`, [id])
+    const deleted = await pool.query(`DELETE FROM tos_versions WHERE id = $1 AND status = 'draft'`, [id])
+    if (deleted.rowCount === 0) {
+      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_PUBLISHED' }, 409)
+    }
 
     this.logger.log(`TOS draft discarded: ${id}`)
   }
