@@ -261,20 +261,21 @@ export function getDbPool(): Pool {
  * Use this for admin operations, migrations, and any operation that
  * requires session-level features (prepared statements, LISTEN/NOTIFY).
  *
- * The pool is cached as a singleton — subsequent calls return the same
- * instance.  Call `directPool.end()` to close it when no longer needed.
+ * The default pool is shared. Call with `{ shared: false }` for an owned
+ * migration/admin pool that the caller must close after its operation.
  *
  * Falls back to DATABASE_URL when PGDIRECT_URL is not configured.
  */
-export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
-  if (directPool) return directPool
+export function createDirectDbPool(config: DbPoolConfig = {}, options: { shared?: boolean } = {}): Pool {
+  const shared = options.shared ?? true
+  if (shared && directPool) return directPool
 
   const directUrl =
     config.pgdirectUrl ??
     process.env['PGDIRECT_URL'] ??
     process.env['DATABASE_URL']
 
-  directPool = new Pool({
+  const created = new Pool({
     connectionString: buildConnectionString(directUrl, config),
     min: config.poolMin ?? 1,
     max: config.poolMax ?? 5,
@@ -284,9 +285,9 @@ export function createDirectDbPool(config: DbPoolConfig = {}): Pool {
     ssl: resolveSslConfig(config.ssl),
   } satisfies PoolConfig)
 
-  attachClientQueryHooks(directPool, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
-
-  return directPool
+  attachClientQueryHooks(created, config.queryTimeout ?? DEFAULT_QUERY_TIMEOUT)
+  if (shared) directPool = created
+  return created
 }
 
 export function createDbInstance(config: DbPoolConfig = {}, schema?: Record<string, unknown>) {
