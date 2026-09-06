@@ -1,3 +1,6 @@
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { AgentSlotsService as ServiceType } from './ai-agent-slots.service.js';
 

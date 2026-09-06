@@ -1303,3 +1303,9 @@ Review and validation: four production-browser checks pass. Controlled password 
 All four rule schemas now reject unknown fields and whitespace-only entries. Creation and updates persist the validated, trimmed document. Rule comparison uses semantic object equality so key order does not cause a change audit. Optional response language must be nonblank when supplied.
 
 Review and validation: all 72 policy service/controller/production-migrated HTTP checks pass. Added real HTTP coverage for every rule type, trimmed storage, invalid create/rules-only updates, unknown fields, unchanged records after rejection and repeated equivalent rules without duplicate audits. Root types, lint and whitespace checks pass. This validates configuration storage; agent-side enforcement and integration still require separate review.
+
+### Hold current authority during agent-slot assignments (F04/F17)
+
+Slot assignment/clearing now rechecks and holds current admin:ai:agents authority inside its existing transaction. The existing slot lock, audit rollback, foreign-key conflict handling and duplicate-assignment behavior remain in force.
+
+Review and validation: 17 existing unit/controller checks and six production-migrated HTTP checks pass. HTTP covers assigning/clearing after grant revocation, both audit-failure rollbacks, shared-agent usage, duplicate suppression and concurrent agent deletion returning 409 without changing the slot or audit. Corrected the fixture's missing model creator before rerunning. Root types, lint and whitespace checks pass. The slot administration screen remains open.

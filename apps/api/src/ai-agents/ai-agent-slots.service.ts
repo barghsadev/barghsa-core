@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -108,7 +109,7 @@ export class AgentSlotsService {
    * request is a no-op that emits no audit. Runs in one transaction.
    */
   assign(input: AssignSlotInput): Promise<AgentSlotDto> {
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const existing = await this.findSlot(q, input.slotKey);
       if (!existing) throw this.slotNotFound(input.slotKey);
 
@@ -221,11 +222,15 @@ export class AgentSlotsService {
   // ─── Transaction helper ─────────────────────────────────────────────────
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:ai:agents');
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;
