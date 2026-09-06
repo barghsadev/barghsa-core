@@ -15,12 +15,7 @@ function mockPool() {
   return { mockQuery, mockConnect, pool }
 }
 
-function mockClient() {
-  const mockClientQuery = vi.fn()
-  const mockRelease = vi.fn()
-  const client = { query: mockClientQuery, release: mockRelease }
-  return { mockClientQuery, mockRelease, client }
-}
+
 
 const MOCK_ROLES = [
   { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
@@ -138,92 +133,5 @@ describe('AdminService.setServiceResponseTargets (T-09.08.01)', () => {
     ).rejects.toMatchObject({ status: 400 })
   })
 
-  it('accepts null to disable a service type', async () => {
-    const { pool, mockConnect } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
-    // BEGIN, SELECT FOR UPDATE (no row), INSERT RETURNING, config_version, audit, COMMIT
-    client.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ version: 1 }] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [] })
-
-    const result = await service.setServiceResponseTargets(
-      { ticket: null },
-      'admin-1',
-      '127.0.0.1',
-    )
-    expect(result).toEqual({ ticket: null, verification_case: null })
-    expect(pool.connect).toHaveBeenCalledTimes(1)
-  })
-
-  it('persists a valid map, bumps config version, and records an audit with the previous value', async () => {
-    const { pool, mockConnect } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
-    // Call order: BEGIN, SELECT ... FOR UPDATE (existing row),
-    // INSERT RETURNING version, config_version, audit_log, COMMIT
-    client.query
-      .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({
-        rows: [{ value: { ticket: 48 }, version: 3 }],
-      }) // SELECT ... FOR UPDATE
-      .mockResolvedValueOnce({ rows: [{ version: 4 }] }) // INSERT RETURNING
-      .mockResolvedValueOnce({ rows: [] }) // config_version
-      .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
-
-    const result = await service.setServiceResponseTargets(
-      { ticket: 24, verification_case: 72 },
-      'admin-1',
-      '127.0.0.1',
-    )
-    expect(result).toEqual({ ticket: 24, verification_case: 72 })
-
-    // The audit insert captures the previous value and both versions.
-    const auditCall = client.query.mock.calls.find(([sql]) =>
-      String(sql).includes('audit_log'),
-    )
-    expect(auditCall).toBeDefined()
-    const auditParams = auditCall![1] as unknown[]
-    expect(auditParams[2]).toBe('config_change')
-    const metadata = JSON.parse(String(auditParams[3])) as Record<string, unknown>
-    expect(metadata).toMatchObject({
-      key: SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
-      previousValue: { ticket: 48 },
-      previousVersion: 3,
-      newValue: { ticket: 24, verification_case: 72 },
-      version: 4,
-    })
-
-    // config_version was bumped for cache invalidation.
-    expect(
-      client.query.mock.calls.some(([sql]) => String(sql).includes('config_version')),
-    ).toBe(true)
-  })
-
-  it('persists an empty map as all service types disabled', async () => {
-    const { pool, mockConnect } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
-    client.query
-      .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
-      .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
-      .mockResolvedValueOnce({ rows: [] }) // config_version
-      .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
-
-    const result = await service.setServiceResponseTargets({}, 'admin-1', '127.0.0.1')
-    expect(result).toEqual({ ticket: null, verification_case: null })
-    // The persisted value is the complete all-disabled map (full replace).
-    const auditCall = client.query.mock.calls.find(([sql]) =>
-      String(sql).includes('audit_log'),
-    )
-    const metadata = JSON.parse(String((auditCall![1] as unknown[])[3])) as Record<string, unknown>
-    expect(metadata.newValue).toEqual({ ticket: null, verification_case: null })
-  })
+  // Transaction, versioning and rollback coverage uses the real HTTP/database fixture.
 })

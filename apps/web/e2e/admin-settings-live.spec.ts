@@ -9,7 +9,7 @@ test.beforeAll(async()=>{
   test.setTimeout(90000)
   buildApi()
   const require=createRequire(fileURLToPath(new URL('../../../packages/db/package.json',import.meta.url)))
-  child=fork(require.resolve('tsx/cli'),[fileURLToPath(new URL('../../api/scripts/team-ui-fixture.ts',import.meta.url))],{silent:true})
+  child=fork(require.resolve('tsx/cli'),[fileURLToPath(new URL('../../api/scripts/admin-ui-fixture.ts',import.meta.url))],{silent:true})
   let logs=''
   for(const stream of [child.stdout,child.stderr])stream?.on('data',data=>{logs=(logs+String(data)).slice(-10000)})
   http=await new Promise((done,reject)=>{
@@ -64,4 +64,30 @@ for(const locale of ['en','fa'])test(`team UI persists through the migrated API 
   await page.getByRole('dialog').getByRole('button',{name:fa?'تأیید':'Confirm',exact:true}).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   expect(await (await page.request.get(`${http.base}/api/admin/staff-teams`,{headers:apiHeaders})).json()).toEqual([])
+})
+
+for(const locale of ['en','fa'])test(`response targets persist and disable through the real API (${locale})`,async({page})=>{
+  await page.addInitScript(value=>{new MutationObserver(()=>{if(document.documentElement)document.documentElement.lang=value}).observe(document,{childList:true})},locale)
+  await page.route('**/api/**',async route=>{
+    const request=route.request(),url=new URL(request.url())
+    const response=await route.fetch({url:`${http.base}${url.pathname}${url.search}`,headers:{...request.headers(),host:new URL(http.base).host,
+      origin:'https://app.example.test',cookie:`barghsa_session=${http.session}`,'x-csrf-token':http.csrf}})
+    await route.fulfill({response})
+  })
+  const fa=locale==='fa',enabled=fa?'فعال کردن هشدار — تیکت‌ها':'Enable alerts — Tickets',hours=fa?'ساعت — تیکت‌ها':'Hours — Tickets'
+  const save=fa?'ذخیره زمان‌های هدف':'Save response targets',confirm=fa?'تأیید':'Confirm'
+  await page.goto('/admin/service-targets')
+  await page.getByLabel(enabled,{exact:true}).check()
+  await page.getByLabel(hours,{exact:true}).fill('48')
+  await page.getByRole('button',{name:save,exact:true}).click()
+  await page.getByRole('dialog').getByRole('button',{name:confirm,exact:true}).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByLabel(hours,{exact:true})).toHaveValue('48')
+  await page.getByLabel(enabled,{exact:true}).uncheck()
+  await page.getByRole('button',{name:save,exact:true}).click()
+  await page.getByRole('dialog').getByRole('button',{name:confirm,exact:true}).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByLabel(enabled,{exact:true})).not.toBeChecked()
 })

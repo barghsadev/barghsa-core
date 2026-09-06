@@ -2188,6 +2188,8 @@ export class AdminController {
    * level to customers.
    */
   @Put('config/service-response-targets')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the service response targets configuration (admin)' })
   @ApiBody({
     schema: {
@@ -2282,6 +2284,8 @@ export class AdminController {
    * types omitted from the payload become disabled.
    */
   @Put('config/escalation-policy')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the service escalation policy configuration (admin)' })
   @ApiBody({
     schema: {

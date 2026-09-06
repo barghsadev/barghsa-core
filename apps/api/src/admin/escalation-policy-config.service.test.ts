@@ -15,12 +15,7 @@ function mockPool() {
   return { mockQuery, mockConnect, pool }
 }
 
-function mockClient() {
-  const mockClientQuery = vi.fn()
-  const mockRelease = vi.fn()
-  const client = { query: mockClientQuery, release: mockRelease }
-  return { mockClientQuery, mockRelease, client }
-}
+
 
 const MOCK_ROLES = [
   { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
@@ -192,61 +187,5 @@ describe('AdminService.setEscalationPolicy (T-09.08.03)', () => {
     ).rejects.toMatchObject({ status: 400 })
   })
 
-  it('accepts null to disable a service type', async () => {
-    const { pool, mockConnect } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
-    client.query
-      .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
-      .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
-      .mockResolvedValueOnce({ rows: [] }) // config_version
-      .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
-
-    const result = await service.setEscalationPolicy(
-      { ticket: null },
-      'admin-1',
-      '127.0.0.1',
-    )
-    expect(result).toEqual({ ticket: null, verification_case: null })
-    expect(pool.connect).toHaveBeenCalledTimes(1)
-  })
-
-  it('persists a valid map, bumps config version, and records an audit with the previous value', async () => {
-    const { pool, mockConnect } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
-    client.query
-      .mockResolvedValueOnce({ rows: [] }) // BEGIN
-      .mockResolvedValueOnce({
-        rows: [{ value: { ticket: null }, version: 2 }],
-      }) // SELECT ... FOR UPDATE
-      .mockResolvedValueOnce({ rows: [{ version: 3 }] }) // INSERT RETURNING
-      .mockResolvedValueOnce({ rows: [] }) // config_version
-      .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
-
-    const result = await service.setEscalationPolicy(SAMPLE_POLICY, 'admin-1', '127.0.0.1')
-    expect(result).toEqual(SAMPLE_POLICY)
-
-    const auditCall = client.query.mock.calls.find(([sql]) =>
-      String(sql).includes('audit_log'),
-    )
-    expect(auditCall).toBeDefined()
-    const auditParams = auditCall![1] as unknown[]
-    expect(auditParams[2]).toBe('config_change')
-    const metadata = JSON.parse(String(auditParams[3])) as Record<string, unknown>
-    expect(metadata).toMatchObject({
-      key: ESCALATION_POLICY_CONFIG_KEY,
-      previousValue: { ticket: null },
-      previousVersion: 2,
-      newValue: SAMPLE_POLICY,
-      version: 3,
-    })
-
-    expect(
-      client.query.mock.calls.some(([sql]) => String(sql).includes('config_version')),
-    ).toBe(true)
-  })
+  // Transaction, versioning and rollback coverage uses the real HTTP/database fixture.
 })

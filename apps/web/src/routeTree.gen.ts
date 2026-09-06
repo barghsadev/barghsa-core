@@ -37,6 +37,7 @@ import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
+import { Route as AdminServiceTargetsRouteImport } from './routes/admin/service-targets'
 import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
@@ -203,6 +204,11 @@ const AdminRolesRoute = AdminRolesRouteImport.update({
   path: '/roles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminServiceTargetsRoute = AdminServiceTargetsRouteImport.update({
+  id: '/service-targets',
+  path: '/service-targets',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminStaffTeamsRoute = AdminStaffTeamsRouteImport.update({
   id: '/staff-teams',
   path: '/staff-teams',
@@ -364,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
@@ -416,6 +423,7 @@ export interface FileRoutesByTo {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
@@ -473,6 +481,7 @@ export interface FileRoutesById {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
+  '/admin/service-targets': typeof AdminServiceTargetsRoute
   '/admin/staff-teams': typeof AdminStaffTeamsRoute
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
@@ -530,6 +539,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
@@ -582,6 +592,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
@@ -638,6 +649,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/providers'
     | '/admin/roles'
+    | '/admin/service-targets'
     | '/admin/staff-teams'
     | '/admin/storage'
     | '/admin/tickets'
@@ -876,6 +888,13 @@ declare module '@tanstack/react-router' {
       path: '/roles'
       fullPath: '/admin/roles'
       preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/service-targets': {
+      id: '/admin/service-targets'
+      path: '/service-targets'
+      fullPath: '/admin/service-targets'
+      preLoaderRoute: typeof AdminServiceTargetsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/staff-teams': {
@@ -1136,6 +1155,7 @@ interface AdminRouteChildren {
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminRolesRoute: typeof AdminRolesRoute
+  AdminServiceTargetsRoute: typeof AdminServiceTargetsRoute
   AdminStaffTeamsRoute: typeof AdminStaffTeamsRoute
   AdminStorageRoute: typeof AdminStorageRoute
   AdminTicketsRoute: typeof AdminTicketsRoute
@@ -1155,6 +1175,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminProvidersRoute: AdminProvidersRoute,
   AdminRolesRoute: AdminRolesRoute,
+  AdminServiceTargetsRoute: AdminServiceTargetsRoute,
   AdminStaffTeamsRoute: AdminStaffTeamsRoute,
   AdminStorageRoute: AdminStorageRoute,
   AdminTicketsRoute: AdminTicketsRoute,

@@ -4,6 +4,14 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  "admin.targets.title": "زمان هدف پاسخ کارکنان",
+  "admin.targets.note": "عبور از زمان هدف، هشدار داخلی برای کارکنان ایجاد می‌کند و به مشتری تعهد سطح خدمت نمی‌دهد. تغییر تنظیمات بر کارهای باز نیز اثر دارد.",
+  "admin.targets.save": "ذخیره زمان‌های هدف",
+  "admin.targets.disabled": "غیرفعال",
+  "admin.targets.hours": "ساعت",
+  "admin.targets.enabled": "فعال کردن هشدار",
+  "admin.targets.range": "بین ۱ تا ۸۷۶۰ ساعت وارد کنید. هر روز برابر ۲۴ ساعت است. غیرفعال کردن، هشدارهای بعدی آن نوع کار را متوقف می‌کند.",
+  "admin.targets.forbidden": "اجازه مدیریت زمان‌های هدف را ندارید یا دسترسی شما تغییر کرده است.",
   "admin.teams.title": "تیم‌ها و تخصیص کار",
   "admin.teams.description": "قوانین فقط بر تیکت‌ها و پرونده‌های جدید اعمال می‌شوند. کارهای قبلی جابه‌جا نمی‌شوند.",
   "admin.teams.saved": "تغییرات ذخیره شد.",
@@ -1494,6 +1502,14 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  "admin.targets.title": "Staff response targets",
+  "admin.targets.note": "Breached targets create internal staff alerts but do not promise a service level to customers. Changes also apply to existing open work.",
+  "admin.targets.save": "Save response targets",
+  "admin.targets.disabled": "Disabled",
+  "admin.targets.hours": "Hours",
+  "admin.targets.enabled": "Enable alerts",
+  "admin.targets.range": "Enter 1 to 8,760 hours. One day is 24 hours. Disabling a work type stops its future target alerts.",
+  "admin.targets.forbidden": "You cannot manage response targets, or your access has changed.",
   "admin.teams.title": "Teams and work assignment",
   "admin.teams.description": "Rules apply only to new tickets and correction cases. Existing work keeps its assignee.",
   "admin.teams.saved": "Changes saved.",

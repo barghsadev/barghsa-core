@@ -1790,6 +1790,7 @@ export class AdminService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[SERVICE_RESPONSE_TARGETS_CONFIG_KEY])
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced — read it before the
@@ -1945,6 +1946,7 @@ export class AdminService {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[ESCALATION_POLICY_CONFIG_KEY])
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced — read it before the
