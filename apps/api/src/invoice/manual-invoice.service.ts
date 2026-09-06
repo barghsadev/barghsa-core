@@ -186,21 +186,34 @@ export class ManualInvoiceService {
 
       // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {
+        await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [
+          JSON.stringify(['manual-invoice', cmd.profileId.toLowerCase(), cmd.idempotencyKey]),
+        ]);
         const fingerprint = fingerprintManualInvoice(cmd);
         const existing = (await client.query(
           `SELECT id, metadata FROM invoices
            WHERE profile_id = $1
              AND metadata->>'source' = 'manual'
              AND metadata->>'idempotencyKey' = $2
-           LIMIT 1`,
+           LIMIT 2`,
           [cmd.profileId, cmd.idempotencyKey]
         )) as { rows: Array<{ id: string; metadata: Record<string, unknown> | null }> };
 
+        if (existing.rows.length > 1) {
+          throw new ConflictException(
+            'Multiple invoices use this request key; reconcile the existing records before retrying'
+          );
+        }
         if (existing.rows.length > 0) {
           const existingId = existing.rows[0]!.id;
           const storedFingerprint =
             (existing.rows[0]!.metadata as Record<string, unknown> | null)?.fingerprint ?? null;
-          if (storedFingerprint !== null && storedFingerprint !== fingerprint) {
+          if (typeof storedFingerprint !== 'string' || !storedFingerprint) {
+            throw new ConflictException(
+              'The stored request cannot be verified; reconcile the existing invoice before retrying'
+            );
+          }
+          if (storedFingerprint !== fingerprint) {
             throw new ConflictException(
               `Idempotency key ${cmd.idempotencyKey} was already used with a different payload`
             );
@@ -351,7 +364,12 @@ export class ManualInvoiceService {
        ORDER BY created_at ASC, id ASC LIMIT 1`,
       [invoiceId]
     )) as { rows: Array<{ id: string }> };
-    return auditResult.rows[0]?.id ?? '';
+    const auditId = auditResult.rows[0]?.id;
+    if (!auditId)
+      throw new ConflictException(
+        'The invoice issue audit is missing; reconcile the existing invoice before retrying'
+      );
+    return auditId;
   }
 
   /**
@@ -381,6 +399,11 @@ export class ManualInvoiceService {
     };
     const row = invoiceResult.rows[0];
     if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`);
+    if (!row.issued_at || !row.payable_from) {
+      throw new ConflictException(
+        'The invoice issue timestamps are missing; reconcile the existing invoice before retrying'
+      );
+    }
 
     const linesResult = (await client.query(
       `SELECT id, description, quantity, unit_price, line_total,
@@ -412,10 +435,8 @@ export class ManualInvoiceService {
       // moved on (paid/cancelled) and are reported truthfully.
       state: row.state as InvoiceState,
       totalAmount: BigInt(row.total_amount),
-      // issued_at / payable_from are set by the Issue transition; the
-      // fallbacks keep the type honest for hypothetical legacy rows.
-      issuedAt: row.issued_at ?? new Date(),
-      payableFrom: row.payable_from ?? new Date(),
+      issuedAt: row.issued_at,
+      payableFrom: row.payable_from,
       dueAt: row.due_at,
       lines: linesResult.rows.map((l) => ({
         id: l.id,

@@ -3,7 +3,7 @@
  * (T-04.1.02.02).
  *
  * Runs the actual service against a Testcontainers-managed PostgreSQL 17
- * instance (migrations 0052 → 0053 → 0054 → 0055 → 0057 → 0058 + audit_log) and proves:
+ * instance with all production migrations and proves:
  *
  *   1. Create + issue is ATOMIC: one BEGIN/COMMIT on a single connection.
  *   2. The invoice lands in `Unpaid` with issuedAt/payableFrom/dueAt set
@@ -19,7 +19,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { ManualInvoiceService } from './manual-invoice.service.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -420,4 +420,86 @@ describe('ManualInvoiceService — real PostgreSQL integration (T-04.1.02.02)', 
     }
     expect((await service.createManualInvoice(cmd)).invoiceId).toBe(first.invoiceId);
   });
+  it('returns one invoice for concurrent same-key requests from different staff', async () => {
+    const other = 'manual-second-staff';
+    await ctx.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$1,'test-only',true)",
+      [other]
+    );
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+      other,
+    ]);
+    await ctx.pool.query(
+      "CREATE FUNCTION slow_manual_insert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN PERFORM pg_sleep(0.5); RETURN NEW; END $$; CREATE TRIGGER slow_manual_insert BEFORE INSERT ON invoices FOR EACH ROW WHEN (NEW.metadata->>'idempotencyKey'='concurrent-manual') EXECUTE FUNCTION slow_manual_insert()"
+    );
+    const cmd = {
+      profileId: PROFILE_ID,
+      actorUserId: ACTOR_USER_ID,
+      lines: [{ description: 'Concurrent invoice', quantity: 1, unitPrice: 100n, vatRate: 0 }],
+      idempotencyKey: 'concurrent-manual',
+    };
+    try {
+      const results = await Promise.all([
+        service.createManualInvoice(cmd),
+        service.createManualInvoice({ ...cmd, actorUserId: other }),
+      ]);
+      expect(results[0]!.invoiceId).toBe(results[1]!.invoiceId);
+      expect(results[0]!.auditId).toBe(results[1]!.auditId);
+      expect(
+        (
+          await ctx.pool.query(
+            "SELECT id FROM invoices WHERE profile_id=$1 AND metadata->>'idempotencyKey'='concurrent-manual'",
+            [PROFILE_ID]
+          )
+        ).rows
+      ).toHaveLength(1);
+      expect(await countAuditRows(results[0]!.invoiceId)).toBe(1);
+    } finally {
+      await ctx.pool.query('DROP TRIGGER slow_manual_insert ON invoices');
+    }
+  });
+
+  it.each(['missing fingerprint', 'duplicate records', 'missing audit', 'missing timestamps'])(
+    'rejects unverifiable legacy replay with %s',
+    async (scenario) => {
+      const cmd = {
+        profileId: PROFILE_ID,
+        actorUserId: ACTOR_USER_ID,
+        lines: [{ description: 'Legacy replay', quantity: 1, unitPrice: 100n, vatRate: 0 }],
+        idempotencyKey: `legacy-${scenario}`,
+      };
+      const first = await service.createManualInvoice(cmd);
+      if (scenario === 'missing fingerprint') {
+        await ctx.pool.query("UPDATE invoices SET metadata=metadata-'fingerprint' WHERE id=$1", [
+          first.invoiceId,
+        ]);
+      } else if (scenario === 'missing audit') {
+        await ctx.pool.query('DELETE FROM audit_log WHERE id=$1', [first.auditId]);
+      } else if (scenario === 'missing timestamps') {
+        await ctx.pool.query('UPDATE invoices SET issued_at=NULL,payable_from=NULL WHERE id=$1', [
+          first.invoiceId,
+        ]);
+      } else {
+        await ctx.pool.query(
+          "INSERT INTO invoices(profile_id,type,state,total_amount,metadata) SELECT profile_id,type,'Draft',total_amount,metadata FROM invoices WHERE id=$1",
+          [first.invoiceId]
+        );
+      }
+      const before = (
+        await ctx.pool.query(
+          "SELECT id,state,metadata FROM invoices WHERE profile_id=$1 AND metadata->>'idempotencyKey'=$2 ORDER BY id",
+          [PROFILE_ID, cmd.idempotencyKey]
+        )
+      ).rows;
+      await expect(service.createManualInvoice(cmd)).rejects.toBeInstanceOf(ConflictException);
+      expect(
+        (
+          await ctx.pool.query(
+            "SELECT id,state,metadata FROM invoices WHERE profile_id=$1 AND metadata->>'idempotencyKey'=$2 ORDER BY id",
+            [PROFILE_ID, cmd.idempotencyKey]
+          )
+        ).rows
+      ).toEqual(before);
+    }
+  );
 });
