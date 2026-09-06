@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
@@ -43,7 +45,7 @@ export interface ReviewVerificationCaseDto {
 
 @ApiTags('CRM Verification Cases')
 @Controller('api/crm')
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 export class VerificationCaseController {
   private readonly logger = new Logger(VerificationCaseController.name)
 
@@ -63,6 +65,7 @@ export class VerificationCaseController {
    * Audit: verification_case_created with case details.
    */
   @Post('profiles/:profileId/verification-cases')
+  @RequiresStepUp()
   @HttpCode(201)
   @ApiOperation({ summary: 'Create a verification case for identity field correction' })
   @ApiParam({
@@ -102,9 +105,14 @@ export class VerificationCaseController {
       )
     }
 
+    const parsed = z.object({ fieldName:z.enum(['first_name','last_name','national_id','legal_name','national_identifier']),
+      currentValue:z.string().nullable().optional(), requestedValue:z.string().trim().min(1).max(512),
+      evidenceUrls:z.array(z.string().max(2048)).max(20).optional(), reason:z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code,message:'Invalid correction request'},400)
+
     const result = await this.verificationCaseService.createCase(
       profileId,
-      dto,
+      {fieldName:parsed.data.fieldName,currentValue:parsed.data.currentValue ?? null,requestedValue:parsed.data.requestedValue,reason:parsed.data.reason,...(parsed.data.evidenceUrls ? {evidenceUrls:parsed.data.evidenceUrls} : {})},
       req.session.userId,
       req.ip ?? 'unknown',
     )
@@ -272,6 +280,7 @@ export class VerificationCaseController {
    * Audit: verification_case_reviewed with decision, notes, before/after values.
    */
   @Put('verification-cases/:caseId/status')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Review a verification case (approve/reject/under-review)' })
   @ApiParam({ name: 'caseId', required: true, description: 'UUID of the verification case', type: String })
@@ -311,9 +320,12 @@ export class VerificationCaseController {
       )
     }
 
+    const parsed = z.object({decision:z.enum(['Under Review','Approved','Rejected']),reviewerNotes:z.string().trim().max(1000).optional()}).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code,message:'Invalid correction decision'},400)
+
     const result = await this.verificationCaseService.reviewCase(
       caseId,
-      dto,
+      {decision:parsed.data.decision,...(parsed.data.reviewerNotes !== undefined ? {reviewerNotes:parsed.data.reviewerNotes} : {})},
       req.session.userId,
       req.ip ?? 'unknown',
     )

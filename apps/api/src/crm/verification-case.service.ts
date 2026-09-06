@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { validateNationalId, validateLegalNationalIdentifier } from '@barghsa/shared/validation'
+import { Injectable, Logger, BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 
@@ -99,111 +100,30 @@ export class VerificationCaseService {
     actorUserId: string,
     ip: string,
   ): Promise<CreateVerificationCaseResult> {
-    const pool = getDbPool()
-
-    // 1. Fetch the profile to verify existence and get its type
-    const profileResult = await pool.query(
-      `SELECT id, profile_type, status FROM profiles WHERE id = $1`,
-      [profileId],
-    )
-    if (profileResult.rows.length === 0) return null
-
-    const profileRow = profileResult.rows[0] as Record<string, unknown>
-    const profileType = profileRow.profile_type as string
-
-    // 2. Validate the field name is a known identity field for this profile type
-    const allowedFields =
-      profileType === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL
-    if (!allowedFields.includes(dto.fieldName)) {
-      return {
-        error: `'${dto.fieldName}' is not a valid identity field for ${profileType} profiles. ` +
-          `Allowed: ${allowedFields.join(', ')}`,
-      }
-    }
-
-    // 3. Validate required fields
-    if (!dto.requestedValue || dto.requestedValue.trim() === '') {
-      return { error: 'requestedValue is required' }
-    }
-    if (!dto.reason || dto.reason.trim() === '') {
-      return { error: 'reason is required' }
-    }
-
-    // 4. Check for existing Open case on same field (prevent duplicates)
-    const existingResult = await pool.query(
-      `SELECT id FROM verification_cases WHERE profile_id = $1 AND field_name = $2 AND status = 'Open'`,
-      [profileId, dto.fieldName],
-    )
-    if (existingResult.rows.length > 0) {
-      return {
-        error: `An open verification case already exists for '${FIELD_LABELS[dto.fieldName] ?? dto.fieldName}' on this profile`,
-      }
-    }
-
-    const now = new Date().toISOString()
-    const caseId = uuidv7()
-    const correlationId = uuidv7()
-    const evidenceJson = JSON.stringify(dto.evidenceUrls ?? [])
-
-    const client = await pool.connect()
+    validateIdentityValue(dto.fieldName, dto.requestedValue)
+    if (!dto.requestedValue?.trim() || !dto.reason?.trim()) throw new BadRequestException('Requested value and reason are required')
+    const client = await getDbPool().connect()
     try {
       await client.query('BEGIN')
-
-      // Insert the verification case
-      await client.query(
-        `INSERT INTO verification_cases (id, profile_id, field_name, current_value, requested_value, evidence_urls, reason, status, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, 'Open', $8, $9::timestamptz, $10::timestamptz)`,
-        [
-          caseId,
-          profileId,
-          dto.fieldName,
-          dto.currentValue,
-          dto.requestedValue.trim(),
-          evidenceJson,
-          dto.reason.trim(),
-          actorUserId,
-          now,
-          now,
-        ],
-      )
-
-      // Record audit event
-      const auditId = uuidv7()
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7::timestamptz)`,
-        [
-          auditId,
-          actorUserId,
-          'verification_case_created',
-          JSON.stringify({
-            caseId,
-            profileId,
-            fieldName: dto.fieldName,
-            currentValue: dto.currentValue,
-            requestedValue: dto.requestedValue.trim(),
-            reason: dto.reason.trim(),
-          }),
-          correlationId,
-          ip,
-          now,
-        ],
-      )
-
+      const profile = (await client.query('SELECT * FROM profiles WHERE id=$1 AND archived=false FOR UPDATE', [profileId])).rows[0]
+      if (!profile) { await client.query('ROLLBACK'); return null }
+      const allowed = profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL
+      if (!allowed.includes(dto.fieldName)) throw new BadRequestException('Invalid identity field for this profile type')
+      const source = profile.profile_type === 'LEGAL'
+        ? (await client.query('SELECT * FROM legal_profiles WHERE id=$1 FOR UPDATE', [profileId])).rows[0] : profile
+      if (!source) throw new ConflictException('Profile identity record is missing')
+      const currentValue = source[dto.fieldName] ?? null
+      const pending = await client.query("SELECT id FROM verification_cases WHERE profile_id=$1 AND field_name=$2 AND status IN ('Open','Under Review')", [profileId, dto.fieldName])
+      if (pending.rows.length) throw new ConflictException('An unresolved correction already exists for this field')
+      const id = uuidv7(), now = new Date().toISOString()
+      await client.query(`INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9)`, [id,profileId,dto.fieldName,currentValue,dto.requestedValue.trim(),JSON.stringify(dto.evidenceUrls ?? []),dto.reason.trim(),actorUserId,now])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at) VALUES ($1,$2,'verification_case_created',$3::jsonb,$4,$5,$6)`,
+        [uuidv7(),actorUserId,JSON.stringify({caseId:id,profileId,fieldName:dto.fieldName,currentValue,requestedValue:dto.requestedValue.trim(),reason:dto.reason.trim()}),uuidv7(),ip,now])
       await client.query('COMMIT')
-
-      this.logger.debug(
-        `Verification case ${caseId} created: profileId=${profileId}, field=${dto.fieldName}, actor=${actorUserId}`,
-      )
-
-      return { success: true, id: caseId, status: 'Open', createdAt: now }
-    } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to create verification case: ${String(err)}`)
-      throw err
-    } finally {
-      client.release()
-    }
+      return { success:true,id,status:'Open',createdAt:now }
+    } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error }
+    finally { client.release() }
   }
 
   /**
@@ -343,129 +263,40 @@ export class VerificationCaseService {
     reviewerUserId: string,
     ip: string,
   ): Promise<ReviewVerificationCaseResult> {
-    const pool = getDbPool()
-
-    // 1. Fetch the case
-    const caseResult = await pool.query(
-      `SELECT v.id, v.profile_id, v.field_name, v.current_value, v.requested_value,
-              v.status, v.evidence_urls
-       FROM verification_cases v
-       WHERE v.id = $1`,
-      [caseId],
-    )
-    if (caseResult.rows.length === 0) return null
-
-    const caseRow = caseResult.rows[0] as Record<string, unknown>
-    const currentStatus = caseRow.status as string
-
-    // 2. Validate state transition
-    const allowedNext = ALLOWED_TRANSITIONS[currentStatus]
-    if (!allowedNext || !allowedNext.includes(dto.decision)) {
-      return {
-        error: `Cannot transition from '${currentStatus}' to '${dto.decision}'. ` +
-          `Allowed transitions: ${(allowedNext ?? []).join(', ') || '(none — terminal)'}`,
-      }
-    }
-
-    // 3. Validate notes for rejections
-    if (dto.decision === 'Rejected' && (!dto.reviewerNotes || dto.reviewerNotes.trim() === '')) {
-      return { error: 'Reviewer notes are required when rejecting a case' }
-    }
-
-    const fieldName = caseRow.field_name as string
-
-    // Re-validate fieldName against allowed identity fields — security measure
-    // to prevent SQL injection via a malformed field_name stored in the DB.
-    // Must happen before pool.connect() for fail-fast behavior.
-    if (dto.decision === 'Approved') {
-      const isLegalField = IDENTITY_FIELDS_LEGAL.includes(fieldName)
-      const isIndividualField = IDENTITY_FIELDS_INDIVIDUAL.includes(fieldName)
-      if (!isLegalField && !isIndividualField) {
-        return { error: `Invalid identity field '${fieldName}' cannot be updated` }
-      }
-    }
-
-    const now = new Date().toISOString()
-    const correlationId = uuidv7()
-    const client = await pool.connect()
-
+    if (dto.decision === 'Rejected' && !dto.reviewerNotes?.trim()) throw new BadRequestException('Reviewer notes are required for rejection')
+    const client = await getDbPool().connect()
     try {
       await client.query('BEGIN')
-
-      // Update the verification case
-      await client.query(
-        `UPDATE verification_cases
-         SET status = $1, reviewed_by = $2, reviewed_at = $3::timestamptz,
-             reviewer_notes = $4, updated_at = $5::timestamptz
-         WHERE id = $6`,
-        [dto.decision, reviewerUserId, now, dto.reviewerNotes ?? null, now, caseId],
-      )
-
-      // If approved, apply the identity field correction to the profile or legal_profiles
+      // Use the same profile-before-case lock order as creation and archival.
+      const profile = (await client.query(`SELECT p.* FROM profiles p JOIN verification_cases v ON v.profile_id=p.id WHERE v.id=$1 AND p.archived=false FOR UPDATE OF p`,[caseId])).rows[0]
+      if (!profile) { await client.query('ROLLBACK'); return null }
+      const row = (await client.query('SELECT * FROM verification_cases WHERE id=$1 FOR UPDATE',[caseId])).rows[0]
+      if (!row || row.profile_id !== profile.id) throw new ConflictException('Correction target changed')
+      if (row.created_by === reviewerUserId) throw new ForbiddenException('A different staff member must review the correction')
+      if (!(ALLOWED_TRANSITIONS[row.status] ?? []).includes(dto.decision)) throw new ConflictException('Invalid correction state transition')
+      const field = String(row.field_name)
+      const allowed = profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL
+      if (!allowed.includes(field)) throw new BadRequestException('Invalid identity field for this profile type')
       if (dto.decision === 'Approved') {
-        const newValue = caseRow.requested_value as string | null
-        const profileId = caseRow.profile_id as string
-        const oldValue = caseRow.current_value as string | null
-
-        // fieldName was already validated against the whitelist before pool.connect()
-
-        if (fieldName === 'legal_name' || fieldName === 'national_identifier') {
-          // Update in legal_profiles table
-          await client.query(
-            `UPDATE legal_profiles SET ${fieldName} = $1, updated_at = $2::timestamptz WHERE id = $3`,
-            [newValue, now, profileId],
-          )
-        } else {
-          // Map field_name to DB column (first_name, last_name, national_id)
-          await client.query(
-            `UPDATE profiles SET ${fieldName} = $1, updated_at = $2::timestamptz WHERE id = $3`,
-            [newValue, now, profileId],
-          )
-        }
+        validateIdentityValue(field, row.requested_value)
+        const table = profile.profile_type === 'LEGAL' ? 'legal_profiles' : 'profiles'
+        const source = table === 'profiles' ? profile : (await client.query('SELECT * FROM legal_profiles WHERE id=$1 FOR UPDATE',[profile.id])).rows[0]
+        if (!source || (source[field] ?? null) !== row.current_value) throw new ConflictException('Identity changed after this correction was requested')
+        const updated = await client.query(`UPDATE ${table} SET ${field}=$1,updated_at=NOW() WHERE id=$2 RETURNING id`,[row.requested_value,profile.id])
+        if (updated.rows.length !== 1) throw new ConflictException('Identity record is missing')
       }
-
-      // Record audit event
-      const auditId = uuidv7()
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7::timestamptz)`,
-        [
-          auditId,
-          reviewerUserId,
-          'verification_case_reviewed',
-          JSON.stringify({
-            caseId,
-            profileId: caseRow.profile_id,
-            fieldName: caseRow.field_name,
-            decision: dto.decision,
-            reviewerNotes: dto.reviewerNotes ?? null,
-            oldValue: caseRow.current_value,
-            newValue: dto.decision === 'Approved' ? caseRow.requested_value : null,
-          }),
-          correlationId,
-          ip,
-          now,
-        ],
-      )
-
+      await client.query(`UPDATE verification_cases SET status=$1,reviewed_by=$2,reviewed_at=NOW(),reviewer_notes=$3,updated_at=NOW() WHERE id=$4`,[dto.decision,reviewerUserId,dto.reviewerNotes?.trim() ?? null,caseId])
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip) VALUES ($1,$2,'verification_case_reviewed',$3::jsonb,$4,$5)`,
+        [uuidv7(),reviewerUserId,JSON.stringify({caseId,profileId:profile.id,fieldName:field,decision:dto.decision,reviewerNotes:dto.reviewerNotes?.trim() ?? null,oldValue:row.current_value,newValue:dto.decision === 'Approved' ? row.requested_value : null}),uuidv7(),ip])
       await client.query('COMMIT')
-
-      this.logger.debug(
-        `Verification case ${caseId} reviewed: ${currentStatus} → ${dto.decision}, reviewer=${reviewerUserId}`,
-      )
-
-      return {
-        success: true,
-        id: caseId,
-        status: dto.decision,
-        profileId: caseRow.profile_id as string,
-      }
-    } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to review verification case ${caseId}: ${String(err)}`)
-      throw err
-    } finally {
-      client.release()
-    }
+      return { success:true,id:caseId,status:dto.decision,profileId:profile.id }
+    } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error }
+    finally { client.release() }
   }
+}
+
+function validateIdentityValue(field: string, value: unknown): void {
+  if (typeof value !== 'string' || !value.trim() || value.trim().length > 512) throw new BadRequestException('Invalid identity value')
+  if (field === 'national_id' && !validateNationalId(value.trim())) throw new BadRequestException('Invalid national ID')
+  if (field === 'national_identifier' && !validateLegalNationalIdentifier(value.trim())) throw new BadRequestException('Invalid legal national identifier')
 }
