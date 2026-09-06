@@ -51,6 +51,9 @@ export type GiftCodeStatus = (typeof GIFT_CODE_STATUSES)[number];
 
 /** 100% expressed in basis points — upper bound of percentage values. */
 export const MAX_GIFT_PERCENT_BPS = 10_000;
+/** Bounds of the persisted PostgreSQL bigint amounts and integer usage limits. */
+export const MAX_GIFT_IRR = 9_223_372_036_854_775_807n;
+export const MAX_GIFT_USAGE_LIMIT = 2_147_483_647;
 
 /** Product category quoted in the task: products.type discriminators. */
 export const GIFT_CODE_CATEGORIES = [
@@ -108,7 +111,7 @@ export function isGiftCodePercentageBps(raw: unknown): raw is number {
 export function isPositiveIrr(raw: unknown): raw is string | bigint {
   try {
     const value = typeof raw === 'bigint' ? raw : BigInt(String(raw));
-    return value > 0n;
+    return value > 0n && value <= MAX_GIFT_IRR;
   } catch {
     return false;
   }
@@ -227,8 +230,11 @@ export function validateGiftCodePayload(input: {
   ] as const) {
     if (raw !== null && raw !== undefined && raw !== '') {
       const num = typeof raw === 'number' ? raw : Number(raw);
-      if (!Number.isSafeInteger(num) || num < 1) {
-        errors.push({ path, message: `${path} must be a positive integer or null for unlimited` });
+      if (!Number.isSafeInteger(num) || num < 1 || num > MAX_GIFT_USAGE_LIMIT) {
+        errors.push({
+          path,
+          message: `${path} must be an integer from 1 to ${MAX_GIFT_USAGE_LIMIT}, or null for unlimited`,
+        });
       }
     }
   }
@@ -239,8 +245,11 @@ export function validateGiftCodePayload(input: {
   ) {
     try {
       const value = toBigInt(input.minOrderAmount as Numeric);
-      if (value < 0n) {
-        errors.push({ path: 'minOrderAmount', message: 'minOrderAmount must be >= 0' });
+      if (value < 0n || value > MAX_GIFT_IRR) {
+        errors.push({
+          path: 'minOrderAmount',
+          message: `minOrderAmount must be between 0 and ${MAX_GIFT_IRR}`,
+        });
       }
     } catch {
       errors.push({

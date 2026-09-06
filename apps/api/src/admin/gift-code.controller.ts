@@ -21,6 +21,9 @@ import {
   GIFT_CODE_ELIGIBILITY,
   GIFT_CODE_STATUSES,
   MAX_GIFT_PERCENT_BPS,
+  MAX_GIFT_IRR,
+  MAX_GIFT_USAGE_LIMIT,
+  GIFT_CODE_CATEGORIES,
   normalizeGiftCode,
   type GiftCodeDto,
 } from '@barghsa/shared/promotions';
@@ -33,21 +36,29 @@ import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js
 const discountTypeSchema = z.enum(GIFT_CODE_DISCOUNT_TYPES);
 const eligibilitySchema = z.enum(GIFT_CODE_ELIGIBILITY);
 const statusSchema = z.enum(GIFT_CODE_STATUSES);
-const irrSchema = z.string().regex(/^\d+$/, 'Expected a non-negative integer IRR amount');
-const positiveIrrSchema = z.string().regex(/^[1-9]\d*$/, 'Expected a positive integer IRR amount');
+const irrSchema = z
+  .string()
+  .regex(/^\d{1,19}$/, 'Expected an integer IRR amount')
+  .refine(
+    (value) => value.length <= 19 && /^\d+$/.test(value) && BigInt(value) <= MAX_GIFT_IRR,
+    'IRR amount exceeds the supported maximum'
+  );
+const positiveIrrSchema = irrSchema.refine(
+  (value) => /^[1-9]\d*$/.test(value),
+  'Expected a positive IRR amount'
+);
 const codeSchema = z
   .string()
+  .trim()
   .min(1, 'code is required')
   .max(64, 'code must be 64 characters or fewer')
   .transform(normalizeGiftCode);
 const profileIdSchema = z.string().uuid('Expected a UUID');
-const categorySchema = z.string().min(1).max(40);
-const limitSchema = z.union([z.number().int().positive(), z.null()]).optional();
-const dateSchema = z
-  .string()
-  .datetime({ offset: true })
-  .or(z.string().datetime({ local: true }))
+const categorySchema = z.enum(GIFT_CODE_CATEGORIES);
+const limitSchema = z
+  .union([z.number().int().positive().max(MAX_GIFT_USAGE_LIMIT), z.null()])
   .optional();
+const dateSchema = z.string().datetime({ offset: true }).optional();
 
 const CreateGiftCodeSchema = z
   .object({
@@ -60,18 +71,11 @@ const CreateGiftCodeSchema = z
     totalLimit: limitSchema,
     perProfileLimit: limitSchema,
     validFrom: dateSchema,
-    validUntil: z
-      .union([
-        z
-          .string()
-          .datetime({ offset: true })
-          .or(z.string().datetime({ local: true })),
-        z.null(),
-      ])
-      .optional(),
+    validUntil: z.union([z.string().datetime({ offset: true }), z.null()]).optional(),
     minOrderAmount: irrSchema.default('0'),
     categories: z.array(categorySchema).default([]),
   })
+  .strict()
   .refine(
     (data) =>
       data.discountType !== 'fixed_irr' || data.maxCapIrr === undefined || data.maxCapIrr === null,
@@ -105,18 +109,11 @@ const UpdateGiftCodeSchema = z
     totalLimit: limitSchema,
     perProfileLimit: limitSchema,
     validFrom: dateSchema,
-    validUntil: z
-      .union([
-        z
-          .string()
-          .datetime({ offset: true })
-          .or(z.string().datetime({ local: true })),
-        z.null(),
-      ])
-      .optional(),
+    validUntil: z.union([z.string().datetime({ offset: true }), z.null()]).optional(),
     minOrderAmount: irrSchema.optional(),
     categories: z.array(categorySchema).optional(),
   })
+  .strict()
   .refine(
     (data) =>
       data.discountType !== 'fixed_irr' || data.maxCapIrr === undefined || data.maxCapIrr === null,
@@ -126,9 +123,11 @@ const UpdateGiftCodeSchema = z
     }
   );
 
-const SetStatusSchema = z.object({
-  status: statusSchema,
-});
+const SetStatusSchema = z
+  .object({
+    status: statusSchema,
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(

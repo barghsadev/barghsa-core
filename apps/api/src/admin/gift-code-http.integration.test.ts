@@ -149,3 +149,69 @@ it('persists gift-code changes and suppresses repeated activation audits', async
     (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
   ).toHaveLength(3);
 });
+
+for (const method of ['POST', 'PATCH'])
+  it.each([
+    { discountValue: '9223372036854775808' },
+    { discountType: 'percentage', discountValue: '100', maxCapIrr: '9223372036854775808' },
+    { minOrderAmount: '9223372036854775808' },
+    { totalLimit: 2147483648 },
+    { perProfileLimit: 2147483648 },
+    { code: '   ' },
+    { unexpected: true },
+    { validFrom: '2027-01-01T00:00:00' },
+    { validUntil: '2027-01-01T00:00:00' },
+    { categories: ['unknown'] },
+  ])(`rejects invalid gift-code ${method} payload %j`, async (body) => {
+    const response = await fetch(
+      `${http.base}/api/admin/promotions/gift-codes${method === 'PATCH' ? `/${giftId}` : ''}`,
+      {
+        method,
+        headers,
+        body: JSON.stringify({
+          ...(method === 'POST'
+            ? { code: 'SECOND', discountType: 'fixed_irr', discountValue: '1000' }
+            : {}),
+          ...body,
+        }),
+      }
+    );
+    expect(response.status).toBe(400);
+    await unchanged();
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+    ).toHaveLength(0);
+  });
+it('accepts exact database bounds and normalizes a code', async () => {
+  const response = await fetch(`${http.base}/api/admin/promotions/gift-codes`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      code: ' second ',
+      discountType: 'fixed_irr',
+      discountValue: '9223372036854775807',
+      minOrderAmount: '9223372036854775807',
+      totalLimit: 2147483647,
+      perProfileLimit: 2147483647,
+      validFrom: '2026-01-01T03:30:00+03:30',
+    }),
+  });
+  expect(response.status).toBe(201);
+  expect(await response.json()).toMatchObject({
+    code: 'SECOND',
+    discountValue: '9223372036854775807',
+    minOrderAmount: '9223372036854775807',
+    totalLimit: 2147483647,
+    perProfileLimit: 2147483647,
+    validFrom: '2026-01-01T00:00:00.000Z',
+  });
+});
+it('rejects unknown activation fields without changing state', async () => {
+  const response = await fetch(`${http.base}/api/admin/promotions/gift-codes/${giftId}/toggle`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ status: 'inactive', unexpected: true }),
+  });
+  expect(response.status).toBe(400);
+  await unchanged();
+});

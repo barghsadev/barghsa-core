@@ -1399,3 +1399,9 @@ Review and validation: four production-browser checks pass after the final trans
 Gift-code create/edit/activation mutations now hold current admin:promotions:edit authority through commit. Edit and activation operations lock the selected gift-code row, matching the redemption lock, before reading state. Redemption and cancellation retain their separate caller-owned transaction contract.
 
 Review and validation: 53 service/controller checks and eight production-migrated HTTP checks pass. HTTP covers all three audit rollbacks and grant-revocation races, concurrent activation preservation during an edit, successful writes and repeated activation without duplicate audits. Root types pass after correcting the transaction callback type to the actual PoolClient; lint and whitespace checks pass. Input bounds and the gift-code editor remain open.
+
+### Bound gift-code amounts, usage limits and mutation inputs (F17/F20)
+
+Gift-code amounts now fit the signed bigint storage range, and usage limits fit the integer columns. The shared payload validator enforces the same bounds for service callers. Admin payloads reject unknown fields and unsupported categories, trim codes before rejecting blank values, and require explicit timezone offsets for supplied dates.
+
+Review and validation: all 83 gift-code service/controller/production-migrated HTTP checks and 27 shared promotion checks pass. Real HTTP coverage rejects each excessive amount/limit and malformed input on create and edit, verifies unchanged state/audits, accepts exact database maxima, normalizes the code and preserves a +03:30 timestamp as its UTC instant. API build, root types, lint, contract and whitespace checks pass. Existing clients sending offset-free dates must include Z or a numeric offset. The profile-eligibility transition and editor remain open.

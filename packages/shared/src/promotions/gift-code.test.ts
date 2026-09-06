@@ -216,3 +216,25 @@ describe('Gift code shared contract (T-09.12.03)', () => {
     });
   });
 });
+
+describe('gift-code database amount bounds', () => {
+  it('accepts the bigint maximum and rejects a larger amount', () => {
+    expect(isPositiveIrr('9223372036854775807')).toBe(true);
+    expect(isPositiveIrr('9223372036854775808')).toBe(false);
+  });
+  it.each([
+    { discountValue: '9223372036854775808' },
+    { minOrderAmount: '9223372036854775808' },
+    { totalLimit: 2147483648 },
+    { perProfileLimit: 2147483648 },
+  ])('rejects out-of-range persisted gift-code values %j', (input) => {
+    expect(
+      validateGiftCodePayload({
+        discountType: 'fixed_irr',
+        discountValue: '1000',
+        maxCapIrr: null,
+        ...input,
+      }).ok
+    ).toBe(false);
+  });
+});
