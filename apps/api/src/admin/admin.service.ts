@@ -1041,6 +1041,7 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:config:write');
 
       // Upsert the config value
       await client.query(
@@ -1082,6 +1083,7 @@ export class AdminService {
       return { mode };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set profile verification mode: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -1164,6 +1166,11 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        actorUserId,
+        'admin:notification-providers:edit'
+      );
 
       await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
@@ -1206,6 +1213,7 @@ export class AdminService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set delivery window config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },

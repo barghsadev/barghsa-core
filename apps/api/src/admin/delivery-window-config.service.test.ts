@@ -3,6 +3,11 @@ import { HttpException } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
 import { DEFAULT_DELIVERY_WINDOW } from '@barghsa/shared/notifications';
 
+// Authority is verified against production migrations through config-write-http.integration.test.ts.
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn(async () => {}),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
