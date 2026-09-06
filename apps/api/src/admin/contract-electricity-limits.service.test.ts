@@ -1,3 +1,6 @@
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { ContractElectricityLimitsService as ServiceType } from './contract-electricity-limits.service.js';

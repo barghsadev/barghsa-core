@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -135,6 +136,8 @@ export class ContractElectricityLimitsService {
     const now = new Date();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, input.actorUserId, 'admin:catalogue:edit');
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('contract-electricity-limits'))");
 
       // Lock the existing row (if any) so the previous value recorded in
       // the audit trail is the true value being replaced. Concurrent
@@ -193,6 +196,7 @@ export class ContractElectricityLimitsService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set contract electricity limits: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },

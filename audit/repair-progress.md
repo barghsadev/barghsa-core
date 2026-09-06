@@ -1173,3 +1173,9 @@ All 73 focused API checks passed, followed by all 2,657 API tests across 214 fil
 Green-rule and contract-limit reads now return CONFIG:STORED_VALUE_INVALID with HTTP 503 for malformed persisted settings. They preserve the damaged row for investigation. Previously both silently substituted defaults, potentially disabling a mandatory advanced-order rule or widening a saved contract limit. Missing rows still use the documented initial defaults. The green safety-status endpoint also refuses damaged rule data.
 
 Review and validation: 33 focused unit and real HTTP checks passed. HTTP confirms both configuration reads and green safety status refuse damaged data without replacing it. Root type checking and lint passed. This does not add unbuilt ordering/contract consumers; they must preserve this fail-closed behavior when integrated.
+
+### Protect contract-limit saves and first-write audit history (F04/F17)
+
+Contract-limit changes now hold current catalogue-edit authority through the transaction and serialize initial configuration creation with an advisory lock. Permission errors preserve their 403 status after rollback.
+
+Review and validation: all 20 focused controller/service/HTTP checks pass. A deterministic HTTP test holds the global configuration-version row, starts saves from two different staff accounts, waits until both transactions are blocked, then releases them and verifies the audit chain 0→1→2. This checks configuration serialization independently of the actor-account lock. Other HTTP cases verify revocation after the guard and rollback of settings/global version on final audit failure. Updated the green first-write test to use two distinct staff accounts as well. Root types and lint pass. The required contract-limit editor remains open.

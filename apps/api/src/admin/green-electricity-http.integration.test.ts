@@ -55,15 +55,15 @@ beforeEach(async () => {
     "INSERT INTO products(system_key,title,price,status) VALUES ('green_electricity','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000"
   );
 });
-function save(body: unknown = input) {
+function save(body: unknown = input, user = 'operator') {
   return fetch(`${http.base}/api/admin/config/green-electricity-rules`, {
     method: 'PUT',
-    headers: headers.operator!,
+    headers: headers[user]!,
     body: JSON.stringify(body),
   });
 }
 it('serializes first writes and preserves a continuous audit version chain', async () => {
-  const responses = await Promise.all([save(), save()]);
+  const responses = await Promise.all([save(), save(input, 'viewer')]);
   expect(responses.map((r) => r.status)).toEqual([200, 200]);
   const audits = (
     await http.pool.query(
