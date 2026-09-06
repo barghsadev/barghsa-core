@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import { requireAddressGeography } from '../profiles/address-geography.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -71,6 +72,27 @@ export class OrdersService {
     @Inject(GiftCodeService)
     private readonly giftCodeService: GiftCodeService
   ) {}
+
+  private async mayManageOrders(
+    client: PoolClient,
+    userId: string,
+    profileId: string
+  ): Promise<boolean> {
+    const profile = (
+      await client.query(
+        'SELECT id,user_id,profile_type FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
+        [profileId]
+      )
+    ).rows[0];
+    if (!profile) return false;
+    if (profile.user_id === userId) return true;
+    if (profile.profile_type !== 'LEGAL') return false;
+    const agent = await client.query(
+      "SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager' FOR SHARE",
+      [profileId, userId]
+    );
+    return agent.rows.length > 0;
+  }
 
   /**
    * Create a new order with an address snapshot.
@@ -153,12 +175,7 @@ export class OrdersService {
     try {
       await client.query('BEGIN');
 
-      // Hold the profile until commit so archival cannot miss this new order.
-      const profileResult = await client.query(
-        `SELECT id FROM profiles WHERE id = $1 AND user_id = $2 AND NOT archived FOR SHARE`,
-        [dto.profileId, userId]
-      );
-      if (profileResult.rows.length === 0) {
+      if (!(await this.mayManageOrders(client, userId, dto.profileId)))
         throw new HttpException(
           {
             statusCode: 404,
@@ -167,7 +184,6 @@ export class OrdersService {
           },
           404
         );
-      }
 
       // Validate the product exists, is active, and fetch its price +
       // type (the price is the order total for gift-code math).
@@ -250,6 +266,15 @@ export class OrdersService {
         );
       }
 
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+         VALUES(uuid_generate_v7(),$1,'order_created',$2::jsonb,uuid_generate_v7(),$3)`,
+        [
+          userId,
+          JSON.stringify({ orderId: finalOrder.id, profileId: dto.profileId, status: 'DRAFT' }),
+          actorIp,
+        ]
+      );
       await client.query('COMMIT');
       this.logger.log(`Order ${finalOrder.id} created for user ${userId}, type=${dto.orderType}`);
       return finalOrder;
@@ -267,7 +292,10 @@ export class OrdersService {
   async listOrders(userId: string): Promise<OrderRow[]> {
     const pool = getDbPool();
     const result = await pool.query(
-      `SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC`,
+      `SELECT o.* FROM orders o JOIN profiles p ON p.id=o.profile_id
+       WHERE NOT p.archived AND (p.user_id=$1 OR (p.profile_type='LEGAL' AND EXISTS(
+         SELECT 1 FROM profile_agents a WHERE a.profile_id=p.id AND a.user_id=$1 AND a.role='Manager'
+       ))) ORDER BY o.created_at DESC`,
       [userId]
     );
     return result.rows.map((row) => mapRow(row as Record<string, unknown>));
@@ -278,10 +306,13 @@ export class OrdersService {
    */
   async getOrder(userId: string, orderId: string): Promise<OrderRow | null> {
     const pool = getDbPool();
-    const result = await pool.query(`SELECT * FROM orders WHERE id = $1 AND user_id = $2`, [
-      orderId,
-      userId,
-    ]);
+    const result = await pool.query(
+      `SELECT o.* FROM orders o JOIN profiles p ON p.id=o.profile_id
+       WHERE o.id=$1 AND NOT p.archived AND (p.user_id=$2 OR (p.profile_type='LEGAL' AND EXISTS(
+         SELECT 1 FROM profile_agents a WHERE a.profile_id=p.id AND a.user_id=$2 AND a.role='Manager'
+       )))`,
+      [orderId, userId]
+    );
     return result.rows.length > 0 ? mapRow(result.rows[0] as Record<string, unknown>) : null;
   }
 
@@ -307,38 +338,34 @@ export class OrdersService {
   ): Promise<OrderRow | null> {
     const pool = getDbPool();
     const client = await pool.connect();
-    let rolledBack = false;
     try {
       await client.query('BEGIN');
-      const result = await client.query(
-        `UPDATE orders
-            SET status = 'CANCELLED', updated_at = $1
-          WHERE id = $2 AND user_id = $3 AND status IN ('DRAFT', 'PENDING')
-          RETURNING *`,
-        [new Date(), orderId, userId]
-      );
-      if (result.rows.length === 0) {
-        await client.query('ROLLBACK').catch(() => {});
-        rolledBack = true;
-        // Distinguish: not found / not owned (404) vs already cancelled
-        // (idempotent no-op) vs terminal non-cancellable (409).
-        const existing = await pool.query(`SELECT * FROM orders WHERE id = $1 AND user_id = $2`, [
-          orderId,
-          userId,
-        ]);
-        if (existing.rows.length === 0) return null;
-        const row = mapRow(existing.rows[0] as Record<string, unknown>);
-        if (row.status === 'CANCELLED') return row;
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'ORDER_NOT_CANCELLABLE',
-            message: `Order ${orderId} is ${row.status} and cannot be cancelled at this stage`,
-          },
-          409
-        );
+      const target = (await client.query('SELECT profile_id FROM orders WHERE id=$1', [orderId]))
+        .rows[0];
+      if (!target || !(await this.mayManageOrders(client, userId, target.profile_id))) {
+        await client.query('ROLLBACK');
+        return null;
       }
-      const order = mapRow(result.rows[0] as Record<string, unknown>);
+      const result = await client.query(
+        'SELECT * FROM orders WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+        [orderId, target.profile_id]
+      );
+      if (!result.rows.length) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+      const current = mapRow(result.rows[0] as Record<string, unknown>);
+      if (current.status === 'CANCELLED') {
+        await client.query('COMMIT');
+        return current;
+      }
+      if (current.status !== 'DRAFT' && current.status !== 'PENDING')
+        throw new HttpException({ statusCode: 409, error: 'ORDER_NOT_CANCELLABLE' }, 409);
+      const updated = await client.query(
+        "UPDATE orders SET status='CANCELLED',updated_at=NOW() WHERE id=$1 RETURNING *",
+        [orderId]
+      );
+      const order = mapRow(updated.rows[0] as Record<string, unknown>);
       // Restore the gift-code slot (default pre-payment policy) — same
       // transaction: the release commits/rolls back with the cancel.
       if (order.giftCodeId !== null) {
@@ -350,15 +377,25 @@ export class OrdersService {
           `Order ${order.id} cancelled before payment; ${released} gift-code slot(s) restored`
         );
       }
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+         VALUES(uuid_generate_v7(),$1,'order_cancelled',$2::jsonb,uuid_generate_v7(),$3)`,
+        [
+          userId,
+          JSON.stringify({
+            orderId: order.id,
+            profileId: order.profileId,
+            previousStatus: current.status,
+            status: 'CANCELLED',
+          }),
+          actorIp,
+        ]
+      );
       await client.query('COMMIT');
       this.logger.log(`Order ${order.id} cancelled for user ${userId}`);
       return order;
     } catch (error) {
-      // The no-match branch already rolled back; the catch only rolls
-      // back when the transaction is still open.
-      if (!rolledBack) {
-        await client.query('ROLLBACK').catch(() => {});
-      }
+      await client.query('ROLLBACK').catch(() => {});
       throw error;
     } finally {
       client.release();

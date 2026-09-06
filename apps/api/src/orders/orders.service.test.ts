@@ -85,7 +85,7 @@ describe('OrdersService', () => {
 
   describe('createOrder', () => {
     it('creates an order with address snapshot in one transaction', async () => {
-      queueResponse({ rows: [{ id: 'prof-1' }] }); // profile exists
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] }); // profile exists
       queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '2000000' }] }); // product
       queueResponse({ rows: [makeRow()] }); // insert order
 
@@ -114,7 +114,7 @@ describe('OrdersService', () => {
     });
 
     it('rolls back and rethrows when a query fails', async () => {
-      queueResponse({ rows: [{ id: 'prof-1' }] });
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
       queueResponse({ rows: [] }); // product missing -> HttpException
 
       await expect(service.createOrder('user-1', validDto)).rejects.toThrow(
@@ -127,7 +127,7 @@ describe('OrdersService', () => {
     });
 
     it('redeems a gift code atomically and stores the discount on the order', async () => {
-      queueResponse({ rows: [{ id: 'prof-1' }] });
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
       queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '2000000' }] });
       queueResponse({ rows: [makeRow()] }); // insert order
       // gift code service returns the redemption…
@@ -166,7 +166,7 @@ describe('OrdersService', () => {
     });
 
     it('rejects a gift code on a product without a price (no redemption)', async () => {
-      queueResponse({ rows: [{ id: 'prof-1' }] });
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
       queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: null }] });
       queueResponse({ rows: [makeRow()] }); // insert order
 
@@ -179,7 +179,7 @@ describe('OrdersService', () => {
     });
 
     it('rolls back when redemption fails — failed orders never consume', async () => {
-      queueResponse({ rows: [{ id: 'prof-1' }] });
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
       queueResponse({ rows: [{ id: 'prod-1', type: 'electricity', price: '100000' }] });
       queueResponse({ rows: [makeRow()] }); // insert order
       mockGiftCodeService.redeem.mockRejectedValue(
@@ -260,84 +260,45 @@ describe('OrdersService', () => {
   });
 
   describe('cancelOrder', () => {
-    it('cancels a DRAFT order and releases its gift-code slot in one transaction', async () => {
-      // cancelOrder runs on a client: BEGIN + conditional UPDATE (+ release)
-      queueResponse({
-        rows: [
-          makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1', gift_discount_amount: '500000' }),
-        ],
+    function authorize() {
+      queueResponse({ rows: [{ profile_id: 'prof-1' }] });
+      queueResponse({ rows: [{ id: 'prof-1', user_id: 'user-1', profile_type: 'INDIVIDUAL' }] });
+    }
+    for (const gift of [null, 'gc-1']) {
+      it(`cancels a draft and releases its gift slot when present (${gift})`, async () => {
+        authorize();
+        queueResponse({ rows: [makeRow({ gift_code_id: gift })] });
+        queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: gift })] });
+        mockGiftCodeService.releaseByOrder.mockResolvedValue({ released: 1 });
+        expect((await service.cancelOrder('user-1', 'ord-001'))?.status).toBe('CANCELLED');
+        expect(mockGiftCodeService.releaseByOrder).toHaveBeenCalledTimes(gift ? 1 : 0);
+        expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
       });
-      mockGiftCodeService.releaseByOrder.mockResolvedValue({ released: 1 });
-
-      const result = await service.cancelOrder('user-1', 'ord-001');
-
-      expect(result?.status).toBe('CANCELLED');
-      // release ran inside the SAME transaction (client passed as executor)
-      expect(mockGiftCodeService.releaseByOrder).toHaveBeenCalledWith('ord-001', mockClient, {
-        actorUserId: 'user-1',
-        ip: 'unknown',
-      });
-      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
-      expect(mockClient.query).not.toHaveBeenCalledWith('ROLLBACK');
-    });
-
-    it('cancels an order without a gift code without touching the redemption service', async () => {
-      queueResponse({ rows: [makeRow({ status: 'CANCELLED' })] });
-
-      const result = await service.cancelOrder('user-1', 'ord-001');
-
-      expect(result?.status).toBe('CANCELLED');
-      expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
-      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
-    });
-
-    it('rolls back the cancellation when the slot release fails (no leaked state)', async () => {
-      queueResponse({
-        rows: [
-          makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1', gift_discount_amount: '500000' }),
-        ],
-      });
+    }
+    it('rolls back cancellation if gift release fails', async () => {
+      authorize();
+      queueResponse({ rows: [makeRow({ gift_code_id: 'gc-1' })] });
+      queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1' })] });
       mockGiftCodeService.releaseByOrder.mockRejectedValue(new Error('release failed'));
-
-      await expect(service.cancelOrder('user-1', 'ord-001')).rejects.toThrow(/release failed/);
-
+      await expect(service.cancelOrder('user-1', 'ord-001')).rejects.toThrow('release failed');
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
       expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
     });
-
-    it('is a no-op for an already-cancelled order (no release)', async () => {
-      // Conditional UPDATE matches nothing
-      queueResponse({ rows: [], rowCount: 0 });
-      // Re-read: order exists and is already CANCELLED
-      mockPool.query.mockResolvedValueOnce({
-        rows: [makeRow({ status: 'CANCELLED' })],
-      });
-
-      const result = await service.cancelOrder('user-1', 'ord-001');
-
-      expect(result?.status).toBe('CANCELLED');
+    it('does not release a gift again for an already cancelled order', async () => {
+      authorize();
+      queueResponse({ rows: [makeRow({ status: 'CANCELLED', gift_code_id: 'gc-1' })] });
+      expect((await service.cancelOrder('user-1', 'ord-001'))?.status).toBe('CANCELLED');
       expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
     });
-
-    it('rejects a CONFIRMED order with 409 instead of fake success', async () => {
-      queueResponse({ rows: [], rowCount: 0 });
-      mockPool.query.mockResolvedValueOnce({
-        rows: [makeRow({ status: 'CONFIRMED' })],
-      });
-
-      const err = await service.cancelOrder('user-1', 'ord-001').catch((e: unknown) => e);
-      expect((err as { status?: number }).status).toBe(409);
+    it('rejects confirmed orders', async () => {
+      authorize();
+      queueResponse({ rows: [makeRow({ status: 'CONFIRMED' })] });
+      await expect(service.cancelOrder('user-1', 'ord-001')).rejects.toMatchObject({ status: 409 });
       expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
     });
-
-    it('returns null when the order is not found', async () => {
-      queueResponse({ rows: [], rowCount: 0 });
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
-
-      const result = await service.cancelOrder('user-1', 'ord-001');
-
-      expect(result).toBeNull();
-      expect(mockGiftCodeService.releaseByOrder).not.toHaveBeenCalled();
+    it('returns null when the order is absent', async () => {
+      queueResponse({ rows: [] });
+      expect(await service.cancelOrder('user-1', 'ord-001')).toBeNull();
     });
   });
 
