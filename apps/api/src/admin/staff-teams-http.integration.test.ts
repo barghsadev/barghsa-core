@@ -88,3 +88,16 @@ it('searches eligible members and retains named existing members after disableme
     expect(data.selected).toEqual([{id:'member',name:'member@example.test',eligible:false}])
   } finally { await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='member'") }
 })
+
+it('requires a current team member as lead, preserves it on partial updates and clears it explicitly',async()=>{
+  const response=await call('staff-teams','POST',{name:'Lead team',memberUserIds:['member'],leadUserId:'member'})
+  expect(response.status).toBe(201)
+  const created=await response.json() as {id:string;leadUserId:string}
+  expect(created.leadUserId).toBe('member')
+  expect((await call('staff-teams','POST',{name:'Lead team'})).status).toBe(409)
+  expect((await call('staff-teams','POST',{name:'Invalid lead',memberUserIds:['member'],leadUserId:'admin'})).status).toBe(400)
+  expect(await (await call(`staff-teams/${created.id}`,'PUT',{name:'Lead renamed'})).json()).toMatchObject({leadUserId:'member'})
+  expect((await call(`staff-teams/${created.id}`,'PUT',{memberUserIds:[]})).status).toBe(400)
+  expect((await call(`staff-teams/${created.id}`,'PUT',{memberUserIds:[],leadUserId:null})).status).toBe(200)
+  expect((await http.pool.query('SELECT lead_user_id FROM staff_teams WHERE id=$1',[created.id])).rows[0].lead_user_id).toBeNull()
+})

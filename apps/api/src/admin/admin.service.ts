@@ -2203,7 +2203,7 @@ export class AdminService {
   async listStaffTeams(): Promise<StaffTeamRecord[]> {
     const pool = getDbPool()
     const teamsResult = await pool.query(
-      `SELECT id, name, description, skill_tags, is_active, created_at, updated_at
+      `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
        FROM staff_teams
        ORDER BY name ASC`,
     )
@@ -2224,12 +2224,13 @@ export class AdminService {
       membersByTeam.set(row.team_id, list)
     }
 
-    return teamsResult.rows.map((row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; created_at: Date; updated_at: Date }) => ({
+    return teamsResult.rows.map((row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; lead_user_id?: string | null; created_at: Date; updated_at: Date }) => ({
       id: row.id,
       name: row.name,
       description: row.description,
       skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
       isActive: row.is_active,
+      leadUserId: row.lead_user_id ?? null,
       memberUserIds: membersByTeam.get(row.id) ?? [],
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
@@ -2271,6 +2272,7 @@ export class AdminService {
       description: ((input as StaffTeamInput).description ?? null) as string | null,
       skillTags: ((input as StaffTeamInput).skillTags ?? []).map((t: string) => t.trim()),
       memberUserIds: (input as StaffTeamInput).memberUserIds ?? [],
+      leadUserId: (input as StaffTeamInput).leadUserId ?? null,
     }
 
     const pool = getDbPool()
@@ -2284,10 +2286,10 @@ export class AdminService {
       await this.assertTeamMembersExist(client, team.memberUserIds)
 
       const insertResult = await client.query(
-        `INSERT INTO staff_teams (id, name, description, skill_tags, is_active, created_at, updated_at)
-         VALUES ($1, $2, $3, $4::jsonb, true, $5, $5)
-         RETURNING id, name, description, skill_tags, is_active, created_at, updated_at`,
-        [teamId, team.name, team.description, JSON.stringify(team.skillTags), now],
+        `INSERT INTO staff_teams (id, name, description, skill_tags, is_active, created_at, updated_at, lead_user_id)
+         VALUES ($1, $2, $3, $4::jsonb, true, $5, $5, $6)
+         RETURNING id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at`,
+        [teamId, team.name, team.description, JSON.stringify(team.skillTags), now, team.leadUserId],
       )
       const row = insertResult.rows[0]!
 
@@ -2296,6 +2298,7 @@ export class AdminService {
       await this.recordTeamAudit(client, 'team_create', actorUserId, ip, now, {
         teamId,
         name: team.name,
+        leadUserId: team.leadUserId,
         memberUserIds: team.memberUserIds,
         skillTags: team.skillTags,
       })
@@ -2355,7 +2358,7 @@ export class AdminService {
       await client.query('BEGIN')
 
       const existingResult = await client.query(
-        `SELECT id, name, description, skill_tags, is_active, created_at, updated_at
+        `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
          FROM staff_teams WHERE id = $1 FOR UPDATE`,
         [teamId],
       )
@@ -2377,6 +2380,7 @@ export class AdminService {
       // then run the full validator over the merged shape so a partial
       // update cannot bypass a rule (e.g. name length).
       const merged: StaffTeamInput = {
+        leadUserId: (input as Record<string,unknown>).leadUserId !== undefined ? (input as StaffTeamInput).leadUserId : existing.lead_user_id ?? null,
         name: (input as Record<string, unknown>).name !== undefined
           ? ((input as Record<string, unknown>).name as string)
           : existing.name,
@@ -2412,10 +2416,10 @@ export class AdminService {
 
       const updateResult = await client.query(
         `UPDATE staff_teams
-         SET name = $2, description = $3, skill_tags = $4::jsonb, updated_at = $5
+         SET name = $2, description = $3, skill_tags = $4::jsonb, updated_at = $5, lead_user_id = $6
          WHERE id = $1
-         RETURNING id, name, description, skill_tags, is_active, created_at, updated_at`,
-        [teamId, merged.name, merged.description, JSON.stringify(merged.skillTags), now],
+         RETURNING id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at`,
+        [teamId, merged.name, merged.description, JSON.stringify(merged.skillTags), now, merged.leadUserId],
       )
       const row = updateResult.rows[0]!
 
@@ -2427,6 +2431,8 @@ export class AdminService {
         teamId,
         name: merged.name,
         previousName: existing.name,
+        previousLeadUserId: existing.lead_user_id ?? null,
+        leadUserId: merged.leadUserId,
         previousMemberUserIds,
         memberUserIds: merged.memberUserIds,
         previousSkillTags: Array.isArray(existing.skill_tags) ? existing.skill_tags : [],
@@ -2587,7 +2593,7 @@ export class AdminService {
   }
 
   private mapTeamRow(
-    row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; created_at: Date; updated_at: Date },
+    row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; lead_user_id?: string | null; created_at: Date; updated_at: Date },
     memberUserIds: string[],
   ): StaffTeamRecord {
     return {
@@ -2596,6 +2602,7 @@ export class AdminService {
       description: row.description,
       skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
       isActive: row.is_active,
+      leadUserId: row.lead_user_id ?? null,
       memberUserIds,
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),

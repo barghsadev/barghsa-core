@@ -39,12 +39,14 @@ for(const locale of ['en','fa'])test(`team UI persists through the migrated API 
   await page.goto('/admin/staff-teams')
   await page.getByLabel(fa?'نام تیم':'Team name',{exact:true}).fill(name)
   await page.getByLabel('Member UI',{exact:true}).check()
+  await page.getByLabel(fa?'سرپرست تیم':'Team lead',{exact:true}).selectOption('team-ui-member')
   await page.getByRole('button',{name:fa?'ذخیره تیم':'Save team',exact:true}).click()
   await page.getByRole('dialog').getByRole('button',{name:fa?'تأیید':'Confirm',exact:true}).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   const apiHeaders={cookie:`barghsa_session=${http.session}`}
-  const team=((await (await page.request.get(`${http.base}/api/admin/staff-teams`,{headers:apiHeaders})).json()) as Array<{id:string;name:string;memberUserIds:string[]}>).find(item=>item.name===name)!
+  const team=((await (await page.request.get(`${http.base}/api/admin/staff-teams`,{headers:apiHeaders})).json()) as Array<{id:string;name:string;memberUserIds:string[];leadUserId:string|null}>).find(item=>item.name===name)!
   expect(team).toBeTruthy()
+  expect(team.leadUserId).toBe('team-ui-member')
   expect(team.memberUserIds).toEqual(['team-ui-member'])
   await page.getByLabel(fa?'تیم مسئول':'Assigned team',{exact:true}).first().selectOption(team.id)
   await page.getByRole('button',{name:fa?'ذخیره قوانین تخصیص':'Save assignment rules',exact:true}).click()

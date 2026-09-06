@@ -5,9 +5,9 @@ import { DEFAULT_STAFF_ASSIGNMENT_RULES, STAFF_ASSIGNMENT_WORK_TYPES, STAFF_ASSI
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js'
 import { useLocale } from '../hooks/useLocale.js'
 
-interface Team { id: string; name: string; description: string | null; skillTags: string[]; isActive: boolean; memberUserIds: string[] }
+interface Team { leadUserId?: string | null; id: string; name: string; description: string | null; skillTags: string[]; isActive: boolean; memberUserIds: string[] }
 interface Member { id: string; name: string; eligible?: boolean }
-const emptyDraft = () => ({ name: '', description: '', tags: '', members: [] as string[] })
+const emptyDraft = () => ({ name: '', description: '', tags: '', members: [] as string[], leadUserId:null as string|null })
 
 export default function AdminStaffTeamsPage() {
   const locale = useLocale(), label = (key: string) => t(`admin.teams.${key}`, locale)
@@ -48,13 +48,16 @@ export default function AdminStaffTeamsPage() {
     return()=>{clearTimeout(timer);controller.abort()}
   },[search,editing])
   function edit(team?:Team) {
-    setEditing(team?.id ?? null);setDraft(team?{name:team.name,description:team.description??'',tags:team.skillTags.join(', '),members:[...team.memberUserIds]}:emptyDraft())
+    setEditing(team?.id ?? null);setDraft(team?{name:team.name,description:team.description??'',tags:team.skillTags.join(', '),members:[...team.memberUserIds],leadUserId:team.leadUserId??null}:emptyDraft())
     setSearch('');setSaved(false);formHeading.current?.focus()
+  }
+  function toggleMember(id:string,checked:boolean) {
+    setDraft(previous=>({...previous,members:checked?[...previous.members,id]:previous.members.filter(value=>value!==id),leadUserId:!checked&&previous.leadUserId===id?null:previous.leadUserId}))
   }
   function saveTeam(event:FormEvent) {
     event.preventDefault();setSaved(false)
     setAction({title:label('saveTeam'),description:`${draft.name.trim()} · ${draft.members.map(id=>known[id]?.name??label('loading')).join(', ')}`,path:`/api/admin/staff-teams${editing?`/${editing}`:''}`,method:editing?'PUT':'POST',
-      body:{name:draft.name.trim(),description:draft.description.trim()||null,skillTags:draft.tags.split(',').map(tag=>tag.trim()).filter(Boolean),memberUserIds:[...draft.members]},forbiddenMessage:label('forbidden')})
+      body:{name:draft.name.trim(),description:draft.description.trim()||null,skillTags:draft.tags.split(',').map(tag=>tag.trim()).filter(Boolean),memberUserIds:[...draft.members],leadUserId:draft.leadUserId},forbiddenMessage:label('forbidden')})
   }
   const disabled=loading||error||!!action
   return <section className="mx-auto max-w-4xl space-y-6" dir={locale==='fa'?'rtl':'ltr'}>
@@ -78,10 +81,13 @@ export default function AdminStaffTeamsPage() {
           <div><Label htmlFor="staff-team-tags">{label('tags')}</Label><Input id="staff-team-tags" value={draft.tags} onChange={event=>setDraft({...draft,tags:event.target.value})}/><p className="text-sm text-gray-600">{label('tagsHelp')}</p></div>
           <div><Label htmlFor="staff-team-search">{label('search')}</Label><Input id="staff-team-search" maxLength={100} value={search} onChange={event=>setSearch(event.target.value)}/></div>
           {memberLoading?<p role="status">{label('loading')}</p>:memberError?<p role="alert">{label('memberError')}</p>:<>
-            <fieldset className="max-h-52 overflow-auto space-y-2"><legend>{label('members')}</legend>{members.map(member=><label key={member.id} className="flex items-center gap-2"><input type="checkbox" checked={draft.members.includes(member.id)} disabled={!draft.members.includes(member.id)&&draft.members.length>=200} onChange={event=>setDraft({...draft,members:event.target.checked?[...draft.members,member.id]:draft.members.filter(id=>id!==member.id)})}/>{member.name}</label>)}</fieldset>
+            <fieldset className="max-h-52 overflow-auto space-y-2"><legend>{label('members')}</legend>{members.map(member=><label key={member.id} className="flex items-center gap-2"><input type="checkbox" checked={draft.members.includes(member.id)} disabled={!draft.members.includes(member.id)&&draft.members.length>=200} onChange={event=>toggleMember(member.id,event.target.checked)}/>{member.name}</label>)}</fieldset>
             {hasMore&&<p className="text-sm">{label('more')}</p>}
           </>}
-          <ul aria-label={label('selected')} className="flex flex-wrap gap-2">{draft.members.map(id=><li key={id} className="rounded border p-2 text-sm">{known[id]?.name??label('loading')} {known[id]?.eligible===false&&label('inactive')} <button type="button" className="underline" onClick={()=>setDraft({...draft,members:draft.members.filter(value=>value!==id)})}>{label('remove')}</button></li>)}</ul>
+          <ul aria-label={label('selected')} className="flex flex-wrap gap-2">{draft.members.map(id=><li key={id} className="rounded border p-2 text-sm">{known[id]?.name??label('loading')} {known[id]?.eligible===false&&label('inactive')} <button type="button" className="underline" onClick={()=>toggleMember(id,false)}>{label('remove')}</button></li>)}</ul>
+          <div><Label htmlFor="staff-team-lead">{label('lead')}</Label><select id="staff-team-lead" className="block rounded border p-2" value={draft.leadUserId??''} onChange={event=>setDraft({...draft,leadUserId:event.target.value||null})}>
+            <option value="">{label('noLead')}</option>{draft.members.map(id=><option key={id} value={id} disabled={known[id]?.eligible===false}>{known[id]?.name??label('loading')}</option>)}
+          </select><p className="text-sm text-gray-600">{label('leadHelp')}</p></div>
           <div className="flex gap-2"><Button type="submit" disabled={!draft.name.trim()||memberLoading||memberError}>{label('saveTeam')}</Button>{editing&&<Button type="button" variant="outline" onClick={()=>edit()}>{label('new')}</Button>}</div>
         </fieldset>
       </form>

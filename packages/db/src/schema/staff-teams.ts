@@ -1,6 +1,6 @@
-import { text, boolean, jsonb, uuid, pgTable, timestamp, primaryKey, check } from 'drizzle-orm/pg-core'
+import { text, boolean, jsonb, uuid, pgTable, timestamp, primaryKey, check, unique } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
-import { createTable } from '../base-table.js'
+import { baseColumns } from '../base-table.js'
 import { users } from './users.js'
 
 /**
@@ -21,15 +21,14 @@ import { users } from './users.js'
  * - `is_active`     soft-disable flag — a disabled team can still exist but
  *                   must never be picked by the assignment engine
  *
- * Database-level CHECK constraints live in migration `0038` only (Drizzle's
- * column builder in v0.40 does not expose `.check()`): `chk_st_name_length`
- * and `chk_st_active_bool` plus the `uq_st_name` unique constraint.
- * `staff-teams.test.ts` pins migration 0038 so a future `drizzle-kit
- * generate` cannot silently drop them.
+ * Team-name and membership constraints are declared here and restored for
+ * production upgrades by migration 0103. Optional team leads receive escalation alerts.
  *
  * @module db/schema
  */
-export const staffTeams = createTable('staff_teams', {
+export const staffTeams = pgTable('staff_teams', {
+  ...baseColumns,
+  leadUserId: text('lead_user_id').references(() => users.userId, {onDelete:'set null'}),
   /** Display name, unique across teams. */
   name: text('name').notNull(),
 
@@ -41,7 +40,7 @@ export const staffTeams = createTable('staff_teams', {
 
   /** Soft-disable flag; disabled teams are never auto-assigned. */
   isActive: boolean('is_active').notNull().default(true),
-})
+},table=>[unique('uq_st_name').on(table.name),check('chk_st_name_length',sql`char_length(${table.name}) BETWEEN 1 AND 80`)])
 
 /**
  * Staff team membership (S-09.08, T-09.08.02).
@@ -50,9 +49,10 @@ export const staffTeams = createTable('staff_teams', {
  * The UNIQUE (team_id, user_id) constraint prevents duplicate membership
  * and doubles as the lookup index for "members of team X".
  *
- * Constraints live in migration `0038` (see {@link staffTeams} header).
+ * The schema and production migration retain the membership uniqueness rule.
  */
-export const staffTeamMembers = createTable('staff_team_members', {
+export const staffTeamMembers = pgTable('staff_team_members', {
+  ...baseColumns,
   /** Owning team (UUID PK of staff_teams). */
   teamId: uuid('team_id')
     .notNull()
@@ -62,7 +62,7 @@ export const staffTeamMembers = createTable('staff_team_members', {
   userId: text('user_id')
     .notNull()
     .references(() => users.userId, { onDelete: 'cascade' }),
-})
+},table=>[unique('uq_stm_team_member').on(table.teamId,table.userId)])
 
 /** Durable round-robin position, committed with the new work item. */
 export const staffAssignmentCursors = pgTable('staff_assignment_cursors', {

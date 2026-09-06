@@ -178,6 +178,7 @@ export interface StaffTeamInput {
   description: string | null
   skillTags: string[]
   memberUserIds: string[]
+  leadUserId?: string | null
 }
 
 /** Stored/read shape of a staff team (created_at/updated_at from base columns). */
@@ -188,6 +189,7 @@ export interface StaffTeamRecord {
   skillTags: string[]
   isActive: boolean
   memberUserIds: string[]
+  leadUserId?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -258,6 +260,11 @@ export function validateStaffTeamInput(input: unknown): StaffTeamInputValidation
     if (unique.size !== o.memberUserIds.length) {
       issues.push('memberUserIds must not contain duplicates')
     }
+  }
+
+  if (o.leadUserId !== undefined && o.leadUserId !== null &&
+      (typeof o.leadUserId !== 'string' || !Array.isArray(o.memberUserIds) || !o.memberUserIds.includes(o.leadUserId))) {
+    issues.push('leadUserId must name a selected team member or be null')
   }
 
   return { ok: issues.length === 0, issues }

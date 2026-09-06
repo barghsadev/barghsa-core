@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version', '0088_staff_activation_delivery', '0089_pending_profile_verification', '0090_user_profile_context', '0091_additive_agent_roles', '0092_notification_delivery_identity', '0093_notification_window_snapshot', '0094_notification_claim_fencing', '0095_notification_message_snapshot', '0096_unified_notification_inbox', '0097_notification_recipient_backfill', '0098_ticket_attachments', '0099_ticket_team', '0100_staff_assignment', '0101_account_notification_recipients', '0102_service_breach_constraints'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version', '0088_staff_activation_delivery', '0089_pending_profile_verification', '0090_user_profile_context', '0091_additive_agent_roles', '0092_notification_delivery_identity', '0093_notification_window_snapshot', '0094_notification_claim_fencing', '0095_notification_message_snapshot', '0096_unified_notification_inbox', '0097_notification_recipient_backfill', '0098_ticket_attachments', '0099_ticket_team', '0100_staff_assignment', '0101_account_notification_recipients', '0102_service_breach_constraints', '0103_staff_team_leads'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -63,7 +63,7 @@ describe('complete production schema baseline', () => {
       // tables with the old migration journal and missing unjournaled schema.
       const oldSql = readFileSync(resolve(folder, '../0079_create_bank_receipt_attachment_claims.sql'), 'utf8')
       await pool.query(oldSql)
-      await pool.query('DROP TABLE staff_assignment_cursors; ALTER TABLE verification_cases DROP COLUMN assigned_to CASCADE; ALTER TABLE verification_cases DROP COLUMN assigned_team_id CASCADE; DROP INDEX tickets_assigned_open_idx')
+      await pool.query('ALTER TABLE staff_teams DROP COLUMN lead_user_id; DROP TABLE staff_assignment_cursors; ALTER TABLE verification_cases DROP COLUMN assigned_to CASCADE; ALTER TABLE verification_cases DROP COLUMN assigned_team_id CASCADE; DROP INDEX tickets_assigned_open_idx')
       await pool.query('ALTER TABLE tickets DROP COLUMN attachments CASCADE; ALTER TABLE tickets DROP COLUMN assigned_team_id CASCADE')
       const legacyTicket = (await pool.query("INSERT INTO tickets(user_id,subject,body) VALUES ('baseline-user','Legacy question','Existing conversation') RETURNING id")).rows[0].id
       await pool.query('DROP INDEX idx_profile_agents_profile_user_role')

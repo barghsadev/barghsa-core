@@ -549,3 +549,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Review: 31 API checks passed, including real HTTP permission/step-up/invalid/disable flows, concurrent first writes and audit-failure rollback/retry for both configurations. Replaced mocked transaction-success checks with those real database scenarios. Workspace typechecks and production web build passed. Four Chromium tests against the migrated API cover team/target persistence and disable in both locales; two additional target browser tests cover invalid input, confirmation, failed saves and denied access.
 - Team/target live browser fixtures were consolidated under admin-settings-live.spec.ts and admin-ui-fixture.ts.
 - Remaining escalation gap: level two currently broadcasts to teammates; the original requirement calls for a team lead. Correct that recipient model next. Consultation targets await the unbuilt consultation domain.
+
+### F17.6 — Explicit team leads and escalation recipients
+
+- Teams can designate a current member as their lead. Partial updates retain the lead; removing that membership requires clearing/changing the lead. The screen selects named members and clears a removed lead. Team create/update audits record the lead change.
+- Level-two escalation now targets configured active team leads, not every teammate. A missing/disabled lead, or a lead already responsible for the item, falls back to active administrators. Unrelated teammates receive no escalation.
+- Migration 0103 adds the optional lead reference and restores omitted unique team-name/membership and bounded-name constraints; schema definitions now retain them. Existing invalid/duplicate data is not silently deleted.
+- Review: 41 focused API checks, all 310 worker tests, eight migration/schema checks and workspace typechecks passed. Real database checks cover lead membership, duplicate team rejection, concurrent escalation deduplication, teammate exclusion and disabled-lead fallback. Seven Chromium checks passed, including lead selection persisted through the real API in both locales.
+- Priority reordering from the original team task is still open, as are separate unbuilt consultation flows. Further production-schema review follows because the legacy inline-constraint omission affects more than these tables.

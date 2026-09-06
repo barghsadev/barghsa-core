@@ -4,6 +4,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  "admin.teams.lead": "سرپرست تیم",
+  "admin.teams.noLead": "بدون سرپرست — ارجاع هشدار به مدیران",
+  "admin.teams.leadHelp": "هشدارهای سطح دوم به سرپرست فعال تیم می‌رسند. اگر سرپرست در دسترس نباشد یا خودش مسئول کار باشد، هشدار به مدیران می‌رسد.",
   "admin.targets.title": "زمان هدف پاسخ کارکنان",
   "admin.targets.note": "عبور از زمان هدف، هشدار داخلی برای کارکنان ایجاد می‌کند و به مشتری تعهد سطح خدمت نمی‌دهد. تغییر تنظیمات بر کارهای باز نیز اثر دارد.",
   "admin.targets.save": "ذخیره زمان‌های هدف",
@@ -1502,6 +1505,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  "admin.teams.lead": "Team lead",
+  "admin.teams.noLead": "No lead — escalate to administrators",
+  "admin.teams.leadHelp": "Level-two alerts go to the active team lead. If the lead is unavailable or is already responsible for the work, alerts go to administrators.",
   "admin.targets.title": "Staff response targets",
   "admin.targets.note": "Breached targets create internal staff alerts but do not promise a service level to customers. Changes also apply to existing open work.",
   "admin.targets.save": "Save response targets",

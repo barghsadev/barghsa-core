@@ -493,3 +493,28 @@ it('delivers and escalates profileless staff alerts privately with retry and rol
   await expect(pool.query(`INSERT INTO notification_outbox(profile_id,event_key,channels,idempotency_key)
     VALUES (NULL,'invalid',ARRAY['in_app'],'missing-recipient')`)).rejects.toMatchObject({code:'23514'})
 })
+
+it('escalates to the configured lead, excludes teammates, and falls back when the lead is disabled',async()=>{
+  await pool.query(`INSERT INTO users(user_id,username,password_hash,is_staff) VALUES
+    ('lead-owner','lead-owner@example.test','test',true),('lead-target','lead-target@example.test','test',true),
+    ('lead-other','lead-other@example.test','test',true)`)
+  const team=(await pool.query("INSERT INTO staff_teams(name,lead_user_id) VALUES ('Lead routing','lead-target') RETURNING id")).rows[0].id
+  await pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'lead-owner'),($1,'lead-target'),($1,'lead-other')",[team])
+  const logger={warn:vi.fn(),info:vi.fn()}
+  async function createAndEscalate(){
+    const ticket=(await pool.query(`INSERT INTO tickets(user_id,assigned_to,subject,body,status,updated_at)
+      VALUES ('delivery-owner','lead-owner','Lead test','Private','in_progress',NOW()-INTERVAL '4 hours') RETURNING id`)).rows[0].id
+    expect((await scanServiceBreaches({pool,logger})).errors).toEqual([])
+    await pool.query("UPDATE service_breach_alerts SET alerted_at=NOW()-INTERVAL '2 hours' WHERE item_id=$1",[ticket])
+    const results=await Promise.all([scanServiceEscalations({pool,logger}),scanServiceEscalations({pool,logger})])
+    expect(results.flatMap(result=>result.errors)).toEqual([])
+    return (await pool.query("SELECT user_id FROM notification_outbox WHERE event_key='admin.service_escalated' AND payload->>'item_id'=$1",[ticket])).rows.map(row=>row.user_id)
+  }
+  expect(await createAndEscalate()).toEqual(['lead-target'])
+  await pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='lead-target'")
+  const fallback=await createAndEscalate()
+  expect(fallback).toContain('alert-admin')
+  expect(fallback).not.toContain('lead-target')
+  expect(fallback).not.toContain('lead-other')
+  await expect(pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'lead-owner')",[team])).rejects.toMatchObject({code:'23505'})
+})

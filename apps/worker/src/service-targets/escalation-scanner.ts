@@ -323,7 +323,7 @@ async function escalateOne(
   // and the item is re-evaluated on the next scan — there is no revert.
   let recipients: RecipientProfile[] = []
   if (toLevel === 2) {
-    // Team lead = the responsible user's team members; fall back to admins.
+    // Configured team lead; fall back to admins.
     recipients = await resolveLevel2Recipients(client, candidate.responsible_user_id)
   } else {
     recipients = await resolveAdminRecipients(client)
@@ -413,20 +413,20 @@ async function resolveLevel2Recipients(
     return resolveAdminRecipients(client)
   }
 
-  // Responsible user's team members (excluding the responsible user, who was
+  // Configured leads for the responsible user's active teams (excluding the responsible user, who was
   // already alerted at level 1 by the breach scanner).
   const members = await client.query(
-    `SELECT DISTINCT stm2.user_id
+    `SELECT DISTINCT t.lead_user_id AS user_id
        FROM staff_team_members stm
-       JOIN staff_team_members stm2 ON stm2.team_id = stm.team_id
        JOIN staff_teams t ON t.id=stm.team_id AND t.is_active
-       JOIN users u ON u.user_id=stm2.user_id AND u.disabled_at IS NULL AND u.activation_token IS NULL
-      WHERE stm.user_id = $1 AND stm2.user_id <> $1`,
+       JOIN staff_team_members lead ON lead.team_id=t.id AND lead.user_id=t.lead_user_id
+       JOIN users u ON u.user_id=t.lead_user_id AND u.disabled_at IS NULL AND u.activation_token IS NULL
+      WHERE stm.user_id = $1 AND t.lead_user_id <> $1`,
     [responsibleUserId],
   )
   const memberIds = members.rows.map((r) => String(r.user_id))
   if (memberIds.length === 0) {
-    // Responsible user is not in any configured team → climb to admins.
+    // No active configured lead for the responsible user → climb to admins.
     return resolveAdminRecipients(client)
   }
 
