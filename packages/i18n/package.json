@@ -1,21 +1,28 @@
 {
-    "name": "@barghsa/i18n",
-    "version": "0.0.0",
-    "private": true,
-    "files": ["dist"],
-    "type": "module",
-        "exports": {
-            ".": {
-                "types": "./dist/index.d.ts",
-                "import": "./dist/index.js",
-                "default": "./dist/index.js"
-            }
-        },
-    "scripts": {
-        "build": "tsc",
-        "dev": "tsc --watch --noEmit",
-        "test": "vitest run --passWithNoTests",
-        "test:coverage": "vitest run --coverage --passWithNoTests",
-        "typecheck": "tsc"
+  "name": "@barghsa/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "import": "./dist/auth.js",
+      "default": "./dist/auth.js"
     }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --passWithNoTests",
+    "typecheck": "tsc"
+  }
 }

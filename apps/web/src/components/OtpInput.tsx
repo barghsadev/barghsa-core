@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { t, type Locale } from '@barghsa/i18n'
+import { t, type Locale } from '@barghsa/i18n/auth'
 
 const DIGIT_COUNT = 6
 

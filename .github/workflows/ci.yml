@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "22"
+  NODE_VERSION: "24"
   PNPM_VERSION: "10.8.1"
 
 jobs:
@@ -27,6 +27,19 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
+      - name: Install production browser check runtime
+        run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+      - name: Verify actual cold authentication transfers
+        run: node scripts/check-auth-transfer.mjs
+      - name: Exercise production authentication and profile flows
+        run: node scripts/run-production-browser.mjs e2e/registration-consent.spec.ts e2e/password-reset.spec.ts e2e/staff-activation.spec.ts e2e/username-pair.spec.ts e2e/profile-switch.spec.ts
+      - name: Upload production browser failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-browser-failures
+          path: apps/web/test-results/
+          retention-days: 7
 
   test:
     name: Run tests

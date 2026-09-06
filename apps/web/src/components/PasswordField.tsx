@@ -1,4 +1,4 @@
-import { type Locale, t } from '@barghsa/i18n'
+import { type Locale, t } from '@barghsa/i18n/auth'
 import { Input, Label, Progress, ProgressIndicator, ProgressTrack } from '@barghsa/ui'
 import { type ReactNode, useCallback, useState } from 'react'
 

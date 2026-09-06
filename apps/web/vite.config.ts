@@ -32,7 +32,7 @@ export default defineConfig({
     TanStackRouterVite({
       routesDirectory: './src/routes',
       generatedRouteTree: './src/routeTree.gen.ts',
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
     }),
     react(),
     tailwindcss(),

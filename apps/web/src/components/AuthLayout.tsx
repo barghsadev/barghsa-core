@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { t, type Locale } from '@barghsa/i18n/auth'
 import { Card, CardContent } from '@barghsa/ui'
 import { useBrandConfig } from '../providers/BrandThemeProvider.js'
 

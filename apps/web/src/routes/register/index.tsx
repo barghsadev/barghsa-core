@@ -1,11 +1,13 @@
-import { useState, useCallback, useEffect } from 'react'
+import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n'
+import { t, type Locale } from '@barghsa/i18n/auth'
 import { Loader2Icon } from 'lucide-react'
-import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription, Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@barghsa/ui'
+import { Button, Checkbox, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui'
 import { AuthLayout } from '../../components/AuthLayout.js'
 import { PasswordField } from '../../components/PasswordField.js'
+
+const RegistrationTermsDialog = lazy(() => import('../../components/RegistrationTermsDialog.js'))
 
 export const Route = createFileRoute('/register/')({
   component: RegisterPage,
@@ -91,6 +93,8 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
 // ─── Page component ──────────────────────────────────────────────────────
 
 function RegisterPage() {
+  const [termsOpen, setTermsOpen] = useState(false)
+  const termsTrigger = useRef<HTMLButtonElement>(null)
   const router = useRouter()
   const locale: Locale = 'fa' // TODO: read from user preference / locale context
 
@@ -293,7 +297,7 @@ function RegisterPage() {
         </div>
       }
     >
-      <Dialog>
+      <>
         <div className="space-y-6">
           <div className="space-y-1.5">
             <h1 className="text-xl font-semibold tracking-tight">
@@ -388,14 +392,14 @@ function RegisterPage() {
                 />
                 <div id="tos-label" className="text-sm font-normal leading-relaxed">
                   {t('auth.register.tosPrefix', locale)}{' '}
-                  <DialogTrigger
-                    render={<button type="button" />}
+                  <button
+                    type="button" ref={termsTrigger} onClick={() => setTermsOpen(true)}
                     disabled={!currentTos}
                     className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
                     aria-label={t('auth.register.tosLinkText', locale)}
                   >
                     {t('auth.register.tosLinkText', locale)}
-                  </DialogTrigger>{' '}
+                  </button>{' '}
                   {t('auth.register.tosSuffix', locale)}
                 </div>
               </div>
@@ -427,14 +431,11 @@ function RegisterPage() {
             </Button>
           </form>
         </div>
-        <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-          <DialogHeader>
-            <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
-            <DialogDescription>{currentTos?.versionId}</DialogDescription>
-          </DialogHeader>
-          <div className="overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed">{currentTos?.content}</div>
-        </DialogContent>
-      </Dialog>
+        {termsOpen && currentTos && <Suspense fallback={null}>
+          <RegistrationTermsDialog locale={locale} versionId={currentTos.versionId} content={currentTos.content}
+            finalFocus={termsTrigger} onClose={() => setTermsOpen(false)} />
+        </Suspense>}
+      </>
     </AuthLayout>
   )
 }

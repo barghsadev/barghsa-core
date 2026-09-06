@@ -20,7 +20,7 @@
     "setup:bucket": "ts-node scripts/setup-bucket.ts",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write",
-    "check:bundle": "size-limit",
+    "check:bundle": "node --test scripts/check-route-budgets.test.mjs && node scripts/check-route-budgets.mjs",
     "db:seed": "pnpm --filter @barghsa/db db:seed"
   },
   "devDependencies": {

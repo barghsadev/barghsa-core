@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
+import { t } from '@barghsa/i18n/auth'
 import { Alert, AlertDescription, Button } from '@barghsa/ui'
 import { AuthLayout } from '../components/AuthLayout.js'
 import { PasswordField } from '../components/PasswordField.js'

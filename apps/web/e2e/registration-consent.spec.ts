@@ -20,6 +20,7 @@ test('registration shows and submits the same terms version', async ({ page }) =
   await expect(dialog).toContainText('consent-v1')
   await page.keyboard.press('Escape')
   await expect(dialog).not.toBeVisible()
+  await expect(page.locator('#tos-label button')).toBeFocused()
   await page.getByRole('checkbox').click()
   const request = page.waitForRequest('**/api/auth/register')
   await page.locator('button[type="submit"]').click()

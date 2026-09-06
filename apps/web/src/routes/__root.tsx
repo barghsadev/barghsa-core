@@ -1,8 +1,8 @@
 import { createRootRoute, Outlet, useLocation, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { useEffect } from 'react'
-import { VerificationBanner } from '../components/VerificationBanner.js'
-import { DefaultProfileModal } from '../components/DefaultProfileModal.js'
+import { lazy, Suspense, useEffect } from 'react'
+const VerificationBanner = lazy(() => import('../components/VerificationBanner.js').then(module => ({ default: module.VerificationBanner })))
+const DefaultProfileModal = lazy(() => import('../components/DefaultProfileModal.js').then(module => ({ default: module.DefaultProfileModal })))
 import { BrandThemeProvider } from '../providers/BrandThemeProvider.js'
 
 export const Route = createRootRoute({
@@ -12,7 +12,7 @@ export const Route = createRootRoute({
 /**
  * Auth route path prefixes that should skip the profile check.
  */
-const AUTH_ROUTE_PREFIXES = ['/login', '/register', '/forgot-password']
+const AUTH_ROUTE_PREFIXES = ['/login', '/register', '/forgot-password', '/activate']
 
 /**
  * Routes explicitly excluded from the profile check.
@@ -93,8 +93,8 @@ function RootComponent() {
   return (
     <>
       <BrandThemeProvider>
-        <VerificationBanner />
-        {needsProfile(pathname) && <DefaultProfileModal />}
+        {!AUTH_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix)) && <Suspense fallback={null}><VerificationBanner /></Suspense>}
+        {needsProfile(pathname) && <Suspense fallback={null}><DefaultProfileModal /></Suspense>}
         <Outlet />
         {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
       </BrandThemeProvider>
