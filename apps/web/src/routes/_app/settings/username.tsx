@@ -65,6 +65,8 @@ function SettingsUsernamePage() {
   const [changeOtpSent, setChangeOtpSent] = useState(false)
   const [changeChallengeId, setChangeChallengeId] = useState('')
   const [changeOtp, setChangeOtp] = useState('')
+  const [previousOtp, setPreviousOtp] = useState('')
+  const [previousDestination, setPreviousDestination] = useState('')
   const [sendingChangeOtp, setSendingChangeOtp] = useState(false)
   const [verifyingChange, setVerifyingChange] = useState(false)
 
@@ -135,8 +137,10 @@ function SettingsUsernamePage() {
 
       const data = await response.json()
       setChangeChallengeId(data.challengeId)
+      setNewUsername(data.destination)
+      setPreviousDestination(data.previousDestination)
       setChangeOtpSent(true)
-      toast.success(t('settings.username.otpSent', locale).replace('{destination}', newUsername.trim()))
+      toast.success(t('settings.username.pairSent', locale))
     } catch {
       toast.error(t('settings.username.error.generic', locale))
     } finally {
@@ -147,7 +151,7 @@ function SettingsUsernamePage() {
   // ── Change username OTP verify ───────────────────────────────────────
 
   const handleVerifyChange = useCallback(async () => {
-    if (!changeOtp.trim() || changeOtp.length !== 6) return
+    if (!/^\d{6}$/.test(changeOtp) || !/^\d{6}$/.test(previousOtp)) return
 
     setVerifyingChange(true)
 
@@ -159,6 +163,7 @@ function SettingsUsernamePage() {
           newUsername: newUsername.trim(),
           otpChallengeId: changeChallengeId,
           otp: changeOtp.trim(),
+          previousOtp,
         }),
       })
 
@@ -182,6 +187,8 @@ function SettingsUsernamePage() {
       setChangeOtpSent(false)
       setChangeChallengeId('')
       setChangeOtp('')
+      setPreviousOtp('')
+      setPreviousDestination('')
 
       // Refresh user info
       fetchUserInfo()
@@ -190,7 +197,7 @@ function SettingsUsernamePage() {
     } finally {
       setVerifyingChange(false)
     }
-  }, [newUsername, changeChallengeId, changeOtp, locale, fetchUserInfo])
+  }, [newUsername, changeChallengeId, changeOtp, previousOtp, locale, fetchUserInfo])
 
   // ── Add contact OTP send ─────────────────────────────────────────────
 
@@ -284,6 +291,8 @@ function SettingsUsernamePage() {
     setChangeOtpSent(false)
     setChangeChallengeId('')
     setChangeOtp('')
+    setPreviousOtp('')
+    setPreviousDestination('')
   }, [])
 
   // ── Cancel add contact ───────────────────────────────────────────────
@@ -399,17 +408,25 @@ function SettingsUsernamePage() {
                 ) : (
                   <>
                     <p className="text-xs text-muted-foreground">
-                      {t('settings.username.otpSent', locale).replace('{destination}', newUsername)}
+                      {t('settings.username.pairSent', locale)}
                     </p>
                     <div className="space-y-1.5">
+                      <Label htmlFor="previous-otp" className="text-xs">
+                        {t('settings.username.previousOtp', locale).replace('{destination}', maskUsername(previousDestination))}
+                      </Label>
+                      <Input id="previous-otp" value={previousOtp} onChange={(e) => setPreviousOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                        inputMode="numeric" autoComplete="one-time-code" maxLength={6} className="text-sm font-mono w-40" dir="ltr" />
+                    </div>
+                    <div className="space-y-1.5">
                       <Label htmlFor="change-otp" className="text-xs">
-                        {t('settings.username.otpLabel', locale)}
+                        {t('settings.username.newOtp', locale).replace('{destination}', maskUsername(newUsername))}
                       </Label>
                       <Input
                         id="change-otp"
                         placeholder={t('settings.username.otpPlaceholder', locale)}
                         value={changeOtp}
-                        onChange={(e) => setChangeOtp(e.target.value)}
+                        onChange={(e) => setChangeOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                        inputMode="numeric" autoComplete="one-time-code"
                         maxLength={6}
                         className="text-sm font-mono w-40"
                         dir="ltr"
@@ -428,7 +445,7 @@ function SettingsUsernamePage() {
                       <Button
                         size="sm"
                         onClick={handleVerifyChange}
-                        disabled={verifyingChange || changeOtp.length !== 6}
+                        disabled={verifyingChange || changeOtp.length !== 6 || previousOtp.length !== 6}
                         className="gap-1"
                       >
                         {verifyingChange ? (

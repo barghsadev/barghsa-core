@@ -319,3 +319,24 @@ it('rolls back challenge creation if the delivery insert fails', async () => {
   expect(response.status).toBe(500)
   expect((await fixture.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count).toBe(0)
 })
+
+
+it('changes username only with both codes delivered to the old and new mailboxes', async () => {
+  const sessionId=randomUUID(), csrf=randomUUID()
+  await fixture.pool.query(`INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at)
+    VALUES ($1,'provider-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())`,[sessionId,csrf,randomUUID()])
+  const headers={Cookie:`barghsa_session=${sessionId}`,'X-CSRF-Token':csrf}
+  const issued=await post('auth/change-username/send-otp',{newUsername:'PAIR-NEW@example.test'},headers)
+  const pair=await issued.json() as {destination:string;challengeId:string}
+  expect(issued.status,JSON.stringify(pair)).toBe(200)
+  expect(pair.destination).toBe('pair-new@example.test')
+  expect(await deliver()).toBe('sent')
+  expect(await deliver()).toBe('sent')
+  expect(received.map(message=>message.to[0]).sort()).toEqual(['pair-new@example.test','provider@example.test'])
+  const code=(address:string)=>received.find(message=>message.to[0]===address)!.text.match(/\d{6}/)![0]
+  const response=await post('auth/change-username',{newUsername:pair.destination,otpChallengeId:pair.challengeId,
+    otp:code('pair-new@example.test'),previousOtp:code('provider@example.test')},headers)
+  expect(response.status,await response.text()).toBe(200)
+  expect((await fixture.pool.query("SELECT username FROM users WHERE user_id='provider-admin'")).rows[0].username).toBe(pair.destination)
+  expect((await fixture.pool.query('SELECT count(*)::int AS count FROM otp_challenges WHERE consumed_at IS NOT NULL')).rows[0].count).toBe(2)
+})

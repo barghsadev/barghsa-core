@@ -59,7 +59,8 @@ export class OtpService {
     ip: string,
     passwordHash?: string,
     tosVersionId?: string,
-    binding: { purpose: 'change_username' | 'add_email' | 'add_mobile'; userId: string; authVersion?: number } | undefined = undefined,
+    binding: { purpose: 'change_username' | 'add_email' | 'add_mobile'; userId: string; authVersion?: number; previousChallengeId?: string } | undefined = undefined,
+    transactionClient?: Pick<PoolClient, 'query'>,
   ): Promise<OtpChallengeResult> {
     await this.enforceSendRateLimits(destination, ip)
 
@@ -70,14 +71,14 @@ export class OtpService {
 
     const deliveryId = randomUUID()
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination })
-    const pool = getDbPool()
+    const pool = transactionClient ?? getDbPool()
     await pool.query(
       `WITH challenge AS (
-         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12) RETURNING challenge_id
+         INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12, $13) RETURNING challenge_id
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at)
          SELECT $10,challenge_id,$3,$11,$7 FROM challenge`,
-      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null, deliveryId, encrypted, binding?.authVersion ?? null],
+      [challengeId, destination, otpHash, passwordHash ?? null, tosVersionId ?? null, OtpService.MAX_ATTEMPTS, expiresAt, binding?.purpose ?? 'registration', binding?.userId ?? null, deliveryId, encrypted, binding?.authVersion ?? null, binding?.previousChallengeId ?? null],
     )
 
     // Gate OTP debug logging behind NODE_ENV to prevent accidental prod exposure
@@ -235,6 +236,7 @@ export class OtpService {
     otp: string,
     _ip: string,
     client: Pick<PoolClient, 'query'>,
+    consume = true,
   ): Promise<{ verified: true; challengeId: string }> {
     // Use the caller transaction so consumption and the account change commit together.
 
@@ -288,6 +290,8 @@ export class OtpService {
 
       throw new OtpAttemptRejected()
     }
+
+    if (!consume) return { verified: true, challengeId }
 
     const consumeResult = await client.query(
       `UPDATE otp_challenges

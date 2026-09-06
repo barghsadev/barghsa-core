@@ -1205,10 +1205,10 @@ export class AuthService {
   }
 
   /**
-   * Send OTP to a new username to initiate a change.
+   * Queue a linked OTP pair to the current and proposed usernames.
    *
    * Validates the new username is not the same as the current one and is
-   * not already taken. Creates an OTP challenge sent to the new destination.
+   * not already taken. Both challenges and delivery rows commit together.
    *
    * Rate limits are enforced via the controller's @RateLimit decorator.
    */
@@ -1216,7 +1216,7 @@ export class AuthService {
     userId: string,
     newUsername: string,
     ip: string,
-  ): Promise<{ challengeId: string; destination: string }> {
+  ): Promise<{ challengeId: string; destination: string; previousDestination: string }> {
     const pool = getDbPool()
 
     // 1. Fetch current user
@@ -1255,12 +1255,24 @@ export class AuthService {
       )
     }
 
-    // 4. Create OTP challenge
-    return this.otpService.createChallenge(newUsername, ip, undefined, undefined, { purpose: 'change_username', userId, authVersion: userResult.rows[0].auth_version })
+    // Both codes and delivery rows are one issuance transaction.
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+      const binding = { purpose: 'change_username' as const, userId, authVersion: userResult.rows[0].auth_version }
+      const previous = await this.otpService.createChallenge(currentUsername, ip, undefined, undefined, binding, client)
+      const next = await this.otpService.createChallenge(newUsername, ip, undefined, undefined,
+        { ...binding, previousChallengeId: previous.challengeId }, client)
+      await client.query('COMMIT')
+      return { ...next, previousDestination: currentUsername }
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally { client.release() }
   }
 
   /**
-   * Complete a username change after OTP verification.
+   * Complete a username change after verifying both linked OTPs.
    *
    * Atomically: verifies OTP → updates username → invalidates all other
    * sessions (keeping the current one). Records an audit event.
@@ -1272,6 +1284,7 @@ export class AuthService {
     otp: string,
     ip: string,
     currentSessionId: string,
+    previousOtp: string,
   ): Promise<{ message: string }> {
     const pool = getDbPool()
     const client = await pool.connect()
@@ -1281,7 +1294,7 @@ export class AuthService {
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
-        `SELECT destination FROM otp_challenges
+        `SELECT destination, previous_challenge_id, consumed_at FROM otp_challenges
          WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
         [challengeId, userId, 'change_username'],
@@ -1294,6 +1307,9 @@ export class AuthService {
         )
       }
 
+      if (challengeResult.rows[0].consumed_at) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
+      }
       const challengeDestination = challengeResult.rows[0].destination
 
       // Verify the challenge was created for the new username (operation scoping)
@@ -1307,8 +1323,22 @@ export class AuthService {
         )
       }
 
-      // 2. Verify OTP (consumes the challenge atomically)
-      await this.otpService.verifyChallenge(challengeId, otp, ip, client)
+      const previousId = challengeResult.rows[0].previous_challenge_id
+      const previous = previousId ? await client.query(
+        `SELECT c.destination FROM otp_challenges c JOIN users u ON u.user_id=c.user_id
+         WHERE c.challenge_id=$1 AND c.user_id=$2 AND c.purpose='change_username'
+           AND c.previous_challenge_id IS NULL AND c.destination=u.username
+         FOR UPDATE OF c`, [previousId,userId],
+      ) : null
+      if (!previous?.rows.length) {
+        throw new HttpException({ statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code }, 400)
+      }
+      // Validate both before consuming either. A wrong code commits only its
+      // attempt decrement; a later account-write failure rolls everything back.
+      await this.otpService.verifyChallenge(previousId, previousOtp, ip, client, false)
+      await this.otpService.verifyChallenge(challengeId, otp, ip, client, false)
+      await client.query(`UPDATE otp_challenges SET consumed_at=NOW(),attempts_remaining=0,updated_at=NOW()
+        WHERE challenge_id=ANY($1::text[])`, [[previousId,challengeId]])
 
       // 3. Re-check uniqueness inside the transaction
       const takenResult = await client.query(
@@ -1519,6 +1549,9 @@ export class AuthService {
         )
       }
 
+      if (challengeResult.rows[0].consumed_at) {
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
+      }
       const challengeDestination = challengeResult.rows[0].destination
 
       // Verify the challenge was created for the contact value (operation scoping)

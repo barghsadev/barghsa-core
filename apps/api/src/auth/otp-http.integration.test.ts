@@ -22,6 +22,13 @@ async function challenge(destination: string, purpose = 'change_username', userI
   // Tests transaction behavior independently of provider delivery.
   await http.pool.query(`INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at,purpose,user_id,password_hash,tos_version_id)
     VALUES ($1,$2,$3,NOW()+INTERVAL '5 minutes',$4,$5,'fixture-password','fixture-terms')`, [id, destination, createHash('sha256').update('123456').digest('hex'), purpose, userId])
+  if (purpose === 'change_username') {
+    const previous = randomUUID()
+    await http.pool.query(`INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at,purpose,user_id,auth_version)
+      SELECT $1,username,$2,NOW()+INTERVAL '5 minutes','change_username',user_id,auth_version FROM users WHERE user_id=$3`,
+      [previous,createHash('sha256').update('112233').digest('hex'),userId])
+    await http.pool.query('UPDATE otp_challenges SET previous_challenge_id=$1 WHERE challenge_id=$2',[previous,id])
+  }
   return id
 }
 
@@ -33,7 +40,7 @@ async function post(path: string, body: unknown) {
 
 it('consumes username OTP in the account transaction and persists failed attempts without hanging', async () => {
   const id = await challenge('otp-new@example.test')
-  const body = { newUsername: 'otp-new@example.test', otpChallengeId: id, otp: '123456' }
+  const body = { newUsername: 'otp-new@example.test', otpChallengeId: id, otp: '123456', previousOtp: '112233' }
   expect((await post('change-username', { ...body, otp: '654321' })).status).toBe(401)
   expect((await http.pool.query('SELECT attempts_remaining,consumed_at FROM otp_challenges WHERE challenge_id=$1', [id])).rows[0])
     .toEqual({ attempts_remaining: 4, consumed_at: null })
@@ -53,7 +60,7 @@ it('consumes username OTP in the account transaction and persists failed attempt
 
 it('allows exactly one concurrent contact verification and rejects reuse', async () => {
   const id = await challenge('+989121234567', 'add_mobile')
-  const body = { contactType: 'mobile', contactValue: '+989121234567', otpChallengeId: id, otp: '123456' }
+  const body = { contactType: 'mobile', contactValue: '+989121234567', otpChallengeId: id, otp: '123456', previousOtp: '112233' }
   const results = await Promise.all([post('add-contact', body), post('add-contact', body)])
   expect(results.map(result => result.status).sort()).toEqual([200, 409])
   expect((await http.pool.query("SELECT mobile FROM users WHERE user_id='otp-user'")).rows[0].mobile).toBe(body.contactValue)
@@ -94,11 +101,11 @@ it('rejects cross-purpose and cross-account codes without consuming them', async
 
   await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES ('another-user','another@example.test','test-only')")
   const otherUser = await challenge('other-new@example.test', 'change_username', 'another-user')
-  expect((await post('change-username', { newUsername: 'other-new@example.test', otpChallengeId: otherUser, otp: '123456' })).status).toBe(404)
+  expect((await post('change-username', { newUsername: 'other-new@example.test', otpChallengeId: otherUser, otp: '123456', previousOtp: '112233' })).status).toBe(404)
   const mobile = await challenge('bound@example.test', 'add_mobile')
   expect((await post('add-contact', { contactType: 'email', contactValue: 'bound@example.test', otpChallengeId: mobile, otp: '123456' })).status).toBe(404)
   expect((await http.pool.query('SELECT consumed_at,attempts_remaining FROM otp_challenges')).rows)
-    .toEqual(Array(4).fill({ consumed_at: null, attempts_remaining: 5 }))
+    .toEqual(Array(5).fill({ consumed_at: null, attempts_remaining: 5 }))
   const valid = await post('login/verify', { challengeId: login, otp: '123456' })
   expect(valid.status, await valid.text() + http.logs()).toBe(200)
 }, 15000)
@@ -106,10 +113,13 @@ it('rejects cross-purpose and cross-account codes without consuming them', async
 it('issues account-bound contact and password-reset challenges through their actual routes', async () => {
   expect((await post('change-username/send-otp', { newUsername: 'issued-change@example.test' })).status).toBe(200)
   expect((await post('add-contact/send-otp', { contactType: 'mobile', contactValue: '+989129999999' })).status).toBe(200)
+  // These are independent issuance routes; clear only the test send quotas.
+  await http.pool.query('DELETE FROM security_rate_limit_counters')
   expect((await post('forgot-password', { username: 'otp-old@example.test' })).status).toBe(200)
-  expect((await http.pool.query('SELECT purpose,user_id,destination FROM otp_challenges ORDER BY purpose')).rows).toEqual([
+  expect((await http.pool.query('SELECT purpose,user_id,destination FROM otp_challenges ORDER BY purpose,destination')).rows).toEqual([
     { purpose: 'add_mobile', user_id: 'otp-user', destination: '+989129999999' },
     { purpose: 'change_username', user_id: 'otp-user', destination: 'issued-change@example.test' },
+    { purpose: 'change_username', user_id: 'otp-user', destination: 'otp-old@example.test' },
     { purpose: 'password_reset', user_id: 'otp-user', destination: 'otp-old@example.test' },
   ])
 }, 10000)
@@ -152,3 +162,30 @@ it('rolls back registration, consent and OTP when session creation fails, then r
   expect((await http.pool.query("SELECT count(*)::int AS count FROM sessions s JOIN users u ON u.user_id=s.user_id WHERE u.username='atomic-register@example.test'")).rows[0].count).toBe(1)
   expect((await http.pool.query('SELECT count(*)::int AS count FROM tos_acceptances WHERE version_id=$1', [terms])).rows[0].count).toBe(1)
 }, 15000)
+
+
+it('requires both linked codes, retains the valid code on failure, and rejects unpaired legacy challenges', async () => {
+  const id = await challenge('paired-new@example.test')
+  const body = { newUsername: 'paired-new@example.test', otpChallengeId: id, otp: '123456', previousOtp: '112233' }
+  expect((await post('change-username', { ...body, previousOtp: undefined })).status).toBe(400)
+  expect((await post('change-username', { ...body, previousOtp: '445566' })).status).toBe(401)
+  expect((await http.pool.query(`SELECT consumed_at,attempts_remaining FROM otp_challenges
+    WHERE challenge_id=(SELECT previous_challenge_id FROM otp_challenges WHERE challenge_id=$1)`,[id])).rows[0])
+    .toEqual({consumed_at:null,attempts_remaining:4})
+  expect((await http.pool.query('SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',[id])).rows[0])
+    .toEqual({consumed_at:null,attempts_remaining:5})
+  expect((await post('change-username', {...body,otp:'445566'})).status).toBe(401)
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges WHERE consumed_at IS NOT NULL')).rows[0].count).toBe(0)
+  await http.pool.query('UPDATE otp_challenges SET previous_challenge_id=NULL WHERE challenge_id=$1',[id])
+  expect((await post('change-username',body)).status).toBe(400)
+  expect((await http.pool.query("SELECT username FROM users WHERE user_id='otp-user'")).rows[0].username).toBe('otp-old@example.test')
+})
+
+it('rolls back both issued challenges and delivery rows if the new destination cannot be queued', async () => {
+  await http.pool.query(`CREATE FUNCTION reject_pair_issue() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN IF NEW.destination='pair-fail@example.test' THEN RAISE EXCEPTION 'Injected pair failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER reject_pair_issue BEFORE INSERT ON otp_challenges FOR EACH ROW EXECUTE FUNCTION reject_pair_issue();`)
+  expect((await post('change-username/send-otp',{newUsername:'pair-fail@example.test'})).status).toBe(500)
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count).toBe(0)
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM auth_delivery_outbox')).rows[0].count).toBe(0)
+})

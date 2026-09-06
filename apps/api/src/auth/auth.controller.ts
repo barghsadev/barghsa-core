@@ -800,7 +800,7 @@ export class AuthController {
   /**
    * POST /api/auth/change-username/send-otp
    *
-   * Initiates a username change by sending an OTP to the new username.
+   * Initiates a username change by queuing codes for both destinations.
    * Requires an authenticated session.
    *
    * Checks: new username is not the same as current, not already taken.
@@ -880,6 +880,7 @@ export class AuthController {
       parsed.data.otp,
       ip,
       req.session.sessionId,
+      parsed.data.previousOtp,
     )
   }
 

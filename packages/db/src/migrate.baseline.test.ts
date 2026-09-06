@@ -34,7 +34,7 @@ describe('complete production schema baseline', () => {
     const url = new URL(process.env.TEST_DATABASE_URL)
     url.pathname = `/${name}`
     const options = { connection: { pgdirectUrl: url.toString() } }
-    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version', '0088_staff_activation_delivery', '0089_pending_profile_verification', '0090_user_profile_context', '0091_additive_agent_roles', '0092_notification_delivery_identity', '0093_notification_window_snapshot', '0094_notification_claim_fencing', '0095_notification_message_snapshot', '0096_unified_notification_inbox', '0097_notification_recipient_backfill', '0098_ticket_attachments', '0099_ticket_team', '0100_staff_assignment', '0101_account_notification_recipients', '0102_service_breach_constraints', '0103_staff_team_leads', '0104_restore_inline_domain_constraints', '0105_optional_foreign_key_defaults'] })
+    expect(await runMigrations(options)).toEqual({ ok: true, applied: ['0080_complete_schema', '0081_restore_domain_constraints', '0082_restore_foundation_constraints', '0083_staff_identity', '0084_staff_capabilities', '0085_otp_purpose_binding', '0086_auth_delivery_outbox', '0087_authentication_version', '0088_staff_activation_delivery', '0089_pending_profile_verification', '0090_user_profile_context', '0091_additive_agent_roles', '0092_notification_delivery_identity', '0093_notification_window_snapshot', '0094_notification_claim_fencing', '0095_notification_message_snapshot', '0096_unified_notification_inbox', '0097_notification_recipient_backfill', '0098_ticket_attachments', '0099_ticket_team', '0100_staff_assignment', '0101_account_notification_recipients', '0102_service_breach_constraints', '0103_staff_team_leads', '0104_restore_inline_domain_constraints', '0105_optional_foreign_key_defaults', '0106_username_challenge_pair'] })
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] })
     expect(await verifyMigrationVersion('0082', options)).toBe(true)
     const pool = new Pool({ connectionString: url.toString() })
@@ -73,6 +73,7 @@ describe('complete production schema baseline', () => {
       await pool.query('DROP TABLE user_profile_contexts; DROP TABLE auth_delivery_outbox; DROP INDEX users_activation_token_idx')
       await pool.query('DROP FUNCTION bump_user_auth_version() CASCADE; DROP FUNCTION bind_otp_auth_version() CASCADE')
       await pool.query('ALTER TABLE users DROP COLUMN auth_version; ALTER TABLE otp_challenges DROP COLUMN auth_version')
+      await pool.query('ALTER TABLE otp_challenges DROP COLUMN previous_challenge_id CASCADE')
       await pool.query('ALTER TABLE otp_challenges DROP COLUMN purpose CASCADE')
       await pool.query("INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at) VALUES ('legacy-otp','old@example.test','test-hash',NOW()+INTERVAL '1 day')")
       await pool.query('DELETE FROM drizzle.__drizzle_migrations')

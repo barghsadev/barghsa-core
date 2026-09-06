@@ -19,6 +19,8 @@ const usernameSchema = z
   .string()
   .min(1, { message: 'AUTH:CHANGE_USERNAME:INVALID' })
   .max(255)
+  .trim()
+  .toLowerCase()
   .transform(toE164)
   .refine(
     (val) => {
@@ -43,6 +45,7 @@ export type ChangeUsernameSendOtpInput = z.infer<typeof ChangeUsernameSendOtpSch
  */
 export const ChangeUsernameVerifySchema = z.object({
   newUsername: usernameSchema,
+  previousOtp: z.string().regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
   otpChallengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
   otp: z
     .string()
@@ -58,6 +61,7 @@ export type ChangeUsernameVerifyInput = z.infer<typeof ChangeUsernameVerifySchem
 export interface ChangeUsernameSendOtpResponse {
   challengeId: string
   destination: string
+  previousDestination: string
 }
 
 /**

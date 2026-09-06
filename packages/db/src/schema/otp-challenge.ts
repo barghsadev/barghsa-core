@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { check, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { check, integer, pgTable, text, timestamp, uniqueIndex, type AnyPgColumn } from 'drizzle-orm/pg-core'
 
 /**
  * OTP challenge table.
@@ -52,6 +52,7 @@ export const otpChallenges = pgTable(
     /** FK to users.user_id, set for login OTP challenges (T-02.01.03). */
     userId: text('user_id'),
     authVersion: integer('auth_version'),
+    previousChallengeId: text('previous_challenge_id').references((): AnyPgColumn => otpChallenges.challengeId),
 
     /** Argon2id password hash, stored during register, consumed on OTP verify. */
     passwordHash: text('password_hash'),
@@ -73,7 +74,10 @@ export const otpChallenges = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [check('otp_challenge_purpose_binding', sql`
+  (table) => [
+    check('otp_username_pair', sql`${table.previousChallengeId} IS NULL OR (${table.purpose}='change_username' AND ${table.previousChallengeId}<>${table.challengeId})`),
+    uniqueIndex('uq_otp_previous_challenge').on(table.previousChallengeId).where(sql`${table.previousChallengeId} IS NOT NULL`),
+    check('otp_challenge_purpose_binding', sql`
     ${table.purpose} = 'legacy_invalid'
     OR (${table.purpose} = 'registration' AND ${table.userId} IS NULL
         AND ${table.passwordHash} IS NOT NULL AND ${table.tosVersionId} IS NOT NULL)
