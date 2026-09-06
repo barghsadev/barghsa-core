@@ -1,78 +1,27 @@
-# Stage 1: Dependencies — install all deps (dev + prod) for build
-FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat
+# Build once with the complete workspace dependency graph.
+FROM node:24-bookworm-slim AS build
 WORKDIR /app
-
-# Copy package manager manifests first for layer caching
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY apps/api/package.json ./apps/api/package.json
-COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
-COPY packages/shared/package.json ./packages/shared/package.json
-COPY packages/i18n/package.json ./packages/i18n/package.json
-COPY packages/db/package.json ./packages/db/package.json
-
-RUN corepack enable && pnpm install --frozen-lockfile --prod=false
-
-# Stage 1b: Production dependencies — install only production deps
-FROM node:20-alpine AS prod-deps
-WORKDIR /app
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY apps/api/package.json ./apps/api/package.json
-COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
-COPY packages/shared/package.json ./packages/shared/package.json
-COPY packages/i18n/package.json ./packages/i18n/package.json
-COPY packages/db/package.json ./packages/db/package.json
-
-RUN corepack enable && pnpm install --frozen-lockfile --prod
-
-# Stage 2: Build — compile the NestJS API
-FROM node:20-alpine AS build
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
+RUN corepack enable
 COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm -r --filter @barghsa/api... --filter @barghsa/worker... build
+RUN pnpm --filter @barghsa/api deploy --prod /out/api
+RUN pnpm --filter @barghsa/worker deploy --prod /out/worker
 
-RUN corepack enable && \
-    NODE_ENV=production pnpm build --filter @barghsa/api
-
-# Stage 3: Production — minimal runtime image with only production deps
-FROM node:20-alpine AS production
-RUN apk add --no-cache libc6-compat
-
+FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
-
-# Copy production dependencies (pnpm workspace symlinks need packages/ dirs to resolve)
-COPY --from=prod-deps /app/node_modules ./node_modules
-
-# Copy built workspace package artifacts so pnpm workspace symlinks resolve at runtime
-COPY --from=build /app/packages/db/package.json ./packages/db/package.json
-COPY --from=build /app/packages/db/dist ./packages/db/dist
-COPY --from=build /app/packages/db/drizzle/production ./packages/db/drizzle/production
-COPY --from=build /app/packages/shared/package.json ./packages/shared/package.json
-COPY --from=build /app/packages/shared/dist ./packages/shared/dist
-COPY --from=build /app/packages/i18n/package.json ./packages/i18n/package.json
-COPY --from=build /app/packages/i18n/dist ./packages/i18n/dist
-
-# Copy package.json for CommonJS compatibility
-COPY --from=build /app/apps/api/package.json ./package.json
-
-# Copy build artifacts
-COPY --from=build /app/apps/api/dist ./dist
-
-# Copy health check script
-COPY apps/api/healthcheck.js ./healthcheck.js
-
-# Production runtime hardening — single ENV to avoid overwrites
-ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation" \
-    NODE_NO_WARNINGS=1
-
-EXPOSE 4000
-
+ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD node healthcheck.js
+FROM runtime AS worker
+COPY --from=build /out/worker ./
+EXPOSE 9090
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD node healthcheck.js
+CMD ["node", "dist/main.js"]
 
+# Keep the API as the default target for existing build commands.
+FROM runtime AS production
+COPY --from=build /out/api ./
+EXPOSE 4000
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 CMD node healthcheck.js
 CMD ["node", "dist/src/main.js"]

@@ -3,7 +3,7 @@ import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
 import { PollerGroup } from './jobs/poller-group.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
-import { type Server as HttpServer, createServer } from 'node:http';
+import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
@@ -59,12 +59,8 @@ const logger = {
  * 3. Close the database connection pool.
  * 4. Exit cleanly with code 0, or code 1 if the grace period expires.
  *
- * ## Deferred shutdown items
- *
- * - **Redis:** no connection factory exists yet. When wired (T-04.02.01),
- *   add `redis.quit()` before pool.end().
- * - **Lease release:** lease infrastructure doesn't exist yet.
- *   When wired, add lease release before closing the pool.
+ * All pollers are tracked; durable outbox leases expire for retry if the
+ * shutdown deadline interrupts a delivery.
  */
 async function main(): Promise<void> {
   logger.info('Worker starting');
@@ -72,6 +68,8 @@ async function main(): Promise<void> {
   // Initialise the database connection pool.
   createDbPool();
   logger.info('Database pool initialised');
+
+  let draining = false;
 
   // Expose a health-check endpoint (`/health` and `/`) for container
   // orchestration plus a Prometheus `/metrics` endpoint carrying the
@@ -91,8 +89,26 @@ async function main(): Promise<void> {
       }
       return;
     }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+    if (pathname === '/health/live') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+      return;
+    }
+    if (pathname === '/health/ready' || pathname === '/health' || pathname === '/') {
+      try {
+        if (draining) throw new Error('draining');
+        await getDbPool().query('SELECT 1');
+        if (draining) throw new Error('draining');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok', service: 'worker' }));
+      } catch {
+        res.writeHead(503, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'unavailable', service: 'worker' }));
+      }
+      return;
+    }
+    res.writeHead(404);
+    res.end();
   });
 
   const port = parseInt(process.env['WORKER_PORT'] ?? '9090', 10);
@@ -102,8 +118,6 @@ async function main(): Promise<void> {
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
 
-  // Stop new jobs before waiting for running work.
-  let draining = false;
 
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */

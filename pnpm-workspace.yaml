@@ -1,3 +1,6 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# Produce self-contained deployments from the frozen workspace lockfile.
+injectWorkspacePackages: true

@@ -2,6 +2,7 @@
     "name": "@barghsa/api",
     "version": "0.0.0",
     "private": true,
+    "files": ["dist", "healthcheck.js"],
     "scripts": {
         "typecheck": "tsc --noEmit",
         "test": "vitest run --passWithNoTests",

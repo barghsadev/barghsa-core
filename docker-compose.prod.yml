@@ -5,7 +5,8 @@
 # and production-grade configuration.
 #
 # Usage:
-#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#   BARGHSA_RUNTIME_ENV_FILE=/absolute/path/runtime.env docker compose \
+#     --env-file /absolute/path/runtime.env -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 name: barghsa-prod
 
@@ -15,19 +16,25 @@ services:
   # API Server (NestJS)
   # ─────────────────────────────────────────────────────────────
   api:
+    env_file:
+      - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
     build:
       context: .
       dockerfile: Dockerfile.base
-    container_name: barghsa-api
+      target: production
     ports:
       - "4000:4000"
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=512"
+      DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
+      REDIS_URL: ${REDIS_URL:-}
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:?Set the public application URL}
+      API_PUBLIC_URL: ${API_PUBLIC_URL:?Set the public API URL for payment callbacks}
+      PAYMENT_GATEWAY_MERCHANT_ID: ${PAYMENT_GATEWAY_MERCHANT_ID:?Set the payment merchant ID}
+      AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
     depends_on:
       postgres:
-        condition: service_healthy
-      redis:
         condition: service_healthy
       pgbouncer:
         condition: service_healthy
@@ -38,6 +45,9 @@ services:
       start_period: 30s
       retries: 3
     restart: unless-stopped
+    stop_grace_period: 40s
+    tmpfs:
+      - /tmp:size=64m,mode=1777
     # Security hardening
     cap_drop:
       - ALL
@@ -46,20 +56,20 @@ services:
       - no-new-privileges:true
 
   # ─────────────────────────────────────────────────────────────
-  # Web Frontend (TanStack Start)
+  # Web Frontend (Vite SPA)
   # ─────────────────────────────────────────────────────────────
   web:
     build:
       context: .
       dockerfile: Dockerfile.web
-    container_name: barghsa-web
     ports:
       - "3000:3000"
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=512"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "healthcheck.js"]
       interval: 30s
@@ -67,7 +77,36 @@ services:
       start_period: 5s
       retries: 3
     restart: unless-stopped
+    stop_grace_period: 40s
+    tmpfs:
+      - /tmp:size=64m,mode=1777
     # Security hardening
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+  worker:
+    env_file:
+      - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+      target: worker
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set the application database URL}
+      AUTH_DELIVERY_ENCRYPTION_KEY: ${AUTH_DELIVERY_ENCRYPTION_KEY:?Set the auth delivery encryption key}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+    restart: unless-stopped
+    stop_grace_period: 40s
+    tmpfs:
+      - /tmp:size=64m,mode=1777
     cap_drop:
       - ALL
     read_only: true

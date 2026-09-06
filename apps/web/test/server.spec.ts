@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createStaticServer } from '../server/index.js';
+import { createStaticServer } from '../server.js';
 import type { Server } from 'node:http';
 import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -60,6 +60,13 @@ describe('static server', () => {
     const res = await fetch(server, '/');
     expect(res.status).toBe(200);
     expect(res.body).toContain('Home');
+  });
+
+  it('sets production security headers', async () => {
+    const res = await fetch(server, '/');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-frame-options']).toBe('DENY');
+    expect(res.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
   });
 
   it('serves static files with correct Content-Type', async () => {

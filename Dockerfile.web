@@ -1,55 +1,17 @@
-# Stage 1: Dependencies — install all deps (dev + prod) needed for build
-FROM node:20-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:24-bookworm-slim AS build
 WORKDIR /app
-
-# Copy package manager manifests first for layer caching
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY apps/web/package.json ./apps/web/package.json
-COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
-COPY packages/shared/package.json ./packages/shared/package.json
-COPY packages/i18n/package.json ./packages/i18n/package.json
-COPY packages/ui/package.json ./packages/ui/package.json
-COPY packages/db/package.json ./packages/db/package.json
-
-RUN corepack enable && pnpm install --frozen-lockfile --prod=false
-
-# Stage 2: Build — compile the web frontend
-FROM node:20-alpine AS build
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
+RUN corepack enable
 COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm -r --filter @barghsa/web... build
 
-RUN corepack enable && \
-    NODE_ENV=production pnpm build --filter @barghsa/web
-
-# Stage 3: Production — minimal runtime image
-FROM node:20-alpine AS production
-
+FROM node:24-bookworm-slim AS production
 WORKDIR /app
-
-# Copy package.json so the ESM "type": "module" field applies to server.js / healthcheck.js
 COPY --from=build /app/apps/web/package.json ./package.json
-
-# Copy only the built frontend assets
 COPY --from=build /app/apps/web/dist ./dist
-
-# Copy production static server
-COPY apps/web/server.js ./server.js
-COPY apps/web/healthcheck.js ./healthcheck.js
-
-# Production runtime hardening — single ENV to avoid overwrites
-ENV NODE_ENV=production \
-    NODE_OPTIONS="--max-old-space-size=512 --no-deprecation" \
-    NODE_NO_WARNINGS=1
-
-EXPOSE 3000
-
-# Use the built-in node user — no custom user creation needed
+COPY apps/web/server.js apps/web/healthcheck.js ./
+ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512"
 USER node
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD node healthcheck.js
-
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD node healthcheck.js
 CMD ["node", "server.js"]

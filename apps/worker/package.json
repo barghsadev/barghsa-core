@@ -8,7 +8,7 @@
     "test:coverage": "vitest run --coverage --passWithNoTests",
     "build": "tsc",
     "dev": "tsc --watch",
-    "start:prod": "node dist/src/main"
+    "start:prod": "node dist/main.js"
   },
   "dependencies": {
     "@barghsa/db": "workspace:*",
@@ -23,5 +23,9 @@
     "@types/pg": "^8.11.0",
     "testcontainers": "12.1.0",
     "typescript": "^5.7.0"
-  }
+  },
+  "files": [
+    "dist",
+    "healthcheck.js"
+  ]
 }

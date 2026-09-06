@@ -120,7 +120,9 @@ export class HealthService implements OnModuleInit {
       return {
         status: 'ok',
         latencyMs: 0,
-        details: { info: 'Redis not configured — skipping' },
+        details: process.env['REDIS_URL'] || process.env['REDIS_HOST']
+          ? { error: 'Configured Redis unavailable', degraded: true }
+          : { info: 'Redis not configured — skipping' },
       };
     }
 
