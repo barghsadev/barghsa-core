@@ -372,3 +372,27 @@ it('rejects the receipt and its approval together and preserves a generic reject
     expect((await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1',[receipt.profile])).rows[0].posted_balance).toBe('0')
   }
 })
+
+it('commits bilingual private approval notices with the decision and rolls back on notice failure', async () => {
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW()");
+  const id = await seed();
+  expect((await decide('reviewer', id)).status).toBe(200);
+  const notice = (await http.pool.query(`SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications
+    WHERE recipient_user_id='initiator' AND localized_content::text LIKE $1`, [`%${id}%`])).rows;
+  expect(notice).toHaveLength(1);
+  expect(notice[0]).toMatchObject({ recipient_user_id: 'initiator', profile_id: null, link_route: '/admin/approval-requests',
+    localized_content: { fa: { title: 'درخواست تأیید شد' }, en: { title: 'Request approved' } } });
+  expect((await decide('reviewer', id)).status).toBe(409);
+  const pending = await seed();
+  await http.pool.query(`CREATE FUNCTION fail_approval_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.recipient_user_id='initiator' THEN RAISE EXCEPTION 'test notification failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_approval_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_approval_notice()`);
+  try {
+    expect((await decide('reviewer', pending)).status).toBe(500);
+    expect((await http.pool.query('SELECT status FROM approval_requests WHERE id=$1',[pending])).rows[0].status).toBe('pending');
+    expect((await http.pool.query("SELECT id FROM audit_log WHERE event='approval_request_approved' AND metadata::jsonb->>'requestId'=$1",[pending])).rows).toHaveLength(0);
+  } finally {
+    await http.pool.query('DROP TRIGGER fail_approval_notice ON in_app_notifications; DROP FUNCTION fail_approval_notice()');
+  }
+  expect((await decide('reviewer', pending)).status).toBe(200);
+});

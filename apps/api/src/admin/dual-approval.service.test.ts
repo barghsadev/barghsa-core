@@ -87,7 +87,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       .createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1')
       .catch((e: unknown) => e)
     expect(httpStatus(rejection)).toBe(400)
-    expect(String(rejectionBody(rejection).message)).toContain('does not exceed')
+    expect(String(rejectionBody(rejection).message)).toContain('is below')
   })
 
   it('refuses to create when the amount is below the threshold', async () => {
@@ -112,10 +112,10 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // INSERT approval_requests
       .mockResolvedValueOnce({ rows: [] }) // INSERT audit_log
+      .mockResolvedValueOnce({ rows: [] }) // eligible staff
       .mockResolvedValueOnce({ rows: [] }) // COMMIT
     mockQuery
       .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS }) // threshold
-      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2', is_admin: true }] }) // eligible staff
       .mockResolvedValueOnce({
         rows: [
           {
@@ -167,10 +167,9 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     const { mockQuery, mockConnect } = await loadService()
     const { mockClientQuery, client } = mockClient()
     mockConnect.mockResolvedValue(client)
-    mockClientQuery.mockResolvedValue({ rows: [] }) // BEGIN/INSERT/INSERT/COMMIT
+    mockClientQuery.mockImplementation(async (sql: string) => ({ rows: sql.includes('SELECT u.user_id') ? [{ user_id: 'admin-2', is_admin: true }, { user_id: 'admin-3', is_admin: false, role_permissions: ['[\"admin:financial:edit\"]'] }, { user_id: 'unqualified', is_admin: false, role_permissions: ['[\"tickets:read\"]'] }] : [] }))
     mockQuery
       .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
-      .mockResolvedValueOnce({ rows: [{ user_id: 'admin-2', is_admin: true }, { user_id: 'admin-3', is_admin: false, role_permissions: ['["admin:financial:edit"]'] }, { user_id: 'unqualified', is_admin: false, role_permissions: ['["tickets:read"]'] }] })
       .mockResolvedValueOnce({
         rows: [
           {
@@ -195,6 +194,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     await service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1')
 
     expect(notificationsService.create).toHaveBeenCalledTimes(2)
+    expect(notificationsService.create.mock.calls.every(call => call[1] === client)).toBe(true)
     const calls = notificationsService.create.mock.calls.map((c) => c[0] as { userId: string })
     expect(calls.map((c) => c.userId).sort()).toEqual(['admin-2', 'admin-3'])
     // The initiator is never notified about their own request.
@@ -202,41 +202,20 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     // An empty queue of eligible staff is a no-op, not an error.
   })
 
-  it('continues even when the eligible-staff query fails after commit (best-effort)', async () => {
+  it('rolls back when staff enumeration fails before commit', async () => {
     const { mockQuery, mockConnect } = await loadService()
     const { mockClientQuery, client } = mockClient()
     mockConnect.mockResolvedValue(client)
-    mockClientQuery.mockResolvedValue({ rows: [] })
-    mockQuery
-      .mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
-      .mockRejectedValueOnce(new Error('eligibility query down'))
-      .mockResolvedValueOnce({
-        rows: [
-          {
-            id: 'req-3',
-            action_type: 'refund',
-            amount_irr: '5',
-            initiator_id: 'user-1',
-            initiator_username: null,
-            reason: 'x',
-            details: null,
-            status: 'pending',
-            reviewer_id: null,
-            reviewer_username: null,
-            review_reason: null,
-            reviewed_at: null,
-            created_at: new Date(),
-            updated_at: new Date(),
-          },
-        ],
-      })
-
-    // The request is durably created; notification enumeration failure must
-    // not surface a 500 (a retry would duplicate the pending request).
-    await expect(
-      service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1'),
-    ).resolves.toMatchObject({ id: 'req-3', status: 'pending' })
+    mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
+    mockClientQuery.mockImplementation(async (sql: string) => {
+      if (sql.includes('SELECT u.user_id')) throw new Error('eligibility query down')
+      return { rows: [] }
+    })
+    await expect(service.createApprovalRequest(VALID_INPUT, 'user-1', '1.1.1.1')).rejects.toThrow()
+    expect(mockClientQuery.mock.calls.map(call => call[0])).toContain('ROLLBACK')
+    expect(mockClientQuery.mock.calls.map(call => call[0])).not.toContain('COMMIT')
   })
+
 })
 
 // ─── listApprovalRequests ─────────────────────────────────────────────

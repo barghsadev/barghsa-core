@@ -388,3 +388,9 @@ Review/validation: all 13 receipt UI checks pass, including fa/en pending respon
 Added the missing staff approval route and navigation, pending/approved/rejected queues with pagination, exact decimal IRR formatting, initiator/reviewer/reasons and receipt references. Decisions use the existing accessible confirmation and step-up dialog with finance-specific conflict/permission errors. Rejection reasons are captured before authentication; stale queue responses are discarded. Bilingual notices explicitly separate approval from payment execution.
 
 Review/validation: five new Chromium scenarios and all ten team-dialog regression scenarios pass. They cover Persian/English exact amounts and password retries, mandatory rejection reasons, conflicts, history/pagination and stale responses. Production web build and typecheck pass. Approval notifications and remaining financial integration checks stay open.
+
+### F13.8 Transactional generic approval notices
+
+Generic request creation now enumerates current eligible staff inside its transaction, excludes disabled and unactivated accounts, and writes bilingual private notices before commit. Generic approval/rejection similarly commits the initiator notice with the decision and audit. Links now target the implemented queue directly.
+
+Review/validation: 30 service/production-HTTP checks and API typecheck pass. A database trigger failure proves a failed notice leaves the request pending with no approval audit; retry succeeds after recovery. Browser evidence from F13.7 remains applicable. Receipt-created requests still need their own notification integration; this checkpoint does not claim that coverage.

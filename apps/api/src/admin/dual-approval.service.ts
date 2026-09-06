@@ -17,6 +17,7 @@ import {
 import { ErrorCodes } from '@barghsa/shared/errors'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import { applyApprovalRequestResolutionOnClient } from './dual-approval-resolution.js'
+import type { DualApprovalQueryClient } from './dual-approval-resolution.js'
 import { resolveStaffPermissions } from '../session/staff-permissions.js'
 
 /**
@@ -80,7 +81,7 @@ const MAX_LIST_LIMIT = 200
  * transaction as the state change, so the audit trail can never diverge from
  * the live state.
  *
- * Notifications are delivered in-app (best-effort after commit): eligible
+ * Notifications are delivered in-app in the same transaction: eligible
  * staff (today: platform admins, mirroring the S-09.07 permission gate, since
  * granular staff-role permissions are not yet resolved into sessions) are
  * notified on initiation, and the initiator is notified of the decision.
@@ -123,7 +124,7 @@ export class DualApprovalService {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message:
-            'Dual approval is disabled or the amount does not exceed the configured threshold',
+            'Dual approval is disabled or the amount is below the configured threshold',
         },
         400,
       )
@@ -173,6 +174,7 @@ export class DualApprovalService {
         ],
       )
 
+      await this.notifyEligibleStaff(client, id, normalized.amountIrR, initiatorUserId)
       await client.query('COMMIT')
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
@@ -187,14 +189,6 @@ export class DualApprovalService {
 
     this.logger.log(
       `Approval request ${id} created by ${initiatorUserId} (${normalized.actionType}, IRR ${normalized.amountIrR})`,
-    )
-
-    // Best-effort in-app notification to approval-eligible staff.
-    await this.notifyEligibleStaff(
-      id,
-      normalized.actionType,
-      normalized.amountIrR,
-      initiatorUserId,
     )
 
     return this.getRequestDto(id)
@@ -354,6 +348,8 @@ export class DualApprovalService {
         amountIrR: row.amount_irr,
       })
 
+      await this.notifyInitiator(client, requestId, row.initiator_id, decision, reviewReason)
+
       await client.query('COMMIT')
 
       this.logger.log(
@@ -363,14 +359,6 @@ export class DualApprovalService {
       // Re-read after commit so the DTO reflects the joined reviewer
       // identity (reviewer_id was NULL when the locked row was read).
       const dto = await this.getRequestDto(requestId)
-
-      // Best-effort in-app notification to the initiator.
-      await this.notifyInitiator(requestId, row.initiator_id, decision, reviewReason)
-        .catch((error: unknown) => {
-          this.logger.warn(
-            `Failed to notify initiator of approval decision: ${String(error)}`,
-          )
-        })
 
       return dto
     } catch (error) {
@@ -417,69 +405,50 @@ export class DualApprovalService {
    * disabled accounts and the initiator.
    */
   private async notifyEligibleStaff(
+    client: DualApprovalQueryClient,
     requestId: string,
-    actionType: ApprovalActionType,
     amountIrR: number,
     initiatorUserId: string,
   ): Promise<void> {
-    try {
-      const pool = getDbPool()
-      const result = await pool.query(
-        `SELECT u.user_id, u.is_admin,
-                ARRAY(SELECT r.permissions FROM user_roles ur
-                      JOIN staff_roles r ON r.role_id=ur.role_id
-                      WHERE ur.user_id=u.user_id) AS role_permissions
-         FROM users u WHERE u.disabled_at IS NULL AND u.user_id <> $1
-           AND (u.is_admin=TRUE OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`,
-        [initiatorUserId],
-      )
-
-      const title = 'درخواست تأیید دومرحلهای جدید'
-      const body =
-        `مبلغ ${amountIrR} ریال — ${actionType} نیاز به تأیید دومرحلهای دارد. ` +
-        'در صف تأیید بررسی کنید.'
-      const link = '/app/admin/approval-requests'
-
-      for (const row of result.rows as { user_id: string; is_admin: boolean; role_permissions: unknown }[]) {
-        const permissions = resolveStaffPermissions(row.role_permissions)
-        if (!row.is_admin && !permissions.includes('*') && !permissions.includes('admin:financial:edit')) continue
-        await this.notificationsService
-          .create({ userId: row.user_id, type: 'general', title, body, link })
-          .catch((error: unknown) => {
-            this.logger.warn(
-              `Failed to notify user ${row.user_id} about approval request ${requestId}: ${String(error)}`,
-            )
-          })
-      }
-    } catch (error) {
-      // The approval request itself is already durably committed; a failure
-      // to enumerate or notify eligible staff must never turn into a 500
-      // (which would make callers retry and create a duplicate request).
-      this.logger.warn(
-        `Failed to notify eligible staff about approval request ${requestId}: ${String(error)}`,
-      )
+    const result = await client.query(
+      `SELECT u.user_id, u.is_admin,
+              ARRAY(SELECT r.permissions FROM user_roles ur
+                    JOIN staff_roles r ON r.role_id=ur.role_id
+                    WHERE ur.user_id=u.user_id) AS role_permissions
+       FROM users u WHERE u.disabled_at IS NULL AND u.activation_token IS NULL AND u.user_id <> $1
+         AND (u.is_admin=TRUE OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`,
+      [initiatorUserId],
+    )
+    const localizedContent = {
+      fa: { title: 'درخواست تأیید دومرحله‌ای جدید', body: `درخواست ${requestId} به مبلغ ${amountIrR} ریال برای بررسی در صف تأییدهای مالی قرار گرفت.` },
+      en: { title: 'Financial approval requested', body: `Request ${requestId} for ${amountIrR} IRR requires a second financial reviewer.` },
+    }
+    for (const row of result.rows as { user_id: string; is_admin: boolean; role_permissions: unknown }[]) {
+      const permissions = resolveStaffPermissions(row.role_permissions)
+      if (!row.is_admin && !permissions.includes('*') && !permissions.includes('admin:financial:edit')) continue
+      await this.notificationsService.create({ userId: row.user_id, type: 'general',
+        ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
     }
   }
 
-  /** Notify the initiator (in-app) about a decision on their request. */
+  /** Notice and decision commit together, including the original rejection reason. */
   private async notifyInitiator(
+    client: DualApprovalQueryClient,
     requestId: string,
     initiatorUserId: string,
     decision: 'approve' | 'reject',
     reviewReason: string | null,
   ): Promise<void> {
-    await this.notificationsService.create({
-      userId: initiatorUserId,
-      type: 'general',
-      title:
-        decision === 'approve' ? 'درخواست تأیید شد' : 'درخواست تأیید رد شد',
-      body:
-        decision === 'approve'
-          ? `درخواست تأیید دومرحلهای شما (${requestId}) تأیید شد.`
-          : `درخواست تأیید دومرحلهای شما (${requestId}) رد شد. دلیل: ${reviewReason ?? 'نامشخص'}`,
-      link: '/app/admin/approval-requests',
-    })
+    const localizedContent = {
+      fa: { title: decision === 'approve' ? 'درخواست تأیید شد' : 'درخواست تأیید رد شد',
+        body: decision === 'approve' ? `درخواست ${requestId} تأیید شد. عملیات پرداخت باید جداگانه تکمیل شود.` : `درخواست ${requestId} رد شد. دلیل: ${reviewReason ?? ''}` },
+      en: { title: decision === 'approve' ? 'Request approved' : 'Request rejected',
+        body: decision === 'approve' ? `Request ${requestId} was approved. Complete the payment action separately.` : `Request ${requestId} was rejected. Reason: ${reviewReason ?? ''}` },
+    }
+    await this.notificationsService.create({ userId: initiatorUserId, type: 'general',
+      ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
   }
+
 }
 
 // ─── Row mapping helpers ─────────────────────────────────────────────────
