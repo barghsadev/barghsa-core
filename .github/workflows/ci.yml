@@ -131,12 +131,28 @@ jobs:
             pnpm test
           fi
       - name: Run coverage with threshold enforcement
+        id: coverage
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --filter="...[origin/main]"
           else
             pnpm test:coverage
           fi
+      - name: Verify changed coverage gate
+        if: always()
+        run: python3 -m unittest discover -s scripts -p 'test_check_changed_coverage.py'
+      - name: Enforce changed source and critical file coverage
+        if: always() && steps.coverage.outcome != 'skipped'
+        env:
+          COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
+      - name: Upload changed coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-coverage
+          path: ${{ runner.temp }}/changed-coverage.json
+          retention-days: 14
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
