@@ -79,6 +79,8 @@ export interface AgentDetailDto extends AgentDto {
   model: ModelRefDto;
   kbs: KbRefDto[];
   policies: PolicyRefDto[];
+  kbGroups: KbRefDto[];
+  policyGroups: KbRefDto[];
 }
 
 // ─── Mutation inputs ───────────────────────────────────────────────────────
@@ -91,6 +93,8 @@ export interface CreateAgentInput {
   ip: string;
   kbIds?: string[];
   policyIds?: string[];
+  kbGroupIds?: string[];
+  policyGroupIds?: string[];
   enabled?: boolean;
 }
 
@@ -103,6 +107,8 @@ export interface UpdateAgentInput {
   kbIds?: string[];
   /** Replace the whole policy link set (undefined = leave untouched). */
   policyIds?: string[];
+  kbGroupIds?: string[];
+  policyGroupIds?: string[];
   actorUserId: string;
   ip: string;
 }
@@ -230,6 +236,32 @@ export class AiAgentsService {
       },
       kbs: kbs.rows,
       policies: policies.rows,
+      kbGroups: await this.groupRefs(getDbPool(), id, 'kb'),
+      policyGroups: await this.groupRefs(getDbPool(), id, 'policy'),
+    };
+  }
+
+  async options(): Promise<
+    Record<'models' | 'kbs' | 'policies' | 'kbGroups' | 'policyGroups', KbRefDto[]>
+  > {
+    const tables = [
+      'ai_models',
+      'knowledge_bases',
+      'ai_policies',
+      'kb_groups',
+      'ai_policy_groups',
+    ] as const;
+    const [models, kbs, policies, kbGroups, policyGroups] = await Promise.all(
+      tables.map((table) =>
+        getDbPool().query<KbRefDto>(`SELECT id,title FROM ${table} ORDER BY title,id`)
+      )
+    );
+    return {
+      models: models!.rows,
+      kbs: kbs!.rows,
+      policies: policies!.rows,
+      kbGroups: kbGroups!.rows,
+      policyGroups: policyGroups!.rows,
     };
   }
 
@@ -248,6 +280,8 @@ export class AiAgentsService {
       const model = await this.requireModel(q, input.modelId);
       await this.requireKbs(q, input.kbIds);
       await this.requirePolicies(q, input.policyIds);
+      await this.requireGroups(q, input.kbGroupIds, 'kb');
+      await this.requireGroups(q, input.policyGroupIds, 'policy');
 
       const row = await this.insertAgent(q, {
         id,
@@ -278,6 +312,21 @@ export class AiAgentsService {
         input.policyIds ?? []
       );
 
+      const kbGroupsAdded = await this.bulkInsert(
+        q,
+        'ai_agent_kb_groups',
+        'group_id',
+        id,
+        input.kbGroupIds ?? []
+      );
+      const policyGroupsAdded = await this.bulkInsert(
+        q,
+        'ai_agent_policy_groups',
+        'group_id',
+        id,
+        input.policyGroupIds ?? []
+      );
+
       await this.recordAudit(q, 'ai_agent_created', input.actorUserId, input.ip, {
         targetId: row.id,
         title: row.title,
@@ -285,6 +334,8 @@ export class AiAgentsService {
         enabled,
         kbsLinked: kbAdded,
         policiesLinked: policyAdded,
+        ...(input.kbGroupIds !== undefined ? { kbGroupsLinked: kbGroupsAdded } : {}),
+        ...(input.policyGroupIds !== undefined ? { policyGroupsLinked: policyGroupsAdded } : {}),
       });
       this.logger.log(
         `Agent created: id=${id}, model=${row.model_id}, kbs=${kbAdded}, policies=${policyAdded}, actor=${input.actorUserId}`
@@ -317,13 +368,19 @@ export class AiAgentsService {
 
       const effectiveModelId = input.modelId ?? existing.model_id;
       const referencesTouched =
-        input.modelId !== undefined || input.kbIds !== undefined || input.policyIds !== undefined;
+        input.modelId !== undefined ||
+        input.kbIds !== undefined ||
+        input.policyIds !== undefined ||
+        input.kbGroupIds !== undefined ||
+        input.policyGroupIds !== undefined;
       const model = referencesTouched
         ? await this.requireModel(q, effectiveModelId)
         : await this.findModel(q, effectiveModelId);
       if (referencesTouched) {
         await this.requireKbs(q, input.kbIds);
         await this.requirePolicies(q, input.policyIds);
+        await this.requireGroups(q, input.kbGroupIds, 'kb');
+        await this.requireGroups(q, input.policyGroupIds, 'policy');
       }
 
       const fields: string[] = [];
@@ -385,9 +442,22 @@ export class AiAgentsService {
         );
       }
 
+      const kbGroupsChanged =
+        input.kbGroupIds !== undefined &&
+        (await this.reconcileSet(q, 'ai_agent_kb_groups', 'group_id', id, input.kbGroupIds));
+      const policyGroupsChanged =
+        input.policyGroupIds !== undefined &&
+        (await this.reconcileSet(
+          q,
+          'ai_agent_policy_groups',
+          'group_id',
+          id,
+          input.policyGroupIds
+        ));
+
       // A links-only change leaves afterRow's updated_at stale; bump it so the
       // agent's effective configuration timestamp reflects the link edit.
-      const linksChanged = kbChanged || policyChanged;
+      const linksChanged = kbChanged || policyChanged || kbGroupsChanged || policyGroupsChanged;
       if (fields.length === 0 && linksChanged) {
         const bump = await q.query<AgentBaseRow>(
           `UPDATE ai_agents
@@ -417,6 +487,8 @@ export class AiAgentsService {
             : {}),
           kbsChanged: kbChanged,
           policiesChanged: policyChanged,
+          ...(input.kbGroupIds !== undefined ? { kbGroupsChanged } : {}),
+          ...(input.policyGroupIds !== undefined ? { policyGroupsChanged } : {}),
         });
       }
       this.logger.log(
@@ -707,6 +779,40 @@ export class AiAgentsService {
     }
   }
 
+  private async requireGroups(
+    q: DbExecutor,
+    ids: string[] | undefined,
+    kind: 'kb' | 'policy'
+  ): Promise<void> {
+    if (!ids?.length) return;
+    const found = await q.query<{ id: string }>(
+      `SELECT id FROM ${kind === 'kb' ? 'kb_groups' : 'ai_policy_groups'} WHERE id = ANY($1::uuid[]) ORDER BY id FOR KEY SHARE`,
+      [ids]
+    );
+    const missing = ids.find((id) => !found.rows.some((row) => row.id === id));
+    if (missing)
+      throw new HttpException(
+        {
+          statusCode: 404,
+          error: kind === 'kb' ? 'AI_KB_GROUP_NOT_FOUND' : 'AI_POLICY_GROUP_NOT_FOUND',
+          message: 'A referenced group does not exist',
+        },
+        404
+      );
+  }
+
+  private async groupRefs(
+    q: DbExecutor,
+    agentId: string,
+    kind: 'kb' | 'policy'
+  ): Promise<KbRefDto[]> {
+    const result = await q.query<KbRefDto>(
+      `SELECT g.id,g.title FROM ${kind === 'kb' ? 'kb_groups' : 'ai_policy_groups'} g JOIN ${kind === 'kb' ? 'ai_agent_kb_groups' : 'ai_agent_policy_groups'} l ON l.group_id=g.id WHERE l.agent_id=$1 ORDER BY g.title,g.id`,
+      [agentId]
+    );
+    return result.rows;
+  }
+
   /**
    * Replace a link set (delete-then-insert) and report whether the resulting
    * membership actually changed (compared by sorted id sets), so an
@@ -933,5 +1039,6 @@ export class AiAgentsService {
 }
 
 /** Allowed link-table union for the typed helpers above. */
-type LinkTable = 'ai_agent_kbs' | 'ai_agent_policies';
-type LinkColumn = 'kb_id' | 'policy_id';
+type LinkTable =
+  'ai_agent_kbs' | 'ai_agent_policies' | 'ai_agent_kb_groups' | 'ai_agent_policy_groups';
+type LinkColumn = 'kb_id' | 'policy_id' | 'group_id';

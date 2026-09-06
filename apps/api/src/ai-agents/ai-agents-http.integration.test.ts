@@ -333,3 +333,141 @@ it.each(['kb', 'policy'] as const)('rejects unknown %s link payload fields', asy
   ).toBe(400);
   await unchangedLink({ kind, action: 'add' });
 });
+
+async function createGroups() {
+  const kb = (
+    await http.pool.query(
+      "INSERT INTO kb_groups(title,created_by) VALUES ('Agent KB group','slot-admin') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const policy = (
+    await http.pool.query(
+      "INSERT INTO ai_policy_groups(title,created_by) VALUES ('Agent policy group','slot-admin') RETURNING id"
+    )
+  ).rows[0].id as string;
+  return { kb, policy };
+}
+function updateGroups(body: unknown) {
+  return fetch(`${http.base}/api/admin/agents/${agentId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(body),
+  });
+}
+it('creates, preserves, replaces and clears agent group references', async () => {
+  const groups = await createGroups();
+  const created = await fetch(`${http.base}/api/admin/agents`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      title: 'Grouped agent',
+      modelId,
+      kbGroupIds: [groups.kb, groups.kb],
+      policyGroupIds: [groups.policy],
+    }),
+  });
+  expect(created.status).toBe(201);
+  agentId = ((await created.json()) as { id: string }).id;
+  const read = () =>
+    fetch(`${http.base}/api/admin/agents/${agentId}`, { headers }).then((response) =>
+      response.json()
+    );
+  expect(await read()).toMatchObject({
+    kbGroups: [{ id: groups.kb, title: 'Agent KB group' }],
+    policyGroups: [{ id: groups.policy, title: 'Agent policy group' }],
+    kbs: [],
+    policies: [],
+  });
+  expect((await updateGroups({ title: 'Renamed group agent' })).status).toBe(200);
+  expect(await read()).toMatchObject({
+    kbGroups: [{ id: groups.kb }],
+    policyGroups: [{ id: groups.policy }],
+  });
+  await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'ai_agent_%'");
+  expect(
+    (await updateGroups({ kbGroupIds: [groups.kb, groups.kb], policyGroupIds: [groups.policy] }))
+      .status
+  ).toBe(200);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+  ).toHaveLength(0);
+  expect((await updateGroups({ kbGroupIds: [] })).status).toBe(200);
+  expect(await read()).toMatchObject({ kbGroups: [], policyGroups: [{ id: groups.policy }] });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='ai_agent_updated'"
+      )
+    ).rows
+  ).toEqual([{ metadata: expect.objectContaining({ kbGroupsChanged: true }) }]);
+});
+it.each(['kbGroupIds', 'policyGroupIds'] as const)(
+  'rejects missing or malformed %s without partial writes',
+  async (field) => {
+    for (const id of [randomUUID(), 'invalid']) {
+      expect((await updateGroups({ title: 'Must not persist', [field]: [id] })).status).toBe(
+        id === 'invalid' ? 400 : 404
+      );
+      const create = await fetch(`${http.base}/api/admin/agents`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ title: 'Must not exist', modelId, [field]: [id] }),
+      });
+      expect(create.status).toBe(id === 'invalid' ? 400 : 404);
+    }
+    expect((await http.pool.query('SELECT id,title FROM ai_agents')).rows).toEqual([
+      { id: agentId, title: 'Support' },
+    ]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+    ).toHaveLength(0);
+  }
+);
+it('rolls back group replacements with scalar edits when the audit fails', async () => {
+  const groups = await createGroups();
+  expect(
+    (await updateGroups({ kbGroupIds: [groups.kb], policyGroupIds: [groups.policy] })).status
+  ).toBe(200);
+  await http.pool.query(
+    "DELETE FROM audit_log WHERE event LIKE 'ai_agent_%'; CREATE OR REPLACE FUNCTION reject_agent_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_agent_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_agent_%') EXECUTE FUNCTION reject_agent_audit()"
+  );
+  try {
+    expect(
+      (await updateGroups({ title: 'Must roll back', kbGroupIds: [], policyGroupIds: [] })).status
+    ).toBe(500);
+    expect(
+      (await http.pool.query('SELECT title FROM ai_agents WHERE id=$1', [agentId])).rows
+    ).toEqual([{ title: 'Support' }]);
+    expect(
+      (
+        await http.pool.query('SELECT group_id FROM ai_agent_kb_groups WHERE agent_id=$1', [
+          agentId,
+        ])
+      ).rows
+    ).toEqual([{ group_id: groups.kb }]);
+    expect(
+      (
+        await http.pool.query('SELECT group_id FROM ai_agent_policy_groups WHERE agent_id=$1', [
+          agentId,
+        ])
+      ).rows
+    ).toEqual([{ group_id: groups.policy }]);
+  } finally {
+    await http.pool.query('DROP TRIGGER reject_agent_audit ON audit_log');
+  }
+});
+it('exposes only IDs and titles as agent-editor options under agent permission', async () => {
+  const groups = await createGroups();
+  await http.pool.query("UPDATE ai_models SET api_token='private-test-only-token' WHERE id=$1", [
+    modelId,
+  ]);
+  const response = await fetch(`${http.base}/api/admin/agents/options`, { headers });
+  expect(response.status).toBe(200);
+  const options = (await response.json()) as Record<string, Array<{ id: string; title: string }>>;
+  expect(options.models).toContainEqual({ id: modelId, title: 'Local' });
+  expect(options.kbGroups).toContainEqual({ id: groups.kb, title: 'Agent KB group' });
+  expect(options.policyGroups).toContainEqual({ id: groups.policy, title: 'Agent policy group' });
+  for (const rows of Object.values(options))
+    for (const row of rows) expect(Object.keys(row).sort()).toEqual(['id', 'title']);
+  expect(JSON.stringify(options)).not.toContain('private-test-only-token');
+});

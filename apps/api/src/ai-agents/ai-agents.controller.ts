@@ -36,6 +36,8 @@ export const CreateAgentSchema = z
     modelId: uuidSchema,
     kbIds: idListSchema.optional(),
     policyIds: idListSchema.optional(),
+    kbGroupIds: idListSchema.optional(),
+    policyGroupIds: idListSchema.optional(),
     // Optional initial active/inactive state; defaults to enabled.
     enabled: z.boolean().optional(),
   })
@@ -48,6 +50,8 @@ export const UpdateAgentSchema = z
     modelId: uuidSchema.optional(),
     kbIds: idListSchema.optional(),
     policyIds: idListSchema.optional(),
+    kbGroupIds: idListSchema.optional(),
+    policyGroupIds: idListSchema.optional(),
     enabled: z.boolean().optional(),
   })
   .strict()
@@ -127,6 +131,13 @@ export class AgentsController {
     return this.service.list();
   }
 
+  @Get('options')
+  @ApiOperation({ summary: 'List non-secret model and knowledge/policy choices for agent editors' })
+  async options(@Req() req: AuthenticatedRequest) {
+    this.assertAgentPermission(req);
+    return this.service.options();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single AI agent (admin)' })
   @ApiResponse({ status: 200, description: 'The agent with its model and linked KBs/policies.' })
@@ -162,6 +173,10 @@ export class AgentsController {
       modelId: parsed.data.modelId,
       ...(parsed.data.kbIds !== undefined ? { kbIds: parsed.data.kbIds } : {}),
       ...(parsed.data.policyIds !== undefined ? { policyIds: parsed.data.policyIds } : {}),
+      ...(parsed.data.kbGroupIds !== undefined ? { kbGroupIds: parsed.data.kbGroupIds } : {}),
+      ...(parsed.data.policyGroupIds !== undefined
+        ? { policyGroupIds: parsed.data.policyGroupIds }
+        : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
@@ -175,7 +190,7 @@ export class AgentsController {
   @ApiOperation({
     summary: 'Update an AI agent (admin)',
     description:
-      'Partial update. When kbIds/policyIds are supplied they replace the ' +
+      'Partial update. When kbIds/policyIds/kbGroupIds/policyGroupIds are supplied they replace the ' +
       'whole corresponding link set (full-set semantics for the admin ' +
       'multi-select form); omit them to leave links untouched.',
   })
@@ -202,6 +217,10 @@ export class AgentsController {
       ...(parsed.data.modelId !== undefined ? { modelId: parsed.data.modelId } : {}),
       ...(parsed.data.kbIds !== undefined ? { kbIds: parsed.data.kbIds } : {}),
       ...(parsed.data.policyIds !== undefined ? { policyIds: parsed.data.policyIds } : {}),
+      ...(parsed.data.kbGroupIds !== undefined ? { kbGroupIds: parsed.data.kbGroupIds } : {}),
+      ...(parsed.data.policyGroupIds !== undefined
+        ? { policyGroupIds: parsed.data.policyGroupIds }
+        : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),

@@ -1339,3 +1339,9 @@ Review and validation: all 83 agent/slot service/controller/production-migrated 
 Migration 0116 adds separate agent-to-KB-group and agent-to-policy-group links without changing existing direct references. Composite primary keys prevent duplicates; reverse indexes support group deletion; both foreign keys cascade only the join rows. Added matching exported schema definitions and corrected the old schema comment claiming disabled agents could not be assigned to slots.
 
 Review and validation: fresh/repeated/populated baseline migration checks and two real database schema-insert/constraint/cascade tests pass. Review aligned composite constraint names with the schema declaration before the final run. Root types, lint and whitespace checks pass. This is an additive storage step; API/editor integration follows. No production migration was applied.
+
+### Wire agent group references into the API (F17)
+
+Agent create/update accept bounded UUID lists for KB groups and policy groups. Omitted lists preserve existing links; supplied lists replace them; empty lists clear them. Group references are validated in the authority-held transaction and are included in change audits and agent detail responses. Added an agent-permission editor-options endpoint exposing only IDs/titles of selectable records, without model credentials or policy contents.
+
+Review and validation: the existing 83 agent/slot checks pass, followed by all 26 agent HTTP checks with the new cases. HTTP covers group creation, deduplication, preservation, clearing, unknown/malformed references, rollback with scalar edits, equivalent-set audit suppression and restricted options output. API build, root types/lint, contract and whitespace checks pass. Migration 0116 is required. The editor and test-chat integration remain open.

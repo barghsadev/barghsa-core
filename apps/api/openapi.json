@@ -112,6 +112,26 @@
         ]
       }
     },
+    "/api/admin/agents/options": {
+      "get": {
+        "operationId": "AgentsController_options",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List non-secret model and knowledge/policy choices for agent editors",
+        "tags": [
+          "Admin · AI Agents"
+        ]
+      }
+    },
     "/api/admin/agents/{id}": {
       "delete": {
         "operationId": "AgentsController_remove",
@@ -168,7 +188,7 @@
         ]
       },
       "put": {
-        "description": "Partial update. When kbIds/policyIds are supplied they replace the whole corresponding link set (full-set semantics for the admin multi-select form); omit them to leave links untouched.",
+        "description": "Partial update. When kbIds/policyIds/kbGroupIds/policyGroupIds are supplied they replace the whole corresponding link set (full-set semantics for the admin multi-select form); omit them to leave links untouched.",
         "operationId": "AgentsController_update",
         "parameters": [
           {
