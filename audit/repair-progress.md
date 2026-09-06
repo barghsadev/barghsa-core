@@ -1481,3 +1481,9 @@ Review and validation: all 29 manual-invoice and calculation-replay checks pass.
 ### Full regression checkpoint after catalogue and invoice repairs
 
 Checkpoint 4b128a6 passes the full API suite with 2,863 tests across 223 files and the full shared suite with 697 tests across 55 files. This run includes the catalogue/gift/VAT changes, reminder authority, manual/correction authority and manual-request idempotency repair. It is regression evidence for this revision, not acceptance certification for unfinished parent tasks or production operations.
+
+### Add date-picker bounds, locale and validation controls (F20)
+
+The shared picker now accepts inclusive minDate/maxDate limits in both modes, explicit fa/en locale, a disabled state and an accessible error message. Persian is the default when neither locale nor the legacy jalali flag is supplied. Explicit legacy flags keep existing callers stable. The trigger and calendar dialog have accessible names; errors describe the trigger. Locale changes preserve the controlled Date value.
+
+Review and validation: four new browser component checks pass for inclusive boundaries, arrows/Enter/Escape, focus restoration, language changes, disabled state and error association. The fixture compiles the actual shared component into a temporary output directory and adds no product route. Corrected its initial import path, explicit test timezone and ambiguous status locator. All five production CRM browser checks pass, including Nowruz and Esfand leap day. Root build, types, lint, contract and bundle checks pass. Timezone integration, half-open ranges, full date labels and responsive month selection remain open; this is not full T-06.03.04 acceptance.

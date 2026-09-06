@@ -18,7 +18,14 @@ type CalendarMode = 'single' | 'range';
 
 interface DatePickerBaseProps {
   calendarMode?: CalendarMode;
+  /** Prefer locale; jalali remains supported for existing callers. */
   jalali?: boolean;
+  locale?: 'fa' | 'en';
+  /** Inclusive calendar-day limits. Existing values are never silently changed. */
+  minDate?: Date;
+  maxDate?: Date;
+  disabled?: boolean;
+  error?: string;
   placeholder?: string;
   className?: string;
   id?: string;
@@ -41,8 +48,13 @@ type DatePickerProps = DatePickerSingleProps | DatePickerRangeProps;
 
 function DatePicker({
   calendarMode = 'single',
-  jalali = false,
-  placeholder = 'انتخاب تاریخ',
+  jalali: jalaliOverride,
+  locale,
+  minDate,
+  maxDate,
+  disabled = false,
+  error,
+  placeholder,
   className,
   value,
   onChange,
@@ -51,6 +63,13 @@ function DatePicker({
   ...props
 }: DatePickerProps & Omit<React.ComponentProps<typeof Popover>, 'children'>) {
   const [open, setOpen] = React.useState(false);
+  const errorId = React.useId();
+  const jalali = locale ? locale === 'fa' : (jalaliOverride ?? true);
+  const prompt = placeholder ?? (jalali ? 'انتخاب تاریخ' : 'Select date');
+  const disabledDays = [
+    ...(minDate ? [{ before: minDate }] : []),
+    ...(maxDate ? [{ after: maxDate }] : []),
+  ];
   // Keep calendar initialization inside its component so importing other UI
   // controls does not retain the date libraries in unrelated route bundles.
   const calendarLocale = React.useMemo(
@@ -89,17 +108,21 @@ function DatePicker({
   }, [value, calendarMode, formatDate, formatRange]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen} {...props}>
+    <Popover open={open && !disabled} onOpenChange={setOpen} {...props}>
       <PopoverTrigger
         render={
           <Button
             id={id}
-            aria-label={label}
+            aria-label={label ?? prompt}
+            aria-haspopup="dialog"
+            aria-invalid={!!error}
+            aria-describedby={error ? errorId : undefined}
+            disabled={disabled}
             variant="outline"
             role="combobox"
-            aria-expanded={open}
+            aria-expanded={open && !disabled}
             className={cn(
-              'w-full justify-start gap-2 text-left font-normal',
+              'w-full justify-start gap-2 text-start font-normal',
               !value && 'text-muted-foreground',
               className
             )}
@@ -108,17 +131,23 @@ function DatePicker({
             {displayValue ? (
               <span>{displayValue}</span>
             ) : (
-              <span className="text-muted-foreground">{placeholder}</span>
+              <span className="text-muted-foreground">{prompt}</span>
             )}
           </Button>
         }
       />
-      <PopoverContent className="w-auto p-0" align="start">
+      {error && (
+        <span id={errorId} className="text-sm text-destructive">
+          {error}
+        </span>
+      )}
+      <PopoverContent className="w-auto p-0" align="start" aria-label={label ?? prompt}>
         {calendarMode === 'range' ? (
           <Calendar
             mode="range"
             selected={value as DateRange | undefined}
             onSelect={onChange as (range: DateRange | undefined) => void}
+            disabled={disabledDays}
             dateLib={jalali ? jalaliCalendar : undefined}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
@@ -133,6 +162,7 @@ function DatePicker({
               (onChange as (date: Date | undefined) => void)?.(date);
               setOpen(false);
             }}
+            disabled={disabledDays}
             dateLib={jalali ? jalaliCalendar : undefined}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
