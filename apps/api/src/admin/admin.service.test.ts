@@ -3,6 +3,11 @@ import { HttpException } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
 import type { CreateStaffUserInput } from './admin.service.js';
 
+// Permission races are exercised through the real HTTP integration suite.
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn(async () => {}),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {

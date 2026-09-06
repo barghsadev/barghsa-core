@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common';
@@ -455,6 +456,7 @@ export class AdminService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:users:create', userId);
       const found = await client.query<{ username: string }>(
         `SELECT username FROM users WHERE user_id=$1 AND is_staff=true
         AND disabled_at IS NULL AND activation_token IS NOT NULL AND must_change_password=true FOR UPDATE`,
@@ -591,6 +593,7 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:users:create');
 
       // ── 3. Create user record ──────────────────────────────────────
       const userResult = await client.query(
@@ -797,6 +800,7 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:roles:edit', targetUserId);
 
       // Serialize replacement and session revocation with other account edits.
       const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
@@ -2877,6 +2881,12 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        input.actorUserId,
+        'admin:staff:edit',
+        input.userId
+      );
 
       // Lock the target row; staff-only so the endpoint cannot probe
       // arbitrary customer accounts.
