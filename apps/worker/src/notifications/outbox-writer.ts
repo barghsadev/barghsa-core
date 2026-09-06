@@ -23,7 +23,7 @@ import { maxAttemptsForType, priorityForType } from './retry-schedule.js'
 
 export interface EnqueueOutboxInput {
   /** Owner of the notification (recipient profile). */
-  profileId: string
+  profileId: string | null
   /** Recipient user id (in-app delivery target). Falls back to profileId. */
   userId?: string | null
   /** Business event key, e.g. 'profile_verified'. Used for template lookup. */
@@ -115,6 +115,7 @@ export async function enqueueOutbox(
   client: PoolClient,
   input: EnqueueOutboxInput,
 ): Promise<EnqueueOutboxResult> {
+  if (!input.profileId && !input.userId) throw new Error('enqueueOutbox requires a profile or account recipient')
   const idempotencyKey = input.idempotencyKey
   if (typeof idempotencyKey !== 'string' || !idempotencyKey.trim()) {
     throw new Error('enqueueOutbox requires a stable business occurrence idempotency key')

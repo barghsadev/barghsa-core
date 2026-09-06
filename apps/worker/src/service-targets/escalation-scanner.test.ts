@@ -86,7 +86,7 @@ function defaultHandler(rows: Array<{ ledger_id: string; item_id: string; respon
     if (sql.includes('FROM staff_team_members')) {
       return { rows: [{ user_id: 'teamlead-1' }] }
     }
-    if (sql.includes('FROM users')) {
+    if (sql.includes('FROM users WHERE is_admin')) {
       return { rows: [{ user_id: 'admin-1' }] }
     }
     if (sql.includes('FROM profiles')) {
@@ -132,7 +132,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
     expect(l2Call!.params[0]).toBe('ticket')
     expect(l2Call!.params[1]).toBe(1) // expected escalation_level
     expect(l2Call!.params[2]).toBeInstanceOf(Date) // cutoff = now - 24h
-    expect(l2Call!.sql).toContain('updated_at <= $4 - (l.target_hours * INTERVAL \'1 hour\')')
+    expect(l2Call!.sql).toContain('updated_at <= $4::timestamptz - (l.target_hours * INTERVAL \'1 hour\')')
     expect(l2Call!.sql).toContain('l.alerted_at <= $3')
     expect(db.calls.some((c) => c.sql.includes('FROM profiles') && Array.isArray(c.params[0]) && (c.params[0] as string[]).includes('teamlead-1'))).toBe(true)
 
@@ -162,7 +162,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
         // level 2 query (expected 1) → none; level 3 query (expected 2) → one.
         return params[1] === 2 ? { rows: [{ ledger_id: 'l2', item_id: 'ticket-2', responsible_user_id: 'staff-2' }] } : { rows: [] }
       }
-      if (sql.includes('FROM users')) return { rows: [{ user_id: 'admin-1' }] }
+      if (sql.includes('FROM users WHERE is_admin')) return { rows: [{ user_id: 'admin-1' }] }
       if (sql.includes('FROM profiles')) return { rows: [{ id: 'profile-admin', user_id: 'admin-1' }] }
       if (sql.includes('RETURNING id')) return { rows: [{ id: 'l2' }], rowCount: 1 }
       return { rows: [] }
@@ -193,7 +193,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
       if (sql.includes('JOIN tickets')) return params[1] === 1 ? { rows: [{ ledger_id: 'l1', item_id: 't1', responsible_user_id: 'solo-1' }] } : { rows: [] }
       // solo-1 has no team memberships.
       if (sql.includes('FROM staff_team_members')) return { rows: [] }
-      if (sql.includes('FROM users')) return { rows: [{ user_id: 'admin-9' }] }
+      if (sql.includes('FROM users WHERE is_admin')) return { rows: [{ user_id: 'admin-9' }] }
       if (sql.includes('FROM profiles')) return { rows: [{ id: 'pa', user_id: 'admin-9' }] }
       if (sql.includes('RETURNING id')) return { rows: [{ id: 'l1' }], rowCount: 1 }
       return { rows: [] }
@@ -211,7 +211,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
         return { rows: [{ value: { ticket: { level2: { delayHours: 24, channels: ['in_app'] }, level3: { delayHours: 48, channels: ['in_app'] } } } }] }
       }
       if (sql.includes('JOIN tickets')) return params[1] === 1 ? { rows: [{ ledger_id: 'l1', item_id: 't1', responsible_user_id: null }] } : { rows: [] }
-      if (sql.includes('FROM users')) return { rows: [{ user_id: 'admin-9' }] }
+      if (sql.includes('FROM users WHERE is_admin')) return { rows: [{ user_id: 'admin-9' }] }
       if (sql.includes('FROM profiles')) return { rows: [{ id: 'pa', user_id: 'admin-9' }] }
       if (sql.includes('RETURNING id')) return { rows: [{ id: 'l1' }], rowCount: 1 }
       return { rows: [] }
@@ -229,7 +229,7 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
       }
       if (sql.includes('JOIN tickets')) return params[1] === 1 ? { rows: [{ ledger_id: 'l1', item_id: 't1', responsible_user_id: 'ghost-1' }] } : { rows: [] }
       if (sql.includes('FROM staff_team_members')) return { rows: [] }
-      if (sql.includes('FROM users')) return { rows: [] } // no admins
+      if (sql.includes('FROM users WHERE is_admin')) return { rows: [] } // no admins
       // The claim is never issued because recipients resolve to none first.
       return { rows: [] }
     })

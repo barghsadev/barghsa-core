@@ -148,6 +148,20 @@
       "when": 1791331200003,
       "tag": "0100_staff_assignment",
       "breakpoints": true
+    },
+    {
+      "idx": 101,
+      "version": "7",
+      "when": 1791331200004,
+      "tag": "0101_account_notification_recipients",
+      "breakpoints": true
+    },
+    {
+      "idx": 102,
+      "version": "7",
+      "when": 1791331200005,
+      "tag": "0102_service_breach_constraints",
+      "breakpoints": true
     }
   ]
 }

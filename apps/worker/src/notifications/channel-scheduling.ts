@@ -1,7 +1,8 @@
 import { decideDeliverySchedule, loadDeliveryWindowConfig, normalizeWindowConfig, type DeliveryWindowConfig } from './delivery-window.js'
 import type { NotificationChannel } from '@barghsa/shared/notifications'
 
-type QueryPool = { query: (sql: string, params?: any[]) => Promise<any>; connect?: () => Promise<QueryPool & { release: () => void }> }
+type QueryConnection = { query: (sql: string, params?: any[]) => Promise<any> }
+type QueryPool = QueryConnection & { connect?: () => Promise<QueryConnection & { release: () => void }> }
 export interface ChannelJob {
   channel: NotificationChannel
   status: string
@@ -36,7 +37,7 @@ export async function reconcileChannelWindows(pool: QueryPool, config?: Delivery
   const pending = await pool.query(`SELECT o.id,o.event_key,o.channels,o.status,o.scheduled_for,u.timezone,
     (SELECT jsonb_agg(jsonb_build_object('channel',j.channel,'status',j.status,'run_after',j.run_after,'delivery_window',j.delivery_window))
       FROM notification_job j WHERE j.outbox_id=o.id) AS jobs
-    FROM notification_outbox o JOIN profiles p ON p.id=o.profile_id
+    FROM notification_outbox o LEFT JOIN profiles p ON p.id=o.profile_id
     LEFT JOIN users u ON u.user_id=COALESCE(o.user_id,p.user_id)
     WHERE o.status IN ('queued','scheduled','sending') AND (o.locked_until IS NULL OR o.locked_until<=clock_timestamp())
       AND (o.scheduled_for IS NULL OR o.scheduled_for<=$1 OR EXISTS (
@@ -52,7 +53,7 @@ export async function reconcileChannelWindows(pool: QueryPool, config?: Delivery
       if (client) {
         await client.query('BEGIN')
         const locked = await client.query(`SELECT o.*,
-          (SELECT u.timezone FROM users u JOIN profiles p ON p.id=o.profile_id WHERE u.user_id=COALESCE(o.user_id,p.user_id)) AS timezone,
+          (SELECT u.timezone FROM users u WHERE u.user_id=COALESCE(o.user_id,(SELECT p.user_id FROM profiles p WHERE p.id=o.profile_id))) AS timezone,
           (SELECT jsonb_agg(jsonb_build_object('channel',j.channel,'status',j.status,'run_after',j.run_after,'delivery_window',j.delivery_window)) FROM notification_job j WHERE j.outbox_id=o.id) AS jobs
           FROM notification_outbox o WHERE o.id=$1 AND o.status IN ('queued','scheduled','sending')
             AND (o.locked_until IS NULL OR o.locked_until<=clock_timestamp()) FOR UPDATE SKIP LOCKED`, [candidate.id])

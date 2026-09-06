@@ -106,12 +106,12 @@ describe('InAppNotificationTransport', () => {
     expect(JSON.parse(inserts[0]!.params[4] as string)).toEqual({})
   })
 
-  it('throws when no profileId is present (cannot scope the row)', async () => {
+  it('throws when neither account nor profile recipient is present', async () => {
     const { pool, inserts } = makePool()
     const transport = new InAppNotificationTransport(pool)
 
-    const payload: NotificationSendPayload = { ...basePayload, profileId: null as unknown as string }
-    await expect(transport.send(payload)).rejects.toThrow(/requires a profileId/)
+    const payload: NotificationSendPayload = { ...basePayload, profileId: null, recipientId: '' }
+    await expect(transport.send(payload)).rejects.toThrow(/requires a profile or account/)
     // A rejected send must not leave a partial row.
     expect(inserts).toHaveLength(0)
   })

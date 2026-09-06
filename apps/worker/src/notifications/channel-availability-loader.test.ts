@@ -17,7 +17,7 @@ function makePool(overrides: {
   const pool = {
     async query(sql: string) {
       queries.push(sql)
-      if (/FROM notification_outbox o\s+JOIN profiles p/.test(sql)) {
+      if (/FROM notification_outbox o\s+LEFT JOIN profiles p/.test(sql)) {
         return { rows: overrides.contactRows ?? [] }
       }
       if (sql.includes('FROM user_notification_preferences')) {

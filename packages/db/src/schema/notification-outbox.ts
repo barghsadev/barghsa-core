@@ -1,4 +1,5 @@
-import { jsonb, pgTable, text, integer, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { jsonb, pgTable, text, integer, timestamp, uniqueIndex, uuid, check } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { profiles } from './profiles.js'
 import { users } from './users.js'
@@ -29,8 +30,7 @@ export const notificationOutbox = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the recipient profile (owner of the notification). */
-    profileId: uuidv7('profile_id')
-      .notNull()
+    profileId: uuid('profile_id')
       .references(() => profiles.id, { onDelete: 'cascade' }),
 
     /** FK to the recipient user when the target is a user (in-app delivery). */
@@ -95,6 +95,7 @@ export const notificationOutbox = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    check('notification_outbox_recipient_check', sql`${table.profileId} IS NOT NULL OR ${table.userId} IS NOT NULL`),
     uniqueIndex('uq_notification_outbox_idempotency').on(table.idempotencyKey),
   ],
 )

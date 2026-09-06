@@ -1,5 +1,6 @@
-import { integer, text, timestamp } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table.js'
+import { sql } from 'drizzle-orm'
+import { integer, text, timestamp, pgTable, check, unique } from 'drizzle-orm/pg-core'
+import { baseColumns } from '../base-table.js'
 
 /**
  * Service breach alert ledger (S-09.08, T-09.08.01).
@@ -33,7 +34,8 @@ import { createTable } from '../base-table.js'
  *
  * @module db/schema
  */
-export const serviceBreachAlerts = createTable('service_breach_alerts', {
+export const serviceBreachAlerts = pgTable('service_breach_alerts', {
+  ...baseColumns,
   /** The service type whose open item breached its target. */
   serviceType: text('service_type').notNull(),
 
@@ -61,4 +63,9 @@ export const serviceBreachAlerts = createTable('service_breach_alerts', {
    * for the next tier.
    */
   escalatedAt: timestamp('escalated_at', { withTimezone: true, mode: 'date' }),
-})
+}, (table) => [
+  unique('uq_sba_item').on(table.serviceType,table.itemId),
+  check('chk_sba_service_type',sql`${table.serviceType} IN ('ticket','verification_case')`),
+  check('chk_sba_target_hours',sql`${table.targetHours}>0`),
+  check('chk_sba_escalation_level',sql`${table.escalationLevel} BETWEEN 1 AND 3`),
+])

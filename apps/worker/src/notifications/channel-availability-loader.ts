@@ -59,7 +59,7 @@ export async function loadChannelAvailabilityContext(
 export type { NotificationChannel }
 export interface NotificationRecipient {
   userId: string
-  profileId: string
+  profileId: string | null
   email: string | null
   mobile: string | null
   locale: 'fa' | 'en'
@@ -73,12 +73,12 @@ export async function loadNotificationRecipient(pool: AvailabilityPool, outboxId
       COALESCE(u.mobile,CASE WHEN u.username LIKE '+%' THEN u.username END) AS mobile,
       EXISTS (SELECT 1 FROM email_suppressions s WHERE lower(s.address)=lower(
         COALESCE(u.email,CASE WHEN u.username LIKE '%@%' THEN u.username END))) AS email_suppressed
-    FROM notification_outbox o JOIN profiles p ON p.id=o.profile_id
+    FROM notification_outbox o LEFT JOIN profiles p ON p.id=o.profile_id
     JOIN users u ON u.user_id=COALESCE(o.user_id,p.user_id)
     WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`, [outboxId])
   const row = result.rows[0]
   if (!row) return null
-  return { userId: row.user_id as string, profileId: row.profile_id as string,
+  return { userId: row.user_id as string, profileId: (row.profile_id as string | null) ?? null,
     email: typeof row.email === 'string' && row.email.trim() ? row.email.trim() : null,
     mobile: typeof row.mobile === 'string' && row.mobile.trim() ? row.mobile.trim() : null,
     locale: row.locale === 'en' ? 'en' : 'fa', emailSuppressed: row.email_suppressed === true }

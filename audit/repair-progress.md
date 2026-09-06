@@ -526,3 +526,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Migration 0100 adds correction assignee/team fields, durable cursors and open-assignment indexes. Correction details show the reviewer; overdue scanners prefer that reviewer to the creator.
 - Review: all 2,496 API tests passed (193 files), including concurrent round-robin balance, eligibility fallback, audit rollback/retry and correction self-review exclusion. Three correction browser checks, 24 worker target tests, populated migration/rerun and workspace typechecks passed.
 - Follow-up: overdue scanners still omit staff without a default customer profile. Fix recipient handling next; team/rule administration screens and the rest of F17 remain open.
+
+### F17.3 — Deliverable staff alerts and functioning escalation
+
+- Staff alerts now use enabled, activated account recipients even without a customer profile. Archived profiles are not selected; disabled team members/admins are excluded. Queue, private inbox, external contact resolution and delivery-window handling support optional profile context.
+- Migration 0101 removes the outbox profile requirement and generated foreign-key default, while requiring an account or profile recipient. Migration 0102 restores omitted alert-ledger uniqueness/domain constraints; existing invalid or duplicate rows fail migration for reconciliation rather than being discarded. Schema definitions retain these constraints for future generation.
+- Real execution exposed and fixed an escalation timestamp parameter inferred as an interval. Breach failure counters now reflect rollback rather than reporting rolled-back alerts as delivered.
+- Review: all 309 worker tests passed. The migrated PostgreSQL scenario proves breach/queue rollback, retry without duplicates, concurrent private inbox delivery, profileless escalation/admin fallback, disabled-recipient exclusion, escalation rollback and ordinary account delivery windows. Nine migration/schema checks and workspace typechecks passed; final worker typecheck and whitespace review passed after the final test changes.
+- No external providers were called. Team administration and other F17 screens remain open.

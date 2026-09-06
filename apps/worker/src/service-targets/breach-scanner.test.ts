@@ -254,7 +254,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
       if (sql.includes('FROM tickets')) {
         return { rows: [{ id: 'ticket-2', recipient_user_id: null }] }
       }
-      if (sql.includes('FROM users')) {
+      if (sql.includes('FROM users WHERE is_admin')) {
         return { rows: [{ user_id: 'admin-1' }, { user_id: 'admin-2' }] }
       }
       if (sql.includes('FROM profiles')) {
@@ -296,7 +296,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
           ],
         }
       }
-      if (sql.includes('FROM users')) {
+      if (sql.includes('FROM users WHERE is_admin')) {
         return { rows: [{ user_id: 'admin-1' }] }
       }
       if (sql.includes('FROM profiles')) {
@@ -333,7 +333,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
     expect(byItem.get('ticket-assigned')).toEqual(['profile-s1'])
   })
 
-  it('skips the ledger insert when the recipient has no deliverable profile', async () => {
+  it('skips the ledger insert when the recipient account is unavailable', async () => {
     const db = makeFakeDb((sql) => {
       if (sql.includes('FROM app_config')) {
         return { rows: [{ value: { ticket: 48 } }] }
@@ -342,7 +342,7 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         return { rows: [{ id: 'ticket-noprofile', recipient_user_id: 'staff-ghost' }] }
       }
       if (sql.includes('FROM profiles')) {
-        return { rows: [] } // staff-ghost has no default profile
+        return { rows: [] } // staff-ghost is unavailable
       }
       if (sql.includes('INSERT INTO service_breach_alerts')) {
         return { rows: [{ id: 'ledger-x', inserted: true }] }

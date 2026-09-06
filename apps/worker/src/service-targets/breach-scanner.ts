@@ -260,6 +260,7 @@ export async function scanServiceBreaches(
 
   for (const domain of BREACH_DOMAINS) {
     const targetHours = targets[domain.serviceType]
+    const before = { alerted: result.alerted, pruned: result.pruned, skippedDuplicates: result.skippedDuplicates }
 
     const client = await pool.connect()
     try {
@@ -295,13 +296,13 @@ export async function scanServiceBreaches(
           const itemRecipients = recipients.forItem(row.recipient_user_id)
 
           // No deliverable recipient (e.g. the responsible staff account has
-          // no default profile): skip the ledger insert entirely so the item
+          // no active account): skip the ledger insert entirely so the item
           // is re-evaluated on the next scan — a silent, permanent alert
           // suppression is worse than re-checking a few minutes later.
           // Warnings are aggregated (one line per pass) so a persistent
           // condition cannot spam the worker log.
           if (itemRecipients.length === 0) {
-            noRecipientSkips.push({ itemId: row.id, reason: 'no default profile' })
+            noRecipientSkips.push({ itemId: row.id, reason: 'no active recipient' })
             continue
           }
 
@@ -336,11 +337,11 @@ export async function scanServiceBreaches(
               // Episode-scoped: the ledger row id guarantees a NEW key every
               // episode, so an item that re-breaches after being pruned can
               // never collide with its first episode's outbox row.
-              idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id}:${ledgerId}`,
+              idempotencyKey: `${SERVICE_TARGET_BREACHED_EVENT_KEY}:${domain.serviceType}:${row.id}:${profile.id ?? profile.userId}:${ledgerId}`,
             })
             if (!enqueueResult.inserted) {
               logger.warn(
-                `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id} (unexpected for a fresh episode)`,
+                `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id ?? profile.userId} (unexpected for a fresh episode)`,
               )
             }
           }
@@ -368,6 +369,7 @@ export async function scanServiceBreaches(
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {})
       const message = (error as Error)?.message ?? String(error)
+      Object.assign(result, before)
       result.errors.push(`${domain.serviceType}: ${message}`)
       logger.warn(`Scan failed for ${domain.serviceType}: ${message}`)
     } finally {
@@ -385,7 +387,7 @@ export async function scanServiceBreaches(
 
 /** A recipient profile resolved for in-app delivery. */
 interface RecipientProfile {
-  id: string
+  id: string | null
   userId: string
 }
 
@@ -403,9 +405,7 @@ interface ResolvedRecipients {
  * - an unassigned item (only in domains whose fallback is `admins`) alerts
  *   every platform admin — and **only** admins, never other items' assigned
  *   staff;
- * - a user without a default profile is skipped (in-app delivery is
- *   profile-scoped; staff created through the admin flow always get an
- *   individual profile) — the caller re-evaluates such items next scan.
+ * - enabled, activated accounts can receive alerts without a customer profile.
  */
 async function resolveRecipients(
   client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
@@ -425,7 +425,7 @@ async function resolveRecipients(
   const adminUserIds = new Set<string>()
   if (needsAdmins) {
     const admins = await client.query(
-      `SELECT user_id FROM users WHERE is_admin = TRUE`,
+      `SELECT user_id FROM users WHERE is_admin = TRUE AND disabled_at IS NULL AND activation_token IS NULL`,
     )
     for (const admin of admins.rows) {
       adminUserIds.add(String(admin.user_id))
@@ -438,13 +438,15 @@ async function resolveRecipients(
   const profilesByUser = new Map<string, RecipientProfile>()
   if (profileUserIds.size > 0) {
     const profiles = await client.query(
-      `SELECT id, user_id FROM profiles WHERE user_id = ANY($1::text[]) AND is_default = TRUE`,
+      `SELECT p.id, u.user_id FROM users u LEFT JOIN LATERAL
+        (SELECT id FROM profiles WHERE user_id=u.user_id AND is_default=TRUE AND archived_at IS NULL ORDER BY id LIMIT 1) p ON TRUE
+       WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
       [[...profileUserIds]],
     )
     for (const profile of profiles.rows) {
       const userId = String(profile.user_id)
       if (!profilesByUser.has(userId)) {
-        profilesByUser.set(userId, { id: String(profile.id), userId })
+        profilesByUser.set(userId, { id: profile.id == null ? null : String(profile.id), userId })
       }
     }
   }

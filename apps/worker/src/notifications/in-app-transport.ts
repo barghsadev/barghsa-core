@@ -17,8 +17,8 @@ import type {
  * (it cannot be disabled), complementing the async email/SMS providers.
  *
  * Mapping from the dispatch payload to the table row:
- * - `profile_id`  ← payload.profileId (the recipient profile — always present
- *   on an outbox row; the table is profile-scoped, not user-scoped).
+ * - `profile_id`  ← payload.profileId (optional profile context; explicit account
+ *   recipients remain private even when they have no customer profile).
  * - `type`        ← payload.eventKey (drives icons & routing).
  * - `title_i18n_key` / `body_i18n_key` ← derived from the event type as
  *   `notifications.<eventKey>.title` / `.body`. This is a documented
@@ -47,15 +47,15 @@ export class InAppNotificationTransport implements INotificationTransport {
   constructor(private readonly pool: any = null) {}
 
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
-    if (!payload.profileId) {
-      throw new Error('in_app transport requires a profileId recipient')
+    if (!payload.profileId && !payload.recipientId) {
+      throw new Error('in_app transport requires a profile or account recipient')
     }
 
     const pool = this.pool ?? getDbPool()
     const deliveryKey = payload.outboxId ? `outbox:${payload.outboxId}` : `transport:${payload.idempotencyKey}`
     const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId
     const existing = await pool.query(`SELECT id FROM in_app_notifications WHERE delivery_key=$1
-      AND profile_id=$2 AND recipient_user_id IS NOT DISTINCT FROM $3::text`, [deliveryKey,payload.profileId,recipient])
+      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text`, [deliveryKey,payload.profileId,recipient])
     if(existing.rows[0])return {status:'delivered',providerRef:existing.rows[0].id}
     const content=defaultInboxContent(payload.eventKey,payload.payload)
     const templates=await pool.query(`SELECT locale,subject,body_template,variables FROM notification_templates
@@ -78,7 +78,7 @@ export class InAppNotificationTransport implements INotificationTransport {
          (profile_id, type, title_i18n_key, body_i18n_key, params, link_route, delivery_key,recipient_user_id,localized_content)
        VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
        ON CONFLICT (delivery_key) DO UPDATE SET delivery_key=EXCLUDED.delivery_key
-       WHERE in_app_notifications.profile_id=EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id
+       WHERE in_app_notifications.profile_id IS NOT DISTINCT FROM EXCLUDED.profile_id AND in_app_notifications.type=EXCLUDED.type AND in_app_notifications.recipient_user_id IS NOT DISTINCT FROM EXCLUDED.recipient_user_id
        RETURNING id`,
       [
         payload.profileId,

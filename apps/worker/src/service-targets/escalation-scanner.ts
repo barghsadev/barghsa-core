@@ -110,7 +110,7 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
         WHERE l.service_type = $1
           AND l.escalation_level = $2
           AND t.status = ANY($5::text[])
-          AND t.updated_at <= $4 - (l.target_hours * INTERVAL '1 hour')
+          AND t.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
           AND l.${column} <= $3
         ORDER BY l.updated_at ASC
         LIMIT $6`,
@@ -124,7 +124,7 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
         WHERE l.service_type = $1
           AND l.escalation_level = $2
           AND vc.status = ANY($5::text[])
-          AND vc.updated_at <= $4 - (l.target_hours * INTERVAL '1 hour')
+          AND vc.updated_at <= $4::timestamptz - (l.target_hours * INTERVAL '1 hour')
           AND l.${column} <= $3
         ORDER BY l.updated_at ASC
         LIMIT $6`,
@@ -168,7 +168,7 @@ const defaultLogger: Pick<Console, 'warn' | 'info'> = {
 
 /** A recipient profile resolved for notification delivery. */
 interface RecipientProfile {
-  id: string
+  id: string | null
   userId: string
 }
 
@@ -330,8 +330,8 @@ async function escalateOne(
   }
 
   if (recipients.length === 0) {
-    // No deliverable recipient (e.g. no team, no admins, or no default
-    // profile): leave the ledger at the current tier so the item is
+    // No deliverable recipient (e.g. no team, no admins, or no active
+    // account): leave the ledger at the current tier so the item is
     // re-evaluated next scan rather than stuck at a higher tier with no alert.
     logger.warn(
       `No deliverable recipient for ${domain.serviceType} ${candidate.item_id} at level ${toLevel}; re-evaluated next scan`,
@@ -367,11 +367,11 @@ async function escalateOne(
       channels: level.channels,
       // Tier + ledger-id scoped: a fresh key every claim guarantees a
       // re-escalation can never collide with a prior tier's outbox row.
-      idempotencyKey: `${SERVICE_ESCALATED_EVENT_KEY}:${domain.serviceType}:${candidate.item_id}:${toLevel}:${profile.id}:${candidate.ledger_id}`,
+      idempotencyKey: `${SERVICE_ESCALATED_EVENT_KEY}:${domain.serviceType}:${candidate.item_id}:${toLevel}:${profile.id ?? profile.userId}:${candidate.ledger_id}`,
     })
     if (!enqueueResult.inserted) {
       logger.warn(
-        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id} (unexpected for a fresh claim)`,
+        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id ?? profile.userId} (unexpected for a fresh claim)`,
       )
     }
   }
@@ -383,14 +383,16 @@ async function escalateOne(
 async function resolveAdminRecipients(
   client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
 ): Promise<RecipientProfile[]> {
-  const admins = await client.query(`SELECT user_id FROM users WHERE is_admin = TRUE`)
+  const admins = await client.query(`SELECT user_id FROM users WHERE is_admin = TRUE AND disabled_at IS NULL AND activation_token IS NULL`)
   const ids = admins.rows.map((r) => String(r.user_id))
   if (ids.length === 0) return []
   const profiles = await client.query(
-    `SELECT id, user_id FROM profiles WHERE user_id = ANY($1::text[]) AND is_default = TRUE`,
+    `SELECT p.id, u.user_id FROM users u LEFT JOIN LATERAL
+        (SELECT id FROM profiles WHERE user_id=u.user_id AND is_default=TRUE AND archived_at IS NULL ORDER BY id LIMIT 1) p ON TRUE
+       WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
     [ids],
   )
-  return profiles.rows.map((r) => ({ id: String(r.id), userId: String(r.user_id) }))
+  return profiles.rows.map((r) => ({ id: r.id == null ? null : String(r.id), userId: String(r.user_id) }))
 }
 
 /**
@@ -417,6 +419,8 @@ async function resolveLevel2Recipients(
     `SELECT DISTINCT stm2.user_id
        FROM staff_team_members stm
        JOIN staff_team_members stm2 ON stm2.team_id = stm.team_id
+       JOIN staff_teams t ON t.id=stm.team_id AND t.is_active
+       JOIN users u ON u.user_id=stm2.user_id AND u.disabled_at IS NULL AND u.activation_token IS NULL
       WHERE stm.user_id = $1 AND stm2.user_id <> $1`,
     [responsibleUserId],
   )
@@ -427,8 +431,10 @@ async function resolveLevel2Recipients(
   }
 
   const profiles = await client.query(
-    `SELECT id, user_id FROM profiles WHERE user_id = ANY($1::text[]) AND is_default = TRUE`,
+    `SELECT p.id, u.user_id FROM users u LEFT JOIN LATERAL
+        (SELECT id FROM profiles WHERE user_id=u.user_id AND is_default=TRUE AND archived_at IS NULL ORDER BY id LIMIT 1) p ON TRUE
+       WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
     [memberIds],
   )
-  return profiles.rows.map((r) => ({ id: String(r.id), userId: String(r.user_id) }))
+  return profiles.rows.map((r) => ({ id: r.id == null ? null : String(r.id), userId: String(r.user_id) }))
 }

@@ -13,6 +13,9 @@ import { InAppNotificationTransport } from './in-app-transport.js'
 import { runOutboxPoll } from './outbox-runner.js'
 import { enqueueOutbox } from './outbox-writer.js'
 import { dispatchOutbox, type OutboxRow } from './outbox-reader.js'
+import { scanServiceBreaches } from '../service-targets/breach-scanner.js'
+import { scanServiceEscalations } from '../service-targets/escalation-scanner.js'
+import { reconcileChannelWindows } from './channel-scheduling.js'
 
 const name = `test_delivery_${randomUUID().replaceAll('-', '')}`
 const folder = resolve(__dirname, '../../../../packages/db/drizzle/production')
@@ -434,4 +437,59 @@ it('saves active bilingual inbox templates and keeps original content/read state
     .toEqual({is_read:true,read_at:new Date('2026-01-01T00:00:00Z')})
   expect((await dispatchOutbox({...row(randomUUID()),channels:['in_app']},{in_app:transport}))[0]!.result.status).toBe('failed')
   expect((await pool.query('SELECT recipient_user_id FROM in_app_notifications WHERE id=$1',[inbox])).rows[0].recipient_user_id).toBe('delivery-owner')
+})
+
+
+it('delivers and escalates profileless staff alerts privately with retry and rollback safety', async () => {
+  await pool.query(`INSERT INTO users(user_id,username,password_hash,is_staff,is_admin,disabled_at) VALUES
+    ('alert-staff','staff-alert@example.test','test',true,false,NULL),
+    ('alert-admin','admin-alert@example.test','test',true,true,NULL),
+    ('alert-disabled','disabled-alert@example.test','test',true,true,NOW())`)
+  await pool.query(`INSERT INTO app_config(key,value) VALUES
+    ('admin.service_response_targets','{"ticket":1}'),
+    ('admin.escalation_policy','{"ticket":{"level2":{"delayHours":1,"channels":["in_app","email"]},"level3":{"delayHours":1,"channels":["in_app"]}}}')`)
+  const ticket=(await pool.query(`INSERT INTO tickets(user_id,assigned_to,subject,body,status,updated_at)
+    VALUES ('delivery-owner','alert-staff','Overdue','Private conversation','in_progress',NOW()-INTERVAL '4 hours') RETURNING id`)).rows[0].id
+  const logger={warn:vi.fn(),info:vi.fn()}
+  // Failure after a real outbox write must also roll back its breach ledger.
+  const failed=await scanServiceBreaches({pool,logger,enqueue:async(client,input)=>{
+    await enqueueOutbox(client,input);throw new Error('injected queue failure')
+  }})
+  expect(failed.errors).toHaveLength(1)
+  expect(failed.alerted).toBe(0)
+  expect((await pool.query('SELECT id FROM service_breach_alerts WHERE item_id=$1',[ticket])).rows).toEqual([])
+  expect((await pool.query("SELECT id FROM notification_outbox WHERE user_id='alert-staff'")).rows).toEqual([])
+  expect((await scanServiceBreaches({pool,logger})).errors).toEqual([])
+  await scanServiceBreaches({pool,logger})
+  const alerts=(await pool.query("SELECT * FROM notification_outbox WHERE user_id='alert-staff'")).rows
+  expect(alerts).toHaveLength(1)
+  expect(alerts[0].profile_id).toBeNull()
+  const notice={...row(alerts[0].id),profileId:null,userId:'alert-staff',eventKey:alerts[0].event_key,payload:alerts[0].payload,channels:['in_app'] as const}
+  const transport=new InAppNotificationTransport(pool)
+  const outcomes=await Promise.all(Array.from({length:4},()=>dispatchOutbox({...notice,channels:[...notice.channels]},{in_app:transport})))
+  expect(outcomes.every(result=>result[0]?.result.status==='delivered')).toBe(true)
+  expect(new Set(outcomes.map(result=>result[0]?.result.providerRef)).size).toBe(1)
+  expect((await pool.query('SELECT profile_id,recipient_user_id,localized_content FROM in_app_notifications WHERE delivery_key=$1',[`outbox:${alerts[0].id}`])).rows[0])
+    .toMatchObject({profile_id:null,recipient_user_id:'alert-staff',localized_content:{fa:expect.any(Object),en:expect.any(Object)}})
+  await pool.query("UPDATE service_breach_alerts SET alerted_at=NOW()-INTERVAL '2 hours' WHERE item_id=$1",[ticket])
+  const escalationFailure=await scanServiceEscalations({pool,logger,enqueue:async(client,input)=>{await enqueueOutbox(client,input);throw new Error('injected escalation queue failure')}})
+  expect(escalationFailure.errors).toHaveLength(1)
+  expect((await pool.query('SELECT escalation_level FROM service_breach_alerts WHERE item_id=$1',[ticket])).rows[0].escalation_level).toBe(1)
+  expect((await scanServiceEscalations({pool,logger})).errors).toEqual([])
+  await scanServiceEscalations({pool,logger})
+  const escalations=(await pool.query("SELECT * FROM notification_outbox WHERE event_key='admin.service_escalated' AND payload->>'item_id'=$1",[ticket])).rows
+  expect(escalations).toHaveLength(1)
+  expect(escalations[0]).toMatchObject({profile_id:null,user_id:'alert-admin',channels:['in_app','email']})
+  expect(await loadNotificationRecipient(pool,escalations[0].id)).toMatchObject({userId:'alert-admin',profileId:null,email:'admin-alert@example.test'})
+  // Urgent escalations stay immediate; ordinary account-only events respect windows.
+  const queueClient=await pool.connect()
+  let scheduledId: string | null
+  try { scheduledId=(await enqueueOutbox(queueClient,{profileId:null,userId:'alert-admin',eventKey:'staff.daytime_notice',channels:['in_app','email'],idempotencyKey:randomUUID()})).outboxId }
+  finally { queueClient.release() }
+  await reconcileChannelWindows(pool,{startHour:23,endHour:24,timezone:'UTC'},new Date('2026-09-06T12:00:00Z'))
+  const jobs=(await pool.query('SELECT channel,run_after FROM notification_job WHERE outbox_id=$1',[scheduledId])).rows
+  expect(jobs.find(job=>job.channel==='email').run_after).not.toBeNull()
+  expect(jobs.find(job=>job.channel==='in_app').run_after).toBeNull()
+  await expect(pool.query(`INSERT INTO notification_outbox(profile_id,event_key,channels,idempotency_key)
+    VALUES (NULL,'invalid',ARRAY['in_app'],'missing-recipient')`)).rejects.toMatchObject({code:'23514'})
 })

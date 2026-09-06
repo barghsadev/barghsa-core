@@ -35,7 +35,7 @@ export function normalizeLeaseDurationMs(value?: number): number {
 
 export interface OutboxRow {
   id: string
-  profileId: string
+  profileId: string | null
   userId: string | null
   eventKey: string
   payload: Record<string, unknown>
@@ -104,7 +104,7 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
   )
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
     id: row.id as string,
-    profileId: row.profile_id as string,
+    profileId: (row.profile_id as string | null) ?? null,
     userId: (row.user_id as string) ?? null,
     eventKey: row.event_key as string,
     payload: (row.payload as Record<string, unknown>) ?? {},
@@ -151,7 +151,7 @@ export async function dispatchOutbox(
       idempotencyKey: deriveChannelIdempotencyKey(
         row.eventKey,
         channel,
-        row.profileId,
+        row.profileId ?? row.userId ?? '',
         row.idempotencyKey,
         row.idempotencyVersion ?? 1,
         row.id,
@@ -159,7 +159,7 @@ export async function dispatchOutbox(
       outboxId: row.id,
       ...(control ? { signal: control.signal } : {}),
       channel,
-      recipientId: row.userId ?? row.profileId,
+      recipientId: row.userId ?? row.profileId ?? '',
       profileId: row.profileId,
       eventKey: row.eventKey,
       payload: row.payload,
