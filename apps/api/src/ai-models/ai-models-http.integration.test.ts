@@ -312,3 +312,58 @@ it('does not overwrite a completed competing test', async () => {
     await Promise.all([first, second]);
   }
 });
+
+it.each(['GET', 'PUT', 'DELETE', 'POST'])('rejects malformed model IDs for %s', async (method) => {
+  const response = await request(
+    `/not-a-uuid${method === 'POST' ? '/test' : ''}`,
+    method,
+    method === 'PUT' ? { title: 'changed' } : undefined
+  );
+  expect(response.status).toBe(400);
+});
+
+it.each([
+  { title: '   ' },
+  { modelName: '  ' },
+  { baseUrl: 'https://user:password@model.example.test/v1' },
+  { baseUrl: 'https://model.example.test/v1?key=secret' },
+  { baseUrl: 'https://model.example.test/v1#fragment' },
+  { unknownField: true },
+])('rejects invalid model fields on create and update: %j', async (invalid) => {
+  expect((await request('', 'POST', { ...input, ...invalid })).status).toBe(400);
+  const id = await seed();
+  expect((await request(`/${id}`, 'PUT', invalid)).status).toBe(400);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+  ).toHaveLength(0);
+});
+
+it.each(['baseUrl', 'providerType'] as const)(
+  'requires explicit credential choice before changing %s',
+  async (field) => {
+    const created = await request('', 'POST', input);
+    expect(created.status).toBe(201);
+    const { id } = (await created.json()) as { id: string };
+    const change =
+      field === 'baseUrl'
+        ? { baseUrl: 'https://different.example.test/v1' }
+        : { providerType: 'anthropic' };
+    for (const token of [undefined, '********rned']) {
+      const response = await request(`/${id}`, 'PUT', {
+        ...change,
+        ...(token === undefined ? {} : { apiToken: token }),
+      });
+      expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({
+        error: { code: 'AI_MODEL_TOKEN_REENTRY_REQUIRED' },
+      });
+    }
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_updated'")).rows
+    ).toHaveLength(0);
+    expect((await request(`/${id}`, 'PUT', { ...change, apiToken: '' })).status).toBe(200);
+    expect(
+      (await http.pool.query('SELECT api_token FROM ai_models WHERE id=$1', [id])).rows
+    ).toEqual([{ api_token: null }]);
+  }
+);

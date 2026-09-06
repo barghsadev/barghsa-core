@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -29,33 +30,40 @@ import {
 /** Shared url refinement: http(s), non-empty after trim. */
 const baseUrlSchema = z
   .string()
+  .trim()
   .min(1, 'Base URL is required')
   .max(500)
   .refine((v) => {
     try {
       const url = new URL(v);
-      return url.protocol === 'http:' || url.protocol === 'https:';
+      return (
+        (url.protocol === 'http:' || url.protocol === 'https:') &&
+        !url.username &&
+        !url.password &&
+        !url.search &&
+        !url.hash
+      );
     } catch {
       return false;
     }
   }, 'Base URL must be an http(s) URL');
 
-export const CreateAiModelSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(120),
+export const CreateAiModelSchema = z.strictObject({
+  title: z.string().trim().min(1, 'Title is required').max(120),
   providerType: z.enum(AI_MODEL_PROVIDER_TYPES, {
     message: 'Provider type is required',
   }),
   baseUrl: baseUrlSchema,
-  modelName: z.string().min(1, 'Model name is required').max(200),
+  modelName: z.string().trim().min(1, 'Model name is required').max(200),
   apiToken: z.string().max(4000).optional(),
 });
 
 export const UpdateAiModelSchema = z
-  .object({
-    title: z.string().min(1).max(120).optional(),
+  .strictObject({
+    title: z.string().trim().min(1).max(120).optional(),
     providerType: z.enum(AI_MODEL_PROVIDER_TYPES).optional(),
     baseUrl: baseUrlSchema.optional(),
-    modelName: z.string().min(1).max(200).optional(),
+    modelName: z.string().trim().min(1).max(200).optional(),
     apiToken: z.string().max(4000).optional(),
   })
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
@@ -108,7 +116,10 @@ export class AiModelsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single AI model (admin)' })
   @ApiResponse({ status: 200, description: 'The AI model with its masked token.' })
-  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<AiModelDto> {
+  async get(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<AiModelDto> {
     this.assertAiModelsPermission(req);
     return this.service.get(id);
   }
@@ -148,12 +159,12 @@ export class AiModelsController {
     description:
       'Partial update. apiToken semantics: omit = unchanged, masked ' +
       'placeholder = unchanged, empty string = clear, anything else = new ' +
-      'token (encrypted at rest).',
+      'token (encrypted at rest). Changing base URL or provider with a stored token requires explicit token re-entry or clearing.',
   })
   @ApiResponse({ status: 200, description: 'AI model updated (masked token preserved).' })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof UpdateAiModelSchema>
   ): Promise<AiModelDto> {
     this.assertAiModelsPermission(req);
@@ -178,7 +189,10 @@ export class AiModelsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI model (admin)' })
   @ApiResponse({ status: 204, description: 'AI model deleted.' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<void> {
     this.assertAiModelsPermission(req);
     return this.service.remove(id, req.session.userId, requestIp(req));
   }
@@ -198,7 +212,7 @@ export class AiModelsController {
   @ApiResponse({ status: 200, description: 'Test outcome + refreshed model.' })
   async test(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<TestAiModelResult> {
     this.assertAiModelsPermission(req);
     return this.service.test(id, req.session.userId, requestIp(req));

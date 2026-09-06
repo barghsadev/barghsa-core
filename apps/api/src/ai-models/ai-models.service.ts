@@ -173,6 +173,24 @@ export class AiModelsService {
       const existing = await this.findRow(id, client);
       if (!existing) throw this.notFound(id);
 
+      const destinationChanged =
+        (input.baseUrl !== undefined && input.baseUrl !== existing.base_url) ||
+        (input.providerType !== undefined && input.providerType !== existing.provider_type);
+      if (
+        destinationChanged &&
+        existing.api_token !== null &&
+        (input.apiToken === undefined || isMaskedAiToken(input.apiToken.trim()))
+      ) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'AI_MODEL_TOKEN_REENTRY_REQUIRED',
+            message: 'Re-enter or clear the API token when changing the provider or base URL',
+          },
+          400
+        );
+      }
+
       const fields: string[] = [];
       const values: unknown[] = [];
       let param = 1;
@@ -234,7 +252,7 @@ export class AiModelsService {
     });
   }
 
-  /** Delete a model. Referenced-by-agents protection lands with T-09.11.04. */
+  /** Delete an unreferenced model; the agent foreign key protects models in use. */
   async remove(id: string, actorUserId: string, ip: string): Promise<void> {
     return this.withTransaction(actorUserId, async (client) => {
       const existing = await this.findRow(id, client);
