@@ -42,6 +42,11 @@ export default function AdminLayout() {
                 </a>
               </li>
               <li>
+                <a href="/admin/failed-jobs" className="text-blue-600 hover:underline">
+                  {t('admin.jobs.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/storage" className="text-blue-600 hover:underline">
                   Storage
                 </a>

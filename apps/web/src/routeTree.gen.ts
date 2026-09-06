@@ -32,6 +32,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
+import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
@@ -178,6 +179,11 @@ const AdminBrandingRoute = AdminBrandingRouteImport.update({
 const AdminCrmRoute = AdminCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFailedJobsRoute = AdminFailedJobsRouteImport.update({
+  id: '/failed-jobs',
+  path: '/failed-jobs',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminGeographyRoute = AdminGeographyRouteImport.update({
@@ -371,6 +377,7 @@ export interface FileRoutesByFullPath {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -424,6 +431,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -483,6 +491,7 @@ export interface FileRoutesById {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -542,6 +551,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/failed-jobs'
     | '/admin/geography'
     | '/admin/invoices'
     | '/admin/notifications'
@@ -595,6 +605,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/approval-requests'
     | '/admin/branding'
+    | '/admin/failed-jobs'
     | '/admin/geography'
     | '/admin/invoices'
     | '/admin/notifications'
@@ -653,6 +664,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/failed-jobs'
     | '/admin/geography'
     | '/admin/invoices'
     | '/admin/notifications'
@@ -863,6 +875,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/admin/crm'
       preLoaderRoute: typeof AdminCrmRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/failed-jobs': {
+      id: '/admin/failed-jobs'
+      path: '/failed-jobs'
+      fullPath: '/admin/failed-jobs'
+      preLoaderRoute: typeof AdminFailedJobsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/geography': {
@@ -1167,6 +1186,7 @@ interface AdminRouteChildren {
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
+  AdminFailedJobsRoute: typeof AdminFailedJobsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
@@ -1187,6 +1207,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
+  AdminFailedJobsRoute: AdminFailedJobsRoute,
   AdminGeographyRoute: AdminGeographyRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,

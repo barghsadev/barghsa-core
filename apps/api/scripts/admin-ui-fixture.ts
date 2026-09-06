@@ -22,6 +22,21 @@ async function main() {
       [randomUUID(), `pending-${language}@example.test`]
     );
   }
+  const jobs: Record<string, { first: string; second: string; dead: string }> = {};
+  for (const [locale, types] of [
+    ['en', ['storage_cleanup', 'auth_delivery', 'invoice_overdue_scan']],
+    ['fa', ['service_breach_scan', 'service_escalation_scan', 'invoice_reminder_sender']],
+  ] as const) {
+    const ids = { first: randomUUID(), second: randomUUID(), dead: randomUUID() };
+    jobs[locale] = ids;
+    for (const [index, key] of ['first', 'second', 'dead'].entries()) {
+      await http.pool.query(
+        `INSERT INTO background_jobs(id,job_type,status,attempts,max_attempts,error)
+        VALUES($1,$2,$3,5,5,'Local worker transport failed')`,
+        [ids[key as keyof typeof ids], types[index], key === 'dead' ? 'dead_letter' : 'failed']
+      );
+    }
+  }
   let closing = false;
   const close = async () => {
     if (closing) return;
@@ -33,7 +48,7 @@ async function main() {
   process.once('message', () => void close());
   process.once('disconnect', () => void close());
   process.once('SIGTERM', () => void close());
-  process.send?.({ base: http.base, session, csrf });
+  process.send?.({ base: http.base, session, csrf, jobs });
 }
 main().catch(async (error) => {
   console.error(error);

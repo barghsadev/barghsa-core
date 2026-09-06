@@ -4,7 +4,12 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { setup as buildApi } from '../../api/src/test/build-http-app';
 let child: ChildProcess;
-let http: { base: string; session: string; csrf: string };
+let http: {
+  base: string;
+  session: string;
+  csrf: string;
+  jobs: Record<string, { first: string; second: string; dead: string }>;
+};
 test.beforeAll(async () => {
   test.setTimeout(90000);
   buildApi();
@@ -359,4 +364,83 @@ for (const locale of ['en', 'fa'])
     expect(account.activationPending).toBe(true);
     expect(new Date(account.activationExpiresAt).getTime()).toBeGreaterThan(Date.now());
     expect(account).not.toHaveProperty('activationToken');
+  });
+
+for (const locale of ['en', 'fa'])
+  test(`failed jobs can be retried in bulk, resolved, and recovered from dead letter (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa',
+      ids = http.jobs[locale]!;
+    await page.goto('/admin/failed-jobs');
+    const row = (id: string) => page.locator(`[data-job-id="${id}"]`);
+    await expect(row(ids.first)).toContainText('Local worker transport failed');
+    await row(ids.first).getByRole('checkbox').check();
+    await row(ids.second).getByRole('checkbox').check();
+    await page
+      .getByRole('button', { name: fa ? /اجرای دوباره موارد انتخاب‌شده/ : /Retry selected/ })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(row(ids.first)).toHaveCount(0);
+    await page
+      .getByRole('button', { name: fa ? 'در انتظار اجرای دوباره' : 'Retrying', exact: true })
+      .click();
+    await expect(row(ids.first)).toBeVisible();
+    await expect(row(ids.second)).toBeVisible();
+    await row(ids.first)
+      .getByRole('button', { name: fa ? 'حل‌شده علامت زدن' : 'Resolve', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toContainText(
+      fa ? 'اجرای کارهای دوره‌ای ادامه' : 'Recurring jobs will continue'
+    );
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(row(ids.first)).toHaveCount(0);
+    await page.getByRole('button', { name: fa ? 'حل‌شده' : 'Resolved', exact: true }).click();
+    await row(ids.first)
+      .getByText(fa ? 'جزئیات' : 'Details', { exact: true })
+      .click();
+    await expect(row(ids.first)).toContainText('admin-ui@example.test');
+    await page
+      .getByRole('button', { name: fa ? 'تلاش‌های پایان‌یافته' : 'Dead letter', exact: true })
+      .click();
+    await row(ids.dead)
+      .getByRole('button', { name: fa ? 'اجرای دوباره' : 'Retry', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(row(ids.dead)).toHaveCount(0);
+    await page.reload();
+    await page
+      .getByRole('button', { name: fa ? 'در انتظار اجرای دوباره' : 'Retrying', exact: true })
+      .click();
+    await expect(row(ids.dead)).toBeVisible();
+    await expect(row(ids.second)).toBeVisible();
   });
