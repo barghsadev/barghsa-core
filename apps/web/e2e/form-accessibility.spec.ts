@@ -1439,3 +1439,91 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(0);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering city choices ignore background and obsolete province responses (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({
+        json: {
+          addresses: [
+            {
+              id: 'saved',
+              provinceId: 'a',
+              cityId: 'city-a',
+              fullAddress: 'Saved address',
+              postalCode: '1234567890',
+            },
+          ],
+        },
+      })
+    );
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: ['a', 'b', 'c'].map((id) => ({ id, nameFa: id, nameEn: id })) })
+    );
+    let releaseBackground!: () => void;
+    let releaseObsolete!: () => void;
+    const background = new Promise<void>((resolve) => {
+      releaseBackground = resolve;
+    });
+    const obsolete = new Promise<void>((resolve) => {
+      releaseObsolete = resolve;
+    });
+    let backgroundStarted = false,
+      obsoleteStarted = false;
+    await page.route('**/api/geography/provinces/*/cities', async (route) => {
+      const id = route.request().url().split('/').at(-2)!;
+      if (id === 'a') {
+        backgroundStarted = true;
+        await background;
+      }
+      if (id === 'c') {
+        obsoleteStarted = true;
+        await obsolete;
+      }
+      await route.fulfill({
+        json: [{ id: `city-${id}`, provinceId: id, nameFa: `city-${id}`, nameEn: `city-${id}` }],
+      });
+    });
+    try {
+      await page.goto('/electricity/order');
+      await expect.poll(() => backgroundStarted).toBe(true);
+      await page
+        .getByRole('button', {
+          name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+          exact: true,
+        })
+        .click();
+      const province = page.locator('#order-address-province');
+      const city = page.locator('#order-address-city');
+      await province.selectOption('b');
+      await city.selectOption('city-b');
+      const backgroundResponse = page.waitForResponse('**/api/geography/provinces/a/cities');
+      releaseBackground();
+      await backgroundResponse;
+      await expect(city).toHaveValue('city-b');
+      await expect(city.locator('option[value="city-a"]')).toHaveCount(0);
+      await province.selectOption('c');
+      await expect.poll(() => obsoleteStarted).toBe(true);
+      await expect(city).toHaveValue('');
+      await province.selectOption('b');
+      await city.selectOption('city-b');
+      const obsoleteResponse = page.waitForResponse('**/api/geography/provinces/c/cities');
+      releaseObsolete();
+      await obsoleteResponse;
+      await expect(city).toHaveValue('city-b');
+      await expect(city.locator('option[value="city-c"]')).toHaveCount(0);
+    } finally {
+      releaseBackground();
+      releaseObsolete();
+    }
+  });
+}

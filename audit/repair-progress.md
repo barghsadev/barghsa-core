@@ -1683,3 +1683,9 @@ The electricity ordering screen no longer treats failed, unauthorized or malform
 Review and validation: eight affected browser checks passed across Persian/English ordering and wallet-limit flows, including failed/401/malformed/no-profile responses, retry and zero write attempts while blocked. Root build, types, lint and route budgets passed. The initial size check caught 250.21 KB against the existing 250 KB ordering budget; extracted wallet-admin strings to a dedicated bilingual dictionary and verified both consumers. Ordering now measures 249.62 KB. A first browser run used an outdated heading assertion; the corrected exact existing heading passes.
 
 Scope correction: the current repository has a general orders API that creates drafts. It deliberately does not represent the future commercial submission handler, as documented in ProfilesService.canPlaceCommercialOrder. The earlier broad note about missing ordering backends must not be read as saying no orders API exists. Full commercial submission, address-loading behavior and task-level acceptance remain separate follow-ups.
+
+### Preserve the selected province's city options (F07/F20)
+
+Saved-address city-name lookups now update only the name cache. Form lookups use a generation counter, clear the prior city immediately and ignore obsolete responses after a province change or unmount. Background name resolution cannot overwrite the form's selected city or options.
+
+Review and validation: six ordering browser checks passed, including delayed saved-address and obsolete-province responses in both languages. Root build, types, lint, formatting and bundle checks passed; ordering measures 249.66 KB against 250 KB. This closes the city-selection race; failed address reads remain the next bounded fix.

@@ -72,6 +72,7 @@ function ElectricityOrderPage() {
   const [loadingAddresses, setLoadingAddresses] = useState(true);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [cities, setCities] = useState<City[]>([]);
+  const cityGeneration = useRef(0);
   /** City name lookup map: cityId -> { nameFa, nameEn } */
   const [cityMap, setCityMap] = useState<Record<string, { nameFa: string; nameEn: string }>>({});
 
@@ -189,12 +190,17 @@ function ElectricityOrderPage() {
 
   // ── Fetch cities for a province ─────────────────────────────────────
 
-  const fetchCities = useCallback(async (provinceId: string) => {
+  const fetchCities = useCallback(async (provinceId: string, updateForm = true) => {
+    const current = updateForm ? ++cityGeneration.current : null;
+    if (updateForm) {
+      setCities([]);
+      setFormCityId('');
+    }
     try {
       const res = await fetch(`/api/geography/provinces/${provinceId}/cities`);
       if (res.ok) {
         const data: City[] = await res.json();
-        setCities(data);
+        if (current !== null && current === cityGeneration.current) setCities(data);
         // Add to city name lookup map
         setCityMap((prev) => {
           const next = { ...prev };
@@ -230,16 +236,20 @@ function ElectricityOrderPage() {
     if (formProvinceId) {
       fetchCities(formProvinceId);
     } else {
+      ++cityGeneration.current;
       setCities([]);
       setFormCityId('');
     }
+    return () => {
+      ++cityGeneration.current;
+    };
   }, [formProvinceId, fetchCities]);
 
   // Fetch cities for each unique province referenced by existing addresses
   useEffect(() => {
     const uniqueProvinceIds = [...new Set(addresses.map((a) => a.provinceId))];
     for (const pid of uniqueProvinceIds) {
-      fetchCities(pid);
+      fetchCities(pid, false);
     }
   }, [addresses, fetchCities]);
 
@@ -619,7 +629,11 @@ function ElectricityOrderPage() {
                     <select
                       id="order-address-province"
                       value={formProvinceId}
-                      onChange={(e) => setFormProvinceId(e.target.value)}
+                      onChange={(e) => {
+                        setFormProvinceId(e.target.value);
+                        setFormCityId('');
+                        setCities([]);
+                      }}
                       className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                       dir={locale === 'fa' ? 'rtl' : 'ltr'}
                     >
