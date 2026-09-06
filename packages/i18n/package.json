@@ -16,6 +16,11 @@
       "types": "./dist/auth.d.ts",
       "import": "./dist/auth.js",
       "default": "./dist/auth.js"
+    },
+    "./vat": {
+      "types": "./dist/vat.d.ts",
+      "import": "./dist/vat.js",
+      "default": "./dist/vat.js"
     }
   },
   "scripts": {

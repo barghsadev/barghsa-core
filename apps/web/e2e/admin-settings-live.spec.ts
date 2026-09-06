@@ -1661,3 +1661,135 @@ for (const locale of ['en', 'fa'])
       0
     );
   });
+
+for (const locale of ['en', 'fa'])
+  test(`VAT UI persists rates and product overrides through migrated API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    const productName = `VAT test ${locale}`;
+    const productResponse = await page.request.post(`${http.base}/api/admin/catalogue/products`, {
+      headers,
+      data: {
+        type: 'hardware',
+        title: { en: productName, fa: productName },
+        price: '1000',
+        status: 'active',
+      },
+    });
+    expect(productResponse.status()).toBe(201);
+    const product = await productResponse.json();
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const save = async () => {
+      await page.getByRole('button', { name: fa ? 'ذخیره نرخ' : 'Save rate', exact: true }).click();
+      await confirm();
+    };
+    const category = fa ? 'saving_plan' : 'consultation';
+    await page.goto('/admin/vat');
+    await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
+    await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
+    await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('7.25');
+    await save();
+    const rates = (await (
+      await page.request.get(`${http.base}/api/admin/finance/vat`, { headers })
+    ).json()) as Array<{ id: string; category: string; rateBasisPoints: number }>;
+    const rate = rates.find((row) => row.category === category)!;
+    expect(rate.rateBasisPoints).toBe(725);
+    await page
+      .getByRole('button', {
+        name: fa ? 'افزودن نرخ اختصاصی محصول' : 'Add product override',
+        exact: true,
+      })
+      .click();
+    await page.getByLabel(fa ? 'محصول' : 'Product', { exact: true }).selectOption(product.id);
+    await page
+      .getByLabel(fa ? 'نرخ ثبت‌شده' : 'Recorded rate', { exact: true })
+      .selectOption(rate.id);
+    await save();
+    const resolve = async () =>
+      await (
+        await page.request.get(
+          `${http.base}/api/admin/finance/vat/resolve?productId=${product.id}`,
+          { headers }
+        )
+      ).json();
+    expect(await resolve()).toMatchObject({ rateBasisPoints: 725 });
+    await page.reload();
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'پایان نرخ اختصاصی' : 'End override'} ${productName}`,
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
+      .click();
+    await confirm();
+    expect(await resolve()).toMatchObject({ rateBasisPoints: 0 });
+    const categoryName = fa ? 'طرح صرفه‌جویی' : 'Consultation';
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'پایان دادن به نرخ' : 'End rate'} ${categoryName}`,
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
+      .click();
+    await confirm();
+    await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
+    await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
+    await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('8');
+    await page
+      .getByLabel(fa ? 'تعیین تاریخ اجرا' : 'Use a specific effective date', { exact: true })
+      .check();
+    await page
+      .getByRole('combobox', { name: fa ? 'تاریخ اجرا' : 'Effective date', exact: true })
+      .click();
+    await page.getByRole('grid').getByRole('button').last().click();
+    await page.getByLabel(fa ? 'ساعت اجرا' : 'Effective time', { exact: true }).fill('23:59');
+    await save();
+    const persisted = (await (
+      await page.request.get(`${http.base}/api/admin/finance/vat`, { headers })
+    ).json()) as Array<{
+      category: string;
+      rateBasisPoints: number;
+      status: string;
+      effectiveFrom: string;
+    }>;
+    const scheduled = persisted.find(
+      (row) => row.category === category && row.rateBasisPoints === 800
+    )!;
+    expect(scheduled.status).toBe('scheduled');
+    expect(Date.parse(scheduled.effectiveFrom)).toBeGreaterThan(Date.now());
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/vat-${locale}.png`, fullPage: true });
+  });
