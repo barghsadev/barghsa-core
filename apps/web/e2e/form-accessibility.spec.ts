@@ -7,6 +7,17 @@ async function shell(page: Page, locale = 'en') {
     }).observe(document, { childList: true });
   }, locale);
   await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  let draft = { version: 0, data: {} as Record<string, string> };
+  await page.route('**/api/onboarding/draft/*', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: draft });
+    const input = route.request().postDataJSON() as {
+      expectedVersion: number;
+      data: Record<string, string>;
+    };
+    if (input.expectedVersion !== draft.version) return route.fulfill({ status: 409, json: {} });
+    draft = { version: draft.version + 1, data: input.data };
+    return route.fulfill({ json: draft });
+  });
   await page.route('**/api/profiles', (route) =>
     route.fulfill({
       json: {
@@ -270,6 +281,7 @@ for (const locale of ['en', 'fa']) {
     let submissions = 0;
     await page.route('**/api/onboarding/legal/*', (route) => {
       submissions++;
+      expect(route.request().postDataJSON().draftVersion).toBeGreaterThan(0);
       return route.fulfill({ status: 400, json: { message: 'Test response' } });
     });
     await page.goto('/onboarding/legal/profile-one');
@@ -363,3 +375,133 @@ for (const locale of ['en', 'fa']) {
       });
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`legal autosave preserves later edits, retries failures and restores saved geography (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let stored = {
+      version: 1,
+      data: {
+        legalName: 'Restored',
+        officialProvinceId: 'province-one',
+        officialCityId: 'city-one',
+        representativeProvinceId: 'province-one',
+        representativeCityId: 'city-one',
+      } as Record<string, string>,
+    };
+    let delayed: import('@playwright/test').Route | undefined;
+    let hold = true,
+      fail = false;
+    await page.route('**/api/onboarding/draft/*', async (route) => {
+      if (route.request().method() === 'GET') return route.fulfill({ json: stored });
+      if (hold) {
+        delayed = route;
+        return;
+      }
+      if (fail) return route.fulfill({ status: 503, json: {} });
+      const input = route.request().postDataJSON() as {
+        expectedVersion: number;
+        data: Record<string, string>;
+      };
+      expect(input.expectedVersion).toBe(stored.version);
+      stored = { version: stored.version + 1, data: input.data };
+      return route.fulfill({ json: stored });
+    });
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
+    );
+    await page.route('**/api/geography/provinces/*/cities', (route) =>
+      route.fulfill({ json: [{ id: 'city-one', nameFa: 'شهر', nameEn: 'City' }] })
+    );
+    await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
+    await page.goto('/onboarding/legal/profile-one');
+    await expect(page.locator('#legalName')).toHaveValue('Restored');
+    await expect(page.locator('#officialCityId')).toHaveValue('city-one');
+    await expect(page.locator('#representativeCityId')).toHaveValue('city-one');
+    await page.locator('#legalName').fill('First edit');
+    await expect.poll(() => !!delayed).toBe(true);
+    await page.locator('#legalName').fill('Latest edit');
+    hold = false;
+    const input = delayed!.request().postDataJSON() as { data: Record<string, string> };
+    stored = { version: stored.version + 1, data: input.data };
+    await delayed!.fulfill({ json: stored });
+    await expect.poll(() => stored.data.legalName).toBe('Latest edit');
+    await expect(
+      page.getByText(locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved', { exact: true })
+    ).toBeVisible();
+    fail = true;
+    await page.locator('#legalName').fill('Retry edit');
+    await expect(
+      page.getByText(
+        locale === 'fa'
+          ? 'پیش‌نویس ذخیره نشده است. دوباره تلاش کنید.'
+          : 'Draft is not saved. Please retry.',
+        { exact: true }
+      )
+    ).toBeVisible();
+    expect(stored.data.legalName).toBe('Latest edit');
+    fail = false;
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
+      .click();
+    await expect.poll(() => stored.data.legalName).toBe('Retry edit');
+    await expect(
+      page.getByText(locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved', { exact: true })
+    ).toBeVisible();
+    await page.reload();
+    await expect(page.locator('#legalName')).toHaveValue('Retry edit');
+    await expect(page.locator('#officialCityId')).toHaveValue('city-one');
+  });
+}
+test('legal autosave stops at a version conflict until the user reloads the saved draft', async ({
+  page,
+}) => {
+  await shell(page);
+  let writes = 0;
+  await page.route('**/api/onboarding/draft/*', (route) => {
+    if (route.request().method() === 'GET')
+      return route.fulfill({
+        json: { version: writes ? 2 : 1, data: { legalName: writes ? 'Other tab' : 'Initial' } },
+      });
+    writes++;
+    return route.fulfill({ status: 409, json: { error: 'CONFLICT:VERSION_CONFLICT' } });
+  });
+  await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
+  await page.goto('/onboarding/legal/profile-one');
+  await expect(page.locator('#legalName')).toHaveValue('Initial');
+  await page.locator('#legalName').fill('Local edit');
+  await expect(
+    page.getByText('This draft changed in another tab. Reload the saved version.', { exact: true })
+  ).toBeVisible();
+  await page.locator('#legalName').fill('Still local');
+  await page.locator('#legalName').press('Tab');
+  expect(writes).toBe(1);
+  await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
+  await expect(page.locator('#legalName')).toHaveValue('Other tab');
+  expect(writes).toBe(1);
+});
+
+test('failed draft load leaves fields untouched until retry succeeds', async ({ page }) => {
+  await shell(page);
+  let fail = true;
+  await page.route('**/api/onboarding/draft/*', (route) => {
+    expect(route.request().method()).toBe('GET');
+    return route.fulfill(
+      fail
+        ? { status: 503, json: {} }
+        : { json: { version: 2, data: { legalName: 'Recovered draft' } } }
+    );
+  });
+  await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
+  await page.goto('/onboarding/legal/profile-one');
+  await expect(page.locator('#legalName')).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Reload saved draft', exact: true })).toBeVisible();
+  fail = false;
+  await page.getByRole('button', { name: 'Reload saved draft', exact: true }).click();
+  await expect(page.locator('#legalName')).toBeEnabled();
+  await expect(page.locator('#legalName')).toHaveValue('Recovered draft');
+});

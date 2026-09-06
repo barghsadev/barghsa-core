@@ -5,6 +5,16 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.draft.editing': 'تغییرات ذخیره نشده',
+  'onboarding.draft.loading': 'در حال دریافت پیش‌نویس…',
+  'onboarding.draft.saved': 'پیش‌نویس ذخیره شد',
+  'onboarding.draft.saving': 'در حال ذخیره پیش‌نویس…',
+  'onboarding.draft.error': 'پیش‌نویس ذخیره نشده است. دوباره تلاش کنید.',
+  'onboarding.draft.conflict':
+    'این پیش‌نویس در صفحه دیگری تغییر کرده است. نسخه ذخیره‌شده را دوباره دریافت کنید.',
+  'onboarding.draft.reload': 'دریافت نسخه ذخیره‌شده',
+  'onboarding.draft.retry': 'تلاش دوباره',
+
   'onboarding.legal.representativeHonorific': 'عنوان اختیاری',
   'onboarding.legal.representativeFirstName': 'نام نماینده',
   'onboarding.legal.representativeLastName': 'نام خانوادگی نماینده',
@@ -1441,6 +1451,15 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.draft.editing': 'Unsaved changes',
+  'onboarding.draft.loading': 'Loading draft…',
+  'onboarding.draft.saved': 'Draft saved',
+  'onboarding.draft.saving': 'Saving draft…',
+  'onboarding.draft.error': 'Draft is not saved. Please retry.',
+  'onboarding.draft.conflict': 'This draft changed in another tab. Reload the saved version.',
+  'onboarding.draft.reload': 'Reload saved draft',
+  'onboarding.draft.retry': 'Retry',
+
   'onboarding.legal.representativeHonorific': 'Honorific',
   'onboarding.legal.representativeFirstName': 'Representative first name',
   'onboarding.legal.representativeLastName': 'Representative last name',

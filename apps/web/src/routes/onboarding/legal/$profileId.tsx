@@ -1,3 +1,4 @@
+import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
@@ -143,6 +144,54 @@ function LegalProfileFormPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const restoreDraft = useCallback((data: Record<string, string>) => {
+    setLegalName(data.legalName ?? '');
+    setNationalIdentifier(data.nationalIdentifier ?? '');
+    setRegistrationNumber(data.registrationNumber ?? '');
+    setCompanyTypeId(data.companyTypeId ?? '');
+    setRegistrationDate(data.registrationDate ?? '');
+    setEconomicCode(data.economicCode ?? '');
+    setOfficialPhone(data.officialPhone ?? '');
+    setOfficialEmail(data.officialEmail ?? '');
+    setOfficialProvinceId(data.officialProvinceId ?? '');
+    setOfficialCityId(data.officialCityId ?? '');
+    setOfficialFullAddress(data.officialFullAddress ?? '');
+    setOfficialPostalCode(data.officialPostalCode ?? '');
+    setRepresentativeTitle(data.representativeTitle ?? '');
+    setRepresentativeRelationship(data.representativeRelationship ?? '');
+    setRepresentative({
+      representativeHonorific: data.representativeHonorific ?? '',
+      representativeFirstName: data.representativeFirstName ?? '',
+      representativeLastName: data.representativeLastName ?? '',
+      representativeNationalId: data.representativeNationalId ?? '',
+      representativeProvinceId: data.representativeProvinceId ?? '',
+      representativeCityId: data.representativeCityId ?? '',
+      representativeFullAddress: data.representativeFullAddress ?? '',
+      representativePostalCode: data.representativePostalCode ?? '',
+    });
+  }, []);
+  const draft = useOnboardingDraft(
+    profileId,
+    {
+      ...representative,
+      legalName,
+      nationalIdentifier,
+      registrationNumber,
+      companyTypeId,
+      registrationDate,
+      economicCode,
+      officialPhone,
+      officialEmail,
+      officialProvinceId,
+      officialCityId,
+      officialFullAddress,
+      officialPostalCode,
+      representativeTitle,
+      representativeRelationship,
+    },
+    restoreDraft
+  );
+
   // ── Document upload (simplified: placeholder for drag & drop) ──
   const [documents, setDocuments] = useState<File[]>([]);
 
@@ -213,7 +262,6 @@ function LegalProfileFormPage() {
     let cancelled = false;
     setLoadingCities(true);
     setCities([]);
-    setOfficialCityId('');
     fetch(`/api/geography/provinces/${officialProvinceId}/cities`, { credentials: 'include' })
       .then((res) => {
         if (!res.ok) throw new Error('Cities unavailable');
@@ -428,16 +476,19 @@ function LegalProfileFormPage() {
       e.preventDefault();
       setSubmitError(null);
 
-      if (!validateForm()) return;
+      if (!draft.ready || !validateForm()) return;
 
       setSubmitting(true);
 
       try {
+        const draftVersion = await draft.flush();
+        if (draftVersion === undefined) return;
         const response = await fetch(`/api/onboarding/legal/${profileId}`, {
           method: 'POST',
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
+            draftVersion,
             ...Object.fromEntries(
               Object.entries(representative).map(([key, value]) => [key, value.trim()])
             ),
@@ -466,7 +517,10 @@ function LegalProfileFormPage() {
               ? body.error
               : ((body?.error as Record<string, unknown>)?.code as string | undefined);
 
-          if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
+          if (errorCode === ErrorCodes.CONFLICT_VERSION.code) {
+            draft.markConflict();
+            setSubmitError(t('onboarding.draft.conflict', locale));
+          } else if (errorCode === ErrorCodes.CONFLICT_DUPLICATE.code) {
             setSubmitError(
               isRtl
                 ? 'این شناسه ملی قبلاً ثبت شده است'
@@ -502,6 +556,10 @@ function LegalProfileFormPage() {
     },
     [
       profileId,
+      draft.ready,
+      draft.flush,
+      draft.markConflict,
+      locale,
       representative,
       legalName,
       nationalIdentifier,
@@ -605,6 +663,11 @@ function LegalProfileFormPage() {
         {/* Back link */}
         <Link
           to="/onboarding"
+          onClick={async (event) => {
+            event.preventDefault();
+            if (!draft.ready || (await draft.flush()) !== undefined)
+              await router.navigate({ to: '/onboarding' });
+          }}
           className="mb-4 inline-flex items-center text-sm text-muted-foreground hover:text-primary"
         >
           <ChevronRightIcon className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
@@ -618,6 +681,27 @@ function LegalProfileFormPage() {
             : 'Please enter the legal entity information'}
         </p>
 
+        <div className="mb-4" role="status">
+          <span>{t(`onboarding.draft.${draft.status}`, locale)}</span>
+          {(draft.status === 'error' || draft.status === 'conflict') && (
+            <Button
+              type="button"
+              variant="outline"
+              className="ms-2"
+              onClick={() => {
+                if (draft.status === 'conflict' || !draft.ready) draft.reload();
+                else void draft.flush();
+              }}
+            >
+              {t(
+                draft.status === 'conflict' || !draft.ready
+                  ? 'onboarding.draft.reload'
+                  : 'onboarding.draft.retry',
+                locale
+              )}
+            </Button>
+          )}
+        </div>
         {/* Submit error alert */}
         {submitError && (
           <Alert variant="destructive" className="mb-6" role="alert">
@@ -626,9 +710,23 @@ function LegalProfileFormPage() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+        <form
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+              void draft.flush();
+          }}
+          onSubmit={handleSubmit}
+          className="space-y-8"
+          noValidate
+        >
           {/* ── Section 1: Authorized Representative ────────── */}
-          <fieldset>
+          <fieldset
+            disabled={!draft.ready || submitting}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                void draft.flush();
+            }}
+          >
             <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
               {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
             </legend>
@@ -733,7 +831,13 @@ function LegalProfileFormPage() {
           </fieldset>
 
           {/* ── Section 2: Legal Entity ─────────────────────── */}
-          <fieldset>
+          <fieldset
+            disabled={!draft.ready || submitting}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                void draft.flush();
+            }}
+          >
             <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
               {isRtl ? 'اطلاعات شخص حقوقی' : 'Legal Entity'}
             </legend>
@@ -878,7 +982,13 @@ function LegalProfileFormPage() {
           </fieldset>
 
           {/* ── Section 3: Official Address ────────────────── */}
-          <fieldset>
+          <fieldset
+            disabled={!draft.ready || submitting}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                void draft.flush();
+            }}
+          >
             <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
               {isRtl ? 'آدرس رسمی' : 'Official Address'}
             </legend>
@@ -1012,7 +1122,13 @@ function LegalProfileFormPage() {
           </fieldset>
 
           {/* ── Section 4: Document Upload ─────────────────── */}
-          <fieldset>
+          <fieldset
+            disabled={!draft.ready || submitting}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+                void draft.flush();
+            }}
+          >
             <legend className="mb-4 text-lg font-semibold border-b pb-2 w-full">
               {isRtl ? 'بارگذاری مدارک' : 'Document Upload'}
             </legend>
