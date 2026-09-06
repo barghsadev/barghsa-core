@@ -12,7 +12,9 @@ beforeAll(async () => {
   await http.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ('policy-admin','policy-admin@example.test','test-only',true)"
   );
-  await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('policy-admin','policy-editor')");
+  await http.pool.query(
+    "INSERT INTO user_roles(user_id,role_id) VALUES ('policy-admin','policy-editor')"
+  );
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(
@@ -274,4 +276,85 @@ it('validates rules against the policy type after a concurrent edit commits', as
     client.release();
     await pending;
   }
+});
+
+const malformedRoutes = [
+  ['GET', 'policies/invalid'],
+  ['PUT', 'policies/invalid'],
+  ['DELETE', 'policies/invalid'],
+  ['GET', 'policy-groups/invalid'],
+  ['PUT', 'policy-groups/invalid'],
+  ['DELETE', 'policy-groups/invalid'],
+  ['POST', 'policy-groups/invalid/members'],
+  ['DELETE', 'policy-groups/invalid/members/invalid'],
+] as const;
+it.each(malformedRoutes)('rejects malformed IDs on %s %s', async (method, path) => {
+  expect((await fetch(`${http.base}/api/admin/${path}`, { method, headers })).status).toBe(400);
+});
+it('validates the nested policy member ID', async () => {
+  for (const path of [`policy-groups/${ids.group}/members/invalid`]) {
+    expect(
+      (await fetch(`${http.base}/api/admin/${path}`, { method: 'DELETE', headers })).status
+    ).toBe(400);
+  }
+});
+it.each(entities)(
+  'rejects invalid $kind metadata without writes and trims valid titles',
+  async (entry) => {
+    for (const method of ['POST', 'PUT']) {
+      for (const body of [
+        { title: '   ' },
+        { title: 'Valid', unexpected: true },
+        { title: 'x'.repeat(121) },
+        { description: 'x'.repeat(2001) },
+      ]) {
+        expect(
+          (
+            await fetch(
+              `${http.base}/api/admin/${entry.path}${method === 'PUT' ? `/${ids[entry.kind]}` : ''}`,
+              {
+                method,
+                headers,
+                body: JSON.stringify({
+                  ...body,
+                  ...(entry.kind === 'policy'
+                    ? { policyType: 'disallowed_actions', rules: { actions: ['financial_advice'] } }
+                    : {}),
+                }),
+              }
+            )
+          ).status
+        ).toBe(400);
+      }
+    }
+    expect((await http.pool.query(`SELECT title FROM ${entry.table}`)).rows).toEqual([
+      { title: entry.title },
+    ]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    ).toHaveLength(0);
+    const response = await fetch(`${http.base}/api/admin/${entry.path}/${ids[entry.kind]}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ title: '  Trimmed title  ' }),
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ title: 'Trimmed title' });
+  }
+);
+it('rejects malformed and unknown membership payload fields', async () => {
+  for (const body of [{ policyId: 'invalid' }, { policyId: ids.policy, unexpected: true }]) {
+    expect(
+      (
+        await fetch(`${http.base}/api/admin/policy-groups/${ids.group}/members`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        })
+      ).status
+    ).toBe(400);
+  }
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+  ).toHaveLength(0);
 });

@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -30,7 +31,7 @@ import { rulesSchemas } from './ai-policies.rules.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const titleSchema = z.string().min(1, 'Title is required').max(120);
+const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
 const policyTypeSchema = z.enum(POLICY_TYPES);
 
@@ -45,6 +46,7 @@ export const CreatePolicySchema = z
     // Optional initial active/inactive state; defaults to enabled.
     enabled: z.boolean().optional(),
   })
+  .strict()
   .superRefine((v, ctx) => {
     const rulesSchema = rulesSchemas[v.policyType];
     const parsed = rulesSchema.safeParse(v.rules);
@@ -71,6 +73,7 @@ export const UpdatePolicySchema = z
     rules: z.record(z.string(), z.unknown()).optional(),
     enabled: z.boolean().optional(),
   })
+  .strict()
   .superRefine((v, ctx) => {
     if (v.policyType !== undefined && v.rules !== undefined) {
       const parsed = rulesSchemas[v.policyType].safeParse(v.rules);
@@ -93,21 +96,26 @@ export const UpdatePolicySchema = z
     }
   });
 
-export const CreatePolicyGroupSchema = z.object({
-  title: titleSchema,
-  description: descriptionSchema.optional(),
-});
+export const CreatePolicyGroupSchema = z
+  .object({
+    title: titleSchema,
+    description: descriptionSchema.optional(),
+  })
+  .strict();
 
 export const UpdatePolicyGroupSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
   })
+  .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AddGroupMemberSchema = z.object({
-  policyId: z.string().min(1, 'policyId is required').max(64),
-});
+export const AddGroupMemberSchema = z
+  .object({
+    policyId: z.string().uuid(),
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -164,7 +172,10 @@ export class PoliciesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single AI policy (admin)' })
   @ApiResponse({ status: 200, description: 'The policy with its group memberships.' })
-  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<PolicyDetailDto> {
+  async get(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<PolicyDetailDto> {
     this.assertPolicyPermission(req);
     return this.service.getPolicy(id);
   }
@@ -215,7 +226,7 @@ export class PoliciesController {
   })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof UpdatePolicySchema>
   ): Promise<PolicyDto> {
     this.assertPolicyPermission(req);
@@ -245,7 +256,10 @@ export class PoliciesController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI policy (admin)' })
   @ApiResponse({ status: 204, description: 'AI policy deleted (memberships cascaded).' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<void> {
     this.assertPolicyPermission(req);
     return this.service.removePolicy(id, req.session.userId, requestIp(req));
   }
@@ -285,7 +299,7 @@ export class PolicyGroupsController {
   @ApiResponse({ status: 200, description: 'The group with its member policies.' })
   async get(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string
+    @Param('id', new ParseUUIDPipe()) id: string
   ): Promise<PolicyGroupDetailDto> {
     this.assertPolicyPermission(req);
     return this.service.getGroup(id);
@@ -327,7 +341,7 @@ export class PolicyGroupsController {
   @ApiResponse({ status: 200, description: 'AI policy group updated.' })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof UpdatePolicyGroupSchema>
   ): Promise<PolicyGroupDto> {
     this.assertPolicyPermission(req);
@@ -354,7 +368,10 @@ export class PolicyGroupsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI policy group (admin)' })
   @ApiResponse({ status: 204, description: 'AI policy group deleted (memberships cascaded).' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<void> {
     this.assertPolicyPermission(req);
     return this.service.removeGroup(id, req.session.userId, requestIp(req));
   }
@@ -370,7 +387,7 @@ export class PolicyGroupsController {
   @ApiResponse({ status: 204, description: 'Policy linked into group.' })
   async addMember(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof AddGroupMemberSchema>
   ): Promise<void> {
     this.assertPolicyPermission(req);
@@ -405,8 +422,8 @@ export class PolicyGroupsController {
   @ApiResponse({ status: 204, description: 'Policy removed from group.' })
   async removeMember(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-    @Param('policyId') policyId: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('policyId', new ParseUUIDPipe()) policyId: string
   ): Promise<void> {
     this.assertPolicyPermission(req);
     return this.service.removeGroupMember(id, policyId, req.session.userId, requestIp(req));

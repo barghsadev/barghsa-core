@@ -45,7 +45,7 @@ const nonAdminReq = {
 
 function basePolicy(over: Record<string, unknown> = {}) {
   return {
-    id: 'pol-1',
+    id: '01900000-0000-7000-8000-000000000001',
     title: 'No financial advice',
     description: '',
     policyType: 'disallowed_actions',
@@ -81,7 +81,9 @@ describe('PoliciesController (T-09.11.03)', () => {
   describe('permission gate (admin:ai:policies)', () => {
     it('rejects non-admin sessions on every route with 403', async () => {
       await expect(controller.list(nonAdminReq)).rejects.toMatchObject({ status: 403 });
-      await expect(controller.get(nonAdminReq, 'pol-1')).rejects.toMatchObject({ status: 403 });
+      await expect(
+        controller.get(nonAdminReq, '01900000-0000-7000-8000-000000000001')
+      ).rejects.toMatchObject({ status: 403 });
       await expect(
         controller.create(nonAdminReq, {
           title: 'x',
@@ -90,9 +92,13 @@ describe('PoliciesController (T-09.11.03)', () => {
         } as never)
       ).rejects.toMatchObject({ status: 403 });
       await expect(
-        controller.update(nonAdminReq, 'pol-1', { title: 'y' } as never)
+        controller.update(nonAdminReq, '01900000-0000-7000-8000-000000000001', {
+          title: 'y',
+        } as never)
       ).rejects.toMatchObject({ status: 403 });
-      await expect(controller.remove(nonAdminReq, 'pol-1')).rejects.toMatchObject({ status: 403 });
+      await expect(
+        controller.remove(nonAdminReq, '01900000-0000-7000-8000-000000000001')
+      ).rejects.toMatchObject({ status: 403 });
       expect(mockListPolicies).not.toHaveBeenCalled();
       expect(mockCreatePolicy).not.toHaveBeenCalled();
     });
@@ -123,7 +129,7 @@ describe('PoliciesController (T-09.11.03)', () => {
         policyType: 'disallowed_actions',
         rules: { actions: ['financial_advice'] },
       } as never);
-      expect(result).toMatchObject({ id: 'pol-1' });
+      expect(result).toMatchObject({ id: '01900000-0000-7000-8000-000000000001' });
       expect(mockCreatePolicy).toHaveBeenCalledWith({
         title: 'No financial advice',
         description: '',
@@ -157,7 +163,9 @@ describe('PoliciesController (T-09.11.03)', () => {
 
   describe('PUT /api/admin/policies/:id', () => {
     it('rejects an empty update body', async () => {
-      await expect(controller.update(adminReq, 'pol-1', {} as never)).rejects.toMatchObject({
+      await expect(
+        controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {} as never)
+      ).rejects.toMatchObject({
         status: 400,
       });
       expect(mockUpdatePolicy).not.toHaveBeenCalled();
@@ -165,7 +173,7 @@ describe('PoliciesController (T-09.11.03)', () => {
 
     it('rejects a mismatched policyType + rules pair (controller superRefine)', async () => {
       await expect(
-        controller.update(adminReq, 'pol-1', {
+        controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {
           policyType: 'response_style',
           rules: { actions: ['financial_advice'] },
         } as never)
@@ -175,9 +183,11 @@ describe('PoliciesController (T-09.11.03)', () => {
 
     it('forwards only provided fields and the enabled toggle', async () => {
       mockUpdatePolicy.mockResolvedValue(basePolicy({ enabled: false }));
-      const result = await controller.update(adminReq, 'pol-1', { enabled: false } as never);
+      const result = await controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {
+        enabled: false,
+      } as never);
       expect(result).toMatchObject({ enabled: false });
-      expect(mockUpdatePolicy).toHaveBeenCalledWith('pol-1', {
+      expect(mockUpdatePolicy).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', {
         enabled: false,
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
@@ -188,8 +198,14 @@ describe('PoliciesController (T-09.11.03)', () => {
   describe('DELETE /api/admin/policies/:id', () => {
     it('deletes the policy', async () => {
       mockRemovePolicy.mockResolvedValue(undefined);
-      await expect(controller.remove(adminReq, 'pol-1')).resolves.toBeUndefined();
-      expect(mockRemovePolicy).toHaveBeenCalledWith('pol-1', 'admin-1', '10.0.0.8');
+      await expect(
+        controller.remove(adminReq, '01900000-0000-7000-8000-000000000001')
+      ).resolves.toBeUndefined();
+      expect(mockRemovePolicy).toHaveBeenCalledWith(
+        '01900000-0000-7000-8000-000000000001',
+        'admin-1',
+        '10.0.0.8'
+      );
     });
   });
 });
@@ -214,9 +230,13 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
       ).rejects.toMatchObject({ status: 403 });
       await expect(controller.remove(nonAdminReq, 'grp-1')).rejects.toMatchObject({ status: 403 });
       await expect(
-        controller.addMember(nonAdminReq, 'grp-1', { policyId: 'pol-1' } as never)
+        controller.addMember(nonAdminReq, 'grp-1', {
+          policyId: '01900000-0000-7000-8000-000000000001',
+        } as never)
       ).rejects.toMatchObject({ status: 403 });
-      await expect(controller.removeMember(nonAdminReq, 'grp-1', 'pol-1')).rejects.toMatchObject({
+      await expect(
+        controller.removeMember(nonAdminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')
+      ).rejects.toMatchObject({
         status: 403,
       });
       expect(mockListGroups).not.toHaveBeenCalled();
@@ -242,11 +262,13 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
     it('links a policy into the group', async () => {
       mockAddGroupMember.mockResolvedValue(undefined);
       await expect(
-        controller.addMember(adminReq, 'grp-1', { policyId: 'pol-1' } as never)
+        controller.addMember(adminReq, 'grp-1', {
+          policyId: '01900000-0000-7000-8000-000000000001',
+        } as never)
       ).resolves.toBeUndefined();
       expect(mockAddGroupMember).toHaveBeenCalledWith({
         groupId: 'grp-1',
-        policyId: 'pol-1',
+        policyId: '01900000-0000-7000-8000-000000000001',
         actorUserId: 'admin-1',
         ip: '10.0.0.8',
       });
@@ -263,8 +285,15 @@ describe('PolicyGroupsController (T-09.11.03)', () => {
   describe('DELETE /api/admin/policy-groups/:id/members/:policyId', () => {
     it('removes the policy from the group', async () => {
       mockRemoveGroupMember.mockResolvedValue(undefined);
-      await expect(controller.removeMember(adminReq, 'grp-1', 'pol-1')).resolves.toBeUndefined();
-      expect(mockRemoveGroupMember).toHaveBeenCalledWith('grp-1', 'pol-1', 'admin-1', '10.0.0.8');
+      await expect(
+        controller.removeMember(adminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')
+      ).resolves.toBeUndefined();
+      expect(mockRemoveGroupMember).toHaveBeenCalledWith(
+        'grp-1',
+        '01900000-0000-7000-8000-000000000001',
+        'admin-1',
+        '10.0.0.8'
+      );
     });
   });
 });

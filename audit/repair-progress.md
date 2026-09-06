@@ -1285,3 +1285,9 @@ Review and validation: all 47 production-migrated knowledge-base HTTP checks pas
 Policy/group create, update, delete and membership changes now hold current admin:ai:policies authority and commit their audit in the same transaction. Existing rows are locked before validation or mutation. A rules-only update therefore validates against the latest stored policy type after a concurrent edit completes. Aggregate/no-op reads stay on the transaction connection; duplicate membership remains audit-free.
 
 Review and validation: 36 existing service/controller tests and 20 production-migrated HTTP checks pass. HTTP covers all eight mutation audit rollbacks and authority-revocation races, successful metadata/group cycles, duplicate membership and a concurrent policy-type change. Review corrected a copied test's irrelevant document-count assertion and removed unrelated storage cleanup from its fixture. Final review caught a strict-type error in an existing query-parameter assertion after the mock was typed; the assertion is narrowed to its parameter array. The final root type check passes, as do lint and whitespace checks. Policy input validation and the policy editor remain open.
+
+### Validate AI policy and group inputs (F17)
+
+Policy/group route IDs and membership payloads now require UUIDs. Create/edit trim titles, reject blank titles and unknown fields, and preserve structured rule validation and existing length limits.
+
+Review and validation: 46 controller/production-migrated HTTP tests pass, including malformed routes and nested member IDs, invalid policy/group create/edit payloads, valid trimmed titles and unchanged records/audits after rejection. Updated legacy controller fixture IDs to valid UUIDs. Root types, lint and whitespace checks pass. The policy administration editor remains open.
