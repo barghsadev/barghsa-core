@@ -110,40 +110,40 @@ export class SessionService {
     const client = transactionClient ?? await pool.connect()
     try {
       if (!transactionClient) await client.query('BEGIN')
-      if (expectedAuthVersion !== undefined) {
-        const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
-        if (!Number.isInteger(expectedAuthVersion) || account.rows[0]?.auth_version !== expectedAuthVersion || account.rows[0]?.disabled_at) {
-          throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
-        }
+      // Lock the account even when no expected auth version was supplied.
+      // Locking existing sessions alone cannot serialize an empty set or
+      // prevent another transaction from inserting after the count snapshot.
+      const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
+      if (!account.rows[0] || account.rows[0].disabled_at || (expectedAuthVersion !== undefined &&
+        (!Number.isInteger(expectedAuthVersion) || account.rows[0].auth_version !== expectedAuthVersion))) {
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
       }
 
-      // 1. Enforce session limit per user
-      // Lock all active sessions for this user to prevent concurrent
-      // createSession calls from racing past the limit check.
+      // 1. Enforce the cap on currently usable sessions for this account.
       const lockResult = await client.query(
         `SELECT session_id
          FROM sessions
-         WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()
+         WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
          FOR UPDATE`,
         [userId],
       )
       const currentCount = lockResult.rows.length
       if (currentCount >= MAX_SESSIONS_PER_USER) {
-        // Revoke the oldest active session to make room
+        // Also repair any pre-existing over-cap set while making room.
         await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
-           WHERE session_id = (
+           WHERE session_id IN (
              SELECT session_id FROM sessions
-             WHERE user_id = $2 AND revoked_at IS NULL AND expires_at > NOW()
-             ORDER BY created_at ASC
-             LIMIT 1
+             WHERE user_id = $2 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
+             ORDER BY created_at ASC, session_id ASC
+             LIMIT $3
            )`,
-          [now, userId],
+          [now, userId, currentCount - MAX_SESSIONS_PER_USER + 1],
         )
         this.logger.warn(
           `Session limit (${MAX_SESSIONS_PER_USER}) reached for user ${userId}; ` +
-            `revoked oldest session to create new one.`,
+            `revoked oldest active sessions to create a new one.`,
         )
       }
 

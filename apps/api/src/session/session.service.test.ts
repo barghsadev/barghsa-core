@@ -150,6 +150,7 @@ describe('SessionService', () => {
   describe('createSession', () => {
     it('creates a session and returns credentials', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users')) return { rows: [{ auth_version: 0, disabled_at: null }] }
         if (sql === 'COMMIT') return { rows: [] }
         if (sql.startsWith('ROLLBACK')) return { rows: [] }
         // SELECT FOR UPDATE → no existing sessions
@@ -178,6 +179,7 @@ describe('SessionService', () => {
       }))
 
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users')) return { rows: [{ auth_version: 0, disabled_at: null }] }
         if (sql === 'COMMIT') return { rows: [] }
         if (sql.startsWith('ROLLBACK')) return { rows: [] }
         if (sql.includes('FOR UPDATE')) return { rows: sessions50 }
@@ -196,13 +198,14 @@ describe('SessionService', () => {
         (s: any) =>
           s.includes('UPDATE sessions') &&
           s.includes('revoked_at') &&
-          s.includes('LIMIT 1'),
+          s.includes('LIMIT $3'),
       )
       expect(revokeCall).toBeDefined()
     })
 
     it('uses BEGIN/COMMIT transaction', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users')) return { rows: [{ auth_version: 0, disabled_at: null }] }
         if (sql === 'COMMIT') return { rows: [] }
         if (sql.startsWith('ROLLBACK')) return { rows: [] }
         if (sql.includes('FOR UPDATE')) return { rows: [] }
@@ -218,6 +221,7 @@ describe('SessionService', () => {
 
     it('releases the client in finally', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users')) return { rows: [{ auth_version: 0, disabled_at: null }] }
         if (sql.includes('FOR UPDATE')) return { rows: [] }
         return { rows: [] }
       })
