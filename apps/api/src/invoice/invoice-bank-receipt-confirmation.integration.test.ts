@@ -419,29 +419,16 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     expect(await receiptState(receiptId)).toBe('Submitted')
   })
 
-  it('rejects confirmation against an Overdue invoice', async () => {
+  it.each([200_000n,400_000n])('settles an overdue invoice with a %s receipt', async (amount) => {
     const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' })
-    const receiptId = await insertReceipt({
-      invoiceId,
-      amount: 400_000n,
-      suffix: 'overdue-blocked',
-    })
+    const receiptId = await insertReceipt({ invoiceId, amount, suffix: `overdue-${amount}` })
     const before = await walletBalances()
-    const rejection = await service
-      .confirm({
-        receiptId,
-        actorUserId: ACTOR_USER_ID,
-        ip: '10.0.0.9',
-        now: NOW,
-      })
-      .catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
-    expect((rejection as HttpException).getStatus()).toBe(409)
-    expect((rejection as HttpException).getResponse()).toMatchObject({
-      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Overdue'),
-    })
-    expect(await receiptState(receiptId)).toBe('Submitted')
+    await service.confirm({ receiptId, actorUserId:ACTOR_USER_ID, ip:'10.0.0.9', now:NOW })
+    const settled = await invoiceSettlement(invoiceId)
+    expect(settled.paid).toBe(amount)
+    expect(settled.state).toBe(amount===400_000n?'Paid':'PartiallyFunded')
     expect((await walletBalances()).posted).toBe(before.posted)
+    expect(await receiptState(receiptId)).toBe('Confirmed')
   })
 
   it('rolls back invoice paid_amount, wallet credit, and receipt when confirm audit fails', async () => {

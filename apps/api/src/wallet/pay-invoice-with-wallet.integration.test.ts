@@ -147,7 +147,7 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     posted: bigint
     reserved?: bigint
     paid?: bigint
-    state?: 'Unpaid' | 'PartiallyFunded'
+    state?: 'Unpaid' | 'PartiallyFunded' | 'Overdue'
   }): Promise<{ profileId: string; invoiceId: string }> {
     const profileId = uuidv7()
     const invoiceId = uuidv7()
@@ -360,16 +360,16 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     expect(nowait.invoice).toBe('55P03')
   })
 
-  it('settles a PartiallyFunded remaining amount without touching reserved funds', async () => {
+  it.each(['PartiallyFunded','Overdue'] as const)('settles a %s remaining amount without touching reserved funds', async (state) => {
     const { profileId, invoiceId } = await seedPayable({
       posted: 500_000n,
       paid: 600_000n,
-      state: 'PartiallyFunded',
+      state,
     })
 
     const result = await pay(invoiceId, profileId, `pay-lock-partial-${invoiceId}`)
 
-    expect(result.fromState).toBe('PartiallyFunded')
+    expect(result.fromState).toBe(state)
     expect(result.remainingPaid).toBe(400_000n)
     expect(BigInt((await fetchWallet(profileId)).posted_balance)).toBe(100_000n)
     expect((await fetchInvoice(invoiceId)).state).toBe('Paid')

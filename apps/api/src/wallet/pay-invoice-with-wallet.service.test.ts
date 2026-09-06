@@ -573,12 +573,12 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
     expect(walletService.debit).not.toHaveBeenCalled()
   })
 
-  it('rejects credit notes, Overdue, and invoices that are not yet payable', async () => {
+  it('rejects credit notes, Cancelled, and invoices that are not yet payable', async () => {
     paymentQueries({ invoice: invoiceRow({ adjustment_kind: 'credit' }) })
     await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(INVOICE_ID))
 
-    paymentQueries({ invoice: invoiceRow({ state: 'Overdue' }) })
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Overdue'))
+    paymentQueries({ invoice: invoiceRow({ state: 'Cancelled' }) })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Cancelled'))
 
     paymentQueries({
       invoice: invoiceRow({ payable_from: new Date('2026-12-01T00:00:00.000Z') }),

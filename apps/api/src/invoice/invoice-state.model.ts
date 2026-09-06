@@ -44,8 +44,8 @@ export type InvoiceTransition = (typeof INVOICE_TRANSITIONS)[number]
 
 /**
  * Terminal states — a transition INTO one of these closes the invoice.
- * From these states only `PartialRefund` (from `Paid`) is permitted by the
- * spec; `Cancelled` and `Refunded` are hard terminal.
+ * Paid permits partial or full refunds; Cancelled and Refunded are hard
+ * terminal states.
  */
 export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
   'Paid',
@@ -58,13 +58,13 @@ export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
  *
  * Derived directly from the S-04.1.01 transition table:
  *   - Issue:              Draft              → Unpaid
- *   - SubmitBankReceipt:  Unpaid, Partially  → PaymentUnderReview
+ *   - SubmitBankReceipt:  Unpaid, Partially, Overdue → PaymentUnderReview
  *   - ConfirmBankReceipt: PaymentUnderReview → Unpaid/PartiallyFunded/Paid
- *   - PayFromWallet:      Unpaid, Partially  → Paid
+ *   - PayFromWallet:      Unpaid, Partially, Overdue → Paid
  *   - MarkOverdue:        Unpaid, Partially  → Overdue
  *   - Cancel:             Unpaid, Overdue, Draft, Partially → Cancelled
  *   - PartialRefund:      Paid, PartiallyRefunded → PartiallyRefunded
- *   - FullRefund:         Paid               → Refunded
+ *   - FullRefund:         Paid, PartiallyRefunded → Refunded
  */
 export const ALLOWED_TRANSITIONS: Readonly<
   Record<InvoiceState, readonly InvoiceState[]>
@@ -74,9 +74,9 @@ export const ALLOWED_TRANSITIONS: Readonly<
   PaymentUnderReview: ['Unpaid', 'PartiallyFunded', 'Paid'],
   PartiallyFunded: ['PaymentUnderReview', 'Paid', 'Overdue', 'Cancelled'],
   Paid: ['PartiallyRefunded', 'Refunded'],
-  Overdue: ['Cancelled'],
+  Overdue: ['PaymentUnderReview', 'Paid', 'Cancelled'],
   Cancelled: [],
-  PartiallyRefunded: ['PartiallyRefunded'],
+  PartiallyRefunded: ['PartiallyRefunded', 'Refunded'],
   Refunded: [],
 }
 
@@ -103,9 +103,9 @@ export const TRANSITION_BY_PAIR: Readonly<
     Cancelled: 'Cancel',
   },
   Paid: { PartiallyRefunded: 'PartialRefund', Refunded: 'FullRefund' },
-  Overdue: { Cancelled: 'Cancel' },
+  Overdue: { PaymentUnderReview: 'SubmitBankReceipt', Paid: 'PayFromWallet', Cancelled: 'Cancel' },
   Cancelled: {},
-  PartiallyRefunded: { PartiallyRefunded: 'PartialRefund' },
+  PartiallyRefunded: { PartiallyRefunded: 'PartialRefund', Refunded: 'FullRefund' },
   Refunded: {},
 }
 
@@ -145,7 +145,7 @@ export const TRANSITION_ERRORS = {
   PARTIALLY_FUNDED_TOO_HIGH: (paid: bigint, total: bigint) =>
     `Cannot enter PartiallyFunded: confirmed amount ${paid} already covers total ${total}`,
   PARTIAL_REFUND_EXCEEDS: (refunded: bigint, paid: bigint) =>
-    `Partial refund would make refunded ${refunded} exceed paid ${paid}`,
+    `PartiallyRefunded requires refunded ${refunded} to be positive and less than paid ${paid}`,
   NONNEGATIVE_PAID: () => `paidAmount cannot be negative`,
   NONNEGATIVE_REFUNDED: () => `refundedAmount cannot be negative`,
   TOTAL_POSITIVE: () => `totalAmount must be positive`,
@@ -216,7 +216,7 @@ export function resolveAmountError(
       }
       return null
     case 'PartiallyRefunded':
-      if (fin.refundedAmount > fin.paidAmount) {
+      if (fin.refundedAmount <= 0n || fin.refundedAmount >= fin.paidAmount) {
         return TRANSITION_ERRORS.PARTIAL_REFUND_EXCEEDS(
           fin.refundedAmount,
           fin.paidAmount,

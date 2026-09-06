@@ -343,7 +343,7 @@ describe('InvoiceStateMachineService', () => {
     it('canSubmitBankReceipt', () => {
       expect(service.canSubmitBankReceipt('Unpaid')).toBe(true)
       expect(service.canSubmitBankReceipt('PartiallyFunded')).toBe(true)
-      expect(service.canSubmitBankReceipt('Overdue')).toBe(false)
+      expect(service.canSubmitBankReceipt('Overdue')).toBe(true)
       expect(service.canSubmitBankReceipt('Draft')).toBe(false)
       expect(service.canSubmitBankReceipt('Paid')).toBe(false)
       expect(service.canSubmitBankReceipt('Unpaid', 'credit')).toBe(false)
@@ -388,7 +388,7 @@ describe('InvoiceStateMachineService', () => {
 
     it('canFullRefund', () => {
       expect(service.canFullRefund('Paid')).toBe(true)
-      expect(service.canFullRefund('PartiallyRefunded')).toBe(false)
+      expect(service.canFullRefund('PartiallyRefunded')).toBe(true)
       expect(service.canFullRefund('Unpaid')).toBe(false)
     })
   })

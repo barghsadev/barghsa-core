@@ -1108,7 +1108,7 @@ export class InvoiceBankReceiptConfirmationService {
     }
 
     let from: InvoiceState = input.invoice.state
-    if (from !== 'PaymentUnderReview' && from !== 'Unpaid' && from !== 'PartiallyFunded') {
+    if (from !== 'PaymentUnderReview' && from !== 'Unpaid' && from !== 'PartiallyFunded' && from !== 'Overdue') {
       httpError(
         ErrorCodes.CONFLICT_STATE.code,
         BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(from),

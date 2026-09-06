@@ -703,34 +703,16 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     expect(pending.rows[0]!.state).toBe('Pending')
   })
 
-  it('rejects invoice-linked confirmation against an Overdue invoice', async () => {
+  it.each([200_000n,400_000n])('settles an overdue invoice with a %s receipt', async (amount) => {
     const invoiceId = await insertInvoice({ total: 400_000n, paid: 0n, state: 'Overdue' })
-    const pendingId = await insertPending('overdue-blocked', 400_000n)
+    const pendingId = await insertPending(`overdue-${amount}`, amount)
     const before = await walletBalances()
-    const rejection = await service
-      .confirm({
-        transactionId: pendingId,
-        actorUserId: ACTOR_USER_ID,
-        ip: '10.0.0.9',
-        invoiceId,
-        now: NOW,
-      })
-      .catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
-    expect((rejection as HttpException).getStatus()).toBe(409)
-    expect((rejection as HttpException).getResponse()).toMatchObject({
-      message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE('Overdue'),
-    })
+    await service.confirm({ transactionId: pendingId, invoiceId, actorUserId:ACTOR_USER_ID, ip:'10.0.0.9', now:NOW })
     const settled = await invoiceSettlement(invoiceId)
-    expect(settled.paid).toBe(0n)
-    expect(settled.state).toBe('Overdue')
-    expect(settled.paidAt).toBeNull()
+    expect(settled.paid).toBe(amount)
+    expect(settled.state).toBe(amount===400_000n?'Paid':'PartiallyFunded')
     expect((await walletBalances()).posted).toBe(before.posted)
-    const pending = await ctx.pool.query<{ state: string }>(
-      `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [pendingId],
-    )
-    expect(pending.rows[0]!.state).toBe('Pending')
+    expect((await ctx.pool.query('SELECT state FROM wallet_transactions WHERE id=$1',[pendingId])).rows[0].state).toBe('Released')
   })
 
   it('rolls back invoice paid_amount when overpayment confirm audit fails', async () => {

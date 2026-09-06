@@ -213,8 +213,9 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
     expect(container.textContent).toContain('Invoice not found')
   })
 
-  it('shows the bank-receipt upload form for an unpaid invoice', async () => {
+  it.each(['Unpaid','Overdue'] as const)('shows the bank-receipt upload form for a %s invoice', async (state) => {
     const payload = replacementPayload()
+    payload.chain[1]!.state = state
     vi.stubGlobal(
       'fetch',
       vi.fn(async (input: RequestInfo | URL) => {

@@ -642,7 +642,7 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
     expect(walletService.credit).not.toHaveBeenCalled()
   })
 
-  it.each(['Overdue', 'Draft', 'Cancelled', 'Refunded', 'PartiallyRefunded'] as const)(
+  it.each(['Draft', 'Cancelled', 'Refunded', 'PartiallyRefunded'] as const)(
     'conflicts when confirming against a %s invoice',
     async (state) => {
       script({ invoice: makeInvoiceRow({ state, paid_amount: '0' }) })

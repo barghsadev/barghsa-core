@@ -248,7 +248,7 @@ export class InvoiceStateMachineService {
     adjustmentKind?: string | null,
   ): boolean {
     if (adjustmentKind === 'credit') return false
-    return from === 'Unpaid' || from === 'PartiallyFunded'
+    return from === 'Unpaid' || from === 'PartiallyFunded' || from === 'Overdue'
   }
 
   canConfirmBankReceipt(from: InvoiceState): boolean {
@@ -260,7 +260,7 @@ export class InvoiceStateMachineService {
     adjustmentKind?: string | null,
   ): boolean {
     if (adjustmentKind === 'credit') return false
-    return from === 'Unpaid' || from === 'PartiallyFunded'
+    return from === 'Unpaid' || from === 'PartiallyFunded' || from === 'Overdue'
   }
 
   canMarkOverdue(
@@ -280,6 +280,6 @@ export class InvoiceStateMachineService {
   }
 
   canFullRefund(from: InvoiceState): boolean {
-    return from === 'Paid'
+    return from === 'Paid' || from === 'PartiallyRefunded'
   }
 }

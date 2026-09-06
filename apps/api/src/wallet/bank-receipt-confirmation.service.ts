@@ -148,7 +148,7 @@ export interface RejectBankReceiptInput {
  *      path (SubmitBankReceipt from Unpaid/PartiallyFunded into
  *      PaymentUnderReview when needed, then confirm to Paid or
  *      PartiallyFunded, setting paid_at on full settlement). Closed
- *      invoices (Overdue, Draft, Cancelled, Refunded, PartiallyRefunded)
+ *      invoices (Draft, Cancelled, Refunded, PartiallyRefunded)
  *      are rejected with conflict — they cannot absorb a receipt.
  *      Paid invoices have remaining 0, so the whole receipt is wallet
  *      excess. Excess is credited via a *separate*
@@ -730,8 +730,8 @@ export class BankReceiptConfirmationService {
    * path so state and paid_at match the post-allocation amount.
    * Unpaid / PartiallyFunded first SubmitBankReceipt into
    * PaymentUnderReview; ConfirmBankReceipt then lands on Paid or
-   * PartiallyFunded and sets paid_at on full settlement. Overdue is
-   * illegal for SubmitBankReceipt and is rejected before this path.
+   * PartiallyFunded and sets paid_at on full settlement. Overdue remains
+   * payable and takes the same audited settlement path.
    */
   private async confirmInvoiceAfterAllocation(
     client: WalletQueryClient,
@@ -772,7 +772,7 @@ export class BankReceiptConfirmationService {
     }
 
     let from: InvoiceState = input.invoice.state
-    if (from !== 'PaymentUnderReview' && from !== 'Unpaid' && from !== 'PartiallyFunded') {
+    if (from !== 'PaymentUnderReview' && from !== 'Unpaid' && from !== 'PartiallyFunded' && from !== 'Overdue') {
       httpError(
         ErrorCodes.CONFLICT_STATE.code,
         BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(from),

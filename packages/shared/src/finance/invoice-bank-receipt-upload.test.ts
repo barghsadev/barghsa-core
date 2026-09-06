@@ -172,7 +172,7 @@ describe('canCustomerSubmitInvoiceBankReceipt (T-04.3.01.02)', () => {
   it('rejects terminal, overdue, draft, and credit-note invoices', () => {
     expect(canCustomerSubmitInvoiceBankReceipt({ state: 'Paid' })).toBe(false)
     expect(canCustomerSubmitInvoiceBankReceipt({ state: 'Cancelled' })).toBe(false)
-    expect(canCustomerSubmitInvoiceBankReceipt({ state: 'Overdue' })).toBe(false)
+    expect(canCustomerSubmitInvoiceBankReceipt({ state: 'Overdue' })).toBe(true)
     expect(canCustomerSubmitInvoiceBankReceipt({ state: 'Draft' })).toBe(false)
     expect(
       canCustomerSubmitInvoiceBankReceipt({ state: 'Unpaid', adjustmentKind: 'credit' }),

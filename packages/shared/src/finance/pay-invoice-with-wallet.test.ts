@@ -28,11 +28,11 @@ const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 
 describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => {
   describe('isWalletPayableInvoiceState', () => {
-    it('allows Unpaid and PartiallyFunded only', () => {
-      expect(WALLET_PAYABLE_INVOICE_STATES).toEqual(['Unpaid', 'PartiallyFunded'])
+    it('allows unpaid, partially funded and overdue invoices', () => {
+      expect(WALLET_PAYABLE_INVOICE_STATES).toEqual(['Unpaid', 'PartiallyFunded', 'Overdue'])
       expect(isWalletPayableInvoiceState('Unpaid')).toBe(true)
       expect(isWalletPayableInvoiceState('PartiallyFunded')).toBe(true)
-      expect(isWalletPayableInvoiceState('Overdue')).toBe(false)
+      expect(isWalletPayableInvoiceState('Overdue')).toBe(true)
       expect(isWalletPayableInvoiceState('Paid')).toBe(false)
       expect(isWalletPayableInvoiceState('Draft')).toBe(false)
       expect(isWalletPayableInvoiceState('PaymentUnderReview')).toBe(false)
@@ -62,7 +62,7 @@ describe('pay invoice with wallet helpers (T-04.2.03.01 / T-04.2.03.02)', () => 
         remainingForWalletPayment({
           totalAmount: 1_000_000n,
           paidAmount: 0n,
-          state: 'Overdue',
+          state: 'Cancelled',
         }),
       ).toBe(0n)
       expect(

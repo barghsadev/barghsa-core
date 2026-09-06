@@ -411,7 +411,7 @@ describe('InvoiceStateMachineService — real PostgreSQL integration (T-04.1.01.
         }),
       ),
     ).rejects.toMatchObject({
-      message: 'Partial refund would make refunded 1000001 exceed paid 1000000',
+      message: 'PartiallyRefunded requires refunded 1000001 to be positive and less than paid 1000000',
     })
     expect((await fetchInvoice(invoiceId)).state).toBe('Paid')
     expect(await auditRows(invoiceId)).toHaveLength(0)

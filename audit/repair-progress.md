@@ -340,3 +340,9 @@ Review/validation: 18 notification-center checks pass, including full HTTP trave
 The failed-notifications admin service now locks the parent before dead-letter rows, matching worker and canonical recovery ordering. It requeues only the exact linked dead-letter job, clears the expired claim token and preserves cumulative outbox attempts and saved content. Completed jobs and active claims cannot be revived.
 
 Review/validation: 25 admin/recovery checks pass, including eight concurrent admin retries producing one success, active-lease refusal, completed-job refusal with rollback and preserved attempt/snapshot evidence. This repairs the additional existing entry point; no remote job was retried.
+
+### F12.1 Overdue payments and cumulative refund states
+
+Reconciled the canonical transition table with its explicit overdue-payability rule. Wallet settlement and both receipt paths now accept Overdue, retaining credit-note/cancelled restrictions, exact wallet debit, receipt allocation caps and audited transitions. Partial receipts become PartiallyFunded and remain eligible for overdue marking/reminders; full settlement reaches Paid. Shared eligibility exposes the existing receipt form for overdue invoices. Cumulative refunds below the paid amount remain strictly partial; exactly the paid amount may reach Refunded after previous partial refunds. The deferred refund module is not implemented.
+
+Review/validation: all 58 invoice/wallet files (870 checks), 360 shared finance checks, nine invoice detail UI checks and all 11 workspace typechecks pass. Real database cases exercise overdue wallet debit and partial/full receipts through both existing services, preserving wallet balances. The backlog generator validates after specification reconciliation. Review discovered the wallet-payment service has no customer HTTP/UI caller; that missing built-task integration remains for F14, so customer end-to-end wallet payment is not yet claimed complete.

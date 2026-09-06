@@ -55,7 +55,7 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
         remainingForBankReceiptSettlement({
           totalAmount: 1_000_000n,
           paidAmount: 0n,
-          state: 'Overdue',
+          state: 'Cancelled',
         }),
       ).toBe(0n)
       expect(
@@ -81,7 +81,7 @@ describe('invoice overpayment allocation (T-04.2.02.05)', () => {
       expect(isBankReceiptInvoiceLinkAllowedState('PaymentUnderReview')).toBe(true)
       expect(isBankReceiptInvoiceLinkAllowedState('PartiallyFunded')).toBe(true)
       expect(isBankReceiptInvoiceLinkAllowedState('Paid')).toBe(true)
-      expect(isBankReceiptInvoiceLinkAllowedState('Overdue')).toBe(false)
+      expect(isBankReceiptInvoiceLinkAllowedState('Overdue')).toBe(true)
       expect(isBankReceiptInvoiceLinkAllowedState('Draft')).toBe(false)
       expect(isBankReceiptInvoiceLinkAllowedState('Cancelled')).toBe(false)
       expect(isBankReceiptInvoiceLinkAllowedState('Refunded')).toBe(false)

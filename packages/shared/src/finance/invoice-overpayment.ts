@@ -15,14 +15,15 @@ import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
 /**
  * Invoice states that can still absorb a bank-receipt allocation.
  * S-04.1.01 permits SubmitBankReceipt only from Unpaid / PartiallyFunded
- * (and ConfirmBankReceipt from PaymentUnderReview). Overdue may only
- * Cancel. Paid is not settleable here: remaining is 0, so a linked
+ * (and ConfirmBankReceipt from PaymentUnderReview). S-04.1.03 also
+ * permits payment when Overdue. Paid has remaining 0, so a linked
  * receipt is entirely verified wallet excess.
  */
 export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
   'Unpaid',
   'PaymentUnderReview',
   'PartiallyFunded',
+  'Overdue',
 ] as const
 
 export type BankReceiptSettleableInvoiceState =
@@ -34,7 +35,7 @@ export type BankReceiptSettleableInvoiceState =
  * Settleable states receive `min(receipt, remaining)` on the invoice;
  * any excess is a separate wallet credit. Paid has remaining 0, so the
  * whole receipt is verified wallet excess and the invoice is untouched.
- * Draft / Overdue / Cancelled / Refunded / PartiallyRefunded conflict —
+ * Draft / Cancelled / Refunded / PartiallyRefunded conflict —
  * they have no payable remaining, and silently crediting the wallet
  * would hide a misapplied receipt.
  */

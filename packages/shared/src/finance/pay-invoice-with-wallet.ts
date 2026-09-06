@@ -19,11 +19,12 @@ import { invoiceRemainingAmount } from './invoice-overpayment.js'
 
 /**
  * Invoice states that may be settled by PayFromWallet
- * (S-04.1.01 / S-04.2.03). Overdue cannot PayFromWallet.
+ * (S-04.1.01 / S-04.2.03). Overdue remains payable under S-04.1.03.
  */
 export const WALLET_PAYABLE_INVOICE_STATES = [
   'Unpaid',
   'PartiallyFunded',
+  'Overdue',
 ] as const
 
 export type WalletPayableInvoiceState =
@@ -105,7 +106,7 @@ export function isWalletPayableInvoiceState(
 
 /**
  * Remaining IRR a wallet payment may debit. Non-payable states
- * (Paid, Overdue, credit notes, …) return 0 so callers cannot
+ * (Paid, Cancelled, credit notes, …) return 0 so callers cannot
  * debit against an invoice that PayFromWallet forbids.
  */
 export function remainingForWalletPayment(input: {

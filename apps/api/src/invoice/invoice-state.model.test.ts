@@ -93,9 +93,9 @@ describe('canTransition', () => {
     expect(canTransition('Paid', 'Unpaid')).toBe(false)
   })
 
-  it('Overdue can only go to Cancelled', () => {
+  it('Overdue remains payable or cancellable', () => {
     for (const to of INVOICE_STATES) {
-      if (to === 'Cancelled') {
+      if (['PaymentUnderReview', 'Paid', 'Cancelled'].includes(to)) {
         expect(canTransition('Overdue', to)).toBe(true)
       } else {
         expect(canTransition('Overdue', to)).toBe(false)
@@ -109,9 +109,9 @@ describe('canTransition', () => {
     }
   })
 
-  it('PartiallyRefunded can only self-loop', () => {
+  it('PartiallyRefunded can continue or finish refunding', () => {
     for (const to of INVOICE_STATES) {
-      if (to === 'PartiallyRefunded') {
+      if (to === 'PartiallyRefunded' || to === 'Refunded') {
         expect(canTransition('PartiallyRefunded', to)).toBe(true)
       } else {
         expect(canTransition('PartiallyRefunded', to)).toBe(false)
@@ -252,10 +252,10 @@ describe('resolveAmountError — numeric guards', () => {
         paidAmount: 1_000_000n,
         refundedAmount: 1_500_000n,
       })
-      expect(err).toContain('exceed paid')
+      expect(err).toContain('less than paid')
     })
 
-    it('accepts when refunded <= paid', () => {
+    it('accepts a positive refund below the paid amount', () => {
       expect(
         resolveAmountError('PartiallyRefunded', {
           ...base,
@@ -322,7 +322,7 @@ describe('transitionName', () => {
 
   it('returns null for illegal pairs', () => {
     expect(transitionName('Draft', 'Paid')).toBeNull()
-    expect(transitionName('Overdue', 'PaymentUnderReview')).toBeNull()
+    expect(transitionName('Overdue', 'Draft')).toBeNull()
     expect(transitionName('Cancelled', 'Draft')).toBeNull()
     expect(transitionName('Refunded', 'Draft')).toBeNull()
   })
@@ -428,5 +428,16 @@ describe('ALLOWED_TRANSITIONS — structural integrity', () => {
         expect(TRANSITION_BY_PAIR[from]?.[to]).toBeDefined()
       }
     }
+  })
+})
+
+describe('cumulative refund completion', () => {
+  it('requires the exact paid amount for the final refund and keeps partial refunds strictly partial', () => {
+    const amounts={paidAmount:100n,totalAmount:100n,refundedAmount:100n}
+    expect(()=>validateTransition('PartiallyRefunded','Refunded',amounts)).not.toThrow()
+    expect(()=>validateTransition('PartiallyRefunded','Refunded',{...amounts,refundedAmount:99n})).toThrow()
+    expect(()=>validateTransition('PartiallyRefunded','Refunded',{...amounts,refundedAmount:101n})).toThrow()
+    for(const refundedAmount of [0n,100n,101n]) expect(()=>validateTransition('Paid','PartiallyRefunded',{...amounts,refundedAmount})).toThrow()
+    expect(()=>validateTransition('Paid','PartiallyRefunded',{...amounts,refundedAmount:40n})).not.toThrow()
   })
 })
