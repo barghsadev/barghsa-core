@@ -5,6 +5,28 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.contractLimits.title': 'محدودیت‌های قرارداد برق',
+  'admin.contractLimits.description': 'محدودیت‌های ایجاد پیش‌نویس جدید برق را تنظیم کنید.',
+  'admin.contractLimits.refresh': 'تازه‌سازی',
+  'admin.contractLimits.loading': 'در حال دریافت محدودیت‌ها…',
+  'admin.contractLimits.forbidden': 'اجازه مدیریت این محدودیت‌ها را ندارید.',
+  'admin.contractLimits.error':
+    'دریافت محدودیت‌ها انجام نشد. تنظیمات ذخیره‌شده آسیب‌دیده باید پیش از استفاده اصلاح شود.',
+  'admin.contractLimits.retry': 'تلاش مجدد',
+  'admin.contractLimits.save': 'ذخیره محدودیت‌ها',
+  'admin.contractLimits.saved': 'محدودیت‌ها ذخیره شد.',
+  'admin.contractLimits.scope':
+    'تغییرات فقط برای پیش‌نویس‌های جدید است. قراردادهای موجود و سفارش‌های تأییدشده شرایط خود را نگه می‌دارند.',
+  'admin.contractLimits.confirm':
+    'این محدودیت‌ها برای پیش‌نویس‌های جدید ذخیره می‌شود. قراردادهای موجود و سفارش‌های تأییدشده تغییر نمی‌کنند.',
+  'admin.contractLimits.maxQuantityIncreasePercent': 'حداکثر افزایش مقدار (درصد)',
+  'admin.contractLimits.maxQuantityIncreasePercentHelp':
+    'عدد صحیح از ۰ تا ۱۰۰۰ وارد کنید. صفر به معنی ممنوعیت افزایش مقدار است.',
+  'admin.contractLimits.maxContractDuration': 'حداکثر مدت (ماه شمسی)',
+  'admin.contractLimits.maxContractDurationHelp': 'عدد صحیح از ۱ تا ۱۲۰۰ ماه شمسی وارد کنید.',
+  'admin.contractLimits.leadTimeDays': 'حداقل فاصله تا شروع (روز)',
+  'admin.contractLimits.leadTimeDaysHelp':
+    'عدد صحیح از ۰ تا ۳۶۵۰۰ وارد کنید. صفر به معنی مجاز بودن شروع از امروز است.',
   'admin.green.title': 'قواعد برق سبز',
   'admin.green.description': 'سهم اجباری برق سبز را برای هر نوع سفارش تنظیم کنید.',
   'admin.green.refresh': 'تازه‌سازی',
@@ -1820,6 +1842,29 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.contractLimits.title': 'Contract electricity limits',
+  'admin.contractLimits.description':
+    'Set the limits used when new electricity drafts are created.',
+  'admin.contractLimits.refresh': 'Refresh',
+  'admin.contractLimits.loading': 'Loading limits…',
+  'admin.contractLimits.forbidden': 'You do not have permission to manage these limits.',
+  'admin.contractLimits.error':
+    'Limits could not be loaded. Damaged saved settings must be repaired before use.',
+  'admin.contractLimits.retry': 'Retry',
+  'admin.contractLimits.save': 'Save limits',
+  'admin.contractLimits.saved': 'Limits saved.',
+  'admin.contractLimits.scope':
+    'Changes apply to new drafts only. Existing contracts and confirmed orders retain their terms.',
+  'admin.contractLimits.confirm':
+    'Save these limits for new drafts. Existing contracts and confirmed orders will not be changed.',
+  'admin.contractLimits.maxQuantityIncreasePercent': 'Maximum quantity increase (%)',
+  'admin.contractLimits.maxQuantityIncreasePercentHelp':
+    'Enter an integer from 0 to 1000. Zero prevents quantity increases.',
+  'admin.contractLimits.maxContractDuration': 'Maximum duration (Jalali months)',
+  'admin.contractLimits.maxContractDurationHelp': 'Enter an integer from 1 to 1200 Jalali months.',
+  'admin.contractLimits.leadTimeDays': 'Minimum lead time (days)',
+  'admin.contractLimits.leadTimeDaysHelp':
+    'Enter an integer from 0 to 36500. Zero permits a start date of today.',
   'admin.green.title': 'Green-electricity rules',
   'admin.green.description': 'Configure mandatory green shares for each ordering mode.',
   'admin.green.refresh': 'Refresh',

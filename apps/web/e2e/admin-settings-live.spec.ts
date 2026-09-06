@@ -857,3 +857,72 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(simple.getByRole('alert')).toHaveCount(0);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`contract limits save and reload through the migrated API (${locale})`, async ({ page }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa';
+    await page.goto('/admin/contract-limits');
+    await page
+      .getByLabel(fa ? 'حداکثر افزایش مقدار (درصد)' : 'Maximum quantity increase (%)', {
+        exact: true,
+      })
+      .fill('0');
+    await page
+      .getByLabel(fa ? 'حداکثر مدت (ماه شمسی)' : 'Maximum duration (Jalali months)', {
+        exact: true,
+      })
+      .fill(fa ? '36' : '24');
+    await page
+      .getByLabel(fa ? 'حداقل فاصله تا شروع (روز)' : 'Minimum lead time (days)', { exact: true })
+      .fill('7');
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await expect(
+      page.getByLabel(fa ? 'حداکثر افزایش مقدار (درصد)' : 'Maximum quantity increase (%)', {
+        exact: true,
+      })
+    ).toHaveValue('0');
+    await expect(
+      page.getByLabel(fa ? 'حداکثر مدت (ماه شمسی)' : 'Maximum duration (Jalali months)', {
+        exact: true,
+      })
+    ).toHaveValue(fa ? '36' : '24');
+    const config = await (
+      await page.request.get(`${http.base}/api/admin/config/contract-electricity-limits`, {
+        headers: { cookie: `barghsa_session=${http.session}` },
+      })
+    ).json();
+    expect(config).toEqual({
+      maxQuantityIncreasePercent: 0,
+      maxContractDuration: fa ? 36 : 24,
+      leadTimeDays: 7,
+    });
+    await page.screenshot({ path: `/tmp/contract-limits-${locale}.png`, fullPage: true });
+  });
