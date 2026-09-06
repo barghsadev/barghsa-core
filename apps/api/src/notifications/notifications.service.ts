@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 
@@ -349,27 +349,24 @@ export class NotificationsService {
     try {
       await client.query('BEGIN')
 
-      // Terminal states are immutable once acted upon (idempotent no-op); the
-      // UPDATE below is guarded to match only 'open' rows.
+      // Match worker lock order: parent outbox, then delivery record/job.
+      const parent = (await client.query(`SELECT status,locked_until > clock_timestamp() AS leased
+        FROM notification_outbox WHERE id=$1 FOR UPDATE`, [row.outboxId])).rows[0]
+      const locked = (await client.query(`SELECT id,status FROM notification_dead_letter
+        WHERE id=$1 FOR UPDATE`, [id])).rows[0]
+      if (!locked || locked.status !== 'open') {
+        await client.query('COMMIT')
+        return locked ?? null
+      }
       if (action === 'retry') {
-        // Reset the job to a fresh budget AND the parent outbox row (attempts
-        // and lock) so the worker re-dispatches instead of instantly
-        // re-dead-lettering from stale attempt counts. Idempotency keys are
-        // preserved, so re-processing cannot double-deliver (T-05.01.04).
-        await client.query(
-          `UPDATE notification_job
-              SET status = 'queued', run_after = NULL, attempts = 0,
-                  last_error = NULL, updated_at = NOW()
-            WHERE id = $1`,
-          [row.jobId],
-        )
-        await client.query(
-          `UPDATE notification_outbox
-              SET status = 'queued', locked_until = NULL, attempts = 0,
-                  updated_at = NOW()
-            WHERE id = $1`,
-          [row.outboxId],
-        )
+        if (!parent || parent.leased || parent.status === 'cancelled' || parent.status === 'delivered') {
+          throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409)
+        }
+        const job = await client.query(`UPDATE notification_job SET status='queued',run_after=NULL,attempts=0,
+          last_error=NULL,updated_at=NOW() WHERE id=$1 AND outbox_id=$2 AND status='dead_letter' RETURNING id`, [row.jobId, row.outboxId])
+        if (job.rows.length !== 1) throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409)
+        await client.query(`UPDATE notification_outbox SET status='queued',locked_until=NULL,lease_token=NULL,
+          scheduled_for=NULL,last_error=NULL,updated_at=NOW() WHERE id=$1`, [row.outboxId])
       }
 
       const updated = await client.query(
@@ -397,6 +394,9 @@ export class NotificationsService {
         [nextStatus, actor, id],
       )
 
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES ($1,$2,'notification_dead_letter_action',$3::jsonb,$4,NOW())`,
+        [uuidv7(),actor,JSON.stringify({ deadLetterId: id, outboxId: row.outboxId, jobId: row.jobId, action }),uuidv7()])
       await client.query('COMMIT')
 
       // If the row was already acted upon (status != 'open'), the guarded

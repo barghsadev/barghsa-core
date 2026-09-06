@@ -188,7 +188,11 @@ async function main(): Promise<void> {
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
-      await recordJobSuccess('notification_outbox_poll');
+      if (r.failed > 0) {
+        await recordJobFailure({ jobType: 'notification_outbox_poll', error: 'notification_delivery_failed', errorCategory: 'transient', payload: { failed: r.failed, delivered: r.delivered } });
+      } else if (r.delivered > 0) {
+        await recordJobSuccess('notification_outbox_poll');
+      }
     } catch (err) {
       logger.error(`Outbox poll failed: ${(err as Error)?.message ?? String(err)}`);
       await recordJobFailure({
