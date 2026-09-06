@@ -40,7 +40,9 @@ export async function startHttpFixture(testDatabaseUrl: string, localStorageEndp
     pool = new Pool({ connectionString: url.toString() })
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
-      env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString(),
+      env: { ...process.env,
+        ...(process.env.BARGHSA_HTTP_COVERAGE_DIR ? { NODE_V8_COVERAGE: process.env.BARGHSA_HTTP_COVERAGE_DIR } : {}),
+        DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString(),
         NODE_ENV: 'test', APP_PUBLIC_URL: 'https://app.example.test', AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only', REDIS_URL: '', REDIS_HOST: '', S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '', S3_REGION: localStorageEndpoint ? 'us-east-1' : '',
         ...(localStorageEndpoint ? { S3_ENDPOINT: localStorageEndpoint, S3_FORCE_PATH_STYLE: 'true', S3_ACCESS_KEY_ID: 'test-only-key', S3_SECRET_ACCESS_KEY: 'test-only-secret' } : {}) },
     })

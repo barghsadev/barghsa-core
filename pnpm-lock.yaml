@@ -9,6 +9,9 @@ importers:
 
   .:
     devDependencies:
+      '@bcoe/v8-coverage':
+        specifier: 1.0.2
+        version: 1.0.2
       '@size-limit/preset-app':
         specifier: 13.0.3
         version: 13.0.3(size-limit@13.0.3)

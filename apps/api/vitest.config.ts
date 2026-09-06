@@ -9,8 +9,9 @@ export default createVitestConfig({
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
     coverage: {
+      provider: 'custom',
+      customProviderModule: './scripts/coverage-provider.mjs',
       exclude: [
-        'src/crm/**',
         'src/**/*.test.ts',
         'src/**/*.spec.ts',
         'src/**/__tests__/**',
@@ -18,11 +19,12 @@ export default createVitestConfig({
         'src/**/index.ts',
         'src/**/*.d.ts',
       ],
+      // Measured whole-package floor; required changed-code/critical gates remain separate.
       thresholds: {
-        lines: 38,
-        branches: 30,
-        functions: 34,
-        statements: 38,
+        lines: 80,
+        branches: 65,
+        functions: 70,
+        statements: 80,
       },
     },
   },

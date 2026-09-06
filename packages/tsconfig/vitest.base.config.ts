@@ -22,9 +22,9 @@ function mergeThresholds(
  *
  * All packages/apps extend this config and may override specific fields.
  *
- * Minimum coverage thresholds (80% line / 75% branch) apply to all packages.
- * Domain packages (auth, payments, wallet, etc.) require 90% line / 85% branch
- * — exceptions require tech lead approval.
+ * Package-wide baseline thresholds are set by each package. The zero defaults
+ * below do not enforce the required changed-code 80/75 or critical-domain
+ * 90/85 policy; those requirements must be checked separately.
  *
  * Overrides are deep-merged: `overrides.test` extends the base test config
  * rather than replacing it, preserving coverage thresholds and other defaults.
