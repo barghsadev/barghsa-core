@@ -12,6 +12,8 @@ export interface TeamAction {
   method: 'POST' | 'PUT' | 'DELETE'
   body?: unknown
   signsOut?: boolean
+  conflictMessage?: string
+  forbiddenMessage?: string
 }
 
 /** The action is captured when opened; password verification retries that same action. */
@@ -48,7 +50,7 @@ export function TeamActionDialog({ action, onClose, onSuccess }: {
         return
       }
       if (!response.ok) {
-        setError(t(response.status === 409 ? 'team.conflict' : response.status === 403 ? 'team.forbidden' : 'team.error', locale))
+        setError(response.status === 409 ? action.conflictMessage ?? t('team.conflict', locale) : response.status === 403 ? action.forbiddenMessage ?? t('team.forbidden', locale) : t('team.error', locale))
         return
       }
       if (action.signsOut) { window.location.assign('/login'); return }

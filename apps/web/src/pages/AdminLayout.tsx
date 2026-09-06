@@ -26,6 +26,7 @@ export default function AdminLayout() {
               <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
               <li><a href="/admin/invoices" className="text-blue-600 hover:underline">Invoices</a></li>
               <li><a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">{t('admin.walletReceipts.nav', locale)}</a></li>
+              <li><a href="/admin/approval-requests" className="text-blue-600 hover:underline">{t('admin.approvals.title', locale)}</a></li>
               <li><a href="/admin/providers" className="text-blue-600 hover:underline">Email Providers</a></li>
               <li><a href="/admin/roles" className="text-blue-600 hover:underline">Roles &amp; Permissions</a></li>
               <li className="pt-2 mt-2 border-t border-gray-100">

@@ -382,3 +382,9 @@ Review/validation: 45 wallet/production-HTTP checks and API typecheck pass. HTTP
 The staff wallet receipt screen distinguishes pending dual approval from completed credit. It keeps the receipt selected/in the queue, shows a bilingual pending notice, restores the bound invoice and makes that destination read-only while review is pending.
 
 Review/validation: all 13 receipt UI checks pass, including fa/en pending responses, absence of the former false credit-success message and preserved invoice binding; web typecheck passes. The i18n package was rebuilt before checking the new dictionary entries. The separate approval queue screen remains next.
+
+### F13.7 Financial approval queue
+
+Added the missing staff approval route and navigation, pending/approved/rejected queues with pagination, exact decimal IRR formatting, initiator/reviewer/reasons and receipt references. Decisions use the existing accessible confirmation and step-up dialog with finance-specific conflict/permission errors. Rejection reasons are captured before authentication; stale queue responses are discarded. Bilingual notices explicitly separate approval from payment execution.
+
+Review/validation: five new Chromium scenarios and all ten team-dialog regression scenarios pass. They cover Persian/English exact amounts and password retries, mandatory rejection reasons, conflicts, history/pagination and stale responses. Production web build and typecheck pass. Approval notifications and remaining financial integration checks stay open.

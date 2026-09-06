@@ -28,6 +28,7 @@ import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
@@ -151,6 +152,11 @@ const AppWalletRoute = AppWalletRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminApprovalRequestsRoute = AdminApprovalRequestsRouteImport.update({
+  id: '/approval-requests',
+  path: '/approval-requests',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBrandingRoute = AdminBrandingRouteImport.update({
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
@@ -373,6 +380,7 @@ export interface FileRoutesByTo {
   '/savings': typeof AppSavingsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/geography': typeof AdminGeographyRoute
   '/admin/invoices': typeof AdminInvoicesRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   '/_app/savings': typeof AppSavingsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
+  '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
   '/admin/geography': typeof AdminGeographyRoute
@@ -476,6 +485,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
@@ -524,6 +534,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/videos'
     | '/wallet'
+    | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/geography'
     | '/admin/invoices'
@@ -574,6 +585,7 @@ export interface FileRouteTypes {
     | '/_app/savings'
     | '/_app/videos'
     | '/_app/wallet'
+    | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
     | '/admin/geography'
@@ -753,6 +765,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/approval-requests': {
+      id: '/admin/approval-requests'
+      path: '/approval-requests'
+      fullPath: '/admin/approval-requests'
+      preLoaderRoute: typeof AdminApprovalRequestsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/branding': {
@@ -1029,6 +1048,7 @@ const AdminCrmRouteWithChildren = AdminCrmRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
   AdminGeographyRoute: typeof AdminGeographyRoute
@@ -1045,6 +1065,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
   AdminGeographyRoute: AdminGeographyRoute,

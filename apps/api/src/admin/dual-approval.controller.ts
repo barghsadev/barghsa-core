@@ -39,7 +39,7 @@ const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
  * Admin surface for the approval-request lifecycle:
  *
  * - `POST /api/admin/approval-requests` — initiate a request (only for
- *   actions exceeding the configured threshold, T-09.07.01);
+ *   actions meeting or exceeding the configured threshold, T-09.07.01);
  * - `GET /api/admin/approval-requests` — queue view (default: pending);
  * - `POST /api/admin/approval-requests/:id/approve` — second-user approval;
  * - `POST /api/admin/approval-requests/:id/reject` — second-user rejection
@@ -80,9 +80,9 @@ export class DualApprovalController {
   /**
    * POST /api/admin/approval-requests
    *
-   * Initiate a dual-approval request for a financial action that exceeds
+   * Initiate a dual-approval request for a financial action that meets or exceeds
    * the configured threshold. If dual approval is disabled or the amount
-   * does not exceed the threshold, the request is rejected (400) — the
+   * is below the threshold, the request is rejected (400) — the
    * workflow can never be triggered for below-threshold actions.
    */
   @Post()
@@ -101,7 +101,7 @@ export class DualApprovalController {
         },
         amount_irr: {
           type: 'integer',
-          description: 'IRR amount of the action (must exceed the configured threshold)',
+          description: 'IRR amount of the action (must meet or exceed the configured threshold)',
         },
         reason: { type: 'string', description: 'Reason for the financial action' },
         details: { type: 'object', description: 'Optional transaction details' },
