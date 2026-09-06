@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { describe, it, expect, vi } from 'vitest'
 import {
   NotificationCenterService,
@@ -17,7 +18,7 @@ function makeMockPool() {
 }
 
 const row = (over: Record<string, unknown>) => ({
-  id: 'id-' + Math.random().toString(36).slice(2),
+  id: randomUUID(),
   type: 'profile_verified',
   titleI18nKey: 'notifications.profile_verified.title',
   bodyI18nKey: 'notifications.profile_verified.body',
@@ -33,12 +34,12 @@ const row = (over: Record<string, unknown>) => ({
 describe('cursor encode/decode', () => {
   it('round-trips a (createdAt, id) position', () => {
     const date = new Date('2026-08-27T06:00:00.123Z')
-    const cursor = encodeCursor(date, 'abc-123')
-    expect(decodeCursor(cursor)).toEqual({ createdAt: date, id: 'abc-123' })
+    const cursor = encodeCursor(date, '00000000-0000-4000-8000-000000000001')
+    expect(decodeCursor(cursor)).toEqual({ createdAt: date, id: '00000000-0000-4000-8000-000000000001', timestamp: date.toISOString() })
   })
 
   it('accepts an ISO string in encodeCursor', () => {
-    const cursor = encodeCursor('2026-08-27T06:00:00.000Z', 'x')
+    const cursor = encodeCursor('2026-08-27T06:00:00.000Z', '00000000-0000-4000-8000-000000000001')
     expect(decodeCursor(cursor).createdAt.toISOString()).toBe(
       '2026-08-27T06:00:00.000Z',
     )
@@ -96,35 +97,34 @@ describe('list', () => {
 
   it('newer direction returns newest-first and emits a cursor from the newest kept row', async () => {
     const pool = makeMockPool()
-    // Both directions fetch DESC (newest-first); the mock simulates that.
+    // Fetch the nearest newer rows in ascending order before display reversal.
     const newest = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') })
     const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
     const older = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
     pool.query
-      .mockResolvedValueOnce({ rows: [newest, mid, older] })
+      .mockResolvedValueOnce({ rows: [older, mid, newest] })
       .mockResolvedValueOnce({ rows: [{ n: '0' }] })
 
     const svc = new NotificationCenterService(pool)
     // Pass a cursor so the list generates the `>` row-comparison condition.
-    const cursor = encodeCursor(new Date('2026-08-27T05:00:00.000Z'), 'seed')
+    const cursor = encodeCursor(new Date('2026-08-27T05:00:00.000Z'), '00000000-0000-4000-8000-000000000001')
     const page = await svc.list('profile-1', {
       limit: 2,
       direction: 'newer',
       cursor,
     })
 
-    expect(page.data[0]!.id).toBe(newest.id)
-    expect(page.data[1]!.id).toBe(mid.id)
+    expect(page.data[0]!.id).toBe(mid.id)
+    expect(page.data[1]!.id).toBe(older.id)
     expect(page.next_cursor).toBeTruthy()
     // Continuous newer cursor anchors on the newest kept row.
     const pos = decodeCursor(page.next_cursor!)
-    expect(pos.id).toBe(newest.id)
+    expect(pos.id).toBe(mid.id)
 
-    // Newer uses a `>` row comparison with the same newest-first ORDER BY, so
-    // it is symmetric with `older` (no duplicate rows when continuing).
+    // The comparison and ascending fetch advance without skipping arrivals.
     const [sql] = pool.query.mock.calls[0] as [string, unknown[]]
     expect(sql).toContain('(created_at, id) >')
-    expect(sql).toContain('ORDER BY created_at DESC, id DESC')
+    expect(sql).toContain('ORDER BY created_at ASC, id ASC')
   })
 
   it('clamps limit to MAX_LIMIT', async () => {
@@ -162,10 +162,10 @@ describe('markRead', () => {
     pool.query.mockResolvedValueOnce({ rowCount: 1 })
 
     const svc = new NotificationCenterService(pool)
-    await svc.markRead('profile-1', 'notif-1')
+    await svc.markRead('profile-1', '00000000-0000-4000-8000-000000000001')
 
     const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(params).toEqual(['profile-1', null, 'notif-1'])
+    expect(params).toEqual(['profile-1', null, '00000000-0000-4000-8000-000000000001'])
   })
 
   it('throws 404 when the row does not belong to the profile', async () => {
@@ -173,7 +173,7 @@ describe('markRead', () => {
     pool.query.mockResolvedValueOnce({ rowCount: 0 })
 
     const svc = new NotificationCenterService(pool)
-    await expect(svc.markRead('profile-1', 'other-id')).rejects.toThrow()
+    await expect(svc.markRead('profile-1', '00000000-0000-4000-8000-000000000002')).rejects.toThrow()
   })
 })
 

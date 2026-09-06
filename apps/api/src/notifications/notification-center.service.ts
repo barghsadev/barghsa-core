@@ -84,10 +84,12 @@ const SELECT_COLUMNS = `id,
   link_params AS "linkParams",
   is_read AS "isRead",
   read_at AS "readAt",
-  created_at AS "createdAt"`
+  created_at AS "createdAt",
+  to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS "cursorTimestamp"`
 
 const DEFAULT_LIMIT = 50
 const MAX_LIMIT = 100
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 /**
  * Encode a (created_at, id) position into an opaque, URL-safe cursor.
@@ -104,7 +106,7 @@ export function encodeCursor(createdAt: Date | string, id: string): string {
  * Decode an opaque cursor into its `{ createdAt, id }` position.
  * Throws on any malformed input so the controller can 400 it.
  */
-export function decodeCursor(cursor: string): { createdAt: Date; id: string } {
+export function decodeCursor(cursor: string): { createdAt: Date; id: string; timestamp: string } {
   let raw: string
   try {
     raw = Buffer.from(cursor, 'base64url').toString('utf8')
@@ -132,7 +134,7 @@ export function decodeCursor(cursor: string): { createdAt: Date; id: string } {
   const iso = raw.slice(0, idx)
   const id = raw.slice(idx + 1)
   const createdAt = new Date(iso)
-  if (Number.isNaN(createdAt.getTime()) || !id) {
+  if (Number.isNaN(createdAt.getTime()) || !UUID_PATTERN.test(id)) {
     throw new HttpException(
       {
         statusCode: 400,
@@ -142,7 +144,7 @@ export function decodeCursor(cursor: string): { createdAt: Date; id: string } {
       400,
     )
   }
-  return { createdAt, id }
+  return { createdAt, id, timestamp: iso }
 }
 
 @Injectable()
@@ -185,13 +187,10 @@ export class NotificationCenterService {
    *   - `newer`:            rows strictly newer than the cursor position (used
    *     to refresh the list with anything that arrived since a loaded page).
    *
-   * Both directions fetch newest-first with the same `ORDER BY`; the only
-   * difference is the row-comparison operator (`<` for older, `>` for newer).
-   * This keeps pagination symmetric and free of duplicates:
-   *   - older: `next_cursor` anchors on the oldest kept row so the next page
-   *     continues with rows strictly older than it.
-   *   - newer: `next_cursor` anchors on the newest kept row so the next page
-   *     continues with rows strictly newer than it.
+   * Newer pages fetch the nearest newer rows in ascending order, then reverse
+   * the kept page for display. Fetching newest-first would skip intermediate
+   * arrivals when they span more than one page. Without a cursor, either
+   * direction starts at the newest page and continues toward older rows.
    *
    * Fetches `limit + 1` rows to detect a following page and emits an opaque
    * `next_cursor` for it. `unread_count` is the profile's total unread always.
@@ -207,7 +206,8 @@ export class NotificationCenterService {
       MAX_LIMIT,
     )
     const filter: NotificationFilter = options.filter ?? 'all'
-    const direction: CursorDirection = options.direction ?? 'older'
+    const direction: CursorDirection = options.cursor ? (options.direction ?? 'older') : 'older'
+    const order = direction === 'newer' ? 'ASC' : 'DESC'
 
     const conditions: string[] = [notificationScope]
     const params: unknown[] = [profileId, userId ?? null]
@@ -223,7 +223,7 @@ export class NotificationCenterService {
       conditions.push(
         `(created_at, id) ${op} ($${++paramIndex}, $${++paramIndex})`,
       )
-      params.push(cursorPosition.createdAt, cursorPosition.id)
+      params.push(cursorPosition.timestamp, cursorPosition.id)
     }
 
     const limitIdx = ++paramIndex
@@ -233,14 +233,15 @@ export class NotificationCenterService {
       `SELECT ${SELECT_COLUMNS}
          FROM in_app_notifications
         WHERE ${conditions.join(' AND ')}
-        ORDER BY created_at DESC, id DESC
+        ORDER BY created_at ${order}, id ${order}
         LIMIT $${limitIdx}`,
       params,
     )
 
-    const data = rows.rows as NotificationCenterItem[]
+    const data = rows.rows as (NotificationCenterItem & { cursorTimestamp?: string })[]
     const hasMore = data.length > limit
-    const page = hasMore ? data.slice(0, limit) : data
+    const page = hasMore ? data.slice(0, limit) : [...data]
+    if (direction === 'newer') page.reverse()
 
     // Continue in the direction of travel, anchored on the boundary row that
     // a following page is strictly beyond (no overlap / no skipped rows):
@@ -249,12 +250,12 @@ export class NotificationCenterService {
     const boundaryRow = direction === 'older' ? page[page.length - 1] : page[0]
     const next_cursor =
       hasMore && boundaryRow
-        ? encodeCursor(boundaryRow.createdAt, boundaryRow.id)
+        ? encodeCursor(boundaryRow.cursorTimestamp ?? boundaryRow.createdAt, boundaryRow.id)
         : null
 
     const unread_count = await this.countUnread(profileId, userId)
 
-    return { data: page, next_cursor, unread_count }
+    return { data: page.map(({ cursorTimestamp: _cursorTimestamp, ...item }) => item), next_cursor, unread_count }
   }
 
   /** Total unread count for a profile (used for the badge & response). */
@@ -275,6 +276,9 @@ export class NotificationCenterService {
    * own rows; throws 404 when the row does not exist for the given profile.
    */
   async markRead(profileId: string | null, notificationId: string, userId?: string): Promise<void> {
+    if (!UUID_PATTERN.test(notificationId)) {
+      throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid notification ID' }, 400)
+    }
     const result = await this.db.query(
       `UPDATE in_app_notifications
           SET is_read = true, read_at = COALESCE(read_at,NOW())

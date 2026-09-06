@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest'
 import { randomUUID } from 'node:crypto'
 import { startHttpFixture } from '../test/http-fixture.js'
+import { encodeCursor } from './notification-center.service.js'
 import { NotificationsService } from './notifications.service.js'
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }))
 vi.mock('@barghsa/db', async original => ({ ...await original<typeof import('@barghsa/db')>(), getDbPool: () => db.pool }))
@@ -50,4 +51,61 @@ it('filters private profile notices from agents and other profile selections',as
   expect(switched.data.map(row=>row.id)).toEqual([other.id])
   await db.pool.query("DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='inbox-agent'",[profile])
   expect(await (await request('inbox-agent','v1/notifications/unread-count')).json()).toEqual({unread_count:0})
+})
+
+it('walks all newer and older pages without skipping notices, including equal timestamps', async () => {
+  await db.pool.query("DELETE FROM in_app_notifications WHERE recipient_user_id='inbox-alone'")
+  const ids: string[] = []
+  for (let i=1;i<=7;i++) {
+    const id=`00000000-0000-4000-8000-${String(i).padStart(12,'0')}`
+    ids.push(id)
+    await db.pool.query(`INSERT INTO in_app_notifications(id,recipient_user_id,type,title_i18n_key,body_i18n_key,created_at)
+      VALUES ($1,'inbox-alone','general','title','body','2026-09-01T00:00:00Z')`, [id])
+  }
+  for (const direction of ['older','newer']) {
+    let cursor = encodeCursor('2026-09-01T00:00:00Z', direction==='newer' ? '00000000-0000-4000-8000-000000000000' : 'ffffffff-ffff-ffff-ffff-ffffffffffff')
+    const seen: string[] = []
+    for (let n=0;n<10;n++) {
+      const response=await request('inbox-alone',`v1/notifications?limit=2&direction=${direction}&cursor=${cursor}`)
+      expect(response.status).toBe(200)
+      const page=await response.json() as {data:Array<{id:string}>,next_cursor:string|null}
+      const pageIds=page.data.map(row=>row.id)
+      expect(pageIds).toEqual([...pageIds].sort().reverse())
+      seen.push(...pageIds)
+      if (!page.next_cursor) break
+      cursor=page.next_cursor
+    }
+    expect(seen).toHaveLength(ids.length)
+    expect([...seen].sort()).toEqual(ids)
+  }
+  const newest=await (await request('inbox-alone','v1/notifications?limit=2&direction=newer')).json() as {data:Array<{id:string}>}
+  expect(newest.data.map(row=>row.id)).toEqual(ids.slice(-2).reverse())
+})
+it('rejects malformed cursor UUIDs and read IDs without database errors', async () => {
+  const cursor=Buffer.from('2026-09-01T00:00:00Z|not-a-uuid').toString('base64url')
+  expect((await request('inbox-alone',`v1/notifications?cursor=${cursor}`)).status).toBe(400)
+  for (const prefix of ['v1/notifications','notifications']) {
+    expect((await request('inbox-alone',`${prefix}/not-a-uuid/read`,'PATCH')).status).toBe(400)
+  }
+})
+
+it('preserves sub-millisecond database timestamps in page cursors', async () => {
+  await db.pool.query("DELETE FROM in_app_notifications WHERE recipient_user_id='inbox-alone'")
+  const ids: string[]=[]
+  for(let i=1;i<=3;i++) {
+    const id=randomUUID();ids.push(id)
+    await db.pool.query(`INSERT INTO in_app_notifications(id,recipient_user_id,type,title_i18n_key,body_i18n_key,created_at)
+      VALUES ($1,'inbox-alone','general','title','body',$2)`,[id,`2026-09-01T00:00:00.00000${i}Z`])
+  }
+  for(const direction of ['newer','older']) {
+    let cursor=encodeCursor(direction==='newer'?'2026-08-31T00:00:00Z':'2026-09-02T00:00:00Z',randomUUID())
+    const seen: string[]=[]
+    for(let n=0;n<5;n++) {
+      const page=await (await request('inbox-alone',`v1/notifications?limit=1&direction=${direction}&cursor=${cursor}`)).json() as {data:Array<{id:string}>,next_cursor:string|null}
+      seen.push(...page.data.map(row=>row.id))
+      if(!page.next_cursor)break
+      cursor=page.next_cursor
+    }
+    expect(seen).toEqual(direction==='newer'?ids:[...ids].reverse())
+  }
 })

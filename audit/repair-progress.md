@@ -328,3 +328,9 @@ Review/validation: all 308 worker checks pass, including active bilingual templa
 Manual CRM verification accepts pending submissions and returns re-verification requests to PENDING_VERIFICATION. It locks the non-archived profile before checking status/owner, then commits the status, audit and bilingual private notice together. Concurrent approvals produce one transition; notice failure rolls back the transaction. Reasons are required for revocation/re-verification. User confirmed there is no identity provider, so automated verification remains unavailable.
 
 Review/validation: 36 focused CRM/inbox checks pass, including production-schema concurrency, rollback, archived/invalid states and owner changes; API typecheck passes. Existing DRAFT manual approval compatibility is preserved. Provider integration and historical verification provenance remain unresolved external work.
+
+### F11.6 Complete inbox pagination
+
+Newer-page queries fetch the nearest arrivals before reversing each page for display, so intermediate pages are no longer skipped. Cursors retain PostgreSQL microseconds instead of rounding through JavaScript dates. Invalid cursor UUIDs and read IDs return 400 through both inbox APIs.
+
+Review/validation: 18 notification-center checks pass, including full HTTP traversal in both directions, equal timestamps, sub-millisecond timestamps, default newest page and malformed inputs; API typecheck passes. No notification rows or read history are changed by this repair.
