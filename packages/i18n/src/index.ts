@@ -89,6 +89,13 @@ export const fa: I18nDictionary = {
   'admin.teams.saveTeam': 'ذخیره تیم',
   'admin.teams.saveRules': 'ذخیره قوانین تخصیص',
   'admin.teams.rules': 'تخصیص خودکار کار جدید',
+  'admin.teams.fallbackHelp':
+    'تیم‌ها به ترتیب اولویت بررسی می‌شوند. اگر هیچ تیمی واجد شرایط نباشد، کار برای تخصیص دستی باقی می‌ماند.',
+  'admin.teams.priority': 'اولویت',
+  'admin.teams.addFallback': 'افزودن تیم جایگزین',
+  'admin.teams.removeFallback': 'حذف اولویت',
+  'admin.teams.moveUp': 'افزایش اولویت',
+  'admin.teams.moveDown': 'کاهش اولویت',
   'admin.teams.expertiseHelp':
     'مهارت بر اساس برچسب تیم است و فرد واجد شرایط با کمترین کار باز انتخاب می‌شود. برچسب ticket یا verification_case کل نوع کار را پوشش می‌دهد؛ برچسب‌های جزئی support، order، invoice، identity، individual و legal هستند. نبود تیم یا عضو واجد شرایط به تخصیص دستی منجر می‌شود.',
   'admin.teams.ticket': 'تیکت‌ها',
@@ -1550,6 +1557,13 @@ export const en: I18nDictionary = {
   'admin.teams.saveTeam': 'Save team',
   'admin.teams.saveRules': 'Save assignment rules',
   'admin.teams.rules': 'Automatic assignment of new work',
+  'admin.teams.fallbackHelp':
+    'Teams are tried in priority order. If none can accept the work, it remains for manual assignment.',
+  'admin.teams.priority': 'Priority',
+  'admin.teams.addFallback': 'Add fallback team',
+  'admin.teams.removeFallback': 'Remove priority',
+  'admin.teams.moveUp': 'Move up',
+  'admin.teams.moveDown': 'Move down',
   'admin.teams.expertiseHelp':
     'Expertise matches team tags, then picks the eligible member with the least open work. Use ticket or verification_case for a whole work type; narrower tags are support, order, invoice, identity, individual and legal. No available team or eligible member means manual assignment.',
   'admin.teams.ticket': 'Tickets',

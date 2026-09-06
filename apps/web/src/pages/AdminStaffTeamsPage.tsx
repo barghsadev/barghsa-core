@@ -1,3 +1,4 @@
+import { AssignmentFallbackEditor } from '../components/AssignmentFallbackEditor.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import { Button, Input, Label } from '@barghsa/ui';
@@ -52,6 +53,13 @@ export default function AdminStaffTeamsPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const generation = useRef(0),
     formHeading = useRef<HTMLHeadingElement>(null);
+  const updateRule = (
+    type: keyof StaffAssignmentRules,
+    rule: StaffAssignmentRules[keyof StaffAssignmentRules]
+  ) => {
+    setSaved(false);
+    setRules((current) => ({ ...current, [type]: rule }));
+  };
   const load = useCallback(async () => {
     const current = ++generation.current;
     setLoading(true);
@@ -349,7 +357,17 @@ export default function AdminStaffTeamsPage() {
                 title: label('saveRules'),
                 description: STAFF_ASSIGNMENT_WORK_TYPES.map(
                   (type) =>
-                    `${label(type)}: ${teams.find((team) => team.id === rules[type].teamId)?.name ?? label('manual')} · ${label(rules[type].strategy)}`
+                    `${label(type)}: ${
+                      rules[type].teamId
+                        ? [rules[type], ...(rules[type].fallbacks ?? [])]
+                            .map(
+                              (choice) =>
+                                `${teams.find((team) => team.id === choice.teamId)?.name ?? label('unavailable')} · ${label(choice.strategy)}`
+                            )
+                            .concat(label('manual'))
+                            .join(' → ')
+                        : label('manual')
+                    }`
                 ).join('; '),
                 path: '/api/admin/config/assignment-rules',
                 method: 'PUT',
@@ -371,17 +389,25 @@ export default function AdminStaffTeamsPage() {
                       className="block rounded border p-2"
                       value={rules[type].teamId ?? ''}
                       onChange={(event) =>
-                        setRules({
-                          ...rules,
-                          [type]: { ...rules[type], teamId: event.target.value || null },
-                        })
+                        updateRule(
+                          type,
+                          event.target.value
+                            ? { ...rules[type], teamId: event.target.value }
+                            : { teamId: null, strategy: rules[type].strategy }
+                        )
                       }
                     >
                       <option value="">{label('manual')}</option>
                       {teams
                         .filter((team) => team.isActive)
                         .map((team) => (
-                          <option key={team.id} value={team.id}>
+                          <option
+                            key={team.id}
+                            value={team.id}
+                            disabled={rules[type].fallbacks?.some(
+                              (choice) => choice.teamId === team.id
+                            )}
+                          >
                             {team.name}
                           </option>
                         ))}
@@ -399,12 +425,9 @@ export default function AdminStaffTeamsPage() {
                       disabled={!rules[type].teamId}
                       value={rules[type].strategy}
                       onChange={(event) =>
-                        setRules({
-                          ...rules,
-                          [type]: {
-                            ...rules[type],
-                            strategy: event.target.value as StaffAssignmentStrategy,
-                          },
+                        updateRule(type, {
+                          ...rules[type],
+                          strategy: event.target.value as StaffAssignmentStrategy,
                         })
                       }
                     >
@@ -415,6 +438,13 @@ export default function AdminStaffTeamsPage() {
                       ))}
                     </select>
                   </div>
+                  <AssignmentFallbackEditor
+                    workType={type}
+                    rule={rules[type]}
+                    teams={teams}
+                    label={label}
+                    onChange={(rule) => updateRule(type, rule)}
+                  />
                 </fieldset>
               ))}
               <Button type="submit">{label('saveRules')}</Button>
