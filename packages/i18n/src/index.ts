@@ -5,6 +5,19 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.kb.pickerHelp':
+    'از بارگذاری‌های تکمیل‌شده خود انتخاب کنید. ۱۰۰ نتیجه جدیدتر نمایش داده می‌شود.',
+  'admin.kb.searchFiles': 'نام فایل',
+  'admin.kb.search': 'جستجوی فایل',
+  'admin.kb.loadingFiles': 'در حال دریافت فایل‌ها…',
+  'admin.kb.fileError': 'دریافت فایل‌ها انجام نشد. دوباره جستجو کنید.',
+  'admin.kb.selectFile': 'انتخاب سند',
+  'admin.kb.attach': 'پیوست سند',
+  'admin.kb.noFiles': 'بارگذاری تکمیل‌شده و پیوست‌نشده‌ای برای این جستجو یافت نشد.',
+  'admin.kb.confirmAttach': 'این سند به پایگاه دانش پیوست شود؟',
+  'admin.kb.detach': 'حذف پیوند سند',
+  'admin.kb.confirmDetach': 'پیوند این سند حذف شود؟ فایل حفظ می‌شود.',
+
   'admin.kb.title': 'پایگاه‌های دانش',
   'admin.kb.knowledge-bases': 'پایگاه‌های دانش',
   'admin.kb.kb-groups': 'گروه‌های پایگاه دانش',
@@ -1927,6 +1940,18 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.kb.pickerHelp': 'Choose from your completed uploads. The newest 100 matches are shown.',
+  'admin.kb.searchFiles': 'File name',
+  'admin.kb.search': 'Search files',
+  'admin.kb.loadingFiles': 'Loading uploads…',
+  'admin.kb.fileError': 'Uploads could not be loaded. Search again to retry.',
+  'admin.kb.selectFile': 'Choose a document',
+  'admin.kb.attach': 'Attach document',
+  'admin.kb.noFiles': 'No unattached completed uploads match this search.',
+  'admin.kb.confirmAttach': 'Attach this document to the knowledge base?',
+  'admin.kb.detach': 'Detach document',
+  'admin.kb.confirmDetach': 'Remove this document link? The file is retained.',
+
   'admin.kb.title': 'Knowledge bases',
   'admin.kb.knowledge-bases': 'Knowledge bases',
   'admin.kb.kb-groups': 'Knowledge-base groups',

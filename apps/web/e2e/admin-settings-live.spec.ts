@@ -1072,6 +1072,50 @@ for (const locale of ['en', 'fa'])
     const kb = kbs.find((item) => item.title === renamed)!;
     expect(kb.description).toBe('Meter guidance');
     await page
+      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${renamed}`, exact: true })
+      .click();
+    await page
+      .getByLabel(fa ? 'انتخاب سند' : 'Choose a document', { exact: true })
+      .selectOption('uploads/document/kb-ui.pdf');
+    await page
+      .getByRole('button', { name: fa ? 'پیوست سند' : 'Attach document', exact: true })
+      .click();
+    await confirm();
+    await expect(page.getByText('Knowledge guide.pdf', { exact: true })).toBeVisible();
+    const withDocument = await (
+      await page.request.get(`${http.base}/api/admin/knowledge-bases/${kb.id}`, { headers })
+    ).json();
+    expect(withDocument.documents).toEqual([
+      expect.objectContaining({
+        storageKey: 'uploads/document/kb-ui.pdf',
+        processingStatus: 'pending',
+      }),
+    ]);
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'حذف پیوند سند' : 'Detach document'} Knowledge guide.pdf`,
+        exact: true,
+      })
+      .click();
+    await confirm();
+    expect(
+      (
+        await (
+          await page.request.get(`${http.base}/api/admin/knowledge-bases/${kb.id}`, { headers })
+        ).json()
+      ).documents
+    ).toEqual([]);
+    const candidates = await (
+      await page.request.get(`${http.base}/api/admin/knowledge-bases/documents/available`, {
+        headers,
+      })
+    ).json();
+    expect(candidates).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ storageKey: 'uploads/document/kb-ui.pdf' }),
+      ])
+    );
+    await page
       .getByRole('button', {
         name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups',
         exact: true,

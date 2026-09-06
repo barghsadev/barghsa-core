@@ -12,6 +12,7 @@ import {
   Post,
   Put,
   Req,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -122,6 +123,19 @@ export class KnowledgeBasesController {
   async list(@Req() req: AuthenticatedRequest): Promise<KbDto[]> {
     this.assertKbPermission(req);
     return this.service.listKbs();
+  }
+
+  @Get('documents/available')
+  @ApiOperation({
+    summary: 'List my completed uploads for knowledge-base attachment',
+    description:
+      'Returns up to 100 newest owned uploads matching the optional file-name search. Incomplete and deletion-pending uploads are excluded.',
+  })
+  async availableDocuments(@Req() req: AuthenticatedRequest, @Query('search') raw: unknown) {
+    this.assertKbPermission(req);
+    const parsed = z.string().trim().max(200).optional().safeParse(raw);
+    if (!parsed.success) httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document search');
+    return this.service.availableDocuments(req.session.userId, parsed.data ?? '');
   }
 
   @Get(':id')

@@ -365,6 +365,36 @@ export class KnowledgeBasesService {
 
   // ─── Knowledge base documents ────────────────────────────────────────────
 
+  async availableDocuments(
+    actorUserId: string,
+    search: string
+  ): Promise<
+    Array<{
+      storageKey: string;
+      fileName: string;
+      mimeType: string | null;
+      sizeBytes: number | null;
+    }>
+  > {
+    const result = await getDbPool().query<StorageRecordRow>(
+      `SELECT storage_key, file_name, content_type, file_size, status, metadata
+       FROM storage_records
+       WHERE status IN ('active', 'immutable')
+         AND metadata->>'uploadedBy' = $1
+         AND COALESCE(metadata->>'provisionalUpload', 'false') <> 'true'
+         AND COALESCE(metadata->>'deletionRequested', 'false') <> 'true'
+         AND COALESCE(file_name, '') ILIKE $2
+       ORDER BY created_at DESC, storage_key LIMIT 100`,
+      [actorUserId, `%${search}%`]
+    );
+    return result.rows.map((row) => ({
+      storageKey: row.storage_key,
+      fileName: row.file_name ?? row.storage_key,
+      mimeType: row.content_type,
+      sizeBytes: row.file_size === null ? null : Number(row.file_size),
+    }));
+  }
+
   /**
    * Attach a document (by storage key) to a KB.
    *

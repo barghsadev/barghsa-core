@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Button, Input, Label } from '@barghsa/ui';
+import { KnowledgeBaseDocumentPicker } from '../components/KnowledgeBaseDocumentPicker.js';
 import { t } from '@barghsa/i18n';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -12,7 +13,7 @@ interface Entry {
 }
 interface Detail extends Entry {
   members?: { id: string; title: string }[];
-  documents?: { id: string; fileName: string; processingStatus: string }[];
+  documents?: { id: string; fileName: string; storageKey: string; processingStatus: string }[];
 }
 type Kind = 'knowledge-bases' | 'kb-groups';
 export default function AdminKnowledgeBasesPage() {
@@ -293,11 +294,41 @@ export default function AdminKnowledgeBasesPage() {
               ) : (
                 <>
                   <h3 className="font-semibold">{label('documents')}</h3>
+                  <KnowledgeBaseDocumentPicker
+                    key={`${detail.id}:${revision}`}
+                    attachedKeys={detail.documents?.map((doc) => doc.storageKey) ?? []}
+                    onAttach={(key) =>
+                      propose(
+                        `/api/admin/knowledge-bases/${detail.id}/documents`,
+                        'POST',
+                        label('attach'),
+                        label('confirmAttach'),
+                        { storageKey: key }
+                      )
+                    }
+                  />
+
                   {!detail.documents?.length && <p>{label('noDocuments')}</p>}
                   <ul className="divide-y">
                     {detail.documents?.map((doc) => (
                       <li key={doc.id} className="flex flex-col gap-1 py-3">
                         <span className="break-words">{doc.fileName}</span>
+                        <div>
+                          <Button
+                            variant="outline"
+                            aria-label={`${label('detach')} ${doc.fileName}`}
+                            onClick={() =>
+                              propose(
+                                `/api/admin/knowledge-bases/${detail.id}/documents/${doc.id}`,
+                                'DELETE',
+                                label('detach'),
+                                label('confirmDetach')
+                              )
+                            }
+                          >
+                            {label('detach')}
+                          </Button>
+                        </div>
                         <span>
                           {label(
                             ['pending', 'processing', 'ready', 'failed'].includes(

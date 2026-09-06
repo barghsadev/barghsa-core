@@ -79,6 +79,7 @@ for (const locale of ['en', 'fa'])
       memberCount: 0,
     };
     let linked = false;
+    let attached = true;
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/admin/**', (route) => {
       const path = new URL(route.request().url()).pathname;
@@ -91,6 +92,21 @@ for (const locale of ['en', 'fa'])
         linked = false;
         return route.fulfill({ status: 204 });
       }
+      if (path.endsWith('/documents/available'))
+        return route.fulfill({
+          json: [{ storageKey: 'uploads/document/guide.pdf', fileName: 'Guide.pdf' }],
+        });
+      if (path.endsWith('/documents') && route.request().method() === 'POST') {
+        expect(route.request().postDataJSON()).toEqual({
+          storageKey: 'uploads/document/guide.pdf',
+        });
+        attached = true;
+        return route.fulfill({ json: {} });
+      }
+      if (path.endsWith('/documents/doc') && route.request().method() === 'DELETE') {
+        attached = false;
+        return route.fulfill({ status: 204 });
+      }
       if (path.endsWith('/knowledge-bases')) return route.fulfill({ json: [kb] });
       if (path.endsWith('/kb-groups'))
         return route.fulfill({ json: [{ ...group, memberCount: linked ? 1 : 0 }] });
@@ -98,7 +114,16 @@ for (const locale of ['en', 'fa'])
         return route.fulfill({
           json: {
             ...kb,
-            documents: [{ id: 'doc', fileName: 'Guide.pdf', processingStatus: 'pending' }],
+            documents: attached
+              ? [
+                  {
+                    id: 'doc',
+                    storageKey: 'uploads/document/guide.pdf',
+                    fileName: 'Guide.pdf',
+                    processingStatus: 'pending',
+                  },
+                ]
+              : [],
             groups: [],
           },
         });
@@ -114,6 +139,29 @@ for (const locale of ['en', 'fa'])
     await expect(
       page.getByText(fa ? 'در انتظار پردازش' : 'Awaiting processing', { exact: true })
     ).toBeVisible();
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'حذف پیوند سند' : 'Detach document'} Guide.pdf`,
+        exact: true,
+      })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page
+      .getByLabel(fa ? 'انتخاب سند' : 'Choose a document', { exact: true })
+      .selectOption('uploads/document/guide.pdf');
+    await page
+      .getByRole('button', { name: fa ? 'پیوست سند' : 'Attach document', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByText('Guide.pdf', { exact: true })).toBeVisible();
     await page
       .getByRole('button', {
         name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups',

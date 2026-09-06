@@ -432,3 +432,45 @@ it('rejects malformed link payloads without writing links or audit entries', asy
     (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
   ).toHaveLength(0);
 });
+
+it('lists only completed owned documents and filters by file name', async () => {
+  const base = await prepareLink('attach');
+  await http.pool.query(
+    "UPDATE storage_records SET file_name='Meter guide.pdf' WHERE storage_key=$1",
+    [base.key]
+  );
+  for (const [suffix, status, metadata] of [
+    ['foreign', 'active', { uploadedBy: 'other' }],
+    ['pending', 'active', { uploadedBy: 'kb-admin', provisionalUpload: true }],
+    ['deleting', 'active', { uploadedBy: 'kb-admin', deletionRequested: 'true' }],
+    ['removed', 'removed', { uploadedBy: 'kb-admin' }],
+  ] as const) {
+    await http.pool.query(
+      'INSERT INTO storage_records(storage_key,status,file_name,metadata) VALUES ($1,$2,$3,$4)',
+      [`kb-test/${suffix}`, status, 'Meter guide.pdf', JSON.stringify(metadata)]
+    );
+  }
+  const response = await fetch(
+    `${http.base}/api/admin/knowledge-bases/documents/available?search=Meter`,
+    { headers }
+  );
+  expect(response.status).toBe(200);
+  expect(await response.json()).toEqual([
+    expect.objectContaining({ storageKey: base.key, fileName: 'Meter guide.pdf' }),
+  ]);
+  expect(
+    await (
+      await fetch(`${http.base}/api/admin/knowledge-bases/documents/available?search=unmatched`, {
+        headers,
+      })
+    ).json()
+  ).toEqual([]);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/admin/knowledge-bases/documents/available?search=${'x'.repeat(201)}`,
+        { headers }
+      )
+    ).status
+  ).toBe(400);
+});
