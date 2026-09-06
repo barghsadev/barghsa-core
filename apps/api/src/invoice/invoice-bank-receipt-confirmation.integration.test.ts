@@ -19,11 +19,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture';
 import {
   BANK_RECEIPT_OVERPAYMENT_ERRORS,
   INVOICE_BANK_RECEIPT_CONFIRMED_EVENT,
@@ -49,39 +46,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-const BANK_RECEIPTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0078_create_bank_receipts.sql'
-);
-const APPROVAL_REQUESTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0036_create_approval_requests.sql'
-);
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
 const ACTOR_USER_ID = 'staff-invoice-bank-receipt-confirm';
@@ -96,12 +60,12 @@ function receiptKey(suffix: string): string {
 }
 
 describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.03)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let walletService: WalletService;
   let service: InvoiceBankReceiptConfirmationService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 8);
     poolHolder.pool = ctx.pool;
     walletService = new WalletService();
     service = new InvoiceBankReceiptConfirmationService(
@@ -110,51 +74,26 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
       new InvoiceStateMachineService(new InvoiceAuditRepository())
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (user_id TEXT PRIMARY KEY)`);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TYPE invoice_state AS ENUM (
-        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(BANK_RECEIPTS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(APPROVAL_REQUESTS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS app_config (
-        key TEXT PRIMARY KEY,
-        value JSONB NOT NULL,
-        version INTEGER NOT NULL DEFAULT 1,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `);
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [PROFILE_A, PROFILE_B]);
+    await ctx.pool.query(
+      `INSERT INTO users (user_id, username, password_hash)
+      VALUES ($1, 'staff@example.test', 'test-only'),
+      ('receipt-customer', 'customer@example.test', 'test-only')`,
+      [ACTOR_USER_ID]
+    );
+    await ctx.pool.query(
+      `INSERT INTO profiles (id, user_id)
+      VALUES ($1, 'receipt-customer'), ($2, 'receipt-customer')`,
+      [PROFILE_A, PROFILE_B]
+    );
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
       PROFILE_B,
     ]);
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID]);
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   async function insertInvoice(opts: {

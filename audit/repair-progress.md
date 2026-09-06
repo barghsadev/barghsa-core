@@ -1075,3 +1075,7 @@ Review and validation: all eight callback tests pass with the full migration cha
 ### Bank receipt wallet settlement on production migrations (F02/F14)
 
 Converted the wallet bank-receipt confirmation suite to the full production database and real required user fields. Review retained all 15 cases for confirmation/rejection, replay, wallet excess, partial/exact/overdue invoice settlement, concurrent allocations, customer notice amounts, and audit-failure rollback. All 15 pass, along with root type checking and lint. This verifies trusted service transactions; HTTP staff authority remains a separate review item.
+
+### Invoice receipt confirmation and rejection on production migrations (F02/F14)
+
+Converted both invoice receipt settlement suites to fully migrated databases with separate customer and audit-actor users. Review preserved allocation/excess arithmetic, replay, concurrent receipt settlement, notification rollback, and confirmation-versus-rejection conflicts. All 15 tests passed across the two suites; root type checking and lint passed. No service behavior changed in this step. HTTP staff permissions and other invoice fixtures remain separate work.
