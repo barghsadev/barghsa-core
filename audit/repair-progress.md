@@ -1411,3 +1411,9 @@ Review and validation: all 83 gift-code service/controller/production-migrated H
 Switching a public gift code to profile-restricted now requires explicit profile selections. Edits to an already-restricted code validate and preserve its stored selections when omitted. Public codes clear profile scopes, including when clients submit leftover IDs. Activation rejects a legacy restricted code with no selected profiles.
 
 Review and validation: all 86 gift-code service/controller/production-migrated HTTP checks pass. Added real HTTP cases for missing selections, deduplication, preservation during amount edits, switching back to public, public creation with leftover IDs and blocked activation of an empty legacy scope. Root types, lint and whitespace checks pass. This does not rewrite production legacy records; existing empty scopes need profile selection before activation. The gift-code editor remains open.
+
+### Add restricted profile choices for gift-code eligibility (F17)
+
+Added a promotions-permission profile search returning only ID, display name, profile type and archive status. Search excludes archived profiles and returns at most 50 choices; selected-ID lookup resolves up to 200 records per request, including archived selections. Search and ID inputs are bounded and validated.
+
+Review and validation: all 34 gift-code production-migrated HTTP checks pass. The new case verifies current-name search, archived-selection resolution, exact response fields and invalid-query rejection. API build, root types/lint and whitespace checks pass. OpenAPI review caught optional parameters being advertised as required; corrected their declarations and regenerated the contract. No national IDs, phone numbers or credentials are returned. The selection component and editor follow.

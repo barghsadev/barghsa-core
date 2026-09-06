@@ -279,3 +279,44 @@ it('requires repairing a legacy empty restricted scope before activation', async
     (await http.pool.query('SELECT status FROM gift_codes WHERE id=$1', [giftId])).rows[0].status
   ).toBe('inactive');
 });
+
+it('searches only current profile names and resolves selected archived profiles without personal identifiers', async () => {
+  const current = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,first_name,last_name) VALUES ('gift-admin','INDIVIDUAL','VERIFIED','Unique recipient','One') RETURNING id"
+    )
+  ).rows[0].id;
+  const archived = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status,title,archived) VALUES ('gift-admin','LEGAL','VERIFIED','Unique recipient company',true) RETURNING id"
+    )
+  ).rows[0].id;
+  const search = await fetch(
+    `${http.base}/api/admin/promotions/gift-codes/profiles?search=Unique%20recipient`,
+    { headers }
+  );
+  expect(search.status).toBe(200);
+  expect(await search.json()).toEqual([
+    { id: current, title: 'Unique recipient One', profileType: 'INDIVIDUAL', archived: false },
+  ]);
+  const selected = await fetch(
+    `${http.base}/api/admin/promotions/gift-codes/profiles?ids=${archived}`,
+    { headers }
+  );
+  expect(selected.status).toBe(200);
+  expect(await selected.json()).toEqual([
+    { id: archived, title: 'Unique recipient company', profileType: 'LEGAL', archived: true },
+  ]);
+  expect(
+    (await fetch(`${http.base}/api/admin/promotions/gift-codes/profiles?ids=invalid`, { headers }))
+      .status
+  ).toBe(400);
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/admin/promotions/gift-codes/profiles?search=${'a'.repeat(101)}`,
+        { headers }
+      )
+    ).status
+  ).toBe(400);
+});

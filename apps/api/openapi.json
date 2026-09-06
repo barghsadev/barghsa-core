@@ -5547,6 +5547,45 @@
         ]
       }
     },
+    "/api/admin/promotions/gift-codes/profiles": {
+      "get": {
+        "operationId": "GiftCodeController_profileOptions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "required": false,
+            "schema": {
+              "maxLength": 7400,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Search profile choices for gift-code eligibility",
+        "tags": [
+          "Admin · Gift Codes"
+        ]
+      }
+    },
     "/api/admin/promotions/gift-codes/{id}": {
       "patch": {
         "description": "Only provided fields change. Changing the code re-normalizes and re-checks case-insensitive uniqueness. For profile-restricted codes, profileIds is REPLACED when provided; switching eligibility to public clears scopes.",

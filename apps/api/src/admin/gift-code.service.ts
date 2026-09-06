@@ -221,6 +221,28 @@ export class GiftCodeService {
     return this.attachProfileIds(pool, result.rows);
   }
 
+  async profileOptions(
+    search: string,
+    ids?: string[]
+  ): Promise<Array<{ id: string; title: string; profileType: string; archived: boolean }>> {
+    const result = await getDbPool().query<{
+      id: string;
+      title: string;
+      profileType: string;
+      archived: boolean;
+    }>(
+      `SELECT id, COALESCE(NULLIF(title, ''), NULLIF(concat_ws(' ', first_name, last_name), ''), '') AS title,
+              profile_type AS "profileType", archived
+       FROM profiles
+       WHERE ($1::uuid[] IS NOT NULL AND id = ANY($1::uuid[]))
+          OR ($1::uuid[] IS NULL AND NOT archived
+              AND strpos(lower(concat_ws(' ', title, first_name, last_name)), lower($2)) > 0)
+       ORDER BY created_at DESC, id LIMIT $3`,
+      [ids ?? null, search, ids ? 200 : 50]
+    );
+    return result.rows;
+  }
+
   /** Full usage statistics for one code, for the admin stats view. */
   async stats(id: string): Promise<{
     code: GiftCodeDto;

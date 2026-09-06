@@ -13,7 +13,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -239,6 +239,32 @@ export class GiftCodeController {
     this.assertPromotionsPermission(req);
     const filters = assertListFilters({ search, status, discountType });
     return this.service.list(filters);
+  }
+
+  @Get('profiles')
+  @ApiOperation({ summary: 'Search profile choices for gift-code eligibility' })
+  @ApiQuery({ name: 'search', required: false, schema: { type: 'string', maxLength: 100 } })
+  @ApiQuery({ name: 'ids', required: false, schema: { type: 'string', maxLength: 7400 } })
+  async profileOptions(
+    @Req() req: AuthenticatedRequest,
+    @Query('search') search?: string,
+    @Query('ids') ids?: string
+  ) {
+    this.assertPromotionsPermission(req);
+    const parsed = z
+      .object({
+        search: z.string().trim().max(100).default(''),
+        ids: z
+          .string()
+          .max(7400)
+          .transform((value) => value.split(','))
+          .pipe(z.array(profileIdSchema).min(1).max(200))
+          .optional(),
+      })
+      .safeParse({ search, ids });
+    if (!parsed.success)
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid profile search', 400);
+    return this.service.profileOptions(parsed.data.search, parsed.data.ids);
   }
 
   @Get(':id/stats')
