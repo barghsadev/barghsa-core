@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -93,7 +94,7 @@ interface UploadPolicyRow {
   id: string;
   category: string;
   allowed_extensions: string[];
-  max_size_bytes: number;
+  max_size_bytes: number | string;
   effective_from: string;
   effective_until: string | null;
   created_by: string;
@@ -241,12 +242,12 @@ export class UploadPolicyService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const open = await this.findOpenPolicy(q, input.category);
       if (open !== null) {
         const openFrom = new Date(open.effective_from);
         if (
-          open.max_size_bytes === input.maxSizeBytes &&
+          Number(open.max_size_bytes) === input.maxSizeBytes &&
           open.allowed_extensions.length === extensions.length &&
           open.allowed_extensions.every((ext, idx) => ext === extensions[idx])
         ) {
@@ -360,7 +361,7 @@ export class UploadPolicyService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const current = await this.findPolicyById(q, input.id);
       if (!current) throw this.policyNotFound(input.id);
 
@@ -418,7 +419,7 @@ export class UploadPolicyService {
       id: row.id,
       category: row.category as UploadPolicyCategory,
       allowedExtensions: row.allowed_extensions,
-      maxSizeBytes: row.max_size_bytes,
+      maxSizeBytes: Number(row.max_size_bytes),
       effectiveFrom: row.effective_from,
       effectiveUntil: row.effective_until ?? null,
       createdBy: row.created_by,
@@ -434,7 +435,7 @@ export class UploadPolicyService {
          FROM upload_policies
         WHERE category = $1 AND effective_until IS NULL
         ORDER BY effective_from DESC
-        LIMIT 1`,
+        LIMIT 1 FOR UPDATE`,
       [category]
     );
     return result.rows[0] ?? null;
@@ -444,7 +445,7 @@ export class UploadPolicyService {
     const result = await q.query<UploadPolicyRow>(
       `SELECT id, category, allowed_extensions, max_size_bytes, effective_from, effective_until, created_by, created_at, updated_at
          FROM upload_policies
-        WHERE id = $1`,
+        WHERE id = $1 FOR UPDATE`,
       [id]
     );
     return result.rows[0] ?? null;
@@ -502,11 +503,15 @@ export class UploadPolicyService {
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:uploads:edit');
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;

@@ -7074,6 +7074,44 @@
         ]
       }
     },
+    "/api/admin/upload-policies/access": {
+      "get": {
+        "operationId": "UploadPolicyController_access",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Admin · Upload Policies"
+        ]
+      }
+    },
+    "/api/admin/upload-policies/limits": {
+      "get": {
+        "operationId": "UploadPolicyController_limits",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Admin · Upload Policies"
+        ]
+      }
+    },
     "/api/admin/upload-policies/{id}/end": {
       "post": {
         "description": "Soft-closes a policy window (effectiveUntil, exclusive). Policies are never hard-deleted — ending is the archival path, and ending an already-ended policy is a no-op.",

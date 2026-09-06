@@ -23,6 +23,10 @@ import {
 } from '@barghsa/shared/admin';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import {
+  getDeploymentAllowedExtensions,
+  getDeploymentMaxSizeBytes,
+} from '../upload/upload.config.js';
 import { UploadPolicyService } from './upload-policy.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
@@ -34,30 +38,34 @@ const effectiveDateSchema = z
   .or(z.string().datetime({ local: true }))
   .optional();
 
-export const CreateUploadPolicySchema = z.object({
-  category: categorySchema,
-  allowedExtensions: z
-    .array(z.string())
-    .min(1, 'At least one extension is required')
-    .max(MAX_UPLOAD_POLICY_EXTENSIONS, `At most ${MAX_UPLOAD_POLICY_EXTENSIONS} extensions`)
-    .refine(
-      (exts) => exts.every((ext) => /^\.[a-z0-9]{1,10}$/.test(ext.trim().toLowerCase())),
-      'Extensions must be lowercase .ext tokens, e.g. ".pdf"'
-    ),
-  maxSizeBytes: z
-    .number()
-    .int('maxSizeBytes must be an integer')
-    .min(1, 'maxSizeBytes must be at least 1 byte')
-    .max(
-      GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
-      `maxSizeBytes cannot exceed the ${GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES}-byte global deployment cap`
-    ),
-  effectiveFrom: effectiveDateSchema,
-});
+export const CreateUploadPolicySchema = z
+  .object({
+    category: categorySchema,
+    allowedExtensions: z
+      .array(z.string())
+      .min(1, 'At least one extension is required')
+      .max(MAX_UPLOAD_POLICY_EXTENSIONS, `At most ${MAX_UPLOAD_POLICY_EXTENSIONS} extensions`)
+      .refine(
+        (exts) => exts.every((ext) => /^\.[a-z0-9]{1,10}$/.test(ext.trim().toLowerCase())),
+        'Extensions must be lowercase .ext tokens, e.g. ".pdf"'
+      ),
+    maxSizeBytes: z
+      .number()
+      .int('maxSizeBytes must be an integer')
+      .min(1, 'maxSizeBytes must be at least 1 byte')
+      .max(
+        GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
+        `maxSizeBytes cannot exceed the ${GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES}-byte global deployment cap`
+      ),
+    effectiveFrom: effectiveDateSchema,
+  })
+  .strict();
 
-export const EndUploadPolicySchema = z.object({
-  effectiveUntil: effectiveDateSchema,
-});
+export const EndUploadPolicySchema = z
+  .object({
+    effectiveUntil: effectiveDateSchema,
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -120,6 +128,23 @@ function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message:
 @Controller('api/admin/upload-policies')
 export class UploadPolicyController {
   constructor(private readonly service: UploadPolicyService) {}
+
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return { canEdit: hasStaffPermission(req, 'admin:uploads:edit') };
+  }
+  @Get('limits')
+  limits(@Req() req: AuthenticatedRequest) {
+    this.assertUploadsPermission(req);
+    return UPLOAD_POLICY_CATEGORIES.map((category) => ({
+      category,
+      allowedExtensions: getDeploymentAllowedExtensions(category),
+      maxSizeBytes: Math.min(
+        getDeploymentMaxSizeBytes(category),
+        GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES
+      ),
+    }));
+  }
 
   /** Single enforcement point for the `admin:uploads:edit` capability. */
   private assertUploadsPermission(req: AuthenticatedRequest): void {
