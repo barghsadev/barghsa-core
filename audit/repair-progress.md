@@ -452,3 +452,11 @@ Cross-step check before this evidence addition: the full API suite passed 2,496 
 Added the correction queue, profile-specific request link, evidence upload and independent review screen. Creation captures the profile, field, value, reason and uploaded keys before step-up; reviewing exposes original/new values and fixed evidence downloads. Self-review controls are hidden, rejection requires notes, and approval is disabled when sealed evidence is unavailable. Queue responses include the current viewer capabilities. Shared upload sequencing retains the invoice-receipt purpose and adds a distinct correction-evidence purpose.
 
 Review/validation: three Chromium scenarios pass in fa/en, including one upload across a password retry and blocked legacy approval. Thirteen case API checks, four invoice-upload client regression checks and all 11 workspace typechecks pass; production web build passes. CRM still has cross-cutting acceptance work, including all identity-edit/deletion races and notification completion. F16 ticket workflows are next.
+
+### F16.1 — Ticket assignment eligibility and concurrent status preservation
+
+- Assignment now requires an existing, enabled, activated account with current ticket-write permission or administrator access. Invalid targets leave the ticket unchanged.
+- The assignment update evaluates the current locked row's status. It advances Open to In Progress and preserves every other status, including a resolution committed while assignment waits.
+- Assignment and its actor-bound audit commit together. Recording failure rolls back the assignment.
+- Review: 52 ticket checks passed, including four real HTTP/PostgreSQL scenarios for rejected targets, authorization, transition preservation under an actual database lock, and audit rollback. API typecheck and diff whitespace check passed.
+- Remaining F16 work includes the full transition/comment rules, attachments and related-record ownership, assigned-only/team access, and customer/staff screens. This checkpoint does not mark the ticket tasks acceptance-complete.

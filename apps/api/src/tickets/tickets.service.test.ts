@@ -449,39 +449,7 @@ describe('TicketsService', () => {
     })
   })
 
-  describe('staffAssignTicket', () => {
-    it('assigns a ticket and transitions open to in_progress', async () => {
-      // getTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'open' })] })
-      // update
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ assigned_to: 'staff-1', status: 'in_progress' })] })
-
-      const result = await service.staffAssignTicket('tkt-001', 'staff-1')
-
-      expect(result.assignedTo).toBe('staff-1')
-      expect(result.status).toBe('in_progress')
-    })
-
-    it('assigns a ticket without changing non-open status', async () => {
-      // getTicket check
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ status: 'resolved' })] })
-      // update
-      mockPool.query.mockResolvedValueOnce({ rows: [makeRow({ assigned_to: 'staff-1', status: 'resolved' })] })
-
-      const result = await service.staffAssignTicket('tkt-001', 'staff-1')
-
-      expect(result.assignedTo).toBe('staff-1')
-      expect(result.status).toBe('resolved')
-    })
-
-    it('throws 404 when ticket does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] })
-
-      await expect(
-        service.staffAssignTicket('tkt-999', 'staff-1'),
-      ).rejects.toThrow(/Ticket not found/)
-    })
-  })
+  // Assignment is covered through real HTTP and PostgreSQL in tickets-http.integration.test.ts.
 
   describe('staffUpdateTicketStatus', () => {
     it('updates status of any ticket', async () => {

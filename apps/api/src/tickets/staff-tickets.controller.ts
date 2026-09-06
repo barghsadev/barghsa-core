@@ -129,8 +129,8 @@ export class StaffTicketsController {
       )
     }
     // Default to self-assignment if no assigneeId provided
-    const assigneeId = body.assigneeId ?? req.session.userId
-    return this.ticketsService.staffAssignTicket(id, assigneeId)
+    const assigneeId = body?.assigneeId ?? req.session.userId
+    return this.ticketsService.staffAssignTicket(id, assigneeId, req.session.userId)
   }
 
   /**

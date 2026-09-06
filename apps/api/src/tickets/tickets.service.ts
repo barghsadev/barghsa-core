@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+import { resolveStaffPermissions } from '../session/staff-permissions.js'
 import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -487,34 +489,37 @@ export class TicketsService {
   async staffAssignTicket(
     ticketId: string,
     assigneeUserId: string,
+    actorId: string,
   ): Promise<TicketRow> {
-    const pool = getDbPool()
-
-    // Verify ticket exists
-    const ticketResult = await pool.query(
-      `SELECT * FROM tickets WHERE id = $1`,
-      [ticketId],
-    )
-    if (ticketResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Ticket not found' },
-        404,
-      )
+    if (typeof assigneeUserId !== 'string' || !assigneeUserId.trim() || assigneeUserId.length > 512) {
+      throw new HttpException('Invalid assignee', 400)
     }
-
-    // If ticket is still 'open', transition to 'in_progress' on assignment
-    const currentStatus = ticketResult.rows[0]!.status as string
-    const newStatus = currentStatus === 'open' ? 'in_progress' : currentStatus
-
-    const result = await pool.query(
-      `UPDATE tickets SET assigned_to = $1, status = $2, updated_at = NOW()
-       WHERE id = $3
-       RETURNING *`,
-      [assigneeUserId, newStatus, ticketId],
-    )
-
-    this.logger.log(`Ticket ${ticketId} assigned to staff ${assigneeUserId}`)
-    return mapRow(result.rows[0]!)
+    const client = await getDbPool().connect()
+    try {
+      await client.query('BEGIN')
+      // Lock the account before the ticket, matching staff account changes.
+      const account = (await client.query(`SELECT u.is_admin, u.disabled_at, u.activation_token,
+        ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
+          WHERE ur.user_id=u.user_id) AS role_permissions
+        FROM users u WHERE u.user_id=$1 FOR UPDATE OF u`, [assigneeUserId])).rows[0]
+      const permissions = resolveStaffPermissions(account?.role_permissions)
+      if (!account || account.disabled_at || account.activation_token ||
+          !(account.is_admin || permissions.includes('*') || permissions.includes('tickets:write'))) {
+        throw new HttpException('Assignee must be active staff with ticket access', 400)
+      }
+      const result = await client.query(`UPDATE tickets SET assigned_to=$1,
+        status=CASE WHEN status='open' THEN 'in_progress' ELSE status END, updated_at=NOW()
+        WHERE id=$2 RETURNING *`, [assigneeUserId, ticketId])
+      if (!result.rows[0]) throw new HttpException('Ticket not found', 404)
+      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata)
+        VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
+        [randomUUID(), actorId, JSON.stringify({ ticketId, assigneeUserId, status: result.rows[0].status })])
+      await client.query('COMMIT')
+      return mapRow(result.rows[0])
+    } catch (error) {
+      await client.query('ROLLBACK')
+      throw error
+    } finally { client.release() }
   }
 
   /**
