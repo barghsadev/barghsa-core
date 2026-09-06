@@ -1261,3 +1261,9 @@ Review and validation: 33 existing service/controller checks and 14 new producti
 Document attach/detach and membership add/remove now commit with current staff authority and their audit entries. Attachment locks the storage record and accepts only completed uploads owned by the editor, unless the editor also has admin:storage:edit. Removed, provisional and deletion-pending records cannot be attached. Detachment preserves the underlying file. Repeated attachments and memberships create no duplicate audit.
 
 Review and validation: 33 existing service/controller checks and all 32 production-migrated HTTP checks pass. Added coverage for four mutation audit rollbacks, four permission-revocation races, successful links, foreign uploads, concurrent storage removal, pending upload/deletion flags and duplicate requests. Root types, lint and whitespace checks pass. Review removed the obsolete unique-violation recovery query inside an aborted transaction and corrected a stale reference-race comment. Input validation and the KB editor remain open.
+
+### Validate knowledge-base and group API inputs (F17)
+
+All KB/group route IDs now require UUIDs, including nested document/member IDs. Metadata schemas trim titles, reject blank titles and unknown fields, and retain length limits. Membership payloads require a UUID; document keys reject whitespace-only input without rewriting valid storage keys.
+
+Review and validation: 46 production-migrated HTTP checks and 18 service checks pass. The controller recheck passes all 15 tests after replacing a legacy fake ID with a UUID. Invalid requests leave metadata, links and audits unchanged. Root types, lint and whitespace checks pass. The management editor and document-processing dependency remain open.

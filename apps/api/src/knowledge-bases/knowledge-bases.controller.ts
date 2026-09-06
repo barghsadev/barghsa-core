@@ -8,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Req,
@@ -29,40 +30,54 @@ import {
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const titleSchema = z.string().min(1, 'Title is required').max(120);
+const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
 
-export const CreateKnowledgeBaseSchema = z.object({
-  title: titleSchema,
-  description: descriptionSchema.optional(),
-});
+export const CreateKnowledgeBaseSchema = z
+  .object({
+    title: titleSchema,
+    description: descriptionSchema.optional(),
+  })
+  .strict();
 
 export const UpdateKnowledgeBaseSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
   })
+  .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AttachDocumentSchema = z.object({
-  storageKey: z.string().min(1, 'storageKey is required').max(500),
-});
+export const AttachDocumentSchema = z
+  .object({
+    storageKey: z
+      .string()
+      .min(1, 'storageKey is required')
+      .max(500)
+      .refine((key) => key.trim().length > 0),
+  })
+  .strict();
 
-export const CreateKbGroupSchema = z.object({
-  title: titleSchema,
-  description: descriptionSchema.optional(),
-});
+export const CreateKbGroupSchema = z
+  .object({
+    title: titleSchema,
+    description: descriptionSchema.optional(),
+  })
+  .strict();
 
 export const UpdateKbGroupSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
   })
+  .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AddGroupMemberSchema = z.object({
-  kbId: z.string().min(1, 'kbId is required').max(64),
-});
+export const AddGroupMemberSchema = z
+  .object({
+    kbId: z.string().uuid(),
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400): never {
   throw new HttpException({ statusCode, error: code, message }, statusCode);
@@ -112,7 +127,10 @@ export class KnowledgeBasesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single knowledge base (admin)' })
   @ApiResponse({ status: 200, description: 'The KB with its documents and group memberships.' })
-  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<KbDetailDto> {
+  async get(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<KbDetailDto> {
     this.assertKbPermission(req);
     return this.service.getKb(id);
   }
@@ -148,7 +166,7 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 200, description: 'Knowledge base updated.' })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof UpdateKnowledgeBaseSchema>
   ): Promise<KbDto> {
     this.assertKbPermission(req);
@@ -170,7 +188,10 @@ export class KnowledgeBasesController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a knowledge base (admin)' })
   @ApiResponse({ status: 204, description: 'Knowledge base deleted (links cascaded).' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<void> {
     this.assertKbPermission(req);
     return this.service.removeKb(id, req.session.userId, requestIp(req));
   }
@@ -189,7 +210,7 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 200, description: 'The document link.' })
   async attachDocument(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof AttachDocumentSchema>
   ): Promise<KbDocumentDto> {
     this.assertKbPermission(req);
@@ -219,8 +240,8 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 204, description: 'Document detached.' })
   async detachDocument(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-    @Param('documentId') documentId: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('documentId', new ParseUUIDPipe()) documentId: string
   ): Promise<void> {
     this.assertKbPermission(req);
     return this.service.detachDocument(id, documentId, req.session.userId, requestIp(req));
@@ -259,7 +280,10 @@ export class KbGroupsController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single KB group (admin)' })
   @ApiResponse({ status: 200, description: 'The group with its member KBs.' })
-  async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<KbGroupDetailDto> {
+  async get(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<KbGroupDetailDto> {
     this.assertKbPermission(req);
     return this.service.getGroup(id);
   }
@@ -295,7 +319,7 @@ export class KbGroupsController {
   @ApiResponse({ status: 200, description: 'KB group updated.' })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof UpdateKbGroupSchema>
   ): Promise<KbGroupDto> {
     this.assertKbPermission(req);
@@ -317,7 +341,10 @@ export class KbGroupsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a KB group (admin)' })
   @ApiResponse({ status: 204, description: 'KB group deleted (memberships cascaded).' })
-  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+  async remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', new ParseUUIDPipe()) id: string
+  ): Promise<void> {
     this.assertKbPermission(req);
     return this.service.removeGroup(id, req.session.userId, requestIp(req));
   }
@@ -333,7 +360,7 @@ export class KbGroupsController {
   @ApiResponse({ status: 204, description: 'KB linked into group.' })
   async addMember(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: z.infer<typeof AddGroupMemberSchema>
   ): Promise<void> {
     this.assertKbPermission(req);
@@ -357,8 +384,8 @@ export class KbGroupsController {
   @ApiResponse({ status: 204, description: 'KB removed from group.' })
   async removeMember(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-    @Param('kbId') kbId: string
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('kbId', new ParseUUIDPipe()) kbId: string
   ): Promise<void> {
     this.assertKbPermission(req);
     return this.service.removeGroupMember(id, kbId, req.session.userId, requestIp(req));

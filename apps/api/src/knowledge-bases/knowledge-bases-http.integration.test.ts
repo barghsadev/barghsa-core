@@ -343,3 +343,92 @@ it.each(['attach', 'add'] as const)(
     ).toHaveLength(1);
   }
 );
+
+const malformedRoutes = [
+  ['GET', 'knowledge-bases/invalid'],
+  ['PUT', 'knowledge-bases/invalid'],
+  ['DELETE', 'knowledge-bases/invalid'],
+  ['POST', 'knowledge-bases/invalid/documents'],
+  ['DELETE', 'knowledge-bases/invalid/documents/invalid'],
+  ['GET', 'kb-groups/invalid'],
+  ['PUT', 'kb-groups/invalid'],
+  ['DELETE', 'kb-groups/invalid'],
+  ['POST', 'kb-groups/invalid/members'],
+  ['DELETE', 'kb-groups/invalid/members/invalid'],
+] as const;
+it.each(malformedRoutes)('rejects malformed IDs on %s %s', async (method, path) => {
+  expect((await fetch(`${http.base}/api/admin/${path}`, { method, headers })).status).toBe(400);
+});
+it('validates nested document and member IDs', async () => {
+  for (const path of [
+    `knowledge-bases/${ids.kb}/documents/invalid`,
+    `kb-groups/${ids.group}/members/invalid`,
+  ]) {
+    expect(
+      (await fetch(`${http.base}/api/admin/${path}`, { method: 'DELETE', headers })).status
+    ).toBe(400);
+  }
+});
+it.each(entities)(
+  'rejects invalid $kind metadata without writes and trims valid titles',
+  async (entry) => {
+    for (const method of ['POST', 'PUT']) {
+      for (const body of [
+        { title: '   ' },
+        { title: 'Valid', unexpected: true },
+        { title: 'x'.repeat(121) },
+        { description: 'x'.repeat(2001) },
+      ]) {
+        expect(
+          (
+            await fetch(
+              `${http.base}/api/admin/${entry.path}${method === 'PUT' ? `/${ids[entry.kind]}` : ''}`,
+              { method, headers, body: JSON.stringify(body) }
+            )
+          ).status
+        ).toBe(400);
+      }
+    }
+    expect((await http.pool.query(`SELECT title FROM ${entry.table}`)).rows).toEqual([
+      { title: entry.title },
+    ]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    ).toHaveLength(0);
+    const response = await fetch(`${http.base}/api/admin/${entry.path}/${ids[entry.kind]}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ title: '  Trimmed title  ' }),
+    });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ title: 'Trimmed title' });
+  }
+);
+it('rejects malformed link payloads without writing links or audit entries', async () => {
+  for (const body of [{ kbId: 'invalid' }, { kbId: ids.kb, unexpected: true }]) {
+    expect(
+      (
+        await fetch(`${http.base}/api/admin/kb-groups/${ids.group}/members`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        })
+      ).status
+    ).toBe(400);
+  }
+  for (const body of [{ storageKey: '   ' }, { storageKey: 'key', unexpected: true }]) {
+    expect(
+      (
+        await fetch(`${http.base}/api/admin/knowledge-bases/${ids.kb}/documents`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        })
+      ).status
+    ).toBe(400);
+  }
+  expect((await http.pool.query('SELECT id FROM kb_documents')).rows).toHaveLength(0);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+  ).toHaveLength(0);
+});
