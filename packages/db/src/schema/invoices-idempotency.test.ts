@@ -141,7 +141,7 @@ describe('invoice type + idempotency unique index (T-04.1.02.06)', () => {
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
       `)
-    ).rejects.toMatchObject({ code: '23505' });
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
   });
 
   it('allows the same order to carry invoices of a different type', async () => {

@@ -32,15 +32,14 @@
   "dependencies": {
     "@barghsa/shared": "workspace:*",
     "argon2": "^0.41.0",
-    "drizzle-orm": "^0.40.0",
+    "drizzle-orm": "0.45.2",
     "pg": "^8.14.0",
     "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@testcontainers/postgresql": "12.1.0",
     "@types/pg": "^8.11.0",
-    "@types/uuid": "11.0.0",
-    "drizzle-kit": "^0.30.0",
+    "drizzle-kit": "0.31.10",
     "testcontainers": "12.1.0",
     "tsx": "4.23.12"
   }

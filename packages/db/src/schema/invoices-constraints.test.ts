@@ -95,7 +95,9 @@ describe('invoice amount CHECK constraints (T-04.1.01.04)', () => {
     await expect(
       insertInvoice({ total: 100_000, paid: 100_001, refunded: 0 })
     ).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
   });
 
@@ -103,13 +105,17 @@ describe('invoice amount CHECK constraints (T-04.1.01.04)', () => {
     await expect(
       insertInvoice({ total: 100_000, paid: 50_000, refunded: 50_001 })
     ).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
   });
 
   it('rejects negative amounts (inline column CHECKs preserved)', async () => {
     await expect(insertInvoice({ total: -1, paid: 0, refunded: 0 })).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
   });
 
@@ -118,7 +124,9 @@ describe('invoice amount CHECK constraints (T-04.1.01.04)', () => {
     await expect(ctx.pool.query(migrationSql)).resolves.toBeDefined();
     // Constraints still enforced after the re-run.
     await expect(insertInvoice({ total: 100, paid: 101, refunded: 0 })).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
   });
 
@@ -172,10 +180,14 @@ describe('invoice amount CHECK constraints (T-04.1.01.04)', () => {
     ]);
 
     await expect(insertInvoice({ total: 100, paid: 200, refunded: 0 })).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
     await expect(insertInvoice({ total: 100, paid: 50, refunded: 100 })).rejects.toMatchObject({
-      code: '23514',
+      cause: {
+        code: '23514',
+      },
     });
   });
 });

@@ -27,12 +27,10 @@
   },
   "devDependencies": {
     "@bcoe/v8-coverage": "1.0.2",
-    "@size-limit/preset-app": "13.0.3",
     "@types/node": "26.2.0",
     "@vitest/coverage-v8": "4.1.11",
     "jsdom": "28.1.0",
     "prettier": "3.9.6",
-    "size-limit": "13.0.3",
     "turbo": "2.10.11",
     "typescript": "7.0.2",
     "vitest": "4.1.11",
@@ -44,6 +42,16 @@
       "esbuild",
       "@parcel/watcher"
     ],
-    "overrides": {}
+    "overrides": {
+      "drizzle-kit@0.31.10>@esbuild-kit/esm-loader": "-",
+      "qs@<6.16.0": "6.16.0"
+    },
+    "packageExtensions": {
+      "@swc/cli@0.8.1": {
+        "dependencies": {
+          "chokidar": "5.0.0"
+        }
+      }
+    }
   }
 }

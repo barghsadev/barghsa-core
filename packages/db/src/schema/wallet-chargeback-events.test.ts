@@ -100,7 +100,7 @@ describe('wallet_chargeback_events PostgreSQL enforcement (T-04.2.04.02)', () =>
         INSERT INTO wallet_chargeback_events (event_id, status, raw)
         VALUES ('evt-dup', 'unmatched', '{}'::jsonb)
       `)
-    ).rejects.toMatchObject({ code: '23505' });
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
   });
 
   it('accepts an unmatched event with null original and wallet FKs', async () => {
@@ -118,13 +118,13 @@ describe('wallet_chargeback_events PostgreSQL enforcement (T-04.2.04.02)', () =>
         INSERT INTO wallet_chargeback_events (event_id, status)
         VALUES ('evt-bad-status', 'credited')
       `)
-    ).rejects.toMatchObject({ code: '23514' });
+    ).rejects.toMatchObject({ cause: { code: '23514' } });
     await expect(
       ctx.db.execute(sql`
         INSERT INTO wallet_chargeback_events (event_id, status, match_method)
         VALUES ('evt-bad-method', 'processing', 'guess')
       `)
-    ).rejects.toMatchObject({ code: '23514' });
+    ).rejects.toMatchObject({ cause: { code: '23514' } });
   });
 
   it('stores a mapped processing claim against a Completed top-up', async () => {

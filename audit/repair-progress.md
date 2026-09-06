@@ -1623,3 +1623,9 @@ Review found a test-state dependency when running the whole browser suite: the g
 Validation: API regression passed 2,871 tests across 224 files; shared regression passed 697 tests across 55 files; all 46 loop tests and the canonical queue check passed. Lint and formatting passed. The initial full browser run passed 229 checks and failed the catalogue precondition. Final browser rerun result is recorded below. Remote CI execution, branch protection, cross-browser coverage and the remaining security/coverage gates are not certified by this change.
 
 Final browser rerun: all 230 Chromium checks passed in 3.2 minutes, including both catalogue languages after preceding green-rule mutations. No retries were enabled for this local run.
+
+### Repair vulnerable dependencies and add the CI dependency gate (F19)
+
+Removed unused size-limit tooling and obsolete UUID type stubs. Upgraded Drizzle ORM/Kit and SWC CLI, selected patched qs within Express's supported range, and removed Drizzle Kit's unused deprecated loader through an exact-version override. Supplied SWC's optional watch dependency through a scoped package extension without changing Nest's Chokidar peer. CI now blocks high/critical dependency advisories and retains the JSON scan report even on failure.
+
+Review and validation: the scan went from five high/seven moderate occurrences to zero advisories. Production build, root types, contract comparison, route budgets, lint, formatting and migration-tool config/journal checks passed. All 2,871 API tests and 567 database tests passed. Drizzle's error wrapping required preserving constraint assertions under cause; native pool assertions remain unchanged. A temporary watch fixture verified initial and changed-file compilation. No schemas, migration history or product routes changed. See dependency-repair.md and both saved JSON scans for detail. Remaining security and license gates are still open.

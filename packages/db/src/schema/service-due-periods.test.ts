@@ -239,7 +239,7 @@ describe('service_due_periods PostgreSQL enforcement (T-04.1.03.01)', () => {
     await insertPeriod({ serviceType: 'manual' });
     await expect(
       ctx.db.execute(sql`DELETE FROM users WHERE user_id = ${ACTOR_USER_ID}`)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('forbids overlapping windows for the same service type', async () => {

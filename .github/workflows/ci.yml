@@ -27,6 +27,15 @@ jobs:
       - name: Verify loop state and dispatch protocol
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile
+      - name: Scan dependencies for high and critical advisories
+        run: pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json"
+      - name: Upload dependency scan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit
+          path: ${{ runner.temp }}/dependency-audit.json
+          retention-days: 14
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm format:check

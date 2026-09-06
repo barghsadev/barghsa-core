@@ -151,7 +151,9 @@ describe('seed verification', () => {
       // Attempt to delete it — should throw.
       await expect(
         ctx.db.delete(products).where(eq(products.id, systemProduct!.id))
-      ).rejects.toThrow(/cannot delete system-defined/i);
+      ).rejects.toMatchObject({
+        cause: { message: expect.stringMatching(/cannot delete system-defined/i) },
+      });
 
       // Verify the row still exists.
       const remaining = await ctx.db
@@ -178,7 +180,9 @@ describe('seed verification', () => {
           .update(products)
           .set({ systemKey: 'hacked_type' })
           .where(eq(products.id, systemProduct!.id))
-      ).rejects.toThrow(/cannot change system_key/i);
+      ).rejects.toMatchObject({
+        cause: { message: expect.stringMatching(/cannot change system_key/i) },
+      });
     });
 
     it('prevents inserting a 5th system-defined electricity product', async () => {
@@ -190,7 +194,9 @@ describe('seed verification', () => {
           type: 'electricity',
           status: 'inactive',
         })
-      ).rejects.toThrow(/cannot insert more than 4/i);
+      ).rejects.toMatchObject({
+        cause: { message: expect.stringMatching(/cannot insert more than 4/i) },
+      });
     });
 
     it('allows inserting admin-created products (null system_key)', async () => {

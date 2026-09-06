@@ -119,7 +119,7 @@ describe('wallet_topup_callback_events PostgreSQL enforcement (T-04.2.02.02)', (
           (event_id, pending_transaction_id, wallet_id, status)
         VALUES ('evt-dup', ${pendingId}::uuid, ${profileId}::uuid, 'credited')
       `)
-    ).rejects.toMatchObject({ code: '23505' });
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
   });
 
   it('accepts a processing claim status after migration 0071', async () => {

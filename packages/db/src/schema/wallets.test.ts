@@ -375,7 +375,7 @@ describe('wallet_transactions PostgreSQL enforcement (T-04.2.01.02)', () => {
     await insertTx({ type: 'topup', amount: 1 });
     await expect(
       ctx.db.execute(sql`DELETE FROM wallets WHERE profile_id = ${walletId}`)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('rejects a duplicate idempotency key', async () => {

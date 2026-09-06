@@ -121,7 +121,7 @@ describe('invoice order-type unique index excludes adjustments (T-04.1.05.03)', 
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
       `)
-    ).rejects.toMatchObject({ code: '23505' });
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
   });
 
   it('allows an adjustment of type manual next to an order-linked original of type manual', async () => {
@@ -192,7 +192,7 @@ describe('invoice order-type unique index excludes adjustments (T-04.1.05.03)', 
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
       `)
-    ).rejects.toMatchObject({ code: '23505' });
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
   });
 
   it('migration 0066 is idempotent — re-running is a no-op', async () => {

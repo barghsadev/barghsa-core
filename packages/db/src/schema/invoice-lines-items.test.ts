@@ -141,7 +141,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         INSERT INTO invoice_lines (invoice_id, description, quantity, unit_price, line_total)
         VALUES (uuid_generate_v7(), 'orphan', 1, 1000, 1000)
       `)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('rejects an item referencing a missing invoice or product (FK)', async () => {
@@ -151,7 +151,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         INSERT INTO invoice_items (invoice_id, product_id, quantity, unit_price)
         VALUES (${invoiceId}, uuid_generate_v7(), 1, 1000)
       `)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
 
     const productId = await insertProduct();
     await expect(
@@ -159,7 +159,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         INSERT INTO invoice_items (invoice_id, product_id, quantity, unit_price)
         VALUES (uuid_generate_v7(), ${productId}, 1, 1000)
       `)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   // ---- Referential actions ------------------------------------------------
@@ -198,7 +198,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
 
     await expect(
       ctx.db.execute(sql`DELETE FROM products WHERE id = ${productId}`)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   // ---- CHECK constraints (invoice_lines) ----------------------------------
@@ -211,8 +211,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, 'zero qty', 0, 1000, 1000)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_lines_quantity_positive'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_lines_quantity_positive'),
+      },
     });
   });
 
@@ -223,7 +225,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         INSERT INTO invoice_lines (invoice_id, description, quantity, unit_price, line_total)
         VALUES (${invoiceId}, 'neg price', 1, -1, -1000)
       `)
-    ).rejects.toMatchObject({ code: '23514' });
+    ).rejects.toMatchObject({ cause: { code: '23514' } });
   });
 
   it('rejects a line whose VAT rate is outside 0..10000 basis points', async () => {
@@ -234,8 +236,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, 'vat too high', 1, 1000, 1000, 10001)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_lines_vat_rate_range'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_lines_vat_rate_range'),
+      },
     });
   });
 
@@ -247,8 +251,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, 'neg vat', 1, 1000, 1000, -1)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_lines_vat_amount_non_negative'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_lines_vat_amount_non_negative'),
+      },
     });
   });
 
@@ -262,8 +268,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
           (${invoiceId}, 'non-taxable with vat', 1, 1000, 1000, 90, FALSE)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_lines_non_taxable_zero_vat'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_lines_non_taxable_zero_vat'),
+      },
     });
   });
 
@@ -279,8 +287,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, ${productId}, 0, 1000)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_items_quantity_positive'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_items_quantity_positive'),
+      },
     });
 
     await expect(
@@ -289,8 +299,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, ${productId}, 1, -1)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_items_unit_price_non_negative'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_items_unit_price_non_negative'),
+      },
     });
 
     await expect(
@@ -299,8 +311,10 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         VALUES (${invoiceId}, ${productId}, 1, 1000, -1)
       `)
     ).rejects.toMatchObject({
-      code: '23514',
-      message: expect.stringContaining('ck_invoice_items_vat_rate_range'),
+      cause: {
+        code: '23514',
+        message: expect.stringContaining('ck_invoice_items_vat_rate_range'),
+      },
     });
   });
 
@@ -367,7 +381,7 @@ describe('invoice_lines & invoice_items schema (T-04.1.02.01)', () => {
         INSERT INTO invoice_lines (invoice_id, description, quantity, unit_price, line_total)
         VALUES (${invoiceId}, 'still enforced', 0, 1000, 0)
       `)
-    ).rejects.toMatchObject({ code: '23514' });
+    ).rejects.toMatchObject({ cause: { code: '23514' } });
   });
 
   // ---- Line ordering column (0055, T-04.1.02.02) --------------------------

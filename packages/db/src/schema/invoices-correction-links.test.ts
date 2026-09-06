@@ -179,7 +179,7 @@ describe('invoice correction self-references migration (T-04.1.05.01)', () => {
           '00000000-0000-0000-0000-000000000001'::uuid
         )
       `)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('rejects a dangling adjustment_for_invoice_id (FK 23503)', async () => {
@@ -192,7 +192,7 @@ describe('invoice correction self-references migration (T-04.1.05.01)', () => {
           '00000000-0000-0000-0000-000000000002'::uuid
         )
       `)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('RESTRICT prevents deleting an original that still has a replacement', async () => {
@@ -203,7 +203,7 @@ describe('invoice correction self-references migration (T-04.1.05.01)', () => {
     `);
     await expect(
       ctx.db.execute(sql`DELETE FROM invoices WHERE id = ${originalId}`)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('creates the correction-chain lookup indexes', async () => {

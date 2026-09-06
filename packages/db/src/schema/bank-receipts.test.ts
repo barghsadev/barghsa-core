@@ -512,7 +512,7 @@ describe('bank_receipts PostgreSQL enforcement (T-04.3.01.01)', () => {
     await insertReceipt();
     await expect(
       ctx.db.execute(sql`DELETE FROM invoices WHERE id = ${invoiceId}`)
-    ).rejects.toMatchObject({ code: '23503' });
+    ).rejects.toMatchObject({ cause: { code: '23503' } });
   });
 
   it('creates the lookup indexes, unique attachment index, and updated_at trigger', async () => {
