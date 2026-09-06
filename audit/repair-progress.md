@@ -1637,3 +1637,9 @@ Added a full-history CI secret scan using checksum-pinned Gitleaks 8.30.1. Shall
 Review and validation: scanned 1,029 local commits. Reviewed all 24 generic-key findings as specific test/alphabet/nonce/digest false positives and recorded exact historical fingerprints, without excluding whole files or rules. The self-test detected its new synthetic credential despite the ignore list; the reviewed project scan then found zero remaining findings. See secret-scan-review.md and secret-scan-triage.json. No provider credentials were tested or rotated, and no remote CI run was triggered.
 
 Four wrapper tests pass for checksum rejection before extraction, ignoring archive traversal paths, retaining scanner failure codes with redaction/all-history arguments, and rejecting shallow checkouts before downloading the tool.
+
+### Record the unresolved dependency-license policy (F19)
+
+Collected the full installed-package license inventory and compared metadata against T-05.03.04's literal allowlist. Twenty-three package entries fall outside it, including Nodemailer, axe-core, Lightning CSS and tslib. Saved the package/version/license list in license-policy-review.md and the normalized inventory in license-inventory.json. No dependency was silently exempted and no broader license list was approved. Asked the user which approved policy to use; independent repair work continues while that decision is pending.
+
+Post-commit secret verification also passed at f9de86b: the synthetic credential was detected, and all 1,030 project commits had zero untriaged findings.
