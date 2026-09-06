@@ -790,3 +790,55 @@ for (const locale of ['en', 'fa']) {
     await expect(firstName).toBeDisabled();
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`company identity is editable until verified (${locale})`, async ({ page }) => {
+    await shell(page, locale);
+    const bodies: unknown[] = [];
+    const detail = {
+      id: 'profile-one',
+      profileType: 'LEGAL',
+      status: 'ACTIVE',
+      title: 'Company',
+      addresses: [],
+      legalInfo: {
+        legalName: 'Original Company',
+        nationalIdentifier: '12345678901',
+        registrationNumber: '123',
+      },
+    };
+    await page.route('**/api/profiles/profile-one', async (route) => {
+      if (route.request().method() === 'PUT') {
+        const body = route.request().postDataJSON();
+        bodies.push(body);
+        Object.assign(detail.legalInfo, body);
+      }
+      await route.fulfill({ json: detail });
+    });
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/onboarding/documents/profile-one', (route) =>
+      route.fulfill({ json: { documents: [] } })
+    );
+    await page.goto('/settings/profile');
+    const name = page.locator('#profile-legalName');
+    const identifier = page.locator('#profile-nationalIdentifier');
+    await expect(name).toBeEnabled();
+    await expect(name).toHaveAccessibleName(locale === 'fa' ? 'نام حقوقی' : 'Legal Name');
+    await name.fill('Changed Company');
+    await identifier.fill('12345678902');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      })
+      .click();
+    await expect
+      .poll(() => bodies)
+      .toEqual([{ legalName: 'Changed Company', nationalIdentifier: '12345678902' }]);
+    await expect(name).toHaveValue('Changed Company');
+    detail.status = 'VERIFIED';
+    await page.reload();
+    await expect(name).toBeDisabled();
+    await expect(identifier).toBeDisabled();
+  });
+}

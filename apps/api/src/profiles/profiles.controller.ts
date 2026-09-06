@@ -1,3 +1,4 @@
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   Body,
   Controller,
@@ -22,7 +23,11 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
+import {
+  validateNationalId,
+  validatePostalCode,
+  validateLegalNationalIdentifier,
+} from '@barghsa/shared/validation';
 
 const addressFields = z.object({
   provinceId: z.string().trim().uuid(),
@@ -40,6 +45,8 @@ const updateProfileInput = addressFields
     firstName: z.string().trim().min(1).max(100).optional(),
     lastName: z.string().trim().min(1).max(100).optional(),
     nationalId: z.string().trim().refine(validateNationalId).optional(),
+    legalName: z.string().trim().min(1).max(200).optional(),
+    nationalIdentifier: z.string().trim().refine(validateLegalNationalIdentifier).optional(),
   })
   .refine((data) => Object.keys(data).length > 0)
   .refine((data) => {
@@ -383,6 +390,7 @@ export class ProfilesController {
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:update:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Update profile fields' })
+  @ApiZodBody(updateProfileInput)
   @ApiResponse({ status: 200, description: 'Profile updated.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
@@ -390,17 +398,7 @@ export class ProfilesController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async updateProfile(
     @Param('id', new ParseUUIDPipe()) profileId: string,
-    @Body()
-    body: {
-      title?: string;
-      firstName?: string;
-      lastName?: string;
-      nationalId?: string;
-      provinceId?: string;
-      cityId?: string;
-      fullAddress?: string;
-      postalCode?: string;
-    },
+    @Body() body: unknown,
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;

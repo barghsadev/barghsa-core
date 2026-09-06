@@ -133,6 +133,8 @@ function SettingsProfilePage() {
   const [nationalId, setNationalId] = useState('');
   const [provinceId, setProvinceId] = useState('');
   const [cityId, setCityId] = useState('');
+  const [legalName, setLegalName] = useState('');
+  const [nationalIdentifier, setNationalIdentifier] = useState('');
   const [fullAddress, setFullAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
 
@@ -240,6 +242,8 @@ function SettingsProfilePage() {
       setFirstName(data.firstName ?? '');
       setLastName(data.lastName ?? '');
       setNationalId(data.nationalId ?? '');
+      setLegalName(data.legalInfo?.legalName ?? '');
+      setNationalIdentifier(data.legalInfo?.nationalIdentifier ?? '');
 
       // Populate main address
       const mainAddress = data.addresses.find((a) => a.mainAddress);
@@ -283,6 +287,11 @@ function SettingsProfilePage() {
         if (firstName !== (profile.firstName ?? '')) payload.firstName = firstName;
         if (lastName !== (profile.lastName ?? '')) payload.lastName = lastName;
         if (nationalId !== (profile.nationalId ?? '')) payload.nationalId = nationalId;
+      }
+      if (profile.profileType === 'LEGAL' && profile.status !== 'VERIFIED' && profile.legalInfo) {
+        if (legalName !== profile.legalInfo.legalName) payload.legalName = legalName;
+        if (nationalIdentifier !== profile.legalInfo.nationalIdentifier)
+          payload.nationalIdentifier = nationalIdentifier;
       }
       const main = profile.addresses.find((address) => address.mainAddress);
       const addressChanged =
@@ -331,6 +340,8 @@ function SettingsProfilePage() {
     }
   }, [
     defaultProfileId,
+    legalName,
+    nationalIdentifier,
     loadingProvinces,
     loadingCities,
     provinceError,
@@ -408,7 +419,7 @@ function SettingsProfilePage() {
             </span>
           </div>
 
-          {/* Legal entity info (read-only) */}
+          {/* Legal entity identity */}
           {isLegal && profile.legalInfo && (
             <div className="rounded-lg border p-4 space-y-3">
               <h2 className="text-base font-semibold flex items-center gap-2">
@@ -417,16 +428,41 @@ function SettingsProfilePage() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs text-muted-foreground">
+                  <Label htmlFor="profile-legalName" className="text-xs text-muted-foreground">
                     {t('settings.profile.legalName', locale)}
+                    {profile.status === 'VERIFIED' && <LockIcon className="inline h-3 w-3 ms-1" />}
                   </Label>
-                  <p className="text-sm font-medium">{profile.legalInfo.legalName}</p>
+                  <Input
+                    id="profile-legalName"
+                    value={legalName}
+                    onChange={(event) => setLegalName(event.target.value)}
+                    disabled={profile.status === 'VERIFIED'}
+                  />
+                  {profile.status === 'VERIFIED' && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('settings.profile.identityLocked', locale)}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <Label className="text-xs text-muted-foreground">
+                  <Label
+                    htmlFor="profile-nationalIdentifier"
+                    className="text-xs text-muted-foreground"
+                  >
                     {t('settings.profile.nationalIdentifier', locale)}
+                    {profile.status === 'VERIFIED' && <LockIcon className="inline h-3 w-3 ms-1" />}
                   </Label>
-                  <p className="text-sm font-medium">{profile.legalInfo.nationalIdentifier}</p>
+                  <Input
+                    id="profile-nationalIdentifier"
+                    value={nationalIdentifier}
+                    onChange={(event) => setNationalIdentifier(event.target.value)}
+                    disabled={profile.status === 'VERIFIED'}
+                  />
+                  {profile.status === 'VERIFIED' && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('settings.profile.identityLocked', locale)}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Label className="text-xs text-muted-foreground">

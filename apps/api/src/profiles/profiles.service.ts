@@ -1065,6 +1065,8 @@ export class ProfilesService {
       firstName?: string | undefined;
       lastName?: string | undefined;
       nationalId?: string | undefined;
+      legalName?: string | undefined;
+      nationalIdentifier?: string | undefined;
       provinceId?: string | undefined;
       cityId?: string | undefined;
       fullAddress?: string | undefined;
@@ -1089,10 +1091,21 @@ export class ProfilesService {
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
-      const identityChanged =
+      const individualIdentityChanged =
         data.firstName !== undefined ||
         data.lastName !== undefined ||
         data.nationalId !== undefined;
+      const legalIdentityChanged =
+        data.legalName !== undefined || data.nationalIdentifier !== undefined;
+      if (
+        (individualIdentityChanged && current.profile_type !== 'INDIVIDUAL') ||
+        (legalIdentityChanged && current.profile_type !== 'LEGAL')
+      )
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+          400
+        );
+      const identityChanged = individualIdentityChanged || legalIdentityChanged;
       if (identityChanged && current.status === 'VERIFIED') {
         const account = (
           await client.query('SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1', [
@@ -1150,6 +1163,20 @@ export class ProfilesService {
             404
           );
         }
+      }
+
+      if (legalIdentityChanged) {
+        const result = await client.query(
+          `UPDATE legal_profiles SET legal_name=COALESCE($2,legal_name),
+           national_identifier=COALESCE($3,national_identifier),updated_at=NOW()
+           WHERE id=$1 RETURNING id`,
+          [profileId, data.legalName ?? null, data.nationalIdentifier ?? null]
+        );
+        if (result.rows.length === 0)
+          throw new HttpException(
+            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+            404
+          );
       }
 
       // If address fields are provided, create a new address record

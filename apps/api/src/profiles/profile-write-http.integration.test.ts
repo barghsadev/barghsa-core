@@ -756,3 +756,79 @@ for (const kind of ['individual', 'legal'] as const) {
     ).toHaveLength(1);
   });
 }
+
+const seedLegalIdentity = async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL',status='ACTIVE' WHERE id=$1", [
+    profileId,
+  ]);
+  await http.pool.query(
+    "INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship) VALUES ($1,'Company','12345678901','123','CEO','director')",
+    [profileId]
+  );
+};
+it('edits unverified company identity with validation, type separation and audit rollback', async () => {
+  expect((await update({ legalName: 'Wrong type' })).status).toBe(400);
+  await seedLegalIdentity();
+  expect((await update({ firstName: 'Wrong type' })).status).toBe(400);
+  expect((await update({ legalName: ' ' })).status).toBe(400);
+  expect((await update({ nationalIdentifier: 'invalid' })).status).toBe(400);
+  expect(
+    (await update({ legalName: 'Renamed Company', nationalIdentifier: '12345678902' })).status
+  ).toBe(200);
+  const read = async () =>
+    (
+      await http.pool.query(
+        'SELECT legal_name,national_identifier FROM legal_profiles WHERE id=$1',
+        [profileId]
+      )
+    ).rows[0];
+  expect(await read()).toEqual({
+    legal_name: 'Renamed Company',
+    national_identifier: '12345678902',
+  });
+  expect(
+    await (await fetch(`${http.base}/api/profiles/${profileId}`, { headers })).json()
+  ).toMatchObject({
+    legalInfo: { legalName: 'Renamed Company', nationalIdentifier: '12345678902' },
+  });
+  await http.pool.query(
+    "CREATE FUNCTION reject_identity_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test rollback'; END $$; CREATE TRIGGER reject_identity_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_self_updated') EXECUTE FUNCTION reject_identity_audit()"
+  );
+  expect((await update({ legalName: 'Rolled back' })).status).toBe(500);
+  expect((await read()).legal_name).toBe('Renamed Company');
+  await http.pool.query('DROP TRIGGER reject_identity_audit ON audit_log');
+  await http.pool.query("UPDATE profiles SET status='VERIFIED' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "UPDATE users SET is_staff=true,is_admin=true WHERE user_id='profile-owner'"
+  );
+  expect((await update({ legalName: 'Forbidden staff exception' })).status).toBe(403);
+  expect((await read()).legal_name).toBe('Renamed Company');
+});
+for (const change of ['verify', 'archive']) {
+  it(`rejects company identity edits after ${change} wins the profile lock`, async () => {
+    await seedLegalIdentity();
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        change === 'verify'
+          ? "UPDATE profiles SET status='VERIFIED' WHERE id=$1"
+          : 'UPDATE profiles SET archived=true WHERE id=$1',
+        [profileId]
+      );
+      pending = update({ legalName: 'Overwritten' });
+      await waitForWrite();
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(change === 'verify' ? 403 : 404);
+      expect(
+        (await http.pool.query('SELECT legal_name FROM legal_profiles WHERE id=$1', [profileId]))
+          .rows[0].legal_name
+      ).toBe('Company');
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+    }
+  });
+}
