@@ -37,3 +37,27 @@ test('session expiry preserves customer and reason through password confirmation
   await expect(page.getByRole('dialog')).toHaveCount(0)
   expect(bodies).toEqual([{reason:'Lost device'},{reason:'Lost device'}])
 })
+test('verification requires a reason when removing approval and archive blockers remain visible',async({page})=>{
+  await page.addInitScript(()=>{new MutationObserver(()=>{if(document.documentElement)document.documentElement.lang='en'}).observe(document,{childList:true})})
+  await page.route('**/api/**',route=>route.fulfill({status:404,json:{}}))
+  const profile=detail(false,true);profile.profile.status='VERIFIED'
+  await page.route(`**/api/crm/profiles/${id}`,route=>route.request().method()==='DELETE'?route.fulfill({status:409,json:{error:{code:'CRM:PROFILE:DELETION_BLOCKED'}}}):route.fulfill({json:profile}))
+  await page.route(`**/api/crm/profiles/${id}/verify`,route=>{
+    expect(route.request().postDataJSON()).toEqual({action:'reverify',reason:'Evidence expired'})
+    profile.profile.status='PENDING_VERIFICATION'
+    return route.fulfill({json:{success:true}})
+  })
+  await page.goto(`/admin/crm/profiles/${id}`)
+  await expect(page.getByRole('button',{name:'Review verification change'})).toBeDisabled()
+  await page.getByLabel('Verification action', {exact:true}).selectOption('reverify')
+  await page.getByLabel('Reason (required to remove or renew verification)').fill('Evidence expired')
+  await page.getByRole('button',{name:'Review verification change'}).click()
+  await page.getByRole('dialog').getByRole('button',{name:'Confirm',exact:true}).click()
+  await expect(page.getByRole('heading',{level:1})).toContainText('Pending verification')
+  await page.getByRole('button',{name:'Archive profile',exact:true}).click()
+  await page.getByRole('dialog').locator('textarea').fill('Closure requested')
+  await page.getByRole('dialog').getByRole('button',{name:'Archive profile',exact:true}).click()
+  await page.getByRole('dialog').getByRole('button',{name:'Confirm',exact:true}).click()
+  await expect(page.getByRole('dialog').getByRole('alert')).toContainText('wallet balances')
+  await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`))
+})

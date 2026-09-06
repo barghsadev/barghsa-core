@@ -153,7 +153,11 @@ function CrmProfileDetailContent() {
   const [editFields, setEditFields] = useState<EditableFields>({ title: '', email: '', mobile: '' })
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState(false)
-  const [pendingAction, setPendingAction] = useState<{ action: TeamAction; kind: 'edit' | 'password' | 'sessions' } | null>(null)
+  const [pendingAction, setPendingAction] = useState<{ action: TeamAction; kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive' } | null>(null)
+  const [verificationAction, setVerificationAction] = useState('verify')
+  const [verificationReason, setVerificationReason] = useState('')
+  const [showArchive, setShowArchive] = useState(false)
+  const [archiveReason, setArchiveReason] = useState('')
   const [showForcePwChange, setShowForcePwChange] = useState(false)
   const [showExpireSessions, setShowExpireSessions] = useState(false)
   const [forcePwChangeReason, setForcePwChangeReason] = useState('')
@@ -210,7 +214,7 @@ function CrmProfileDetailContent() {
     setSaveSuccess(false)
   }
 
-  function queueAction(action: TeamAction, kind: 'edit' | 'password' | 'sessions') {
+  function queueAction(action: TeamAction, kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive') {
     setPendingAction({ action: { ...action, forbiddenMessage: t('crm.profile.error.accessDenied', locale),
       conflictMessage: t('crm.profile.conflict', locale) }, kind })
   }
@@ -234,8 +238,9 @@ function CrmProfileDetailContent() {
   }
   async function actionSucceeded() {
     const kind = pendingAction?.kind
+    if (kind === 'archive') { window.location.assign('/admin/crm'); return }
     if (kind === 'edit') { setIsEditing(false); setSaveSuccess(true) }
-    else { setActionSuccess(t(kind === 'password' ? 'crm.profile.admin.forcePwChangeSuccess' : 'crm.profile.admin.expireSessionsSuccess', locale)); setForcePwChangeReason(''); setExpireSessionsReason('') }
+    else { setActionSuccess(t(kind === 'verification' ? 'crm.profile.verification.saved' : kind === 'password' ? 'crm.profile.admin.forcePwChangeSuccess' : 'crm.profile.admin.expireSessionsSuccess', locale)); setForcePwChangeReason(''); setExpireSessionsReason('') }
     // A committed mutation stays successful even when the subsequent read fails.
     try {
       const response = await fetch(`/api/crm/profiles/${profileId}`, { credentials: 'include' })
@@ -288,7 +293,7 @@ function CrmProfileDetailContent() {
         <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
           {t('crm.profile.title', locale)}
           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.status)}`}>
-            {profile.status}
+            {t(`crm.list.${profile.status}`, locale)}
           </span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
             {getProfileTypeLabel(profile.profileType, locale)}
@@ -348,6 +353,25 @@ function CrmProfileDetailContent() {
         </p>
       </div>
 
+      {data.viewerPermissions?.canVerify && ['DRAFT','ACTIVE','PENDING_VERIFICATION','VERIFIED'].includes(profile.status) && <div className="mb-4 space-y-3 rounded border bg-white p-4">
+        <Label htmlFor="crm-verify-action">{t('crm.profile.verification.action', locale)}</Label>
+        <select id="crm-verify-action" className="block rounded border p-2" value={profile.status === 'VERIFIED' ? (verificationAction === 'verify' ? 'unverify' : verificationAction) : 'verify'}
+          onChange={event => setVerificationAction(event.target.value)}>
+          {(profile.status === 'VERIFIED' ? ['unverify','reverify'] : ['verify']).map(action => <option key={action} value={action}>{t(`crm.profile.verification.${action}`, locale)}</option>)}
+        </select>
+        <Label htmlFor="crm-verify-reason">{t('crm.profile.verification.reason', locale)}</Label>
+        <textarea id="crm-verify-reason" className="block w-full rounded border p-2" maxLength={1000} value={verificationReason} onChange={event => setVerificationReason(event.target.value)} />
+        <Button disabled={!!pendingAction || (profile.status === 'VERIFIED' && !verificationReason.trim())} onClick={() => {
+          const action = profile.status === 'VERIFIED' ? (verificationAction === 'verify' ? 'unverify' : verificationAction) : 'verify'
+          queueAction({ title: t(`crm.profile.verification.${action}`, locale), description: `${profile.title || profileId} · ${verificationReason.trim()}`,
+            path: `/api/crm/profiles/${profileId}/verify`, method: 'POST', body: { action, ...(verificationReason.trim() ? { reason: verificationReason.trim() } : {}) } }, 'verification')
+        }}>{t('crm.profile.verification.review', locale)}</Button>
+      </div>}
+      {data.viewerPermissions?.canManageUser && <Button variant="outline" className="mb-4" onClick={() => setShowArchive(true)}>{t('crm.profile.archive.title', locale)}</Button>}
+      {showArchive && <AdminActionConfirmModal title={t('crm.profile.archive.title', locale)} message={t('crm.profile.archive.warning', locale)} reason={archiveReason} onReasonChange={setArchiveReason}
+        onCancel={() => setShowArchive(false)} cancelLabel={t('team.cancel', locale)} confirmLabel={t('crm.profile.archive.title', locale)} loading={false}
+        onConfirm={() => { setShowArchive(false); queueAction({ title: t('crm.profile.archive.title', locale), description: `${t('crm.profile.archive.warning', locale)} ${profileId} · ${archiveReason.trim()}`,
+          path: `/api/crm/profiles/${profileId}`, method: 'DELETE', errorMessages: { 'CRM:PROFILE:DELETION_BLOCKED': t('crm.profile.archive.warning', locale), 'CRM:PROFILE:LAST_OWNER': t('crm.profile.archive.warning', locale) }, body: { reason: archiveReason.trim() } }, 'archive') }} />}
       {/* Save success / error flash messages */}
       {saveSuccess && (
         <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">

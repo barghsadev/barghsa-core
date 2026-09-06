@@ -330,9 +330,12 @@ export class CrmV2Controller {
       )
     }
 
+    const parsed = z.object({ action: z.enum(['verify','unverify','reverify']), reason: z.string().trim().max(1000).optional() }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid verification action or reason' }, 400)
+
     const result = await this.crmV2Service.verifyProfile(
       profileId,
-      dto,
+      { action: parsed.data.action, ...(parsed.data.reason !== undefined ? { reason: parsed.data.reason } : {}) },
       req.session.userId,
       req.ip ?? 'unknown',
     )
@@ -419,9 +422,12 @@ export class CrmV2Controller {
       )
     }
 
+    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+
     const result = await this.crmV2Service.forcePasswordChange(
       userId,
-      dto.reason,
+      parsed.data.reason,
       req.session.userId,
       req.ip ?? 'unknown',
     )
@@ -507,9 +513,12 @@ export class CrmV2Controller {
       )
     }
 
+    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+
     const result = await this.crmV2Service.expireSessions(
       userId,
-      dto.reason,
+      parsed.data.reason,
       req.session.userId,
       req.ip ?? 'unknown',
     )
@@ -603,9 +612,12 @@ export class CrmV2Controller {
       )
     }
 
+    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
+    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+
     const result = await this.crmV2Service.deleteProfile(
       profileId,
-      dto.reason,
+      parsed.data.reason,
       req.session.userId,
       req.ip ?? 'unknown',
     )

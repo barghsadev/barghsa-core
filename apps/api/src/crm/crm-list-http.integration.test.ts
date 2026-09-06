@@ -106,3 +106,19 @@ it('requires recent step-up before every sensitive CRM mutation',async()=>{
   const identity=await fetch(`${http.base}/api/crm/profiles/${id}`,{method:'PUT',headers,body:JSON.stringify({nationalId:'1234567890'})})
   expect(identity.status).toBe(400)
 })
+it('archives an empty profile once and blocks funds and canonical legal ownership',async()=>{
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='crm-admin'")
+  const csrf=(await http.pool.query("SELECT csrf_token FROM sessions WHERE user_id='crm-admin'")).rows[0].csrf_token
+  const headers={Cookie:cookie,'X-CSRF-Token':csrf,'Content-Type':'application/json'}
+  const blocked=randomUUID(),empty=randomUUID(),legal=randomUUID()
+  for(const [id,type] of [[blocked,'INDIVIDUAL'],[empty,'INDIVIDUAL'],[legal,'LEGAL']]) await http.pool.query("INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'crm-page-4',$2,'ACTIVE')",[id,type])
+  await http.pool.query('INSERT INTO wallets(profile_id,posted_balance) VALUES ($1,10000000000000001)',[blocked])
+  async function archive(id:string) {return fetch(`${http.base}/api/crm/profiles/${id}`,{method:'DELETE',headers,body:JSON.stringify({reason:'Closure requested'})})}
+  expect((await archive(blocked)).status).toBe(409)
+  expect((await archive(legal)).status).toBe(409)
+  expect((await http.pool.query('SELECT archived FROM profiles WHERE id=$1',[blocked])).rows[0].archived).toBe(false)
+  const results=await Promise.all(Array.from({length:4},()=>archive(empty)))
+  expect(results.map(response=>response.status).sort()).toEqual([200,409,409,409])
+  expect((await http.pool.query("SELECT id FROM audit_log WHERE event='profile_deleted' AND metadata::jsonb->>'profileId'=$1",[empty])).rows).toHaveLength(1)
+  expect((await http.pool.query('SELECT archived,archived_reason FROM profiles WHERE id=$1',[empty])).rows[0]).toMatchObject({archived:true,archived_reason:'Closure requested'})
+})

@@ -805,6 +805,15 @@ export const fa: I18nDictionary = {
 
   // ── CRM Profile Detail (T-05.02.01) ────────────────────────────
   'crm.profile.title': 'مشخصات پروفایل',
+  "crm.profile.verification.action": "عملیات تأیید هویت",
+  "crm.profile.verification.verify": "تأیید پروفایل",
+  "crm.profile.verification.unverify": "لغو تأیید",
+  "crm.profile.verification.reverify": "درخواست تأیید مجدد",
+  "crm.profile.verification.reason": "دلیل (برای لغو یا تجدید تأیید الزامی است)",
+  "crm.profile.verification.review": "بررسی تغییر تأیید هویت",
+  "crm.profile.verification.saved": "تغییر تأیید هویت ثبت شد.",
+  "crm.profile.archive.title": "بایگانی پروفایل",
+  "crm.profile.archive.warning": "پروفایل پنهان و سوابق آن حفظ می‌شود. سفارش یا قرارداد فعال، فاکتور پرداخت‌نشده، موجودی کیف پول و محدودیت مالکیت ممکن است مانع بایگانی شوند. دلیل را وارد کنید.",
   'crm.profile.conflict': 'این رکورد تغییر کرده است. پنجره را ببندید و پیش از تلاش دوباره، پروفایل را تازه‌سازی کنید.',
   'crm.profile.backToUsers': '→ بازگشت به کاربران',
   'crm.profile.tab.overview': 'خلاصه',
@@ -2131,6 +2140,15 @@ export const en: I18nDictionary = {
 
     // ── CRM Profile Detail (T-05.02.01) ────────────────────────────
     'crm.profile.title': 'Profile Detail',
+  "crm.profile.verification.action": "Verification action",
+  "crm.profile.verification.verify": "Verify profile",
+  "crm.profile.verification.unverify": "Remove verification",
+  "crm.profile.verification.reverify": "Request re-verification",
+  "crm.profile.verification.reason": "Reason (required to remove or renew verification)",
+  "crm.profile.verification.review": "Review verification change",
+  "crm.profile.verification.saved": "Verification change saved.",
+  "crm.profile.archive.title": "Archive profile",
+  "crm.profile.archive.warning": "This hides the profile while preserving its history. Active orders, contracts, unpaid invoices, wallet balances and ownership constraints can block archiving. Enter the reason.",
     'crm.profile.conflict': 'This record has changed. Close the dialog and reload the profile before trying again.',
     'crm.profile.label.sessionId': 'Session reference',
     'crm.profile.session.revoked': 'Revoked',

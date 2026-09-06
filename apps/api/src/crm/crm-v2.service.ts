@@ -729,27 +729,18 @@ export class CrmV2Service {
 
     const pool = getDbPool()
 
-    // 1. Fetch the profile to verify existence and type
-    const profileResult = await pool.query(
-      `SELECT id, user_id, profile_type, status, archived, title, first_name, last_name
-       FROM profiles WHERE id = $1`,
-      [profileId],
-    )
-
-    if (profileResult.rows.length === 0) return null
-
-    const profileRow = profileResult.rows[0] as Record<string, unknown>
-
-    // 2. Check if already archived
-    if (profileRow.archived === true) {
-      return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' }
-    }
-
-    const profileType = profileRow.profile_type as string
     const client = await pool.connect()
-
     try {
       await client.query('BEGIN')
+      const profileResult = await client.query(
+        `SELECT id,user_id,profile_type,status,archived FROM profiles WHERE id=$1 FOR UPDATE`, [profileId])
+      if (!profileResult.rows.length) { await client.query('ROLLBACK'); return null }
+      const profileRow = profileResult.rows[0] as Record<string, unknown>
+      if (profileRow.archived === true) {
+        await client.query('ROLLBACK')
+        return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' }
+      }
+      const profileType = profileRow.profile_type as string
 
       // 3. Check business constraints
       // Check for active orders (status != 'CANCELLED')
@@ -798,7 +789,7 @@ export class CrmV2Service {
       )
       if ((invoicesTableExists.rows[0] as Record<string, unknown>).exists) {
         const unpaidInvoices = await client.query(
-          `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1 AND status != 'PAID'`,
+          `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1 AND state NOT IN ('Paid','Cancelled','Refunded','PartiallyRefunded')`,
           [profileId],
         )
         const unpaidInvoiceCount = (unpaidInvoices.rows[0] as Record<string, unknown>).cnt as number
@@ -820,12 +811,12 @@ export class CrmV2Service {
       )
       if ((walletsTableExists.rows[0] as Record<string, unknown>).exists) {
         const walletResult = await client.query(
-          `SELECT balance FROM wallets WHERE profile_id = $1`,
+          `SELECT posted_balance, reserved_balance FROM wallets WHERE profile_id = $1 FOR UPDATE`,
           [profileId],
         )
         if (walletResult.rows.length > 0) {
-          const balance = (walletResult.rows[0] as Record<string, unknown>).balance as number
-          if (balance > 0) {
+          const wallet = walletResult.rows[0] as { posted_balance: string; reserved_balance: string }
+          if (BigInt(wallet.posted_balance) !== 0n || BigInt(wallet.reserved_balance) !== 0n) {
             await client.query('ROLLBACK')
             return {
               errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
@@ -835,41 +826,11 @@ export class CrmV2Service {
         }
       }
 
-      // 4. For LEGAL profiles, check this is not the last owner/agent
+      // A legal profile has one canonical owner in profiles.user_id. Agents
+      // cannot substitute for that owner or authorize deleting the legal entity.
       if (profileType === 'LEGAL') {
-        // Check agent count on this legal profile (use legal_profiles_reps or similar if table exists,
-        // otherwise conservatively assume it's the last owner)
-        // For now, if we can't verify, we let deletion proceed — the business
-        // constraint is enforced when the agent management system is wired.
-        const legalRepsTableExists = await client.query(
-          `SELECT EXISTS (
-            SELECT FROM information_schema.tables
-            WHERE table_schema = 'public' AND table_name = 'legal_profile_reps'
-          ) AS exists`,
-        )
-        if ((legalRepsTableExists.rows[0] as Record<string, unknown>).exists) {
-          const repCount = await client.query(
-            `SELECT COUNT(*)::int AS cnt FROM legal_profile_reps WHERE profile_id = $1`,
-            [profileId],
-          )
-          const repCountNum = (repCount.rows[0] as Record<string, unknown>).cnt as number
-          if (repCountNum <= 1) {
-            // Only one owner — check if this profile IS that owner
-            const ownerCount = await client.query(
-              `SELECT COUNT(*)::int AS cnt FROM legal_profile_reps
-               WHERE profile_id = $1 AND role IN ('owner', 'manager')`,
-              [profileId],
-            )
-            const ownerCountNum = (ownerCount.rows[0] as Record<string, unknown>).cnt as number
-            if (ownerCountNum <= 1) {
-              await client.query('ROLLBACK')
-              return {
-                errorCode: 'CRM:PROFILE:LAST_OWNER',
-                error: 'Cannot delete the last owner/manager of a legal profile. Assign a new owner before deletion.',
-              }
-            }
-          }
-        }
+        await client.query('ROLLBACK')
+        return { errorCode: 'CRM:PROFILE:LAST_OWNER', error: 'Cannot archive a legal profile while its canonical ownership remains active.' }
       }
 
       const now = new Date().toISOString()
