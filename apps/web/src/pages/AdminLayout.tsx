@@ -9,7 +9,7 @@ import { useLocale } from '../hooks/useLocale.js'
 export default function AdminLayout() {
   const locale = useLocale()
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <TosBanner />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 bg-white border-inset-end border-gray-200 p-4 shrink-0">
@@ -17,6 +17,7 @@ export default function AdminLayout() {
             <h2 className="text-lg font-semibold mb-4">Admin</h2>
             <ul className="space-y-2">
               <li><a href="/admin" className="text-blue-600 hover:underline">Dashboard</a></li>
+              <li><a href="/admin/tickets" className="text-blue-600 hover:underline">{t('tickets.staffTitle',locale)}</a></li>
               <li><a href="/admin/users" className="text-blue-600 hover:underline">Users</a></li>
               <li><a href="/admin/storage" className="text-blue-600 hover:underline">Storage</a></li>
               <li><a href="/admin/verification" className="text-blue-600 hover:underline">Verification</a></li>

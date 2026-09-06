@@ -97,6 +97,30 @@ export class TicketsService {
 
   private readonly logger = new Logger(TicketsService.name)
 
+  async creationOptions(userId: string, profileId?: string, recordPage = 1) {
+    if (!Number.isSafeInteger(recordPage) || recordPage < 1 || recordPage > 100000) throw new HttpException('Invalid record page',400)
+    if (profileId && !z.uuid().safeParse(profileId).success) throw new HttpException('Invalid profile',400)
+    const pool = getDbPool()
+    const profiles = (await pool.query(`SELECT id,COALESCE(NULLIF(title,''),NULLIF(concat_ws(' ',first_name,last_name),'')) AS title
+      FROM profiles WHERE user_id=$1 AND NOT archived ORDER BY created_at,id`,[userId])).rows
+    if (!profileId) return { profiles, records: [] }
+    if (!profiles.some(profile=>profile.id===profileId)) throw new HttpException('Profile not found',404)
+    const records = (await pool.query(`SELECT * FROM (
+      SELECT id,'order' AS type,created_at FROM orders WHERE profile_id=$1
+      UNION ALL SELECT id,'invoice' AS type,created_at FROM invoices WHERE profile_id=$1
+      ) records ORDER BY created_at DESC,id DESC LIMIT 21 OFFSET $2`,[profileId,(recordPage-1)*20])).rows
+    return { profiles, records: records.slice(0,20), hasMoreRecords: records.length>20 }
+  }
+
+  async eligibleAssignees() {
+    const users = (await getDbPool().query(`SELECT u.user_id AS id,u.username AS name,u.is_admin,
+      ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
+      FROM users u WHERE u.disabled_at IS NULL AND u.activation_token IS NULL
+        AND (u.is_admin OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id)) ORDER BY u.username,u.user_id`)).rows
+    return users.filter(user=>user.is_admin || resolveStaffPermissions(user.role_permissions).some(permission=>['*','tickets:*','tickets:write','tickets:assigned'].includes(permission)))
+      .map(user=>({ id: user.id as string, name: user.name as string }))
+  }
+
   /**
    * Create a new support ticket.
    *

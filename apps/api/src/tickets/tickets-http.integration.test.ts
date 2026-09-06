@@ -251,3 +251,30 @@ it('rechecks assigned-only permission after waiting on a concurrent reassignment
     expect((await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1',[id])).rows).toHaveLength(0)
   } finally {await client.query('ROLLBACK');client.release();await response}
 })
+it('offers only owned profiles and exposes eligible assignees only to full ticket managers', async () => {
+  const response=await fetch(`${http.base}/api/tickets/options`,{headers:headers.customer!})
+  expect(response.status).toBe(200)
+  const options=await response.json() as {profiles:{id:string}[]}
+  const foreign=randomUUID()
+  await http.pool.query("INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'staff','INDIVIDUAL','VERIFIED')",[foreign])
+  expect(options.profiles.map(profile=>profile.id)).not.toContain(foreign)
+  expect((await fetch(`${http.base}/api/tickets/options?profileId=${foreign}`,{headers:headers.customer!})).status).toBe(404)
+  expect((await fetch(`${http.base}/api/staff/tickets/assignees`,{headers:headers.assigned!})).status).toBe(403)
+  const staff=await fetch(`${http.base}/api/staff/tickets/assignees`,{headers:headers.staff!})
+  expect(staff.status).toBe(200)
+  const assignees=await staff.json() as {id:string;name:string}[]
+  expect(assignees.map(person=>person.id).sort()).toEqual(['assigned','staff'])
+  expect(assignees.every(person=>Object.keys(person).sort().join(',')==='id,name')).toBe(true)
+})
+it('paginates older related records without exposing another profile',async()=>{
+  const profile=randomUUID()
+  await http.pool.query("INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,'customer','INDIVIDUAL','VERIFIED')",[profile])
+  await http.pool.query('INSERT INTO invoices(profile_id,order_id,total_amount) SELECT $1,NULL,100 FROM generate_series(1,25)',[profile])
+  const get=(page:number)=>fetch(`${http.base}/api/tickets/options?profileId=${profile}&recordPage=${page}`,{headers:headers.customer!})
+  const first=await (await get(1)).json() as {records:{id:string}[];hasMoreRecords:boolean}
+  const second=await (await get(2)).json() as {records:{id:string}[];hasMoreRecords:boolean}
+  expect(first.records).toHaveLength(20);expect(first.hasMoreRecords).toBe(true)
+  expect(second.records).toHaveLength(5);expect(second.hasMoreRecords).toBe(false)
+  expect(new Set([...first.records,...second.records].map(row=>row.id)).size).toBe(25)
+  expect((await get(1.5)).status).toBe(400)
+})

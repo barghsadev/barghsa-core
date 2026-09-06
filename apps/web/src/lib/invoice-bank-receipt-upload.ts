@@ -86,7 +86,11 @@ export async function uploadVerificationEvidence(file: File, profileId: string):
   return uploadVerifiedAttachment(file, profileId, 'verification_evidence')
 }
 
-async function uploadVerifiedAttachment(file: File, profileId: string, purpose: string): Promise<string | null> {
+export async function uploadTicketAttachment(file: File, profileId: string | null): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'ticket_attachment')
+}
+
+async function uploadVerifiedAttachment(file: File, profileId: string | null, purpose: string): Promise<string | null> {
   const evaluated = evaluateInvoiceBankReceiptClientFile({
     name: file.name,
     type: file.type,

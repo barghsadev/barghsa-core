@@ -35,6 +35,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
     { to: '/ai', label: t('dashboard.nav.ai', locale) },
     { to: '/documents', label: t('dashboard.nav.documents', locale) },
     { to: '/videos', label: t('dashboard.nav.videos', locale) },
+    { to: '/tickets', label: t('tickets.title',locale) },
     { to: '/notifications', label: t('notifications.nav', locale) },
     { to: '/settings/team', label: t('team.title', locale) },
     { to: '/settings', label: t('dashboard.nav.settings', locale) },

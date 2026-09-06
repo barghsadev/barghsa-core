@@ -95,6 +95,12 @@ export class StaffTicketsController {
    *
    * Staff view any ticket detail (no user scoping).
    */
+  @Get('assignees')
+  async assignees(@Req() req: AuthenticatedRequest) {
+    if (this.assignedScope(req, 'write') !== undefined) throw new HttpException('Only full ticket managers can choose other assignees',403)
+    return this.ticketsService.eligibleAssignees()
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Staff get ticket detail' })
   @ApiResponse({ status: 200, description: 'Ticket detail.' })

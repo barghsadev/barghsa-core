@@ -25,6 +25,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppDocumentsRouteImport } from './routes/_app/documents'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
+import { Route as AppTicketsRouteImport } from './routes/_app/tickets'
 import { Route as AppVideosRouteImport } from './routes/_app/videos'
 import { Route as AppWalletRouteImport } from './routes/_app/wallet'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -37,6 +38,7 @@ import { Route as AdminNotificationsRouteImport } from './routes/admin/notificat
 import { Route as AdminProvidersRouteImport } from './routes/admin/providers'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
+import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
@@ -140,6 +142,11 @@ const AppSavingsRoute = AppSavingsRouteImport.update({
   path: '/savings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTicketsRoute = AppTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVideosRoute = AppVideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -198,6 +205,11 @@ const AdminRolesRoute = AdminRolesRouteImport.update({
 const AdminStorageRoute = AdminStorageRouteImport.update({
   id: '/storage',
   path: '/storage',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTicketsRoute = AdminTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminTosRoute = AdminTosRouteImport.update({
@@ -335,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
+  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
@@ -346,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -385,6 +399,7 @@ export interface FileRoutesByTo {
   '/documents': typeof AppDocumentsRoute
   '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
+  '/tickets': typeof AppTicketsRoute
   '/videos': typeof AppVideosRoute
   '/wallet': typeof AppWalletRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
@@ -395,6 +410,7 @@ export interface FileRoutesByTo {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -438,6 +454,7 @@ export interface FileRoutesById {
   '/_app/documents': typeof AppDocumentsRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/savings': typeof AppSavingsRoute
+  '/_app/tickets': typeof AppTicketsRoute
   '/_app/videos': typeof AppVideosRoute
   '/_app/wallet': typeof AppWalletRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
@@ -449,6 +466,7 @@ export interface FileRoutesById {
   '/admin/providers': typeof AdminProvidersRoute
   '/admin/roles': typeof AdminRolesRoute
   '/admin/storage': typeof AdminStorageRoute
+  '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -492,6 +510,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/notifications'
     | '/savings'
+    | '/tickets'
     | '/videos'
     | '/wallet'
     | '/admin/approval-requests'
@@ -503,6 +522,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/roles'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
@@ -542,6 +562,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/notifications'
     | '/savings'
+    | '/tickets'
     | '/videos'
     | '/wallet'
     | '/admin/approval-requests'
@@ -552,6 +573,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/roles'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
@@ -594,6 +616,7 @@ export interface FileRouteTypes {
     | '/_app/documents'
     | '/_app/notifications'
     | '/_app/savings'
+    | '/_app/tickets'
     | '/_app/videos'
     | '/_app/wallet'
     | '/admin/approval-requests'
@@ -605,6 +628,7 @@ export interface FileRouteTypes {
     | '/admin/providers'
     | '/admin/roles'
     | '/admin/storage'
+    | '/admin/tickets'
     | '/admin/tos'
     | '/admin/users'
     | '/admin/verification'
@@ -758,6 +782,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSavingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/tickets': {
+      id: '/_app/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AppTicketsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/videos': {
       id: '/_app/videos'
       path: '/videos'
@@ -840,6 +871,13 @@ declare module '@tanstack/react-router' {
       path: '/storage'
       fullPath: '/admin/storage'
       preLoaderRoute: typeof AdminStorageRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tickets': {
+      id: '/admin/tickets'
+      path: '/tickets'
+      fullPath: '/admin/tickets'
+      preLoaderRoute: typeof AdminTicketsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/tos': {
@@ -1013,6 +1051,7 @@ interface AppRouteChildren {
   AppDocumentsRoute: typeof AppDocumentsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSavingsRoute: typeof AppSavingsRoute
+  AppTicketsRoute: typeof AppTicketsRoute
   AppVideosRoute: typeof AppVideosRoute
   AppWalletRoute: typeof AppWalletRoute
   AppElectricityOrderRoute: typeof AppElectricityOrderRoute
@@ -1035,6 +1074,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDocumentsRoute: AppDocumentsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSavingsRoute: AppSavingsRoute,
+  AppTicketsRoute: AppTicketsRoute,
   AppVideosRoute: AppVideosRoute,
   AppWalletRoute: AppWalletRoute,
   AppElectricityOrderRoute: AppElectricityOrderRoute,
@@ -1078,6 +1118,7 @@ interface AdminRouteChildren {
   AdminProvidersRoute: typeof AdminProvidersRoute
   AdminRolesRoute: typeof AdminRolesRoute
   AdminStorageRoute: typeof AdminStorageRoute
+  AdminTicketsRoute: typeof AdminTicketsRoute
   AdminTosRoute: typeof AdminTosRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
@@ -1095,6 +1136,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminProvidersRoute: AdminProvidersRoute,
   AdminRolesRoute: AdminRolesRoute,
   AdminStorageRoute: AdminStorageRoute,
+  AdminTicketsRoute: AdminTicketsRoute,
   AdminTosRoute: AdminTosRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,

@@ -17,7 +17,11 @@ const AUTH_ROUTE_PREFIXES = ['/login', '/register', '/forgot-password']
 /**
  * Routes explicitly excluded from the profile check.
  */
-const EXCLUDED_ROUTES = new Set(['/', '/onboarding'])
+const EXCLUDED_ROUTES = new Set(['/', '/onboarding', '/tickets'])
+function needsProfile(pathname: string): boolean {
+  return !AUTH_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix)) && !EXCLUDED_ROUTES.has(pathname)
+    && pathname !== '/admin' && !pathname.startsWith('/admin/')
+}
 
 /**
  * Client-side profile check (T-03.01.01).
@@ -35,14 +39,15 @@ const EXCLUDED_ROUTES = new Set(['/', '/onboarding'])
 async function runProfileCheck(
   pathname: string,
   router: ReturnType<typeof useRouter>,
+  signal: AbortSignal,
 ): Promise<void> {
   // Skip auth routes and onboarding
-  if (AUTH_ROUTE_PREFIXES.some((p) => pathname.startsWith(p))) return
-  if (EXCLUDED_ROUTES.has(pathname)) return
+  if (!needsProfile(pathname)) return
 
   try {
     const response = await fetch('/api/profiles', {
       method: 'GET',
+      signal,
       credentials: 'include',
       headers: { Accept: 'application/json' },
     })
@@ -61,6 +66,7 @@ async function runProfileCheck(
     } = await response.json()
 
     // No profiles — redirect to onboarding
+    if (signal.aborted) return
     if (data.profiles.length === 0) {
       router.navigate({ to: '/onboarding', replace: true })
       return
@@ -70,7 +76,7 @@ async function runProfileCheck(
     // Profile creation already establishes the initial default on the server.
     // Multiple profiles — proceed normally
   } catch (error) {
-    console.warn('[profile guard] network error', error)
+    if (!signal.aborted) console.warn('[profile guard] network error', error)
   }
 }
 
@@ -79,14 +85,16 @@ function RootComponent() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    runProfileCheck(pathname, router)
+    const controller = new AbortController()
+    void runProfileCheck(pathname, router, controller.signal)
+    return () => controller.abort()
   }, [pathname, router])
 
   return (
     <>
       <BrandThemeProvider>
         <VerificationBanner />
-        <DefaultProfileModal />
+        {needsProfile(pathname) && <DefaultProfileModal />}
         <Outlet />
         {process.env.NODE_ENV === 'development' && <TanStackRouterDevtools />}
       </BrandThemeProvider>

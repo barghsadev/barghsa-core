@@ -108,6 +108,11 @@ export class TicketsController {
    *
    * Gets a single ticket detail, scoped to the authenticated user.
    */
+  @Get('options')
+  async creationOptions(@Req() req: AuthenticatedRequest, @Query('profileId') profileId?: string, @Query('recordPage') recordPage?: string) {
+    return this.ticketsService.creationOptions(req.session.userId, profileId, recordPage === undefined ? 1 : Number(recordPage))
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get ticket detail' })
   @ApiResponse({ status: 200, description: 'Ticket detail.' })

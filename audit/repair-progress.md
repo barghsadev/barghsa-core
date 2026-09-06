@@ -485,3 +485,12 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - An actual blocked comment transaction proves that reassignment removes access before the pending write can commit. The staff queue reports current action capabilities for its screen.
 - Review: 36 ticket/permission checks passed, including 12 real HTTP/database scenarios; API typecheck and whitespace check passed. Tests also cover forged list filters, another ticket's internal comments, status/assignment refusal and access after reassignment.
 - Team assignment/configuration consumption and ticket screens remain open.
+
+### F16.5 — Customer and staff ticket screens
+
+- Added customer `/tickets` and staff `/admin/tickets` routes and navigation. Both have searchable/filterable/sortable paginated lists, conversation details, localized dates, attachment downloads and direct ticket links.
+- Customer creation offers only owned profiles, paginated owned order/invoice choices, priority and up to five uploads. A failed ticket save preserves the draft and reuses completed uploads on retry. Customers can reply and reopen.
+- Staff controls follow current capabilities: eligible assignee selection, allowed status changes, public replies and visibly distinct internal notes. Assigned-only staff can resume reopened assigned tickets but cannot reassign them.
+- Review found the global profile check blocked support and staff pages for accounts without customer profiles. Those pages now bypass onboarding/default-profile selection, and in-flight profile checks are cancelled on navigation. Profile-dependent customer behavior remains covered by regression tests. English/Persian admin layout direction now follows the locale.
+- Review: nine Chromium ticket/profile-switch scenarios passed; 36 focused API checks passed; all workspace typechecks and the production web build passed. Rendered staff screen inspected. Build still reports the previously tracked entry bundle budget problem under F19.
+- Remaining F16 work includes configured team assignment, staff response targets/notices and final task acceptance reconciliation. Contract linking is still unavailable until that module exists.
