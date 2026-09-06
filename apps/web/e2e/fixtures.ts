@@ -1,4 +1,4 @@
-import { test as base, expect, type Page } from '@playwright/test'
+import { test as base, expect, type Page } from '@playwright/test';
 
 /**
  * Extended test fixture providing isolated test context.
@@ -10,7 +10,7 @@ import { test as base, expect, type Page } from '@playwright/test'
 interface TestFixtures {
   /** Deterministic identity to scope test data (e.g. seed search prefix).
    *  Format: `e2e-<project>-<worker>-<sanitized-title>` */
-  identity: string
+  identity: string;
 }
 
 /**
@@ -21,18 +21,18 @@ function sanitize(title: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 48)
+    .slice(0, 48);
 }
 
 export const test = base.extend<TestFixtures>({
   identity: [
     async ({}, use, testInfo) => {
-      const identity = `e2e-${testInfo.project.name}-w${testInfo.workerIndex}-${sanitize(testInfo.title)}`
-      await use(identity)
+      const identity = `e2e-${testInfo.project.name}-w${testInfo.workerIndex}-${sanitize(testInfo.title)}`;
+      await use(identity);
     },
     { auto: true },
   ],
-})
+});
 
-export { expect } from '@playwright/test'
-export type { Page }
+export { expect } from '@playwright/test';
+export type { Page };

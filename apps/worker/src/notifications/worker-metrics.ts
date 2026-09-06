@@ -1,5 +1,5 @@
-import { Registry, Counter, Gauge } from 'prom-client'
-import type { NotificationChannel } from '@barghsa/shared/notifications'
+import { Registry, Counter, Gauge } from 'prom-client';
+import type { NotificationChannel } from '@barghsa/shared/notifications';
 
 /**
  * Notification observability metrics (E-05, T-05.01.07).
@@ -29,39 +29,39 @@ import type { NotificationChannel } from '@barghsa/shared/notifications'
  * never collides with the API process's metrics names if both are ever
  * imported into one bundle.
  */
-const registry = new Registry()
+const registry = new Registry();
 
 export const notificationsOutboxAge = new Gauge({
   name: 'notifications_outbox_age_seconds',
   help: 'Age in seconds of the oldest pending (queued/scheduled/sending) notification outbox row',
   registers: [registry],
-})
+});
 
 export const notificationsQueueDepth = new Gauge({
   name: 'notifications_queue_depth',
   help: 'Number of notification outbox rows waiting to be dispatched (queued + scheduled)',
   registers: [registry],
-})
+});
 
 export const notificationsDeadLetterCount = new Gauge({
   name: 'notifications_dead_letter_count',
   help: 'Number of open dead-letter notifications awaiting admin triage',
   registers: [registry],
-})
+});
 
 export const notificationsDeliveryAttempts = new Counter({
   name: 'notifications_delivery_attempts_total',
   help: 'Total notification delivery attempts, labelled by channel and outcome',
   labelNames: ['channel', 'status'] as const,
   registers: [registry],
-})
+});
 
 export const providerEmailHealth = new Gauge({
   name: 'provider_email_health',
   help: 'Email provider circuit breaker health: 1=healthy, 0=tripped/degraded',
   labelNames: ['provider_id'] as const,
   registers: [registry],
-})
+});
 
 /**
  * Record one delivery attempt in the attempts counter. Called by the outbox
@@ -70,9 +70,9 @@ export const providerEmailHealth = new Gauge({
  */
 export function recordDeliveryAttempt(
   channel: NotificationChannel,
-  status: 'delivered' | 'failed',
+  status: 'delivered' | 'failed'
 ): void {
-  notificationsDeliveryAttempts.inc({ channel, status }, 1)
+  notificationsDeliveryAttempts.inc({ channel, status }, 1);
 }
 
 /**
@@ -81,42 +81,42 @@ export function recordDeliveryAttempt(
  */
 export async function collectNotificationGauges(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool: any,
+  pool: any
 ): Promise<void> {
   // Oldest pending row's age, in seconds. NULL (no pending rows) -> 0.
   const ageRes = await pool.query(
     `SELECT COALESCE(MAX(EXTRACT(EPOCH FROM (NOW() - created_at))), 0) AS age
        FROM notification_outbox
-      WHERE status IN ('queued', 'scheduled', 'sending')`,
-  )
-  notificationsOutboxAge.set(Number(ageRes.rows[0]?.age ?? 0))
+      WHERE status IN ('queued', 'scheduled', 'sending')`
+  );
+  notificationsOutboxAge.set(Number(ageRes.rows[0]?.age ?? 0));
 
   // Backlog awaiting dispatch: queued + scheduled rows.
   const depthRes = await pool.query(
     `SELECT COUNT(*)::int AS depth
        FROM notification_outbox
-      WHERE status IN ('queued', 'scheduled')`,
-  )
-  notificationsQueueDepth.set(Number(depthRes.rows[0]?.depth ?? 0))
+      WHERE status IN ('queued', 'scheduled')`
+  );
+  notificationsQueueDepth.set(Number(depthRes.rows[0]?.depth ?? 0));
 
   // Open dead-letter items needing triage.
   const dlRes = await pool.query(
     `SELECT COUNT(*)::int AS count
        FROM notification_dead_letter
-      WHERE status = 'open'`,
-  )
-  notificationsDeadLetterCount.set(Number(dlRes.rows[0]?.count ?? 0))
+      WHERE status = 'open'`
+  );
+  notificationsDeadLetterCount.set(Number(dlRes.rows[0]?.count ?? 0));
 
   // Email provider circuit-breaker health (T-05.06.06): 1=healthy, 0=tripped.
   // Recomputed from the persisted `degraded` flag on email_provider_configs
   // so the /metrics endpoint reflects the same state the send path enforces.
   const healthRes = await pool.query(
     `SELECT id, CASE WHEN degraded THEN 0 ELSE 1 END AS health
-       FROM email_provider_configs`,
-  )
-  providerEmailHealth.reset()
+       FROM email_provider_configs`
+  );
+  providerEmailHealth.reset();
   for (const row of healthRes.rows as Array<{ id: string; health: number }>) {
-    providerEmailHealth.set({ provider_id: row.id }, Number(row.health))
+    providerEmailHealth.set({ provider_id: row.id }, Number(row.health));
   }
 }
 
@@ -124,9 +124,9 @@ export async function collectNotificationGauges(
  * Render all notification metrics in Prometheus text format for `GET /metrics`.
  */
 export async function exportWorkerMetrics(): Promise<string> {
-  return registry.metrics()
+  return registry.metrics();
 }
 
 // Export the scoped registry so main.ts can wire Node runtime metrics
 // (collectDefaultMetrics) onto the same set in one place if desired.
-export { registry }
+export { registry };

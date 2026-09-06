@@ -6,8 +6,8 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: "24"
-  PNPM_VERSION: "10.8.1"
+  NODE_VERSION: '24'
+  PNPM_VERSION: '10.8.1'
 
 jobs:
   integrity:
@@ -25,6 +25,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm typecheck
+      - run: pnpm format:check
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
       - name: Validate pilot TLS proxy and edge quotas

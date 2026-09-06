@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,19 +12,19 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import {
   AiModelsService,
   AI_MODEL_PROVIDER_TYPES,
   type AiModelDto,
   type TestAiModelResult,
-} from './ai-models.service.js'
+} from './ai-models.service.js';
 
 /** Shared url refinement: http(s), non-empty after trim. */
 const baseUrlSchema = z
@@ -33,12 +33,12 @@ const baseUrlSchema = z
   .max(500)
   .refine((v) => {
     try {
-      const url = new URL(v)
-      return url.protocol === 'http:' || url.protocol === 'https:'
+      const url = new URL(v);
+      return url.protocol === 'http:' || url.protocol === 'https:';
     } catch {
-      return false
+      return false;
     }
-  }, 'Base URL must be an http(s) URL')
+  }, 'Base URL must be an http(s) URL');
 
 export const CreateAiModelSchema = z.object({
   title: z.string().min(1, 'Title is required').max(120),
@@ -48,7 +48,7 @@ export const CreateAiModelSchema = z.object({
   baseUrl: baseUrlSchema,
   modelName: z.string().min(1, 'Model name is required').max(200),
   apiToken: z.string().max(4000).optional(),
-})
+});
 
 export const UpdateAiModelSchema = z
   .object({
@@ -58,14 +58,14 @@ export const UpdateAiModelSchema = z
     modelName: z.string().min(1).max(200).optional(),
     apiToken: z.string().max(4000).optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
 function httpError(code: string, message: string, statusCode = 400): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /**
@@ -92,8 +92,8 @@ export class AiModelsController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI models',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -101,16 +101,16 @@ export class AiModelsController {
   @ApiOperation({ summary: 'List AI models (admin)' })
   @ApiResponse({ status: 200, description: 'All AI models, newest first, tokens masked.' })
   async list(@Req() req: AuthenticatedRequest): Promise<AiModelDto[]> {
-    this.assertAiModelsPermission(req)
-    return this.service.list()
+    this.assertAiModelsPermission(req);
+    return this.service.list();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single AI model (admin)' })
   @ApiResponse({ status: 200, description: 'The AI model with its masked token.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<AiModelDto> {
-    this.assertAiModelsPermission(req)
-    return this.service.get(id)
+    this.assertAiModelsPermission(req);
+    return this.service.get(id);
   }
 
   @Post()
@@ -121,12 +121,12 @@ export class AiModelsController {
   @ApiResponse({ status: 201, description: 'AI model created (token stored encrypted).' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateAiModelSchema>,
+    @Body() body: z.infer<typeof CreateAiModelSchema>
   ): Promise<AiModelDto> {
-    this.assertAiModelsPermission(req)
-    const parsed = CreateAiModelSchema.safeParse(body)
+    this.assertAiModelsPermission(req);
+    const parsed = CreateAiModelSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload');
     }
     return this.service.create({
       title: parsed.data.title,
@@ -136,7 +136,7 @@ export class AiModelsController {
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Put(':id')
@@ -154,24 +154,22 @@ export class AiModelsController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateAiModelSchema>,
+    @Body() body: z.infer<typeof UpdateAiModelSchema>
   ): Promise<AiModelDto> {
-    this.assertAiModelsPermission(req)
-    const parsed = UpdateAiModelSchema.safeParse(body)
+    this.assertAiModelsPermission(req);
+    const parsed = UpdateAiModelSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid AI model payload');
     }
     return this.service.update(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
-      ...(parsed.data.providerType !== undefined
-        ? { providerType: parsed.data.providerType }
-        : {}),
+      ...(parsed.data.providerType !== undefined ? { providerType: parsed.data.providerType } : {}),
       ...(parsed.data.baseUrl !== undefined ? { baseUrl: parsed.data.baseUrl } : {}),
       ...(parsed.data.modelName !== undefined ? { modelName: parsed.data.modelName } : {}),
       ...(parsed.data.apiToken !== undefined ? { apiToken: parsed.data.apiToken } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -180,12 +178,9 @@ export class AiModelsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI model (admin)' })
   @ApiResponse({ status: 204, description: 'AI model deleted.' })
-  async remove(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ): Promise<void> {
-    this.assertAiModelsPermission(req)
-    return this.service.remove(id, req.session.userId, requestIp(req))
+  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+    this.assertAiModelsPermission(req);
+    return this.service.remove(id, req.session.userId, requestIp(req));
   }
 
   @Post(':id/test')
@@ -203,9 +198,9 @@ export class AiModelsController {
   @ApiResponse({ status: 200, description: 'Test outcome + refreshed model.' })
   async test(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<TestAiModelResult> {
-    this.assertAiModelsPermission(req)
-    return this.service.test(id, req.session.userId, requestIp(req))
+    this.assertAiModelsPermission(req);
+    return this.service.test(id, req.session.userId, requestIp(req));
   }
 }

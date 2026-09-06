@@ -24,19 +24,14 @@
  * - `dead_letter`  the job exhausted its attempt budget and is quarantined;
  * - `resolved`     the job recovered (worker success) or an admin resolved it.
  */
-export const BACKGROUND_JOB_STATUSES = [
-  'failed',
-  'retrying',
-  'dead_letter',
-  'resolved',
-] as const
+export const BACKGROUND_JOB_STATUSES = ['failed', 'retrying', 'dead_letter', 'resolved'] as const;
 
 /** A background job lifecycle state. */
-export type BackgroundJobStatus = (typeof BACKGROUND_JOB_STATUSES)[number]
+export type BackgroundJobStatus = (typeof BACKGROUND_JOB_STATUSES)[number];
 
 /** Whether a raw value is a valid background job status. */
 export function isBackgroundJobStatus(raw: unknown): raw is BackgroundJobStatus {
-  return typeof raw === 'string' && (BACKGROUND_JOB_STATUSES as readonly string[]).includes(raw)
+  return typeof raw === 'string' && (BACKGROUND_JOB_STATUSES as readonly string[]).includes(raw);
 }
 
 /**
@@ -53,23 +48,23 @@ export const BACKGROUND_JOB_TYPES = [
   { key: 'invoice_reminder_sender', label: 'Invoice reminder sender' },
   { key: 'wallet_reconciliation_scan', label: 'Wallet ledger reconciliation' },
   { key: 'online_topup_expiry_scan', label: 'Online top-up Pending TTL expiry' },
-] as const
+] as const;
 
 /** A known background job type key. */
-export type BackgroundJobType = (typeof BACKGROUND_JOB_TYPES)[number]['key']
+export type BackgroundJobType = (typeof BACKGROUND_JOB_TYPES)[number]['key'];
 
 /** Whether a raw value is a known background job type key. */
 export function isBackgroundJobType(raw: unknown): raw is BackgroundJobType {
   return (
     typeof raw === 'string' &&
     (BACKGROUND_JOB_TYPES as readonly { key: string }[]).some((t) => t.key === raw)
-  )
+  );
 }
 
 /** Resolve the human-readable label for a job type key. */
 export function backgroundJobLabel(jobType: string): string {
   const entry = (BACKGROUND_JOB_TYPES as readonly { key: string; label: string }[]).find(
-    (t) => t.key === jobType,
-  )
-  return entry?.label ?? jobType
+    (t) => t.key === jobType
+  );
+  return entry?.label ?? jobType;
 }

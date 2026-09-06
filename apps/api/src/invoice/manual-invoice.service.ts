@@ -40,70 +40,70 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-} from '@nestjs/common'
-import { createHash } from 'node:crypto'
-import { getDbPool } from '@barghsa/db'
-import { duePeriodTypeForManual } from '@barghsa/shared/finance'
-import { v7 as uuidv7 } from 'uuid'
-import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
-import type { TransitionResult } from './invoice-state-machine.service.js'
-import type { TransactionClient } from './invoice-audit.repository.js'
-import type { InvoiceState } from './invoice-state.model.js'
+} from '@nestjs/common';
+import { createHash } from 'node:crypto';
+import { getDbPool } from '@barghsa/db';
+import { duePeriodTypeForManual } from '@barghsa/shared/finance';
+import { v7 as uuidv7 } from 'uuid';
+import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
+import type { TransitionResult } from './invoice-state-machine.service.js';
+import type { TransactionClient } from './invoice-audit.repository.js';
+import type { InvoiceState } from './invoice-state.model.js';
 import {
   calculateManualInvoice,
   type CalculatedManualLine,
   type ManualInvoiceLineInput,
-} from './manual-invoice.calculation.js'
-import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
-import { DueAtCalculationService } from './due-at.service.js'
+} from './manual-invoice.calculation.js';
+import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js';
+import { DueAtCalculationService } from './due-at.service.js';
 
 /** Command to create and issue one manual invoice. */
 export interface CreateManualInvoiceCommand {
   /** Customer profile the invoice is issued to. */
-  profileId: string
+  profileId: string;
   /** Optional contract reference (text FK placeholder, S-04.1.02). */
-  contractId?: string
+  contractId?: string;
   /** Custom lines entered by the staff member. At least one required. */
-  lines: ManualInvoiceLineInput[]
+  lines: ManualInvoiceLineInput[];
   /** The finance staff member performing the action (FK `users.userId`). */
-  actorUserId: string
+  actorUserId: string;
   /** Opaque correlation ID for audit linkage. */
-  correlationId?: string
+  correlationId?: string;
   /** Human-readable reason (audited). */
-  reason?: string
+  reason?: string;
   /** Source IP of the staff member (audited). */
-  ip?: string
+  ip?: string;
   /**
    * Idempotency key: retrying with the same key and the same payload
    * returns the existing invoice instead of creating a duplicate. A key
    * reused with a different payload is rejected with ConflictException.
    */
-  idempotencyKey?: string
+  idempotencyKey?: string;
   /** Explicit due date (>= now); defaults to issuedAt + configured days. */
-  dueAt?: Date
+  dueAt?: Date;
   /** Override "now" for tests. */
-  now?: Date
+  now?: Date;
 }
 
 /** A persisted line as returned to the caller. */
 export interface ManualInvoiceLineResult extends CalculatedManualLine {
-  id: string
-  position: number
+  id: string;
+  position: number;
 }
 
 /** Result of a successful create-and-issue. */
 export interface ManualInvoiceResult {
-  invoiceId: string
-  profileId: string
-  contractId: string | null
-  state: InvoiceState
-  totalAmount: bigint
-  lines: ManualInvoiceLineResult[]
-  issuedAt: Date
-  payableFrom: Date
-  dueAt: Date | null
-  auditId: string
-  transition: TransitionResult
+  invoiceId: string;
+  profileId: string;
+  contractId: string | null;
+  state: InvoiceState;
+  totalAmount: bigint;
+  lines: ManualInvoiceLineResult[];
+  issuedAt: Date;
+  payableFrom: Date;
+  dueAt: Date | null;
+  auditId: string;
+  transition: TransitionResult;
 }
 
 /**
@@ -114,10 +114,10 @@ export interface ManualInvoiceResult {
  * retry by a different staff member replays the same invoice.
  */
 export function fingerprintManualInvoice(cmd: {
-  profileId: string
-  contractId?: string
-  lines: ManualInvoiceLineInput[]
-  dueAt?: Date
+  profileId: string;
+  contractId?: string;
+  lines: ManualInvoiceLineInput[];
+  dueAt?: Date;
 }): string {
   const normal = {
     profileId: cmd.profileId,
@@ -130,17 +130,17 @@ export function fingerprintManualInvoice(cmd: {
       vatRate: l.vatRate,
       isTaxable: l.isTaxable !== false,
     })),
-  }
-  return createHash('sha256').update(JSON.stringify(normal)).digest('hex')
+  };
+  return createHash('sha256').update(JSON.stringify(normal)).digest('hex');
 }
 
 @Injectable()
 export class ManualInvoiceService {
-  private readonly logger = new Logger(ManualInvoiceService.name)
+  private readonly logger = new Logger(ManualInvoiceService.name);
 
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
-    private readonly dueAtCalculation: DueAtCalculationService,
+    private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
   /**
@@ -152,66 +152,62 @@ export class ManualInvoiceService {
    * @throws ConflictException when an idempotency key is reused with a
    *   different payload.
    */
-  async createManualInvoice(
-    cmd: CreateManualInvoiceCommand,
-  ): Promise<ManualInvoiceResult> {
+  async createManualInvoice(cmd: CreateManualInvoiceCommand): Promise<ManualInvoiceResult> {
     // --- 1. Pure validation + calculation (throws RangeError) ---
-    let calculation
+    let calculation;
     try {
-      calculation = calculateManualInvoice(cmd.lines)
+      calculation = calculateManualInvoice(cmd.lines);
     } catch (err: unknown) {
       if (err instanceof RangeError) {
-        throw new BadRequestException(err.message)
+        throw new BadRequestException(err.message);
       }
-      throw err
+      throw err;
     }
 
-    const now = cmd.now ?? new Date()
+    const now = cmd.now ?? new Date();
     if (cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
-      throw new BadRequestException('dueAt cannot be in the past')
+      throw new BadRequestException('dueAt cannot be in the past');
     }
 
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // --- 2. Profile must exist (clean 404 + FK pre-check) ---
-      const profileResult = (await client.query(
-        `SELECT id FROM profiles WHERE id = $1`,
-        [cmd.profileId],
-      )) as { rows: Array<{ id: string }> }
+      const profileResult = (await client.query(`SELECT id FROM profiles WHERE id = $1`, [
+        cmd.profileId,
+      ])) as { rows: Array<{ id: string }> };
       if (profileResult.rows.length === 0) {
-        throw new NotFoundException(`Profile not found: ${cmd.profileId}`)
+        throw new NotFoundException(`Profile not found: ${cmd.profileId}`);
       }
 
       // --- 3. Idempotency replay (same key + same payload → same invoice) ---
       if (cmd.idempotencyKey) {
-        const fingerprint = fingerprintManualInvoice(cmd)
+        const fingerprint = fingerprintManualInvoice(cmd);
         const existing = (await client.query(
           `SELECT id, metadata FROM invoices
            WHERE profile_id = $1
              AND metadata->>'source' = 'manual'
              AND metadata->>'idempotencyKey' = $2
            LIMIT 1`,
-          [cmd.profileId, cmd.idempotencyKey],
-        )) as { rows: Array<{ id: string; metadata: Record<string, unknown> | null }> }
+          [cmd.profileId, cmd.idempotencyKey]
+        )) as { rows: Array<{ id: string; metadata: Record<string, unknown> | null }> };
 
         if (existing.rows.length > 0) {
-          const existingId = existing.rows[0]!.id
+          const existingId = existing.rows[0]!.id;
           const storedFingerprint =
-            (existing.rows[0]!.metadata as Record<string, unknown> | null)
-              ?.fingerprint ?? null
+            (existing.rows[0]!.metadata as Record<string, unknown> | null)?.fingerprint ?? null;
           if (storedFingerprint !== null && storedFingerprint !== fingerprint) {
             throw new ConflictException(
-              `Idempotency key ${cmd.idempotencyKey} was already used with a different payload`,
-            )
+              `Idempotency key ${cmd.idempotencyKey} was already used with a different payload`
+            );
           }
 
-          const replayed = await this.loadInvoiceExcerpt(client, existingId)
-          const auditId = await this.findIssueAuditId(client, existingId)
+          const replayed = await this.loadInvoiceExcerpt(client, existingId);
+          const auditId = await this.findIssueAuditId(client, existingId);
 
-          await client.query('COMMIT')
+          await client.query('COMMIT');
           return {
             ...replayed,
             auditId,
@@ -222,7 +218,7 @@ export class ManualInvoiceService {
               transition: 'Issue' as const,
               auditId,
             },
-          }
+          };
         }
       }
 
@@ -231,15 +227,12 @@ export class ManualInvoiceService {
         serviceType: duePeriodTypeForManual(),
         issuedAt: now,
         ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
-      })
-      const dueAt = due.dueAt
+      });
+      const dueAt = due.dueAt;
 
       // --- 5. Insert the invoice (Draft, issue timestamps NULL) + snapshot ---
-      const invoiceId = uuidv7()
-      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(
-        cmd.lines,
-        calculation,
-      )
+      const invoiceId = uuidv7();
+      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(cmd.lines, calculation);
       const metadata = JSON.stringify({
         source: 'manual',
         generatedBy: cmd.actorUserId,
@@ -269,7 +262,7 @@ export class ManualInvoiceService {
           totalAmount: calculation.totalAmount.toString(),
           rounding: 'half-up-to-nearest-IRR',
         },
-      })
+      });
 
       await client.query(
         `INSERT INTO invoices (id, profile_id, contract_id, type, state, total_amount, issued_at, payable_from, due_at, metadata, invoice_calculation_snapshot)
@@ -282,8 +275,8 @@ export class ManualInvoiceService {
           dueAt,
           metadata,
           JSON.stringify(calculationSnapshot),
-        ],
-      )
+        ]
+      );
 
       // --- 6. Insert the lines (position = entry order) ---
       for (const [index, line] of calculation.lines.entries()) {
@@ -302,46 +295,41 @@ export class ManualInvoiceService {
             line.vatAmount,
             line.isTaxable,
             index,
-          ],
-        )
+          ]
+        );
       }
 
       // --- 7. Issue: Draft → Unpaid on the SAME transaction ---
-      const transition = await this.stateMachine.transition(
-        invoiceId,
-        'Draft',
-        'Unpaid',
-        {
-          actorUserId: cmd.actorUserId,
-          // exactOptionalPropertyTypes: only spread present fields
-          ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
-          ...(cmd.reason !== undefined ? { reason: cmd.reason } : {}),
-          ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
-          now,
-          client,
-        },
-      )
+      const transition = await this.stateMachine.transition(invoiceId, 'Draft', 'Unpaid', {
+        actorUserId: cmd.actorUserId,
+        // exactOptionalPropertyTypes: only spread present fields
+        ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
+        ...(cmd.reason !== undefined ? { reason: cmd.reason } : {}),
+        ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
+        now,
+        client,
+      });
 
       // --- 7. Read back INSIDE the transaction (read-your-own-writes):
       //      a read failure here rolls back everything and cannot be
       //      reported as a create failure for a committed invoice. ---
-      const excerpt = await this.loadInvoiceExcerpt(client, invoiceId)
+      const excerpt = await this.loadInvoiceExcerpt(client, invoiceId);
 
-      await client.query('COMMIT')
-      return { ...excerpt, auditId: transition.auditId, transition }
+      await client.query('COMMIT');
+      return { ...excerpt, auditId: transition.auditId, transition };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
         error instanceof ConflictException
       ) {
-        throw error
+        throw error;
       }
-      this.logger.error(`Manual invoice creation failed: ${String(error)}`)
-      throw error
+      this.logger.error(`Manual invoice creation failed: ${String(error)}`);
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -353,18 +341,15 @@ export class ManualInvoiceService {
    * (audit_log.metadata is TEXT holding JSON; a global cast would 22P02
    * on any non-JSON row written by another service).
    */
-  private async findIssueAuditId(
-    client: TransactionClient,
-    invoiceId: string,
-  ): Promise<string> {
+  private async findIssueAuditId(client: TransactionClient, invoiceId: string): Promise<string> {
     const auditResult = (await client.query(
       `SELECT id FROM audit_log
        WHERE event = 'invoice.issue'
          AND metadata::jsonb->>'invoiceId' = $1
        ORDER BY created_at ASC, id ASC LIMIT 1`,
-      [invoiceId],
-    )) as { rows: Array<{ id: string }> }
-    return auditResult.rows[0]?.id ?? ''
+      [invoiceId]
+    )) as { rows: Array<{ id: string }> };
+    return auditResult.rows[0]?.id ?? '';
   }
 
   /**
@@ -373,27 +358,27 @@ export class ManualInvoiceService {
    */
   private async loadInvoiceExcerpt(
     client: TransactionClient,
-    invoiceId: string,
+    invoiceId: string
   ): Promise<Omit<ManualInvoiceResult, 'auditId' | 'transition'>> {
     const invoiceResult = (await client.query(
       `SELECT id, profile_id, contract_id, state, total_amount,
               issued_at, payable_from, due_at
        FROM invoices WHERE id = $1`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        profile_id: string
-        contract_id: string | null
-        state: string
-        total_amount: string
-        issued_at: Date | null
-        payable_from: Date | null
-        due_at: Date | null
-      }>
-    }
-    const row = invoiceResult.rows[0]
-    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`)
+        id: string;
+        profile_id: string;
+        contract_id: string | null;
+        state: string;
+        total_amount: string;
+        issued_at: Date | null;
+        payable_from: Date | null;
+        due_at: Date | null;
+      }>;
+    };
+    const row = invoiceResult.rows[0];
+    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`);
 
     const linesResult = (await client.query(
       `SELECT id, description, quantity, unit_price, line_total,
@@ -401,20 +386,20 @@ export class ManualInvoiceService {
        FROM invoice_lines
        WHERE invoice_id = $1
        ORDER BY position ASC, created_at ASC`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        description: string
-        quantity: number
-        unit_price: string
-        line_total: string
-        vat_rate: number
-        vat_amount: string
-        is_taxable: boolean
-        position: number
-      }>
-    }
+        id: string;
+        description: string;
+        quantity: number;
+        unit_price: string;
+        line_total: string;
+        vat_rate: number;
+        vat_amount: string;
+        is_taxable: boolean;
+        position: number;
+      }>;
+    };
 
     return {
       invoiceId: row.id,
@@ -441,6 +426,6 @@ export class ManualInvoiceService {
         isTaxable: l.is_taxable,
         position: l.position,
       })),
-    }
+    };
   }
 }

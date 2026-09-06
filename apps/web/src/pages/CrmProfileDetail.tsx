@@ -1,132 +1,146 @@
-import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button, Label } from '@barghsa/ui'
-import { useState, useEffect, useId } from 'react'
-import { useParams, Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
+import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Button,
+  Label,
+} from '@barghsa/ui';
+import { useState, useEffect, useId } from 'react';
+import { useParams, Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
 
 interface Profile {
-  id: string
-  profileType: string
-  status: string
-  title: string | null
-  contactEmail: string | null
-  contactMobile: string | null
-  firstName: string | null
-  lastName: string | null
-  nationalId: string | null
-  createdAt: string
-  updatedAt: string
+  id: string;
+  profileType: string;
+  status: string;
+  title: string | null;
+  contactEmail: string | null;
+  contactMobile: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  nationalId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface UserInfo {
-  userId: string
-  username: string
-  email: string | null
-  mobile: string | null
-  lastLogin: string | null
-  isAdmin: boolean
-  createdAt: string
+  userId: string;
+  username: string;
+  email: string | null;
+  mobile: string | null;
+  lastLogin: string | null;
+  isAdmin: boolean;
+  createdAt: string;
 }
 
 interface Address {
-  id: string
-  provinceId: string
-  cityId: string
-  fullAddress: string
-  postalCode: string
-  mainAddress: boolean
-  createdAt: string
+  id: string;
+  provinceId: string;
+  cityId: string;
+  fullAddress: string;
+  postalCode: string;
+  mainAddress: boolean;
+  createdAt: string;
 }
 
 interface SessionEntry {
-  sessionId: string
-  createdAt: string
-  lastActive: string
-  deviceInfo: Record<string, unknown> | null
-  expiresAt: string
-  isRevoked: boolean
-  isActive?: boolean
+  sessionId: string;
+  createdAt: string;
+  lastActive: string;
+  deviceInfo: Record<string, unknown> | null;
+  expiresAt: string;
+  isRevoked: boolean;
+  isActive?: boolean;
 }
 
 interface SessionsInfo {
-  count: number
-  lastActive: string | null
-  entries: SessionEntry[]
+  count: number;
+  lastActive: string | null;
+  entries: SessionEntry[];
 }
 
 interface LegalInfo {
-  legalName: string
-  nationalIdentifier: string
-  registrationNumber: string
-  companyTypeId: string | null
-  economicCode: string | null
-  officialPhone: string | null
-  officialEmail: string | null
-  officialFullAddress: string | null
-  officialPostalCode: string | null
-  representativeTitle: string
-  representativeRelationship: string
+  legalName: string;
+  nationalIdentifier: string;
+  registrationNumber: string;
+  companyTypeId: string | null;
+  economicCode: string | null;
+  officialPhone: string | null;
+  officialEmail: string | null;
+  officialFullAddress: string | null;
+  officialPostalCode: string | null;
+  representativeTitle: string;
+  representativeRelationship: string;
 }
 
 interface SiblingProfile {
-  id: string
-  profileType: string
-  isDefault: boolean
-  status: string
-  title: string | null
+  id: string;
+  profileType: string;
+  isDefault: boolean;
+  status: string;
+  title: string | null;
 }
 
 interface ProfileDetail {
-  viewerPermissions?: { canEdit: boolean; canEditIdentity?: boolean; canVerify: boolean; canManageUser: boolean }
-  profile: Profile
-  user: UserInfo
-  legalInfo: LegalInfo | null
-  addresses: Address[]
-  sessions: SessionsInfo
-  siblingProfiles: SiblingProfile[]
+  viewerPermissions?: {
+    canEdit: boolean;
+    canEditIdentity?: boolean;
+    canVerify: boolean;
+    canManageUser: boolean;
+  };
+  profile: Profile;
+  user: UserInfo;
+  legalInfo: LegalInfo | null;
+  addresses: Address[];
+  sessions: SessionsInfo;
+  siblingProfiles: SiblingProfile[];
 }
 
 /** Editable fields (non-identity) */
 interface EditableFields {
-  title: string
-  email: string
-  mobile: string
+  title: string;
+  email: string;
+  mobile: string;
 }
 
 function getStatusBadgeClass(status: string): string {
   switch (status) {
     case 'VERIFIED':
-      return 'bg-green-100 text-green-800'
+      return 'bg-green-100 text-green-800';
     case 'ACTIVE':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-100 text-blue-800';
     case 'DRAFT':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-100 text-yellow-800';
     case 'SUSPENDED':
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-800';
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-100 text-gray-800';
   }
 }
 
 function getProfileTypeLabel(type: string, locale: Locale): string {
-  return t(`crm.list.${type}`, locale)
+  return t(`crm.list.${type}`, locale);
 }
 
 function formatDate(iso: string | null, locale: Locale): string {
-  if (!iso) return '—'
+  if (!iso) return '—';
   return new Date(iso).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-GB', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  })
+  });
 }
 
 interface TabDef {
-  id: string
-  labelKey: string
+  id: string;
+  labelKey: string;
 }
 
 const TAB_DEFS: TabDef[] = [
@@ -137,118 +151,180 @@ const TAB_DEFS: TabDef[] = [
   { id: 'agent-invites', labelKey: 'crm.profile.tab.agentInvites' },
   { id: 'verification-history', labelKey: 'crm.profile.tab.verificationHistory' },
   { id: 'profiles', labelKey: 'crm.profile.tab.otherProfiles' },
-]
+];
 
 export default function CrmProfileDetail() {
-  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' })
-  return <CrmProfileDetailContent key={profileId} />
+  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
+  return <CrmProfileDetailContent key={profileId} />;
 }
 
 function CrmProfileDetailContent() {
-  const locale: Locale = useLocale()
-  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' })
-  const [data, setData] = useState<ProfileDetail | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState('overview')
-  const [isEditing, setIsEditing] = useState(false)
-  const [editFields, setEditFields] = useState<EditableFields>({ title: '', email: '', mobile: '' })
-  const [saveError, setSaveError] = useState<string | null>(null)
-  const [saveSuccess, setSaveSuccess] = useState(false)
-  const [pendingAction, setPendingAction] = useState<{ action: TeamAction; kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive' } | null>(null)
-  const [verificationAction, setVerificationAction] = useState('verify')
-  const [verificationReason, setVerificationReason] = useState('')
-  const [showArchive, setShowArchive] = useState(false)
-  const [archiveReason, setArchiveReason] = useState('')
-  const [showForcePwChange, setShowForcePwChange] = useState(false)
-  const [showExpireSessions, setShowExpireSessions] = useState(false)
-  const [forcePwChangeReason, setForcePwChangeReason] = useState('')
-  const [expireSessionsReason, setExpireSessionsReason] = useState('')
-  const actionLoading = false
-  const saving = pendingAction?.kind === 'edit'
-  const actionError: string | null = null
-  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+  const locale: Locale = useLocale();
+  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
+  const [data, setData] = useState<ProfileDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFields, setEditFields] = useState<EditableFields>({
+    title: '',
+    email: '',
+    mobile: '',
+  });
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{
+    action: TeamAction;
+    kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive';
+  } | null>(null);
+  const [verificationAction, setVerificationAction] = useState('verify');
+  const [verificationReason, setVerificationReason] = useState('');
+  const [showArchive, setShowArchive] = useState(false);
+  const [archiveReason, setArchiveReason] = useState('');
+  const [showForcePwChange, setShowForcePwChange] = useState(false);
+  const [showExpireSessions, setShowExpireSessions] = useState(false);
+  const [forcePwChangeReason, setForcePwChangeReason] = useState('');
+  const [expireSessionsReason, setExpireSessionsReason] = useState('');
+  const actionLoading = false;
+  const saving = pendingAction?.kind === 'edit';
+  const actionError: string | null = null;
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const abort = new AbortController()
-    setData(null)
-    setLoading(true)
-    setError(null)
+    const abort = new AbortController();
+    setData(null);
+    setLoading(true);
+    setError(null);
     fetch(`/api/crm/profiles/${profileId}`, { signal: abort.signal, credentials: 'include' })
       .then((res) => {
         if (!res.ok) {
-          if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale))
-          if (res.status === 403) throw new Error(t('crm.profile.error.accessDenied', locale))
-          throw new Error(t('crm.profile.error.generic', locale))
+          if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale));
+          if (res.status === 403) throw new Error(t('crm.profile.error.accessDenied', locale));
+          throw new Error(t('crm.profile.error.generic', locale));
         }
-        return res.json()
+        return res.json();
       })
       .then((json: ProfileDetail) => {
-        if (abort.signal.aborted) return
-        setData(json)
-        setLoading(false)
+        if (abort.signal.aborted) return;
+        setData(json);
+        setLoading(false);
       })
       .catch((err: Error) => {
-        if (abort.signal.aborted) return
-        setError(err.message)
-        setLoading(false)
-      })
-    return () => abort.abort()
-  }, [profileId, locale])
+        if (abort.signal.aborted) return;
+        setError(err.message);
+        setLoading(false);
+      });
+    return () => abort.abort();
+  }, [profileId, locale]);
 
   /** Enter edit mode, pre-filling form fields from current data */
   function handleStartEdit() {
-    if (!data) return
+    if (!data) return;
     setEditFields({
       title: data.profile.title ?? '',
       email: data.profile.contactEmail ?? '',
       mobile: data.profile.contactMobile ?? '',
-    })
-    setIsEditing(true)
-    setSaveError(null)
-    setSaveSuccess(false)
+    });
+    setIsEditing(true);
+    setSaveError(null);
+    setSaveSuccess(false);
   }
 
   /** Cancel editing without saving */
   function handleCancelEdit() {
-    setIsEditing(false)
-    setSaveError(null)
-    setSaveSuccess(false)
+    setIsEditing(false);
+    setSaveError(null);
+    setSaveSuccess(false);
   }
 
-  function queueAction(action: TeamAction, kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive') {
-    setPendingAction({ action: { ...action, forbiddenMessage: t('crm.profile.error.accessDenied', locale),
-      conflictMessage: t('crm.profile.conflict', locale) }, kind })
+  function queueAction(
+    action: TeamAction,
+    kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive'
+  ) {
+    setPendingAction({
+      action: {
+        ...action,
+        forbiddenMessage: t('crm.profile.error.accessDenied', locale),
+        conflictMessage: t('crm.profile.conflict', locale),
+      },
+      kind,
+    });
   }
   function handleConfirmSave() {
-    queueAction({ title: t('crm.profile.edit.confirm.title', locale), description: `${t('crm.profile.edit.confirm.message', locale)} ${profileId}`,
-      path: `/api/crm/profiles/${profileId}`, method: 'PUT', body: {
-        title: editFields.title || null, email: editFields.email || null, mobile: editFields.mobile || null,
-      } }, 'edit')
+    queueAction(
+      {
+        title: t('crm.profile.edit.confirm.title', locale),
+        description: `${t('crm.profile.edit.confirm.message', locale)} ${profileId}`,
+        path: `/api/crm/profiles/${profileId}`,
+        method: 'PUT',
+        body: {
+          title: editFields.title || null,
+          email: editFields.email || null,
+          mobile: editFields.mobile || null,
+        },
+      },
+      'edit'
+    );
   }
   function handleForcePasswordChange() {
-    if (!data || !forcePwChangeReason.trim()) return
-    setShowForcePwChange(false)
-    queueAction({ title: t('crm.profile.admin.forcePasswordChange', locale), description: `${data.user.username} · ${forcePwChangeReason.trim()}`,
-      path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/force-password-change`, method: 'POST', body: { reason: forcePwChangeReason.trim() } }, 'password')
+    if (!data || !forcePwChangeReason.trim()) return;
+    setShowForcePwChange(false);
+    queueAction(
+      {
+        title: t('crm.profile.admin.forcePasswordChange', locale),
+        description: `${data.user.username} · ${forcePwChangeReason.trim()}`,
+        path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/force-password-change`,
+        method: 'POST',
+        body: { reason: forcePwChangeReason.trim() },
+      },
+      'password'
+    );
   }
   function handleExpireSessions() {
-    if (!data || !expireSessionsReason.trim()) return
-    setShowExpireSessions(false)
-    queueAction({ title: t('crm.profile.admin.expireSessions', locale), description: `${data.user.username} · ${expireSessionsReason.trim()}`,
-      path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/expire-sessions`, method: 'POST', body: { reason: expireSessionsReason.trim() } }, 'sessions')
+    if (!data || !expireSessionsReason.trim()) return;
+    setShowExpireSessions(false);
+    queueAction(
+      {
+        title: t('crm.profile.admin.expireSessions', locale),
+        description: `${data.user.username} · ${expireSessionsReason.trim()}`,
+        path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/expire-sessions`,
+        method: 'POST',
+        body: { reason: expireSessionsReason.trim() },
+      },
+      'sessions'
+    );
   }
   async function actionSucceeded() {
-    const kind = pendingAction?.kind
-    if (kind === 'archive') { window.location.assign('/admin/crm'); return }
-    if (kind === 'edit') { setIsEditing(false); setSaveSuccess(true) }
-    else { setActionSuccess(t(kind === 'verification' ? 'crm.profile.verification.saved' : kind === 'password' ? 'crm.profile.admin.forcePwChangeSuccess' : 'crm.profile.admin.expireSessionsSuccess', locale)); setForcePwChangeReason(''); setExpireSessionsReason('') }
+    const kind = pendingAction?.kind;
+    if (kind === 'archive') {
+      window.location.assign('/admin/crm');
+      return;
+    }
+    if (kind === 'edit') {
+      setIsEditing(false);
+      setSaveSuccess(true);
+    } else {
+      setActionSuccess(
+        t(
+          kind === 'verification'
+            ? 'crm.profile.verification.saved'
+            : kind === 'password'
+              ? 'crm.profile.admin.forcePwChangeSuccess'
+              : 'crm.profile.admin.expireSessionsSuccess',
+          locale
+        )
+      );
+      setForcePwChangeReason('');
+      setExpireSessionsReason('');
+    }
     // A committed mutation stays successful even when the subsequent read fails.
     try {
-      const response = await fetch(`/api/crm/profiles/${profileId}`, { credentials: 'include' })
-      if (response.ok) setData(await response.json() as ProfileDetail)
-      else setError(t('crm.profile.error.generic', locale))
-    } catch { setError(t('crm.profile.error.generic', locale)) }
+      const response = await fetch(`/api/crm/profiles/${profileId}`, { credentials: 'include' });
+      if (response.ok) setData((await response.json()) as ProfileDetail);
+      else setError(t('crm.profile.error.generic', locale));
+    } catch {
+      setError(t('crm.profile.error.generic', locale));
+    }
   }
 
   if (loading) {
@@ -256,45 +332,43 @@ function CrmProfileDetailContent() {
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="animate-pulse text-gray-400">{t('crm.profile.loading', locale)}</div>
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-red-700 mb-2">{t('crm.profile.error.title', locale)}</h2>
+          <h2 className="text-xl font-semibold text-red-700 mb-2">
+            {t('crm.profile.error.title', locale)}
+          </h2>
           <p className="text-gray-600">{error}</p>
-          <Link
-            to="/admin/crm/"
-            className="text-blue-600 hover:underline mt-4 inline-block"
-          >
+          <Link to="/admin/crm/" className="text-blue-600 hover:underline mt-4 inline-block">
             {t('crm.profile.backToUsers', locale)}
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
-  if (!data) return null
+  if (!data) return null;
 
-  const { profile, user, legalInfo, addresses, sessions, siblingProfiles } = data
+  const { profile, user, legalInfo, addresses, sessions, siblingProfiles } = data;
 
-  const tabs = TAB_DEFS.map(td => ({ id: td.id, label: t(td.labelKey, locale) }))
+  const tabs = TAB_DEFS.map((td) => ({ id: td.id, label: t(td.labelKey, locale) }));
 
   return (
     <div dir={locale === 'fa' ? 'rtl' : undefined}>
       {/* Breadcrumb / Header */}
       <div className="mb-6">
-        <Link
-          to="/admin/crm/"
-          className="text-blue-600 hover:underline text-sm"
-        >
+        <Link to="/admin/crm/" className="text-blue-600 hover:underline text-sm">
           {t('crm.profile.backToUsers', locale)}
         </Link>
         <h1 className="text-2xl font-bold mt-1 flex items-center gap-3">
           {t('crm.profile.title', locale)}
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.status)}`}>
+          <span
+            className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.status)}`}
+          >
             {t(`crm.list.${profile.status}`, locale)}
           </span>
           <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">
@@ -303,12 +377,14 @@ function CrmProfileDetailContent() {
           <span className="ml-auto flex gap-2">
             {!isEditing ? (
               <>
-                {data.viewerPermissions?.canEdit && <button
-                  onClick={handleStartEdit}
-                  className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                >
-                  {t('crm.profile.edit', locale)}
-                </button>}
+                {data.viewerPermissions?.canEdit && (
+                  <button
+                    onClick={handleStartEdit}
+                    className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                  >
+                    {t('crm.profile.edit', locale)}
+                  </button>
+                )}
                 {data.viewerPermissions?.canManageUser && (
                   <>
                     <button
@@ -349,52 +425,154 @@ function CrmProfileDetailContent() {
         <p className="text-gray-500 text-sm mt-1">
           {profile.firstName && profile.lastName
             ? `${profile.firstName} ${profile.lastName}`
-            : legalInfo?.legalName ?? profileId}
+            : (legalInfo?.legalName ?? profileId)}
           {' — '}
           {user.username}
         </p>
       </div>
 
-      {data.viewerPermissions?.canVerify && ['DRAFT','ACTIVE','PENDING_VERIFICATION','VERIFIED'].includes(profile.status) && <div className="mb-4 space-y-3 rounded border bg-white p-4">
-        <Label htmlFor="crm-verify-action">{t('crm.profile.verification.action', locale)}</Label>
-        <select id="crm-verify-action" className="block rounded border p-2" value={profile.status === 'VERIFIED' ? (verificationAction === 'verify' ? 'unverify' : verificationAction) : 'verify'}
-          onChange={event => setVerificationAction(event.target.value)}>
-          {(profile.status === 'VERIFIED' ? ['unverify','reverify'] : ['verify']).map(action => <option key={action} value={action}>{t(`crm.profile.verification.${action}`, locale)}</option>)}
-        </select>
-        <Label htmlFor="crm-verify-reason">{t('crm.profile.verification.reason', locale)}</Label>
-        <textarea id="crm-verify-reason" className="block w-full rounded border p-2" maxLength={1000} value={verificationReason} onChange={event => setVerificationReason(event.target.value)} />
-        <Button disabled={!!pendingAction || (profile.status === 'VERIFIED' && !verificationReason.trim())} onClick={() => {
-          const action = profile.status === 'VERIFIED' ? (verificationAction === 'verify' ? 'unverify' : verificationAction) : 'verify'
-          queueAction({ title: t(`crm.profile.verification.${action}`, locale), description: `${profile.title || profileId} · ${verificationReason.trim()}`,
-            path: `/api/crm/profiles/${profileId}/verify`, method: 'POST', body: { action, ...(verificationReason.trim() ? { reason: verificationReason.trim() } : {}) } }, 'verification')
-        }}>{t('crm.profile.verification.review', locale)}</Button>
-      </div>}
-      {data.viewerPermissions?.canManageUser && <Button variant="outline" className="mb-4" onClick={() => setShowArchive(true)}>{t('crm.profile.archive.title', locale)}</Button>}
-      {showArchive && <AdminActionConfirmModal title={t('crm.profile.archive.title', locale)} message={t('crm.profile.archive.warning', locale)} reason={archiveReason} onReasonChange={setArchiveReason}
-        onCancel={() => setShowArchive(false)} cancelLabel={t('team.cancel', locale)} confirmLabel={t('crm.profile.archive.title', locale)} loading={false}
-        onConfirm={() => { setShowArchive(false); queueAction({ title: t('crm.profile.archive.title', locale), description: `${t('crm.profile.archive.warning', locale)} ${profileId} · ${archiveReason.trim()}`,
-          path: `/api/crm/profiles/${profileId}`, method: 'DELETE', errorMessages: { 'CRM:PROFILE:DELETION_BLOCKED': t('crm.profile.archive.warning', locale), 'CRM:PROFILE:LAST_OWNER': t('crm.profile.archive.warning', locale) }, body: { reason: archiveReason.trim() } }, 'archive') }} />}
-      {data.viewerPermissions?.canEditIdentity && <p className="mb-4"><a className="text-blue-700 underline" href={`/admin/crm/corrections?profileId=${encodeURIComponent(profileId)}`}>{t('crm.corrections.request',locale)}</a></p>}
+      {data.viewerPermissions?.canVerify &&
+        ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status) && (
+          <div className="mb-4 space-y-3 rounded border bg-white p-4">
+            <Label htmlFor="crm-verify-action">
+              {t('crm.profile.verification.action', locale)}
+            </Label>
+            <select
+              id="crm-verify-action"
+              className="block rounded border p-2"
+              value={
+                profile.status === 'VERIFIED'
+                  ? verificationAction === 'verify'
+                    ? 'unverify'
+                    : verificationAction
+                  : 'verify'
+              }
+              onChange={(event) => setVerificationAction(event.target.value)}
+            >
+              {(profile.status === 'VERIFIED' ? ['unverify', 'reverify'] : ['verify']).map(
+                (action) => (
+                  <option key={action} value={action}>
+                    {t(`crm.profile.verification.${action}`, locale)}
+                  </option>
+                )
+              )}
+            </select>
+            <Label htmlFor="crm-verify-reason">
+              {t('crm.profile.verification.reason', locale)}
+            </Label>
+            <textarea
+              id="crm-verify-reason"
+              className="block w-full rounded border p-2"
+              maxLength={1000}
+              value={verificationReason}
+              onChange={(event) => setVerificationReason(event.target.value)}
+            />
+            <Button
+              disabled={
+                !!pendingAction || (profile.status === 'VERIFIED' && !verificationReason.trim())
+              }
+              onClick={() => {
+                const action =
+                  profile.status === 'VERIFIED'
+                    ? verificationAction === 'verify'
+                      ? 'unverify'
+                      : verificationAction
+                    : 'verify';
+                queueAction(
+                  {
+                    title: t(`crm.profile.verification.${action}`, locale),
+                    description: `${profile.title || profileId} · ${verificationReason.trim()}`,
+                    path: `/api/crm/profiles/${profileId}/verify`,
+                    method: 'POST',
+                    body: {
+                      action,
+                      ...(verificationReason.trim() ? { reason: verificationReason.trim() } : {}),
+                    },
+                  },
+                  'verification'
+                );
+              }}
+            >
+              {t('crm.profile.verification.review', locale)}
+            </Button>
+          </div>
+        )}
+      {data.viewerPermissions?.canManageUser && (
+        <Button variant="outline" className="mb-4" onClick={() => setShowArchive(true)}>
+          {t('crm.profile.archive.title', locale)}
+        </Button>
+      )}
+      {showArchive && (
+        <AdminActionConfirmModal
+          title={t('crm.profile.archive.title', locale)}
+          message={t('crm.profile.archive.warning', locale)}
+          reason={archiveReason}
+          onReasonChange={setArchiveReason}
+          onCancel={() => setShowArchive(false)}
+          cancelLabel={t('team.cancel', locale)}
+          confirmLabel={t('crm.profile.archive.title', locale)}
+          loading={false}
+          onConfirm={() => {
+            setShowArchive(false);
+            queueAction(
+              {
+                title: t('crm.profile.archive.title', locale),
+                description: `${t('crm.profile.archive.warning', locale)} ${profileId} · ${archiveReason.trim()}`,
+                path: `/api/crm/profiles/${profileId}`,
+                method: 'DELETE',
+                errorMessages: {
+                  'CRM:PROFILE:DELETION_BLOCKED': t('crm.profile.archive.warning', locale),
+                  'CRM:PROFILE:LAST_OWNER': t('crm.profile.archive.warning', locale),
+                },
+                body: { reason: archiveReason.trim() },
+              },
+              'archive'
+            );
+          }}
+        />
+      )}
+      {data.viewerPermissions?.canEditIdentity && (
+        <p className="mb-4">
+          <a
+            className="text-blue-700 underline"
+            href={`/admin/crm/corrections?profileId=${encodeURIComponent(profileId)}`}
+          >
+            {t('crm.corrections.request', locale)}
+          </a>
+        </p>
+      )}
       {/* Save success / error flash messages */}
       {saveSuccess && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">
+        <div
+          className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm"
+          role="alert"
+        >
           {t('crm.profile.edit.saved', locale)}
         </div>
       )}
       {saveError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm" role="alert">
+        <div
+          className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+          role="alert"
+        >
           {saveError}
         </div>
       )}
 
       {/* Action success / error flash messages */}
       {actionSuccess && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">
+        <div
+          className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm"
+          role="alert"
+        >
           {actionSuccess}
         </div>
       )}
       {actionError && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm" role="alert">
+        <div
+          className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md text-sm"
+          role="alert"
+        >
           {actionError}
         </div>
       )}
@@ -425,12 +603,44 @@ function CrmProfileDetailContent() {
       {activeTab === 'overview' && (
         <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <SummaryCard title={t('crm.profile.summary.verification', locale)} value={profile.status === 'VERIFIED' ? t('crm.profile.verified', locale) : profile.status} icon="✓" colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'} />
-            <SummaryCard title={t('crm.profile.summary.activeSessions', locale)} value={String(sessions.count)} icon="⚡" colorClass="text-blue-600" />
-            <SummaryCard title={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} icon="🔑" colorClass="text-gray-600" />
-            <SummaryCard title={t('crm.profile.summary.addresses', locale)} value={String(addresses.length)} icon="📍" colorClass="text-purple-600" />
-            <SummaryCard title={t('crm.profile.summary.otherProfiles', locale)} value={String(siblingProfiles.length)} icon="👤" colorClass="text-teal-600" />
-            <SummaryCard title={t('crm.profile.summary.lastActivity', locale)} value={sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'} icon="⏱" colorClass="text-gray-600" />
+            <SummaryCard
+              title={t('crm.profile.summary.verification', locale)}
+              value={
+                profile.status === 'VERIFIED' ? t('crm.profile.verified', locale) : profile.status
+              }
+              icon="✓"
+              colorClass={profile.status === 'VERIFIED' ? 'text-green-600' : 'text-yellow-600'}
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.activeSessions', locale)}
+              value={String(sessions.count)}
+              icon="⚡"
+              colorClass="text-blue-600"
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.lastLogin', locale)}
+              value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'}
+              icon="🔑"
+              colorClass="text-gray-600"
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.addresses', locale)}
+              value={String(addresses.length)}
+              icon="📍"
+              colorClass="text-purple-600"
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.otherProfiles', locale)}
+              value={String(siblingProfiles.length)}
+              icon="👤"
+              colorClass="text-teal-600"
+            />
+            <SummaryCard
+              title={t('crm.profile.summary.lastActivity', locale)}
+              value={sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
+              icon="⏱"
+              colorClass="text-gray-600"
+            />
           </div>
         </div>
       )}
@@ -443,13 +653,28 @@ function CrmProfileDetailContent() {
             <DetailRow label="Username" value={user.username} />
             <DetailRow label={t('crm.profile.label.email', locale)} value={user.email ?? '—'} />
             <DetailRow label={t('crm.profile.label.mobile', locale)} value={user.mobile ?? '—'} />
-            <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
-            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt, locale)} />
-            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} />
+            <DetailRow
+              label={t('crm.profile.label.admin', locale)}
+              value={
+                user.isAdmin
+                  ? t('crm.profile.label.yes', locale)
+                  : t('crm.profile.label.no', locale)
+              }
+            />
+            <DetailRow
+              label={t('crm.profile.label.created', locale)}
+              value={formatDate(user.createdAt, locale)}
+            />
+            <DetailRow
+              label={t('crm.profile.summary.lastLogin', locale)}
+              value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'}
+            />
           </Section>
 
           <Section title={t('crm.profile.section.contacts', locale)}>
-            <p className="text-sm text-muted-foreground">{t('crm.profile.contacts.explanation', locale)}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('crm.profile.contacts.explanation', locale)}
+            </p>
             {isEditing ? (
               <>
                 <EditRow
@@ -467,8 +692,14 @@ function CrmProfileDetailContent() {
               </>
             ) : (
               <>
-                <DetailRow label={t('crm.profile.label.email', locale)} value={profile.contactEmail ?? '—'} />
-                <DetailRow label={t('crm.profile.label.mobile', locale)} value={profile.contactMobile ?? '—'} />
+                <DetailRow
+                  label={t('crm.profile.label.email', locale)}
+                  value={profile.contactEmail ?? '—'}
+                />
+                <DetailRow
+                  label={t('crm.profile.label.mobile', locale)}
+                  value={profile.contactMobile ?? '—'}
+                />
               </>
             )}
           </Section>
@@ -508,9 +739,14 @@ function CrmProfileDetailContent() {
               iconTooltip={isEditing ? t('crm.profile.edit.identityLocked', locale) : undefined}
             />
             {isEditing && (
-              <p className="text-xs text-gray-400 mt-1">{t('crm.profile.edit.identityLocked', locale)}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {t('crm.profile.edit.identityLocked', locale)}
+              </p>
             )}
-            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(profile.createdAt, locale)} />
+            <DetailRow
+              label={t('crm.profile.label.created', locale)}
+              value={formatDate(profile.createdAt, locale)}
+            />
             <DetailRow label="Updated" value={formatDate(profile.updatedAt, locale)} />
           </Section>
 
@@ -525,7 +761,10 @@ function CrmProfileDetailContent() {
               <DetailRow label="Official Email" value={legalInfo.officialEmail ?? '—'} />
               <DetailRow label="Official Address" value={legalInfo.officialFullAddress ?? '—'} />
               <DetailRow label="Official Postal Code" value={legalInfo.officialPostalCode ?? '—'} />
-              <DetailRow label="Representative" value={`${legalInfo.representativeTitle} (${legalInfo.representativeRelationship})`} />
+              <DetailRow
+                label="Representative"
+                value={`${legalInfo.representativeTitle} (${legalInfo.representativeRelationship})`}
+              />
             </Section>
           )}
         </div>
@@ -544,7 +783,9 @@ function CrmProfileDetailContent() {
                   className={`border rounded-lg p-4 ${addr.mainAddress ? 'border-blue-300 bg-blue-50' : 'border-gray-200'}`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-500">{t('crm.profile.tab.addresses', locale)}</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      {t('crm.profile.tab.addresses', locale)}
+                    </span>
                     {addr.mainAddress && (
                       <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
                         {t('crm.profile.label.main', locale)}
@@ -569,7 +810,9 @@ function CrmProfileDetailContent() {
       {activeTab === 'sessions' && (
         <div id="panel-sessions" role="tabpanel" aria-labelledby="tab-sessions">
           <div className="mb-4 text-sm text-gray-500">
-            {sessions.count} {t('crm.profile.tab.sessions', locale)} | {t('crm.profile.summary.lastActivity', locale)}: {sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
+            {sessions.count} {t('crm.profile.tab.sessions', locale)} |{' '}
+            {t('crm.profile.summary.lastActivity', locale)}:{' '}
+            {sessions.lastActive ? formatDate(sessions.lastActive, locale) : '—'}
           </div>
           {sessions.entries.length === 0 ? (
             <p className="text-gray-500 text-center py-8">{t('crm.profile.noSessions', locale)}</p>
@@ -580,7 +823,9 @@ function CrmProfileDetailContent() {
                   <tr className="border-b border-gray-200 text-start text-gray-500">
                     <th className="pb-2 font-medium">{t('crm.profile.label.sessionId', locale)}</th>
                     <th className="pb-2 font-medium">{t('crm.profile.label.created', locale)}</th>
-                    <th className="pb-2 font-medium">{t('crm.profile.label.lastActive', locale)}</th>
+                    <th className="pb-2 font-medium">
+                      {t('crm.profile.label.lastActive', locale)}
+                    </th>
                     <th className="pb-2 font-medium">{t('crm.profile.label.expires', locale)}</th>
                     <th className="pb-2 font-medium">{t('crm.profile.label.status', locale)}</th>
                     <th className="pb-2 font-medium">{t('crm.profile.label.device', locale)}</th>
@@ -596,10 +841,19 @@ function CrmProfileDetailContent() {
                       <td className="py-2">{formatDate(s.lastActive, locale)}</td>
                       <td className="py-2">{formatDate(s.expiresAt, locale)}</td>
                       <td className="py-2">
-                        <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                          !s.isActive ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-                        }`}>
-                          {t(s.isRevoked ? 'crm.profile.session.revoked' : s.isActive ? 'crm.profile.session.active' : 'crm.profile.session.expired', locale)}
+                        <span
+                          className={`text-xs px-1.5 py-0.5 rounded-full ${
+                            !s.isActive ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                          }`}
+                        >
+                          {t(
+                            s.isRevoked
+                              ? 'crm.profile.session.revoked'
+                              : s.isActive
+                                ? 'crm.profile.session.active'
+                                : 'crm.profile.session.expired',
+                            locale
+                          )}
                         </span>
                       </td>
                       <td className="py-2 text-xs text-gray-500 max-w-[150px] truncate">
@@ -630,7 +884,11 @@ function CrmProfileDetailContent() {
 
       {/* Tab: Verification History */}
       {activeTab === 'verification-history' && (
-        <div id="panel-verification-history" role="tabpanel" aria-labelledby="tab-verification-history">
+        <div
+          id="panel-verification-history"
+          role="tabpanel"
+          aria-labelledby="tab-verification-history"
+        >
           <div className="border border-gray-200 rounded-lg p-6 text-center">
             <p className="text-gray-500 text-sm">
               {t('crm.profile.verificationHistory.placeholder', locale)}
@@ -646,7 +904,9 @@ function CrmProfileDetailContent() {
       {activeTab === 'profiles' && (
         <div id="panel-profiles" role="tabpanel" aria-labelledby="tab-profiles">
           {siblingProfiles.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">{t('crm.profile.noOtherProfiles', locale)}</p>
+            <p className="text-gray-500 text-center py-8">
+              {t('crm.profile.noOtherProfiles', locale)}
+            </p>
           ) : (
             <div className="space-y-3">
               {siblingProfiles.map((sp) => (
@@ -656,7 +916,9 @@ function CrmProfileDetailContent() {
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${getStatusBadgeClass(sp.status)}`}>
+                      <span
+                        className={`text-xs px-1.5 py-0.5 rounded-full ${getStatusBadgeClass(sp.status)}`}
+                      >
                         {sp.status}
                       </span>
                       <span className="text-xs px-1.5 py-0.5 rounded-full bg-gray-200 text-gray-700">
@@ -668,7 +930,9 @@ function CrmProfileDetailContent() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm mt-1 text-gray-600">{sp.title ?? sp.id.substring(0, 8)}</p>
+                    <p className="text-sm mt-1 text-gray-600">
+                      {sp.title ?? sp.id.substring(0, 8)}
+                    </p>
                   </div>
                   <Link
                     to="/admin/crm/profiles/$profileId"
@@ -683,7 +947,13 @@ function CrmProfileDetailContent() {
           )}
         </div>
       )}
-      {pendingAction && <TeamActionDialog action={pendingAction.action} onClose={() => setPendingAction(null)} onSuccess={actionSucceeded} />}
+      {pendingAction && (
+        <TeamActionDialog
+          action={pendingAction.action}
+          onClose={() => setPendingAction(null)}
+          onSuccess={actionSucceeded}
+        />
+      )}
       {showForcePwChange && (
         <AdminActionConfirmModal
           title={t('crm.profile.admin.forcePasswordChange', locale)}
@@ -691,7 +961,10 @@ function CrmProfileDetailContent() {
           reason={forcePwChangeReason}
           onReasonChange={setForcePwChangeReason}
           onConfirm={handleForcePasswordChange}
-          onCancel={() => { setShowForcePwChange(false); setForcePwChangeReason('') }}
+          onCancel={() => {
+            setShowForcePwChange(false);
+            setForcePwChangeReason('');
+          }}
           cancelLabel={t('crm.profile.edit.cancel', locale)}
           confirmLabel={t('crm.profile.admin.forcePasswordChange', locale)}
           loading={actionLoading}
@@ -704,14 +977,17 @@ function CrmProfileDetailContent() {
           reason={expireSessionsReason}
           onReasonChange={setExpireSessionsReason}
           onConfirm={handleExpireSessions}
-          onCancel={() => { setShowExpireSessions(false); setExpireSessionsReason('') }}
+          onCancel={() => {
+            setShowExpireSessions(false);
+            setExpireSessionsReason('');
+          }}
           cancelLabel={t('crm.profile.edit.cancel', locale)}
           confirmLabel={t('crm.profile.admin.expireSessions', locale)}
           loading={actionLoading}
         />
       )}
     </div>
-  )
+  );
 }
 
 /* ── sub-components ── */
@@ -722,10 +998,10 @@ function SummaryCard({
   icon,
   colorClass,
 }: {
-  title: string
-  value: string
-  icon: string
-  colorClass: string
+  title: string;
+  value: string;
+  icon: string;
+  colorClass: string;
 }) {
   return (
     <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
@@ -734,7 +1010,7 @@ function SummaryCard({
         {icon} {value}
       </p>
     </div>
-  )
+  );
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -745,23 +1021,40 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {children}
       </div>
     </div>
-  )
+  );
 }
 
-function DetailRow({ label, value, valueClass, icon, iconTooltip }: { label: string; value: string; valueClass?: string | undefined; icon?: string | undefined; iconTooltip?: string | undefined }) {
+function DetailRow({
+  label,
+  value,
+  valueClass,
+  icon,
+  iconTooltip,
+}: {
+  label: string;
+  value: string;
+  valueClass?: string | undefined;
+  icon?: string | undefined;
+  iconTooltip?: string | undefined;
+}) {
   return (
     <div className="flex flex-col">
       <span className="text-xs text-gray-500 font-medium">{label}</span>
       <span className={`text-sm text-gray-900 break-words ${valueClass ?? ''}`}>
         {value}
         {icon && (
-          <span className="inline-block mr-1" title={iconTooltip ?? ''} role="img" aria-label={iconTooltip ?? 'locked'}>
+          <span
+            className="inline-block mr-1"
+            title={iconTooltip ?? ''}
+            role="img"
+            aria-label={iconTooltip ?? 'locked'}
+          >
             {icon}
           </span>
         )}
       </span>
     </div>
-  )
+  );
 }
 
 /** Editable text input row used in edit mode */
@@ -771,15 +1064,17 @@ function EditRow({
   onChange,
   placeholder,
 }: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  placeholder?: string
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
 }) {
-  const inputId = useId()
+  const inputId = useId();
   return (
     <div className="flex flex-col">
-      <label htmlFor={inputId} className="text-xs text-gray-500 font-medium">{label}</label>
+      <label htmlFor={inputId} className="text-xs text-gray-500 font-medium">
+        {label}
+      </label>
       <input
         id={inputId}
         type="text"
@@ -790,7 +1085,7 @@ function EditRow({
         className="mt-1 w-full border border-gray-300 rounded px-2 py-1 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
       />
     </div>
-  )
+  );
 }
 
 /** Confirm modal with a reason text input for admin actions */
@@ -805,26 +1100,56 @@ function AdminActionConfirmModal({
   confirmLabel,
   loading,
 }: {
-  title: string
-  message: string
-  reason: string
-  onReasonChange: (v: string) => void
-  onConfirm: () => void
-  onCancel: () => void
-  cancelLabel: string
-  confirmLabel: string
-  loading: boolean
+  title: string;
+  message: string;
+  reason: string;
+  onReasonChange: (v: string) => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+  cancelLabel: string;
+  confirmLabel: string;
+  loading: boolean;
 }) {
-  return <Dialog open onOpenChange={open => { if (!open && !loading) onCancel() }}>
-    <DialogContent>
-      <form onSubmit={event => { event.preventDefault(); if (reason.trim()) onConfirm() }} className="space-y-4">
-        <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{message}</DialogDescription></DialogHeader>
-        <Label htmlFor="crm-action-reason">{message}</Label>
-        <textarea id="crm-action-reason" required maxLength={1000} value={reason} onChange={event => onReasonChange(event.target.value)} disabled={loading}
-          className="w-full rounded border p-2" dir="auto" />
-        <DialogFooter><Button type="button" variant="outline" onClick={onCancel} disabled={loading}>{cancelLabel}</Button>
-          <Button type="submit" disabled={loading || !reason.trim()}>{confirmLabel}</Button></DialogFooter>
-      </form>
-    </DialogContent>
-  </Dialog>
+  return (
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open && !loading) onCancel();
+      }}
+    >
+      <DialogContent>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (reason.trim()) onConfirm();
+          }}
+          className="space-y-4"
+        >
+          <DialogHeader>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{message}</DialogDescription>
+          </DialogHeader>
+          <Label htmlFor="crm-action-reason">{message}</Label>
+          <textarea
+            id="crm-action-reason"
+            required
+            maxLength={1000}
+            value={reason}
+            onChange={(event) => onReasonChange(event.target.value)}
+            disabled={loading}
+            className="w-full rounded border p-2"
+            dir="auto"
+          />
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
+              {cancelLabel}
+            </Button>
+            <Button type="submit" disabled={loading || !reason.trim()}>
+              {confirmLabel}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 }

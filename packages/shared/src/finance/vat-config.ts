@@ -39,9 +39,9 @@ export const CHARGE_CATEGORIES = [
   'green_electricity',
   'free_market_electricity',
   'energy_saving_electricity',
-] as const
+] as const;
 
-export type ChargeCategory = (typeof CHARGE_CATEGORIES)[number]
+export type ChargeCategory = (typeof CHARGE_CATEGORIES)[number];
 
 /**
  * Reserved category key for product-specific override rates.
@@ -53,11 +53,11 @@ export type ChargeCategory = (typeof CHARGE_CATEGORIES)[number]
  * admin API so a product-specific rate (e.g. 5% for one product when no
  * category uses 5%) can be expressed.
  */
-export const PRODUCT_OVERRIDE_CATEGORY = 'product_override'
+export const PRODUCT_OVERRIDE_CATEGORY = 'product_override';
 
 /** Whether a raw value is a known charge category key. */
 export function isChargeCategory(raw: unknown): raw is ChargeCategory {
-  return typeof raw === 'string' && (CHARGE_CATEGORIES as readonly string[]).includes(raw)
+  return typeof raw === 'string' && (CHARGE_CATEGORIES as readonly string[]).includes(raw);
 }
 
 /**
@@ -65,15 +65,17 @@ export function isChargeCategory(raw: unknown): raw is ChargeCategory {
  * row: either a known charge category or the reserved product-override
  * key.
  */
-export function isRateCategory(raw: unknown): raw is ChargeCategory | typeof PRODUCT_OVERRIDE_CATEGORY {
-  return isChargeCategory(raw) || raw === PRODUCT_OVERRIDE_CATEGORY
+export function isRateCategory(
+  raw: unknown
+): raw is ChargeCategory | typeof PRODUCT_OVERRIDE_CATEGORY {
+  return isChargeCategory(raw) || raw === PRODUCT_OVERRIDE_CATEGORY;
 }
 
 /** Maximum VAT rate in basis points: 100% = 10 000 bps. */
-export const MAX_VAT_BASIS_POINTS = 10_000
+export const MAX_VAT_BASIS_POINTS = 10_000;
 
 /** Minimum VAT rate in basis points: 0%. */
-export const MIN_VAT_BASIS_POINTS = 0
+export const MIN_VAT_BASIS_POINTS = 0;
 
 /**
  * Whether a raw value is a valid VAT rate in basis points:
@@ -85,17 +87,17 @@ export function isValidVatBasisPoints(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= MIN_VAT_BASIS_POINTS &&
     raw <= MAX_VAT_BASIS_POINTS
-  )
+  );
 }
 
 /** Convert basis points to a percent value (e.g. 900 -> 9). */
 export function vatBasisPointsToPercent(bps: number): number {
-  return bps / 100
+  return bps / 100;
 }
 
 /** Convert a percent value to basis points (e.g. 9 -> 900). */
 export function vatPercentToBasisPoints(percent: number): number {
-  return Math.round(percent * 100)
+  return Math.round(percent * 100);
 }
 
 /**
@@ -103,44 +105,44 @@ export function vatPercentToBasisPoints(percent: number): number {
  * by the admin API.
  */
 export interface VatConfigDto {
-  id: string
+  id: string;
   /** Charge category key this rate applies to. */
-  category: ChargeCategory | string
+  category: ChargeCategory | string;
   /** Rate in basis points (0..10000). */
-  rateBasisPoints: number
+  rateBasisPoints: number;
   /** Effective window — `effectiveFrom` inclusive. */
-  effectiveFrom: string
+  effectiveFrom: string;
   /** Effective window end — exclusive; null = open/current. */
-  effectiveUntil: string | null
+  effectiveUntil: string | null;
   /** Admin who recorded this rate. */
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
   /**
    * Derived status for admin UI/table:
    * - `current` — active now
    * - `scheduled` — future effective date (not yet active)
    * - `expired` — ended in the past
    */
-  status: 'current' | 'scheduled' | 'expired'
+  status: 'current' | 'scheduled' | 'expired';
 }
 
 /** A product VAT override row as stored in `product_vat_overrides`. */
 export interface VatProductOverrideDto {
-  id: string
-  productId: string
+  id: string;
+  productId: string;
   /** The vat_configurations row whose rate the override applies. */
-  vatConfigId: string
+  vatConfigId: string;
   /** Rate of the referenced configuration (basis points), denormalized for display. */
-  rateBasisPoints: number
-  category: ChargeCategory | string
+  rateBasisPoints: number;
+  category: ChargeCategory | string;
   /** Effective window — `effectiveFrom` inclusive. */
-  effectiveFrom: string
+  effectiveFrom: string;
   /** Effective window end — exclusive; null = open/current. */
-  effectiveUntil: string | null
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  effectiveUntil: string | null;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -149,21 +151,26 @@ export interface VatProductOverrideDto {
 export function vatWindowStatus(
   effectiveFrom: Date | string,
   effectiveUntil: Date | string | null,
-  at: Date = new Date(),
+  at: Date = new Date()
 ): 'current' | 'scheduled' | 'expired' {
-  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom)
-  const until = effectiveUntil == null ? null : effectiveUntil instanceof Date ? effectiveUntil : new Date(effectiveUntil)
-  if (from.getTime() > at.getTime()) return 'scheduled'
-  if (until !== null && until.getTime() <= at.getTime()) return 'expired'
-  return 'current'
+  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom);
+  const until =
+    effectiveUntil == null
+      ? null
+      : effectiveUntil instanceof Date
+        ? effectiveUntil
+        : new Date(effectiveUntil);
+  if (from.getTime() > at.getTime()) return 'scheduled';
+  if (until !== null && until.getTime() <= at.getTime()) return 'expired';
+  return 'current';
 }
 
 /** One resolved VAT decision: the rate plus the rule that produced it. */
 export interface VatResolution {
   /** Rate in basis points (0..10000). */
-  rateBasisPoints: number
+  rateBasisPoints: number;
   /** Which rule produced the rate. */
-  source: 'product_override' | 'category' | 'fallback_zero'
+  source: 'product_override' | 'category' | 'fallback_zero';
 }
 
 /**
@@ -180,13 +187,13 @@ export interface VatResolution {
  */
 export function resolveVatRate(
   activeProductOverrideRate: number | null,
-  activeCategoryRate: number | null,
+  activeCategoryRate: number | null
 ): VatResolution {
   if (activeProductOverrideRate !== null) {
-    return { rateBasisPoints: activeProductOverrideRate, source: 'product_override' }
+    return { rateBasisPoints: activeProductOverrideRate, source: 'product_override' };
   }
   if (activeCategoryRate !== null) {
-    return { rateBasisPoints: activeCategoryRate, source: 'category' }
+    return { rateBasisPoints: activeCategoryRate, source: 'category' };
   }
-  return { rateBasisPoints: 0, source: 'fallback_zero' }
+  return { rateBasisPoints: 0, source: 'fallback_zero' };
 }

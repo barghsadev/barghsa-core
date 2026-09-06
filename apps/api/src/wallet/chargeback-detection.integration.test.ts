@@ -20,106 +20,106 @@
  *      count (no nested checkout while the advisory lock is held).
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { HttpException } from '@nestjs/common'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { v7 as uuidv7 } from 'uuid'
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
-import type { IsolatedTestDb } from '@barghsa/db/test'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance'
-import { WalletService } from './wallet.service.js'
-import { ChargebackDetectionService } from './chargeback-detection.service.js'
-import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js'
-import { signPaymentCallback } from './payment-callback-verifier.js'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { HttpException } from '@nestjs/common';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { v7 as uuidv7 } from 'uuid';
+import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
+import type { IsolatedTestDb } from '@barghsa/db/test';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
+import { WalletService } from './wallet.service.js';
+import { ChargebackDetectionService } from './chargeback-detection.service.js';
+import { onlineTopUpCreditIdempotencyKey } from './online-topup-callback.service.js';
+import { signPaymentCallback } from './payment-callback-verifier.js';
 
-const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }))
+const poolHolder = vi.hoisted(() => ({ pool: null as import('pg').Pool | null }));
 
 vi.mock('@barghsa/db', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@barghsa/db')>()
+  const actual = await importOriginal<typeof import('@barghsa/db')>();
   return {
     ...actual,
     getDbPool: () => {
       if (!poolHolder.pool) {
-        throw new Error('test pool not initialized — beforeAll must run first')
+        throw new Error('test pool not initialized — beforeAll must run first');
       }
-      return poolHolder.pool
+      return poolHolder.pool;
     },
-  }
-})
+  };
+});
 
 const UUIDV7_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql',
-)
+  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
+);
 const WALLET_TX_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
-)
+  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
+);
 const AVAILABLE_CHECK_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql',
-)
+  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql'
+);
 const REVERSAL_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0074_wallet_tx_reverses_transaction.sql',
-)
+  '../../../../packages/db/drizzle/0074_wallet_tx_reverses_transaction.sql'
+);
 const CHARGEBACK_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0075_create_wallet_chargeback_events.sql',
-)
+  '../../../../packages/db/drizzle/0075_create_wallet_chargeback_events.sql'
+);
 
-const CONCURRENT_HANDLERS = 4
-const POOL_DEADLOCK_TIMEOUT_MS = 8_000
+const CONCURRENT_HANDLERS = 4;
+const POOL_DEADLOCK_TIMEOUT_MS = 8_000;
 
-const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
-const PROFILE_C = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
-const SECRET = 'integration-chargeback-secret'
-const MERCHANT = 'barghsa-test-merchant'
-const AMOUNT = 25_000n
-const AUTHORITY = 'auth-chargeback-1'
-const PROVIDER_REF = 'psp-chargeback-ref'
+const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const PROFILE_B = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
+const PROFILE_C = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const SECRET = 'integration-chargeback-secret';
+const MERCHANT = 'barghsa-test-merchant';
+const AMOUNT = 25_000n;
+const AUTHORITY = 'auth-chargeback-1';
+const PROVIDER_REF = 'psp-chargeback-ref';
 
 describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => {
-  let ctx: IsolatedTestDb
-  let walletService: WalletService
-  let service: ChargebackDetectionService
-  let pendingId: string
-  let creditId: string
+  let ctx: IsolatedTestDb;
+  let walletService: WalletService;
+  let service: ChargebackDetectionService;
+  let pendingId: string;
+  let creditId: string;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', CONCURRENT_HANDLERS)
-    poolHolder.pool = ctx.pool
-    walletService = new WalletService()
+    ctx = await createIsolatedTestDb('test_', CONCURRENT_HANDLERS);
+    poolHolder.pool = ctx.pool;
+    walletService = new WalletService();
     service = new ChargebackDetectionService(walletService, {
       webhookSecret: SECRET,
       merchantId: MERCHANT,
-    })
+    });
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(AVAILABLE_CHECK_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(CHARGEBACK_MIGRATION, 'utf-8').trim())
+    `);
+    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(AVAILABLE_CHECK_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(REVERSAL_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(CHARGEBACK_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2), ($3)`, [
       PROFILE_A,
       PROFILE_B,
       PROFILE_C,
-    ])
+    ]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2), ($3)`, [
       PROFILE_A,
       PROFILE_B,
       PROFILE_C,
-    ])
+    ]);
 
-    pendingId = uuidv7()
+    pendingId = uuidv7();
     const credit = await walletService.credit(
       PROFILE_A,
       AMOUNT,
@@ -133,20 +133,20 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           authority: AUTHORITY,
         },
       },
-      onlineTopUpCreditIdempotencyKey(pendingId),
-    )
-    creditId = credit.id
-  }, 60_000)
+      onlineTopUpCreditIdempotencyKey(pendingId)
+    );
+    creditId = credit.id;
+  }, 60_000);
 
   afterAll(async () => {
-    poolHolder.pool = null
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    poolHolder.pool = null;
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   function signed(body: Record<string, unknown>, eventId: string) {
-    const rawBody = JSON.stringify(body)
-    const timestamp = String(Math.floor(Date.now() / 1000))
+    const rawBody = JSON.stringify(body);
+    const timestamp = String(Math.floor(Date.now() / 1000));
     return {
       headers: {
         eventId,
@@ -154,7 +154,7 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
         signature: signPaymentCallback(rawBody, eventId, timestamp, SECRET),
       },
       rawBody,
-    }
+    };
   }
 
   function chargebackBody(overrides: Record<string, unknown> = {}) {
@@ -166,64 +166,64 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       authority: AUTHORITY,
       amountIrR: AMOUNT.toString(),
       ...overrides,
-    }
+    };
   }
 
   async function fetchWallet() {
     const result = await ctx.pool.query<{
-      posted_balance: string
-      reserved_balance: string
+      posted_balance: string;
+      reserved_balance: string;
     }>(
       `SELECT posted_balance::text AS posted_balance, reserved_balance::text AS reserved_balance
        FROM wallets WHERE profile_id = $1`,
-      [PROFILE_A],
-    )
-    return result.rows[0]!
+      [PROFILE_A]
+    );
+    return result.rows[0]!;
   }
 
   it('maps a signed chargeback to the original credit and posts a reversal', async () => {
-    const result = await service.handle(signed(chargebackBody(), 'evt-cb-int-1'))
+    const result = await service.handle(signed(chargebackBody(), 'evt-cb-int-1'));
 
-    expect(result.mapped).toBe(true)
-    expect(result.reversed).toBe(true)
-    expect(result.originalTransactionId).toBe(creditId)
-    expect(result.matchMethod).toBe('merchant_order_id')
-    expect(result.status).toBe('reversed')
+    expect(result.mapped).toBe(true);
+    expect(result.reversed).toBe(true);
+    expect(result.originalTransactionId).toBe(creditId);
+    expect(result.matchMethod).toBe('merchant_order_id');
+    expect(result.status).toBe('reversed');
 
-    const wallet = await fetchWallet()
-    expect(wallet.posted_balance).toBe('0')
+    const wallet = await fetchWallet();
+    expect(wallet.posted_balance).toBe('0');
 
     const original = await ctx.pool.query<{ type: string; amount: string; state: string }>(
       `SELECT type, amount::text AS amount, state FROM wallet_transactions WHERE id = $1`,
-      [creditId],
-    )
+      [creditId]
+    );
     expect(original.rows[0]).toMatchObject({
       type: 'topup',
       amount: AMOUNT.toString(),
       state: 'Completed',
-    })
+    });
 
     const reversal = await ctx.pool.query<{
-      type: string
-      amount: string
-      reverses_transaction_id: string
-      description: string
+      type: string;
+      amount: string;
+      reverses_transaction_id: string;
+      description: string;
     }>(
       `SELECT type, amount::text AS amount, reverses_transaction_id, description
          FROM wallet_transactions WHERE id = $1`,
-      [result.reversalTransactionId],
-    )
+      [result.reversalTransactionId]
+    );
     expect(reversal.rows[0]).toMatchObject({
       type: 'reversal',
       amount: (-AMOUNT).toString(),
       reverses_transaction_id: creditId,
       description: WALLET_CHARGEBACK_REASON,
-    })
-  })
+    });
+  });
 
   it('does not reverse on a tampered signature', async () => {
-    const rawBody = JSON.stringify(chargebackBody())
-    const timestamp = String(Math.floor(Date.now() / 1000))
+    const rawBody = JSON.stringify(chargebackBody());
+    const timestamp = String(Math.floor(Date.now() / 1000));
     const rejection = await service
       .handle({
         headers: {
@@ -233,38 +233,38 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
         },
         rawBody,
       })
-      .catch((error: unknown) => error)
+      .catch((error: unknown) => error);
 
-    expect(rejection).toBeInstanceOf(HttpException)
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
-    })
+    });
     const events = await ctx.pool.query(
-      `SELECT 1 FROM wallet_chargeback_events WHERE event_id = 'evt-cb-bad-sig'`,
-    )
-    expect(events.rows).toHaveLength(0)
-  })
+      `SELECT 1 FROM wallet_chargeback_events WHERE event_id = 'evt-cb-bad-sig'`
+    );
+    expect(events.rows).toHaveLength(0);
+  });
 
   it('replays a duplicate event id without a second reversal', async () => {
-    const first = await service.handle(signed(chargebackBody(), 'evt-cb-int-1'))
-    expect(first.processed).toBe(false)
-    expect(first.reversed).toBe(true)
-    expect(first.reversalTransactionId).toBeTruthy()
+    const first = await service.handle(signed(chargebackBody(), 'evt-cb-int-1'));
+    expect(first.processed).toBe(false);
+    expect(first.reversed).toBe(true);
+    expect(first.reversalTransactionId).toBeTruthy();
 
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions
         WHERE reverses_transaction_id = $1 AND type = 'reversal'`,
-      [creditId],
-    )
-    expect(reversals.rows).toHaveLength(1)
-  })
+      [creditId]
+    );
+    expect(reversals.rows).toHaveLength(1);
+  });
 
   it('stores an unmatched chargeback without rewriting the ledger', async () => {
-    const unknownPending = uuidv7()
+    const unknownPending = uuidv7();
     const before = await ctx.pool.query<{ count: string }>(
       `SELECT COUNT(*)::text AS count FROM wallet_transactions WHERE wallet_id = $1`,
-      [PROFILE_A],
-    )
+      [PROFILE_A]
+    );
     const result = await service.handle(
       signed(
         chargebackBody({
@@ -272,31 +272,31 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           providerRefId: 'unknown-ref',
           authority: 'unknown-authority',
         }),
-        'evt-cb-unmatched',
-      ),
-    )
+        'evt-cb-unmatched'
+      )
+    );
     expect(result).toMatchObject({
       mapped: false,
       reversed: false,
       status: 'unmatched',
-    })
+    });
     const after = await ctx.pool.query<{ count: string }>(
       `SELECT COUNT(*)::text AS count FROM wallet_transactions WHERE wallet_id = $1`,
-      [PROFILE_A],
-    )
-    expect(after.rows[0]?.count).toBe(before.rows[0]?.count)
+      [PROFILE_A]
+    );
+    expect(after.rows[0]?.count).toBe(before.rows[0]?.count);
     const event = await ctx.pool.query<{ status: string; original_transaction_id: string | null }>(
       `SELECT status, original_transaction_id
-         FROM wallet_chargeback_events WHERE event_id = 'evt-cb-unmatched'`,
-    )
+         FROM wallet_chargeback_events WHERE event_id = 'evt-cb-unmatched'`
+    );
     expect(event.rows[0]).toMatchObject({
       status: 'unmatched',
       original_transaction_id: null,
-    })
-  })
+    });
+  });
 
   it('maps a chargeback whose reversal cannot post and leaves the original intact', async () => {
-    const pendingB = uuidv7()
+    const pendingB = uuidv7();
     const credit = await walletService.credit(
       PROFILE_B,
       AMOUNT,
@@ -306,9 +306,9 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
         description: 'Online wallet top-up',
         metadata: { channel: 'online', pendingTransactionId: pendingB },
       },
-      onlineTopUpCreditIdempotencyKey(pendingB),
-    )
-    await walletService.reserve(PROFILE_B, AMOUNT, `reserve-shortfall-${uuidv7()}`)
+      onlineTopUpCreditIdempotencyKey(pendingB)
+    );
+    await walletService.reserve(PROFILE_B, AMOUNT, `reserve-shortfall-${uuidv7()}`);
 
     const result = await service.handle(
       signed(
@@ -318,31 +318,31 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           merchantOrderId: pendingB,
           amountIrR: AMOUNT.toString(),
         },
-        'evt-cb-unresolved',
-      ),
-    )
+        'evt-cb-unresolved'
+      )
+    );
     expect(result).toMatchObject({
       mapped: true,
       reversed: false,
       originalTransactionId: credit.id,
       status: 'unresolved',
-    })
+    });
     const original = await ctx.pool.query<{ state: string; amount: string }>(
       `SELECT state, amount::text AS amount FROM wallet_transactions WHERE id = $1`,
-      [credit.id],
-    )
-    expect(original.rows[0]).toMatchObject({ state: 'Completed', amount: AMOUNT.toString() })
+      [credit.id]
+    );
+    expect(original.rows[0]).toMatchObject({ state: 'Completed', amount: AMOUNT.toString() });
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [credit.id],
-    )
-    expect(reversals.rows).toHaveLength(0)
-  })
+      [credit.id]
+    );
+    expect(reversals.rows).toHaveLength(0);
+  });
 
   it('maps an authority-only notification when the credit has a distinct provider ref', async () => {
-    const pendingC = uuidv7()
-    const authorityC = 'auth-chargeback-c'
-    const providerRefC = 'psp-chargeback-ref-c'
+    const pendingC = uuidv7();
+    const authorityC = 'auth-chargeback-c';
+    const providerRefC = 'psp-chargeback-ref-c';
     const credit = await walletService.credit(
       PROFILE_C,
       AMOUNT,
@@ -356,10 +356,10 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           authority: authorityC,
         },
       },
-      onlineTopUpCreditIdempotencyKey(pendingC),
-    )
-    expect(credit.refId).toBe(providerRefC)
-    expect(credit.refId).not.toBe(authorityC)
+      onlineTopUpCreditIdempotencyKey(pendingC)
+    );
+    expect(credit.refId).toBe(providerRefC);
+    expect(credit.refId).not.toBe(authorityC);
 
     const result = await service.handle(
       signed(
@@ -369,45 +369,50 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           authority: authorityC,
           amountIrR: AMOUNT.toString(),
         },
-        'evt-cb-authority-only',
-      ),
-    )
+        'evt-cb-authority-only'
+      )
+    );
     expect(result).toMatchObject({
       mapped: true,
       reversed: true,
       originalTransactionId: credit.id,
       matchMethod: 'authority',
       status: 'reversed',
-    })
+    });
 
     const original = await ctx.pool.query<{ type: string; amount: string; state: string }>(
       `SELECT type, amount::text AS amount, state FROM wallet_transactions WHERE id = $1`,
-      [credit.id],
-    )
+      [credit.id]
+    );
     expect(original.rows[0]).toMatchObject({
       type: 'topup',
       amount: AMOUNT.toString(),
       state: 'Completed',
-    })
+    });
     const reversal = await ctx.pool.query<{
-      type: string
-      amount: string
-      reverses_transaction_id: string
+      type: string;
+      amount: string;
+      reverses_transaction_id: string;
     }>(
       `SELECT type, amount::text AS amount, reverses_transaction_id
          FROM wallet_transactions WHERE id = $1`,
-      [result.reversalTransactionId],
-    )
+      [result.reversalTransactionId]
+    );
     expect(reversal.rows[0]).toMatchObject({
       type: 'reversal',
       amount: (-AMOUNT).toString(),
       reverses_transaction_id: credit.id,
-    })
-  })
+    });
+  });
 
-  async function seedCompletedTopUp(profileId: string, pending: string, authority: string, providerRef: string) {
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId])
-    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId])
+  async function seedCompletedTopUp(
+    profileId: string,
+    pending: string,
+    authority: string,
+    providerRef: string
+  ) {
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId]);
+    await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId]);
     return walletService.credit(
       profileId,
       AMOUNT,
@@ -421,19 +426,19 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           authority,
         },
       },
-      onlineTopUpCreditIdempotencyKey(pending),
-    )
+      onlineTopUpCreditIdempotencyKey(pending)
+    );
   }
 
   it('resumes a stuck processing claim without rewriting the original credit', async () => {
-    const profileId = uuidv7()
-    const pending = uuidv7()
+    const profileId = uuidv7();
+    const pending = uuidv7();
     const credit = await seedCompletedTopUp(
       profileId,
       pending,
       'auth-resume-processing',
-      'psp-resume-processing',
-    )
+      'psp-resume-processing'
+    );
     await ctx.pool.query(
       `INSERT INTO wallet_chargeback_events (event_id, status, raw)
        VALUES ($1, 'processing', $2::jsonb)`,
@@ -448,8 +453,8 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           amountIrR: AMOUNT.toString(),
           reason: WALLET_CHARGEBACK_REASON,
         }),
-      ],
-    )
+      ]
+    );
 
     const result = await service.handle(
       signed(
@@ -459,43 +464,43 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           merchantOrderId: pending,
           amountIrR: AMOUNT.toString(),
         },
-        'evt-cb-resume-processing',
-      ),
-    )
+        'evt-cb-resume-processing'
+      )
+    );
     expect(result).toMatchObject({
       processed: true,
       mapped: true,
       reversed: true,
       originalTransactionId: credit.id,
       status: 'reversed',
-    })
+    });
     const original = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [credit.id],
-    )
-    expect(original.rows[0]?.state).toBe('Completed')
+      [credit.id]
+    );
+    expect(original.rows[0]?.state).toBe('Completed');
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [credit.id],
-    )
-    expect(reversals.rows).toHaveLength(1)
-  })
+      [credit.id]
+    );
+    expect(reversals.rows).toHaveLength(1);
+  });
 
   it('rejects a processing retry that reuses the event id with a different locator', async () => {
-    const claimedPending = uuidv7()
-    const otherPending = uuidv7()
+    const claimedPending = uuidv7();
+    const otherPending = uuidv7();
     const claimedCredit = await seedCompletedTopUp(
       uuidv7(),
       claimedPending,
       'auth-claimed-payload',
-      'psp-claimed-payload',
-    )
+      'psp-claimed-payload'
+    );
     const otherCredit = await seedCompletedTopUp(
       uuidv7(),
       otherPending,
       'auth-other-payload',
-      'psp-other-payload',
-    )
+      'psp-other-payload'
+    );
     await ctx.pool.query(
       `INSERT INTO wallet_chargeback_events (event_id, status, raw)
        VALUES ($1, 'processing', $2::jsonb)`,
@@ -510,8 +515,8 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           amountIrR: AMOUNT.toString(),
           reason: WALLET_CHARGEBACK_REASON,
         }),
-      ],
-    )
+      ]
+    );
 
     const rejection = await service
       .handle(
@@ -522,48 +527,48 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
             merchantOrderId: otherPending,
             amountIrR: AMOUNT.toString(),
           },
-          'evt-cb-payload-mismatch',
-        ),
+          'evt-cb-payload-mismatch'
+        )
       )
-      .catch((error: unknown) => error)
+      .catch((error: unknown) => error);
 
-    expect(rejection).toBeInstanceOf(HttpException)
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
       message: 'Payment chargeback event payload does not match the claimed notification',
-    })
+    });
 
     const claimedReversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [claimedCredit.id],
-    )
+      [claimedCredit.id]
+    );
     const otherReversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [otherCredit.id],
-    )
-    expect(claimedReversals.rows).toHaveLength(0)
-    expect(otherReversals.rows).toHaveLength(0)
+      [otherCredit.id]
+    );
+    expect(claimedReversals.rows).toHaveLength(0);
+    expect(otherReversals.rows).toHaveLength(0);
 
     const event = await ctx.pool.query<{ status: string; original_transaction_id: string | null }>(
       `SELECT status, original_transaction_id
          FROM wallet_chargeback_events
-        WHERE event_id = 'evt-cb-payload-mismatch'`,
-    )
+        WHERE event_id = 'evt-cb-payload-mismatch'`
+    );
     expect(event.rows[0]).toMatchObject({
       status: 'processing',
       original_transaction_id: null,
-    })
-  })
+    });
+  });
 
   it('rejects a corrected locator after an unmatched event instead of remapping', async () => {
-    const unmatchedPending = uuidv7()
-    const mappedPending = uuidv7()
+    const unmatchedPending = uuidv7();
+    const mappedPending = uuidv7();
     const mappedCredit = await seedCompletedTopUp(
       uuidv7(),
       mappedPending,
       'auth-corrected-locator',
-      'psp-corrected-locator',
-    )
+      'psp-corrected-locator'
+    );
     await ctx.pool.query(
       `INSERT INTO wallet_chargeback_events (event_id, status, raw)
        VALUES ($1, 'unmatched', $2::jsonb)`,
@@ -578,8 +583,8 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
           amountIrR: AMOUNT.toString(),
           reason: WALLET_CHARGEBACK_REASON,
         }),
-      ],
-    )
+      ]
+    );
 
     const rejection = await service
       .handle(
@@ -590,49 +595,49 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
             merchantOrderId: mappedPending,
             amountIrR: AMOUNT.toString(),
           },
-          'evt-cb-unmatched-corrected',
-        ),
+          'evt-cb-unmatched-corrected'
+        )
       )
-      .catch((error: unknown) => error)
+      .catch((error: unknown) => error);
 
-    expect(rejection).toBeInstanceOf(HttpException)
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
       message: 'Payment chargeback event payload does not match the claimed notification',
-    })
+    });
 
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [mappedCredit.id],
-    )
-    expect(reversals.rows).toHaveLength(0)
+      [mappedCredit.id]
+    );
+    expect(reversals.rows).toHaveLength(0);
 
     const event = await ctx.pool.query<{
-      status: string
-      original_transaction_id: string | null
+      status: string;
+      original_transaction_id: string | null;
     }>(
       `SELECT status, original_transaction_id
          FROM wallet_chargeback_events
-        WHERE event_id = 'evt-cb-unmatched-corrected'`,
-    )
+        WHERE event_id = 'evt-cb-unmatched-corrected'`
+    );
     expect(event.rows[0]).toMatchObject({
       status: 'unmatched',
       original_transaction_id: null,
-    })
-  })
+    });
+  });
 
   it.each(['reversed', 'unresolved'] as const)(
     'rejects a payload mismatch against a terminal %s event',
     async (status) => {
-      const claimedPending = uuidv7()
-      const otherPending = uuidv7()
+      const claimedPending = uuidv7();
+      const otherPending = uuidv7();
       const otherCredit = await seedCompletedTopUp(
         uuidv7(),
         otherPending,
         `auth-terminal-${status}`,
-        `psp-terminal-${status}`,
-      )
-      const eventId = `evt-cb-terminal-${status}`
+        `psp-terminal-${status}`
+      );
+      const eventId = `evt-cb-terminal-${status}`;
       await ctx.pool.query(
         `INSERT INTO wallet_chargeback_events (
            event_id, status, original_transaction_id, wallet_id, match_method, raw
@@ -651,8 +656,8 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
             amountIrR: AMOUNT.toString(),
             reason: WALLET_CHARGEBACK_REASON,
           }),
-        ],
-      )
+        ]
+      );
 
       const rejection = await service
         .handle(
@@ -663,155 +668,151 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
               merchantOrderId: otherPending,
               amountIrR: AMOUNT.toString(),
             },
-            eventId,
-          ),
+            eventId
+          )
         )
-        .catch((error: unknown) => error)
+        .catch((error: unknown) => error);
 
-      expect(rejection).toBeInstanceOf(HttpException)
+      expect(rejection).toBeInstanceOf(HttpException);
       expect((rejection as HttpException).getResponse()).toMatchObject({
         error: ErrorCodes.PROVIDER_CALLBACK_INVALID.code,
         message: 'Payment chargeback event payload does not match the claimed notification',
-      })
+      });
 
       const reversals = await ctx.pool.query(
         `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-        [otherCredit.id],
-      )
-      expect(reversals.rows).toHaveLength(0)
+        [otherCredit.id]
+      );
+      expect(reversals.rows).toHaveLength(0);
 
       const event = await ctx.pool.query<{ status: string }>(
         `SELECT status FROM wallet_chargeback_events WHERE event_id = $1`,
-        [eventId],
-      )
-      expect(event.rows[0]?.status).toBe(status)
-    },
-  )
+        [eventId]
+      );
+      expect(event.rows[0]?.status).toBe(status);
+    }
+  );
 
   it('serializes concurrent retries of the same event id to a single reversal', async () => {
-    const profileId = uuidv7()
-    const pending = uuidv7()
+    const profileId = uuidv7();
+    const pending = uuidv7();
     const credit = await seedCompletedTopUp(
       profileId,
       pending,
       'auth-concurrent-event',
-      'psp-concurrent-event',
-    )
+      'psp-concurrent-event'
+    );
     const body = {
       type: 'chargeback',
       merchantId: MERCHANT,
       merchantOrderId: pending,
       amountIrR: AMOUNT.toString(),
-    }
+    };
     const [first, second] = await Promise.all([
       service.handle(signed(body, 'evt-cb-concurrent-same')),
       service.handle(signed(body, 'evt-cb-concurrent-same')),
-    ])
-    expect([first.status, second.status]).toEqual(['reversed', 'reversed'])
-    expect(new Set([first.processed, second.processed])).toEqual(new Set([true, false]))
-    expect(first.originalTransactionId ?? second.originalTransactionId).toBe(credit.id)
-    expect(first.reversalTransactionId).toBe(second.reversalTransactionId)
+    ]);
+    expect([first.status, second.status]).toEqual(['reversed', 'reversed']);
+    expect(new Set([first.processed, second.processed])).toEqual(new Set([true, false]));
+    expect(first.originalTransactionId ?? second.originalTransactionId).toBe(credit.id);
+    expect(first.reversalTransactionId).toBe(second.reversalTransactionId);
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [credit.id],
-    )
-    expect(reversals.rows).toHaveLength(1)
+      [credit.id]
+    );
+    expect(reversals.rows).toHaveLength(1);
     const events = await ctx.pool.query(
-      `SELECT status FROM wallet_chargeback_events WHERE event_id = 'evt-cb-concurrent-same'`,
-    )
-    expect(events.rows).toHaveLength(1)
-    expect(events.rows[0]).toMatchObject({ status: 'reversed' })
-  })
+      `SELECT status FROM wallet_chargeback_events WHERE event_id = 'evt-cb-concurrent-same'`
+    );
+    expect(events.rows).toHaveLength(1);
+    expect(events.rows[0]).toMatchObject({ status: 'reversed' });
+  });
 
   it('maps two concurrent event ids for the same top-up to one compensating reversal', async () => {
-    const profileId = uuidv7()
-    const pending = uuidv7()
+    const profileId = uuidv7();
+    const pending = uuidv7();
     const credit = await seedCompletedTopUp(
       profileId,
       pending,
       'auth-concurrent-distinct',
-      'psp-concurrent-distinct',
-    )
+      'psp-concurrent-distinct'
+    );
     const body = {
       type: 'chargeback',
       merchantId: MERCHANT,
       merchantOrderId: pending,
       amountIrR: AMOUNT.toString(),
-    }
+    };
     const [first, second] = await Promise.all([
       service.handle(signed(body, 'evt-cb-concurrent-a')),
       service.handle(signed(body, 'evt-cb-concurrent-b')),
-    ])
-    expect(first.mapped).toBe(true)
-    expect(second.mapped).toBe(true)
-    expect(first.reversed).toBe(true)
-    expect(second.reversed).toBe(true)
-    expect(first.originalTransactionId).toBe(credit.id)
-    expect(second.originalTransactionId).toBe(credit.id)
-    const reversalIds = new Set([first.reversalTransactionId, second.reversalTransactionId])
-    expect(reversalIds.size).toBe(1)
+    ]);
+    expect(first.mapped).toBe(true);
+    expect(second.mapped).toBe(true);
+    expect(first.reversed).toBe(true);
+    expect(second.reversed).toBe(true);
+    expect(first.originalTransactionId).toBe(credit.id);
+    expect(second.originalTransactionId).toBe(credit.id);
+    const reversalIds = new Set([first.reversalTransactionId, second.reversalTransactionId]);
+    expect(reversalIds.size).toBe(1);
     const reversals = await ctx.pool.query(
       `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [credit.id],
-    )
-    expect(reversals.rows).toHaveLength(1)
-  })
+      [credit.id]
+    );
+    expect(reversals.rows).toHaveLength(1);
+  });
 
-  it(
-    'completes concurrent handlers when the pool max equals the handler count',
-    async () => {
-      const cases = await Promise.all(
-        Array.from({ length: CONCURRENT_HANDLERS }, async (_, index) => {
-          const pending = uuidv7()
-          const credit = await seedCompletedTopUp(
-            uuidv7(),
-            pending,
-            `auth-pool-bound-${index}`,
-            `psp-pool-bound-${index}`,
-          )
-          return { credit, pending, eventId: `evt-cb-pool-bound-${index}` }
-        }),
-      )
-
-      let timeoutId: ReturnType<typeof setTimeout> | undefined
-      const deadlock = new Promise<never>((_, reject) => {
-        timeoutId = setTimeout(() => {
-          reject(
-            new Error(
-              `chargeback handlers deadlocked: pool max ${CONCURRENT_HANDLERS} did not finish within ${POOL_DEADLOCK_TIMEOUT_MS}ms`,
-            ),
-          )
-        }, POOL_DEADLOCK_TIMEOUT_MS)
+  it('completes concurrent handlers when the pool max equals the handler count', async () => {
+    const cases = await Promise.all(
+      Array.from({ length: CONCURRENT_HANDLERS }, async (_, index) => {
+        const pending = uuidv7();
+        const credit = await seedCompletedTopUp(
+          uuidv7(),
+          pending,
+          `auth-pool-bound-${index}`,
+          `psp-pool-bound-${index}`
+        );
+        return { credit, pending, eventId: `evt-cb-pool-bound-${index}` };
       })
+    );
 
-      const results = await Promise.race([
-        Promise.all(
-          cases.map((entry) =>
-            service.handle(
-              signed(
-                {
-                  type: 'chargeback',
-                  merchantId: MERCHANT,
-                  merchantOrderId: entry.pending,
-                  amountIrR: AMOUNT.toString(),
-                },
-                entry.eventId,
-              ),
-            ),
-          ),
-        ),
-        deadlock,
-      ]).finally(() => {
-        if (timeoutId !== undefined) clearTimeout(timeoutId)
-      })
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const deadlock = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => {
+        reject(
+          new Error(
+            `chargeback handlers deadlocked: pool max ${CONCURRENT_HANDLERS} did not finish within ${POOL_DEADLOCK_TIMEOUT_MS}ms`
+          )
+        );
+      }, POOL_DEADLOCK_TIMEOUT_MS);
+    });
 
-      expect(results).toHaveLength(CONCURRENT_HANDLERS)
-      for (const [index, result] of results.entries()) {
-        expect(result.status).toBe('reversed')
-        expect(result.originalTransactionId).toBe(cases[index]!.credit.id)
-        expect(result.reversalTransactionId).toBeTruthy()
-      }
-    },
-    15_000,
-  )
-})
+    const results = await Promise.race([
+      Promise.all(
+        cases.map((entry) =>
+          service.handle(
+            signed(
+              {
+                type: 'chargeback',
+                merchantId: MERCHANT,
+                merchantOrderId: entry.pending,
+                amountIrR: AMOUNT.toString(),
+              },
+              entry.eventId
+            )
+          )
+        )
+      ),
+      deadlock,
+    ]).finally(() => {
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
+    });
+
+    expect(results).toHaveLength(CONCURRENT_HANDLERS);
+    for (const [index, result] of results.entries()) {
+      expect(result.status).toBe('reversed');
+      expect(result.originalTransactionId).toBe(cases[index]!.credit.id);
+      expect(result.reversalTransactionId).toBeTruthy();
+    }
+  }, 15_000);
+});

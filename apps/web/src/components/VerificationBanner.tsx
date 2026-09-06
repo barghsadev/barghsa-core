@@ -1,16 +1,16 @@
-import { useLocale } from '../hooks/useLocale.js'
-import { withCsrf } from '../lib/csrf.js'
-import { useEffect, useState } from 'react'
-import { Link, useRouter } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
+import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
+import { useEffect, useState } from 'react';
+import { Link, useRouter } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n';
 
 interface VerificationStatusResponse {
-  activeProfileId: string | null
-  profileStatus: string | null
-  isVerified: boolean
-  verificationRequired: boolean
-  verificationMethod: 'api' | 'manual'
-  canAutoVerify: boolean
+  activeProfileId: string | null;
+  profileStatus: string | null;
+  isVerified: boolean;
+  verificationRequired: boolean;
+  verificationMethod: 'api' | 'manual';
+  canAutoVerify: boolean;
 }
 
 /**
@@ -27,19 +27,19 @@ interface VerificationStatusResponse {
  * - Verification is not required by the system
  */
 export function VerificationBanner() {
-  const [status, setStatus] = useState<VerificationStatusResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [verifying, setVerifying] = useState(false)
-  const [verified, setVerified] = useState(false)
-  const [dismissed, setDismissed] = useState(false)
-  const [hasError, setHasError] = useState(false)
-  const router = useRouter()
+  const [status, setStatus] = useState<VerificationStatusResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const router = useRouter();
 
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     async function fetchStatus() {
       try {
@@ -47,73 +47,73 @@ export function VerificationBanner() {
           method: 'GET',
           credentials: 'include',
           headers: { Accept: 'application/json', 'Accept-Language': locale },
-        })
+        });
 
         // Not authenticated — no banner
         if (response.status === 401) {
-          if (!cancelled) setLoading(false)
-          return
+          if (!cancelled) setLoading(false);
+          return;
         }
 
         if (!response.ok) {
-          if (!cancelled) setLoading(false)
-          return
+          if (!cancelled) setLoading(false);
+          return;
         }
 
-        const data: VerificationStatusResponse = await response.json()
+        const data: VerificationStatusResponse = await response.json();
         if (!cancelled) {
-          setStatus(data)
-          setLoading(false)
+          setStatus(data);
+          setLoading(false);
         }
       } catch {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
     }
 
-    fetchStatus()
+    fetchStatus();
 
     return () => {
-      cancelled = true
-    }
-  }, [locale])
+      cancelled = true;
+    };
+  }, [locale]);
 
   // Don't render anything while loading, or if no status data, or if dismissed
-  if (loading || !status || dismissed) return null
+  if (loading || !status || dismissed) return null;
 
   // Don't render if profile is verified or verification is not required
-  if (status.isVerified || !status.verificationRequired) return null
+  if (status.isVerified || !status.verificationRequired) return null;
 
   // Don't render if no active profile at all. Capture the non-null status
   // for use inside the handleAutoVerify closure, which TypeScript cannot
   // narrow across function boundaries.
-  if (!status.activeProfileId) return null
-  const currentStatus = status
+  if (!status.activeProfileId) return null;
+  const currentStatus = status;
 
   async function handleAutoVerify() {
-    if (!currentStatus.activeProfileId) return
-    setVerifying(true)
-    setHasError(false)
+    if (!currentStatus.activeProfileId) return;
+    setVerifying(true);
+    setHasError(false);
 
     try {
       const response = await fetch(`/api/profiles/${currentStatus.activeProfileId}/verify`, {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json', 'Accept-Language': locale }),
-      })
+      });
 
       if (response.ok) {
-        setVerified(true)
+        setVerified(true);
         // Refresh the page after a brief delay to reflect the new status
         setTimeout(() => {
-          router.invalidate()
-        }, 1500)
+          router.invalidate();
+        }, 1500);
       } else {
-        setVerifying(false)
-        setHasError(true)
+        setVerifying(false);
+        setHasError(true);
       }
     } catch {
-      setVerifying(false)
-      setHasError(true)
+      setVerifying(false);
+      setHasError(true);
     }
   }
 
@@ -128,7 +128,7 @@ export function VerificationBanner() {
           <span>{t('verification.banner.verified', locale)}</span>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -140,9 +140,15 @@ export function VerificationBanner() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex flex-col gap-1">
           <span>{t('verification.banner.title', locale)}</span>
-          {!currentStatus.canAutoVerify && <span className="text-xs">{t('verification.banner.manualHelp', locale)}</span>}
-          <Link to="/tickets" className="text-xs underline underline-offset-2">{t('verification.banner.support', locale)}</Link>
-          {hasError && <span className="text-xs text-red-600">{t('verification.banner.error', locale)}</span>}
+          {!currentStatus.canAutoVerify && (
+            <span className="text-xs">{t('verification.banner.manualHelp', locale)}</span>
+          )}
+          <Link to="/tickets" className="text-xs underline underline-offset-2">
+            {t('verification.banner.support', locale)}
+          </Link>
+          {hasError && (
+            <span className="text-xs text-red-600">{t('verification.banner.error', locale)}</span>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {currentStatus.canAutoVerify && (
@@ -166,5 +172,5 @@ export function VerificationBanner() {
         </div>
       </div>
     </div>
-  )
+  );
 }

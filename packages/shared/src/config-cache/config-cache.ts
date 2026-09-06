@@ -1,12 +1,12 @@
-import type { Redis } from 'ioredis'
+import type { Redis } from 'ioredis';
 
 // ---------------------------------------------------------------------------
 // Logger contract — no framework dependency
 // ---------------------------------------------------------------------------
 
 export interface ConfigCacheLogger {
-  warn(message: string, ...meta: unknown[]): void
-  error(message: string, ...meta: unknown[]): void
+  warn(message: string, ...meta: unknown[]): void;
+  error(message: string, ...meta: unknown[]): void;
 }
 
 // ---------------------------------------------------------------------------
@@ -15,19 +15,19 @@ export interface ConfigCacheLogger {
 
 /** A single cached config entry with its version and the global version snapshot. */
 export interface CachedConfigEntry<T = unknown> {
-  value: T
+  value: T;
   /** Per-key version from app_config.version — incremented on each write to this key. */
-  version: number
+  version: number;
   /** The global version snapshot at the time this entry was cached. */
-  cachedAtGlobalVersion: number
+  cachedAtGlobalVersion: number;
 }
 
 /** Result of a config fetch with staleness information. */
 export interface ConfigFetchResult<T = unknown> {
-  value: T | null
-  fresh: boolean
+  value: T | null;
+  fresh: boolean;
   /** Per-key version from app_config.version. */
-  version: number | null
+  version: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -75,13 +75,13 @@ export class ConfigCache {
   // -----------------------------------------------------------------------
 
   /** Redis key prefix for individual config entries. */
-  static readonly ENTRY_PREFIX = 'config:entry:'
+  static readonly ENTRY_PREFIX = 'config:entry:';
 
   /** Redis key for the global version counter. */
-  static readonly GLOBAL_VERSION_KEY = 'config:global:version'
+  static readonly GLOBAL_VERSION_KEY = 'config:global:version';
 
   /** TTL for cached config entries (5 minutes in seconds). */
-  static readonly ENTRY_TTL_SEC = 300
+  static readonly ENTRY_TTL_SEC = 300;
 
   // -----------------------------------------------------------------------
   // Constructor
@@ -101,10 +101,12 @@ export class ConfigCache {
    * @param logger       Optional logger for warnings / errors.
    */
   constructor(
-    private readonly fetchFromDb: (key: string) => Promise<{ value: unknown; version: number } | null>,
+    private readonly fetchFromDb: (
+      key: string
+    ) => Promise<{ value: unknown; version: number } | null>,
     private readonly fetchGlobalVersion: () => Promise<number>,
     private readonly redis: Redis | null,
-    private readonly logger?: ConfigCacheLogger,
+    private readonly logger?: ConfigCacheLogger
   ) {}
 
   // -----------------------------------------------------------------------
@@ -123,8 +125,8 @@ export class ConfigCache {
    * @returns The config value, or `null` if the key does not exist.
    */
   async get<T = unknown>(key: string): Promise<T | null> {
-    const result = await this.getWithVersion<T>(key)
-    return result.value
+    const result = await this.getWithVersion<T>(key);
+    return result.value;
   }
 
   /**
@@ -139,11 +141,11 @@ export class ConfigCache {
     // --- Try Redis -----------------------------------------------------------
     if (this.redis) {
       try {
-        const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`)
+        const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`);
 
         if (entryRaw) {
-          const entry: CachedConfigEntry<T> = JSON.parse(entryRaw)
-          const globalVersion = await this.fetchGlobalVersion()
+          const entry: CachedConfigEntry<T> = JSON.parse(entryRaw);
+          const globalVersion = await this.fetchGlobalVersion();
 
           // Compare the global version stored at cache time against the
           // current global version.  If cachedAtGlobalVersion >= current,
@@ -163,7 +165,7 @@ export class ConfigCache {
           // (cachedAtGlobalVersion >= 0 is always true), which would
           // serve stale config to financial calculations.
           if (entry.cachedAtGlobalVersion >= globalVersion) {
-            return { value: entry.value, fresh: true, version: entry.version }
+            return { value: entry.value, fresh: true, version: entry.version };
           }
 
           // Global version advanced — cache is stale; fall through to PG
@@ -171,16 +173,16 @@ export class ConfigCache {
       } catch (err) {
         this.logger?.warn(
           '[config-cache] Redis read failed, falling back to PostgreSQL:',
-          err instanceof Error ? err.message : String(err),
-        )
+          err instanceof Error ? err.message : String(err)
+        );
         // Fall through to PG
       }
     }
 
     // --- Cache miss or stale — read from PostgreSQL ---------------------------
-    const row = await this.fetchFromDb(key)
+    const row = await this.fetchFromDb(key);
     if (!row) {
-      return { value: null, fresh: true, version: null }
+      return { value: null, fresh: true, version: null };
     }
 
     // --- Populate Redis cache -------------------------------------------------
@@ -188,7 +190,7 @@ export class ConfigCache {
       try {
         // Fetch the current global version — this is the snapshot we record
         // with the cached entry so future staleness checks are correct.
-        const currentGlobalVersion = await this.fetchGlobalVersion()
+        const currentGlobalVersion = await this.fetchGlobalVersion();
 
         await this.redis.setex(
           `${ConfigCache.ENTRY_PREFIX}${key}`,
@@ -197,8 +199,8 @@ export class ConfigCache {
             value: row.value,
             version: row.version,
             cachedAtGlobalVersion: currentGlobalVersion,
-          } satisfies CachedConfigEntry),
-        )
+          } satisfies CachedConfigEntry)
+        );
         // The global version key (config:global:version) is NOT explicitly
         // set with a TTL here — it is a permanent counter managed by INCR
         // in invalidate()/invalidateAll().  This avoids the NX+EX race
@@ -213,12 +215,12 @@ export class ConfigCache {
       } catch (err) {
         this.logger?.warn(
           '[config-cache] Redis write failed (non-fatal):',
-          err instanceof Error ? err.message : String(err),
-        )
+          err instanceof Error ? err.message : String(err)
+        );
       }
     }
 
-    return { value: row.value as T, fresh: false, version: row.version }
+    return { value: row.value as T, fresh: false, version: row.version };
   }
 
   /**
@@ -234,18 +236,18 @@ export class ConfigCache {
    * @param key The config key that was updated.
    */
   async invalidate(key: string): Promise<void> {
-    if (!this.redis) return
+    if (!this.redis) return;
 
     try {
       await Promise.all([
         this.redis.del(`${ConfigCache.ENTRY_PREFIX}${key}`),
         this.redis.incr(ConfigCache.GLOBAL_VERSION_KEY),
-      ])
+      ]);
     } catch (err) {
       this.logger?.warn(
         '[config-cache] Redis invalidation failed (non-fatal):',
-        err instanceof Error ? err.message : String(err),
-      )
+        err instanceof Error ? err.message : String(err)
+      );
     }
   }
 
@@ -256,33 +258,33 @@ export class ConfigCache {
    * Use sparingly — prefer {@link invalidate} for individual updates.
    */
   async invalidateAll(): Promise<void> {
-    if (!this.redis) return
+    if (!this.redis) return;
 
     try {
       const stream = this.redis.scanStream({
         match: `${ConfigCache.ENTRY_PREFIX}*`,
         count: 100,
-      })
+      });
 
       // Collect keys from the scan stream
-      const keys: string[] = []
+      const keys: string[] = [];
       for await (const batch of stream) {
         if (batch.length > 0) {
-          keys.push(...batch)
+          keys.push(...batch);
         }
       }
 
-      const pipeline = this.redis.pipeline()
+      const pipeline = this.redis.pipeline();
       if (keys.length > 0) {
-        pipeline.del(...keys)
+        pipeline.del(...keys);
       }
-      pipeline.incr(ConfigCache.GLOBAL_VERSION_KEY)
-      await pipeline.exec()
+      pipeline.incr(ConfigCache.GLOBAL_VERSION_KEY);
+      await pipeline.exec();
     } catch (err) {
       this.logger?.warn(
         '[config-cache] Full invalidation failed (non-fatal):',
-        err instanceof Error ? err.message : String(err),
-      )
+        err instanceof Error ? err.message : String(err)
+      );
     }
   }
 
@@ -293,19 +295,19 @@ export class ConfigCache {
    * not cached or the cache is stale (version mismatch).
    */
   async peek<T = unknown>(key: string): Promise<CachedConfigEntry<T> | null> {
-    if (!this.redis) return null
+    if (!this.redis) return null;
 
     try {
-      const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`)
+      const entryRaw = await this.redis.get(`${ConfigCache.ENTRY_PREFIX}${key}`);
 
-      if (!entryRaw) return null
+      if (!entryRaw) return null;
 
-      const entry: CachedConfigEntry<T> = JSON.parse(entryRaw)
-      const globalVersion = await this.fetchGlobalVersion()
+      const entry: CachedConfigEntry<T> = JSON.parse(entryRaw);
+      const globalVersion = await this.fetchGlobalVersion();
 
-      return entry.cachedAtGlobalVersion >= globalVersion ? entry : null
+      return entry.cachedAtGlobalVersion >= globalVersion ? entry : null;
     } catch {
-      return null
+      return null;
     }
   }
 }

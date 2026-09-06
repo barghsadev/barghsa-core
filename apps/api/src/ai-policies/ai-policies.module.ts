@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common'
-import { SessionModule } from '../session/index.js'
-import { PoliciesController, PolicyGroupsController } from './ai-policies.controller.js'
-import { AiPoliciesService } from './ai-policies.service.js'
+import { Module } from '@nestjs/common';
+import { SessionModule } from '../session/index.js';
+import { PoliciesController, PolicyGroupsController } from './ai-policies.controller.js';
+import { AiPoliciesService } from './ai-policies.service.js';
 
 /**
  * AI policy administration module (S-09.11, T-09.11.03).

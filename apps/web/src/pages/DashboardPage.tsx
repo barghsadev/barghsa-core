@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { WalletBalanceCard } from '../components/WalletBalanceCard.js'
-import { QuickStatusCards } from '../components/QuickStatusCards.js'
+import { useState, useEffect } from 'react';
+import { Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import { WalletBalanceCard } from '../components/WalletBalanceCard.js';
+import { QuickStatusCards } from '../components/QuickStatusCards.js';
 
 interface DashboardData {
-  wallet: { balance: number; currency: string; lowBalanceWarning: boolean }
-  activeOrders: number
-  pendingInvoices: number
-  openTickets: number
-  contracts: { active: number; total: number }
+  wallet: { balance: number; currency: string; lowBalanceWarning: boolean };
+  activeOrders: number;
+  pendingInvoices: number;
+  openTickets: number;
+  contracts: { active: number; total: number };
   quickStatus: {
-    activeContracts: number
-    pendingOrders: number
-    openTickets: number
-    unpaidInvoices: number
-  }
+    activeContracts: number;
+    pendingOrders: number;
+    openTickets: number;
+    unpaidInvoices: number;
+  };
 }
 
 function formatRial(amount: number, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
-    }).format(amount)
+    }).format(amount);
   } catch {
-    return amount.toLocaleString()
+    return amount.toLocaleString();
   }
 }
 
@@ -39,35 +39,37 @@ function formatRial(amount: number, locale: Locale): string {
  *   - Quick actions section.
  */
 export function DashboardPage({ locale = 'fa' as Locale }) {
-  const [data, setData] = useState<DashboardData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const isRtl = locale === 'fa'
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     async function fetchDashboard() {
       try {
-        const res = await fetch('/api/dashboard', { credentials: 'include' })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const json: DashboardData = await res.json()
-        if (!cancelled) setData(json)
+        const res = await fetch('/api/dashboard', { credentials: 'include' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json: DashboardData = await res.json();
+        if (!cancelled) setData(json);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load dashboard')
+          setError(err instanceof Error ? err.message : 'Failed to load dashboard');
         }
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
     }
 
-    fetchDashboard()
-    return () => { cancelled = true }
-  }, [])
+    fetchDashboard();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Placeholder profile name — in the future read from active profile state
-  const profileName = '…'
+  const profileName = '…';
 
   if (error) {
     return (
@@ -80,7 +82,7 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
           {t('dashboard.overview.moreInfo', locale)}
         </button>
       </div>
-    )
+    );
   }
 
   if (loading) {
@@ -98,21 +100,21 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   const quickActions = [
     { label: t('dashboard.overview.newOrder', locale), href: '/electricity' },
     { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet' },
     { label: t('dashboard.overview.supportTicket', locale), href: '/support' },
-  ]
+  ];
 
   const qs = data?.quickStatus ?? {
     activeContracts: data?.contracts?.active ?? 0,
     pendingOrders: data?.activeOrders ?? 0,
     openTickets: data?.openTickets ?? 0,
     unpaidInvoices: data?.pendingInvoices ?? 0,
-  }
+  };
 
   return (
     <div className="space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -179,5 +181,5 @@ export function DashboardPage({ locale = 'fa' as Locale }) {
         </div>
       </section>
     </div>
-  )
+  );
 }

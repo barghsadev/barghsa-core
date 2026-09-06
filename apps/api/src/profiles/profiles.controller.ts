@@ -11,27 +11,27 @@ import {
   Param,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ProfilesService } from './profiles.service.js'
-import { AgentsService } from './agents.service.js'
-import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProfilesService } from './profiles.service.js';
+import { AgentsService } from './agents.service.js';
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 
 @ApiTags('Profiles')
 @Controller('api/profiles')
 @UseGuards(SessionAuthGuard)
 export class ProfilesController {
-  private readonly logger = new Logger(ProfilesController.name)
+  private readonly logger = new Logger(ProfilesController.name);
 
   constructor(
     private readonly profilesService: ProfilesService,
-    private readonly agentsService: AgentsService,
+    private readonly agentsService: AgentsService
   ) {}
 
   /**
@@ -60,14 +60,14 @@ export class ProfilesController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async listProfiles(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const result = await this.profilesService.getProfilesByUserId(userId)
+    const userId = req.session.userId;
+    const result = await this.profilesService.getProfilesByUserId(userId);
 
     this.logger.debug(
-      `User ${userId}: ${result.profiles.length} profile(s), default=${result.hasDefault}`,
-    )
+      `User ${userId}: ${result.profiles.length} profile(s), default=${result.hasDefault}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -87,30 +87,31 @@ export class ProfilesController {
   @HttpCode(200)
   @RateLimit({ namespace: 'profiles:switch:user', limit: 30, windowMs: 60_000 })
   @ApiOperation({ summary: 'Switch the active profile' })
-  @ApiResponse({ status: 200, description: 'Active profile switched.', schema: { type: 'object', properties: { activeProfileId: { type: 'string', nullable: true } } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Active profile switched.',
+    schema: { type: 'object', properties: { activeProfileId: { type: 'string', nullable: true } } },
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'User does not have access to the profile' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async switchProfile(
     @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ activeProfileId: string | null }> {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
     // Verify this profile belongs to the user (or they are an active agent).
-    const profile = await this.profilesService.getAccessibleProfile(userId, profileId)
+    const profile = await this.profilesService.getAccessibleProfile(userId, profileId);
     if (!profile) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
     // Clear any existing default for this user, set this one as default.
-    await this.profilesService.setDefaultProfile(userId, profileId)
+    await this.profilesService.setDefaultProfile(userId, profileId);
 
-    this.logger.log(`User ${userId} switched active profile to ${profileId}`)
-    return { activeProfileId: profileId }
+    this.logger.log(`User ${userId} switched active profile to ${profileId}`);
+    return { activeProfileId: profileId };
   }
 
   /**
@@ -128,24 +129,21 @@ export class ProfilesController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async setDefaultProfile(
     @Param('id') profileId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
     // Verify this profile belongs to the user
-    const profile = await this.profilesService.getProfileById(profileId)
+    const profile = await this.profilesService.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
     // Clear any existing default for this user, set this one as default
-    await this.profilesService.setDefaultProfile(userId, profileId)
+    await this.profilesService.setDefaultProfile(userId, profileId);
 
-    this.logger.log(`Profile ${profileId} set as default for user ${userId}`)
-    return { message: 'Profile set as default.' }
+    this.logger.log(`Profile ${profileId} set as default for user ${userId}`);
+    return { message: 'Profile set as default.' };
   }
 
   /**
@@ -185,14 +183,14 @@ export class ProfilesController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getVerificationStatus(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const result = await this.profilesService.getVerificationStatus(userId)
+    const userId = req.session.userId;
+    const result = await this.profilesService.getVerificationStatus(userId);
 
     this.logger.debug(
-      `User ${userId}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`,
-    )
+      `User ${userId}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -210,17 +208,14 @@ export class ProfilesController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async verifyProfile(
     @Param('id') profileId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
     // Verify this profile belongs to the user
-    const profile = await this.profilesService.getProfileById(profileId)
+    const profile = await this.profilesService.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
     // Verify the profile is not already verified
@@ -230,49 +225,74 @@ export class ProfilesController {
           statusCode: 409,
           error: ErrorCodes.CONFLICT_STATE.code,
         },
-        409,
-      )
+        409
+      );
     }
 
-    return this.profilesService.verifyProfileApi(userId, profileId)
+    return this.profilesService.verifyProfileApi(userId, profileId);
   }
 
   @Get('ownership-transfers')
   @HttpCode(200)
   async listOwnershipTransfers(@Req() req: AuthenticatedRequest) {
-    return this.agentsService.listOwnershipTransfers(req.session.userId)
+    return this.agentsService.listOwnershipTransfers(req.session.userId);
   }
 
   @Post(':profileId/ownership-accept')
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
-  async acceptOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
-    return this.resolveOwnership(profileId,body,req,'accept')
+  async acceptOwnership(
+    @Param('profileId') profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.resolveOwnership(profileId, body, req, 'accept');
   }
 
   @Post(':profileId/ownership-decline')
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
-  async declineOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
-    return this.resolveOwnership(profileId,body,req,'decline')
+  async declineOwnership(
+    @Param('profileId') profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.resolveOwnership(profileId, body, req, 'decline');
   }
 
   @Post(':profileId/ownership-cancel')
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
-  async cancelOwnership(@Param('profileId') profileId: string, @Body() body: unknown, @Req() req: AuthenticatedRequest) {
-    return this.resolveOwnership(profileId,body,req,'cancel')
+  async cancelOwnership(
+    @Param('profileId') profileId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.resolveOwnership(profileId, body, req, 'cancel');
   }
 
-  private resolveOwnership(profileId: string, body: unknown, req: AuthenticatedRequest, decision: 'accept'|'decline'|'cancel') {
-    const parsed=z.object({ transferId:z.uuid() }).safeParse(body)
+  private resolveOwnership(
+    profileId: string,
+    body: unknown,
+    req: AuthenticatedRequest,
+    decision: 'accept' | 'decline' | 'cancel'
+  ) {
+    const parsed = z.object({ transferId: z.uuid() }).safeParse(body);
     if (!parsed.success || !z.uuid().safeParse(profileId).success) {
-      throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
     }
-    return this.agentsService.resolveOwnershipTransfer(profileId,parsed.data.transferId,req.session.userId,decision)
+    return this.agentsService.resolveOwnershipTransfer(
+      profileId,
+      parsed.data.transferId,
+      req.session.userId,
+      decision
+    );
   }
 
   /**
@@ -289,27 +309,21 @@ export class ProfilesController {
   @ApiResponse({ status: 200, description: 'Profile details.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
-  async getProfile(
-    @Param('id') profileId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
+  async getProfile(@Param('id') profileId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
 
-    const profile = await this.profilesService.getProfileById(profileId)
+    const profile = await this.profilesService.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
     // Fetch addresses
-    const addresses = await this.profilesService.getProfileAddresses(profileId)
+    const addresses = await this.profilesService.getProfileAddresses(profileId);
 
     // For legal profiles, fetch legal entity data
-    let legalInfo: Record<string, unknown> | null = null
+    let legalInfo: Record<string, unknown> | null = null;
     if (profile.profileType === 'LEGAL') {
-      legalInfo = await this.profilesService.getLegalProfileInfo(profileId)
+      legalInfo = await this.profilesService.getLegalProfileInfo(profileId);
     }
 
     return {
@@ -325,7 +339,7 @@ export class ProfilesController {
       updatedAt: profile.updatedAt,
       addresses,
       legalInfo,
-    }
+    };
   }
 
   /**
@@ -349,105 +363,144 @@ export class ProfilesController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async updateProfile(
     @Param('id') profileId: string,
-    @Body() body: {
-      title?: string
-      firstName?: string
-      lastName?: string
-      nationalId?: string
-      provinceId?: string
-      cityId?: string
-      fullAddress?: string
-      postalCode?: string
+    @Body()
+    body: {
+      title?: string;
+      firstName?: string;
+      lastName?: string;
+      nationalId?: string;
+      provinceId?: string;
+      cityId?: string;
+      fullAddress?: string;
+      postalCode?: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
-    const profile = await this.profilesService.getProfileById(profileId)
+    const profile = await this.profilesService.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
     // Prevent updating identity fields if profile is verified (unless admin)
-    const isAdmin = req.session.isAdmin ?? false
-    const isVerified = profile.status === 'VERIFIED'
+    const isAdmin = req.session.isAdmin ?? false;
+    const isVerified = profile.status === 'VERIFIED';
 
     if (isVerified && !isAdmin) {
-      if (body.firstName !== undefined || body.lastName !== undefined || body.nationalId !== undefined) {
+      if (
+        body.firstName !== undefined ||
+        body.lastName !== undefined ||
+        body.nationalId !== undefined
+      ) {
         throw new HttpException(
           {
             statusCode: 403,
             error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-            message: 'Identity fields are read-only after verification. Contact support to make changes.',
+            message:
+              'Identity fields are read-only after verification. Contact support to make changes.',
           },
-          403,
-        )
+          403
+        );
       }
     }
 
     // Field length validation
     if (body.title !== undefined && body.title.length > 50) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Title must be 50 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Title must be 50 characters or fewer',
+        },
+        400
+      );
     }
     if (body.firstName !== undefined) {
       if (!body.firstName.trim()) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'First name cannot be empty' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+            message: 'First name cannot be empty',
+          },
+          400
+        );
       }
       if (body.firstName.length > 100) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'First name must be 100 characters or fewer' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'First name must be 100 characters or fewer',
+          },
+          400
+        );
       }
     }
     if (body.lastName !== undefined) {
       if (!body.lastName.trim()) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Last name cannot be empty' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+            message: 'Last name cannot be empty',
+          },
+          400
+        );
       }
       if (body.lastName.length > 100) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Last name must be 100 characters or fewer' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Last name must be 100 characters or fewer',
+          },
+          400
+        );
       }
     }
     if (body.nationalId !== undefined) {
       if (!body.nationalId.trim()) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National ID cannot be empty' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+            message: 'National ID cannot be empty',
+          },
+          400
+        );
       }
       if (!validateNationalId(body.nationalId.trim())) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid national ID format' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Invalid national ID format',
+          },
+          400
+        );
       }
     }
     if (body.fullAddress !== undefined && body.fullAddress.length > 500) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Full address must be 500 characters or fewer',
+        },
+        400
+      );
     }
     if (body.postalCode !== undefined && !validatePostalCode(body.postalCode.trim())) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid postal code format' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid postal code format',
+        },
+        400
+      );
     }
 
     const updated = await this.profilesService.updateProfile(userId, profileId, {
@@ -459,9 +512,9 @@ export class ProfilesController {
       cityId: body.cityId?.trim() ?? undefined,
       fullAddress: body.fullAddress?.trim() ?? undefined,
       postalCode: body.postalCode?.trim() ?? undefined,
-    })
+    });
 
-    this.logger.log(`Profile ${profileId} updated for user ${userId}`)
+    this.logger.log(`Profile ${profileId} updated for user ${userId}`);
 
     return {
       id: updated.id,
@@ -473,7 +526,7 @@ export class ProfilesController {
       lastName: updated.lastName,
       nationalId: updated.nationalId,
       updatedAt: updated.updatedAt,
-    }
+    };
   }
 
   /**
@@ -489,16 +542,13 @@ export class ProfilesController {
   @ApiResponse({ status: 200, description: 'List of addresses.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
-  async listAddresses(
-    @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
+  async listAddresses(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
 
-    await this.profilesService.requireAddressEditor(userId,profileId)
+    await this.profilesService.requireAddressEditor(userId, profileId);
 
-    const addresses = await this.profilesService.getProfileAddresses(profileId)
-    return { addresses }
+    const addresses = await this.profilesService.getProfileAddresses(profileId);
+    return { addresses };
   }
 
   /**
@@ -517,49 +567,70 @@ export class ProfilesController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async createAddress(
     @Param('profileId') profileId: string,
-    @Body() body: {
-      provinceId: string
-      cityId: string
-      fullAddress: string
-      postalCode: string
-      mainAddress?: boolean
+    @Body()
+    body: {
+      provinceId: string;
+      cityId: string;
+      fullAddress: string;
+      postalCode: string;
+      mainAddress?: boolean;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
     // Required field validation
     if (!body.provinceId?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Province is required',
+        },
+        400
+      );
     }
     if (!body.cityId?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'City is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'City is required',
+        },
+        400
+      );
     }
     if (!body.fullAddress?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Full address is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Full address is required',
+        },
+        400
+      );
     }
     if (!body.postalCode?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Postal code is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Postal code is required',
+        },
+        400
+      );
     }
 
     // Field length validation
     if (body.fullAddress.length > 500) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Full address must be 500 characters or fewer',
+        },
+        400
+      );
     }
 
     const address = await this.profilesService.createAddress(userId, profileId, {
@@ -568,10 +639,10 @@ export class ProfilesController {
       fullAddress: body.fullAddress.trim(),
       postalCode: body.postalCode.trim(),
       ...(body.mainAddress === true ? { mainAddress: true } : {}),
-    })
+    });
 
-    this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`)
-    return address
+    this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`);
+    return address;
   }
 
   /**
@@ -592,22 +663,27 @@ export class ProfilesController {
   async updateAddress(
     @Param('profileId') profileId: string,
     @Param('addressId') addressId: string,
-    @Body() body: {
-      provinceId?: string
-      cityId?: string
-      fullAddress?: string
-      postalCode?: string
+    @Body()
+    body: {
+      provinceId?: string;
+      cityId?: string;
+      fullAddress?: string;
+      postalCode?: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
     // Field length validation
     if (body.fullAddress !== undefined && body.fullAddress.length > 500) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Full address must be 500 characters or fewer',
+        },
+        400
+      );
     }
 
     const address = await this.profilesService.updateAddress(userId, profileId, addressId, {
@@ -615,10 +691,10 @@ export class ProfilesController {
       ...(body.cityId !== undefined ? { cityId: body.cityId.trim() } : {}),
       ...(body.fullAddress !== undefined ? { fullAddress: body.fullAddress.trim() } : {}),
       ...(body.postalCode !== undefined ? { postalCode: body.postalCode.trim() } : {}),
-    })
+    });
 
-    this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`)
-    return address
+    this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`);
+    return address;
   }
 
   /**
@@ -632,18 +708,21 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:addresses:delete:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Delete an address' })
   @ApiResponse({ status: 200, description: 'Address deleted.' })
-  @ApiResponse({ status: 400, description: 'Cannot delete main address or address linked to order' })
+  @ApiResponse({
+    status: 400,
+    description: 'Cannot delete main address or address linked to order',
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async deleteAddress(
     @Param('profileId') profileId: string,
     @Param('addressId') addressId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
-    await this.profilesService.deleteAddress(userId, profileId, addressId)
-    this.logger.log(`Address ${addressId} deleted for profile ${profileId} by user ${userId}`)
-    return { message: 'Address deleted successfully.' }
+    const userId = req.session.userId;
+    await this.profilesService.deleteAddress(userId, profileId, addressId);
+    this.logger.log(`Address ${addressId} deleted for profile ${profileId} by user ${userId}`);
+    return { message: 'Address deleted successfully.' };
   }
 
   /**
@@ -663,12 +742,12 @@ export class ProfilesController {
   async setMainAddress(
     @Param('profileId') profileId: string,
     @Param('addressId') addressId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
-    const address = await this.profilesService.setMainAddress(userId, profileId, addressId)
-    this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`)
-    return address
+    const userId = req.session.userId;
+    const address = await this.profilesService.setMainAddress(userId, profileId, addressId);
+    this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`);
+    return address;
   }
 
   /**
@@ -689,7 +768,10 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:transfer-ownership:initiate', limit: 5, windowMs: 60_000 })
   @ApiOperation({ summary: 'Initiate ownership transfer for a legal profile' })
   @ApiResponse({ status: 201, description: 'Ownership transfer initiated.' })
-  @ApiResponse({ status: 400, description: 'Validation error — target not an agent, or not a legal profile.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error — target not an agent, or not a legal profile.',
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Only the profile owner can initiate transfer' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
@@ -697,28 +779,32 @@ export class ProfilesController {
   async initiateOwnershipTransfer(
     @Param('profileId') profileId: string,
     @Body() body: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
-    const parsed = z.object({newOwnerUserId:z.string().trim().min(1).max(128)}).safeParse(body)
+    const parsed = z.object({ newOwnerUserId: z.string().trim().min(1).max(128) }).safeParse(body);
     if (!parsed.success || !z.uuid().safeParse(profileId).success) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'newOwnerUserId is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'newOwnerUserId is required',
+        },
+        400
+      );
     }
 
     const result = await this.agentsService.initiateOwnershipTransfer(
       profileId,
       parsed.data.newOwnerUserId,
-      userId,
-    )
+      userId
+    );
 
     this.logger.log(
-      `Ownership transfer ${result.id} initiated for profile ${profileId} by user ${userId}`,
-    )
+      `Ownership transfer ${result.id} initiated for profile ${profileId} by user ${userId}`
+    );
 
-    return result
+    return result;
   }
 }

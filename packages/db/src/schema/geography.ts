@@ -1,12 +1,12 @@
-import { sql } from 'drizzle-orm'
-import { uuid, pgEnum, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
+import { sql } from 'drizzle-orm';
+import { uuid, pgEnum, text, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
 
 /**
  * Province status enum — active means the province is visible and
  * selectable in user-facing forms; inactive hides it from selection.
  */
-export const provinceStatus = pgEnum('province_status', ['active', 'inactive'])
+export const provinceStatus = pgEnum('province_status', ['active', 'inactive']);
 
 /**
  * Iranian provinces table (T-03.02.02, T-09.02.01).
@@ -29,22 +29,18 @@ export const provinces = pgTable('provinces', {
   status: provinceStatus('status').notNull().default('active'),
 
   /** When the province was created. */
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
   /** When the province was last updated (maintained by trigger). */
-  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
-})
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * Iranian cities table (T-03.02.02).
  *
  * Each city belongs to a province. Pre-seeded with major Iranian cities.
  */
-export const cityStatus = pgEnum('city_status', ['active', 'inactive'])
+export const cityStatus = pgEnum('city_status', ['active', 'inactive']);
 
 /**
  * Iranian cities table (T-03.02.02, T-09.02.02).
@@ -57,7 +53,9 @@ export const cities = pgTable('cities', {
   id: uuidv7('id').primaryKey().notNull(),
 
   /** Foreign key to the parent province. */
-  provinceId: uuid('province_id').notNull().references(() => provinces.id, { onDelete: 'restrict' }),
+  provinceId: uuid('province_id')
+    .notNull()
+    .references(() => provinces.id, { onDelete: 'restrict' }),
 
   /** City name in Persian. */
   nameFa: text('name_fa').notNull(),
@@ -69,15 +67,11 @@ export const cities = pgTable('cities', {
   status: cityStatus('status').notNull().default('active'),
 
   /** When the city was created. */
-  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
   /** When the city was last updated (maintained by trigger). */
-  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-    .defaultNow()
-    .notNull(),
-})
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the provinces and cities tables.
@@ -102,4 +96,4 @@ export const createGeographyTables = sql`
 
   CREATE INDEX IF NOT EXISTS idx_cities_province_id ON cities (province_id);
   CREATE INDEX IF NOT EXISTS idx_provinces_status ON provinces (status);
-`
+`;

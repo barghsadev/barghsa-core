@@ -16,16 +16,16 @@
 
 This runbook covers the restoration of application configuration and critical non-DB files from encrypted off-server backups (`restore-config.sh`). The following asset types are included:
 
-| Asset | Backup path (S3 prefix) | Priority |
-|---|---|---|
-| Application `.env` files | `config/<label>/` → `env-*` | Critical |
-| Admin config schema snapshot | `config/<label>/` → `admin-config-snapshot.json` | High |
-| Encryption keys (wrapped) | `config/<label>/` → `key-*` | Critical |
-| Docker Compose / deploy scripts | `config/<label>/` → `deploy-*` | High |
-| TLS certificates (public only) | `config/<label>/` → `cert-*` | High |
-| Deployment/infra scripts | `config/<label>/` → `script-*` | Medium |
+| Asset                           | Backup path (S3 prefix)                          | Priority |
+| ------------------------------- | ------------------------------------------------ | -------- |
+| Application `.env` files        | `config/<label>/` → `env-*`                      | Critical |
+| Admin config schema snapshot    | `config/<label>/` → `admin-config-snapshot.json` | High     |
+| Encryption keys (wrapped)       | `config/<label>/` → `key-*`                      | Critical |
+| Docker Compose / deploy scripts | `config/<label>/` → `deploy-*`                   | High     |
+| TLS certificates (public only)  | `config/<label>/` → `cert-*`                     | High     |
+| Deployment/infra scripts        | `config/<label>/` → `script-*`                   | Medium   |
 
-**Important:** Database restoration is covered by the separate PostgreSQL restore runbook (`restore-pg.sh`). Always restore the database *first*, then config files, so admin config snapshots can be re-applied to a running API.
+**Important:** Database restoration is covered by the separate PostgreSQL restore runbook (`restore-pg.sh`). Always restore the database _first_, then config files, so admin config snapshots can be re-applied to a running API.
 
 ---
 
@@ -68,7 +68,7 @@ print(resp)
 
 - **Latest backup:** Run `--label latest` (default).
 - **Specific backup:** Use the ISO-8601 timestamp from the backup label, e.g. `--label 2026-08-24T12:00:00Z`.
-- **Recovery point:** Choose the backup taken *before* the config change, data loss, or corruption event.
+- **Recovery point:** Choose the backup taken _before_ the config change, data loss, or corruption event.
 
 ### Step 3: Restore to an isolated directory (recommended first)
 
@@ -81,6 +81,7 @@ print(resp)
 This restores files to `/tmp/config-restore-test/` without affecting production files. Inspect the restored files before copying them in place.
 
 **Output:** Decrypted files in `/tmp/config-restore-test/` with:
+
 - `MANIFEST.txt` — list of backed-up files and their categories
 - `backup-meta.json` — backup metadata (source, hostname, encryption method)
 - Individual files with prefixed names (e.g. `env-.env`, `deploy-docker-compose.yml`)
@@ -101,6 +102,7 @@ python3 -m json.tool /tmp/config-restore-test/admin-config-snapshot.json
 ### Step 5: Apply the restored files
 
 **For `.env` files:**
+
 ```bash
 # Compare first, then copy
 diff /tmp/config-restore-test/env-.env .env || true
@@ -110,6 +112,7 @@ pnpm dev       # or docker compose restart
 ```
 
 **For Docker Compose / deploy scripts:**
+
 ```bash
 cp /tmp/config-restore-test/deploy-docker-compose.yml docker-compose.yml
 cp /tmp/config-restore-test/deploy-Dockerfile.web Dockerfile.web
@@ -117,12 +120,14 @@ cp /tmp/config-restore-test/deploy-Dockerfile.base Dockerfile.base
 ```
 
 **For TLS certificates:**
+
 ```bash
 mkdir -p certs
 cp /tmp/config-restore-test/cert-* certs/
 ```
 
 **For encryption keys:**
+
 ```bash
 # Keys are already encrypted at rest in the backup (wrapped copies).
 # Copy them to the key directory and verify integrity.
@@ -133,6 +138,7 @@ gpg --verify keys/key-*.gpg || true
 ```
 
 **For deployment scripts:**
+
 ```bash
 chmod +x /tmp/config-restore-test/script-*.sh
 cp /tmp/config-restore-test/script-*.sh scripts/
@@ -141,6 +147,7 @@ cp /tmp/config-restore-test/script-*.sh scripts/
 ### Step 6: Verify the restored application
 
 1. Start the application (if not already running):
+
    ```bash
    docker compose up -d
    # or
@@ -148,11 +155,13 @@ cp /tmp/config-restore-test/script-*.sh scripts/
    ```
 
 2. Check health endpoint:
+
    ```bash
    curl -s http://localhost:4000/health | python3 -m json.tool
    ```
 
 3. Verify database connectivity:
+
    ```bash
    curl -s http://localhost:4000/health/readiness | python3 -m json.tool
    ```
@@ -176,6 +185,7 @@ export GPG_PASSPHRASE=correct-horse-battery-staple
 ```
 
 The script:
+
 1. Restores the latest config backup to an isolated directory
 2. Verifies the file structure (MANIFEST, metadata, file count)
 3. Checks that all files are decryptable and readable
@@ -183,10 +193,12 @@ The script:
 5. Produces a structured JSON result
 
 **Exit codes:**
+
 - `0` — All checks passed
 - `1` — One or more checks failed (logged to stderr)
 
 **Example output:**
+
 ```json
 {
   "step_restore": "ok",
@@ -216,6 +228,7 @@ The script:
 **Actual:** Recorded in each quarterly verification run's RPO field.
 
 **Notes:**
+
 - Configuration files change infrequently. Weekly backups provide adequate coverage.
 - Highly sensitive secrets (API keys, database passwords) should use a secrets vault or external secret manager — file backup is a last-resort fallback.
 - The backup script runs on every full backup cycle. Retention is 90 days by default.
@@ -227,21 +240,22 @@ The script:
 **Actual:** Measured during each quarterly verification.
 
 **Breakdown:**
-| Step | Estimated time |
-|---|---|
-| Download encrypted backup from S3 | < 1 min (small archive) |
-| Decrypt (GPG symmetric AES-256) | < 30 sec |
-| Extract and verify | < 30 sec |
-| Manual copy to production locations | < 5 min |
-| Restart application / reload config | < 2 min |
-| Verification and testing | < 10 min |
-| **Total** | **< 20 min** |
+
+| Step                                | Estimated time          |
+| ----------------------------------- | ----------------------- |
+| Download encrypted backup from S3   | < 1 min (small archive) |
+| Decrypt (GPG symmetric AES-256)     | < 30 sec                |
+| Extract and verify                  | < 30 sec                |
+| Manual copy to production locations | < 5 min                 |
+| Restart application / reload config | < 2 min                 |
+| Verification and testing            | < 10 min                |
+| **Total**                           | **< 20 min**            |
 
 ### Measured values (updated per quarterly verification)
 
-| Date | RTO | RPO | Verified by | Notes |
-|---|---|---|---|---|
-| *(first verification)* | | | | |
+| Date                   | RTO | RPO | Verified by | Notes |
+| ---------------------- | --- | --- | ----------- | ----- |
+| _(first verification)_ |     |     |             |       |
 
 ---
 
@@ -282,14 +296,14 @@ The script:
 
 ## Troubleshooting
 
-| Problem | Likely cause | Solution |
-|---|---|---|
-| `gpg: decryption failed: No secret key` | Wrong GPG key or passphrase | Verify `GPG_PASSPHRASE` is set correctly, or import the correct private key |
-| S3 download fails with 403 | Wrong credentials | Verify `BACKUP_S3_ACCESS_KEY` and `BACKUP_S3_SECRET_KEY` |
-| S3 download fails with 404 | Backup label is wrong or backup was pruned | List available backups and choose a valid label |
-| No `config/` prefix in S3 bucket | Config backup has never been run | Run `backup-config.sh` first |
-| tar extraction fails with CRC error | Backup file is corrupted | Download again; if still corrupt, the backup on S3 is damaged — use an earlier backup label |
-| `.env` file restored contains old values | The backup was taken before a config change | Choose a backup label from after the change, or manually update the values |
+| Problem                                  | Likely cause                                | Solution                                                                                    |
+| ---------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `gpg: decryption failed: No secret key`  | Wrong GPG key or passphrase                 | Verify `GPG_PASSPHRASE` is set correctly, or import the correct private key                 |
+| S3 download fails with 403               | Wrong credentials                           | Verify `BACKUP_S3_ACCESS_KEY` and `BACKUP_S3_SECRET_KEY`                                    |
+| S3 download fails with 404               | Backup label is wrong or backup was pruned  | List available backups and choose a valid label                                             |
+| No `config/` prefix in S3 bucket         | Config backup has never been run            | Run `backup-config.sh` first                                                                |
+| tar extraction fails with CRC error      | Backup file is corrupted                    | Download again; if still corrupt, the backup on S3 is damaged — use an earlier backup label |
+| `.env` file restored contains old values | The backup was taken before a config change | Choose a backup label from after the change, or manually update the values                  |
 
 ---
 

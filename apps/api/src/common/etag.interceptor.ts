@@ -68,11 +68,10 @@ export class EtagInterceptor implements NestInterceptor {
     }
 
     // Only process handlers decorated with @Etag()
-    const etagEnabled =
-      this.reflector.getAllAndOverride<boolean>(ETAG_METADATA, [
-        context.getHandler(),
-        context.getClass(),
-      ]);
+    const etagEnabled = this.reflector.getAllAndOverride<boolean>(ETAG_METADATA, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     if (!etagEnabled) {
       return next.handle();
@@ -108,7 +107,7 @@ export class EtagInterceptor implements NestInterceptor {
         }
 
         return body;
-      }),
+      })
     );
   }
 }

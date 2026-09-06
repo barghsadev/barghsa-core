@@ -5,22 +5,26 @@
  * provides a helper to attach it to state-changing requests.
  */
 
-const CSRF_COOKIE_NAME = 'barghsa_csrf'
-const CSRF_HEADER_NAME = 'X-CSRF-Token'
+const CSRF_COOKIE_NAME = 'barghsa_csrf';
+const CSRF_HEADER_NAME = 'X-CSRF-Token';
 
 /**
  * Read the CSRF token from the cookie set by the server.
  */
 export function getCsrfToken(): string | null {
-  if (typeof document === 'undefined') return null
-  const cookies = document.cookie.split(';')
+  if (typeof document === 'undefined') return null;
+  const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
-    const [name, ...rest] = cookie.trim().split('=')
+    const [name, ...rest] = cookie.trim().split('=');
     if (name === CSRF_COOKIE_NAME) {
-      try { return decodeURIComponent(rest.join('=')) || null } catch { return null }
+      try {
+        return decodeURIComponent(rest.join('=')) || null;
+      } catch {
+        return null;
+      }
     }
   }
-  return null
+  return null;
 }
 
 /**
@@ -29,12 +33,12 @@ export function getCsrfToken(): string | null {
  * Returns a new Headers object with the token added.
  */
 export function withCsrf(headers?: HeadersInit): Headers {
-  const h = new Headers(headers)
-  const token = getCsrfToken()
+  const h = new Headers(headers);
+  const token = getCsrfToken();
   if (token) {
-    h.set(CSRF_HEADER_NAME, token)
+    h.set(CSRF_HEADER_NAME, token);
   } else {
-    h.delete(CSRF_HEADER_NAME)
+    h.delete(CSRF_HEADER_NAME);
   }
-  return h
+  return h;
 }

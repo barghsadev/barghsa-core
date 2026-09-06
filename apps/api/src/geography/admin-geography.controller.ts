@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -13,19 +13,19 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { AdminGeographyService } from './admin-geography.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+} from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { AdminGeographyService } from './admin-geography.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 // ---------------------------------------------------------------------------
 // Zod validation schemas
 // ---------------------------------------------------------------------------
 
-const nameFaRe = /^[\u0600-\u06FF\u200C\s]+$/
-const nameEnRe = /^[a-zA-Z\s]+$/
+const nameFaRe = /^[\u0600-\u06FF\u200C\s]+$/;
+const nameEnRe = /^[a-zA-Z\s]+$/;
 
 export const CreateProvinceSchema = z.object({
   nameFa: z
@@ -38,7 +38,7 @@ export const CreateProvinceSchema = z.object({
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
-})
+});
 
 export const UpdateProvinceSchema = z.object({
   nameFa: z
@@ -54,10 +54,10 @@ export const UpdateProvinceSchema = z.object({
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' })
     .optional(),
   status: z.enum(['active', 'inactive']).optional(),
-})
+});
 
-export type CreateProvinceDto = z.infer<typeof CreateProvinceSchema>
-export type UpdateProvinceDto = z.infer<typeof UpdateProvinceSchema>
+export type CreateProvinceDto = z.infer<typeof CreateProvinceSchema>;
+export type UpdateProvinceDto = z.infer<typeof UpdateProvinceSchema>;
 
 // ---------------------------------------------------------------------------
 // City Zod validation schemas
@@ -74,7 +74,7 @@ export const CreateCitySchema = z.object({
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(100)
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' }),
-})
+});
 
 export const UpdateCitySchema = z.object({
   nameFa: z
@@ -90,10 +90,10 @@ export const UpdateCitySchema = z.object({
     .regex(nameEnRe, { message: 'VALIDATION:INVALID_ENGLISH_NAME' })
     .optional(),
   status: z.enum(['active', 'inactive']).optional(),
-})
+});
 
-export type CreateCityDto = z.infer<typeof CreateCitySchema>
-export type UpdateCityDto = z.infer<typeof UpdateCitySchema>
+export type CreateCityDto = z.infer<typeof CreateCitySchema>;
+export type UpdateCityDto = z.infer<typeof UpdateCitySchema>;
 
 // ---------------------------------------------------------------------------
 // Controller
@@ -103,7 +103,7 @@ export type UpdateCityDto = z.infer<typeof UpdateCitySchema>
 @Controller('api/admin/geography')
 @UseGuards(SessionAuthGuard)
 export class AdminGeographyController {
-  private readonly logger = new Logger(AdminGeographyController.name)
+  private readonly logger = new Logger(AdminGeographyController.name);
 
   constructor(private readonly adminGeographyService: AdminGeographyService) {}
 
@@ -118,7 +118,11 @@ export class AdminGeographyController {
   @ApiQuery({ name: 'search', required: false, description: 'Search in Persian/English name' })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status (active/inactive)' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20, max: 100)' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Items per page (default: 20, max: 100)',
+  })
   @ApiResponse({ status: 200, description: 'Paginated province list.' })
   @ApiResponse({ status: 403, description: 'Not admin.' })
   async listProvinces(
@@ -126,15 +130,15 @@ export class AdminGeographyController {
     @Query('search') search?: string,
     @Query('status') status?: 'active' | 'inactive',
     @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('limit') limit?: string
   ) {
-    this.requireAdmin(req)
+    this.requireAdmin(req);
     return this.adminGeographyService.listProvinces({
       search,
       status,
       page: page ? parseInt(page, 10) : undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
-    })
+    });
   }
 
   /**
@@ -146,19 +150,16 @@ export class AdminGeographyController {
   @ApiOperation({ summary: 'Get province by ID (admin)' })
   @ApiResponse({ status: 200, description: 'Province details.' })
   @ApiResponse({ status: 404, description: 'Province not found.' })
-  async getProvince(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
-    this.requireAdmin(req)
-    const province = await this.adminGeographyService.getProvince(id)
+  async getProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.requireAdmin(req);
+    const province = await this.adminGeographyService.getProvince(id);
     if (!province) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Province not found' },
-        404,
-      )
+        404
+      );
     }
-    return province
+    return province;
   }
 
   /**
@@ -172,20 +173,21 @@ export class AdminGeographyController {
   @ApiResponse({ status: 201, description: 'Province created.' })
   @ApiResponse({ status: 400, description: 'Validation error.' })
   @ApiResponse({ status: 409, description: 'Province already exists.' })
-  async createProvince(
-    @Req() req: AuthenticatedRequest,
-    @Body() body: unknown,
-  ) {
-    this.requireAdmin(req)
-    const parsed = CreateProvinceSchema.safeParse(body)
+  async createProvince(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    this.requireAdmin(req);
+    const parsed = CreateProvinceSchema.safeParse(body);
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
-        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: firstIssue?.message ?? 'VALIDATION_ERROR',
+          message: 'Invalid input',
+        },
+        400
+      );
     }
-    return this.adminGeographyService.createProvince(parsed.data)
+    return this.adminGeographyService.createProvince(parsed.data);
   }
 
   /**
@@ -201,25 +203,32 @@ export class AdminGeographyController {
   async updateProvince(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: unknown,
+    @Body() body: unknown
   ) {
-    this.requireAdmin(req)
-    const parsed = UpdateProvinceSchema.safeParse(body)
+    this.requireAdmin(req);
+    const parsed = UpdateProvinceSchema.safeParse(body);
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
-        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: firstIssue?.message ?? 'VALIDATION_ERROR',
+          message: 'Invalid input',
+        },
+        400
+      );
     }
-    const province = await this.adminGeographyService.updateProvince(id, parsed.data as UpdateProvinceDto)
+    const province = await this.adminGeographyService.updateProvince(
+      id,
+      parsed.data as UpdateProvinceDto
+    );
     if (!province) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Province not found' },
-        404,
-      )
+        404
+      );
     }
-    return province
+    return province;
   }
 
   /**
@@ -233,19 +242,16 @@ export class AdminGeographyController {
   @ApiResponse({ status: 200, description: 'Province deactivated.' })
   @ApiResponse({ status: 404, description: 'Province not found.' })
   @ApiResponse({ status: 409, description: 'Province has cities.' })
-  async deleteProvince(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
-    this.requireAdmin(req)
-    const deleted = await this.adminGeographyService.deleteProvince(id)
+  async deleteProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.requireAdmin(req);
+    const deleted = await this.adminGeographyService.deleteProvince(id);
     if (!deleted) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:PROVINCE_NOT_FOUND', message: 'Province not found' },
-        404,
-      )
+        404
+      );
     }
-    return { success: true }
+    return { success: true };
   }
 
   // ---------------------------------------------------------------------------
@@ -262,7 +268,11 @@ export class AdminGeographyController {
   @ApiQuery({ name: 'search', required: false, description: 'Search in Persian/English name' })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status (active/inactive)' })
   @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 20, max: 100)' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Items per page (default: 20, max: 100)',
+  })
   @ApiResponse({ status: 200, description: 'Paginated city list.' })
   @ApiResponse({ status: 403, description: 'Not admin.' })
   async listCities(
@@ -271,15 +281,15 @@ export class AdminGeographyController {
     @Query('search') search?: string,
     @Query('status') status?: 'active' | 'inactive',
     @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('limit') limit?: string
   ) {
-    this.requireAdmin(req)
+    this.requireAdmin(req);
     return this.adminGeographyService.listCities(provinceId, {
       search,
       status,
       page: page ? parseInt(page, 10) : undefined,
       limit: limit ? parseInt(limit, 10) : undefined,
-    })
+    });
   }
 
   /**
@@ -291,19 +301,16 @@ export class AdminGeographyController {
   @ApiOperation({ summary: 'Get city by ID (admin)' })
   @ApiResponse({ status: 200, description: 'City details.' })
   @ApiResponse({ status: 404, description: 'City not found.' })
-  async getCity(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
-    this.requireAdmin(req)
-    const city = await this.adminGeographyService.getCity(id)
+  async getCity(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.requireAdmin(req);
+    const city = await this.adminGeographyService.getCity(id);
     if (!city) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
-        404,
-      )
+        404
+      );
     }
-    return city
+    return city;
   }
 
   /**
@@ -321,18 +328,22 @@ export class AdminGeographyController {
   async createCity(
     @Req() req: AuthenticatedRequest,
     @Param('provinceId') provinceId: string,
-    @Body() body: unknown,
+    @Body() body: unknown
   ) {
-    this.requireAdmin(req)
-    const parsed = CreateCitySchema.safeParse(body)
+    this.requireAdmin(req);
+    const parsed = CreateCitySchema.safeParse(body);
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
-        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: firstIssue?.message ?? 'VALIDATION_ERROR',
+          message: 'Invalid input',
+        },
+        400
+      );
     }
-    return this.adminGeographyService.createCity(provinceId, parsed.data)
+    return this.adminGeographyService.createCity(provinceId, parsed.data);
   }
 
   /**
@@ -348,25 +359,29 @@ export class AdminGeographyController {
   async updateCity(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: unknown,
+    @Body() body: unknown
   ) {
-    this.requireAdmin(req)
-    const parsed = UpdateCitySchema.safeParse(body)
+    this.requireAdmin(req);
+    const parsed = UpdateCitySchema.safeParse(body);
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
-        { statusCode: 400, error: firstIssue?.message ?? 'VALIDATION_ERROR', message: 'Invalid input' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: firstIssue?.message ?? 'VALIDATION_ERROR',
+          message: 'Invalid input',
+        },
+        400
+      );
     }
-    const city = await this.adminGeographyService.updateCity(id, parsed.data as UpdateCityDto)
+    const city = await this.adminGeographyService.updateCity(id, parsed.data as UpdateCityDto);
     if (!city) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
-        404,
-      )
+        404
+      );
     }
-    return city
+    return city;
   }
 
   /**
@@ -379,19 +394,16 @@ export class AdminGeographyController {
   @ApiOperation({ summary: 'Delete (deactivate) city (admin)' })
   @ApiResponse({ status: 200, description: 'City deactivated.' })
   @ApiResponse({ status: 404, description: 'City not found.' })
-  async deleteCity(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
-    this.requireAdmin(req)
-    const deleted = await this.adminGeographyService.deleteCity(id)
+  async deleteCity(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    this.requireAdmin(req);
+    const deleted = await this.adminGeographyService.deleteCity(id);
     if (!deleted) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
-        404,
-      )
+        404
+      );
     }
-    return { success: true }
+    return { success: true };
   }
 
   // ---------------------------------------------------------------------------
@@ -400,12 +412,12 @@ export class AdminGeographyController {
 
   private requireAdmin(req: AuthenticatedRequest): void {
     // The capability is resolved from current database roles.
-    const isAdmin = hasStaffPermission(req, 'admin:geography:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:geography:edit');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: 'FORBIDDEN', message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
   }
 }

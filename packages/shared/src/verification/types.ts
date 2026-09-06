@@ -8,22 +8,22 @@
  * Supported verification modes.
  * Mirrors the admin config enum in the app_config table.
  */
-export type VerificationMode = 'DISABLED' | 'MANUAL' | 'API'
+export type VerificationMode = 'DISABLED' | 'MANUAL' | 'API';
 
 /**
  * Result of a verification check against an external provider API.
  */
 export interface VerificationResult {
   /** Whether the identity was successfully verified. */
-  verified: boolean
+  verified: boolean;
   /** A stable, provider-agnostic reason code. */
-  code: VerificationResultCode
+  code: VerificationResultCode;
   /** Human-readable detail (safe to surface to the user). */
-  message: string
+  message: string;
   /** Provider-specific raw response (for debugging / audit). */
-  rawResponse?: Record<string, unknown>
+  rawResponse?: Record<string, unknown>;
   /** How long the provider took to respond (ms). */
-  durationMs: number
+  durationMs: number;
 }
 
 /**
@@ -36,7 +36,7 @@ export type VerificationResultCode =
   | 'PROVIDER_ERROR'
   | 'TIMEOUT'
   | 'CIRCUIT_OPEN'
-  | 'INVALID_INPUT'
+  | 'INVALID_INPUT';
 
 /**
  * Configuration for a single verification provider.
@@ -44,11 +44,11 @@ export type VerificationResultCode =
  */
 export interface VerificationProviderConfig {
   /** Provider identifier (e.g. 'national_id', 'sabt_ahval'). */
-  providerId: string
+  providerId: string;
   /** Provider-specific settings (URL, keys, etc.). */
-  settings: Record<string, string>
+  settings: Record<string, string>;
   /** Whether this provider is enabled. */
-  enabled: boolean
+  enabled: boolean;
 }
 
 /**
@@ -56,11 +56,11 @@ export interface VerificationProviderConfig {
  */
 export interface CircuitBreakerConfig {
   /** Number of consecutive failures before the circuit opens. */
-  failureThreshold: number
+  failureThreshold: number;
   /** Milliseconds to wait before attempting a half-open probe. */
-  resetTimeoutMs: number
+  resetTimeoutMs: number;
   /** Maximum number of half-open probes before deciding. */
-  halfOpenMaxProbes: number
+  halfOpenMaxProbes: number;
 }
 
 /**
@@ -68,11 +68,11 @@ export interface CircuitBreakerConfig {
  */
 export interface RetryConfig {
   /** Maximum number of retry attempts. */
-  maxRetries: number
+  maxRetries: number;
   /** Base delay in ms (exponential backoff). */
-  baseDelayMs: number
+  baseDelayMs: number;
   /** Maximum delay in ms. */
-  maxDelayMs: number
+  maxDelayMs: number;
 }
 
 /**
@@ -82,7 +82,7 @@ export const DEFAULT_CIRCUIT_BREAKER: CircuitBreakerConfig = {
   failureThreshold: 5,
   resetTimeoutMs: 30_000,
   halfOpenMaxProbes: 3,
-}
+};
 
 /**
  * Default retry configuration.
@@ -91,4 +91,4 @@ export const DEFAULT_RETRY_CONFIG: RetryConfig = {
   maxRetries: 3,
   baseDelayMs: 200,
   maxDelayMs: 5_000,
-}
+};

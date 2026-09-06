@@ -32,7 +32,7 @@ export const RegisterSchema = z.object({
         const e164Re = /^\+[1-9]\d{6,14}$/;
         return emailRe.test(val) || e164Re.test(val);
       },
-      { message: 'AUTH:REGISTER:INVALID_USERNAME' },
+      { message: 'AUTH:REGISTER:INVALID_USERNAME' }
     ),
   password: z
     .string()

@@ -1,15 +1,15 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Validates an Iranian mobile (0912...) and converts to E.164 (+98912...).
  */
-const IRANIAN_MOBILE_RE = /^09\d{9}$/
+const IRANIAN_MOBILE_RE = /^09\d{9}$/;
 
 function toE164(value: string): string {
   if (IRANIAN_MOBILE_RE.test(value)) {
-    return `+98${value.slice(1)}`
+    return `+98${value.slice(1)}`;
   }
-  return value
+  return value;
 }
 
 /**
@@ -31,11 +31,11 @@ export const LoginSchema = z.object({
     .refine(
       (val) => {
         // Must be a valid email or E.164 phone number
-        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const e164Re = /^\+[1-9]\d{6,14}$/
-        return emailRe.test(val) || e164Re.test(val)
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const e164Re = /^\+[1-9]\d{6,14}$/;
+        return emailRe.test(val) || e164Re.test(val);
       },
-      { message: 'VALIDATION:INPUT:INVALID' },
+      { message: 'VALIDATION:INPUT:INVALID' }
     ),
   password: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }),
   deviceInfo: z
@@ -44,13 +44,13 @@ export const LoginSchema = z.object({
       fingerprint: z.string().max(256).optional(),
     })
     .optional(),
-})
+});
 
-export type LoginInput = z.infer<typeof LoginSchema>
+export type LoginInput = z.infer<typeof LoginSchema>;
 
 export interface DeviceInfoInput {
-  userAgent?: string
-  fingerprint?: string
+  userAgent?: string;
+  fingerprint?: string;
 }
 
 /**
@@ -63,25 +63,25 @@ export interface DeviceInfoInput {
  */
 export interface LoginResponse {
   /** Whether the login requires step-up OTP verification. */
-  requiresOtp: boolean
+  requiresOtp: boolean;
   /** Whether the user must change their password before proceeding (T-02.01.04). */
-  mustChangePassword?: boolean
+  mustChangePassword?: boolean;
   /** Short-lived token authorizing a password change (present when mustChangePassword is true). */
-  passwordChangeToken?: string
+  passwordChangeToken?: string;
   /** Opaque challenge ID for OTP step, present when requiresOtp is true. */
-  challengeId?: string
+  challengeId?: string;
   /** Whether the user is a staff/admin who always requires MFA. */
-  userIsStaff?: boolean
+  userIsStaff?: boolean;
   /** UUID of the authenticated user. */
-  userId?: string
+  userId?: string;
   /** Opaque session identifier (stored in HttpOnly cookie). */
-  sessionId?: string
+  sessionId?: string;
   /** CSRF token bound to the session. */
-  csrfToken?: string
+  csrfToken?: string;
   /** Refresh token for session renewal (rotated on use). */
-  refreshToken?: string
+  refreshToken?: string;
   /** ISO 8601 timestamp of session expiry. */
-  expiresAt?: string
+  expiresAt?: string;
 }
 
 /**
@@ -94,9 +94,9 @@ export const LoginVerifySchema = z.object({
     .length(6, { message: 'VALIDATION:INPUT:INVALID' })
     .regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
   trustDevice: z.boolean().optional().default(false),
-})
+});
 
-export type LoginVerifyInput = z.infer<typeof LoginVerifySchema>
+export type LoginVerifyInput = z.infer<typeof LoginVerifySchema>;
 
 /**
  * Successful login OTP verification response.
@@ -104,15 +104,15 @@ export type LoginVerifyInput = z.infer<typeof LoginVerifySchema>
  */
 export interface LoginVerifyResponse {
   /** The authenticated user's UUID. */
-  userId: string
+  userId: string;
   /** Opaque session identifier (stored in HttpOnly cookie). */
-  sessionId: string
+  sessionId: string;
   /** CSRF token bound to the session for state-changing requests. */
-  csrfToken: string
+  csrfToken: string;
   /** Refresh token for session renewal (rotated on use). */
-  refreshToken: string
+  refreshToken: string;
   /** ISO 8601 timestamp of when the session expires. */
-  expiresAt: string
+  expiresAt: string;
 }
 
 /**
@@ -120,6 +120,6 @@ export interface LoginVerifyResponse {
  */
 export const LoginResendSchema = z.object({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
-})
+});
 
-export type LoginResendInput = z.infer<typeof LoginResendSchema>
+export type LoginResendInput = z.infer<typeof LoginResendSchema>;

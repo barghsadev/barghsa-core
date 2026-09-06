@@ -22,16 +22,16 @@ export interface WalletTopUpLimitConfig {
    * Maximum IRR amount a single online wallet top-up may request.
    * `0` blocks all online top-ups (admin kill switch).
    */
-  limitIrR: number
+  limitIrR: number;
 }
 
 /** Default configuration: 2,000,000,000 IRR per transaction (T-09.10.01). */
 export const DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG: WalletTopUpLimitConfig = {
   limitIrR: 2_000_000_000,
-}
+};
 
 /** `app_config` key holding the online wallet top-up limit (T-09.10.01). */
-export const WALLET_TOP_UP_LIMIT_CONFIG_KEY = 'finance.wallet_top_up_limit'
+export const WALLET_TOP_UP_LIMIT_CONFIG_KEY = 'finance.wallet_top_up_limit';
 
 /**
  * Transaction-scoped advisory lock namespace for {@link WALLET_TOP_UP_LIMIT_CONFIG_KEY}.
@@ -42,7 +42,7 @@ export const WALLET_TOP_UP_LIMIT_CONFIG_KEY = 'finance.wallet_top_up_limit'
  * before reading or upserting. That serializes the absent-row/first-write
  * race (T-04.2.02.06).
  */
-export const WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE = 'barghsa.finance.wallet_top_up_limit'
+export const WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE = 'barghsa.finance.wallet_top_up_limit';
 
 /**
  * Result of validating a proposed online wallet top-up limit for the admin
@@ -51,8 +51,8 @@ export const WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE = 'barghsa.finance.wallet_top_up
  * the durable error message and surfaced via i18n on the client).
  */
 export interface WalletTopUpLimitValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -70,7 +70,7 @@ export function isValidWalletTopUpLimit(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 0 &&
     raw <= Number.MAX_SAFE_INTEGER
-  )
+  );
 }
 
 /**
@@ -85,30 +85,30 @@ export function isValidWalletTopUpLimit(raw: unknown): raw is number {
  * JSON numbers, so the persisted value round-trips losslessly).
  */
 export function validateWalletTopUpLimitConfig(input: unknown): WalletTopUpLimitValidationResult {
-  const issues: string[] = []
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object') {
-    return { ok: false, issues: ['Online wallet top-up limit config must be an object'] }
+    return { ok: false, issues: ['Online wallet top-up limit config must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
-  const raw = o.limit_irr ?? o.limitIrR
+  const o = input as Record<string, unknown>;
+  const raw = o.limit_irr ?? o.limitIrR;
 
   if (raw === undefined || raw === null || raw === '') {
-    issues.push('limit_irr is required')
-    return { ok: false, issues }
+    issues.push('limit_irr is required');
+    return { ok: false, issues };
   }
 
   if (typeof raw !== 'number') {
-    issues.push(`limit_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
-    return { ok: false, issues }
+    issues.push(`limit_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`);
+    return { ok: false, issues };
   }
 
   if (!isValidWalletTopUpLimit(raw)) {
-    issues.push(`limit_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
+    issues.push(`limit_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`);
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -118,13 +118,13 @@ export function validateWalletTopUpLimitConfig(input: unknown): WalletTopUpLimit
  * happen post-validation but keeps the read path total).
  */
 export function toWalletTopUpLimitConfig(input: unknown): WalletTopUpLimitConfig {
-  if (!input || typeof input !== 'object') return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
-  const o = input as Record<string, unknown>
-  const raw = o.limit_irr ?? o.limitIrR
+  if (!input || typeof input !== 'object') return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG };
+  const o = input as Record<string, unknown>;
+  const raw = o.limit_irr ?? o.limitIrR;
   if (isValidWalletTopUpLimit(raw)) {
-    return { limitIrR: raw }
+    return { limitIrR: raw };
   }
-  return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }
+  return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG };
 }
 
 /**
@@ -136,8 +136,8 @@ export function toWalletTopUpLimitConfig(input: unknown): WalletTopUpLimitConfig
  * `0` when the default is used because nothing is persisted yet.
  */
 export interface OnlineTopUpLimitSnapshot {
-  onlineTopUpLimit: number
-  configVersion: number
+  onlineTopUpLimit: number;
+  configVersion: number;
 }
 
 /**
@@ -146,7 +146,7 @@ export interface OnlineTopUpLimitSnapshot {
  * rather than substituting the 2e9 default (T-04.2.02.06).
  */
 export const ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE =
-  'Online top-up limit configuration is unavailable'
+  'Online top-up limit configuration is unavailable';
 
 /**
  * Result of resolving a persisted `app_config` value into the versioned
@@ -157,8 +157,7 @@ export const ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE =
  * a value is present but corrupt — callers must fail closed.
  */
 export type OnlineTopUpLimitResolution =
-  | { ok: true; snapshot: OnlineTopUpLimitSnapshot }
-  | { ok: false }
+  { ok: true; snapshot: OnlineTopUpLimitSnapshot } | { ok: false };
 
 /**
  * Resolve a persisted `finance.wallet_top_up_limit` value into the snapshot
@@ -171,26 +170,26 @@ export type OnlineTopUpLimitResolution =
  */
 export function resolveOnlineTopUpLimitSnapshot(
   value: unknown,
-  version?: unknown,
+  version?: unknown
 ): OnlineTopUpLimitResolution {
   if (value == null) {
     return {
       ok: true,
       snapshot: toOnlineTopUpLimitSnapshot({ ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG }, 0),
-    }
+    };
   }
   if (typeof value !== 'object') {
-    return { ok: false }
+    return { ok: false };
   }
-  const o = value as Record<string, unknown>
-  const raw = o.limit_irr ?? o.limitIrR
+  const o = value as Record<string, unknown>;
+  const raw = o.limit_irr ?? o.limitIrR;
   if (!isValidWalletTopUpLimit(raw)) {
-    return { ok: false }
+    return { ok: false };
   }
   return {
     ok: true,
     snapshot: toOnlineTopUpLimitSnapshot({ limitIrR: raw }, version as number),
-  }
+  };
 }
 
 /**
@@ -202,24 +201,23 @@ export function resolveOnlineTopUpLimitSnapshot(
  * not exist yet).
  */
 export type ExpectedWalletTopUpLimitVersionResult =
-  | { ok: true; expectedVersion: number | undefined }
-  | { ok: false }
+  { ok: true; expectedVersion: number | undefined } | { ok: false };
 
 export function readExpectedWalletTopUpLimitVersion(
-  input: unknown,
+  input: unknown
 ): ExpectedWalletTopUpLimitVersionResult {
   if (!input || typeof input !== 'object') {
-    return { ok: true, expectedVersion: undefined }
+    return { ok: true, expectedVersion: undefined };
   }
-  const o = input as Record<string, unknown>
+  const o = input as Record<string, unknown>;
   if (!('expected_version' in o) && !('expectedVersion' in o)) {
-    return { ok: true, expectedVersion: undefined }
+    return { ok: true, expectedVersion: undefined };
   }
-  const raw = o.expected_version ?? o.expectedVersion
+  const raw = o.expected_version ?? o.expectedVersion;
   if (typeof raw !== 'number' || !Number.isSafeInteger(raw) || raw < 0) {
-    return { ok: false }
+    return { ok: false };
   }
-  return { ok: true, expectedVersion: raw }
+  return { ok: true, expectedVersion: raw };
 }
 
 /**
@@ -228,12 +226,12 @@ export function readExpectedWalletTopUpLimitVersion(
  */
 export function onlineTopUpLimitVersionConflictMessage(
   expectedVersion: number,
-  actualVersion: number,
+  actualVersion: number
 ): string {
   return (
     `Online top-up limit config version ${expectedVersion} is stale; ` +
     `current version is ${actualVersion}`
-  )
+  );
 }
 
 /**
@@ -242,14 +240,14 @@ export function onlineTopUpLimitVersionConflictMessage(
  */
 export function toOnlineTopUpLimitSnapshot(
   config: WalletTopUpLimitConfig,
-  version: number | null | undefined,
+  version: number | null | undefined
 ): OnlineTopUpLimitSnapshot {
   const configVersion =
-    typeof version === 'number' && Number.isSafeInteger(version) && version >= 0 ? version : 0
+    typeof version === 'number' && Number.isSafeInteger(version) && version >= 0 ? version : 0;
   return {
     onlineTopUpLimit: config.limitIrR,
     configVersion,
-  }
+  };
 }
 
 /**
@@ -260,12 +258,12 @@ export function toOnlineTopUpLimitSnapshot(
  */
 export function onlineTopUpLimitExceededMessage(
   amountIrR: bigint,
-  snapshot: OnlineTopUpLimitSnapshot,
+  snapshot: OnlineTopUpLimitSnapshot
 ): string {
   return (
     `Online top-up amount ${amountIrR.toString()} IRR exceeds the configured ` +
     `per-transaction limit of ${snapshot.onlineTopUpLimit} IRR`
-  )
+  );
 }
 
 /**
@@ -274,20 +272,20 @@ export function onlineTopUpLimitExceededMessage(
  * enforced (T-04.2.02.06).
  */
 export function readOnlineTopUpLimitFromErrorBody(raw: unknown): OnlineTopUpLimitSnapshot | null {
-  if (!raw || typeof raw !== 'object') return null
-  const o = raw as Record<string, unknown>
+  if (!raw || typeof raw !== 'object') return null;
+  const o = raw as Record<string, unknown>;
   const nested =
-    o.error && typeof o.error === 'object' ? (o.error as Record<string, unknown>) : null
+    o.error && typeof o.error === 'object' ? (o.error as Record<string, unknown>) : null;
   const candidate = isValidWalletTopUpLimit(o.onlineTopUpLimit)
     ? o
     : nested && isValidWalletTopUpLimit(nested.onlineTopUpLimit)
       ? nested
-      : null
-  if (!candidate) return null
+      : null;
+  if (!candidate) return null;
   return toOnlineTopUpLimitSnapshot(
     { limitIrR: candidate.onlineTopUpLimit as number },
-    candidate.configVersion as number,
-  )
+    candidate.configVersion as number
+  );
 }
 
 /**
@@ -301,28 +299,24 @@ export function readOnlineTopUpLimitFromErrorBody(raw: unknown): OnlineTopUpLimi
  */
 export function isOnlineWalletTopUpAllowed(
   config: WalletTopUpLimitConfig,
-  amountIrR: number | bigint,
+  amountIrR: number | bigint
 ): boolean {
-  if (!isValidWalletTopUpLimit(config.limitIrR)) return false
-  const limit = BigInt(config.limitIrR)
+  if (!isValidWalletTopUpLimit(config.limitIrR)) return false;
+  const limit = BigInt(config.limitIrR);
 
   if (typeof amountIrR === 'bigint') {
-    if (amountIrR <= 0n) return false
-    return limit >= amountIrR
+    if (amountIrR <= 0n) return false;
+    return limit >= amountIrR;
   }
 
-  if (
-    typeof amountIrR !== 'number' ||
-    !Number.isSafeInteger(amountIrR) ||
-    amountIrR <= 0
-  ) {
-    return false
+  if (typeof amountIrR !== 'number' || !Number.isSafeInteger(amountIrR) || amountIrR <= 0) {
+    return false;
   }
-  return limit >= BigInt(amountIrR)
+  return limit >= BigInt(amountIrR);
 }
 
 /** PostgreSQL `bigint` / signed int8 maximum (inclusive). */
-const MAX_INT8 = 9_223_372_036_854_775_807n
+const MAX_INT8 = 9_223_372_036_854_775_807n;
 
 /**
  * Parse a proposed online top-up amount in IRR (T-04.2.02.01).
@@ -333,23 +327,23 @@ const MAX_INT8 = 9_223_372_036_854_775_807n
  */
 export function parseOnlineTopUpAmountIrR(raw: unknown): bigint | null {
   if (typeof raw === 'bigint') {
-    if (raw <= 0n || raw > MAX_INT8) return null
-    return raw
+    if (raw <= 0n || raw > MAX_INT8) return null;
+    return raw;
   }
   if (typeof raw === 'number') {
-    if (!Number.isSafeInteger(raw) || raw <= 0) return null
-    return BigInt(raw)
+    if (!Number.isSafeInteger(raw) || raw <= 0) return null;
+    return BigInt(raw);
   }
   if (typeof raw === 'string') {
-    const trimmed = raw.trim()
-    if (!/^[1-9][0-9]{0,18}$/.test(trimmed)) return null
+    const trimmed = raw.trim();
+    if (!/^[1-9][0-9]{0,18}$/.test(trimmed)) return null;
     try {
-      const amount = BigInt(trimmed)
-      if (amount <= 0n || amount > MAX_INT8) return null
-      return amount
+      const amount = BigInt(trimmed);
+      if (amount <= 0n || amount > MAX_INT8) return null;
+      return amount;
     } catch {
-      return null
+      return null;
     }
   }
-  return null
+  return null;
 }

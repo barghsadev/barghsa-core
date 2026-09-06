@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Zod schema for the forgot-password request body.
@@ -12,21 +12,21 @@ export const ForgotPasswordSchema = z.object({
     .string()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(255)
-    .transform(value => {
-      const normalized = value.trim().toLowerCase()
-      return /^09\d{9}$/.test(normalized) ? `+98${normalized.slice(1)}` : normalized
+    .transform((value) => {
+      const normalized = value.trim().toLowerCase();
+      return /^09\d{9}$/.test(normalized) ? `+98${normalized.slice(1)}` : normalized;
     })
-    .refine(value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\+[1-9]\d{6,14}$/.test(value)),
-})
+    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\+[1-9]\d{6,14}$/.test(value)),
+});
 
-export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
 
 /** sent is always true — this field is for forward compatibility only */
 export interface ForgotPasswordResponse {
   /** Opaque identifier, including for unknown accounts. */
-  challengeId: string
+  challengeId: string;
   /** Always true — HTTP 200 is the real signal. */
-  sent: true
+  sent: true;
   /** Generic message shown to the user. */
-  message: string
+  message: string;
 }

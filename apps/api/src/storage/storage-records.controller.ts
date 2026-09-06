@@ -12,33 +12,33 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
-} from '@nestjs/common'
+} from '@nestjs/common';
 import {
   ImmutableStorageRecordService,
   ImmutableRecordDeleteError,
   StorageObjectNotFound,
   type StorageRecordInfo,
-} from '@barghsa/shared/storage'
-import { STORAGE_PROVIDER } from './storage.constants.js'
+} from '@barghsa/shared/storage';
+import { STORAGE_PROVIDER } from './storage.constants.js';
 
 // ---------------------------------------------------------------------------
 // DTOs
 // ---------------------------------------------------------------------------
 
 export interface SignRecordDto {
-  signedBy?: string
+  signedBy?: string;
 }
 
 export interface StorageRecordResponse {
-  key: string
-  status: string
-  fileName: string | null
-  contentType: string | null
-  fileSize: number | null
-  category: string | null
-  signedAt: string | null
-  signedBy: string | null
-  removedAt: string | null
+  key: string;
+  status: string;
+  fileName: string | null;
+  contentType: string | null;
+  fileSize: number | null;
+  category: string | null;
+  signedAt: string | null;
+  signedBy: string | null;
+  removedAt: string | null;
 }
 
 function toResponse(info: StorageRecordInfo): StorageRecordResponse {
@@ -52,7 +52,7 @@ function toResponse(info: StorageRecordInfo): StorageRecordResponse {
     signedAt: info.signedAt?.toISOString() ?? null,
     signedBy: info.signedBy,
     removedAt: info.removedAt?.toISOString() ?? null,
-  }
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -61,11 +61,11 @@ function toResponse(info: StorageRecordInfo): StorageRecordResponse {
 
 @Controller('api/admin/storage/records')
 export class StorageRecordsController {
-  private readonly logger = new Logger(StorageRecordsController.name)
+  private readonly logger = new Logger(StorageRecordsController.name);
 
   constructor(
     @Inject(STORAGE_PROVIDER)
-    private readonly storageService: ImmutableStorageRecordService,
+    private readonly storageService: ImmutableStorageRecordService
   ) {}
 
   /**
@@ -75,9 +75,9 @@ export class StorageRecordsController {
    */
   @Get(':key')
   async getRecord(@Param('key') key: string): Promise<StorageRecordResponse> {
-    const status = await this.storageService.getRecordStatus(key)
+    const status = await this.storageService.getRecordStatus(key);
     if (!status) {
-      throw new NotFoundException(`Storage record not found: "${key}"`)
+      throw new NotFoundException(`Storage record not found: "${key}"`);
     }
     return toResponse({
       key,
@@ -91,7 +91,7 @@ export class StorageRecordsController {
       signedAt: null,
       signedBy: null,
       removedAt: null,
-    })
+    });
   }
 
   /**
@@ -104,19 +104,19 @@ export class StorageRecordsController {
   @HttpCode(HttpStatus.OK)
   async signRecord(
     @Param('key') key: string,
-    @Body() dto: SignRecordDto,
+    @Body() dto: SignRecordDto
   ): Promise<StorageRecordResponse> {
     try {
-      await this.storageService.markAsImmutable(key, dto.signedBy)
+      await this.storageService.markAsImmutable(key, dto.signedBy);
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
-        throw new NotFoundException(err.message)
+        throw new NotFoundException(err.message);
       }
-      this.logger.error(`Failed to sign storage record "${key}":`, err)
-      throw new InternalServerErrorException('Failed to sign storage record')
+      this.logger.error(`Failed to sign storage record "${key}":`, err);
+      throw new InternalServerErrorException('Failed to sign storage record');
     }
 
-    const status = await this.storageService.getRecordStatus(key)
+    const status = await this.storageService.getRecordStatus(key);
     return toResponse({
       key,
       status: status ?? 'immutable',
@@ -129,7 +129,7 @@ export class StorageRecordsController {
       signedAt: new Date(),
       signedBy: dto.signedBy ?? null,
       removedAt: null,
-    })
+    });
   }
 
   /**
@@ -146,14 +146,14 @@ export class StorageRecordsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRecord(@Param('key') key: string): Promise<void> {
     try {
-      await this.storageService.deleteRecord(key)
+      await this.storageService.deleteRecord(key);
     } catch (err) {
       if (err instanceof ImmutableRecordDeleteError) {
         // Soft delete was performed despite the error — report conflict
-        throw new ConflictException(err.message)
+        throw new ConflictException(err.message);
       }
-      this.logger.error(`Failed to delete storage record "${key}":`, err)
-      throw new InternalServerErrorException('Failed to delete storage record')
+      this.logger.error(`Failed to delete storage record "${key}":`, err);
+      throw new InternalServerErrorException('Failed to delete storage record');
     }
   }
 }

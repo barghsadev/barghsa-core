@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -10,35 +10,35 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   EmailProviderConfigService,
   type CreateProviderInput,
   type EmailProviderConfigResult,
   type UpdateProviderInput,
-} from './email-provider-config.service'
-import { SessionAuthGuard } from '../session/session.guard'
-import type { AuthenticatedRequest } from '../session/session.guard'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard'
+} from './email-provider-config.service';
+import { SessionAuthGuard } from '../session/session.guard';
+import type { AuthenticatedRequest } from '../session/session.guard';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard';
 
 export const CreateProviderSchema = z.object({
   transport: z.enum(['smtp', 'resend']),
   label: z.string().min(1).max(120),
   config: z.record(z.string(), z.unknown()),
-})
+});
 
 export const UpdateProviderSchema = z.object({
   label: z.string().min(1).max(120).optional(),
   config: z.record(z.string(), z.unknown()).optional(),
-})
+});
 
 export const RecordTestSchema = z.object({
   passed: z.boolean(),
   error: z.string().max(1000).optional(),
-})
+});
 
 /**
  * Optional body for `POST :id/test-connection`. `recipient` is required for
@@ -47,10 +47,10 @@ export const RecordTestSchema = z.object({
  */
 export const TestConnectionSchema = z.object({
   recipient: z.string().email().optional(),
-})
+});
 
 function httpError(code: string, message: string, statusCode = 409): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 /**
@@ -81,7 +81,7 @@ export class EmailProviderConfigController {
    */
   private assertProviderEditPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:notification-providers:edit')) {
-      httpError('AUTHZ:FORBIDDEN', 'Admin role required to manage notification providers', 403)
+      httpError('AUTHZ:FORBIDDEN', 'Admin role required to manage notification providers', 403);
     }
   }
 
@@ -89,8 +89,8 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'List email provider configurations' })
   @ApiResponse({ status: 200, description: 'All provider configs, newest first.' })
   async list(@Req() req: AuthenticatedRequest): Promise<EmailProviderConfigResult[]> {
-    this.assertProviderEditPermission(req)
-    return this.service.list()
+    this.assertProviderEditPermission(req);
+    return this.service.list();
   }
 
   @Post()
@@ -100,23 +100,23 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Create a draft email provider configuration' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateProviderSchema>,
+    @Body() body: z.infer<typeof CreateProviderSchema>
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    const parsed = CreateProviderSchema.safeParse(body)
+    this.assertProviderEditPermission(req);
+    const parsed = CreateProviderSchema.safeParse(body);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400,
-      )
+        400
+      );
     }
     const input: CreateProviderInput = {
       transport: parsed.data.transport,
       label: parsed.data.label,
       config: parsed.data.config,
       createdBy: req.session.userId,
-    }
-    return this.service.create(input)
+    };
+    return this.service.create(input);
   }
 
   @Put(':id')
@@ -127,20 +127,20 @@ export class EmailProviderConfigController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateProviderSchema>,
+    @Body() body: z.infer<typeof UpdateProviderSchema>
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    const parsed = UpdateProviderSchema.safeParse(body)
+    this.assertProviderEditPermission(req);
+    const parsed = UpdateProviderSchema.safeParse(body);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400,
-      )
+        400
+      );
     }
-    const input: UpdateProviderInput = {}
-    if (parsed.data.label !== undefined) input.label = parsed.data.label
-    if (parsed.data.config !== undefined) input.config = parsed.data.config
-    return this.service.update(id, input)
+    const input: UpdateProviderInput = {};
+    if (parsed.data.label !== undefined) input.label = parsed.data.label;
+    if (parsed.data.config !== undefined) input.config = parsed.data.config;
+    return this.service.update(id, input);
   }
 
   @Post(':id/test')
@@ -151,20 +151,20 @@ export class EmailProviderConfigController {
   async recordTest(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof RecordTestSchema>,
+    @Body() body: z.infer<typeof RecordTestSchema>
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    const parsed = RecordTestSchema.safeParse(body)
+    this.assertProviderEditPermission(req);
+    const parsed = RecordTestSchema.safeParse(body);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400,
-      )
+        400
+      );
     }
     return this.service.recordTest(id, {
       passed: parsed.data.passed,
       ...(parsed.data.error !== undefined ? { error: parsed.data.error } : {}),
-    })
+    });
   }
 
   @Post(':id/test-connection')
@@ -183,21 +183,18 @@ export class EmailProviderConfigController {
   async testConnection(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body?: z.infer<typeof TestConnectionSchema>,
+    @Body() body?: z.infer<typeof TestConnectionSchema>
   ): Promise<EmailProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
-    this.assertProviderEditPermission(req)
-    const parsed = body === undefined ? null : TestConnectionSchema.safeParse(body)
+    this.assertProviderEditPermission(req);
+    const parsed = body === undefined ? null : TestConnectionSchema.safeParse(body);
     if (body !== undefined && !parsed!.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
-        400,
-      )
+        400
+      );
     }
-    const { ok, error, result } = await this.service.testConnection(
-      id,
-      parsed?.data?.recipient,
-    )
-    return { ...result, test: { ok, error } }
+    const { ok, error, result } = await this.service.testConnection(id, parsed?.data?.recipient);
+    return { ...result, test: { ok, error } };
   }
 
   @Post(':id/activate')
@@ -207,10 +204,10 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Activate a tested draft provider configuration' })
   async activate(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    return this.service.activate(id, req.session.userId)
+    this.assertProviderEditPermission(req);
+    return this.service.activate(id, req.session.userId);
   }
 
   @Post(':id/disable')
@@ -220,10 +217,10 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Disable a provider configuration' })
   disable(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    return this.service.disable(id)
+    this.assertProviderEditPermission(req);
+    return this.service.disable(id);
   }
 
   @Post(':id/rollback')
@@ -233,9 +230,9 @@ export class EmailProviderConfigController {
   @ApiOperation({ summary: 'Roll back to a superseded/disabled version' })
   rollback(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<EmailProviderConfigResult> {
-    this.assertProviderEditPermission(req)
-    return this.service.rollback(id, req.session.userId)
+    this.assertProviderEditPermission(req);
+    return this.service.rollback(id, req.session.userId);
   }
 }

@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react'
-import { withCsrf } from '../lib/csrf.js'
+import { useState, useEffect, useCallback } from 'react';
+import { withCsrf } from '../lib/csrf.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-type VerificationMode = 'DISABLED' | 'MANUAL' | 'API'
+type VerificationMode = 'DISABLED' | 'MANUAL' | 'API';
 
 interface VerificationModeResponse {
-  mode: VerificationMode
+  mode: VerificationMode;
 }
 
 // ---------------------------------------------------------------------------
@@ -16,10 +16,10 @@ interface VerificationModeResponse {
 // ---------------------------------------------------------------------------
 
 async function fetchMode(): Promise<VerificationMode> {
-  const res = await fetch('/api/admin/config/profile-verification-mode')
-  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`)
-  const data: VerificationModeResponse = await res.json()
-  return data.mode
+  const res = await fetch('/api/admin/config/profile-verification-mode');
+  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
+  const data: VerificationModeResponse = await res.json();
+  return data.mode;
 }
 
 async function saveMode(mode: VerificationMode): Promise<void> {
@@ -27,8 +27,8 @@ async function saveMode(mode: VerificationMode): Promise<void> {
     method: 'PUT',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ mode }),
-  })
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`)
+  });
+  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -38,7 +38,8 @@ async function saveMode(mode: VerificationMode): Promise<void> {
 const MODE_DESCRIPTIONS: Record<VerificationMode, { title: string; description: string }> = {
   DISABLED: {
     title: 'No verification',
-    description: 'Profiles are created without verification. Suitable for testing or closed systems.',
+    description:
+      'Profiles are created without verification. Suitable for testing or closed systems.',
   },
   MANUAL: {
     title: 'Manual verification',
@@ -46,50 +47,51 @@ const MODE_DESCRIPTIONS: Record<VerificationMode, { title: string; description: 
   },
   API: {
     title: 'API-based auto-verification',
-    description: 'Profiles are automatically verified via external APIs (national ID, etc.). Requires provider configuration.',
+    description:
+      'Profiles are automatically verified via external APIs (national ID, etc.). Requires provider configuration.',
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 export default function AdminVerificationConfig() {
-  const [currentMode, setCurrentMode] = useState<VerificationMode | null>(null)
-  const [selectedMode, setSelectedMode] = useState<VerificationMode>('DISABLED')
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const [currentMode, setCurrentMode] = useState<VerificationMode | null>(null);
+  const [selectedMode, setSelectedMode] = useState<VerificationMode>('DISABLED');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMode()
       .then((mode) => {
-        setCurrentMode(mode)
-        setSelectedMode(mode)
+        setCurrentMode(mode);
+        setSelectedMode(mode);
       })
       .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   const clearMessages = useCallback(() => {
-    setError(null)
-    setSuccess(null)
-  }, [])
+    setError(null);
+    setSuccess(null);
+  }, []);
 
   const handleSave = useCallback(async () => {
-    clearMessages()
-    setSaving(true)
+    clearMessages();
+    setSaving(true);
     try {
-      await saveMode(selectedMode)
-      setCurrentMode(selectedMode)
-      setSuccess('Verification mode updated.')
+      await saveMode(selectedMode);
+      setCurrentMode(selectedMode);
+      setSuccess('Verification mode updated.');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Save failed')
+      setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [selectedMode, clearMessages])
+  }, [selectedMode, clearMessages]);
 
   // -----------------------------------------------------------------------
   // Loading state
@@ -100,7 +102,7 @@ export default function AdminVerificationConfig() {
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-500">Loading verification configuration...</p>
       </div>
-    )
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -128,7 +130,12 @@ export default function AdminVerificationConfig() {
       )}
 
       <div className="space-y-4 max-w-xl">
-        {(Object.entries(MODE_DESCRIPTIONS) as [VerificationMode, typeof MODE_DESCRIPTIONS[VerificationMode]][]).map(([mode, desc]) => (
+        {(
+          Object.entries(MODE_DESCRIPTIONS) as [
+            VerificationMode,
+            (typeof MODE_DESCRIPTIONS)[VerificationMode],
+          ][]
+        ).map(([mode, desc]) => (
           <label
             key={mode}
             className={`block p-4 border rounded-lg cursor-pointer transition-colors ${
@@ -136,7 +143,10 @@ export default function AdminVerificationConfig() {
                 ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-200 hover:bg-gray-50'
             }`}
-            onClick={() => { clearMessages(); setSelectedMode(mode) }}
+            onClick={() => {
+              clearMessages();
+              setSelectedMode(mode);
+            }}
           >
             <div className="flex items-center gap-3">
               <input
@@ -144,7 +154,10 @@ export default function AdminVerificationConfig() {
                 name="verification-mode"
                 value={mode}
                 checked={selectedMode === mode}
-                onChange={() => { clearMessages(); setSelectedMode(mode) }}
+                onChange={() => {
+                  clearMessages();
+                  setSelectedMode(mode);
+                }}
                 className="text-blue-600 focus:ring-blue-500"
               />
               <div>
@@ -166,5 +179,5 @@ export default function AdminVerificationConfig() {
         </div>
       </div>
     </div>
-  )
+  );
 }

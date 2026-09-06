@@ -38,19 +38,19 @@
  */
 
 /** Discount type discriminator. */
-export const GIFT_CODE_DISCOUNT_TYPES = ['fixed_irr', 'percentage'] as const
-export type GiftCodeDiscountType = (typeof GIFT_CODE_DISCOUNT_TYPES)[number]
+export const GIFT_CODE_DISCOUNT_TYPES = ['fixed_irr', 'percentage'] as const;
+export type GiftCodeDiscountType = (typeof GIFT_CODE_DISCOUNT_TYPES)[number];
 
 /** Eligibility scope discriminator. */
-export const GIFT_CODE_ELIGIBILITY = ['public', 'profile'] as const
-export type GiftCodeEligibility = (typeof GIFT_CODE_ELIGIBILITY)[number]
+export const GIFT_CODE_ELIGIBILITY = ['public', 'profile'] as const;
+export type GiftCodeEligibility = (typeof GIFT_CODE_ELIGIBILITY)[number];
 
 /** Lifecycle status. */
-export const GIFT_CODE_STATUSES = ['active', 'inactive'] as const
-export type GiftCodeStatus = (typeof GIFT_CODE_STATUSES)[number]
+export const GIFT_CODE_STATUSES = ['active', 'inactive'] as const;
+export type GiftCodeStatus = (typeof GIFT_CODE_STATUSES)[number];
 
 /** 100% expressed in basis points — upper bound of percentage values. */
-export const MAX_GIFT_PERCENT_BPS = 10_000
+export const MAX_GIFT_PERCENT_BPS = 10_000;
 
 /** Product category quoted in the task: products.type discriminators. */
 export const GIFT_CODE_CATEGORIES = [
@@ -58,39 +58,30 @@ export const GIFT_CODE_CATEGORIES = [
   'electricity',
   'hardware',
   'saving_plan',
-] as const
-export type GiftCodeCategory = (typeof GIFT_CODE_CATEGORIES)[number]
+] as const;
+export type GiftCodeCategory = (typeof GIFT_CODE_CATEGORIES)[number];
 
 /**
  * Normalize a raw gift code: trim whitespace and uppercase. This is the
  * canonical form used for the DB unique index and every lookup.
  */
 export function normalizeGiftCode(raw: string): string {
-  return raw.trim().toUpperCase()
+  return raw.trim().toUpperCase();
 }
 
 /** Whether a raw value is a known discount type. */
 export function isGiftCodeDiscountType(raw: unknown): raw is GiftCodeDiscountType {
-  return (
-    typeof raw === 'string' &&
-    (GIFT_CODE_DISCOUNT_TYPES as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (GIFT_CODE_DISCOUNT_TYPES as readonly string[]).includes(raw);
 }
 
 /** Whether a raw value is a known eligibility scope. */
 export function isGiftCodeEligibility(raw: unknown): raw is GiftCodeEligibility {
-  return (
-    typeof raw === 'string' &&
-    (GIFT_CODE_ELIGIBILITY as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (GIFT_CODE_ELIGIBILITY as readonly string[]).includes(raw);
 }
 
 /** Whether a raw value is a known status. */
 export function isGiftCodeStatus(raw: unknown): raw is GiftCodeStatus {
-  return (
-    typeof raw === 'string' &&
-    (GIFT_CODE_STATUSES as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (GIFT_CODE_STATUSES as readonly string[]).includes(raw);
 }
 
 /**
@@ -104,43 +95,43 @@ export function isGiftCodeStatus(raw: unknown): raw is GiftCodeStatus {
  */
 export function isGiftCodePercentageBps(raw: unknown): raw is number {
   if (typeof raw === 'number') {
-    return Number.isSafeInteger(raw) && raw >= 1 && raw <= MAX_GIFT_PERCENT_BPS
+    return Number.isSafeInteger(raw) && raw >= 1 && raw <= MAX_GIFT_PERCENT_BPS;
   }
   if (typeof raw === 'string' && /^[1-9]\d*$/.test(raw)) {
-    const value = Number(raw)
-    return Number.isSafeInteger(value) && value >= 1 && value <= MAX_GIFT_PERCENT_BPS
+    const value = Number(raw);
+    return Number.isSafeInteger(value) && value >= 1 && value <= MAX_GIFT_PERCENT_BPS;
   }
-  return false
+  return false;
 }
 
 /** Whether a raw value is a valid positive IRR amount (as string/bigint). */
 export function isPositiveIrr(raw: unknown): raw is string | bigint {
   try {
-    const value = typeof raw === 'bigint' ? raw : BigInt(String(raw))
-    return value > 0n
+    const value = typeof raw === 'bigint' ? raw : BigInt(String(raw));
+    return value > 0n;
   } catch {
-    return false
+    return false;
   }
 }
 
 /** BigInt-alias so callers can pass pg bigint strings or bigints. */
-type Numeric = string | bigint
+type Numeric = string | bigint;
 
 function toBigInt(value: Numeric): bigint {
-  return typeof value === 'bigint' ? value : BigInt(value)
+  return typeof value === 'bigint' ? value : BigInt(value);
 }
 
 export interface ComputeGiftDiscountInput {
-  discountType: GiftCodeDiscountType
+  discountType: GiftCodeDiscountType;
   /**
    * `fixed_irr`: the IRR amount. `percentage`: the percentage in basis
    * points (2500 = 25%).
    */
-  discountValue: Numeric
+  discountValue: Numeric;
   /** Required for `percentage` (the cap); null/absent for `fixed_irr`. */
-  maxCapIrr: Numeric | null
+  maxCapIrr: Numeric | null;
   /** The pre-discount order total in IRR. */
-  orderAmount: Numeric
+  orderAmount: Numeric;
 }
 
 /**
@@ -157,32 +148,32 @@ export interface ComputeGiftDiscountInput {
  * convention used across the catalogue/finance code).
  */
 export function computeGiftDiscount(input: ComputeGiftDiscountInput): string {
-  const orderAmount = toBigInt(input.orderAmount)
-  const discountValue = toBigInt(input.discountValue)
+  const orderAmount = toBigInt(input.orderAmount);
+  const discountValue = toBigInt(input.discountValue);
   if (orderAmount < 0n || discountValue < 0n) {
-    throw new Error('gift discount inputs must be non-negative')
+    throw new Error('gift discount inputs must be non-negative');
   }
   if (input.discountType === 'fixed_irr') {
-    const discount = discountValue < orderAmount ? discountValue : orderAmount
-    return discount.toString()
+    const discount = discountValue < orderAmount ? discountValue : orderAmount;
+    return discount.toString();
   }
   // percentage — basis points; positive inputs, so / truncates = floor
-  const uncapped = (orderAmount * discountValue) / 10000n
+  const uncapped = (orderAmount * discountValue) / 10000n;
   if (input.maxCapIrr === null || input.maxCapIrr === undefined) {
-    throw new Error('percentage gift discount requires a max IRR cap')
+    throw new Error('percentage gift discount requires a max IRR cap');
   }
-  const cap = toBigInt(input.maxCapIrr)
+  const cap = toBigInt(input.maxCapIrr);
   if (cap <= 0n) {
-    throw new Error('percentage gift discount cap must be positive')
+    throw new Error('percentage gift discount cap must be positive');
   }
-  const capped = uncapped < cap ? uncapped : cap
-  return capped.toString()
+  const capped = uncapped < cap ? uncapped : cap;
+  return capped.toString();
 }
 
 /** Validation outcome shape returned by `validateGiftCodePayload`. */
 export interface GiftCodePayloadValidation {
-  ok: boolean
-  errors: Array<{ path: string; message: string }>
+  ok: boolean;
+  errors: Array<{ path: string; message: string }>;
 }
 
 /**
@@ -191,37 +182,43 @@ export interface GiftCodePayloadValidation {
  * 0048). Shared so the controller (zod), the service, and tests agree.
  */
 export function validateGiftCodePayload(input: {
-  discountType: unknown
-  discountValue: unknown
-  maxCapIrr: unknown
-  validFrom?: unknown
-  validUntil?: unknown
-  totalLimit?: unknown
-  perProfileLimit?: unknown
-  minOrderAmount?: unknown
+  discountType: unknown;
+  discountValue: unknown;
+  maxCapIrr: unknown;
+  validFrom?: unknown;
+  validUntil?: unknown;
+  totalLimit?: unknown;
+  perProfileLimit?: unknown;
+  minOrderAmount?: unknown;
 }): GiftCodePayloadValidation {
-  const errors: Array<{ path: string; message: string }> = []
+  const errors: Array<{ path: string; message: string }> = [];
   if (!isGiftCodeDiscountType(input.discountType)) {
     errors.push({
       path: 'discountType',
       message: `discountType must be one of ${GIFT_CODE_DISCOUNT_TYPES.join(', ')}`,
-    })
+    });
   } else if (input.discountType === 'fixed_irr') {
     if (!isPositiveIrr(input.discountValue)) {
-      errors.push({ path: 'discountValue', message: 'fixed_irr discountValue must be a positive IRR amount' })
+      errors.push({
+        path: 'discountValue',
+        message: 'fixed_irr discountValue must be a positive IRR amount',
+      });
     }
     if (input.maxCapIrr !== null && input.maxCapIrr !== undefined) {
-      errors.push({ path: 'maxCapIrr', message: 'maxCapIrr must not be set for fixed_irr codes' })
+      errors.push({ path: 'maxCapIrr', message: 'maxCapIrr must not be set for fixed_irr codes' });
     }
   } else {
     if (!isGiftCodePercentageBps(input.discountValue)) {
       errors.push({
         path: 'discountValue',
         message: `percentage discountValue must be integer basis points within [1, ${MAX_GIFT_PERCENT_BPS}]`,
-      })
+      });
     }
     if (!isPositiveIrr(input.maxCapIrr ?? null)) {
-      errors.push({ path: 'maxCapIrr', message: 'percentage codes require maxCapIrr (positive IRR cap)' })
+      errors.push({
+        path: 'maxCapIrr',
+        message: 'percentage codes require maxCapIrr (positive IRR cap)',
+      });
     }
   }
   for (const [path, raw] of [
@@ -229,34 +226,41 @@ export function validateGiftCodePayload(input: {
     ['perProfileLimit', input.perProfileLimit],
   ] as const) {
     if (raw !== null && raw !== undefined && raw !== '') {
-      const num = typeof raw === 'number' ? raw : Number(raw)
+      const num = typeof raw === 'number' ? raw : Number(raw);
       if (!Number.isSafeInteger(num) || num < 1) {
-        errors.push({ path, message: `${path} must be a positive integer or null for unlimited` })
+        errors.push({ path, message: `${path} must be a positive integer or null for unlimited` });
       }
     }
   }
-  if (input.minOrderAmount !== undefined && input.minOrderAmount !== null && input.minOrderAmount !== '') {
+  if (
+    input.minOrderAmount !== undefined &&
+    input.minOrderAmount !== null &&
+    input.minOrderAmount !== ''
+  ) {
     try {
-      const value = toBigInt(input.minOrderAmount as Numeric)
+      const value = toBigInt(input.minOrderAmount as Numeric);
       if (value < 0n) {
-        errors.push({ path: 'minOrderAmount', message: 'minOrderAmount must be >= 0' })
+        errors.push({ path: 'minOrderAmount', message: 'minOrderAmount must be >= 0' });
       }
     } catch {
-      errors.push({ path: 'minOrderAmount', message: 'minOrderAmount must be an integer IRR amount' })
+      errors.push({
+        path: 'minOrderAmount',
+        message: 'minOrderAmount must be an integer IRR amount',
+      });
     }
   }
   if (input.validFrom !== undefined && input.validFrom !== null) {
-    const from = new Date(String(input.validFrom))
+    const from = new Date(String(input.validFrom));
     if (Number.isNaN(from.getTime())) {
-      errors.push({ path: 'validFrom', message: 'validFrom must be an ISO-8601 timestamp' })
+      errors.push({ path: 'validFrom', message: 'validFrom must be an ISO-8601 timestamp' });
     } else if (input.validUntil !== undefined && input.validUntil !== null) {
-      const until = new Date(String(input.validUntil))
+      const until = new Date(String(input.validUntil));
       if (!Number.isNaN(until.getTime()) && until.getTime() <= from.getTime()) {
-        errors.push({ path: 'validUntil', message: 'validUntil must be strictly after validFrom' })
+        errors.push({ path: 'validUntil', message: 'validUntil must be strictly after validFrom' });
       }
     }
   }
-  return { ok: errors.length === 0, errors }
+  return { ok: errors.length === 0, errors };
 }
 
 // ─── DTOs ──────────────────────────────────────────────────────────────
@@ -264,62 +268,62 @@ export function validateGiftCodePayload(input: {
 /** Derived usage totals attached to every admin list/detail row. */
 export interface GiftCodeUsageDto {
   /** Redemptions currently counting against limits (status consumed). */
-  consumed: number
+  consumed: number;
   /** Redemptions restored after cancellation (status released). */
-  released: number
+  released: number;
   /** Sum of discount IRR applied by consumed redemptions. */
-  totalDiscountIrr: string
+  totalDiscountIrr: string;
 }
 
 /** A gift code row as exposed by the admin API. */
 export interface GiftCodeDto {
-  id: string
+  id: string;
   /** Normalized (trim + uppercase) code. */
-  code: string
-  discountType: GiftCodeDiscountType
+  code: string;
+  discountType: GiftCodeDiscountType;
   /** IRR amount (fixed_irr) or basis points (percentage). */
-  discountValue: string
+  discountValue: string;
   /** Mandatory for percentage; always null for fixed_irr. */
-  maxCapIrr: string | null
-  eligibility: GiftCodeEligibility
+  maxCapIrr: string | null;
+  eligibility: GiftCodeEligibility;
   /** Profile ids when eligibility === 'profile'. */
-  profileIds: string[]
+  profileIds: string[];
   /** Total redemptions allowed; null = unlimited. */
-  totalLimit: number | null
+  totalLimit: number | null;
   /** Redemptions per profile; null = unlimited. */
-  perProfileLimit: number | null
+  perProfileLimit: number | null;
   /** Window start (inclusive). */
-  validFrom: string
+  validFrom: string;
   /** Window end (exclusive); null = no expiry. */
-  validUntil: string | null
+  validUntil: string | null;
   /** Minimum order amount in IRR; '0' = no minimum. */
-  minOrderAmount: string
+  minOrderAmount: string;
   /** Eligible product categories; empty = all. */
-  categories: string[]
-  status: GiftCodeStatus
-  createdBy: string
-  createdAt: string
-  updatedAt: string
-  usage: GiftCodeUsageDto
+  categories: string[];
+  status: GiftCodeStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  usage: GiftCodeUsageDto;
 }
 
 /** A single redemption record (stats view). */
 export interface GiftCodeRedemptionDto {
-  id: string
-  giftCodeId: string
-  profileId: string
-  orderId: string
+  id: string;
+  giftCodeId: string;
+  profileId: string;
+  orderId: string;
   /** Applied discount in IRR. */
-  discountAmount: string
+  discountAmount: string;
   /** 'consumed' counts against limits; 'released' was restored. */
-  status: 'consumed' | 'released'
-  createdAt: string
+  status: 'consumed' | 'released';
+  createdAt: string;
 }
 
 /** Per-profile usage breakdown for the admin stats view. */
 export interface GiftCodeProfileUsageDto {
-  profileId: string
-  consumed: number
-  released: number
-  discountIrr: string
+  profileId: string;
+  consumed: number;
+  released: number;
+  discountIrr: string;
 }

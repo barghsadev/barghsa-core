@@ -1,11 +1,8 @@
-import { z } from 'zod'
-import type { PolicyType } from './ai-policies.service.js'
+import { z } from 'zod';
+import type { PolicyType } from './ai-policies.service.js';
 
 const stringList = (field: string) =>
-  z
-    .array(z.string().min(1).max(200))
-    .min(1, `At least one ${field} is required`)
-    .max(200)
+  z.array(z.string().min(1).max(200)).min(1, `At least one ${field} is required`).max(200);
 
 /**
  * Structured guardrail documents, validated per policy kind. These match
@@ -30,12 +27,12 @@ export const rulesSchemas: Record<PolicyType, z.ZodType> = {
     language: z.string().max(50).optional(),
     maxLength: z.number().int().positive().max(100000).optional(),
   }),
-}
+};
 
 /** Flattened zod issues for client-facing validation detail. */
 export function rulesErrorDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
   return issues.map((issue) => ({
     path: `rules.${issue.path.join('.')}`,
     message: issue.message,
-  }))
+  }));
 }

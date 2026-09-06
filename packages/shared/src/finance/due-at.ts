@@ -24,13 +24,13 @@ import {
   isServiceDuePeriodType,
   isValidDefaultDueDays,
   type ServiceDuePeriodType,
-} from './service-due-periods.js'
+} from './service-due-periods.js';
 
 /** Milliseconds in one 24-hour due-period day (UTC). */
-export const MS_PER_DUE_DAY = 24 * 60 * 60 * 1000
+export const MS_PER_DUE_DAY = 24 * 60 * 60 * 1000;
 
 /** How `dueAt` was produced. */
-export type DueAtSource = 'config' | 'staff_override' | 'fallback'
+export type DueAtSource = 'config' | 'staff_override' | 'fallback';
 
 /** Error messages for the dueAt calculation surface. */
 export const DUE_AT_ERRORS = {
@@ -38,24 +38,24 @@ export const DUE_AT_ERRORS = {
   BAD_CONFIG_DAYS: () =>
     `configDays must be an integer between ${MIN_SERVICE_DUE_DAYS} and ${MAX_SERVICE_DUE_DAYS}`,
   BAD_OVERRIDE: () => 'staffOverride must be a valid Date',
-} as const
+} as const;
 
 /** Result of resolving an invoice due instant. */
 export interface ResolvedDueAt {
-  dueAt: Date
-  source: DueAtSource
+  dueAt: Date;
+  source: DueAtSource;
   /**
    * Days that produced `dueAt` for `config` / `fallback`.
    * Null when a staff override supplied the instant directly.
    */
-  configDays: number | null
+  configDays: number | null;
 }
 
 function requireValidDate(value: Date, message: string): Date {
   if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
-    throw new RangeError(message)
+    throw new RangeError(message);
   }
-  return value
+  return value;
 }
 
 /**
@@ -65,11 +65,11 @@ function requireValidDate(value: Date, message: string): Date {
  *   outside the admin 1..365 integer range.
  */
 export function addDueDays(issuedAt: Date, configDays: number): Date {
-  requireValidDate(issuedAt, DUE_AT_ERRORS.BAD_ISSUED_AT())
+  requireValidDate(issuedAt, DUE_AT_ERRORS.BAD_ISSUED_AT());
   if (!isValidDefaultDueDays(configDays)) {
-    throw new RangeError(DUE_AT_ERRORS.BAD_CONFIG_DAYS())
+    throw new RangeError(DUE_AT_ERRORS.BAD_CONFIG_DAYS());
   }
-  return new Date(issuedAt.getTime() + configDays * MS_PER_DUE_DAY)
+  return new Date(issuedAt.getTime() + configDays * MS_PER_DUE_DAY);
 }
 
 /**
@@ -82,19 +82,19 @@ export function addDueDays(issuedAt: Date, configDays: number): Date {
  *   3. else `issuedAt + DEFAULT_SERVICE_DUE_DAYS` (fallback).
  */
 export function resolveDueAt(input: {
-  issuedAt: Date
-  configDays?: number | null
-  staffOverride?: Date | null
+  issuedAt: Date;
+  configDays?: number | null;
+  staffOverride?: Date | null;
 }): ResolvedDueAt {
-  requireValidDate(input.issuedAt, DUE_AT_ERRORS.BAD_ISSUED_AT())
+  requireValidDate(input.issuedAt, DUE_AT_ERRORS.BAD_ISSUED_AT());
 
   if (input.staffOverride != null) {
-    const override = requireValidDate(input.staffOverride, DUE_AT_ERRORS.BAD_OVERRIDE())
+    const override = requireValidDate(input.staffOverride, DUE_AT_ERRORS.BAD_OVERRIDE());
     return {
       dueAt: override,
       source: 'staff_override',
       configDays: null,
-    }
+    };
   }
 
   if (input.configDays != null) {
@@ -102,14 +102,14 @@ export function resolveDueAt(input: {
       dueAt: addDueDays(input.issuedAt, input.configDays),
       source: 'config',
       configDays: input.configDays,
-    }
+    };
   }
 
   return {
     dueAt: addDueDays(input.issuedAt, DEFAULT_SERVICE_DUE_DAYS),
     source: 'fallback',
     configDays: DEFAULT_SERVICE_DUE_DAYS,
-  }
+  };
 }
 
 /**
@@ -118,13 +118,11 @@ export function resolveDueAt(input: {
  * `consultation`) pass through; `hardware` and unknown values return
  * null so issuance falls back rather than querying a non-canonical key.
  */
-export function duePeriodTypeForProduct(
-  productType: string,
-): ServiceDuePeriodType | null {
-  return isServiceDuePeriodType(productType) ? productType : null
+export function duePeriodTypeForProduct(productType: string): ServiceDuePeriodType | null {
+  return isServiceDuePeriodType(productType) ? productType : null;
 }
 
 /** Manual invoices always resolve against the `manual` due-period row. */
 export function duePeriodTypeForManual(): ServiceDuePeriodType {
-  return 'manual'
+  return 'manual';
 }

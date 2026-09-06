@@ -1,7 +1,7 @@
-import { Inject, Injectable, Logger, HttpException } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY,
   DEFAULT_CONTRACT_ELECTRICITY_LIMITS,
@@ -9,8 +9,8 @@ import {
   toContractElectricityLimits,
   validateContractElectricityLimits,
   type ContractElectricityLimits,
-} from '@barghsa/shared/admin'
-import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
+} from '@barghsa/shared/admin';
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 
 /**
  * Contract electricity limits configuration service (S-09.12, T-09.12.06)
@@ -52,28 +52,28 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
 
 export interface UpdateContractElectricityLimitsInput {
   /** Raw request body (snake_case wire shape accepted). */
-  raw: unknown
-  actorUserId: string
-  ip: string
+  raw: unknown;
+  actorUserId: string;
+  ip: string;
 }
 
 // ─── Internal helpers ──────────────────────────────────────────────────────
 
 type QueryFn = <T = Record<string, unknown>>(
   text: string,
-  values?: unknown[],
-) => Promise<{ rows: T[]; rowCount: number | null }>
+  values?: unknown[]
+) => Promise<{ rows: T[]; rowCount: number | null }>;
 
 /** Minimal query executor shared by the pool and a transactional client. */
-type DbExecutor = { query: QueryFn }
+type DbExecutor = { query: QueryFn };
 
 @Injectable()
 export class ContractElectricityLimitsService {
-  private readonly logger = new Logger(ContractElectricityLimitsService.name)
+  private readonly logger = new Logger(ContractElectricityLimitsService.name);
 
   constructor(
     @Inject(CorrelationIdProvider)
-    private readonly correlationIdProvider: CorrelationIdProvider,
+    private readonly correlationIdProvider: CorrelationIdProvider
   ) {}
 
   // ─── Reads ───────────────────────────────────────────────────────────────
@@ -88,27 +88,27 @@ export class ContractElectricityLimitsService {
    * read path or silently change the enforced limits.
    */
   async get(): Promise<ContractElectricityLimits> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query<{ value: unknown }>(
       `SELECT value FROM app_config WHERE key = $1`,
-      [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY],
-    )
+      [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY]
+    );
     if (result.rows.length === 0) {
-      return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS }
+      return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS };
     }
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
     // The stored snake_case shape must itself validate; a malformed row is
     // logged and served as the documented defaults, so a corrupt value can
     // never widen or narrow the enforced limits (same fail-safe as the
     // green-electricity config read path).
-    const validation = validateContractElectricityLimits(persisted)
+    const validation = validateContractElectricityLimits(persisted);
     if (!validation.ok) {
       this.logger.warn(
-        `Contract electricity limits row for key ${CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`,
-      )
-      return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS }
+        `Contract electricity limits row for key ${CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`
+      );
+      return { ...DEFAULT_CONTRACT_ELECTRICITY_LIMITS };
     }
-    return toContractElectricityLimits(persisted)
+    return toContractElectricityLimits(persisted);
   }
 
   // ─── Writes ──────────────────────────────────────────────────────────────
@@ -124,7 +124,7 @@ export class ContractElectricityLimitsService {
    * `change_recorded` audit event with the previous and new values.
    */
   async update(input: UpdateContractElectricityLimitsInput): Promise<ContractElectricityLimits> {
-    const validation = validateContractElectricityLimits(input.raw)
+    const validation = validateContractElectricityLimits(input.raw);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -132,48 +132,46 @@ export class ContractElectricityLimitsService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toContractElectricityLimits(input.raw)
-    const stored = contractElectricityLimitsToStored(config)
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const now = new Date()
+    const config = toContractElectricityLimits(input.raw);
+    const stored = contractElectricityLimitsToStored(config);
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const now = new Date();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Lock the existing row (if any) so the previous value recorded in
       // the audit trail is the true value being replaced. Concurrent
       // writers serialize on this row lock.
       const prevResult = await client.query<{ value: unknown; version: number }>(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
-      const previousVersion =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.version : 0
+        [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
+      const previousVersion = prevResult.rows.length > 0 ? prevResult.rows[0]!.version : 0;
 
       const upsertResult = await client.query<{ version: number }>(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY, JSON.stringify(stored), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version
+        [CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY, JSON.stringify(stored), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record the epic's change_recorded audit event (matching the
       // upload-policy / VAT audit trail).
-      const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7()
+      const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, 'change_recorded', $3::jsonb, $4, $5, $6)`,
@@ -192,24 +190,24 @@ export class ContractElectricityLimitsService {
           correlationId,
           input.ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Contract electricity limits updated by ${input.actorUserId} (version ${newVersion})`,
-      )
-      return config
+        `Contract electricity limits updated by ${input.actorUserId} (version ${newVersion})`
+      );
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set contract electricity limits: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set contract electricity limits: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 }

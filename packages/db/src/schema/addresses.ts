@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { uuid, text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { profiles } from './profiles'
-import { provinces, cities } from './geography'
+import { sql } from 'drizzle-orm';
+import { uuid, text, boolean, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { profiles } from './profiles';
+import { provinces, cities } from './geography';
 
 /**
  * Profile addresses table (T-03.02.02).
@@ -19,43 +19,40 @@ import { provinces, cities } from './geography'
  * - `main_address` — whether this is the profile's main address.
  * - `created_at` / `updated_at` — audit columns.
  */
-export const addresses = pgTable(
-  'addresses',
-  {
-    /** UUIDv7 opaque address identifier. */
-    id: uuidv7('id').primaryKey().notNull(),
+export const addresses = pgTable('addresses', {
+  /** UUIDv7 opaque address identifier. */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** Foreign key to the owning profile. */
-    profileId: uuid('profile_id')
-      .notNull()
-      .references(() => profiles.id, { onDelete: 'cascade' }),
+  /** Foreign key to the owning profile. */
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
 
-    /** Iranian province id. */
-    provinceId: uuid('province_id').notNull().references(() => provinces.id, { onDelete: 'restrict' }),
+  /** Iranian province id. */
+  provinceId: uuid('province_id')
+    .notNull()
+    .references(() => provinces.id, { onDelete: 'restrict' }),
 
-    /** Iranian city id. */
-    cityId: uuid('city_id').notNull().references(() => cities.id, { onDelete: 'restrict' }),
+  /** Iranian city id. */
+  cityId: uuid('city_id')
+    .notNull()
+    .references(() => cities.id, { onDelete: 'restrict' }),
 
-    /** Full free-text address. */
-    fullAddress: text('full_address').notNull(),
+  /** Full free-text address. */
+  fullAddress: text('full_address').notNull(),
 
-    /** Iranian postal code (10 digits). */
-    postalCode: text('postal_code').notNull(),
+  /** Iranian postal code (10 digits). */
+  postalCode: text('postal_code').notNull(),
 
-    /** Whether this is the profile's main address. */
-    mainAddress: boolean('main_address').notNull().default(false),
+  /** Whether this is the profile's main address. */
+  mainAddress: boolean('main_address').notNull().default(false),
 
-    /** When the address was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** When the address was created. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the addresses table.
@@ -75,4 +72,4 @@ export const createAddressesTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_addresses_profile_id ON addresses (profile_id);
   CREATE UNIQUE INDEX IF NOT EXISTS idx_addresses_main_per_profile ON addresses (profile_id) WHERE main_address = true;
-`
+`;

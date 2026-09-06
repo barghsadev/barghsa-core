@@ -9,12 +9,12 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { NotificationsService } from './notifications.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { NotificationsService } from './notifications.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 @ApiTags('Notifications')
 @ApiBearerAuth()
@@ -31,19 +31,29 @@ export class NotificationsController {
    */
   @Get()
   @ApiOperation({ summary: 'Get in-app notifications for current user' })
-  @ApiQuery({ name: 'limit', required: false, type: Number, description: 'Max results (default 50)' })
-  @ApiQuery({ name: 'offset', required: false, type: Number, description: 'Pagination offset (default 0)' })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Max results (default 50)',
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    type: Number,
+    description: 'Pagination offset (default 0)',
+  })
   @ApiResponse({ status: 200, description: 'List of notifications with total and unread count.' })
   async findByUser(
     @Req() req: AuthenticatedRequest,
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+    @Query('offset') offset?: string
   ) {
     return this.notificationsService.findByUser(
       req.session.userId,
       limit ? parseInt(limit, 10) : 50,
-      offset ? parseInt(offset, 10) : 0,
-    )
+      offset ? parseInt(offset, 10) : 0
+    );
   }
 
   /**
@@ -55,8 +65,8 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Get unread notification count' })
   @ApiResponse({ status: 200, description: 'Unread notification count.' })
   async countUnread(@Req() req: AuthenticatedRequest) {
-    const count = await this.notificationsService.countUnread(req.session.userId)
-    return { unreadCount: count }
+    const count = await this.notificationsService.countUnread(req.session.userId);
+    return { unreadCount: count };
   }
 
   /**
@@ -69,12 +79,9 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Mark a notification as read' })
   @ApiResponse({ status: 200, description: 'Notification marked as read.' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
-  async markAsRead(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    await this.notificationsService.markAsRead(id, req.session.userId)
-    return { message: 'Notification marked as read' }
+  async markAsRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    await this.notificationsService.markAsRead(id, req.session.userId);
+    return { message: 'Notification marked as read' };
   }
 
   /**
@@ -87,7 +94,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Mark all notifications as read' })
   @ApiResponse({ status: 200, description: 'All notifications marked as read.' })
   async markAllAsRead(@Req() req: AuthenticatedRequest) {
-    await this.notificationsService.markAllAsRead(req.session.userId)
-    return { message: 'All notifications marked as read' }
+    await this.notificationsService.markAllAsRead(req.session.userId);
+    return { message: 'All notifications marked as read' };
   }
 }

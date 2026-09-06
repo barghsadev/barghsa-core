@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * SMTP provider configuration schema (E-05, T-05.06.02).
@@ -10,8 +10,8 @@ import { z } from 'zod'
  * with these defaults before dialing.
  */
 
-export const SmtpSecuritySchema = z.enum(['TLS', 'STARTTLS'])
-export type SmtpSecurity = z.infer<typeof SmtpSecuritySchema>
+export const SmtpSecuritySchema = z.enum(['TLS', 'STARTTLS']);
+export type SmtpSecurity = z.infer<typeof SmtpSecuritySchema>;
 
 export const SmtpConfigSchema = z.object({
   /** SMTP host name or IP literal. */
@@ -37,33 +37,33 @@ export const SmtpConfigSchema = z.object({
   from_email: z.string().email().max(320),
   /** Optional reply-to e-mail address. */
   reply_to: z.string().email().max(320).optional(),
-})
+});
 
-export type SmtpConfig = z.infer<typeof SmtpConfigSchema>
+export type SmtpConfig = z.infer<typeof SmtpConfigSchema>;
 
 export interface SmtpConfigParseOk {
-  ok: true
-  config: SmtpConfig
+  ok: true;
+  config: SmtpConfig;
 }
 
 export interface SmtpConfigParseError {
-  ok: false
-  error: string
+  ok: false;
+  error: string;
 }
 
-export type SmtpConfigParseResult = SmtpConfigParseOk | SmtpConfigParseError
+export type SmtpConfigParseResult = SmtpConfigParseOk | SmtpConfigParseError;
 
 /** Parse an opaque stored config blob into a validated `SmtpConfig`. */
 export function parseSmtpConfig(raw: unknown): SmtpConfigParseResult {
-  const parsed = SmtpConfigSchema.safeParse(raw)
+  const parsed = SmtpConfigSchema.safeParse(raw);
   if (!parsed.success) {
     const details = parsed.error.issues
       .map((issue) => {
-        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
-        return `${path}: ${issue.message}`
+        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)';
+        return `${path}: ${issue.message}`;
       })
-      .join('; ')
-    return { ok: false, error: details }
+      .join('; ');
+    return { ok: false, error: details };
   }
-  return { ok: true, config: parsed.data }
+  return { ok: true, config: parsed.data };
 }

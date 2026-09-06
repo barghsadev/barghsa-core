@@ -22,30 +22,30 @@ import {
   type CalculatedManualLine,
   type ManualInvoiceCalculation,
   type ManualInvoiceLineInput,
-} from './manual-invoice.calculation.js'
+} from './manual-invoice.calculation.js';
 import {
   autoLineDescription,
   calculateAutoInvoice,
   type AutoInvoiceCalculation,
   type AutoInvoiceLineInput,
   type CalculatedAutoLine,
-} from './auto-invoice.calculation.js'
+} from './auto-invoice.calculation.js';
 
 /** Snapshot schema version. Bump when the document shape changes. */
-export const INVOICE_CALCULATION_SNAPSHOT_VERSION = 1 as const
+export const INVOICE_CALCULATION_SNAPSHOT_VERSION = 1 as const;
 
 /** Canonical rounding rule recorded on every snapshot. */
-export const INVOICE_ROUNDING_RULE = 'half-up-to-nearest-IRR' as const
+export const INVOICE_ROUNDING_RULE = 'half-up-to-nearest-IRR' as const;
 
 /**
  * VAT rate is integer basis points (0..10000 = 0%..100%).
  * `roundHalfUpDiv(net × vatRate, VAT_BASIS_POINT_SCALE)` is the line VAT.
  */
-export const VAT_BASIS_POINT_SCALE = 10_000 as const
+export const VAT_BASIS_POINT_SCALE = 10_000 as const;
 
 /** Serialize a bigint IRR amount as a decimal-digit JSON string. */
 export function irrJson(value: bigint): string {
-  return value.toString()
+  return value.toString();
 }
 
 /**
@@ -59,40 +59,40 @@ export function irrJson(value: bigint): string {
 export function parseIrrJson(value: unknown): bigint {
   if (typeof value === 'number') {
     throw new RangeError(
-      'parseIrrJson: IRR arrived as a JSON Number — precision may be lost; expected a decimal-digit string',
-    )
+      'parseIrrJson: IRR arrived as a JSON Number — precision may be lost; expected a decimal-digit string'
+    );
   }
   if (typeof value !== 'string' || !/^-?\d+$/.test(value)) {
     throw new RangeError(
-      `parseIrrJson: expected a decimal-digit IRR string, got ${JSON.stringify(value)}`,
-    )
+      `parseIrrJson: expected a decimal-digit IRR string, got ${JSON.stringify(value)}`
+    );
   }
-  return BigInt(value)
+  return BigInt(value);
 }
 
 /** One staff/system-entered line as stored for replay. */
 export interface InvoiceCalculationSnapshotLineInput {
-  description: string
-  quantity: number
+  description: string;
+  quantity: number;
   /** Unit price in IRR (bigint as decimal-digit string). */
-  unitPrice: string
+  unitPrice: string;
   /** VAT rate in integer basis points: 900 = 9.00%. */
-  vatRate: number
-  isTaxable: boolean
+  vatRate: number;
+  isTaxable: boolean;
   /** Present on auto invoices (product composition snapshot). */
-  productId?: string
-  productType?: string
-  productTitle?: { fa?: string | null; en?: string | null } | null
+  productId?: string;
+  productType?: string;
+  productTitle?: { fa?: string | null; en?: string | null } | null;
 }
 
 /** All inputs needed to replay the invoice calculation. */
 export interface InvoiceCalculationSnapshotInputs {
-  lines: InvoiceCalculationSnapshotLineInput[]
+  lines: InvoiceCalculationSnapshotLineInput[];
   /**
    * Order-level gift-code discount in IRR (string). `"0"` for manual
    * invoices, which have no pre-VAT discount input.
    */
-  orderDiscount: string
+  orderDiscount: string;
 }
 
 /**
@@ -105,66 +105,66 @@ export interface InvoiceCalculationSnapshotInputs {
  * one IRR without re-running the math.
  */
 export interface InvoiceVatRoundingStep {
-  lineIndex: number
-  operation: 'vat'
+  lineIndex: number;
+  operation: 'vat';
   /** Net taxable amount AFTER discount, BEFORE VAT. */
-  netAmount: string
-  vatRate: number
-  isTaxable: boolean
+  netAmount: string;
+  vatRate: number;
+  isTaxable: boolean;
   /** `netAmount × vatRate` (0 when the line is non-taxable). */
-  numerator: string
+  numerator: string;
   /** Always `"10000"` (VAT_BASIS_POINT_SCALE). */
-  denominator: string
+  denominator: string;
   /** Integer division `numerator / denominator` (truncated toward zero). */
-  truncatedQuotient: string
+  truncatedQuotient: string;
   /** `numerator % denominator`. */
-  remainder: string
+  remainder: string;
   /**
    * True when `remainder * 2 >= denominator` — exact half or above, so
    * half-up added 1 IRR versus truncated division.
    */
-  roundedUp: boolean
+  roundedUp: boolean;
   /** Final half-up VAT in IRR. */
-  result: string
+  result: string;
 }
 
 /** Per-line intermediates: gross → discount → net → VAT rounding. */
 export interface InvoiceLineCalculationStep {
-  lineIndex: number
+  lineIndex: number;
   /** quantity × unitPrice (pre-discount). */
-  gross: string
+  gross: string;
   /** Discount allocated to this line (`"0"` for manual). */
-  discount: string
+  discount: string;
   /** Remaining order-level discount after this line absorbed its share. */
-  remainingDiscountAfter: string
+  remainingDiscountAfter: string;
   /** `gross − discount` — the pre-VAT line total. */
-  lineTotal: string
-  vat: InvoiceVatRoundingStep
+  lineTotal: string;
+  vat: InvoiceVatRoundingStep;
 }
 
 /** Invoice-level money totals (all IRR strings). */
 export interface InvoiceCalculationSnapshotTotals {
   /** Σ lineTotal (pre-VAT, post-discount). */
-  subtotal: string
+  subtotal: string;
   /** Σ vatAmount. */
-  totalVat: string
+  totalVat: string;
   /** Σ per-line discount. */
-  totalDiscount: string
+  totalDiscount: string;
   /** subtotal + totalVat — the invoice total. */
-  totalAmount: string
+  totalAmount: string;
 }
 
 /** Canonical JSON document stored in `invoice_calculation_snapshot`. */
 export interface InvoiceCalculationSnapshot {
-  version: typeof INVOICE_CALCULATION_SNAPSHOT_VERSION
-  source: 'manual' | 'auto'
+  version: typeof INVOICE_CALCULATION_SNAPSHOT_VERSION;
+  source: 'manual' | 'auto';
   rounding: {
-    rule: typeof INVOICE_ROUNDING_RULE
-    vatScale: typeof VAT_BASIS_POINT_SCALE
-  }
-  inputs: InvoiceCalculationSnapshotInputs
-  steps: InvoiceLineCalculationStep[]
-  totals: InvoiceCalculationSnapshotTotals
+    rule: typeof INVOICE_ROUNDING_RULE;
+    vatScale: typeof VAT_BASIS_POINT_SCALE;
+  };
+  inputs: InvoiceCalculationSnapshotInputs;
+  steps: InvoiceLineCalculationStep[];
+  totals: InvoiceCalculationSnapshotTotals;
 }
 
 /**
@@ -177,9 +177,9 @@ export function describeVatRounding(
   lineIndex: number,
   netAmount: bigint,
   vatRate: number,
-  isTaxable: boolean,
+  isTaxable: boolean
 ): InvoiceVatRoundingStep {
-  const denominator = BigInt(VAT_BASIS_POINT_SCALE)
+  const denominator = BigInt(VAT_BASIS_POINT_SCALE);
   if (!isTaxable) {
     return {
       lineIndex,
@@ -193,14 +193,14 @@ export function describeVatRounding(
       remainder: '0',
       roundedUp: false,
       result: '0',
-    }
+    };
   }
 
-  const numerator = netAmount * BigInt(vatRate)
-  const truncatedQuotient = numerator / denominator
-  const remainder = numerator % denominator
-  const roundedUp = remainder * 2n >= denominator
-  const result = roundHalfUpDiv(numerator, denominator)
+  const numerator = netAmount * BigInt(vatRate);
+  const truncatedQuotient = numerator / denominator;
+  const remainder = numerator % denominator;
+  const roundedUp = remainder * 2n >= denominator;
+  const result = roundHalfUpDiv(numerator, denominator);
   return {
     lineIndex,
     operation: 'vat',
@@ -213,57 +213,49 @@ export function describeVatRounding(
     remainder: irrJson(remainder),
     roundedUp,
     result: irrJson(result),
-  }
+  };
 }
 
 function snapshotTotals(
   lines: Array<{ lineTotal: bigint; vatAmount: bigint; discount?: bigint }>,
-  totalAmount: bigint,
+  totalAmount: bigint
 ): InvoiceCalculationSnapshotTotals {
-  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0n)
-  const totalVat = lines.reduce((sum, l) => sum + l.vatAmount, 0n)
-  const totalDiscount = lines.reduce((sum, l) => sum + (l.discount ?? 0n), 0n)
+  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0n);
+  const totalVat = lines.reduce((sum, l) => sum + l.vatAmount, 0n);
+  const totalDiscount = lines.reduce((sum, l) => sum + (l.discount ?? 0n), 0n);
   return {
     subtotal: irrJson(subtotal),
     totalVat: irrJson(totalVat),
     totalDiscount: irrJson(totalDiscount),
     totalAmount: irrJson(totalAmount),
-  }
+  };
 }
 
 function roundingHeader() {
   return {
     rule: INVOICE_ROUNDING_RULE,
     vatScale: VAT_BASIS_POINT_SCALE,
-  } as const
+  } as const;
 }
 
-function manualLineStep(
-  line: CalculatedManualLine,
-  lineIndex: number,
-): InvoiceLineCalculationStep {
-  const gross = BigInt(line.quantity) * line.unitPrice
+function manualLineStep(line: CalculatedManualLine, lineIndex: number): InvoiceLineCalculationStep {
+  const gross = BigInt(line.quantity) * line.unitPrice;
   return {
     lineIndex,
     gross: irrJson(gross),
     discount: '0',
     remainingDiscountAfter: '0',
     lineTotal: irrJson(line.lineTotal),
-    vat: describeVatRounding(
-      lineIndex,
-      line.lineTotal,
-      line.vatRate,
-      line.isTaxable !== false,
-    ),
-  }
+    vat: describeVatRounding(lineIndex, line.lineTotal, line.vatRate, line.isTaxable !== false),
+  };
 }
 
 function autoLineStep(
   line: CalculatedAutoLine,
   lineIndex: number,
-  remainingDiscountAfter: bigint,
+  remainingDiscountAfter: bigint
 ): InvoiceLineCalculationStep {
-  const gross = BigInt(line.quantity) * line.unitPrice
+  const gross = BigInt(line.quantity) * line.unitPrice;
   return {
     lineIndex,
     gross: irrJson(gross),
@@ -271,7 +263,7 @@ function autoLineStep(
     remainingDiscountAfter: irrJson(remainingDiscountAfter),
     lineTotal: irrJson(line.lineTotal),
     vat: describeVatRounding(lineIndex, line.lineTotal, line.vatRate, line.isTaxable),
-  }
+  };
 }
 
 /**
@@ -283,7 +275,7 @@ function autoLineStep(
  */
 export function buildManualInvoiceCalculationSnapshot(
   inputs: ManualInvoiceLineInput[],
-  calculation: ManualInvoiceCalculation,
+  calculation: ManualInvoiceCalculation
 ): InvoiceCalculationSnapshot {
   return {
     version: INVOICE_CALCULATION_SNAPSHOT_VERSION,
@@ -301,7 +293,7 @@ export function buildManualInvoiceCalculationSnapshot(
     },
     steps: calculation.lines.map((line, index) => manualLineStep(line, index)),
     totals: snapshotTotals(calculation.lines, calculation.totalAmount),
-  }
+  };
 }
 
 /**
@@ -314,13 +306,13 @@ export function buildManualInvoiceCalculationSnapshot(
 export function buildAutoInvoiceCalculationSnapshot(
   inputs: AutoInvoiceLineInput[],
   orderDiscount: bigint,
-  calculation: AutoInvoiceCalculation,
+  calculation: AutoInvoiceCalculation
 ): InvoiceCalculationSnapshot {
-  let remaining = orderDiscount
+  let remaining = orderDiscount;
   const steps = calculation.lines.map((line, index) => {
-    remaining -= line.discount
-    return autoLineStep(line, index, remaining)
-  })
+    remaining -= line.discount;
+    return autoLineStep(line, index, remaining);
+  });
 
   return {
     version: INVOICE_CALCULATION_SNAPSHOT_VERSION,
@@ -346,16 +338,16 @@ export function buildAutoInvoiceCalculationSnapshot(
         vatAmount: l.vatAmount,
         discount: l.discount,
       })),
-      calculation.totalAmount,
+      calculation.totalAmount
     ),
-  }
+  };
 }
 
 /** Per-line money produced by replaying snapshot inputs. */
 export interface ReplayedInvoiceLine {
-  lineTotal: bigint
-  vatAmount: bigint
-  discount: bigint
+  lineTotal: bigint;
+  vatAmount: bigint;
+  discount: bigint;
 }
 
 /**
@@ -365,16 +357,16 @@ export interface ReplayedInvoiceLine {
  * `invoices.total_amount` / `invoice_lines` (int8).
  */
 export interface ReplayedInvoiceCalculation {
-  source: 'manual' | 'auto'
-  totalAmount: bigint
-  subtotal: bigint
-  totalVat: bigint
-  totalDiscount: bigint
-  lines: ReplayedInvoiceLine[]
+  source: 'manual' | 'auto';
+  totalAmount: bigint;
+  subtotal: bigint;
+  totalVat: bigint;
+  totalDiscount: bigint;
+  lines: ReplayedInvoiceLine[];
 }
 
 function snapshotLineToManualInput(
-  line: InvoiceCalculationSnapshotLineInput,
+  line: InvoiceCalculationSnapshotLineInput
 ): ManualInvoiceLineInput {
   return {
     description: line.description,
@@ -382,21 +374,15 @@ function snapshotLineToManualInput(
     unitPrice: parseIrrJson(line.unitPrice),
     vatRate: line.vatRate,
     isTaxable: line.isTaxable,
-  }
+  };
 }
 
-function snapshotLineToAutoInput(
-  line: InvoiceCalculationSnapshotLineInput,
-): AutoInvoiceLineInput {
+function snapshotLineToAutoInput(line: InvoiceCalculationSnapshotLineInput): AutoInvoiceLineInput {
   if (typeof line.productId !== 'string' || line.productId.length === 0) {
-    throw new RangeError(
-      'replayInvoiceCalculation: auto snapshot line is missing productId',
-    )
+    throw new RangeError('replayInvoiceCalculation: auto snapshot line is missing productId');
   }
   if (typeof line.productType !== 'string' || line.productType.length === 0) {
-    throw new RangeError(
-      'replayInvoiceCalculation: auto snapshot line is missing productType',
-    )
+    throw new RangeError('replayInvoiceCalculation: auto snapshot line is missing productType');
   }
   return {
     productId: line.productId,
@@ -406,24 +392,22 @@ function snapshotLineToAutoInput(
     unitPrice: parseIrrJson(line.unitPrice),
     vatRate: line.vatRate,
     isTaxable: line.isTaxable,
-  }
+  };
 }
 
 /** Decode snapshot totals (decimal-digit strings) to bigint IRR. */
-export function parseSnapshotTotals(
-  totals: InvoiceCalculationSnapshotTotals,
-): {
-  subtotal: bigint
-  totalVat: bigint
-  totalDiscount: bigint
-  totalAmount: bigint
+export function parseSnapshotTotals(totals: InvoiceCalculationSnapshotTotals): {
+  subtotal: bigint;
+  totalVat: bigint;
+  totalDiscount: bigint;
+  totalAmount: bigint;
 } {
   return {
     subtotal: parseIrrJson(totals.subtotal),
     totalVat: parseIrrJson(totals.totalVat),
     totalDiscount: parseIrrJson(totals.totalDiscount),
     totalAmount: parseIrrJson(totals.totalAmount),
-  }
+  };
 }
 
 /**
@@ -437,12 +421,10 @@ export function parseSnapshotTotals(
  *   lack product identity, or any IRR field is not a digit string.
  */
 export function replayInvoiceCalculation(
-  snapshot: InvoiceCalculationSnapshot,
+  snapshot: InvoiceCalculationSnapshot
 ): ReplayedInvoiceCalculation {
   if (snapshot.source === 'manual') {
-    const calc = calculateManualInvoice(
-      snapshot.inputs.lines.map(snapshotLineToManualInput),
-    )
+    const calc = calculateManualInvoice(snapshot.inputs.lines.map(snapshotLineToManualInput));
     return {
       source: 'manual',
       totalAmount: calc.totalAmount,
@@ -454,14 +436,14 @@ export function replayInvoiceCalculation(
         vatAmount: l.vatAmount,
         discount: 0n,
       })),
-    }
+    };
   }
 
   if (snapshot.source === 'auto') {
     const calc = calculateAutoInvoice(
       snapshot.inputs.lines.map(snapshotLineToAutoInput),
-      parseIrrJson(snapshot.inputs.orderDiscount),
-    )
+      parseIrrJson(snapshot.inputs.orderDiscount)
+    );
     return {
       source: 'auto',
       totalAmount: calc.totalAmount,
@@ -473,12 +455,12 @@ export function replayInvoiceCalculation(
         vatAmount: l.vatAmount,
         discount: l.discount,
       })),
-    }
+    };
   }
 
   throw new RangeError(
     `replayInvoiceCalculation: unknown snapshot source ${JSON.stringify(
-      (snapshot as { source?: unknown }).source,
-    )}`,
-  )
+      (snapshot as { source?: unknown }).source
+    )}`
+  );
 }

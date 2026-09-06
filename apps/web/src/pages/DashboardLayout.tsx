@@ -1,14 +1,14 @@
-import { Link, Outlet } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
-import { ProfileSwitcher } from '../components/ProfileSwitcher.js'
-import { TosBanner } from '../components/TosBanner.js'
-import { InvitationBanner } from '../components/InvitationBanner.js'
-import { OwnershipBanner } from '../components/OwnershipBanner.js'
-import { NotificationBell } from '../components/NotificationBell.js'
+import { Link, Outlet } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
+import { ProfileSwitcher } from '../components/ProfileSwitcher.js';
+import { TosBanner } from '../components/TosBanner.js';
+import { InvitationBanner } from '../components/InvitationBanner.js';
+import { OwnershipBanner } from '../components/OwnershipBanner.js';
+import { NotificationBell } from '../components/NotificationBell.js';
 
 interface DashboardLayoutProps {
-  locale?: Locale
+  locale?: Locale;
 }
 
 /**
@@ -22,9 +22,9 @@ interface DashboardLayoutProps {
  * mobile the sidebar collapses to a horizontal strip via flex wrapping.
  */
 export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps) {
-  const currentLocale = useLocale()
-  const locale = localeOverride ?? currentLocale
-  const isRtl = locale === 'fa'
+  const currentLocale = useLocale();
+  const locale = localeOverride ?? currentLocale;
+  const isRtl = locale === 'fa';
 
   const navItems: Array<{ to: string; label: string }> = [
     { to: '/dashboard', label: t('dashboard.nav.overview', locale) },
@@ -35,11 +35,11 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
     { to: '/ai', label: t('dashboard.nav.ai', locale) },
     { to: '/documents', label: t('dashboard.nav.documents', locale) },
     { to: '/videos', label: t('dashboard.nav.videos', locale) },
-    { to: '/tickets', label: t('tickets.title',locale) },
+    { to: '/tickets', label: t('tickets.title', locale) },
     { to: '/notifications', label: t('notifications.nav', locale) },
     { to: '/settings/team', label: t('team.title', locale) },
     { to: '/settings', label: t('dashboard.nav.settings', locale) },
-  ]
+  ];
 
   return (
     <div className="min-h-dvh flex flex-col bg-gray-50" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -98,5 +98,5 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
         </main>
       </div>
     </div>
-  )
+  );
 }

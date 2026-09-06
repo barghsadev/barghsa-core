@@ -12,17 +12,14 @@
  * a transition is never persisted without its audit record and vice versa.
  */
 
-import { Injectable } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import {
-  DUE_AT_OVERRIDE_EVENT,
-  type InvoiceDueAtOverrideSnapshot,
-} from '@barghsa/shared/finance'
+import { Injectable } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { DUE_AT_OVERRIDE_EVENT, type InvoiceDueAtOverrideSnapshot } from '@barghsa/shared/finance';
 import {
   type InvoiceState,
   type InvoiceTransition,
   TRANSITION_LABELS,
-} from './invoice-state.model.js'
+} from './invoice-state.model.js';
 
 /**
  * Minimal transaction-scoped client accepted by the repository.
@@ -33,27 +30,27 @@ import {
  * caller that owns the transaction.
  */
 export interface TransactionClient {
-  query(text: string, params?: unknown[]): Promise<unknown>
+  query(text: string, params?: unknown[]): Promise<unknown>;
 }
 
 /** Audit context for one invoice state transition (T-04.1.01.05). */
 export interface InvoiceAuditEntry {
   /** The invoice whose state changed. */
-  invoiceId: string
+  invoiceId: string;
   /** State the invoice was in before the transition. */
-  fromState: InvoiceState
+  fromState: InvoiceState;
   /** State the invoice is in after the transition. */
-  toState: InvoiceState
+  toState: InvoiceState;
   /** Named transition applied (one of the S-04.1.01 transition set). */
-  transition: InvoiceTransition
+  transition: InvoiceTransition;
   /** The user who performed the action (FK to `users.userId`). */
-  actorUserId: string
+  actorUserId: string;
   /** Opaque correlation ID linking related events. */
-  correlationId?: string | undefined
+  correlationId?: string | undefined;
   /** Human-readable reason (required for cancellations, refunds). */
-  reason?: string | undefined
+  reason?: string | undefined;
   /** Source IP of the requesting user; omit for system-initiated steps. */
-  ip?: string | undefined
+  ip?: string | undefined;
 }
 
 @Injectable()
@@ -73,18 +70,18 @@ export class InvoiceAuditRepository {
   async recordTransition(
     client: TransactionClient,
     entry: InvoiceAuditEntry,
-    occurredAt: Date,
+    occurredAt: Date
   ): Promise<string> {
-    const auditId = uuidv7()
-    const label = TRANSITION_LABELS[entry.transition]
-    const event = `invoice.${label}`
+    const auditId = uuidv7();
+    const label = TRANSITION_LABELS[entry.transition];
+    const event = `invoice.${label}`;
     const metadata = JSON.stringify({
       invoiceId: entry.invoiceId,
       fromState: entry.fromState,
       toState: entry.toState,
       transition: label,
       reason: entry.reason ?? null,
-    })
+    });
 
     await client.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
@@ -97,10 +94,10 @@ export class InvoiceAuditRepository {
         entry.correlationId ?? null,
         entry.ip ?? null,
         occurredAt,
-      ],
-    )
+      ]
+    );
 
-    return auditId
+    return auditId;
   }
 
   /**
@@ -114,16 +111,16 @@ export class InvoiceAuditRepository {
   async recordDueAtOverride(
     client: TransactionClient,
     entry: {
-      invoiceId: string
-      actorUserId: string
-      snapshot: InvoiceDueAtOverrideSnapshot
-      invoiceState: InvoiceState
-      correlationId?: string | undefined
-      ip?: string | undefined
+      invoiceId: string;
+      actorUserId: string;
+      snapshot: InvoiceDueAtOverrideSnapshot;
+      invoiceState: InvoiceState;
+      correlationId?: string | undefined;
+      ip?: string | undefined;
     },
-    occurredAt: Date,
+    occurredAt: Date
   ): Promise<string> {
-    const auditId = uuidv7()
+    const auditId = uuidv7();
     const metadata = JSON.stringify({
       invoiceId: entry.invoiceId,
       invoiceState: entry.invoiceState,
@@ -131,7 +128,7 @@ export class InvoiceAuditRepository {
       newDueAt: entry.snapshot.dueAt,
       reason: entry.snapshot.reason,
       customerVisible: true,
-    })
+    });
 
     await client.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
@@ -144,9 +141,9 @@ export class InvoiceAuditRepository {
         entry.correlationId ?? null,
         entry.ip ?? null,
         occurredAt,
-      ],
-    )
+      ]
+    );
 
-    return auditId
+    return auditId;
   }
 }

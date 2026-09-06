@@ -23,7 +23,7 @@ export interface DualApprovalConfig {
    * payment confirmations require a second approver. `0` = dual approval
    * disabled (no threshold enforced).
    */
-  thresholdIrR: number
+  thresholdIrR: number;
 }
 
 /**
@@ -32,10 +32,10 @@ export interface DualApprovalConfig {
  */
 export const DEFAULT_DUAL_APPROVAL_CONFIG: DualApprovalConfig = {
   thresholdIrR: 0,
-}
+};
 
 /** `app_config` key holding the dual-approval threshold (T-09.07.01). */
-export const DUAL_APPROVAL_THRESHOLD_CONFIG_KEY = 'finance.dual_approval_threshold'
+export const DUAL_APPROVAL_THRESHOLD_CONFIG_KEY = 'finance.dual_approval_threshold';
 
 /**
  * Result of validating a proposed dual-approval threshold for the admin
@@ -44,8 +44,8 @@ export const DUAL_APPROVAL_THRESHOLD_CONFIG_KEY = 'finance.dual_approval_thresho
  * the durable error message and surfaced via i18n on the client).
  */
 export interface DualApprovalValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -61,7 +61,7 @@ export function isValidDualApprovalThreshold(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 0 &&
     raw <= Number.MAX_SAFE_INTEGER
-  )
+  );
 }
 
 /**
@@ -75,30 +75,30 @@ export function isValidDualApprovalThreshold(raw: unknown): raw is number {
  * exactly in JSON numbers, so the persisted value round-trips losslessly).
  */
 export function validateDualApprovalConfig(input: unknown): DualApprovalValidationResult {
-  const issues: string[] = []
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object') {
-    return { ok: false, issues: ['Dual-approval threshold config must be an object'] }
+    return { ok: false, issues: ['Dual-approval threshold config must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
-  const raw = o.threshold_irr ?? o.thresholdIrR
+  const o = input as Record<string, unknown>;
+  const raw = o.threshold_irr ?? o.thresholdIrR;
 
   if (raw === undefined || raw === null || raw === '') {
-    issues.push('threshold_irr is required')
-    return { ok: false, issues }
+    issues.push('threshold_irr is required');
+    return { ok: false, issues };
   }
 
   if (typeof raw !== 'number') {
-    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
-    return { ok: false, issues }
+    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`);
+    return { ok: false, issues };
   }
 
   if (!isValidDualApprovalThreshold(raw)) {
-    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`)
+    issues.push(`threshold_irr must be an integer between 0 and ${Number.MAX_SAFE_INTEGER}`);
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -108,11 +108,11 @@ export function validateDualApprovalConfig(input: unknown): DualApprovalValidati
  * post-validation but keeps the write path total).
  */
 export function toDualApprovalConfig(input: unknown): DualApprovalConfig {
-  if (!input || typeof input !== 'object') return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
-  const o = input as Record<string, unknown>
-  const raw = o.threshold_irr ?? o.thresholdIrR
+  if (!input || typeof input !== 'object') return { ...DEFAULT_DUAL_APPROVAL_CONFIG };
+  const o = input as Record<string, unknown>;
+  const raw = o.threshold_irr ?? o.thresholdIrR;
   if (isValidDualApprovalThreshold(raw)) {
-    return { thresholdIrR: raw }
+    return { thresholdIrR: raw };
   }
-  return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
+  return { ...DEFAULT_DUAL_APPROVAL_CONFIG };
 }

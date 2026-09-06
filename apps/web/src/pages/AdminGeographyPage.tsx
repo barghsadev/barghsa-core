@@ -1,24 +1,24 @@
-import { useState, useEffect, useCallback } from 'react'
-import { withCsrf } from '../lib/csrf.js'
+import { useState, useEffect, useCallback } from 'react';
+import { withCsrf } from '../lib/csrf.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface Province {
-  id: string
-  nameFa: string
-  nameEn: string
-  status: 'active' | 'inactive'
-  createdAt: string
-  updatedAt: string
+  id: string;
+  nameFa: string;
+  nameEn: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ListProvincesResponse {
-  provinces: Province[]
-  total: number
-  page: number
-  limit: number
+  provinces: Province[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -26,20 +26,20 @@ interface ListProvincesResponse {
 // ---------------------------------------------------------------------------
 
 async function listProvinces(params: {
-  search?: string | undefined
-  status?: 'active' | 'inactive' | undefined
-  page?: number | undefined
-  limit?: number | undefined
+  search?: string | undefined;
+  status?: 'active' | 'inactive' | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
 }): Promise<ListProvincesResponse> {
-  const qs = new URLSearchParams()
-  if (params.search) qs.set('search', params.search)
-  if (params.status) qs.set('status', params.status)
-  if (params.page) qs.set('page', String(params.page))
-  if (params.limit) qs.set('limit', String(params.limit))
+  const qs = new URLSearchParams();
+  if (params.search) qs.set('search', params.search);
+  if (params.status) qs.set('status', params.status);
+  if (params.page) qs.set('page', String(params.page));
+  if (params.limit) qs.set('limit', String(params.limit));
 
-  const res = await fetch(`/api/admin/geography/provinces?${qs.toString()}`)
-  if (!res.ok) throw new Error(`Failed to fetch provinces: ${res.statusText}`)
-  return res.json()
+  const res = await fetch(`/api/admin/geography/provinces?${qs.toString()}`);
+  if (!res.ok) throw new Error(`Failed to fetch provinces: ${res.statusText}`);
+  return res.json();
 }
 
 async function createProvince(data: { nameFa: string; nameEn: string }): Promise<Province> {
@@ -47,38 +47,38 @@ async function createProvince(data: { nameFa: string; nameEn: string }): Promise
     method: 'POST',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
-  })
+  });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(err.error ?? 'Failed to create province')
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? 'Failed to create province');
   }
-  return res.json()
+  return res.json();
 }
 
 async function updateProvince(
   id: string,
-  data: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' },
+  data: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' }
 ): Promise<Province> {
   const res = await fetch(`/api/admin/geography/provinces/${id}`, {
     method: 'PATCH',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
-  })
+  });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(err.error ?? 'Failed to update province')
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? 'Failed to update province');
   }
-  return res.json()
+  return res.json();
 }
 
 async function deleteProvince(id: string): Promise<void> {
   const res = await fetch(`/api/admin/geography/provinces/${id}`, {
     method: 'DELETE',
     headers: withCsrf({}),
-  })
+  });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(err.error ?? 'Failed to delete province')
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? 'Failed to delete province');
   }
 }
 
@@ -86,70 +86,70 @@ async function deleteProvince(id: string): Promise<void> {
 // Helpers
 // ---------------------------------------------------------------------------
 
-const PERSIAN_ALPHABET = /^[\u0600-\u06FF\u200C\s]+$/
-const ENGLISH_ALPHABET = /^[a-zA-Z\s]+$/
+const PERSIAN_ALPHABET = /^[\u0600-\u06FF\u200C\s]+$/;
+const ENGLISH_ALPHABET = /^[a-zA-Z\s]+$/;
 
 // ---------------------------------------------------------------------------
 // ProvinceFormModal
 // ---------------------------------------------------------------------------
 
 interface ProvinceFormModalProps {
-  mode: 'add' | 'edit'
-  province?: Province // for edit mode
-  onClose: () => void
-  onSaved: () => void
+  mode: 'add' | 'edit';
+  province?: Province; // for edit mode
+  onClose: () => void;
+  onSaved: () => void;
 }
 
 function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormModalProps) {
-  const [nameFa, setNameFa] = useState(province?.nameFa ?? '')
-  const [nameEn, setNameEn] = useState(province?.nameEn ?? '')
-  const [status, setStatus] = useState<'active' | 'inactive'>(province?.status ?? 'active')
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [nameFa, setNameFa] = useState(province?.nameFa ?? '');
+  const [nameEn, setNameEn] = useState(province?.nameEn ?? '');
+  const [status, setStatus] = useState<'active' | 'inactive'>(province?.status ?? 'active');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
-      e.preventDefault()
-      setError(null)
+      e.preventDefault();
+      setError(null);
 
       // Validation
       if (!nameFa.trim()) {
-        setError('Persian name is required')
-        return
+        setError('Persian name is required');
+        return;
       }
       if (!PERSIAN_ALPHABET.test(nameFa.trim())) {
-        setError('Persian name must contain only Persian characters')
-        return
+        setError('Persian name must contain only Persian characters');
+        return;
       }
       if (!nameEn.trim()) {
-        setError('English name is required')
-        return
+        setError('English name is required');
+        return;
       }
       if (!ENGLISH_ALPHABET.test(nameEn.trim())) {
-        setError('English name must contain only English letters')
-        return
+        setError('English name must contain only English letters');
+        return;
       }
 
-      setSaving(true)
+      setSaving(true);
       try {
         if (mode === 'add') {
-          await createProvince({ nameFa: nameFa.trim(), nameEn: nameEn.trim() })
+          await createProvince({ nameFa: nameFa.trim(), nameEn: nameEn.trim() });
         } else if (province) {
-          const patch: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' } = {}
-          if (nameFa.trim() !== province.nameFa) patch.nameFa = nameFa.trim()
-          if (nameEn.trim() !== province.nameEn) patch.nameEn = nameEn.trim()
-          if (status !== province.status) patch.status = status
-          await updateProvince(province.id, patch)
+          const patch: { nameFa?: string; nameEn?: string; status?: 'active' | 'inactive' } = {};
+          if (nameFa.trim() !== province.nameFa) patch.nameFa = nameFa.trim();
+          if (nameEn.trim() !== province.nameEn) patch.nameEn = nameEn.trim();
+          if (status !== province.status) patch.status = status;
+          await updateProvince(province.id, patch);
         }
-        onSaved()
+        onSaved();
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Save failed')
+        setError(err instanceof Error ? err.message : 'Save failed');
       } finally {
-        setSaving(false)
+        setSaving(false);
       }
     },
-    [mode, province, nameFa, nameEn, status, onSaved],
-  )
+    [mode, province, nameFa, nameEn, status, onSaved]
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -162,9 +162,7 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
           <div className="space-y-4">
             {/* Persian name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Persian Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Persian Name</label>
               <input
                 type="text"
                 value={nameFa}
@@ -178,9 +176,7 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
 
             {/* English name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                English Name
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">English Name</label>
               <input
                 type="text"
                 value={nameEn}
@@ -194,9 +190,7 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
             {/* Status (edit mode only) */}
             {mode === 'edit' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as 'active' | 'inactive')}
@@ -210,9 +204,7 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
 
             {/* Error */}
             {error && (
-              <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">
-                {error}
-              </div>
+              <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</div>
             )}
 
             {/* Actions */}
@@ -237,7 +229,7 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
         </form>
       </div>
     </div>
-  )
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -245,40 +237,38 @@ function ProvinceFormModal({ mode, province, onClose, onSaved }: ProvinceFormMod
 // ---------------------------------------------------------------------------
 
 interface DeleteConfirmModalProps {
-  province: Province
-  onClose: () => void
-  onDeleted: () => void
+  province: Province;
+  onClose: () => void;
+  onDeleted: () => void;
 }
 
 function DeleteConfirmModal({ province, onClose, onDeleted }: DeleteConfirmModalProps) {
-  const [deleting, setDeleting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDelete = useCallback(async () => {
-    setDeleting(true)
-    setError(null)
+    setDeleting(true);
+    setError(null);
     try {
-      await deleteProvince(province.id)
-      onDeleted()
+      await deleteProvince(province.id);
+      onDeleted();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Delete failed')
-      setDeleting(false)
+      setError(err instanceof Error ? err.message : 'Delete failed');
+      setDeleting(false);
     }
-  }, [province.id, onDeleted])
+  }, [province.id, onDeleted]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6">
         <h2 className="text-lg font-semibold mb-2">Delete Province</h2>
         <p className="text-sm text-gray-600 mb-4">
-          Are you sure you want to deactivate <strong>{province.nameFa}</strong> ({province.nameEn})?
-          The province will be set to inactive.
+          Are you sure you want to deactivate <strong>{province.nameFa}</strong> ({province.nameEn}
+          )? The province will be set to inactive.
         </p>
 
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">
-            {error}
-          </div>
+          <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">{error}</div>
         )}
 
         <div className="flex justify-end gap-2">
@@ -301,7 +291,7 @@ function DeleteConfirmModal({ province, onClose, onDeleted }: DeleteConfirmModal
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -309,54 +299,54 @@ function DeleteConfirmModal({ province, onClose, onDeleted }: DeleteConfirmModal
 // ---------------------------------------------------------------------------
 
 export default function AdminGeographyPage() {
-  const [provinces, setProvinces] = useState<Province[]>([])
-  const [total, setTotal] = useState(0)
-  const [page, setPage] = useState(1)
-  const [limit] = useState(20)
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'active' | 'inactive' | ''>('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'inactive' | ''>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Modal state
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [editingProvince, setEditingProvince] = useState<Province | null>(null)
-  const [deletingProvince, setDeletingProvince] = useState<Province | null>(null)
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingProvince, setEditingProvince] = useState<Province | null>(null);
+  const [deletingProvince, setDeletingProvince] = useState<Province | null>(null);
 
   const fetchProvinces = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
       const data = await listProvinces({
         search: search || undefined,
         status: statusFilter || undefined,
         page,
         limit,
-      })
-      setProvinces(data.provinces)
-      setTotal(data.total)
+      });
+      setProvinces(data.provinces);
+      setTotal(data.total);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load provinces')
+      setError(err instanceof Error ? err.message : 'Failed to load provinces');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [search, statusFilter, page, limit])
+  }, [search, statusFilter, page, limit]);
 
   useEffect(() => {
-    fetchProvinces()
-  }, [fetchProvinces])
+    fetchProvinces();
+  }, [fetchProvinces]);
 
-  const totalPages = Math.ceil(total / limit)
+  const totalPages = Math.ceil(total / limit);
 
   // Debounced search
-  const [searchInput, setSearchInput] = useState('')
+  const [searchInput, setSearchInput] = useState('');
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearch(searchInput)
-      setPage(1)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [searchInput])
+      setSearch(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   // -----------------------------------------------------------------------
   // Loading state
@@ -367,7 +357,7 @@ export default function AdminGeographyPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-gray-500">Loading...</div>
       </div>
-    )
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -398,8 +388,8 @@ export default function AdminGeographyPage() {
         <select
           value={statusFilter}
           onChange={(e) => {
-            setStatusFilter(e.target.value as 'active' | 'inactive' | '')
-            setPage(1)
+            setStatusFilter(e.target.value as 'active' | 'inactive' | '');
+            setPage(1);
           }}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
@@ -411,9 +401,7 @@ export default function AdminGeographyPage() {
 
       {/* Error */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">
-          {error}
-        </div>
+        <div className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded mb-4">{error}</div>
       )}
 
       {/* Table */}
@@ -437,7 +425,9 @@ export default function AdminGeographyPage() {
             ) : (
               provinces.map((province) => (
                 <tr key={province.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3" dir="rtl">{province.nameFa}</td>
+                  <td className="px-4 py-3" dir="rtl">
+                    {province.nameFa}
+                  </td>
                   <td className="px-4 py-3">{province.nameEn}</td>
                   <td className="px-4 py-3">
                     <span
@@ -483,7 +473,8 @@ export default function AdminGeographyPage() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4 text-sm text-gray-600">
           <span>
-            Showing {Math.min((page - 1) * limit + 1, total)}–{Math.min(page * limit, total)} of {total}
+            Showing {Math.min((page - 1) * limit + 1, total)}–{Math.min(page * limit, total)} of{' '}
+            {total}
           </span>
           <div className="flex gap-2">
             <button
@@ -510,8 +501,8 @@ export default function AdminGeographyPage() {
           mode="add"
           onClose={() => setShowAddModal(false)}
           onSaved={() => {
-            setShowAddModal(false)
-            fetchProvinces()
+            setShowAddModal(false);
+            fetchProvinces();
           }}
         />
       )}
@@ -522,8 +513,8 @@ export default function AdminGeographyPage() {
           province={editingProvince}
           onClose={() => setEditingProvince(null)}
           onSaved={() => {
-            setEditingProvince(null)
-            fetchProvinces()
+            setEditingProvince(null);
+            fetchProvinces();
           }}
         />
       )}
@@ -533,11 +524,11 @@ export default function AdminGeographyPage() {
           province={deletingProvince}
           onClose={() => setDeletingProvince(null)}
           onDeleted={() => {
-            setDeletingProvince(null)
-            fetchProvinces()
+            setDeletingProvince(null);
+            fetchProvinces();
           }}
         />
       )}
     </div>
-  )
+  );
 }

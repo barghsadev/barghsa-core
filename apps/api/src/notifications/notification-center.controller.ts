@@ -8,23 +8,17 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { NotificationCenterService } from './notification-center.service.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { NotificationCenterService } from './notification-center.service.js';
 import type {
   NotificationCenterPage,
   CursorDirection,
   NotificationFilter,
-} from './notification-center.service.js'
+} from './notification-center.service.js';
 
 /**
  * Notification center API (E-05, T-05.02.02).
@@ -53,7 +47,7 @@ export class NotificationCenterController {
   constructor(private readonly notificationCenterService: NotificationCenterService) {}
 
   private async requireActiveProfile(req: AuthenticatedRequest): Promise<string | null> {
-    return this.notificationCenterService.resolveActiveProfileId(req.session.userId)
+    return this.notificationCenterService.resolveActiveProfileId(req.session.userId);
   }
 
   /**
@@ -79,35 +73,33 @@ export class NotificationCenterController {
     @Query('cursor') cursor?: string,
     @Query('limit') limit?: string,
     @Query('filter') filter?: string,
-    @Query('direction') direction?: string,
+    @Query('direction') direction?: string
   ): Promise<NotificationCenterPage> {
-    const profileId = await this.requireActiveProfile(req)
-    const normFilter: NotificationFilter =
-      filter === 'unread' ? 'unread' : 'all'
-    const normDirection: CursorDirection =
-      direction === 'newer' ? 'newer' : 'older'
-    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : undefined
+    const profileId = await this.requireActiveProfile(req);
+    const normFilter: NotificationFilter = filter === 'unread' ? 'unread' : 'all';
+    const normDirection: CursorDirection = direction === 'newer' ? 'newer' : 'older';
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : undefined;
     if (parsedLimit !== undefined && Number.isNaN(parsedLimit)) {
       throw new BadRequestException({
         statusCode: 400,
         error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
         message: 'Invalid limit',
-      })
+      });
     }
 
     const options: {
-      cursor?: string
-      limit?: number
-      filter: NotificationFilter
-      direction: CursorDirection
+      cursor?: string;
+      limit?: number;
+      filter: NotificationFilter;
+      direction: CursorDirection;
     } = {
       filter: normFilter,
       direction: normDirection,
-    }
-    if (cursor) options.cursor = cursor
-    if (parsedLimit !== undefined) options.limit = parsedLimit
+    };
+    if (cursor) options.cursor = cursor;
+    if (parsedLimit !== undefined) options.limit = parsedLimit;
 
-    return this.notificationCenterService.list(profileId, options, req.session.userId)
+    return this.notificationCenterService.list(profileId, options, req.session.userId);
   }
 
   /**
@@ -121,9 +113,12 @@ export class NotificationCenterController {
   @ApiOperation({ summary: 'Fetch the current unread notification count' })
   @ApiResponse({ status: 200, description: '{ unread_count }' })
   async unreadCount(@Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req)
-    const unread_count = await this.notificationCenterService.countUnread(profileId, req.session.userId)
-    return { unread_count }
+    const profileId = await this.requireActiveProfile(req);
+    const unread_count = await this.notificationCenterService.countUnread(
+      profileId,
+      req.session.userId
+    );
+    return { unread_count };
   }
 
   /**
@@ -136,12 +131,15 @@ export class NotificationCenterController {
   @ApiOperation({ summary: 'Mark all notifications read' })
   @ApiResponse({ status: 200, description: '{ marked, unread_count }' })
   async markAllRead(@Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req)
-    const marked = await this.notificationCenterService.markAllRead(profileId, req.session.userId)
+    const profileId = await this.requireActiveProfile(req);
+    const marked = await this.notificationCenterService.markAllRead(profileId, req.session.userId);
     // Re-query after the update so the reported count is accurate even if a
     // new notification arrives concurrently between the UPDATE and the reply.
-    const unread_count = await this.notificationCenterService.countUnread(profileId, req.session.userId)
-    return { marked, unread_count }
+    const unread_count = await this.notificationCenterService.countUnread(
+      profileId,
+      req.session.userId
+    );
+    return { marked, unread_count };
   }
 
   /**
@@ -156,9 +154,12 @@ export class NotificationCenterController {
   @ApiResponse({ status: 200, description: '{ id, is_read, unread_count }' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
   async markRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req)
-    await this.notificationCenterService.markRead(profileId, id, req.session.userId)
-    const unreadCount = await this.notificationCenterService.countUnread(profileId, req.session.userId)
-    return { id, is_read: true, unread_count: unreadCount }
+    const profileId = await this.requireActiveProfile(req);
+    await this.notificationCenterService.markRead(profileId, id, req.session.userId);
+    const unreadCount = await this.notificationCenterService.countUnread(
+      profileId,
+      req.session.userId
+    );
+    return { id, is_read: true, unread_count: unreadCount };
   }
 }

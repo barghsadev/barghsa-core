@@ -1,6 +1,6 @@
-import { Controller, Get, Logger } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { BrandConfigService } from '../admin/brand-config.service.js'
+import { Controller, Get, Logger } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BrandConfigService } from '../admin/brand-config.service.js';
 
 /**
  * Public brand configuration DTO — safe for unauthenticated consumption.
@@ -9,14 +9,14 @@ import { BrandConfigService } from '../admin/brand-config.service.js'
  * and returns only the frontend-facing config values.
  */
 export interface PublicBrandConfigDto {
-  appTitle: string
-  slogan: string
-  primaryColor: string
-  secondaryColor: string
-  accentColor: string
-  logoUrl: string | null
-  faviconUrl: string | null
-  darkMode: boolean
+  appTitle: string;
+  slogan: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  logoUrl: string | null;
+  faviconUrl: string | null;
+  darkMode: boolean;
 }
 
 /**
@@ -30,11 +30,9 @@ export interface PublicBrandConfigDto {
 @ApiTags('Public')
 @Controller('api/public')
 export class PublicBrandingController {
-  private readonly logger = new Logger(PublicBrandingController.name)
+  private readonly logger = new Logger(PublicBrandingController.name);
 
-  constructor(
-    private readonly brandConfigService: BrandConfigService,
-  ) {}
+  constructor(private readonly brandConfigService: BrandConfigService) {}
 
   /**
    * GET /api/public/branding/config
@@ -47,9 +45,9 @@ export class PublicBrandingController {
   @ApiResponse({ status: 200, description: 'Active brand configuration for theming.' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async getActiveBrandConfig(): Promise<PublicBrandConfigDto> {
-    const config = await this.brandConfigService.getActiveConfig()
+    const config = await this.brandConfigService.getActiveConfig();
 
-    const brandConfig = config.config as Record<string, unknown>
+    const brandConfig = config.config as Record<string, unknown>;
 
     return {
       appTitle: (brandConfig.appTitle as string) ?? 'Barghsa',
@@ -60,6 +58,6 @@ export class PublicBrandingController {
       logoUrl: (brandConfig.logoUrl as string | null) ?? null,
       faviconUrl: (brandConfig.faviconUrl as string | null) ?? null,
       darkMode: (brandConfig.darkMode as boolean) ?? false,
-    }
+    };
   }
 }

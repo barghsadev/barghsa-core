@@ -15,8 +15,5 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "references": [
-    {"path": "../shared"},
-    {"path": "../i18n"}
-  ]
+  "references": [{ "path": "../shared" }, { "path": "../i18n" }]
 }

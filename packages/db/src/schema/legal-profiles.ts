@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm'
-import { text, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
+import { sql } from 'drizzle-orm';
+import { text, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
 
 /**
  * Company types reference table (T-03.02.03).
@@ -20,7 +20,7 @@ export const companyTypes = pgTable('company_types', {
 
   /** Company type name in Persian. */
   nameFa: text('name_fa').notNull(),
-})
+});
 
 /**
  * Legal profiles extended data table (T-03.02.03).
@@ -45,65 +45,58 @@ export const companyTypes = pgTable('company_types', {
  * - `representative_relationship` — representative's relationship to entity.
  * - `created_at` / `updated_at` — audit columns.
  */
-export const legalProfiles = pgTable(
-  'legal_profiles',
-  {
-    /** UUIDv7 primary key (same as profiles.id). */
-    id: uuidv7('id').primaryKey().notNull(),
+export const legalProfiles = pgTable('legal_profiles', {
+  /** UUIDv7 primary key (same as profiles.id). */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** Registered legal entity name. */
-    legalName: text('legal_name').notNull(),
+  /** Registered legal entity name. */
+  legalName: text('legal_name').notNull(),
 
-    /** 11-digit Iranian national identifier for legal entities. */
-    nationalIdentifier: text('national_identifier').notNull(),
+  /** 11-digit Iranian national identifier for legal entities. */
+  nationalIdentifier: text('national_identifier').notNull(),
 
-    /** Company registration number. */
-    registrationNumber: text('registration_number').notNull(),
+  /** Company registration number. */
+  registrationNumber: text('registration_number').notNull(),
 
-    /** FK to company_types. */
-    companyTypeId: text('company_type_id'),
+  /** FK to company_types. */
+  companyTypeId: text('company_type_id'),
 
-    /** Optional registration date. */
-    registrationDate: text('registration_date'),
+  /** Optional registration date. */
+  registrationDate: text('registration_date'),
 
-    /** Optional economic code. */
-    economicCode: text('economic_code'),
+  /** Optional economic code. */
+  economicCode: text('economic_code'),
 
-    /** Optional official phone number. */
-    officialPhone: text('official_phone'),
+  /** Optional official phone number. */
+  officialPhone: text('official_phone'),
 
-    /** Optional official email. */
-    officialEmail: text('official_email'),
+  /** Optional official email. */
+  officialEmail: text('official_email'),
 
-    /** Official address province ID. */
-    officialProvinceId: text('official_province_id'),
+  /** Official address province ID. */
+  officialProvinceId: text('official_province_id'),
 
-    /** Official address city ID. */
-    officialCityId: text('official_city_id'),
+  /** Official address city ID. */
+  officialCityId: text('official_city_id'),
 
-    /** Official address free text. */
-    officialFullAddress: text('official_full_address'),
+  /** Official address free text. */
+  officialFullAddress: text('official_full_address'),
 
-    /** Official address postal code. */
-    officialPostalCode: text('official_postal_code'),
+  /** Official address postal code. */
+  officialPostalCode: text('official_postal_code'),
 
-    /** Authorized representative's title/position. */
-    representativeTitle: text('representative_title').notNull(),
+  /** Authorized representative's title/position. */
+  representativeTitle: text('representative_title').notNull(),
 
-    /** Representative's relationship to the entity. */
-    representativeRelationship: text('representative_relationship').notNull(),
+  /** Representative's relationship to the entity. */
+  representativeRelationship: text('representative_relationship').notNull(),
 
-    /** When the legal profile was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** When the legal profile was created. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the legal_profiles and company_types tables.
@@ -147,4 +140,4 @@ export const createLegalProfilesTables = sql`
   CREATE UNIQUE INDEX IF NOT EXISTS idx_legal_profiles_national_identifier
     ON legal_profiles (national_identifier)
     WHERE national_identifier IS NOT NULL;
-`
+`;

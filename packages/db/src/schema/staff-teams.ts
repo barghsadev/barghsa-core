@@ -1,7 +1,17 @@
-import { text, boolean, jsonb, uuid, pgTable, timestamp, primaryKey, check, unique } from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
-import { baseColumns } from '../base-table.js'
-import { users } from './users.js'
+import {
+  text,
+  boolean,
+  jsonb,
+  uuid,
+  pgTable,
+  timestamp,
+  primaryKey,
+  check,
+  unique,
+} from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { baseColumns } from '../base-table.js';
+import { users } from './users.js';
 
 /**
  * Staff teams (S-09.08, T-09.08.02).
@@ -26,21 +36,28 @@ import { users } from './users.js'
  *
  * @module db/schema
  */
-export const staffTeams = pgTable('staff_teams', {
-  ...baseColumns,
-  leadUserId: text('lead_user_id').references(() => users.userId, {onDelete:'set null'}),
-  /** Display name, unique across teams. */
-  name: text('name').notNull(),
+export const staffTeams = pgTable(
+  'staff_teams',
+  {
+    ...baseColumns,
+    leadUserId: text('lead_user_id').references(() => users.userId, { onDelete: 'set null' }),
+    /** Display name, unique across teams. */
+    name: text('name').notNull(),
 
-  /** Free-form description (nullable). */
-  description: text('description'),
+    /** Free-form description (nullable). */
+    description: text('description'),
 
-  /** Skill tags used by expertise/load assignment (JSONB array of text). */
-  skillTags: jsonb('skill_tags').$type<string[]>().notNull().default([]),
+    /** Skill tags used by expertise/load assignment (JSONB array of text). */
+    skillTags: jsonb('skill_tags').$type<string[]>().notNull().default([]),
 
-  /** Soft-disable flag; disabled teams are never auto-assigned. */
-  isActive: boolean('is_active').notNull().default(true),
-},table=>[unique('uq_st_name').on(table.name),check('chk_st_name_length',sql`char_length(${table.name}) BETWEEN 1 AND 80`)])
+    /** Soft-disable flag; disabled teams are never auto-assigned. */
+    isActive: boolean('is_active').notNull().default(true),
+  },
+  (table) => [
+    unique('uq_st_name').on(table.name),
+    check('chk_st_name_length', sql`char_length(${table.name}) BETWEEN 1 AND 80`),
+  ]
+);
 
 /**
  * Staff team membership (S-09.08, T-09.08.02).
@@ -51,23 +68,39 @@ export const staffTeams = pgTable('staff_teams', {
  *
  * The schema and production migration retain the membership uniqueness rule.
  */
-export const staffTeamMembers = pgTable('staff_team_members', {
-  ...baseColumns,
-  /** Owning team (UUID PK of staff_teams). */
-  teamId: uuid('team_id')
-    .notNull()
-    .references(() => staffTeams.id, { onDelete: 'cascade' }),
+export const staffTeamMembers = pgTable(
+  'staff_team_members',
+  {
+    ...baseColumns,
+    /** Owning team (UUID PK of staff_teams). */
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => staffTeams.id, { onDelete: 'cascade' }),
 
-  /** Member user. */
-  userId: text('user_id')
-    .notNull()
-    .references(() => users.userId, { onDelete: 'cascade' }),
-},table=>[unique('uq_stm_team_member').on(table.teamId,table.userId)])
+    /** Member user. */
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
+  },
+  (table) => [unique('uq_stm_team_member').on(table.teamId, table.userId)]
+);
 
 /** Durable round-robin position, committed with the new work item. */
-export const staffAssignmentCursors = pgTable('staff_assignment_cursors', {
-  teamId: uuid('team_id').notNull().references(() => staffTeams.id, {onDelete:'cascade'}),
-  workType: text('work_type').notNull(),
-  lastUserId: text('last_user_id').references(() => users.userId, {onDelete:'set null'}),
-  updatedAt: timestamp('updated_at',{withTimezone:true,mode:'date'}).notNull().defaultNow(),
-}, table => [primaryKey({columns:[table.teamId,table.workType]}),check('staff_assignment_cursors_work_type_check',sql`${table.workType} IN ('ticket','verification_case')`)])
+export const staffAssignmentCursors = pgTable(
+  'staff_assignment_cursors',
+  {
+    teamId: uuid('team_id')
+      .notNull()
+      .references(() => staffTeams.id, { onDelete: 'cascade' }),
+    workType: text('work_type').notNull(),
+    lastUserId: text('last_user_id').references(() => users.userId, { onDelete: 'set null' }),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.teamId, table.workType] }),
+    check(
+      'staff_assignment_cursors_work_type_check',
+      sql`${table.workType} IN ('ticket','verification_case')`
+    ),
+  ]
+);

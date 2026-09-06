@@ -1,5 +1,5 @@
-export { KnowledgeBasesModule } from './knowledge-bases.module.js'
-export { KnowledgeBasesService } from './knowledge-bases.service.js'
+export { KnowledgeBasesModule } from './knowledge-bases.module.js';
+export { KnowledgeBasesService } from './knowledge-bases.service.js';
 export {
   KnowledgeBasesController,
   KbGroupsController,
@@ -9,4 +9,4 @@ export {
   CreateKbGroupSchema,
   UpdateKbGroupSchema,
   AddGroupMemberSchema,
-} from './knowledge-bases.controller.js'
+} from './knowledge-bases.controller.js';

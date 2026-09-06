@@ -1,5 +1,5 @@
-export { AiPoliciesModule } from './ai-policies.module.js'
-export { AiPoliciesService } from './ai-policies.service.js'
+export { AiPoliciesModule } from './ai-policies.module.js';
+export { AiPoliciesService } from './ai-policies.service.js';
 export {
   PoliciesController,
   PolicyGroupsController,
@@ -8,4 +8,4 @@ export {
   CreatePolicyGroupSchema,
   UpdatePolicyGroupSchema,
   AddGroupMemberSchema,
-} from './ai-policies.controller.js'
+} from './ai-policies.controller.js';

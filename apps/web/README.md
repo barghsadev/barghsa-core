@@ -17,9 +17,9 @@ The task name references "TanStack Start" because `@tanstack/start` is the SSR f
 
 ### Scripts
 
-| Script | Description |
-|--------|-------------|
-| `dev` | Start Vite dev server |
-| `build` | Production build to `dist/` |
-| `preview` | Preview production build |
-| `typecheck` | TypeScript type checking |
+| Script      | Description                 |
+| ----------- | --------------------------- |
+| `dev`       | Start Vite dev server       |
+| `build`     | Production build to `dist/` |
+| `preview`   | Preview production build    |
+| `typecheck` | TypeScript type checking    |

@@ -1,7 +1,7 @@
-import { sql } from 'drizzle-orm'
-import { bigint, integer, text, uuid } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { bigint, integer, text, uuid } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { users } from './users';
 
 /**
  * Contract templates (T-09.12.04) — admin-managed document templates
@@ -54,7 +54,7 @@ export const contractTemplates = createTable('contract_templates', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /**
  * Append-only version history (T-09.12.04).
@@ -64,38 +64,38 @@ export const contractTemplates = createTable('contract_templates', {
  * `placeholders` is immutable after upload — it is exactly what the
  * regex extracted from that file at upload time.
  */
-export const contractTemplateVersions = createTable(
-  'contract_template_versions',
-  {
-    /** FK contract_templates.id, RESTRICT (history is never orphaned). */
-    templateId: uuid('template_id')
-      .notNull()
-      .references(() => contractTemplates.id, { onDelete: 'restrict' }),
+export const contractTemplateVersions = createTable('contract_template_versions', {
+  /** FK contract_templates.id, RESTRICT (history is never orphaned). */
+  templateId: uuid('template_id')
+    .notNull()
+    .references(() => contractTemplates.id, { onDelete: 'restrict' }),
 
-    /** 1-based per-template sequence; UNIQUE per template. */
-    versionNumber: integer('version_number').notNull(),
+  /** 1-based per-template sequence; UNIQUE per template. */
+  versionNumber: integer('version_number').notNull(),
 
-    /** Object-storage key for the template file (UNIQUE). */
-    storageKey: text('storage_key').notNull(),
+  /** Object-storage key for the template file (UNIQUE). */
+  storageKey: text('storage_key').notNull(),
 
-    /** Original upload file name. */
-    fileName: text('file_name').notNull(),
+  /** Original upload file name. */
+  fileName: text('file_name').notNull(),
 
-    /** MIME content type as provided (sanitized by the service). */
-    contentType: text('content_type'),
+  /** MIME content type as provided (sanitized by the service). */
+  contentType: text('content_type'),
 
-    /** File size in bytes. */
-    fileSize: bigint('file_size', { mode: 'number' }),
+  /** File size in bytes. */
+  fileSize: bigint('file_size', { mode: 'number' }),
 
-    /** Placeholders extracted at upload time; never edited afterwards. */
-    placeholders: text('placeholders').array().notNull().default(sql`'{}'`),
+  /** Placeholders extracted at upload time; never edited afterwards. */
+  placeholders: text('placeholders')
+    .array()
+    .notNull()
+    .default(sql`'{}'`),
 
-    /** Admin who uploaded this version. */
-    createdBy: text('created_by')
-      .notNull()
-      .references(() => users.userId, { onDelete: 'restrict' }),
-  },
-)
+  /** Admin who uploaded this version. */
+  createdBy: text('created_by')
+    .notNull()
+    .references(() => users.userId, { onDelete: 'restrict' }),
+});
 
 /**
  * Contract-type → template links (no-delete seam, S-04.5.03).
@@ -113,4 +113,4 @@ export const contractTypeTemplates = createTable('contract_type_templates', {
   templateId: uuid('template_id')
     .notNull()
     .references(() => contractTemplates.id, { onDelete: 'restrict' }),
-})
+});

@@ -1,6 +1,6 @@
-import { createVitestConfig } from '../../packages/tsconfig/vitest.base.config'
-import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { createVitestConfig } from '../../packages/tsconfig/vitest.base.config';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default createVitestConfig({
   plugins: [react()],
@@ -14,4 +14,4 @@ export default createVitestConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-})
+});

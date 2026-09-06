@@ -1,9 +1,9 @@
-import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
-import { SessionService } from './session.service.js'
-import { SessionController } from './session.controller.js'
-import { CsrfGuard } from './csrf.guard.js'
-import { SessionContextMiddleware } from './session-context.middleware.js'
+import { Module, RequestMethod, type MiddlewareConsumer, type NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { SessionService } from './session.service.js';
+import { SessionController } from './session.controller.js';
+import { CsrfGuard } from './csrf.guard.js';
+import { SessionContextMiddleware } from './session-context.middleware.js';
 
 /**
  * Session module (T-02.02.01 / T-02.02.02 / T-02.02.03).
@@ -31,6 +31,8 @@ import { SessionContextMiddleware } from './session-context.middleware.js'
 })
 export class SessionModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(SessionContextMiddleware).forRoutes({ path: '{*path}', method: RequestMethod.ALL })
+    consumer
+      .apply(SessionContextMiddleware)
+      .forRoutes({ path: '{*path}', method: RequestMethod.ALL });
   }
 }

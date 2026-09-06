@@ -35,9 +35,11 @@ export const RATE_LIMIT_KEY = 'rate_limit:config';
  * login() { ... }
  * ```
  */
-export const RateLimit = (...options: RateLimitOptions[]): MethodDecorator & ClassDecorator =>
+export const RateLimit =
+  (...options: RateLimitOptions[]): MethodDecorator & ClassDecorator =>
   (target: object, _key?: string | symbol, descriptor?: PropertyDescriptor): void => {
     const subject = descriptor?.value ?? target;
-    const existing = Reflect.getOwnMetadata(RATE_LIMIT_KEY, subject) as RateLimitOptions[] | undefined;
+    const existing = Reflect.getOwnMetadata(RATE_LIMIT_KEY, subject) as
+      RateLimitOptions[] | undefined;
     Reflect.defineMetadata(RATE_LIMIT_KEY, [...(existing ?? []), ...options], subject);
   };

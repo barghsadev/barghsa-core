@@ -1,11 +1,15 @@
-import { defaultInboxContent, defaultInboxLink, renderTemplate } from '@barghsa/shared/notifications'
-export { relativeLinkRoute } from '@barghsa/shared/notifications'
-import { getDbPool } from '@barghsa/db'
+import {
+  defaultInboxContent,
+  defaultInboxLink,
+  renderTemplate,
+} from '@barghsa/shared/notifications';
+export { relativeLinkRoute } from '@barghsa/shared/notifications';
+import { getDbPool } from '@barghsa/db';
 import type {
   INotificationTransport,
   NotificationSendPayload,
   NotificationSendResult,
-} from '@barghsa/shared/notifications'
+} from '@barghsa/shared/notifications';
 
 /**
  * In-app notification transport adapter (E-05, T-05.02.01).
@@ -37,7 +41,7 @@ import type {
  * delivery failure — the row must persist for in-app to count as delivered).
  */
 export class InAppNotificationTransport implements INotificationTransport {
-  readonly channel = 'in_app' as const
+  readonly channel = 'in_app' as const;
 
   /**
    * @param pool Optional query pool override for tests; defaults to the shared
@@ -48,30 +52,58 @@ export class InAppNotificationTransport implements INotificationTransport {
 
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
     if (!payload.profileId && !payload.recipientId) {
-      throw new Error('in_app transport requires a profile or account recipient')
+      throw new Error('in_app transport requires a profile or account recipient');
     }
 
-    const pool = this.pool ?? getDbPool()
-    const deliveryKey = payload.outboxId ? `outbox:${payload.outboxId}` : `transport:${payload.idempotencyKey}`
-    const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId
-    const existing = await pool.query(`SELECT id FROM in_app_notifications WHERE delivery_key=$1
-      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text`, [deliveryKey,payload.profileId,recipient])
-    if(existing.rows[0])return {status:'delivered',providerRef:existing.rows[0].id}
-    const content=defaultInboxContent(payload.eventKey,payload.payload)
-    const templates=await pool.query(`SELECT locale,subject,body_template,variables FROM notification_templates
-      WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,[payload.eventKey])
-    for(const template of templates.rows){
-      if(template.locale!=='fa'&&template.locale!=='en')throw new Error('Invalid inbox template locale')
-      if(!Array.isArray(template.variables)||typeof template.body_template!=='string')throw new Error('Invalid inbox template')
-      const names=template.variables.map((item:unknown)=>typeof item==='string'?item.trim():
-        item&&typeof item==='object'&&'name' in item&&typeof item.name==='string'?item.name.trim():'')
-      if(names.some((name:string)=>!name))throw new Error('Invalid inbox template variables')
-      const title=renderTemplate(template.subject ?? content[template.locale as 'fa'|'en'].title,names,{data:payload.payload,escapeValues:false})
-      const body=renderTemplate(template.body_template,names,{data:payload.payload,escapeValues:false})
-      if(title.missing.length||title.unknown.length||body.missing.length||body.unknown.length)throw new Error('Inbox template data incomplete')
-      content[template.locale as 'fa'|'en']={title:title.output,body:body.output}
+    const pool = this.pool ?? getDbPool();
+    const deliveryKey = payload.outboxId
+      ? `outbox:${payload.outboxId}`
+      : `transport:${payload.idempotencyKey}`;
+    const recipient = payload.recipientId === payload.profileId ? null : payload.recipientId;
+    const existing = await pool.query(
+      `SELECT id FROM in_app_notifications WHERE delivery_key=$1
+      AND profile_id IS NOT DISTINCT FROM $2::uuid AND recipient_user_id IS NOT DISTINCT FROM $3::text`,
+      [deliveryKey, payload.profileId, recipient]
+    );
+    if (existing.rows[0]) return { status: 'delivered', providerRef: existing.rows[0].id };
+    const content = defaultInboxContent(payload.eventKey, payload.payload);
+    const templates = await pool.query(
+      `SELECT locale,subject,body_template,variables FROM notification_templates
+      WHERE event_key=$1 AND channel='in_app' AND status='active' AND is_active=true`,
+      [payload.eventKey]
+    );
+    for (const template of templates.rows) {
+      if (template.locale !== 'fa' && template.locale !== 'en')
+        throw new Error('Invalid inbox template locale');
+      if (!Array.isArray(template.variables) || typeof template.body_template !== 'string')
+        throw new Error('Invalid inbox template');
+      const names = template.variables.map((item: unknown) =>
+        typeof item === 'string'
+          ? item.trim()
+          : item && typeof item === 'object' && 'name' in item && typeof item.name === 'string'
+            ? item.name.trim()
+            : ''
+      );
+      if (names.some((name: string) => !name)) throw new Error('Invalid inbox template variables');
+      const title = renderTemplate(
+        template.subject ?? content[template.locale as 'fa' | 'en'].title,
+        names,
+        { data: payload.payload, escapeValues: false }
+      );
+      const body = renderTemplate(template.body_template, names, {
+        data: payload.payload,
+        escapeValues: false,
+      });
+      if (
+        title.missing.length ||
+        title.unknown.length ||
+        body.missing.length ||
+        body.unknown.length
+      )
+        throw new Error('Inbox template data incomplete');
+      content[template.locale as 'fa' | 'en'] = { title: title.output, body: body.output };
     }
-    const linkRoute = defaultInboxLink(payload.eventKey,payload.payload)
+    const linkRoute = defaultInboxLink(payload.eventKey, payload.payload);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inserted: { rows: Array<{ id: string }> } = await pool.query(
       `INSERT INTO in_app_notifications
@@ -87,15 +119,17 @@ export class InAppNotificationTransport implements INotificationTransport {
         `notifications.${payload.eventKey}.body`,
         JSON.stringify(payload.payload ?? {}),
         linkRoute,
-        deliveryKey,recipient,JSON.stringify(content),
-      ],
-    )
+        deliveryKey,
+        recipient,
+        JSON.stringify(content),
+      ]
+    );
 
-    const id = inserted.rows[0]?.id
+    const id = inserted.rows[0]?.id;
     if (!id) {
-      throw new Error('in_app transport: insert did not return a row id')
+      throw new Error('in_app transport: insert did not return a row id');
     }
 
-    return { providerRef: id, status: 'delivered' }
+    return { providerRef: id, status: 'delivered' };
   }
 }

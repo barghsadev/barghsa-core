@@ -1,5 +1,5 @@
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,26 +12,26 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   DualApprovalService,
   DUAL_APPROVAL_ACTION_TYPES,
   type ApprovalRequestDto,
-} from './dual-approval.service.js'
-import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance'
+} from './dual-approval.service.js';
+import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 
 /** Zod schema for the reject-request body (reason is mandatory). */
 export const RejectApprovalRequestSchema = z.object({
   reason: z.string().trim().min(1).max(APPROVAL_REVIEW_REASON_MAX_LENGTH),
-})
+});
 
 /** Human-readable labels for the supported queue statuses. */
-const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
+const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const;
 
 /**
  * Dual-approval workflow controller (S-09.07, T-09.07.02).
@@ -52,7 +52,7 @@ const QUEUE_STATUSES = ['pending', 'approved', 'rejected'] as const
 @Controller('api/admin/approval-requests')
 @UseGuards(SessionAuthGuard, StepUpGuard)
 export class DualApprovalController {
-  private readonly logger = new Logger(DualApprovalController.name)
+  private readonly logger = new Logger(DualApprovalController.name);
 
   constructor(private readonly dualApprovalService: DualApprovalService) {}
 
@@ -64,16 +64,16 @@ export class DualApprovalController {
   private assertFinancialEditPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:financial:edit')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`,
-      )
+        `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required for dual-approval management',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -114,15 +114,11 @@ export class DualApprovalController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async createApprovalRequest(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.dualApprovalService.createApprovalRequest(
-      rawBody,
-      req.session.userId,
-      ip,
-    )
+    this.assertFinancialEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.dualApprovalService.createApprovalRequest(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -143,16 +139,16 @@ export class DualApprovalController {
     @Query('status') status: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto[]> {
-    this.assertFinancialEditPermission(req)
-    const options: Parameters<DualApprovalService['listApprovalRequests']>[0] = {}
+    this.assertFinancialEditPermission(req);
+    const options: Parameters<DualApprovalService['listApprovalRequests']>[0] = {};
     if (status !== undefined) {
-      options.status = status as NonNullable<typeof options.status>
+      options.status = status as NonNullable<typeof options.status>;
     }
-    if (limit !== undefined) options.limit = Number(limit)
-    if (offset !== undefined) options.offset = Number(offset)
-    return this.dualApprovalService.listApprovalRequests(options)
+    if (limit !== undefined) options.limit = Number(limit);
+    if (offset !== undefined) options.offset = Number(offset);
+    return this.dualApprovalService.listApprovalRequests(options);
   }
 
   /**
@@ -173,11 +169,11 @@ export class DualApprovalController {
   @ApiResponse({ status: 409, description: 'Request already resolved' })
   async approveApprovalRequest(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.dualApprovalService.approveApprovalRequest(id, req.session.userId, ip)
+    this.assertFinancialEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.dualApprovalService.approveApprovalRequest(id, req.session.userId, ip);
   }
 
   /**
@@ -212,11 +208,11 @@ export class DualApprovalController {
   async rejectApprovalRequest(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ApprovalRequestDto> {
-    this.assertFinancialEditPermission(req)
+    this.assertFinancialEditPermission(req);
 
-    const parsed = RejectApprovalRequestSchema.safeParse(rawBody)
+    const parsed = RejectApprovalRequestSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -224,16 +220,16 @@ export class DualApprovalController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'reason is required when rejecting an approval request',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.dualApprovalService.rejectApprovalRequest(
       id,
       req.session.userId,
       ip,
-      parsed.data.reason,
-    )
+      parsed.data.reason
+    );
   }
 }

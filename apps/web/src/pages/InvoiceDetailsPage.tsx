@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance'
-import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react'
-import { useLocale } from '../hooks/useLocale.js'
+import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n';
+import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
+import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
+import { useLocale } from '../hooks/useLocale.js';
 import {
   InvoiceRequestError,
   fetchInvoiceDetails,
@@ -13,11 +13,11 @@ import {
   stateI18nKey,
   type CustomerInvoiceDetails,
   type CustomerInvoiceNode,
-} from '../lib/customer-invoices.js'
-import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js'
+} from '../lib/customer-invoices.js';
+import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js';
 
 interface InvoiceDetailsPageProps {
-  invoiceId: string
+  invoiceId: string;
 }
 
 /**
@@ -28,36 +28,36 @@ interface InvoiceDetailsPageProps {
  * the change. RTL-aware, profile-scoped via the details API.
  */
 export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
-  const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null)
-  const [error, setError] = useState<'not-found' | 'load' | null>(null)
-  const [loading, setLoading] = useState(true)
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
+  const [details, setDetails] = useState<CustomerInvoiceDetails | null>(null);
+  const [error, setError] = useState<'not-found' | 'load' | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false
-    setLoading(true)
-    setError(null)
-    setDetails(null)
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    setDetails(null);
     fetchInvoiceDetails(invoiceId)
       .then((payload) => {
-        if (!cancelled) setDetails(payload)
+        if (!cancelled) setDetails(payload);
       })
       .catch((err: unknown) => {
-        if (cancelled) return
+        if (cancelled) return;
         if (err instanceof InvoiceRequestError && err.status === 404) {
-          setError('not-found')
+          setError('not-found');
         } else {
-          setError('load')
+          setError('load');
         }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
+        if (!cancelled) setLoading(false);
+      });
     return () => {
-      cancelled = true
-    }
-  }, [invoiceId])
+      cancelled = true;
+    };
+  }, [invoiceId]);
 
   return (
     <div className="mx-auto max-w-3xl space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -66,19 +66,14 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
           to="/invoices"
           className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
         >
-          <ArrowRightIcon
-            className={`h-4 w-4 ${isRtl ? '' : 'rotate-180'}`}
-            aria-hidden="true"
-          />
+          <ArrowRightIcon className={`h-4 w-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
           {t('invoices.details.back', locale)}
         </Link>
       </nav>
 
       <header className="flex items-center gap-2">
         <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-        <h1 className="text-2xl font-bold text-gray-900">
-          {t('invoices.details.title', locale)}
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('invoices.details.title', locale)}</h1>
       </header>
 
       {loading ? (
@@ -98,18 +93,14 @@ export function InvoiceDetailsPage({ invoiceId }: InvoiceDetailsPageProps) {
         <InvoiceDetailsBody details={details} />
       ) : null}
     </div>
-  )
+  );
 }
 
 function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
-  const locale = useLocale()
-  const viewed = details.invoice
-  const original = details.chain.find(
-    (node) => node.invoiceId === details.originalInvoiceId,
-  )
-  const linked = details.chain.filter(
-    (node) => node.invoiceId !== details.originalInvoiceId,
-  )
+  const locale = useLocale();
+  const viewed = details.invoice;
+  const original = details.chain.find((node) => node.invoiceId === details.originalInvoiceId);
+  const linked = details.chain.filter((node) => node.invoiceId !== details.originalInvoiceId);
 
   return (
     <section aria-labelledby="invoice-chain-heading" className="space-y-3">
@@ -154,7 +145,7 @@ function InvoiceDetailsBody({ details }: { details: CustomerInvoiceDetails }) {
         <InvoiceBankReceiptUploadForm invoiceId={viewed.invoiceId} />
       ) : null}
     </section>
-  )
+  );
 }
 
 function InvoiceCard({
@@ -163,13 +154,13 @@ function InvoiceCard({
   current,
   showExplanation = false,
 }: {
-  node: CustomerInvoiceNode
-  heading: string
-  current: boolean
-  showExplanation?: boolean
+  node: CustomerInvoiceNode;
+  heading: string;
+  current: boolean;
+  showExplanation?: boolean;
 }) {
-  const locale = useLocale()
-  const explanation = node.explanation
+  const locale = useLocale();
+  const explanation = node.explanation;
 
   return (
     <article
@@ -182,9 +173,7 @@ function InvoiceCard({
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-semibold text-gray-900">{heading}</h3>
-        <p className="text-sm text-gray-600">
-          {t(stateI18nKey(node.state), locale)}
-        </p>
+        <p className="text-sm text-gray-600">{t(stateI18nKey(node.state), locale)}</p>
       </header>
 
       {showExplanation || explanation ? (
@@ -192,9 +181,7 @@ function InvoiceCard({
           data-testid={`invoice-explanation-${node.invoiceId}`}
           className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-950"
         >
-          <span className="font-medium">
-            {t('invoices.details.explanation', locale)}:{' '}
-          </span>
+          <span className="font-medium">{t('invoices.details.explanation', locale)}: </span>
           {explanation ?? t('invoices.details.noExplanation', locale)}
         </p>
       ) : null}
@@ -203,15 +190,13 @@ function InvoiceCard({
         <div>
           <dt className="text-gray-500">{t('invoices.details.total', locale)}</dt>
           <dd className="font-medium text-gray-900">
-            {formatIrr(node.totalAmount, locale)}{' '}
-            {t('invoices.details.currency', locale)}
+            {formatIrr(node.totalAmount, locale)} {t('invoices.details.currency', locale)}
           </dd>
         </div>
         <div>
           <dt className="text-gray-500">{t('invoices.details.paid', locale)}</dt>
           <dd className="font-medium text-gray-900">
-            {formatIrr(node.paidAmount, locale)}{' '}
-            {t('invoices.details.currency', locale)}
+            {formatIrr(node.paidAmount, locale)} {t('invoices.details.currency', locale)}
           </dd>
         </div>
         <div>
@@ -246,8 +231,7 @@ function InvoiceCard({
                 <td className="py-1">{line.description}</td>
                 <td className="py-1">{line.quantity}</td>
                 <td className="py-1">
-                  {formatIrr(line.lineTotal, locale)}{' '}
-                  {t('invoices.details.currency', locale)}
+                  {formatIrr(line.lineTotal, locale)} {t('invoices.details.currency', locale)}
                 </td>
               </tr>
             ))}
@@ -267,5 +251,5 @@ function InvoiceCard({
         </p>
       ) : null}
     </article>
-  )
+  );
 }

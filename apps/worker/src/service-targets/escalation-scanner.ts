@@ -1,13 +1,13 @@
-import type { Pool, PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
+import type { Pool, PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import {
   ESCALATION_POLICY_CONFIG_KEY,
   toEscalationPolicies,
   type EscalationLevelConfig,
   type ServiceResponseTargetType,
-} from '@barghsa/shared/admin'
-import { enqueueOutbox } from '../notifications/outbox-writer.js'
-import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js'
+} from '@barghsa/shared/admin';
+import { enqueueOutbox } from '../notifications/outbox-writer.js';
+import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js';
 
 /**
  * Service escalation scanner (S-09.08, T-09.08.03).
@@ -61,31 +61,31 @@ import { CASE_OPEN_STATUSES, TICKET_OPEN_STATUSES } from './breach-scanner.js'
  */
 
 /** Milliseconds per target hour. */
-const HOUR_MS = 3_600_000
+const HOUR_MS = 3_600_000;
 
 /** In-app/email notification event key for a service escalation. */
-export const SERVICE_ESCALATED_EVENT_KEY = 'admin.service_escalated'
+export const SERVICE_ESCALATED_EVENT_KEY = 'admin.service_escalated';
 
 /** Default number of escalation candidates processed per service type per scan. */
-export const DEFAULT_ESCALATION_BATCH_SIZE = 200
+export const DEFAULT_ESCALATION_BATCH_SIZE = 200;
 
 /** Outcome statistics of one escalation scan. */
 export interface EscalationScanResult {
   /** False when no config row is persisted (escalation not configured yet). */
-  enabled: boolean
+  enabled: boolean;
   /** Escalation tiers fired per service type. */
-  escalated: Record<ServiceResponseTargetType, { level2: number; level3: number }>
+  escalated: Record<ServiceResponseTargetType, { level2: number; level3: number }>;
   /** Episodes skipped because a concurrent scan already advanced them or the item recovered. */
-  skippedConcurrent: number
+  skippedConcurrent: number;
   /** Per-type failure messages; the other types still got scanned. */
-  errors: string[]
+  errors: string[];
 }
 
 /** Behavioural hook for one escalation domain (service type). */
 interface EscalationDomainSpec {
-  serviceType: ServiceResponseTargetType
+  serviceType: ServiceResponseTargetType;
   /** Statuses that count as "open and awaiting staff" (source re-verify). */
-  openStatuses: readonly string[]
+  openStatuses: readonly string[];
   /**
    * SQL template returning up to `$6` ledger rows due for the given
    * escalation tier.
@@ -97,14 +97,16 @@ interface EscalationDomainSpec {
    * `$5` open statuses (source re-verify), `$6` batch size.
    * Selects `l.id AS ledger_id`, `l.item_id`, and the responsible staff user.
    */
-  findDueSql: (baseColumn: 'alerted_at' | 'escalated_at') => string
+  findDueSql: (baseColumn: 'alerted_at' | 'escalated_at') => string;
 }
 
 const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
   {
     serviceType: 'ticket',
     openStatuses: TICKET_OPEN_STATUSES,
-    findDueSql: (column) => `SELECT l.id AS ledger_id, l.item_id, t.assigned_to AS responsible_user_id
+    findDueSql: (
+      column
+    ) => `SELECT l.id AS ledger_id, l.item_id, t.assigned_to AS responsible_user_id
         FROM service_breach_alerts l
         JOIN tickets t ON t.id = l.item_id::uuid
         WHERE l.service_type = $1
@@ -118,7 +120,9 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
   {
     serviceType: 'verification_case',
     openStatuses: CASE_OPEN_STATUSES,
-    findDueSql: (column) => `SELECT l.id AS ledger_id, l.item_id, COALESCE(vc.assigned_to,vc.created_by) AS responsible_user_id
+    findDueSql: (
+      column
+    ) => `SELECT l.id AS ledger_id, l.item_id, COALESCE(vc.assigned_to,vc.created_by) AS responsible_user_id
         FROM service_breach_alerts l
         JOIN verification_cases vc ON vc.id = l.item_id
         WHERE l.service_type = $1
@@ -129,7 +133,7 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
         ORDER BY l.updated_at ASC
         LIMIT $6`,
   },
-]
+];
 
 /**
  * SQL atomically advancing one episode to the next escalation tier.
@@ -140,43 +144,43 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
 const ADVANCE_SQL = `UPDATE service_breach_alerts
    SET escalation_level = $3, escalated_at = $4, updated_at = $4
    WHERE id = $1 AND escalation_level = $2
-   RETURNING id`
+   RETURNING id`;
 
 /** Human-readable in-app label per service type (both locales). */
 const SERVICE_TYPE_LABELS: Record<ServiceResponseTargetType, { fa: string; en: string }> = {
   ticket: { fa: 'تیکت', en: 'ticket' },
   verification_case: { fa: 'پرونده تأیید هویت', en: 'verification case' },
-}
+};
 
 export interface EscalationScanOptions {
   /** Query pool override for tests; defaults to the worker's shared pool. */
-  pool?: Pool
+  pool?: Pool;
   /** Clock override for tests. */
-  now?: () => Date
+  now?: () => Date;
   /** Outbox-enqueue override for tests; defaults to {@link enqueueOutbox}. */
-  enqueue?: typeof enqueueOutbox
+  enqueue?: typeof enqueueOutbox;
   /** Logger override for tests. */
-  logger?: Pick<Console, 'warn' | 'info'>
+  logger?: Pick<Console, 'warn' | 'info'>;
   /** Max escalation candidates processed per service type per scan (default 200). */
-  batchSize?: number
+  batchSize?: number;
 }
 
 const defaultLogger: Pick<Console, 'warn' | 'info'> = {
   warn: (msg: unknown) => console.warn(`[worker:escalation-scan] ${String(msg)}`),
   info: (msg: unknown) => console.log(`[worker:escalation-scan] ${String(msg)}`),
-}
+};
 
 /** A recipient profile resolved for notification delivery. */
 interface RecipientProfile {
-  id: string | null
-  userId: string
+  id: string | null;
+  userId: string;
 }
 
 /** A due-to-escalate ledger row. */
 interface DueRow {
-  ledger_id: string
-  item_id: string
-  responsible_user_id: string | null
+  ledger_id: string;
+  item_id: string;
+  responsible_user_id: string | null;
 }
 
 /**
@@ -188,87 +192,117 @@ interface DueRow {
  * re-enabling later resumes from the recorded tiers).
  */
 export async function scanServiceEscalations(
-  options: EscalationScanOptions = {},
+  options: EscalationScanOptions = {}
 ): Promise<EscalationScanResult> {
-  const pool = options.pool ?? getDbPool()
-  const now = options.now?.() ?? new Date()
-  const enqueue = options.enqueue ?? enqueueOutbox
-  const logger = options.logger ?? defaultLogger
-  const batchSize = options.batchSize ?? DEFAULT_ESCALATION_BATCH_SIZE
+  const pool = options.pool ?? getDbPool();
+  const now = options.now?.() ?? new Date();
+  const enqueue = options.enqueue ?? enqueueOutbox;
+  const logger = options.logger ?? defaultLogger;
+  const batchSize = options.batchSize ?? DEFAULT_ESCALATION_BATCH_SIZE;
 
   const result: EscalationScanResult = {
     enabled: true,
     escalated: { ticket: { level2: 0, level3: 0 }, verification_case: { level2: 0, level3: 0 } },
     skippedConcurrent: 0,
     errors: [],
-  }
+  };
 
   const configResult = await pool.query<{ value: unknown }>(
     `SELECT value FROM app_config WHERE key = $1`,
-    [ESCALATION_POLICY_CONFIG_KEY],
-  )
+    [ESCALATION_POLICY_CONFIG_KEY]
+  );
 
   if (configResult.rows.length === 0) {
-    result.enabled = false
-    return result
+    result.enabled = false;
+    return result;
   }
 
-  const policies = toEscalationPolicies(configResult.rows[0]!.value)
+  const policies = toEscalationPolicies(configResult.rows[0]!.value);
 
   for (const domain of ESCALATION_DOMAINS) {
-    const policy = policies[domain.serviceType]
-    if (!policy) continue // type disabled
+    const policy = policies[domain.serviceType];
+    if (!policy) continue; // type disabled
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Counters are applied only *after* the COMMIT below, so a partial
       // failure that rolls back the per-type transaction never reports
       // escalations that were not durably committed.
-      let tier2 = 0
-      let tier3 = 0
+      let tier2 = 0;
+      let tier3 = 0;
 
       // Level 2: assigned → team lead, measured from the breach alert.
       if (policy.level2.delayHours !== null) {
-        const due = await fetchDue(client, domain, policy.level2.delayHours, now, batchSize, 1, 'alerted_at')
+        const due = await fetchDue(
+          client,
+          domain,
+          policy.level2.delayHours,
+          now,
+          batchSize,
+          1,
+          'alerted_at'
+        );
         for (const candidate of due) {
           const outcome = await escalateOne(
-            client, enqueue, logger, domain, candidate,
-            policy.level2, /* fromLevel */ 1, /* toLevel */ 2, now,
-          )
-          if (outcome === 'escalated') tier2++
-          else if (outcome === 'concurrent') result.skippedConcurrent++
+            client,
+            enqueue,
+            logger,
+            domain,
+            candidate,
+            policy.level2,
+            /* fromLevel */ 1,
+            /* toLevel */ 2,
+            now
+          );
+          if (outcome === 'escalated') tier2++;
+          else if (outcome === 'concurrent') result.skippedConcurrent++;
         }
       }
 
       // Level 3: team lead → admin, measured from the level-2 escalation.
       if (policy.level3.delayHours !== null) {
-        const due = await fetchDue(client, domain, policy.level3.delayHours, now, batchSize, 2, 'escalated_at')
+        const due = await fetchDue(
+          client,
+          domain,
+          policy.level3.delayHours,
+          now,
+          batchSize,
+          2,
+          'escalated_at'
+        );
         for (const candidate of due) {
           const outcome = await escalateOne(
-            client, enqueue, logger, domain, candidate,
-            policy.level3, /* fromLevel */ 2, /* toLevel */ 3, now,
-          )
-          if (outcome === 'escalated') tier3++
-          else if (outcome === 'concurrent') result.skippedConcurrent++
+            client,
+            enqueue,
+            logger,
+            domain,
+            candidate,
+            policy.level3,
+            /* fromLevel */ 2,
+            /* toLevel */ 3,
+            now
+          );
+          if (outcome === 'escalated') tier3++;
+          else if (outcome === 'concurrent') result.skippedConcurrent++;
         }
       }
 
-      await client.query('COMMIT')
-      result.escalated[domain.serviceType].level2 += tier2
-      result.escalated[domain.serviceType].level3 += tier3
+      await client.query('COMMIT');
+      result.escalated[domain.serviceType].level2 += tier2;
+      result.escalated[domain.serviceType].level3 += tier3;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      const message = (error as Error)?.message ?? String(error)
-      result.errors.push(`${domain.serviceType}: ${message}`)
-      logger.warn(`Escalation scan failed for ${domain.serviceType}: ${message}`)
+      await client.query('ROLLBACK').catch(() => {});
+      const message = (error as Error)?.message ?? String(error);
+      result.errors.push(`${domain.serviceType}: ${message}`);
+      logger.warn(`Escalation scan failed for ${domain.serviceType}: ${message}`);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
-  return result
+  return result;
 }
 
 /** Fetch ledger rows due for one escalation tier, re-verified against the open item. */
@@ -279,9 +313,9 @@ async function fetchDue(
   now: Date,
   batchSize: number,
   expectedLevel: number,
-  baseColumn: 'alerted_at' | 'escalated_at',
+  baseColumn: 'alerted_at' | 'escalated_at'
 ): Promise<DueRow[]> {
-  const cutoff = new Date(now.getTime() - delayHours * HOUR_MS)
+  const cutoff = new Date(now.getTime() - delayHours * HOUR_MS);
   const rows = await client.query<DueRow>(domain.findDueSql(baseColumn), [
     domain.serviceType,
     expectedLevel,
@@ -289,8 +323,8 @@ async function fetchDue(
     now,
     domain.openStatuses,
     batchSize,
-  ])
-  return rows.rows
+  ]);
+  return rows.rows;
 }
 
 /**
@@ -316,17 +350,17 @@ async function escalateOne(
   level: EscalationLevelConfig,
   fromLevel: number,
   toLevel: number,
-  now: Date,
+  now: Date
 ): Promise<'escalated' | 'concurrent' | 'no_recipient'> {
   // Resolve recipients first. No state is changed before the claim, so a
   // missing/deliverable-less recipient simply leaves the ledger untouched
   // and the item is re-evaluated on the next scan — there is no revert.
-  let recipients: RecipientProfile[] = []
+  let recipients: RecipientProfile[] = [];
   if (toLevel === 2) {
     // Configured team lead; fall back to admins.
-    recipients = await resolveLevel2Recipients(client, candidate.responsible_user_id)
+    recipients = await resolveLevel2Recipients(client, candidate.responsible_user_id);
   } else {
-    recipients = await resolveAdminRecipients(client)
+    recipients = await resolveAdminRecipients(client);
   }
 
   if (recipients.length === 0) {
@@ -334,22 +368,17 @@ async function escalateOne(
     // account): leave the ledger at the current tier so the item is
     // re-evaluated next scan rather than stuck at a higher tier with no alert.
     logger.warn(
-      `No deliverable recipient for ${domain.serviceType} ${candidate.item_id} at level ${toLevel}; re-evaluated next scan`,
-    )
-    return 'no_recipient'
+      `No deliverable recipient for ${domain.serviceType} ${candidate.item_id} at level ${toLevel}; re-evaluated next scan`
+    );
+    return 'no_recipient';
   }
 
   // Atomic claim: only the scan that observes the expected current level
   // wins and returns a row. A concurrent scan that already advanced the tier
   // gets nothing and never enqueues a duplicate.
-  const claim = await client.query(ADVANCE_SQL, [
-    candidate.ledger_id,
-    fromLevel,
-    toLevel,
-    now,
-  ])
+  const claim = await client.query(ADVANCE_SQL, [candidate.ledger_id, fromLevel, toLevel, now]);
   if (claim.rowCount === 0 || claim.rows.length === 0) {
-    return 'concurrent'
+    return 'concurrent';
   }
 
   for (const profile of recipients) {
@@ -368,31 +397,36 @@ async function escalateOne(
       // Tier + ledger-id scoped: a fresh key every claim guarantees a
       // re-escalation can never collide with a prior tier's outbox row.
       idempotencyKey: `${SERVICE_ESCALATED_EVENT_KEY}:${domain.serviceType}:${candidate.item_id}:${toLevel}:${profile.id ?? profile.userId}:${candidate.ledger_id}`,
-    })
+    });
     if (!enqueueResult.inserted) {
       logger.warn(
-        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id ?? profile.userId} (unexpected for a fresh claim)`,
-      )
+        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id ?? profile.userId} (unexpected for a fresh claim)`
+      );
     }
   }
 
-  return 'escalated'
+  return 'escalated';
 }
 
 /** Resolve the default in-app/email profile(s) for every platform admin. */
-async function resolveAdminRecipients(
-  client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
-): Promise<RecipientProfile[]> {
-  const admins = await client.query(`SELECT user_id FROM users WHERE is_admin = TRUE AND disabled_at IS NULL AND activation_token IS NULL`)
-  const ids = admins.rows.map((r) => String(r.user_id))
-  if (ids.length === 0) return []
+async function resolveAdminRecipients(client: {
+  query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }>;
+}): Promise<RecipientProfile[]> {
+  const admins = await client.query(
+    `SELECT user_id FROM users WHERE is_admin = TRUE AND disabled_at IS NULL AND activation_token IS NULL`
+  );
+  const ids = admins.rows.map((r) => String(r.user_id));
+  if (ids.length === 0) return [];
   const profiles = await client.query(
     `SELECT p.id, u.user_id FROM users u LEFT JOIN LATERAL
         (SELECT id FROM profiles WHERE user_id=u.user_id AND is_default=TRUE AND archived_at IS NULL ORDER BY id LIMIT 1) p ON TRUE
        WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
-    [ids],
-  )
-  return profiles.rows.map((r) => ({ id: r.id == null ? null : String(r.id), userId: String(r.user_id) }))
+    [ids]
+  );
+  return profiles.rows.map((r) => ({
+    id: r.id == null ? null : String(r.id),
+    userId: String(r.user_id),
+  }));
 }
 
 /**
@@ -406,11 +440,13 @@ async function resolveAdminRecipients(
  * unassigned-item behaviour.
  */
 async function resolveLevel2Recipients(
-  client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }> },
-  responsibleUserId: string | null,
+  client: {
+    query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }>;
+  },
+  responsibleUserId: string | null
 ): Promise<RecipientProfile[]> {
   if (!responsibleUserId) {
-    return resolveAdminRecipients(client)
+    return resolveAdminRecipients(client);
   }
 
   // Configured leads for the responsible user's active teams (excluding the responsible user, who was
@@ -422,19 +458,22 @@ async function resolveLevel2Recipients(
        JOIN staff_team_members lead ON lead.team_id=t.id AND lead.user_id=t.lead_user_id
        JOIN users u ON u.user_id=t.lead_user_id AND u.disabled_at IS NULL AND u.activation_token IS NULL
       WHERE stm.user_id = $1 AND t.lead_user_id <> $1`,
-    [responsibleUserId],
-  )
-  const memberIds = members.rows.map((r) => String(r.user_id))
+    [responsibleUserId]
+  );
+  const memberIds = members.rows.map((r) => String(r.user_id));
   if (memberIds.length === 0) {
     // No active configured lead for the responsible user → climb to admins.
-    return resolveAdminRecipients(client)
+    return resolveAdminRecipients(client);
   }
 
   const profiles = await client.query(
     `SELECT p.id, u.user_id FROM users u LEFT JOIN LATERAL
         (SELECT id FROM profiles WHERE user_id=u.user_id AND is_default=TRUE AND archived_at IS NULL ORDER BY id LIMIT 1) p ON TRUE
        WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL`,
-    [memberIds],
-  )
-  return profiles.rows.map((r) => ({ id: r.id == null ? null : String(r.id), userId: String(r.user_id) }))
+    [memberIds]
+  );
+  return profiles.rows.map((r) => ({
+    id: r.id == null ? null : String(r.id),
+    userId: String(r.user_id),
+  }));
 }

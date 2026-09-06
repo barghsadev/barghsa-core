@@ -1,21 +1,32 @@
-import { Controller, Get, Post, HttpCode, HttpException, Query, Body, Req, Logger, UseGuards } from '@nestjs/common'
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger'
-import type { Request } from 'express'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { TosService, type CurrentTosResponse } from './tos.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+import {
+  Controller,
+  Get,
+  Post,
+  HttpCode,
+  HttpException,
+  Query,
+  Body,
+  Req,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import type { Request } from 'express';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { TosService, type CurrentTosResponse } from './tos.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 /** Zod schema for TOS acceptance request body. */
 const AcceptTosSchema = z.object({
   versionId: z.string().min(1),
-})
+});
 
 @ApiTags('Terms of Service')
 @Controller('api/tos')
 export class TosController {
-  private readonly logger = new Logger(TosController.name)
+  private readonly logger = new Logger(TosController.name);
 
   constructor(private readonly tosService: TosService) {}
 
@@ -49,11 +60,9 @@ export class TosController {
     },
   })
   @ApiResponse({ status: 404, description: 'No active TOS version found' })
-  async getCurrent(
-    @Query('locale') locale?: string,
-  ): Promise<CurrentTosResponse> {
-    const normalizedLocale = locale === 'en' ? 'en' : 'fa'
-    return this.tosService.getCurrent(normalizedLocale)
+  async getCurrent(@Query('locale') locale?: string): Promise<CurrentTosResponse> {
+    const normalizedLocale = locale === 'en' ? 'en' : 'fa';
+    return this.tosService.getCurrent(normalizedLocale);
   }
 
   /**
@@ -96,29 +105,29 @@ export class TosController {
   @ApiResponse({ status: 401, description: 'Unauthenticated' })
   async accept(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
-    const parsed = AcceptTosSchema.safeParse(rawBody)
+    const parsed = AcceptTosSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const userAgent = req.headers['user-agent']
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const userAgent = req.headers['user-agent'];
 
     await this.tosService.recordAcceptance(
       req.session.userId,
       parsed.data.versionId,
       ip,
-      userAgent,
-    )
+      userAgent
+    );
 
-    this.logger.log(`TOS accepted by user ${req.session.userId}`)
+    this.logger.log(`TOS accepted by user ${req.session.userId}`);
 
-    return { message: 'Terms of Service accepted successfully.' }
+    return { message: 'Terms of Service accepted successfully.' };
   }
 }

@@ -1,18 +1,18 @@
-import { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { t, type Locale } from '@barghsa/i18n/auth'
+import { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { t, type Locale } from '@barghsa/i18n/auth';
 
-const DIGIT_COUNT = 6
+const DIGIT_COUNT = 6;
 
 export interface OtpInputHandle {
-  reset: () => void
+  reset: () => void;
 }
 
 export interface OtpInputProps {
-  locale: Locale
-  disabled?: boolean
-  error?: string | null
-  onComplete: (otp: string) => void
-  onClearError: () => void
+  locale: Locale;
+  disabled?: boolean;
+  error?: string | null;
+  onComplete: (otp: string) => void;
+  onClearError: () => void;
 }
 
 /**
@@ -20,160 +20,154 @@ export interface OtpInputProps {
  * keyboard navigation, paste support, and shake animation on error.
  */
 export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpInput(
-  {
-    locale,
-    disabled = false,
-    error = null,
-    onComplete,
-    onClearError,
-  },
-  ref,
+  { locale, disabled = false, error = null, onComplete, onClearError },
+  ref
 ) {
-  const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(''))
-  const [shaking, setShaking] = useState(false)
-  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(DIGIT_COUNT).fill(null))
+  const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(''));
+  const [shaking, setShaking] = useState(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(DIGIT_COUNT).fill(null));
 
   // Focus first input on mount
   useEffect(() => {
     if (!disabled) {
-      inputRefs.current[0]?.focus()
+      inputRefs.current[0]?.focus();
     }
-  }, [disabled])
+  }, [disabled]);
 
   // Shake animation when error changes from null to non-null
   useEffect(() => {
     if (error) {
-      setShaking(true)
-      const timer = setTimeout(() => setShaking(false), 500)
-      return () => clearTimeout(timer)
+      setShaking(true);
+      const timer = setTimeout(() => setShaking(false), 500);
+      return () => clearTimeout(timer);
     }
-    return
-  }, [error])
+    return;
+  }, [error]);
 
   const focusInput = useCallback((index: number) => {
-    const el = inputRefs.current[index]
+    const el = inputRefs.current[index];
     if (el) {
-      el.focus()
-      el.setSelectionRange(0, el.value.length)
+      el.focus();
+      el.setSelectionRange(0, el.value.length);
     }
-  }, [])
+  }, []);
 
   const handleChange = useCallback(
     (index: number, value: string) => {
       // Only allow digits
-      if (!/^\d*$/.test(value)) return
+      if (!/^\d*$/.test(value)) return;
 
       // Clear error on any user interaction
-      if (error) onClearError()
+      if (error) onClearError();
 
-      const newDigits = [...digits]
+      const newDigits = [...digits];
       // If pasting multiple digits starting from this position
       if (value.length > 1) {
-        const chars = value.split('').slice(0, DIGIT_COUNT - index)
+        const chars = value.split('').slice(0, DIGIT_COUNT - index);
         for (let i = 0; i < chars.length; i++) {
-          const char = chars[i] as string
-          newDigits[index + i] = char ?? ''
+          const char = chars[i] as string;
+          newDigits[index + i] = char ?? '';
         }
-        setDigits(newDigits)
+        setDigits(newDigits);
 
         // Focus the next empty slot or the last filled
-        const nextEmpty = newDigits.findIndex((d) => !d)
+        const nextEmpty = newDigits.findIndex((d) => !d);
         if (nextEmpty !== -1) {
-          focusInput(nextEmpty)
+          focusInput(nextEmpty);
         } else {
-          focusInput(Math.min(index + chars.length - 1, DIGIT_COUNT - 1))
+          focusInput(Math.min(index + chars.length - 1, DIGIT_COUNT - 1));
           // Auto-submit
-          const otp = newDigits.join('')
+          const otp = newDigits.join('');
           if (otp.length === DIGIT_COUNT) {
-            onComplete(otp)
+            onComplete(otp);
           }
         }
-        return
+        return;
       }
 
       // Single digit
-      const digit = value.slice(0, 1)
-      newDigits[index] = digit
-      setDigits(newDigits)
+      const digit = value.slice(0, 1);
+      newDigits[index] = digit;
+      setDigits(newDigits);
 
       if (digit && index < DIGIT_COUNT - 1) {
         // Auto-advance to next field
-        focusInput(index + 1)
+        focusInput(index + 1);
       }
 
       // Auto-submit when all 6 digits filled
-      const otp = newDigits.join('')
+      const otp = newDigits.join('');
       if (otp.length === DIGIT_COUNT && newDigits.every((d) => d)) {
-        onComplete(otp)
+        onComplete(otp);
       }
     },
-    [digits, error, onClearError, focusInput, onComplete],
-  )
+    [digits, error, onClearError, focusInput, onComplete]
+  );
 
   const handleKeyDown = useCallback(
     (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Backspace' && !digits[index] && index > 0) {
         // Move to previous field
-        focusInput(index - 1)
-        return
+        focusInput(index - 1);
+        return;
       }
       if (e.key === 'ArrowLeft') {
-        e.preventDefault()
-        const prev = index > 0 ? index - 1 : DIGIT_COUNT - 1
-        focusInput(prev)
-        return
+        e.preventDefault();
+        const prev = index > 0 ? index - 1 : DIGIT_COUNT - 1;
+        focusInput(prev);
+        return;
       }
       if (e.key === 'ArrowRight') {
-        e.preventDefault()
-        const next = index < DIGIT_COUNT - 1 ? index + 1 : 0
-        focusInput(next)
-        return
+        e.preventDefault();
+        const next = index < DIGIT_COUNT - 1 ? index + 1 : 0;
+        focusInput(next);
+        return;
       }
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault()
+        e.preventDefault();
       }
     },
-    [digits, focusInput],
-  )
+    [digits, focusInput]
+  );
 
   const handlePaste = useCallback(
     (e: React.ClipboardEvent) => {
-      e.preventDefault()
-      const pasted = e.clipboardData.getData('text/plain').replace(/\D/g, '')
-      if (!pasted) return
+      e.preventDefault();
+      const pasted = e.clipboardData.getData('text/plain').replace(/\D/g, '');
+      if (!pasted) return;
 
-      if (error) onClearError()
+      if (error) onClearError();
 
-      const newDigits = [...digits]
+      const newDigits = [...digits];
       for (let i = 0; i < pasted.length && i < DIGIT_COUNT; i++) {
-        const char = pasted[i] as string
-        newDigits[i] = char ?? ''
+        const char = pasted[i] as string;
+        newDigits[i] = char ?? '';
       }
-      setDigits(newDigits)
+      setDigits(newDigits);
 
       if (pasted.length >= DIGIT_COUNT || newDigits.every((d) => d)) {
-        focusInput(DIGIT_COUNT - 1)
-        const otp = newDigits.join('')
+        focusInput(DIGIT_COUNT - 1);
+        const otp = newDigits.join('');
         if (otp.length === DIGIT_COUNT) {
-          onComplete(otp)
+          onComplete(otp);
         }
       } else {
-        focusInput(pasted.length)
+        focusInput(pasted.length);
       }
     },
-    [digits, error, onClearError, focusInput, onComplete],
-  )
+    [digits, error, onClearError, focusInput, onComplete]
+  );
 
   const handleReset = useCallback(() => {
-    setDigits(Array(DIGIT_COUNT).fill(''))
-    setShaking(false)
+    setDigits(Array(DIGIT_COUNT).fill(''));
+    setShaking(false);
     if (!disabled) {
-      focusInput(0)
+      focusInput(0);
     }
-  }, [disabled, focusInput])
+  }, [disabled, focusInput]);
 
   // Expose reset method via ref
-  useImperativeHandle(ref, () => ({ reset: handleReset }), [handleReset])
+  useImperativeHandle(ref, () => ({ reset: handleReset }), [handleReset]);
 
   return (
     <div className="space-y-3">
@@ -188,7 +182,7 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
           <input
             key={i}
             ref={(el) => {
-              inputRefs.current[i] = el
+              inputRefs.current[i] = el;
             }}
             type="text"
             inputMode="numeric"
@@ -208,21 +202,16 @@ export const OtpInput = forwardRef<OtpInputHandle, OtpInputProps>(function OtpIn
                   ? 'border-primary text-foreground'
                   : 'border-muted-foreground/30 text-foreground'
             } ${
-              disabled
-                ? 'opacity-50 cursor-not-allowed'
-                : 'focus:border-primary focus:border-b-3'
+              disabled ? 'opacity-50 cursor-not-allowed' : 'focus:border-primary focus:border-b-3'
             }`}
           />
         ))}
       </div>
       {error && (
-        <p
-          className="text-center text-sm text-destructive animate-fade-in"
-          role="alert"
-        >
+        <p className="text-center text-sm text-destructive animate-fade-in" role="alert">
           {error}
         </p>
       )}
     </div>
-  )
-})
+  );
+});

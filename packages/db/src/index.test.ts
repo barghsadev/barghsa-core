@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHealth } from './index'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHealth } from './index';
 
 /**
  * Build a minimal mock pg Client that mirrors the real client's internal
@@ -9,286 +9,290 @@ import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery, dbHeal
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makeMockClient(): {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: any
-  cancel: ReturnType<typeof vi.fn>
-  runQuery: ReturnType<typeof vi.fn>
-  resolvePromise: () => void
+  client: any;
+  cancel: ReturnType<typeof vi.fn>;
+  runQuery: ReturnType<typeof vi.fn>;
+  resolvePromise: () => void;
 } {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const _queryQueue: any[] = []
+  const _queryQueue: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let _activeQuery: any = null
-  let deferredResolve: (() => void) | null = null
+  let _activeQuery: any = null;
+  let deferredResolve: (() => void) | null = null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const runQuery = vi.fn((...args: any[]) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const queryObj: any = { text: 'query', id: Math.random(), callback: null }
-    _queryQueue.push(queryObj)
+    const queryObj: any = { text: 'query', id: Math.random(), callback: null };
+    _queryQueue.push(queryObj);
 
     // Simulate the real pg flow: immediately start the query if no active one.
     if (!_activeQuery) {
-      _activeQuery = _queryQueue.shift() ?? null
+      _activeQuery = _queryQueue.shift() ?? null;
     }
 
-    const seenCallback = args.find((a: any) => typeof a === 'function')
+    const seenCallback = args.find((a: any) => typeof a === 'function');
     if (seenCallback) {
-      queryObj.callback = seenCallback
+      queryObj.callback = seenCallback;
       // Callback path: matches real pg which returns undefined for
       // callback-style calls (result stays undefined, return result || query
       // returns query but the wrapped function discards the return value).
-      return undefined
+      return undefined;
     }
 
     // Promise path: return a Promise that stays pending until resolved.
     return new Promise((resolve) => {
       deferredResolve = () => {
-        _activeQuery = null
-        const next = _queryQueue.shift()
-        if (next) _activeQuery = next
-        resolve({ rows: [], rowCount: 0 })
-      }
-    })
-  })
+        _activeQuery = null;
+        const next = _queryQueue.shift();
+        if (next) _activeQuery = next;
+        resolve({ rows: [], rowCount: 0 });
+      };
+    });
+  });
 
-  const cancel = vi.fn()
+  const cancel = vi.fn();
   const client = {
     query: runQuery,
     _queryQueue,
     cancel,
-  }
+  };
   // Use a getter for _activeQuery so wrapClientQuery reads the live value.
   Object.defineProperty(client, '_activeQuery', {
     get: () => _activeQuery,
     configurable: true,
-  })
+  });
 
   const resolvePromise = (): void => {
-    deferredResolve?.()
-    deferredResolve = null
-  }
+    deferredResolve?.();
+    deferredResolve = null;
+  };
 
-  return { client, cancel, runQuery, resolvePromise }
+  return { client, cancel, runQuery, resolvePromise };
 }
 
 describe('@barghsa/db', () => {
   it('export createDbPool is a function', () => {
-    expect(typeof createDbPool).toBe('function')
-  })
+    expect(typeof createDbPool).toBe('function');
+  });
 
   describe('buildConnectionString', () => {
     it('encodes GUC options in the connection string', () => {
-      const result = buildConnectionString('postgresql://localhost:5432/test', {})
-      expect(result).toContain('options=')
-      expect(decodeURIComponent(result)).toContain('statement_timeout=30s')
-      expect(decodeURIComponent(result)).toContain('lock_timeout=5s')
-      expect(decodeURIComponent(result)).toContain('idle_in_transaction_session_timeout=60s')
-    })
+      const result = buildConnectionString('postgresql://localhost:5432/test', {});
+      expect(result).toContain('options=');
+      expect(decodeURIComponent(result)).toContain('statement_timeout=30s');
+      expect(decodeURIComponent(result)).toContain('lock_timeout=5s');
+      expect(decodeURIComponent(result)).toContain('idle_in_transaction_session_timeout=60s');
+    });
 
     it('appends with & when base URL already has query params', () => {
-      const result = buildConnectionString('postgresql://localhost:5432/test?sslmode=require', {})
-      expect(result).toContain('&options=')
-    })
+      const result = buildConnectionString('postgresql://localhost:5432/test?sslmode=require', {});
+      expect(result).toContain('&options=');
+    });
 
     it('uses custom timeout overrides', () => {
       const result = buildConnectionString('postgresql://localhost:5432/test', {
         statementTimeout: '45s',
         lockTimeout: '10s',
-      })
-      expect(decodeURIComponent(result)).toContain('statement_timeout=45s')
-      expect(decodeURIComponent(result)).toContain('lock_timeout=10s')
-    })
+      });
+      expect(decodeURIComponent(result)).toContain('statement_timeout=45s');
+      expect(decodeURIComponent(result)).toContain('lock_timeout=10s');
+    });
 
     it('returns empty string when no URL available', () => {
-      const original = process.env.DATABASE_URL
-      delete process.env.DATABASE_URL
-      const result = buildConnectionString(undefined, {})
-      expect(result).toBe('')
-      if (original) process.env.DATABASE_URL = original
-    })
-  })
+      const original = process.env.DATABASE_URL;
+      delete process.env.DATABASE_URL;
+      const result = buildConnectionString(undefined, {});
+      expect(result).toBe('');
+      if (original) process.env.DATABASE_URL = original;
+    });
+  });
 
   it('getDbPool throws when pool not initialized', () => {
-    expect(() => getDbPool()).toThrow('Database pool not initialized')
-  })
+    expect(() => getDbPool()).toThrow('Database pool not initialized');
+  });
 
   describe('queryTimeout config', () => {
     beforeEach(() => {
-      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
-    })
+      process.env.DATABASE_URL = 'postgresql://localhost:5432/test';
+    });
 
     afterEach(() => {
-      delete process.env.DATABASE_URL
-    })
+      delete process.env.DATABASE_URL;
+    });
 
     it('createDbPool accepts queryTimeout option', () => {
-      const p = createDbPool({ queryTimeout: 5000 })
-      expect(p).toBeDefined()
-      p.end().catch(() => {})
-    })
+      const p = createDbPool({ queryTimeout: 5000 });
+      expect(p).toBeDefined();
+      p.end().catch(() => {});
+    });
 
     it('default queryTimeout is 30_000 ms', () => {
-      const p = createDbPool({})
-      expect(p).toBeDefined()
-      p.end().catch(() => {})
-    })
+      const p = createDbPool({});
+      expect(p).toBeDefined();
+      p.end().catch(() => {});
+    });
 
     it('attaches client query hooks with timeout guard', () => {
-      const p = createDbPool({ queryTimeout: 100 })
-      expect(p.listeners('connect').length).toBe(1)
-      expect(p.listeners('error').length).toBe(1)
-      p.end().catch(() => {})
-    })
-  })
+      const p = createDbPool({ queryTimeout: 100 });
+      expect(p.listeners('connect').length).toBe(1);
+      expect(p.listeners('error').length).toBe(1);
+      p.end().catch(() => {});
+    });
+  });
 
   describe('wrapClientQuery timeout behavior', () => {
     beforeEach(() => {
-      vi.useFakeTimers()
-    })
+      vi.useFakeTimers();
+    });
 
     afterEach(() => {
-      vi.useRealTimers()
-    })
+      vi.useRealTimers();
+    });
 
     it('cancels the correct query object when timeout elapses (Promise path)', () => {
-      const { client, cancel } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      wrapped('SELECT pg_sleep(5)')
+      const { client, cancel } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
+      wrapped('SELECT pg_sleep(5)');
 
       // The captured query should be the one in _activeQuery.
-      const captured = (client as any)._activeQuery
-      expect(captured).toBeDefined()
+      const captured = (client as any)._activeQuery;
+      expect(captured).toBeDefined();
 
-      vi.advanceTimersByTime(100)
-      expect(cancel).toHaveBeenCalledTimes(1)
-      const call = cancel.mock.calls[0]!
+      vi.advanceTimersByTime(100);
+      expect(cancel).toHaveBeenCalledTimes(1);
+      const call = cancel.mock.calls[0]!;
       // First arg is the client instance, second is the exact captured query.
-      expect(call[0]).toBe(client)
-      expect(call[1]).toBe(captured)
-    })
+      expect(call[0]).toBe(client);
+      expect(call[1]).toBe(captured);
+    });
 
     it('does not throw when the timeout fires', () => {
-      const { client, cancel } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      wrapped('SELECT pg_sleep(5)')
-      expect(() => vi.advanceTimersByTime(100)).not.toThrow()
-      expect(cancel).toHaveBeenCalled()
-    })
+      const { client, cancel } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
+      wrapped('SELECT pg_sleep(5)');
+      expect(() => vi.advanceTimersByTime(100)).not.toThrow();
+      expect(cancel).toHaveBeenCalled();
+    });
 
     it('cancels the correct query object when timeout elapses (callback path)', () => {
-      const { client, cancel } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      const cb = vi.fn()
-      wrapped('SELECT pg_sleep(5)', cb)
+      const { client, cancel } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
+      const cb = vi.fn();
+      wrapped('SELECT pg_sleep(5)', cb);
 
       // The captured query should be the one from the internal state.
-      const captured = (client as any)._activeQuery
-      expect(captured).toBeDefined()
+      const captured = (client as any)._activeQuery;
+      expect(captured).toBeDefined();
 
-      vi.advanceTimersByTime(100)
-      expect(cancel).toHaveBeenCalledTimes(1)
-      const call = cancel.mock.calls[0]!
-      expect(call[1]).toBe(captured)
-    })
+      vi.advanceTimersByTime(100);
+      expect(cancel).toHaveBeenCalledTimes(1);
+      const call = cancel.mock.calls[0]!;
+      expect(call[1]).toBe(captured);
+    });
 
     it('does not cancel when the query completes before the timeout', async () => {
-      const { client, cancel, resolvePromise } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      wrapped('SELECT 1')
+      const { client, cancel, resolvePromise } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
+      wrapped('SELECT 1');
 
       // Complete the query well before the threshold.
-      vi.advanceTimersByTime(50)
-      resolvePromise()
+      vi.advanceTimersByTime(50);
+      resolvePromise();
       // Flush microtasks so .finally() runs and clears the timeout.
-      await vi.advanceTimersByTimeAsync(0)
+      await vi.advanceTimersByTimeAsync(0);
 
       // Now advance far past the threshold; timer must have been cleaned up.
-      await vi.advanceTimersByTimeAsync(200)
-      expect(cancel).not.toHaveBeenCalled()
-    })
+      await vi.advanceTimersByTimeAsync(200);
+      expect(cancel).not.toHaveBeenCalled();
+    });
 
     it('does not schedule a timeout when queryTimeout is 0 (disabled)', () => {
-      const { client, cancel } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 0) as typeof client.query
-      wrapped('SELECT pg_sleep(5)')
-      vi.advanceTimersByTime(1000)
-      expect(cancel).not.toHaveBeenCalled()
-    })
+      const { client, cancel } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 0) as typeof client.query;
+      wrapped('SELECT pg_sleep(5)');
+      vi.advanceTimersByTime(1000);
+      expect(cancel).not.toHaveBeenCalled();
+    });
 
     it('preserves callback invocation', () => {
-      const { client, runQuery } = makeMockClient()
-      const wrapped = wrapClientQuery(client, 100) as typeof client.query
-      const cb = vi.fn()
-      wrapped('SELECT 1', cb)
-      expect(runQuery).toHaveBeenCalled()
-    })
-  })
+      const { client, runQuery } = makeMockClient();
+      const wrapped = wrapClientQuery(client, 100) as typeof client.query;
+      const cb = vi.fn();
+      wrapped('SELECT 1', cb);
+      expect(runQuery).toHaveBeenCalled();
+    });
+  });
 
   describe('dbHealth', () => {
     beforeEach(() => {
-      process.env.DATABASE_URL = 'postgresql://localhost:5432/test'
-    })
+      process.env.DATABASE_URL = 'postgresql://localhost:5432/test';
+    });
 
     afterEach(() => {
-      delete process.env.DATABASE_URL
-    })
+      delete process.env.DATABASE_URL;
+    });
 
     it('returns ok:true with poolStats when query succeeds', async () => {
-      const p = createDbPool({ queryTimeout: 0 })
+      const p = createDbPool({ queryTimeout: 0 });
       // Stub the pool's query to avoid a real DB connection.
-      vi.spyOn(p, 'query').mockResolvedValue({ rows: [{ '?column?': 1 }], rowCount: 1, command: 'SELECT' } as never)
+      vi.spyOn(p, 'query').mockResolvedValue({
+        rows: [{ '?column?': 1 }],
+        rowCount: 1,
+        command: 'SELECT',
+      } as never);
 
-      const result = await dbHealth()
+      const result = await dbHealth();
 
-      expect(result.ok).toBe(true)
-      expect(typeof result.latencyMs).toBe('number')
-      expect(result.latencyMs).toBeGreaterThanOrEqual(0)
-      expect(result.poolStats).toBeDefined()
-      expect(typeof result.poolStats.totalCount).toBe('number')
-      expect(typeof result.poolStats.idleCount).toBe('number')
-      expect(typeof result.poolStats.waitingCount).toBe('number')
+      expect(result.ok).toBe(true);
+      expect(typeof result.latencyMs).toBe('number');
+      expect(result.latencyMs).toBeGreaterThanOrEqual(0);
+      expect(result.poolStats).toBeDefined();
+      expect(typeof result.poolStats.totalCount).toBe('number');
+      expect(typeof result.poolStats.idleCount).toBe('number');
+      expect(typeof result.poolStats.waitingCount).toBe('number');
 
-      vi.mocked(p.query).mockRestore()
-      await p.end().catch(() => {})
-    })
+      vi.mocked(p.query).mockRestore();
+      await p.end().catch(() => {});
+    });
 
     it('returns ok:false when query fails', async () => {
-      const p = createDbPool({ queryTimeout: 0 })
-      vi.spyOn(p, 'query').mockRejectedValue(new Error('Connection refused'))
+      const p = createDbPool({ queryTimeout: 0 });
+      vi.spyOn(p, 'query').mockRejectedValue(new Error('Connection refused'));
 
-      const result = await dbHealth()
+      const result = await dbHealth();
 
-      expect(result.ok).toBe(false)
-      expect(typeof result.latencyMs).toBe('number')
-      expect(result.poolStats).toBeDefined()
+      expect(result.ok).toBe(false);
+      expect(typeof result.latencyMs).toBe('number');
+      expect(result.poolStats).toBeDefined();
 
-      vi.mocked(p.query).mockRestore()
-      await p.end().catch(() => {})
-    })
+      vi.mocked(p.query).mockRestore();
+      await p.end().catch(() => {});
+    });
 
     it('returns ok:false on timeout and cleans up timer', async () => {
-      const p = createDbPool({ queryTimeout: 0 })
+      const p = createDbPool({ queryTimeout: 0 });
       // Never- resolving query so the timeout fires first.
-      vi.spyOn(p, 'query').mockReturnValue(new Promise<never>(() => {}) as never)
+      vi.spyOn(p, 'query').mockReturnValue(new Promise<never>(() => {}) as never);
 
-      vi.useFakeTimers()
+      vi.useFakeTimers();
 
-      const healthPromise = dbHealth()
+      const healthPromise = dbHealth();
 
       // Advance past the 5s threshold.
-      await vi.advanceTimersByTimeAsync(5_100)
+      await vi.advanceTimersByTimeAsync(5_100);
 
-      const result = await healthPromise
+      const result = await healthPromise;
 
-      expect(result.ok).toBe(false)
-      expect(result.latencyMs).toBeGreaterThanOrEqual(5_000)
+      expect(result.ok).toBe(false);
+      expect(result.latencyMs).toBeGreaterThanOrEqual(5_000);
 
       // Verify no timers remain after the timeout resolves.
-      expect(vi.getTimerCount()).toBe(0)
+      expect(vi.getTimerCount()).toBe(0);
 
-      vi.useRealTimers()
-      vi.mocked(p.query).mockRestore()
-      await p.end().catch(() => {})
-    })
-  })
-})
+      vi.useRealTimers();
+      vi.mocked(p.query).mockRestore();
+      await p.end().catch(() => {});
+    });
+  });
+});

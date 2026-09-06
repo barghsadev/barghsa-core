@@ -1,15 +1,15 @@
-import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n/auth'
-import { Card, CardContent } from '@barghsa/ui'
-import { useBrandConfig } from '../providers/BrandThemeProvider.js'
+import { Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n/auth';
+import { Card, CardContent } from '@barghsa/ui';
+import { useBrandConfig } from '../providers/BrandThemeProvider.js';
 
 export interface AuthLayoutProps {
   /** The locale for i18n text (fa or en) */
-  locale?: Locale
+  locale?: Locale;
   /** Form content rendered in the right column */
-  children: React.ReactNode
+  children: React.ReactNode;
   /** Optional bottom-of-form footer links (e.g. login link) */
-  footer?: React.ReactNode
+  footer?: React.ReactNode;
 }
 
 /**
@@ -27,16 +27,13 @@ export interface AuthLayoutProps {
  * Does NOT render the default app sidebar or navbar.
  */
 export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps) {
-  const { brandConfig } = useBrandConfig()
+  const { brandConfig } = useBrandConfig();
 
-  const appTitle = brandConfig.appTitle || t('auth.brand.title', locale)
-  const slogan = brandConfig.slogan || t('auth.brand.slogan', locale)
-  const logoUrl = brandConfig.logoUrl
+  const appTitle = brandConfig.appTitle || t('auth.brand.title', locale);
+  const slogan = brandConfig.slogan || t('auth.brand.slogan', locale);
+  const logoUrl = brandConfig.logoUrl;
   return (
-    <div
-      className="flex min-h-dvh flex-col md:flex-row"
-      dir={locale === 'fa' ? 'rtl' : 'ltr'}
-    >
+    <div className="flex min-h-dvh flex-col md:flex-row" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {/* Left: Brand column — hidden on mobile, shown as sidebar on md+ */}
       <aside className="hidden md:flex md:w-1/2 lg:w-3/5 xl:w-1/2 flex-col justify-between bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-8 lg:p-12 xl:p-16">
         <div>
@@ -61,19 +58,14 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
                 style={{ color: 'var(--brand-primary)' }}
               >
                 <rect width="32" height="32" rx="8" fill="currentColor" />
-                <path
-                  d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-                  fill="var(--brand-primary-foreground)"
-                />
+                <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--brand-primary-foreground)" />
               </svg>
             )}
             <span>{appTitle}</span>
           </Link>
 
           {/* Slogan */}
-          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">
-            {slogan}
-          </p>
+          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-md">{slogan}</p>
 
           {/* Value propositions */}
           <ul className="mt-8 space-y-4">
@@ -127,32 +119,21 @@ export function AuthLayout({ locale = 'fa', children, footer }: AuthLayoutProps)
               style={{ color: 'var(--brand-primary)' }}
             >
               <rect width="32" height="32" rx="8" fill="currentColor" />
-              <path
-                d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-                fill="var(--brand-primary-foreground)"
-              />
+              <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--brand-primary-foreground)" />
             </svg>
-            )}
-            <span>{appTitle}</span>
-          </Link>
-        <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">
-          {slogan}
-        </p>
+          )}
+          <span>{appTitle}</span>
+        </Link>
+        <p className="mt-2 text-sm text-muted-foreground text-center max-w-xs">{slogan}</p>
       </div>
 
       {/* Right: Form column */}
       <main className="flex flex-1 items-center justify-center p-4 md:p-8 lg:p-12">
         <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            {children}
-          </CardContent>
-          {footer && (
-            <div className="px-(--card-spacing) pb-(--card-spacing)">
-              {footer}
-            </div>
-          )}
+          <CardContent className="pt-6">{children}</CardContent>
+          {footer && <div className="px-(--card-spacing) pb-(--card-spacing)">{footer}</div>}
         </Card>
       </main>
     </div>
-  )
+  );
 }

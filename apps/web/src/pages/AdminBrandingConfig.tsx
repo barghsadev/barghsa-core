@@ -1,29 +1,29 @@
-import { useState, useEffect, useCallback } from 'react'
-import { withCsrf } from '../lib/csrf.js'
+import { useState, useEffect, useCallback } from 'react';
+import { withCsrf } from '../lib/csrf.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface BrandConfig {
-  appTitle: string
-  slogan: string
-  primaryColor: string
-  secondaryColor: string
-  accentColor: string
-  logoUrl: string | null
-  faviconUrl: string | null
-  darkMode: boolean
+  appTitle: string;
+  slogan: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  logoUrl: string | null;
+  faviconUrl: string | null;
+  darkMode: boolean;
 }
 
 interface BrandConfigDto {
-  id: string
-  config: BrandConfig
-  version: number
-  status: 'draft' | 'active'
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  config: BrandConfig;
+  version: number;
+  status: 'draft' | 'active';
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -39,16 +39,16 @@ const DEFAULT_CONFIG: BrandConfig = {
   logoUrl: null,
   faviconUrl: null,
   darkMode: false,
-}
+};
 
 // ---------------------------------------------------------------------------
 // API helpers
 // ---------------------------------------------------------------------------
 
 async function fetchActiveConfig(): Promise<BrandConfigDto> {
-  const res = await fetch('/api/admin/branding/config')
-  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`)
-  return res.json()
+  const res = await fetch('/api/admin/branding/config');
+  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
+  return res.json();
 }
 
 async function saveDraftConfig(config: BrandConfig): Promise<BrandConfigDto> {
@@ -56,21 +56,21 @@ async function saveDraftConfig(config: BrandConfig): Promise<BrandConfigDto> {
     method: 'PUT',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify({ config }),
-  })
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`)
-  return res.json()
+  });
+  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
+  return res.json();
 }
 
 async function activateConfig(): Promise<BrandConfigDto> {
   const res = await fetch('/api/admin/branding/activate', {
     method: 'POST',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
-  })
+  });
   if (!res.ok) {
-    if (res.status === 400) throw new Error('No draft config to activate')
-    throw new Error(`Failed to activate config: ${res.statusText}`)
+    if (res.status === 400) throw new Error('No draft config to activate');
+    throw new Error(`Failed to activate config: ${res.statusText}`);
   }
-  return res.json()
+  return res.json();
 }
 
 // ---------------------------------------------------------------------------
@@ -82,9 +82,9 @@ function ColorInput({
   value,
   onChange,
 }: {
-  label: string
-  value: string
-  onChange: (v: string) => void
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
 }) {
   return (
     <div className="flex items-center gap-3">
@@ -102,12 +102,9 @@ function ColorInput({
         className="border border-gray-300 rounded px-2 py-1 text-sm w-28 font-mono"
         placeholder="#000000"
       />
-      <div
-        className="w-16 h-8 rounded border border-gray-200"
-        style={{ backgroundColor: value }}
-      />
+      <div className="w-16 h-8 rounded border border-gray-200" style={{ backgroundColor: value }} />
     </div>
-  )
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -115,105 +112,111 @@ function ColorInput({
 // ---------------------------------------------------------------------------
 
 export default function AdminBrandingConfig() {
-  const [config, setConfig] = useState<BrandConfig>(DEFAULT_CONFIG)
-  const [activeConfig, setActiveConfig] = useState<BrandConfigDto | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [activating, setActivating] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [draftInfo, setDraftInfo] = useState<{ version: number; updatedAt: string } | null>(null)
-  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [config, setConfig] = useState<BrandConfig>(DEFAULT_CONFIG);
+  const [activeConfig, setActiveConfig] = useState<BrandConfigDto | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [activating, setActivating] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [draftInfo, setDraftInfo] = useState<{ version: number; updatedAt: string } | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   // Load current config
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     fetchActiveConfig()
       .then((dto) => {
-        if (cancelled) return
-        setActiveConfig(dto)
-        setConfig({ ...DEFAULT_CONFIG, ...dto.config })
+        if (cancelled) return;
+        setActiveConfig(dto);
+        setConfig({ ...DEFAULT_CONFIG, ...dto.config });
         if (dto.status === 'draft') {
-          setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt })
+          setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt });
         }
       })
       .catch((err) => {
-        if (!cancelled) setMessage({ type: 'error', text: `Failed to load config: ${err.message}` })
+        if (!cancelled)
+          setMessage({ type: 'error', text: `Failed to load config: ${err.message}` });
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-    return () => { cancelled = true }
-  }, [])
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const updateConfig = useCallback((key: keyof BrandConfig, value: string | boolean | null) => {
-    setConfig((prev) => ({ ...prev, [key]: value }))
-  }, [])
+    setConfig((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   const handleSave = useCallback(async () => {
-    setSaving(true)
-    setMessage(null)
+    setSaving(true);
+    setMessage(null);
     try {
-      const dto = await saveDraftConfig(config)
-      setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt })
-      setMessage({ type: 'success', text: 'Draft config saved successfully.' })
+      const dto = await saveDraftConfig(config);
+      setDraftInfo({ version: dto.version, updatedAt: dto.updatedAt });
+      setMessage({ type: 'success', text: 'Draft config saved successfully.' });
     } catch (err) {
-      setMessage({ type: 'error', text: `Failed to save: ${(err as Error).message}` })
+      setMessage({ type: 'error', text: `Failed to save: ${(err as Error).message}` });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [config])
+  }, [config]);
 
   const handleActivate = useCallback(async () => {
-    setActivating(true)
-    setMessage(null)
+    setActivating(true);
+    setMessage(null);
     try {
-      const dto = await activateConfig()
-      setActiveConfig(dto)
-      setConfig({ ...DEFAULT_CONFIG, ...dto.config })
-      setDraftInfo(null)
-      setMessage({ type: 'success', text: `Config version ${dto.version} activated.` })
+      const dto = await activateConfig();
+      setActiveConfig(dto);
+      setConfig({ ...DEFAULT_CONFIG, ...dto.config });
+      setDraftInfo(null);
+      setMessage({ type: 'success', text: `Config version ${dto.version} activated.` });
     } catch (err) {
       // Save first if no draft exists
       if ((err as Error).message === 'No draft config to activate') {
-        await handleSave()
+        await handleSave();
         try {
-          const dto = await activateConfig()
-          setActiveConfig(dto)
-          setConfig({ ...DEFAULT_CONFIG, ...dto.config })
-          setDraftInfo(null)
-          setMessage({ type: 'success', text: `Config version ${dto.version} activated.` })
+          const dto = await activateConfig();
+          setActiveConfig(dto);
+          setConfig({ ...DEFAULT_CONFIG, ...dto.config });
+          setDraftInfo(null);
+          setMessage({ type: 'success', text: `Config version ${dto.version} activated.` });
         } catch (e2) {
-          setMessage({ type: 'error', text: `Failed to activate: ${(e2 as Error).message}` })
+          setMessage({ type: 'error', text: `Failed to activate: ${(e2 as Error).message}` });
         }
       } else {
-        setMessage({ type: 'error', text: `Failed to activate: ${(err as Error).message}` })
+        setMessage({ type: 'error', text: `Failed to activate: ${(err as Error).message}` });
       }
     } finally {
-      setActivating(false)
+      setActivating(false);
     }
-  }, [handleSave])
+  }, [handleSave]);
 
-  const handleLogoUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setLogoFile(file)
-    // In a real implementation, upload to storage and get CDN URL
-    // For now, create a local object URL for preview
-    const url = URL.createObjectURL(file)
-    updateConfig('logoUrl', url)
-  }, [updateConfig])
+  const handleLogoUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      setLogoFile(file);
+      // In a real implementation, upload to storage and get CDN URL
+      // For now, create a local object URL for preview
+      const url = URL.createObjectURL(file);
+      updateConfig('logoUrl', url);
+    },
+    [updateConfig]
+  );
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
-    )
+    );
   }
 
   const isDirty = activeConfig
     ? JSON.stringify(config) !== JSON.stringify({ ...DEFAULT_CONFIG, ...activeConfig.config })
-    : true
+    : true;
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
@@ -224,13 +227,12 @@ export default function AdminBrandingConfig() {
             Configure your brand identity — logo, colors, and app name.
             {draftInfo && (
               <span className="ml-2 text-amber-600">
-                (Draft v{draftInfo.version} — last saved {new Date(draftInfo.updatedAt).toLocaleString()})
+                (Draft v{draftInfo.version} — last saved{' '}
+                {new Date(draftInfo.updatedAt).toLocaleString()})
               </span>
             )}
             {activeConfig?.status === 'active' && !draftInfo && (
-              <span className="ml-2 text-green-600">
-                (Active v{activeConfig.version})
-              </span>
+              <span className="ml-2 text-green-600">(Active v{activeConfig.version})</span>
             )}
           </p>
         </div>
@@ -331,7 +333,9 @@ export default function AdminBrandingConfig() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Favicon URL (optional)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Favicon URL (optional)
+          </label>
           <input
             type="text"
             value={config.faviconUrl ?? ''}
@@ -372,14 +376,9 @@ export default function AdminBrandingConfig() {
           }}
         >
           <div className="flex items-center gap-4 mb-4">
-            {config.logoUrl && (
-              <img src={config.logoUrl} alt="Logo" className="h-10" />
-            )}
+            {config.logoUrl && <img src={config.logoUrl} alt="Logo" className="h-10" />}
             <div>
-              <h3
-                className="text-xl font-bold"
-                style={{ color: config.primaryColor }}
-              >
+              <h3 className="text-xl font-bold" style={{ color: config.primaryColor }}>
                 {config.appTitle || 'Barghsa'}
               </h3>
               {config.slogan && (
@@ -436,11 +435,9 @@ export default function AdminBrandingConfig() {
         </button>
 
         {activeConfig?.status === 'active' && (
-          <span className="text-xs text-green-600 ml-auto">
-            Active v{activeConfig.version}
-          </span>
+          <span className="text-xs text-green-600 ml-auto">Active v{activeConfig.version}</span>
         )}
       </div>
     </div>
-  )
+  );
 }

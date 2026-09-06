@@ -1,19 +1,19 @@
-import { withCsrf } from '../lib/csrf.js'
-import { useState, useEffect, useCallback } from 'react'
-import type { FormEvent } from 'react'
+import { withCsrf } from '../lib/csrf.js';
+import { useState, useEffect, useCallback } from 'react';
+import type { FormEvent } from 'react';
 
 interface TosVersion {
-  id: string
-  versionId: string
-  contentFa: string
-  contentEn: string
-  changeType: 'major' | 'minor' | null
-  status: 'draft' | 'published'
-  isActive: boolean
-  publishedAt: string | null
-  createdBy: string | null
-  createdAt: string
-  updatedAt: string
+  id: string;
+  versionId: string;
+  contentFa: string;
+  contentEn: string;
+  changeType: 'major' | 'minor' | null;
+  status: 'draft' | 'published';
+  isActive: boolean;
+  publishedAt: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -23,93 +23,93 @@ interface TosVersion {
  * Read-only version detail view shows full Persian and English content.
  */
 export default function AdminTosPage() {
-  const [versions, setVersions] = useState<TosVersion[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [versions, setVersions] = useState<TosVersion[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Draft editor state
-  const [showEditor, setShowEditor] = useState(false)
-  const [editId, setEditId] = useState<string | null>(null)
-  const [versionId, setVersionId] = useState('')
-  const [contentFa, setContentFa] = useState('')
-  const [contentEn, setContentEn] = useState('')
-  const [saving, setSaving] = useState(false)
+  const [showEditor, setShowEditor] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [versionId, setVersionId] = useState('');
+  const [contentFa, setContentFa] = useState('');
+  const [contentEn, setContentEn] = useState('');
+  const [saving, setSaving] = useState(false);
 
   // Publish dialog state
-  const [publishId, setPublishId] = useState<string | null>(null)
-  const [changeType, setChangeType] = useState<'major' | 'minor'>('minor')
-  const [publishing, setPublishing] = useState(false)
+  const [publishId, setPublishId] = useState<string | null>(null);
+  const [changeType, setChangeType] = useState<'major' | 'minor'>('minor');
+  const [publishing, setPublishing] = useState(false);
 
   // Version detail view state (T-09.03.02)
-  const [viewVersion, setViewVersion] = useState<TosVersion | null>(null)
-  const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa')
+  const [viewVersion, setViewVersion] = useState<TosVersion | null>(null);
+  const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa');
 
   const fetchVersions = useCallback(async () => {
     try {
-      setLoading(true)
-      const res = await fetch('/api/admin/tos/versions')
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
-      setVersions(data ?? [])
+      setLoading(true);
+      const res = await fetch('/api/admin/tos/versions');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setVersions(data ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load TOS versions')
+      setError(err instanceof Error ? err.message : 'Failed to load TOS versions');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchVersions()
-  }, [fetchVersions])
+    fetchVersions();
+  }, [fetchVersions]);
 
   // Check if a draft already exists
-  const hasDraft = versions.some((v) => v.status === 'draft')
+  const hasDraft = versions.some((v) => v.status === 'draft');
 
   function openCreate() {
-    setEditId(null)
-    setVersionId('')
-    setContentFa('')
-    setContentEn('')
-    setShowEditor(true)
+    setEditId(null);
+    setVersionId('');
+    setContentFa('');
+    setContentEn('');
+    setShowEditor(true);
   }
 
   function openEdit(v: TosVersion) {
-    setEditId(v.id)
-    setVersionId(v.versionId)
-    setContentFa(v.contentFa)
-    setContentEn(v.contentEn)
-    setShowEditor(true)
+    setEditId(v.id);
+    setVersionId(v.versionId);
+    setContentFa(v.contentFa);
+    setContentEn(v.contentEn);
+    setShowEditor(true);
   }
 
   function openView(v: TosVersion) {
-    setViewVersion(v)
-    setDetailLocale('fa')
+    setViewVersion(v);
+    setDetailLocale('fa');
   }
 
   function closeView() {
-    setViewVersion(null)
+    setViewVersion(null);
   }
 
   async function handleSave(e: FormEvent) {
-    e.preventDefault()
-    setSaving(true)
+    e.preventDefault();
+    setSaving(true);
 
     try {
       if (editId) {
         // Update existing draft
-        const body: Record<string, string> = {}
-        if (versionId) body.versionId = versionId
-        if (contentFa) body.contentFa = contentFa
-        if (contentEn) body.contentEn = contentEn
+        const body: Record<string, string> = {};
+        if (versionId) body.versionId = versionId;
+        if (contentFa) body.contentFa = contentFa;
+        if (contentEn) body.contentEn = contentEn;
 
         const res = await fetch(`/api/admin/tos/versions/${editId}`, {
           method: 'PUT',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
-        })
+        });
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+          const errData = await res.json().catch(() => ({}));
+          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
         }
       } else {
         // Create new draft
@@ -117,63 +117,66 @@ export default function AdminTosPage() {
           method: 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({ versionId, contentFa, contentEn }),
-        })
+        });
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+          const errData = await res.json().catch(() => ({}));
+          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
         }
       }
 
-      setShowEditor(false)
-      await fetchVersions()
+      setShowEditor(false);
+      await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save')
+      setError(err instanceof Error ? err.message : 'Failed to save');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   async function handlePublish() {
-    if (!publishId) return
-    setPublishing(true)
+    if (!publishId) return;
+    setPublishing(true);
 
     try {
       const res = await fetch(`/api/admin/tos/versions/${publishId}/publish`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ changeType }),
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
 
-      setPublishId(null)
-      await fetchVersions()
+      setPublishId(null);
+      await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to publish')
+      setError(err instanceof Error ? err.message : 'Failed to publish');
     } finally {
-      setPublishing(false)
+      setPublishing(false);
     }
   }
 
   async function handleDiscard(id: string) {
-    if (!window.confirm('Discard this draft? This cannot be undone.')) return
+    if (!window.confirm('Discard this draft? This cannot be undone.')) return;
 
     try {
-      const res = await fetch(`/api/admin/tos/versions/${id}`, { headers: withCsrf(), method: 'DELETE' })
+      const res = await fetch(`/api/admin/tos/versions/${id}`, {
+        headers: withCsrf(),
+        method: 'DELETE',
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      await fetchVersions()
+      await fetchVersions();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to discard')
+      setError(err instanceof Error ? err.message : 'Failed to discard');
     }
   }
 
   if (loading && versions.length === 0) {
-    return <div className="p-4 text-gray-500">Loading TOS versions...</div>
+    return <div className="p-4 text-gray-500">Loading TOS versions...</div>;
   }
 
   return (
@@ -204,10 +207,11 @@ export default function AdminTosPage() {
 
       {/* Draft editor */}
       {showEditor && (
-        <form onSubmit={handleSave} className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-          <h2 className="text-lg font-semibold">
-            {editId ? 'Edit Draft' : 'Create New Draft'}
-          </h2>
+        <form
+          onSubmit={handleSave}
+          className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+        >
+          <h2 className="text-lg font-semibold">{editId ? 'Edit Draft' : 'Create New Draft'}</h2>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -319,7 +323,10 @@ export default function AdminTosPage() {
 
       {/* Version detail modal (T-09.03.02) */}
       {viewVersion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={closeView}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={closeView}
+        >
           <div
             className="bg-white rounded-lg shadow-xl max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
@@ -327,9 +334,7 @@ export default function AdminTosPage() {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <div>
-                <h2 className="text-lg font-semibold">
-                  TOS Version: {viewVersion.versionId}
-                </h2>
+                <h2 className="text-lg font-semibold">TOS Version: {viewVersion.versionId}</h2>
                 <p className="text-sm text-gray-500">
                   {viewVersion.status === 'published' ? 'Published' : 'Draft'} ·
                   {viewVersion.changeType && (
@@ -432,13 +437,27 @@ export default function AdminTosPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Version</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Change</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Active</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Published</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Version
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Status
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Change
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Active
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Published
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Author
+              </th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -533,5 +552,5 @@ export default function AdminTosPage() {
         </table>
       </div>
     </div>
-  )
+  );
 }

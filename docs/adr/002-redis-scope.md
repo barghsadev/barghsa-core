@@ -1,11 +1,11 @@
 # ADR-002: Redis Scope & Architectural Guarantees
 
-| Field         | Value                                   |
-|---------------|-----------------------------------------|
-| **Status**    | Accepted                                |
-| **Date**      | 2026-08-24                              |
-| **Deciders**  | Platform Engineering                    |
-| **Driver**    | T-04.02.04                              |
+| Field        | Value                |
+| ------------ | -------------------- |
+| **Status**   | Accepted             |
+| **Date**     | 2026-08-24           |
+| **Deciders** | Platform Engineering |
+| **Driver**   | T-04.02.04           |
 
 ---
 
@@ -31,11 +31,11 @@ Every Redis key has a defined TTL, an invalidation strategy, and a fallback path
 
 ### Concrete guarantees
 
-| Area | Redis Role | Fallback | TTL | Invalidation |
-|------|-----------|----------|-----|--------------|
-| Config caching | Accelerate reads, avoid PG round-trip for every request | Direct PostgreSQL read | 300 s (5 min) | Per-key eviction + global version bump on update. See `ConfigCache.invalidate()` |
-| Rate limiting | Low-latency atomic counters | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic |
-| Coordination locks | Distributed mutual exclusion | PG advisory locks or skip-operation | 1–30 s (depending on use case) | Automatic expiry (NX + PEXPIRE); never block on a stale lock |
+| Area               | Redis Role                                              | Fallback                                                                      | TTL                                          | Invalidation                                                                     |
+| ------------------ | ------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------- |
+| Config caching     | Accelerate reads, avoid PG round-trip for every request | Direct PostgreSQL read                                                        | 300 s (5 min)                                | Per-key eviction + global version bump on update. See `ConfigCache.invalidate()` |
+| Rate limiting      | Low-latency atomic counters                             | PostgreSQL upsert (`INSERT ... ON CONFLICT DO UPDATE`) + periodic row cleanup | Window duration (configurable per namespace) | Redis keys auto-expire after the window; PG cleanup is periodic                  |
+| Coordination locks | Distributed mutual exclusion                            | PG advisory locks or skip-operation                                           | 1–30 s (depending on use case)               | Automatic expiry (NX + PEXPIRE); never block on a stale lock                     |
 
 ### What Redis is NOT used for
 

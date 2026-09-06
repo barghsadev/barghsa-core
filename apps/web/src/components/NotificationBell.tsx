@@ -1,26 +1,26 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import { BellIcon, CheckCheckIcon } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate, type NavigateOptions } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n';
+import { BellIcon, CheckCheckIcon } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuSeparator,
-} from '@barghsa/ui'
-import { useLocale } from '../hooks/useLocale.js'
-import { useUnreadCount } from '../hooks/useUnreadCount.js'
-import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js'
+} from '@barghsa/ui';
+import { useLocale } from '../hooks/useLocale.js';
+import { useUnreadCount } from '../hooks/useUnreadCount.js';
+import { useUnreadDocumentTitle } from '../hooks/useUnreadDocumentTitle.js';
 import {
   fetchNotifications,
   markOneRead,
   markAllRead,
   toNavigationTarget,
   type NotificationItem,
-} from '../lib/notifications.js'
-import { NotificationRow } from './NotificationRow.js'
+} from '../lib/notifications.js';
+import { NotificationRow } from './NotificationRow.js';
 
-const DROPDOWN_SIZE = 10
+const DROPDOWN_SIZE = 10;
 
 /**
  * Header notification bell (E-05, T-05.02.03 / T-05.02.04).
@@ -34,58 +34,52 @@ const DROPDOWN_SIZE = 10
  * shows a loading skeleton and empty state.
  */
 export function NotificationBell() {
-  const locale = useLocale()
-  const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
-  const [items, setItems] = useState<NotificationItem[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const locale = useLocale();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState<NotificationItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const {
-    unreadCount,
-    setUnreadCount,
-    optimisticDecrement,
-  } = useUnreadCount()
+  const { unreadCount, setUnreadCount, optimisticDecrement } = useUnreadCount();
 
   // Mirror the unread count into the tab title while it is backgrounded.
-  useUnreadDocumentTitle(unreadCount)
+  useUnreadDocumentTitle(unreadCount);
 
   const load = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const page = await fetchNotifications(undefined, 'all', DROPDOWN_SIZE)
-      setItems(page.data)
-      setUnreadCount(page.unread_count)
-      setError(null)
+      const page = await fetchNotifications(undefined, 'all', DROPDOWN_SIZE);
+      setItems(page.data);
+      setUnreadCount(page.unread_count);
+      setError(null);
     } catch {
-      setError(t('notifications.error.load', locale))
+      setError(t('notifications.error.load', locale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [locale, setUnreadCount])
+  }, [locale, setUnreadCount]);
 
   // Load once on mount so the badge is accurate before the dropdown is opened.
   useEffect(() => {
-    void load()
-  }, [load])
+    void load();
+  }, [load]);
 
   const handleOpenChange = (next: boolean) => {
-    setOpen(next)
-    if (next) void load()
-  }
+    setOpen(next);
+    if (next) void load();
+  };
 
   const handleItemClick = async (item: NotificationItem) => {
-    const target = toNavigationTarget(item)
+    const target = toNavigationTarget(item);
     if (!item.isRead) {
       // Optimistic badge + row update (low-risk: read-state is idempotent),
       // then reconcile with the authoritative server count.
-      optimisticDecrement(1)
-      setItems((prev) =>
-        prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)),
-      )
+      optimisticDecrement(1);
+      setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)));
       try {
-        const count = await markOneRead(item.id)
-        setUnreadCount(count)
+        const count = await markOneRead(item.id);
+        setUnreadCount(count);
       } catch {
         // Non-blocking: navigation still proceeds if a route exists; the
         // next short-poll reconciles the badge if the write failed.
@@ -95,27 +89,24 @@ export function NotificationBell() {
       navigate({
         to: target.to,
         search: target.search as NavigateOptions['search'],
-      } as NavigateOptions)
+      } as NavigateOptions);
     }
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleMarkAll = async () => {
-    optimisticDecrement(unreadCount)
-    setItems((prev) => prev.map((i) => ({ ...i, isRead: true })))
+    optimisticDecrement(unreadCount);
+    setItems((prev) => prev.map((i) => ({ ...i, isRead: true })));
     try {
-      const count = await markAllRead()
-      setUnreadCount(count)
+      const count = await markAllRead();
+      setUnreadCount(count);
     } catch {
       // Non-blocking; the next short-poll reconciles the badge.
     }
-  }
+  };
 
-  const badgeLabel = unreadCount > 99 ? '99+' : String(unreadCount)
-  const bellAria = t('notifications.bellAria', locale).replace(
-    '{count}',
-    String(unreadCount),
-  )
+  const badgeLabel = unreadCount > 99 ? '99+' : String(unreadCount);
+  const bellAria = t('notifications.bellAria', locale).replace('{count}', String(unreadCount));
 
   return (
     <DropdownMenu open={open} onOpenChange={handleOpenChange}>
@@ -184,11 +175,7 @@ export function NotificationBell() {
                   className="flex w-full items-start gap-3 rounded-md px-1.5 py-2 text-start hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   dir={locale === 'fa' ? 'rtl' : 'ltr'}
                 >
-                  <NotificationRow
-                    item={item}
-                    locale={locale}
-                    unread={!item.isRead}
-                  />
+                  <NotificationRow item={item} locale={locale} unread={!item.isRead} />
                 </button>
               </li>
             ))}
@@ -207,5 +194,5 @@ export function NotificationBell() {
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

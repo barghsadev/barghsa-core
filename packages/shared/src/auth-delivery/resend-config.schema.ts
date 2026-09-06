@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Resend provider configuration schema (E-05, T-05.06.03).
@@ -30,33 +30,33 @@ export const ResendConfigSchema = z.object({
    * Secret at rest; never surfaced by the API (masked like `api_key`).
    */
   webhook_secret: z.string().min(1).max(1024).optional(),
-})
+});
 
-export type ResendConfig = z.infer<typeof ResendConfigSchema>
+export type ResendConfig = z.infer<typeof ResendConfigSchema>;
 
 export interface ResendConfigParseOk {
-  ok: true
-  config: ResendConfig
+  ok: true;
+  config: ResendConfig;
 }
 
 export interface ResendConfigParseError {
-  ok: false
-  error: string
+  ok: false;
+  error: string;
 }
 
-export type ResendConfigParseResult = ResendConfigParseOk | ResendConfigParseError
+export type ResendConfigParseResult = ResendConfigParseOk | ResendConfigParseError;
 
 /** Parse an opaque stored config blob into a validated `ResendConfig`. */
 export function parseResendConfig(raw: unknown): ResendConfigParseResult {
-  const parsed = ResendConfigSchema.safeParse(raw)
+  const parsed = ResendConfigSchema.safeParse(raw);
   if (!parsed.success) {
     const details = parsed.error.issues
       .map((issue) => {
-        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
-        return `${path}: ${issue.message}`
+        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)';
+        return `${path}: ${issue.message}`;
       })
-      .join('; ')
-    return { ok: false, error: details }
+      .join('; ');
+    return { ok: false, error: details };
   }
-  return { ok: true, config: parsed.data }
+  return { ok: true, config: parsed.data };
 }

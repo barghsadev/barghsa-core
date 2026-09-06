@@ -1,45 +1,50 @@
-import { notificationLink } from '@barghsa/shared/notifications'
-import { NotificationCenterService, notificationScope } from './notification-center.service.js'
-import { Injectable, Logger, HttpException } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
+import { notificationLink } from '@barghsa/shared/notifications';
+import { NotificationCenterService, notificationScope } from './notification-center.service.js';
+import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
 
 export interface CreateNotificationParams {
-  userId: string
-  profileId?: string
-  type: 'verification_status' | 'profile_verified' | 'profile_unverified' | 'profile_pending' | 'general'
-  title: string
-  localizedContent?: Record<'fa'|'en',{title:string;body:string}>
-  body?: string
-  link?: string
+  userId: string;
+  profileId?: string;
+  type:
+    | 'verification_status'
+    | 'profile_verified'
+    | 'profile_unverified'
+    | 'profile_pending'
+    | 'general';
+  title: string;
+  localizedContent?: Record<'fa' | 'en', { title: string; body: string }>;
+  body?: string;
+  link?: string;
 }
 
 export interface NotificationResult {
-  id: string
-  userId: string
-  profileId: string | null
-  type: string
-  title: string
-  body: string | null
-  link: string | null
-  read: boolean
-  readAt: Date | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  userId: string;
+  profileId: string | null;
+  type: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  read: boolean;
+  readAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /** A single delivery-log row surfaced to the admin panel (E-05, T-05.01.05). */
 export interface DeliveryLogRow {
-  id: string
-  notificationId: string
-  channel: 'in_app' | 'email' | 'sms'
-  status: 'delivered' | 'failed'
-  attemptNumber: number
-  providerRef: string | null
-  latencyMs: number | null
-  errorCategory: string | null
-  errorDetail: string | null
-  createdAt: Date
+  id: string;
+  notificationId: string;
+  channel: 'in_app' | 'email' | 'sms';
+  status: 'delivered' | 'failed';
+  attemptNumber: number;
+  providerRef: string | null;
+  latencyMs: number | null;
+  errorCategory: string | null;
+  errorDetail: string | null;
+  createdAt: Date;
 }
 
 /**
@@ -53,7 +58,7 @@ export interface DeliveryLogRow {
  */
 @Injectable()
 export class NotificationsService {
-  private readonly logger = new Logger(NotificationsService.name)
+  private readonly logger = new Logger(NotificationsService.name);
 
   /**
    * Create a new in-app notification for a user.
@@ -65,10 +70,13 @@ export class NotificationsService {
    * @param params - Notification creation parameters.
    * @returns The created notification record.
    */
-  async create(params: CreateNotificationParams, transaction?: { query: (sql:string,params?:unknown[])=>Promise<unknown> }): Promise<NotificationResult> {
-    const pool = transaction ?? getDbPool()
-    const id = uuidv7()
-    const now = new Date()
+  async create(
+    params: CreateNotificationParams,
+    transaction?: { query: (sql: string, params?: unknown[]) => Promise<unknown> }
+  ): Promise<NotificationResult> {
+    const pool = transaction ?? getDbPool();
+    const id = uuidv7();
+    const now = new Date();
 
     await pool.query(
       `INSERT INTO in_app_notifications (id,recipient_user_id,profile_id,type,title_i18n_key,body_i18n_key,localized_content,link_route,is_read,created_at,delivery_key)
@@ -84,10 +92,10 @@ export class NotificationsService {
         notificationLink(params.link),
         now,
         params.localizedContent ? JSON.stringify(params.localizedContent) : null,
-      ],
-    )
+      ]
+    );
 
-    this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`)
+    this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`);
 
     return {
       id,
@@ -101,7 +109,7 @@ export class NotificationsService {
       readAt: null,
       createdAt: now,
       updatedAt: now,
-    }
+    };
   }
 
   /**
@@ -115,37 +123,49 @@ export class NotificationsService {
   async findByUser(
     userId: string,
     limit: number = 50,
-    offset: number = 0,
+    offset: number = 0
   ): Promise<{ notifications: NotificationResult[]; total: number; unreadCount: number }> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const center = new NotificationCenterService(pool)
-    const profileId = await center.resolveActiveProfileId(userId)
-    const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50
-    const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0
-    const counts = (await pool.query(`SELECT count(*)::int AS total,
-      count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`, [profileId, userId])).rows[0]
-    const rows = await pool.query(`SELECT id,profile_id AS "profileId",type,
+    const center = new NotificationCenterService(pool);
+    const profileId = await center.resolveActiveProfileId(userId);
+    const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50;
+    const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0;
+    const counts = (
+      await pool.query(
+        `SELECT count(*)::int AS total,
+      count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`,
+        [profileId, userId]
+      )
+    ).rows[0];
+    const rows = await pool.query(
+      `SELECT id,profile_id AS "profileId",type,
       COALESCE(localized_content->'original'->>'title',localized_content->'fa'->>'title',title_i18n_key) AS title,
       COALESCE(localized_content->'original'->>'body',localized_content->'fa'->>'body',body_i18n_key) AS body,
       link_route AS link,is_read AS read,read_at AS "readAt",created_at AS "createdAt",created_at AS "updatedAt"
-      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $3 OFFSET $4`, [profileId,userId,safeLimit,safeOffset])
-    return { notifications: rows.rows.map(row => ({ ...row, userId })), total: counts?.total ?? 0, unreadCount: counts?.unread ?? 0 }
+      FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $3 OFFSET $4`,
+      [profileId, userId, safeLimit, safeOffset]
+    );
+    return {
+      notifications: rows.rows.map((row) => ({ ...row, userId })),
+      total: counts?.total ?? 0,
+      unreadCount: counts?.unread ?? 0,
+    };
   }
 
   async countUnread(userId: string): Promise<number> {
-    const center = new NotificationCenterService(getDbPool())
-    return center.countUnread(await center.resolveActiveProfileId(userId), userId)
+    const center = new NotificationCenterService(getDbPool());
+    return center.countUnread(await center.resolveActiveProfileId(userId), userId);
   }
 
   async markAsRead(notificationId: string, userId: string): Promise<void> {
-    const center = new NotificationCenterService(getDbPool())
-    await center.markRead(await center.resolveActiveProfileId(userId), notificationId, userId)
+    const center = new NotificationCenterService(getDbPool());
+    await center.markRead(await center.resolveActiveProfileId(userId), notificationId, userId);
   }
 
   async markAllAsRead(userId: string): Promise<void> {
-    const center = new NotificationCenterService(getDbPool())
-    await center.markAllRead(await center.resolveActiveProfileId(userId), userId)
+    const center = new NotificationCenterService(getDbPool());
+    await center.markAllRead(await center.resolveActiveProfileId(userId), userId);
   }
 
   /**
@@ -160,30 +180,30 @@ export class NotificationsService {
    * @param options - Optional filters and pagination.
    */
   async findDeliveryLogs(options: {
-    notificationId?: string
-    channel?: 'in_app' | 'email' | 'sms'
-    status?: 'delivered' | 'failed'
-    limit?: number
-    offset?: number
+    notificationId?: string;
+    channel?: 'in_app' | 'email' | 'sms';
+    status?: 'delivered' | 'failed';
+    limit?: number;
+    offset?: number;
   }): Promise<DeliveryLogRow[]> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
-    const offset = Math.max(options.offset ?? 0, 0)
+    const pool = getDbPool();
+    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+    const offset = Math.max(options.offset ?? 0, 0);
 
-    const conditions: string[] = []
-    const params: unknown[] = []
+    const conditions: string[] = [];
+    const params: unknown[] = [];
     // Counter-based placeholder builder. Each filter appends its value and a
     // fresh `$N` placeholder, so conditions never share or misnumber indexes.
     const push = (column: string, value: string) => {
-      params.push(value)
-      conditions.push(`${column} = $${params.length}`)
-    }
+      params.push(value);
+      conditions.push(`${column} = $${params.length}`);
+    };
 
-    if (options.notificationId) push('notification_id', options.notificationId)
-    if (options.channel) push('channel', options.channel)
-    if (options.status) push('status', options.status)
+    if (options.notificationId) push('notification_id', options.notificationId);
+    if (options.channel) push('channel', options.channel);
+    if (options.status) push('status', options.status);
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
     // Alias snake_case DB columns to camelCase so runtime rows match the
     // declared DeliveryLogRow shape (the `pg` driver does not auto-convert).
     const rowsResult = await pool.query<DeliveryLogRow>(
@@ -201,37 +221,37 @@ export class NotificationsService {
        ${where}
        ORDER BY created_at DESC
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset],
-    )
-    return rowsResult.rows
+      [...params, limit, offset]
+    );
+    return rowsResult.rows;
   }
 
   /** A single dead-letter row surfaced to the admin panel (E-05, T-05.01.06). */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async listDeadLetters(options: {
-    status?: 'open' | 'retried' | 'resolved' | 'dismissed'
-    severity?: 'error' | 'critical'
-    channel?: 'in_app' | 'email' | 'sms'
-    limit?: number
-    offset?: number
+    status?: 'open' | 'retried' | 'resolved' | 'dismissed';
+    severity?: 'error' | 'critical';
+    channel?: 'in_app' | 'email' | 'sms';
+    limit?: number;
+    offset?: number;
   }): Promise<any[]> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200)
-    const offset = Math.max(options.offset ?? 0, 0)
+    const pool = getDbPool();
+    const limit = Math.min(Math.max(options.limit ?? 50, 1), 200);
+    const offset = Math.max(options.offset ?? 0, 0);
 
-    const conditions: string[] = []
-    const params: unknown[] = []
+    const conditions: string[] = [];
+    const params: unknown[] = [];
     const push = (column: string, value: string) => {
-      params.push(value)
-      conditions.push(`${column} = $${params.length}`)
-    }
-    if (options.status) push('status', options.status)
-    if (options.severity) push('severity', options.severity)
-    if (options.channel) push('channel', options.channel)
+      params.push(value);
+      conditions.push(`${column} = $${params.length}`);
+    };
+    if (options.status) push('status', options.status);
+    if (options.severity) push('severity', options.severity);
+    if (options.channel) push('channel', options.channel);
 
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-    const limitIdx = params.length + 1
-    const offsetIdx = params.length + 2
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const limitIdx = params.length + 1;
+    const offsetIdx = params.length + 2;
     const rows = await pool.query(
       `SELECT id,
               outbox_id AS "outboxId",
@@ -259,9 +279,9 @@ export class NotificationsService {
          CASE severity WHEN 'critical' THEN 0 ELSE 1 END,
          created_at DESC
        LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
-      [...params, limit, offset],
-    )
-    return rows.rows
+      [...params, limit, offset]
+    );
+    return rows.rows;
   }
 
   /**
@@ -281,56 +301,78 @@ export class NotificationsService {
   async deadLetterAction(
     id: string,
     action: 'retry' | 'resolve' | 'dismiss',
-    actor: string,
+    actor: string
   ): Promise<any | null> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const current = await pool.query<{
-      id: string
-      jobId: string
-      outboxId: string
-      status: string
+      id: string;
+      jobId: string;
+      outboxId: string;
+      status: string;
     }>(
       `SELECT id, job_id AS "jobId", outbox_id AS "outboxId", status
          FROM notification_dead_letter WHERE id = $1`,
-      [id],
-    )
-    if (current.rows.length === 0) return null
+      [id]
+    );
+    if (current.rows.length === 0) return null;
 
-    const row = current.rows[0]
-    if (!row) return null
+    const row = current.rows[0];
+    if (!row) return null;
 
     // Map the requested action to the persisted status (matches the
     // chk_ndl_status CHECK constraint).
     const nextStatus =
-      action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed'
+      action === 'retry' ? 'retried' : action === 'resolve' ? 'resolved' : 'dismissed';
 
     // The retry re-queue touches three tables; acquire a dedicated client and
     // run it as a single transaction so a crash mid-way cannot leave the job
     // re-queued while the dead-letter row stays open (or vice versa). A
     // dedicated client is required — multi-statement `pool.query('BEGIN')`
     // does not pin a connection across statements.
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Match worker lock order: parent outbox, then delivery record/job.
-      const parent = (await client.query(`SELECT status,locked_until > clock_timestamp() AS leased
-        FROM notification_outbox WHERE id=$1 FOR UPDATE`, [row.outboxId])).rows[0]
-      const locked = (await client.query(`SELECT id,status FROM notification_dead_letter
-        WHERE id=$1 FOR UPDATE`, [id])).rows[0]
+      const parent = (
+        await client.query(
+          `SELECT status,locked_until > clock_timestamp() AS leased
+        FROM notification_outbox WHERE id=$1 FOR UPDATE`,
+          [row.outboxId]
+        )
+      ).rows[0];
+      const locked = (
+        await client.query(
+          `SELECT id,status FROM notification_dead_letter
+        WHERE id=$1 FOR UPDATE`,
+          [id]
+        )
+      ).rows[0];
       if (!locked || locked.status !== 'open') {
-        await client.query('COMMIT')
-        return locked ?? null
+        await client.query('COMMIT');
+        return locked ?? null;
       }
       if (action === 'retry') {
-        if (!parent || parent.leased || parent.status === 'cancelled' || parent.status === 'delivered') {
-          throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409)
+        if (
+          !parent ||
+          parent.leased ||
+          parent.status === 'cancelled' ||
+          parent.status === 'delivered'
+        ) {
+          throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409);
         }
-        const job = await client.query(`UPDATE notification_job SET status='queued',run_after=NULL,attempts=0,
-          last_error=NULL,updated_at=NOW() WHERE id=$1 AND outbox_id=$2 AND status='dead_letter' RETURNING id`, [row.jobId, row.outboxId])
-        if (job.rows.length !== 1) throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409)
-        await client.query(`UPDATE notification_outbox SET status='queued',locked_until=NULL,lease_token=NULL,
-          scheduled_for=NULL,last_error=NULL,updated_at=NOW() WHERE id=$1`, [row.outboxId])
+        const job = await client.query(
+          `UPDATE notification_job SET status='queued',run_after=NULL,attempts=0,
+          last_error=NULL,updated_at=NOW() WHERE id=$1 AND outbox_id=$2 AND status='dead_letter' RETURNING id`,
+          [row.jobId, row.outboxId]
+        );
+        if (job.rows.length !== 1)
+          throw new HttpException({ error: 'NOTIFICATION_RETRY_CONFLICT' }, 409);
+        await client.query(
+          `UPDATE notification_outbox SET status='queued',locked_until=NULL,lease_token=NULL,
+          scheduled_for=NULL,last_error=NULL,updated_at=NOW() WHERE id=$1`,
+          [row.outboxId]
+        );
       }
 
       const updated = await client.query(
@@ -355,26 +397,33 @@ export class NotificationsService {
                     resolved_by AS "resolvedBy",
                     created_at AS "createdAt",
                     updated_at AS "updatedAt"`,
-        [nextStatus, actor, id],
-      )
+        [nextStatus, actor, id]
+      );
 
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
         VALUES ($1,$2,'notification_dead_letter_action',$3::jsonb,$4,NOW())`,
-        [uuidv7(),actor,JSON.stringify({ deadLetterId: id, outboxId: row.outboxId, jobId: row.jobId, action }),uuidv7()])
-      await client.query('COMMIT')
+        [
+          uuidv7(),
+          actor,
+          JSON.stringify({ deadLetterId: id, outboxId: row.outboxId, jobId: row.jobId, action }),
+          uuidv7(),
+        ]
+      );
+      await client.query('COMMIT');
 
       // If the row was already acted upon (status != 'open'), the guarded
       // UPDATE affected zero rows: report the terminal state so the caller
       // treats it as an idempotent no-op.
       if (updated.rows.length === 0) {
-        return { id: row.id, status: row.status }
+        return { id: row.id, status: row.status };
       }
-      return updated.rows[0]
+      return updated.rows[0];
     } catch (err) {
-      await client.query('ROLLBACK')
-      throw err
+      await client.query('ROLLBACK');
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
   }
 }

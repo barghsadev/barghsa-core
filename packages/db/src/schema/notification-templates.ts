@@ -1,7 +1,7 @@
-import { boolean, pgTable, text, jsonb, integer, uniqueIndex } from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
+import { boolean, pgTable, text, jsonb, integer, uniqueIndex } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
 
 /**
  * Notification templates table (T-09.04.01).
@@ -89,8 +89,7 @@ export const notificationTemplates = pgTable(
     publishedAt: timestamptz('published_at'),
 
     /** FK to users — the last editor of this template. */
-    createdBy: text('created_by')
-      .references(() => users.userId, { onDelete: 'set null' }),
+    createdBy: text('created_by').references(() => users.userId, { onDelete: 'set null' }),
 
     /** Record creation timestamp. */
     createdAt: timestamptz('created_at').defaultNow().notNull(),
@@ -110,5 +109,5 @@ export const notificationTemplates = pgTable(
     uniqueIndex('uq_notification_templates_active')
       .on(table.eventKey, table.channel, table.locale)
       .where(sql`is_active = true`),
-  ],
-)
+  ]
+);

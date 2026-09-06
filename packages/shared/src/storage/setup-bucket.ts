@@ -88,10 +88,7 @@ const DEFAULT_LEGAL_HOLD_VALUE = 'true';
 // Lifecycle rules builder
 // ---------------------------------------------------------------------------
 
-function buildLifecycleRules(
-  legalHoldKey: string,
-  legalHoldValue: string,
-): LifecycleRule[] {
+function buildLifecycleRules(legalHoldKey: string, legalHoldValue: string): LifecycleRule[] {
   const rules: LifecycleRule[] = [];
 
   // ── Prefix-based expiry rules ──────────────────────────────────────────
@@ -155,9 +152,7 @@ function buildLifecycleRules(
       },
     },
     Transitions: [{ Days: 0, StorageClass: 'GLACIER' }],
-    NoncurrentVersionTransitions: [
-      { NoncurrentDays: 0, StorageClass: 'GLACIER' },
-    ],
+    NoncurrentVersionTransitions: [{ NoncurrentDays: 0, StorageClass: 'GLACIER' }],
   });
 
   return rules;
@@ -184,9 +179,7 @@ function buildLifecycleRules(
  * const result = await setupBucket({ bucket: 'my-bucket', client });
  * ```
  */
-export async function setupBucket(
-  config: BucketSetupConfig,
-): Promise<BucketSetupResult> {
+export async function setupBucket(config: BucketSetupConfig): Promise<BucketSetupResult> {
   const {
     bucket,
     client,
@@ -210,7 +203,7 @@ export async function setupBucket(
       new PutBucketVersioningCommand({
         Bucket: bucket,
         VersioningConfiguration: { Status: 'Enabled' },
-      }),
+      })
     );
     result.versioningConfigured = true;
   }
@@ -224,7 +217,7 @@ export async function setupBucket(
       new PutBucketLifecycleConfigurationCommand({
         Bucket: bucket,
         LifecycleConfiguration: { Rules: rules },
-      }),
+      })
     );
     result.lifecycleConfigured = true;
   }
@@ -246,7 +239,7 @@ export async function setupBucket(
  */
 export function getStandardLifecycleRules(
   legalHoldKey: string = DEFAULT_LEGAL_HOLD_KEY,
-  legalHoldValue: string = DEFAULT_LEGAL_HOLD_VALUE,
+  legalHoldValue: string = DEFAULT_LEGAL_HOLD_VALUE
 ): LifecycleRule[] {
   return buildLifecycleRules(legalHoldKey, legalHoldValue);
 }

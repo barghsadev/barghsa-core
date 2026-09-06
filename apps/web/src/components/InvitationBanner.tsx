@@ -1,31 +1,31 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { Button } from '@barghsa/ui'
-import { withCsrf } from '../lib/csrf.js'
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import { Button } from '@barghsa/ui';
+import { withCsrf } from '../lib/csrf.js';
 
 // ─── Types ────────────────────────────────────────────────────────────
 
 interface PendingInvitation {
-  id: string
-  profileId: string
-  profileName: string
-  role: string
-  invitedBy: string
-  inviterName: string | null
-  createdAt: string
-  expiresAt: string | null
+  id: string;
+  profileId: string;
+  profileName: string;
+  role: string;
+  invitedBy: string;
+  inviterName: string | null;
+  createdAt: string;
+  expiresAt: string | null;
 }
 
 interface PendingInvitationsResponse {
-  invitations: PendingInvitation[]
+  invitations: PendingInvitation[];
 }
 
 interface ActionState {
-  accepting: boolean
-  declining: boolean
-  done: boolean
-  doneAction: 'accept' | 'decline' | null
+  accepting: boolean;
+  declining: boolean;
+  done: boolean;
+  doneAction: 'accept' | 'decline' | null;
 }
 
 const defaultActionState = (): ActionState => ({
@@ -33,12 +33,12 @@ const defaultActionState = (): ActionState => ({
   declining: false,
   done: false,
   doneAction: null,
-})
+});
 
 // ─── Props ────────────────────────────────────────────────────────────
 
 interface InvitationBannerProps {
-  locale?: Locale
+  locale?: Locale;
 }
 
 // ─── Component ────────────────────────────────────────────────────────
@@ -52,13 +52,13 @@ interface InvitationBannerProps {
  * with Accept and Decline buttons.
  */
 export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
-  const [invitations, setInvitations] = useState<PendingInvitation[]>([])
-  const [loading, setLoading] = useState(true)
-  const [actionStates, setActionStates] = useState<Record<string, ActionState>>({})
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [invitations, setInvitations] = useState<PendingInvitation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionStates, setActionStates] = useState<Record<string, ActionState>>({});
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const isRtl = locale === 'fa'
+  const isRtl = locale === 'fa';
 
   // ── Fetch pending invitations ─────────────────────────────────
 
@@ -68,117 +68,129 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
         method: 'GET',
         credentials: 'include',
         headers: { Accept: 'application/json' },
-      })
+      });
 
       if (response.status === 401) {
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
 
       if (!response.ok) {
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
 
-      const data: PendingInvitationsResponse = await response.json()
-      setInvitations(data.invitations)
+      const data: PendingInvitationsResponse = await response.json();
+      setInvitations(data.invitations);
     } catch {
       // Silently fail — banner is non-critical UI
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchInvitations()
-  }, [fetchInvitations])
+    fetchInvitations();
+  }, [fetchInvitations]);
 
   // ── Accept invitation ─────────────────────────────────────────
 
-  const handleAccept = useCallback(async (inviteId: string) => {
-    setActionStates((prev) => {
-      const current = prev[inviteId] ?? defaultActionState()
-      return { ...prev, [inviteId]: { ...current, accepting: true, declining: false } }
-    })
-    setError(null)
+  const handleAccept = useCallback(
+    async (inviteId: string) => {
+      setActionStates((prev) => {
+        const current = prev[inviteId] ?? defaultActionState();
+        return { ...prev, [inviteId]: { ...current, accepting: true, declining: false } };
+      });
+      setError(null);
 
-    try {
-      const response = await fetch(`/api/invitations/${inviteId}/accept`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      })
+      try {
+        const response = await fetch(`/api/invitations/${inviteId}/accept`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
-      if (!response.ok) {
-        setError(t('invitation.banner.error', locale))
+        if (!response.ok) {
+          setError(t('invitation.banner.error', locale));
+          setActionStates((prev) => {
+            const current = prev[inviteId] ?? defaultActionState();
+            return { ...prev, [inviteId]: { ...current, accepting: false } };
+          });
+          return;
+        }
+
         setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState()
-          return { ...prev, [inviteId]: { ...current, accepting: false } }
-        })
-        return
+          const current = prev[inviteId] ?? defaultActionState();
+          return {
+            ...prev,
+            [inviteId]: { ...current, accepting: false, done: true, doneAction: 'accept' },
+          };
+        });
+
+        window.dispatchEvent(new Event('barghsa:profiles-changed'));
+        void router.invalidate();
+      } catch {
+        setError(t('invitation.banner.error', locale));
+        setActionStates((prev) => {
+          const current = prev[inviteId] ?? defaultActionState();
+          return { ...prev, [inviteId]: { ...current, accepting: false } };
+        });
       }
-
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState()
-        return { ...prev, [inviteId]: { ...current, accepting: false, done: true, doneAction: 'accept' } }
-      })
-
-      window.dispatchEvent(new Event('barghsa:profiles-changed'))
-      void router.invalidate()
-    } catch {
-      setError(t('invitation.banner.error', locale))
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState()
-        return { ...prev, [inviteId]: { ...current, accepting: false } }
-      })
-    }
-  }, [locale, router])
+    },
+    [locale, router]
+  );
 
   // ── Decline invitation ────────────────────────────────────────
 
-  const handleDecline = useCallback(async (inviteId: string) => {
-    setActionStates((prev) => {
-      const current = prev[inviteId] ?? defaultActionState()
-      return { ...prev, [inviteId]: { ...current, declining: true, accepting: false } }
-    })
-    setError(null)
+  const handleDecline = useCallback(
+    async (inviteId: string) => {
+      setActionStates((prev) => {
+        const current = prev[inviteId] ?? defaultActionState();
+        return { ...prev, [inviteId]: { ...current, declining: true, accepting: false } };
+      });
+      setError(null);
 
-    try {
-      const response = await fetch(`/api/invitations/${inviteId}/decline`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: withCsrf({ 'Content-Type': 'application/json' }),
-      })
+      try {
+        const response = await fetch(`/api/invitations/${inviteId}/decline`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: withCsrf({ 'Content-Type': 'application/json' }),
+        });
 
-      if (!response.ok) {
-        setError(t('invitation.banner.error', locale))
+        if (!response.ok) {
+          setError(t('invitation.banner.error', locale));
+          setActionStates((prev) => {
+            const current = prev[inviteId] ?? defaultActionState();
+            return { ...prev, [inviteId]: { ...current, declining: false } };
+          });
+          return;
+        }
+
         setActionStates((prev) => {
-          const current = prev[inviteId] ?? defaultActionState()
-          return { ...prev, [inviteId]: { ...current, declining: false } }
-        })
-        return
+          const current = prev[inviteId] ?? defaultActionState();
+          return {
+            ...prev,
+            [inviteId]: { ...current, declining: false, done: true, doneAction: 'decline' },
+          };
+        });
+
+        window.dispatchEvent(new Event('barghsa:profiles-changed'));
+        void router.invalidate();
+      } catch {
+        setError(t('invitation.banner.error', locale));
+        setActionStates((prev) => {
+          const current = prev[inviteId] ?? defaultActionState();
+          return { ...prev, [inviteId]: { ...current, declining: false } };
+        });
       }
-
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState()
-        return { ...prev, [inviteId]: { ...current, declining: false, done: true, doneAction: 'decline' } }
-      })
-
-      window.dispatchEvent(new Event('barghsa:profiles-changed'))
-      void router.invalidate()
-    } catch {
-      setError(t('invitation.banner.error', locale))
-      setActionStates((prev) => {
-        const current = prev[inviteId] ?? defaultActionState()
-        return { ...prev, [inviteId]: { ...current, declining: false } }
-      })
-    }
-  }, [locale, router])
+    },
+    [locale, router]
+  );
 
   // ── Render ────────────────────────────────────────────────────
 
   if (loading || invitations.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -193,7 +205,7 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
       )}
 
       {invitations.map((inv) => {
-        const state = actionStates[inv.id] ?? defaultActionState()
+        const state = actionStates[inv.id] ?? defaultActionState();
 
         if (state.done) {
           return (
@@ -206,12 +218,12 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
                 ? t('invitation.banner.accepted', locale)
                 : t('invitation.banner.declined', locale)}
             </div>
-          )
+          );
         }
 
         const displayDate = new Date(inv.createdAt).toLocaleDateString(
-          locale === 'fa' ? 'fa-IR' : 'en-US',
-        )
+          locale === 'fa' ? 'fa-IR' : 'en-US'
+        );
 
         return (
           <div
@@ -228,13 +240,12 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
                 </span>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-blue-700">
                   <span>
-                    {t('invitation.banner.invitedBy', locale)
-                      .replace('{name}', inv.inviterName ?? inv.invitedBy)}
+                    {t('invitation.banner.invitedBy', locale).replace(
+                      '{name}',
+                      inv.inviterName ?? inv.invitedBy
+                    )}
                   </span>
-                  <span>
-                    {t('invitation.banner.date', locale)
-                      .replace('{date}', displayDate)}
-                  </span>
+                  <span>{t('invitation.banner.date', locale).replace('{date}', displayDate)}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
@@ -261,8 +272,8 @@ export function InvitationBanner({ locale = 'fa' }: InvitationBannerProps) {
               </div>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

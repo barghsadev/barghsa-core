@@ -18,9 +18,7 @@ export const RedisConfigSchema = z.object({
   host: z.string().optional(),
   port: z.coerce.number().int().positive().max(65535).optional(),
   password: z.string().optional(),
-  tls: z
-    .union([z.boolean(), z.object({})])
-    .optional(),
+  tls: z.union([z.boolean(), z.object({})]).optional(),
   keyPrefix: z.string().optional(),
   maxRetriesPerRequest: z.number().int().min(0).nullable().optional(),
   enableReadyCheck: z.boolean().optional(),

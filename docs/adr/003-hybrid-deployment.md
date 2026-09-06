@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-24  
 **Deciders:** Platform Engineering Team  
-**Dependencies:** T-04.01.02, E-05  
+**Dependencies:** T-04.01.02, E-05
 
 ## Context
 
@@ -30,6 +30,7 @@ ssl: {
 ```
 
 For cloud-specific services:
+
 - **AWS RDS:** Use the AWS RDS CA bundle (`rds-ca-bundle.pem` or `rds-combined-ca-bundle.pem`)
 - **Google Cloud SQL:** Use the server's CA certificate (downloaded from the Cloud SQL Console)
 - **DigitalOcean:** CA certificate provided in the connection details page
@@ -40,11 +41,11 @@ The CA bundle path is configured via `DATABASE_CA_PATH` environment variable. Wh
 
 The application resolves the PostgreSQL connection target in the following order:
 
-| Priority | Variable | Purpose |
-|----------|----------|---------|
+| Priority    | Variable        | Purpose                                      |
+| ----------- | --------------- | -------------------------------------------- |
 | 1 (highest) | `PGBOUNCER_URL` | PgBouncer (recommended for multi-replica HA) |
-| 2 | `DATABASE_URL` | Direct PostgreSQL (hybrid managed DB) |
-| 3 | `PGDIRECT_URL` | Direct admin/migration bypass |
+| 2           | `DATABASE_URL`  | Direct PostgreSQL (hybrid managed DB)        |
+| 3           | `PGDIRECT_URL`  | Direct admin/migration bypass                |
 
 When `DATABASE_URL` points to a managed PostgreSQL endpoint, TLS is required. The connection string may include `?sslmode=require` query parameter, or the `ssl` configuration may be set via the code-level config or `DATABASE_CA_PATH` / `DATABASE_SSL_ENABLED` env vars.
 
@@ -59,12 +60,12 @@ The firewall and network configuration is managed outside this repository (Terra
 
 ### 4. TLS configuration via environment variables
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `DATABASE_URL` | Yes | — | PostgreSQL connection string (may include `sslmode`) |
-| `DATABASE_SSL_ENABLED` | No | `false` | When `true`, enables TLS even if the connection string omits `sslmode` |
-| `DATABASE_CA_PATH` | No | — | Filesystem path to the CA certificate bundle for server certificate validation |
-| `DATABASE_SSL_REJECT_UNAUTHORIZED` | No | `true` | When `false`, connects with TLS but skips certificate validation (only for troubleshooting) |
+| Variable                           | Required | Default | Description                                                                                 |
+| ---------------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`                     | Yes      | —       | PostgreSQL connection string (may include `sslmode`)                                        |
+| `DATABASE_SSL_ENABLED`             | No       | `false` | When `true`, enables TLS even if the connection string omits `sslmode`                      |
+| `DATABASE_CA_PATH`                 | No       | —       | Filesystem path to the CA certificate bundle for server certificate validation              |
+| `DATABASE_SSL_REJECT_UNAUTHORIZED` | No       | `true`  | When `false`, connects with TLS but skips certificate validation (only for troubleshooting) |
 
 Application code reads these variables in `createDbPool()` and passes them to the `Pool` constructor.
 
@@ -80,12 +81,14 @@ Single-server deployments (all-in-one topology) come with explicitly documented 
 ## Consequences
 
 **Positive:**
+
 - Application code is topology-agnostic — the same Docker image works in single-server, hybrid, and HA topologies.
 - TLS with certificate validation meets the security requirement for production database connections.
 - Env var configuration for TLS is standard and deployer-friendly.
 - Clear firewall and access control guidance for infrastructure provisioning.
 
 **Negative:**
+
 - Managing CA bundle paths adds operational overhead — the CA bundle must be updated when the managed provider rotates their root CA.
 - Certificate validation requires the CA bundle file on the application VM, adding a deployment dependency.
 - The TLS configuration adds complexity to the `createDbPool()` config interface.
@@ -95,6 +98,7 @@ Single-server deployments (all-in-one topology) come with explicitly documented 
 ### No TLS for internal VPC (rejected)
 
 In a VPC with strict network ACLs, some teams skip TLS within the VPC boundary. This is rejected because:
+
 - Internal VPC traffic may still traverse shared physical infrastructure.
 - Regulatory compliance (PCI-DSS, SOC2) requires encryption in transit regardless of network boundary.
 - Defence-in-depth principle: network ACLs + TLS is strictly better than network ACLs alone.
@@ -112,6 +116,7 @@ Requiring TLS in local development would add friction for developers who need to
 ## Review
 
 This ADR should be reviewed when:
+
 - A managed PostgreSQL provider is selected and CA bundle handling is operationalised.
 - The application adds read replicas or database proxy that changes the TLS termination point.
 - A connection pooler (PgBouncer) is adopted for HA — TLS termination between app and PgBouncer, and PgBouncer to PostgreSQL, must be configured separately.

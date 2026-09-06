@@ -1,4 +1,4 @@
-import { createVitestConfig } from '../tsconfig/vitest.base.config'
+import { createVitestConfig } from '../tsconfig/vitest.base.config';
 
 export default createVitestConfig({
   test: {
@@ -20,4 +20,4 @@ export default createVitestConfig({
       ],
     },
   },
-})
+});

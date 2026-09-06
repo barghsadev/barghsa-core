@@ -11,13 +11,9 @@
  */
 
 /** Claim owners stored on `bank_receipt_attachment_claims.claim_type`. */
-export const BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES = [
-  'wallet_topup',
-  'invoice_receipt',
-] as const
+export const BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES = ['wallet_topup', 'invoice_receipt'] as const;
 
-export type BankReceiptAttachmentClaimType =
-  (typeof BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES)[number]
+export type BankReceiptAttachmentClaimType = (typeof BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES)[number];
 
 /**
  * Advisory-lock namespace shared by wallet top-up and invoice receipt
@@ -25,11 +21,10 @@ export type BankReceiptAttachmentClaimType =
  * produces the `pg_advisory_lock` pair; keep hashing off this package
  * so the finance barrel stays browser-safe.
  */
-export const BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE = 'bank-receipt-attachment'
+export const BANK_RECEIPT_ATTACHMENT_LOCK_NAMESPACE = 'bank-receipt-attachment';
 
 export type BankReceiptAttachmentClaimVerdict =
-  | { ok: true }
-  | { ok: false; reason: 'missing' | 'other_flow' }
+  { ok: true } | { ok: false; reason: 'missing' | 'other_flow' };
 
 /**
  * Decide whether a locked claim row may be reused by `requested`.
@@ -39,13 +34,13 @@ export type BankReceiptAttachmentClaimVerdict =
  */
 export function evaluateBankReceiptAttachmentClaim(
   existingType: string | null | undefined,
-  requested: BankReceiptAttachmentClaimType,
+  requested: BankReceiptAttachmentClaimType
 ): BankReceiptAttachmentClaimVerdict {
   if (existingType == null || existingType === '') {
-    return { ok: false, reason: 'missing' }
+    return { ok: false, reason: 'missing' };
   }
   if (existingType === requested) {
-    return { ok: true }
+    return { ok: true };
   }
-  return { ok: false, reason: 'other_flow' }
+  return { ok: false, reason: 'other_flow' };
 }

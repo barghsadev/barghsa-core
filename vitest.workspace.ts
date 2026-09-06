@@ -1,4 +1,4 @@
-import { defineWorkspace } from 'vitest/config'
+import { defineWorkspace } from 'vitest/config';
 
 /**
  * Vitest workspace definition.
@@ -9,7 +9,4 @@ import { defineWorkspace } from 'vitest/config'
  *
  * @see https://vitest.dev/guide/workspace
  */
-export default defineWorkspace([
-  'packages/*',
-  'apps/*',
-])
+export default defineWorkspace(['packages/*', 'apps/*']);

@@ -1,6 +1,6 @@
-import { index, jsonb, pgTable, text, boolean } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
+import { index, jsonb, pgTable, text, boolean } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
 
 /**
  * AI usage policy (S-09.11, T-09.11.03).
@@ -64,5 +64,5 @@ export const aiPolicies = pgTable(
     index('idx_aip_created_at').on(table.createdAt),
     /** Filter policies by guardrail kind (admin list). */
     index('idx_aip_type').on(table.policyType),
-  ],
-)
+  ]
+);

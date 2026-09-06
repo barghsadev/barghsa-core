@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm';
 import {
   check,
   foreignKey,
@@ -9,10 +9,10 @@ import {
   unique,
   uniqueIndex,
   uuid,
-} from 'drizzle-orm/pg-core'
-import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types'
-import { profiles } from './profiles'
-import { orders } from './orders'
+} from 'drizzle-orm/pg-core';
+import { pgEnum, uuidv7, irrAmount, timestamptz } from '../types';
+import { profiles } from './profiles';
+import { orders } from './orders';
 
 /**
  * Invoice state enum (T-04.1.01.02).
@@ -31,7 +31,7 @@ export const invoiceStateEnum = pgEnum('invoice_state', [
   'Cancelled',
   'PartiallyRefunded',
   'Refunded',
-])
+]);
 
 /**
  * Invoice table (T-04.1.01.01).
@@ -81,8 +81,7 @@ export const invoices = pgTable(
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
     /** Optional foreign key to the originating order. */
-    orderId: uuid('order_id')
-      .references(() => orders.id, { onDelete: 'set null' }),
+    orderId: uuid('order_id').references(() => orders.id, { onDelete: 'set null' }),
 
     /**
      * Optional reference to a contract (T-04.1.02.05).
@@ -119,10 +118,14 @@ export const invoices = pgTable(
     totalAmount: irrAmount('total_amount').notNull(),
 
     /** Cumulative confirmed payment amount in IRR. Default 0. */
-    paidAmount: irrAmount('paid_amount').notNull().default(sql`0::bigint`),
+    paidAmount: irrAmount('paid_amount')
+      .notNull()
+      .default(sql`0::bigint`),
 
     /** Cumulative refund amount in IRR. Default 0. */
-    refundedAmount: irrAmount('refunded_amount').notNull().default(sql`0::bigint`),
+    refundedAmount: irrAmount('refunded_amount')
+      .notNull()
+      .default(sql`0::bigint`),
 
     /** When the invoice was issued (Draft→Unpaid transition). */
     issuedAt: timestamptz('issued_at'),
@@ -198,9 +201,7 @@ export const invoices = pgTable(
     accountingAmount: irrAmount('accounting_amount'),
 
     /** When the invoice record was created. */
-    createdAt: timestamptz('created_at')
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
 
     /** When the invoice record was last updated. */
     updatedAt: timestamptz('updated_at')
@@ -212,12 +213,12 @@ export const invoices = pgTable(
     /** paidAmount must not exceed the invoice total. */
     paidNotExceedsTotal: check(
       'ck_paid_not_exceeds_total',
-      sql`${table.paidAmount} <= ${table.totalAmount}`,
+      sql`${table.paidAmount} <= ${table.totalAmount}`
     ),
     /** refundedAmount must not exceed the cumulative paid amount. */
     refundNotExceedsPaid: check(
       'ck_refund_not_exceeds_paid',
-      sql`${table.refundedAmount} <= ${table.paidAmount}`,
+      sql`${table.refundedAmount} <= ${table.paidAmount}`
     ),
     /**
      * Idempotency: an order produces at most one ordinary (non-correction)
@@ -230,9 +231,7 @@ export const invoices = pgTable(
      */
     orderIdTypeUnique: uniqueIndex('uq_invoices_order_id_type')
       .on(table.orderId, table.type)
-      .where(
-        sql`${table.replacesInvoiceId} IS NULL AND ${table.adjustmentForInvoiceId} IS NULL`,
-      ),
+      .where(sql`${table.replacesInvoiceId} IS NULL AND ${table.adjustmentForInvoiceId} IS NULL`),
     /**
      * Superkey of the primary key so child tables can composite-FK
      * `(invoice_id, profile_id) → invoices(id, profile_id)` and reject
@@ -271,16 +270,14 @@ export const invoices = pgTable(
           ${table.adjustmentKind} IS NULL
           OR ${table.adjustmentKind} IN ('charge', 'credit')
         )
-      )`,
+      )`
     ),
-    replacesInvoiceIdIdx: index('idx_invoices_replaces_invoice_id').on(
-      table.replacesInvoiceId,
-    ),
+    replacesInvoiceIdIdx: index('idx_invoices_replaces_invoice_id').on(table.replacesInvoiceId),
     adjustmentForInvoiceIdIdx: index('idx_invoices_adjustment_for_invoice_id').on(
-      table.adjustmentForInvoiceId,
+      table.adjustmentForInvoiceId
     ),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the invoices table with CHECK constraints.
@@ -349,4 +346,4 @@ export const createInvoicesTable = sql`
   CREATE UNIQUE INDEX IF NOT EXISTS uq_invoices_order_id_type
     ON invoices (order_id, type)
     WHERE replaces_invoice_id IS NULL AND adjustment_for_invoice_id IS NULL;
-`
+`;

@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
-import { t, type Locale } from '@barghsa/i18n'
-import { Button } from '@barghsa/ui'
+import { useState, useEffect, useCallback } from 'react';
+import { t, type Locale } from '@barghsa/i18n';
+import { Button } from '@barghsa/ui';
 import {
   Dialog,
   DialogContent,
@@ -8,32 +8,32 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@barghsa/ui'
-import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react'
-import { withCsrf } from '../lib/csrf.js'
+} from '@barghsa/ui';
+import { AlertCircleIcon, CheckIcon, Loader2Icon } from 'lucide-react';
+import { withCsrf } from '../lib/csrf.js';
 
 // ─── Types ────────────────────────────────────────────────────────────
 
 interface UserInfo {
-  userId: string
-  username: string
-  email: string | null
-  mobile: string | null
-  requiresTosAcceptance: boolean
+  userId: string;
+  username: string;
+  email: string | null;
+  mobile: string | null;
+  requiresTosAcceptance: boolean;
 }
 
 interface CurrentTosResponse {
-  id: string
-  content: string
-  versionId: string
-  updatedAt: string
-  publishedAt: string
+  id: string;
+  content: string;
+  versionId: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 // ─── Props ────────────────────────────────────────────────────────────
 
 interface TosBannerProps {
-  locale?: Locale
+  locale?: Locale;
 }
 
 // ─── Component ────────────────────────────────────────────────────────
@@ -53,108 +53,108 @@ interface TosBannerProps {
  * inside DashboardLayout and AdminLayout those are already authenticated pages.
  */
 export function TosBanner({ locale = 'fa' }: TosBannerProps) {
-  const [requiresAcceptance, setRequiresAcceptance] = useState(false)
-  const [checking, setChecking] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null)
-  const [loadingTos, setLoadingTos] = useState(false)
-  const [accepting, setAccepting] = useState(false)
-  const [accepted, setAccepted] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [dismissedAutoModal, setDismissedAutoModal] = useState(false)
+  const [requiresAcceptance, setRequiresAcceptance] = useState(false);
+  const [checking, setChecking] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [currentTos, setCurrentTos] = useState<CurrentTosResponse | null>(null);
+  const [loadingTos, setLoadingTos] = useState(false);
+  const [accepting, setAccepting] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [dismissedAutoModal, setDismissedAutoModal] = useState(false);
 
   // ── Check TOS acceptance status ─────────────────────────────────
 
   const checkTosStatus = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth/user')
+      const response = await fetch('/api/auth/user');
       if (!response.ok) {
-        setChecking(false)
-        return
+        setChecking(false);
+        return;
       }
-      const data: UserInfo = await response.json()
-      setRequiresAcceptance(data.requiresTosAcceptance)
+      const data: UserInfo = await response.json();
+      setRequiresAcceptance(data.requiresTosAcceptance);
     } catch {
       // Silently fail — banner is non-critical UI
     } finally {
-      setChecking(false)
+      setChecking(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    checkTosStatus()
-  }, [checkTosStatus])
+    checkTosStatus();
+  }, [checkTosStatus]);
 
   // ── Fetch current TOS content for modal ─────────────────────────
 
   const openReviewModal = useCallback(async () => {
-    setShowModal(true)
-    setLoadingTos(true)
-    setCurrentTos(null)
-    setError(null)
+    setShowModal(true);
+    setLoadingTos(true);
+    setCurrentTos(null);
+    setError(null);
 
     try {
-      const response = await fetch(`/api/tos/current?locale=${locale}`)
+      const response = await fetch(`/api/tos/current?locale=${locale}`);
       if (!response.ok) {
-        setError(t('tos.page.error', locale))
-        return
+        setError(t('tos.page.error', locale));
+        return;
       }
-      const data: CurrentTosResponse = await response.json()
-      setCurrentTos(data)
+      const data: CurrentTosResponse = await response.json();
+      setCurrentTos(data);
     } catch {
-      setError(t('tos.page.error', locale))
+      setError(t('tos.page.error', locale));
     } finally {
-      setLoadingTos(false)
+      setLoadingTos(false);
     }
-  }, [locale])
+  }, [locale]);
 
   // ── Auto-open modal on first non-exempt page visit ─────────────
 
   useEffect(() => {
     if (requiresAcceptance && !dismissedAutoModal) {
-      openReviewModal()
+      openReviewModal();
     }
-  }, [requiresAcceptance, dismissedAutoModal, openReviewModal])
+  }, [requiresAcceptance, dismissedAutoModal, openReviewModal]);
 
   // ── Accept TOS ──────────────────────────────────────────────────
 
   const handleAccept = useCallback(async () => {
-    if (!currentTos) return
+    if (!currentTos) return;
 
-    setAccepting(true)
-    setError(null)
+    setAccepting(true);
+    setError(null);
 
     try {
       const response = await fetch('/api/tos/accept', {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ versionId: currentTos.id }),
-      })
+      });
 
       if (!response.ok) {
-        setError(t('tos.modal.error', locale))
-        return
+        setError(t('tos.modal.error', locale));
+        return;
       }
 
-      setAccepted(true)
-      setRequiresAcceptance(false)
+      setAccepted(true);
+      setRequiresAcceptance(false);
 
       // Close modal after brief success state
       setTimeout(() => {
-        setShowModal(false)
-        setAccepted(false)
-      }, 1500)
+        setShowModal(false);
+        setAccepted(false);
+      }, 1500);
     } catch {
-      setError(t('tos.modal.error', locale))
+      setError(t('tos.modal.error', locale));
     } finally {
-      setAccepting(false)
+      setAccepting(false);
     }
-  }, [currentTos, locale])
+  }, [currentTos, locale]);
 
   // ── Render ──────────────────────────────────────────────────────
 
   if (checking || !requiresAcceptance) {
-    return null
+    return null;
   }
 
   return (
@@ -170,29 +170,33 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
           <span className="text-amber-800">{t('tos.banner.text', locale)}</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="default"
-            size="sm"
-            onClick={openReviewModal}
-          >
+          <Button variant="default" size="sm" onClick={openReviewModal}>
             {t('tos.banner.review', locale)}
           </Button>
         </div>
       </div>
 
       {/* Review modal */}
-      <Dialog open={showModal} onOpenChange={(open) => {
-        if (!open && !accepted) {
-          setDismissedAutoModal(true)
-        }
-        setShowModal(open)
-      }}>
+      <Dialog
+        open={showModal}
+        onOpenChange={(open) => {
+          if (!open && !accepted) {
+            setDismissedAutoModal(true);
+          }
+          setShowModal(open);
+        }}
+      >
         <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{t('tos.modal.title', locale)}</DialogTitle>
             {currentTos && (
               <DialogDescription>
-                {t('tos.page.lastUpdated', locale).replace('{date}', new Date(currentTos.updatedAt).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US'))}
+                {t('tos.page.lastUpdated', locale).replace(
+                  '{date}',
+                  new Date(currentTos.updatedAt).toLocaleDateString(
+                    locale === 'fa' ? 'fa-IR' : 'en-US'
+                  )
+                )}
               </DialogDescription>
             )}
           </DialogHeader>
@@ -210,12 +214,11 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
               </div>
             )}
             {currentTos && !loadingTos && !error && (
-              <div
-                className="prose prose-sm max-w-none"
-                dir={locale === 'fa' ? 'rtl' : 'ltr'}
-              >
+              <div className="prose prose-sm max-w-none" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
                 {currentTos.content.split('\n').map((line, i) => (
-                  <p key={i} className="mb-2">{line}</p>
+                  <p key={i} className="mb-2">
+                    {line}
+                  </p>
                 ))}
               </div>
             )}
@@ -246,5 +249,5 @@ export function TosBanner({ locale = 'fa' }: TosBannerProps) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

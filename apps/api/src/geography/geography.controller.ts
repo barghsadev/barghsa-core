@@ -1,19 +1,13 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Logger,
-  UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { GeographyService } from './geography.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
+import { Controller, Get, Param, Logger, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GeographyService } from './geography.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
 
 @ApiTags('Geography')
 @Controller('api/geography')
 @UseGuards(SessionAuthGuard)
 export class GeographyController {
-  private readonly logger = new Logger(GeographyController.name)
+  private readonly logger = new Logger(GeographyController.name);
 
   constructor(private readonly geographyService: GeographyService) {}
 
@@ -40,7 +34,7 @@ export class GeographyController {
     },
   })
   async getProvinces() {
-    return this.geographyService.getProvinces()
+    return this.geographyService.getProvinces();
   }
 
   /**
@@ -68,7 +62,7 @@ export class GeographyController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getCities(@Param('id') provinceId: string) {
-    return this.geographyService.getCitiesByProvince(provinceId)
+    return this.geographyService.getCitiesByProvince(provinceId);
   }
 
   /**
@@ -96,6 +90,6 @@ export class GeographyController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getCompanyTypes() {
-    return this.geographyService.getCompanyTypes()
+    return this.geographyService.getCompanyTypes();
   }
 }

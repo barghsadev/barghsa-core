@@ -24,22 +24,19 @@
  * @module finance
  */
 
-import {
-  isValidDualApprovalThreshold,
-} from './dual-approval-config.js'
-import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from './wallet-bank-receipt-confirmation.js'
+import { isValidDualApprovalThreshold } from './dual-approval-config.js';
+import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from './wallet-bank-receipt-confirmation.js';
 
 /** Approval-request action covering bank-payment confirmations (T-09.07.01). */
-export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE =
-  'bank_payment_confirmation' as const
+export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE = 'bank_payment_confirmation' as const;
 
 /** Canonical audit event when the first staff parks a dual-approval confirm. */
 export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REQUESTED_EVENT =
-  'invoice.bank_receipt.dual_approval_requested' as const
+  'invoice.bank_receipt.dual_approval_requested' as const;
 
 /** Human-readable reason stored on the approval_requests row. */
 export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REASON =
-  'Invoice bank receipt confirmation' as const
+  'Invoice bank receipt confirmation' as const;
 
 export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS = {
   SAME_STAFF: () =>
@@ -48,11 +45,11 @@ export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ERRORS = {
     'Dual-approval threshold configuration is invalid; invoice bank-receipt confirmation is blocked',
   APPROVAL_REJECTED: () =>
     'Invoice bank-receipt dual approval was rejected; confirmation cannot restart the approval workflow',
-} as const
+} as const;
 
 /** Fallback customer-visible reason when the approval-request review reason is blank. */
 export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON =
-  'Dual-approval request was rejected' as const
+  'Dual-approval request was rejected' as const;
 
 /**
  * Map a DualApprovalService review reason onto a `bank_receipts.rejection_reason`.
@@ -60,23 +57,23 @@ export const INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON =
  * so the receipt CHECK constraint always receives a non-empty reason.
  */
 export function invoiceBankReceiptReasonFromDualApprovalRejection(
-  reviewReason: string | null | undefined,
+  reviewReason: string | null | undefined
 ): string {
-  const trimmed = typeof reviewReason === 'string' ? reviewReason.trim() : ''
+  const trimmed = typeof reviewReason === 'string' ? reviewReason.trim() : '';
   if (trimmed.length === 0) {
-    return INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON
+    return INVOICE_BANK_RECEIPT_DUAL_APPROVAL_REJECTED_REASON;
   }
   if (trimmed.length > BANK_RECEIPT_REJECT_REASON_MAX_LENGTH) {
-    return trimmed.slice(0, BANK_RECEIPT_REJECT_REASON_MAX_LENGTH)
+    return trimmed.slice(0, BANK_RECEIPT_REJECT_REASON_MAX_LENGTH);
   }
-  return trimmed
+  return trimmed;
 }
 
 /** Result of reading the persisted dual-approval threshold for this gate. */
 export type InvoiceBankReceiptDualApprovalThresholdRead =
   | { status: 'disabled'; thresholdIrR: 0 }
   | { status: 'enabled'; thresholdIrR: number }
-  | { status: 'corrupt' }
+  | { status: 'corrupt' };
 
 /**
  * Normalize a raw `app_config` value (or a missing row) into the
@@ -86,23 +83,23 @@ export type InvoiceBankReceiptDualApprovalThresholdRead =
  * not contain a valid non-negative safe-integer threshold is corrupt.
  */
 export function readInvoiceBankReceiptDualApprovalThreshold(
-  raw: unknown,
+  raw: unknown
 ): InvoiceBankReceiptDualApprovalThresholdRead {
   if (raw === undefined) {
-    return { status: 'disabled', thresholdIrR: 0 }
+    return { status: 'disabled', thresholdIrR: 0 };
   }
   if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
-    return { status: 'corrupt' }
+    return { status: 'corrupt' };
   }
-  const o = raw as Record<string, unknown>
-  const value = o.threshold_irr ?? o.thresholdIrR
+  const o = raw as Record<string, unknown>;
+  const value = o.threshold_irr ?? o.thresholdIrR;
   if (!isValidDualApprovalThreshold(value)) {
-    return { status: 'corrupt' }
+    return { status: 'corrupt' };
   }
   if (value === 0) {
-    return { status: 'disabled', thresholdIrR: 0 }
+    return { status: 'disabled', thresholdIrR: 0 };
   }
-  return { status: 'enabled', thresholdIrR: value }
+  return { status: 'enabled', thresholdIrR: value };
 }
 
 /**
@@ -114,34 +111,34 @@ export function readInvoiceBankReceiptDualApprovalThreshold(
  */
 export function invoiceBankReceiptRequiresDualApproval(
   read: InvoiceBankReceiptDualApprovalThresholdRead,
-  amountIrR: bigint,
+  amountIrR: bigint
 ): boolean {
-  if (read.status !== 'enabled') return false
-  if (amountIrR <= 0n) return false
-  return amountIrR >= BigInt(read.thresholdIrR)
+  if (read.status !== 'enabled') return false;
+  if (amountIrR <= 0n) return false;
+  return amountIrR >= BigInt(read.thresholdIrR);
 }
 
 /** JSONB `details` payload stored on the approval_requests row. */
 export function invoiceBankReceiptDualApprovalDetails(input: {
-  receiptId: string
-  invoiceId: string
-  profileId: string
+  receiptId: string;
+  invoiceId: string;
+  profileId: string;
 }): Record<string, string> {
   return {
     receiptId: input.receiptId,
     invoiceId: input.invoiceId,
     profileId: input.profileId,
     entityType: 'invoice_bank_receipt',
-  }
+  };
 }
 
 /** Read the receipt id back out of an approval-request details object. */
 export function receiptIdFromInvoiceBankReceiptDualApprovalDetails(
-  details: unknown,
+  details: unknown
 ): string | null {
   if (!details || typeof details !== 'object' || Array.isArray(details)) {
-    return null
+    return null;
   }
-  const receiptId = (details as Record<string, unknown>).receiptId
-  return typeof receiptId === 'string' && receiptId.length > 0 ? receiptId : null
+  const receiptId = (details as Record<string, unknown>).receiptId;
+  return typeof receiptId === 'string' && receiptId.length > 0 ? receiptId : null;
 }

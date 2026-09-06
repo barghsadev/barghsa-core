@@ -15,51 +15,44 @@
  * @module finance
  */
 
-import { invoiceRemainingAmount } from './invoice-overpayment.js'
+import { invoiceRemainingAmount } from './invoice-overpayment.js';
 
 /**
  * Invoice states that may be settled by PayFromWallet
  * (S-04.1.01 / S-04.2.03). Overdue remains payable under S-04.1.03.
  */
-export const WALLET_PAYABLE_INVOICE_STATES = [
-  'Unpaid',
-  'PartiallyFunded',
-  'Overdue',
-] as const
+export const WALLET_PAYABLE_INVOICE_STATES = ['Unpaid', 'PartiallyFunded', 'Overdue'] as const;
 
-export type WalletPayableInvoiceState =
-  (typeof WALLET_PAYABLE_INVOICE_STATES)[number]
+export type WalletPayableInvoiceState = (typeof WALLET_PAYABLE_INVOICE_STATES)[number];
 
 /** Human-readable description on the Completed payment debit row. */
-export const PAY_INVOICE_WITH_WALLET_DESCRIPTION =
-  'Wallet payment of invoice remaining balance'
+export const PAY_INVOICE_WITH_WALLET_DESCRIPTION = 'Wallet payment of invoice remaining balance';
 
 /**
  * Append-only audit event for the wallet side of a pay-from-wallet
  * settlement (T-04.2.03.02 / C-04.CC.04). Inserted in the same
  * transaction as the `wallet_transactions` debit.
  */
-export const WALLET_INVOICE_PAYMENT_EVENT = 'wallet.invoice_payment' as const
+export const WALLET_INVOICE_PAYMENT_EVENT = 'wallet.invoice_payment' as const;
 
 /**
  * `idempotency_keys.entity_type` for `payInvoiceWithWallet`
  * (T-04.2.03.03). Unique together with the client key.
  */
-export const INVOICE_WALLET_PAYMENT_ENTITY_TYPE = 'invoice_wallet_payment' as const
+export const INVOICE_WALLET_PAYMENT_ENTITY_TYPE = 'invoice_wallet_payment' as const;
 
 /** Unique index name on `(idempotency_key, entity_type)`. */
-export const IDEMPOTENCY_KEYS_UNIQUE_INDEX = 'uq_idempotency_keys_key_entity_type'
+export const IDEMPOTENCY_KEYS_UNIQUE_INDEX = 'uq_idempotency_keys_key_entity_type';
 
 /** C-04.CC.01 default TTL for cached idempotency responses. */
-export const IDEMPOTENCY_KEY_TTL_MS = 24 * 60 * 60 * 1000
+export const IDEMPOTENCY_KEY_TTL_MS = 24 * 60 * 60 * 1000;
 
 export const PAY_INVOICE_WITH_WALLET_ERRORS = {
   BAD_INVOICE_ID: () => 'invoiceId must be a UUID',
   BAD_PROFILE_ID: () => 'profileId must be a UUID',
   IDEMPOTENCY_REQUIRED: () => 'Idempotency key is required',
   IDEMPOTENCY_IN_FLIGHT: () => 'Idempotency key is already in flight',
-  IDEMPOTENCY_COLLISION: () =>
-    'Idempotency key already used for a different wallet operation',
+  IDEMPOTENCY_COLLISION: () => 'Idempotency key already used for a different wallet operation',
   PROFILE_MISMATCH: () => 'Invoice does not belong to this wallet profile',
   INSUFFICIENT_BALANCE: (available: bigint, required: bigint) =>
     `Insufficient balance: available=${available.toString()}, required=${required.toString()}`,
@@ -68,40 +61,35 @@ export const PAY_INVOICE_WITH_WALLET_ERRORS = {
     `Invoice in state '${state}' cannot be paid from the wallet`,
   CREDIT_NOT_PAYABLE: (invoiceId: string) =>
     `Invoice ${invoiceId} is a credit note and cannot enter the customer payment flow`,
-  NOT_YET_PAYABLE: (payableFrom: string) =>
-    `Invoice is not payable until ${payableFrom}`,
+  NOT_YET_PAYABLE: (payableFrom: string) => `Invoice is not payable until ${payableFrom}`,
   ALREADY_PAID: () => 'Invoice is already paid',
-} as const
+} as const;
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export interface ParsePayInvoiceWithWalletIdsSuccess {
-  ok: true
-  invoiceId: string
-  profileId: string
+  ok: true;
+  invoiceId: string;
+  profileId: string;
 }
 
 export interface ParsePayInvoiceWithWalletIdsFailure {
-  ok: false
-  message: string
+  ok: false;
+  message: string;
 }
 
 export type ParsePayInvoiceWithWalletIdsResult =
-  | ParsePayInvoiceWithWalletIdsSuccess
-  | ParsePayInvoiceWithWalletIdsFailure
+  ParsePayInvoiceWithWalletIdsSuccess | ParsePayInvoiceWithWalletIdsFailure;
 
 export interface PayInvoiceWithWalletLedgerSnapshot {
-  purpose: 'invoice_payment'
-  invoiceId: string
-  remainingBefore: string
-  paidAmountAfter: string
+  purpose: 'invoice_payment';
+  invoiceId: string;
+  remainingBefore: string;
+  paidAmountAfter: string;
 }
 
-export function isWalletPayableInvoiceState(
-  state: string,
-): state is WalletPayableInvoiceState {
-  return (WALLET_PAYABLE_INVOICE_STATES as readonly string[]).includes(state)
+export function isWalletPayableInvoiceState(state: string): state is WalletPayableInvoiceState {
+  return (WALLET_PAYABLE_INVOICE_STATES as readonly string[]).includes(state);
 }
 
 /**
@@ -110,25 +98,22 @@ export function isWalletPayableInvoiceState(
  * debit against an invoice that PayFromWallet forbids.
  */
 export function remainingForWalletPayment(input: {
-  totalAmount: bigint
-  paidAmount: bigint
-  state: string
-  adjustmentKind?: string | null
+  totalAmount: bigint;
+  paidAmount: bigint;
+  state: string;
+  adjustmentKind?: string | null;
 }): bigint {
-  if (input.adjustmentKind === 'credit') return 0n
-  if (!isWalletPayableInvoiceState(input.state)) return 0n
-  return invoiceRemainingAmount(input.totalAmount, input.paidAmount)
+  if (input.adjustmentKind === 'credit') return 0n;
+  if (!isWalletPayableInvoiceState(input.state)) return 0n;
+  return invoiceRemainingAmount(input.totalAmount, input.paidAmount);
 }
 
 /**
  * Derived available balance (`posted − reserved`). Never stored
  * (T-04.2.01.01 / T-04.2.03.02).
  */
-export function walletAvailableBalance(
-  postedBalance: bigint,
-  reservedBalance: bigint,
-): bigint {
-  return postedBalance - reservedBalance
+export function walletAvailableBalance(postedBalance: bigint, reservedBalance: bigint): bigint {
+  return postedBalance - reservedBalance;
 }
 
 /**
@@ -136,41 +121,38 @@ export function walletAvailableBalance(
  * availableBalance covers the exact remaining invoice amount
  * (T-04.2.03.02 / S-04.2.03). `remaining <= 0` is not payable.
  */
-export function availableCoversRemaining(
-  available: bigint,
-  remaining: bigint,
-): boolean {
-  return remaining > 0n && available >= remaining
+export function availableCoversRemaining(available: bigint, remaining: bigint): boolean {
+  return remaining > 0n && available >= remaining;
 }
 
 export function parsePayInvoiceWithWalletIds(
   invoiceId: unknown,
-  profileId: unknown,
+  profileId: unknown
 ): ParsePayInvoiceWithWalletIdsResult {
   if (typeof invoiceId !== 'string' || !UUID_RE.test(invoiceId.trim())) {
-    return { ok: false, message: PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID() }
+    return { ok: false, message: PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID() };
   }
   if (typeof profileId !== 'string' || !UUID_RE.test(profileId.trim())) {
-    return { ok: false, message: PAY_INVOICE_WITH_WALLET_ERRORS.BAD_PROFILE_ID() }
+    return { ok: false, message: PAY_INVOICE_WITH_WALLET_ERRORS.BAD_PROFILE_ID() };
   }
   return {
     ok: true,
     invoiceId: invoiceId.trim().toLowerCase(),
     profileId: profileId.trim().toLowerCase(),
-  }
+  };
 }
 
 export function payInvoiceWithWalletMetadata(input: {
-  invoiceId: string
-  remainingBefore: bigint
-  paidAmountAfter: bigint
+  invoiceId: string;
+  remainingBefore: bigint;
+  paidAmountAfter: bigint;
 }): PayInvoiceWithWalletLedgerSnapshot {
   return {
     purpose: 'invoice_payment',
     invoiceId: input.invoiceId,
     remainingBefore: input.remainingBefore.toString(),
     paidAmountAfter: input.paidAmountAfter.toString(),
-  }
+  };
 }
 
 /**
@@ -178,27 +160,27 @@ export function payInvoiceWithWalletMetadata(input: {
  * strings so the JSONB snapshot never uses floating point.
  */
 export function payInvoiceWithWalletAuditMetadata(input: {
-  invoiceId: string
-  profileId: string
-  walletTransactionId: string
-  remainingPaid: bigint
-  postedBalanceBefore: bigint
-  postedBalanceAfter: bigint
-  reservedBalance: bigint
-  availableBalance: bigint
-  fromState: string
+  invoiceId: string;
+  profileId: string;
+  walletTransactionId: string;
+  remainingPaid: bigint;
+  postedBalanceBefore: bigint;
+  postedBalanceAfter: bigint;
+  reservedBalance: bigint;
+  availableBalance: bigint;
+  fromState: string;
 }): {
-  entityType: 'wallet'
-  entityId: string
-  invoiceId: string
-  walletTransactionId: string
-  remainingPaid: string
-  postedBalanceBefore: string
-  postedBalanceAfter: string
-  reservedBalance: string
-  availableBalance: string
-  previousState: string
-  newState: 'Paid'
+  entityType: 'wallet';
+  entityId: string;
+  invoiceId: string;
+  walletTransactionId: string;
+  remainingPaid: string;
+  postedBalanceBefore: string;
+  postedBalanceAfter: string;
+  reservedBalance: string;
+  availableBalance: string;
+  previousState: string;
+  newState: 'Paid';
 } {
   return {
     entityType: 'wallet',
@@ -212,17 +194,17 @@ export function payInvoiceWithWalletAuditMetadata(input: {
     availableBalance: input.availableBalance.toString(),
     previousState: input.fromState,
     newState: 'Paid',
-  }
+  };
 }
 
 export function isMatchingWalletInvoicePayment(input: {
-  walletId: string
-  expectedWalletId: string
-  invoiceId: string
-  type: string
-  state: string
-  refId: string | null
-  amount: bigint
+  walletId: string;
+  expectedWalletId: string;
+  invoiceId: string;
+  type: string;
+  state: string;
+  refId: string | null;
+  amount: bigint;
 }): boolean {
   return (
     input.walletId === input.expectedWalletId &&
@@ -230,7 +212,7 @@ export function isMatchingWalletInvoicePayment(input: {
     input.type === 'payment' &&
     input.refId === input.invoiceId &&
     input.amount < 0n
-  )
+  );
 }
 
 /**
@@ -239,57 +221,54 @@ export function isMatchingWalletInvoicePayment(input: {
  * oversized ledger rows must not flip the invoice to Paid.
  */
 export function isExactRemainingWalletDebit(input: {
-  walletId: string
-  expectedWalletId: string
-  invoiceId: string
-  type: string
-  state: string
-  refId: string | null
-  amount: bigint
-  remaining: bigint
+  walletId: string;
+  expectedWalletId: string;
+  invoiceId: string;
+  type: string;
+  state: string;
+  refId: string | null;
+  amount: bigint;
+  remaining: bigint;
 }): boolean {
   return (
     input.remaining > 0n &&
     input.amount === -input.remaining &&
     isMatchingWalletInvoicePayment(input)
-  )
+  );
 }
 
 /** True when WalletService.debit rejected a colliding idempotency key. */
 export function isWalletDebitIdempotencyCollision(message: string): boolean {
-  return message.includes('Idempotency key already used')
+  return message.includes('Idempotency key already used');
 }
 
 export interface PayInvoiceWithWalletCachedLedger {
-  id: string
-  walletId: string
-  type: string
-  amount: string
-  state: string
-  idempotencyKey: string
-  refId: string | null
-  description: string | null
-  metadata: unknown
-  createdAt: string
-  updatedAt: string
+  id: string;
+  walletId: string;
+  type: string;
+  amount: string;
+  state: string;
+  idempotencyKey: string;
+  refId: string | null;
+  description: string | null;
+  metadata: unknown;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /** JSONB snapshot stored on `idempotency_keys.response`. */
 export interface PayInvoiceWithWalletCachedResponse {
-  invoiceId: string
-  profileId: string
-  fromState: string
-  toState: 'Paid'
-  remainingPaid: string
-  walletTransaction: PayInvoiceWithWalletCachedLedger
-  auditId: string
+  invoiceId: string;
+  profileId: string;
+  fromState: string;
+  toState: 'Paid';
+  remainingPaid: string;
+  walletTransaction: PayInvoiceWithWalletCachedLedger;
+  auditId: string;
 }
 
-export function idempotencyKeyExpiresAt(
-  now: Date,
-  ttlMs: number = IDEMPOTENCY_KEY_TTL_MS,
-): Date {
-  return new Date(now.getTime() + ttlMs)
+export function idempotencyKeyExpiresAt(now: Date, ttlMs: number = IDEMPOTENCY_KEY_TTL_MS): Date {
+  return new Date(now.getTime() + ttlMs);
 }
 
 /**
@@ -298,39 +277,38 @@ export function idempotencyKeyExpiresAt(
  * so a retry after TTL still returns the original result.
  */
 export function isExpiredInFlightIdempotencyClaim(input: {
-  response: unknown
-  expiresAt: Date | string | null | undefined
-  now: Date
+  response: unknown;
+  expiresAt: Date | string | null | undefined;
+  now: Date;
 }): boolean {
-  if (input.response != null) return false
-  if (input.expiresAt == null) return false
-  const expiresAt =
-    input.expiresAt instanceof Date ? input.expiresAt : new Date(input.expiresAt)
-  if (Number.isNaN(expiresAt.getTime())) return false
-  return expiresAt.getTime() <= input.now.getTime()
+  if (input.response != null) return false;
+  if (input.expiresAt == null) return false;
+  const expiresAt = input.expiresAt instanceof Date ? input.expiresAt : new Date(input.expiresAt);
+  if (Number.isNaN(expiresAt.getTime())) return false;
+  return expiresAt.getTime() <= input.now.getTime();
 }
 
 export function serializePayInvoiceWithWalletCache(input: {
-  invoiceId: string
-  profileId: string
-  fromState: string
-  remainingPaid: bigint
+  invoiceId: string;
+  profileId: string;
+  fromState: string;
+  remainingPaid: bigint;
   walletTransaction: {
-    id: string
-    walletId: string
-    type: string
-    amount: bigint
-    state: string
-    idempotencyKey: string
-    refId: string | null
-    description: string | null
-    metadata: unknown
-    createdAt: Date
-    updatedAt: Date
-  }
-  auditId: string
+    id: string;
+    walletId: string;
+    type: string;
+    amount: bigint;
+    state: string;
+    idempotencyKey: string;
+    refId: string | null;
+    description: string | null;
+    metadata: unknown;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  auditId: string;
 }): PayInvoiceWithWalletCachedResponse {
-  const tx = input.walletTransaction
+  const tx = input.walletTransaction;
   return {
     invoiceId: input.invoiceId,
     profileId: input.profileId,
@@ -351,34 +329,34 @@ export function serializePayInvoiceWithWalletCache(input: {
       updatedAt: tx.updatedAt.toISOString(),
     },
     auditId: input.auditId,
-  }
+  };
 }
 
 export function parsePayInvoiceWithWalletCache(
-  raw: unknown,
+  raw: unknown
 ): PayInvoiceWithWalletCachedResponse | null {
-  let value: unknown = raw
+  let value: unknown = raw;
   if (typeof value === 'string') {
     try {
-      value = JSON.parse(value) as unknown
+      value = JSON.parse(value) as unknown;
     } catch {
-      return null
+      return null;
     }
   }
-  if (!value || typeof value !== 'object') return null
-  const row = value as Record<string, unknown>
-  if (typeof row.invoiceId !== 'string' || typeof row.profileId !== 'string') return null
-  if (typeof row.fromState !== 'string' || row.toState !== 'Paid') return null
-  if (typeof row.remainingPaid !== 'string' || typeof row.auditId !== 'string') return null
-  const tx = row.walletTransaction
-  if (!tx || typeof tx !== 'object') return null
-  const ledger = tx as Record<string, unknown>
-  if (typeof ledger.id !== 'string' || typeof ledger.walletId !== 'string') return null
-  if (typeof ledger.type !== 'string' || typeof ledger.amount !== 'string') return null
-  if (typeof ledger.state !== 'string' || typeof ledger.idempotencyKey !== 'string') return null
-  if (ledger.refId != null && typeof ledger.refId !== 'string') return null
-  if (ledger.description != null && typeof ledger.description !== 'string') return null
-  if (typeof ledger.createdAt !== 'string' || typeof ledger.updatedAt !== 'string') return null
+  if (!value || typeof value !== 'object') return null;
+  const row = value as Record<string, unknown>;
+  if (typeof row.invoiceId !== 'string' || typeof row.profileId !== 'string') return null;
+  if (typeof row.fromState !== 'string' || row.toState !== 'Paid') return null;
+  if (typeof row.remainingPaid !== 'string' || typeof row.auditId !== 'string') return null;
+  const tx = row.walletTransaction;
+  if (!tx || typeof tx !== 'object') return null;
+  const ledger = tx as Record<string, unknown>;
+  if (typeof ledger.id !== 'string' || typeof ledger.walletId !== 'string') return null;
+  if (typeof ledger.type !== 'string' || typeof ledger.amount !== 'string') return null;
+  if (typeof ledger.state !== 'string' || typeof ledger.idempotencyKey !== 'string') return null;
+  if (ledger.refId != null && typeof ledger.refId !== 'string') return null;
+  if (ledger.description != null && typeof ledger.description !== 'string') return null;
+  if (typeof ledger.createdAt !== 'string' || typeof ledger.updatedAt !== 'string') return null;
   return {
     invoiceId: row.invoiceId,
     profileId: row.profileId,
@@ -399,16 +377,16 @@ export function parsePayInvoiceWithWalletCache(
       updatedAt: ledger.updatedAt,
     },
     auditId: row.auditId,
-  }
+  };
 }
 
 export function cachedWalletPaymentMatchesRequest(
   cached: PayInvoiceWithWalletCachedResponse,
   invoiceId: string,
-  profileId: string,
+  profileId: string
 ): boolean {
   return (
     cached.invoiceId.toLowerCase() === invoiceId.toLowerCase() &&
     cached.profileId.toLowerCase() === profileId.toLowerCase()
-  )
+  );
 }

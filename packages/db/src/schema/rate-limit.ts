@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm'
-import { bigint, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import { bigint, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
 /**
  * Rate-limit counter rows stored in PostgreSQL.
@@ -28,19 +28,15 @@ export const rateLimitCounters = pgTable(
     /** Current counter value. */
     count: integer('count').notNull().default(1),
     /** Created at (informational, for debugging). */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
     /** Last updated at. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => ({
     // Compound PK: one row per key per window — enables upsert semantics
     pk: uniqueIndex('rate_limit_counters_pk').on(table.key, table.windowStart),
-  }),
-)
+  })
+);
 
 /**
  * Rate-limit metadata / OTP-critical counter table.
@@ -61,17 +57,13 @@ export const securityRateLimitCounters = pgTable(
     windowMs: integer('window_ms').notNull(),
     /** Current counter value. */
     count: integer('count').notNull().default(1),
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => ({
     pk: uniqueIndex('security_rate_limit_counters_pk').on(table.key, table.windowStart),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the rate_limit_counters table and its index via raw migration.
@@ -88,7 +80,7 @@ export const createRateLimitCountersTable = sql`
 
   CREATE UNIQUE INDEX IF NOT EXISTS rate_limit_counters_pk
     ON rate_limit_counters (key, window_start);
-`
+`;
 
 /**
  * SQL to create the security_rate_limit_counters table.
@@ -105,4 +97,4 @@ export const createSecurityRateLimitCountersTable = sql`
 
   CREATE UNIQUE INDEX IF NOT EXISTS security_rate_limit_counters_pk
     ON security_rate_limit_counters (key, window_start);
-`
+`;

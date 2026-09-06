@@ -10,8 +10,8 @@
  * and debit joining the same client.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ConflictException, NotFoundException } from '@nestjs/common'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
@@ -19,32 +19,32 @@ import {
   WALLET_INVOICE_PAYMENT_EVENT,
   payInvoiceWithWalletMetadata,
   serializePayInvoiceWithWalletCache,
-} from '@barghsa/shared/finance'
-import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js'
-import type { WalletService } from './wallet.service.js'
-import type { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
+} from '@barghsa/shared/finance';
+import { PayInvoiceWithWalletService } from './pay-invoice-with-wallet.service.js';
+import type { WalletService } from './wallet.service.js';
+import type { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 
 const mockClient = {
   query: vi.fn(),
   release: vi.fn(),
-}
+};
 
 const mockPool = {
   connect: vi.fn().mockResolvedValue(mockClient),
   query: vi.fn(),
-}
+};
 
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
-}))
+}));
 
-const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
-const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-const OTHER_PROFILE = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
-const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
-const ACTOR_ID = 'user-owner-1'
-const NOW = new Date('2026-09-02T08:00:00.000Z')
-const IDEMPOTENCY_KEY = 'pay-invoice-wallet:inv-1'
+const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
+const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const OTHER_PROFILE = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
+const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const ACTOR_ID = 'user-owner-1';
+const NOW = new Date('2026-09-02T08:00:00.000Z');
+const IDEMPOTENCY_KEY = 'pay-invoice-wallet:inv-1';
 
 function invoiceRow(overrides: Record<string, unknown> = {}) {
   return {
@@ -57,12 +57,12 @@ function invoiceRow(overrides: Record<string, unknown> = {}) {
     adjustment_kind: null,
     payable_from: new Date('2026-08-01T00:00:00.000Z'),
     ...overrides,
-  }
+  };
 }
 
 function walletRow(overrides: Record<string, unknown> = {}) {
-  const posted = (overrides.posted_balance as string | undefined) ?? '2000000'
-  const reserved = (overrides.reserved_balance as string | undefined) ?? '0'
+  const posted = (overrides.posted_balance as string | undefined) ?? '2000000';
+  const reserved = (overrides.reserved_balance as string | undefined) ?? '0';
   return {
     profile_id: PROFILE_ID,
     posted_balance: posted,
@@ -70,7 +70,7 @@ function walletRow(overrides: Record<string, unknown> = {}) {
     version: 3,
     available_balance: (BigInt(posted) - BigInt(reserved)).toString(),
     ...overrides,
-  }
+  };
 }
 
 function debitRow(overrides: Record<string, unknown> = {}) {
@@ -92,7 +92,7 @@ function debitRow(overrides: Record<string, unknown> = {}) {
     createdAt: NOW,
     updatedAt: NOW,
     ...overrides,
-  }
+  };
 }
 
 function ledgerSqlRow(overrides: Record<string, unknown> = {}) {
@@ -109,71 +109,73 @@ function ledgerSqlRow(overrides: Record<string, unknown> = {}) {
     created_at: NOW,
     updated_at: NOW,
     ...overrides,
-  }
+  };
 }
 
 function mockQuery(handler: (sql: string, params?: unknown[]) => unknown) {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
-      return { rows: [] }
+      return { rows: [] };
     }
-    return handler(sql, params)
-  })
+    return handler(sql, params);
+  });
 }
 
-function paymentQueries(opts: {
-  invoice?: Record<string, unknown> | null
-  wallet?: Record<string, unknown> | null
-  ledger?: Record<string, unknown>[]
-  paidOk?: boolean
-  /** Rows returned by INSERT … ON CONFLICT DO NOTHING RETURNING. Default: claimed. */
-  idempotencyInsert?: Record<string, unknown>[]
-  /** Rows returned by SELECT … FOR UPDATE on idempotency_keys. */
-  idempotencySelect?: Record<string, unknown>[]
-  /** Rows returned by reclaiming an expired in-flight claim. */
-  idempotencyReclaim?: Record<string, unknown>[]
-  /** Rows returned by persisting the cached JSONB response. */
-  idempotencyPersist?: Record<string, unknown>[]
-} = {}) {
-  const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice
-  const wallet = opts.wallet === undefined ? walletRow() : opts.wallet
-  const ledger = opts.ledger ?? []
-  const paidOk = opts.paidOk ?? true
-  const idempotencyInsert = opts.idempotencyInsert ?? [{ id: 'idem-claim-1' }]
-  const idempotencySelect = opts.idempotencySelect ?? []
-  const idempotencyReclaim = opts.idempotencyReclaim ?? []
-  const idempotencyPersist = opts.idempotencyPersist ?? [{ id: 'idem-persist-1' }]
+function paymentQueries(
+  opts: {
+    invoice?: Record<string, unknown> | null;
+    wallet?: Record<string, unknown> | null;
+    ledger?: Record<string, unknown>[];
+    paidOk?: boolean;
+    /** Rows returned by INSERT … ON CONFLICT DO NOTHING RETURNING. Default: claimed. */
+    idempotencyInsert?: Record<string, unknown>[];
+    /** Rows returned by SELECT … FOR UPDATE on idempotency_keys. */
+    idempotencySelect?: Record<string, unknown>[];
+    /** Rows returned by reclaiming an expired in-flight claim. */
+    idempotencyReclaim?: Record<string, unknown>[];
+    /** Rows returned by persisting the cached JSONB response. */
+    idempotencyPersist?: Record<string, unknown>[];
+  } = {}
+) {
+  const invoice = opts.invoice === undefined ? invoiceRow() : opts.invoice;
+  const wallet = opts.wallet === undefined ? walletRow() : opts.wallet;
+  const ledger = opts.ledger ?? [];
+  const paidOk = opts.paidOk ?? true;
+  const idempotencyInsert = opts.idempotencyInsert ?? [{ id: 'idem-claim-1' }];
+  const idempotencySelect = opts.idempotencySelect ?? [];
+  const idempotencyReclaim = opts.idempotencyReclaim ?? [];
+  const idempotencyPersist = opts.idempotencyPersist ?? [{ id: 'idem-persist-1' }];
   mockQuery((sql) => {
     if (sql.includes('INSERT INTO idempotency_keys')) {
-      return { rows: idempotencyInsert }
+      return { rows: idempotencyInsert };
     }
     if (sql.includes('FROM idempotency_keys')) {
-      return { rows: idempotencySelect }
+      return { rows: idempotencySelect };
     }
     if (sql.includes('UPDATE idempotency_keys') && sql.includes('expires_at')) {
-      return { rows: idempotencyReclaim }
+      return { rows: idempotencyReclaim };
     }
     if (sql.includes('UPDATE idempotency_keys')) {
-      return { rows: idempotencyPersist }
+      return { rows: idempotencyPersist };
     }
     if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
-      return { rows: wallet ? [wallet] : [] }
+      return { rows: wallet ? [wallet] : [] };
     }
     if (sql.includes('FROM invoices') && sql.includes('FOR UPDATE')) {
-      return { rows: invoice ? [invoice] : [] }
+      return { rows: invoice ? [invoice] : [] };
     }
     if (sql.includes('FROM wallet_transactions')) {
-      return { rows: ledger }
+      return { rows: ledger };
     }
     if (sql.includes('SET paid_amount')) {
-      if (!paidOk) return { rows: [] }
-      return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] }
+      if (!paidOk) return { rows: [] };
+      return { rows: [{ paid_amount: '1000000', total_amount: '1000000' }] };
     }
     if (sql.includes('INSERT INTO audit_log')) {
-      return { rows: [] }
+      return { rows: [] };
     }
-    throw new Error(`unexpected sql: ${sql}`)
-  })
+    throw new Error(`unexpected sql: ${sql}`);
+  });
 }
 
 function cachedResponse(invoiceId = INVOICE_ID, profileId = PROFILE_ID) {
@@ -184,28 +186,28 @@ function cachedResponse(invoiceId = INVOICE_ID, profileId = PROFILE_ID) {
     remainingPaid: 1_000_000n,
     auditId: 'audit-1',
     walletTransaction: debitRow({ refId: invoiceId, walletId: profileId }),
-  })
+  });
 }
 
 describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03)', () => {
-  let walletService: { debit: ReturnType<typeof vi.fn> }
+  let walletService: { debit: ReturnType<typeof vi.fn> };
   let invoiceStateMachine: {
-    canPayFromWallet: ReturnType<typeof vi.fn>
-    transition: ReturnType<typeof vi.fn>
-  }
-  let service: PayInvoiceWithWalletService
+    canPayFromWallet: ReturnType<typeof vi.fn>;
+    transition: ReturnType<typeof vi.fn>;
+  };
+  let service: PayInvoiceWithWalletService;
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockPool.connect.mockResolvedValue(mockClient)
-    mockClient.release.mockImplementation(() => {})
+    vi.clearAllMocks();
+    mockPool.connect.mockResolvedValue(mockClient);
+    mockClient.release.mockImplementation(() => {});
     walletService = {
       debit: vi.fn().mockResolvedValue(debitRow()),
-    }
+    };
     invoiceStateMachine = {
       canPayFromWallet: vi.fn(
         (from: string, adjustmentKind?: string | null) =>
-          adjustmentKind !== 'credit' && (from === 'Unpaid' || from === 'PartiallyFunded'),
+          adjustmentKind !== 'credit' && (from === 'Unpaid' || from === 'PartiallyFunded')
       ),
       transition: vi.fn().mockResolvedValue({
         invoiceId: INVOICE_ID,
@@ -214,12 +216,12 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         transition: 'PayFromWallet',
         auditId: 'audit-1',
       }),
-    }
+    };
     service = new PayInvoiceWithWalletService(
       walletService as unknown as WalletService,
-      invoiceStateMachine as unknown as InvoiceStateMachineService,
-    )
-  })
+      invoiceStateMachine as unknown as InvoiceStateMachineService
+    );
+  });
 
   function pay(overrides: Record<string, unknown> = {}) {
     return service.payInvoiceWithWallet(
@@ -231,14 +233,14 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         now: NOW,
         ip: '203.0.113.10',
         ...('options' in overrides ? (overrides.options as object) : {}),
-      },
-    )
+      }
+    );
   }
 
   it('debits the exact remaining amount and marks the invoice Paid in one transaction', async () => {
-    paymentQueries()
+    paymentQueries();
 
-    const result = await pay()
+    const result = await pay();
 
     expect(result).toMatchObject({
       invoiceId: INVOICE_ID,
@@ -248,10 +250,10 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
       remainingPaid: 1_000_000n,
       auditId: 'audit-1',
       replayed: false,
-    })
-    expect(result.walletTransaction.id).toBe(TX_ID)
+    });
+    expect(result.walletTransaction.id).toBe(TX_ID);
 
-    expect(walletService.debit).toHaveBeenCalledTimes(1)
+    expect(walletService.debit).toHaveBeenCalledTimes(1);
     expect(walletService.debit).toHaveBeenCalledWith(
       PROFILE_ID,
       1_000_000n,
@@ -262,8 +264,8 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         expectedVersion: 3,
       }),
       IDEMPOTENCY_KEY,
-      mockClient,
-    )
+      mockClient
+    );
     expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
       INVOICE_ID,
       'Unpaid',
@@ -277,17 +279,17 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
           totalAmount: 1_000_000n,
           incomingPaidAmount: 1_000_000n,
         }),
-      }),
-    )
-    expect(mockClient.query).toHaveBeenCalledWith('BEGIN')
-    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
-    expect(mockClient.query).not.toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.release).toHaveBeenCalledOnce()
+      })
+    );
+    expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+    expect(mockClient.query).not.toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.release).toHaveBeenCalledOnce();
 
     const walletAudit = mockClient.query.mock.calls.find(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
-    )
-    expect(walletAudit?.[1]?.[2]).toBe(WALLET_INVOICE_PAYMENT_EVENT)
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log')
+    );
+    expect(walletAudit?.[1]?.[2]).toBe(WALLET_INVOICE_PAYMENT_EVENT);
     expect(JSON.parse(String(walletAudit?.[1]?.[3]))).toMatchObject({
       entityType: 'wallet',
       entityId: PROFILE_ID,
@@ -298,60 +300,60 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
       postedBalanceAfter: '1000000',
       previousState: 'Unpaid',
       newState: 'Paid',
-    })
+    });
     const debitIdx = mockClient.query.mock.calls.findIndex(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
-    )
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log')
+    );
     const paidUpdateIdx = mockClient.query.mock.calls.findIndex(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
-    )
-    expect(debitIdx).toBeGreaterThan(-1)
-    expect(debitIdx).toBeLessThan(paidUpdateIdx)
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount')
+    );
+    expect(debitIdx).toBeGreaterThan(-1);
+    expect(debitIdx).toBeLessThan(paidUpdateIdx);
 
     const paidUpdate = mockClient.query.mock.calls.find(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
-    )
-    expect(paidUpdate?.[0]).toContain('AND state = $3')
-    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000', 'Unpaid'])
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount')
+    );
+    expect(paidUpdate?.[0]).toContain('AND state = $3');
+    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '1000000', 'Unpaid']);
 
     const cacheWrite = mockClient.query.mock.calls.find(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
-    )
-    expect(cacheWrite?.[0]).toContain('AND response IS NULL')
-    expect(cacheWrite?.[0]).toContain('RETURNING id')
-    expect(cacheWrite?.[1]?.[0]).toBe(IDEMPOTENCY_KEY)
-    expect(cacheWrite?.[1]?.[1]).toBe(INVOICE_WALLET_PAYMENT_ENTITY_TYPE)
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys')
+    );
+    expect(cacheWrite?.[0]).toContain('AND response IS NULL');
+    expect(cacheWrite?.[0]).toContain('RETURNING id');
+    expect(cacheWrite?.[1]?.[0]).toBe(IDEMPOTENCY_KEY);
+    expect(cacheWrite?.[1]?.[1]).toBe(INVOICE_WALLET_PAYMENT_ENTITY_TYPE);
     expect(JSON.parse(String(cacheWrite?.[1]?.[2]))).toMatchObject({
       invoiceId: INVOICE_ID,
       profileId: PROFILE_ID,
       remainingPaid: '1000000',
       toState: 'Paid',
-    })
-  })
+    });
+  });
 
   it('SELECT … FOR UPDATE locks the wallet before the invoice', async () => {
-    paymentQueries()
+    paymentQueries();
 
-    await pay()
+    await pay();
 
-    const sqlCalls = mockClient.query.mock.calls.map((c) => String(c[0]))
-    const claimIdx = sqlCalls.findIndex((sql) => sql.includes('INSERT INTO idempotency_keys'))
+    const sqlCalls = mockClient.query.mock.calls.map((c) => String(c[0]));
+    const claimIdx = sqlCalls.findIndex((sql) => sql.includes('INSERT INTO idempotency_keys'));
     const walletIdx = sqlCalls.findIndex(
-      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE'),
-    )
+      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE')
+    );
     const invoiceIdx = sqlCalls.findIndex(
-      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE'),
-    )
-    expect(claimIdx).toBeGreaterThan(-1)
-    expect(claimIdx).toBeLessThan(walletIdx)
-    expect(walletIdx).toBeLessThan(invoiceIdx)
-    expect(sqlCalls[claimIdx]).toContain('ON CONFLICT (idempotency_key, entity_type)')
-    expect(sqlCalls[walletIdx]).toContain('posted_balance')
-    expect(sqlCalls[walletIdx]).toContain('reserved_balance')
-    expect(sqlCalls[walletIdx]).toContain('available_balance')
-    expect(sqlCalls[walletIdx]).toContain('FOR UPDATE OF wallets')
-    expect(sqlCalls[invoiceIdx]).toContain('FOR UPDATE OF invoices')
-  })
+      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE')
+    );
+    expect(claimIdx).toBeGreaterThan(-1);
+    expect(claimIdx).toBeLessThan(walletIdx);
+    expect(walletIdx).toBeLessThan(invoiceIdx);
+    expect(sqlCalls[claimIdx]).toContain('ON CONFLICT (idempotency_key, entity_type)');
+    expect(sqlCalls[walletIdx]).toContain('posted_balance');
+    expect(sqlCalls[walletIdx]).toContain('reserved_balance');
+    expect(sqlCalls[walletIdx]).toContain('available_balance');
+    expect(sqlCalls[walletIdx]).toContain('FOR UPDATE OF wallets');
+    expect(sqlCalls[invoiceIdx]).toContain('FOR UPDATE OF invoices');
+  });
 
   it('debits only the remaining amount on a PartiallyFunded invoice', async () => {
     walletService.debit.mockResolvedValue(
@@ -362,23 +364,23 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
           remainingBefore: 400_000n,
           paidAmountAfter: 1_000_000n,
         }),
-      }),
-    )
+      })
+    );
     invoiceStateMachine.transition.mockResolvedValue({
       invoiceId: INVOICE_ID,
       fromState: 'PartiallyFunded',
       toState: 'Paid',
       transition: 'PayFromWallet',
       auditId: 'audit-partial',
-    })
+    });
     paymentQueries({
       invoice: invoiceRow({ state: 'PartiallyFunded', paid_amount: '600000' }),
-    })
+    });
 
-    const result = await pay()
+    const result = await pay();
 
-    expect(result.fromState).toBe('PartiallyFunded')
-    expect(result.remainingPaid).toBe(400_000n)
+    expect(result.fromState).toBe('PartiallyFunded');
+    expect(result.remainingPaid).toBe(400_000n);
     expect(walletService.debit).toHaveBeenCalledWith(
       PROFILE_ID,
       400_000n,
@@ -388,71 +390,71 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         expectedVersion: 3,
       }),
       IDEMPOTENCY_KEY,
-      mockClient,
-    )
+      mockClient
+    );
     const paidUpdate = mockClient.query.mock.calls.find(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
-    )
-    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '400000', 'PartiallyFunded'])
-  })
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount')
+    );
+    expect(paidUpdate?.[1]).toEqual([INVOICE_ID, '400000', 'PartiallyFunded']);
+  });
 
   it('rejects when locked availableBalance is below remaining without debiting', async () => {
     paymentQueries({
       wallet: walletRow({ posted_balance: '100000', reserved_balance: '0' }),
-    })
+    });
 
     await expect(pay()).rejects.toThrow(
-      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(100_000n, 1_000_000n),
-    )
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(100_000n, 1_000_000n)
+    );
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log'),
-      ),
-    ).toBe(false)
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('INSERT INTO audit_log')
+      )
+    ).toBe(false);
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
-      ),
-    ).toBe(false)
-  })
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount')
+      )
+    ).toBe(false);
+  });
 
   it('rejects when reserved funds leave availableBalance below remaining', async () => {
     paymentQueries({
       wallet: walletRow({ posted_balance: '1000000', reserved_balance: '1' }),
-    })
+    });
 
     await expect(pay()).rejects.toThrow(
-      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(999_999n, 1_000_000n),
-    )
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-  })
+      PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(999_999n, 1_000_000n)
+    );
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
 
   it('returns the cached result on idempotent retry without debiting again', async () => {
     paymentQueries({
       idempotencyInsert: [],
       idempotencySelect: [{ entity_id: INVOICE_ID, response: cachedResponse() }],
-    })
+    });
 
-    const result = await pay()
+    const result = await pay();
 
-    expect(result.replayed).toBe(true)
-    expect(result.toState).toBe('Paid')
-    expect(result.remainingPaid).toBe(1_000_000n)
-    expect(result.walletTransaction.id).toBe(TX_ID)
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    expect(result.replayed).toBe(true);
+    expect(result.toState).toBe('Paid');
+    expect(result.remainingPaid).toBe(1_000_000n);
+    expect(result.walletTransaction.id).toBe(TX_ID);
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets'),
-      ),
-    ).toBe(false)
-  })
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets')
+      )
+    ).toBe(false);
+  });
 
   it('rejects a retry that reuses the key for a different invoice', async () => {
     paymentQueries({
@@ -463,23 +465,23 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
           response: cachedResponse('22222222-2222-7222-8222-222222222222'),
         },
       ],
-    })
+    });
 
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-  })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
 
   it('rejects an in-flight idempotency claim without debiting', async () => {
     paymentQueries({
       idempotencyInsert: [],
       idempotencySelect: [{ entity_id: INVOICE_ID, response: null }],
-    })
+    });
 
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-  })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT());
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
 
   it('reclaims an expired in-flight claim and pays without a second debit key', async () => {
     paymentQueries({
@@ -492,193 +494,199 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
         },
       ],
       idempotencyReclaim: [{ id: 'idem-reclaim-1' }],
-    })
+    });
 
-    const result = await pay()
+    const result = await pay();
 
-    expect(result.replayed).toBe(false)
-    expect(result.toState).toBe('Paid')
-    expect(walletService.debit).toHaveBeenCalledTimes(1)
-    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
-  })
+    expect(result.replayed).toBe(false);
+    expect(result.toState).toBe('Paid');
+    expect(walletService.debit).toHaveBeenCalledTimes(1);
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+  });
 
   it('settles an Unpaid invoice when a matching debit already exists (heal)', async () => {
     paymentQueries({
       ledger: [ledgerSqlRow()],
-    })
+    });
 
-    const result = await pay()
+    const result = await pay();
 
-    expect(result.replayed).toBe(true)
-    expect(result.toState).toBe('Paid')
-    expect(walletService.debit).not.toHaveBeenCalled()
+    expect(result.replayed).toBe(true);
+    expect(result.toState).toBe('Paid');
+    expect(walletService.debit).not.toHaveBeenCalled();
     expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
       INVOICE_ID,
       'Unpaid',
       'Paid',
-      expect.objectContaining({ client: mockClient }),
-    )
-    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
-  })
+      expect.objectContaining({ client: mockClient })
+    );
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+  });
 
   it('replays a matching ledger row when the invoice is already Paid (heal cache)', async () => {
     paymentQueries({
       invoice: invoiceRow({ state: 'Paid', paid_amount: '1000000' }),
       ledger: [ledgerSqlRow()],
-    })
+    });
 
-    const result = await pay()
+    const result = await pay();
 
-    expect(result.replayed).toBe(true)
-    expect(result.toState).toBe('Paid')
-    expect(result.remainingPaid).toBe(1_000_000n)
-    expect(result.walletTransaction.id).toBe(TX_ID)
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('COMMIT')
+    expect(result.replayed).toBe(true);
+    expect(result.toState).toBe('Paid');
+    expect(result.remainingPaid).toBe(1_000_000n);
+    expect(result.walletTransaction.id).toBe(TX_ID);
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys'),
-      ),
-    ).toBe(true)
-  })
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('UPDATE idempotency_keys')
+      )
+    ).toBe(true);
+  });
 
   it('rejects a colliding idempotency key that belongs to another operation', async () => {
     paymentQueries({
       ledger: [ledgerSqlRow({ type: 'topup', amount: '1000000', ref_id: null })],
-    })
+    });
 
-    await expect(pay()).rejects.toThrow('Idempotency key already used for a different wallet operation')
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-  })
+    await expect(pay()).rejects.toThrow(
+      'Idempotency key already used for a different wallet operation'
+    );
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
 
   it('returns 404 when the wallet is missing', async () => {
-    paymentQueries({ wallet: null })
-    await expect(pay()).rejects.toThrow(`Wallet not found: ${PROFILE_ID}`)
-    expect(walletService.debit).not.toHaveBeenCalled()
+    paymentQueries({ wallet: null });
+    await expect(pay()).rejects.toThrow(`Wallet not found: ${PROFILE_ID}`);
+    expect(walletService.debit).not.toHaveBeenCalled();
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM invoices'),
-      ),
-    ).toBe(false)
-  })
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM invoices')
+      )
+    ).toBe(false);
+  });
 
   it('returns 404 when the invoice is missing or belongs to another profile', async () => {
-    paymentQueries({ invoice: null })
-    await expect(pay()).rejects.toBeInstanceOf(NotFoundException)
+    paymentQueries({ invoice: null });
+    await expect(pay()).rejects.toBeInstanceOf(NotFoundException);
 
-    paymentQueries({ invoice: invoiceRow({ profile_id: OTHER_PROFILE }) })
-    await expect(pay()).rejects.toThrow(`Invoice not found: ${INVOICE_ID}`)
-    expect(walletService.debit).not.toHaveBeenCalled()
-  })
+    paymentQueries({ invoice: invoiceRow({ profile_id: OTHER_PROFILE }) });
+    await expect(pay()).rejects.toThrow(`Invoice not found: ${INVOICE_ID}`);
+    expect(walletService.debit).not.toHaveBeenCalled();
+  });
 
   it('rejects credit notes, Cancelled, and invoices that are not yet payable', async () => {
-    paymentQueries({ invoice: invoiceRow({ adjustment_kind: 'credit' }) })
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(INVOICE_ID))
+    paymentQueries({ invoice: invoiceRow({ adjustment_kind: 'credit' }) });
+    await expect(pay()).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(INVOICE_ID)
+    );
 
-    paymentQueries({ invoice: invoiceRow({ state: 'Cancelled' }) })
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Cancelled'))
+    paymentQueries({ invoice: invoiceRow({ state: 'Cancelled' }) });
+    await expect(pay()).rejects.toThrow(
+      PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Cancelled')
+    );
 
     paymentQueries({
       invoice: invoiceRow({ payable_from: new Date('2026-12-01T00:00:00.000Z') }),
-    })
-    await expect(pay()).rejects.toThrow('Invoice is not payable until')
-    expect(walletService.debit).not.toHaveBeenCalled()
-  })
+    });
+    await expect(pay()).rejects.toThrow('Invoice is not payable until');
+    expect(walletService.debit).not.toHaveBeenCalled();
+  });
 
   it('rejects blank idempotency keys and invalid ids without opening a transaction', async () => {
     await expect(
-      service.payInvoiceWithWallet(INVOICE_ID, PROFILE_ID, '   ', { actorUserId: ACTOR_ID }),
-    ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_REQUIRED())
+      service.payInvoiceWithWallet(INVOICE_ID, PROFILE_ID, '   ', { actorUserId: ACTOR_ID })
+    ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_REQUIRED());
     await expect(
       service.payInvoiceWithWallet('not-a-uuid', PROFILE_ID, IDEMPOTENCY_KEY, {
         actorUserId: ACTOR_ID,
-      }),
-    ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID())
-    expect(mockPool.connect).not.toHaveBeenCalled()
-  })
+      })
+    ).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.BAD_INVOICE_ID());
+    expect(mockPool.connect).not.toHaveBeenCalled();
+  });
 
   it('rolls back the debit when the idempotency cache persist matches no in-flight row', async () => {
-    paymentQueries({ idempotencyPersist: [] })
+    paymentQueries({ idempotencyPersist: [] });
 
-    await expect(pay()).rejects.toThrow('Idempotency cache row missing')
-    expect(walletService.debit).toHaveBeenCalledTimes(1)
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
-  })
+    await expect(pay()).rejects.toThrow('Idempotency cache row missing');
+    expect(walletService.debit).toHaveBeenCalledTimes(1);
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+  });
 
   it('rolls back the debit when the locked invoice state UPDATE matches no row', async () => {
-    paymentQueries({ paidOk: false })
+    paymentQueries({ paidOk: false });
 
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID())
-    expect(walletService.debit).toHaveBeenCalledTimes(1)
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
-  })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID());
+    expect(walletService.debit).toHaveBeenCalledTimes(1);
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+  });
 
   it('rolls back when the invoice transition fails after the wallet debit', async () => {
-    invoiceStateMachine.transition.mockRejectedValue(new ConflictException('state conflict'))
-    paymentQueries()
+    invoiceStateMachine.transition.mockRejectedValue(new ConflictException('state conflict'));
+    paymentQueries();
 
-    await expect(pay()).rejects.toThrow('state conflict')
+    await expect(pay()).rejects.toThrow('state conflict');
     expect(walletService.debit).toHaveBeenCalledWith(
       PROFILE_ID,
       1_000_000n,
       expect.anything(),
       IDEMPOTENCY_KEY,
-      mockClient,
-    )
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
-  })
+      mockClient
+    );
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+  });
 
   it('rejects a debit that is not the exact remaining payment without settling', async () => {
-    walletService.debit.mockResolvedValue(debitRow({ amount: -999_999n }))
-    paymentQueries()
+    walletService.debit.mockResolvedValue(debitRow({ amount: -999_999n }));
+    paymentQueries();
 
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
     expect(
       mockClient.query.mock.calls.some(
-        (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount'),
-      ),
-    ).toBe(false)
-  })
+        (c) => typeof c[0] === 'string' && (c[0] as string).includes('SET paid_amount')
+      )
+    ).toBe(false);
+  });
 
   it('maps WalletService.debit idempotency collisions to the payment collision error', async () => {
     walletService.debit.mockRejectedValue(
-      new ConflictException('Idempotency key already used for a different wallet'),
-    )
-    paymentQueries()
+      new ConflictException('Idempotency key already used for a different wallet')
+    );
+    paymentQueries();
 
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT')
-  })
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+  });
 
   it('rejects Draft invoices without debiting', async () => {
-    paymentQueries({ invoice: invoiceRow({ state: 'Draft' }) })
-    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Draft'))
-    expect(walletService.debit).not.toHaveBeenCalled()
-    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK')
-  })
+    paymentQueries({ invoice: invoiceRow({ state: 'Draft' }) });
+    await expect(pay()).rejects.toThrow(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE('Draft'));
+    expect(walletService.debit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
 
   it('canonicalizes mixed-case ids before locking', async () => {
-    paymentQueries()
+    paymentQueries();
     const result = await pay({
       invoiceId: INVOICE_ID.toUpperCase(),
       profileId: PROFILE_ID.toUpperCase(),
-    })
-    expect(result.invoiceId).toBe(INVOICE_ID)
-    expect(result.profileId).toBe(PROFILE_ID)
+    });
+    expect(result.invoiceId).toBe(INVOICE_ID);
+    expect(result.profileId).toBe(PROFILE_ID);
     const walletLock = mockClient.query.mock.calls.find(
-      (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets'),
-    )
-    expect(walletLock?.[1]).toEqual([PROFILE_ID])
-  })
-})
+      (c) => typeof c[0] === 'string' && (c[0] as string).includes('FROM wallets')
+    );
+    expect(walletLock?.[1]).toEqual([PROFILE_ID]);
+  });
+});

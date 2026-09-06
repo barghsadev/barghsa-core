@@ -1,4 +1,4 @@
-import { ErrorComponentProps, Link } from '@tanstack/react-router'
+import { ErrorComponentProps, Link } from '@tanstack/react-router';
 
 /**
  * Accessible route-level error boundary for lazy-loaded modules.
@@ -9,7 +9,7 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
     error instanceof TypeError &&
     (error.message?.includes('Failed to fetch') ||
       error.message?.includes('loading') ||
-      error.message?.includes('ChunkLoadError'))
+      error.message?.includes('ChunkLoadError'));
 
   return (
     <div
@@ -19,9 +19,7 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
     >
       <div className="max-w-md text-center space-y-4">
         <h2 className="text-xl font-semibold text-red-700">
-          {isChunkLoadError
-            ? 'Failed to load this page'
-            : 'An unexpected error occurred'}
+          {isChunkLoadError ? 'Failed to load this page' : 'An unexpected error occurred'}
         </h2>
         <p className="text-gray-600">
           {isChunkLoadError
@@ -50,5 +48,5 @@ export function RouteErrorBoundary({ error, reset }: ErrorComponentProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

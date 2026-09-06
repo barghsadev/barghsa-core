@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { uuid, text, pgTable, timestamp } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { profiles } from './profiles'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { uuid, text, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { profiles } from './profiles';
+import { users } from './users';
 
 /**
  * Profile ownership transfers table (T-05.04.05).
@@ -24,58 +24,50 @@ import { users } from './users'
  * - `declined_at` — when the transfer was declined by the target.
  * - `created_at` / `updated_at` — audit columns.
  */
-export const profileOwnershipTransfers = pgTable(
-  'profile_ownership_transfers',
-  {
-    /** UUIDv7 primary key. */
-    id: uuidv7('id').primaryKey().notNull(),
+export const profileOwnershipTransfers = pgTable('profile_ownership_transfers', {
+  /** UUIDv7 primary key. */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** FK to the legal profile being transferred. */
-    profileId: uuid('profile_id')
-      .notNull()
-      .references(() => profiles.id, { onDelete: 'cascade' }),
+  /** FK to the legal profile being transferred. */
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'cascade' }),
 
-    /** The current profile owner initiating the transfer. */
-    fromUserId: text('from_user_id')
-      .notNull()
-      .references(() => users.userId, { onDelete: 'restrict' }),
+  /** The current profile owner initiating the transfer. */
+  fromUserId: text('from_user_id')
+    .notNull()
+    .references(() => users.userId, { onDelete: 'restrict' }),
 
-    /** The target user (must be an existing agent of the profile). */
-    toUserId: text('to_user_id')
-      .notNull()
-      .references(() => users.userId, { onDelete: 'restrict' }),
+  /** The target user (must be an existing agent of the profile). */
+  toUserId: text('to_user_id')
+    .notNull()
+    .references(() => users.userId, { onDelete: 'restrict' }),
 
-    /** Transfer status. */
-    status: text('status', {
-      enum: ['Pending', 'Completed', 'Declined', 'Expired', 'Cancelled'],
-    })
-      .notNull()
-      .default('Pending'),
+  /** Transfer status. */
+  status: text('status', {
+    enum: ['Pending', 'Completed', 'Declined', 'Expired', 'Cancelled'],
+  })
+    .notNull()
+    .default('Pending'),
 
-    /** When the pending transfer expires. */
-    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' })
-      .notNull(),
+  /** When the pending transfer expires. */
+  expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
 
-    /** When the transfer was accepted and completed. */
-    completedAt: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
+  /** When the transfer was accepted and completed. */
+  completedAt: timestamp('completed_at', { withTimezone: true, mode: 'date' }),
 
-    /** When the transfer was cancelled by the initiator. */
-    cancelledAt: timestamp('cancelled_at', { withTimezone: true, mode: 'date' }),
+  /** When the transfer was cancelled by the initiator. */
+  cancelledAt: timestamp('cancelled_at', { withTimezone: true, mode: 'date' }),
 
-    /** When the transfer was declined by the target. */
-    declinedAt: timestamp('declined_at', { withTimezone: true, mode: 'date' }),
+  /** When the transfer was declined by the target. */
+  declinedAt: timestamp('declined_at', { withTimezone: true, mode: 'date' }),
 
-    /** When the record was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** When the record was created. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the profile_ownership_transfers table.
@@ -106,4 +98,4 @@ export const createProfileOwnershipTransfersTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_ownership_transfers_status
     ON profile_ownership_transfers (status);
-`
+`;

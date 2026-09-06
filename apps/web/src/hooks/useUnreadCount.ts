@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { fetchUnreadCount } from '../lib/notifications.js'
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { fetchUnreadCount } from '../lib/notifications.js';
 
 /** Default short-poll interval for the real-time badge (T-05.02.04). */
-export const UNREAD_POLL_MS = 30_000
+export const UNREAD_POLL_MS = 30_000;
 
 export interface UseUnreadCount {
   /** Latest known unread count (kept locally in sync with the server poll). */
-  unreadCount: number
+  unreadCount: number;
   /** Force an immediate poll (e.g. after an optimistic mutation settles). */
-  refresh: () => void
+  refresh: () => void;
   /** Overwrite the count with an externally-known value. */
-  setUnreadCount: (count: number) => void
+  setUnreadCount: (count: number) => void;
   /** Optimistically decrement (low-risk: read actions) without a round-trip. */
-  optimisticDecrement: (by?: number) => void
+  optimisticDecrement: (by?: number) => void;
 }
 
 /**
@@ -26,50 +26,48 @@ export interface UseUnreadCount {
  * `optimisticDecrement` for instant feedback; the next poll reconciles with
  * the authoritative server count.
  */
-export function useUnreadCount(
-  pollMs: number = UNREAD_POLL_MS,
-): UseUnreadCount {
-  const [unreadCount, setUnreadCountState] = useState(0)
-  const mounted = useRef(true)
-  const inflight = useRef(false)
+export function useUnreadCount(pollMs: number = UNREAD_POLL_MS): UseUnreadCount {
+  const [unreadCount, setUnreadCountState] = useState(0);
+  const mounted = useRef(true);
+  const inflight = useRef(false);
 
   const refresh = useCallback((): void => {
-    if (inflight.current) return
-    inflight.current = true
+    if (inflight.current) return;
+    inflight.current = true;
     void fetchUnreadCount()
       .then((count) => {
-        if (mounted.current) setUnreadCountState(count)
+        if (mounted.current) setUnreadCountState(count);
       })
       .catch(() => {
         // Transient network/server error: keep the last known count.
       })
       .finally(() => {
-        inflight.current = false
-      })
-  }, [])
+        inflight.current = false;
+      });
+  }, []);
 
   useEffect(() => {
-    mounted.current = true
-    refresh()
-    const interval = window.setInterval(refresh, pollMs)
+    mounted.current = true;
+    refresh();
+    const interval = window.setInterval(refresh, pollMs);
     const onVisibility = () => {
-      if (!document.hidden) refresh()
-    }
-    document.addEventListener('visibilitychange', onVisibility)
+      if (!document.hidden) refresh();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
-      mounted.current = false
-      window.clearInterval(interval)
-      document.removeEventListener('visibilitychange', onVisibility)
-    }
-  }, [refresh, pollMs])
+      mounted.current = false;
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [refresh, pollMs]);
 
   const setUnreadCount = useCallback((count: number) => {
-    if (mounted.current) setUnreadCountState(count)
-  }, [])
+    if (mounted.current) setUnreadCountState(count);
+  }, []);
 
   const optimisticDecrement = useCallback((by = 1) => {
-    setUnreadCountState((prev) => Math.max(0, prev - by))
-  }, [])
+    setUnreadCountState((prev) => Math.max(0, prev - by));
+  }, []);
 
-  return { unreadCount, refresh, setUnreadCount, optimisticDecrement }
+  return { unreadCount, refresh, setUnreadCount, optimisticDecrement };
 }

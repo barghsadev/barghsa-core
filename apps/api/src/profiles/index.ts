@@ -1,9 +1,9 @@
-export { ProfilesModule } from './profiles.module.js'
-export { ProfilesService } from './profiles.service.js'
-export { ProfilesController } from './profiles.controller.js'
-export { OnboardingController } from './onboarding.controller.js'
-export { AgentsController } from './agents.controller.js'
-export { ProfileVerifiedGuard } from './profiles.guard.js'
-export { AgentRoleGuard } from './agent-role.guard.js'
-export { RequireAgentPermission } from './agent-permission.decorator.js'
-export type { ProfileDto, ProfilesResponseDto, VerificationStatusDto } from './profiles.service.js'
+export { ProfilesModule } from './profiles.module.js';
+export { ProfilesService } from './profiles.service.js';
+export { ProfilesController } from './profiles.controller.js';
+export { OnboardingController } from './onboarding.controller.js';
+export { AgentsController } from './agents.controller.js';
+export { ProfileVerifiedGuard } from './profiles.guard.js';
+export { AgentRoleGuard } from './agent-role.guard.js';
+export { RequireAgentPermission } from './agent-permission.decorator.js';
+export type { ProfileDto, ProfilesResponseDto, VerificationStatusDto } from './profiles.service.js';

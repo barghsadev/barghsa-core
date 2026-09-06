@@ -28,25 +28,22 @@ export const SERVICE_DUE_PERIOD_TYPES = [
   'saving_plan',
   'consultation',
   'manual',
-] as const
+] as const;
 
-export type ServiceDuePeriodType = (typeof SERVICE_DUE_PERIOD_TYPES)[number]
+export type ServiceDuePeriodType = (typeof SERVICE_DUE_PERIOD_TYPES)[number];
 
 /** Fallback used by invoice issuance when no active period row exists. */
-export const DEFAULT_SERVICE_DUE_DAYS = 7
+export const DEFAULT_SERVICE_DUE_DAYS = 7;
 
 /** Minimum configurable due period in days (due the next calendar day). */
-export const MIN_SERVICE_DUE_DAYS = 1
+export const MIN_SERVICE_DUE_DAYS = 1;
 
 /** Maximum configurable due period in days (one calendar year). */
-export const MAX_SERVICE_DUE_DAYS = 365
+export const MAX_SERVICE_DUE_DAYS = 365;
 
 /** Whether a raw value is a known service-due-period type. */
 export function isServiceDuePeriodType(raw: unknown): raw is ServiceDuePeriodType {
-  return (
-    typeof raw === 'string' &&
-    (SERVICE_DUE_PERIOD_TYPES as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (SERVICE_DUE_PERIOD_TYPES as readonly string[]).includes(raw);
 }
 
 /**
@@ -59,7 +56,7 @@ export function isValidDefaultDueDays(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= MIN_SERVICE_DUE_DAYS &&
     raw <= MAX_SERVICE_DUE_DAYS
-  )
+  );
 }
 
 /**
@@ -67,25 +64,25 @@ export function isValidDefaultDueDays(raw: unknown): raw is number {
  * exposed by the future admin API.
  */
 export interface ServiceDuePeriodDto {
-  id: string
-  serviceType: ServiceDuePeriodType
+  id: string;
+  serviceType: ServiceDuePeriodType;
   /** Default due period in days (`issuedAt + defaultDays` → `dueAt`). */
-  defaultDays: number
+  defaultDays: number;
   /** Effective window — `effectiveFrom` inclusive. */
-  effectiveFrom: string
+  effectiveFrom: string;
   /** Effective window end — exclusive; null = open/current. */
-  effectiveUntil: string | null
+  effectiveUntil: string | null;
   /** Admin who recorded this period. */
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
   /**
    * Derived status for admin UI/table:
    * - `current` — active now
    * - `scheduled` — future effective date (not yet active)
    * - `expired` — ended in the past
    */
-  status: 'current' | 'scheduled' | 'expired'
+  status: 'current' | 'scheduled' | 'expired';
 }
 
 /**
@@ -95,16 +92,16 @@ export interface ServiceDuePeriodDto {
 export function serviceDuePeriodWindowStatus(
   effectiveFrom: Date | string,
   effectiveUntil: Date | string | null,
-  at: Date = new Date(),
+  at: Date = new Date()
 ): 'current' | 'scheduled' | 'expired' {
-  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom)
+  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom);
   const until =
     effectiveUntil == null
       ? null
       : effectiveUntil instanceof Date
         ? effectiveUntil
-        : new Date(effectiveUntil)
-  if (from.getTime() > at.getTime()) return 'scheduled'
-  if (until !== null && until.getTime() <= at.getTime()) return 'expired'
-  return 'current'
+        : new Date(effectiveUntil);
+  if (from.getTime() > at.getTime()) return 'scheduled';
+  if (until !== null && until.getTime() <= at.getTime()) return 'expired';
+  return 'current';
 }

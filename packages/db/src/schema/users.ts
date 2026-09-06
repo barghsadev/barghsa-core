@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm'
-import { pgTable, text, boolean, timestamp, integer } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import { pgTable, text, boolean, timestamp, integer } from 'drizzle-orm/pg-core';
 
 /**
  * Users table (T-01.02.03).
@@ -22,80 +22,79 @@ import { pgTable, text, boolean, timestamp, integer } from 'drizzle-orm/pg-core'
  * - `last_login_at` — nullable; last successful login (T-10.01.01).
  * - `created_at` / `updated_at` — audit columns.
  */
-export const users = pgTable(
-  'users',
-  {
-    /** UUIDv7 opaque user identifier. */
-    userId: text('user_id').primaryKey(),
+export const users = pgTable('users', {
+  /** UUIDv7 opaque user identifier. */
+  userId: text('user_id').primaryKey(),
 
-    /** Unique username: normalized email or E.164 phone. */
-    username: text('username').notNull().unique(),
+  /** Unique username: normalized email or E.164 phone. */
+  username: text('username').notNull().unique(),
 
-    /** Email address. Set when username is mobile; same as username when username is email. */
-    email: text('email'),
+  /** Email address. Set when username is mobile; same as username when username is email. */
+  email: text('email'),
 
-    /** E.164 phone number. Set when username is email; same as username when username is mobile. */
-    mobile: text('mobile'),
+  /** E.164 phone number. Set when username is email; same as username when username is mobile. */
+  mobile: text('mobile'),
 
-    /** Argon2id hash of the user's password. */
-    passwordHash: text('password_hash').notNull(),
+  /** Argon2id hash of the user's password. */
+  passwordHash: text('password_hash').notNull(),
 
-    /** Changes whenever account credentials or verified destinations change. */
-    authVersion: integer('auth_version').notNull().default(0),
+  /** Changes whenever account credentials or verified destinations change. */
+  authVersion: integer('auth_version').notNull().default(0),
 
-    /** Preferred locale: 'fa' or 'en'. Defaults to Persian. */
-    locale: text('locale').notNull().default('fa'),
+  /** Preferred locale: 'fa' or 'en'. Defaults to Persian. */
+  locale: text('locale').notNull().default('fa'),
 
-    /** Staff flag — next login must change password (T-02.01.04). */
-    mustChangePassword: boolean('must_change_password').notNull().default(false),
+  /** Staff flag — next login must change password (T-02.01.04). */
+  mustChangePassword: boolean('must_change_password').notNull().default(false),
 
-    /** Short-lived token authorizing a password change after login detection (T-02.01.04). */
-    passwordChangeToken: text('password_change_token'),
+  /** Short-lived token authorizing a password change after login detection (T-02.01.04). */
+  passwordChangeToken: text('password_change_token'),
 
-    /** Expiry of the password change token (default 5 min). */
-    passwordChangeTokenExpiresAt: timestamp('password_change_token_expires_at', { withTimezone: true, mode: 'date' }),
+  /** Expiry of the password change token (default 5 min). */
+  passwordChangeTokenExpiresAt: timestamp('password_change_token_expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }),
 
-    /** Notification channel preferences (T-03.03.05). */
-    notificationPreferences: text('notification_preferences').notNull().default('IN_APP'),
+  /** Notification channel preferences (T-03.03.05). */
+  notificationPreferences: text('notification_preferences').notNull().default('IN_APP'),
 
-    /** IANA timezone string (T-03.03.06). Default: Iran Standard Time (UTC+3:30). */
-    timezone: text('timezone').notNull().default('Asia/Tehran'),
+  /** IANA timezone string (T-03.03.06). Default: Iran Standard Time (UTC+3:30). */
+  timezone: text('timezone').notNull().default('Asia/Tehran'),
 
-    /** Admin flag — set for bootstrap admin user (T-02.04.03). */
-    isAdmin: boolean('is_admin').notNull().default(false),
+  /** Admin flag — set for bootstrap admin user (T-02.04.03). */
+  isAdmin: boolean('is_admin').notNull().default(false),
 
-    /** Staff membership does not grant any permission by itself. */
-    isStaff: boolean('is_staff').notNull().default(false),
+  /** Staff membership does not grant any permission by itself. */
+  isStaff: boolean('is_staff').notNull().default(false),
 
-    /** SHA-256 hash of the time-limited staff activation token (T-05.03.01). */
-    activationToken: text('activation_token'),
+  /** SHA-256 hash of the time-limited staff activation token (T-05.03.01). */
+  activationToken: text('activation_token'),
 
-    /** Expiry of the activation token (24h from creation, T-05.03.01). */
-    activationTokenExpiresAt: timestamp('activation_token_expires_at', { withTimezone: true, mode: 'date' }),
+  /** Expiry of the activation token (24h from creation, T-05.03.01). */
+  activationTokenExpiresAt: timestamp('activation_token_expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }),
 
-    /** Version ID of the TOS the user last accepted (T-04.01.03). */
-    lastAcceptedTosVersion: text('last_accepted_tos_version'),
+  /** Version ID of the TOS the user last accepted (T-04.01.03). */
+  lastAcceptedTosVersion: text('last_accepted_tos_version'),
 
-    /** When the account was disabled (T-10.01.01). Null = active. A disabled
-     * account cannot log in, cannot reset its password, and has all sessions
-     * revoked; refresh tokens are consumed at disable time. */
-    disabledAt: timestamp('disabled_at', { withTimezone: true, mode: 'date' }),
+  /** When the account was disabled (T-10.01.01). Null = active. A disabled
+   * account cannot log in, cannot reset its password, and has all sessions
+   * revoked; refresh tokens are consumed at disable time. */
+  disabledAt: timestamp('disabled_at', { withTimezone: true, mode: 'date' }),
 
-    /** Last successful login timestamp (T-10.01.01). Null until first login.
-     * Updated on password and OTP login paths; registration does not count. */
-    lastLoginAt: timestamp('last_login_at', { withTimezone: true, mode: 'date' }),
+  /** Last successful login timestamp (T-10.01.01). Null until first login.
+   * Updated on password and OTP login paths; registration does not count. */
+  lastLoginAt: timestamp('last_login_at', { withTimezone: true, mode: 'date' }),
 
-    /** When the user was created (registration verified). */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** When the user was created (registration verified). */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the users table.
@@ -171,4 +170,4 @@ export const createUsersTable = sql`
       ALTER TABLE users ADD COLUMN last_login_at TIMESTAMPTZ;
     END IF;
   END $$;
-`
+`;

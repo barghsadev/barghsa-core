@@ -4,24 +4,24 @@ import {
   ExecutionContext,
   UnauthorizedException,
   Logger,
-} from '@nestjs/common'
-import type { Request } from 'express'
-import { SessionService } from './session.service.js'
-import { SESSION_COOKIE_NAME } from './cookie.helper.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import type { Request } from 'express';
+import { SessionService } from './session.service.js';
+import { SESSION_COOKIE_NAME } from './cookie.helper.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 /**
  * Augmented Express Request with authenticated session data.
  */
 export interface AuthenticatedRequest extends Request {
   session: {
-    sessionId: string
-    userId: string
-    csrfToken: string
-    isAdmin: boolean
-    permissions?: string[]
-    stepUpVerifiedAt: Date | null
-  }
+    sessionId: string;
+    userId: string;
+    csrfToken: string;
+    isAdmin: boolean;
+    permissions?: string[];
+    stepUpVerifiedAt: Date | null;
+  };
 }
 
 /**
@@ -46,44 +46,44 @@ export interface AuthenticatedRequest extends Request {
  */
 @Injectable()
 export class SessionAuthGuard implements CanActivate {
-  private readonly logger = new Logger(SessionAuthGuard.name)
+  private readonly logger = new Logger(SessionAuthGuard.name);
 
   constructor(private readonly sessionService: SessionService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: Request = context.switchToHttp().getRequest()
+    const request: Request = context.switchToHttp().getRequest();
 
-    const sessionId = request.cookies?.[SESSION_COOKIE_NAME]
+    const sessionId = request.cookies?.[SESSION_COOKIE_NAME];
 
     if (!sessionId || typeof sessionId !== 'string') {
-      this.logger.debug('No session cookie found')
+      this.logger.debug('No session cookie found');
       throw new UnauthorizedException({
         statusCode: 401,
         error: ErrorCodes.AUTH_UNAUTHENTICATED.code,
-      })
+      });
     }
 
-    const validated = await this.sessionService.validateSession(sessionId)
+    const validated = await this.sessionService.validateSession(sessionId);
 
     if (!validated) {
-      this.logger.debug(`Session ${sessionId} invalid, expired, or revoked`)
+      this.logger.debug(`Session ${sessionId} invalid, expired, or revoked`);
       throw new UnauthorizedException({
         statusCode: 401,
         error: ErrorCodes.AUTH_UNAUTHENTICATED.code,
-      })
+      });
     }
 
     // Attach session to request
-    ;(request as AuthenticatedRequest).session = {
+    (request as AuthenticatedRequest).session = {
       sessionId: validated.sessionId,
       userId: validated.userId,
       csrfToken: validated.csrfToken,
       isAdmin: validated.isAdmin,
       permissions: validated.permissions ?? [],
       stepUpVerifiedAt: validated.stepUpVerifiedAt,
-    }
+    };
 
-    return true
+    return true;
   }
 }
 
@@ -105,36 +105,36 @@ export class SessionAuthGuard implements CanActivate {
  */
 @Injectable()
 export class SessionOptionalGuard implements CanActivate {
-  private readonly logger = new Logger(SessionOptionalGuard.name)
+  private readonly logger = new Logger(SessionOptionalGuard.name);
 
   constructor(private readonly sessionService: SessionService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: Request = context.switchToHttp().getRequest()
+    const request: Request = context.switchToHttp().getRequest();
 
     // Discard middleware context if the session expired or was revoked before this guard.
-    delete (request as Partial<AuthenticatedRequest>).session
+    delete (request as Partial<AuthenticatedRequest>).session;
 
-    const sessionId = request.cookies?.[SESSION_COOKIE_NAME]
+    const sessionId = request.cookies?.[SESSION_COOKIE_NAME];
 
     if (!sessionId || typeof sessionId !== 'string') {
       // No session — that's fine for optional auth
-      return true
+      return true;
     }
 
-    const validated = await this.sessionService.validateSession(sessionId)
+    const validated = await this.sessionService.validateSession(sessionId);
 
     if (validated) {
-      ;(request as AuthenticatedRequest).session = {
+      (request as AuthenticatedRequest).session = {
         sessionId: validated.sessionId,
         userId: validated.userId,
         csrfToken: validated.csrfToken,
         isAdmin: validated.isAdmin,
         permissions: validated.permissions ?? [],
         stepUpVerifiedAt: validated.stepUpVerifiedAt,
-      }
+      };
     }
 
-    return true
+    return true;
   }
 }

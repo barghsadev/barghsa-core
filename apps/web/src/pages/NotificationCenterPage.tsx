@@ -1,15 +1,10 @@
-import { notificationContent } from '../lib/notifications.js'
-import { useCallback, useEffect, useState } from 'react'
-import { useNavigate, type NavigateOptions } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import {
-  BellIcon,
-  CheckCheckIcon,
-  Loader2Icon,
-  InboxIcon,
-} from 'lucide-react'
-import { Button } from '@barghsa/ui'
-import { useLocale } from '../hooks/useLocale.js'
+import { notificationContent } from '../lib/notifications.js';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n';
+import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
+import { Button } from '@barghsa/ui';
+import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchNotifications,
   markOneRead,
@@ -17,10 +12,10 @@ import {
   toNavigationTarget,
   type NotificationFilter,
   type NotificationItem,
-} from '../lib/notifications.js'
-import { NotificationRow } from '../components/NotificationRow.js'
+} from '../lib/notifications.js';
+import { NotificationRow } from '../components/NotificationRow.js';
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
 /**
  * Notification center page (E-05, T-05.02.03).
@@ -31,59 +26,57 @@ const PAGE_SIZE = 20
  * loading skeleton, an empty state, and a load-more footer. RTL-aware.
  */
 export function NotificationCenterPage() {
-  const locale = useLocale()
-  const navigate = useNavigate()
+  const locale = useLocale();
+  const navigate = useNavigate();
 
-  const [items, setItems] = useState<NotificationItem[]>([])
-  const [nextCursor, setNextCursor] = useState<string | null>(null)
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [filter, setFilter] = useState<NotificationFilter>('all')
-  const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [markingAll, setMarkingAll] = useState(false)
+  const [items, setItems] = useState<NotificationItem[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [filter, setFilter] = useState<NotificationFilter>('all');
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [markingAll, setMarkingAll] = useState(false);
 
   const load = useCallback(
     async (cursor?: string, currentFilter: NotificationFilter = filter) => {
       try {
-        const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE)
-        setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]))
-        setNextCursor(page.next_cursor)
-        setUnreadCount(page.unread_count)
-        setError(null)
+        const page = await fetchNotifications(cursor, currentFilter, PAGE_SIZE);
+        setItems((prev) => (cursor ? [...prev, ...page.data] : [...page.data]));
+        setNextCursor(page.next_cursor);
+        setUnreadCount(page.unread_count);
+        setError(null);
       } catch {
-        setError(t('notifications.error.load', locale))
+        setError(t('notifications.error.load', locale));
       }
     },
-    [filter, locale],
-  )
+    [filter, locale]
+  );
 
   useEffect(() => {
-    setLoading(true)
-    setItems([])
-    setNextCursor(null)
-    void load(undefined, filter).finally(() => setLoading(false))
-  }, [filter, load])
+    setLoading(true);
+    setItems([]);
+    setNextCursor(null);
+    void load(undefined, filter).finally(() => setLoading(false));
+  }, [filter, load]);
 
   const handleLoadMore = async () => {
-    if (!nextCursor || loadingMore) return
-    setLoadingMore(true)
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
     try {
-      await load(nextCursor)
+      await load(nextCursor);
     } finally {
-      setLoadingMore(false)
+      setLoadingMore(false);
     }
-  }
+  };
 
   const handleItemClick = async (item: NotificationItem) => {
-    const target = toNavigationTarget(item)
+    const target = toNavigationTarget(item);
     if (!item.isRead) {
       try {
-        const count = await markOneRead(item.id)
-        setUnreadCount(count)
-        setItems((prev) =>
-          prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)),
-        )
+        const count = await markOneRead(item.id);
+        setUnreadCount(count);
+        setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, isRead: true } : i)));
       } catch {
         // Non-blocking; navigation proceeds if a route exists.
       }
@@ -92,33 +85,31 @@ export function NotificationCenterPage() {
       navigate({
         to: target.to,
         search: target.search as NavigateOptions['search'],
-      } as NavigateOptions)
+      } as NavigateOptions);
     }
-  }
+  };
 
   const handleMarkAll = async () => {
-    setMarkingAll(true)
+    setMarkingAll(true);
     try {
-      const count = await markAllRead()
-      setUnreadCount(count)
-      setItems((prev) => prev.map((i) => ({ ...i, isRead: true })))
+      const count = await markAllRead();
+      setUnreadCount(count);
+      setItems((prev) => prev.map((i) => ({ ...i, isRead: true })));
     } catch {
-      setError(t('notifications.error.load', locale))
+      setError(t('notifications.error.load', locale));
     } finally {
-      setMarkingAll(false)
+      setMarkingAll(false);
     }
-  }
+  };
 
-  const isRtl = locale === 'fa'
+  const isRtl = locale === 'fa';
 
   return (
     <div className="mx-auto max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <BellIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-          <h1 className="text-2xl font-bold text-gray-900">
-            {t('notifications.title', locale)}
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('notifications.title', locale)}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -139,7 +130,11 @@ export function NotificationCenterPage() {
       </header>
 
       {/* Filter toggle */}
-      <div role="tablist" aria-label={t('notifications.bellLabel', locale)} className="flex gap-1 rounded-lg bg-gray-100 p-1 text-sm">
+      <div
+        role="tablist"
+        aria-label={t('notifications.bellLabel', locale)}
+        className="flex gap-1 rounded-lg bg-gray-100 p-1 text-sm"
+      >
         {(['all', 'unread'] as NotificationFilter[]).map((value) => (
           <button
             key={value}
@@ -191,9 +186,7 @@ export function NotificationCenterPage() {
               ? t('notifications.empty.unread', locale)
               : t('notifications.empty.title', locale)}
           </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            {t('notifications.empty.body', locale)}
-          </p>
+          <p className="mt-1 text-sm text-gray-500">{t('notifications.empty.body', locale)}</p>
         </div>
       )}
 
@@ -232,13 +225,11 @@ export function NotificationCenterPage() {
             disabled={loadingMore}
             className="gap-2"
           >
-            {loadingMore && (
-              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-            )}
+            {loadingMore && <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />}
             {t('notifications.loadMore', locale)}
           </Button>
         </div>
       )}
     </div>
-  )
+  );
 }

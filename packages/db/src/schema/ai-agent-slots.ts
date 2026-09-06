@@ -1,7 +1,7 @@
-import { pgTable, text, uuid, index } from 'drizzle-orm/pg-core'
-import { timestamptz } from '../types.js'
-import { users } from './users.js'
-import { aiAgents } from './ai-agents.js'
+import { pgTable, text, uuid, index } from 'drizzle-orm/pg-core';
+import { timestamptz } from '../types.js';
+import { users } from './users.js';
+import { aiAgents } from './ai-agents.js';
 
 /**
  * AI agent slot assignment (S-09.11, T-09.11.05).
@@ -52,5 +52,5 @@ export const aiAgentSlots = pgTable(
   (table) => [
     /** Which slots use an agent ("also used in" warning; SET NULL delete path). */
     index('idx_aias_agent_id').on(table.agentId),
-  ],
-)
+  ]
+);

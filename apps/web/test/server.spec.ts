@@ -9,27 +9,28 @@ import { request } from 'node:http';
 /**
  * Helper: make an HTTP request and return the status, headers, and body.
  */
-function fetch(server: Server, path: string, method = 'GET'): Promise<{ status: number; headers: Record<string, string>; body: string }> {
+function fetch(
+  server: Server,
+  path: string,
+  method = 'GET'
+): Promise<{ status: number; headers: Record<string, string>; body: string }> {
   return new Promise((resolve, reject) => {
     const addr = server.address();
     if (!addr || typeof addr === 'string') {
       reject(new Error('Server not listening on a port'));
       return;
     }
-    const req = request(
-      { hostname: '127.0.0.1', port: addr.port, path, method },
-      (res) => {
-        const chunks: Buffer[] = [];
-        res.on('data', (chunk: Buffer) => chunks.push(chunk));
-        res.on('end', () => {
-          resolve({
-            status: res.statusCode ?? 0,
-            headers: res.headers as Record<string, string>,
-            body: Buffer.concat(chunks).toString('utf-8'),
-          });
+    const req = request({ hostname: '127.0.0.1', port: addr.port, path, method }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => {
+        resolve({
+          status: res.statusCode ?? 0,
+          headers: res.headers as Record<string, string>,
+          body: Buffer.concat(chunks).toString('utf-8'),
         });
-      },
-    );
+      });
+    });
     req.on('error', reject);
     req.end();
   });

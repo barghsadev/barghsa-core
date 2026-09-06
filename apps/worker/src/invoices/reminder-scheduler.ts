@@ -1,5 +1,5 @@
-import type { Pool, PoolClient, QueryResult } from 'pg'
-import { getDbPool } from '@barghsa/db'
+import type { Pool, PoolClient, QueryResult } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import {
   INVOICE_REMINDER_OFFSETS,
   REMINDER_STOP_STATES,
@@ -12,9 +12,13 @@ import {
   type InvoiceReminderChannel,
   type InvoiceReminderOffset,
   type ReminderOffsetToggleDto,
-} from '@barghsa/shared/finance'
-import { isValidTimeZone, type DeliveryWindowConfig } from '@barghsa/shared/notifications'
-import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../notifications/delivery-window.js'
+} from '@barghsa/shared/finance';
+import { isValidTimeZone, type DeliveryWindowConfig } from '@barghsa/shared/notifications';
+import {
+  isWithinWindow,
+  loadDeliveryWindowConfig,
+  nextWindowOpen,
+} from '../notifications/delivery-window.js';
 
 /**
  * ReminderScheduler (S-04.1.04, T-04.1.04.02).
@@ -67,13 +71,13 @@ import { isWithinWindow, loadDeliveryWindowConfig, nextWindowOpen } from '../not
  */
 
 /** Default number of issued invoices claimed per page / scheduling quota. */
-export const DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE = 200
+export const DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE = 200;
 
 /**
  * Extra calendar day beyond the latest canonical offset so a post-close
  * instant snapped to the next daytime-window open is still a candidate.
  */
-export const REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS = 1
+export const REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS = 1;
 
 /**
  * Inclusive horizon used by the candidate query: latest S-04.1.04 offset
@@ -82,13 +86,13 @@ export const REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS = 1
  * receive any schedule row and must not occupy the oldest-first batch.
  */
 export const REMINDER_SCHEDULE_HORIZON_DAYS =
-  Math.max(...INVOICE_REMINDER_OFFSETS) + REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS
+  Math.max(...INVOICE_REMINDER_OFFSETS) + REMINDER_SCHEDULE_WINDOW_SNAP_BUFFER_DAYS;
 
 /**
  * Max candidate pages per pass (each up to `batchSize`). Bounds work when
  * a residual empty-plan cohort still matches the SQL horizon.
  */
-export const DEFAULT_REMINDER_SCHEDULE_MAX_PAGES = 10
+export const DEFAULT_REMINDER_SCHEDULE_MAX_PAGES = 10;
 
 /**
  * Offsets whose snapped `scheduledAt` is this close to the scheduling
@@ -96,69 +100,69 @@ export const DEFAULT_REMINDER_SCHEDULE_MAX_PAGES = 10
  * for a slow batch) so a default 7-day due period still gets its `-7`
  * on-issue reminder; hours- or days-late processing does not.
  */
-export const REMINDER_SCHEDULE_CATCH_UP_GRACE_MS = 60 * 60 * 1000
+export const REMINDER_SCHEDULE_CATCH_UP_GRACE_MS = 60 * 60 * 1000;
 
 /** Stable worker task key recorded in `background_jobs`. */
-export const INVOICE_REMINDER_JOB_TYPE = 'invoice_reminder_scheduler' as const
+export const INVOICE_REMINDER_JOB_TYPE = 'invoice_reminder_scheduler' as const;
 
 /** Outcome of one reminder-scheduler pass. */
 export interface ReminderScheduleResult {
   /** Candidate invoices fetched this tick (before per-row lock/re-check). */
-  scanned: number
+  scanned: number;
   /** Invoices that received a new schedule. */
-  scheduled: number
+  scheduled: number;
   /**
    * Candidates skipped because a concurrent worker held the row, the
    * invoice was no longer eligible after lock, rows already existed,
    * or every offset had already elapsed.
    */
-  skipped: number
+  skipped: number;
   /** True when the candidate query hit the batch cap. */
-  truncated: boolean
+  truncated: boolean;
   /** Per-invoice failure messages. */
-  errors: string[]
+  errors: string[];
 }
 
 /** One planned schedule row (offset × channel). */
 export interface PlannedReminderRow {
-  offset: InvoiceReminderOffset
-  channel: InvoiceReminderChannel
-  scheduledAt: Date
+  offset: InvoiceReminderOffset;
+  channel: InvoiceReminderChannel;
+  scheduledAt: Date;
 }
 
 /** Behavioural override hooks for tests. */
 export interface ReminderScheduleOptions {
-  pool?: Pool
-  logger?: { warn: (msg: string) => void; info: (msg: string) => void }
-  batchSize?: number
+  pool?: Pool;
+  logger?: { warn: (msg: string) => void; info: (msg: string) => void };
+  batchSize?: number;
   /**
    * Delivery window. When set, `app_config` is not queried (unit tests).
    * Production leaves this unset so the admin-configured window is used.
    */
-  deliveryWindow?: DeliveryWindowConfig
+  deliveryWindow?: DeliveryWindowConfig;
   /**
    * Admin offset-enable matrix. When set, the toggle table is not
    * queried (unit tests). Production leaves this unset so live admin
    * toggles are used. Missing pairs default to enabled.
    */
-  reminderOffsetToggles?: ReminderOffsetToggleDto[]
+  reminderOffsetToggles?: ReminderOffsetToggleDto[];
   /**
    * Stable scheduling-pass timestamp used to drop elapsed offsets.
    * Production leaves this unset (`new Date()` once per pass).
    */
-  now?: Date
+  now?: Date;
 }
 
 const defaultLogger = {
   warn: (msg: string): void => {
     // eslint-disable-next-line no-console
-    console.warn(`[worker] ${msg}`)
+    console.warn(`[worker] ${msg}`);
   },
   info: (msg: string): void => {
     // eslint-disable-next-line no-console
-    console.log(`[worker] ${msg}`)
+    console.log(`[worker] ${msg}`);
   },
-}
+};
 
 /**
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
@@ -201,7 +205,7 @@ export const FIND_UNSCHEDULED_ISSUED_INVOICES_SQL = `SELECT i.id, i.state, i.due
           )
           AND COALESCE(NULLIF(i.metadata #>> '{due,serviceType}', ''), '') <> ALL($6::text[])
         ORDER BY i.issued_at ASC, i.id ASC
-        LIMIT $2`
+        LIMIT $2`;
 
 const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
                NULLIF(i.metadata #>> '{due,serviceType}', '') AS service_type,
@@ -211,18 +215,18 @@ const LOCK_INVOICE_SQL = `SELECT i.id, i.state, i.due_at, i.issued_at,
         LEFT JOIN profiles p ON p.id = i.profile_id
         LEFT JOIN users u ON u.user_id = p.user_id
         WHERE i.id = $1
-        FOR UPDATE OF i SKIP LOCKED`
+        FOR UPDATE OF i SKIP LOCKED`;
 
-const EXISTING_SCHEDULE_SQL = `SELECT 1 FROM invoice_reminder_schedule WHERE invoice_id = $1 LIMIT 1`
+const EXISTING_SCHEDULE_SQL = `SELECT 1 FROM invoice_reminder_schedule WHERE invoice_id = $1 LIMIT 1`;
 
 interface CandidateRow {
-  id: string
-  state: string
-  due_at: Date | string | null
-  issued_at: Date | string | null
-  service_type: string | null
-  timezone: string | null
-  notification_preferences: string | null
+  id: string;
+  state: string;
+  due_at: Date | string | null;
+  issued_at: Date | string | null;
+  service_type: string | null;
+  timezone: string | null;
+  notification_preferences: string | null;
 }
 
 /**
@@ -233,14 +237,14 @@ interface CandidateRow {
  */
 export function reminderWindowForProfile(
   adminWindow: DeliveryWindowConfig,
-  profileTimezone: string | null | undefined,
+  profileTimezone: string | null | undefined
 ): DeliveryWindowConfig {
-  const tz = typeof profileTimezone === 'string' ? profileTimezone.trim() : ''
+  const tz = typeof profileTimezone === 'string' ? profileTimezone.trim() : '';
   return {
     timezone: tz.length > 0 && isValidTimeZone(tz) ? tz : adminWindow.timezone,
     startHour: adminWindow.startHour,
     endHour: adminWindow.endHour,
-  }
+  };
 }
 
 /**
@@ -248,8 +252,8 @@ export function reminderWindowForProfile(
  * otherwise the next window open in `config.timezone`.
  */
 export function snapToDaytimeWindow(instant: Date, config: DeliveryWindowConfig): Date {
-  if (isWithinWindow(instant, config)) return instant
-  return nextWindowOpen(instant, config)
+  if (isWithinWindow(instant, config)) return instant;
+  return nextWindowOpen(instant, config);
 }
 
 /**
@@ -261,9 +265,9 @@ export function snapToDaytimeWindow(instant: Date, config: DeliveryWindowConfig)
 export function reminderElapsedCutoffMs(
   issuedAt: Date,
   now: Date,
-  graceMs: number = REMINDER_SCHEDULE_CATCH_UP_GRACE_MS,
+  graceMs: number = REMINDER_SCHEDULE_CATCH_UP_GRACE_MS
 ): number {
-  return Math.max(issuedAt.getTime(), now.getTime() - graceMs)
+  return Math.max(issuedAt.getTime(), now.getTime() - graceMs);
 }
 
 /**
@@ -271,13 +275,13 @@ export function reminderElapsedCutoffMs(
  * issuance, or the snapped send time is already behind the catch-up cutoff.
  */
 export function isElapsedReminder(input: {
-  instant: Date
-  scheduledAt: Date
-  issuedAt: Date
-  now: Date
+  instant: Date;
+  scheduledAt: Date;
+  issuedAt: Date;
+  now: Date;
 }): boolean {
-  if (input.instant.getTime() < input.issuedAt.getTime()) return true
-  return input.scheduledAt.getTime() < reminderElapsedCutoffMs(input.issuedAt, input.now)
+  if (input.instant.getTime() < input.issuedAt.getTime()) return true;
+  return input.scheduledAt.getTime() < reminderElapsedCutoffMs(input.issuedAt, input.now);
 }
 
 /**
@@ -289,42 +293,40 @@ export function isElapsedReminder(input: {
  * when `enabledOffsets` is provided.
  */
 export function planInvoiceReminders(input: {
-  dueAt: Date
-  issuedAt: Date
-  now: Date
-  channels: readonly InvoiceReminderChannel[]
-  window: DeliveryWindowConfig
+  dueAt: Date;
+  issuedAt: Date;
+  now: Date;
+  channels: readonly InvoiceReminderChannel[];
+  window: DeliveryWindowConfig;
   /** Canonical offsets still enabled for this invoice's service type. */
-  enabledOffsets?: readonly InvoiceReminderOffset[]
+  enabledOffsets?: readonly InvoiceReminderOffset[];
 }): PlannedReminderRow[] {
   const channels: InvoiceReminderChannel[] =
-    input.channels.length > 0 ? [...input.channels] : ['in_app']
-  const allowed = new Set<InvoiceReminderOffset>(
-    input.enabledOffsets ?? INVOICE_REMINDER_OFFSETS,
-  )
-  const rows: PlannedReminderRow[] = []
+    input.channels.length > 0 ? [...input.channels] : ['in_app'];
+  const allowed = new Set<InvoiceReminderOffset>(input.enabledOffsets ?? INVOICE_REMINDER_OFFSETS);
+  const rows: PlannedReminderRow[] = [];
   for (const { offset, instant } of computeReminderInstants(input.dueAt)) {
-    if (!allowed.has(offset)) continue
-    const scheduledAt = snapToDaytimeWindow(instant, input.window)
+    if (!allowed.has(offset)) continue;
+    const scheduledAt = snapToDaytimeWindow(instant, input.window);
     if (isElapsedReminder({ instant, scheduledAt, issuedAt: input.issuedAt, now: input.now })) {
-      continue
+      continue;
     }
     for (const channel of channels) {
-      rows.push({ offset, channel, scheduledAt })
+      rows.push({ offset, channel, scheduledAt });
     }
   }
-  return rows
+  return rows;
 }
 
 function parseDueAtValue(value: Date | string | null | undefined): Date | null {
   if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value
+    return Number.isNaN(value.getTime()) ? null : value;
   }
   if (typeof value === 'string' && value.trim() !== '') {
-    const parsed = new Date(value)
-    return Number.isNaN(parsed.getTime()) ? null : parsed
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
   }
-  return null
+  return null;
 }
 
 /**
@@ -336,10 +338,10 @@ function parseDueAtValue(value: Date | string | null | undefined): Date | null {
  */
 async function loadWindow(
   pool: Pool,
-  override: DeliveryWindowConfig | undefined,
+  override: DeliveryWindowConfig | undefined
 ): Promise<DeliveryWindowConfig> {
-  if (override) return override
-  return loadDeliveryWindowConfig(pool)
+  if (override) return override;
+  return loadDeliveryWindowConfig(pool);
 }
 
 /**
@@ -350,19 +352,19 @@ async function loadWindow(
  */
 async function loadReminderOffsetToggles(
   pool: Pool,
-  override: ReminderOffsetToggleDto[] | undefined,
+  override: ReminderOffsetToggleDto[] | undefined
 ): Promise<ReminderOffsetToggleDto[]> {
-  if (override) return override
+  if (override) return override;
   const result = await pool.query<{ service_type: string; offset: number; enabled: boolean }>(
-    `SELECT service_type, "offset", enabled FROM invoice_reminder_offset_toggles`,
-  )
+    `SELECT service_type, "offset", enabled FROM invoice_reminder_offset_toggles`
+  );
   return mergeReminderOffsetToggles(
     result.rows.map((row) => ({
       serviceType: row.service_type,
       offset: Number(row.offset),
       enabled: row.enabled,
-    })),
-  )
+    }))
+  );
 }
 
 /**
@@ -374,12 +376,12 @@ async function loadReminderOffsetToggles(
  * large zero-plan cohort cannot occupy every page across ticks.
  */
 export async function scheduleIssuedInvoiceReminders(
-  options: ReminderScheduleOptions = {},
+  options: ReminderScheduleOptions = {}
 ): Promise<ReminderScheduleResult> {
-  const pool = options.pool ?? getDbPool()
-  const logger = options.logger ?? defaultLogger
-  const batchSize = options.batchSize ?? DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE
-  const now = parseDueAtValue(options.now ?? new Date()) ?? new Date()
+  const pool = options.pool ?? getDbPool();
+  const logger = options.logger ?? defaultLogger;
+  const batchSize = options.batchSize ?? DEFAULT_REMINDER_SCHEDULE_BATCH_SIZE;
+  const now = parseDueAtValue(options.now ?? new Date()) ?? new Date();
 
   const result: ReminderScheduleResult = {
     scanned: 0,
@@ -387,68 +389,74 @@ export async function scheduleIssuedInvoiceReminders(
     skipped: 0,
     truncated: false,
     errors: [],
-  }
+  };
 
-  const adminWindow = await loadWindow(pool, options.deliveryWindow)
-  const offsetToggles = await loadReminderOffsetToggles(pool, options.reminderOffsetToggles)
-  const excludedServiceTypes = serviceTypesWithNoEnabledOffsets(offsetToggles)
+  const adminWindow = await loadWindow(pool, options.deliveryWindow);
+  const offsetToggles = await loadReminderOffsetToggles(pool, options.reminderOffsetToggles);
+  const excludedServiceTypes = serviceTypesWithNoEnabledOffsets(offsetToggles);
 
-  let cursorIssuedAt: Date | null = null
-  let cursorId: string | null = null
+  let cursorIssuedAt: Date | null = null;
+  let cursorId: string | null = null;
 
   for (let page = 0; page < DEFAULT_REMINDER_SCHEDULE_MAX_PAGES; page += 1) {
     const candidates: QueryResult<CandidateRow> = await pool.query<CandidateRow>(
       FIND_UNSCHEDULED_ISSUED_INVOICES_SQL,
-      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId, excludedServiceTypes],
-    )
-    result.scanned += candidates.rows.length
+      [[...REMINDER_STOP_STATES], batchSize, now, cursorIssuedAt, cursorId, excludedServiceTypes]
+    );
+    result.scanned += candidates.rows.length;
     if (candidates.rows.length === 0) {
-      result.truncated = false
-      break
+      result.truncated = false;
+      break;
     }
 
     for (const candidate of candidates.rows) {
-      const client = await pool.connect()
+      const client = await pool.connect();
       try {
-        await client.query('BEGIN')
-        const inserted = await scheduleOneInvoice(client, candidate, adminWindow, now, offsetToggles)
+        await client.query('BEGIN');
+        const inserted = await scheduleOneInvoice(
+          client,
+          candidate,
+          adminWindow,
+          now,
+          offsetToggles
+        );
         if (inserted) {
-          await client.query('COMMIT')
-          result.scheduled += 1
+          await client.query('COMMIT');
+          result.scheduled += 1;
         } else {
-          await client.query('ROLLBACK')
-          result.skipped += 1
+          await client.query('ROLLBACK');
+          result.skipped += 1;
         }
       } catch (error) {
-        await client.query('ROLLBACK').catch(() => {})
-        const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`
-        result.errors.push(message)
-        logger.warn(`Reminder schedule failed: ${message}`)
+        await client.query('ROLLBACK').catch(() => {});
+        const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+        result.errors.push(message);
+        logger.warn(`Reminder schedule failed: ${message}`);
       } finally {
-        client.release()
+        client.release();
       }
 
       if (result.scheduled >= batchSize) {
-        result.truncated = true
-        return result
+        result.truncated = true;
+        return result;
       }
     }
 
     if (candidates.rows.length < batchSize) {
-      result.truncated = false
-      break
+      result.truncated = false;
+      break;
     }
 
-    result.truncated = true
-    const last: CandidateRow | undefined = candidates.rows[candidates.rows.length - 1]
-    if (!last) break
-    const lastIssuedAt = parseDueAtValue(last.issued_at)
-    if (lastIssuedAt === null) break
-    cursorIssuedAt = lastIssuedAt
-    cursorId = last.id
+    result.truncated = true;
+    const last: CandidateRow | undefined = candidates.rows[candidates.rows.length - 1];
+    if (!last) break;
+    const lastIssuedAt = parseDueAtValue(last.issued_at);
+    if (lastIssuedAt === null) break;
+    cursorIssuedAt = lastIssuedAt;
+    cursorId = last.id;
   }
 
-  return result
+  return result;
 }
 
 async function scheduleOneInvoice(
@@ -456,41 +464,41 @@ async function scheduleOneInvoice(
   candidate: CandidateRow,
   adminWindow: DeliveryWindowConfig,
   now: Date,
-  offsetToggles: ReminderOffsetToggleDto[],
+  offsetToggles: ReminderOffsetToggleDto[]
 ): Promise<boolean> {
-  const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [candidate.id])
-  const row = locked.rows[0]
-  if (!row) return false
-  if (!isEligibleForReminderSchedule(row.state, row.issued_at, row.due_at)) return false
+  const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [candidate.id]);
+  const row = locked.rows[0];
+  if (!row) return false;
+  if (!isEligibleForReminderSchedule(row.state, row.issued_at, row.due_at)) return false;
 
-  const existing = await client.query(EXISTING_SCHEDULE_SQL, [row.id])
-  if ((existing.rowCount ?? existing.rows.length) > 0) return false
+  const existing = await client.query(EXISTING_SCHEDULE_SQL, [row.id]);
+  if ((existing.rowCount ?? existing.rows.length) > 0) return false;
 
-  const dueAt = parseDueAtValue(row.due_at)
-  const issuedAt = parseDueAtValue(row.issued_at)
-  if (dueAt === null || issuedAt === null) return false
+  const dueAt = parseDueAtValue(row.due_at);
+  const issuedAt = parseDueAtValue(row.issued_at);
+  if (dueAt === null || issuedAt === null) return false;
 
-  const window = reminderWindowForProfile(adminWindow, row.timezone)
-  const channels = reminderChannelsFromPreferences(row.notification_preferences)
-  const enabledOffsets = enabledOffsetsForServiceType(offsetToggles, row.service_type)
-  const planned = planInvoiceReminders({ dueAt, issuedAt, now, channels, window, enabledOffsets })
-  if (planned.length === 0) return false
+  const window = reminderWindowForProfile(adminWindow, row.timezone);
+  const channels = reminderChannelsFromPreferences(row.notification_preferences);
+  const enabledOffsets = enabledOffsetsForServiceType(offsetToggles, row.service_type);
+  const planned = planInvoiceReminders({ dueAt, issuedAt, now, channels, window, enabledOffsets });
+  if (planned.length === 0) return false;
 
-  const values: unknown[] = [row.id]
-  const placeholders: string[] = []
-  let param = 2
+  const values: unknown[] = [row.id];
+  const placeholders: string[] = [];
+  let param = 2;
   for (const item of planned) {
-    placeholders.push(`($1, $${param}, $${param + 1}, $${param + 2})`)
-    values.push(item.offset, item.channel, item.scheduledAt)
-    param += 3
+    placeholders.push(`($1, $${param}, $${param + 1}, $${param + 2})`);
+    values.push(item.offset, item.channel, item.scheduledAt);
+    param += 3;
   }
 
   await client.query(
     `INSERT INTO invoice_reminder_schedule (invoice_id, "offset", channel, scheduled_at)
      VALUES ${placeholders.join(', ')}
      ON CONFLICT (invoice_id, "offset", channel) DO NOTHING`,
-    values,
-  )
+    values
+  );
 
-  return true
+  return true;
 }

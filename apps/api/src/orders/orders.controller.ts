@@ -9,19 +9,19 @@ import {
   Param,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { OrdersService } from './orders.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { OrdersService } from './orders.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('Orders')
 @Controller('api/orders')
 @UseGuards(SessionAuthGuard)
 export class OrdersController {
-  private readonly logger = new Logger(OrdersController.name)
+  private readonly logger = new Logger(OrdersController.name);
 
   constructor(private readonly ordersService: OrdersService) {}
 
@@ -43,33 +43,38 @@ export class OrdersController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile or product not found' })
   async createOrder(
-    @Body() body: {
-      profileId: string
-      productId: string
-      orderType: 'electricity' | 'savings' | 'solar'
+    @Body()
+    body: {
+      profileId: string;
+      productId: string;
+      orderType: 'electricity' | 'savings' | 'solar';
       address: {
-        provinceId: string
-        cityId: string
-        fullAddress: string
-        postalCode: string
-      }
+        provinceId: string;
+        cityId: string;
+        fullAddress: string;
+        postalCode: string;
+      };
       /** Optional gift code (T-09.12.03), redeemed atomically with the order. */
-      giftCode?: string
+      giftCode?: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
-    const order = await this.ordersService.createOrder(userId, {
-      profileId: body.profileId,
-      productId: body.productId,
-      orderType: body.orderType,
-      address: body.address,
-      ...(body.giftCode !== undefined ? { giftCode: body.giftCode } : {}),
-    }, req.ip ?? 'unknown')
+    const order = await this.ordersService.createOrder(
+      userId,
+      {
+        profileId: body.profileId,
+        productId: body.productId,
+        orderType: body.orderType,
+        address: body.address,
+        ...(body.giftCode !== undefined ? { giftCode: body.giftCode } : {}),
+      },
+      req.ip ?? 'unknown'
+    );
 
-    this.logger.log(`Order ${order.id} created for user ${userId}`)
-    return order
+    this.logger.log(`Order ${order.id} created for user ${userId}`);
+    return order;
   }
 
   /**
@@ -84,9 +89,9 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: 'List of orders.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async listOrders(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const orders = await this.ordersService.listOrders(userId)
-    return { orders }
+    const userId = req.session.userId;
+    const orders = await this.ordersService.listOrders(userId);
+    return { orders };
   }
 
   /**
@@ -101,21 +106,15 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: 'Order details.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  async getOrder(
-    @Param('id') orderId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-    const order = await this.ordersService.getOrder(userId, orderId)
+  async getOrder(@Param('id') orderId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
+    const order = await this.ordersService.getOrder(userId, orderId);
 
     if (!order) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
-    return order
+    return order;
   }
 
   /**
@@ -135,18 +134,12 @@ export class OrdersController {
   })
   @ApiResponse({ status: 200, description: 'Order cancelled.' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  async cancelOrder(
-    @Param('id') orderId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-    const order = await this.ordersService.cancelOrder(userId, orderId, req.ip ?? 'unknown')
+  async cancelOrder(@Param('id') orderId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
+    const order = await this.ordersService.cancelOrder(userId, orderId, req.ip ?? 'unknown');
     if (!order) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
-    return order
+    return order;
   }
 }

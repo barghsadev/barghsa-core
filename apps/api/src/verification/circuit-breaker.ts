@@ -11,17 +11,17 @@
  * event-loop context. No locking is needed.
  */
 export class CircuitBreaker {
-  private state: 'CLOSED' | 'OPEN' | 'HALF_OPEN' = 'CLOSED'
-  private failureCount = 0
-  private lastFailureTime = 0
-  private halfOpenProbes = 0
+  private state: 'CLOSED' | 'OPEN' | 'HALF_OPEN' = 'CLOSED';
+  private failureCount = 0;
+  private lastFailureTime = 0;
+  private halfOpenProbes = 0;
 
   constructor(
     private readonly config: {
-      failureThreshold: number
-      resetTimeoutMs: number
-      halfOpenMaxProbes: number
-    },
+      failureThreshold: number;
+      resetTimeoutMs: number;
+      halfOpenMaxProbes: number;
+    }
   ) {}
 
   /**
@@ -29,77 +29,77 @@ export class CircuitBreaker {
    * Returns the result or throws if the circuit is open.
    */
   async call<T>(fn: () => Promise<T>): Promise<T> {
-    this.assertClosed()
+    this.assertClosed();
     try {
-      const result = await fn()
-      this.onSuccess()
-      return result
+      const result = await fn();
+      this.onSuccess();
+      return result;
     } catch (error) {
-      this.onFailure()
-      throw error
+      this.onFailure();
+      throw error;
     }
   }
 
   /** Whether the circuit is currently open (rejecting calls). */
   get isOpen(): boolean {
-    return this.state === 'OPEN'
+    return this.state === 'OPEN';
   }
 
   /** Current state for observability. */
   getState(): 'CLOSED' | 'OPEN' | 'HALF_OPEN' {
-    return this.state
+    return this.state;
   }
 
   /** Current failure count. */
   getFailureCount(): number {
-    return this.failureCount
+    return this.failureCount;
   }
 
   /** Reset the circuit breaker to its initial closed state. */
   reset(): void {
-    this.state = 'CLOSED'
-    this.failureCount = 0
-    this.halfOpenProbes = 0
+    this.state = 'CLOSED';
+    this.failureCount = 0;
+    this.halfOpenProbes = 0;
   }
 
   private assertClosed(): void {
-    if (this.state === 'CLOSED') return
+    if (this.state === 'CLOSED') return;
 
-    const now = Date.now()
+    const now = Date.now();
 
     if (this.state === 'OPEN') {
       // Check if the reset timeout has elapsed
       if (now - this.lastFailureTime >= this.config.resetTimeoutMs) {
-        this.state = 'HALF_OPEN'
-        this.halfOpenProbes = 0
+        this.state = 'HALF_OPEN';
+        this.halfOpenProbes = 0;
       } else {
-        throw new Error('Circuit breaker is OPEN')
+        throw new Error('Circuit breaker is OPEN');
       }
     }
 
     if (this.state === 'HALF_OPEN') {
       if (this.halfOpenProbes >= this.config.halfOpenMaxProbes) {
-        throw new Error('Circuit breaker is OPEN (half-open probes exhausted)')
+        throw new Error('Circuit breaker is OPEN (half-open probes exhausted)');
       }
-      this.halfOpenProbes++
+      this.halfOpenProbes++;
     }
   }
 
   private onSuccess(): void {
     if (this.state === 'HALF_OPEN') {
       // A successful probe closes the circuit
-      this.state = 'CLOSED'
-      this.failureCount = 0
-      this.halfOpenProbes = 0
+      this.state = 'CLOSED';
+      this.failureCount = 0;
+      this.halfOpenProbes = 0;
     }
   }
 
   private onFailure(): void {
-    this.failureCount++
-    this.lastFailureTime = Date.now()
+    this.failureCount++;
+    this.lastFailureTime = Date.now();
 
     if (this.state === 'HALF_OPEN' || this.failureCount >= this.config.failureThreshold) {
-      this.state = 'OPEN'
+      this.state = 'OPEN';
     }
   }
 }

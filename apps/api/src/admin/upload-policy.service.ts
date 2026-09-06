@@ -1,6 +1,6 @@
-import { Injectable, Logger, HttpException, Inject } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
+import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
 import {
   GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
   MAX_UPLOAD_POLICY_EXTENSIONS,
@@ -10,12 +10,12 @@ import {
   uploadPolicyWindowStatus,
   type UploadPolicyCategory,
   type UploadPolicyDto,
-} from '@barghsa/shared/admin'
+} from '@barghsa/shared/admin';
 import {
   getDeploymentAllowedExtensions,
   getDeploymentMaxSizeBytes,
-} from '../upload/upload.config.js'
-import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
+} from '../upload/upload.config.js';
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 
 /**
  * Admin upload policy configuration service (S-09.12, T-09.12.05) — API
@@ -60,58 +60,58 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
 
 export interface CreateUploadPolicyInput {
   /** Canonical admin category key (UPLOAD_POLICY_CATEGORIES). */
-  category: UploadPolicyCategory
+  category: UploadPolicyCategory;
   /** Lowercase `.ext` whitelist (subset of the deployment extension set). */
-  allowedExtensions: string[]
+  allowedExtensions: string[];
   /** Maximum file size in bytes (≤ deployment per-category cap). */
-  maxSizeBytes: number
+  maxSizeBytes: number;
   /** ISO timestamp the policy takes effect (inclusive). Defaults to now. */
-  effectiveFrom?: string
-  actorUserId: string
-  ip: string
+  effectiveFrom?: string;
+  actorUserId: string;
+  ip: string;
 }
 
 export interface EndUploadPolicyInput {
-  id: string
+  id: string;
   /** ISO timestamp the policy stops applying (exclusive). Defaults to now. */
-  effectiveUntil?: string
-  actorUserId: string
-  ip: string
+  effectiveUntil?: string;
+  actorUserId: string;
+  ip: string;
 }
 
 // ─── Internal row types ────────────────────────────────────────────────────
 
 type QueryFn = <T = Record<string, unknown>>(
   text: string,
-  values?: unknown[],
-) => Promise<{ rows: T[]; rowCount: number | null }>
+  values?: unknown[]
+) => Promise<{ rows: T[]; rowCount: number | null }>;
 
 /** Minimal query executor shared by the pool and a transactional client. */
-type DbExecutor = { query: QueryFn }
+type DbExecutor = { query: QueryFn };
 
 interface UploadPolicyRow {
-  id: string
-  category: string
-  allowed_extensions: string[]
-  max_size_bytes: number
-  effective_from: string
-  effective_until: string | null
-  created_by: string
-  created_at: string
-  updated_at: string
+  id: string;
+  category: string;
+  allowed_extensions: string[];
+  max_size_bytes: number;
+  effective_from: string;
+  effective_until: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
 }
 
-const PG_EXCLUSION_VIOLATION = '23P01'
-const PG_CHECK_VIOLATION = '23514'
-const PG_FOREIGN_KEY_VIOLATION = '23503'
+const PG_EXCLUSION_VIOLATION = '23P01';
+const PG_CHECK_VIOLATION = '23514';
+const PG_FOREIGN_KEY_VIOLATION = '23503';
 
 @Injectable()
 export class UploadPolicyService {
-  private readonly logger = new Logger(UploadPolicyService.name)
+  private readonly logger = new Logger(UploadPolicyService.name);
 
   constructor(
     @Inject(CorrelationIdProvider)
-    private readonly correlationIdProvider: CorrelationIdProvider,
+    private readonly correlationIdProvider: CorrelationIdProvider
   ) {}
 
   // ─── Reads ───────────────────────────────────────────────────────────────
@@ -123,9 +123,9 @@ export class UploadPolicyService {
    */
   async list(category?: string): Promise<UploadPolicyDto[]> {
     if (category !== undefined && !isUploadPolicyCategory(category)) {
-      throw this.invalidCategory(category)
+      throw this.invalidCategory(category);
     }
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = category
       ? await pool.query<UploadPolicyRow>(
           `SELECT id, category, allowed_extensions, max_size_bytes,
@@ -133,15 +133,15 @@ export class UploadPolicyService {
              FROM upload_policies
             WHERE category = $1
             ORDER BY effective_from DESC, created_at DESC`,
-          [category],
+          [category]
         )
       : await pool.query<UploadPolicyRow>(
           `SELECT id, category, allowed_extensions, max_size_bytes,
                   effective_from, effective_until, created_by, created_at, updated_at
              FROM upload_policies
-            ORDER BY effective_from DESC, created_at DESC`,
-        )
-    return result.rows.map((row) => this.toDto(row))
+            ORDER BY effective_from DESC, created_at DESC`
+        );
+    return result.rows.map((row) => this.toDto(row));
   }
 
   // ─── Mutations ──────────────────────────────────────────────────────────
@@ -160,20 +160,19 @@ export class UploadPolicyService {
    */
   async create(input: CreateUploadPolicyInput): Promise<UploadPolicyDto> {
     if (!isUploadPolicyCategory(input.category)) {
-      throw this.invalidCategory(input.category)
+      throw this.invalidCategory(input.category);
     }
 
-    const extensions = normalizePolicyExtensions(input.allowedExtensions)
+    const extensions = normalizePolicyExtensions(input.allowedExtensions);
     if (extensions.length === 0) {
       throw new HttpException(
         {
           statusCode: 400,
           error: 'UPLOAD_POLICY_EXTENSIONS_INVALID',
-          message:
-            'At least one valid extension is required (lowercase .ext tokens, e.g. .pdf)',
+          message: 'At least one valid extension is required (lowercase .ext tokens, e.g. .pdf)',
         },
-        400,
-      )
+        400
+      );
     }
     if (extensions.length > MAX_UPLOAD_POLICY_EXTENSIONS) {
       throw new HttpException(
@@ -182,8 +181,8 @@ export class UploadPolicyService {
           error: 'UPLOAD_POLICY_EXTENSIONS_INVALID',
           message: `A policy may list at most ${MAX_UPLOAD_POLICY_EXTENSIONS} extensions`,
         },
-        400,
-      )
+        400
+      );
     }
 
     // Deployment-safe boundary: the extension whitelist is a SUBSET of
@@ -191,10 +190,8 @@ export class UploadPolicyService {
     // upload path also intersects at read time (defense in depth), but
     // a policy that already violates this is a misconfiguration and is
     // rejected at write time.
-    const deploymentExtensions = getDeploymentAllowedExtensions(input.category)
-    const notDeploymentPermitted = extensions.filter(
-      (ext) => !deploymentExtensions.includes(ext),
-    )
+    const deploymentExtensions = getDeploymentAllowedExtensions(input.category);
+    const notDeploymentPermitted = extensions.filter((ext) => !deploymentExtensions.includes(ext));
     if (notDeploymentPermitted.length > 0) {
       throw new HttpException(
         {
@@ -208,12 +205,12 @@ export class UploadPolicyService {
             deploymentAllowedExtensions: deploymentExtensions,
           },
         },
-        400,
-      )
+        400
+      );
     }
 
-    const deploymentMax = getDeploymentMaxSizeBytes(input.category)
-    const hardCap = Math.min(deploymentMax, GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES)
+    const deploymentMax = getDeploymentMaxSizeBytes(input.category);
+    const hardCap = Math.min(deploymentMax, GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES);
     if (
       !Number.isSafeInteger(input.maxSizeBytes) ||
       input.maxSizeBytes < MIN_UPLOAD_POLICY_SIZE_BYTES ||
@@ -234,20 +231,20 @@ export class UploadPolicyService {
             globalMaxBytes: GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES,
           },
         },
-        400,
-      )
+        400
+      );
     }
 
     const effectiveFrom =
-      input.effectiveFrom !== undefined ? new Date(input.effectiveFrom) : new Date()
+      input.effectiveFrom !== undefined ? new Date(input.effectiveFrom) : new Date();
     if (Number.isNaN(effectiveFrom.getTime())) {
-      throw this.invalidEffectiveDate('effectiveFrom')
+      throw this.invalidEffectiveDate('effectiveFrom');
     }
 
     return this.withTransaction(async (q) => {
-      const open = await this.findOpenPolicy(q, input.category)
+      const open = await this.findOpenPolicy(q, input.category);
       if (open !== null) {
-        const openFrom = new Date(open.effective_from)
+        const openFrom = new Date(open.effective_from);
         if (
           open.max_size_bytes === input.maxSizeBytes &&
           open.allowed_extensions.length === extensions.length &&
@@ -255,7 +252,7 @@ export class UploadPolicyService {
         ) {
           // No-op: the same policy is already open — no version records a
           // non-change (mirrors catalogue/VAT no-op discipline).
-          return this.readPolicy(q, open.id)
+          return this.readPolicy(q, open.id);
         }
         if (effectiveFrom.getTime() <= openFrom.getTime()) {
           throw new HttpException(
@@ -264,34 +261,40 @@ export class UploadPolicyService {
               error: 'UPLOAD_POLICY_INVALID_EFFECTIVE_FROM',
               message:
                 'A new upload policy must take effect strictly after the currently ' +
-                'open policy (active since ' + open.effective_from + ')',
+                'open policy (active since ' +
+                open.effective_from +
+                ')',
             },
-            400,
-          )
+            400
+          );
         }
         // Close the previous open policy at the new effective_from.
         await q.query(
           `UPDATE upload_policies
               SET effective_until = $1, updated_at = NOW()
             WHERE id = $2 AND effective_until IS NULL`,
-          [effectiveFrom, open.id],
-        )
+          [effectiveFrom, open.id]
+        );
       } else {
         // No open policy: the new open row must not overlap any already
         // ended window. The DB EXCLUDE constraint would reject it as
         // 23P01; pre-validate here so a mis-dated (e.g. backdated after
         // an end-date) request surfaces as an actionable 400.
-        const conflict = await q.query<{ id: string; effective_from: string; effective_until: string | null }>(
+        const conflict = await q.query<{
+          id: string;
+          effective_from: string;
+          effective_until: string | null;
+        }>(
           `SELECT id, effective_from, effective_until
              FROM upload_policies
             WHERE category = $1
               AND effective_from <= $2
               AND (effective_until IS NULL OR effective_until > $2)
             LIMIT 1`,
-          [input.category, effectiveFrom],
-        )
+          [input.category, effectiveFrom]
+        );
         if (conflict.rows.length > 0) {
-          const row = conflict.rows[0]
+          const row = conflict.rows[0];
           if (row !== undefined) {
             throw new HttpException(
               {
@@ -301,13 +304,13 @@ export class UploadPolicyService {
                   'The requested effective_from falls inside an existing policy window ' +
                   `(id ${row.id}: ${row.effective_from}${row.effective_until ? ' -> ' + row.effective_until : ' (open)'})`,
               },
-              400,
-            )
+              400
+            );
           }
         }
       }
 
-      const id = uuidv7()
+      const id = uuidv7();
       await q.query(
         `INSERT INTO upload_policies
            (id, category, allowed_extensions, max_size_bytes, effective_from, effective_until, created_by, created_at, updated_at)
@@ -320,8 +323,8 @@ export class UploadPolicyService {
           effectiveFrom,
           input.actorUserId,
           new Date(),
-        ],
-      )
+        ]
+      );
       await this.recordChange(q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
@@ -335,14 +338,14 @@ export class UploadPolicyService {
           effectiveFrom: effectiveFrom.toISOString(),
           ...(open !== null ? { closedUploadPolicyId: open.id } : {}),
         },
-      })
+      });
       this.logger.log(
         `Upload policy created: id=${id}, category=${input.category}, ` +
           `extensions=${extensions.join(',')}, maxSizeBytes=${input.maxSizeBytes}, ` +
-          `effectiveFrom=${effectiveFrom.toISOString()}, actor=${input.actorUserId}`,
-      )
-      return this.readPolicy(q, id)
-    })
+          `effectiveFrom=${effectiveFrom.toISOString()}, actor=${input.actorUserId}`
+      );
+      return this.readPolicy(q, id);
+    });
   }
 
   /**
@@ -352,40 +355,41 @@ export class UploadPolicyService {
    */
   async end(input: EndUploadPolicyInput): Promise<UploadPolicyDto> {
     const effectiveUntil =
-      input.effectiveUntil !== undefined ? new Date(input.effectiveUntil) : new Date()
+      input.effectiveUntil !== undefined ? new Date(input.effectiveUntil) : new Date();
     if (Number.isNaN(effectiveUntil.getTime())) {
-      throw this.invalidEffectiveDate('effectiveUntil')
+      throw this.invalidEffectiveDate('effectiveUntil');
     }
 
     return this.withTransaction(async (q) => {
-      const current = await this.findPolicyById(q, input.id)
-      if (!current) throw this.policyNotFound(input.id)
+      const current = await this.findPolicyById(q, input.id);
+      if (!current) throw this.policyNotFound(input.id);
 
       if (current.effective_until !== null) {
         // Already ended — no write, no audit.
-        return this.toDto(current)
+        return this.toDto(current);
       }
 
-      const from = new Date(current.effective_from)
+      const from = new Date(current.effective_from);
       if (effectiveUntil.getTime() <= from.getTime()) {
         throw new HttpException(
           {
             statusCode: 400,
             error: 'UPLOAD_POLICY_INVALID_EFFECTIVE_UNTIL',
             message:
-              'effectiveUntil must be strictly after the policy\'s effective_from (' +
-              current.effective_from + ')',
+              "effectiveUntil must be strictly after the policy's effective_from (" +
+              current.effective_from +
+              ')',
           },
-          400,
-        )
+          400
+        );
       }
 
       await q.query(
         `UPDATE upload_policies
             SET effective_until = $1, updated_at = NOW()
           WHERE id = $2 AND effective_until IS NULL`,
-        [effectiveUntil, input.id],
-      )
+        [effectiveUntil, input.id]
+      );
       await this.recordChange(q, {
         actorUserId: input.actorUserId,
         ip: input.ip,
@@ -399,12 +403,12 @@ export class UploadPolicyService {
           effectiveFrom: current.effective_from,
           effectiveUntil: effectiveUntil.toISOString(),
         },
-      })
+      });
       this.logger.log(
-        `Upload policy ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${input.actorUserId}`,
-      )
-      return this.readPolicy(q, input.id)
-    })
+        `Upload policy ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${input.actorUserId}`
+      );
+      return this.readPolicy(q, input.id);
+    });
   }
 
   // ─── Internals ──────────────────────────────────────────────────────────
@@ -421,7 +425,7 @@ export class UploadPolicyService {
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       status: uploadPolicyWindowStatus(row.effective_from, row.effective_until),
-    }
+    };
   }
 
   private async findOpenPolicy(q: DbExecutor, category: string): Promise<UploadPolicyRow | null> {
@@ -431,9 +435,9 @@ export class UploadPolicyService {
         WHERE category = $1 AND effective_until IS NULL
         ORDER BY effective_from DESC
         LIMIT 1`,
-      [category],
-    )
-    return result.rows[0] ?? null
+      [category]
+    );
+    return result.rows[0] ?? null;
   }
 
   private async findPolicyById(q: DbExecutor, id: string): Promise<UploadPolicyRow | null> {
@@ -441,16 +445,16 @@ export class UploadPolicyService {
       `SELECT id, category, allowed_extensions, max_size_bytes, effective_from, effective_until, created_by, created_at, updated_at
          FROM upload_policies
         WHERE id = $1`,
-      [id],
-    )
-    return result.rows[0] ?? null
+      [id]
+    );
+    return result.rows[0] ?? null;
   }
 
   /** Re-read a policy after a mutation. */
   private async readPolicy(q: DbExecutor, id: string): Promise<UploadPolicyDto> {
-    const row = await this.findPolicyById(q, id)
-    if (!row) throw this.policyNotFound(id)
-    return this.toDto(row)
+    const row = await this.findPolicyById(q, id);
+    if (!row) throw this.policyNotFound(id);
+    return this.toDto(row);
   }
 
   private invalidCategory(category: string): HttpException {
@@ -462,8 +466,8 @@ export class UploadPolicyService {
           `Invalid upload policy category: ${category}. ` +
           'Expected one of: document, image, video',
       },
-      400,
-    )
+      400
+    );
   }
 
   private invalidEffectiveDate(field: string): HttpException {
@@ -473,8 +477,8 @@ export class UploadPolicyService {
         error: 'UPLOAD_POLICY_INVALID_DATE',
         message: `Invalid ${field}: expected an ISO-8601 timestamp`,
       },
-      400,
-    )
+      400
+    );
   }
 
   private policyNotFound(id: string): HttpException {
@@ -484,8 +488,8 @@ export class UploadPolicyService {
         error: 'UPLOAD_POLICY_NOT_FOUND',
         message: `Upload policy ${id} not found`,
       },
-      404,
-    )
+      404
+    );
   }
 
   private isPgError(error: unknown, code: string): boolean {
@@ -494,22 +498,22 @@ export class UploadPolicyService {
       error !== null &&
       'code' in error &&
       (error as { code: string }).code === code
-    )
+    );
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
-    const client = await getDbPool().connect()
-    let committed = false
+    const client = await getDbPool().connect();
+    let committed = false;
     try {
-      await client.query('BEGIN')
-      const result = await fn(client)
-      await client.query('COMMIT')
-      committed = true
-      return result
+      await client.query('BEGIN');
+      const result = await fn(client);
+      await client.query('COMMIT');
+      committed = true;
+      return result;
     } catch (error) {
-      if (committed) throw error
-      await client.query('ROLLBACK').catch(() => {})
+      if (committed) throw error;
+      await client.query('ROLLBACK').catch(() => {});
       // Translate DB races into clean HTTP errors where safe.
       if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
         throw new HttpException(
@@ -518,23 +522,25 @@ export class UploadPolicyService {
             error: 'UPLOAD_POLICY_REFERENCE_MISSING',
             message: 'A referenced user no longer exists',
           },
-          409,
-        )
+          409
+        );
       }
-      if (this.isPgError(error, PG_EXCLUSION_VIOLATION) || this.isPgError(error, PG_CHECK_VIOLATION)) {
+      if (
+        this.isPgError(error, PG_EXCLUSION_VIOLATION) ||
+        this.isPgError(error, PG_CHECK_VIOLATION)
+      ) {
         throw new HttpException(
           {
             statusCode: 409,
             error: 'UPLOAD_POLICY_WINDOW_OVERLAP',
-            message:
-              'The requested effective window overlaps an existing upload policy',
+            message: 'The requested effective window overlaps an existing upload policy',
           },
-          409,
-        )
+          409
+        );
       }
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -542,16 +548,16 @@ export class UploadPolicyService {
   private async recordChange(
     q: DbExecutor,
     input: {
-      actorUserId: string
-      ip: string
-      entity: string
-      action: string
-      meta: Record<string, unknown>
-    },
+      actorUserId: string;
+      ip: string;
+      entity: string;
+      action: string;
+      meta: Record<string, unknown>;
+    }
   ): Promise<void> {
     // Correlate with the originating request when one exists (AsyncLocal
     // Storage set by CorrelationIdMiddleware); fall back to a fresh id.
-    const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7()
+    const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7();
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, 'change_recorded', $3::jsonb, $4, $5, $6)`,
@@ -562,7 +568,7 @@ export class UploadPolicyService {
         correlationId,
         input.ip,
         new Date(),
-      ],
-    )
+      ]
+    );
   }
 }

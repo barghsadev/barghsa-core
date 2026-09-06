@@ -21,10 +21,10 @@
  */
 
 /** Ledger type written by `WalletService.reverseTransaction`. */
-export const WALLET_REVERSAL_TYPE = 'reversal' as const
+export const WALLET_REVERSAL_TYPE = 'reversal' as const;
 
 /** Reversal rows post into `wallets.posted_balance`. */
-export const WALLET_REVERSAL_POSTED_STATE = 'Completed' as const
+export const WALLET_REVERSAL_POSTED_STATE = 'Completed' as const;
 
 /**
  * Posted money-moving types that may be reversed. Reservations and
@@ -36,61 +36,50 @@ export const REVERSIBLE_WALLET_LEDGER_TYPES = [
   'payment',
   'refund',
   'compensating',
-] as const
+] as const;
 
-export type ReversibleWalletLedgerType =
-  (typeof REVERSIBLE_WALLET_LEDGER_TYPES)[number]
+export type ReversibleWalletLedgerType = (typeof REVERSIBLE_WALLET_LEDGER_TYPES)[number];
 
 /** Only Completed rows have already moved `posted_balance`. */
-export const REVERSIBLE_WALLET_LEDGER_STATE = 'Completed' as const
+export const REVERSIBLE_WALLET_LEDGER_STATE = 'Completed' as const;
 
 /** Unique partial index on `wallet_transactions.reverses_transaction_id`. */
-export const WALLET_TX_REVERSES_CONSTRAINT = 'uq_wallet_tx_reverses_transaction'
+export const WALLET_TX_REVERSES_CONSTRAINT = 'uq_wallet_tx_reverses_transaction';
 
 /**
  * Table CHECK: `type = 'reversal'` iff `reverses_transaction_id` is set
  * (T-04.2.04.01). Non-reversal rows, including unmatched `compensating`
  * exceptions, leave the pointer NULL.
  */
-export const WALLET_TX_REVERSAL_ORIGINAL_CONSTRAINT =
-  'chk_wallet_tx_reversal_original'
+export const WALLET_TX_REVERSAL_ORIGINAL_CONSTRAINT = 'chk_wallet_tx_reversal_original';
 
 export const WALLET_REVERSAL_ERRORS = {
   ORIGINAL_ID_REQUIRED: () => 'Original transaction id must be a UUID',
   REASON_REQUIRED: () => 'Reversal reason is required',
   IDEMPOTENCY_REQUIRED: () => 'Idempotency key is required',
   NOT_FOUND: (id: string) => `Wallet transaction not found: ${id}`,
-  NOT_REVERSIBLE_TYPE: (type: string) =>
-    `Ledger type '${type}' cannot be reversed`,
-  NOT_REVERSIBLE_STATE: (state: string) =>
-    `Ledger row in state '${state}' cannot be reversed`,
-  ALREADY_REVERSED: (id: string) =>
-    `Wallet transaction ${id} has already been reversed`,
+  NOT_REVERSIBLE_TYPE: (type: string) => `Ledger type '${type}' cannot be reversed`,
+  NOT_REVERSIBLE_STATE: (state: string) => `Ledger row in state '${state}' cannot be reversed`,
+  ALREADY_REVERSED: (id: string) => `Wallet transaction ${id} has already been reversed`,
   INSUFFICIENT_BALANCE: (available: bigint, required: bigint) =>
     `Insufficient balance: available=${available.toString()}, required=${required.toString()}`,
-  IDEMPOTENCY_COLLISION: () =>
-    'Idempotency key already used for a different wallet operation',
-  IDEMPOTENCY_WALLET: () =>
-    'Idempotency key already used for a different wallet',
-  USE_REVERSE_TRANSACTION: () =>
-    'Ledger type reversal must be posted via reverseTransaction',
-} as const
+  IDEMPOTENCY_COLLISION: () => 'Idempotency key already used for a different wallet operation',
+  IDEMPOTENCY_WALLET: () => 'Idempotency key already used for a different wallet',
+  USE_REVERSE_TRANSACTION: () => 'Ledger type reversal must be posted via reverseTransaction',
+} as const;
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function isWalletTransactionUuid(value: string): boolean {
-  return UUID_RE.test(value.trim())
+  return UUID_RE.test(value.trim());
 }
 
-export function isReversibleWalletLedgerType(
-  type: string,
-): type is ReversibleWalletLedgerType {
-  return (REVERSIBLE_WALLET_LEDGER_TYPES as readonly string[]).includes(type)
+export function isReversibleWalletLedgerType(type: string): type is ReversibleWalletLedgerType {
+  return (REVERSIBLE_WALLET_LEDGER_TYPES as readonly string[]).includes(type);
 }
 
 export function isReversibleWalletLedgerState(state: string): boolean {
-  return state === REVERSIBLE_WALLET_LEDGER_STATE
+  return state === REVERSIBLE_WALLET_LEDGER_STATE;
 }
 
 /**
@@ -98,12 +87,12 @@ export function isReversibleWalletLedgerState(state: string): boolean {
  * of the original. Original credits (positive) reverse as debits.
  */
 export function reversalAmount(originalAmount: bigint): bigint {
-  return -originalAmount
+  return -originalAmount;
 }
 
 /** True when reversing a credit: posted_balance must fall. */
 export function reversalDebitsPostedBalance(originalAmount: bigint): boolean {
-  return originalAmount > 0n
+  return originalAmount > 0n;
 }
 
 /**
@@ -111,30 +100,27 @@ export function reversalDebitsPostedBalance(originalAmount: bigint): boolean {
  * balance. Zero when the reversal is a credit (undoing a payment).
  */
 export function availableRequiredForReversal(originalAmount: bigint): bigint {
-  return originalAmount > 0n ? originalAmount : 0n
+  return originalAmount > 0n ? originalAmount : 0n;
 }
 
-export function availableCoversReversal(
-  availableBalance: bigint,
-  originalAmount: bigint,
-): boolean {
-  return availableBalance >= availableRequiredForReversal(originalAmount)
+export function availableCoversReversal(availableBalance: bigint, originalAmount: bigint): boolean {
+  return availableBalance >= availableRequiredForReversal(originalAmount);
 }
 
 export interface WalletReversalMetadata {
-  originalTransactionId: string
-  originalType: string
-  originalAmount: string
-  originalRefId: string | null
-  reason: string
+  originalTransactionId: string;
+  originalType: string;
+  originalAmount: string;
+  originalRefId: string | null;
+  reason: string;
 }
 
 export function walletReversalMetadata(input: {
-  originalTransactionId: string
-  originalType: string
-  originalAmount: bigint
-  originalRefId?: string | null
-  reason: string
+  originalTransactionId: string;
+  originalType: string;
+  originalAmount: bigint;
+  originalRefId?: string | null;
+  reason: string;
 }): WalletReversalMetadata {
   return {
     originalTransactionId: input.originalTransactionId,
@@ -142,16 +128,16 @@ export function walletReversalMetadata(input: {
     originalAmount: input.originalAmount.toString(),
     originalRefId: input.originalRefId ?? null,
     reason: input.reason,
-  }
+  };
 }
 
 export interface WalletReversalReplayRow {
-  walletId: string
-  type: string
-  amount: bigint
-  state: string
-  reversesTransactionId: string | null
-  description: string | null
+  walletId: string;
+  type: string;
+  amount: bigint;
+  state: string;
+  reversesTransactionId: string | null;
+  description: string | null;
 }
 
 /**
@@ -162,11 +148,11 @@ export interface WalletReversalReplayRow {
 export function isMatchingReversalReplay(
   existing: WalletReversalReplayRow,
   expected: {
-    walletId: string
-    originalTransactionId: string
-    originalAmount: bigint
-    reason: string
-  },
+    walletId: string;
+    originalTransactionId: string;
+    originalAmount: bigint;
+    reason: string;
+  }
 ): boolean {
   return (
     existing.walletId === expected.walletId &&
@@ -175,5 +161,5 @@ export function isMatchingReversalReplay(
     existing.amount === reversalAmount(expected.originalAmount) &&
     existing.reversesTransactionId === expected.originalTransactionId &&
     existing.description === expected.reason
-  )
+  );
 }

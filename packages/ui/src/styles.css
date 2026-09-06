@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 @config "../tailwind.config.ts";
 @source "./";
 @source "../../../apps/web/src";
@@ -71,9 +71,23 @@
     }
   }
   @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
-    20%, 40%, 60%, 80% { transform: translateX(3px); }
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-3px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(3px);
+    }
   }
 }
 
@@ -134,11 +148,11 @@
   }
 
   /* RTL-aware base styles */
-  [dir="rtl"] {
+  [dir='rtl'] {
     @apply text-right;
   }
 
-  [dir="ltr"] {
+  [dir='ltr'] {
     @apply text-left;
   }
 }

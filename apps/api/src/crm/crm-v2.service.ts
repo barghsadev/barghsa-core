@@ -1,127 +1,136 @@
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { createHash } from 'node:crypto'
-import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
-import { NotificationsService } from '../notifications/notifications.service.js'
-import { SessionService } from '../session/session.service.js'
-import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js'
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { createHash } from 'node:crypto';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
+import { NotificationsService } from '../notifications/notifications.service.js';
+import { SessionService } from '../session/session.service.js';
+import type { UpdateProfileDto, VerifyProfileDto } from './crm-v2.controller.js';
 
 /** Simple email regex for server-side validation */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Iranian mobile regex: starts with 09 followed by 9 digits */
-const MOBILE_RE = /^09\d{9}$/
+const MOBILE_RE = /^09\d{9}$/;
 
 /** Allowed verification actions */
-const VERIFY_ACTIONS = ['verify', 'unverify', 'reverify'] as const
-type VerifyAction = (typeof VERIFY_ACTIONS)[number]
+const VERIFY_ACTIONS = ['verify', 'unverify', 'reverify'] as const;
+type VerifyAction = (typeof VERIFY_ACTIONS)[number];
 
 /**
  * Maps a verification action to the resulting profile status,
  * and returns the set of source states that permit the transition.
  */
-const VERIFY_TRANSITIONS: Record<
-  VerifyAction,
-  { targetStatus: string; allowedFrom: string[] }
-> = {
+const VERIFY_TRANSITIONS: Record<VerifyAction, { targetStatus: string; allowedFrom: string[] }> = {
   verify: { targetStatus: 'VERIFIED', allowedFrom: ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION'] },
   unverify: { targetStatus: 'ACTIVE', allowedFrom: ['VERIFIED'] },
   reverify: { targetStatus: 'PENDING_VERIFICATION', allowedFrom: ['VERIFIED'] },
-}
+};
 
 /**
  * Result type for profile update in CrmV2Service.
  */
 export type CrmUpdateProfileResult =
-  | { updated: true; profile: { id: string; title: string | null; contactEmail: string | null; contactMobile: string | null; updatedAt: string }; user: { username: string; email: string | null; mobile: string | null } }
+  | {
+      updated: true;
+      profile: {
+        id: string;
+        title: string | null;
+        contactEmail: string | null;
+        contactMobile: string | null;
+        updatedAt: string;
+      };
+      user: { username: string; email: string | null; mobile: string | null };
+    }
   | { error: string }
-  | null
+  | null;
 
 /**
  * Result type for profile verification in CrmV2Service.
  */
 export type CrmVerifyProfileResult =
-  | { success: true; profileId: string; previousStatus: string; newStatus: string; reason: string | null }
+  | {
+      success: true;
+      profileId: string;
+      previousStatus: string;
+      newStatus: string;
+      reason: string | null;
+    }
   | { error: string }
-  | null
+  | null;
 
 export type CrmForcePasswordChangeResult =
-  | { success: true; userId: string; reason: string }
-  | { error: string }
-  | null
+  { success: true; userId: string; reason: string } | { error: string } | null;
 
 export type CrmExpireSessionsResult =
-  | { success: true; userId: string; reason: string }
-  | { error: string }
-  | null
+  { success: true; userId: string; reason: string } | { error: string } | null;
 
 /**
  * A single profile entry in the pending verification dashboard widget.
  */
 export interface PendingVerificationProfile {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  firstName: string | null
-  lastName: string | null
-  legalName: string | null
-  createdAt: string
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  firstName: string | null;
+  lastName: string | null;
+  legalName: string | null;
+  createdAt: string;
 }
 
 /**
  * A single address record on a CRM profile.
  */
 export interface CrmProfileAddress {
-  id: string
-  provinceId: string
-  cityId: string
-  fullAddress: string
-  postalCode: string
-  mainAddress: boolean
-  createdAt: string
+  id: string;
+  provinceId: string;
+  cityId: string;
+  fullAddress: string;
+  postalCode: string;
+  mainAddress: boolean;
+  createdAt: string;
 }
 
 /**
  * A single session record on a CRM profile.
  */
 export interface CrmProfileSession {
-  sessionId: string
-  createdAt: string
-  lastActive: string
-  deviceInfo: Record<string, unknown> | null
-  expiresAt: string
-  isRevoked: boolean
-  isActive: boolean
+  sessionId: string;
+  createdAt: string;
+  lastActive: string;
+  deviceInfo: Record<string, unknown> | null;
+  expiresAt: string;
+  isRevoked: boolean;
+  isActive: boolean;
 }
 
 /**
  * Legal entity data attached to a LEGAL-type profile.
  */
 export interface CrmLegalInfo {
-  legalName: string
-  nationalIdentifier: string
-  registrationNumber: string
-  companyTypeId: string | null
-  economicCode: string | null
-  officialPhone: string | null
-  officialEmail: string | null
-  officialProvinceId: string | null
-  officialCityId: string | null
-  officialFullAddress: string | null
-  officialPostalCode: string | null
-  representativeTitle: string
-  representativeRelationship: string
+  legalName: string;
+  nationalIdentifier: string;
+  registrationNumber: string;
+  companyTypeId: string | null;
+  economicCode: string | null;
+  officialPhone: string | null;
+  officialEmail: string | null;
+  officialProvinceId: string | null;
+  officialCityId: string | null;
+  officialFullAddress: string | null;
+  officialPostalCode: string | null;
+  representativeTitle: string;
+  representativeRelationship: string;
 }
 
 /**
  * A single profile on the same user (profile switcher context).
  */
 export interface CrmSiblingProfile {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  isDefault: boolean
-  status: string
-  title: string | null
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  isDefault: boolean;
+  status: string;
+  title: string | null;
 }
 
 /**
@@ -129,44 +138,44 @@ export interface CrmSiblingProfile {
  */
 export interface CrmProfileDetail {
   profile: {
-    id: string
-    profileType: 'INDIVIDUAL' | 'LEGAL'
-    status: string
-    title: string | null
-    contactEmail: string | null
-    contactMobile: string | null
-    firstName: string | null
-    lastName: string | null
-    nationalId: string | null
-    createdAt: string
-    updatedAt: string
-  }
+    id: string;
+    profileType: 'INDIVIDUAL' | 'LEGAL';
+    status: string;
+    title: string | null;
+    contactEmail: string | null;
+    contactMobile: string | null;
+    firstName: string | null;
+    lastName: string | null;
+    nationalId: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
   user: {
-    userId: string
-    username: string
-    email: string | null
-    mobile: string | null
-    lastLogin: string | null
-    isAdmin: boolean
-    createdAt: string
-  }
-  legalInfo: CrmLegalInfo | null
-  addresses: CrmProfileAddress[]
+    userId: string;
+    username: string;
+    email: string | null;
+    mobile: string | null;
+    lastLogin: string | null;
+    isAdmin: boolean;
+    createdAt: string;
+  };
+  legalInfo: CrmLegalInfo | null;
+  addresses: CrmProfileAddress[];
   sessions: {
-    count: number
-    lastActive: string | null
-    entries: CrmProfileSession[]
-  }
-  siblingProfiles: CrmSiblingProfile[]
+    count: number;
+    lastActive: string | null;
+    entries: CrmProfileSession[];
+  };
+  siblingProfiles: CrmSiblingProfile[];
 }
 
 @Injectable()
 export class CrmV2Service {
-  private readonly logger = new Logger(CrmV2Service.name)
+  private readonly logger = new Logger(CrmV2Service.name);
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly notificationsService: NotificationsService,
+    private readonly notificationsService: NotificationsService
   ) {}
 
   /**
@@ -177,7 +186,7 @@ export class CrmV2Service {
    * addresses, and sibling profiles.
    */
   async getProfileDetail(profileId: string): Promise<CrmProfileDetail | null> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // 1. Fetch the profile
     const profileResult = await pool.query(
@@ -187,14 +196,14 @@ export class CrmV2Service {
               updated_at AT TIME ZONE 'UTC' AS updated_at
        FROM profiles
        WHERE id = $1`,
-      [profileId],
-    )
+      [profileId]
+    );
 
     if (profileResult.rows.length === 0) {
-      return null
+      return null;
     }
 
-    const profileRow = profileResult.rows[0] as Record<string, unknown>
+    const profileRow = profileResult.rows[0] as Record<string, unknown>;
 
     // 2. Fetch the user associated with this profile
     const userResult = await pool.query(
@@ -203,13 +212,13 @@ export class CrmV2Service {
               is_admin, created_at AT TIME ZONE 'UTC' AS created_at
        FROM users
        WHERE user_id = $1`,
-      [profileRow.user_id],
-    )
+      [profileRow.user_id]
+    );
 
-    const userRow = userResult.rows[0] as Record<string, unknown> | undefined
+    const userRow = userResult.rows[0] as Record<string, unknown> | undefined;
     if (!userRow) {
-      this.logger.warn(`Profile ${profileId} has orphaned user_id ${String(profileRow.user_id)}`)
-      return null
+      this.logger.warn(`Profile ${profileId} has orphaned user_id ${String(profileRow.user_id)}`);
+      return null;
     }
 
     // 3. Fetch addresses for this profile
@@ -219,8 +228,8 @@ export class CrmV2Service {
        FROM addresses
        WHERE profile_id = $1
        ORDER BY main_address DESC, created_at ASC`,
-      [profileId],
-    )
+      [profileId]
+    );
 
     const addresses: CrmProfileAddress[] = addressResult.rows.map(
       (row: Record<string, unknown>) => ({
@@ -231,8 +240,8 @@ export class CrmV2Service {
         postalCode: row.postal_code as string,
         mainAddress: row.main_address as boolean,
         createdAt: (row.created_at as string) ?? '',
-      }),
-    )
+      })
+    );
 
     // 4. Fetch session metadata for the user
     const sessionResult = await pool.query(
@@ -245,8 +254,8 @@ export class CrmV2Service {
        WHERE user_id = $1
        ORDER BY updated_at DESC
        LIMIT 20`,
-      [userRow.user_id],
-    )
+      [userRow.user_id]
+    );
 
     const sessionsList: CrmProfileSession[] = sessionResult.rows.map(
       (row: Record<string, unknown>) => ({
@@ -258,15 +267,16 @@ export class CrmV2Service {
         expiresAt: (row.expires_at as string) ?? '',
         isRevoked: (row.is_revoked as boolean) ?? false,
         isActive: row.is_active === true,
-      }),
-    )
+      })
+    );
 
     const sessionCountResult = await pool.query(
       `SELECT COUNT(*)::int AS cnt FROM sessions WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()`,
-      [userRow.user_id],
-    )
+      [userRow.user_id]
+    );
 
-    const activeSessionCount = (sessionCountResult.rows[0] as Record<string, unknown>).cnt as number
+    const activeSessionCount = (sessionCountResult.rows[0] as Record<string, unknown>)
+      .cnt as number;
 
     // 5. Fetch sibling profiles (other profiles for the same user)
     const siblingResult = await pool.query(
@@ -274,8 +284,8 @@ export class CrmV2Service {
        FROM profiles
        WHERE user_id = $1 AND id != $2
        ORDER BY is_default DESC, created_at ASC`,
-      [userRow.user_id, profileId],
-    )
+      [userRow.user_id, profileId]
+    );
 
     const siblingProfiles: CrmSiblingProfile[] = siblingResult.rows.map(
       (row: Record<string, unknown>) => ({
@@ -284,11 +294,11 @@ export class CrmV2Service {
         isDefault: row.is_default as boolean,
         status: row.status as string,
         title: (row.title as string) ?? null,
-      }),
-    )
+      })
+    );
 
     // 6. Fetch legal info if this is a LEGAL profile
-    let legalInfo: CrmLegalInfo | null = null
+    let legalInfo: CrmLegalInfo | null = null;
     if (profileRow.profile_type === 'LEGAL') {
       const legalResult = await pool.query(
         `SELECT legal_name, national_identifier, registration_number, company_type_id,
@@ -298,11 +308,11 @@ export class CrmV2Service {
                 representative_title, representative_relationship
          FROM legal_profiles
          WHERE id = $1`,
-        [profileId],
-      )
+        [profileId]
+      );
 
       if (legalResult.rows.length > 0) {
-        const lr = legalResult.rows[0] as Record<string, unknown>
+        const lr = legalResult.rows[0] as Record<string, unknown>;
         legalInfo = {
           legalName: lr.legal_name as string,
           nationalIdentifier: lr.national_identifier as string,
@@ -317,12 +327,12 @@ export class CrmV2Service {
           officialPostalCode: (lr.official_postal_code as string) ?? null,
           representativeTitle: lr.representative_title as string,
           representativeRelationship: lr.representative_relationship as string,
-        }
+        };
       }
     }
 
     // Determine last active session
-    const lastActive = sessionsList.length > 0 ? sessionsList[0]!.lastActive : null
+    const lastActive = sessionsList.length > 0 ? sessionsList[0]!.lastActive : null;
 
     return {
       profile: {
@@ -355,7 +365,7 @@ export class CrmV2Service {
         entries: sessionsList,
       },
       siblingProfiles,
-    }
+    };
   }
 
   /**
@@ -369,52 +379,105 @@ export class CrmV2Service {
     profileId: string,
     dto: UpdateProfileDto,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<CrmUpdateProfileResult> {
-    const email=dto.email?.trim().toLowerCase() || null
-    const mobileInput=dto.mobile?.trim() || null
-    const mobile=mobileInput && MOBILE_RE.test(mobileInput) ? `+98${mobileInput.slice(1)}` : mobileInput
-    if (dto.title !== undefined && dto.title !== null && dto.title.length > 256) return {error:'Title is too long'}
-    if (email && (email.length>254 || !EMAIL_RE.test(email))) return {error:'Invalid email format'}
-    if (mobile && !/^\+989\d{9}$/.test(mobile)) return {error:'Invalid Iranian mobile number format'}
-    const client=await getDbPool().connect()
+    const email = dto.email?.trim().toLowerCase() || null;
+    const mobileInput = dto.mobile?.trim() || null;
+    const mobile =
+      mobileInput && MOBILE_RE.test(mobileInput) ? `+98${mobileInput.slice(1)}` : mobileInput;
+    if (dto.title !== undefined && dto.title !== null && dto.title.length > 256)
+      return { error: 'Title is too long' };
+    if (email && (email.length > 254 || !EMAIL_RE.test(email)))
+      return { error: 'Invalid email format' };
+    if (mobile && !/^\+989\d{9}$/.test(mobile))
+      return { error: 'Invalid Iranian mobile number format' };
+    const client = await getDbPool().connect();
     try {
-      await client.query('BEGIN')
-      const found=await client.query(`SELECT id,user_id,title,contact_email,contact_mobile,archived,updated_at
-        FROM profiles WHERE id=$1 FOR UPDATE`,[profileId])
-      const profile=found.rows[0]
-      if(!profile) {await client.query('ROLLBACK');return null}
-      if(profile.archived) throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code,message:'Archived profiles cannot be edited'},409)
-      const account=(await client.query('SELECT username,email,mobile FROM users WHERE user_id=$1',[profile.user_id])).rows[0]
-      if(!account) {await client.query('ROLLBACK');return null}
-      const changes:Record<string,unknown>={}
-      const before:Record<string,unknown>={},after:Record<string,unknown>={}
-      for(const [field,column,value] of [
-        ['title','title',dto.title],['email','contact_email',dto.email===undefined?undefined:email],
-        ['mobile','contact_mobile',dto.mobile===undefined?undefined:mobile],
+      await client.query('BEGIN');
+      const found = await client.query(
+        `SELECT id,user_id,title,contact_email,contact_mobile,archived,updated_at
+        FROM profiles WHERE id=$1 FOR UPDATE`,
+        [profileId]
+      );
+      const profile = found.rows[0];
+      if (!profile) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+      if (profile.archived)
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: ErrorCodes.CONFLICT_STATE.code,
+            message: 'Archived profiles cannot be edited',
+          },
+          409
+        );
+      const account = (
+        await client.query('SELECT username,email,mobile FROM users WHERE user_id=$1', [
+          profile.user_id,
+        ])
+      ).rows[0];
+      if (!account) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+      const changes: Record<string, unknown> = {};
+      const before: Record<string, unknown> = {},
+        after: Record<string, unknown> = {};
+      for (const [field, column, value] of [
+        ['title', 'title', dto.title],
+        ['email', 'contact_email', dto.email === undefined ? undefined : email],
+        ['mobile', 'contact_mobile', dto.mobile === undefined ? undefined : mobile],
       ] as const) {
-        if(value!==undefined && (profile[column]??null)!==value) {
-          changes[column]=value;before[field]=profile[column]??null;after[field]=value
+        if (value !== undefined && (profile[column] ?? null) !== value) {
+          changes[column] = value;
+          before[field] = profile[column] ?? null;
+          after[field] = value;
         }
       }
-      if(Object.keys(changes).length) {
-        const entries=Object.entries(changes)
-        const updated=await client.query(`UPDATE profiles SET ${entries.map(([key],index)=>`${key}=$${index+1}`).join(',')},updated_at=NOW()
-          WHERE id=$${entries.length+1} RETURNING updated_at`,[...entries.map(([,value])=>value),profileId])
-        await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
+      if (Object.keys(changes).length) {
+        const entries = Object.entries(changes);
+        const updated = await client.query(
+          `UPDATE profiles SET ${entries.map(([key], index) => `${key}=$${index + 1}`).join(',')},updated_at=NOW()
+          WHERE id=$${entries.length + 1} RETURNING updated_at`,
+          [...entries.map(([, value]) => value), profileId]
+        );
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)
           VALUES ($1,$2,'profile_updated',$3::jsonb,$4,$5)`,
-          [uuidv7(),actorUserId,JSON.stringify({profileId,scope:'profile_contact',before,after}),uuidv7(),ip])
-        Object.assign(profile,changes,{updated_at:updated.rows[0].updated_at})
+          [
+            uuidv7(),
+            actorUserId,
+            JSON.stringify({ profileId, scope: 'profile_contact', before, after }),
+            uuidv7(),
+            ip,
+          ]
+        );
+        Object.assign(profile, changes, { updated_at: updated.rows[0].updated_at });
       }
-      await client.query('COMMIT')
-      return {updated:true,profile:{id:profileId,title:profile.title??null,contactEmail:profile.contact_email??null,
-        contactMobile:profile.contact_mobile??null,updatedAt:new Date(profile.updated_at).toISOString()},
-        user:{username:account.username,email:account.email??null,mobile:account.mobile??null}}
-    } catch(error) {
-      await client.query('ROLLBACK').catch(()=>{})
-      throw error
-    } finally {client.release()}
-
+      await client.query('COMMIT');
+      return {
+        updated: true,
+        profile: {
+          id: profileId,
+          title: profile.title ?? null,
+          contactEmail: profile.contact_email ?? null,
+          contactMobile: profile.contact_mobile ?? null,
+          updatedAt: new Date(profile.updated_at).toISOString(),
+        },
+        user: {
+          username: account.username,
+          email: account.email ?? null,
+          mobile: account.mobile ?? null,
+        },
+      };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -430,46 +493,132 @@ export class CrmV2Service {
    * Notification context is included in audit metadata for downstream
    * delivery to the profile owner.
    */
-  async verifyProfile(profileId:string,dto:VerifyProfileDto,actorUserId:string,ip:string):Promise<CrmVerifyProfileResult> {
-    if(!VERIFY_ACTIONS.includes(dto.action as VerifyAction))return {error:`Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}`}
-    const action=dto.action as VerifyAction, transition=VERIFY_TRANSITIONS[action]
-    const reason=dto.reason?.trim()||null
-    if((action==='unverify'||action==='reverify')&&!reason)return {error:`Reason is required for '${action}' action`}
-    const client=await getDbPool().connect()
+  async verifyProfile(
+    profileId: string,
+    dto: VerifyProfileDto,
+    actorUserId: string,
+    ip: string
+  ): Promise<CrmVerifyProfileResult> {
+    if (!VERIFY_ACTIONS.includes(dto.action as VerifyAction))
+      return { error: `Invalid verification action. Must be one of: ${VERIFY_ACTIONS.join(', ')}` };
+    const action = dto.action as VerifyAction,
+      transition = VERIFY_TRANSITIONS[action];
+    const reason = dto.reason?.trim() || null;
+    if ((action === 'unverify' || action === 'reverify') && !reason)
+      return { error: `Reason is required for '${action}' action` };
+    const client = await getDbPool().connect();
     try {
-      await client.query('BEGIN')
-      const profile=(await client.query('SELECT id,user_id,status FROM profiles WHERE id=$1 AND archived=false FOR UPDATE',[profileId])).rows[0]
-      if(!profile){await client.query('COMMIT');return null}
-      const currentStatus=profile.status as string,targetStatus=transition.targetStatus
-      const result={success:true as const,profileId,previousStatus:currentStatus,newStatus:targetStatus,reason}
-      if(currentStatus===targetStatus){await client.query('COMMIT');return result}
-      if(!transition.allowedFrom.includes(currentStatus)){
-        await client.query('COMMIT')
-        return {error:`Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`}
+      await client.query('BEGIN');
+      const profile = (
+        await client.query(
+          'SELECT id,user_id,status FROM profiles WHERE id=$1 AND archived=false FOR UPDATE',
+          [profileId]
+        )
+      ).rows[0];
+      if (!profile) {
+        await client.query('COMMIT');
+        return null;
       }
-      const now=new Date(),correlationId=uuidv7()
-      await client.query('UPDATE profiles SET status=$1,updated_at=$2 WHERE id=$3',[targetStatus,now,profileId])
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
-        VALUES ($1,$2,'verification_change',$3::jsonb,$4,$5,$6)`,[uuidv7(),actorUserId,JSON.stringify({
-          profileId,previousStatus:currentStatus,newStatus:targetStatus,action,reason,profileOwnerUserId:profile.user_id,
-        }),correlationId,ip||null,now])
-      const content=action==='verify'?{
-        fa:{title:'پروفایل شما تأیید شد',body:'پروفایل شما توسط کارشناس تأیید شد.'},
-        en:{title:'Your profile was verified',body:'A staff reviewer verified your profile.'},
-      }:action==='unverify'?{
-        fa:{title:'تأیید پروفایل لغو شد',body:`تأیید پروفایل شما لغو شد. دلیل: ${reason}`},
-        en:{title:'Profile verification revoked',body:`Your profile verification was revoked. Reason: ${reason}`},
-      }:{
-        fa:{title:'پروفایل نیاز به تأیید مجدد دارد',body:`پروفایل شما در انتظار تأیید مجدد است. دلیل: ${reason}`},
-        en:{title:'Profile verification requested again',body:`Your profile is awaiting verification again. Reason: ${reason}`},
+      const currentStatus = profile.status as string,
+        targetStatus = transition.targetStatus;
+      const result = {
+        success: true as const,
+        profileId,
+        previousStatus: currentStatus,
+        newStatus: targetStatus,
+        reason,
+      };
+      if (currentStatus === targetStatus) {
+        await client.query('COMMIT');
+        return result;
       }
-      await this.notificationsService.create({userId:profile.user_id,profileId,
-        type:action==='verify'?'profile_verified':action==='unverify'?'profile_unverified':'profile_pending',
-        title:content.fa.title,body:content.fa.body,localizedContent:content,link:'/settings/profile'},client)
-      await client.query('COMMIT')
-      return result
-    } catch(error){await client.query('ROLLBACK');throw error}
-    finally{client.release()}
+      if (!transition.allowedFrom.includes(currentStatus)) {
+        await client.query('COMMIT');
+        return {
+          error: `Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
+        };
+      }
+      const now = new Date(),
+        correlationId = uuidv7();
+      await client.query('UPDATE profiles SET status=$1,updated_at=$2 WHERE id=$3', [
+        targetStatus,
+        now,
+        profileId,
+      ]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'verification_change',$3::jsonb,$4,$5,$6)`,
+        [
+          uuidv7(),
+          actorUserId,
+          JSON.stringify({
+            profileId,
+            previousStatus: currentStatus,
+            newStatus: targetStatus,
+            action,
+            reason,
+            profileOwnerUserId: profile.user_id,
+          }),
+          correlationId,
+          ip || null,
+          now,
+        ]
+      );
+      const content =
+        action === 'verify'
+          ? {
+              fa: { title: 'پروفایل شما تأیید شد', body: 'پروفایل شما توسط کارشناس تأیید شد.' },
+              en: {
+                title: 'Your profile was verified',
+                body: 'A staff reviewer verified your profile.',
+              },
+            }
+          : action === 'unverify'
+            ? {
+                fa: {
+                  title: 'تأیید پروفایل لغو شد',
+                  body: `تأیید پروفایل شما لغو شد. دلیل: ${reason}`,
+                },
+                en: {
+                  title: 'Profile verification revoked',
+                  body: `Your profile verification was revoked. Reason: ${reason}`,
+                },
+              }
+            : {
+                fa: {
+                  title: 'پروفایل نیاز به تأیید مجدد دارد',
+                  body: `پروفایل شما در انتظار تأیید مجدد است. دلیل: ${reason}`,
+                },
+                en: {
+                  title: 'Profile verification requested again',
+                  body: `Your profile is awaiting verification again. Reason: ${reason}`,
+                },
+              };
+      await this.notificationsService.create(
+        {
+          userId: profile.user_id,
+          profileId,
+          type:
+            action === 'verify'
+              ? 'profile_verified'
+              : action === 'unverify'
+                ? 'profile_unverified'
+                : 'profile_pending',
+          title: content.fa.title,
+          body: content.fa.body,
+          localizedContent: content,
+          link: '/settings/profile',
+        },
+        client
+      );
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -482,34 +631,31 @@ export class CrmV2Service {
     userId: string,
     reason: string,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<CrmForcePasswordChangeResult> {
     if (!reason || reason.trim() === '') {
-      return { error: 'Reason is required for force password change' }
+      return { error: 'Reason is required for force password change' };
     }
 
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Verify user exists
-    const userResult = await pool.query(
-      `SELECT user_id FROM users WHERE user_id = $1`,
-      [userId],
-    )
-    if (userResult.rows.length === 0) return null
+    const userResult = await pool.query(`SELECT user_id FROM users WHERE user_id = $1`, [userId]);
+    if (userResult.rows.length === 0) return null;
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       await client.query(
         `UPDATE users SET must_change_password = true, updated_at = NOW() WHERE user_id = $1`,
-        [userId],
-      )
+        [userId]
+      );
 
-      await this.sessionService.revokeAllUserSessions(userId)
+      await this.sessionService.revokeAllUserSessions(userId);
 
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
@@ -520,22 +666,20 @@ export class CrmV2Service {
           JSON.stringify({ targetUserId: userId, reason }),
           correlationId,
           ip,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.debug(
-        `Password change forced for user ${userId} by ${actorUserId}: ${reason}`,
-      )
+      this.logger.debug(`Password change forced for user ${userId} by ${actorUserId}: ${reason}`);
 
-      return { success: true, userId, reason }
+      return { success: true, userId, reason };
     } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to force password change for user ${userId}: ${String(err)}`)
-      throw err
+      await client.query('ROLLBACK');
+      this.logger.error(`Failed to force password change for user ${userId}: ${String(err)}`);
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -550,29 +694,26 @@ export class CrmV2Service {
     userId: string,
     reason: string,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<CrmExpireSessionsResult> {
     if (!reason || reason.trim() === '') {
-      return { error: 'Reason is required for expire sessions' }
+      return { error: 'Reason is required for expire sessions' };
     }
 
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Verify user exists
-    const userResult = await pool.query(
-      `SELECT user_id FROM users WHERE user_id = $1`,
-      [userId],
-    )
-    if (userResult.rows.length === 0) return null
+    const userResult = await pool.query(`SELECT user_id FROM users WHERE user_id = $1`, [userId]);
+    if (userResult.rows.length === 0) return null;
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
-      await this.sessionService.revokeAllUserSessions(userId)
+      await this.sessionService.revokeAllUserSessions(userId);
 
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, NOW())`,
@@ -583,22 +724,20 @@ export class CrmV2Service {
           JSON.stringify({ targetUserId: userId, reason }),
           correlationId,
           ip,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.debug(
-        `Sessions expired for user ${userId} by ${actorUserId}: ${reason}`,
-      )
+      this.logger.debug(`Sessions expired for user ${userId} by ${actorUserId}: ${reason}`);
 
-      return { success: true, userId, reason }
+      return { success: true, userId, reason };
     } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to expire sessions for user ${userId}: ${String(err)}`)
-      throw err
+      await client.query('ROLLBACK');
+      this.logger.error(`Failed to expire sessions for user ${userId}: ${String(err)}`);
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -618,35 +757,48 @@ export class CrmV2Service {
     profileId: string,
     reason: string,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<CrmDeleteProfileResult> {
     if (!reason || reason.trim() === '') {
-      return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Reason is required for profile deletion' }
+      return {
+        errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+        error: 'Reason is required for profile deletion',
+      };
     }
 
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
       const profileResult = await client.query(
-        `SELECT id,user_id,profile_type,status,archived FROM profiles WHERE id=$1 FOR UPDATE`, [profileId])
-      if (!profileResult.rows.length) { await client.query('ROLLBACK'); return null }
-      const profileRow = profileResult.rows[0] as Record<string, unknown>
-      if (profileRow.archived === true) {
-        await client.query('ROLLBACK')
-        return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' }
+        `SELECT id,user_id,profile_type,status,archived FROM profiles WHERE id=$1 FOR UPDATE`,
+        [profileId]
+      );
+      if (!profileResult.rows.length) {
+        await client.query('ROLLBACK');
+        return null;
       }
-      const profileType = profileRow.profile_type as string
+      const profileRow = profileResult.rows[0] as Record<string, unknown>;
+      if (profileRow.archived === true) {
+        await client.query('ROLLBACK');
+        return { errorCode: 'CRM:PROFILE:ALREADY_ARCHIVED', error: 'Profile is already archived' };
+      }
+      const profileType = profileRow.profile_type as string;
 
       // Correction creation/review uses the same profile lock, so this cannot
       // miss a case that commits concurrently with archival.
       const openCorrections = await client.query(
         `SELECT EXISTS(SELECT 1 FROM verification_cases WHERE profile_id=$1
-          AND status IN ('Open','Under Review')) AS pending`, [profileId])
+          AND status IN ('Open','Under Review')) AS pending`,
+        [profileId]
+      );
       if (openCorrections.rows[0].pending) {
-        await client.query('ROLLBACK')
-        return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Resolve open identity corrections before archiving this profile.' }
+        await client.query('ROLLBACK');
+        return {
+          errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          error: 'Resolve open identity corrections before archiving this profile.',
+        };
       }
 
       // 3. Check business constraints
@@ -654,15 +806,15 @@ export class CrmV2Service {
       const activeOrders = await client.query(
         `SELECT COUNT(*)::int AS cnt FROM orders
          WHERE profile_id = $1 AND status != 'CANCELLED'`,
-        [profileId],
-      )
-      const activeOrderCount = (activeOrders.rows[0] as Record<string, unknown>).cnt as number
+        [profileId]
+      );
+      const activeOrderCount = (activeOrders.rows[0] as Record<string, unknown>).cnt as number;
       if (activeOrderCount > 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         return {
           errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
           error: `Profile has ${activeOrderCount} active order(s). Cancel orders before deletion.`,
-        }
+        };
       }
 
       // Check for contracts (if table exists)
@@ -670,20 +822,21 @@ export class CrmV2Service {
         `SELECT EXISTS (
           SELECT FROM information_schema.tables
           WHERE table_schema = 'public' AND table_name = 'contracts'
-        ) AS exists`,
-      )
+        ) AS exists`
+      );
       if ((contractsTableExists.rows[0] as Record<string, unknown>).exists) {
         const activeContracts = await client.query(
           `SELECT COUNT(*)::int AS cnt FROM contracts WHERE profile_id = $1`,
-          [profileId],
-        )
-        const activeContractCount = (activeContracts.rows[0] as Record<string, unknown>).cnt as number
+          [profileId]
+        );
+        const activeContractCount = (activeContracts.rows[0] as Record<string, unknown>)
+          .cnt as number;
         if (activeContractCount > 0) {
-          await client.query('ROLLBACK')
+          await client.query('ROLLBACK');
           return {
             errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
             error: `Profile has ${activeContractCount} contract(s). Resolve contracts before deletion.`,
-          }
+          };
         }
       }
 
@@ -692,20 +845,21 @@ export class CrmV2Service {
         `SELECT EXISTS (
           SELECT FROM information_schema.tables
           WHERE table_schema = 'public' AND table_name = 'invoices'
-        ) AS exists`,
-      )
+        ) AS exists`
+      );
       if ((invoicesTableExists.rows[0] as Record<string, unknown>).exists) {
         const unpaidInvoices = await client.query(
           `SELECT COUNT(*)::int AS cnt FROM invoices WHERE profile_id = $1 AND state NOT IN ('Paid','Cancelled','Refunded','PartiallyRefunded')`,
-          [profileId],
-        )
-        const unpaidInvoiceCount = (unpaidInvoices.rows[0] as Record<string, unknown>).cnt as number
+          [profileId]
+        );
+        const unpaidInvoiceCount = (unpaidInvoices.rows[0] as Record<string, unknown>)
+          .cnt as number;
         if (unpaidInvoiceCount > 0) {
-          await client.query('ROLLBACK')
+          await client.query('ROLLBACK');
           return {
             errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
             error: `Profile has ${unpaidInvoiceCount} unpaid invoice(s). Resolve invoices before deletion.`,
-          }
+          };
         }
       }
 
@@ -714,21 +868,24 @@ export class CrmV2Service {
         `SELECT EXISTS (
           SELECT FROM information_schema.tables
           WHERE table_schema = 'public' AND table_name = 'wallets'
-        ) AS exists`,
-      )
+        ) AS exists`
+      );
       if ((walletsTableExists.rows[0] as Record<string, unknown>).exists) {
         const walletResult = await client.query(
           `SELECT posted_balance, reserved_balance FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-          [profileId],
-        )
+          [profileId]
+        );
         if (walletResult.rows.length > 0) {
-          const wallet = walletResult.rows[0] as { posted_balance: string; reserved_balance: string }
+          const wallet = walletResult.rows[0] as {
+            posted_balance: string;
+            reserved_balance: string;
+          };
           if (BigInt(wallet.posted_balance) !== 0n || BigInt(wallet.reserved_balance) !== 0n) {
-            await client.query('ROLLBACK')
+            await client.query('ROLLBACK');
             return {
               errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
               error: 'Profile has a non-zero wallet balance. Zero the balance before deletion.',
-            }
+            };
           }
         }
       }
@@ -736,32 +893,40 @@ export class CrmV2Service {
       // Top-up initiation holds the profile before the wallet lock. Pending
       // credits must settle or fail before a zero-balance wallet can archive.
       const pendingWallet = await client.query(
-        `SELECT EXISTS(SELECT 1 FROM wallet_transactions WHERE wallet_id=$1 AND state='Pending') AS pending`, [profileId])
+        `SELECT EXISTS(SELECT 1 FROM wallet_transactions WHERE wallet_id=$1 AND state='Pending') AS pending`,
+        [profileId]
+      );
       if (pendingWallet.rows[0].pending) {
-        await client.query('ROLLBACK')
-        return { errorCode: 'CRM:PROFILE:DELETION_BLOCKED', error: 'Resolve pending wallet transactions before archiving this profile.' }
+        await client.query('ROLLBACK');
+        return {
+          errorCode: 'CRM:PROFILE:DELETION_BLOCKED',
+          error: 'Resolve pending wallet transactions before archiving this profile.',
+        };
       }
 
       // A legal profile has one canonical owner in profiles.user_id. Agents
       // cannot substitute for that owner or authorize deleting the legal entity.
       if (profileType === 'LEGAL') {
-        await client.query('ROLLBACK')
-        return { errorCode: 'CRM:PROFILE:LAST_OWNER', error: 'Cannot archive a legal profile while its canonical ownership remains active.' }
+        await client.query('ROLLBACK');
+        return {
+          errorCode: 'CRM:PROFILE:LAST_OWNER',
+          error: 'Cannot archive a legal profile while its canonical ownership remains active.',
+        };
       }
 
-      const now = new Date().toISOString()
-      const correlationId = uuidv7()
+      const now = new Date().toISOString();
+      const correlationId = uuidv7();
 
       // 5. Soft-delete the profile — set archived flag
       await client.query(
         `UPDATE profiles
          SET archived = true, archived_at = $1::timestamptz, archived_reason = $2, updated_at = $1::timestamptz
          WHERE id = $3`,
-        [now, reason, profileId],
-      )
+        [now, reason, profileId]
+      );
 
       // 6. Record audit event
-      const auditId = uuidv7()
+      const auditId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -774,32 +939,31 @@ export class CrmV2Service {
             profileType,
             reason,
             profileOwnerUserId: profileRow.user_id as string,
-            gdprRetentionNote: 'GDPR retention period applies. Do not permanently delete before retention expiry.',
+            gdprRetentionNote:
+              'GDPR retention period applies. Do not permanently delete before retention expiry.',
           }),
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.debug(
-        `Profile ${profileId} archived by ${actorUserId}: ${reason}`,
-      )
+      this.logger.debug(`Profile ${profileId} archived by ${actorUserId}: ${reason}`);
 
       return {
         success: true,
         profileId,
         reason,
         archivedAt: now,
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK')
-      this.logger.error(`Failed to delete profile ${profileId}: ${String(err)}`)
-      throw err
+      await client.query('ROLLBACK');
+      this.logger.error(`Failed to delete profile ${profileId}: ${String(err)}`);
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -812,18 +976,18 @@ export class CrmV2Service {
    * Only returns non-archived profiles.
    */
   async getPendingVerification(): Promise<{
-    count: number
-    profiles: PendingVerificationProfile[]
+    count: number;
+    profiles: PendingVerificationProfile[];
   }> {
     // TODO(E-07): check verification-settings toggle before returning data
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     const countResult = await pool.query(
       `SELECT COUNT(*)::int AS cnt
        FROM profiles
-       WHERE status = 'PENDING_VERIFICATION' AND archived = false`,
-    )
-    const count = (countResult.rows[0] as Record<string, unknown>).cnt as number
+       WHERE status = 'PENDING_VERIFICATION' AND archived = false`
+    );
+    const count = (countResult.rows[0] as Record<string, unknown>).cnt as number;
 
     const profileResult = await pool.query(
       `SELECT p.id, p.profile_type, p.first_name, p.last_name,
@@ -833,8 +997,8 @@ export class CrmV2Service {
        LEFT JOIN legal_profiles lp ON lp.id = p.id
        WHERE p.status = 'PENDING_VERIFICATION' AND p.archived = false
        ORDER BY p.created_at DESC
-       LIMIT 5`,
-    )
+       LIMIT 5`
+    );
 
     const profiles: PendingVerificationProfile[] = profileResult.rows.map(
       (row: Record<string, unknown>) => ({
@@ -844,10 +1008,10 @@ export class CrmV2Service {
         lastName: (row.last_name as string) ?? null,
         legalName: (row.legal_name as string) ?? null,
         createdAt: (row.created_at as string) ?? '',
-      }),
-    )
+      })
+    );
 
-    return { count, profiles }
+    return { count, profiles };
   }
 }
 
@@ -857,4 +1021,4 @@ export class CrmV2Service {
 export type CrmDeleteProfileResult =
   | { success: true; profileId: string; reason: string; archivedAt: string }
   | { errorCode: string; error: string }
-  | null
+  | null;

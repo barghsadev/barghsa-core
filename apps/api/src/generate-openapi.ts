@@ -19,7 +19,6 @@ async function generateOpenApiSpec(): Promise<void> {
     const outputPath = path.resolve('dist', 'openapi.json');
     fs.writeFileSync(outputPath, JSON.stringify(document, null, 2));
     console.log(`OpenAPI specification written to ${outputPath}`);
-
   } finally {
     await app.close();
   }

@@ -8,15 +8,11 @@ describe('rate-limit types and helpers', () => {
     });
 
     it('accepts multiple identifiers', () => {
-      expect(rateLimitKey('otp', '+989123456789', 'login')).toBe(
-        'otp:+989123456789:login',
-      );
+      expect(rateLimitKey('otp', '+989123456789', 'login')).toBe('otp:+989123456789:login');
     });
 
     it('accepts numeric identifiers', () => {
-      expect(rateLimitKey('user_action', 'usr_abc', 42)).toBe(
-        'user_action:usr_abc:42',
-      );
+      expect(rateLimitKey('user_action', 'usr_abc', 42)).toBe('user_action:usr_abc:42');
     });
   });
 

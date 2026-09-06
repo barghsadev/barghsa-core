@@ -1,7 +1,7 @@
-import { domainChecks } from '../domain-checks'
-import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { walletTransactions, wallets } from './wallets.js'
+import { domainChecks } from '../domain-checks';
+import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { walletTransactions, wallets } from './wallets.js';
 
 /**
  * Durable ledger of authenticated provider chargeback notifications
@@ -31,16 +31,14 @@ export const walletChargebackEvents = pgTable(
     eventId: text('event_id').notNull(),
 
     /** Completed top-up credit this chargeback maps to, when unique. */
-    originalTransactionId: uuid('original_transaction_id').references(
-      () => walletTransactions.id,
-      { onDelete: 'restrict' },
-    ),
+    originalTransactionId: uuid('original_transaction_id').references(() => walletTransactions.id, {
+      onDelete: 'restrict',
+    }),
 
     /** Compensating reversal row, when reverseTransaction posted. */
-    reversalTransactionId: uuid('reversal_transaction_id').references(
-      () => walletTransactions.id,
-      { onDelete: 'restrict' },
-    ),
+    reversalTransactionId: uuid('reversal_transaction_id').references(() => walletTransactions.id, {
+      onDelete: 'restrict',
+    }),
 
     /** Wallet of the mapped original; NULL when unmatched. */
     walletId: uuid('wallet_id').references(() => wallets.profileId, {
@@ -68,5 +66,5 @@ export const walletChargebackEvents = pgTable(
     index('idx_wce_original_tx').on(table.originalTransactionId),
     index('idx_wce_wallet').on(table.walletId),
     index('idx_wce_status').on(table.status),
-  ],
-)
+  ]
+);

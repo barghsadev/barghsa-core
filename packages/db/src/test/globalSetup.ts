@@ -10,11 +10,11 @@
  * @see https://node.testcontainers.org/
  */
 
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql'
-import { Pool } from 'pg'
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
+import { Pool } from 'pg';
 
-let container: StartedPostgreSqlContainer | null = null
-let shutdownPool: Pool | null = null
+let container: StartedPostgreSqlContainer | null = null;
+let shutdownPool: Pool | null = null;
 
 /**
  * Called once before all test workers start.
@@ -25,25 +25,25 @@ export async function setup(): Promise<void> {
     .withDatabase('barghsa_test')
     .withUsername('barghsa')
     .withPassword('barghsa_test')
-    .start()
+    .start();
 
-  container = started
+  container = started;
 
-  const connectionString = started.getConnectionUri()
-  process.env.TEST_DATABASE_URL = connectionString
+  const connectionString = started.getConnectionUri();
+  process.env.TEST_DATABASE_URL = connectionString;
 
   // btree_gist is required by GIST EXCLUDE windows (VAT, upload policies,
   // service_due_periods). Create it once here so parallel migrations do
   // not race on CREATE EXTENSION.
-  const bootstrap = new Pool({ connectionString, max: 1 })
+  const bootstrap = new Pool({ connectionString, max: 1 });
   try {
-    await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist')
+    await bootstrap.query('CREATE EXTENSION IF NOT EXISTS btree_gist');
   } finally {
-    await bootstrap.end()
+    await bootstrap.end();
   }
 
   // Create a lightweight pool for schema management (used by test helpers).
-  shutdownPool = new Pool({ connectionString, max: 2 })
+  shutdownPool = new Pool({ connectionString, max: 2 });
 }
 
 /**
@@ -52,12 +52,12 @@ export async function setup(): Promise<void> {
  */
 export async function teardown(): Promise<void> {
   if (shutdownPool) {
-    await shutdownPool.end().catch(() => {})
-    shutdownPool = null
+    await shutdownPool.end().catch(() => {});
+    shutdownPool = null;
   }
   if (container) {
-    await container.stop()
-    container = null
+    await container.stop();
+    container = null;
   }
-  delete process.env.TEST_DATABASE_URL
+  delete process.env.TEST_DATABASE_URL;
 }

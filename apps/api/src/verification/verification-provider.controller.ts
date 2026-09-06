@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -11,14 +11,14 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { VerificationErrorCodes } from '@barghsa/shared/verification'
-import { VerificationProviderService } from './verification-provider.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { VerificationErrorCodes } from '@barghsa/shared/verification';
+import { VerificationProviderService } from './verification-provider.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 /**
  * Zod schema for the provider config update request body.
@@ -27,7 +27,7 @@ const SetProviderConfigSchema = z.object({
   providerId: z.string().min(1),
   settings: z.record(z.string(), z.string()),
   enabled: z.boolean(),
-})
+});
 
 /**
  * Zod schema for the verification request body.
@@ -35,17 +35,15 @@ const SetProviderConfigSchema = z.object({
 const RunVerificationSchema = z.object({
   providerId: z.string().min(1),
   input: z.record(z.string(), z.unknown()),
-})
+});
 
 @ApiTags('Verification')
 @Controller('api/admin/verification')
 @UseGuards(SessionAuthGuard)
 export class VerificationProviderController {
-  private readonly logger = new Logger(VerificationProviderController.name)
+  private readonly logger = new Logger(VerificationProviderController.name);
 
-  constructor(
-    private readonly verificationProviderService: VerificationProviderService,
-  ) {}
+  constructor(private readonly verificationProviderService: VerificationProviderService) {}
 
   /**
    * GET /api/admin/verification/providers
@@ -57,14 +55,14 @@ export class VerificationProviderController {
   @ApiResponse({ status: 200, description: 'List of providers with status.' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   listProviders(@Req() req: AuthenticatedRequest) {
-    const isAdmin = hasStaffPermission(req, 'admin:config:read')
+    const isAdmin = hasStaffPermission(req, 'admin:config:read');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.verificationProviderService.listProviders()
+    return this.verificationProviderService.listProviders();
   }
 
   /**
@@ -80,30 +78,34 @@ export class VerificationProviderController {
   @ApiResponse({ status: 404, description: 'Provider not found' })
   async getProviderConfig(
     @Param('providerId') providerId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:config:read')
+    const isAdmin = hasStaffPermission(req, 'admin:config:read');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const adapter = this.verificationProviderService.getAdapter(providerId)
+    const adapter = this.verificationProviderService.getAdapter(providerId);
     if (!adapter) {
       throw new HttpException(
-        { statusCode: 404, error: VerificationErrorCodes.PROVIDER_NOT_FOUND, message: 'Provider not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: VerificationErrorCodes.PROVIDER_NOT_FOUND,
+          message: 'Provider not found',
+        },
+        404
+      );
     }
 
-    const config = await this.verificationProviderService.getProviderConfig(providerId)
+    const config = await this.verificationProviderService.getProviderConfig(providerId);
     return {
       providerId,
       displayName: adapter.displayName,
       config: config ?? { providerId, settings: {}, enabled: false },
-    }
+    };
   }
 
   /**
@@ -121,7 +123,10 @@ export class VerificationProviderController {
       required: ['providerId', 'settings', 'enabled'],
       properties: {
         providerId: { type: 'string', description: 'Must match the URL providerId' },
-        settings: { type: 'object', description: 'Provider-specific settings (URL, API key, etc.)' },
+        settings: {
+          type: 'object',
+          description: 'Provider-specific settings (URL, API key, etc.)',
+        },
         enabled: { type: 'boolean', description: 'Whether the provider is enabled' },
       },
     },
@@ -133,44 +138,56 @@ export class VerificationProviderController {
   async setProviderConfig(
     @Param('providerId') providerId: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:config:write')
+    const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = SetProviderConfigSchema.safeParse(rawBody)
+    const parsed = SetProviderConfigSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid provider config' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid provider config',
+        },
+        400
+      );
     }
 
     if (parsed.data.providerId !== providerId) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'providerId in body must match URL parameter' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'providerId in body must match URL parameter',
+        },
+        400
+      );
     }
 
-    const adapter = this.verificationProviderService.getAdapter(providerId)
+    const adapter = this.verificationProviderService.getAdapter(providerId);
     if (!adapter) {
       throw new HttpException(
-        { statusCode: 404, error: VerificationErrorCodes.PROVIDER_NOT_FOUND, message: 'Provider not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: VerificationErrorCodes.PROVIDER_NOT_FOUND,
+          message: 'Provider not found',
+        },
+        404
+      );
     }
 
-    await this.verificationProviderService.setProviderConfig(providerId, parsed.data)
+    await this.verificationProviderService.setProviderConfig(providerId, parsed.data);
 
-    this.logger.log(`Provider config updated: ${providerId} by ${req.session.userId}`)
+    this.logger.log(`Provider config updated: ${providerId} by ${req.session.userId}`);
 
-    return { providerId, message: 'Configuration updated' }
+    return { providerId, message: 'Configuration updated' };
   }
 
   /**
@@ -188,26 +205,30 @@ export class VerificationProviderController {
   @ApiResponse({ status: 404, description: 'Provider not found' })
   async resetCircuitBreaker(
     @Param('providerId') providerId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:config:write')
+    const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const reset = this.verificationProviderService.resetCircuitBreaker(providerId)
+    const reset = this.verificationProviderService.resetCircuitBreaker(providerId);
     if (!reset) {
       throw new HttpException(
-        { statusCode: 404, error: VerificationErrorCodes.PROVIDER_NOT_FOUND, message: 'Provider not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: VerificationErrorCodes.PROVIDER_NOT_FOUND,
+          message: 'Provider not found',
+        },
+        404
+      );
     }
 
-    this.logger.log(`Circuit breaker reset for provider: ${providerId} by ${req.session.userId}`)
-    return { providerId, message: 'Circuit breaker reset' }
+    this.logger.log(`Circuit breaker reset for provider: ${providerId} by ${req.session.userId}`);
+    return { providerId, message: 'Circuit breaker reset' };
   }
 
   /**
@@ -233,28 +254,31 @@ export class VerificationProviderController {
   @ApiResponse({ status: 200, description: 'Verification result.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async runVerification(
-    @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const isAdmin = hasStaffPermission(req, 'verification:write')
+  async runVerification(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
+    const isAdmin = hasStaffPermission(req, 'verification:write');
     if (!isAdmin) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = RunVerificationSchema.safeParse(rawBody)
+    const parsed = RunVerificationSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid verification request' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid verification request',
+        },
+        400
+      );
     }
 
-    this.logger.log(`Verification requested: provider=${parsed.data.providerId} by ${req.session.userId}`)
+    this.logger.log(
+      `Verification requested: provider=${parsed.data.providerId} by ${req.session.userId}`
+    );
 
-    return this.verificationProviderService.verify(parsed.data.providerId, parsed.data.input)
+    return this.verificationProviderService.verify(parsed.data.providerId, parsed.data.input);
   }
 }

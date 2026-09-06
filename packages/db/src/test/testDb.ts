@@ -22,47 +22,45 @@
  * ```
  */
 
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { Pool } from 'pg'
-import { randomUUID } from 'node:crypto'
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { Pool } from 'pg';
+import { randomUUID } from 'node:crypto';
 
-const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
+const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql');
 const INVOICES_MIGRATION = resolve(
   __dirname,
-  '../../drizzle/0052_add_invoice_amount_check_constraints.sql',
-)
+  '../../drizzle/0052_add_invoice_amount_check_constraints.sql'
+);
 
 export interface IsolatedTestDb {
   /** The PostgreSQL schema name (e.g. `test_a1b2c3d4`). */
-  schemaName: string
+  schemaName: string;
   /** Drizzle ORM instance scoped to the isolated schema. */
-  db: ReturnType<typeof drizzle>
+  db: ReturnType<typeof drizzle>;
   /** Pool backing this instance — call `end()` after the test. */
-  pool: Pool
+  pool: Pool;
   /**
    * Connection string whose `search_path` targets the isolated schema.
    * Callers that need additional pools (e.g. to exercise concurrent
    * connections) can build their own `Pool` from this URL.
    */
-  connectionString: string
+  connectionString: string;
 }
 
-const MANAGEMENT_POOL_MAX = 5
+const MANAGEMENT_POOL_MAX = 5;
 
 /**
  * Lazily-initialized management pool connected to the Testcontainers
  * database.  Used only for CREATE / DROP SCHEMA statements.
  */
 function getManagementPool(): Pool {
-  const url = process.env.TEST_DATABASE_URL
+  const url = process.env.TEST_DATABASE_URL;
   if (!url) {
-    throw new Error(
-      'TEST_DATABASE_URL is not set. Did you run vitest with the globalSetup?',
-    )
+    throw new Error('TEST_DATABASE_URL is not set. Did you run vitest with the globalSetup?');
   }
-  return new Pool({ connectionString: url, max: MANAGEMENT_POOL_MAX })
+  return new Pool({ connectionString: url, max: MANAGEMENT_POOL_MAX });
 }
 
 /**
@@ -74,12 +72,12 @@ function getManagementPool(): Pool {
  * record a successful no-op.
  */
 export async function seedBankReceiptsPrerequisites(pool: Pool): Promise<void> {
-  await pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+  await pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       user_id TEXT PRIMARY KEY
     )
-  `)
+  `);
   await pool.query(`
     DO $seed$
     BEGIN
@@ -91,18 +89,18 @@ export async function seedBankReceiptsPrerequisites(pool: Pool): Promise<void> {
       WHEN duplicate_object THEN NULL;
     END
     $seed$
-  `)
+  `);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS profiles (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
     )
-  `)
+  `);
   await pool.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
     )
-  `)
-  await pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
+  `);
+  await pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
 }
 
 /**
@@ -116,27 +114,24 @@ export async function seedBankReceiptsPrerequisites(pool: Pool): Promise<void> {
  * @returns An `IsolatedTestDb` with `schemaName`, `db`, `pool`, and the
  *   schema-scoped `connectionString`.
  */
-export async function createIsolatedTestDb(
-  prefix = 'test_',
-  poolMax = 1,
-): Promise<IsolatedTestDb> {
-  const schemaName = `${prefix}${randomUUID().replace(/-/g, '').slice(0, 12)}`
-  const mgmtPool = getManagementPool()
+export async function createIsolatedTestDb(prefix = 'test_', poolMax = 1): Promise<IsolatedTestDb> {
+  const schemaName = `${prefix}${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+  const mgmtPool = getManagementPool();
 
   try {
-    await mgmtPool.query(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`)
+    await mgmtPool.query(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`);
 
     // Build a connection string that targets the isolated schema.
-    const baseUrl = process.env.TEST_DATABASE_URL!
-    const sep = baseUrl.includes('?') ? '&' : '?'
-    const schemaUrl = `${baseUrl}${sep}options=${encodeURIComponent(`-c search_path=${schemaName},public`)}`
+    const baseUrl = process.env.TEST_DATABASE_URL!;
+    const sep = baseUrl.includes('?') ? '&' : '?';
+    const schemaUrl = `${baseUrl}${sep}options=${encodeURIComponent(`-c search_path=${schemaName},public`)}`;
 
-    const pool = new Pool({ connectionString: schemaUrl, max: poolMax })
-    const db = drizzle(pool, { logger: false })
+    const pool = new Pool({ connectionString: schemaUrl, max: poolMax });
+    const db = drizzle(pool, { logger: false });
 
-    return { schemaName, db, pool, connectionString: schemaUrl }
+    return { schemaName, db, pool, connectionString: schemaUrl };
   } finally {
-    await mgmtPool.end().catch(() => {})
+    await mgmtPool.end().catch(() => {});
   }
 }
 
@@ -146,29 +141,27 @@ export async function createIsolatedTestDb(
  */
 export async function dropTestSchema(schemaName: string): Promise<void> {
   if (!schemaName.startsWith('test_')) {
-    throw new Error(
-      `Refusing to drop schema "${schemaName}": does not start with 'test_'`,
-    )
+    throw new Error(`Refusing to drop schema "${schemaName}": does not start with 'test_'`);
   }
-  const mgmtPool = getManagementPool()
+  const mgmtPool = getManagementPool();
   try {
-    let lastError: unknown
+    let lastError: unknown;
     for (let attempt = 0; attempt < 8; attempt++) {
       try {
-        await mgmtPool.query(`DROP SCHEMA IF EXISTS "${schemaName}" CASCADE`)
-        return
+        await mgmtPool.query(`DROP SCHEMA IF EXISTS "${schemaName}" CASCADE`);
+        return;
       } catch (err) {
-        lastError = err
+        lastError = err;
         // GIST EXCLUDE indexes share btree_gist operator classes; parallel
         // DROP SCHEMA of those tables can deadlock (40P01).
         if ((err as { code?: string }).code !== '40P01' || attempt === 7) {
-          throw err
+          throw err;
         }
-        await new Promise((resolve) => setTimeout(resolve, 50 * 2 ** attempt))
+        await new Promise((resolve) => setTimeout(resolve, 50 * 2 ** attempt));
       }
     }
-    throw lastError
+    throw lastError;
   } finally {
-    await mgmtPool.end().catch(() => {})
+    await mgmtPool.end().catch(() => {});
   }
 }

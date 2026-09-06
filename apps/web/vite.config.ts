@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+import { resolve } from 'path';
 
 /**
  * Vite plugin: apply immutable Cache-Control only to content-hashed assets.
@@ -10,21 +10,21 @@ import { resolve } from 'path'
  * always fetch the latest entry point on deployment.
  */
 function immutableAssetsPlugin(): ReturnType<typeof defineConfig>['plugins'][0] {
-  const IMMUTABLE_PATTERN = /\/assets\/.+-[a-zA-Z0-9_-]{8,}\./
+  const IMMUTABLE_PATTERN = /\/assets\/.+-[a-zA-Z0-9_-]{8,}\./;
   return {
     name: 'immutable-assets',
     configurePreviewServer(server) {
       server.middlewares.use((req, res, next) => {
         if (req.url && IMMUTABLE_PATTERN.test(req.url)) {
-          res.setHeader('Cache-Control', 'public, immutable, max-age=31536000')
+          res.setHeader('Cache-Control', 'public, immutable, max-age=31536000');
         } else if (req.url && !req.url.startsWith('/api')) {
           // index.html and other unhashed resources — revalidate on every deploy
-          res.setHeader('Cache-Control', 'no-cache, must-revalidate')
+          res.setHeader('Cache-Control', 'no-cache, must-revalidate');
         }
-        next()
-      })
+        next();
+      });
     },
-  }
+  };
 }
 
 export default defineConfig({
@@ -71,4 +71,4 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-})
+});

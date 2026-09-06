@@ -4,11 +4,11 @@ import {
   ExecutionContext,
   ForbiddenException,
   Logger,
-} from '@nestjs/common'
-import type { Request } from 'express'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ProfilesService } from './profiles.service.js'
+} from '@nestjs/common';
+import type { Request } from 'express';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ProfilesService } from './profiles.service.js';
 
 /**
  * Profile verification guard (T-03.01.02).
@@ -32,36 +32,36 @@ import { ProfilesService } from './profiles.service.js'
  */
 @Injectable()
 export class ProfileVerifiedGuard implements CanActivate {
-  private readonly logger = new Logger(ProfileVerifiedGuard.name)
+  private readonly logger = new Logger(ProfileVerifiedGuard.name);
 
   constructor(private readonly profilesService: ProfilesService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: Request = context.switchToHttp().getRequest()
-    const authRequest = request as AuthenticatedRequest
+    const request: Request = context.switchToHttp().getRequest();
+    const authRequest = request as AuthenticatedRequest;
 
     // Must have an authenticated session
     if (!authRequest.session) {
-      this.logger.warn('ProfileVerifiedGuard: no authenticated session found')
+      this.logger.warn('ProfileVerifiedGuard: no authenticated session found');
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_PROFILE_NOT_VERIFIED.code,
-      })
+      });
     }
 
-    const userId = authRequest.session.userId
-    const canOrder = await this.profilesService.canPlaceCommercialOrder(userId)
+    const userId = authRequest.session.userId;
+    const canOrder = await this.profilesService.canPlaceCommercialOrder(userId);
 
     if (!canOrder) {
       this.logger.debug(
-        `ProfileVerifiedGuard: user ${userId} cannot place commercial order — profile not verified`,
-      )
+        `ProfileVerifiedGuard: user ${userId} cannot place commercial order — profile not verified`
+      );
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_PROFILE_NOT_VERIFIED.code,
-      })
+      });
     }
 
-    return true
+    return true;
   }
 }

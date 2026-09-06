@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Barghsa E2E test configuration.
@@ -18,9 +18,9 @@ import { defineConfig, devices } from '@playwright/test'
  * Base URL is read from PLAYWRIGHT_BASE_URL (defaults to local dev server).
  * When PLAYWRIGHT_BASE_URL is set externally, webServer is disabled.
  */
-const EXTERNAL_URL = process.env['PLAYWRIGHT_BASE_URL']
-const LOCAL_URL = 'http://localhost:5173'
-const resolvedBaseURL = EXTERNAL_URL ?? LOCAL_URL
+const EXTERNAL_URL = process.env['PLAYWRIGHT_BASE_URL'];
+const LOCAL_URL = 'http://localhost:5173';
+const resolvedBaseURL = EXTERNAL_URL ?? LOCAL_URL;
 
 export default defineConfig({
   testDir: './e2e',
@@ -29,10 +29,7 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
-  reporter: [
-    ['html', { outputFolder: 'playwright-report' }],
-    ['list'],
-  ],
+  reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
 
   use: {
     baseURL: resolvedBaseURL,
@@ -72,4 +69,4 @@ export default defineConfig({
         reuseExistingServer: !process.env['CI'],
         timeout: 30_000,
       },
-})
+});

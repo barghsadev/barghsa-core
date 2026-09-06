@@ -1,17 +1,17 @@
-import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
 
 export interface WalletBalanceCardProps {
   /** Wallet balance in IRR (Rial). */
-  balance: number
+  balance: number;
   /** Currency label, e.g. 'IRR'. */
-  currency: string
+  currency: string;
   /** Whether balance is low relative to pending invoices. */
-  lowBalanceWarning: boolean
+  lowBalanceWarning: boolean;
   /** Number of pending invoices (for contextual warning). */
-  pendingInvoices: number
+  pendingInvoices: number;
   /** UI locale for number formatting and translation. */
-  locale?: Locale
+  locale?: Locale;
 }
 
 /**
@@ -21,9 +21,9 @@ function formatAmount(amount: number, locale: Locale): string {
   try {
     return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
       style: 'decimal',
-    }).format(amount)
+    }).format(amount);
   } catch {
-    return amount.toLocaleString()
+    return amount.toLocaleString();
   }
 }
 
@@ -40,14 +40,11 @@ export function WalletBalanceCard({
   pendingInvoices,
   locale = 'fa',
 }: WalletBalanceCardProps) {
-  const isRtl = locale === 'fa'
-  const tomanAmount = Math.round(balance / 10)
+  const isRtl = locale === 'fa';
+  const tomanAmount = Math.round(balance / 10);
 
   return (
-    <div
-      className="bg-white rounded-lg shadow-sm p-6"
-      dir={isRtl ? 'rtl' : 'ltr'}
-    >
+    <div className="bg-white rounded-lg shadow-sm p-6" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Balance section */}
       <div className="mb-4">
         <p className="text-sm text-gray-500 mb-1">
@@ -60,7 +57,7 @@ export function WalletBalanceCard({
         <p className="text-base text-gray-500 mt-1">
           {t('dashboard.overview.balanceInToman', locale).replace(
             '{amount}',
-            formatAmount(tomanAmount, locale),
+            formatAmount(tomanAmount, locale)
           )}
         </p>
       </div>
@@ -82,5 +79,5 @@ export function WalletBalanceCard({
         {t('dashboard.overview.chargeWallet', locale)}
       </Link>
     </div>
-  )
+  );
 }

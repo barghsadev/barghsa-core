@@ -1,6 +1,6 @@
-import { boolean, pgTable, text } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
+import { boolean, pgTable, text } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
 
 /**
  * TOS versions table (T-04.01.01, T-04.01.02, T-09.03.01).
@@ -27,55 +27,51 @@ import { users } from './users.js'
  * - `published_at` — when this version was published.
  * - `created_at` / `updated_at` — audit columns.
  */
-export const tosVersions = pgTable(
-  'tos_versions',
-  {
-    /** UUIDv7 opaque version identifier. */
-    id: uuidv7('id').primaryKey().notNull(),
+export const tosVersions = pgTable('tos_versions', {
+  /** UUIDv7 opaque version identifier. */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** Human-readable version label, e.g. "v1". */
-    versionId: text('version_id').notNull().unique(),
+  /** Human-readable version label, e.g. "v1". */
+  versionId: text('version_id').notNull().unique(),
 
-    /** Persian (primary) TOS content. */
-    contentFa: text('content_fa').notNull(),
+  /** Persian (primary) TOS content. */
+  contentFa: text('content_fa').notNull(),
 
-    /** English TOS content. */
-    contentEn: text('content_en').notNull(),
+  /** English TOS content. */
+  contentEn: text('content_en').notNull(),
 
-    /**
-     * Change type: `major` (material change → re-acceptance) or
-     * `minor` (typo/clarification → no re-acceptance).
-     * Only meaningful for published versions.
-     */
-    changeType: text('change_type', { enum: ['major', 'minor'] })
-      .notNull()
-      .default('minor'),
+  /**
+   * Change type: `major` (material change → re-acceptance) or
+   * `minor` (typo/clarification → no re-acceptance).
+   * Only meaningful for published versions.
+   */
+  changeType: text('change_type', { enum: ['major', 'minor'] })
+    .notNull()
+    .default('minor'),
 
-    /**
-     * Lifecycle status: `draft` (editable, not visible to users)
-     * or `published` (final, may be set as active).
-     */
-    status: text('status', { enum: ['draft', 'published'] })
-      .notNull()
-      .default('draft'),
+  /**
+   * Lifecycle status: `draft` (editable, not visible to users)
+   * or `published` (final, may be set as active).
+   */
+  status: text('status', { enum: ['draft', 'published'] })
+    .notNull()
+    .default('draft'),
 
-    /** FK to users — the last editor of this version. */
-    createdBy: text('created_by')
-      .references(() => users.userId, { onDelete: 'set null' }),
+  /** FK to users — the last editor of this version. */
+  createdBy: text('created_by').references(() => users.userId, { onDelete: 'set null' }),
 
-    /** Whether this version is the currently active one. */
-    isActive: boolean('is_active').notNull().default(false),
+  /** Whether this version is the currently active one. */
+  isActive: boolean('is_active').notNull().default(false),
 
-    /** When this version was published (null while in draft). */
-    publishedAt: timestamptz('published_at'),
+  /** When this version was published (null while in draft). */
+  publishedAt: timestamptz('published_at'),
 
-    /** Record creation timestamp. */
-    createdAt: timestamptz('created_at').defaultNow().notNull(),
+  /** Record creation timestamp. */
+  createdAt: timestamptz('created_at').defaultNow().notNull(),
 
-    /** Record last-updated timestamp. */
-    updatedAt: timestamptz('updated_at')
-      .defaultNow()
-      .notNull()
-      .$onUpdate(() => new Date()),
-  },
-)
+  /** Record last-updated timestamp. */
+  updatedAt: timestamptz('updated_at')
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});

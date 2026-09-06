@@ -1,6 +1,6 @@
-import { jsonb, text, timestamp } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table.js'
-import { users } from './users.js'
+import { jsonb, text, timestamp } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table.js';
+import { users } from './users.js';
 
 /**
  * Reconciliation exception ledger (S-09.09, T-09.09.01).
@@ -68,4 +68,4 @@ export const reconciliationExceptions = createTable('reconciliation_exceptions',
 
   /** When the item was resolved/closed. */
   resolvedAt: timestamp('resolved_at', { withTimezone: true, mode: 'date' }),
-})
+});

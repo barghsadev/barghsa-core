@@ -29,13 +29,13 @@
 // ---------------------------------------------------------------------------
 
 /** Canonical admin-configurable upload policy categories (T-09.12.05). */
-export const UPLOAD_POLICY_CATEGORIES = ['document', 'image', 'video'] as const
+export const UPLOAD_POLICY_CATEGORIES = ['document', 'image', 'video'] as const;
 
-export type UploadPolicyCategory = (typeof UPLOAD_POLICY_CATEGORIES)[number]
+export type UploadPolicyCategory = (typeof UPLOAD_POLICY_CATEGORIES)[number];
 
 /** Whether a raw value is a known upload policy category key. */
 export function isUploadPolicyCategory(raw: unknown): raw is UploadPolicyCategory {
-  return typeof raw === 'string' && (UPLOAD_POLICY_CATEGORIES as readonly string[]).includes(raw)
+  return typeof raw === 'string' && (UPLOAD_POLICY_CATEGORIES as readonly string[]).includes(raw);
 }
 
 // ---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ export function isUploadPolicyCategory(raw: unknown): raw is UploadPolicyCategor
 // ---------------------------------------------------------------------------
 
 /** Max distinct extensions kept per policy — guards against pathological lists. */
-export const MAX_UPLOAD_POLICY_EXTENSIONS = 50
+export const MAX_UPLOAD_POLICY_EXTENSIONS = 50;
 
 /**
  * A valid extension token: a leading dot followed by 1..10 lowercase
@@ -51,11 +51,11 @@ export const MAX_UPLOAD_POLICY_EXTENSIONS = 50
  * wildcard, uppercase, or empty string — extension checks in the upload
  * path compare exact tokens, so the whitelist format must stay canonical.
  */
-export const UPLOAD_POLICY_EXTENSION_PATTERN = /^\.[a-z0-9]{1,10}$/
+export const UPLOAD_POLICY_EXTENSION_PATTERN = /^\.[a-z0-9]{1,10}$/;
 
 /** Whether a raw value is a valid policy extension token (lowercase, dotted). */
 export function isValidPolicyExtension(raw: unknown): raw is string {
-  return typeof raw === 'string' && UPLOAD_POLICY_EXTENSION_PATTERN.test(raw)
+  return typeof raw === 'string' && UPLOAD_POLICY_EXTENSION_PATTERN.test(raw);
 }
 
 /**
@@ -64,15 +64,15 @@ export function isValidPolicyExtension(raw: unknown): raw is string {
  * admin service stores and the upload path compares against.
  */
 export function normalizePolicyExtensions(raw: readonly string[]): string[] {
-  const seen = new Set<string>()
-  const result: string[] = []
+  const seen = new Set<string>();
+  const result: string[] = [];
   for (const entry of raw) {
-    const token = entry.trim().toLowerCase()
-    if (!isValidPolicyExtension(token) || seen.has(token)) continue
-    seen.add(token)
-    result.push(token)
+    const token = entry.trim().toLowerCase();
+    if (!isValidPolicyExtension(token) || seen.has(token)) continue;
+    seen.add(token);
+    result.push(token);
   }
-  return result
+  return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -80,7 +80,7 @@ export function normalizePolicyExtensions(raw: readonly string[]): string[] {
 // ---------------------------------------------------------------------------
 
 /** Minimum policy max-size: 1 byte (a zero-byte cap would deny everything). */
-export const MIN_UPLOAD_POLICY_SIZE_BYTES = 1
+export const MIN_UPLOAD_POLICY_SIZE_BYTES = 1;
 
 /**
  * Deployment-safe hard cap for any admin-configured max size (100 MB).
@@ -88,7 +88,7 @@ export const MIN_UPLOAD_POLICY_SIZE_BYTES = 1
  * additionally applies the tighter per-category deployment cap (e.g.
  * documents 10 MB) from `apps/api/src/upload/upload.config.ts`.
  */
-export const GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES = 100 * 1024 * 1024
+export const GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES = 100 * 1024 * 1024;
 
 // ---------------------------------------------------------------------------
 // DTO
@@ -99,28 +99,28 @@ export const GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES = 100 * 1024 * 1024
  * by the admin API.
  */
 export interface UploadPolicyDto {
-  id: string
+  id: string;
   /** Canonical admin category key ('document' | 'image' | 'video'). */
-  category: UploadPolicyCategory
+  category: UploadPolicyCategory;
   /** Lowercase `.ext` whitelist (1..50 entries). */
-  allowedExtensions: string[]
+  allowedExtensions: string[];
   /** Maximum file size in bytes (1 B .. 100 MB hard cap, per-category deployment cap tighter). */
-  maxSizeBytes: number
+  maxSizeBytes: number;
   /** Effective window — `effectiveFrom` inclusive. */
-  effectiveFrom: string
+  effectiveFrom: string;
   /** Effective window end — exclusive; null = open/current. */
-  effectiveUntil: string | null
+  effectiveUntil: string | null;
   /** Admin who recorded this policy. */
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
   /**
    * Derived status for the admin UI/table:
    * - `current` — active now
    * - `scheduled` — future effective date (not yet active)
    * - `expired` — ended in the past
    */
-  status: 'current' | 'scheduled' | 'expired'
+  status: 'current' | 'scheduled' | 'expired';
 }
 
 /**
@@ -130,11 +130,16 @@ export interface UploadPolicyDto {
 export function uploadPolicyWindowStatus(
   effectiveFrom: Date | string,
   effectiveUntil: Date | string | null,
-  at: Date = new Date(),
+  at: Date = new Date()
 ): 'current' | 'scheduled' | 'expired' {
-  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom)
-  const until = effectiveUntil == null ? null : effectiveUntil instanceof Date ? effectiveUntil : new Date(effectiveUntil)
-  if (from.getTime() > at.getTime()) return 'scheduled'
-  if (until !== null && until.getTime() <= at.getTime()) return 'expired'
-  return 'current'
+  const from = effectiveFrom instanceof Date ? effectiveFrom : new Date(effectiveFrom);
+  const until =
+    effectiveUntil == null
+      ? null
+      : effectiveUntil instanceof Date
+        ? effectiveUntil
+        : new Date(effectiveUntil);
+  if (from.getTime() > at.getTime()) return 'scheduled';
+  if (until !== null && until.getTime() <= at.getTime()) return 'expired';
+  return 'current';
 }

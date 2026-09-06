@@ -1,14 +1,14 @@
-import { and, eq, sql } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/node-postgres'
-import { v7 as uuidv7 } from 'uuid'
-import * as argon2 from 'argon2'
-import { Pool } from 'pg'
-import { createDirectDbPool } from '../index'
-import { products } from '../schema/products'
-import { users } from '../schema/users'
-import { notificationTemplates } from '../schema/notification-templates'
-import { buildSeedTemplates } from './notification-templates'
-import type { DbInstance } from '../index'
+import { and, eq, sql } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { v7 as uuidv7 } from 'uuid';
+import * as argon2 from 'argon2';
+import { Pool } from 'pg';
+import { createDirectDbPool } from '../index';
+import { products } from '../schema/products';
+import { users } from '../schema/users';
+import { notificationTemplates } from '../schema/notification-templates';
+import { buildSeedTemplates } from './notification-templates';
+import type { DbInstance } from '../index';
 
 // ---------------------------------------------------------------------------
 // Seed runner — idempotent seed script for development and initial deployment.
@@ -23,13 +23,13 @@ import type { DbInstance } from '../index'
 // ---------------------------------------------------------------------------
 
 export interface SeederResult {
-  entity: string
-  created: number
-  skipped: number
-  errors: string[]
+  entity: string;
+  created: number;
+  skipped: number;
+  errors: string[];
 }
 
-export type Seeder = (db: DbInstance, force: boolean) => Promise<SeederResult>
+export type Seeder = (db: DbInstance, force: boolean) => Promise<SeederResult>;
 
 // ---------------------------------------------------------------------------
 // Seeders
@@ -37,39 +37,85 @@ export type Seeder = (db: DbInstance, force: boolean) => Promise<SeederResult>
 
 /** Initial admin creation is explicit, serialized and audited. Credentials never enter seed output. */
 export async function seedAdmin(db: DbInstance, _force: boolean): Promise<SeederResult> {
-  const result: SeederResult = {entity:'admin_bootstrap',created:0,skipped:0,errors:[]}
-  const secret=process.env.ADMIN_BOOTSTRAP_SECRET, key=process.env.ADMIN_BOOTSTRAP_KEY
-  const rawIdentity=process.env.ADMIN_BOOTSTRAP_EMAIL, password=process.env.ADMIN_BOOTSTRAP_PASSWORD
-  if (!secret && !key && !rawIdentity && !password) {result.skipped++;return result}
-  try {
-    await db.transaction(async tx=>{
-      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('barghsa.admin_bootstrap'))`)
-      const admins=await tx.select({id:users.userId}).from(users).where(eq(users.isAdmin,true)).limit(1)
-      if(admins.length){result.skipped++;return}
-      if(!secret?.trim() || !key?.trim() || !rawIdentity?.trim() || !password){
-        result.errors.push('Initial admin creation requires ADMIN_BOOTSTRAP_SECRET, ADMIN_BOOTSTRAP_KEY, ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD')
-        return
-      }
-      const username=rawIdentity.trim().toLowerCase()
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) && !/^\+[1-9]\d{7,14}$/.test(username)){
-        result.errors.push('Bootstrap identity must be an email address or E.164 phone number');return
-      }
-      if(password.length<8||password.length>128||!/[A-Z]/.test(password)||!/[a-z]/.test(password)||!/[0-9]/.test(password)){
-        result.errors.push('Bootstrap password must be 8-128 characters and include uppercase, lowercase and a digit');return
-      }
-      if((await tx.select({id:users.userId}).from(users).where(eq(users.username,username)).limit(1)).length){
-        result.errors.push('Bootstrap identity already belongs to an account');return
-      }
-      const userId=uuidv7(),now=new Date(),passwordHash=await argon2.hash(password)
-      await tx.insert(users).values({userId,username,passwordHash,locale:'fa',mustChangePassword:true,isAdmin:true,isStaff:true,createdAt:now,updatedAt:now})
-      await tx.execute(sql`INSERT INTO audit_log(id,user_id,event,metadata,created_at)
-        VALUES (${uuidv7()},${userId},'admin_bootstrapped',${JSON.stringify({source:'seed',mustChangePassword:true})},${now})`)
-      result.created++
-    })
-  } catch {
-    result.created=0;result.errors.push('Bootstrap transaction failed; no administrator was created')
+  const result: SeederResult = { entity: 'admin_bootstrap', created: 0, skipped: 0, errors: [] };
+  const secret = process.env.ADMIN_BOOTSTRAP_SECRET,
+    key = process.env.ADMIN_BOOTSTRAP_KEY;
+  const rawIdentity = process.env.ADMIN_BOOTSTRAP_EMAIL,
+    password = process.env.ADMIN_BOOTSTRAP_PASSWORD;
+  if (!secret && !key && !rawIdentity && !password) {
+    result.skipped++;
+    return result;
   }
-  return result
+  try {
+    await db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('barghsa.admin_bootstrap'))`);
+      const admins = await tx
+        .select({ id: users.userId })
+        .from(users)
+        .where(eq(users.isAdmin, true))
+        .limit(1);
+      if (admins.length) {
+        result.skipped++;
+        return;
+      }
+      if (!secret?.trim() || !key?.trim() || !rawIdentity?.trim() || !password) {
+        result.errors.push(
+          'Initial admin creation requires ADMIN_BOOTSTRAP_SECRET, ADMIN_BOOTSTRAP_KEY, ADMIN_BOOTSTRAP_EMAIL and ADMIN_BOOTSTRAP_PASSWORD'
+        );
+        return;
+      }
+      const username = rawIdentity.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) && !/^\+[1-9]\d{7,14}$/.test(username)) {
+        result.errors.push('Bootstrap identity must be an email address or E.164 phone number');
+        return;
+      }
+      if (
+        password.length < 8 ||
+        password.length > 128 ||
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password)
+      ) {
+        result.errors.push(
+          'Bootstrap password must be 8-128 characters and include uppercase, lowercase and a digit'
+        );
+        return;
+      }
+      if (
+        (
+          await tx
+            .select({ id: users.userId })
+            .from(users)
+            .where(eq(users.username, username))
+            .limit(1)
+        ).length
+      ) {
+        result.errors.push('Bootstrap identity already belongs to an account');
+        return;
+      }
+      const userId = uuidv7(),
+        now = new Date(),
+        passwordHash = await argon2.hash(password);
+      await tx.insert(users).values({
+        userId,
+        username,
+        passwordHash,
+        locale: 'fa',
+        mustChangePassword: true,
+        isAdmin: true,
+        isStaff: true,
+        createdAt: now,
+        updatedAt: now,
+      });
+      await tx.execute(sql`INSERT INTO audit_log(id,user_id,event,metadata,created_at)
+        VALUES (${uuidv7()},${userId},'admin_bootstrapped',${JSON.stringify({ source: 'seed', mustChangePassword: true })},${now})`);
+      result.created++;
+    });
+  } catch {
+    result.created = 0;
+    result.errors.push('Bootstrap transaction failed; no administrator was created');
+  }
+  return result;
 }
 
 /**
@@ -87,9 +133,9 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
     created: 0,
     skipped: 0,
     errors: [],
-  }
+  };
 
-  const defaultProducts = getSystemProducts()
+  const defaultProducts = getSystemProducts();
 
   for (const product of defaultProducts) {
     try {
@@ -97,25 +143,25 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
         .select({ id: products.id })
         .from(products)
         .where(eq(products.systemKey, product.systemKey))
-        .limit(1)
+        .limit(1);
 
       if (existing.length > 0) {
-        result.skipped++
-        continue
+        result.skipped++;
+        continue;
       }
 
       await db.insert(products).values(product).onConflictDoNothing({
         target: products.systemKey,
-      })
+      });
 
-      result.created++
+      result.created++;
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      result.errors.push(`product[${product.systemKey}]: ${message}`)
+      const message = err instanceof Error ? err.message : String(err);
+      result.errors.push(`product[${product.systemKey}]: ${message}`);
     }
   }
 
-  return result
+  return result;
 }
 
 /**
@@ -128,10 +174,10 @@ async function seedProducts(db: DbInstance, _force: boolean): Promise<SeederResu
  *   status    — 'inactive' (admin must activate)
  */
 function getSystemProducts(): Array<{
-  systemKey: string
-  title: { fa: string; en: string }
-  type: 'electricity'
-  status: 'inactive'
+  systemKey: string;
+  title: { fa: string; en: string };
+  type: 'electricity';
+  status: 'inactive';
 }> {
   return [
     {
@@ -158,7 +204,7 @@ function getSystemProducts(): Array<{
       type: 'electricity',
       status: 'inactive',
     },
-  ]
+  ];
 }
 
 /**
@@ -174,7 +220,7 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
     created: 0,
     skipped: 0,
     errors: [],
-  }
+  };
 
   const iranianProvinces: Array<{ nameFa: string; nameEn: string }> = [
     { nameFa: 'آذربایجان شرقی', nameEn: 'East Azerbaijan' },
@@ -208,33 +254,33 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
     { nameFa: 'هرمزگان', nameEn: 'Hormozgan' },
     { nameFa: 'همدان', nameEn: 'Hamadan' },
     { nameFa: 'یزد', nameEn: 'Yazd' },
-  ]
+  ];
 
   // Use raw SQL through the drizzle ORM instance to insert provinces
   // (geography tables are not registered in the Drizzle ORM schema object).
   for (const province of iranianProvinces) {
     try {
       const existing = await db.execute(
-        sql`SELECT id FROM provinces WHERE name_en = ${province.nameEn} LIMIT 1`,
-      )
+        sql`SELECT id FROM provinces WHERE name_en = ${province.nameEn} LIMIT 1`
+      );
 
       if (existing.rows.length > 0) {
-        result.skipped++
-        continue
+        result.skipped++;
+        continue;
       }
 
       await db.execute(
-        sql`INSERT INTO provinces (id, name_fa, name_en) VALUES (gen_random_uuid(), ${province.nameFa}, ${province.nameEn})`,
-      )
+        sql`INSERT INTO provinces (id, name_fa, name_en) VALUES (gen_random_uuid(), ${province.nameFa}, ${province.nameEn})`
+      );
 
-      result.created++
+      result.created++;
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      result.errors.push(`province[${province.nameEn}]: ${message}`)
+      const message = err instanceof Error ? err.message : String(err);
+      result.errors.push(`province[${province.nameEn}]: ${message}`);
     }
   }
 
-  return result
+  return result;
 }
 
 /**
@@ -252,19 +298,16 @@ async function seedGeography(db: DbInstance, _force: boolean): Promise<SeederRes
  * (archived/draft-only) combos are re-seeded to guarantee an active version
  * exists for every event.
  */
-async function seedNotificationTemplates(
-  db: DbInstance,
-  _force: boolean,
-): Promise<SeederResult> {
+async function seedNotificationTemplates(db: DbInstance, _force: boolean): Promise<SeederResult> {
   const result: SeederResult = {
     entity: 'notification_templates',
     created: 0,
     skipped: 0,
     errors: [],
-  }
+  };
 
-  const templates = buildSeedTemplates()
-  const now = new Date()
+  const templates = buildSeedTemplates();
+  const now = new Date();
 
   for (const tpl of templates) {
     try {
@@ -277,14 +320,14 @@ async function seedNotificationTemplates(
             eq(notificationTemplates.eventKey, tpl.eventKey),
             eq(notificationTemplates.channel, tpl.channel),
             eq(notificationTemplates.locale, tpl.locale),
-            eq(notificationTemplates.isActive, true),
-          ),
+            eq(notificationTemplates.isActive, true)
+          )
         )
-        .limit(1)
+        .limit(1);
 
       if (existing.length > 0) {
-        result.skipped++
-        continue
+        result.skipped++;
+        continue;
       }
 
       await db.insert(notificationTemplates).values({
@@ -301,37 +344,32 @@ async function seedNotificationTemplates(
         publishedAt: now,
         createdAt: now,
         updatedAt: now,
-      })
+      });
 
-      result.created++
+      result.created++;
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      result.errors.push(`template[${tpl.eventKey}/${tpl.channel}/${tpl.locale}]: ${message}`)
+      const message = err instanceof Error ? err.message : String(err);
+      result.errors.push(`template[${tpl.eventKey}/${tpl.channel}/${tpl.locale}]: ${message}`);
     }
   }
 
-  return result
+  return result;
 }
 
 // ---------------------------------------------------------------------------
 // Registered seeders — add new seeders here as the schema grows.
 // ---------------------------------------------------------------------------
 
-const seeders: Seeder[] = [
-  seedProducts,
-  seedAdmin,
-  seedGeography,
-  seedNotificationTemplates,
-]
+const seeders: Seeder[] = [seedProducts, seedAdmin, seedGeography, seedNotificationTemplates];
 
 // ---------------------------------------------------------------------------
 // CLI entry point
 // ---------------------------------------------------------------------------
 
 export interface SeedRunResult {
-  ok: boolean
-  results: SeederResult[]
-  errors: string[]
+  ok: boolean;
+  results: SeederResult[];
+  errors: string[];
 }
 
 /**
@@ -343,38 +381,38 @@ export interface SeedRunResult {
 export async function runSeed(
   force: boolean = false,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dbOverride?: any,
+  dbOverride?: any
 ): Promise<SeedRunResult> {
-  let pool: Pool | null = null
+  let pool: Pool | null = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let db: any
+  let db: any;
 
   if (dbOverride) {
-    db = dbOverride
+    db = dbOverride;
   } else {
-    pool = createDirectDbPool({}, { shared: false })
-    db = drizzle(pool)
+    pool = createDirectDbPool({}, { shared: false });
+    db = drizzle(pool);
   }
 
-  const results: SeederResult[] = []
-  const errors: string[] = []
+  const results: SeederResult[] = [];
+  const errors: string[] = [];
 
   try {
     for (const seeder of seeders) {
       try {
-        const result = await seeder(db, force)
-        results.push(result)
+        const result = await seeder(db, force);
+        results.push(result);
         if (result.errors.length > 0) {
-          errors.push(...result.errors.map((e) => `[${result.entity}] ${e}`))
+          errors.push(...result.errors.map((e) => `[${result.entity}] ${e}`));
         }
       } catch (err) {
-        const message = err instanceof Error ? err.message : String(err)
-        errors.push(message)
+        const message = err instanceof Error ? err.message : String(err);
+        errors.push(message);
       }
     }
   } finally {
     if (pool) {
-      await pool.end()
+      await pool.end();
     }
   }
 
@@ -382,7 +420,7 @@ export async function runSeed(
     ok: errors.length === 0,
     results,
     errors,
-  }
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -390,41 +428,40 @@ export async function runSeed(
 // ---------------------------------------------------------------------------
 
 function parseArgs(): { force: boolean } {
-  const args = process.argv.slice(2)
+  const args = process.argv.slice(2);
   return {
     force: args.includes('--force'),
-  }
+  };
 }
 
 async function main(): Promise<void> {
-  const { force } = parseArgs()
-  const result = await runSeed(force)
+  const { force } = parseArgs();
+  const result = await runSeed(force);
 
   for (const r of result.results) {
-    const parts: string[] = []
-    if (r.created > 0) parts.push(`created ${r.created}`)
-    if (r.skipped > 0) parts.push(`skipped ${r.skipped}`)
-    if (r.errors.length > 0) parts.push(`errors: ${r.errors.join(', ')}`)
-    const summary = parts.length > 0 ? parts.join(', ') : 'no changes'
+    const parts: string[] = [];
+    if (r.created > 0) parts.push(`created ${r.created}`);
+    if (r.skipped > 0) parts.push(`skipped ${r.skipped}`);
+    if (r.errors.length > 0) parts.push(`errors: ${r.errors.join(', ')}`);
+    const summary = parts.length > 0 ? parts.join(', ') : 'no changes';
     // eslint-disable-next-line no-console
-    console.log(`[seed:${r.entity}] ${summary}`)
+    console.log(`[seed:${r.entity}] ${summary}`);
   }
 
   if (!result.ok) {
     for (const err of result.errors) {
-      console.error(`[seed:error] ${err}`)
+      console.error(`[seed:error] ${err}`);
     }
-    process.exit(1)
+    process.exit(1);
   }
 
-  process.exit(0)
+  process.exit(0);
 }
 
 // Allow direct invocation: `tsx src/seed/index.ts`
 const isDirectRun =
   process.argv[1] != null &&
-  (process.argv[1].endsWith('/seed/index.ts') ||
-    process.argv[1].endsWith('\\seed\\index.ts'))
+  (process.argv[1].endsWith('/seed/index.ts') || process.argv[1].endsWith('\\seed\\index.ts'));
 if (isDirectRun) {
-  main()
+  main();
 }

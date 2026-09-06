@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest';
 import {
   CHARGEBACK_MATCH_METHODS,
   CHARGEBACK_NOTIFICATION_TYPES,
@@ -22,18 +22,18 @@ import {
   topUpPendingTransactionId,
   type ChargebackTopUpCandidate,
   type ParsedChargebackNotification,
-} from './wallet-chargeback.js'
+} from './wallet-chargeback.js';
 
-const PENDING_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-const CREDIT_ID = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
-const OTHER_CREDIT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
-const WALLET_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
-const AUTHORITY = 'A00000000000000000000000000000000001'
-const PROVIDER_REF = 'psp-ref-1'
-const AMOUNT = 250_000n
+const PENDING_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const CREDIT_ID = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
+const OTHER_CREDIT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const WALLET_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd';
+const AUTHORITY = 'A00000000000000000000000000000000001';
+const PROVIDER_REF = 'psp-ref-1';
+const AMOUNT = 250_000n;
 
 function notification(
-  overrides: Partial<ParsedChargebackNotification> = {},
+  overrides: Partial<ParsedChargebackNotification> = {}
 ): ParsedChargebackNotification {
   return {
     type: 'chargeback',
@@ -44,12 +44,10 @@ function notification(
     amountIrR: AMOUNT,
     reason: WALLET_CHARGEBACK_REASON,
     ...overrides,
-  }
+  };
 }
 
-function candidate(
-  overrides: Partial<ChargebackTopUpCandidate> = {},
-): ChargebackTopUpCandidate {
+function candidate(overrides: Partial<ChargebackTopUpCandidate> = {}): ChargebackTopUpCandidate {
   return {
     id: CREDIT_ID,
     walletId: WALLET_ID,
@@ -64,44 +62,38 @@ function candidate(
       authority: AUTHORITY,
     },
     ...overrides,
-  }
+  };
 }
 
 describe('wallet chargeback helpers (T-04.2.04.02)', () => {
   it('names event statuses, match methods, and the unique event-id index', () => {
-    expect(WALLET_CHARGEBACK_REASON).toBe('provider chargeback')
-    expect(WALLET_CHARGEBACK_EVENT_CONSTRAINT).toBe('uq_wallet_chargeback_event_id')
-    expect(CHARGEBACK_NOTIFICATION_TYPES).toEqual(['chargeback', 'reversed', 'reversal'])
-    expect(CHARGEBACK_MATCH_METHODS).toEqual([
-      'merchant_order_id',
-      'provider_ref_id',
-      'authority',
-    ])
+    expect(WALLET_CHARGEBACK_REASON).toBe('provider chargeback');
+    expect(WALLET_CHARGEBACK_EVENT_CONSTRAINT).toBe('uq_wallet_chargeback_event_id');
+    expect(CHARGEBACK_NOTIFICATION_TYPES).toEqual(['chargeback', 'reversed', 'reversal']);
+    expect(CHARGEBACK_MATCH_METHODS).toEqual(['merchant_order_id', 'provider_ref_id', 'authority']);
     expect(WALLET_CHARGEBACK_EVENT_STATUSES).toEqual([
       'processing',
       'reversed',
       'unmatched',
       'unresolved',
       'duplicate',
-    ])
-    expect(WALLET_CHARGEBACK_UNRESOLVED_STATUSES).toEqual(['unmatched', 'unresolved'])
-    expect(isChargebackNotificationType('chargeback')).toBe(true)
-    expect(isChargebackNotificationType('paid')).toBe(false)
-    expect(isChargebackMatchMethod('authority')).toBe(true)
-    expect(isWalletChargebackEventStatus('unmatched')).toBe(true)
-    expect(isUnresolvedChargebackStatus('unmatched')).toBe(true)
-    expect(isUnresolvedChargebackStatus('reversed')).toBe(false)
-  })
+    ]);
+    expect(WALLET_CHARGEBACK_UNRESOLVED_STATUSES).toEqual(['unmatched', 'unresolved']);
+    expect(isChargebackNotificationType('chargeback')).toBe(true);
+    expect(isChargebackNotificationType('paid')).toBe(false);
+    expect(isChargebackMatchMethod('authority')).toBe(true);
+    expect(isWalletChargebackEventStatus('unmatched')).toBe(true);
+    expect(isUnresolvedChargebackStatus('unmatched')).toBe(true);
+    expect(isUnresolvedChargebackStatus('reversed')).toBe(false);
+  });
 
   it('derives credit and reversal idempotency keys from the pending id / event id', () => {
-    expect(ONLINE_TOPUP_CREDIT_IDEMPOTENCY_PREFIX).toBe('wallet-online-topup-credit:')
+    expect(ONLINE_TOPUP_CREDIT_IDEMPOTENCY_PREFIX).toBe('wallet-online-topup-credit:');
     expect(chargebackCreditIdempotencyKey(PENDING_ID)).toBe(
-      `wallet-online-topup-credit:${PENDING_ID}`,
-    )
-    expect(chargebackReversalIdempotencyKey('evt-1')).toBe(
-      'wallet-chargeback-reversal:evt-1',
-    )
-  })
+      `wallet-online-topup-credit:${PENDING_ID}`
+    );
+    expect(chargebackReversalIdempotencyKey('evt-1')).toBe('wallet-chargeback-reversal:evt-1');
+  });
 
   it('parses a signed-body JSON chargeback notification', () => {
     const parsed = parseChargebackNotificationJson(
@@ -113,8 +105,8 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         authority: AUTHORITY,
         amountIrR: '250000',
         reason: 'card dispute',
-      }),
-    )
+      })
+    );
     expect(parsed).toEqual({
       ok: true,
       notification: {
@@ -126,8 +118,8 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         amountIrR: AMOUNT,
         reason: 'card dispute',
       },
-    })
-  })
+    });
+  });
 
   it('accepts reversed/reversal types and defaults the reason', () => {
     expect(
@@ -135,25 +127,25 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         type: 'reversed',
         merchantId: 'm',
         amountIrR: 1,
-      }),
+      })
     ).toMatchObject({
       ok: true,
       notification: { type: 'reversed', reason: WALLET_CHARGEBACK_REASON },
-    })
+    });
     expect(
       parseChargebackNotification({
         type: 'reversal',
         merchantId: 'm',
         amountIrR: 1,
         providerRefId: 'ref-9',
-      }),
-    ).toMatchObject({ ok: true, notification: { type: 'reversal' } })
+      })
+    ).toMatchObject({ ok: true, notification: { type: 'reversal' } });
     expect(
       parseChargebackNotification({
         type: 'chargeback',
         merchantId: 'm',
         amountIrR: 1,
-      }),
+      })
     ).toMatchObject({
       ok: true,
       notification: {
@@ -161,38 +153,38 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         providerRefId: null,
         authority: null,
       },
-    })
-  })
+    });
+  });
 
   it('rejects malformed JSON, unknown types, and invalid amounts', () => {
     expect(parseChargebackNotificationJson('{')).toEqual({
       ok: false,
       reason: 'invalid_json',
-    })
+    });
     expect(parseChargebackNotification({ type: 'paid', merchantId: 'm', amountIrR: 1 })).toEqual({
       ok: false,
       reason: 'invalid_type',
-    })
+    });
     expect(
       parseChargebackNotification({
         type: 'chargeback',
         merchantId: 'm',
         amountIrR: 0,
-      }),
-    ).toEqual({ ok: false, reason: 'invalid_amount' })
+      })
+    ).toEqual({ ok: false, reason: 'invalid_amount' });
     expect(
       parseChargebackNotification({
         type: 'chargeback',
         merchantId: 'm',
         amountIrR: 100,
         merchantOrderId: 'not-a-uuid',
-      }),
-    ).toEqual({ ok: false, reason: 'invalid_merchant_order_id' })
+      })
+    ).toEqual({ ok: false, reason: 'invalid_merchant_order_id' });
     expect(parseChargebackNotification(null)).toEqual({
       ok: false,
       reason: 'invalid_shape',
-    })
-  })
+    });
+  });
 
   it('maps a unique credit by pending order id first', () => {
     const match = matchChargebackToTopUp(notification(), [
@@ -203,20 +195,19 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
         idempotencyKey: 'other',
         metadata: { authority: AUTHORITY },
       }),
-    ])
+    ]);
     expect(match).toEqual({
       original: candidate(),
       method: 'merchant_order_id',
-    })
-  })
+    });
+  });
 
   it('uses provider ref, then authority, only when stronger locators are absent', () => {
-    const byRef = matchChargebackToTopUp(
-      notification({ merchantOrderId: null, authority: null }),
-      [candidate({ idempotencyKey: 'credit-other', metadata: {} })],
-    )
-    expect(byRef?.method).toBe('provider_ref_id')
-    expect(byRef?.original.id).toBe(CREDIT_ID)
+    const byRef = matchChargebackToTopUp(notification({ merchantOrderId: null, authority: null }), [
+      candidate({ idempotencyKey: 'credit-other', metadata: {} }),
+    ]);
+    expect(byRef?.method).toBe('provider_ref_id');
+    expect(byRef?.original.id).toBe(CREDIT_ID);
 
     const byAuthority = matchChargebackToTopUp(
       notification({
@@ -229,37 +220,37 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
           idempotencyKey: 'credit-other',
           metadata: { gateway: { authority: AUTHORITY } },
         }),
-      ],
-    )
-    expect(byAuthority?.method).toBe('authority')
-  })
+      ]
+    );
+    expect(byAuthority?.method).toBe('authority');
+  });
 
   it('maps an authority-only notification when refId is a distinct provider capture ref', () => {
-    const credit = candidate()
-    expect(credit.refId).toBe(PROVIDER_REF)
-    expect(credit.refId).not.toBe(AUTHORITY)
+    const credit = candidate();
+    expect(credit.refId).toBe(PROVIDER_REF);
+    expect(credit.refId).not.toBe(AUTHORITY);
 
     const match = matchChargebackToTopUp(
       notification({
         merchantOrderId: null,
         providerRefId: null,
       }),
-      [credit],
-    )
-    expect(match).toEqual({ original: credit, method: 'authority' })
-  })
+      [credit]
+    );
+    expect(match).toEqual({ original: credit, method: 'authority' });
+  });
 
   it('does not map a locator-less notification even when candidates exist', () => {
-    expect(hasChargebackLocator(notification())).toBe(true)
+    expect(hasChargebackLocator(notification())).toBe(true);
     expect(
       hasChargebackLocator(
         notification({
           merchantOrderId: null,
           providerRefId: null,
           authority: null,
-        }),
-      ),
-    ).toBe(false)
+        })
+      )
+    ).toBe(false);
     expect(
       matchChargebackToTopUp(
         notification({
@@ -267,60 +258,47 @@ describe('wallet chargeback helpers (T-04.2.04.02)', () => {
           providerRefId: null,
           authority: null,
         }),
-        [candidate()],
-      ),
-    ).toBeNull()
-  })
+        [candidate()]
+      )
+    ).toBeNull();
+  });
 
   it('does not fall through when a present order id does not match', () => {
     expect(
       matchChargebackToTopUp(
         notification({ merchantOrderId: 'eeeeeeee-eeee-7eee-8eee-eeeeeeeeeeee' }),
-        [candidate()],
-      ),
-    ).toBeNull()
-  })
+        [candidate()]
+      )
+    ).toBeNull();
+  });
 
   it('does not map an ambiguous or amount-mismatched set', () => {
     expect(
-      matchChargebackToTopUp(
-        notification({ merchantOrderId: null, authority: null }),
-        [
-          candidate(),
-          candidate({ id: OTHER_CREDIT_ID, idempotencyKey: 'other-key' }),
-        ],
-      ),
-    ).toBeNull()
-    expect(
-      matchChargebackToTopUp(notification({ amountIrR: 1n }), [candidate()]),
-    ).toBeNull()
-    expect(
-      matchChargebackToTopUp(notification(), [
-        candidate({ type: 'payment' }),
-      ]),
-    ).toBeNull()
-    expect(
-      matchChargebackToTopUp(notification(), [
-        candidate({ state: 'Pending' }),
-      ]),
-    ).toBeNull()
-  })
+      matchChargebackToTopUp(notification({ merchantOrderId: null, authority: null }), [
+        candidate(),
+        candidate({ id: OTHER_CREDIT_ID, idempotencyKey: 'other-key' }),
+      ])
+    ).toBeNull();
+    expect(matchChargebackToTopUp(notification({ amountIrR: 1n }), [candidate()])).toBeNull();
+    expect(matchChargebackToTopUp(notification(), [candidate({ type: 'payment' })])).toBeNull();
+    expect(matchChargebackToTopUp(notification(), [candidate({ state: 'Pending' })])).toBeNull();
+  });
 
   it('reads pending id and authority from credit metadata', () => {
-    expect(topUpPendingTransactionId(candidate())).toBe(PENDING_ID)
-    expect(topUpAuthority(candidate())).toBe(AUTHORITY)
-    expect(topUpAuthority(candidate({ refId: null }))).toBe(AUTHORITY)
+    expect(topUpPendingTransactionId(candidate())).toBe(PENDING_ID);
+    expect(topUpAuthority(candidate())).toBe(AUTHORITY);
+    expect(topUpAuthority(candidate({ refId: null }))).toBe(AUTHORITY);
     expect(
       topUpAuthority(
         candidate({
           refId: PROVIDER_REF,
           metadata: { gateway: { authority: 'auth-from-gateway' } },
-        }),
-      ),
-    ).toBe('auth-from-gateway')
-    expect(topUpAuthority(candidate({ metadata: {} }))).toBe(PROVIDER_REF)
-    expect(chargebackAmountMatchesTopUp(AMOUNT, AMOUNT)).toBe(true)
-    expect(chargebackAmountMatchesTopUp(AMOUNT, -AMOUNT)).toBe(true)
-    expect(chargebackAmountMatchesTopUp(AMOUNT, 1n)).toBe(false)
-  })
-})
+        })
+      )
+    ).toBe('auth-from-gateway');
+    expect(topUpAuthority(candidate({ metadata: {} }))).toBe(PROVIDER_REF);
+    expect(chargebackAmountMatchesTopUp(AMOUNT, AMOUNT)).toBe(true);
+    expect(chargebackAmountMatchesTopUp(AMOUNT, -AMOUNT)).toBe(true);
+    expect(chargebackAmountMatchesTopUp(AMOUNT, 1n)).toBe(false);
+  });
+});

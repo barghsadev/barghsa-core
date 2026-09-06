@@ -1,7 +1,7 @@
-import { domainChecks } from '../domain-checks'
-import { pgTable, text, integer, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { notificationOutbox } from './notification-outbox.js'
+import { domainChecks } from '../domain-checks';
+import { pgTable, text, integer, index } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { notificationOutbox } from './notification-outbox.js';
 
 /**
  * Notification delivery log table (E-05, T-05.01.05).
@@ -74,5 +74,5 @@ export const notificationDeliveryLog = pgTable(
     // Triaging a channel or an error class across notifications.
     index('idx_ndl_channel_status').on(table.channel, table.status),
     index('idx_ndl_created').on(table.createdAt),
-  ],
-)
+  ]
+);

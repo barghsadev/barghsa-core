@@ -1,15 +1,15 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { sql } from 'drizzle-orm'
-import { createIsolatedTestDb, dropTestSchema } from '../test/testDb'
-import type { IsolatedTestDb } from '../test/testDb'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { sql } from 'drizzle-orm';
+import { createIsolatedTestDb, dropTestSchema } from '../test/testDb';
+import type { IsolatedTestDb } from '../test/testDb';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql')
+const UUIDV7_MIGRATION = resolve(__dirname, '../../drizzle/0000_init_uuidv7_function.sql');
 const IDEMPOTENCY_MIGRATION = resolve(
   __dirname,
-  '../../drizzle/0057_add_invoice_type_idempotency.sql',
-)
+  '../../drizzle/0057_add_invoice_type_idempotency.sql'
+);
 
 /**
  * Real-PostgreSQL enforcement tests for the invoice idempotency migration
@@ -27,30 +27,30 @@ const IDEMPOTENCY_MIGRATION = resolve(
  *   - the migration is idempotent (re-runnable).
  */
 describe('invoice type + idempotency unique index (T-04.1.02.06)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: IsolatedTestDb;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb()
+    ctx = await createIsolatedTestDb();
 
-    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(uuidSql)
+    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(uuidSql);
 
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
         'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
 
     // Base invoices table exactly as it exists BEFORE migration 0057:
     // origin columns + metadata, but no `type` column.
@@ -65,10 +65,10 @@ describe('invoice type + idempotency unique index (T-04.1.02.06)', () => {
         total_amount BIGINT NOT NULL CHECK (total_amount >= 0),
         metadata JSONB
       )
-    `)
+    `);
 
-    await ctx.db.execute(sql`INSERT INTO profiles (id) VALUES (uuid_generate_v7())`)
-    await ctx.db.execute(sql`INSERT INTO orders (id) VALUES (uuid_generate_v7())`)
+    await ctx.db.execute(sql`INSERT INTO profiles (id) VALUES (uuid_generate_v7())`);
+    await ctx.db.execute(sql`INSERT INTO orders (id) VALUES (uuid_generate_v7())`);
 
     // Legacy pre-0057 rows carrying ONLY the metadata source discriminator.
     // The migration must backfill `type` from these.
@@ -78,29 +78,29 @@ describe('invoice type + idempotency unique index (T-04.1.02.06)', () => {
          '{"source":"auto"}'::jsonb, 1000000),
         ((SELECT id FROM profiles LIMIT 1), NULL,
          '{"source":"manual"}'::jsonb, 200000)
-    `)
+    `);
 
-    const migrationSql = readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(migrationSql)
-  })
+    const migrationSql = readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(migrationSql);
+  });
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   async function freshOrder(): Promise<string> {
     const r = await ctx.db.execute<{ id: string }>(sql`
       INSERT INTO orders (id) VALUES (uuid_generate_v7()) RETURNING id
-    `)
-    return r.rows[0]!.id
+    `);
+    return r.rows[0]!.id;
   }
 
   async function profileId(): Promise<string> {
     const r = await ctx.db.execute<{ id: string }>(sql`
       SELECT id FROM profiles LIMIT 1
-    `)
-    return r.rows[0]!.id
+    `);
+    return r.rows[0]!.id;
   }
 
   it('adds a nullable type column', async () => {
@@ -109,110 +109,106 @@ describe('invoice type + idempotency unique index (T-04.1.02.06)', () => {
       FROM information_schema.columns
       WHERE table_schema = current_schema()
         AND table_name = 'invoices' AND column_name = 'type'
-    `)
-    expect(cols.rows).toHaveLength(1)
-    expect(cols.rows[0]!.is_nullable).toBe('YES')
-  })
+    `);
+    expect(cols.rows).toHaveLength(1);
+    expect(cols.rows[0]!.is_nullable).toBe('YES');
+  });
 
   it('backfills existing rows from the legacy metadata source', async () => {
     const rows = await ctx.db.execute<{ order_id: string | null; type: string | null }>(sql`
       SELECT order_id, type FROM invoices ORDER BY total_amount
-    `)
-    expect(rows.rows).toHaveLength(2)
+    `);
+    expect(rows.rows).toHaveLength(2);
     // The auto row kept its order link and gained type='auto'.
-    expect(
-      rows.rows.some((r) => r.order_id !== null && r.type === 'auto'),
-    ).toBe(true)
+    expect(rows.rows.some((r) => r.order_id !== null && r.type === 'auto')).toBe(true);
     // The order-less (manual) row gained type='manual'.
-    expect(
-      rows.rows.some((r) => r.order_id === null && r.type === 'manual'),
-    ).toBe(true)
-  })
+    expect(rows.rows.some((r) => r.order_id === null && r.type === 'manual')).toBe(true);
+  });
 
   it('rejects a second invoice of the same type for the same order (idempotency)', async () => {
-    const orderId = await freshOrder()
-    const profile = await profileId()
+    const orderId = await freshOrder();
+    const profile = await profileId();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
-      `),
-    ).resolves.toBeDefined()
+      `)
+    ).resolves.toBeDefined();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
-      `),
-    ).rejects.toMatchObject({ code: '23505' })
-  })
+      `)
+    ).rejects.toMatchObject({ code: '23505' });
+  });
 
   it('allows the same order to carry invoices of a different type', async () => {
-    const orderId = await freshOrder()
-    const profile = await profileId()
+    const orderId = await freshOrder();
+    const profile = await profileId();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
-      `),
-    ).resolves.toBeDefined()
+      `)
+    ).resolves.toBeDefined();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'manual', 100000)
-      `),
-    ).resolves.toBeDefined()
-  })
+      `)
+    ).resolves.toBeDefined();
+  });
 
   it('treats NULLs as distinct — untyped rows do not collide', async () => {
-    const orderId = await freshOrder()
-    const profile = await profileId()
+    const orderId = await freshOrder();
+    const profile = await profileId();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, 'auto', 100000)
-      `),
-    ).resolves.toBeDefined()
+      `)
+    ).resolves.toBeDefined();
 
     // Same order, but type NULL — a distinct key, so the insert is allowed.
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, ${orderId}, NULL, 100000)
-      `),
-    ).resolves.toBeDefined()
-  })
+      `)
+    ).resolves.toBeDefined();
+  });
 
   it('allows multiple order-less (manual) invoices of the same type', async () => {
-    const profile = await profileId()
+    const profile = await profileId();
 
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, NULL, 'manual', 100000)
-      `),
-    ).resolves.toBeDefined()
+      `)
+    ).resolves.toBeDefined();
     await expect(
       ctx.db.execute(sql`
         INSERT INTO invoices (id, profile_id, order_id, type, total_amount)
         VALUES (uuid_generate_v7(), ${profile}, NULL, 'manual', 100000)
-      `),
-    ).resolves.toBeDefined()
-  })
+      `)
+    ).resolves.toBeDefined();
+  });
 
   it('migration 0057 is idempotent — re-running is a no-op', async () => {
-    const migrationSql = readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim()
-    await expect(ctx.pool.query(migrationSql)).resolves.toBeDefined()
+    const migrationSql = readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim();
+    await expect(ctx.pool.query(migrationSql)).resolves.toBeDefined();
 
     const idx = await ctx.db.execute<{ index_name: string }>(sql`
       SELECT indexname AS index_name FROM pg_indexes
       WHERE schemaname = current_schema()
         AND tablename = 'invoices' AND indexname = 'uq_invoices_order_id_type'
-    `)
-    expect(idx.rows).toHaveLength(1)
-  })
-})
+    `);
+    expect(idx.rows).toHaveLength(1);
+  });
+});

@@ -1,86 +1,80 @@
-import { createHash } from 'node:crypto'
-import {
-  HttpException,
-  Inject,
-  Injectable,
-  Logger,
-  Optional,
-} from '@nestjs/common'
-import { z } from 'zod'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { createHash } from 'node:crypto';
+import { HttpException, Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { z } from 'zod';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   isOnlineTopUpCallbackOpenState,
   isOnlineTopUpIntentReleasable,
   parseOnlineTopUpAmountIrR,
-} from '@barghsa/shared/finance'
-import { WalletService, type TransactionRow } from './wallet.service.js'
+} from '@barghsa/shared/finance';
+import { WalletService, type TransactionRow } from './wallet.service.js';
 import {
   PAYMENT_GATEWAY,
   resolvePaymentGatewayMerchantId,
   resolvePaymentGatewayWebhookSecret,
   type PaymentGateway,
-} from './payment-gateway.js'
+} from './payment-gateway.js';
 import {
   verifyPaymentCallbackSignature,
   type PaymentCallbackHeaders,
-} from './payment-callback-verifier.js'
+} from './payment-callback-verifier.js';
 
-const PG_UNIQUE_VIOLATION = '23505'
-const CALLBACK_EVENT_UNIQUE = 'uq_wallet_topup_callback_event_id'
-const ONLINE_TOPUP_DESCRIPTION = 'Online wallet top-up'
+const PG_UNIQUE_VIOLATION = '23505';
+const CALLBACK_EVENT_UNIQUE = 'uq_wallet_topup_callback_event_id';
+const ONLINE_TOPUP_DESCRIPTION = 'Online wallet top-up';
 
-export const PAYMENT_CALLBACK_CONFIG = Symbol('PAYMENT_CALLBACK_CONFIG')
+export const PAYMENT_CALLBACK_CONFIG = Symbol('PAYMENT_CALLBACK_CONFIG');
 
 export interface PaymentCallbackConfig {
-  webhookSecret: string
-  merchantId: string
+  webhookSecret: string;
+  merchantId: string;
 }
 
 export interface HandleProviderCallbackInput {
-  headers: PaymentCallbackHeaders
-  rawBody: string
+  headers: PaymentCallbackHeaders;
+  rawBody: string;
 }
 
 export interface HandleZarinpalReturnInput {
-  orderId: string
-  authority: string
-  status: string
+  orderId: string;
+  authority: string;
+  status: string;
 }
 
 export interface HandleProviderCallbackResult {
-  ok: true
-  processed: boolean
-  credited: boolean
-  transactionId: string | null
-  creditTransactionId: string | null
+  ok: true;
+  processed: boolean;
+  credited: boolean;
+  transactionId: string | null;
+  creditTransactionId: string | null;
 }
 
 interface ProcessVerifiedPayloadInput {
-  eventId: string
-  merchantOrderId: string
-  authority: string
+  eventId: string;
+  merchantOrderId: string;
+  authority: string;
   /** When set, must match the pending amount. When omitted, the stored amount is used. */
-  amountIrR?: bigint
-  status: 'paid' | 'failed' | 'cancelled'
-  providerRefId?: string
-  raw: unknown
+  amountIrR?: bigint;
+  status: 'paid' | 'failed' | 'cancelled';
+  providerRefId?: string;
+  raw: unknown;
 }
 
-type CallbackEventStatus = 'processing' | 'credited' | 'unpaid' | 'duplicate'
+type CallbackEventStatus = 'processing' | 'credited' | 'unpaid' | 'duplicate';
 
 interface CallbackEventRow {
-  eventId: string
-  pendingTransactionId: string
-  walletId: string
-  status: CallbackEventStatus
+  eventId: string;
+  pendingTransactionId: string;
+  walletId: string;
+  status: CallbackEventStatus;
 }
 
 interface QueryClient {
   query: (
     text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 const CallbackBodySchema = z
@@ -92,7 +86,7 @@ const CallbackBodySchema = z
     status: z.enum(['paid', 'failed', 'cancelled']),
     providerRefId: z.string().min(1).optional(),
   })
-  .strict()
+  .strict();
 
 /**
  * Authenticated payment-provider callback handler (T-04.2.02.02).
@@ -122,80 +116,80 @@ const CallbackBodySchema = z
  */
 @Injectable()
 export class OnlineTopUpCallbackService {
-  private readonly logger = new Logger(OnlineTopUpCallbackService.name)
+  private readonly logger = new Logger(OnlineTopUpCallbackService.name);
 
   constructor(
     private readonly walletService: WalletService,
     @Inject(PAYMENT_GATEWAY) private readonly paymentGateway: PaymentGateway,
     @Optional()
     @Inject(PAYMENT_CALLBACK_CONFIG)
-    private readonly injectedConfig?: PaymentCallbackConfig,
+    private readonly injectedConfig?: PaymentCallbackConfig
   ) {}
 
   async handle(input: HandleProviderCallbackInput): Promise<HandleProviderCallbackResult> {
-    const config = this.resolveConfig()
+    const config = this.resolveConfig();
     if (!config.webhookSecret) {
-      this.logger.warn('Payment callback received but PAYMENT_GATEWAY_WEBHOOK_SECRET is not set')
+      this.logger.warn('Payment callback received but PAYMENT_GATEWAY_WEBHOOK_SECRET is not set');
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_UNCONFIGURED,
-        'Payment provider callback signing secret is not configured',
-      )
+        'Payment provider callback signing secret is not configured'
+      );
     }
 
     const verification = verifyPaymentCallbackSignature(
       input.rawBody,
       input.headers,
-      config.webhookSecret,
-    )
+      config.webhookSecret
+    );
     if (!verification.ok) {
       if (verification.reason === 'replayed') {
-        this.logger.warn('Rejected replayed or expired payment callback signature')
+        this.logger.warn('Rejected replayed or expired payment callback signature');
         httpError(
           ErrorCodes.PROVIDER_CALLBACK_REPLAYED,
-          'Payment provider callback is expired or replayed',
-        )
+          'Payment provider callback is expired or replayed'
+        );
       }
-      this.logger.warn(`Rejected payment callback signature (${verification.reason})`)
+      this.logger.warn(`Rejected payment callback signature (${verification.reason})`);
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Invalid payment provider callback signature',
-      )
+        'Invalid payment provider callback signature'
+      );
     }
 
-    const eventId = input.headers.eventId!.trim()
+    const eventId = input.headers.eventId!.trim();
     if (!eventId) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback event id is required')
+      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback event id is required');
     }
 
-    let parsedJson: unknown
+    let parsedJson: unknown;
     try {
-      parsedJson = JSON.parse(input.rawBody)
+      parsedJson = JSON.parse(input.rawBody);
     } catch {
-      httpError(ErrorCodes.VALIDATION_PARSE_JSON, 'Payment callback body must be JSON')
+      httpError(ErrorCodes.VALIDATION_PARSE_JSON, 'Payment callback body must be JSON');
     }
 
-    const parsed = CallbackBodySchema.safeParse(parsedJson)
+    const parsed = CallbackBodySchema.safeParse(parsedJson);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD,
-        'Payment callback body must include merchantOrderId, merchantId, authority, amountIrR, and status',
-      )
+        'Payment callback body must include merchantOrderId, merchantId, authority, amountIrR, and status'
+      );
     }
 
-    const amountIrR = parseOnlineTopUpAmountIrR(parsed.data.amountIrR)
+    const amountIrR = parseOnlineTopUpAmountIrR(parsed.data.amountIrR);
     if (amountIrR === null) {
       httpError(
         ErrorCodes.VALIDATION_INPUT_INVALID,
-        'Payment callback amount must be a positive integer IRR value',
-      )
+        'Payment callback amount must be a positive integer IRR value'
+      );
     }
 
     if (parsed.data.merchantId !== config.merchantId) {
-      this.logger.warn('Payment callback merchant id did not match configured merchant context')
+      this.logger.warn('Payment callback merchant id did not match configured merchant context');
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Payment callback merchant context is invalid',
-      )
+        'Payment callback merchant context is invalid'
+      );
     }
 
     return this.processVerifiedPayload({
@@ -206,7 +200,7 @@ export class OnlineTopUpCallbackService {
       status: parsed.data.status,
       raw: parsed.data,
       ...(parsed.data.providerRefId ? { providerRefId: parsed.data.providerRefId } : {}),
-    })
+    });
   }
 
   /**
@@ -216,21 +210,24 @@ export class OnlineTopUpCallbackService {
    * before `WalletService.credit()`.
    */
   async handleZarinpalReturn(
-    input: HandleZarinpalReturnInput,
+    input: HandleZarinpalReturnInput
   ): Promise<HandleProviderCallbackResult> {
-    const orderId = input.orderId.trim()
-    const authority = input.authority.trim()
-    const statusRaw = input.status.trim()
+    const orderId = input.orderId.trim();
+    const authority = input.authority.trim();
+    const statusRaw = input.status.trim();
     if (!z.string().uuid().safeParse(orderId).success) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback merchant order was not found')
+      httpError(
+        ErrorCodes.PROVIDER_CALLBACK_INVALID,
+        'Payment callback merchant order was not found'
+      );
     }
     if (!authority) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback authority is required')
+      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback authority is required');
     }
 
-    const statusUpper = statusRaw.toUpperCase()
+    const statusUpper = statusRaw.toUpperCase();
     const status: ProcessVerifiedPayloadInput['status'] =
-      statusUpper === 'OK' ? 'paid' : statusUpper === 'NOK' ? 'cancelled' : 'failed'
+      statusUpper === 'OK' ? 'paid' : statusUpper === 'NOK' ? 'cancelled' : 'failed';
 
     return this.processVerifiedPayload({
       eventId: zarinpalReturnEventId(orderId, authority, status),
@@ -243,108 +240,104 @@ export class OnlineTopUpCallbackService {
         authority,
         status: statusRaw,
       },
-    })
+    });
   }
 
   private async processVerifiedPayload(
-    input: ProcessVerifiedPayloadInput,
+    input: ProcessVerifiedPayloadInput
   ): Promise<HandleProviderCallbackResult> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const lockKeys = onlineTopUpCallbackLockKeys(input.merchantOrderId)
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const lockKeys = onlineTopUpCallbackLockKeys(input.merchantOrderId);
     try {
-      await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys)
+      await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
-        const pending = await this.loadPendingTopUp(client, input.merchantOrderId)
-        const amountIrR = input.amountIrR ?? pending.amount
-        this.assertMerchantContext(pending, input.authority, amountIrR)
+        const pending = await this.loadPendingTopUp(client, input.merchantOrderId);
+        const amountIrR = input.amountIrR ?? pending.amount;
+        this.assertMerchantContext(pending, input.authority, amountIrR);
 
         const claim = await this.claimEvent(client, {
           eventId: input.eventId,
           pendingId: pending.id,
           walletId: pending.walletId,
           raw: input.raw,
-        })
+        });
         if (!claim.inserted) {
-          const existing = claim.existing
+          const existing = claim.existing;
           if (!existing) {
             httpError(
               ErrorCodes.PROVIDER_CALLBACK_INVALID,
-              'Payment callback event id could not be claimed',
-            )
+              'Payment callback event id could not be claimed'
+            );
           }
-          const sameOrder = existing.pendingTransactionId === pending.id
-          const resumeCrash = sameOrder && existing.status === 'processing'
+          const sameOrder = existing.pendingTransactionId === pending.id;
+          const resumeCrash = sameOrder && existing.status === 'processing';
           const resumeUnpaidForPaid =
-            sameOrder && existing.status === 'unpaid' && input.status === 'paid'
+            sameOrder && existing.status === 'unpaid' && input.status === 'paid';
           if (!resumeCrash && !resumeUnpaidForPaid) {
-            return this.alreadyProcessedResult(client, existing)
+            return this.alreadyProcessedResult(client, existing);
           }
           if (resumeUnpaidForPaid) {
-            await this.reopenUnpaidEvent(client, input.eventId, input.raw)
+            await this.reopenUnpaidEvent(client, input.eventId, input.raw);
           }
         }
 
-        const alreadyCredited = await this.findExistingCredit(client, pending.id)
+        const alreadyCredited = await this.findExistingCredit(client, pending.id);
         if (alreadyCredited) {
           if (isOnlineTopUpIntentReleasable(pending.state)) {
-            await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId)
+            await this.releasePendingIntent(client, pending.id, alreadyCredited.id, input.eventId);
           }
-          await this.finalizeEvent(client, input.eventId, 'duplicate')
+          await this.finalizeEvent(client, input.eventId, 'duplicate');
           return {
             ok: true,
             processed: false,
             credited: true,
             transactionId: pending.id,
             creditTransactionId: alreadyCredited.id,
-          }
+          };
         }
 
         if (input.status !== 'paid') {
-          await this.markPendingFailed(client, pending.id, input.status)
-          await this.finalizeEvent(client, input.eventId, 'unpaid')
+          await this.markPendingFailed(client, pending.id, input.status);
+          await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
             processed: true,
             credited: false,
             transactionId: pending.id,
             creditTransactionId: null,
-          }
+          };
         }
 
-        let verified: { paid: boolean; providerRefId: string | null }
+        let verified: { paid: boolean; providerRefId: string | null };
         try {
           verified = await this.paymentGateway.verifyPayment({
             amountIrR,
             merchantOrderId: pending.id,
             authority: input.authority,
             idempotencyKey: pending.id,
-          })
+          });
         } catch (error) {
           this.logger.error(
             `Payment gateway verify failed for pending top-up ${pending.id}`,
-            error instanceof Error ? error.stack : undefined,
-          )
-          httpError(
-            ErrorCodes.PROVIDER_DOWNSTREAM,
-            'Payment gateway is unavailable',
-            502,
-          )
+            error instanceof Error ? error.stack : undefined
+          );
+          httpError(ErrorCodes.PROVIDER_DOWNSTREAM, 'Payment gateway is unavailable', 502);
         }
 
         if (!verified.paid) {
-          await this.markPendingFailed(client, pending.id, 'verify_unpaid')
-          await this.finalizeEvent(client, input.eventId, 'unpaid')
+          await this.markPendingFailed(client, pending.id, 'verify_unpaid');
+          await this.finalizeEvent(client, input.eventId, 'unpaid');
           return {
             ok: true,
             processed: true,
             credited: false,
             transactionId: pending.id,
             creditTransactionId: null,
-          }
+          };
         }
 
-        const providerRef = input.providerRefId ?? verified.providerRefId ?? input.authority
+        const providerRef = input.providerRefId ?? verified.providerRefId ?? input.authority;
         const credit = await this.walletService.credit(
           pending.walletId,
           amountIrR,
@@ -359,15 +352,15 @@ export class OnlineTopUpCallbackService {
               authority: input.authority,
             },
           },
-          onlineTopUpCreditIdempotencyKey(pending.id),
-        )
+          onlineTopUpCreditIdempotencyKey(pending.id)
+        );
 
-        await this.releasePendingIntent(client, pending.id, credit.id, input.eventId)
-        await this.finalizeEvent(client, input.eventId, 'credited')
+        await this.releasePendingIntent(client, pending.id, credit.id, input.eventId);
+        await this.finalizeEvent(client, input.eventId, 'credited');
 
         this.logger.log(
-          `Online top-up ${pending.id} credited as ${credit.id} for wallet ${pending.walletId}`,
-        )
+          `Online top-up ${pending.id} credited as ${credit.id} for wallet ${pending.walletId}`
+        );
 
         return {
           ok: true,
@@ -375,57 +368,69 @@ export class OnlineTopUpCallbackService {
           credited: true,
           transactionId: pending.id,
           creditTransactionId: credit.id,
-        }
+        };
       } finally {
-        await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys)
+        await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys);
       }
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   private resolveConfig(): PaymentCallbackConfig {
-    if (this.injectedConfig) return this.injectedConfig
+    if (this.injectedConfig) return this.injectedConfig;
     return {
       webhookSecret: resolvePaymentGatewayWebhookSecret(),
       merchantId: resolvePaymentGatewayMerchantId(),
-    }
+    };
   }
 
-  private async loadPendingTopUp(client: QueryClient, merchantOrderId: string): Promise<TransactionRow> {
+  private async loadPendingTopUp(
+    client: QueryClient,
+    merchantOrderId: string
+  ): Promise<TransactionRow> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
-      [merchantOrderId],
-    )
+      [merchantOrderId]
+    );
     if (result.rows.length === 0) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback merchant order was not found')
+      httpError(
+        ErrorCodes.PROVIDER_CALLBACK_INVALID,
+        'Payment callback merchant order was not found'
+      );
     }
-    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0])
+    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
   }
 
   private assertMerchantContext(
     pending: TransactionRow,
     authority: string,
-    amountIrR: bigint,
+    amountIrR: bigint
   ): void {
     if (pending.type !== 'topup') {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback merchant order is not a top-up')
+      httpError(
+        ErrorCodes.PROVIDER_CALLBACK_INVALID,
+        'Payment callback merchant order is not a top-up'
+      );
     }
     if (pending.amount !== amountIrR) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback amount does not match merchant order')
+      httpError(
+        ErrorCodes.PROVIDER_CALLBACK_INVALID,
+        'Payment callback amount does not match merchant order'
+      );
     }
-    const storedAuthority = readStoredAuthority(pending)
+    const storedAuthority = readStoredAuthority(pending);
     if (!storedAuthority || storedAuthority !== authority) {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Payment callback authority does not match merchant order',
-      )
+        'Payment callback authority does not match merchant order'
+      );
     }
     if (!isOnlineTopUpCallbackOpenState(pending.state)) {
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Payment callback merchant order is not awaiting confirmation',
-      )
+        'Payment callback merchant order is not awaiting confirmation'
+      );
     }
   }
 
@@ -442,11 +447,11 @@ export class OnlineTopUpCallbackService {
   private async claimEvent(
     client: QueryClient,
     input: {
-      eventId: string
-      pendingId: string
-      walletId: string
-      raw: unknown
-    },
+      eventId: string;
+      pendingId: string;
+      walletId: string;
+      raw: unknown;
+    }
   ): Promise<{ inserted: boolean; existing: CallbackEventRow | null }> {
     try {
       const inserted = await client.query(
@@ -455,17 +460,20 @@ export class OnlineTopUpCallbackService {
          VALUES ($1, $2, $3, 'processing', $4::jsonb)
          ON CONFLICT (event_id) DO NOTHING
          RETURNING event_id, pending_transaction_id, wallet_id, status`,
-        [input.eventId, input.pendingId, input.walletId, JSON.stringify(input.raw)],
-      )
+        [input.eventId, input.pendingId, input.walletId, JSON.stringify(input.raw)]
+      );
       if (inserted.rows.length > 0) {
-        return { inserted: true, existing: mapEvent(inserted.rows[0] as Parameters<typeof mapEvent>[0]) }
+        return {
+          inserted: true,
+          existing: mapEvent(inserted.rows[0] as Parameters<typeof mapEvent>[0]),
+        };
       }
     } catch (error) {
-      if (!isPgUniqueViolation(error, CALLBACK_EVENT_UNIQUE)) throw error
+      if (!isPgUniqueViolation(error, CALLBACK_EVENT_UNIQUE)) throw error;
     }
 
-    const existing = await this.loadEvent(client, input.eventId)
-    return { inserted: false, existing }
+    const existing = await this.loadEvent(client, input.eventId);
+    return { inserted: false, existing };
   }
 
   private async loadEvent(client: QueryClient, eventId: string): Promise<CallbackEventRow | null> {
@@ -473,15 +481,15 @@ export class OnlineTopUpCallbackService {
       `SELECT event_id, pending_transaction_id, wallet_id, status
          FROM wallet_topup_callback_events
         WHERE event_id = $1`,
-      [eventId],
-    )
-    if (result.rows.length === 0) return null
-    return mapEvent(result.rows[0] as Parameters<typeof mapEvent>[0])
+      [eventId]
+    );
+    if (result.rows.length === 0) return null;
+    return mapEvent(result.rows[0] as Parameters<typeof mapEvent>[0]);
   }
 
   private async alreadyProcessedResult(
     client: QueryClient,
-    existing: CallbackEventRow,
+    existing: CallbackEventRow
   ): Promise<HandleProviderCallbackResult> {
     if (existing.status === 'unpaid' || existing.status === 'processing') {
       return {
@@ -490,35 +498,35 @@ export class OnlineTopUpCallbackService {
         credited: false,
         transactionId: existing.pendingTransactionId,
         creditTransactionId: null,
-      }
+      };
     }
-    const credit = await this.findExistingCredit(client, existing.pendingTransactionId)
+    const credit = await this.findExistingCredit(client, existing.pendingTransactionId);
     return {
       ok: true,
       processed: false,
       credited: true,
       transactionId: existing.pendingTransactionId,
       creditTransactionId: credit?.id ?? null,
-    }
+    };
   }
 
   private async findExistingCredit(
     client: QueryClient,
-    pendingId: string,
+    pendingId: string
   ): Promise<TransactionRow | null> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [onlineTopUpCreditIdempotencyKey(pendingId)],
-    )
-    if (result.rows.length === 0) return null
-    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0])
+      [onlineTopUpCreditIdempotencyKey(pendingId)]
+    );
+    if (result.rows.length === 0) return null;
+    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
   }
 
   private async releasePendingIntent(
     client: QueryClient,
     pendingId: string,
     creditTransactionId: string,
-    eventId: string,
+    eventId: string
   ): Promise<void> {
     await client.query(
       `UPDATE wallet_transactions
@@ -536,14 +544,14 @@ export class OnlineTopUpCallbackService {
             creditedAt: new Date().toISOString(),
           },
         }),
-      ],
-    )
+      ]
+    );
   }
 
   private async markPendingFailed(
     client: QueryClient,
     pendingId: string,
-    reason: string,
+    reason: string
   ): Promise<void> {
     await client.query(
       `UPDATE wallet_transactions
@@ -560,8 +568,8 @@ export class OnlineTopUpCallbackService {
             failedAt: new Date().toISOString(),
           },
         }),
-      ],
-    )
+      ]
+    );
   }
 
   /**
@@ -572,7 +580,7 @@ export class OnlineTopUpCallbackService {
   private async reopenUnpaidEvent(
     client: QueryClient,
     eventId: string,
-    raw: unknown,
+    raw: unknown
   ): Promise<void> {
     await client.query(
       `UPDATE wallet_topup_callback_events
@@ -580,27 +588,27 @@ export class OnlineTopUpCallbackService {
               raw = $2::jsonb
         WHERE event_id = $1
           AND status = 'unpaid'`,
-      [eventId, JSON.stringify(raw)],
-    )
+      [eventId, JSON.stringify(raw)]
+    );
   }
 
   private async finalizeEvent(
     client: QueryClient,
     eventId: string,
-    status: Exclude<CallbackEventStatus, 'processing'>,
+    status: Exclude<CallbackEventStatus, 'processing'>
   ): Promise<void> {
     await client.query(
       `UPDATE wallet_topup_callback_events
           SET status = $2
         WHERE event_id = $1
           AND status = 'processing'`,
-      [eventId, status],
-    )
+      [eventId, status]
+    );
   }
 }
 
 export function onlineTopUpCreditIdempotencyKey(pendingTransactionId: string): string {
-  return `wallet-online-topup-credit:${pendingTransactionId}`
+  return `wallet-online-topup-credit:${pendingTransactionId}`;
 }
 
 /**
@@ -612,53 +620,55 @@ export function onlineTopUpCreditIdempotencyKey(pendingTransactionId: string): s
 export function zarinpalReturnEventId(
   orderId: string,
   authority: string,
-  terminalStatus: 'paid' | 'failed' | 'cancelled',
+  terminalStatus: 'paid' | 'failed' | 'cancelled'
 ): string {
-  return `zarinpal-return:${orderId}:${authority}:${terminalStatus}`
+  return `zarinpal-return:${orderId}:${authority}:${terminalStatus}`;
 }
 
 export function onlineTopUpCallbackLockKeys(merchantOrderId: string): [number, number] {
-  const digest = createHash('sha256').update(`wallet-online-topup-callback:${merchantOrderId}`).digest()
-  return [digest.readInt32BE(0), digest.readInt32BE(4)]
+  const digest = createHash('sha256')
+    .update(`wallet-online-topup-callback:${merchantOrderId}`)
+    .digest();
+  return [digest.readInt32BE(0), digest.readInt32BE(4)];
 }
 
 function readStoredAuthority(pending: TransactionRow): string | null {
-  if (typeof pending.refId === 'string' && pending.refId.length > 0) return pending.refId
-  if (!pending.metadata || typeof pending.metadata !== 'object') return null
-  const gateway = (pending.metadata as { gateway?: { authority?: unknown } }).gateway
+  if (typeof pending.refId === 'string' && pending.refId.length > 0) return pending.refId;
+  if (!pending.metadata || typeof pending.metadata !== 'object') return null;
+  const gateway = (pending.metadata as { gateway?: { authority?: unknown } }).gateway;
   if (typeof gateway?.authority === 'string' && gateway.authority.length > 0) {
-    return gateway.authority
+    return gateway.authority;
   }
-  return null
+  return null;
 }
 
 function mapEvent(row: {
-  event_id: string
-  pending_transaction_id: string
-  wallet_id: string
-  status: string
+  event_id: string;
+  pending_transaction_id: string;
+  wallet_id: string;
+  status: string;
 }): CallbackEventRow {
   return {
     eventId: row.event_id,
     pendingTransactionId: row.pending_transaction_id,
     walletId: row.wallet_id,
     status: row.status as CallbackEventStatus,
-  }
+  };
 }
 
 function mapTransaction(row: {
-  id: string
-  wallet_id: string
-  type: string
-  amount: string | number | bigint
-  state: string
-  idempotency_key: string
-  ref_id?: string | null
-  description?: string | null
-  metadata?: unknown
-  reverses_transaction_id?: string | null
-  created_at: Date
-  updated_at: Date
+  id: string;
+  wallet_id: string;
+  type: string;
+  amount: string | number | bigint;
+  state: string;
+  idempotency_key: string;
+  ref_id?: string | null;
+  description?: string | null;
+  metadata?: unknown;
+  reverses_transaction_id?: string | null;
+  created_at: Date;
+  updated_at: Date;
 }): TransactionRow {
   return {
     id: row.id,
@@ -673,20 +683,20 @@ function mapTransaction(row: {
     reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-  }
+  };
 }
 
 function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
-  if (!error || typeof error !== 'object') return false
-  const pgError = error as { code?: string; constraint?: string }
-  if (pgError.code !== PG_UNIQUE_VIOLATION) return false
-  return constraint === undefined || pgError.constraint === constraint
+  if (!error || typeof error !== 'object') return false;
+  const pgError = error as { code?: string; constraint?: string };
+  if (pgError.code !== PG_UNIQUE_VIOLATION) return false;
+  return constraint === undefined || pgError.constraint === constraint;
 }
 
 function httpError(
   def: { code: string; httpStatus: number },
   message: string,
-  statusCode = def.httpStatus,
+  statusCode = def.httpStatus
 ): never {
-  throw new HttpException({ statusCode, error: def.code, message }, statusCode)
+  throw new HttpException({ statusCode, error: def.code, message }, statusCode);
 }

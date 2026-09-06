@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,26 +12,22 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import {
-  AiAgentsService,
-  type AgentDto,
-  type AgentDetailDto,
-} from './ai-agents.service.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { AiAgentsService, type AgentDto, type AgentDetailDto } from './ai-agents.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const titleSchema = z.string().min(1, 'Title is required').max(120)
-const descriptionSchema = z.string().max(2000).default('')
+const titleSchema = z.string().min(1, 'Title is required').max(120);
+const descriptionSchema = z.string().max(2000).default('');
 // All agent/model/KB/policy ids are UUID columns; reject anything else before
 // it reaches Postgres (where 22P02 would otherwise surface as a raw 500).
-const uuidSchema = z.string().uuid('Expected a UUID')
-const idListSchema = z.array(uuidSchema).max(200, 'An agent can reference at most 200 items')
+const uuidSchema = z.string().uuid('Expected a UUID');
+const idListSchema = z.array(uuidSchema).max(200, 'An agent can reference at most 200 items');
 
 export const CreateAgentSchema = z.object({
   title: titleSchema,
@@ -41,7 +37,7 @@ export const CreateAgentSchema = z.object({
   policyIds: idListSchema.optional(),
   // Optional initial active/inactive state; defaults to enabled.
   enabled: z.boolean().optional(),
-})
+});
 
 export const UpdateAgentSchema = z
   .object({
@@ -52,42 +48,37 @@ export const UpdateAgentSchema = z
     policyIds: idListSchema.optional(),
     enabled: z.boolean().optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
 export const AddAgentKbSchema = z.object({
   kbId: uuidSchema,
-})
+});
 
 export const AddAgentPolicySchema = z.object({
   policyId: uuidSchema,
-})
+});
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = uuidSchema.safeParse(id)
+  const parsed = uuidSchema.safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -116,8 +107,8 @@ export class AgentsController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage AI agents',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -125,17 +116,17 @@ export class AgentsController {
   @ApiOperation({ summary: 'List AI agents (admin)' })
   @ApiResponse({ status: 200, description: 'All agents, newest first, with link counts.' })
   async list(@Req() req: AuthenticatedRequest): Promise<AgentDto[]> {
-    this.assertAgentPermission(req)
-    return this.service.list()
+    this.assertAgentPermission(req);
+    return this.service.list();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single AI agent (admin)' })
   @ApiResponse({ status: 200, description: 'The agent with its model and linked KBs/policies.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<AgentDetailDto> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    return this.service.get(id)
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    return this.service.get(id);
   }
 
   @Post()
@@ -146,17 +137,17 @@ export class AgentsController {
   @ApiResponse({ status: 201, description: 'AI agent created, KBs/policies linked.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateAgentSchema>,
+    @Body() body: z.infer<typeof CreateAgentSchema>
   ): Promise<AgentDto> {
-    this.assertAgentPermission(req)
-    const parsed = CreateAgentSchema.safeParse(body)
+    this.assertAgentPermission(req);
+    const parsed = CreateAgentSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid AI agent payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.create({
       title: parsed.data.title,
@@ -167,7 +158,7 @@ export class AgentsController {
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Put(':id')
@@ -185,31 +176,29 @@ export class AgentsController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateAgentSchema>,
+    @Body() body: z.infer<typeof UpdateAgentSchema>
   ): Promise<AgentDto> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    const parsed = UpdateAgentSchema.safeParse(body)
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    const parsed = UpdateAgentSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid AI agent payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.update(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
-      ...(parsed.data.description !== undefined
-        ? { description: parsed.data.description }
-        : {}),
+      ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       ...(parsed.data.modelId !== undefined ? { modelId: parsed.data.modelId } : {}),
       ...(parsed.data.kbIds !== undefined ? { kbIds: parsed.data.kbIds } : {}),
       ...(parsed.data.policyIds !== undefined ? { policyIds: parsed.data.policyIds } : {}),
       ...(parsed.data.enabled !== undefined ? { enabled: parsed.data.enabled } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -218,13 +207,10 @@ export class AgentsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete an AI agent (admin)' })
   @ApiResponse({ status: 204, description: 'AI agent deleted (KB/policy links cascaded).' })
-  async remove(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ): Promise<void> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    return this.service.remove(id, req.session.userId, requestIp(req))
+  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    return this.service.remove(id, req.session.userId, requestIp(req));
   }
 
   @Post(':id/kbs')
@@ -239,20 +225,25 @@ export class AgentsController {
   async addKb(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof AddAgentKbSchema>,
+    @Body() body: z.infer<typeof AddAgentKbSchema>
   ): Promise<void> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    const parsed = AddAgentKbSchema.safeParse(body)
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    const parsed = AddAgentKbSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB link payload', 400, validationDetails(parsed.error.issues))
+      httpError(
+        ErrorCodes.VALIDATION_PARSE_ZOD.code,
+        'Invalid KB link payload',
+        400,
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.addKb({
       agentId: id,
       kbId: parsed.data.kbId,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id/kbs/:kbId')
@@ -269,12 +260,12 @@ export class AgentsController {
   async removeKb(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('kbId') kbId: string,
+    @Param('kbId') kbId: string
   ): Promise<void> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    assertUuid(kbId, 'kbId')
-    return this.service.removeKb(id, kbId, req.session.userId, requestIp(req))
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    assertUuid(kbId, 'kbId');
+    return this.service.removeKb(id, kbId, req.session.userId, requestIp(req));
   }
 
   @Post(':id/policies')
@@ -289,20 +280,25 @@ export class AgentsController {
   async addPolicy(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof AddAgentPolicySchema>,
+    @Body() body: z.infer<typeof AddAgentPolicySchema>
   ): Promise<void> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    const parsed = AddAgentPolicySchema.safeParse(body)
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    const parsed = AddAgentPolicySchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid policy link payload', 400, validationDetails(parsed.error.issues))
+      httpError(
+        ErrorCodes.VALIDATION_PARSE_ZOD.code,
+        'Invalid policy link payload',
+        400,
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.addPolicy({
       agentId: id,
       policyId: parsed.data.policyId,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id/policies/:policyId')
@@ -319,11 +315,11 @@ export class AgentsController {
   async removePolicy(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('policyId') policyId: string,
+    @Param('policyId') policyId: string
   ): Promise<void> {
-    this.assertAgentPermission(req)
-    assertUuid(id)
-    assertUuid(policyId, 'policyId')
-    return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req))
+    this.assertAgentPermission(req);
+    assertUuid(id);
+    assertUuid(policyId, 'policyId');
+    return this.service.removePolicy(id, policyId, req.session.userId, requestIp(req));
   }
 }

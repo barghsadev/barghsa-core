@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm'
-import { pgTable, text, timestamp, integer } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import { pgTable, text, timestamp, integer } from 'drizzle-orm/pg-core';
 
 /**
  * Refresh token families (T-02.02.01).
@@ -18,36 +18,31 @@ import { pgTable, text, timestamp, integer } from 'drizzle-orm/pg-core'
  * - `consumed_at` — set when this token is rotated (next token issued).
  * - `created_at` — when this token was issued.
  */
-export const refreshTokens = pgTable(
-  'refresh_tokens',
-  {
-    /** Unique record ID (UUIDv7). */
-    id: text('id').primaryKey(),
+export const refreshTokens = pgTable('refresh_tokens', {
+  /** Unique record ID (UUIDv7). */
+  id: text('id').primaryKey(),
 
-    /** Family ID grouping tokens into revocation families. */
-    familyId: text('family_id').notNull(),
+  /** Family ID grouping tokens into revocation families. */
+  familyId: text('family_id').notNull(),
 
-    /** SHA-256 hash of the refresh token. */
-    tokenHash: text('token_hash').notNull().unique(),
+  /** SHA-256 hash of the refresh token. */
+  tokenHash: text('token_hash').notNull().unique(),
 
-    /** The user this token belongs to. */
-    userId: text('user_id').notNull(),
+  /** The user this token belongs to. */
+  userId: text('user_id').notNull(),
 
-    /** The session this token belongs to. */
-    sessionId: text('session_id').notNull(),
+  /** The session this token belongs to. */
+  sessionId: text('session_id').notNull(),
 
-    /** Monotonic version counter (1 = original, incremented on rotation). */
-    version: integer('version').notNull().default(1),
+  /** Monotonic version counter (1 = original, incremented on rotation). */
+  version: integer('version').notNull().default(1),
 
-    /** Set when this token is consumed (rotated) — null means current token. */
-    consumedAt: timestamp('consumed_at', { withTimezone: true, mode: 'date' }),
+  /** Set when this token is consumed (rotated) — null means current token. */
+  consumedAt: timestamp('consumed_at', { withTimezone: true, mode: 'date' }),
 
-    /** Creation timestamp. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Creation timestamp. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the refresh_tokens table.
@@ -68,4 +63,4 @@ export const createRefreshTokensTable = sql`
   CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens (user_id);
   CREATE INDEX IF NOT EXISTS idx_refresh_tokens_session_id ON refresh_tokens (session_id);
   CREATE INDEX IF NOT EXISTS idx_refresh_tokens_consumed_at ON refresh_tokens (consumed_at);
-`
+`;

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 interface RouteSkeletonProps {
-  layout?: 'default' | 'admin'
+  layout?: 'default' | 'admin';
 }
 
 /**
@@ -9,15 +9,15 @@ interface RouteSkeletonProps {
  * Falls back to false when matchMedia is unavailable (SSR/server context).
  */
 function getPrefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /**
  * Deterministic skeleton widths to avoid hydration mismatches.
  */
-const DEFAULT_SKELETON_WIDTHS = ['70%', '85%', '60%', '75%'] as const
-const ADMIN_SIDEBAR_WIDTHS = ['70%', '50%', '80%', '55%', '65%', '75%'] as const
+const DEFAULT_SKELETON_WIDTHS = ['70%', '85%', '60%', '75%'] as const;
+const ADMIN_SIDEBAR_WIDTHS = ['70%', '50%', '80%', '55%', '65%', '75%'] as const;
 
 /**
  * Route-level loading skeleton that matches the app shell.
@@ -25,18 +25,18 @@ const ADMIN_SIDEBAR_WIDTHS = ['70%', '50%', '80%', '55%', '65%', '75%'] as const
  * Uses logical CSS properties for RTL compatibility.
  */
 export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion);
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     // Sync any change that happened after initial render
-    setPrefersReducedMotion(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
-  const shimmer = prefersReducedMotion ? '' : 'animate-shimmer'
+  const shimmer = prefersReducedMotion ? '' : 'animate-shimmer';
 
   if (layout === 'admin') {
     return (
@@ -58,7 +58,7 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
           <div className={`h-64 w-full bg-gray-200 rounded-lg ${shimmer}`} />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -72,7 +72,7 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -80,23 +80,27 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
  * Respects prefers-reduced-motion.
  */
 export function RouteSpinner() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getPrefersReducedMotion);
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   return (
-    <div className="flex items-center justify-center min-h-[200px]" role="status" aria-label="Loading">
+    <div
+      className="flex items-center justify-center min-h-[200px]"
+      role="status"
+      aria-label="Loading"
+    >
       {prefersReducedMotion ? (
         <span className="text-gray-400 text-sm">Loading…</span>
       ) : (
         <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
       )}
     </div>
-  )
+  );
 }

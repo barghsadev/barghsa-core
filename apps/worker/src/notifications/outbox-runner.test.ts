@@ -1,6 +1,10 @@
-import { describe, it, expect, vi } from 'vitest'
-import { runOutboxPoll, sanitizeLastError } from './outbox-runner.js'
-import type { INotificationTransport, NotificationSendPayload, NotificationSendResult } from '@barghsa/shared/notifications'
+import { describe, it, expect, vi } from 'vitest';
+import { runOutboxPoll, sanitizeLastError } from './outbox-runner.js';
+import type {
+  INotificationTransport,
+  NotificationSendPayload,
+  NotificationSendResult,
+} from '@barghsa/shared/notifications';
 
 /**
  * Outbox runner unit tests (E-05, T-05.01.02).
@@ -13,43 +17,55 @@ import type { INotificationTransport, NotificationSendPayload, NotificationSendR
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function makePool() {
-  const updates: Array<{ sql: string; params: unknown[] }> = []
-  const jobs: Array<Record<string, any>> = ['in_app', 'email'].map(channel => ({ channel, status: 'queued', run_after: null }))
+  const updates: Array<{ sql: string; params: unknown[] }> = [];
+  const jobs: Array<Record<string, any>> = ['in_app', 'email'].map((channel) => ({
+    channel,
+    status: 'queued',
+    run_after: null,
+  }));
   const pool = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async query(sql: string, params?: any[]) {
-      updates.push({ sql, params: params ?? [] })
-      const values = params ?? []
-      if ((sql.includes('UPDATE notification_outbox') && sql.includes('RETURNING id')) || sql.startsWith('SELECT id FROM notification_outbox')) return { rows: [{ id: values[0] }], rowCount: 1 }
-      if (sql.startsWith('SELECT channel,status')) return { rows: jobs.map(job => ({ ...job })), rowCount: jobs.length }
+      updates.push({ sql, params: params ?? [] });
+      const values = params ?? [];
+      if (
+        (sql.includes('UPDATE notification_outbox') && sql.includes('RETURNING id')) ||
+        sql.startsWith('SELECT id FROM notification_outbox')
+      )
+        return { rows: [{ id: values[0] }], rowCount: 1 };
+      if (sql.startsWith('SELECT channel,status'))
+        return { rows: jobs.map((job) => ({ ...job })), rowCount: jobs.length };
       if (sql.includes('UPDATE notification_job')) {
-        const skipped = sql.includes("SET status = 'failed'")
-        const channel = skipped ? values[1] : values[5]
-        const affected = jobs.filter(job => !channel || job.channel === channel)
+        const skipped = sql.includes("SET status = 'failed'");
+        const channel = skipped ? values[1] : values[5];
+        const affected = jobs.filter((job) => !channel || job.channel === channel);
         for (const job of affected) {
-          job.status = skipped ? 'failed' : values[1]
-          job.last_error = skipped ? values[2] : channel ? values[4] : values[3]
-          job.attempts = skipped ? 0 : channel ? values[3] : values[2]
-          job.run_after = skipped ? null : channel ? values[6] : values[4]
+          job.status = skipped ? 'failed' : values[1];
+          job.last_error = skipped ? values[2] : channel ? values[4] : values[3];
+          job.attempts = skipped ? 0 : channel ? values[3] : values[2];
+          job.run_after = skipped ? null : channel ? values[6] : values[4];
         }
-        return { rows: affected.map(job => ({ id: `job:${job.channel}`, channel: job.channel })), rowCount: affected.length }
+        return {
+          rows: affected.map((job) => ({ id: `job:${job.channel}`, channel: job.channel })),
+          rowCount: affected.length,
+        };
       }
-      return { rows: [], rowCount: 0 }
+      return { rows: [], rowCount: 0 };
     },
-  }
-  return { pool, updates }
+  };
+  return { pool, updates };
 }
 
 class FakeTransport implements INotificationTransport {
-  readonly channel: 'in_app' | 'email' | 'sms'
-  fail: boolean
+  readonly channel: 'in_app' | 'email' | 'sms';
+  fail: boolean;
   constructor(channel: 'in_app' | 'email' | 'sms', fail = false) {
-    this.channel = channel
-    this.fail = fail
+    this.channel = channel;
+    this.fail = fail;
   }
   async send(payload: NotificationSendPayload): Promise<NotificationSendResult> {
-    if (this.fail) return { providerRef: 'fail', status: 'failed' }
-    return { providerRef: `real:${payload.channel}`, status: 'delivered' }
+    if (this.fail) return { providerRef: 'fail', status: 'failed' };
+    return { providerRef: `real:${payload.channel}`, status: 'delivered' };
   }
 }
 
@@ -66,7 +82,7 @@ const baseRow = {
   maxAttempts: 5,
   scheduledAt: null,
   lastError: null,
-}
+};
 
 /**
  * A fully-verified availability context (recipient has a verified email and
@@ -75,219 +91,236 @@ const baseRow = {
  * tests exercise channel fan-out without being affected by the T-05.05.02
  * availability gate.
  */
-const fullyAvailable = () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} })
+const fullyAvailable = () => ({ verifiedEmail: true, verifiedPhone: true, marketingOptedIn: {} });
 
 describe('runOutboxPoll', () => {
   it('marks a fully-delivered row and jobs as done, persisting real provider refs', async () => {
-    const { pool, updates } = makePool()
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
+    const { pool, updates } = makePool();
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow]);
 
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email') },
       availability: fullyAvailable,
-    })
+    });
 
-    expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 })
+    expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 });
 
-    const sql = updates.map((u) => u.sql).join('\n')
-    expect(sql).toContain("status = 'sending'")
-    expect(updates.some(update => update.sql.includes('UPDATE notification_outbox') && update.params[1] === 'delivered')).toBe(true)
+    const sql = updates.map((u) => u.sql).join('\n');
+    expect(sql).toContain("status = 'sending'");
+    expect(
+      updates.some(
+        (update) =>
+          update.sql.includes('UPDATE notification_outbox') && update.params[1] === 'delivered'
+      )
+    ).toBe(true);
     // Job status is a bound param ($2): "done" for a delivered job.
-    const done = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
-    expect(done).toHaveLength(2)
-    expect(done.every((u) => u.params[1] === 'done')).toBe(true)
+    const done = updates.filter((u) => u.sql.includes('UPDATE notification_job'));
+    expect(done).toHaveLength(2);
+    expect(done.every((u) => u.params[1] === 'done')).toBe(true);
     // Real provider refs persisted (param $3), one per channel.
-    expect(done.some((u) => u.params[2] === 'real:in_app')).toBe(true)
-    expect(done.some((u) => u.params[2] === 'real:email')).toBe(true)
+    expect(done.some((u) => u.params[2] === 'real:in_app')).toBe(true);
+    expect(done.some((u) => u.params[2] === 'real:email')).toBe(true);
 
     // Each delivered channel gets a delivery-log row (T-05.01.05).
-    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
-    expect(logInserts).toHaveLength(2)
-    expect(logInserts.every((u) => u.params[2] === 'delivered')).toBe(true)
+    const logInserts = updates.filter((u) =>
+      u.sql.includes('INSERT INTO notification_delivery_log')
+    );
+    expect(logInserts).toHaveLength(2);
+    expect(logInserts.every((u) => u.params[2] === 'delivered')).toBe(true);
     // Sanitized error fields stay null on delivered attempts.
-    expect(logInserts.every((u) => u.params[6] === null && u.params[7] === null)).toBe(true)
-  })
+    expect(logInserts.every((u) => u.params[6] === null && u.params[7] === null)).toBe(true);
+  });
 
   it('marks only the failing job and returns the row to queued for retry', async () => {
-    const { pool, updates } = makePool()
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
+    const { pool, updates } = makePool();
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow]);
 
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
       availability: fullyAvailable,
-    })
+    });
 
-    expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 })
+    expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 });
 
-    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
+    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'));
     // in_app done, email retrying (not exhausted at attempts=1 of 5).
-    expect(jobUpdates.find((u) => u.params[5] === 'in_app')!.params[1]).toBe('done')
-    expect(jobUpdates.find((u) => u.params[5] === 'email')!.params[1]).toBe('retrying')
+    expect(jobUpdates.find((u) => u.params[5] === 'in_app')!.params[1]).toBe('done');
+    expect(jobUpdates.find((u) => u.params[5] === 'email')!.params[1]).toBe('retrying');
 
     // Delivery logs: in_app delivered, email failed with a classified error.
-    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
-    expect(logInserts).toHaveLength(2)
-    const inAppLog = logInserts.find((u) => u.params[1] === 'in_app')!
-    const emailLog = logInserts.find((u) => u.params[1] === 'email')!
-    expect(inAppLog.params[2]).toBe('delivered')
-    expect(emailLog.params[2]).toBe('failed')
+    const logInserts = updates.filter((u) =>
+      u.sql.includes('INSERT INTO notification_delivery_log')
+    );
+    expect(logInserts).toHaveLength(2);
+    const inAppLog = logInserts.find((u) => u.params[1] === 'in_app')!;
+    const emailLog = logInserts.find((u) => u.params[1] === 'email')!;
+    expect(inAppLog.params[2]).toBe('delivered');
+    expect(emailLog.params[2]).toBe('failed');
 
     // Outbox row returned to queued with an unconsumed locked_until (backoff).
     const outboxUpdate = updates.find(
-      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'scheduled',
-    )
-    expect(outboxUpdate).toBeTruthy()
-  })
+      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'scheduled'
+    );
+    expect(outboxUpdate).toBeTruthy();
+  });
 
   it('marks a row failed permanently and dead-letters its jobs when max attempts are exhausted', async () => {
-    const { pool, updates } = makePool()
+    const { pool, updates } = makePool();
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
       { ...baseRow, attempts: 4, maxAttempts: 5 },
-    ])
+    ]);
 
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
       availability: fullyAvailable,
-    })
-    expect(r.failed).toBe(1)
+    });
+    expect(r.failed).toBe(1);
 
     // Outbox row marked 'failed' permanently (bound param $2).
     const outboxUpdate = updates.find(
-      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'failed',
-    )
-    expect(outboxUpdate).toBeTruthy()
+      (u) => u.sql.includes('UPDATE notification_outbox') && u.params[1] === 'failed'
+    );
+    expect(outboxUpdate).toBeTruthy();
     // Exhausted jobs move to dead_letter (not just 'failed').
-    const emailJob = updates.find((u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email')
-    expect(emailJob!.params[1]).toBe('dead_letter')
+    const emailJob = updates.find(
+      (u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email'
+    );
+    expect(emailJob!.params[1]).toBe('dead_letter');
     // No further retry scheduled after exhaustion: run_after is null.
-    expect(emailJob!.params[6]).toBeNull()
-  })
+    expect(emailJob!.params[6]).toBeNull();
+  });
 
   it('skips an external channel without marketing opt-in via the availability gate (T-05.05.02)', async () => {
-    const { pool, updates } = makePool()
+    const { pool, updates } = makePool();
     vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
       { ...baseRow, eventKey: 'marketing.promotion' },
-    ])
+    ]);
 
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email') },
       // Marketing event: verified destination in-app only; no marketing consent.
       availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }),
-    })
+    });
     // in_app delivered; the gated email leg is skipped, so the row is delivered.
-    expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 })
+    expect(r).toEqual({ leased: 1, delivered: 1, failed: 0 });
 
     // The email transport must never be called for a skipped leg.
     // (FakeTransport records reads — assert via the runOutboxPoll behaviour:
     // only the in_app job is marked done.)
-    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
+    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'));
     // in_app job → done; email job → flagged skipped/failed by the gate.
-    const inAppJob = jobUpdates.find((u) => u.params[5] === 'in_app' && u.params[1] === 'done')
-    expect(inAppJob).toBeTruthy()
+    const inAppJob = jobUpdates.find((u) => u.params[5] === 'in_app' && u.params[1] === 'done');
+    expect(inAppJob).toBeTruthy();
     // markSkippedJobs issues UPDATE ... SET status='failed', last_error=$3 WHERE outbox_id=$1 AND channel=$2
     const emailJob = jobUpdates.find(
-      (u) => u.sql.includes('SET status = \'failed\'') && String(u.params[1]) === 'email',
-    )
-    expect(emailJob).toBeTruthy()
-    expect(String(emailJob!.params[2])).toContain('skipped:')
+      (u) => u.sql.includes("SET status = 'failed'") && String(u.params[1]) === 'email'
+    );
+    expect(emailJob).toBeTruthy();
+    expect(String(emailJob!.params[2])).toContain('skipped:');
     // A delivery-log row records the skip with a permanent error detail.
-    const logInserts = updates.filter((u) => u.sql.includes('INSERT INTO notification_delivery_log'))
-    const emailLog = logInserts.find((u) => u.params[1] === 'email')
-    expect(emailLog).toBeTruthy()
-    expect(String(emailLog!.params[6])).toBe('permanent')
-    expect(String(emailLog!.params[7])).toContain('skipped: marketing')
-  })
+    const logInserts = updates.filter((u) =>
+      u.sql.includes('INSERT INTO notification_delivery_log')
+    );
+    const emailLog = logInserts.find((u) => u.params[1] === 'email');
+    expect(emailLog).toBeTruthy();
+    expect(String(emailLog!.params[6])).toBe('permanent');
+    expect(String(emailLog!.params[7])).toContain('skipped: marketing');
+  });
 
   it('schedules a jittered run_after backoff on a retry-eligible job', async () => {
-    const { pool, updates } = makePool()
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
+    const { pool, updates } = makePool();
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow]);
 
     await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app'), email: new FakeTransport('email', true) },
       availability: fullyAvailable,
-    })
+    });
 
-    const emailJob = updates.find((u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email')
+    const emailJob = updates.find(
+      (u) => u.sql.includes('UPDATE notification_job') && u.params[5] === 'email'
+    );
     // Retrying job (attempts=1 of 5) gets a run_after backoff (param $6 now
     // holds it; the retry ladder guarantees it is in the future).
-    expect(emailJob!.params[1]).toBe('retrying')
-    const runAfter = emailJob!.params[6] as Date
-    expect(runAfter).toBeInstanceOf(Date)
-    expect(runAfter.getTime()).toBeGreaterThan(Date.now())
-  })
+    expect(emailJob!.params[1]).toBe('retrying');
+    const runAfter = emailJob!.params[6] as Date;
+    expect(runAfter).toBeInstanceOf(Date);
+    expect(runAfter.getTime()).toBeGreaterThan(Date.now());
+  });
 
   it('propagates a throwing dispatch into a failed row with sanitized error and job bookkeeping', async () => {
-    const { pool, updates } = makePool()
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow])
+    const { pool, updates } = makePool();
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([baseRow]);
     vi.spyOn(await import('./outbox-reader.js'), 'dispatchOutbox').mockRejectedValue(
-      new Error('SMTP auth failed for user:key:AKIAIOSFODNN7EXAMPLE'),
-    )
+      new Error('SMTP auth failed for user:key:AKIAIOSFODNN7EXAMPLE')
+    );
 
     const r = await runOutboxPoll({
       pool,
       transports: { in_app: new FakeTransport('in_app') },
       availability: fullyAvailable,
-    })
-    expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 })
-    const errCol = updates.find((u) => u.sql.includes('last_error'))
-    expect(String(errCol?.params[3])).not.toContain('AKIAIOSFODNN7EXAMPLE')
+    });
+    expect(r).toEqual({ leased: 1, delivered: 0, failed: 1 });
+    const errCol = updates.find((u) => u.sql.includes('last_error'));
+    expect(String(errCol?.params[3])).not.toContain('AKIAIOSFODNN7EXAMPLE');
     // Exception path must keep per-channel jobs consistent with the outbox row.
-    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'))
-    expect(jobUpdates.length).toBeGreaterThan(0)
-    expect(jobUpdates.every((u) => u.params[1] === 'retrying')).toBe(true)
-    expect(jobUpdates[0]!.params[3]).toBe(1) // attempts incremented
-  })
+    const jobUpdates = updates.filter((u) => u.sql.includes('UPDATE notification_job'));
+    expect(jobUpdates.length).toBeGreaterThan(0);
+    expect(jobUpdates.every((u) => u.params[1] === 'retrying')).toBe(true);
+    expect(jobUpdates[0]!.params[3]).toBe(1); // attempts incremented
+  });
 
   it('returns zeroed results when no rows are due', async () => {
-    const { pool, updates } = makePool()
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([])
-    const r = await runOutboxPoll({ pool, transports: {} })
-    expect(r).toEqual({ leased: 0, delivered: 0, failed: 0 })
+    const { pool, updates } = makePool();
+    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([]);
+    const r = await runOutboxPoll({ pool, transports: {} });
+    expect(r).toEqual({ leased: 0, delivered: 0, failed: 0 });
     // Delivery-window reconciliation reads config/queued rows (SELECTs only);
     // with nothing due, no state-changing statement must be issued.
-    expect(updates.length).toBeGreaterThanOrEqual(0)
-    expect(updates.every((u) => u.sql.trimStart().startsWith('SELECT'))).toBe(true)
-  })
-})
+    expect(updates.length).toBeGreaterThanOrEqual(0);
+    expect(updates.every((u) => u.sql.trimStart().startsWith('SELECT'))).toBe(true);
+  });
+});
 
 describe('sanitizeLastError', () => {
   it('redacts bearer tokens and api keys', () => {
-    const s = sanitizeLastError('auth failed with Bearer abc123 and api_key=secret456 here')
-    expect(s).not.toContain('abc123')
-    expect(s).not.toContain('secret456')
-    expect(s).toContain('[REDACTED]')
-  })
+    const s = sanitizeLastError('auth failed with Bearer abc123 and api_key=secret456 here');
+    expect(s).not.toContain('abc123');
+    expect(s).not.toContain('secret456');
+    expect(s).toContain('[REDACTED]');
+  });
 
   it('redacts credentials embedded in URLs', () => {
-    const s = sanitizeLastError('could not connect to postgres://user:pass123@db.example.com:5432/x')
-    expect(s).not.toContain('pass123')
-    expect(s).toContain('[REDACTED]')
-  })
+    const s = sanitizeLastError(
+      'could not connect to postgres://user:pass123@db.example.com:5432/x'
+    );
+    expect(s).not.toContain('pass123');
+    expect(s).toContain('[REDACTED]');
+  });
 
   it('caps the message length', () => {
-    const s = sanitizeLastError('x'.repeat(2000))
-    expect(s.length).toBeLessThanOrEqual(500)
-  })
+    const s = sanitizeLastError('x'.repeat(2000));
+    expect(s.length).toBeLessThanOrEqual(500);
+  });
 
   it('keeps benign messages unchanged', () => {
-    const s = sanitizeLastError('provider unavailable (timeout)')
-    expect(s).toContain('provider unavailable')
-  })
+    const s = sanitizeLastError('provider unavailable (timeout)');
+    expect(s).toContain('provider unavailable');
+  });
 
   it('does not scrub UUIDs or short identifiers', () => {
-    const s = sanitizeLastError('row 550e8400-e29b-41d4-a716-446655440000 not found (tx 12345)')
-    expect(s).toContain('550e8400-e29b-41d4-a716-446655440000')
-    expect(s).toContain('12345')
-  })
+    const s = sanitizeLastError('row 550e8400-e29b-41d4-a716-446655440000 not found (tx 12345)');
+    expect(s).toContain('550e8400-e29b-41d4-a716-446655440000');
+    expect(s).toContain('12345');
+  });
 
   it('redacts AWS access key ids and stripe sk_live tokens', () => {
-    const s = sanitizeLastError('denied AKIAIOSFODNN7EXAMPLE sk_live_aaaaaaaaaaaaaaaaaaaaaaaa')
-    expect(s).not.toContain('AKIAIOSFODNN7EXAMPLE')
-    expect(s).not.toContain('sk_live_aaaaaaaaaaaaaaaaaaaaaaaa')
-  })
-})
+    const s = sanitizeLastError('denied AKIAIOSFODNN7EXAMPLE sk_live_aaaaaaaaaaaaaaaaaaaaaaaa');
+    expect(s).not.toContain('AKIAIOSFODNN7EXAMPLE');
+    expect(s).not.toContain('sk_live_aaaaaaaaaaaaaaaaaaaaaaaa');
+  });
+});

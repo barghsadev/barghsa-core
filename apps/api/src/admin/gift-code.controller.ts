@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,10 +12,10 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   GIFT_CODE_DISCOUNT_TYPES,
   GIFT_CODE_ELIGIBILITY,
@@ -23,69 +23,72 @@ import {
   MAX_GIFT_PERCENT_BPS,
   normalizeGiftCode,
   type GiftCodeDto,
-} from '@barghsa/shared/promotions'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js'
+} from '@barghsa/shared/promotions';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { GiftCodeService, type GiftCodeListFilter } from './gift-code.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const discountTypeSchema = z.enum(GIFT_CODE_DISCOUNT_TYPES)
-const eligibilitySchema = z.enum(GIFT_CODE_ELIGIBILITY)
-const statusSchema = z.enum(GIFT_CODE_STATUSES)
-const irrSchema = z
-  .string()
-  .regex(/^\d+$/, 'Expected a non-negative integer IRR amount')
-const positiveIrrSchema = z
-  .string()
-  .regex(/^[1-9]\d*$/, 'Expected a positive integer IRR amount')
+const discountTypeSchema = z.enum(GIFT_CODE_DISCOUNT_TYPES);
+const eligibilitySchema = z.enum(GIFT_CODE_ELIGIBILITY);
+const statusSchema = z.enum(GIFT_CODE_STATUSES);
+const irrSchema = z.string().regex(/^\d+$/, 'Expected a non-negative integer IRR amount');
+const positiveIrrSchema = z.string().regex(/^[1-9]\d*$/, 'Expected a positive integer IRR amount');
 const codeSchema = z
   .string()
   .min(1, 'code is required')
   .max(64, 'code must be 64 characters or fewer')
-  .transform(normalizeGiftCode)
-const profileIdSchema = z.string().uuid('Expected a UUID')
-const categorySchema = z.string().min(1).max(40)
-const limitSchema = z
-  .union([z.number().int().positive(), z.null()])
-  .optional()
+  .transform(normalizeGiftCode);
+const profileIdSchema = z.string().uuid('Expected a UUID');
+const categorySchema = z.string().min(1).max(40);
+const limitSchema = z.union([z.number().int().positive(), z.null()]).optional();
 const dateSchema = z
   .string()
   .datetime({ offset: true })
   .or(z.string().datetime({ local: true }))
-  .optional()
+  .optional();
 
-const CreateGiftCodeSchema = z.object({
-  code: codeSchema,
-  discountType: discountTypeSchema,
-  discountValue: irrSchema,
-  maxCapIrr: z.union([positiveIrrSchema, z.null()]).optional(),
-  eligibility: eligibilitySchema.default('public'),
-  profileIds: z.array(profileIdSchema).default([]),
-  totalLimit: limitSchema,
-  perProfileLimit: limitSchema,
-  validFrom: dateSchema,
-  validUntil: z
-    .union([z.string().datetime({ offset: true }).or(z.string().datetime({ local: true })), z.null()])
-    .optional(),
-  minOrderAmount: irrSchema.default('0'),
-  categories: z.array(categorySchema).default([]),
-}).refine(
-  (data) =>
-    data.discountType !== 'fixed_irr' ||
-    data.maxCapIrr === undefined ||
-    data.maxCapIrr === null,
-  {
-    path: ['maxCapIrr'],
-    message: 'maxCapIrr must not be set for fixed_irr codes',
-  },
-).refine(
-  (data) => data.discountType !== 'percentage' || (data.maxCapIrr !== undefined && data.maxCapIrr !== null),
-  {
-    path: ['maxCapIrr'],
-    message: 'percentage codes require a positive maxCapIrr',
-  },
-)
+const CreateGiftCodeSchema = z
+  .object({
+    code: codeSchema,
+    discountType: discountTypeSchema,
+    discountValue: irrSchema,
+    maxCapIrr: z.union([positiveIrrSchema, z.null()]).optional(),
+    eligibility: eligibilitySchema.default('public'),
+    profileIds: z.array(profileIdSchema).default([]),
+    totalLimit: limitSchema,
+    perProfileLimit: limitSchema,
+    validFrom: dateSchema,
+    validUntil: z
+      .union([
+        z
+          .string()
+          .datetime({ offset: true })
+          .or(z.string().datetime({ local: true })),
+        z.null(),
+      ])
+      .optional(),
+    minOrderAmount: irrSchema.default('0'),
+    categories: z.array(categorySchema).default([]),
+  })
+  .refine(
+    (data) =>
+      data.discountType !== 'fixed_irr' || data.maxCapIrr === undefined || data.maxCapIrr === null,
+    {
+      path: ['maxCapIrr'],
+      message: 'maxCapIrr must not be set for fixed_irr codes',
+    }
+  )
+  .refine(
+    (data) =>
+      data.discountType !== 'percentage' ||
+      (data.maxCapIrr !== undefined && data.maxCapIrr !== null),
+    {
+      path: ['maxCapIrr'],
+      message: 'percentage codes require a positive maxCapIrr',
+    }
+  );
 
 // NOTE: built independently (NOT .partial() of the create schema) —
 // zod v4 forbids .partial() on refined object schemas, and the update
@@ -103,87 +106,86 @@ const UpdateGiftCodeSchema = z
     perProfileLimit: limitSchema,
     validFrom: dateSchema,
     validUntil: z
-      .union([z.string().datetime({ offset: true }).or(z.string().datetime({ local: true })), z.null()])
+      .union([
+        z
+          .string()
+          .datetime({ offset: true })
+          .or(z.string().datetime({ local: true })),
+        z.null(),
+      ])
       .optional(),
     minOrderAmount: irrSchema.optional(),
     categories: z.array(categorySchema).optional(),
   })
   .refine(
     (data) =>
-      data.discountType !== 'fixed_irr' ||
-      data.maxCapIrr === undefined ||
-      data.maxCapIrr === null,
+      data.discountType !== 'fixed_irr' || data.maxCapIrr === undefined || data.maxCapIrr === null,
     {
       path: ['maxCapIrr'],
       message: 'maxCapIrr must not be set for fixed_irr codes',
-    },
-  )
+    }
+  );
 
 const SetStatusSchema = z.object({
   status: statusSchema,
-})
+});
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /** Validate the optional list filters and return sanitized values. */
 function assertListFilters(raw: {
-  search?: string | undefined
-  status?: string | undefined
-  discountType?: string | undefined
+  search?: string | undefined;
+  status?: string | undefined;
+  discountType?: string | undefined;
 }): GiftCodeListFilter {
-  const out: GiftCodeListFilter = {}
+  const out: GiftCodeListFilter = {};
   if (raw.search !== undefined && raw.search !== '') {
-    out.search = normalizeGiftCode(raw.search)
+    out.search = normalizeGiftCode(raw.search);
   }
   if (raw.status !== undefined) {
-    const parsed = statusSchema.safeParse(raw.status)
+    const parsed = statusSchema.safeParse(raw.status);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         `Invalid status: expected one of ${GIFT_CODE_STATUSES.join(', ')}`,
-        400,
-      )
+        400
+      );
     }
-    out.status = parsed.data
+    out.status = parsed.data;
   }
   if (raw.discountType !== undefined) {
-    const parsed = discountTypeSchema.safeParse(raw.discountType)
+    const parsed = discountTypeSchema.safeParse(raw.discountType);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         `Invalid discountType: expected one of ${GIFT_CODE_DISCOUNT_TYPES.join(', ')}`,
-        400,
-      )
+        400
+      );
     }
-    out.discountType = parsed.data
+    out.discountType = parsed.data;
   }
-  return out
+  return out;
 }
 
 /**
@@ -216,8 +218,8 @@ export class GiftCodeController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage gift codes',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -233,11 +235,11 @@ export class GiftCodeController {
     @Req() req: AuthenticatedRequest,
     @Query('search') search?: string,
     @Query('status') status?: string,
-    @Query('discountType') discountType?: string,
+    @Query('discountType') discountType?: string
   ): Promise<GiftCodeDto[]> {
-    this.assertPromotionsPermission(req)
-    const filters = assertListFilters({ search, status, discountType })
-    return this.service.list(filters)
+    this.assertPromotionsPermission(req);
+    const filters = assertListFilters({ search, status, discountType });
+    return this.service.list(filters);
   }
 
   @Get(':id/stats')
@@ -250,11 +252,11 @@ export class GiftCodeController {
   @ApiResponse({ status: 200, description: 'Usage statistics.' })
   async stats(
     @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
+    @Param('id') id: string
   ): Promise<ReturnType<GiftCodeService['stats']>> {
-    this.assertPromotionsPermission(req)
-    assertUuid(id)
-    return this.service.stats(id)
+    this.assertPromotionsPermission(req);
+    assertUuid(id);
+    return this.service.stats(id);
   }
 
   @Post()
@@ -272,17 +274,17 @@ export class GiftCodeController {
   @ApiResponse({ status: 201, description: 'Gift code created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateGiftCodeSchema>,
+    @Body() body: z.infer<typeof CreateGiftCodeSchema>
   ): Promise<GiftCodeDto> {
-    this.assertPromotionsPermission(req)
-    const parsed = CreateGiftCodeSchema.safeParse(body)
+    this.assertPromotionsPermission(req);
+    const parsed = CreateGiftCodeSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid gift code payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.create({
       code: parsed.data.code,
@@ -299,7 +301,7 @@ export class GiftCodeController {
       categories: parsed.data.categories,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Patch(':id')
@@ -317,20 +319,20 @@ export class GiftCodeController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateGiftCodeSchema>,
+    @Body() body: z.infer<typeof UpdateGiftCodeSchema>
   ): Promise<GiftCodeDto> {
-    this.assertPromotionsPermission(req)
-    assertUuid(id)
-    const parsed = UpdateGiftCodeSchema.safeParse(body ?? {})
+    this.assertPromotionsPermission(req);
+    assertUuid(id);
+    const parsed = UpdateGiftCodeSchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid gift code payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
-    const data = parsed.data
+    const data = parsed.data;
     return this.service.update(id, {
       ...(data.code !== undefined ? { code: data.code } : {}),
       ...(data.discountType !== undefined ? { discountType: data.discountType } : {}),
@@ -346,7 +348,7 @@ export class GiftCodeController {
       ...(data.categories !== undefined ? { categories: data.categories } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post(':id/toggle')
@@ -363,19 +365,19 @@ export class GiftCodeController {
   async setStatus(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof SetStatusSchema>,
+    @Body() body: z.infer<typeof SetStatusSchema>
   ): Promise<GiftCodeDto> {
-    this.assertPromotionsPermission(req)
-    assertUuid(id)
-    const parsed = SetStatusSchema.safeParse(body ?? {})
+    this.assertPromotionsPermission(req);
+    assertUuid(id);
+    const parsed = SetStatusSchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid status payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
-    return this.service.setStatus(id, parsed.data.status, req.session.userId, requestIp(req))
+    return this.service.setStatus(id, parsed.data.status, req.session.userId, requestIp(req));
   }
 }

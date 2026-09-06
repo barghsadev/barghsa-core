@@ -56,7 +56,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // For 4xx errors, use rawMessage if available, otherwise localized message
     const message =
       httpStatus < 500
-        ? rawMessage ?? t(errorCodeDef.messageKey, locale)
+        ? (rawMessage ?? t(errorCodeDef.messageKey, locale))
         : t(errorCodeDef.messageKey, locale);
 
     // Get correlation ID from AsyncLocalStorage
@@ -90,15 +90,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const details = exception.getResponse();
       const error = body.error as Record<string, unknown>;
       error.message = t('error.rate_limit.exceeded', locale);
-      if (typeof details === 'object' && details !== null && 'retryAfterMs' in details
-          && typeof details.retryAfterMs === 'number' && Number.isFinite(details.retryAfterMs)
-          && details.retryAfterMs >= 0) {
+      if (
+        typeof details === 'object' &&
+        details !== null &&
+        'retryAfterMs' in details &&
+        typeof details.retryAfterMs === 'number' &&
+        Number.isFinite(details.retryAfterMs) &&
+        details.retryAfterMs >= 0
+      ) {
         const seconds = Math.max(1, Math.ceil(details.retryAfterMs / 1000));
         response.setHeader('Retry-After', String(seconds));
         error.retryAfterMs = seconds * 1000;
         error.retryAfterSeconds = seconds;
-        error.message = t('error.rate_limit.retry_after', locale).replace('{seconds}',
-          new Intl.NumberFormat(locale, { useGrouping: false }).format(seconds));
+        error.message = t('error.rate_limit.retry_after', locale).replace(
+          '{seconds}',
+          new Intl.NumberFormat(locale, { useGrouping: false }).format(seconds)
+        );
       }
     }
 
@@ -172,18 +179,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     httpStatus: number,
     errorCode: string,
     correlationId: string | undefined,
-    request: Request,
+    request: Request
   ): void {
     if (httpStatus < 500) {
       // 4xx — debug level (client errors, not actionable)
       this.logger.debug(
-        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`,
+        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
       );
     } else {
       // 5xx — error level (actionable)
       this.logger.error(
         `Server error: ${errorCode} — ${httpStatus} ${request.method} ${request.url} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`,
-        exception instanceof Error ? exception.stack : undefined,
+        exception instanceof Error ? exception.stack : undefined
       );
     }
   }

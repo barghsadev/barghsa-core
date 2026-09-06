@@ -1,6 +1,6 @@
-import { jsonb, text } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { pgEnum, irrAmount } from '../types'
+import { jsonb, text } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { pgEnum, irrAmount } from '../types';
 
 /**
  * Product type discriminator.
@@ -15,7 +15,7 @@ export const productTypeEnum = pgEnum('product_type', [
   'electricity',
   'hardware',
   'saving_plan',
-])
+]);
 
 /**
  * Product lifecycle status.
@@ -24,11 +24,7 @@ export const productTypeEnum = pgEnum('product_type', [
  * - `inactive` — Hidden from ordering but not deleted; admin can reactivate
  * - `archived` — No longer in use; preserved for historical reference
  */
-export const productStatusEnum = pgEnum('product_status', [
-  'active',
-  'inactive',
-  'archived',
-])
+export const productStatusEnum = pgEnum('product_status', ['active', 'inactive', 'archived']);
 
 /**
  * Products table.
@@ -69,4 +65,4 @@ export const products = createTable('products', {
 
   /** Product lifecycle status: active, inactive, archived. Default: inactive. */
   status: productStatusEnum('status').notNull().default('inactive'),
-})
+});

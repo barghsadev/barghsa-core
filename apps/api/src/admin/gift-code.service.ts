@@ -1,6 +1,6 @@
-import { Injectable, Logger, HttpException, Inject } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
+import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
 import {
   computeGiftDiscount,
   isGiftCodeEligibility,
@@ -13,8 +13,8 @@ import {
   type GiftCodeProfileUsageDto,
   type GiftCodeRedemptionDto,
   type GiftCodeStatus,
-} from '@barghsa/shared/promotions'
-import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
+} from '@barghsa/shared/promotions';
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 
 /**
  * Gift code management service (S-09.12, T-09.12.03) — API slice.
@@ -63,135 +63,133 @@ import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
 
 export interface GiftCodeListFilter {
   /** Substring match on the normalized code. */
-  search?: string
-  status?: GiftCodeStatus
-  discountType?: GiftCodeDiscountType
+  search?: string;
+  status?: GiftCodeStatus;
+  discountType?: GiftCodeDiscountType;
 }
 
 export interface CreateGiftCodeInput {
   /** Raw code — normalized (trim + uppercase) before storage. */
-  code: string
-  discountType: GiftCodeDiscountType
+  code: string;
+  discountType: GiftCodeDiscountType;
   /** IRR amount (fixed_irr) or basis points (percentage). */
-  discountValue: string
+  discountValue: string;
   /** Mandatory for percentage; must be null for fixed_irr. */
-  maxCapIrr: string | null
-  eligibility: GiftCodeEligibility
+  maxCapIrr: string | null;
+  eligibility: GiftCodeEligibility;
   /** Required when eligibility === 'profile'. */
-  profileIds: string[]
-  totalLimit: number | null
-  perProfileLimit: number | null
-  validFrom?: string
-  validUntil: string | null
-  minOrderAmount: string
-  categories: string[]
-  actorUserId: string
-  ip: string
+  profileIds: string[];
+  totalLimit: number | null;
+  perProfileLimit: number | null;
+  validFrom?: string;
+  validUntil: string | null;
+  minOrderAmount: string;
+  categories: string[];
+  actorUserId: string;
+  ip: string;
 }
 
-export type UpdateGiftCodeInput = Partial<
-  Omit<CreateGiftCodeInput, 'actorUserId' | 'ip'>
-> & {
-  actorUserId: string
-  ip: string
-}
+export type UpdateGiftCodeInput = Partial<Omit<CreateGiftCodeInput, 'actorUserId' | 'ip'>> & {
+  actorUserId: string;
+  ip: string;
+};
 
 export interface RedeemGiftCodeInput {
   /** Raw code from the customer; normalized before lookup. */
-  giftCode: string
-  profileId: string
+  giftCode: string;
+  profileId: string;
   /** The order the redemption is attached to (must already exist). */
-  orderId: string
+  orderId: string;
   /** Pre-discount order total in IRR (bigint string). */
-  orderAmount: string
+  orderAmount: string;
   /** Product category (`products.type`) the order belongs to. */
-  category: string
+  category: string;
   /** Actor (session user) for the redemption audit trail. */
-  actorUserId?: string
-  ip?: string
+  actorUserId?: string;
+  ip?: string;
 }
 
 // ─── Internal row types ────────────────────────────────────────────────────
 
 type QueryFn = <T = Record<string, unknown>>(
   text: string,
-  values?: unknown[],
-) => Promise<{ rows: T[]; rowCount: number | null }>
+  values?: unknown[]
+) => Promise<{ rows: T[]; rowCount: number | null }>;
 
 /** Minimal query executor shared by the pool and a transactional client. */
-export type DbExecutor = { query: QueryFn }
+export type DbExecutor = { query: QueryFn };
 
 interface GiftCodeRow {
-  id: string
-  code: string
-  discount_type: GiftCodeDiscountType
-  discount_value: string
-  max_cap_irr: string | null
-  eligibility: GiftCodeEligibility
-  total_limit: number | null
-  per_profile_limit: number | null
-  valid_from: string
-  valid_until: string | null
-  min_order_amount: string
-  categories: string[]
-  status: GiftCodeStatus
-  created_by: string
-  created_at: string
-  updated_at: string
+  id: string;
+  code: string;
+  discount_type: GiftCodeDiscountType;
+  discount_value: string;
+  max_cap_irr: string | null;
+  eligibility: GiftCodeEligibility;
+  total_limit: number | null;
+  per_profile_limit: number | null;
+  valid_from: string;
+  valid_until: string | null;
+  min_order_amount: string;
+  categories: string[];
+  status: GiftCodeStatus;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface GiftCodeWithUsageRow extends GiftCodeRow {
-  consumed: number
-  released: number
-  total_discount: string
+  consumed: number;
+  released: number;
+  total_discount: string;
 }
 
 interface RedemptionRow {
-  id: string
-  gift_code_id: string
-  profile_id: string
-  order_id: string
-  discount_amount: string
-  status: 'consumed' | 'released'
-  created_at: string
+  id: string;
+  gift_code_id: string;
+  profile_id: string;
+  order_id: string;
+  discount_amount: string;
+  status: 'consumed' | 'released';
+  created_at: string;
 }
 
-const PG_UNIQUE_VIOLATION = '23505'
-const PG_FOREIGN_KEY_VIOLATION = '23503'
+const PG_UNIQUE_VIOLATION = '23505';
+const PG_FOREIGN_KEY_VIOLATION = '23503';
 
-const GIFT_CODE_NOT_FOUND = 'GIFT_CODE_NOT_FOUND'
-const GIFT_CODE_ALREADY_EXISTS = 'GIFT_CODE_ALREADY_EXISTS'
-const GIFT_CODE_ALREADY_APPLIED = 'GIFT_CODE_ALREADY_APPLIED'
-const GIFT_CODE_INACTIVE = 'GIFT_CODE_INACTIVE'
-const GIFT_CODE_NOT_YET_VALID = 'GIFT_CODE_NOT_YET_VALID'
-const GIFT_CODE_EXPIRED = 'GIFT_CODE_EXPIRED'
-const GIFT_CODE_NOT_ELIGIBLE = 'GIFT_CODE_NOT_ELIGIBLE'
-const GIFT_CODE_TOTAL_LIMIT_REACHED = 'GIFT_CODE_TOTAL_LIMIT_REACHED'
-const GIFT_CODE_PROFILE_LIMIT_REACHED = 'GIFT_CODE_PROFILE_LIMIT_REACHED'
-const GIFT_CODE_MIN_ORDER_NOT_MET = 'GIFT_CODE_MIN_ORDER_NOT_MET'
-const GIFT_CODE_CATEGORY_NOT_ELIGIBLE = 'GIFT_CODE_CATEGORY_NOT_ELIGIBLE'
-const GIFT_CODE_PROFILES_REQUIRED = 'GIFT_CODE_PROFILES_REQUIRED'
+const GIFT_CODE_NOT_FOUND = 'GIFT_CODE_NOT_FOUND';
+const GIFT_CODE_ALREADY_EXISTS = 'GIFT_CODE_ALREADY_EXISTS';
+const GIFT_CODE_ALREADY_APPLIED = 'GIFT_CODE_ALREADY_APPLIED';
+const GIFT_CODE_INACTIVE = 'GIFT_CODE_INACTIVE';
+const GIFT_CODE_NOT_YET_VALID = 'GIFT_CODE_NOT_YET_VALID';
+const GIFT_CODE_EXPIRED = 'GIFT_CODE_EXPIRED';
+const GIFT_CODE_NOT_ELIGIBLE = 'GIFT_CODE_NOT_ELIGIBLE';
+const GIFT_CODE_TOTAL_LIMIT_REACHED = 'GIFT_CODE_TOTAL_LIMIT_REACHED';
+const GIFT_CODE_PROFILE_LIMIT_REACHED = 'GIFT_CODE_PROFILE_LIMIT_REACHED';
+const GIFT_CODE_MIN_ORDER_NOT_MET = 'GIFT_CODE_MIN_ORDER_NOT_MET';
+const GIFT_CODE_CATEGORY_NOT_ELIGIBLE = 'GIFT_CODE_CATEGORY_NOT_ELIGIBLE';
+const GIFT_CODE_PROFILES_REQUIRED = 'GIFT_CODE_PROFILES_REQUIRED';
 
 /** Allowed code charset after normalization: A-Z0-9, dash, underscore. */
-const GIFT_CODE_PATTERN = /^[A-Z0-9][A-Z0-9_-]{2,63}$/
+const GIFT_CODE_PATTERN = /^[A-Z0-9][A-Z0-9_-]{2,63}$/;
 
 /** Allowed product category key: lowercase letters, digits, underscore. */
-const GIFT_CODE_CATEGORY_PATTERN = /^[a-z0-9_]+$/
+const GIFT_CODE_CATEGORY_PATTERN = /^[a-z0-9_]+$/;
 
 @Injectable()
 export class GiftCodeService {
-  private readonly logger = new Logger(GiftCodeService.name)
+  private readonly logger = new Logger(GiftCodeService.name);
 
   constructor(
     @Inject(CorrelationIdProvider)
-    private readonly correlationIdProvider: CorrelationIdProvider,
+    private readonly correlationIdProvider: CorrelationIdProvider
   ) {}
 
   // ─── Admin reads ───────────────────────────────────────────────────────
 
   /** List gift codes, newest first, with derived usage totals. */
   async list(filter: GiftCodeListFilter = {}): Promise<GiftCodeDto[]> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query<GiftCodeWithUsageRow>(
       `SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
               gc.eligibility, gc.total_limit, gc.per_profile_limit,
@@ -216,26 +214,26 @@ export class GiftCodeService {
           : null,
         filter.status ?? null,
         filter.discountType ?? null,
-      ],
-    )
-    return this.attachProfileIds(pool, result.rows)
+      ]
+    );
+    return this.attachProfileIds(pool, result.rows);
   }
 
   /** Full usage statistics for one code, for the admin stats view. */
   async stats(id: string): Promise<{
-    code: GiftCodeDto
-    perProfile: GiftCodeProfileUsageDto[]
-    recentRedemptions: GiftCodeRedemptionDto[]
+    code: GiftCodeDto;
+    perProfile: GiftCodeProfileUsageDto[];
+    recentRedemptions: GiftCodeRedemptionDto[];
   }> {
-    const pool = getDbPool()
-    const code = await this.findByIdWithUsage(pool, id)
-    if (!code) throw this.notFound(id)
+    const pool = getDbPool();
+    const code = await this.findByIdWithUsage(pool, id);
+    if (!code) throw this.notFound(id);
 
     const perProfile = await pool.query<{
-      profile_id: string
-      consumed: number
-      released: number
-      discount_irr: string
+      profile_id: string;
+      consumed: number;
+      released: number;
+      discount_irr: string;
     }>(
       `SELECT profile_id,
               COUNT(*) FILTER (WHERE status = 'consumed')::int AS consumed,
@@ -245,17 +243,17 @@ export class GiftCodeService {
         WHERE gift_code_id = $1
         GROUP BY profile_id
         ORDER BY consumed DESC, profile_id`,
-      [id],
-    )
+      [id]
+    );
     const recent = await pool.query<RedemptionRow>(
       `SELECT id, gift_code_id, profile_id, order_id, discount_amount, status, created_at
          FROM gift_code_redemptions
         WHERE gift_code_id = $1
         ORDER BY created_at DESC
         LIMIT 25`,
-      [id],
-    )
-    const withProfiles = await this.attachProfileIds(pool, [code])
+      [id]
+    );
+    const withProfiles = await this.attachProfileIds(pool, [code]);
     return {
       code: withProfiles[0] as GiftCodeDto,
       perProfile: perProfile.rows.map((row) => ({
@@ -265,7 +263,7 @@ export class GiftCodeService {
         discountIrr: row.discount_irr,
       })),
       recentRedemptions: recent.rows.map((row) => this.toRedemptionDto(row)),
-    }
+    };
   }
 
   // ─── Admin mutations ───────────────────────────────────────────────────
@@ -277,8 +275,8 @@ export class GiftCodeService {
    * ONE transaction.
    */
   async create(input: CreateGiftCodeInput): Promise<GiftCodeDto> {
-    const code = this.assertNormalizedCode(input.code)
-    const validation = validateGiftCodePayload(input)
+    const code = this.assertNormalizedCode(input.code);
+    const validation = validateGiftCodePayload(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -287,24 +285,24 @@ export class GiftCodeService {
           message: 'Invalid gift code payload',
           details: validation.errors,
         },
-        400,
-      )
+        400
+      );
     }
-    const eligibility = this.assertEligibility(input.eligibility)
-    const profileIds = this.assertProfileScope(eligibility, input.profileIds)
-    const minOrderAmount = this.assertMinOrderAmount(input.minOrderAmount)
-    const categories = this.assertCategories(input.categories)
+    const eligibility = this.assertEligibility(input.eligibility);
+    const profileIds = this.assertProfileScope(eligibility, input.profileIds);
+    const minOrderAmount = this.assertMinOrderAmount(input.minOrderAmount);
+    const categories = this.assertCategories(input.categories);
 
-    const pool = getDbPool()
-    const existing = await pool.query('SELECT 1 FROM gift_codes WHERE code = $1', [code])
+    const pool = getDbPool();
+    const existing = await pool.query('SELECT 1 FROM gift_codes WHERE code = $1', [code]);
     if (existing.rows.length > 0) {
-      throw this.alreadyExists(code)
+      throw this.alreadyExists(code);
     }
-    const validFrom = input.validFrom !== undefined ? new Date(input.validFrom) : new Date()
-    if (Number.isNaN(validFrom.getTime())) throw this.invalidField('validFrom')
-    const validUntil = input.validUntil !== null ? new Date(input.validUntil) : null
+    const validFrom = input.validFrom !== undefined ? new Date(input.validFrom) : new Date();
+    if (Number.isNaN(validFrom.getTime())) throw this.invalidField('validFrom');
+    const validUntil = input.validUntil !== null ? new Date(input.validUntil) : null;
     if (validUntil !== null && Number.isNaN(validUntil.getTime())) {
-      throw this.invalidField('validUntil')
+      throw this.invalidField('validUntil');
     }
     if (validUntil !== null && validUntil.getTime() <= validFrom.getTime()) {
       throw new HttpException(
@@ -313,12 +311,12 @@ export class GiftCodeService {
           error: 'GIFT_CODE_INVALID_WINDOW',
           message: 'validUntil must be strictly after validFrom',
         },
-        400,
-      )
+        400
+      );
     }
 
     return this.withTransaction(async (q) => {
-      const id = uuidv7()
+      const id = uuidv7();
       await q.query(
         `INSERT INTO gift_codes
            (id, code, discount_type, discount_value, max_cap_irr, eligibility,
@@ -326,13 +324,24 @@ export class GiftCodeService {
             min_order_amount, categories, status, created_by, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'active', $13, $14, $14)`,
         [
-          id, code, input.discountType, input.discountValue, input.maxCapIrr, eligibility,
-          input.totalLimit ?? null, input.perProfileLimit ?? null, validFrom, validUntil,
-          minOrderAmount, categories, input.actorUserId, new Date(),
-        ],
-      )
+          id,
+          code,
+          input.discountType,
+          input.discountValue,
+          input.maxCapIrr,
+          eligibility,
+          input.totalLimit ?? null,
+          input.perProfileLimit ?? null,
+          validFrom,
+          validUntil,
+          minOrderAmount,
+          categories,
+          input.actorUserId,
+          new Date(),
+        ]
+      );
       if (profileIds.length > 0) {
-        await this.insertProfiles(q, id, profileIds)
+        await this.insertProfiles(q, id, profileIds);
       }
       await this.recordChange(q, {
         actorUserId: input.actorUserId,
@@ -354,10 +363,10 @@ export class GiftCodeService {
           minOrderAmount,
           categories: categories.length > 0 ? categories : undefined,
         },
-      })
-      this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actorUserId}`)
-      return this.readDto(q, id)
-    })
+      });
+      this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actorUserId}`);
+      return this.readDto(q, id);
+    });
   }
 
   /**
@@ -368,22 +377,28 @@ export class GiftCodeService {
    */
   async update(id: string, input: UpdateGiftCodeInput): Promise<GiftCodeDto> {
     return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id)
-      if (!current) throw this.notFound(id)
+      const current = await this.findById(q, id);
+      if (!current) throw this.notFound(id);
 
-      const code = input.code !== undefined ? this.assertNormalizedCode(input.code) : current.code
+      const code = input.code !== undefined ? this.assertNormalizedCode(input.code) : current.code;
       if (code !== current.code) {
-        const dup = await q.query('SELECT 1 FROM gift_codes WHERE code = $1 AND id <> $2', [code, id])
-        if (dup.rows.length > 0) throw this.alreadyExists(code)
+        const dup = await q.query('SELECT 1 FROM gift_codes WHERE code = $1 AND id <> $2', [
+          code,
+          id,
+        ]);
+        if (dup.rows.length > 0) throw this.alreadyExists(code);
       }
-      const discountType = input.discountType ?? current.discount_type
-      const discountValue = input.discountValue ?? current.discount_value
+      const discountType = input.discountType ?? current.discount_type;
+      const discountValue = input.discountValue ?? current.discount_value;
       // A code converted to fixed_irr NEVER keeps a cap: when the caller
       // switched the type and did not supply a cap, force null (otherwise
       // the stale stored cap trips the fixed-forbids-cap rule forever).
-      const maxCapIrr = input.maxCapIrr !== undefined
-        ? input.maxCapIrr
-        : (discountType === 'fixed_irr' ? null : current.max_cap_irr)
+      const maxCapIrr =
+        input.maxCapIrr !== undefined
+          ? input.maxCapIrr
+          : discountType === 'fixed_irr'
+            ? null
+            : current.max_cap_irr;
       const validation = validateGiftCodePayload({
         discountType,
         discountValue,
@@ -393,7 +408,7 @@ export class GiftCodeService {
         minOrderAmount: input.minOrderAmount ?? current.min_order_amount,
         validFrom: input.validFrom ?? current.valid_from,
         validUntil: input.validUntil !== undefined ? input.validUntil : current.valid_until,
-      })
+      });
       if (!validation.ok) {
         throw new HttpException(
           {
@@ -402,36 +417,41 @@ export class GiftCodeService {
             message: 'Invalid gift code payload',
             details: validation.errors,
           },
-          400,
-        )
+          400
+        );
       }
-      const eligibility = input.eligibility !== undefined
-        ? this.assertEligibility(input.eligibility)
-        : current.eligibility
-      const profileIds = input.profileIds !== undefined
-        ? this.assertProfileScope(eligibility, input.profileIds)
-        : undefined
-      const minOrderAmount = input.minOrderAmount !== undefined
-        ? this.assertMinOrderAmount(input.minOrderAmount)
-        : current.min_order_amount
-      const categories = input.categories !== undefined
-        ? this.assertCategories(input.categories)
-        : current.categories
+      const eligibility =
+        input.eligibility !== undefined
+          ? this.assertEligibility(input.eligibility)
+          : current.eligibility;
+      const profileIds =
+        input.profileIds !== undefined
+          ? this.assertProfileScope(eligibility, input.profileIds)
+          : undefined;
+      const minOrderAmount =
+        input.minOrderAmount !== undefined
+          ? this.assertMinOrderAmount(input.minOrderAmount)
+          : current.min_order_amount;
+      const categories =
+        input.categories !== undefined
+          ? this.assertCategories(input.categories)
+          : current.categories;
 
-      let validFrom: Date = new Date(current.valid_from)
+      let validFrom: Date = new Date(current.valid_from);
       if (input.validFrom !== undefined) {
-        const parsed = new Date(input.validFrom)
-        if (Number.isNaN(parsed.getTime())) throw this.invalidField('validFrom')
-        validFrom = parsed
+        const parsed = new Date(input.validFrom);
+        if (Number.isNaN(parsed.getTime())) throw this.invalidField('validFrom');
+        validFrom = parsed;
       }
-      let validUntil: Date | null = current.valid_until !== null ? new Date(current.valid_until) : null
+      let validUntil: Date | null =
+        current.valid_until !== null ? new Date(current.valid_until) : null;
       if (input.validUntil !== undefined) {
         if (input.validUntil === null) {
-          validUntil = null
+          validUntil = null;
         } else {
-          const parsed = new Date(input.validUntil)
-          if (Number.isNaN(parsed.getTime())) throw this.invalidField('validUntil')
-          validUntil = parsed
+          const parsed = new Date(input.validUntil);
+          if (Number.isNaN(parsed.getTime())) throw this.invalidField('validUntil');
+          validUntil = parsed;
         }
       }
       if (validUntil !== null && validUntil.getTime() <= validFrom.getTime()) {
@@ -441,8 +461,8 @@ export class GiftCodeService {
             error: 'GIFT_CODE_INVALID_WINDOW',
             message: 'validUntil must be strictly after validFrom',
           },
-          400,
-        )
+          400
+        );
       }
 
       await q.query(
@@ -453,19 +473,27 @@ export class GiftCodeService {
                 categories = $11, updated_at = $12
           WHERE id = $13`,
         [
-          code, discountType, discountValue, maxCapIrr, eligibility,
+          code,
+          discountType,
+          discountValue,
+          maxCapIrr,
+          eligibility,
           input.totalLimit !== undefined ? input.totalLimit : current.total_limit,
           input.perProfileLimit !== undefined ? input.perProfileLimit : current.per_profile_limit,
-          validFrom, validUntil,
-          minOrderAmount, categories, new Date(), id,
-        ],
-      )
+          validFrom,
+          validUntil,
+          minOrderAmount,
+          categories,
+          new Date(),
+          id,
+        ]
+      );
       // Replace profile scopes whenever provided (or eligibility changed
       // to public — clear stale scopes).
       if (input.profileIds !== undefined || eligibility !== current.eligibility) {
-        await q.query('DELETE FROM gift_code_profiles WHERE gift_code_id = $1', [id])
+        await q.query('DELETE FROM gift_code_profiles WHERE gift_code_id = $1', [id]);
         if (profileIds !== undefined && profileIds.length > 0) {
-          await this.insertProfiles(q, id, profileIds)
+          await this.insertProfiles(q, id, profileIds);
         }
       }
 
@@ -483,10 +511,10 @@ export class GiftCodeService {
           ...(input.maxCapIrr !== undefined ? { maxCapIrr } : {}),
           ...(input.eligibility !== undefined ? { eligibility } : {}),
         },
-      })
-      this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actorUserId}`)
-      return this.readDto(q, id)
-    })
+      });
+      this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actorUserId}`);
+      return this.readDto(q, id);
+    });
   }
 
   /**
@@ -497,29 +525,31 @@ export class GiftCodeService {
     id: string,
     status: GiftCodeStatus,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<GiftCodeDto> {
-    if (!isGiftCodeStatus(status)) throw this.invalidField('status')
+    if (!isGiftCodeStatus(status)) throw this.invalidField('status');
     return this.withTransaction(async (q) => {
-      const current = await this.findById(q, id)
-      if (!current) throw this.notFound(id)
-      if (current.status === status) return this.readDto(q, id)
+      const current = await this.findById(q, id);
+      if (!current) throw this.notFound(id);
+      if (current.status === status) return this.readDto(q, id);
 
       await q.query('UPDATE gift_codes SET status = $1, updated_at = $2 WHERE id = $3', [
-        status, new Date(), id,
-      ])
+        status,
+        new Date(),
+        id,
+      ]);
       await this.recordChange(q, {
         actorUserId,
         ip,
         entity: 'gift_code',
         action: status === 'active' ? 'activated' : 'deactivated',
         meta: { giftCodeId: id, code: current.code },
-      })
+      });
       this.logger.log(
-        `Gift code ${status === 'active' ? 'activated' : 'deactivated'}: id=${id}, actor=${actorUserId}`,
-      )
-      return this.readDto(q, id)
-    })
+        `Gift code ${status === 'active' ? 'activated' : 'deactivated'}: id=${id}, actor=${actorUserId}`
+      );
+      return this.readDto(q, id);
+    });
   }
 
   // ─── Redemption seam (order creation) ──────────────────────────────────
@@ -537,7 +567,7 @@ export class GiftCodeService {
    * serialize against the total/per-profile limits (no oversell).
    */
   async redeem(input: RedeemGiftCodeInput, q?: DbExecutor): Promise<GiftCodeRedemptionDto> {
-    const code = normalizeGiftCode(input.giftCode)
+    const code = normalizeGiftCode(input.giftCode);
     const run = async (tx: DbExecutor): Promise<GiftCodeRedemptionDto> => {
       const lock = await tx.query<GiftCodeRow>(
         `SELECT id, code, discount_type, discount_value, max_cap_irr, eligibility,
@@ -546,33 +576,33 @@ export class GiftCodeService {
            FROM gift_codes
           WHERE code = $1
           FOR UPDATE`,
-        [code],
-      )
-      const gift = lock.rows[0]
-      if (!gift) throw this.http(404, GIFT_CODE_NOT_FOUND, `Gift code ${code} not found`)
+        [code]
+      );
+      const gift = lock.rows[0];
+      if (!gift) throw this.http(404, GIFT_CODE_NOT_FOUND, `Gift code ${code} not found`);
 
       if (gift.status !== 'active') {
-        throw this.http(400, GIFT_CODE_INACTIVE, `Gift code ${code} is not active`)
+        throw this.http(400, GIFT_CODE_INACTIVE, `Gift code ${code} is not active`);
       }
-      const now = Date.now()
+      const now = Date.now();
       if (new Date(gift.valid_from).getTime() > now) {
-        throw this.http(400, GIFT_CODE_NOT_YET_VALID, `Gift code ${code} is not valid yet`)
+        throw this.http(400, GIFT_CODE_NOT_YET_VALID, `Gift code ${code} is not valid yet`);
       }
       if (gift.valid_until !== null && new Date(gift.valid_until).getTime() <= now) {
-        throw this.http(400, GIFT_CODE_EXPIRED, `Gift code ${code} has expired`)
+        throw this.http(400, GIFT_CODE_EXPIRED, `Gift code ${code} has expired`);
       }
 
       if (gift.eligibility === 'profile') {
         const scope = await tx.query(
           'SELECT 1 FROM gift_code_profiles WHERE gift_code_id = $1 AND profile_id = $2',
-          [gift.id, input.profileId],
-        )
+          [gift.id, input.profileId]
+        );
         if (scope.rows.length === 0) {
           throw this.http(
             403,
             GIFT_CODE_NOT_ELIGIBLE,
-            `Gift code ${code} is not eligible for this profile`,
-          )
+            `Gift code ${code} is not eligible for this profile`
+          );
         }
       }
 
@@ -580,44 +610,48 @@ export class GiftCodeService {
         const total = await tx.query<{ n: number }>(
           `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
             WHERE gift_code_id = $1 AND status = 'consumed'`,
-          [gift.id],
-        )
+          [gift.id]
+        );
         if ((total.rows[0]?.n ?? 0) >= gift.total_limit) {
-          throw this.http(400, GIFT_CODE_TOTAL_LIMIT_REACHED, `Gift code ${code} usage limit reached`)
+          throw this.http(
+            400,
+            GIFT_CODE_TOTAL_LIMIT_REACHED,
+            `Gift code ${code} usage limit reached`
+          );
         }
       }
       if (gift.per_profile_limit !== null) {
         const perProfile = await tx.query<{ n: number }>(
           `SELECT COUNT(*)::int AS n FROM gift_code_redemptions
             WHERE gift_code_id = $1 AND profile_id = $2 AND status = 'consumed'`,
-          [gift.id, input.profileId],
-        )
+          [gift.id, input.profileId]
+        );
         if ((perProfile.rows[0]?.n ?? 0) >= gift.per_profile_limit) {
           throw this.http(
             400,
             GIFT_CODE_PROFILE_LIMIT_REACHED,
-            `Gift code ${code} limit reached for this profile`,
-          )
+            `Gift code ${code} limit reached for this profile`
+          );
         }
       }
 
-      const orderAmount = BigInt(input.orderAmount)
+      const orderAmount = BigInt(input.orderAmount);
       if (orderAmount < 0n) {
-        throw this.http(400, 'GIFT_CODE_INVALID_ORDER', 'orderAmount must be >= 0')
+        throw this.http(400, 'GIFT_CODE_INVALID_ORDER', 'orderAmount must be >= 0');
       }
       if (orderAmount < BigInt(gift.min_order_amount)) {
         throw this.http(
           400,
           GIFT_CODE_MIN_ORDER_NOT_MET,
-          `Gift code ${code} requires a minimum order of ${gift.min_order_amount} IRR`,
-        )
+          `Gift code ${code} requires a minimum order of ${gift.min_order_amount} IRR`
+        );
       }
       if (gift.categories.length > 0 && !gift.categories.includes(input.category)) {
         throw this.http(
           400,
           GIFT_CODE_CATEGORY_NOT_ELIGIBLE,
-          `Gift code ${code} does not apply to category ${input.category}`,
-        )
+          `Gift code ${code} does not apply to category ${input.category}`
+        );
       }
 
       const discountAmount = computeGiftDiscount({
@@ -625,15 +659,15 @@ export class GiftCodeService {
         discountValue: gift.discount_value,
         maxCapIrr: gift.max_cap_irr,
         orderAmount: input.orderAmount,
-      })
+      });
 
       const inserted = await tx.query<RedemptionRow>(
         `INSERT INTO gift_code_redemptions
            (id, gift_code_id, profile_id, order_id, discount_amount, status, created_at)
          VALUES ($1, $2, $3, $4, $5, 'consumed', $6)
          RETURNING id, gift_code_id, profile_id, order_id, discount_amount, status, created_at`,
-        [uuidv7(), gift.id, input.profileId, input.orderId, discountAmount, new Date()],
-      )
+        [uuidv7(), gift.id, input.profileId, input.orderId, discountAmount, new Date()]
+      );
       // The ledger row is the primary trace, mirroring the epic's audit
       // posture with a change_recorded event (same executor → commits
       // with the redemption, no out-of-band writes).
@@ -650,28 +684,28 @@ export class GiftCodeService {
             orderId: input.orderId,
             discountAmount,
           },
-        })
+        });
       }
       this.logger.log(
         `Gift code redeemed: code=${code}, order=${input.orderId}, ` +
-          `profile=${input.profileId}, discount=${discountAmount}`,
-      )
-      return this.toRedemptionDto(inserted.rows[0] as RedemptionRow)
-    }
+          `profile=${input.profileId}, discount=${discountAmount}`
+      );
+      return this.toRedemptionDto(inserted.rows[0] as RedemptionRow);
+    };
 
     if (q !== undefined) {
       try {
-        return await run(q)
+        return await run(q);
       } catch (error) {
         // Caller owns the transaction (orders create flow): translate pg
         // races here too — the caller will ROLLBACK the raw error, but
         // surfacing a clean 409 instead of a raw pg 500 is this service's
         // contract.
-        this.translatePgErrors(error)
-        throw error
+        this.translatePgErrors(error);
+        throw error;
       }
     }
-    return this.withTransaction(run)
+    return this.withTransaction(run);
   }
 
   /**
@@ -689,15 +723,15 @@ export class GiftCodeService {
   async releaseByOrder(
     orderId: string,
     q?: DbExecutor,
-    audit?: { actorUserId: string; ip: string },
+    audit?: { actorUserId: string; ip: string }
   ): Promise<{ released: number }> {
     const run = async (tx: DbExecutor): Promise<{ released: number }> => {
       const result = await tx.query(
         `UPDATE gift_code_redemptions SET status = 'released'
           WHERE order_id = $1 AND status = 'consumed'`,
-        [orderId],
-      )
-      const released = result.rowCount ?? 0
+        [orderId]
+      );
+      const released = result.rowCount ?? 0;
       if (released > 0) {
         if (audit !== undefined) {
           await this.recordChange(tx, {
@@ -706,25 +740,25 @@ export class GiftCodeService {
             entity: 'gift_code',
             action: 'released',
             meta: { orderId },
-          })
+          });
         }
-        this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`)
+        this.logger.log(`Gift code slot(s) released for cancelled order ${orderId}: ${released}`);
       }
-      return { released }
-    }
+      return { released };
+    };
 
-    if (q !== undefined) return run(q)
-    return this.withTransaction(run)
+    if (q !== undefined) return run(q);
+    return this.withTransaction(run);
   }
 
   private assertEligibility(raw: unknown): GiftCodeEligibility {
-    if (!isGiftCodeEligibility(raw)) throw this.invalidField('eligibility')
-    return raw
+    if (!isGiftCodeEligibility(raw)) throw this.invalidField('eligibility');
+    return raw;
   }
 
   private assertNormalizedCode(raw: string): string {
-    if (typeof raw !== 'string') throw this.invalidField('code')
-    const code = normalizeGiftCode(raw)
+    if (typeof raw !== 'string') throw this.invalidField('code');
+    const code = normalizeGiftCode(raw);
     if (!GIFT_CODE_PATTERN.test(code)) {
       throw new HttpException(
         {
@@ -733,20 +767,20 @@ export class GiftCodeService {
           message:
             'code must be 3-64 characters: letters, digits, dash or underscore (case-insensitive)',
         },
-        400,
-      )
+        400
+      );
     }
-    return code
+    return code;
   }
 
   private assertProfileScope(
     eligibility: GiftCodeEligibility,
-    profileIds: string[] | undefined,
+    profileIds: string[] | undefined
   ): string[] {
-    const ids = [...new Set((profileIds ?? []).map((p) => p.trim()).filter((p) => p.length > 0))]
+    const ids = [...new Set((profileIds ?? []).map((p) => p.trim()).filter((p) => p.length > 0))];
     for (const id of ids) {
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-        throw this.invalidField('profileIds')
+        throw this.invalidField('profileIds');
       }
     }
     if (eligibility === 'profile' && ids.length === 0) {
@@ -756,36 +790,41 @@ export class GiftCodeService {
           error: GIFT_CODE_PROFILES_REQUIRED,
           message: 'profile-restricted gift codes require at least one profile',
         },
-        400,
-      )
+        400
+      );
     }
-    return ids
+    return ids;
   }
 
   private assertMinOrderAmount(raw: string): string {
-    let value: bigint
+    let value: bigint;
     try {
-      value = BigInt(String(raw))
+      value = BigInt(String(raw));
     } catch {
-      throw this.invalidField('minOrderAmount')
+      throw this.invalidField('minOrderAmount');
     }
-    if (value < 0n) throw this.invalidField('minOrderAmount')
-    return value.toString()
+    if (value < 0n) throw this.invalidField('minOrderAmount');
+    return value.toString();
   }
 
   private assertCategories(raw: string[]): string[] {
-    if (!Array.isArray(raw)) throw this.invalidField('categories')
-    const uniq = [...new Set(raw.map((c) => c.trim()).filter((c) => c.length > 0))]
-    if (uniq.some((c) => !GIFT_CODE_CATEGORY_PATTERN.test(c))) throw this.invalidField('categories')
-    return uniq
+    if (!Array.isArray(raw)) throw this.invalidField('categories');
+    const uniq = [...new Set(raw.map((c) => c.trim()).filter((c) => c.length > 0))];
+    if (uniq.some((c) => !GIFT_CODE_CATEGORY_PATTERN.test(c)))
+      throw this.invalidField('categories');
+    return uniq;
   }
 
-  private async insertProfiles(q: DbExecutor, giftCodeId: string, profileIds: string[]): Promise<void> {
+  private async insertProfiles(
+    q: DbExecutor,
+    giftCodeId: string,
+    profileIds: string[]
+  ): Promise<void> {
     for (const profileId of profileIds) {
-      await q.query(
-        'INSERT INTO gift_code_profiles (gift_code_id, profile_id) VALUES ($1, $2)',
-        [giftCodeId, profileId],
-      )
+      await q.query('INSERT INTO gift_code_profiles (gift_code_id, profile_id) VALUES ($1, $2)', [
+        giftCodeId,
+        profileId,
+      ]);
     }
   }
 
@@ -798,7 +837,7 @@ export class GiftCodeService {
       discountAmount: row.discount_amount,
       status: row.status,
       createdAt: row.created_at,
-    }
+    };
   }
 
   private toDto(row: GiftCodeWithUsageRow, profileIds: string[]): GiftCodeDto {
@@ -825,24 +864,27 @@ export class GiftCodeService {
         released: row.released,
         totalDiscountIrr: row.total_discount,
       } satisfies GiftCodeDto['usage'],
-    }
+    };
   }
 
-  private async attachProfileIds(q: DbExecutor, rows: GiftCodeWithUsageRow[]): Promise<GiftCodeDto[]> {
-    if (rows.length === 0) return []
+  private async attachProfileIds(
+    q: DbExecutor,
+    rows: GiftCodeWithUsageRow[]
+  ): Promise<GiftCodeDto[]> {
+    if (rows.length === 0) return [];
     const entries = await q.query<{ gift_code_id: string; profile_id: string }>(
       `SELECT gift_code_id, profile_id FROM gift_code_profiles
         WHERE gift_code_id = ANY($1::uuid[])
         ORDER BY profile_id`,
-      [rows.map((r) => r.id)],
-    )
-    const byCode = new Map<string, string[]>()
+      [rows.map((r) => r.id)]
+    );
+    const byCode = new Map<string, string[]>();
     for (const entry of entries.rows) {
-      const list = byCode.get(entry.gift_code_id) ?? []
-      list.push(entry.profile_id)
-      byCode.set(entry.gift_code_id, list)
+      const list = byCode.get(entry.gift_code_id) ?? [];
+      list.push(entry.profile_id);
+      byCode.set(entry.gift_code_id, list);
     }
-    return rows.map((row) => this.toDto(row, byCode.get(row.id) ?? []))
+    return rows.map((row) => this.toDto(row, byCode.get(row.id) ?? []));
   }
 
   private async findById(q: DbExecutor, id: string): Promise<GiftCodeRow | null> {
@@ -852,15 +894,12 @@ export class GiftCodeService {
               min_order_amount, categories, status, created_by, created_at, updated_at
          FROM gift_codes
         WHERE id = $1`,
-      [id],
-    )
-    return result.rows[0] ?? null
+      [id]
+    );
+    return result.rows[0] ?? null;
   }
 
-  private async findByIdWithUsage(
-    q: DbExecutor,
-    id: string,
-  ): Promise<GiftCodeWithUsageRow | null> {
+  private async findByIdWithUsage(q: DbExecutor, id: string): Promise<GiftCodeWithUsageRow | null> {
     const result = await q.query<GiftCodeWithUsageRow>(
       `SELECT gc.id, gc.code, gc.discount_type, gc.discount_value, gc.max_cap_irr,
               gc.eligibility, gc.total_limit, gc.per_profile_limit,
@@ -873,16 +912,16 @@ export class GiftCodeService {
          LEFT JOIN gift_code_redemptions gcr ON gcr.gift_code_id = gc.id
         WHERE gc.id = $1
         GROUP BY gc.id`,
-      [id],
-    )
-    return result.rows[0] ?? null
+      [id]
+    );
+    return result.rows[0] ?? null;
   }
 
   private async readDto(q: DbExecutor, id: string): Promise<GiftCodeDto> {
-    const row = await this.findByIdWithUsage(q, id)
-    if (!row) throw this.notFound(id)
-    const [dto] = await this.attachProfileIds(q, [row])
-    return dto as GiftCodeDto
+    const row = await this.findByIdWithUsage(q, id);
+    if (!row) throw this.notFound(id);
+    const [dto] = await this.attachProfileIds(q, [row]);
+    return dto as GiftCodeDto;
   }
 
   private invalidField(field: string): HttpException {
@@ -892,8 +931,8 @@ export class GiftCodeService {
         error: 'GIFT_CODE_INVALID_FIELD',
         message: `Invalid ${field}`,
       },
-      400,
-    )
+      400
+    );
   }
 
   private notFound(id: string): HttpException {
@@ -903,8 +942,8 @@ export class GiftCodeService {
         error: GIFT_CODE_NOT_FOUND,
         message: `Gift code ${id} not found`,
       },
-      404,
-    )
+      404
+    );
   }
 
   private alreadyExists(code: string): HttpException {
@@ -914,12 +953,12 @@ export class GiftCodeService {
         error: GIFT_CODE_ALREADY_EXISTS,
         message: `A gift code with the code ${code} already exists (codes are case-insensitive)`,
       },
-      409,
-    )
+      409
+    );
   }
 
   private http(statusCode: number, error: string, message: string): HttpException {
-    return new HttpException({ statusCode, error, message }, statusCode)
+    return new HttpException({ statusCode, error, message }, statusCode);
   }
 
   private isPgError(error: unknown, code: string): boolean {
@@ -928,26 +967,26 @@ export class GiftCodeService {
       error !== null &&
       'code' in error &&
       (error as { code: string }).code === code
-    )
+    );
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
   private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
-    const client = await getDbPool().connect()
-    let committed = false
+    const client = await getDbPool().connect();
+    let committed = false;
     try {
-      await client.query('BEGIN')
-      const result = await fn(client)
-      await client.query('COMMIT')
-      committed = true
-      return result
+      await client.query('BEGIN');
+      const result = await fn(client);
+      await client.query('COMMIT');
+      committed = true;
+      return result;
     } catch (error) {
-      if (committed) throw error
-      await client.query('ROLLBACK').catch(() => {})
-      this.translatePgErrors(error)
-      throw error
+      if (committed) throw error;
+      await client.query('ROLLBACK').catch(() => {});
+      this.translatePgErrors(error);
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -966,7 +1005,7 @@ export class GiftCodeService {
       // Disambiguate by constraint name: the normalized-code index
       // racing a concurrent create is a duplicate code; the
       // one-redemption-per-order index is a code already applied.
-      const constraint = (error as { constraint?: string }).constraint
+      const constraint = (error as { constraint?: string }).constraint;
       if (constraint === 'uq_gift_code_redemptions_order_id') {
         throw new HttpException(
           {
@@ -974,8 +1013,8 @@ export class GiftCodeService {
             error: GIFT_CODE_ALREADY_APPLIED,
             message: 'A gift code has already been applied to this order',
           },
-          409,
-        )
+          409
+        );
       }
       throw new HttpException(
         {
@@ -983,8 +1022,8 @@ export class GiftCodeService {
           error: GIFT_CODE_ALREADY_EXISTS,
           message: 'A gift code with this code already exists (codes are case-insensitive)',
         },
-        409,
-      )
+        409
+      );
     }
     if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
       throw new HttpException(
@@ -993,8 +1032,8 @@ export class GiftCodeService {
           error: 'GIFT_CODE_REFERENCE_MISSING',
           message: 'A referenced profile or order no longer exists',
         },
-        409,
-      )
+        409
+      );
     }
   }
 
@@ -1002,16 +1041,16 @@ export class GiftCodeService {
   private async recordChange(
     q: DbExecutor,
     input: {
-      actorUserId: string
-      ip: string
-      entity: string
-      action: string
-      meta: Record<string, unknown>
-    },
+      actorUserId: string;
+      ip: string;
+      entity: string;
+      action: string;
+      meta: Record<string, unknown>;
+    }
   ): Promise<void> {
     // Correlate with the originating request when one exists (AsyncLocal
     // Storage set by CorrelationIdMiddleware); fall back to a fresh id.
-    const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7()
+    const correlationId = this.correlationIdProvider.getCorrelationId() ?? uuidv7();
     await q.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, 'change_recorded', $3::jsonb, $4, $5, $6)`,
@@ -1022,7 +1061,7 @@ export class GiftCodeService {
         correlationId,
         input.ip,
         new Date(),
-      ],
-    )
+      ]
+    );
   }
 }

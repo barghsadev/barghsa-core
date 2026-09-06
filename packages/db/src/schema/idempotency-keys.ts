@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm'
-import { check, index, jsonb, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types'
+import { sql } from 'drizzle-orm';
+import { check, index, jsonb, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types';
 
 /**
  * Unified idempotency cache (T-04.2.03.03 / C-04.CC.01).
@@ -42,22 +42,22 @@ export const idempotencyKeys = pgTable(
   (table) => ({
     keyNonblank: check(
       'chk_idempotency_keys_key_nonblank',
-      sql`char_length(btrim(${table.idempotencyKey})) > 0`,
+      sql`char_length(btrim(${table.idempotencyKey})) > 0`
     ),
     entityTypeNonblank: check(
       'chk_idempotency_keys_entity_type_nonblank',
-      sql`char_length(btrim(${table.entityType})) > 0`,
+      sql`char_length(btrim(${table.entityType})) > 0`
     ),
     /** At most one cached result per (idempotencyKey, entityType). */
     keyEntityTypeUnique: uniqueIndex('uq_idempotency_keys_key_entity_type').on(
       table.idempotencyKey,
-      table.entityType,
+      table.entityType
     ),
     expiresAtIdx: index('idx_idempotency_keys_expires_at')
       .on(table.expiresAt)
       .where(sql`${table.expiresAt} IS NOT NULL`),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the idempotency_keys table (migration 0073 source).
@@ -84,4 +84,4 @@ export const createIdempotencyKeysTable = sql`
   CREATE INDEX IF NOT EXISTS idx_idempotency_keys_expires_at
     ON idempotency_keys (expires_at)
     WHERE expires_at IS NOT NULL;
-`
+`;

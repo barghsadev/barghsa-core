@@ -1,9 +1,9 @@
-import { sql } from 'drizzle-orm'
-import { text, timestamp, uuid, pgTable } from 'drizzle-orm/pg-core'
-import { uuidv7, irrAmount } from '../types'
-import { users } from './users'
-import { profiles } from './profiles'
-import { products } from './products'
+import { sql } from 'drizzle-orm';
+import { text, timestamp, uuid, pgTable } from 'drizzle-orm/pg-core';
+import { uuidv7, irrAmount } from '../types';
+import { users } from './users';
+import { profiles } from './profiles';
+import { products } from './products';
 
 /**
  * Orders table (T-03.04.02).
@@ -24,79 +24,72 @@ import { products } from './products'
  * - `snapshot_postal_code` — address snapshot: postal code (copied).
  * - `created_at` / `updated_at` — audit columns.
  */
-export const orders = pgTable(
-  'orders',
-  {
-    /** UUIDv7 opaque order identifier. */
-    id: uuidv7('id').primaryKey().notNull(),
+export const orders = pgTable('orders', {
+  /** UUIDv7 opaque order identifier. */
+  id: uuidv7('id').primaryKey().notNull(),
 
-    /** Foreign key to the ordering user. */
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.userId, { onDelete: 'restrict' }),
+  /** Foreign key to the ordering user. */
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.userId, { onDelete: 'restrict' }),
 
-    /** Foreign key to the active profile. */
-    profileId: uuid('profile_id')
-      .notNull()
-      .references(() => profiles.id, { onDelete: 'restrict' }),
+  /** Foreign key to the active profile. */
+  profileId: uuid('profile_id')
+    .notNull()
+    .references(() => profiles.id, { onDelete: 'restrict' }),
 
-    /** Foreign key to the ordered product. */
-    productId: uuid('product_id')
-      .notNull()
-      .references(() => products.id, { onDelete: 'restrict' }),
+  /** Foreign key to the ordered product. */
+  productId: uuid('product_id')
+    .notNull()
+    .references(() => products.id, { onDelete: 'restrict' }),
 
-    /** Order type discriminator. */
-    orderType: text('order_type', {
-      enum: ['electricity', 'savings', 'solar'],
-    }).notNull(),
+  /** Order type discriminator. */
+  orderType: text('order_type', {
+    enum: ['electricity', 'savings', 'solar'],
+  }).notNull(),
 
-    /** Order lifecycle status. */
-    status: text('status', {
-      enum: ['DRAFT', 'PENDING', 'CONFIRMED', 'CANCELLED'],
-    })
-      .notNull()
-      .default('DRAFT'),
+  /** Order lifecycle status. */
+  status: text('status', {
+    enum: ['DRAFT', 'PENDING', 'CONFIRMED', 'CANCELLED'],
+  })
+    .notNull()
+    .default('DRAFT'),
 
-    /** Address snapshot — province id (copied from profile address). */
-    snapshotProvinceId: text('snapshot_province_id').notNull(),
+  /** Address snapshot — province id (copied from profile address). */
+  snapshotProvinceId: text('snapshot_province_id').notNull(),
 
-    /** Address snapshot — city id (copied from profile address). */
-    snapshotCityId: text('snapshot_city_id').notNull(),
+  /** Address snapshot — city id (copied from profile address). */
+  snapshotCityId: text('snapshot_city_id').notNull(),
 
-    /** Address snapshot — full address text (copied from profile address). */
-    snapshotFullAddress: text('snapshot_full_address').notNull(),
+  /** Address snapshot — full address text (copied from profile address). */
+  snapshotFullAddress: text('snapshot_full_address').notNull(),
 
-    /** Address snapshot — postal code (copied from profile address). */
-    snapshotPostalCode: text('snapshot_postal_code').notNull(),
+  /** Address snapshot — postal code (copied from profile address). */
+  snapshotPostalCode: text('snapshot_postal_code').notNull(),
 
-    /**
-     * Gift code applied at order creation (T-09.12.03) — denormalized
-     * mirror of the authoritative association in
-     * `gift_code_redemptions.order_id` (UNIQUE): at most one gift code
-     * per order. Nullable until a code is redeemed on the order. No FK
-     * here on purpose — referential integrity and the code link live
-     * in the redemption ledger, keeping the schema acyclic.
-     */
-    giftCodeId: uuid('gift_code_id'),
+  /**
+   * Gift code applied at order creation (T-09.12.03) — denormalized
+   * mirror of the authoritative association in
+   * `gift_code_redemptions.order_id` (UNIQUE): at most one gift code
+   * per order. Nullable until a code is redeemed on the order. No FK
+   * here on purpose — referential integrity and the code link live
+   * in the redemption ledger, keeping the schema acyclic.
+   */
+  giftCodeId: uuid('gift_code_id'),
 
-    /**
-     * Exact IRR discount applied by the gift code at redemption time
-     * (T-09.12.03). Snapshot for display/history — the ledger row
-     * (`gift_code_redemptions.discount_amount`) is the source of truth.
-     */
-    giftDiscountAmount: irrAmount('gift_discount_amount'),
+  /**
+   * Exact IRR discount applied by the gift code at redemption time
+   * (T-09.12.03). Snapshot for display/history — the ledger row
+   * (`gift_code_redemptions.discount_amount`) is the source of truth.
+   */
+  giftDiscountAmount: irrAmount('gift_discount_amount'),
 
-    /** When the order was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** When the order was created. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the orders table.
@@ -121,4 +114,4 @@ export const createOrdersTable = sql`
   CREATE INDEX IF NOT EXISTS idx_orders_profile_id ON orders (profile_id);
   CREATE INDEX IF NOT EXISTS idx_orders_product_id ON orders (product_id);
   CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status);
-`
+`;

@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-24  
 **Deciders:** Platform Engineering Team  
-**Dependencies:** T-02.02.01, T-02.02.02, T-02.02.03  
+**Dependencies:** T-02.02.01, T-02.02.02, T-02.02.03
 
 ## Context
 
@@ -17,14 +17,14 @@ All primary keys use **UUIDv7** (RFC 9562) via a custom `uuidv7` column type bac
 
 **UUIDv7 benefits over UUIDv4:**
 
-| Aspect | UUIDv4 | UUIDv7 |
-|---|---|---|
-| Sort order | Random | Time-ordered (by ms) |
-| B-tree index locality | Poor — random inserts fragment pages | Good — new values cluster in time order |
-| Index page splits | Frequent | Reduced |
-| Sequential scan performance | No ordering benefit | Roughly insert-order |
-| Collision resistance | 122 random bits | 74 random bits (sufficient) |
-| Timestamp extraction | Not possible | 48-bit ms timestamp embedded |
+| Aspect                      | UUIDv4                               | UUIDv7                                  |
+| --------------------------- | ------------------------------------ | --------------------------------------- |
+| Sort order                  | Random                               | Time-ordered (by ms)                    |
+| B-tree index locality       | Poor — random inserts fragment pages | Good — new values cluster in time order |
+| Index page splits           | Frequent                             | Reduced                                 |
+| Sequential scan performance | No ordering benefit                  | Roughly insert-order                    |
+| Collision resistance        | 122 random bits                      | 74 random bits (sufficient)             |
+| Timestamp extraction        | Not possible                         | 48-bit ms timestamp embedded            |
 
 UUIDv7 provides the distribution benefits of UUIDs (not trivially enumerable like sequential integers, avoids B-tree index fragmentation that plagues UUIDv4 in large tables) while exposing approximate creation time through the embedded timestamp — a trade-off accepted for index locality.
 
@@ -88,11 +88,11 @@ Rates, percentages, coefficients, and non-currency quantities use **`numeric(20,
 
 Every domain table includes these three base columns, provided automatically by the `createTable()` factory:
 
-| Column | Type | Default | Description |
-|---|---|---|---|
-| `id` | `uuid` (UUIDv7) | `uuid_generate_v7()` | Primary key, time-sortable |
-| `created_at` | `timestamptz` | `now()` | Set on INSERT, never updated |
-| `updated_at` | `timestamptz` | `now()` + `$onUpdate` | Updated by Drizzle ORM on qualifying writes (not raw SQL outside the ORM) |
+| Column       | Type            | Default               | Description                                                               |
+| ------------ | --------------- | --------------------- | ------------------------------------------------------------------------- |
+| `id`         | `uuid` (UUIDv7) | `uuid_generate_v7()`  | Primary key, time-sortable                                                |
+| `created_at` | `timestamptz`   | `now()`               | Set on INSERT, never updated                                              |
+| `updated_at` | `timestamptz`   | `now()` + `$onUpdate` | Updated by Drizzle ORM on qualifying writes (not raw SQL outside the ORM) |
 
 **Implementation:** `packages/db/src/base-table.ts` — `createTable()` spreads `baseColumns` into every table definition.
 
@@ -105,6 +105,7 @@ Every domain table includes these three base columns, provided automatically by 
 ## Consequences
 
 **Positive:**
+
 - Consistent type system across all schemas reduces cognitive load and review effort.
 - UUIDv7 avoids the B-tree index fragmentation that plagues UUIDv4 in large tables.
 - `bigint` for IRR avoids decimal rounding errors and is faster than `numeric`.
@@ -113,6 +114,7 @@ Every domain table includes these three base columns, provided automatically by 
 - UTC-only timestamps simplify querying, indexing, and cross-timezone aggregation.
 
 **Negative:**
+
 - `bigint` amounts require explicit formatting at the presentation layer (no built-in currency formatting from the database).
 - UUIDv7 primary keys are larger than `serial`/`bigserial` (16 bytes vs 4/8 bytes), increasing index size slightly.
 - `numeric(20, 6)` returns strings in JavaScript, requiring conversion before arithmetic operations.

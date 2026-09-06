@@ -1,10 +1,10 @@
-import { sql } from 'drizzle-orm'
-import { integer, text, uuid } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { irrAmount, timestamptz } from '../types'
-import { orders } from './orders'
-import { profiles } from './profiles'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { integer, text, uuid } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { irrAmount, timestamptz } from '../types';
+import { orders } from './orders';
+import { profiles } from './profiles';
+import { users } from './users';
 
 /**
  * Gift codes (T-09.12.03) — admin-managed promotions redeemed at order
@@ -70,10 +70,15 @@ export const giftCodes = createTable('gift_codes', {
   validUntil: timestamptz('valid_until'),
 
   /** Minimum order amount in IRR; 0 = no minimum. BIGINT. */
-  minOrderAmount: irrAmount('min_order_amount').notNull().default(sql`0`),
+  minOrderAmount: irrAmount('min_order_amount')
+    .notNull()
+    .default(sql`0`),
 
   /** Eligible product categories; empty array = all. */
-  categories: text('categories').array().notNull().default(sql`'{}'`),
+  categories: text('categories')
+    .array()
+    .notNull()
+    .default(sql`'{}'`),
 
   /** `active` | `inactive`. */
   status: text('status', {
@@ -86,7 +91,7 @@ export const giftCodes = createTable('gift_codes', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /**
  * Profile-restricted eligibility (T-09.12.03).
@@ -105,7 +110,7 @@ export const giftCodeProfiles = createTable('gift_code_profiles', {
   profileId: uuid('profile_id')
     .notNull()
     .references(() => profiles.id, { onDelete: 'cascade' }),
-})
+});
 
 /**
  * Redemption ledger (T-09.12.03) — ONE row per redeemed order.
@@ -150,7 +155,7 @@ export const giftCodeRedemptions = createTable('gift_code_redemptions', {
   })
     .notNull()
     .default('consumed'),
-})
+});
 
 /** SQL to create the gift_codes table (migration 0048 source). */
 export const createGiftCodesTable = sql`
@@ -208,7 +213,7 @@ export const createGiftCodesTable = sql`
     ON gift_codes (valid_from);
   CREATE INDEX IF NOT EXISTS idx_gift_codes_valid_until
     ON gift_codes (valid_until);
-`
+`;
 
 /** SQL to create the gift_code_profiles table (migration 0048 source). */
 export const createGiftCodeProfilesTable = sql`
@@ -220,7 +225,7 @@ export const createGiftCodeProfilesTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_gift_code_profiles_profile_id
     ON gift_code_profiles (profile_id);
-`
+`;
 
 /** SQL to create the gift_code_redemptions table (migration 0048 source). */
 export const createGiftCodeRedemptionsTable = sql`
@@ -242,7 +247,7 @@ export const createGiftCodeRedemptionsTable = sql`
     ON gift_code_redemptions (gift_code_id, status);
   CREATE INDEX IF NOT EXISTS idx_gift_code_redemptions_code_profile_status
     ON gift_code_redemptions (gift_code_id, profile_id, status);
-`
+`;
 
 /** SQL to add the gift-code mirror columns to orders (migration 0048 source). */
 export const alterOrdersForGiftCodes = sql`
@@ -254,4 +259,4 @@ export const alterOrdersForGiftCodes = sql`
 
   CREATE INDEX IF NOT EXISTS idx_orders_gift_code_id
     ON orders (gift_code_id);
-`
+`;

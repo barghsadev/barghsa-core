@@ -1,10 +1,10 @@
-import { randomUUID } from 'node:crypto'
-import { describe, it, expect, vi } from 'vitest'
+import { randomUUID } from 'node:crypto';
+import { describe, it, expect, vi } from 'vitest';
 import {
   NotificationCenterService,
   encodeCursor,
   decodeCursor,
-} from './notification-center.service.js'
+} from './notification-center.service.js';
 
 // The service talks to Postgres via a query pool. These tests inject a mock
 // pool to exercise the cursor-keyset pagination, filtering, and read-state
@@ -14,7 +14,7 @@ import {
 function makeMockPool() {
   return {
     query: vi.fn(),
-  }
+  };
 }
 
 const row = (over: Record<string, unknown>) => ({
@@ -29,189 +29,194 @@ const row = (over: Record<string, unknown>) => ({
   readAt: null,
   createdAt: new Date('2026-08-27T06:00:00.000Z'),
   ...over,
-})
+});
 
 describe('cursor encode/decode', () => {
   it('round-trips a (createdAt, id) position', () => {
-    const date = new Date('2026-08-27T06:00:00.123Z')
-    const cursor = encodeCursor(date, '00000000-0000-4000-8000-000000000001')
-    expect(decodeCursor(cursor)).toEqual({ createdAt: date, id: '00000000-0000-4000-8000-000000000001', timestamp: date.toISOString() })
-  })
+    const date = new Date('2026-08-27T06:00:00.123Z');
+    const cursor = encodeCursor(date, '00000000-0000-4000-8000-000000000001');
+    expect(decodeCursor(cursor)).toEqual({
+      createdAt: date,
+      id: '00000000-0000-4000-8000-000000000001',
+      timestamp: date.toISOString(),
+    });
+  });
 
   it('accepts an ISO string in encodeCursor', () => {
-    const cursor = encodeCursor('2026-08-27T06:00:00.000Z', '00000000-0000-4000-8000-000000000001')
-    expect(decodeCursor(cursor).createdAt.toISOString()).toBe(
-      '2026-08-27T06:00:00.000Z',
-    )
-  })
+    const cursor = encodeCursor('2026-08-27T06:00:00.000Z', '00000000-0000-4000-8000-000000000001');
+    expect(decodeCursor(cursor).createdAt.toISOString()).toBe('2026-08-27T06:00:00.000Z');
+  });
 
   it('rejects a malformed cursor (400 HTTP error)', () => {
-    expect(() => decodeCursor('%%%not-base64%%%')).toThrow()
+    expect(() => decodeCursor('%%%not-base64%%%')).toThrow();
     // Valid base64 but no separator / not a date.
-    expect(() => decodeCursor(Buffer.from('nodate|id').toString('base64url'))).toThrow()
-    expect(() => decodeCursor(Buffer.from('2026-08-27T06:00:00.000Z|').toString('base64url'))).toThrow()
-  })
-})
+    expect(() => decodeCursor(Buffer.from('nodate|id').toString('base64url'))).toThrow();
+    expect(() =>
+      decodeCursor(Buffer.from('2026-08-27T06:00:00.000Z|').toString('base64url'))
+    ).toThrow();
+  });
+});
 
 describe('list', () => {
   it('returns newest page with unread count when no cursor', async () => {
-    const pool = makeMockPool()
-    const now = new Date('2026-08-27T06:00:00.000Z')
+    const pool = makeMockPool();
+    const now = new Date('2026-08-27T06:00:00.000Z');
     pool.query
       .mockResolvedValueOnce({
         rows: [row({ createdAt: now }), row({ createdAt: now })],
       })
-      .mockResolvedValueOnce({ rows: [{ n: '3' }] })
+      .mockResolvedValueOnce({ rows: [{ n: '3' }] });
 
-    const svc = new NotificationCenterService(pool)
-    const page = await svc.list('profile-1', { limit: 50 })
+    const svc = new NotificationCenterService(pool);
+    const page = await svc.list('profile-1', { limit: 50 });
 
-    expect(pool.query).toHaveBeenCalledTimes(2)
-    const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
+    expect(pool.query).toHaveBeenCalledTimes(2);
+    const [, params] = pool.query.mock.calls[0] as [string, unknown[]];
     // The list query (first call) is scoped to the profile.
-    expect(params).toEqual(['profile-1', null, 51])
-    expect(page.data).toHaveLength(2)
-    expect(page.next_cursor).toBeNull()
-    expect(page.unread_count).toBe(3)
-  })
+    expect(params).toEqual(['profile-1', null, 51]);
+    expect(page.data).toHaveLength(2);
+    expect(page.next_cursor).toBeNull();
+    expect(page.unread_count).toBe(3);
+  });
 
   it('emits a next_cursor when a following older page exists', async () => {
-    const pool = makeMockPool()
+    const pool = makeMockPool();
     // 3 rows for a limit of 2 => hasMore, but page keeps only 2.
-    const a = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') })
-    const b = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
-    const c = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
+    const a = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') });
+    const b = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') });
+    const c = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') });
     pool.query
       .mockResolvedValueOnce({ rows: [a, b, c] })
-      .mockResolvedValueOnce({ rows: [{ n: '0' }] })
+      .mockResolvedValueOnce({ rows: [{ n: '0' }] });
 
-    const svc = new NotificationCenterService(pool)
-    const page = await svc.list('profile-1', { limit: 2 })
+    const svc = new NotificationCenterService(pool);
+    const page = await svc.list('profile-1', { limit: 2 });
 
-    expect(page.data).toHaveLength(2)
-    expect(page.next_cursor).toBeTruthy()
+    expect(page.data).toHaveLength(2);
+    expect(page.next_cursor).toBeTruthy();
     // decode the emitted cursor: it is the last kept row's position.
-    const pos = decodeCursor(page.next_cursor!)
-    expect(pos.id).toBe(b.id)
-  })
+    const pos = decodeCursor(page.next_cursor!);
+    expect(pos.id).toBe(b.id);
+  });
 
   it('newer direction returns newest-first and emits a cursor from the newest kept row', async () => {
-    const pool = makeMockPool()
+    const pool = makeMockPool();
     // Fetch the nearest newer rows in ascending order before display reversal.
-    const newest = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') })
-    const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') })
-    const older = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') })
+    const newest = row({ createdAt: new Date('2026-08-27T06:02:00.000Z') });
+    const mid = row({ createdAt: new Date('2026-08-27T06:01:00.000Z') });
+    const older = row({ createdAt: new Date('2026-08-27T06:00:00.000Z') });
     pool.query
       .mockResolvedValueOnce({ rows: [older, mid, newest] })
-      .mockResolvedValueOnce({ rows: [{ n: '0' }] })
+      .mockResolvedValueOnce({ rows: [{ n: '0' }] });
 
-    const svc = new NotificationCenterService(pool)
+    const svc = new NotificationCenterService(pool);
     // Pass a cursor so the list generates the `>` row-comparison condition.
-    const cursor = encodeCursor(new Date('2026-08-27T05:00:00.000Z'), '00000000-0000-4000-8000-000000000001')
+    const cursor = encodeCursor(
+      new Date('2026-08-27T05:00:00.000Z'),
+      '00000000-0000-4000-8000-000000000001'
+    );
     const page = await svc.list('profile-1', {
       limit: 2,
       direction: 'newer',
       cursor,
-    })
+    });
 
-    expect(page.data[0]!.id).toBe(mid.id)
-    expect(page.data[1]!.id).toBe(older.id)
-    expect(page.next_cursor).toBeTruthy()
+    expect(page.data[0]!.id).toBe(mid.id);
+    expect(page.data[1]!.id).toBe(older.id);
+    expect(page.next_cursor).toBeTruthy();
     // Continuous newer cursor anchors on the newest kept row.
-    const pos = decodeCursor(page.next_cursor!)
-    expect(pos.id).toBe(mid.id)
+    const pos = decodeCursor(page.next_cursor!);
+    expect(pos.id).toBe(mid.id);
 
     // The comparison and ascending fetch advance without skipping arrivals.
-    const [sql] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(sql).toContain('(created_at, id) >')
-    expect(sql).toContain('ORDER BY created_at ASC, id ASC')
-  })
+    const [sql] = pool.query.mock.calls[0] as [string, unknown[]];
+    expect(sql).toContain('(created_at, id) >');
+    expect(sql).toContain('ORDER BY created_at ASC, id ASC');
+  });
 
   it('clamps limit to MAX_LIMIT', async () => {
-    const pool = makeMockPool()
-    pool.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ n: '0' }] })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({ rows: [{ n: '0' }] });
 
-    const svc = new NotificationCenterService(pool)
-    await svc.list('profile-1', { limit: 999 })
+    const svc = new NotificationCenterService(pool);
+    await svc.list('profile-1', { limit: 999 });
 
-    const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
+    const [, params] = pool.query.mock.calls[0] as [string, unknown[]];
     // limit+1 = 101 after clamping to MAX_LIMIT (100).
-    expect(params).toEqual(['profile-1', null, 101])
-  })
+    expect(params).toEqual(['profile-1', null, 101]);
+  });
 
   it('filters unread rows and scopes to the profile', async () => {
-    const pool = makeMockPool()
-    pool.query
-      .mockResolvedValueOnce({ rows: [] })
-      .mockResolvedValueOnce({ rows: [{ n: '1' }] })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({ rows: [{ n: '1' }] });
 
-    const svc = new NotificationCenterService(pool)
-    await svc.list('profile-9', { filter: 'unread', limit: 10 })
+    const svc = new NotificationCenterService(pool);
+    await svc.list('profile-9', { filter: 'unread', limit: 10 });
 
-    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(sql).toContain('is_read = false')
-    expect(params).toContain('profile-9')
-  })
-})
+    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]];
+    expect(sql).toContain('is_read = false');
+    expect(params).toContain('profile-9');
+  });
+});
 
 describe('markRead', () => {
   it('marks the row read and is profile-scoped', async () => {
-    const pool = makeMockPool()
-    pool.query.mockResolvedValueOnce({ rowCount: 1 })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rowCount: 1 });
 
-    const svc = new NotificationCenterService(pool)
-    await svc.markRead('profile-1', '00000000-0000-4000-8000-000000000001')
+    const svc = new NotificationCenterService(pool);
+    await svc.markRead('profile-1', '00000000-0000-4000-8000-000000000001');
 
-    const [, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(params).toEqual(['profile-1', null, '00000000-0000-4000-8000-000000000001'])
-  })
+    const [, params] = pool.query.mock.calls[0] as [string, unknown[]];
+    expect(params).toEqual(['profile-1', null, '00000000-0000-4000-8000-000000000001']);
+  });
 
   it('throws 404 when the row does not belong to the profile', async () => {
-    const pool = makeMockPool()
-    pool.query.mockResolvedValueOnce({ rowCount: 0 })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rowCount: 0 });
 
-    const svc = new NotificationCenterService(pool)
-    await expect(svc.markRead('profile-1', '00000000-0000-4000-8000-000000000002')).rejects.toThrow()
-  })
-})
+    const svc = new NotificationCenterService(pool);
+    await expect(
+      svc.markRead('profile-1', '00000000-0000-4000-8000-000000000002')
+    ).rejects.toThrow();
+  });
+});
 
 describe('markAllRead', () => {
   it('updates only unread rows of the profile and returns the count', async () => {
-    const pool = makeMockPool()
-    pool.query.mockResolvedValueOnce({ rowCount: 5 })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rowCount: 5 });
 
-    const svc = new NotificationCenterService(pool)
-    const n = await svc.markAllRead('profile-1')
+    const svc = new NotificationCenterService(pool);
+    const n = await svc.markAllRead('profile-1');
 
-    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(sql).toContain('is_read = false')
-    expect(params).toEqual(['profile-1', null])
-    expect(n).toBe(5)
-  })
-})
+    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]];
+    expect(sql).toContain('is_read = false');
+    expect(params).toEqual(['profile-1', null]);
+    expect(n).toBe(5);
+  });
+});
 
 describe('countUnread', () => {
   it('counts unread rows for the profile (backing the unread-count poll)', async () => {
-    const pool = makeMockPool()
-    pool.query.mockResolvedValueOnce({ rows: [{ n: '3' }] })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rows: [{ n: '3' }] });
 
-    const svc = new NotificationCenterService(pool)
-    const n = await svc.countUnread('profile-1')
+    const svc = new NotificationCenterService(pool);
+    const n = await svc.countUnread('profile-1');
 
-    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]]
-    expect(sql).toContain('COUNT(*)')
-    expect(sql).toContain('is_read = false')
-    expect(params).toEqual(['profile-1', null])
-    expect(n).toBe(3)
-  })
+    const [sql, params] = pool.query.mock.calls[0] as [string, unknown[]];
+    expect(sql).toContain('COUNT(*)');
+    expect(sql).toContain('is_read = false');
+    expect(params).toEqual(['profile-1', null]);
+    expect(n).toBe(3);
+  });
 
   it('returns 0 when no row is present', async () => {
-    const pool = makeMockPool()
-    pool.query.mockResolvedValueOnce({ rows: [] })
+    const pool = makeMockPool();
+    pool.query.mockResolvedValueOnce({ rows: [] });
 
-    const svc = new NotificationCenterService(pool)
-    await expect(svc.countUnread('profile-1')).resolves.toBe(0)
-  })
-})
+    const svc = new NotificationCenterService(pool);
+    await expect(svc.countUnread('profile-1')).resolves.toBe(0);
+  });
+});

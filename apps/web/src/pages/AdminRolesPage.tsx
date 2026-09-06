@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from 'react'
-import type { FormEvent } from 'react'
-import { t } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
+import { useEffect, useState, useCallback } from 'react';
+import type { FormEvent } from 'react';
+import { t } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
 
 /**
  * Staff role management page (T-09.05.01).
@@ -12,117 +12,138 @@ import { useLocale } from '../hooks/useLocale.js'
  */
 
 interface StaffRole {
-  roleId: string
-  name: string
-  description: string
-  permissions: string[]
-  predefined: boolean
-  createdAt: string
-  updatedAt: string
+  roleId: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  predefined: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface EffectivePermissions {
-  userId: string
-  isAdmin: boolean
-  roleIds: string[]
-  roleNames: string[]
-  permissions: { permission: string; group: string }[]
-  isWildcard: boolean
+  userId: string;
+  isAdmin: boolean;
+  roleIds: string[];
+  roleNames: string[];
+  permissions: { permission: string; group: string }[];
+  isWildcard: boolean;
 }
 
 /** Permission groups ordered for stable display. */
-const GROUP_ORDER = ['admin', 'users', 'profiles', 'tickets', 'crm', 'verification', 'finance', 'invoices', 'payments', 'reports', 'legal', 'contracts', 'compliance', 'operations', 'orders', 'scheduling', 'config', 'staff']
+const GROUP_ORDER = [
+  'admin',
+  'users',
+  'profiles',
+  'tickets',
+  'crm',
+  'verification',
+  'finance',
+  'invoices',
+  'payments',
+  'reports',
+  'legal',
+  'contracts',
+  'compliance',
+  'operations',
+  'orders',
+  'scheduling',
+  'config',
+  'staff',
+];
 
 /** Group permissions by their prefix (module). */
 function groupPermissions(permissions: string[]): { group: string; permissions: string[] }[] {
-  const map = new Map<string, string[]>()
+  const map = new Map<string, string[]>();
   for (const p of permissions) {
-    const group = p.split(':')[0] ?? 'other'
-    const list = map.get(group) ?? []
-    list.push(p)
-    map.set(group, list)
+    const group = p.split(':')[0] ?? 'other';
+    const list = map.get(group) ?? [];
+    list.push(p);
+    map.set(group, list);
   }
   const groups = [...map.entries()].map(([group, perms]) => ({
     group,
     permissions: perms.sort(),
-  }))
+  }));
   const sorted = groups.sort((a, b) => {
-    const ia = GROUP_ORDER.indexOf(a.group)
-    const ib = GROUP_ORDER.indexOf(b.group)
-    if (ia === -1 && ib === -1) return a.group.localeCompare(b.group)
-    if (ia === -1) return 1
-    if (ib === -1) return -1
-    return ia - ib
-  })
-  return sorted
+    const ia = GROUP_ORDER.indexOf(a.group);
+    const ib = GROUP_ORDER.indexOf(b.group);
+    if (ia === -1 && ib === -1) return a.group.localeCompare(b.group);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+  return sorted;
 }
 
 export default function AdminRolesPage() {
-  const locale = useLocale()
-  const [roles, setRoles] = useState<StaffRole[] | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isError, setIsError] = useState(false)
+  const locale = useLocale();
+  const [roles, setRoles] = useState<StaffRole[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
-  const [staffUserId, setStaffUserId] = useState('')
-  const [effective, setEffective] = useState<EffectivePermissions | null>(null)
-  const [permLoading, setPermLoading] = useState(false)
-  const [permError, setPermError] = useState<string | null>(null)
+  const [staffUserId, setStaffUserId] = useState('');
+  const [effective, setEffective] = useState<EffectivePermissions | null>(null);
+  const [permLoading, setPermLoading] = useState(false);
+  const [permError, setPermError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     const load = async () => {
       try {
-        const res = await fetch('/api/admin/roles')
-        if (!res.ok) throw new Error('Failed to fetch roles')
-        const json = await res.json() as StaffRole[]
+        const res = await fetch('/api/admin/roles');
+        if (!res.ok) throw new Error('Failed to fetch roles');
+        const json = (await res.json()) as StaffRole[];
         if (!cancelled) {
-          setRoles(json)
-          setIsLoading(false)
+          setRoles(json);
+          setIsLoading(false);
         }
       } catch {
         if (!cancelled) {
-          setIsLoading(false)
-          setIsError(true)
+          setIsLoading(false);
+          setIsError(true);
         }
       }
-    }
-    void load()
+    };
+    void load();
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   const lookupEffective = useCallback(
     async (e: FormEvent) => {
-      e.preventDefault()
-      const id = staffUserId.trim()
-      if (!id) return
-      setPermLoading(true)
-      setPermError(null)
-      setEffective(null)
+      e.preventDefault();
+      const id = staffUserId.trim();
+      if (!id) return;
+      setPermLoading(true);
+      setPermError(null);
+      setEffective(null);
       try {
-        const res = await fetch(`/api/admin/users/${encodeURIComponent(id)}/effective-permissions`)
+        const res = await fetch(`/api/admin/users/${encodeURIComponent(id)}/effective-permissions`);
         if (!res.ok) {
-          if (res.status === 404) throw new Error(t('admin.roles.user.notfound', locale))
-          throw new Error(t('admin.roles.user.lookup.failed', locale))
+          if (res.status === 404) throw new Error(t('admin.roles.user.notfound', locale));
+          throw new Error(t('admin.roles.user.lookup.failed', locale));
         }
-        const json = await res.json() as EffectivePermissions
-        setEffective(json)
+        const json = (await res.json()) as EffectivePermissions;
+        setEffective(json);
       } catch (err) {
-        setPermError(err instanceof Error ? err.message : t('admin.roles.user.lookup.failed', locale))
+        setPermError(
+          err instanceof Error ? err.message : t('admin.roles.user.lookup.failed', locale)
+        );
       } finally {
-        setPermLoading(false)
+        setPermLoading(false);
       }
     },
-    [staffUserId, locale],
-  )
+    [staffUserId, locale]
+  );
 
   if (isLoading) {
-    return <div className="p-6 text-gray-500">{t('common.loading', locale)}</div>
+    return <div className="p-6 text-gray-500">{t('common.loading', locale)}</div>;
   }
 
   if (isError || !roles) {
-    return <div className="p-6 text-red-600">{t('admin.roles.load.failed', locale)}</div>
+    return <div className="p-6 text-red-600">{t('admin.roles.load.failed', locale)}</div>;
   }
 
   return (
@@ -148,7 +169,7 @@ export default function AdminRolesPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {roles.map((role) => {
-                const groups = groupPermissions(role.permissions)
+                const groups = groupPermissions(role.permissions);
                 return (
                   <tr key={role.roleId}>
                     <td className="px-4 py-4 align-top">
@@ -164,15 +185,21 @@ export default function AdminRolesPage() {
                     </td>
                     <td className="px-4 py-4">
                       {role.permissions.length === 0 ? (
-                        <span className="text-xs text-gray-400">{t('admin.roles.no.permissions', locale)}</span>
+                        <span className="text-xs text-gray-400">
+                          {t('admin.roles.no.permissions', locale)}
+                        </span>
                       ) : (
                         <div className="flex flex-wrap gap-x-6 gap-y-2">
                           {groups.map((g) => (
                             <div key={g.group}>
-                              <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">{g.group}</div>
+                              <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                                {g.group}
+                              </div>
                               <ul className="mt-1 space-y-0.5">
                                 {g.permissions.map((p) => (
-                                  <li key={p} className="text-xs text-gray-700 font-mono">{p}</li>
+                                  <li key={p} className="text-xs text-gray-700 font-mono">
+                                    {p}
+                                  </li>
                                 ))}
                               </ul>
                             </div>
@@ -181,7 +208,7 @@ export default function AdminRolesPage() {
                       )}
                     </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
@@ -190,7 +217,9 @@ export default function AdminRolesPage() {
 
       {/* Effective permissions lookup */}
       <section className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900">{t('admin.roles.effective.title', locale)}</h2>
+        <h2 className="text-lg font-semibold text-gray-900">
+          {t('admin.roles.effective.title', locale)}
+        </h2>
         <p className="mt-1 text-sm text-gray-500">{t('admin.roles.effective.subtitle', locale)}</p>
         <form onSubmit={lookupEffective} className="mt-4 flex items-end gap-3">
           <div className="flex-1 max-w-md">
@@ -233,17 +262,25 @@ export default function AdminRolesPage() {
               </p>
             )}
             {effective.isWildcard ? (
-              <p className="mt-3 text-sm text-gray-700">{t('admin.roles.effective.wildcard', locale)}</p>
+              <p className="mt-3 text-sm text-gray-700">
+                {t('admin.roles.effective.wildcard', locale)}
+              </p>
             ) : effective.permissions.length === 0 ? (
-              <p className="mt-3 text-sm text-gray-500">{t('admin.roles.effective.none', locale)}</p>
+              <p className="mt-3 text-sm text-gray-500">
+                {t('admin.roles.effective.none', locale)}
+              </p>
             ) : (
               <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
                 {groupPermissions(effective.permissions.map((p) => p.permission)).map((g) => (
                   <div key={g.group}>
-                    <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">{g.group}</div>
+                    <div className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                      {g.group}
+                    </div>
                     <ul className="mt-1 space-y-0.5">
                       {g.permissions.map((p) => (
-                        <li key={p} className="text-xs text-gray-700 font-mono">{p}</li>
+                        <li key={p} className="text-xs text-gray-700 font-mono">
+                          {p}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -254,5 +291,5 @@ export default function AdminRolesPage() {
         )}
       </section>
     </div>
-  )
+  );
 }

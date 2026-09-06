@@ -34,18 +34,14 @@ export class CompositeRateLimiterStore {
    *
    * Tries Redis first; falls back to PostgreSQL on any Redis error.
    */
-  async increment(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     if (this.redis) {
       try {
         return await this.incrementRedis(key, limit, windowMs);
       } catch (err) {
         this.logger?.warn(
           '[CompositeRateLimiter] Redis increment failed, falling back to PostgreSQL',
-          err,
+          err
         );
       }
     }
@@ -58,11 +54,7 @@ export class CompositeRateLimiterStore {
    * Always writes to PostgreSQL (authoritative).  Optionally also updates
    * Redis for fast reads, but the PostgreSQL write always happens first.
    */
-  async incrementSecurity(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async incrementSecurity(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     // PostgreSQL first — it's the authoritative source for security counters
     const result = await this.pgStore.incrementSecurity(key, limit, windowMs);
 
@@ -125,7 +117,7 @@ export class CompositeRateLimiterStore {
   private async incrementRedis(
     key: string,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): Promise<RateLimitResult> {
     const redis = this.redis!;
     const count = await redis.incr(key);
@@ -154,7 +146,7 @@ export class CompositeRateLimiterStore {
     key: string,
     count: number,
     limit: number,
-    windowMs: number,
+    windowMs: number
   ): Promise<void> {
     const redisKey = `security:${key}`;
     await this.redis!.setex(redisKey, Math.ceil(windowMs / 1000), String(count));

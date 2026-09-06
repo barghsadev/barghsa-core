@@ -69,7 +69,7 @@ describe('CompositeRateLimiterStore', () => {
       expect(mockQuery).toHaveBeenCalled();
       expect(logger.warn).toHaveBeenCalledWith(
         expect.stringContaining('Redis increment failed'),
-        expect.any(Error),
+        expect.any(Error)
       );
       expect(result.allowed).toBe(true);
     });
@@ -116,7 +116,7 @@ describe('CompositeRateLimiterStore', () => {
       expect(mockRedis.setex).toHaveBeenCalledWith(
         'security:login:admin',
         expect.any(Number),
-        expect.any(String),
+        expect.any(String)
       );
       expect(result.allowed).toBe(true);
     });

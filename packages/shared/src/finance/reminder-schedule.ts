@@ -14,27 +14,27 @@
  * @module finance
  */
 
-import { MS_PER_DUE_DAY } from './due-at.js'
-import { parseDueAt } from './overdue.js'
+import { MS_PER_DUE_DAY } from './due-at.js';
+import { parseDueAt } from './overdue.js';
 
 /**
  * Canonical reminder offsets in days relative to `dueAt`
  * (S-04.1.04). Must stay in lock-step with
  * `chk_invoice_reminder_schedule_offset` (migration 0060).
  */
-export const INVOICE_REMINDER_OFFSETS = [-7, -3, -1, 0, 1, 7] as const
+export const INVOICE_REMINDER_OFFSETS = [-7, -3, -1, 0, 1, 7] as const;
 
 /** One canonical reminder offset. */
-export type InvoiceReminderOffset = (typeof INVOICE_REMINDER_OFFSETS)[number]
+export type InvoiceReminderOffset = (typeof INVOICE_REMINDER_OFFSETS)[number];
 
 /**
  * Delivery channels stored on a schedule row. Matches the notification
  * transport set (`in_app` always; `email`/`sms` per profile preferences).
  */
-export const INVOICE_REMINDER_CHANNELS = ['in_app', 'email', 'sms'] as const
+export const INVOICE_REMINDER_CHANNELS = ['in_app', 'email', 'sms'] as const;
 
 /** One reminder delivery channel. */
-export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
+export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number];
 
 /**
  * Invoice states that must not receive a new reminder plan (S-04.1.04
@@ -42,25 +42,25 @@ export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
  * rows on these transitions (migration 0063 trigger + sender catch-up);
  * the scheduler also skips them on catch-up.
  */
-export const REMINDER_STOP_STATES = ['Paid', 'Cancelled', 'Refunded'] as const
+export const REMINDER_STOP_STATES = ['Paid', 'Cancelled', 'Refunded'] as const;
 
 /** An invoice state that must not receive a new reminder schedule. */
-export type ReminderStopState = (typeof REMINDER_STOP_STATES)[number]
+export type ReminderStopState = (typeof REMINDER_STOP_STATES)[number];
 
 /** Error messages for reminder instant arithmetic. */
 export const REMINDER_SCHEDULE_ERRORS = {
   BAD_DUE_AT: () => 'dueAt must be a valid Date',
   BAD_OFFSET: () => 'offsetDays must be an integer',
-} as const
+} as const;
 
 /** True when `value` is one of the canonical S-04.1.04 offsets. */
 export function isInvoiceReminderOffset(value: number): value is InvoiceReminderOffset {
-  return (INVOICE_REMINDER_OFFSETS as readonly number[]).includes(value)
+  return (INVOICE_REMINDER_OFFSETS as readonly number[]).includes(value);
 }
 
 /** True when `state` is Paid / Cancelled / Refunded. */
 export function isReminderStopState(state: string): state is ReminderStopState {
-  return (REMINDER_STOP_STATES as readonly string[]).includes(state)
+  return (REMINDER_STOP_STATES as readonly string[]).includes(state);
 }
 
 /**
@@ -70,12 +70,12 @@ export function isReminderStopState(state: string): state is ReminderStopState {
  */
 export function addReminderOffset(dueAt: Date, offsetDays: number): Date {
   if (!(dueAt instanceof Date) || Number.isNaN(dueAt.getTime())) {
-    throw new RangeError(REMINDER_SCHEDULE_ERRORS.BAD_DUE_AT())
+    throw new RangeError(REMINDER_SCHEDULE_ERRORS.BAD_DUE_AT());
   }
   if (!Number.isInteger(offsetDays)) {
-    throw new RangeError(REMINDER_SCHEDULE_ERRORS.BAD_OFFSET())
+    throw new RangeError(REMINDER_SCHEDULE_ERRORS.BAD_OFFSET());
   }
-  return new Date(dueAt.getTime() + offsetDays * MS_PER_DUE_DAY)
+  return new Date(dueAt.getTime() + offsetDays * MS_PER_DUE_DAY);
 }
 
 /**
@@ -83,13 +83,13 @@ export function addReminderOffset(dueAt: Date, offsetDays: number): Date {
  * Daytime-window snapping is applied by the worker, not here.
  */
 export function computeReminderInstants(dueAt: Date): Array<{
-  offset: InvoiceReminderOffset
-  instant: Date
+  offset: InvoiceReminderOffset;
+  instant: Date;
 }> {
   return INVOICE_REMINDER_OFFSETS.map((offset) => ({
     offset,
     instant: addReminderOffset(dueAt, offset),
-  }))
+  }));
 }
 
 /**
@@ -99,11 +99,11 @@ export function computeReminderInstants(dueAt: Date): Array<{
 export function isEligibleForReminderSchedule(
   state: string,
   issuedAt: Date | string | null | undefined,
-  dueAt: Date | string | null | undefined,
+  dueAt: Date | string | null | undefined
 ): boolean {
-  if (isReminderStopState(state)) return false
-  if (state === 'Draft') return false
-  return parseDueAt(issuedAt) !== null && parseDueAt(dueAt) !== null
+  if (isReminderStopState(state)) return false;
+  if (state === 'Draft') return false;
+  return parseDueAt(issuedAt) !== null && parseDueAt(dueAt) !== null;
 }
 
 /**
@@ -113,8 +113,8 @@ export function isEligibleForReminderSchedule(
  * hourly cron can still send.
  */
 export function isEligibleForReminderSend(state: string): boolean {
-  if (state === 'Draft') return false
-  return !isReminderStopState(state)
+  if (state === 'Draft') return false;
+  return !isReminderStopState(state);
 }
 
 /**
@@ -123,16 +123,16 @@ export function isEligibleForReminderSend(state: string): boolean {
  * always sent in-app plus any enabled external channel).
  */
 export function reminderChannelsFromPreferences(
-  raw: string | null | undefined,
+  raw: string | null | undefined
 ): InvoiceReminderChannel[] {
   const tokens = new Set(
     (raw ?? '')
       .split(',')
       .map((token) => token.trim().toUpperCase())
-      .filter((token) => token.length > 0),
-  )
-  const channels: InvoiceReminderChannel[] = ['in_app']
-  if (tokens.has('EMAIL')) channels.push('email')
-  if (tokens.has('SMS')) channels.push('sms')
-  return channels
+      .filter((token) => token.length > 0)
+  );
+  const channels: InvoiceReminderChannel[] = ['in_app'];
+  if (tokens.has('EMAIL')) channels.push('email');
+  if (tokens.has('SMS')) channels.push('sms');
+  return channels;
 }

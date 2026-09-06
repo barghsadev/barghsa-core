@@ -1,7 +1,7 @@
-import { sql } from 'drizzle-orm'
-import { uuid, text, pgTable, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { profiles } from './profiles'
+import { sql } from 'drizzle-orm';
+import { uuid, text, pgTable, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { profiles } from './profiles';
 
 /**
  * Profile agents table (T-05.04.01).
@@ -35,22 +35,22 @@ export const profileAgents = pgTable(
     role: text('role').notNull(),
 
     /** When the invitation was accepted and this agent was added. */
-    joinedAt: timestamp('joined_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    joinedAt: timestamp('joined_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     /** When the agent record was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
-  table => [uniqueIndex('idx_profile_agents_profile_user_role').on(table.profileId,table.userId,table.role)],
-)
+  (table) => [
+    uniqueIndex('idx_profile_agents_profile_user_role').on(
+      table.profileId,
+      table.userId,
+      table.role
+    ),
+  ]
+);
 
 /**
  * SQL to create the profile_agents table.
@@ -73,4 +73,4 @@ export const createProfileAgentsTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_profile_agents_user
     ON profile_agents (user_id);
-`
+`;

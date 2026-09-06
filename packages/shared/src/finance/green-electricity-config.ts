@@ -27,24 +27,24 @@
 /** A single order mode's mandatory-green configuration. */
 export interface GreenElectricityModeConfig {
   /** Whether the mandatory-green rule is active for this order mode. */
-  mandatoryGreenEnabled: boolean
+  mandatoryGreenEnabled: boolean;
   /**
    * Average-power threshold in kW. Orders at or above this threshold are
    * subject to the mandatory-green rule. `>= 0`.
    */
-  averagePowerThresholdKw: number
+  averagePowerThresholdKw: number;
   /**
    * Percentage of the order that must be green electricity. `0..100`.
    */
-  mandatoryGreenSharePercent: number
+  mandatoryGreenSharePercent: number;
 }
 
 /** Admin-configurable mandatory green-electricity rules for both order modes. */
 export interface GreenElectricityConfig {
   /** Simple-order mandatory-green configuration. Enabled by default. */
-  simpleOrder: GreenElectricityModeConfig
+  simpleOrder: GreenElectricityModeConfig;
   /** Advanced-order mandatory-green configuration. Disabled by default. */
-  advancedOrder: GreenElectricityModeConfig
+  advancedOrder: GreenElectricityModeConfig;
 }
 
 /**
@@ -62,19 +62,19 @@ export const DEFAULT_GREEN_ELECTRICITY_CONFIG: GreenElectricityConfig = {
     averagePowerThresholdKw: 1000,
     mandatoryGreenSharePercent: 4,
   },
-}
+};
 
 /** `app_config` key holding the mandatory green-electricity rules (T-09.10.02). */
-export const GREEN_ELECTRICITY_CONFIG_KEY = 'electricity.green_mandatory_rules'
+export const GREEN_ELECTRICITY_CONFIG_KEY = 'electricity.green_mandatory_rules';
 
 /** Order modes supported by the mandatory-green rule. */
-export type GreenElectricityOrderMode = 'simpleOrder' | 'advancedOrder'
+export type GreenElectricityOrderMode = 'simpleOrder' | 'advancedOrder';
 
 /** All order modes, in a stable order. */
 export const GREEN_ELECTRICITY_ORDER_MODES: GreenElectricityOrderMode[] = [
   'simpleOrder',
   'advancedOrder',
-]
+];
 
 /**
  * Result of validating a proposed green-electricity rules config for the
@@ -82,8 +82,8 @@ export const GREEN_ELECTRICITY_ORDER_MODES: GreenElectricityOrderMode[] = [
  * `issues` carries one or more human-readable descriptions (English).
  */
 export interface GreenElectricityConfigValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -96,7 +96,7 @@ export function isValidAveragePowerThresholdKw(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 0 &&
     raw <= Number.MAX_SAFE_INTEGER
-  )
+  );
 }
 
 /**
@@ -104,55 +104,44 @@ export function isValidAveragePowerThresholdKw(raw: unknown): raw is number {
  * a number, `0..100`. Decimals are permitted (e.g. `4.5`).
  */
 export function isValidMandatoryGreenSharePercent(raw: unknown): raw is number {
-  return (
-    typeof raw === 'number' &&
-    Number.isFinite(raw) &&
-    raw >= 0 &&
-    raw <= 100
-  )
+  return typeof raw === 'number' && Number.isFinite(raw) && raw >= 0 && raw <= 100;
 }
 
 /**
  * Validate a single mode's raw input (snake_case keys as stored/expected in
  * the admin API body). Appends human-readable issues to `issues`.
  */
-function validateMode(
-  modeName: GreenElectricityOrderMode,
-  raw: unknown,
-  issues: string[],
-): void {
-  const prefix = `${
-    modeName === 'simpleOrder' ? 'simple' : 'advanced'
-  }_order`
+function validateMode(modeName: GreenElectricityOrderMode, raw: unknown, issues: string[]): void {
+  const prefix = `${modeName === 'simpleOrder' ? 'simple' : 'advanced'}_order`;
   if (!raw || typeof raw !== 'object') {
-    issues.push(`${prefix} must be an object`)
-    return
+    issues.push(`${prefix} must be an object`);
+    return;
   }
-  const o = raw as Record<string, unknown>
+  const o = raw as Record<string, unknown>;
 
-  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled
+  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled;
   if (enabled === undefined || enabled === null || enabled === '') {
-    issues.push(`${prefix}.mandatory_green_enabled is required`)
+    issues.push(`${prefix}.mandatory_green_enabled is required`);
   } else if (typeof enabled !== 'boolean') {
-    issues.push(`${prefix}.mandatory_green_enabled must be a boolean`)
+    issues.push(`${prefix}.mandatory_green_enabled must be a boolean`);
   }
 
-  const threshold = o.average_power_threshold_kw ?? o.averagePowerThresholdKw
+  const threshold = o.average_power_threshold_kw ?? o.averagePowerThresholdKw;
   if (threshold === undefined || threshold === null || threshold === '') {
-    issues.push(`${prefix}.average_power_threshold_kw is required`)
+    issues.push(`${prefix}.average_power_threshold_kw is required`);
   } else if (typeof threshold !== 'number') {
-    issues.push(`${prefix}.average_power_threshold_kw must be an integer >= 0`)
+    issues.push(`${prefix}.average_power_threshold_kw must be an integer >= 0`);
   } else if (!isValidAveragePowerThresholdKw(threshold)) {
-    issues.push(`${prefix}.average_power_threshold_kw must be an integer >= 0`)
+    issues.push(`${prefix}.average_power_threshold_kw must be an integer >= 0`);
   }
 
-  const share = o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent
+  const share = o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent;
   if (share === undefined || share === null || share === '') {
-    issues.push(`${prefix}.mandatory_green_share_percent is required`)
+    issues.push(`${prefix}.mandatory_green_share_percent is required`);
   } else if (typeof share !== 'number') {
-    issues.push(`${prefix}.mandatory_green_share_percent must be a percentage between 0 and 100`)
+    issues.push(`${prefix}.mandatory_green_share_percent must be a percentage between 0 and 100`);
   } else if (!isValidMandatoryGreenSharePercent(share)) {
-    issues.push(`${prefix}.mandatory_green_share_percent must be a percentage between 0 and 100`)
+    issues.push(`${prefix}.mandatory_green_share_percent must be a percentage between 0 and 100`);
   }
 }
 
@@ -166,21 +155,23 @@ function validateMode(
  * rejected rather than coerced so a malformed payload cannot silently change
  * the enforced rule.
  */
-export function validateGreenElectricityConfig(input: unknown): GreenElectricityConfigValidationResult {
-  const issues: string[] = []
+export function validateGreenElectricityConfig(
+  input: unknown
+): GreenElectricityConfigValidationResult {
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object') {
-    return { ok: false, issues: ['Green electricity rules config must be an object'] }
+    return { ok: false, issues: ['Green electricity rules config must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
-  const simple = o.simple_order ?? o.simpleOrder
-  const advanced = o.advanced_order ?? o.advancedOrder
+  const o = input as Record<string, unknown>;
+  const simple = o.simple_order ?? o.simpleOrder;
+  const advanced = o.advanced_order ?? o.advancedOrder;
 
-  validateMode('simpleOrder', simple, issues)
-  validateMode('advancedOrder', advanced, issues)
+  validateMode('simpleOrder', simple, issues);
+  validateMode('advancedOrder', advanced, issues);
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -190,25 +181,24 @@ export function validateGreenElectricityConfig(input: unknown): GreenElectricity
  */
 export function toGreenElectricityModeConfig(
   raw: unknown,
-  fallback: GreenElectricityModeConfig,
+  fallback: GreenElectricityModeConfig
 ): GreenElectricityModeConfig {
-  if (!raw || typeof raw !== 'object') return { ...fallback }
-  const o = raw as Record<string, unknown>
-  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled
+  if (!raw || typeof raw !== 'object') return { ...fallback };
+  const o = raw as Record<string, unknown>;
+  const enabled = o.mandatory_green_enabled ?? o.mandatoryGreenEnabled;
   return {
-    mandatoryGreenEnabled:
-      typeof enabled === 'boolean' ? enabled : fallback.mandatoryGreenEnabled,
+    mandatoryGreenEnabled: typeof enabled === 'boolean' ? enabled : fallback.mandatoryGreenEnabled,
     averagePowerThresholdKw: isValidAveragePowerThresholdKw(
-      o.average_power_threshold_kw ?? o.averagePowerThresholdKw,
+      o.average_power_threshold_kw ?? o.averagePowerThresholdKw
     )
-      ? (o.average_power_threshold_kw ?? o.averagePowerThresholdKw) as number
+      ? ((o.average_power_threshold_kw ?? o.averagePowerThresholdKw) as number)
       : fallback.averagePowerThresholdKw,
     mandatoryGreenSharePercent: isValidMandatoryGreenSharePercent(
-      o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent,
+      o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent
     )
-      ? (o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent) as number
+      ? ((o.mandatory_green_share_percent ?? o.mandatoryGreenSharePercent) as number)
       : fallback.mandatoryGreenSharePercent,
-  }
+  };
 }
 
 /**
@@ -217,17 +207,17 @@ export function toGreenElectricityModeConfig(
  * back to defaults defensively if any value is malformed.
  */
 export function toGreenElectricityConfig(input: unknown): GreenElectricityConfig {
-  const o = (input && typeof input === 'object') ? input as Record<string, unknown> : {}
+  const o = input && typeof input === 'object' ? (input as Record<string, unknown>) : {};
   return {
     simpleOrder: toGreenElectricityModeConfig(
       o.simple_order ?? o.simpleOrder,
-      DEFAULT_GREEN_ELECTRICITY_CONFIG.simpleOrder,
+      DEFAULT_GREEN_ELECTRICITY_CONFIG.simpleOrder
     ),
     advancedOrder: toGreenElectricityModeConfig(
       o.advanced_order ?? o.advancedOrder,
-      DEFAULT_GREEN_ELECTRICITY_CONFIG.advancedOrder,
+      DEFAULT_GREEN_ELECTRICITY_CONFIG.advancedOrder
     ),
-  }
+  };
 }
 
 /**
@@ -238,28 +228,28 @@ export function toGreenElectricityConfig(input: unknown): GreenElectricityConfig
  */
 export function isGreenRuleActive(
   config: GreenElectricityConfig,
-  mode: GreenElectricityOrderMode,
+  mode: GreenElectricityOrderMode
 ): boolean {
-  const modeConfig = config?.[mode]
-  if (!modeConfig || typeof modeConfig.mandatoryGreenEnabled !== 'boolean') return false
-  return modeConfig.mandatoryGreenEnabled
+  const modeConfig = config?.[mode];
+  if (!modeConfig || typeof modeConfig.mandatoryGreenEnabled !== 'boolean') return false;
+  return modeConfig.mandatoryGreenEnabled;
 }
 
 /** The snake_case stored shape of a single mode (as persisted in app_config). */
-export function modeConfigToStored(
-  mode: GreenElectricityModeConfig,
-): Record<string, unknown> {
+export function modeConfigToStored(mode: GreenElectricityModeConfig): Record<string, unknown> {
   return {
     mandatory_green_enabled: mode.mandatoryGreenEnabled,
     average_power_threshold_kw: mode.averagePowerThresholdKw,
     mandatory_green_share_percent: mode.mandatoryGreenSharePercent,
-  }
+  };
 }
 
 /** The snake_case stored shape of the full green-electricity config. */
-export function greenElectricityConfigToStored(config: GreenElectricityConfig): Record<string, unknown> {
+export function greenElectricityConfigToStored(
+  config: GreenElectricityConfig
+): Record<string, unknown> {
   return {
     simple_order: modeConfigToStored(config.simpleOrder),
     advanced_order: modeConfigToStored(config.advancedOrder),
-  }
+  };
 }

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Zod schema for the password reset request body (T-02.03.02).
@@ -21,14 +21,14 @@ export const ResetPasswordSchema = z.object({
     .regex(/[A-Z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
     .regex(/[a-z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
     .regex(/[0-9]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' }),
-})
+});
 
-export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>
+export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
 
 /**
  * Successful password reset response.
  */
 export interface ResetPasswordResponse {
   /** Success message for the frontend toast. */
-  message: string
+  message: string;
 }

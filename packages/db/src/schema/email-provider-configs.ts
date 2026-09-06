@@ -1,7 +1,7 @@
-import { jsonb, pgTable, text, uniqueIndex, boolean, integer } from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
-import { uuidv7, timestamptz } from '../types.js'
-import { users } from './users.js'
+import { jsonb, pgTable, text, uniqueIndex, boolean, integer } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { uuidv7, timestamptz } from '../types.js';
+import { users } from './users.js';
 
 /**
  * Email provider configuration (E-05, T-05.06.01).
@@ -137,6 +137,8 @@ export const emailProviderConfigs = pgTable(
      * — only one row may ever hold the active state. The service enforces the
      * same rule transactionally for a friendlier, domain-specific error.
      */
-    uniqueIndex('uq_email_provider_active').on(table.status).where(sql`status = 'active'`),
-  ],
-)
+    uniqueIndex('uq_email_provider_active')
+      .on(table.status)
+      .where(sql`status = 'active'`),
+  ]
+);

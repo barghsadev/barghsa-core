@@ -1,12 +1,12 @@
-import { getDbPool } from '@barghsa/db'
+import { getDbPool } from '@barghsa/db';
 import type {
   INotificationTransport,
   NotificationChannel,
   NotificationSendPayload,
   NotificationSendResult,
-} from '@barghsa/shared/notifications'
-import { sanitizeError } from './error-redact.js'
-import { deriveChannelIdempotencyKey } from './outbox-writer.js'
+} from '@barghsa/shared/notifications';
+import { sanitizeError } from './error-redact.js';
+import { deriveChannelIdempotencyKey } from './outbox-writer.js';
 
 /**
  * Base outbox reader (E-05, T-05.01.01).
@@ -27,39 +27,41 @@ import { deriveChannelIdempotencyKey } from './outbox-writer.js'
  * outcome; it cannot make an undelivered external leg count as success.
  */
 
-const DEFAULT_LEASE_SIZE = 5
-const DEFAULT_LEASE_MS = 60_000
+const DEFAULT_LEASE_SIZE = 5;
+const DEFAULT_LEASE_MS = 60_000;
 export function normalizeLeaseDurationMs(value?: number): number {
-  return value !== undefined && Number.isFinite(value) && value >= 100 && value <= 300_000 ? Math.floor(value) : DEFAULT_LEASE_MS
+  return value !== undefined && Number.isFinite(value) && value >= 100 && value <= 300_000
+    ? Math.floor(value)
+    : DEFAULT_LEASE_MS;
 }
 
 export interface OutboxRow {
-  id: string
-  profileId: string | null
-  userId: string | null
-  eventKey: string
-  payload: Record<string, unknown>
-  channels: NotificationChannel[]
-  idempotencyKey: string
+  id: string;
+  profileId: string | null;
+  userId: string | null;
+  eventKey: string;
+  payload: Record<string, unknown>;
+  channels: NotificationChannel[];
+  idempotencyKey: string;
   /** Absent only in legacy callers; persisted new rows use version 2. */
-  idempotencyVersion?: number
-  leaseToken?: string
-  attempts: number
-  maxAttempts: number
-  scheduledAt: Date | null
+  idempotencyVersion?: number;
+  leaseToken?: string;
+  attempts: number;
+  maxAttempts: number;
+  scheduledAt: Date | null;
   /** Sanitized error from the last failed attempt (for dead-letter triage). */
-  lastError: string | null
+  lastError: string | null;
 }
 
 export interface OutboxReaderOptions {
   /** Transport registry keyed by channel. In-app is mandatory. */
-  transports: Partial<Record<NotificationChannel, INotificationTransport>>
+  transports: Partial<Record<NotificationChannel, INotificationTransport>>;
   /** Pool override for isolated database checks. */
-  pool?: { query: (sql: string, params?: any[]) => Promise<any> }
+  pool?: { query: (sql: string, params?: any[]) => Promise<any> };
   /** Maximum rows to claim per poll (default 5). */
-  leaseSize?: number
+  leaseSize?: number;
   /** Lease duration in ms (default 60s). */
-  leaseDurationMs?: number
+  leaseDurationMs?: number;
 }
 
 /**
@@ -71,11 +73,13 @@ export interface OutboxReaderOptions {
  * safe across concurrent workers.
  */
 export async function leaseOutbox(options?: OutboxReaderOptions): Promise<OutboxRow[]> {
-  const requestedLimit = options?.leaseSize ?? DEFAULT_LEASE_SIZE
-  const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(100, Math.floor(requestedLimit))) : DEFAULT_LEASE_SIZE
-  const leaseMs = normalizeLeaseDurationMs(options?.leaseDurationMs)
-  const pool = options?.pool ?? getDbPool()
-  const now = new Date()
+  const requestedLimit = options?.leaseSize ?? DEFAULT_LEASE_SIZE;
+  const limit = Number.isFinite(requestedLimit)
+    ? Math.max(1, Math.min(100, Math.floor(requestedLimit)))
+    : DEFAULT_LEASE_SIZE;
+  const leaseMs = normalizeLeaseDurationMs(options?.leaseDurationMs);
+  const pool = options?.pool ?? getDbPool();
+  const now = new Date();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = await pool.query(
@@ -100,8 +104,8 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
         )
         RETURNING id, profile_id, user_id, event_key, payload, channels,
                   idempotency_key, idempotency_version, lease_token, attempts, max_attempts, scheduled_for, last_error`,
-    [leaseMs, now, limit],
-  )
+    [leaseMs, now, limit]
+  );
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
     id: row.id as string,
     profileId: (row.profile_id as string | null) ?? null,
@@ -116,16 +120,16 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
     maxAttempts: (row.max_attempts as number) ?? 5,
     scheduledAt: (row.scheduled_for as Date | null) ?? null,
     lastError: (row.last_error as string | null) ?? null,
-  }))
+  }));
 }
 
 export interface DispatchOutcome {
-  channel: NotificationChannel
-  result: NotificationSendResult
+  channel: NotificationChannel;
+  result: NotificationSendResult;
   /** Provider round-trip latency in milliseconds for this attempt. */
-  latencyMs: number
+  latencyMs: number;
   /** Sanitized failure detail for this channel only. */
-  error?: string
+  error?: string;
 }
 
 /**
@@ -141,12 +145,12 @@ export interface DispatchOutcome {
 export async function dispatchOutbox(
   row: OutboxRow,
   transports: Partial<Record<NotificationChannel, INotificationTransport>>,
-  control?: { signal: AbortSignal; beforeSend: () => Promise<void> },
+  control?: { signal: AbortSignal; beforeSend: () => Promise<void> }
 ): Promise<DispatchOutcome[]> {
-  const outcomes: DispatchOutcome[] = []
+  const outcomes: DispatchOutcome[] = [];
   for (const channel of new Set(row.channels)) {
-    await control?.beforeSend()
-    const transport = transports[channel]
+    await control?.beforeSend();
+    const transport = transports[channel];
     const payload: NotificationSendPayload = {
       idempotencyKey: deriveChannelIdempotencyKey(
         row.eventKey,
@@ -154,7 +158,7 @@ export async function dispatchOutbox(
         row.profileId ?? row.userId ?? '',
         row.idempotencyKey,
         row.idempotencyVersion ?? 1,
-        row.id,
+        row.id
       ),
       outboxId: row.id,
       ...(control ? { signal: control.signal } : {}),
@@ -163,20 +167,28 @@ export async function dispatchOutbox(
       profileId: row.profileId,
       eventKey: row.eventKey,
       payload: row.payload,
-    }
-    const startedAt = performance.now()
+    };
+    const startedAt = performance.now();
     try {
-      if (!transport || transport.channel !== channel) throw new Error(`${channel} transport unavailable`)
-      const result = await transport.send(payload)
-      if (!result || !['delivered', 'failed'].includes(result.status) || (result.status === 'delivered' && !result.providerRef)) {
-        throw new Error(`${channel} transport returned an invalid delivery result`)
+      if (!transport || transport.channel !== channel)
+        throw new Error(`${channel} transport unavailable`);
+      const result = await transport.send(payload);
+      if (
+        !result ||
+        !['delivered', 'failed'].includes(result.status) ||
+        (result.status === 'delivered' && !result.providerRef)
+      ) {
+        throw new Error(`${channel} transport returned an invalid delivery result`);
       }
-      outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) })
+      outcomes.push({ channel, result, latencyMs: Math.round(performance.now() - startedAt) });
     } catch (error) {
-      outcomes.push({ channel, result: { providerRef: '', status: 'failed' },
+      outcomes.push({
+        channel,
+        result: { providerRef: '', status: 'failed' },
         latencyMs: Math.round(performance.now() - startedAt),
-        error: sanitizeError(error instanceof Error ? error.message : String(error)) })
+        error: sanitizeError(error instanceof Error ? error.message : String(error)),
+      });
     }
   }
-  return outcomes
+  return outcomes;
 }

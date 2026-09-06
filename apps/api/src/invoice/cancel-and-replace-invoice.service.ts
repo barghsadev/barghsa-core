@@ -45,23 +45,21 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-} from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { duePeriodTypeForManual } from '@barghsa/shared/finance'
-import { v7 as uuidv7 } from 'uuid'
-import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
-import type { TransitionResult } from './invoice-state-machine.service.js'
-import type { TransactionClient } from './invoice-audit.repository.js'
-import type { InvoiceState } from './invoice-state.model.js'
+} from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { duePeriodTypeForManual } from '@barghsa/shared/finance';
+import { v7 as uuidv7 } from 'uuid';
+import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
+import type { TransitionResult } from './invoice-state-machine.service.js';
+import type { TransactionClient } from './invoice-audit.repository.js';
+import type { InvoiceState } from './invoice-state.model.js';
 import {
   calculateManualInvoice,
   type ManualInvoiceLineInput,
-} from './manual-invoice.calculation.js'
-import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
-import { DueAtCalculationService } from './due-at.service.js'
-import type {
-  ManualInvoiceLineResult,
-} from './manual-invoice.service.js'
+} from './manual-invoice.calculation.js';
+import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js';
+import { DueAtCalculationService } from './due-at.service.js';
+import type { ManualInvoiceLineResult } from './manual-invoice.service.js';
 
 /**
  * Unpaid states from which a pre-payment cancel+replace is allowed.
@@ -74,114 +72,111 @@ export const REPLACEABLE_INVOICE_STATES = [
   'Draft',
   'Unpaid',
   'Overdue',
-] as const satisfies readonly InvoiceState[]
+] as const satisfies readonly InvoiceState[];
 
-export type ReplaceableInvoiceState = (typeof REPLACEABLE_INVOICE_STATES)[number]
+export type ReplaceableInvoiceState = (typeof REPLACEABLE_INVOICE_STATES)[number];
 
 export const CANCEL_AND_REPLACE_ERRORS = {
-  REASON_REQUIRED: () =>
-    'A reason is required to cancel and replace an invoice',
+  REASON_REQUIRED: () => 'A reason is required to cancel and replace an invoice',
   HAS_PAYMENT: (invoiceId: string, paidAmount: bigint) =>
     `Cannot replace invoice ${invoiceId}: confirmed payment ${paidAmount} IRR; use an adjustment or refund instead`,
   STATE_NOT_REPLACEABLE: (invoiceId: string, state: string) =>
     `Cannot replace invoice ${invoiceId} in state '${state}'; only unpaid Draft, Unpaid, or Overdue invoices may be cancelled and replaced`,
-} as const
+} as const;
 
 /** Command to cancel one unpaid invoice and issue a linked replacement. */
 export interface CancelAndReplaceInvoiceCommand {
   /** Invoice to cancel (must have no confirmed payment). */
-  invoiceId: string
+  invoiceId: string;
   /** Required customer/staff-visible reason (audited). */
-  reason: string
+  reason: string;
   /** Corrected lines that become the replacement invoice. */
-  newLines: ManualInvoiceLineInput[]
+  newLines: ManualInvoiceLineInput[];
   /** Finance staff member performing the action (FK `users.userId`). */
-  actorUserId: string
+  actorUserId: string;
   /** Opaque correlation ID for audit linkage. */
-  correlationId?: string
+  correlationId?: string;
   /** Source IP of the staff member (audited). */
-  ip?: string
+  ip?: string;
   /** Explicit due date (>= now) for the replacement; defaults to issuedAt + config days. */
-  dueAt?: Date
+  dueAt?: Date;
   /** Override "now" for tests. */
-  now?: Date
+  now?: Date;
 }
 
 /** Result of a successful cancel-and-replace. */
 export interface CancelAndReplaceInvoiceResult {
-  originalInvoiceId: string
-  originalState: InvoiceState
-  replacementInvoiceId: string
-  replacementState: InvoiceState
-  profileId: string
-  contractId: string | null
-  orderId: string | null
-  consultationId: string | null
-  replacesInvoiceId: string
-  totalAmount: bigint
-  lines: ManualInvoiceLineResult[]
-  issuedAt: Date
-  payableFrom: Date
-  dueAt: Date | null
-  cancelAuditId: string
-  issueAuditId: string
-  cancelTransition: TransitionResult
-  issueTransition: TransitionResult
+  originalInvoiceId: string;
+  originalState: InvoiceState;
+  replacementInvoiceId: string;
+  replacementState: InvoiceState;
+  profileId: string;
+  contractId: string | null;
+  orderId: string | null;
+  consultationId: string | null;
+  replacesInvoiceId: string;
+  totalAmount: bigint;
+  lines: ManualInvoiceLineResult[];
+  issuedAt: Date;
+  payableFrom: Date;
+  dueAt: Date | null;
+  cancelAuditId: string;
+  issueAuditId: string;
+  cancelTransition: TransitionResult;
+  issueTransition: TransitionResult;
 }
 
 interface LockedOriginalRow {
-  id: string
-  profile_id: string
-  order_id: string | null
-  contract_id: string | null
-  consultation_id: string | null
-  type: string | null
-  state: string
-  total_amount: string
-  paid_amount: string
-  refunded_amount: string
-  metadata: unknown
+  id: string;
+  profile_id: string;
+  order_id: string | null;
+  contract_id: string | null;
+  consultation_id: string | null;
+  type: string | null;
+  state: string;
+  total_amount: string;
+  paid_amount: string;
+  refunded_amount: string;
+  metadata: unknown;
 }
 
 /** True when `state` is an unpaid, cancellable state eligible for replace. */
-export function isReplaceableInvoiceState(
-  state: string,
-): state is ReplaceableInvoiceState {
-  return (REPLACEABLE_INVOICE_STATES as readonly string[]).includes(state)
+export function isReplaceableInvoiceState(state: string): state is ReplaceableInvoiceState {
+  return (REPLACEABLE_INVOICE_STATES as readonly string[]).includes(state);
 }
 
 function asMetadataObject(value: unknown): Record<string, unknown> {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return { ...(value as Record<string, unknown>) }
+    return { ...(value as Record<string, unknown>) };
   }
   if (typeof value === 'string') {
     try {
-      const parsed: unknown = JSON.parse(value)
+      const parsed: unknown = JSON.parse(value);
       if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return { ...(parsed as Record<string, unknown>) }
+        return { ...(parsed as Record<string, unknown>) };
       }
     } catch {
       /* ignore malformed JSON */
     }
   }
-  return {}
+  return {};
 }
 
 function requireReason(reason: string): string {
-  const trimmed = typeof reason === 'string' ? reason.trim() : ''
+  const trimmed = typeof reason === 'string' ? reason.trim() : '';
   if (trimmed === '') {
-    throw new BadRequestException(CANCEL_AND_REPLACE_ERRORS.REASON_REQUIRED())
+    throw new BadRequestException(CANCEL_AND_REPLACE_ERRORS.REASON_REQUIRED());
   }
-  return trimmed
+  return trimmed;
 }
 
 @Injectable()
 export class CancelAndReplaceInvoiceService {
-  private readonly logger = new Logger(CancelAndReplaceInvoiceService.name)
+  private readonly logger = new Logger(CancelAndReplaceInvoiceService.name);
 
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
-    private readonly dueAtCalculation: DueAtCalculationService,
+    private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
   /**
@@ -194,29 +189,29 @@ export class CancelAndReplaceInvoiceService {
    *   is not in a replaceable unpaid state.
    */
   async cancelAndReplaceInvoice(
-    cmd: CancelAndReplaceInvoiceCommand,
+    cmd: CancelAndReplaceInvoiceCommand
   ): Promise<CancelAndReplaceInvoiceResult> {
-    const reason = requireReason(cmd.reason)
+    const reason = requireReason(cmd.reason);
 
-    let calculation
+    let calculation;
     try {
-      calculation = calculateManualInvoice(cmd.newLines)
+      calculation = calculateManualInvoice(cmd.newLines);
     } catch (err: unknown) {
       if (err instanceof RangeError) {
-        throw new BadRequestException(err.message)
+        throw new BadRequestException(err.message);
       }
-      throw err
+      throw err;
     }
 
-    const now = cmd.now ?? new Date()
+    const now = cmd.now ?? new Date();
     if (cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
-      throw new BadRequestException('dueAt cannot be in the past')
+      throw new BadRequestException('dueAt cannot be in the past');
     }
 
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
@@ -224,27 +219,24 @@ export class CancelAndReplaceInvoiceService {
            FROM invoices
           WHERE id = $1
           FOR UPDATE`,
-        [cmd.invoiceId],
-      )) as { rows: LockedOriginalRow[] }
-      const original = locked.rows[0]
+        [cmd.invoiceId]
+      )) as { rows: LockedOriginalRow[] };
+      const original = locked.rows[0];
       if (!original) {
-        throw new NotFoundException(`Invoice not found: ${cmd.invoiceId}`)
+        throw new NotFoundException(`Invoice not found: ${cmd.invoiceId}`);
       }
 
-      const paidAmount = BigInt(original.paid_amount)
+      const paidAmount = BigInt(original.paid_amount);
       if (paidAmount > 0n) {
         throw new ConflictException(
-          CANCEL_AND_REPLACE_ERRORS.HAS_PAYMENT(cmd.invoiceId, paidAmount),
-        )
+          CANCEL_AND_REPLACE_ERRORS.HAS_PAYMENT(cmd.invoiceId, paidAmount)
+        );
       }
 
       if (!isReplaceableInvoiceState(original.state)) {
         throw new ConflictException(
-          CANCEL_AND_REPLACE_ERRORS.STATE_NOT_REPLACEABLE(
-            cmd.invoiceId,
-            original.state,
-          ),
-        )
+          CANCEL_AND_REPLACE_ERRORS.STATE_NOT_REPLACEABLE(cmd.invoiceId, original.state)
+        );
       }
 
       const cancelTransition = await this.stateMachine.transition(
@@ -256,25 +248,20 @@ export class CancelAndReplaceInvoiceService {
           reason,
           now,
           client,
-          ...(cmd.correlationId !== undefined
-            ? { correlationId: cmd.correlationId }
-            : {}),
+          ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
           ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
-        },
-      )
+        }
+      );
 
       const due = await this.dueAtCalculation.resolve(client, {
         serviceType: duePeriodTypeForManual(),
         issuedAt: now,
         ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
-      })
-      const dueAt = due.dueAt
+      });
+      const dueAt = due.dueAt;
 
-      const replacementId = uuidv7()
-      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(
-        cmd.newLines,
-        calculation,
-      )
+      const replacementId = uuidv7();
+      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(cmd.newLines, calculation);
       const replacementMetadata = JSON.stringify({
         source: 'cancel_and_replace',
         generatedBy: cmd.actorUserId,
@@ -301,7 +288,7 @@ export class CancelAndReplaceInvoiceService {
           totalAmount: calculation.totalAmount.toString(),
           rounding: 'half-up-to-nearest-IRR',
         },
-      })
+      });
 
       await client.query(
         `INSERT INTO invoices
@@ -321,8 +308,8 @@ export class CancelAndReplaceInvoiceService {
           replacementMetadata,
           JSON.stringify(calculationSnapshot),
           cmd.invoiceId,
-        ],
-      )
+        ]
+      );
 
       for (const [index, line] of calculation.lines.entries()) {
         await client.query(
@@ -341,42 +328,35 @@ export class CancelAndReplaceInvoiceService {
             line.vatAmount,
             line.isTaxable,
             index,
-          ],
-        )
+          ]
+        );
       }
 
-      const issueTransition = await this.stateMachine.transition(
-        replacementId,
-        'Draft',
-        'Unpaid',
-        {
-          actorUserId: cmd.actorUserId,
-          reason,
-          now,
-          client,
-          ...(cmd.correlationId !== undefined
-            ? { correlationId: cmd.correlationId }
-            : {}),
-          ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
-        },
-      )
+      const issueTransition = await this.stateMachine.transition(replacementId, 'Draft', 'Unpaid', {
+        actorUserId: cmd.actorUserId,
+        reason,
+        now,
+        client,
+        ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
+        ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
+      });
 
-      const originalMetadata = asMetadataObject(original.metadata)
+      const originalMetadata = asMetadataObject(original.metadata);
       const nextOriginalMetadata = {
         ...originalMetadata,
         replacedByInvoiceId: replacementId,
         replacementReason: reason,
-      }
+      };
       await client.query(
         `UPDATE invoices
             SET metadata = $1::jsonb, updated_at = $2
           WHERE id = $3`,
-        [JSON.stringify(nextOriginalMetadata), now, cmd.invoiceId],
-      )
+        [JSON.stringify(nextOriginalMetadata), now, cmd.invoiceId]
+      );
 
-      const excerpt = await this.loadReplacementExcerpt(client, replacementId)
+      const excerpt = await this.loadReplacementExcerpt(client, replacementId);
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.invoiceId,
         originalState: 'Cancelled',
@@ -396,66 +376,66 @@ export class CancelAndReplaceInvoiceService {
         issueAuditId: issueTransition.auditId,
         cancelTransition,
         issueTransition,
-      }
+      };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
         error instanceof ConflictException
       ) {
-        throw error
+        throw error;
       }
-      this.logger.error(`Cancel-and-replace failed: ${String(error)}`)
-      throw error
+      this.logger.error(`Cancel-and-replace failed: ${String(error)}`);
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   private async loadReplacementExcerpt(
     client: TransactionClient,
-    invoiceId: string,
+    invoiceId: string
   ): Promise<{
-    profileId: string
-    contractId: string | null
-    orderId: string | null
-    consultationId: string | null
-    replacesInvoiceId: string
-    state: InvoiceState
-    totalAmount: bigint
-    lines: ManualInvoiceLineResult[]
-    issuedAt: Date
-    payableFrom: Date
-    dueAt: Date | null
+    profileId: string;
+    contractId: string | null;
+    orderId: string | null;
+    consultationId: string | null;
+    replacesInvoiceId: string;
+    state: InvoiceState;
+    totalAmount: bigint;
+    lines: ManualInvoiceLineResult[];
+    issuedAt: Date;
+    payableFrom: Date;
+    dueAt: Date | null;
   }> {
     const invoiceResult = (await client.query(
       `SELECT id, profile_id, order_id, contract_id, consultation_id, state,
               total_amount, issued_at, payable_from, due_at, replaces_invoice_id
          FROM invoices
         WHERE id = $1`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        profile_id: string
-        order_id: string | null
-        contract_id: string | null
-        consultation_id: string | null
-        state: string
-        total_amount: string
-        issued_at: Date | null
-        payable_from: Date | null
-        due_at: Date | null
-        replaces_invoice_id: string | null
-      }>
-    }
-    const row = invoiceResult.rows[0]
-    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`)
+        id: string;
+        profile_id: string;
+        order_id: string | null;
+        contract_id: string | null;
+        consultation_id: string | null;
+        state: string;
+        total_amount: string;
+        issued_at: Date | null;
+        payable_from: Date | null;
+        due_at: Date | null;
+        replaces_invoice_id: string | null;
+      }>;
+    };
+    const row = invoiceResult.rows[0];
+    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`);
     if (!row.replaces_invoice_id) {
       throw new NotFoundException(
-        `Replacement invoice ${invoiceId} is missing replaces_invoice_id`,
-      )
+        `Replacement invoice ${invoiceId} is missing replaces_invoice_id`
+      );
     }
 
     const linesResult = (await client.query(
@@ -464,20 +444,20 @@ export class CancelAndReplaceInvoiceService {
          FROM invoice_lines
         WHERE invoice_id = $1
         ORDER BY position ASC, created_at ASC`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        description: string
-        quantity: number
-        unit_price: string
-        line_total: string
-        vat_rate: number
-        vat_amount: string
-        is_taxable: boolean
-        position: number
-      }>
-    }
+        id: string;
+        description: string;
+        quantity: number;
+        unit_price: string;
+        line_total: string;
+        vat_rate: number;
+        vat_amount: string;
+        is_taxable: boolean;
+        position: number;
+      }>;
+    };
 
     return {
       profileId: row.profile_id,
@@ -501,6 +481,6 @@ export class CancelAndReplaceInvoiceService {
         isTaxable: l.is_taxable,
         position: l.position,
       })),
-    }
+    };
   }
 }

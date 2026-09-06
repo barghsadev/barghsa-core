@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 /**
  * MultiSelect — Combobox with `multiple` mode and chips for multi-select UX.
@@ -20,4 +20,4 @@ export {
   ComboBoxSeparator as MultiSelectSeparator,
   ComboBoxChips as MultiSelectChips,
   ComboBoxChip as MultiSelectChip,
-} from "./combo-box"
+} from './combo-box';

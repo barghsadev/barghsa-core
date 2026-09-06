@@ -8,98 +8,98 @@
  * `expireStaleOnlineTopUps` pass against Testcontainers PostgreSQL 17.
  */
 
-import { randomUUID } from 'node:crypto'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
-import type { IsolatedTestDb } from '@barghsa/db/test'
+import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
+import type { IsolatedTestDb } from '@barghsa/db/test';
 import {
   DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS,
   ONLINE_TOPUP_CHANNEL,
   ONLINE_TOPUP_EXPIRY_AUDIT_EVENT,
   ONLINE_TOPUP_EXPIRY_REASON,
   ONLINE_TOPUP_EXPIRY_TRANSITION,
-} from '@barghsa/shared/finance'
+} from '@barghsa/shared/finance';
 import {
   FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL,
   expireStaleOnlineTopUps,
-} from './online-topup-expiry-scanner.js'
+} from './online-topup-expiry-scanner.js';
 
 const UUIDV7_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql',
-)
+  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
+);
 const WALLET_TX_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
-)
+  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
+);
 const AUDIT_LOG_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql',
-)
+  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
+);
 const EXPIRY_IDX_MIGRATION = resolve(
   __dirname,
-  '../../../../packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql',
-)
+  '../../../../packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql'
+);
 
-const WALLET_A = '11111111-1111-7111-8111-111111111111'
-const WALLET_B = '22222222-2222-7222-8222-222222222222'
-const ACTOR_USER_ID = 'online-expiry-scanner-actor'
-const NOW = new Date('2026-09-02T12:00:00.000Z')
-const TTL = DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS
-const CUTOFF = new Date(NOW.getTime() - TTL)
-const EXPIRED_EARLY = new Date(CUTOFF.getTime() - 120_000)
-const EXPIRED_LATE = new Date(CUTOFF.getTime() - 30_000)
-const FRESH = new Date(NOW.getTime() - 60_000)
+const WALLET_A = '11111111-1111-7111-8111-111111111111';
+const WALLET_B = '22222222-2222-7222-8222-222222222222';
+const ACTOR_USER_ID = 'online-expiry-scanner-actor';
+const NOW = new Date('2026-09-02T12:00:00.000Z');
+const TTL = DEFAULT_ONLINE_TOPUP_PENDING_TTL_MS;
+const CUTOFF = new Date(NOW.getTime() - TTL);
+const EXPIRED_EARLY = new Date(CUTOFF.getTime() - 120_000);
+const EXPIRED_LATE = new Date(CUTOFF.getTime() - 30_000);
+const FRESH = new Date(NOW.getTime() - 60_000);
 
 describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: IsolatedTestDb;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8)
+    ctx = await createIsolatedTestDb('test_', 8);
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS profiles (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-    )`)
+    )`);
     await ctx.pool.query(`CREATE TABLE IF NOT EXISTS users (
       user_id TEXT PRIMARY KEY
-    )`)
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(EXPIRY_IDX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [WALLET_A, WALLET_B])
+    )`);
+    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(EXPIRY_IDX_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1), ($2)`, [WALLET_A, WALLET_B]);
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES ($1, 0, 0, 0), ($2, 0, 0, 0)`,
-      [WALLET_A, WALLET_B],
-    )
+      [WALLET_A, WALLET_B]
+    );
     await ctx.pool.query(
       `INSERT INTO users (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
-      [ACTOR_USER_ID],
-    )
-  }, 60_000)
+      [ACTOR_USER_ID]
+    );
+  }, 60_000);
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   beforeEach(async () => {
-    await ctx.pool.query('DELETE FROM audit_log')
-    await ctx.pool.query('DELETE FROM wallet_transactions')
-  })
+    await ctx.pool.query('DELETE FROM audit_log');
+    await ctx.pool.query('DELETE FROM wallet_transactions');
+  });
 
   async function insertTopUp(opts: {
-    walletId?: string
-    state: string
-    channel: string
-    createdAt: Date
-    authority?: string
-    amount?: number
+    walletId?: string;
+    state: string;
+    channel: string;
+    createdAt: Date;
+    authority?: string;
+    amount?: number;
   }): Promise<string> {
-    const id = randomUUID()
+    const id = randomUUID();
     await ctx.pool.query(
       `INSERT INTO wallet_transactions
          (id, wallet_id, type, amount, state, idempotency_key, metadata, created_at)
@@ -117,9 +117,9 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
             : {}),
         }),
         opts.createdAt,
-      ],
-    )
-    return id
+      ]
+    );
+    return id;
   }
 
   it('candidate query returns only online Pending rows older than the cutoff', async () => {
@@ -128,72 +128,72 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-early',
-    })
+    });
     const expiredLate = await insertTopUp({
       walletId: WALLET_B,
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_LATE,
       authority: 'auth-late',
-    })
+    });
     const fresh = await insertTopUp({
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: FRESH,
       authority: 'auth-fresh',
-    })
+    });
     const bankReceipt = await insertTopUp({
       state: 'Pending',
       channel: 'bank_receipt',
       createdAt: EXPIRED_EARLY,
-    })
+    });
     const alreadyRejected = await insertTopUp({
       state: 'Rejected',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-rejected',
-    })
+    });
     const failed = await insertTopUp({
       state: 'Failed',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-failed',
-    })
+    });
 
     const result = await ctx.pool.query<{ id: string }>(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL, [
       ONLINE_TOPUP_CHANNEL,
       CUTOFF,
       200,
-    ])
+    ]);
 
-    expect(result.rows.map((row) => row.id)).toEqual([expiredEarly, expiredLate])
-    expect(result.rows.some((row) => row.id === fresh)).toBe(false)
-    expect(result.rows.some((row) => row.id === bankReceipt)).toBe(false)
-    expect(result.rows.some((row) => row.id === alreadyRejected)).toBe(false)
-    expect(result.rows.some((row) => row.id === failed)).toBe(false)
-  })
+    expect(result.rows.map((row) => row.id)).toEqual([expiredEarly, expiredLate]);
+    expect(result.rows.some((row) => row.id === fresh)).toBe(false);
+    expect(result.rows.some((row) => row.id === bankReceipt)).toBe(false);
+    expect(result.rows.some((row) => row.id === alreadyRejected)).toBe(false);
+    expect(result.rows.some((row) => row.id === failed)).toBe(false);
+  });
 
   it('honours LIMIT and oldest-created ordering on the migrated schema', async () => {
     const first = await insertTopUp({
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
-    })
+    });
     await insertTopUp({
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_LATE,
-    })
+    });
 
     const result = await ctx.pool.query<{ id: string }>(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL, [
       ONLINE_TOPUP_CHANNEL,
       CUTOFF,
       1,
-    ])
+    ]);
 
-    expect(result.rows).toHaveLength(1)
-    expect(result.rows[0]?.id).toBe(first)
-  })
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0]?.id).toBe(first);
+  });
 
   it('does not treat created_at equal to the cutoff as expired (exclusive TTL)', async () => {
     const onCutoff = await insertTopUp({
@@ -201,14 +201,14 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: CUTOFF,
       authority: 'auth-boundary',
-    })
+    });
     const result = await ctx.pool.query<{ id: string }>(FIND_EXPIRED_ONLINE_TOPUP_CANDIDATES_SQL, [
       ONLINE_TOPUP_CHANNEL,
       CUTOFF,
       200,
-    ])
-    expect(result.rows.some((row) => row.id === onCutoff)).toBe(false)
-  })
+    ]);
+    expect(result.rows.some((row) => row.id === onCutoff)).toBe(false);
+  });
 
   it('rejects expired online Pendings, preserves gateway authority, and leaves balances and bank receipts untouched', async () => {
     const expiredId = await insertTopUp({
@@ -216,18 +216,18 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-keep',
-    })
+    });
     const freshId = await insertTopUp({
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: FRESH,
       authority: 'auth-fresh',
-    })
+    });
     const bankId = await insertTopUp({
       state: 'Pending',
       channel: 'bank_receipt',
       createdAt: EXPIRED_EARLY,
-    })
+    });
 
     const scan = await expireStaleOnlineTopUps({
       pool: ctx.pool,
@@ -236,51 +236,51 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       batchSize: 50,
       actorUserId: ACTOR_USER_ID,
       correlationId: 'corr-online-expiry-pg',
-    })
+    });
 
-    expect(scan.errors).toEqual([])
-    expect(scan).toMatchObject({ scanned: 1, rejected: 1, skipped: 0 })
+    expect(scan.errors).toEqual([]);
+    expect(scan).toMatchObject({ scanned: 1, rejected: 1, skipped: 0 });
 
     const expired = await ctx.pool.query<{
-      state: string
+      state: string;
       metadata: {
-        channel?: string
-        gateway?: { authority?: string }
-        expiry?: { reason?: string; ttlMs?: number; rejectedAt?: string }
-      }
-    }>(`SELECT state, metadata FROM wallet_transactions WHERE id = $1`, [expiredId])
-    expect(expired.rows[0]?.state).toBe('Rejected')
-    expect(expired.rows[0]?.metadata.channel).toBe(ONLINE_TOPUP_CHANNEL)
-    expect(expired.rows[0]?.metadata.gateway?.authority).toBe('auth-keep')
+        channel?: string;
+        gateway?: { authority?: string };
+        expiry?: { reason?: string; ttlMs?: number; rejectedAt?: string };
+      };
+    }>(`SELECT state, metadata FROM wallet_transactions WHERE id = $1`, [expiredId]);
+    expect(expired.rows[0]?.state).toBe('Rejected');
+    expect(expired.rows[0]?.metadata.channel).toBe(ONLINE_TOPUP_CHANNEL);
+    expect(expired.rows[0]?.metadata.gateway?.authority).toBe('auth-keep');
     expect(expired.rows[0]?.metadata.expiry).toMatchObject({
       reason: ONLINE_TOPUP_EXPIRY_REASON,
       ttlMs: TTL,
       rejectedAt: NOW.toISOString(),
-    })
+    });
 
     const fresh = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [freshId],
-    )
-    expect(fresh.rows[0]?.state).toBe('Pending')
+      [freshId]
+    );
+    expect(fresh.rows[0]?.state).toBe('Pending');
 
     const bank = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [bankId],
-    )
-    expect(bank.rows[0]?.state).toBe('Pending')
+      [bankId]
+    );
+    expect(bank.rows[0]?.state).toBe('Pending');
 
     const wallet = await ctx.pool.query<{ posted_balance: string; reserved_balance: string }>(
       `SELECT posted_balance, reserved_balance FROM wallets WHERE profile_id = $1`,
-      [WALLET_A],
-    )
-    expect(wallet.rows[0]).toMatchObject({ posted_balance: '0', reserved_balance: '0' })
+      [WALLET_A]
+    );
+    expect(wallet.rows[0]).toMatchObject({ posted_balance: '0', reserved_balance: '0' });
 
     const audit = await ctx.pool.query<{ event: string; metadata: string }>(
       `SELECT event, metadata FROM audit_log WHERE metadata LIKE $1`,
-      [`%${expiredId}%`],
-    )
-    expect(audit.rows[0]?.event).toBe(ONLINE_TOPUP_EXPIRY_AUDIT_EVENT)
+      [`%${expiredId}%`]
+    );
+    expect(audit.rows[0]?.event).toBe(ONLINE_TOPUP_EXPIRY_AUDIT_EVENT);
     expect(JSON.parse(audit.rows[0]!.metadata)).toMatchObject({
       transactionId: expiredId,
       walletId: WALLET_A,
@@ -289,8 +289,8 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       transition: ONLINE_TOPUP_EXPIRY_TRANSITION,
       reason: ONLINE_TOPUP_EXPIRY_REASON,
       ttlMs: TTL,
-    })
-  })
+    });
+  });
 
   it('is idempotent: a second pass does not re-reject or change metadata', async () => {
     const expiredId = await insertTopUp({
@@ -298,36 +298,36 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-once',
-    })
+    });
 
     const first = await expireStaleOnlineTopUps({
       pool: ctx.pool,
       now: () => NOW,
       ttlMs: TTL,
       actorUserId: ACTOR_USER_ID,
-    })
-    expect(first.rejected).toBe(1)
+    });
+    expect(first.rejected).toBe(1);
 
     const second = await expireStaleOnlineTopUps({
       pool: ctx.pool,
       now: () => NOW,
       ttlMs: TTL,
       actorUserId: ACTOR_USER_ID,
-    })
-    expect(second).toMatchObject({ scanned: 0, rejected: 0, skipped: 0, errors: [] })
+    });
+    expect(second).toMatchObject({ scanned: 0, rejected: 0, skipped: 0, errors: [] });
 
     const row = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [expiredId],
-    )
-    expect(row.rows[0]?.state).toBe('Rejected')
+      [expiredId]
+    );
+    expect(row.rows[0]?.state).toBe('Rejected');
 
     const audits = await ctx.pool.query<{ n: string }>(
       `SELECT COUNT(*)::text AS n FROM audit_log WHERE event = $1`,
-      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT],
-    )
-    expect(audits.rows[0]?.n).toBe('1')
-  })
+      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT]
+    );
+    expect(audits.rows[0]?.n).toBe('1');
+  });
 
   it('drains a truncated batch on the next tick, oldest first', async () => {
     const first = await insertTopUp({
@@ -335,21 +335,21 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-drain-1',
-    })
+    });
     const second = await insertTopUp({
       walletId: WALLET_B,
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_LATE,
       authority: 'auth-drain-2',
-    })
-    const thirdCreatedAt = new Date(EXPIRED_LATE.getTime() + 1_000)
+    });
+    const thirdCreatedAt = new Date(EXPIRED_LATE.getTime() + 1_000);
     const third = await insertTopUp({
       state: 'Pending',
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: thirdCreatedAt,
       authority: 'auth-drain-3',
-    })
+    });
 
     const firstPass = await expireStaleOnlineTopUps({
       pool: ctx.pool,
@@ -357,18 +357,18 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       ttlMs: TTL,
       batchSize: 2,
       actorUserId: ACTOR_USER_ID,
-    })
-    expect(firstPass).toMatchObject({ scanned: 2, rejected: 2, truncated: true, errors: [] })
+    });
+    expect(firstPass).toMatchObject({ scanned: 2, rejected: 2, truncated: true, errors: [] });
 
     const afterFirst = await ctx.pool.query<{ id: string; state: string }>(
       `SELECT id, state FROM wallet_transactions WHERE id IN ($1, $2, $3) ORDER BY created_at ASC, id ASC`,
-      [first, second, third],
-    )
+      [first, second, third]
+    );
     expect(afterFirst.rows).toEqual([
       { id: first, state: 'Rejected' },
       { id: second, state: 'Rejected' },
       { id: third, state: 'Pending' },
-    ])
+    ]);
 
     const secondPass = await expireStaleOnlineTopUps({
       pool: ctx.pool,
@@ -376,15 +376,15 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       ttlMs: TTL,
       batchSize: 2,
       actorUserId: ACTOR_USER_ID,
-    })
-    expect(secondPass).toMatchObject({ scanned: 1, rejected: 1, truncated: false, errors: [] })
+    });
+    expect(secondPass).toMatchObject({ scanned: 1, rejected: 1, truncated: false, errors: [] });
 
     const leftover = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [third],
-    )
-    expect(leftover.rows[0]?.state).toBe('Rejected')
-  })
+      [third]
+    );
+    expect(leftover.rows[0]?.state).toBe('Rejected');
+  });
 
   it('skips a candidate held by FOR UPDATE SKIP LOCKED and leaves it Pending', async () => {
     const expiredId = await insertTopUp({
@@ -392,35 +392,35 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-held',
-    })
+    });
 
-    const holder = await ctx.pool.connect()
+    const holder = await ctx.pool.connect();
     try {
-      await holder.query('BEGIN')
+      await holder.query('BEGIN');
       const locked = await holder.query<{ id: string }>(
         `SELECT id FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
-        [expiredId],
-      )
-      expect(locked.rows).toHaveLength(1)
+        [expiredId]
+      );
+      expect(locked.rows).toHaveLength(1);
 
       const scan = await expireStaleOnlineTopUps({
         pool: ctx.pool,
         now: () => NOW,
         ttlMs: TTL,
         actorUserId: ACTOR_USER_ID,
-      })
-      expect(scan).toMatchObject({ scanned: 1, rejected: 0, skipped: 1, errors: [] })
+      });
+      expect(scan).toMatchObject({ scanned: 1, rejected: 0, skipped: 1, errors: [] });
 
       const stillPending = await holder.query<{ state: string }>(
         `SELECT state FROM wallet_transactions WHERE id = $1`,
-        [expiredId],
-      )
-      expect(stillPending.rows[0]?.state).toBe('Pending')
+        [expiredId]
+      );
+      expect(stillPending.rows[0]?.state).toBe('Pending');
     } finally {
-      await holder.query('ROLLBACK').catch(() => {})
-      holder.release()
+      await holder.query('ROLLBACK').catch(() => {});
+      holder.release();
     }
-  })
+  });
 
   it('rejects an expired row exactly once when two scanners overlap', async () => {
     const expiredId = await insertTopUp({
@@ -428,7 +428,7 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
       channel: ONLINE_TOPUP_CHANNEL,
       createdAt: EXPIRED_EARLY,
       authority: 'auth-race',
-    })
+    });
 
     const [first, second] = await Promise.all([
       expireStaleOnlineTopUps({
@@ -445,23 +445,23 @@ describe('online top-up expiry — real PostgreSQL (T-04.2.02.07)', () => {
         actorUserId: ACTOR_USER_ID,
         correlationId: 'corr-race-b',
       }),
-    ])
+    ]);
 
-    expect(first.errors).toEqual([])
-    expect(second.errors).toEqual([])
-    expect(first.rejected + second.rejected).toBe(1)
-    expect(first.scanned + second.scanned).toBeGreaterThanOrEqual(1)
+    expect(first.errors).toEqual([]);
+    expect(second.errors).toEqual([]);
+    expect(first.rejected + second.rejected).toBe(1);
+    expect(first.scanned + second.scanned).toBeGreaterThanOrEqual(1);
 
     const row = await ctx.pool.query<{ state: string }>(
       `SELECT state FROM wallet_transactions WHERE id = $1`,
-      [expiredId],
-    )
-    expect(row.rows[0]?.state).toBe('Rejected')
+      [expiredId]
+    );
+    expect(row.rows[0]?.state).toBe('Rejected');
 
     const audits = await ctx.pool.query<{ n: string }>(
       `SELECT COUNT(*)::text AS n FROM audit_log WHERE event = $1`,
-      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT],
-    )
-    expect(audits.rows[0]?.n).toBe('1')
-  })
-})
+      [ONLINE_TOPUP_EXPIRY_AUDIT_EVENT]
+    );
+    expect(audits.rows[0]?.n).toBe('1');
+  });
+});

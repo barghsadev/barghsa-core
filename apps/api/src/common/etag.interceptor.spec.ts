@@ -11,7 +11,9 @@ function createMockContext(options: {
 }): { ctx: ExecutionContext; response: ReturnType<typeof createMockResponse> } {
   const { method = 'GET', url = '/api/products', ifNoneMatch = undefined } = options;
 
-  const mockHeaders: Record<string, string | string[] | undefined> = { 'if-none-match': ifNoneMatch };
+  const mockHeaders: Record<string, string | string[] | undefined> = {
+    'if-none-match': ifNoneMatch,
+  };
   const response = createMockResponse();
 
   return {
@@ -25,8 +27,8 @@ function createMockContext(options: {
       getArgByIndex: () => undefined,
       getArgs: () => [],
       getType: () => 'http',
-      switchToRpc: () => ({} as ReturnType<ExecutionContext['switchToRpc']>),
-      switchToWs: () => ({} as ReturnType<ExecutionContext['switchToWs']>),
+      switchToRpc: () => ({}) as ReturnType<ExecutionContext['switchToRpc']>,
+      switchToWs: () => ({}) as ReturnType<ExecutionContext['switchToWs']>,
     } as unknown as ExecutionContext,
     response,
   };
@@ -36,10 +38,18 @@ function createMockResponse() {
   const headers: Record<string, string> = {};
   let statusCode: number | undefined;
   return {
-    setHeader: vi.fn((name: string, value: string) => { headers[name] = value; }),
-    status: vi.fn((code: number) => { statusCode = code; }),
-    get statusCode() { return statusCode; },
-    get headers() { return headers; },
+    setHeader: vi.fn((name: string, value: string) => {
+      headers[name] = value;
+    }),
+    status: vi.fn((code: number) => {
+      statusCode = code;
+    }),
+    get statusCode() {
+      return statusCode;
+    },
+    get headers() {
+      return headers;
+    },
   };
 }
 
@@ -91,7 +101,10 @@ describe('EtagInterceptor', () => {
       const result$ = interceptor.intercept(ctx, next);
       await new Promise((resolve) => result$.subscribe(resolve));
 
-      expect(response.setHeader).toHaveBeenCalledWith('ETag', expect.stringMatching(/^"[A-Za-z0-9+/=]+"$/));
+      expect(response.setHeader).toHaveBeenCalledWith(
+        'ETag',
+        expect.stringMatching(/^"[A-Za-z0-9+/=]+"$/)
+      );
     });
   });
 

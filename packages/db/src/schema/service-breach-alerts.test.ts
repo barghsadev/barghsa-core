@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
-import { serviceBreachAlerts } from './service-breach-alerts.js'
+import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { serviceBreachAlerts } from './service-breach-alerts.js';
 
 /**
  * Drift guard for the service_breach_alerts table (T-09.08.01 + T-09.08.03).
@@ -19,68 +19,70 @@ import { serviceBreachAlerts } from './service-breach-alerts.js'
  */
 const MIGRATION_0037 = readFileSync(
   join(process.cwd(), 'drizzle', '0037_create_service_breach_alerts.sql'),
-  'utf8',
-)
+  'utf8'
+);
 const MIGRATION_0039 = readFileSync(
   join(process.cwd(), 'drizzle', '0039_add_escalation_to_service_breach_alerts.sql'),
-  'utf8',
-)
+  'utf8'
+);
 
 describe('service_breach_alerts schema (T-09.08.01)', () => {
   it('declares the domain columns expected by the worker scan', () => {
-    const columns = Object.keys(serviceBreachAlerts)
+    const columns = Object.keys(serviceBreachAlerts);
     for (const column of ['serviceType', 'itemId', 'targetHours', 'alertedAt']) {
-      expect(columns).toContain(column)
+      expect(columns).toContain(column);
     }
-  })
+  });
 
   it('declares the createTable base columns (id, created_at, updated_at)', () => {
-    const columns = Object.keys(serviceBreachAlerts)
+    const columns = Object.keys(serviceBreachAlerts);
     for (const column of ['id', 'createdAt', 'updatedAt']) {
-      expect(columns).toContain(column)
+      expect(columns).toContain(column);
     }
     // The migration must create the same base columns the drizzle schema
     // (createTable) exposes, or a future ORM query would hit missing columns.
-    expect(MIGRATION_0037).toMatch(/id\s+UUID PRIMARY KEY DEFAULT uuid_generate_v7\(\)/)
-    expect(MIGRATION_0037).toMatch(/created_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/)
-    expect(MIGRATION_0037).toMatch(/updated_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/)
-  })
+    expect(MIGRATION_0037).toMatch(/id\s+UUID PRIMARY KEY DEFAULT uuid_generate_v7\(\)/);
+    expect(MIGRATION_0037).toMatch(/created_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/);
+    expect(MIGRATION_0037).toMatch(/updated_at\s+TIMESTAMPTZ NOT NULL DEFAULT NOW\(\)/);
+  });
 
   it('migration 0037 keeps the service-type CHECK constraint (ticket, verification_case)', () => {
     expect(MIGRATION_0037).toMatch(
-      /chk_sba_service_type[\s\S]*CHECK \(service_type IN \('ticket', 'verification_case'\)\)/,
-    )
-  })
+      /chk_sba_service_type[\s\S]*CHECK \(service_type IN \('ticket', 'verification_case'\)\)/
+    );
+  });
 
   it('migration 0037 keeps the positive target-hours CHECK constraint', () => {
-    expect(MIGRATION_0037).toMatch(/chk_sba_target_hours[\s\S]*CHECK \(target_hours > 0\)/)
-  })
+    expect(MIGRATION_0037).toMatch(/chk_sba_target_hours[\s\S]*CHECK \(target_hours > 0\)/);
+  });
 
   it('migration 0037 keeps the per-item dedup UNIQUE constraint', () => {
-    expect(MIGRATION_0037).toMatch(/uq_sba_item[\s\S]*UNIQUE \(service_type, item_id\)/)
-  })
-})
+    expect(MIGRATION_0037).toMatch(/uq_sba_item[\s\S]*UNIQUE \(service_type, item_id\)/);
+  });
+});
 
 describe('service_breach_alerts escalation columns (T-09.08.03)', () => {
   it('declares the escalation columns on the drizzle schema', () => {
-    const columns = Object.keys(serviceBreachAlerts)
+    const columns = Object.keys(serviceBreachAlerts);
     for (const column of ['escalationLevel', 'escalatedAt']) {
-      expect(columns).toContain(column)
+      expect(columns).toContain(column);
     }
-  })
+  });
 
   it('migration 0039 adds escalation_level (default 1, terminal 3) and escalated_at as additive columns', () => {
     // Expand-only: IF NOT EXISTS so the migration is safely re-appliable.
-    expect(MIGRATION_0039).toMatch(/ADD COLUMN IF NOT EXISTS escalation_level INTEGER NOT NULL DEFAULT 1/)
-    expect(MIGRATION_0039).toMatch(/ADD COLUMN IF NOT EXISTS escalated_at TIMESTAMPTZ/)
+    expect(MIGRATION_0039).toMatch(
+      /ADD COLUMN IF NOT EXISTS escalation_level INTEGER NOT NULL DEFAULT 1/
+    );
+    expect(MIGRATION_0039).toMatch(/ADD COLUMN IF NOT EXISTS escalated_at TIMESTAMPTZ/);
     // The check guards the 1..3 escalation band.
     expect(MIGRATION_0039).toMatch(
-      /chk_sba_escalation_level[\s\S]*CHECK \(escalation_level BETWEEN 1 AND 3\)/,
-    )
-  })
+      /chk_sba_escalation_level[\s\S]*CHECK \(escalation_level BETWEEN 1 AND 3\)/
+    );
+  });
 
   it('migration 0039 rollback drops both escalation columns', () => {
-    expect(MIGRATION_0039).toMatch(/DROP COLUMN IF EXISTS escalated_at/)
-    expect(MIGRATION_0039).toMatch(/DROP COLUMN IF EXISTS escalation_level/)
-  })
-})
+    expect(MIGRATION_0039).toMatch(/DROP COLUMN IF EXISTS escalated_at/);
+    expect(MIGRATION_0039).toMatch(/DROP COLUMN IF EXISTS escalation_level/);
+  });
+});

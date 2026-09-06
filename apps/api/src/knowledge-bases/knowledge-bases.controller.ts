@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -12,12 +12,12 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import {
   KnowledgeBasesService,
   type KbDto,
@@ -25,51 +25,51 @@ import {
   type KbDocumentDto,
   type KbGroupDto,
   type KbGroupDetailDto,
-} from './knowledge-bases.service.js'
+} from './knowledge-bases.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const titleSchema = z.string().min(1, 'Title is required').max(120)
-const descriptionSchema = z.string().max(2000).default('')
+const titleSchema = z.string().min(1, 'Title is required').max(120);
+const descriptionSchema = z.string().max(2000).default('');
 
 export const CreateKnowledgeBaseSchema = z.object({
   title: titleSchema,
   description: descriptionSchema.optional(),
-})
+});
 
 export const UpdateKnowledgeBaseSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
 export const AttachDocumentSchema = z.object({
   storageKey: z.string().min(1, 'storageKey is required').max(500),
-})
+});
 
 export const CreateKbGroupSchema = z.object({
   title: titleSchema,
   description: descriptionSchema.optional(),
-})
+});
 
 export const UpdateKbGroupSchema = z
   .object({
     title: titleSchema.optional(),
     description: z.string().max(2000).optional(),
   })
-  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided')
+  .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
 export const AddGroupMemberSchema = z.object({
   kbId: z.string().min(1, 'kbId is required').max(64),
-})
+});
 
 function httpError(code: string, message: string, statusCode = 400): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /**
@@ -96,8 +96,8 @@ export class KnowledgeBasesController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage knowledge bases',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -105,16 +105,16 @@ export class KnowledgeBasesController {
   @ApiOperation({ summary: 'List knowledge bases (admin)' })
   @ApiResponse({ status: 200, description: 'All KBs, newest first, with document + group counts.' })
   async list(@Req() req: AuthenticatedRequest): Promise<KbDto[]> {
-    this.assertKbPermission(req)
-    return this.service.listKbs()
+    this.assertKbPermission(req);
+    return this.service.listKbs();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single knowledge base (admin)' })
   @ApiResponse({ status: 200, description: 'The KB with its documents and group memberships.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<KbDetailDto> {
-    this.assertKbPermission(req)
-    return this.service.getKb(id)
+    this.assertKbPermission(req);
+    return this.service.getKb(id);
   }
 
   @Post()
@@ -125,19 +125,19 @@ export class KnowledgeBasesController {
   @ApiResponse({ status: 201, description: 'Knowledge base created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateKnowledgeBaseSchema>,
+    @Body() body: z.infer<typeof CreateKnowledgeBaseSchema>
   ): Promise<KbDto> {
-    this.assertKbPermission(req)
-    const parsed = CreateKnowledgeBaseSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = CreateKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload');
     }
     return this.service.createKb({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Put(':id')
@@ -149,21 +149,19 @@ export class KnowledgeBasesController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateKnowledgeBaseSchema>,
+    @Body() body: z.infer<typeof UpdateKnowledgeBaseSchema>
   ): Promise<KbDto> {
-    this.assertKbPermission(req)
-    const parsed = UpdateKnowledgeBaseSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = UpdateKnowledgeBaseSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid knowledge base payload');
     }
     return this.service.updateKb(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
-      ...(parsed.data.description !== undefined
-        ? { description: parsed.data.description }
-        : {}),
+      ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -172,12 +170,9 @@ export class KnowledgeBasesController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a knowledge base (admin)' })
   @ApiResponse({ status: 204, description: 'Knowledge base deleted (links cascaded).' })
-  async remove(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ): Promise<void> {
-    this.assertKbPermission(req)
-    return this.service.removeKb(id, req.session.userId, requestIp(req))
+  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+    this.assertKbPermission(req);
+    return this.service.removeKb(id, req.session.userId, requestIp(req));
   }
 
   @Post(':id/documents')
@@ -195,19 +190,19 @@ export class KnowledgeBasesController {
   async attachDocument(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof AttachDocumentSchema>,
+    @Body() body: z.infer<typeof AttachDocumentSchema>
   ): Promise<KbDocumentDto> {
-    this.assertKbPermission(req)
-    const parsed = AttachDocumentSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = AttachDocumentSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid document payload');
     }
     return this.service.attachDocument({
       kbId: id,
       storageKey: parsed.data.storageKey,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id/documents/:documentId')
@@ -225,10 +220,10 @@ export class KnowledgeBasesController {
   async detachDocument(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('documentId') documentId: string,
+    @Param('documentId') documentId: string
   ): Promise<void> {
-    this.assertKbPermission(req)
-    return this.service.detachDocument(id, documentId, req.session.userId, requestIp(req))
+    this.assertKbPermission(req);
+    return this.service.detachDocument(id, documentId, req.session.userId, requestIp(req));
   }
 }
 
@@ -248,8 +243,8 @@ export class KbGroupsController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage KB groups',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -257,16 +252,16 @@ export class KbGroupsController {
   @ApiOperation({ summary: 'List KB groups (admin)' })
   @ApiResponse({ status: 200, description: 'All groups, newest first, with member counts.' })
   async list(@Req() req: AuthenticatedRequest): Promise<KbGroupDto[]> {
-    this.assertKbPermission(req)
-    return this.service.listGroups()
+    this.assertKbPermission(req);
+    return this.service.listGroups();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single KB group (admin)' })
   @ApiResponse({ status: 200, description: 'The group with its member KBs.' })
   async get(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<KbGroupDetailDto> {
-    this.assertKbPermission(req)
-    return this.service.getGroup(id)
+    this.assertKbPermission(req);
+    return this.service.getGroup(id);
   }
 
   @Post()
@@ -277,19 +272,19 @@ export class KbGroupsController {
   @ApiResponse({ status: 201, description: 'KB group created.' })
   async create(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateKbGroupSchema>,
+    @Body() body: z.infer<typeof CreateKbGroupSchema>
   ): Promise<KbGroupDto> {
-    this.assertKbPermission(req)
-    const parsed = CreateKbGroupSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = CreateKbGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload');
     }
     return this.service.createGroup({
       title: parsed.data.title,
       description: parsed.data.description ?? '',
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Put(':id')
@@ -301,21 +296,19 @@ export class KbGroupsController {
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof UpdateKbGroupSchema>,
+    @Body() body: z.infer<typeof UpdateKbGroupSchema>
   ): Promise<KbGroupDto> {
-    this.assertKbPermission(req)
-    const parsed = UpdateKbGroupSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = UpdateKbGroupSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid KB group payload');
     }
     return this.service.updateGroup(id, {
       ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
-      ...(parsed.data.description !== undefined
-        ? { description: parsed.data.description }
-        : {}),
+      ...(parsed.data.description !== undefined ? { description: parsed.data.description } : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id')
@@ -324,12 +317,9 @@ export class KbGroupsController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a KB group (admin)' })
   @ApiResponse({ status: 204, description: 'KB group deleted (memberships cascaded).' })
-  async remove(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ): Promise<void> {
-    this.assertKbPermission(req)
-    return this.service.removeGroup(id, req.session.userId, requestIp(req))
+  async remove(@Req() req: AuthenticatedRequest, @Param('id') id: string): Promise<void> {
+    this.assertKbPermission(req);
+    return this.service.removeGroup(id, req.session.userId, requestIp(req));
   }
 
   @Post(':id/members')
@@ -344,19 +334,19 @@ export class KbGroupsController {
   async addMember(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof AddGroupMemberSchema>,
+    @Body() body: z.infer<typeof AddGroupMemberSchema>
   ): Promise<void> {
-    this.assertKbPermission(req)
-    const parsed = AddGroupMemberSchema.safeParse(body)
+    this.assertKbPermission(req);
+    const parsed = AddGroupMemberSchema.safeParse(body);
     if (!parsed.success) {
-      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid member payload')
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid member payload');
     }
     return this.service.addGroupMember({
       groupId: id,
       kbId: parsed.data.kbId,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Delete(':id/members/:kbId')
@@ -368,9 +358,9 @@ export class KbGroupsController {
   async removeMember(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Param('kbId') kbId: string,
+    @Param('kbId') kbId: string
   ): Promise<void> {
-    this.assertKbPermission(req)
-    return this.service.removeGroupMember(id, kbId, req.session.userId, requestIp(req))
+    this.assertKbPermission(req);
+    return this.service.removeGroupMember(id, kbId, req.session.userId, requestIp(req));
   }
 }

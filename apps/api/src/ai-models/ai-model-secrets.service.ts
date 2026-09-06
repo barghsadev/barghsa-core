@@ -1,5 +1,5 @@
-import { Injectable, Logger, Optional, Inject } from '@nestjs/common'
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto'
+import { Injectable, Logger, Optional, Inject } from '@nestjs/common';
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 
 /**
  * Field-level encryption for AI model API tokens (S-09.11, T-09.11.01).
@@ -25,36 +25,36 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
  * must not silently degrade.
  */
 
-export const AI_MODEL_ENCRYPTION_ENV = 'AI_MODEL_ENCRYPTION_KEY'
+export const AI_MODEL_ENCRYPTION_ENV = 'AI_MODEL_ENCRYPTION_KEY';
 
 /** Injection token to override the encryption key (used by tests). */
-export const AI_MODEL_SECRETS_KEY = Symbol('AI_MODEL_SECRETS_KEY')
+export const AI_MODEL_SECRETS_KEY = Symbol('AI_MODEL_SECRETS_KEY');
 
 /** Encrypted blob prefix (versioned so formats can evolve). */
-const ENCRYPTED_VERSION = 'v1'
+const ENCRYPTED_VERSION = 'v1';
 
 @Injectable()
 export class AiModelSecretsService {
-  private readonly logger = new Logger(AiModelSecretsService.name)
-  private readonly key: Buffer | null
+  private readonly logger = new Logger(AiModelSecretsService.name);
+  private readonly key: Buffer | null;
 
   constructor(
     @Optional()
     @Inject(AI_MODEL_SECRETS_KEY)
-    key?: Buffer | string,
+    key?: Buffer | string
   ) {
-    this.key = resolveKey(key)
+    this.key = resolveKey(key);
     if (!this.key) {
       this.logger.warn(
         `${AI_MODEL_ENCRYPTION_ENV} is not set — AI model tokens cannot be encrypted. ` +
-          'Create/update of models with an API token will fail until the key is configured.',
-      )
+          'Create/update of models with an API token will fail until the key is configured.'
+      );
     }
   }
 
   /** True when a key is configured, so callers can fail closed. */
   get available(): boolean {
-    return this.key !== null
+    return this.key !== null;
   }
 
   /**
@@ -62,17 +62,17 @@ export class AiModelSecretsService {
    * token must never be persisted in clear text.
    */
   encryptToken(plaintext: string): string {
-    const key = this.requireKey()
-    const iv = randomBytes(12)
-    const cipher = createCipheriv('aes-256-gcm', key, iv)
-    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()])
-    const tag = cipher.getAuthTag()
+    const key = this.requireKey();
+    const iv = randomBytes(12);
+    const cipher = createCipheriv('aes-256-gcm', key, iv);
+    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+    const tag = cipher.getAuthTag();
     return [
       ENCRYPTED_VERSION,
       iv.toString('base64url'),
       tag.toString('base64url'),
       encrypted.toString('base64url'),
-    ].join(':')
+    ].join(':');
   }
 
   /**
@@ -80,19 +80,19 @@ export class AiModelSecretsService {
    * (legacy plaintext). Throws on a malformed or tampered blob — fail closed.
    */
   decryptToken(stored: string): string {
-    if (!stored.startsWith(ENCRYPTED_VERSION + ':')) return stored
-    const [, ivB64, tagB64, dataB64] = stored.split(':')
+    if (!stored.startsWith(ENCRYPTED_VERSION + ':')) return stored;
+    const [, ivB64, tagB64, dataB64] = stored.split(':');
     if (!ivB64 || !tagB64 || !dataB64) {
-      throw new Error('AI model token: malformed encrypted value')
+      throw new Error('AI model token: malformed encrypted value');
     }
-    const key = this.requireKey()
-    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(ivB64, 'base64url'))
-    decipher.setAuthTag(Buffer.from(tagB64, 'base64url'))
+    const key = this.requireKey();
+    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(ivB64, 'base64url'));
+    decipher.setAuthTag(Buffer.from(tagB64, 'base64url'));
     const decrypted = Buffer.concat([
       decipher.update(Buffer.from(dataB64, 'base64url')),
       decipher.final(),
-    ])
-    return decrypted.toString('utf8')
+    ]);
+    return decrypted.toString('utf8');
   }
 
   /**
@@ -100,8 +100,8 @@ export class AiModelSecretsService {
    * except the last 4. Short values are fully masked.
    */
   maskValue(value: string): string {
-    if (value.length <= 4) return '*'.repeat(value.length)
-    return '*'.repeat(value.length - 4) + value.slice(-4)
+    if (value.length <= 4) return '*'.repeat(value.length);
+    return '*'.repeat(value.length - 4) + value.slice(-4);
   }
 
   /**
@@ -109,41 +109,41 @@ export class AiModelSecretsService {
    * (missing key / tampered blob) so the admin page can still render.
    */
   maskToken(stored: string): string {
-    if (stored.length === 0) return ''
+    if (stored.length === 0) return '';
     try {
-      return this.maskValue(this.decryptToken(stored))
+      return this.maskValue(this.decryptToken(stored));
     } catch {
-      return isEncryptedAiToken(stored) ? '[encrypted]' : this.maskValue(stored)
+      return isEncryptedAiToken(stored) ? '[encrypted]' : this.maskValue(stored);
     }
   }
 
   private requireKey(): Buffer {
-    const key = this.key
+    const key = this.key;
     if (!key) {
       throw new Error(
-        `AI model tokens: ${AI_MODEL_ENCRYPTION_ENV} is not set; cannot encrypt/decrypt API tokens`,
-      )
+        `AI model tokens: ${AI_MODEL_ENCRYPTION_ENV} is not set; cannot encrypt/decrypt API tokens`
+      );
     }
-    return key
+    return key;
   }
 }
 
 function resolveKey(configured?: Buffer | string): Buffer | null {
   const raw =
     configured ??
-    (typeof process !== 'undefined' ? (process.env[AI_MODEL_ENCRYPTION_ENV] ?? '') : '')
-  if (!raw) return null
+    (typeof process !== 'undefined' ? (process.env[AI_MODEL_ENCRYPTION_ENV] ?? '') : '');
+  if (!raw) return null;
   if (typeof raw === 'string') {
     // 64 hex chars = exactly 32 raw bytes.
-    if (/^[0-9a-fA-F]{64}$/.test(raw)) return Buffer.from(raw, 'hex')
-    return createHash('sha256').update(raw).digest()
+    if (/^[0-9a-fA-F]{64}$/.test(raw)) return Buffer.from(raw, 'hex');
+    return createHash('sha256').update(raw).digest();
   }
-  return raw
+  return raw;
 }
 
 /** True when a value looks like an encrypted `v1:` blob. */
 export function isEncryptedAiToken(value: unknown): boolean {
-  return typeof value === 'string' && value.startsWith(ENCRYPTED_VERSION + ':')
+  return typeof value === 'string' && value.startsWith(ENCRYPTED_VERSION + ':');
 }
 
 /**
@@ -155,8 +155,8 @@ export function isEncryptedAiToken(value: unknown): boolean {
  * to prefer preserving the stored token over corrupting it.
  */
 export function isMaskedAiToken(value: string): boolean {
-  if (value.length === 0) return false
-  const starCount = value.match(/^\*+/)?.[0].length ?? 0
-  if (starCount === 0) return false
-  return value.length - starCount <= 4
+  if (value.length === 0) return false;
+  const starCount = value.match(/^\*+/)?.[0].length ?? 0;
+  if (starCount === 0) return false;
+  return value.length - starCount <= 4;
 }

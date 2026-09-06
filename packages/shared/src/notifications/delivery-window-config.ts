@@ -15,11 +15,11 @@
 /** Admin-configurable daily delivery window, expressed in hour-of-day. */
 export interface DeliveryWindowConfig {
   /** IANA timezone the window is declared in, e.g. `Asia/Tehran`. */
-  timezone: string
+  timezone: string;
   /** Window open hour (0–23, inclusive start). */
-  startHour: number
+  startHour: number;
   /** Window close hour (0–23, exclusive end). */
-  endHour: number
+  endHour: number;
 }
 
 /** Default window: 09:00–21:00 in Iran time (story T-05.03 default). */
@@ -27,16 +27,16 @@ export const DEFAULT_DELIVERY_WINDOW: DeliveryWindowConfig = {
   timezone: 'Asia/Tehran',
   startHour: 9,
   endHour: 21,
-}
+};
 
 /** `app_config` key holding the admin-configurable delivery window (T-05.03.03). */
-export const DELIVERY_WINDOW_CONFIG_KEY = 'notification.delivery_window'
+export const DELIVERY_WINDOW_CONFIG_KEY = 'notification.delivery_window';
 
 /** Minimum sensible window length in hours (T-05.03.03 validates ≥ 4h). */
-export const MIN_WINDOW_HOURS = 4
+export const MIN_WINDOW_HOURS = 4;
 
 /** Max window length in hours (whole day 00–24 → 24h). */
-export const MAX_WINDOW_HOURS = 24
+export const MAX_WINDOW_HOURS = 24;
 
 /**
  * Result of validating a proposed delivery-window configuration for the admin
@@ -45,8 +45,8 @@ export const MAX_WINDOW_HOURS = 24
  * message and surfaced via i18n on the client) descriptions.
  */
 export interface WindowValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -54,14 +54,14 @@ export interface WindowValidationResult {
  * callers can collect issues.
  */
 export function isValidTimeZone(tz: string): boolean {
-  if (typeof tz !== 'string' || tz.trim().length === 0) return false
+  if (typeof tz !== 'string' || tz.trim().length === 0) return false;
   try {
     // `Intl.DateTimeFormat` throws RangeError for unknown time zones. A valid
     // result (regardless of the produced offset) proves the named zone exists.
-    new Intl.DateTimeFormat('en-US', { timeZone: tz }).format()
-    return true
+    new Intl.DateTimeFormat('en-US', { timeZone: tz }).format();
+    return true;
   } catch {
-    return false
+    return false;
   }
 }
 
@@ -75,44 +75,44 @@ export function isValidTimeZone(tz: string): boolean {
  * delivery window must fall within a single calendar day.
  */
 export function validateWindowConfig(input: unknown): WindowValidationResult {
-  const issues: string[] = []
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object') {
-    return { ok: false, issues: ['Delivery window config must be an object'] }
+    return { ok: false, issues: ['Delivery window config must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
+  const o = input as Record<string, unknown>;
 
   if (typeof o.timezone !== 'string' || !isValidTimeZone(o.timezone)) {
-    issues.push('A valid IANA timezone is required')
+    issues.push('A valid IANA timezone is required');
   }
 
-  const start = Number(o.start_hour ?? o.startHour)
-  const end = Number(o.end_hour ?? o.endHour)
+  const start = Number(o.start_hour ?? o.startHour);
+  const end = Number(o.end_hour ?? o.endHour);
 
   if (!Number.isInteger(start) || start < 0 || start > 23) {
-    issues.push('Start hour must be an integer between 0 and 23')
+    issues.push('Start hour must be an integer between 0 and 23');
   }
   if (!Number.isInteger(end) || end < 0 || end > 23) {
-    issues.push('End hour must be an integer between 0 and 23')
+    issues.push('End hour must be an integer between 0 and 23');
   }
 
   // Only evaluate range rules when both bounds are individually valid so we do
   // not emit misleading extra errors on malformed input.
-  const intStart = Number.isInteger(start) && start >= 0 && start <= 23 ? start : null
-  const intEnd = Number.isInteger(end) && end >= 0 && end <= 23 ? end : null
+  const intStart = Number.isInteger(start) && start >= 0 && start <= 23 ? start : null;
+  const intEnd = Number.isInteger(end) && end >= 0 && end <= 23 ? end : null;
 
   if (intStart !== null && intEnd !== null) {
     if (intStart >= intEnd) {
-      issues.push('Start time must be before end time')
+      issues.push('Start time must be before end time');
     }
-    const length = intEnd - intStart
+    const length = intEnd - intStart;
     if (length < MIN_WINDOW_HOURS) {
-      issues.push(`Delivery window must be at least ${MIN_WINDOW_HOURS} hours`)
+      issues.push(`Delivery window must be at least ${MIN_WINDOW_HOURS} hours`);
     }
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -122,16 +122,19 @@ export function validateWindowConfig(input: unknown): WindowValidationResult {
  * post-validation but keeps the write path total).
  */
 export function toDeliveryWindowConfig(input: unknown): DeliveryWindowConfig {
-  if (!input || typeof input !== 'object') return { ...DEFAULT_DELIVERY_WINDOW }
-  const o = input as Record<string, unknown>
-  const start = Number(o.start_hour ?? o.startHour)
-  const end = Number(o.end_hour ?? o.endHour)
+  if (!input || typeof input !== 'object') return { ...DEFAULT_DELIVERY_WINDOW };
+  const o = input as Record<string, unknown>;
+  const start = Number(o.start_hour ?? o.startHour);
+  const end = Number(o.end_hour ?? o.endHour);
   return {
     timezone:
       typeof o.timezone === 'string' && isValidTimeZone(o.timezone)
         ? o.timezone
         : DEFAULT_DELIVERY_WINDOW.timezone,
-    startHour: Number.isInteger(start) && start >= 0 && start <= 23 ? start : DEFAULT_DELIVERY_WINDOW.startHour,
+    startHour:
+      Number.isInteger(start) && start >= 0 && start <= 23
+        ? start
+        : DEFAULT_DELIVERY_WINDOW.startHour,
     endHour: Number.isInteger(end) && end >= 0 && end <= 23 ? end : DEFAULT_DELIVERY_WINDOW.endHour,
-  }
+  };
 }

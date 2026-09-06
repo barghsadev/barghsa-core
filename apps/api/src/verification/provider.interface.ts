@@ -1,4 +1,4 @@
-import type { VerificationResult } from '@barghsa/shared/verification'
+import type { VerificationResult } from '@barghsa/shared/verification';
 
 /**
  * Abstract provider adapter for identity verification APIs.
@@ -15,10 +15,10 @@ import type { VerificationResult } from '@barghsa/shared/verification'
  */
 export abstract class VerificationProviderAdapter {
   /** Unique provider identifier (e.g. 'national_id', 'sabt_ahval'). */
-  abstract readonly providerId: string
+  abstract readonly providerId: string;
 
   /** Human-readable display name. */
-  abstract readonly displayName: string
+  abstract readonly displayName: string;
 
   /**
    * The actual verification logic — implemented by each provider.
@@ -26,7 +26,7 @@ export abstract class VerificationProviderAdapter {
    * @param input - Provider-specific input data (e.g. national ID, full name, birth date).
    * @returns A VerificationResult with the outcome.
    */
-  abstract verify(input: Record<string, unknown>): Promise<VerificationResult>
+  abstract verify(input: Record<string, unknown>): Promise<VerificationResult>;
 
   /**
    * Validate that the input data is complete and well-formed for this provider.
@@ -34,5 +34,5 @@ export abstract class VerificationProviderAdapter {
    * @param input - The raw input data to validate.
    * @returns An array of validation error messages (empty = valid).
    */
-  abstract validateInput(input: Record<string, unknown>): string[]
+  abstract validateInput(input: Record<string, unknown>): string[];
 }

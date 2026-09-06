@@ -1,18 +1,12 @@
-import {
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import type { IncomingMessage } from 'node:http'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { SkipCsrf } from '../session/csrf.guard.js'
-import { ChargebackDetectionService } from './chargeback-detection.service.js'
+import { Controller, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { IncomingMessage } from 'node:http';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { SkipCsrf } from '../session/csrf.guard.js';
+import { ChargebackDetectionService } from './chargeback-detection.service.js';
 
 interface ChargebackRequest extends IncomingMessage {
-  rawBody?: Buffer
+  rawBody?: Buffer;
 }
 
 /**
@@ -36,21 +30,27 @@ export class ChargebackDetectionController {
   @ApiOperation({
     summary: 'Authenticated payment-provider chargeback for an online wallet top-up',
   })
-  @ApiResponse({ status: 200, description: 'Chargeback accepted (reversed, unmatched, or duplicate).' })
-  @ApiResponse({ status: 401, description: 'Invalid signature, replay window, or merchant context' })
+  @ApiResponse({
+    status: 200,
+    description: 'Chargeback accepted (reversed, unmatched, or duplicate).',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid signature, replay window, or merchant context',
+  })
   @ApiResponse({ status: 503, description: 'Callback signing secret is not configured' })
   async receive(@Req() req: ChargebackRequest) {
     const headers = {
       eventId: headerValue(req.headers['x-barghsa-event-id']),
       timestamp: headerValue(req.headers['x-barghsa-timestamp']),
       signature: headerValue(req.headers['x-barghsa-signature']),
-    }
-    const rawBody = req.rawBody?.toString('utf8') ?? ''
-    return this.chargebackService.handle({ headers, rawBody })
+    };
+    const rawBody = req.rawBody?.toString('utf8') ?? '';
+    return this.chargebackService.handle({ headers, rawBody });
   }
 }
 
 function headerValue(value: string | string[] | undefined): string | undefined {
-  if (Array.isArray(value)) return value[0]
-  return value
+  if (Array.isArray(value)) return value[0];
+  return value;
 }

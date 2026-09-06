@@ -1,4 +1,4 @@
-import { createVitestConfig } from '../../packages/tsconfig/vitest.base.config'
+import { createVitestConfig } from '../../packages/tsconfig/vitest.base.config';
 
 export default createVitestConfig({
   test: {
@@ -8,4 +8,4 @@ export default createVitestConfig({
     // Use `forks` pool so testcontainers works correctly across workers.
     pool: 'forks',
   },
-})
+});

@@ -1,7 +1,7 @@
-import { Module, forwardRef } from '@nestjs/common'
-import { TosController } from './tos.controller.js'
-import { TosService } from './tos.service.js'
-import { SessionModule } from '../session/session.module.js'
+import { Module, forwardRef } from '@nestjs/common';
+import { TosController } from './tos.controller.js';
+import { TosService } from './tos.service.js';
+import { SessionModule } from '../session/session.module.js';
 
 @Module({
   imports: [forwardRef(() => SessionModule)],

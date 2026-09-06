@@ -1,53 +1,55 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 export interface CurrentTosResponse {
-  id: string
-  content: string
-  versionId: string
-  updatedAt: Date | null
-  publishedAt: Date | null
+  id: string;
+  content: string;
+  versionId: string;
+  updatedAt: Date | null;
+  publishedAt: Date | null;
 }
 
 export interface TosVersionListItem {
-  id: string
-  versionId: string
-  contentFa: string
-  contentEn: string
-  changeType: 'major' | 'minor'
-  status: 'draft' | 'published'
-  isActive: boolean
-  publishedAt: Date | null
-  createdBy: string | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  versionId: string;
+  contentFa: string;
+  contentEn: string;
+  changeType: 'major' | 'minor';
+  status: 'draft' | 'published';
+  isActive: boolean;
+  publishedAt: Date | null;
+  createdBy: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface TosVersionDetail extends TosVersionListItem {}
 
 export interface CreateTosVersionInput {
-  versionId: string
-  contentFa: string
-  contentEn: string
+  versionId: string;
+  contentFa: string;
+  contentEn: string;
 }
 
 export interface UpdateTosVersionInput {
-  versionId?: string
-  contentFa?: string
-  contentEn?: string
+  versionId?: string;
+  contentFa?: string;
+  contentEn?: string;
 }
 
-export type UpdateTosVersionFields = Partial<Pick<UpdateTosVersionInput, 'versionId' | 'contentFa' | 'contentEn'>>
+export type UpdateTosVersionFields = Partial<
+  Pick<UpdateTosVersionInput, 'versionId' | 'contentFa' | 'contentEn'>
+>;
 
 export interface PublishTosVersionInput {
-  changeType: 'major' | 'minor'
+  changeType: 'major' | 'minor';
 }
 
 @Injectable()
 export class TosService {
-  private readonly logger = new Logger(TosService.name)
+  private readonly logger = new Logger(TosService.name);
 
   /**
    * Returns the currently active TOS version.
@@ -56,33 +58,33 @@ export class TosService {
    * Falls back to Persian content when the requested locale is not available.
    */
   async getCurrent(locale: 'fa' | 'en' = 'fa'): Promise<CurrentTosResponse> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     const result = await pool.query<{
-      id: string
-      version_id: string
-      content_fa: string
-      content_en: string
-      is_active: boolean
-      published_at: Date
-      created_at: Date
-      updated_at: Date
+      id: string;
+      version_id: string;
+      content_fa: string;
+      content_en: string;
+      is_active: boolean;
+      published_at: Date;
+      created_at: Date;
+      updated_at: Date;
     }>(
       `SELECT id, version_id, content_fa, content_en, is_active, published_at, created_at, updated_at
        FROM tos_versions
        WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
        ORDER BY published_at DESC
-       LIMIT 1`,
-    )
+       LIMIT 1`
+    );
 
     if (result.rows.length === 0) {
       throw new HttpException(
         { message: 'No active TOS version found', code: 'TOS_NOT_FOUND' },
-        HttpStatus.NOT_FOUND,
-      )
+        HttpStatus.NOT_FOUND
+      );
     }
 
-    const active = result.rows[0]!
+    const active = result.rows[0]!;
 
     return {
       id: active.id,
@@ -90,7 +92,7 @@ export class TosService {
       versionId: active.version_id,
       updatedAt: active.updated_at,
       publishedAt: active.published_at,
-    }
+    };
   }
 
   /**
@@ -105,37 +107,37 @@ export class TosService {
    * @param userId - The UUID of the user to check.
    */
   async requiresReAcceptance(userId: string): Promise<boolean> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Get the current active TOS version id
     const activeResult = await pool.query<{ id: string }>(
       `SELECT id FROM tos_versions
        WHERE is_active = true AND status = 'published' AND published_at IS NOT NULL
        ORDER BY published_at DESC
-       LIMIT 1`,
-    )
+       LIMIT 1`
+    );
 
     if (activeResult.rows.length === 0) {
       // No active TOS version — nothing to accept
-      return false
+      return false;
     }
 
-    const activeVersionId = activeResult.rows[0]!.id
+    const activeVersionId = activeResult.rows[0]!.id;
 
     // Get the user's last accepted version
     const userResult = await pool.query<{ last_accepted_tos_version: string | null }>(
       `SELECT last_accepted_tos_version FROM users WHERE user_id = $1`,
-      [userId],
-    )
+      [userId]
+    );
 
     if (userResult.rows.length === 0) {
-      return false
+      return false;
     }
 
-    const userAccepted = userResult.rows[0]!.last_accepted_tos_version
+    const userAccepted = userResult.rows[0]!.last_accepted_tos_version;
 
     // If never accepted, or accepted a different version, re-acceptance is needed
-    return userAccepted !== activeVersionId
+    return userAccepted !== activeVersionId;
   }
 
   /**
@@ -157,58 +159,55 @@ export class TosService {
     userId: string,
     versionId: string,
     ip: string,
-    userAgent?: string,
+    userAgent?: string
   ): Promise<void> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Verify the TOS version exists and is the current active version
       const versionResult = await client.query(
         `SELECT id FROM tos_versions WHERE id::text = $1 AND is_active = true AND status = 'published' AND published_at IS NOT NULL FOR UPDATE`,
-        [versionId],
-      )
+        [versionId]
+      );
 
       if (versionResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-          400,
-        )
+          400
+        );
       }
 
       // 2. Insert immutable acceptance record
-      const acceptanceId = uuidv7()
-      const now = new Date()
+      const acceptanceId = uuidv7();
+      const now = new Date();
 
       await client.query(
         `INSERT INTO tos_acceptances (id, user_id, version_id, accepted_at, ip_address, user_agent)
          VALUES ($1, $2, $3, $4, $5, $6)`,
-        [acceptanceId, userId, versionId, now, ip, userAgent ?? null],
-      )
+        [acceptanceId, userId, versionId, now, ip, userAgent ?? null]
+      );
 
       // 3. Update user's last accepted TOS version
       await client.query(
         `UPDATE users
          SET last_accepted_tos_version = $1, updated_at = $2
          WHERE user_id = $3`,
-        [versionId, now, userId],
-      )
+        [versionId, now, userId]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`TOS acceptance recorded: user ${userId} accepted version ${versionId}`)
+      this.logger.log(`TOS acceptance recorded: user ${userId} accepted version ${versionId}`);
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Failed to record TOS acceptance for user ${userId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Failed to record TOS acceptance for user ${userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -220,7 +219,7 @@ export class TosService {
    * List all TOS versions, ordered by createdAt DESC.
    */
   async listVersions(): Promise<TosVersionListItem[]> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query<TosVersionListItem>(
       `SELECT id, version_id AS "versionId", content_fa AS "contentFa",
               content_en AS "contentEn", change_type AS "changeType",
@@ -228,16 +227,16 @@ export class TosService {
               created_by AS "createdBy", created_at AS "createdAt",
               updated_at AS "updatedAt"
        FROM tos_versions
-       ORDER BY created_at DESC`,
-    )
-    return result.rows
+       ORDER BY created_at DESC`
+    );
+    return result.rows;
   }
 
   /**
    * Get a single TOS version by id.
    */
   async getVersion(id: string): Promise<TosVersionDetail> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query<TosVersionDetail>(
       `SELECT id, version_id AS "versionId", content_fa AS "contentFa",
               content_en AS "contentEn", change_type AS "changeType",
@@ -246,30 +245,33 @@ export class TosService {
               updated_at AS "updatedAt"
        FROM tos_versions
        WHERE id = $1`,
-      [id],
-    )
+      [id]
+    );
 
     if (result.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'TOS_VERSION_NOT_FOUND', message: 'TOS version not found' },
-        404,
-      )
+        404
+      );
     }
 
-    return result.rows[0]!
+    return result.rows[0]!;
   }
 
   /**
    * Create a new draft TOS version.
    * Only one draft can exist at a time — if a draft exists, it returns 409.
    */
-  async createVersion(input: CreateTosVersionInput, actorUserId: string): Promise<TosVersionDetail> {
-    const pool = getDbPool()
+  async createVersion(
+    input: CreateTosVersionInput,
+    actorUserId: string
+  ): Promise<TosVersionDetail> {
+    const pool = getDbPool();
 
     // Check for existing draft
     const existingDraft = await pool.query(
-      `SELECT id FROM tos_versions WHERE status = 'draft' LIMIT 1`,
-    )
+      `SELECT id FROM tos_versions WHERE status = 'draft' LIMIT 1`
+    );
 
     if (existingDraft.rows.length > 0) {
       throw new HttpException(
@@ -278,25 +280,25 @@ export class TosService {
           error: 'TOS_DRAFT_EXISTS',
           message: 'A draft TOS version already exists. Publish or discard it first.',
         },
-        409,
-      )
+        409
+      );
     }
 
     // Check version_id uniqueness
     const existingVersionId = await pool.query(
       `SELECT id FROM tos_versions WHERE version_id = $1`,
-      [input.versionId],
-    )
+      [input.versionId]
+    );
 
     if (existingVersionId.rows.length > 0) {
       throw new HttpException(
         { statusCode: 409, error: 'TOS_VERSION_ID_TAKEN', message: 'Version ID is already in use' },
-        409,
-      )
+        409
+      );
     }
 
-    const id = uuidv7()
-    const now = new Date()
+    const id = uuidv7();
+    const now = new Date();
 
     const result = await pool.query<TosVersionDetail>(
       `INSERT INTO tos_versions (id, version_id, content_fa, content_en, status, created_by, created_at, updated_at)
@@ -306,32 +308,33 @@ export class TosService {
                  status, is_active AS "isActive", published_at AS "publishedAt",
                  created_by AS "createdBy", created_at AS "createdAt",
                  updated_at AS "updatedAt"`,
-      [id, input.versionId, input.contentFa, input.contentEn, actorUserId, now, now],
-    )
+      [id, input.versionId, input.contentFa, input.contentEn, actorUserId, now, now]
+    );
 
-    this.logger.log(`TOS draft created: ${input.versionId} by ${actorUserId}`)
+    this.logger.log(`TOS draft created: ${input.versionId} by ${actorUserId}`);
 
-    return result.rows[0]!
+    return result.rows[0]!;
   }
 
   /**
    * Update a draft TOS version.
    * Only draft versions can be updated.
    */
-  async updateVersion(id: string, input: UpdateTosVersionFields, actorUserId: string): Promise<TosVersionDetail> {
-    const pool = getDbPool()
+  async updateVersion(
+    id: string,
+    input: UpdateTosVersionFields,
+    actorUserId: string
+  ): Promise<TosVersionDetail> {
+    const pool = getDbPool();
 
     // Verify the version exists and is a draft
-    const version = await pool.query(
-      `SELECT id, status FROM tos_versions WHERE id = $1`,
-      [id],
-    )
+    const version = await pool.query(`SELECT id, status FROM tos_versions WHERE id = $1`, [id]);
 
     if (version.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'TOS_VERSION_NOT_FOUND', message: 'TOS version not found' },
-        404,
-      )
+        404
+      );
     }
 
     if (version.rows[0]!.status !== 'draft') {
@@ -341,41 +344,41 @@ export class TosService {
           error: 'TOS_VERSION_NOT_DRAFT',
           message: 'Only draft versions can be edited',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Build dynamic SET clause
-    const setClauses: string[] = []
-    const params: unknown[] = []
-    let paramIndex = 1
+    const setClauses: string[] = [];
+    const params: unknown[] = [];
+    let paramIndex = 1;
 
     if (input.versionId !== undefined) {
-      setClauses.push(`version_id = $${paramIndex++}`)
-      params.push(input.versionId)
+      setClauses.push(`version_id = $${paramIndex++}`);
+      params.push(input.versionId);
     }
     if (input.contentFa !== undefined) {
-      setClauses.push(`content_fa = $${paramIndex++}`)
-      params.push(input.contentFa)
+      setClauses.push(`content_fa = $${paramIndex++}`);
+      params.push(input.contentFa);
     }
     if (input.contentEn !== undefined) {
-      setClauses.push(`content_en = $${paramIndex++}`)
-      params.push(input.contentEn)
+      setClauses.push(`content_en = $${paramIndex++}`);
+      params.push(input.contentEn);
     }
 
     if (setClauses.length === 0) {
       // Nothing to update — return current state
-      return this.getVersion(id)
+      return this.getVersion(id);
     }
 
-    setClauses.push(`created_by = $${paramIndex++}`)
-    params.push(actorUserId)
+    setClauses.push(`created_by = $${paramIndex++}`);
+    params.push(actorUserId);
 
-    setClauses.push(`updated_at = $${paramIndex++}`)
-    const now = new Date()
-    params.push(now)
+    setClauses.push(`updated_at = $${paramIndex++}`);
+    const now = new Date();
+    params.push(now);
 
-    params.push(id)
+    params.push(id);
 
     const result = await pool.query<TosVersionDetail>(
       `UPDATE tos_versions
@@ -386,16 +389,16 @@ export class TosService {
                  status, is_active AS "isActive", published_at AS "publishedAt",
                  created_by AS "createdBy", created_at AS "createdAt",
                  updated_at AS "updatedAt"`,
-      params,
-    )
+      params
+    );
 
     if (result.rows.length === 0) {
-      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_NOT_DRAFT' }, 409)
+      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_NOT_DRAFT' }, 409);
     }
 
-    this.logger.log(`TOS draft updated: ${id} by ${actorUserId}`)
+    this.logger.log(`TOS draft updated: ${id} by ${actorUserId}`);
 
-    return result.rows[0]!
+    return result.rows[0]!;
   }
 
   /**
@@ -406,20 +409,21 @@ export class TosService {
    * and sets this one as the new active version (triggering re-acceptance).
    * If change_type is 'minor', the current active version stays active.
    */
-  async publishVersion(id: string, input: PublishTosVersionInput, actorUserId: string): Promise<TosVersionDetail> {
-    const pool = getDbPool()
+  async publishVersion(
+    id: string,
+    input: PublishTosVersionInput,
+    actorUserId: string
+  ): Promise<TosVersionDetail> {
+    const pool = getDbPool();
 
     // Verify the version exists and is a draft
-    const version = await pool.query(
-      `SELECT id, status FROM tos_versions WHERE id = $1`,
-      [id],
-    )
+    const version = await pool.query(`SELECT id, status FROM tos_versions WHERE id = $1`, [id]);
 
     if (version.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'TOS_VERSION_NOT_FOUND', message: 'TOS version not found' },
-        404,
-      )
+        404
+      );
     }
 
     if (version.rows[0]!.status !== 'draft') {
@@ -429,26 +433,26 @@ export class TosService {
           error: 'TOS_VERSION_ALREADY_PUBLISHED',
           message: 'This TOS version is already published',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const now = new Date()
-    const client = await pool.connect()
+    const now = new Date();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
       // Serialize publication with draft edits and other publications of this version.
-      const locked = await client.query(`SELECT status FROM tos_versions WHERE id=$1 FOR UPDATE`, [id])
+      const locked = await client.query(`SELECT status FROM tos_versions WHERE id=$1 FOR UPDATE`, [
+        id,
+      ]);
       if (locked.rows[0]?.status !== 'draft') {
-        throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_ALREADY_PUBLISHED' }, 409)
+        throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_ALREADY_PUBLISHED' }, 409);
       }
 
       if (input.changeType === 'major') {
         // Deactivate the currently active version
-        await client.query(
-          `UPDATE tos_versions SET is_active = false WHERE is_active = true`,
-        )
+        await client.query(`UPDATE tos_versions SET is_active = false WHERE is_active = true`);
       }
 
       // Publish this version
@@ -466,15 +470,8 @@ export class TosService {
                    status, is_active AS "isActive", published_at AS "publishedAt",
                    created_by AS "createdBy", created_at AS "createdAt",
                    updated_at AS "updatedAt"`,
-        [
-          input.changeType,
-          input.changeType === 'major',
-          now,
-          actorUserId,
-          now,
-          id,
-        ],
-      )
+        [input.changeType, input.changeType === 'major', now, actorUserId, now, id]
+      );
 
       // Record audit event
       await client.query(
@@ -491,26 +488,23 @@ export class TosService {
           uuidv7(),
           'admin',
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `TOS version published: ${result.rows[0]!.versionId} (${input.changeType}) by ${actorUserId}`,
-      )
+        `TOS version published: ${result.rows[0]!.versionId} (${input.changeType}) by ${actorUserId}`
+      );
 
-      return result.rows[0]!
+      return result.rows[0]!;
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Failed to publish TOS version ${id}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Failed to publish TOS version ${id}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -518,18 +512,15 @@ export class TosService {
    * Delete a draft TOS version (discard).
    */
   async deleteVersion(id: string): Promise<void> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const version = await pool.query(
-      `SELECT id, status FROM tos_versions WHERE id = $1`,
-      [id],
-    )
+    const version = await pool.query(`SELECT id, status FROM tos_versions WHERE id = $1`, [id]);
 
     if (version.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'TOS_VERSION_NOT_FOUND', message: 'TOS version not found' },
-        404,
-      )
+        404
+      );
     }
 
     if (version.rows[0]!.status !== 'draft') {
@@ -539,15 +530,18 @@ export class TosService {
           error: 'TOS_VERSION_PUBLISHED',
           message: 'Published TOS versions cannot be deleted',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const deleted = await pool.query(`DELETE FROM tos_versions WHERE id = $1 AND status = 'draft'`, [id])
+    const deleted = await pool.query(
+      `DELETE FROM tos_versions WHERE id = $1 AND status = 'draft'`,
+      [id]
+    );
     if (deleted.rowCount === 0) {
-      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_PUBLISHED' }, 409)
+      throw new HttpException({ statusCode: 409, error: 'TOS_VERSION_PUBLISHED' }, 409);
     }
 
-    this.logger.log(`TOS draft discarded: ${id}`)
+    this.logger.log(`TOS draft discarded: ${id}`);
   }
 }

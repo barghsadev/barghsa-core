@@ -1,6 +1,6 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router'
-import { RouteSkeleton } from '../../../components/RouteSkeleton.js'
-import { RouteErrorBoundary } from '../../../components/RouteErrorBoundary.js'
+import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { RouteSkeleton } from '../../../components/RouteSkeleton.js';
+import { RouteErrorBoundary } from '../../../components/RouteErrorBoundary.js';
 
 /**
  * CRM profile list route — index under /admin/crm.
@@ -11,11 +11,11 @@ import { RouteErrorBoundary } from '../../../components/RouteErrorBoundary.js'
  */
 const verifySearch = (search: Record<string, unknown>) => ({
   verification: typeof search.verification === 'string' ? search.verification : undefined,
-})
+});
 
 export const Route = createFileRoute('/admin/crm/')({
   validateSearch: verifySearch,
   component: lazyRouteComponent(() => import('../../../pages/CrmProfileList.js')),
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,
-})
+});

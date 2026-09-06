@@ -1,13 +1,13 @@
-import { createFileRoute, Link, useSearch } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { t, type Locale } from '@barghsa/i18n'
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+import { createFileRoute, Link, useSearch } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { t, type Locale } from '@barghsa/i18n';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
 interface CurrentTosResponse {
-  content: string
-  versionId: string
-  updatedAt: string
-  publishedAt: string
+  content: string;
+  versionId: string;
+  updatedAt: string;
+  publishedAt: string;
 }
 
 export const Route = createFileRoute('/terms')({
@@ -15,50 +15,50 @@ export const Route = createFileRoute('/terms')({
   validateSearch: (search: Record<string, unknown>): { lang?: 'fa' | 'en' } => ({
     ...(search.lang === 'en' ? { lang: 'en' as const } : {}),
   }),
-})
+});
 
 function TermsPage() {
-  const { lang } = useSearch({ from: '/terms' })
-  const locale: Locale = lang ?? 'fa'
-  const isRtl = locale === 'fa'
-  const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon
+  const { lang } = useSearch({ from: '/terms' });
+  const locale: Locale = lang ?? 'fa';
+  const isRtl = locale === 'fa';
+  const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
 
-  const [tos, setTos] = useState<CurrentTosResponse | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [tos, setTos] = useState<CurrentTosResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController()
-    let cancelled = false
+    const controller = new AbortController();
+    let cancelled = false;
 
     async function fetchTos() {
       try {
-        setLoading(true)
-        setError(false)
+        setLoading(true);
+        setError(false);
         const res = await fetch(`/api/tos/current?locale=${locale}`, {
           signal: controller.signal,
           credentials: 'omit',
-        })
+        });
         if (!res.ok) {
-          if (!cancelled) setError(true)
-          return
+          if (!cancelled) setError(true);
+          return;
         }
-        const data: CurrentTosResponse = await res.json()
-        if (!cancelled) setTos(data)
+        const data: CurrentTosResponse = await res.json();
+        if (!cancelled) setTos(data);
       } catch {
-        if (!cancelled) setError(true)
+        if (!cancelled) setError(true);
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
     }
 
-    fetchTos()
+    fetchTos();
 
     return () => {
-      cancelled = true
-      controller.abort()
-    }
-  }, [locale])
+      cancelled = true;
+      controller.abort();
+    };
+  }, [locale]);
 
   const formattedDate = tos?.updatedAt
     ? new Date(tos.updatedAt).toLocaleDateString(locale === 'fa' ? 'fa-IR' : 'en-US', {
@@ -66,13 +66,10 @@ function TermsPage() {
         month: 'long',
         day: 'numeric',
       })
-    : null
+    : null;
 
   return (
-    <div
-      className="flex min-h-dvh flex-col"
-      dir={isRtl ? 'rtl' : 'ltr'}
-    >
+    <div className="flex min-h-dvh flex-col" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Mobile header with brand */}
       <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
         <Link
@@ -90,10 +87,7 @@ function TermsPage() {
             className="shrink-0"
           >
             <rect width="32" height="32" rx="8" fill="currentColor" />
-            <path
-              d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-              fill="var(--primary-foreground)"
-            />
+            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{t('auth.brand.title', locale)}</span>
         </Link>
@@ -116,10 +110,7 @@ function TermsPage() {
             className="shrink-0"
           >
             <rect width="32" height="32" rx="8" fill="currentColor" />
-            <path
-              d="M18 6L9 18h5l-1 8 9-12h-5l1-8z"
-              fill="var(--primary-foreground)"
-            />
+            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
           </svg>
           <span>{t('auth.brand.title', locale)}</span>
         </Link>
@@ -132,18 +123,14 @@ function TermsPage() {
           {loading && (
             <div className="flex flex-col items-center justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              <p className="mt-4 text-sm text-muted-foreground">
-                {t('tos.page.loading', locale)}
-              </p>
+              <p className="mt-4 text-sm text-muted-foreground">{t('tos.page.loading', locale)}</p>
             </div>
           )}
 
           {/* Error state */}
           {error && !loading && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <p className="text-sm text-destructive">
-                {t('tos.page.error', locale)}
-              </p>
+              <p className="text-sm text-destructive">{t('tos.page.error', locale)}</p>
               <Link
                 to="/"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
@@ -158,9 +145,7 @@ function TermsPage() {
           {tos && !loading && (
             <article className="prose prose-sm dark:prose-invert max-w-none">
               <header className="mb-8 not-prose">
-                <h1 className="text-2xl font-bold tracking-tight">
-                  {t('tos.page.title', locale)}
-                </h1>
+                <h1 className="text-2xl font-bold tracking-tight">{t('tos.page.title', locale)}</h1>
                 {formattedDate && (
                   <p className="mt-2 text-sm text-muted-foreground">
                     {t('tos.page.lastUpdated', locale).replace('{date}', formattedDate)}
@@ -192,5 +177,5 @@ function TermsPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

@@ -33,60 +33,128 @@
  */
 
 /** Delivery classification of a notification event. */
-export type NotificationClassification = 'immediate' | 'daytime'
+export type NotificationClassification = 'immediate' | 'daytime';
 
 /** Whether an event is a mandatory, marketing or system/test notification. */
-export type NotificationCategory = 'mandatory' | 'marketing' | 'system'
+export type NotificationCategory = 'mandatory' | 'marketing' | 'system';
 
 /** Static, code-defined metadata for one notification event key. */
 export interface NotificationTypeDefinition {
   /** Delivery classification: `immediate` bypasses the quiet window. */
-  classification: NotificationClassification
+  classification: NotificationClassification;
   /**
    * True for security/OTP/auth events that must always be `immediate` and can
    * never be reclassified by an admin. The registry is code-defined, so this
    * flag is the semantic marker downstream logic (and any future admin config)
    * must respect.
    */
-  securityPinned: boolean
+  securityPinned: boolean;
   /** Event category for consent / mandatory-vs-marketing routing. */
-  category: NotificationCategory
+  category: NotificationCategory;
 }
 
 /** The code-defined registry of business notification events (E-05 §3 Appendix). */
 export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTypeDefinition>> = {
   // ── Authentication & security — immediate, security-pinned ──────────────
   'auth.otp_sent': { classification: 'immediate', securityPinned: true, category: 'mandatory' },
-  'auth.password_changed': { classification: 'immediate', securityPinned: true, category: 'mandatory' },
-  'auth.session_revoked': { classification: 'immediate', securityPinned: true, category: 'mandatory' },
-  'auth.new_device_login': { classification: 'immediate', securityPinned: true, category: 'mandatory' },
+  'auth.password_changed': {
+    classification: 'immediate',
+    securityPinned: true,
+    category: 'mandatory',
+  },
+  'auth.session_revoked': {
+    classification: 'immediate',
+    securityPinned: true,
+    category: 'mandatory',
+  },
+  'auth.new_device_login': {
+    classification: 'immediate',
+    securityPinned: true,
+    category: 'mandatory',
+  },
 
   // ── Payment / wallet — financial, mostly immediate ──────────────────────
-  'payment.wallet_topup_completed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'payment.wallet_topup_failed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'payment.invoice_paid': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'payment.bank_receipt_rejected': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'payment.invoice_overdue': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
+  'payment.wallet_topup_completed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.wallet_topup_failed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.invoice_paid': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.bank_receipt_rejected': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.invoice_overdue': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
   // Hourly ReminderSender (T-04.1.04.03). Daytime: schedule rows are already
   // snapped into the delivery window; the outbox still parks a late tick.
-  'payment.invoice_reminder': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'payment.refund_completed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'payment.refund_failed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
+  'payment.invoice_reminder': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.refund_completed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'payment.refund_failed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── Contract lifecycle ──────────────────────────────────────────────────
   'contract.created': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'contract.awaiting_acceptance': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
+  'contract.awaiting_acceptance': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
   'contract.accepted': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
   'contract.signed': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
   'contract.active': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'contract.cancelled': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'contract.changes_requested': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
+  'contract.cancelled': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'contract.changes_requested': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── Orders ──────────────────────────────────────────────────────────────
   'order.submitted': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'order.status_changed': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'order.awaiting_staff': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'order.cancellation_requested': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
+  'order.status_changed': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'order.awaiting_staff': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'order.cancellation_requested': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── Tickets ─────────────────────────────────────────────────────────────
   'ticket.new_reply': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
@@ -94,23 +162,67 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
 
   // ── Documents ───────────────────────────────────────────────────────────
   'document.uploaded': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'document.scan_failed': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'document.quarantined': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'document.review_completed': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
+  'document.scan_failed': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'document.quarantined': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'document.review_completed': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── Profile ─────────────────────────────────────────────────────────────
-  'profile.verification_status': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
-  'profile.invitation_received': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'profile.agent_role_changed': { classification: 'daytime', securityPinned: false, category: 'mandatory' },
+  'profile.verification_status': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'profile.invitation_received': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'profile.agent_role_changed': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── Wallet alerts ───────────────────────────────────────────────────────
-  'wallet.low_balance': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
-  'wallet.credit_received': { classification: 'immediate', securityPinned: false, category: 'mandatory' },
+  'wallet.low_balance': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
+  'wallet.credit_received': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'mandatory',
+  },
 
   // ── System / marketing ──────────────────────────────────────────────────
-  'system.service_outage': { classification: 'immediate', securityPinned: false, category: 'system' },
-  'marketing.promotion': { classification: 'daytime', securityPinned: false, category: 'marketing' },
-  'system.notification_test': { classification: 'immediate', securityPinned: false, category: 'system' },
+  'system.service_outage': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
+  'marketing.promotion': {
+    classification: 'daytime',
+    securityPinned: false,
+    category: 'marketing',
+  },
+  'system.notification_test': {
+    classification: 'immediate',
+    securityPinned: false,
+    category: 'system',
+  },
 
   // ── Admin / staff operations (S-09.08) ─────────────────────────────────
   // Staff-only operational alert: an open service item (ticket, verification
@@ -140,7 +252,7 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
     securityPinned: false,
     category: 'system',
   },
-} as const
+} as const;
 
 /**
  * Resolve the delivery classification for an event key.
@@ -150,7 +262,7 @@ export const NOTIFICATION_TYPE_REGISTRY: Readonly<Record<string, NotificationTyp
  * in the registry and can never be reclassified.
  */
 export function classifyNotificationType(eventKey: string): NotificationClassification {
-  return NOTIFICATION_TYPE_REGISTRY[eventKey]?.classification ?? 'daytime'
+  return NOTIFICATION_TYPE_REGISTRY[eventKey]?.classification ?? 'daytime';
 }
 
 /**
@@ -162,12 +274,12 @@ export function classifyNotificationType(eventKey: string): NotificationClassifi
  * classification change.
  */
 export function isSecurityPinnedNotification(eventKey: string): boolean {
-  return NOTIFICATION_TYPE_REGISTRY[eventKey]?.securityPinned ?? false
+  return NOTIFICATION_TYPE_REGISTRY[eventKey]?.securityPinned ?? false;
 }
 
 /** Resolve the static definition for an event key, or `undefined` if unregistered. */
 export function getNotificationTypeDefinition(
-  eventKey: string,
+  eventKey: string
 ): NotificationTypeDefinition | undefined {
-  return NOTIFICATION_TYPE_REGISTRY[eventKey]
+  return NOTIFICATION_TYPE_REGISTRY[eventKey];
 }

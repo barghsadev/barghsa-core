@@ -11,10 +11,10 @@ import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   evaluateInvoiceBankReceiptClientFile,
   parseInvoiceBankReceiptAmountIrR,
-} from '@barghsa/shared/finance'
-import { withCsrf } from './csrf.js'
+} from '@barghsa/shared/finance';
+import { withCsrf } from './csrf.js';
 
-export { INVOICE_BANK_RECEIPT_FILE_ACCEPT }
+export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };
 
 export type InvoiceReceiptError =
   | 'invalid-amount'
@@ -24,12 +24,12 @@ export type InvoiceReceiptError =
   | 'upload'
   | 'conflict'
   | 'no-profile'
-  | 'generic'
+  | 'generic';
 
 /** Western comma and Arabic thousands separator (U+066C). */
-const IRR_THOUSANDS_SEPARATORS = /[,٬]/g
+const IRR_THOUSANDS_SEPARATORS = /[,٬]/g;
 /** Integer with explicit thousands grouping, e.g. `250,000` or `1٬234٬567`. */
-const IRR_THOUSANDS_GROUPED = /^[0-9]{1,3}(?:[,٬][0-9]{3})+$/
+const IRR_THOUSANDS_GROUPED = /^[0-9]{1,3}(?:[,٬][0-9]{3})+$/;
 
 /**
  * Map Persian (`۰`–`۹`) and Arabic-Indic (`٠`–`٩`) digits to ASCII.
@@ -38,26 +38,26 @@ const IRR_THOUSANDS_GROUPED = /^[0-9]{1,3}(?:[,٬][0-9]{3})+$/
  * pasted text instead of concatenating leftover digit groups into a new amount.
  */
 export function normalizeIrrAmountDigits(raw: string): string {
-  let ascii = ''
+  let ascii = '';
   for (const ch of raw) {
-    const code = ch.codePointAt(0) ?? 0
+    const code = ch.codePointAt(0) ?? 0;
     if (code >= 0x06f0 && code <= 0x06f9) {
-      ascii += String(code - 0x06f0)
+      ascii += String(code - 0x06f0);
     } else if (code >= 0x0660 && code <= 0x0669) {
-      ascii += String(code - 0x0660)
+      ascii += String(code - 0x0660);
     } else {
-      ascii += ch
+      ascii += ch;
     }
   }
-  const trimmed = ascii.trim()
+  const trimmed = ascii.trim();
   if (IRR_THOUSANDS_GROUPED.test(trimmed)) {
-    return trimmed.replace(IRR_THOUSANDS_SEPARATORS, '')
+    return trimmed.replace(IRR_THOUSANDS_SEPARATORS, '');
   }
-  return trimmed
+  return trimmed;
 }
 
 export function utcTodayIso(now: Date = new Date()): string {
-  return now.toISOString().slice(0, 10)
+  return now.toISOString().slice(0, 10);
 }
 
 export function isAllowedInvoiceReceiptFile(file: File): boolean {
@@ -65,39 +65,49 @@ export function isAllowedInvoiceReceiptFile(file: File): boolean {
     name: file.name,
     type: file.type,
     size: file.size,
-  }).ok
+  }).ok;
 }
 
 export function mapInvoiceReceiptSubmitError(status: number): InvoiceReceiptError {
-  if (status === 409) return 'conflict'
-  if (status === 404) return 'no-profile'
-  if (status === 400) return 'generic'
-  return 'generic'
+  if (status === 409) return 'conflict';
+  if (status === 404) return 'no-profile';
+  if (status === 400) return 'generic';
+  return 'generic';
 }
 
 export async function uploadInvoiceReceiptAttachment(
   file: File,
-  profileId: string,
+  profileId: string
 ): Promise<string | null> {
-  return uploadVerifiedAttachment(file, profileId, BANK_RECEIPT_STORAGE_PURPOSE)
+  return uploadVerifiedAttachment(file, profileId, BANK_RECEIPT_STORAGE_PURPOSE);
 }
 
-export async function uploadVerificationEvidence(file: File, profileId: string): Promise<string | null> {
-  return uploadVerifiedAttachment(file, profileId, 'verification_evidence')
+export async function uploadVerificationEvidence(
+  file: File,
+  profileId: string
+): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'verification_evidence');
 }
 
-export async function uploadTicketAttachment(file: File, profileId: string | null): Promise<string | null> {
-  return uploadVerifiedAttachment(file, profileId, 'ticket_attachment')
+export async function uploadTicketAttachment(
+  file: File,
+  profileId: string | null
+): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'ticket_attachment');
 }
 
-async function uploadVerifiedAttachment(file: File, profileId: string | null, purpose: string): Promise<string | null> {
+async function uploadVerifiedAttachment(
+  file: File,
+  profileId: string | null,
+  purpose: string
+): Promise<string | null> {
   const evaluated = evaluateInvoiceBankReceiptClientFile({
     name: file.name,
     type: file.type,
     size: file.size,
-  })
-  if (!evaluated.ok) return null
-  const category = evaluated.category
+  });
+  if (!evaluated.ok) return null;
+  const category = evaluated.category;
   const presignRes = await fetch('/api/upload/presigned-url', {
     method: 'POST',
     credentials: 'include',
@@ -112,13 +122,17 @@ async function uploadVerifiedAttachment(file: File, profileId: string | null, pu
       category,
       metadata: { recordType: 'receipt' },
     }),
-  })
+  });
   const presign = (await presignRes.json().catch(() => ({}))) as {
-    key?: string
-    presignedUrl?: string
-  }
-  if (!presignRes.ok || typeof presign.key !== 'string' || typeof presign.presignedUrl !== 'string') {
-    return null
+    key?: string;
+    presignedUrl?: string;
+  };
+  if (
+    !presignRes.ok ||
+    typeof presign.key !== 'string' ||
+    typeof presign.presignedUrl !== 'string'
+  ) {
+    return null;
   }
 
   const putRes = await fetch(presign.presignedUrl, {
@@ -127,17 +141,17 @@ async function uploadVerifiedAttachment(file: File, profileId: string | null, pu
     headers: {
       'Content-Type': file.type || (category === 'document' ? 'application/pdf' : 'image/jpeg'),
     },
-  })
-  if (!putRes.ok) return null
+  });
+  if (!putRes.ok) return null;
 
-  const encodedKey = encodeURIComponent(presign.key)
+  const encodedKey = encodeURIComponent(presign.key);
   const verifyRes = await fetch(`/api/upload/${encodedKey}/verify`, {
     method: 'POST',
     credentials: 'include',
     headers: withCsrf({ Accept: 'application/json' }),
-  })
-  const verify = (await verifyRes.json().catch(() => ({}))) as { status?: string }
-  if (!verifyRes.ok || verify.status !== 'confirmed') return null
+  });
+  const verify = (await verifyRes.json().catch(() => ({}))) as { status?: string };
+  if (!verifyRes.ok || verify.status !== 'confirmed') return null;
 
   const recordRes = await fetch(`/api/upload/${encodedKey}/record`, {
     method: 'POST',
@@ -154,18 +168,18 @@ async function uploadVerifiedAttachment(file: File, profileId: string | null, pu
       purpose,
       profileId,
     }),
-  })
-  if (!recordRes.ok) return null
-  return presign.key
+  });
+  if (!recordRes.ok) return null;
+  return presign.key;
 }
 
 export async function submitInvoiceBankReceipt(input: {
-  invoiceId: string
-  amountIrR: bigint
-  paymentDate: string
-  payerReference: string
-  attachmentKey: string
-  customerNote?: string
+  invoiceId: string;
+  amountIrR: bigint;
+  paymentDate: string;
+  payerReference: string;
+  attachmentKey: string;
+  customerNote?: string;
 }): Promise<{ ok: true; state: 'Submitted'; amount: bigint } | { ok: false; status: number }> {
   const res = await fetch(`/api/invoices/${input.invoiceId}/bank-receipts`, {
     method: 'POST',
@@ -181,23 +195,23 @@ export async function submitInvoiceBankReceipt(input: {
       attachmentKey: input.attachmentKey,
       customerNote: input.customerNote,
     }),
-  })
+  });
   const payload = (await res.json().catch(() => ({}))) as {
-    state?: string
-    amount?: unknown
-  }
-  const confirmedAmount = parseInvoiceBankReceiptAmountIrR(payload.amount)
+    state?: string;
+    amount?: unknown;
+  };
+  const confirmedAmount = parseInvoiceBankReceiptAmountIrR(payload.amount);
   if (!res.ok || payload.state !== 'Submitted' || confirmedAmount !== input.amountIrR) {
-    return { ok: false, status: res.status }
+    return { ok: false, status: res.status };
   }
-  return { ok: true, state: 'Submitted', amount: confirmedAmount }
+  return { ok: true, state: 'Submitted', amount: confirmedAmount };
 }
 
 export async function fetchActiveProfileId(): Promise<string | null> {
-  const res = await fetch('/api/profiles', { credentials: 'include' })
-  if (!res.ok) return null
-  const data = (await res.json().catch(() => ({}))) as { activeProfileId?: unknown }
+  const res = await fetch('/api/profiles', { credentials: 'include' });
+  if (!res.ok) return null;
+  const data = (await res.json().catch(() => ({}))) as { activeProfileId?: unknown };
   return typeof data.activeProfileId === 'string' && data.activeProfileId.length > 0
     ? data.activeProfileId
-    : null
+    : null;
 }

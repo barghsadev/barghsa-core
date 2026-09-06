@@ -13,7 +13,7 @@
  * @module finance
  */
 
-import { BANK_RECEIPT_SETTLEABLE_INVOICE_STATES } from './invoice-overpayment.js'
+import { BANK_RECEIPT_SETTLEABLE_INVOICE_STATES } from './invoice-overpayment.js';
 import {
   BANK_RECEIPT_ATTACHMENT_EXTENSIONS,
   parseBankReceiptAttachmentKey,
@@ -23,78 +23,75 @@ import {
   parseBankReceiptTopUpAmountIrR,
   utcTodayIso,
   type BankReceiptTopUpDetails,
-} from './wallet-bank-receipt-topup.js'
+} from './wallet-bank-receipt-topup.js';
 
-const MB = 1024 * 1024
+const MB = 1024 * 1024;
 
 /** PDF scans use the document upload category (deployment default 10 MB). */
-export const INVOICE_BANK_RECEIPT_DOCUMENT_MAX_BYTES = 10 * MB
+export const INVOICE_BANK_RECEIPT_DOCUMENT_MAX_BYTES = 10 * MB;
 
 /** Photo receipts use the image upload category (deployment default 20 MB). */
-export const INVOICE_BANK_RECEIPT_IMAGE_MAX_BYTES = 20 * MB
+export const INVOICE_BANK_RECEIPT_IMAGE_MAX_BYTES = 20 * MB;
 
-export const INVOICE_BANK_RECEIPT_ALLOWED_EXTENSIONS = BANK_RECEIPT_ATTACHMENT_EXTENSIONS
+export const INVOICE_BANK_RECEIPT_ALLOWED_EXTENSIONS = BANK_RECEIPT_ATTACHMENT_EXTENSIONS;
 
 export const INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY = {
   document: ['application/pdf'],
   image: ['image/jpeg', 'image/png', 'image/webp'],
-} as const
+} as const;
 
-export type InvoiceBankReceiptFileCategory = keyof typeof INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY
+export type InvoiceBankReceiptFileCategory =
+  keyof typeof INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY;
 
 export const INVOICE_BANK_RECEIPT_FILE_ACCEPT =
-  '.pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp'
+  '.pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp';
 
 /**
  * Server-only prefix for the immutable copy created at submit. Presigned
  * PUT URLs are issued only under `uploads/<category>/`, so the client
  * cannot overwrite this key with the original upload URL.
  */
-export const INVOICE_BANK_RECEIPT_SEALED_PREFIX = 'receipts/submitted/'
+export const INVOICE_BANK_RECEIPT_SEALED_PREFIX = 'receipts/submitted/';
 
 /**
  * Invoice states from which a customer may submit a bank receipt.
  * Same set as staff settleable states: Unpaid, PaymentUnderReview,
  * PartiallyFunded. Credit notes are rejected separately.
  */
-export const INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES =
-  BANK_RECEIPT_SETTLEABLE_INVOICE_STATES
+export const INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES = BANK_RECEIPT_SETTLEABLE_INVOICE_STATES;
 
 export type InvoiceBankReceiptSubmittableState =
-  (typeof INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES)[number]
+  (typeof INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES)[number];
 
-export type InvoiceBankReceiptFileRejection = 'type' | 'size' | 'empty'
+export type InvoiceBankReceiptFileRejection = 'type' | 'size' | 'empty';
 
 export interface InvoiceBankReceiptFileOk {
-  ok: true
-  category: InvoiceBankReceiptFileCategory
-  fileSize: number
+  ok: true;
+  category: InvoiceBankReceiptFileCategory;
+  fileSize: number;
 }
 
 export interface InvoiceBankReceiptFileFailure {
-  ok: false
-  reason: InvoiceBankReceiptFileRejection
+  ok: false;
+  reason: InvoiceBankReceiptFileRejection;
 }
 
-export type InvoiceBankReceiptFileResult =
-  | InvoiceBankReceiptFileOk
-  | InvoiceBankReceiptFileFailure
+export type InvoiceBankReceiptFileResult = InvoiceBankReceiptFileOk | InvoiceBankReceiptFileFailure;
 
 export interface InvoiceBankReceiptParseSuccess {
-  ok: true
-  amountIrR: bigint
-  receipt: BankReceiptTopUpDetails
+  ok: true;
+  amountIrR: bigint;
+  receipt: BankReceiptTopUpDetails;
 }
 
 export interface InvoiceBankReceiptParseFailure {
-  ok: false
-  field: 'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote'
-  message: string
+  ok: false;
+  field: 'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote';
+  message: string;
 }
 
 export type InvoiceBankReceiptParseResult =
-  | InvoiceBankReceiptParseSuccess
-  | InvoiceBankReceiptParseFailure
+  InvoiceBankReceiptParseSuccess | InvoiceBankReceiptParseFailure;
 
 const MIME_BY_EXTENSION: Record<string, string> = {
   '.pdf': 'application/pdf',
@@ -102,22 +99,20 @@ const MIME_BY_EXTENSION: Record<string, string> = {
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.webp': 'image/webp',
-}
+};
 
-export function invoiceBankReceiptMaxBytes(
-  category: InvoiceBankReceiptFileCategory,
-): number {
+export function invoiceBankReceiptMaxBytes(category: InvoiceBankReceiptFileCategory): number {
   return category === 'document'
     ? INVOICE_BANK_RECEIPT_DOCUMENT_MAX_BYTES
-    : INVOICE_BANK_RECEIPT_IMAGE_MAX_BYTES
+    : INVOICE_BANK_RECEIPT_IMAGE_MAX_BYTES;
 }
 
 export function invoiceBankReceiptCategoryFromKey(
-  attachmentKey: string,
+  attachmentKey: string
 ): InvoiceBankReceiptFileCategory | null {
-  if (attachmentKey.startsWith('uploads/document/')) return 'document'
-  if (attachmentKey.startsWith('uploads/image/')) return 'image'
-  return null
+  if (attachmentKey.startsWith('uploads/document/')) return 'document';
+  if (attachmentKey.startsWith('uploads/image/')) return 'image';
+  return null;
 }
 
 /**
@@ -125,36 +120,32 @@ export function invoiceBankReceiptCategoryFromKey(
  * same UUID filename so retries reseal to the same object; the prefix is
  * not client-writable via presign.
  */
-export function sealedInvoiceBankReceiptAttachmentKey(
-  uploadKey: string,
-): string | null {
-  const parsed = parseBankReceiptAttachmentKey(uploadKey)
-  if (parsed === null) return null
-  const slash = parsed.lastIndexOf('/')
-  const fileName = parsed.slice(slash + 1)
+export function sealedInvoiceBankReceiptAttachmentKey(uploadKey: string): string | null {
+  const parsed = parseBankReceiptAttachmentKey(uploadKey);
+  if (parsed === null) return null;
+  const slash = parsed.lastIndexOf('/');
+  const fileName = parsed.slice(slash + 1);
   if (fileName.length === 0 || fileName.includes('/') || fileName.includes('..')) {
-    return null
+    return null;
   }
-  return `${INVOICE_BANK_RECEIPT_SEALED_PREFIX}${fileName}`
+  return `${INVOICE_BANK_RECEIPT_SEALED_PREFIX}${fileName}`;
 }
 
 /** Keys that may identify a receipt row for a customer-submitted upload. */
 export function invoiceBankReceiptLookupKeys(uploadKey: string): string[] {
-  const sealed = sealedInvoiceBankReceiptAttachmentKey(uploadKey)
-  return sealed === null ? [uploadKey] : [uploadKey, sealed]
+  const sealed = sealedInvoiceBankReceiptAttachmentKey(uploadKey);
+  return sealed === null ? [uploadKey] : [uploadKey, sealed];
 }
 
 export function invoiceBankReceiptExtensionFromName(name: unknown): string | null {
-  if (typeof name !== 'string') return null
-  const trimmed = name.trim().toLowerCase()
-  const slash = Math.max(trimmed.lastIndexOf('/'), trimmed.lastIndexOf('\\'))
-  const base = slash === -1 ? trimmed : trimmed.slice(slash + 1)
-  const dot = base.lastIndexOf('.')
-  if (dot <= 0) return null
-  const ext = base.slice(dot)
-  return (INVOICE_BANK_RECEIPT_ALLOWED_EXTENSIONS as readonly string[]).includes(ext)
-    ? ext
-    : null
+  if (typeof name !== 'string') return null;
+  const trimmed = name.trim().toLowerCase();
+  const slash = Math.max(trimmed.lastIndexOf('/'), trimmed.lastIndexOf('\\'));
+  const base = slash === -1 ? trimmed : trimmed.slice(slash + 1);
+  const dot = base.lastIndexOf('.');
+  if (dot <= 0) return null;
+  const ext = base.slice(dot);
+  return (INVOICE_BANK_RECEIPT_ALLOWED_EXTENSIONS as readonly string[]).includes(ext) ? ext : null;
 }
 
 /**
@@ -162,12 +153,12 @@ export function invoiceBankReceiptExtensionFromName(name: unknown): string | nul
  * Unknown combinations are rejected rather than guessed.
  */
 export function invoiceBankReceiptCategoryFromClientFile(input: {
-  name: unknown
-  type: unknown
+  name: unknown;
+  type: unknown;
 }): InvoiceBankReceiptFileCategory | null {
-  const name = typeof input.name === 'string' ? input.name.toLowerCase() : ''
-  const type = typeof input.type === 'string' ? input.type.toLowerCase() : ''
-  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'document'
+  const name = typeof input.name === 'string' ? input.name.toLowerCase() : '';
+  const type = typeof input.type === 'string' ? input.type.toLowerCase() : '';
+  if (type === 'application/pdf' || name.endsWith('.pdf')) return 'document';
   if (
     type === 'image/jpeg' ||
     type === 'image/png' ||
@@ -177,28 +168,28 @@ export function invoiceBankReceiptCategoryFromClientFile(input: {
     name.endsWith('.png') ||
     name.endsWith('.webp')
   ) {
-    return 'image'
+    return 'image';
   }
-  return null
+  return null;
 }
 
 export function parsePositiveByteCount(raw: unknown): number | null {
   if (typeof raw === 'bigint') {
-    if (raw <= 0n || raw > BigInt(Number.MAX_SAFE_INTEGER)) return null
-    return Number(raw)
+    if (raw <= 0n || raw > BigInt(Number.MAX_SAFE_INTEGER)) return null;
+    return Number(raw);
   }
   if (typeof raw === 'number') {
-    if (!Number.isSafeInteger(raw) || raw <= 0) return null
-    return raw
+    if (!Number.isSafeInteger(raw) || raw <= 0) return null;
+    return raw;
   }
   if (typeof raw === 'string') {
-    const trimmed = raw.trim()
-    if (!/^[1-9][0-9]{0,15}$/.test(trimmed)) return null
-    const value = Number(trimmed)
-    if (!Number.isSafeInteger(value) || value <= 0) return null
-    return value
+    const trimmed = raw.trim();
+    if (!/^[1-9][0-9]{0,15}$/.test(trimmed)) return null;
+    const value = Number(trimmed);
+    if (!Number.isSafeInteger(value) || value <= 0) return null;
+    return value;
   }
-  return null
+  return null;
 }
 
 /**
@@ -206,23 +197,23 @@ export function parsePositiveByteCount(raw: unknown): number | null {
  * and oversize files are distinct from disallowed types.
  */
 export function evaluateInvoiceBankReceiptClientFile(input: {
-  name: unknown
-  type: unknown
-  size: unknown
+  name: unknown;
+  type: unknown;
+  size: unknown;
 }): InvoiceBankReceiptFileResult {
-  const category = invoiceBankReceiptCategoryFromClientFile(input)
-  if (category === null) return { ok: false, reason: 'type' }
-  const size = parsePositiveByteCount(input.size)
+  const category = invoiceBankReceiptCategoryFromClientFile(input);
+  if (category === null) return { ok: false, reason: 'type' };
+  const size = parsePositiveByteCount(input.size);
   if (size === null) {
     if (input.size === 0 || input.size === 0n || input.size === '0') {
-      return { ok: false, reason: 'empty' }
+      return { ok: false, reason: 'empty' };
     }
-    return { ok: false, reason: 'size' }
+    return { ok: false, reason: 'size' };
   }
   if (size > invoiceBankReceiptMaxBytes(category)) {
-    return { ok: false, reason: 'size' }
+    return { ok: false, reason: 'size' };
   }
-  return { ok: true, category, fileSize: size }
+  return { ok: true, category, fileSize: size };
 }
 
 /**
@@ -232,59 +223,57 @@ export function evaluateInvoiceBankReceiptClientFile(input: {
  * MIME/category/name, when present, must agree with the attachment key.
  */
 export function evaluateInvoiceBankReceiptStoredFile(input: {
-  attachmentKey: string
-  fileSize: unknown
-  contentType?: unknown
-  category?: unknown
-  fileName?: unknown
+  attachmentKey: string;
+  fileSize: unknown;
+  contentType?: unknown;
+  category?: unknown;
+  fileName?: unknown;
 }): InvoiceBankReceiptFileResult {
-  const keyCategory = invoiceBankReceiptCategoryFromKey(input.attachmentKey)
-  if (keyCategory === null) return { ok: false, reason: 'type' }
+  const keyCategory = invoiceBankReceiptCategoryFromKey(input.attachmentKey);
+  if (keyCategory === null) return { ok: false, reason: 'type' };
 
-  const keyExt = invoiceBankReceiptExtensionFromName(input.attachmentKey)
-  if (keyExt === null) return { ok: false, reason: 'type' }
+  const keyExt = invoiceBankReceiptExtensionFromName(input.attachmentKey);
+  if (keyExt === null) return { ok: false, reason: 'type' };
 
   if (typeof input.category === 'string' && input.category.trim() !== '') {
-    if (input.category.trim() !== keyCategory) return { ok: false, reason: 'type' }
+    if (input.category.trim() !== keyCategory) return { ok: false, reason: 'type' };
   }
 
   if (typeof input.fileName === 'string' && input.fileName.trim() !== '') {
-    const nameExt = invoiceBankReceiptExtensionFromName(input.fileName)
-    if (nameExt === null || nameExt !== keyExt) return { ok: false, reason: 'type' }
+    const nameExt = invoiceBankReceiptExtensionFromName(input.fileName);
+    if (nameExt === null || nameExt !== keyExt) return { ok: false, reason: 'type' };
   }
 
   if (typeof input.contentType === 'string' && input.contentType.trim() !== '') {
-    const mime = input.contentType.trim().toLowerCase()
-    const allowed = INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory] as readonly string[]
-    const expected = MIME_BY_EXTENSION[keyExt]
+    const mime = input.contentType.trim().toLowerCase();
+    const allowed = INVOICE_BANK_RECEIPT_ALLOWED_MIME_BY_CATEGORY[keyCategory] as readonly string[];
+    const expected = MIME_BY_EXTENSION[keyExt];
     if (!allowed.includes(mime) || (expected !== undefined && mime !== expected)) {
-      return { ok: false, reason: 'type' }
+      return { ok: false, reason: 'type' };
     }
   }
 
   if (input.fileSize === 0 || input.fileSize === 0n || input.fileSize === '0') {
-    return { ok: false, reason: 'empty' }
+    return { ok: false, reason: 'empty' };
   }
-  const fileSize = parsePositiveByteCount(input.fileSize)
-  if (fileSize === null) return { ok: false, reason: 'empty' }
+  const fileSize = parsePositiveByteCount(input.fileSize);
+  if (fileSize === null) return { ok: false, reason: 'empty' };
   if (fileSize > invoiceBankReceiptMaxBytes(keyCategory)) {
-    return { ok: false, reason: 'size' }
+    return { ok: false, reason: 'size' };
   }
-  return { ok: true, category: keyCategory, fileSize }
+  return { ok: true, category: keyCategory, fileSize };
 }
 
 export function canCustomerSubmitInvoiceBankReceipt(input: {
-  state: string
-  adjustmentKind?: string | null
+  state: string;
+  adjustmentKind?: string | null;
 }): boolean {
-  if (input.adjustmentKind === 'credit') return false
-  return (INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES as readonly string[]).includes(
-    input.state,
-  )
+  if (input.adjustmentKind === 'credit') return false;
+  return (INVOICE_BANK_RECEIPT_SUBMITTABLE_STATES as readonly string[]).includes(input.state);
 }
 
 export function parseInvoiceBankReceiptAmountIrR(raw: unknown): bigint | null {
-  return parseBankReceiptTopUpAmountIrR(raw)
+  return parseBankReceiptTopUpAmountIrR(raw);
 }
 
 /**
@@ -293,61 +282,61 @@ export function parseInvoiceBankReceiptAmountIrR(raw: unknown): bigint | null {
  */
 export function parseInvoiceBankReceiptSubmission(
   input: unknown,
-  todayIso: string = utcTodayIso(),
+  todayIso: string = utcTodayIso()
 ): InvoiceBankReceiptParseResult {
   if (!input || typeof input !== 'object') {
     return {
       ok: false,
       field: 'amount',
       message: 'Invoice bank receipt body must be an object',
-    }
+    };
   }
-  const body = input as Record<string, unknown>
+  const body = input as Record<string, unknown>;
 
-  const amountIrR = parseInvoiceBankReceiptAmountIrR(body.amount)
+  const amountIrR = parseInvoiceBankReceiptAmountIrR(body.amount);
   if (amountIrR === null) {
     return {
       ok: false,
       field: 'amount',
       message: 'Invoice bank receipt amount must be a positive integer IRR value',
-    }
+    };
   }
 
-  const paymentDate = parseBankReceiptPaymentDate(body.paymentDate, todayIso)
+  const paymentDate = parseBankReceiptPaymentDate(body.paymentDate, todayIso);
   if (paymentDate === null) {
     return {
       ok: false,
       field: 'paymentDate',
       message: 'Payment date must be a calendar YYYY-MM-DD value that is not in the future',
-    }
+    };
   }
 
-  const payerReference = parseBankReceiptPayerReference(body.payerReference)
+  const payerReference = parseBankReceiptPayerReference(body.payerReference);
   if (payerReference === null) {
     return {
       ok: false,
       field: 'payerReference',
       message: 'Payer reference is required (1–128 characters)',
-    }
+    };
   }
 
-  const attachmentKey = parseBankReceiptAttachmentKey(body.attachmentKey)
+  const attachmentKey = parseBankReceiptAttachmentKey(body.attachmentKey);
   if (attachmentKey === null) {
     return {
       ok: false,
       field: 'attachmentKey',
       message:
         'Attachment key must be a verified uploads/document or uploads/image object with a PDF or image extension',
-    }
+    };
   }
 
-  const customerNote = parseBankReceiptCustomerNote(body.customerNote)
+  const customerNote = parseBankReceiptCustomerNote(body.customerNote);
   if (customerNote === undefined) {
     return {
       ok: false,
       field: 'customerNote',
       message: 'Customer note must be at most 2000 characters',
-    }
+    };
   }
 
   return {
@@ -359,28 +348,28 @@ export function parseInvoiceBankReceiptSubmission(
       attachmentKey,
       customerNote,
     },
-  }
+  };
 }
 
 export function invoiceBankReceiptAttachmentKeysMatch(
   storedKey: string,
-  submittedUploadKey: string,
+  submittedUploadKey: string
 ): boolean {
-  if (storedKey === submittedUploadKey) return true
-  const sealed = sealedInvoiceBankReceiptAttachmentKey(submittedUploadKey)
-  return sealed !== null && storedKey === sealed
+  if (storedKey === submittedUploadKey) return true;
+  const sealed = sealedInvoiceBankReceiptAttachmentKey(submittedUploadKey);
+  return sealed !== null && storedKey === sealed;
 }
 
 export function invoiceBankReceiptDetailsMatch(
   row: {
-    amount: string | number | bigint
-    paymentDate: string
-    payerReference: string
-    attachmentKey: string
-    customerNote: string | null
+    amount: string | number | bigint;
+    paymentDate: string;
+    payerReference: string;
+    attachmentKey: string;
+    customerNote: string | null;
   },
   amountIrR: bigint,
-  receipt: BankReceiptTopUpDetails,
+  receipt: BankReceiptTopUpDetails
 ): boolean {
   return (
     BigInt(row.amount) === amountIrR &&
@@ -388,5 +377,5 @@ export function invoiceBankReceiptDetailsMatch(
     row.payerReference === receipt.payerReference &&
     invoiceBankReceiptAttachmentKeysMatch(row.attachmentKey, receipt.attachmentKey) &&
     (row.customerNote ?? null) === receipt.customerNote
-  )
+  );
 }

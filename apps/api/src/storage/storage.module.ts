@@ -1,7 +1,11 @@
 import { Global, Logger, Module } from '@nestjs/common';
 import { createDbInstance, type DbInstance } from '@barghsa/db';
 import { storageRecords } from '@barghsa/db/schema/storage-record';
-import { createStorageProvider, type StorageProvider, ImmutableStorageRecordService } from '@barghsa/shared/storage';
+import {
+  createStorageProvider,
+  type StorageProvider,
+  ImmutableStorageRecordService,
+} from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from './storage.constants.js';
 import { StorageAdminController } from './storage-admin.controller.js';
 import { StorageRecordDbAdapter } from './storage-record-db-adapter.js';
@@ -21,7 +25,7 @@ import { StorageRecordsController } from './storage-records.controller.js';
           const logger = new Logger('StorageModule');
           logger.warn(
             'S3_BUCKET and/or S3_REGION not set — storage provider disabled. ' +
-            'Upload endpoints will return 503.',
+              'Upload endpoints will return 503.'
           );
           return null;
         }
@@ -31,16 +35,23 @@ import { StorageRecordsController } from './storage-records.controller.js';
           bucket,
           region,
           ...(process.env['S3_ENDPOINT'] ? { endpoint: process.env['S3_ENDPOINT'] } : {}),
-          ...(process.env['S3_ACCESS_KEY_ID'] ? { accessKeyId: process.env['S3_ACCESS_KEY_ID'] } : {}),
-          ...(process.env['S3_SECRET_ACCESS_KEY'] ? { secretAccessKey: process.env['S3_SECRET_ACCESS_KEY'] } : {}),
+          ...(process.env['S3_ACCESS_KEY_ID']
+            ? { accessKeyId: process.env['S3_ACCESS_KEY_ID'] }
+            : {}),
+          ...(process.env['S3_SECRET_ACCESS_KEY']
+            ? { secretAccessKey: process.env['S3_SECRET_ACCESS_KEY'] }
+            : {}),
           ...(process.env['S3_FORCE_PATH_STYLE'] === 'true' ? { forcePathStyle: true } : {}),
         };
 
         const logger = new Logger('StorageModule');
-        return createStorageProvider(config as unknown as Parameters<typeof createStorageProvider>[0], {
-          warn: (msg, ...meta) => logger.warn(msg, ...meta),
-          error: (msg, ...meta) => logger.error(msg, ...meta),
-        });
+        return createStorageProvider(
+          config as unknown as Parameters<typeof createStorageProvider>[0],
+          {
+            warn: (msg, ...meta) => logger.warn(msg, ...meta),
+            error: (msg, ...meta) => logger.error(msg, ...meta),
+          }
+        );
       },
     },
     {
@@ -54,7 +65,7 @@ import { StorageRecordsController } from './storage-records.controller.js';
       provide: IMMUTABLE_STORAGE_SERVICE,
       useFactory: (
         storageProvider: StorageProvider | null,
-        dbAdapter: StorageRecordDbAdapter,
+        dbAdapter: StorageRecordDbAdapter
       ): ImmutableStorageRecordService | null => {
         if (!storageProvider) return null;
         return new ImmutableStorageRecordService(storageProvider, dbAdapter);

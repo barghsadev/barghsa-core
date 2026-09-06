@@ -34,8 +34,8 @@ import {
   DELIVERY_WINDOW_CONFIG_KEY,
   MIN_WINDOW_HOURS,
   type DeliveryWindowConfig,
-} from '@barghsa/shared/notifications'
-import type { NotificationChannel } from '@barghsa/shared/notifications'
+} from '@barghsa/shared/notifications';
+import type { NotificationChannel } from '@barghsa/shared/notifications';
 
 // Re-export the shared delivery-window contract so worker consumers (and the
 // worker test suite) keep importing from this module while the canonical
@@ -46,27 +46,25 @@ export {
   DELIVERY_WINDOW_CONFIG_KEY,
   MIN_WINDOW_HOURS,
   type DeliveryWindowConfig,
-} from '@barghsa/shared/notifications'
+} from '@barghsa/shared/notifications';
 
 /** External channels that are subject to the quiet window. */
-const EXTERNAL_CHANNELS: ReadonlySet<string> = new Set<NotificationChannel>(['email', 'sms'])
+const EXTERNAL_CHANNELS: ReadonlySet<string> = new Set<NotificationChannel>(['email', 'sms']);
 
 /** Result of applying the delivery window to a single notification event. */
-export type DeliveryScheduleDecision =
-  | { kind: 'now' }
-  | { kind: 'schedule'; scheduledFor: Date }
+export type DeliveryScheduleDecision = { kind: 'now' } | { kind: 'schedule'; scheduledFor: Date };
 
 // ───────────────────────────────────────────────────────────────────────────
 //  Timezone helpers (Intl-based, DST-tolerant)
 // ───────────────────────────────────────────────────────────────────────────
 
 interface TzParts {
-  year: number
-  month: number
-  day: number
-  hour: number
-  minute: number
-  second: number
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
 }
 
 /** Wall-clock date/time parts of `date` as seen in `timeZone`. */
@@ -80,10 +78,10 @@ function tzParts(date: Date, timeZone: string): TzParts {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-  })
-  const parts: Record<string, number> = {}
+  });
+  const parts: Record<string, number> = {};
   for (const p of dtf.formatToParts(date)) {
-    if (p.type !== 'literal') parts[p.type] = Number.parseInt(p.value, 10)
+    if (p.type !== 'literal') parts[p.type] = Number.parseInt(p.value, 10);
   }
   return {
     year: parts['year']!,
@@ -92,7 +90,7 @@ function tzParts(date: Date, timeZone: string): TzParts {
     hour: parts['hour']! % 24, // Intl may emit "24" for midnight with hour12:false
     minute: parts['minute']!,
     second: parts['second']!,
-  }
+  };
 }
 
 /**
@@ -107,49 +105,49 @@ function atCalendar(
   day: number,
   hour: number,
   minute = 0,
-  second = 0,
+  second = 0
 ): Date {
-  const targetUtc = Date.UTC(year, month - 1, day, hour, minute, second)
-  let epoch = targetUtc
+  const targetUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+  let epoch = targetUtc;
   for (let i = 0; i < 3; i++) {
-    const p = tzParts(new Date(epoch), timeZone)
-    const wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second)
+    const p = tzParts(new Date(epoch), timeZone);
+    const wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
     // wall == targetUtc at the fixpoint; correct the guess by the discrepancy.
-    epoch = targetUtc - (wall - epoch)
+    epoch = targetUtc - (wall - epoch);
   }
   const wallAt = (instant: number) => {
-    const parts = tzParts(new Date(instant), timeZone)
-    return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second)
-  }
+    const parts = tzParts(new Date(instant), timeZone);
+    return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+  };
   // A fall-back boundary can occur twice. Choose its first occurrence.
   if (wallAt(epoch) === targetUtc) {
     for (const hours of [3, 2, 1]) {
-      const earlier = epoch - hours * 60 * 60 * 1000
-      if (wallAt(earlier) === targetUtc) return new Date(earlier)
+      const earlier = epoch - hours * 60 * 60 * 1000;
+      if (wallAt(earlier) === targetUtc) return new Date(earlier);
     }
-    return new Date(epoch)
+    return new Date(epoch);
   }
   // A spring-forward boundary may not exist. Use the first valid local
   // minute after the gap instead of returning a time before the window.
-  const start = epoch - 3 * 60 * 60 * 1000
+  const start = epoch - 3 * 60 * 60 * 1000;
   for (let minute = 0; minute <= 360; minute++) {
-    const instant = start + minute * 60 * 1000
-    if (wallAt(instant) >= targetUtc) return new Date(instant)
+    const instant = start + minute * 60 * 1000;
+    if (wallAt(instant) >= targetUtc) return new Date(instant);
   }
-  return new Date(epoch)
+  return new Date(epoch);
 }
 
 // ───────────────────────────────────────────────────────────────────────────
 //  Window predicates
 // ───────────────────────────────────────────────────────────────────────────
 
-const HOUR_MIN = 60
+const HOUR_MIN = 60;
 
 /** True when `date` (as a wall clock in `config.timezone`) is inside the window. */
 export function isWithinWindow(date: Date, config: DeliveryWindowConfig): boolean {
-  const p = tzParts(date, config.timezone)
-  const minutes = p.hour * HOUR_MIN + p.minute
-  return minutes >= config.startHour * HOUR_MIN && minutes < config.endHour * HOUR_MIN
+  const p = tzParts(date, config.timezone);
+  const minutes = p.hour * HOUR_MIN + p.minute;
+  return minutes >= config.startHour * HOUR_MIN && minutes < config.endHour * HOUR_MIN;
 }
 
 /**
@@ -157,15 +155,21 @@ export function isWithinWindow(date: Date, config: DeliveryWindowConfig): boolea
  * clock is before `startHour`, otherwise tomorrow at `startHour`.
  */
 export function nextWindowOpen(date: Date, config: DeliveryWindowConfig): Date {
-  const p = tzParts(date, config.timezone)
+  const p = tzParts(date, config.timezone);
   if (p.hour < config.startHour) {
-    return atCalendar(config.timezone, p.year, p.month, p.day, config.startHour)
+    return atCalendar(config.timezone, p.year, p.month, p.day, config.startHour);
   }
   // Never returns "now / inside the window": when the clock is already at or
   // past startHour the open boundary has passed, so bump to the next calendar
   // day (read tomorrow's y/m/d in the target timezone to survive DST shifts).
-  const tomorrow = new Date(Date.UTC(p.year, p.month - 1, p.day + 1))
-  return atCalendar(config.timezone, tomorrow.getUTCFullYear(), tomorrow.getUTCMonth() + 1, tomorrow.getUTCDate(), config.startHour)
+  const tomorrow = new Date(Date.UTC(p.year, p.month - 1, p.day + 1));
+  return atCalendar(
+    config.timezone,
+    tomorrow.getUTCFullYear(),
+    tomorrow.getUTCMonth() + 1,
+    tomorrow.getUTCDate(),
+    config.startHour
+  );
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -174,7 +178,7 @@ export function nextWindowOpen(date: Date, config: DeliveryWindowConfig): Date {
 
 /** True when the row requests an external (quiet-window-gated) channel. */
 export function hasExternalChannel(channels: readonly NotificationChannel[]): boolean {
-  return channels.some((c) => EXTERNAL_CHANNELS.has(c))
+  return channels.some((c) => EXTERNAL_CHANNELS.has(c));
 }
 
 /**
@@ -191,12 +195,12 @@ export function decideDeliverySchedule(
   eventKey: string,
   channels: readonly NotificationChannel[],
   now: Date,
-  config: DeliveryWindowConfig,
+  config: DeliveryWindowConfig
 ): DeliveryScheduleDecision {
-  if (classifyNotificationType(eventKey) === 'immediate') return { kind: 'now' }
-  if (!hasExternalChannel(channels)) return { kind: 'now' }
-  if (isWithinWindow(now, config)) return { kind: 'now' }
-  return { kind: 'schedule', scheduledFor: nextWindowOpen(now, config) }
+  if (classifyNotificationType(eventKey) === 'immediate') return { kind: 'now' };
+  if (!hasExternalChannel(channels)) return { kind: 'now' };
+  if (isWithinWindow(now, config)) return { kind: 'now' };
+  return { kind: 'schedule', scheduledFor: nextWindowOpen(now, config) };
 }
 
 // ───────────────────────────────────────────────────────────────────────────
@@ -205,8 +209,8 @@ export function decideDeliverySchedule(
 
 /** Coerce a stored hour to a valid 0–23 integer, or `fallback`. */
 function toHour(value: unknown, fallback: number): number {
-  const n = typeof value === 'number' ? value : Number(value)
-  return Number.isInteger(n) && n >= 0 && n <= 23 ? n : fallback
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isInteger(n) && n >= 0 && n <= 23 ? n : fallback;
 }
 
 /**
@@ -216,18 +220,24 @@ function toHour(value: unknown, fallback: number): number {
  * value can never disable delivery entirely.
  */
 export function normalizeWindowConfig(raw: unknown): DeliveryWindowConfig {
-  if (!raw || typeof raw !== 'object') return { ...DEFAULT_DELIVERY_WINDOW }
+  if (!raw || typeof raw !== 'object') return { ...DEFAULT_DELIVERY_WINDOW };
 
-  const o = raw as Record<string, unknown>
+  const o = raw as Record<string, unknown>;
   let timezone =
-    typeof o.timezone === 'string' && o.timezone.length > 0 ? o.timezone : DEFAULT_DELIVERY_WINDOW.timezone
-  try { new Intl.DateTimeFormat('en', { timeZone: timezone }).format() } catch { timezone = DEFAULT_DELIVERY_WINDOW.timezone }
-  const startHour = toHour(o.start_hour ?? o.startHour, DEFAULT_DELIVERY_WINDOW.startHour)
-  const endHour = toHour(o.end_hour ?? o.endHour, DEFAULT_DELIVERY_WINDOW.endHour)
+    typeof o.timezone === 'string' && o.timezone.length > 0
+      ? o.timezone
+      : DEFAULT_DELIVERY_WINDOW.timezone;
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: timezone }).format();
+  } catch {
+    timezone = DEFAULT_DELIVERY_WINDOW.timezone;
+  }
+  const startHour = toHour(o.start_hour ?? o.startHour, DEFAULT_DELIVERY_WINDOW.startHour);
+  const endHour = toHour(o.end_hour ?? o.endHour, DEFAULT_DELIVERY_WINDOW.endHour);
 
-  if (startHour >= endHour) return { ...DEFAULT_DELIVERY_WINDOW, timezone }
+  if (startHour >= endHour) return { ...DEFAULT_DELIVERY_WINDOW, timezone };
 
-  return { timezone, startHour, endHour }
+  return { timezone, startHour, endHour };
 }
 
 /**
@@ -237,10 +247,10 @@ export function normalizeWindowConfig(raw: unknown): DeliveryWindowConfig {
  * value.
  */
 export async function loadDeliveryWindowConfig(pool: {
-  query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }>
+  query: (sql: string, params?: unknown[]) => Promise<{ rows: Array<Record<string, unknown>> }>;
 }): Promise<DeliveryWindowConfig> {
   const result = await pool.query('SELECT value FROM app_config WHERE key = $1', [
     DELIVERY_WINDOW_CONFIG_KEY,
-  ])
-  return normalizeWindowConfig(result.rows[0]?.value)
+  ]);
+  return normalizeWindowConfig(result.rows[0]?.value);
 }

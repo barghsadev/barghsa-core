@@ -17,64 +17,62 @@
  */
 
 /** Ledger state that posts into `wallets.posted_balance`. */
-export const WALLET_LEDGER_POSTED_STATE = 'Completed' as const
+export const WALLET_LEDGER_POSTED_STATE = 'Completed' as const;
 
 /** Ledger state that posts into `wallets.reserved_balance`. */
-export const WALLET_LEDGER_RESERVED_STATE = 'Reserved' as const
+export const WALLET_LEDGER_RESERVED_STATE = 'Reserved' as const;
 
 /** Reconciliation exception type written to the finance queue. */
-export const WALLET_MISMATCH_EXCEPTION_TYPE = 'wallet_mismatch' as const
+export const WALLET_MISMATCH_EXCEPTION_TYPE = 'wallet_mismatch' as const;
 
 /** Producer key stored on exception `details.source`. */
-export const WALLET_RECONCILIATION_SOURCE = 'wallet_reconciliation_scan' as const
+export const WALLET_RECONCILIATION_SOURCE = 'wallet_reconciliation_scan' as const;
 
 /**
  * Absolute posted or reserved drift (IRR) at or above which a mismatch
  * is triaged `critical`. Below this, every mismatch is `high` — any
  * ledger/cache disagreement is a finance incident.
  */
-export const WALLET_MISMATCH_CRITICAL_ABS_IRR = 1_000_000_000n
+export const WALLET_MISMATCH_CRITICAL_ABS_IRR = 1_000_000_000n;
 
 /** Snapshot used to compare one wallet row against its ledger sums. */
 export interface WalletLedgerSnapshot {
-  walletId: string
-  postedBalance: bigint
-  reservedBalance: bigint
-  ledgerPostedSum: bigint
-  ledgerReservedSum: bigint
+  walletId: string;
+  postedBalance: bigint;
+  reservedBalance: bigint;
+  ledgerPostedSum: bigint;
+  ledgerReservedSum: bigint;
 }
 
 /** A wallet whose cached balances disagree with the ledger. */
 export interface WalletMismatch extends WalletLedgerSnapshot {
   /** `postedBalance - ledgerPostedSum` (wallet minus ledger). */
-  postedDelta: bigint
+  postedDelta: bigint;
   /** `reservedBalance - ledgerReservedSum` (wallet minus ledger). */
-  reservedDelta: bigint
+  reservedDelta: bigint;
 }
 
 /** Severity written onto a `wallet_mismatch` finance-queue row. */
-export type WalletMismatchSeverity = 'high' | 'critical'
+export type WalletMismatchSeverity = 'high' | 'critical';
 
 function absDelta(value: bigint): bigint {
-  return value < 0n ? -value : value
+  return value < 0n ? -value : value;
 }
 
 /**
  * Compare cached wallet balances to the ledger sums. Returns `null`
  * when both sides agree.
  */
-export function diffWalletAgainstLedger(
-  snapshot: WalletLedgerSnapshot,
-): WalletMismatch | null {
-  const postedDelta = snapshot.postedBalance - snapshot.ledgerPostedSum
-  const reservedDelta = snapshot.reservedBalance - snapshot.ledgerReservedSum
-  if (postedDelta === 0n && reservedDelta === 0n) return null
-  return { ...snapshot, postedDelta, reservedDelta }
+export function diffWalletAgainstLedger(snapshot: WalletLedgerSnapshot): WalletMismatch | null {
+  const postedDelta = snapshot.postedBalance - snapshot.ledgerPostedSum;
+  const reservedDelta = snapshot.reservedBalance - snapshot.ledgerReservedSum;
+  if (postedDelta === 0n && reservedDelta === 0n) return null;
+  return { ...snapshot, postedDelta, reservedDelta };
 }
 
 /** True when cached posted/reserved balances equal the ledger sums. */
 export function walletMatchesLedger(snapshot: WalletLedgerSnapshot): boolean {
-  return diffWalletAgainstLedger(snapshot) === null
+  return diffWalletAgainstLedger(snapshot) === null;
 }
 
 /**
@@ -86,8 +84,8 @@ export function walletMismatchSeverity(mismatch: WalletMismatch): WalletMismatch
   const magnitude =
     absDelta(mismatch.postedDelta) > absDelta(mismatch.reservedDelta)
       ? absDelta(mismatch.postedDelta)
-      : absDelta(mismatch.reservedDelta)
-  return magnitude >= WALLET_MISMATCH_CRITICAL_ABS_IRR ? 'critical' : 'high'
+      : absDelta(mismatch.reservedDelta);
+  return magnitude >= WALLET_MISMATCH_CRITICAL_ABS_IRR ? 'critical' : 'high';
 }
 
 /** Human-readable finance-queue summary for a mismatch. */
@@ -100,7 +98,7 @@ export function describeWalletMismatch(mismatch: WalletMismatch): string {
     `reserved wallet=${mismatch.reservedBalance.toString()} ` +
     `ledger=${mismatch.ledgerReservedSum.toString()} ` +
     `(delta=${mismatch.reservedDelta.toString()})`
-  )
+  );
 }
 
 /** JSONB audit payload stored on the finance-queue row. */
@@ -114,7 +112,7 @@ export function walletMismatchDetails(mismatch: WalletMismatch): Record<string, 
     postedDelta: mismatch.postedDelta.toString(),
     reservedDelta: mismatch.reservedDelta.toString(),
     source: WALLET_RECONCILIATION_SOURCE,
-  }
+  };
 }
 
 /**
@@ -123,13 +121,13 @@ export function walletMismatchDetails(mismatch: WalletMismatch): Record<string, 
  * so a corrupt driver value cannot throw mid-scan.
  */
 export function parseLedgerAmount(value: unknown): bigint {
-  if (typeof value === 'bigint') return value
-  if (typeof value === 'number' && Number.isInteger(value)) return BigInt(value)
+  if (typeof value === 'bigint') return value;
+  if (typeof value === 'number' && Number.isInteger(value)) return BigInt(value);
   if (typeof value === 'string') {
-    const trimmed = value.trim()
-    if (/^-?\d+$/.test(trimmed)) return BigInt(trimmed)
-    const whole = trimmed.match(/^(-?\d+)\.0+$/)
-    if (whole?.[1]) return BigInt(whole[1])
+    const trimmed = value.trim();
+    if (/^-?\d+$/.test(trimmed)) return BigInt(trimmed);
+    const whole = trimmed.match(/^(-?\d+)\.0+$/);
+    if (whole?.[1]) return BigInt(whole[1]);
   }
-  return 0n
+  return 0n;
 }

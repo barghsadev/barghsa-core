@@ -13,7 +13,7 @@ const CLEANUP_INTERVAL_MS = 60 * 60 * 1000; // once an hour is enough
  */
 export type DbQueryFn = (
   text: string,
-  params?: unknown[],
+  params?: unknown[]
 ) => Promise<{ rows: Record<string, unknown>[]; rowCount?: number | null }>;
 
 /**
@@ -84,11 +84,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
    * `windowMs`, giving a fixed window.  This is an approximation of a
    * true sliding window but is safe and fast with PostgreSQL upserts.
    */
-  async increment(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     const now = Date.now();
     const windowStart = Math.floor(now / windowMs) * windowMs;
     const windowEnd = windowStart + windowMs;
@@ -100,7 +96,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
          SET count = rate_limit_counters.count + 1,
              updated_at = NOW()
        RETURNING count`,
-      [key, windowStart, windowMs],
+      [key, windowStart, windowMs]
     );
 
     const row = result.rows[0];
@@ -120,20 +116,13 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
    * Manual reset — deletes all counter rows for `key`.
    */
   async reset(key: string): Promise<void> {
-    await this.query(
-      `DELETE FROM rate_limit_counters WHERE key = $1`,
-      [key],
-    );
+    await this.query(`DELETE FROM rate_limit_counters WHERE key = $1`, [key]);
   }
 
   /**
    * Increment a security-critical counter (OTP, login, password reset).
    */
-  async incrementSecurity(
-    key: string,
-    limit: number,
-    windowMs: number,
-  ): Promise<RateLimitResult> {
+  async incrementSecurity(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
     const now = Date.now();
     const windowStart = Math.floor(now / windowMs) * windowMs;
     const windowEnd = windowStart + windowMs;
@@ -145,7 +134,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
          SET count = security_rate_limit_counters.count + 1,
              updated_at = NOW()
        RETURNING count`,
-      [key, windowStart, windowMs],
+      [key, windowStart, windowMs]
     );
 
     const row = result.rows[0];
@@ -173,7 +162,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     const result = await this.query(
       `SELECT count FROM security_rate_limit_counters
        WHERE key = $1 AND window_start = $2`,
-      [key, windowStart],
+      [key, windowStart]
     );
 
     const row = result.rows[0];
@@ -184,10 +173,7 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
    * Reset a security-critical counter by key — deletes all rows for `key`.
    */
   async resetSecurity(key: string): Promise<void> {
-    await this.query(
-      `DELETE FROM security_rate_limit_counters WHERE key = $1`,
-      [key],
-    );
+    await this.query(`DELETE FROM security_rate_limit_counters WHERE key = $1`, [key]);
   }
 
   // -----------------------------------------------------------------------
@@ -204,13 +190,13 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     const mainResult = await this.query(
       `DELETE FROM rate_limit_counters
        WHERE window_start + window_ms < $1`,
-      [cutoff],
+      [cutoff]
     );
 
     const secResult = await this.query(
       `DELETE FROM security_rate_limit_counters
        WHERE window_start + window_ms < $1`,
-      [cutoff],
+      [cutoff]
     );
 
     const total = Number(mainResult.rowCount ?? 0) + Number(secResult.rowCount ?? 0);

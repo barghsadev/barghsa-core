@@ -1,4 +1,4 @@
-import { defineConfig } from 'drizzle-kit'
+import { defineConfig } from 'drizzle-kit';
 
 /**
  * Drizzle Kit configuration for the @barghsa/db package.
@@ -19,4 +19,4 @@ export default defineConfig({
     casing: 'camel',
   },
   // extensions: { extensions: ['plv8'] }, // Uncomment if plv8 extension is used in the target database
-})
+});

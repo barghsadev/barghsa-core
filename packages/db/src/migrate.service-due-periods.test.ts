@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { sql } from 'drizzle-orm'
-import { migrate } from 'drizzle-orm/node-postgres/migrator'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
-import type { IsolatedTestDb } from './test/testDb'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { sql } from 'drizzle-orm';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createIsolatedTestDb, dropTestSchema } from './test/testDb';
+import type { IsolatedTestDb } from './test/testDb';
 
 /**
  * Proves production `migrate()` (drizzle-orm journal discovery) applies
@@ -18,48 +18,45 @@ import type { IsolatedTestDb } from './test/testDb'
  * journaled after 0059 so migrate() also applies it.
  */
 
-const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
-const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json')
-const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql')
-const AMOUNT_MIGRATION = resolve(
-  DRIZZLE_FOLDER,
-  '0052_add_invoice_amount_check_constraints.sql',
-)
-const DUE_PERIODS_TAG = '0059_create_service_due_periods'
+const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle');
+const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json');
+const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql');
+const AMOUNT_MIGRATION = resolve(DRIZZLE_FOLDER, '0052_add_invoice_amount_check_constraints.sql');
+const DUE_PERIODS_TAG = '0059_create_service_due_periods';
 /** `when` of journal tag 0058 — last entry before 0059 was registered. */
-const PRIOR_JOURNAL_HEAD_WHEN = 1750000000000
+const PRIOR_JOURNAL_HEAD_WHEN = 1750000000000;
 
 describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
-  let ctx: IsolatedTestDb
-  let duePeriodsWhen: number
+  let ctx: IsolatedTestDb;
+  let duePeriodsWhen: number;
 
   beforeAll(async () => {
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
-      entries: Array<{ tag: string; when: number }>
-    }
-    const duePeriodsEntry = journal.entries.find((entry) => entry.tag === DUE_PERIODS_TAG)
+      entries: Array<{ tag: string; when: number }>;
+    };
+    const duePeriodsEntry = journal.entries.find((entry) => entry.tag === DUE_PERIODS_TAG);
     if (!duePeriodsEntry) {
       throw new Error(
-        `${DUE_PERIODS_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
-      )
+        `${DUE_PERIODS_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`
+      );
     }
     if (duePeriodsEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
       throw new Error(
-        `${DUE_PERIODS_TAG} journal 'when' (${duePeriodsEntry.when}) must be after 0058 (${PRIOR_JOURNAL_HEAD_WHEN})`,
-      )
+        `${DUE_PERIODS_TAG} journal 'when' (${duePeriodsEntry.when}) must be after 0058 (${PRIOR_JOURNAL_HEAD_WHEN})`
+      );
     }
-    duePeriodsWhen = duePeriodsEntry.when
+    duePeriodsWhen = duePeriodsEntry.when;
 
-    ctx = await createIsolatedTestDb()
+    ctx = await createIsolatedTestDb();
 
-    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(uuidSql)
+    const uuidSql = readFileSync(UUIDV7_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(uuidSql);
 
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY
       )
-    `)
+    `);
     // 0060 (invoice_reminder_schedule), 0061 (unique index), 0062
     // (offset toggles), and 0063 (cancel on stop state) are journaled
     // after 0059; migrate() will also apply them and needs the invoices
@@ -69,19 +66,19 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
         'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
-    const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim()
-    await ctx.pool.query(amountSql)
+    `);
+    const amountSql = readFileSync(AMOUNT_MIGRATION, 'utf-8').trim();
+    await ctx.pool.query(amountSql);
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
@@ -89,22 +86,22 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         hash text NOT NULL,
         created_at bigint
       )
-    `)
-    await ctx.pool.query(
-      `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-      ['prior-journal-head-0058', PRIOR_JOURNAL_HEAD_WHEN],
-    )
+    `);
+    await ctx.pool.query(`INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`, [
+      'prior-journal-head-0058',
+      PRIOR_JOURNAL_HEAD_WHEN,
+    ]);
 
     await migrate(ctx.db, {
       migrationsFolder: DRIZZLE_FOLDER,
       migrationsSchema: ctx.schemaName,
-    })
-  })
+    });
+  });
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   it('creates service_due_periods through the journaled migrate() path', async () => {
     const cols = await ctx.db.execute<{ column_name: string }>(sql`
@@ -113,7 +110,7 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
       WHERE table_schema = current_schema()
         AND table_name = 'service_due_periods'
       ORDER BY ordinal_position
-    `)
+    `);
     expect(cols.rows.map((row) => row.column_name)).toEqual(
       expect.arrayContaining([
         'id',
@@ -124,9 +121,9 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
         'created_by',
         'created_at',
         'updated_at',
-      ]),
-    )
-  })
+      ])
+    );
+  });
 
   it('records 0059 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
@@ -134,9 +131,9 @@ describe('drizzle migrate() applies service_due_periods (T-04.1.03.01)', () => {
        FROM __drizzle_migrations
        WHERE created_at > $1
        ORDER BY created_at ASC`,
-      [PRIOR_JOURNAL_HEAD_WHEN],
-    )
-    expect(rows.rows.length).toBeGreaterThanOrEqual(1)
-    expect(rows.rows.map((row) => Number(row.created_at))).toContain(duePeriodsWhen)
-  })
-})
+      [PRIOR_JOURNAL_HEAD_WHEN]
+    );
+    expect(rows.rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows.rows.map((row) => Number(row.created_at))).toContain(duePeriodsWhen);
+  });
+});

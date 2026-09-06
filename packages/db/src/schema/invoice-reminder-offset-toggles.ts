@@ -1,8 +1,8 @@
-import { domainCheckEntries } from '../domain-checks'
-import { sql } from 'drizzle-orm'
-import { boolean, integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
-import { baseColumns } from '../base-table'
-import { users } from './users'
+import { domainCheckEntries } from '../domain-checks';
+import { sql } from 'drizzle-orm';
+import { boolean, integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { baseColumns } from '../base-table';
+import { users } from './users';
 
 /**
  * Admin reminder-offset toggles (T-04.1.04.05).
@@ -48,10 +48,10 @@ export const invoiceReminderOffsetToggles = pgTable(
     ...domainCheckEntries('invoice_reminder_offset_toggles'),
     serviceTypeOffsetUnique: uniqueIndex('uq_invoice_reminder_offset_toggles_type_offset').on(
       table.serviceType,
-      table.offset,
+      table.offset
     ),
-  }),
-)
+  })
+);
 
 /** SQL to create the invoice_reminder_offset_toggles table (migration 0062 source). */
 export const createInvoiceReminderOffsetTogglesTable = sql`
@@ -91,4 +91,4 @@ export const createInvoiceReminderOffsetTogglesTable = sql`
     BEFORE UPDATE ON invoice_reminder_offset_toggles
     FOR EACH ROW
     EXECUTE FUNCTION update_invoice_reminder_offset_toggles_updated_at();
-`
+`;

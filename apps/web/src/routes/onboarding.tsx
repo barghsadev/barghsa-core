@@ -1,35 +1,35 @@
-import { withCsrf } from '../lib/csrf.js'
-import { useState } from 'react'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
+import { withCsrf } from '../lib/csrf.js';
+import { useState } from 'react';
+import { createFileRoute, useRouter } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
 
 export const Route = createFileRoute('/onboarding')({
   component: OnboardingPage,
-})
+});
 
-type ProfileType = 'INDIVIDUAL' | 'LEGAL'
+type ProfileType = 'INDIVIDUAL' | 'LEGAL';
 
 function OnboardingPage() {
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
-  const isRtl = locale === 'fa'
-  const router = useRouter()
+  const locale: Locale = 'fa'; // TODO: read from user preference / locale context
+  const isRtl = locale === 'fa';
+  const router = useRouter();
 
-  const [selectedType, setSelectedType] = useState<ProfileType | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [selectedType, setSelectedType] = useState<ProfileType | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleContinue() {
     if (!selectedType) {
       setError(
         isRtl
-          ? t('onboarding.type.error.required', 'fa') ?? 'لطفاً نوع پروفایل را انتخاب کنید'
-          : t('onboarding.type.error.required', 'en') ?? 'Please select a profile type',
-      )
-      return
+          ? (t('onboarding.type.error.required', 'fa') ?? 'لطفاً نوع پروفایل را انتخاب کنید')
+          : (t('onboarding.type.error.required', 'en') ?? 'Please select a profile type')
+      );
+      return;
     }
 
-    setSubmitting(true)
-    setError(null)
+    setSubmitting(true);
+    setError(null);
 
     try {
       const response = await fetch('/api/onboarding/start', {
@@ -37,14 +37,14 @@ function OnboardingPage() {
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ profileType: selectedType }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        throw new Error(body.message ?? `HTTP ${response.status}`)
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.message ?? `HTTP ${response.status}`);
       }
 
-      const body = await response.json() as { profileId: string }
+      const body = (await response.json()) as { profileId: string };
 
       // Navigate to the appropriate profile form
       if (selectedType === 'INDIVIDUAL') {
@@ -52,19 +52,19 @@ function OnboardingPage() {
           to: '/onboarding/individual/$profileId',
           params: { profileId: body.profileId },
           replace: true,
-        })
+        });
       } else {
         router.navigate({
           to: '/onboarding/legal/$profileId',
           params: { profileId: body.profileId },
           replace: true,
-        })
+        });
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-      setError(message)
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      setError(message);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
@@ -84,17 +84,15 @@ function OnboardingPage() {
           {t('onboarding.welcome.subtitleEn', locale)}
         </p>
 
-        <p className="mb-4 text-base font-medium">
-          {t('onboarding.type.prompt', locale)}
-        </p>
+        <p className="mb-4 text-base font-medium">{t('onboarding.type.prompt', locale)}</p>
 
         <div className="flex flex-col gap-4 sm:flex-row">
           {/* Individual card */}
           <button
             type="button"
             onClick={() => {
-              setSelectedType('INDIVIDUAL')
-              setError(null)
+              setSelectedType('INDIVIDUAL');
+              setError(null);
             }}
             className={`flex flex-1 flex-col items-center rounded-lg border-2 p-6 text-center transition-colors ${
               selectedType === 'INDIVIDUAL'
@@ -121,8 +119,8 @@ function OnboardingPage() {
           <button
             type="button"
             onClick={() => {
-              setSelectedType('LEGAL')
-              setError(null)
+              setSelectedType('LEGAL');
+              setError(null);
             }}
             className={`flex flex-1 flex-col items-center rounded-lg border-2 p-6 text-center transition-colors ${
               selectedType === 'LEGAL'
@@ -134,9 +132,7 @@ function OnboardingPage() {
             <span className="mb-2 text-3xl" aria-hidden="true">
               🏢
             </span>
-            <h2 className="mb-1 text-lg font-semibold">
-              {t('onboarding.profile.legal', locale)}
-            </h2>
+            <h2 className="mb-1 text-lg font-semibold">{t('onboarding.profile.legal', locale)}</h2>
             <p className="text-sm text-muted-foreground">
               {t('onboarding.profile.legalDesc', locale)}
             </p>
@@ -158,11 +154,9 @@ function OnboardingPage() {
           disabled={!selectedType || submitting}
           className="mt-6 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {submitting
-            ? '…'
-            : t('onboarding.type.continue', locale)}
+          {submitting ? '…' : t('onboarding.type.continue', locale)}
         </button>
       </div>
     </div>
-  )
+  );
 }

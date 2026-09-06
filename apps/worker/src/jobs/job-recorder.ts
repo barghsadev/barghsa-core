@@ -1,14 +1,11 @@
-import { getDbPool } from '@barghsa/db'
-import {
-  BACKGROUND_JOB_TYPES,
-  type BackgroundJobType,
-} from '@barghsa/shared/admin'
-import { sanitizeError } from '../notifications/error-redact.js'
+import { getDbPool } from '@barghsa/db';
+import { BACKGROUND_JOB_TYPES, type BackgroundJobType } from '@barghsa/shared/admin';
+import { sanitizeError } from '../notifications/error-redact.js';
 
 /**
  * Default retry budget before a job is dead-lettered (T-09.09.02).
  */
-export const DEFAULT_MAX_ATTEMPTS = 5
+export const DEFAULT_MAX_ATTEMPTS = 5;
 
 /**
  * Back-off applied when a job keeps failing, so the admin dashboard reflects
@@ -16,29 +13,29 @@ export const DEFAULT_MAX_ATTEMPTS = 5
  * their own cadence regardless; this field is for triage display and future
  * schedule-aware runners.
  */
-const RETRY_BACKOFF_MS = 60_000
+const RETRY_BACKOFF_MS = 60_000;
 
 /**
  * The predicate of the `background_jobs` partial unique index that scopes the
  * `ON CONFLICT` upsert target (see migration 0041). Kept in one place so the
  * recorder SQL and the migration constraint cannot drift.
  */
-const ACTIVE_STATUSES_SQL = "status IN ('failed', 'retrying', 'dead_letter')"
+const ACTIVE_STATUSES_SQL = "status IN ('failed', 'retrying', 'dead_letter')";
 
 /**
  * Input for {@link recordJobFailure}.
  */
 export interface RecordFailureInput {
   /** Stable worker task key, e.g. 'service_breach_scan'. */
-  jobType: BackgroundJobType
+  jobType: BackgroundJobType;
   /** Sanitized error message (never raw secrets). */
-  error: string
+  error: string;
   /** Whether the failure is transient (retryable) or permanent. */
-  errorCategory?: 'transient' | 'permanent' | 'provider'
+  errorCategory?: 'transient' | 'permanent' | 'provider';
   /** Masked job context for triage (must not contain secrets). */
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown>;
   /** Retry budget before the job is dead-lettered. */
-  maxAttempts?: number
+  maxAttempts?: number;
 }
 
 /**
@@ -68,17 +65,18 @@ export interface RecordFailureInput {
 export async function recordJobFailure(
   input: RecordFailureInput,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool?: any,
+  pool?: any
 ): Promise<void> {
   try {
-    const p = pool ?? getDbPool()
-    const safeMessage = sanitizeError(input.error)
-    const category = input.errorCategory ?? 'transient'
-    const maxAttempts = Number.isInteger(input.maxAttempts) && (input.maxAttempts ?? 0) >= 1
-      ? (input.maxAttempts as number)
-      : DEFAULT_MAX_ATTEMPTS
-    const now = new Date()
-    const nextRunAt = new Date(now.getTime() + RETRY_BACKOFF_MS)
+    const p = pool ?? getDbPool();
+    const safeMessage = sanitizeError(input.error);
+    const category = input.errorCategory ?? 'transient';
+    const maxAttempts =
+      Number.isInteger(input.maxAttempts) && (input.maxAttempts ?? 0) >= 1
+        ? (input.maxAttempts as number)
+        : DEFAULT_MAX_ATTEMPTS;
+    const now = new Date();
+    const nextRunAt = new Date(now.getTime() + RETRY_BACKOFF_MS);
 
     await p.query(
       `INSERT INTO background_jobs
@@ -113,12 +111,12 @@ export async function recordJobFailure(
         JSON.stringify(input.payload ?? {}),
         now,
         nextRunAt,
-      ],
-    )
+      ]
+    );
   } catch (err) {
     // A ledger failure must never crash the worker loop.
     // eslint-disable-next-line no-console
-    console.error(`[worker] failed to record job failure: ${sanitizeError(String(err))}`)
+    console.error(`[worker] failed to record job failure: ${sanitizeError(String(err))}`);
   }
 }
 
@@ -130,11 +128,11 @@ export async function recordJobFailure(
 export async function recordJobSuccess(
   jobType: BackgroundJobType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pool?: any,
+  pool?: any
 ): Promise<void> {
   try {
-    const p = pool ?? getDbPool()
-    const now = new Date()
+    const p = pool ?? getDbPool();
+    const now = new Date();
     await p.query(
       `UPDATE background_jobs
           SET status = 'resolved',
@@ -143,13 +141,13 @@ export async function recordJobSuccess(
               updated_at = $2
         WHERE job_type = $1
           AND status IN ('failed', 'retrying', 'dead_letter')`,
-      [jobType, now],
-    )
+      [jobType, now]
+    );
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.error(`[worker] failed to record job success: ${sanitizeError(String(err))}`)
+    console.error(`[worker] failed to record job success: ${sanitizeError(String(err))}`);
   }
 }
 
 /** Re-export the known job types so worker call sites validate keys. */
-export const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key)
+export const JOB_TYPES = BACKGROUND_JOB_TYPES.map((t) => t.key);

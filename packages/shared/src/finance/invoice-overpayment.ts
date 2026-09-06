@@ -10,7 +10,7 @@
  * @module finance
  */
 
-import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js'
+import { BANK_RECEIPT_TOPUP_CHANNEL } from './wallet-bank-receipt-topup.js';
 
 /**
  * Invoice states that can still absorb a bank-receipt allocation.
@@ -24,10 +24,10 @@ export const BANK_RECEIPT_SETTLEABLE_INVOICE_STATES = [
   'PaymentUnderReview',
   'PartiallyFunded',
   'Overdue',
-] as const
+] as const;
 
 export type BankReceiptSettleableInvoiceState =
-  (typeof BANK_RECEIPT_SETTLEABLE_INVOICE_STATES)[number]
+  (typeof BANK_RECEIPT_SETTLEABLE_INVOICE_STATES)[number];
 
 /**
  * Invoice states staff may bind a receipt to for overpayment handling.
@@ -42,76 +42,72 @@ export type BankReceiptSettleableInvoiceState =
 export const BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES = [
   ...BANK_RECEIPT_SETTLEABLE_INVOICE_STATES,
   'Paid',
-] as const
+] as const;
 
 export type BankReceiptInvoiceLinkAllowedState =
-  (typeof BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES)[number]
+  (typeof BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES)[number];
 
 /** Human-readable description on the Completed overpayment credit row. */
-export const BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION =
-  'Bank receipt overpayment wallet credit'
+export const BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION = 'Bank receipt overpayment wallet credit';
 
 export const BANK_RECEIPT_OVERPAYMENT_ERRORS = {
   BAD_RECEIPT_AMOUNT: () => 'Receipt amount must be a positive integer IRR value',
   BAD_REMAINING: () => 'Invoice remaining must be a non-negative integer IRR value',
   BAD_INVOICE_ID: () => 'invoiceId must be a UUID when applying a receipt to an invoice',
   PROFILE_MISMATCH: () => 'Invoice does not belong to this wallet profile',
-  CANNOT_OVERSETTLE: () =>
-    'Invoice remaining changed; the receipt would over-settle the invoice',
+  CANNOT_OVERSETTLE: () => 'Invoice remaining changed; the receipt would over-settle the invoice',
   INVOICE_STATE_NOT_SETTLEABLE: (state: string) =>
     `Invoice in state '${state}' cannot receive a bank-receipt allocation`,
-} as const
+} as const;
 
-const UUID_RE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export interface ReceiptAgainstInvoiceAllocation {
-  invoiceAllocation: bigint
-  walletCreditAmount: bigint
-  isOverpayment: boolean
+  invoiceAllocation: bigint;
+  walletCreditAmount: bigint;
+  isOverpayment: boolean;
 }
 
 export interface BankReceiptOverpaymentSnapshot {
-  invoiceId: string
-  remainingBefore: string
-  invoiceAllocation: string
-  walletCreditAmount: string
-  overpaymentCreditTransactionId: string | null
+  invoiceId: string;
+  remainingBefore: string;
+  invoiceAllocation: string;
+  walletCreditAmount: string;
+  overpaymentCreditTransactionId: string | null;
 }
 
 export interface ParseOptionalInvoiceIdSuccess {
-  ok: true
-  invoiceId: string | null
+  ok: true;
+  invoiceId: string | null;
 }
 
 export interface ParseOptionalInvoiceIdFailure {
-  ok: false
-  message: string
+  ok: false;
+  message: string;
 }
 
 export type ParseOptionalInvoiceIdResult =
-  | ParseOptionalInvoiceIdSuccess
-  | ParseOptionalInvoiceIdFailure
+  ParseOptionalInvoiceIdSuccess | ParseOptionalInvoiceIdFailure;
 
 /**
  * Remaining payable IRR. Never negative: a paid-in-full invoice has
  * remaining 0 even if callers pass a stale paidAmount.
  */
 export function invoiceRemainingAmount(totalAmount: bigint, paidAmount: bigint): bigint {
-  if (totalAmount < 0n || paidAmount < 0n) return 0n
-  return totalAmount > paidAmount ? totalAmount - paidAmount : 0n
+  if (totalAmount < 0n || paidAmount < 0n) return 0n;
+  return totalAmount > paidAmount ? totalAmount - paidAmount : 0n;
 }
 
 export function isBankReceiptSettleableInvoiceState(
-  state: string,
+  state: string
 ): state is BankReceiptSettleableInvoiceState {
-  return (BANK_RECEIPT_SETTLEABLE_INVOICE_STATES as readonly string[]).includes(state)
+  return (BANK_RECEIPT_SETTLEABLE_INVOICE_STATES as readonly string[]).includes(state);
 }
 
 export function isBankReceiptInvoiceLinkAllowedState(
-  state: string,
+  state: string
 ): state is BankReceiptInvoiceLinkAllowedState {
-  return (BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES as readonly string[]).includes(state)
+  return (BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES as readonly string[]).includes(state);
 }
 
 /**
@@ -122,12 +118,12 @@ export function isBankReceiptInvoiceLinkAllowedState(
  * {@link BANK_RECEIPT_INVOICE_LINK_ALLOWED_STATES}.
  */
 export function remainingForBankReceiptSettlement(input: {
-  totalAmount: bigint
-  paidAmount: bigint
-  state: string
+  totalAmount: bigint;
+  paidAmount: bigint;
+  state: string;
 }): bigint {
-  if (!isBankReceiptSettleableInvoiceState(input.state)) return 0n
-  return invoiceRemainingAmount(input.totalAmount, input.paidAmount)
+  if (!isBankReceiptSettleableInvoiceState(input.state)) return 0n;
+  return invoiceRemainingAmount(input.totalAmount, input.paidAmount);
 }
 
 /**
@@ -136,10 +132,10 @@ export function remainingForBankReceiptSettlement(input: {
  * (SubmitBankReceipt into PaymentUnderReview when needed, then confirm).
  */
 export function invoiceStateAfterBankReceiptAllocation(input: {
-  paidAmount: bigint
-  totalAmount: bigint
+  paidAmount: bigint;
+  totalAmount: bigint;
 }): 'Paid' | 'PartiallyFunded' {
-  return input.paidAmount >= input.totalAmount ? 'Paid' : 'PartiallyFunded'
+  return input.paidAmount >= input.totalAmount ? 'Paid' : 'PartiallyFunded';
 }
 
 /**
@@ -149,60 +145,58 @@ export function invoiceStateAfterBankReceiptAllocation(input: {
  * `walletCreditAmount = receiptAmount - invoiceAllocation`
  */
 export function allocateReceiptAgainstInvoice(input: {
-  receiptAmount: bigint
-  remaining: bigint
+  receiptAmount: bigint;
+  remaining: bigint;
 }): ReceiptAgainstInvoiceAllocation {
   if (input.receiptAmount <= 0n) {
-    throw new RangeError(BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_RECEIPT_AMOUNT())
+    throw new RangeError(BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_RECEIPT_AMOUNT());
   }
   if (input.remaining < 0n) {
-    throw new RangeError(BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_REMAINING())
+    throw new RangeError(BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_REMAINING());
   }
   const invoiceAllocation =
-    input.receiptAmount < input.remaining ? input.receiptAmount : input.remaining
-  const walletCreditAmount = input.receiptAmount - invoiceAllocation
+    input.receiptAmount < input.remaining ? input.receiptAmount : input.remaining;
+  const walletCreditAmount = input.receiptAmount - invoiceAllocation;
   return {
     invoiceAllocation,
     walletCreditAmount,
     isOverpayment: walletCreditAmount > 0n,
-  }
+  };
 }
 
 /**
  * Distinct from `bankReceiptCreditIdempotencyKey` so the excess credit
  * cannot collide with a full wallet-top-up credit of the same pending row.
  */
-export function bankReceiptOverpaymentCreditIdempotencyKey(
-  pendingTransactionId: string,
-): string {
-  return `wallet-bank-receipt-overpayment-credit:${pendingTransactionId}`
+export function bankReceiptOverpaymentCreditIdempotencyKey(pendingTransactionId: string): string {
+  return `wallet-bank-receipt-overpayment-credit:${pendingTransactionId}`;
 }
 
 export function parseOptionalInvoiceId(raw: unknown): ParseOptionalInvoiceIdResult {
   if (raw === undefined || raw === null) {
-    return { ok: true, invoiceId: null }
+    return { ok: true, invoiceId: null };
   }
   if (typeof raw !== 'object' || Array.isArray(raw)) {
-    return { ok: false, message: BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID() }
+    return { ok: false, message: BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID() };
   }
-  const value = (raw as { invoiceId?: unknown }).invoiceId
+  const value = (raw as { invoiceId?: unknown }).invoiceId;
   if (value === undefined || value === null || value === '') {
-    return { ok: true, invoiceId: null }
+    return { ok: true, invoiceId: null };
   }
   if (typeof value !== 'string' || !UUID_RE.test(value.trim())) {
-    return { ok: false, message: BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID() }
+    return { ok: false, message: BANK_RECEIPT_OVERPAYMENT_ERRORS.BAD_INVOICE_ID() };
   }
-  return { ok: true, invoiceId: value.trim().toLowerCase() }
+  return { ok: true, invoiceId: value.trim().toLowerCase() };
 }
 
 export function bankReceiptOverpaymentCreditMetadata(input: {
-  pendingTransactionId: string
-  invoiceId: string
-  confirmedBy: string
-  confirmedAt: Date
-  invoiceAllocation: bigint
-  walletCreditAmount: bigint
-  remainingBefore: bigint
+  pendingTransactionId: string;
+  invoiceId: string;
+  confirmedBy: string;
+  confirmedAt: Date;
+  invoiceAllocation: bigint;
+  walletCreditAmount: bigint;
+  remainingBefore: bigint;
 }): Record<string, unknown> {
   return {
     channel: BANK_RECEIPT_TOPUP_CHANNEL,
@@ -214,15 +208,15 @@ export function bankReceiptOverpaymentCreditMetadata(input: {
     invoiceAllocation: input.invoiceAllocation.toString(),
     walletCreditAmount: input.walletCreditAmount.toString(),
     remainingBefore: input.remainingBefore.toString(),
-  }
+  };
 }
 
 export function bankReceiptOverpaymentSnapshot(input: {
-  invoiceId: string
-  remainingBefore: bigint
-  invoiceAllocation: bigint
-  walletCreditAmount: bigint
-  overpaymentCreditTransactionId: string | null
+  invoiceId: string;
+  remainingBefore: bigint;
+  invoiceAllocation: bigint;
+  walletCreditAmount: bigint;
+  overpaymentCreditTransactionId: string | null;
 }): BankReceiptOverpaymentSnapshot {
   return {
     invoiceId: input.invoiceId,
@@ -230,20 +224,20 @@ export function bankReceiptOverpaymentSnapshot(input: {
     invoiceAllocation: input.invoiceAllocation.toString(),
     walletCreditAmount: input.walletCreditAmount.toString(),
     overpaymentCreditTransactionId: input.overpaymentCreditTransactionId,
-  }
+  };
 }
 
 export function readBankReceiptOverpaymentSnapshot(
-  metadata: unknown,
+  metadata: unknown
 ): BankReceiptOverpaymentSnapshot | null {
-  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return null
-  const record = (metadata as { overpayment?: unknown }).overpayment
-  if (!record || typeof record !== 'object' || Array.isArray(record)) return null
-  const snap = record as Record<string, unknown>
-  if (typeof snap.invoiceId !== 'string') return null
-  if (typeof snap.remainingBefore !== 'string') return null
-  if (typeof snap.invoiceAllocation !== 'string') return null
-  if (typeof snap.walletCreditAmount !== 'string') return null
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return null;
+  const record = (metadata as { overpayment?: unknown }).overpayment;
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
+  const snap = record as Record<string, unknown>;
+  if (typeof snap.invoiceId !== 'string') return null;
+  if (typeof snap.remainingBefore !== 'string') return null;
+  if (typeof snap.invoiceAllocation !== 'string') return null;
+  if (typeof snap.walletCreditAmount !== 'string') return null;
   return {
     invoiceId: snap.invoiceId,
     remainingBefore: snap.remainingBefore,
@@ -253,7 +247,7 @@ export function readBankReceiptOverpaymentSnapshot(
       typeof snap.overpaymentCreditTransactionId === 'string'
         ? snap.overpaymentCreditTransactionId
         : null,
-  }
+  };
 }
 
 /**
@@ -263,29 +257,29 @@ export function readBankReceiptOverpaymentSnapshot(
  * full receipt face value, which would overstate the wallet credit.
  */
 export interface BankReceiptOverpaymentCompletedNoticeFields {
-  invoice_id: string
-  invoice_allocation: string
-  remaining_before: string
-  wallet_credit_amount: string
-  is_overpayment: true
+  invoice_id: string;
+  invoice_allocation: string;
+  remaining_before: string;
+  wallet_credit_amount: string;
+  is_overpayment: true;
 }
 
 export function bankReceiptOverpaymentCompletedNoticeFields(
-  overpayment: BankReceiptOverpaymentSnapshot | null | undefined,
+  overpayment: BankReceiptOverpaymentSnapshot | null | undefined
 ): BankReceiptOverpaymentCompletedNoticeFields | null {
-  if (!overpayment) return null
-  let excess: bigint
+  if (!overpayment) return null;
+  let excess: bigint;
   try {
-    excess = BigInt(overpayment.walletCreditAmount)
+    excess = BigInt(overpayment.walletCreditAmount);
   } catch {
-    return null
+    return null;
   }
-  if (excess <= 0n) return null
+  if (excess <= 0n) return null;
   return {
     invoice_id: overpayment.invoiceId,
     invoice_allocation: overpayment.invoiceAllocation,
     remaining_before: overpayment.remainingBefore,
     wallet_credit_amount: overpayment.walletCreditAmount,
     is_overpayment: true,
-  }
+  };
 }

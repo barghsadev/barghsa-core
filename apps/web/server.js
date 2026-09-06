@@ -200,7 +200,7 @@ export function createStaticServer(options = {}) {
     };
 
     log(
-      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${gracePeriodMs / 1_000}s deadline)`,
+      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${gracePeriodMs / 1_000}s deadline)`
     );
 
     // Safety-net timer — force exit if the deadline expires
@@ -239,7 +239,9 @@ export function createStaticServer(options = {}) {
     // that were never started.
   };
 
-  return /** @type {import('node:http').Server & { shutdown: (signal?: string) => void }} */ (server);
+  return /** @type {import('node:http').Server & { shutdown: (signal?: string) => void }} */ (
+    server
+  );
 }
 
 // ── Auto-start when run directly (Docker CMD) ─────────────

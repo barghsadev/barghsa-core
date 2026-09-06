@@ -1,4 +1,4 @@
-import { getDbPool } from './index.js'
+import { getDbPool } from './index.js';
 
 // ---------------------------------------------------------------------------
 // Type definitions for PostgreSQL performance metrics collected from system
@@ -9,96 +9,96 @@ import { getDbPool } from './index.js'
 export interface DatabaseMetrics {
   /** Global database-level counters from pg_stat_database */
   database: {
-    xact_commit: number
-    xact_rollback: number
-    blks_read: number
-    blks_hit: number
-    tup_returned: number
-    tup_fetched: number
-    tup_inserted: number
-    tup_updated: number
-    tup_deleted: number
-    conflicts: number
-    deadlocks: number
-    blk_read_time: number
-    blk_write_time: number
-    temp_files: number
-    temp_bytes: number
-  }
+    xact_commit: number;
+    xact_rollback: number;
+    blks_read: number;
+    blks_hit: number;
+    tup_returned: number;
+    tup_fetched: number;
+    tup_inserted: number;
+    tup_updated: number;
+    tup_deleted: number;
+    conflicts: number;
+    deadlocks: number;
+    blk_read_time: number;
+    blk_write_time: number;
+    temp_files: number;
+    temp_bytes: number;
+  };
   /** Cache hit ratio (0–1), calculated from blks_hit / (blks_hit + blks_read) */
-  cacheHitRatio: number
+  cacheHitRatio: number;
   /** Connection pool saturation (0–1) — total client connections / PG max_connections */
-  connectionSaturation: number
+  connectionSaturation: number;
   /** PostgreSQL server max_connections setting */
-  maxConnections: number
+  maxConnections: number;
   /** Number of active connections currently executing a query */
-  activeConnections: number
+  activeConnections: number;
   /** Number of idle-in-transaction connections (potential issues) */
-  idleInTransaction: number
+  idleInTransaction: number;
   /** Number of connections waiting on a lock */
-  waitingConnections: number
+  waitingConnections: number;
   /** Long-running queries (>= the given threshold) */
   longRunningQueries: Array<{
-    pid: number
-    query: string
-    durationSeconds: number
-    state: string
-    waitEvent: string | null
-  }>
+    pid: number;
+    query: string;
+    durationSeconds: number;
+    state: string;
+    waitEvent: string | null;
+  }>;
   /** WAL metrics from pg_stat_wal (PG 14+) */
   wal: {
-    wal_records: number
-    wal_fpi: number
-    wal_bytes: number
-    wal_buffers_full: number
-    wal_write: number
-    wal_sync: number
-    wal_write_time: number
-    wal_sync_time: number
-  } | null
+    wal_records: number;
+    wal_fpi: number;
+    wal_bytes: number;
+    wal_buffers_full: number;
+    wal_write: number;
+    wal_sync: number;
+    wal_write_time: number;
+    wal_sync_time: number;
+  } | null;
   /** Background writer stats from pg_stat_bgwriter */
   bgwriter: {
-    checkpoints_timed: number
-    checkpoints_req: number
-    checkpoint_write_time: number
-    checkpoint_sync_time: number
-    buffers_checkpoint: number
-    buffers_clean: number
-    maxwritten_clean: number
-    buffers_backend: number
-    buffers_backend_fsync: number
-    buffers_alloc: number
-    stats_reset: string | null
-  } | null
+    checkpoints_timed: number;
+    checkpoints_req: number;
+    checkpoint_write_time: number;
+    checkpoint_sync_time: number;
+    buffers_checkpoint: number;
+    buffers_clean: number;
+    maxwritten_clean: number;
+    buffers_backend: number;
+    buffers_backend_fsync: number;
+    buffers_alloc: number;
+    stats_reset: string | null;
+  } | null;
   /** Query performance metrics from pg_stat_statements (top-N by total_time) */
   topQueries: Array<{
-    queryId: string
-    query: string
-    calls: number
-    totalTimeMs: number
-    meanTimeMs: number
-    rows: number
-    sharedBlksHit: number
-    sharedBlksRead: number
-    sharedBlksDirtied: number
-    sharedBlksWritten: number
-    localBlksHit: number
-    localBlksRead: number
-    tempBlksRead: number
-    tempBlksWritten: number
-    blkReadTimeMs: number
-    blkWriteTimeMs: number
-  }> | null
+    queryId: string;
+    query: string;
+    calls: number;
+    totalTimeMs: number;
+    meanTimeMs: number;
+    rows: number;
+    sharedBlksHit: number;
+    sharedBlksRead: number;
+    sharedBlksDirtied: number;
+    sharedBlksWritten: number;
+    localBlksHit: number;
+    localBlksRead: number;
+    tempBlksRead: number;
+    tempBlksWritten: number;
+    blkReadTimeMs: number;
+    blkWriteTimeMs: number;
+  }> | null;
 }
 
 export interface MetricsResult {
-  ok: boolean
-  metrics: DatabaseMetrics | null
-  error?: string
-  latencyMs: number
+  ok: boolean;
+  metrics: DatabaseMetrics | null;
+  error?: string;
+  latencyMs: number;
 }
 
-const SLOW_QUERY_THRESHOLD_SECONDS = 30
+const SLOW_QUERY_THRESHOLD_SECONDS = 30;
 
 /**
  * Collect replication lag from pg_stat_replication.
@@ -107,7 +107,7 @@ const SLOW_QUERY_THRESHOLD_SECONDS = 30
  */
 export async function collectReplicationLag(): Promise<number | null> {
   try {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(`
       SELECT
         COALESCE(
@@ -119,11 +119,11 @@ export async function collectReplicationLag(): Promise<number | null> {
       FROM pg_stat_replication
       WHERE state = 'streaming'
       LIMIT 1
-    `)
-    if (result.rows.length === 0) return null
-    return Number(result.rows[0].lag_seconds)
+    `);
+    if (result.rows.length === 0) return null;
+    return Number(result.rows[0].lag_seconds);
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -143,11 +143,11 @@ export async function collectReplicationLag(): Promise<number | null> {
  */
 export async function collectPerformanceMetrics(
   topN = 10,
-  slowThresholdSeconds = SLOW_QUERY_THRESHOLD_SECONDS,
+  slowThresholdSeconds = SLOW_QUERY_THRESHOLD_SECONDS
 ): Promise<MetricsResult> {
-  const startedAt = Date.now()
+  const startedAt = Date.now();
 
-  const pool = getDbPool()
+  const pool = getDbPool();
 
   try {
     // Query pg_stat_database for the barghsa database
@@ -172,7 +172,7 @@ export async function collectPerformanceMetrics(
         datname
       FROM pg_stat_database
       WHERE datname = current_database()
-    `)
+    `);
 
     // Query pg_stat_activity for connection state
     const activityStats = pool.query(`
@@ -184,10 +184,11 @@ export async function collectPerformanceMetrics(
       FROM pg_stat_activity
       WHERE backend_type = 'client backend'
         AND pid <> pg_backend_pid()
-    `)
+    `);
 
     // Query long-running queries
-    const longRunningStats = pool.query(`
+    const longRunningStats = pool.query(
+      `
       SELECT
         pid,
         query,
@@ -202,7 +203,9 @@ export async function collectPerformanceMetrics(
         AND pid <> pg_backend_pid()
       ORDER BY duration_seconds DESC
       LIMIT 20
-    `, [String(slowThresholdSeconds)])
+    `,
+      [String(slowThresholdSeconds)]
+    );
 
     // Query pg_stat_bgwriter
     const bgwriterStats = pool.query(`
@@ -219,7 +222,7 @@ export async function collectPerformanceMetrics(
         buffers_alloc,
         stats_reset
       FROM pg_stat_bgwriter
-    `)
+    `);
 
     // Query pg_stat_wal (PG 14+)
     const walStats = pool.query(`
@@ -233,10 +236,11 @@ export async function collectPerformanceMetrics(
         wal_write_time,
         wal_sync_time
       FROM pg_stat_wal
-    `)
+    `);
 
     // Query pg_stat_statements for top-N by total time
-    const queryStats = pool.query(`
+    const queryStats = pool.query(
+      `
       SELECT
         queryid,
         left(query, 200) AS query,
@@ -258,20 +262,27 @@ export async function collectPerformanceMetrics(
       WHERE calls > 0
       ORDER BY total_exec_time DESC
       LIMIT $1::integer
-    `, [String(topN)])
+    `,
+      [String(topN)]
+    );
 
     // Query server max_connections from pg_settings
     const maxConnResult = pool.query(`
       SELECT setting::integer AS max_connections
       FROM pg_settings
       WHERE name = 'max_connections'
-    `)
+    `);
 
     // Use allSettled so a single failing view doesn't kill all metrics
     const settled = await Promise.allSettled([
-      dbStats, activityStats, longRunningStats,
-      bgwriterStats, walStats, queryStats, maxConnResult,
-    ])
+      dbStats,
+      activityStats,
+      longRunningStats,
+      bgwriterStats,
+      walStats,
+      queryStats,
+      maxConnResult,
+    ]);
 
     const [
       dbResultSettled,
@@ -281,33 +292,39 @@ export async function collectPerformanceMetrics(
       walResultSettled,
       queryResultSettled,
       maxConnResultSettled,
-    ] = settled
+    ] = settled;
 
     // Gracefully handle each query result, defaulting to empty/null on failure
-    const dbResult = dbResultSettled.status === 'fulfilled' ? dbResultSettled.value : { rows: [] }
-    const activityResult = activityResultSettled.status === 'fulfilled' ? activityResultSettled.value : { rows: [] }
-    const longRunningResult = longRunningResultSettled.status === 'fulfilled' ? longRunningResultSettled.value : { rows: [] }
-    const bgwriterResult = bgwriterResultSettled.status === 'fulfilled' ? bgwriterResultSettled.value : { rows: [] }
-    const walResult = walResultSettled.status === 'fulfilled' ? walResultSettled.value : { rows: [] }
-    const queryResult = queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : { rows: [] }
+    const dbResult = dbResultSettled.status === 'fulfilled' ? dbResultSettled.value : { rows: [] };
+    const activityResult =
+      activityResultSettled.status === 'fulfilled' ? activityResultSettled.value : { rows: [] };
+    const longRunningResult =
+      longRunningResultSettled.status === 'fulfilled'
+        ? longRunningResultSettled.value
+        : { rows: [] };
+    const bgwriterResult =
+      bgwriterResultSettled.status === 'fulfilled' ? bgwriterResultSettled.value : { rows: [] };
+    const walResult =
+      walResultSettled.status === 'fulfilled' ? walResultSettled.value : { rows: [] };
+    const queryResult =
+      queryResultSettled.status === 'fulfilled' ? queryResultSettled.value : { rows: [] };
 
-    const maxConn = maxConnResultSettled.status === 'fulfilled' && maxConnResultSettled.value.rows.length > 0
-      ? Number(maxConnResultSettled.value.rows[0].max_connections)
-      : pool.options?.max ?? 100
+    const maxConn =
+      maxConnResultSettled.status === 'fulfilled' && maxConnResultSettled.value.rows.length > 0
+        ? Number(maxConnResultSettled.value.rows[0].max_connections)
+        : (pool.options?.max ?? 100);
 
-    const dbRow = dbResult.rows[0] ?? null
-    const actRow = activityResult.rows[0] ?? null
-    const maxConnections = maxConn
+    const dbRow = dbResult.rows[0] ?? null;
+    const actRow = activityResult.rows[0] ?? null;
+    const maxConnections = maxConn;
 
-    const blksHit = Number(dbRow?.blks_hit ?? 0)
-    const blksRead = Number(dbRow?.blks_read ?? 0)
-    const totalBlks = blksHit + blksRead
-    const cacheHitRatio = totalBlks > 0 ? blksHit / totalBlks : 1
+    const blksHit = Number(dbRow?.blks_hit ?? 0);
+    const blksRead = Number(dbRow?.blks_read ?? 0);
+    const totalBlks = blksHit + blksRead;
+    const cacheHitRatio = totalBlks > 0 ? blksHit / totalBlks : 1;
 
-    const totalConnections = Number(actRow?.total_connections ?? 0)
-    const connectionSaturation = maxConnections > 0
-      ? totalConnections / maxConnections
-      : 0
+    const totalConnections = Number(actRow?.total_connections ?? 0);
+    const connectionSaturation = maxConnections > 0 ? totalConnections / maxConnections : 0;
 
     const metrics: DatabaseMetrics = {
       database: {
@@ -387,19 +404,19 @@ export async function collectPerformanceMetrics(
         blkReadTimeMs: Number(r.blk_read_time ?? 0),
         blkWriteTimeMs: Number(r.blk_write_time ?? 0),
       })),
-    }
+    };
 
     return {
       ok: true,
       metrics,
       latencyMs: Date.now() - startedAt,
-    }
+    };
   } catch (err) {
     return {
       ok: false,
       metrics: null,
       error: err instanceof Error ? err.message : String(err),
       latencyMs: Date.now() - startedAt,
-    }
+    };
   }
 }

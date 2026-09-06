@@ -1215,14 +1215,14 @@ Unit tests cover configuration validation, secret masking, event/parameter mappi
 
 Barghsa is implemented as a TypeScript pnpm + Turborepo monorepo:
 
-| Path | Role |
-|------|------|
-| `apps/web` | TanStack Start frontend (shadcn/ui + Base UI, RTL, light/dark) |
-| `apps/api` | NestJS API gateway / modular monolith |
-| `packages/db` | Drizzle ORM schema + seed |
-| `packages/shared` | Shared Zod schemas / username helpers |
-| `packages/i18n` | FA (default) + EN dictionaries |
-| `packages/ui` | Shared shadcn/Base UI components |
+| Path              | Role                                                           |
+| ----------------- | -------------------------------------------------------------- |
+| `apps/web`        | TanStack Start frontend (shadcn/ui + Base UI, RTL, light/dark) |
+| `apps/api`        | NestJS API gateway / modular monolith                          |
+| `packages/db`     | Drizzle ORM schema + seed                                      |
+| `packages/shared` | Shared Zod schemas / username helpers                          |
+| `packages/i18n`   | FA (default) + EN dictionaries                                 |
+| `packages/ui`     | Shared shadcn/Base UI components                               |
 
 ### Prerequisites
 
@@ -1266,11 +1266,11 @@ pnpm dev:docker
 
 This sets the following environment variables:
 
-| Variable | Effect |
-|---|---|
-| `CHOKIDAR_USEPOLLING=true` | Enables polling for chokidar-based watchers (Vite dev server, NestJS `--watch` via SWC) |
-| `TSC_WATCHFILE=UseFsEventsWithPolling` | Tries native FS events, falls back to polling for `tsc --watch` (packages/ui, shared, i18n) |
-| `TURBO_DAEMON=false` | Disables Turborepo daemon — the daemon's file watcher is unnecessary for persistent `dev` tasks and may interfere with polling mode |
+| Variable                               | Effect                                                                                                                              |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `CHOKIDAR_USEPOLLING=true`             | Enables polling for chokidar-based watchers (Vite dev server, NestJS `--watch` via SWC)                                             |
+| `TSC_WATCHFILE=UseFsEventsWithPolling` | Tries native FS events, falls back to polling for `tsc --watch` (packages/ui, shared, i18n)                                         |
+| `TURBO_DAEMON=false`                   | Disables Turborepo daemon — the daemon's file watcher is unnecessary for persistent `dev` tasks and may interfere with polling mode |
 
 > **Note:** On native macOS (outside Docker), `pnpm dev` runs without polling and provides faster hot reload. The `dev:docker` script is only needed when the apps are running inside Docker containers on macOS.
 

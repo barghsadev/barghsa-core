@@ -1,1 +1,1 @@
-export * from '@barghsa/shared/auth-delivery'
+export * from '@barghsa/shared/auth-delivery';

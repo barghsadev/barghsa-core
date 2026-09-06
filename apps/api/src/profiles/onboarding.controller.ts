@@ -8,24 +8,24 @@ import {
   Logger,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ProfilesService } from './profiles.service.js'
-import { LegalProfilesService } from './legal-profiles.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProfilesService } from './profiles.service.js';
+import { LegalProfilesService } from './legal-profiles.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('Onboarding')
 @Controller('api/onboarding')
 @UseGuards(SessionAuthGuard)
 export class OnboardingController {
-  private readonly logger = new Logger(OnboardingController.name)
+  private readonly logger = new Logger(OnboardingController.name);
 
   constructor(
     private readonly profilesService: ProfilesService,
-    private readonly legalProfilesService: LegalProfilesService,
+    private readonly legalProfilesService: LegalProfilesService
   ) {}
 
   /**
@@ -56,9 +56,9 @@ export class OnboardingController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async startOnboarding(
     @Body() body: { profileType: string },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ profileId: string; profileType: 'INDIVIDUAL' | 'LEGAL'; isDefault: boolean }> {
-    const profileType = body.profileType?.toUpperCase()
+    const profileType = body.profileType?.toUpperCase();
 
     if (profileType !== 'INDIVIDUAL' && profileType !== 'LEGAL') {
       throw new HttpException(
@@ -67,24 +67,21 @@ export class OnboardingController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'profileType must be INDIVIDUAL or LEGAL',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const profile = await this.profilesService.createProfile(
-      req.session.userId,
-      profileType,
-    )
+    const profile = await this.profilesService.createProfile(req.session.userId, profileType);
 
     this.logger.log(
-      `Onboarding started for user ${req.session.userId}: profile ${profile.id} (${profileType})`,
-    )
+      `Onboarding started for user ${req.session.userId}: profile ${profile.id} (${profileType})`
+    );
 
     return {
       profileId: profile.id,
       profileType: profile.profileType,
       isDefault: profile.isDefault,
-    }
+    };
   }
 
   /**
@@ -121,86 +118,131 @@ export class OnboardingController {
   @ApiResponse({ status: 409, description: 'National ID already registered' })
   async saveIndividualProfile(
     @Param('profileId') profileId: string,
-    @Body() body: {
-      title?: string
-      firstName: string
-      lastName: string
-      nationalId: string
-      provinceId: string
-      cityId: string
-      fullAddress: string
-      postalCode: string
+    @Body()
+    body: {
+      title?: string;
+      firstName: string;
+      lastName: string;
+      nationalId: string;
+      provinceId: string;
+      cityId: string;
+      fullAddress: string;
+      postalCode: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
     // Required field validation
     if (!body.firstName?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'First name is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'First name is required',
+        },
+        400
+      );
     }
     if (!body.lastName?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Last name is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Last name is required',
+        },
+        400
+      );
     }
     if (!body.nationalId?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National ID is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'National ID is required',
+        },
+        400
+      );
     }
     if (!body.provinceId?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Province is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Province is required',
+        },
+        400
+      );
     }
     if (!body.cityId?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'City is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'City is required',
+        },
+        400
+      );
     }
     if (!body.fullAddress?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Full address is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Full address is required',
+        },
+        400
+      );
     }
     if (!body.postalCode?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Postal code is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Postal code is required',
+        },
+        400
+      );
     }
 
     // Field length validation
     if (body.firstName.length > 100) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'First name must be 100 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'First name must be 100 characters or fewer',
+        },
+        400
+      );
     }
     if (body.lastName.length > 100) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Last name must be 100 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Last name must be 100 characters or fewer',
+        },
+        400
+      );
     }
     if (body.fullAddress.length > 500) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Full address must be 500 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Full address must be 500 characters or fewer',
+        },
+        400
+      );
     }
     if (body.title && body.title.length > 50) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Title must be 50 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Title must be 50 characters or fewer',
+        },
+        400
+      );
     }
 
     const profile = await this.profilesService.saveIndividualProfile(
@@ -215,10 +257,10 @@ export class OnboardingController {
         cityId: body.cityId.trim(),
         fullAddress: body.fullAddress.trim(),
         postalCode: body.postalCode.trim(),
-      },
-    )
+      }
+    );
 
-    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`)
+    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`);
 
     return {
       id: profile.id,
@@ -229,7 +271,7 @@ export class OnboardingController {
       firstName: profile.firstName,
       lastName: profile.lastName,
       nationalId: profile.nationalId,
-    }
+    };
   }
 
   /**
@@ -263,86 +305,127 @@ export class OnboardingController {
   @ApiResponse({ status: 409, description: 'National identifier already registered' })
   async saveLegalProfile(
     @Param('profileId') profileId: string,
-    @Body() body: {
-      legalName: string
-      nationalIdentifier: string
-      registrationNumber: string
-      companyTypeId?: string
-      registrationDate?: string
-      economicCode?: string
-      officialPhone?: string
-      officialEmail?: string
-      officialProvinceId?: string
-      officialCityId?: string
-      officialFullAddress?: string
-      officialPostalCode?: string
-      representativeTitle: string
-      representativeRelationship: string
+    @Body()
+    body: {
+      legalName: string;
+      nationalIdentifier: string;
+      registrationNumber: string;
+      companyTypeId?: string;
+      registrationDate?: string;
+      economicCode?: string;
+      officialPhone?: string;
+      officialEmail?: string;
+      officialProvinceId?: string;
+      officialCityId?: string;
+      officialFullAddress?: string;
+      officialPostalCode?: string;
+      representativeTitle: string;
+      representativeRelationship: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
     // Required field validation
     if (!body.legalName?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Legal name is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Legal name is required',
+        },
+        400
+      );
     }
     if (!body.nationalIdentifier?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'National identifier is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'National identifier is required',
+        },
+        400
+      );
     }
     if (!body.registrationNumber?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Registration number is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Registration number is required',
+        },
+        400
+      );
     }
     if (!body.representativeTitle?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative title is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Representative title is required',
+        },
+        400
+      );
     }
     if (!body.representativeRelationship?.trim()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_MISSING.code, message: 'Representative relationship is required' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
+          message: 'Representative relationship is required',
+        },
+        400
+      );
     }
 
     // Field length validation
     if (body.legalName.length > 200) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Legal name must be 200 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Legal name must be 200 characters or fewer',
+        },
+        400
+      );
     }
     if (body.registrationNumber.length > 50) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Registration number must be 50 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Registration number must be 50 characters or fewer',
+        },
+        400
+      );
     }
     if (body.representativeTitle.length > 100) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative title must be 100 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Representative title must be 100 characters or fewer',
+        },
+        400
+      );
     }
     if (body.representativeRelationship.length > 100) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Representative relationship must be 100 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Representative relationship must be 100 characters or fewer',
+        },
+        400
+      );
     }
     if (body.officialFullAddress && body.officialFullAddress.length > 500) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Official full address must be 500 characters or fewer' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Official full address must be 500 characters or fewer',
+        },
+        400
+      );
     }
 
     const profile = await this.legalProfilesService.saveLegalProfile(
@@ -363,10 +446,10 @@ export class OnboardingController {
         officialPostalCode: body.officialPostalCode?.trim() || undefined,
         representativeTitle: body.representativeTitle.trim(),
         representativeRelationship: body.representativeRelationship.trim(),
-      },
-    )
+      }
+    );
 
-    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`)
+    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`);
 
     return {
       id: profile.id,
@@ -374,7 +457,7 @@ export class OnboardingController {
       isDefault: profile.isDefault,
       status: profile.status,
       title: profile.title,
-    }
+    };
   }
 
   /**
@@ -408,16 +491,13 @@ export class OnboardingController {
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async completeOnboarding(
     @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const profile = await this.profilesService.completeOnboarding(
-      req.session.userId,
-      profileId,
-    )
+    const profile = await this.profilesService.completeOnboarding(req.session.userId, profileId);
 
     this.logger.log(
-      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`,
-    )
+      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`
+    );
 
     return {
       id: profile.id,
@@ -425,6 +505,6 @@ export class OnboardingController {
       isDefault: profile.isDefault,
       status: profile.status,
       message: 'Onboarding completed successfully',
-    }
+    };
   }
 }

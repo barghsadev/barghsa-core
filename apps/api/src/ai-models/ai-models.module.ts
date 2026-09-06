@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
-import { SessionModule } from '../session/index.js'
-import { AiModelsController } from './ai-models.controller.js'
-import { AiModelsService } from './ai-models.service.js'
-import { AiModelSecretsService } from './ai-model-secrets.service.js'
-import { AiModelTesterService } from './ai-model-tester.service.js'
+import { Module } from '@nestjs/common';
+import { SessionModule } from '../session/index.js';
+import { AiModelsController } from './ai-models.controller.js';
+import { AiModelsService } from './ai-models.service.js';
+import { AiModelSecretsService } from './ai-model-secrets.service.js';
+import { AiModelTesterService } from './ai-model-tester.service.js';
 
 /**
  * AI model administration module (S-09.11, T-09.11.01).

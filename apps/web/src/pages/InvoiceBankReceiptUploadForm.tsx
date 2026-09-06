@@ -1,10 +1,10 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { t } from '@barghsa/i18n'
+import { useEffect, useState, type FormEvent } from 'react';
+import { t } from '@barghsa/i18n';
 import {
   INVOICE_BANK_RECEIPT_FILE_ACCEPT,
   parseInvoiceBankReceiptAmountIrR,
-} from '@barghsa/shared/finance'
-import { useLocale } from '../hooks/useLocale.js'
+} from '@barghsa/shared/finance';
+import { useLocale } from '../hooks/useLocale.js';
 import {
   fetchActiveProfileId,
   isAllowedInvoiceReceiptFile,
@@ -14,10 +14,10 @@ import {
   uploadInvoiceReceiptAttachment,
   utcTodayIso,
   type InvoiceReceiptError,
-} from '../lib/invoice-bank-receipt-upload.js'
+} from '../lib/invoice-bank-receipt-upload.js';
 
 interface InvoiceBankReceiptUploadFormProps {
-  invoiceId: string
+  invoiceId: string;
 }
 
 const ERROR_I18N: Record<InvoiceReceiptError, string> = {
@@ -29,7 +29,7 @@ const ERROR_I18N: Record<InvoiceReceiptError, string> = {
   conflict: 'invoices.details.receiptConflict',
   'no-profile': 'invoices.details.receiptNoProfile',
   generic: 'invoices.details.receiptGenericError',
-}
+};
 
 /**
  * Customer invoice bank-receipt upload form (T-04.3.01.02).
@@ -39,67 +39,67 @@ const ERROR_I18N: Record<InvoiceReceiptError, string> = {
  * for finance confirmation.
  */
 export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUploadFormProps) {
-  const locale = useLocale()
-  const [profileId, setProfileId] = useState<string | null>(null)
-  const [amountInput, setAmountInput] = useState('')
-  const [paymentDate, setPaymentDate] = useState('')
-  const [payerReference, setPayerReference] = useState('')
-  const [customerNote, setCustomerNote] = useState('')
-  const [file, setFile] = useState<File | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<InvoiceReceiptError | null>(null)
-  const [success, setSuccess] = useState(false)
+  const locale = useLocale();
+  const [profileId, setProfileId] = useState<string | null>(null);
+  const [amountInput, setAmountInput] = useState('');
+  const [paymentDate, setPaymentDate] = useState('');
+  const [payerReference, setPayerReference] = useState('');
+  const [customerNote, setCustomerNote] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<InvoiceReceiptError | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     void fetchActiveProfileId().then((id) => {
-      if (!cancelled) setProfileId(id)
-    })
+      if (!cancelled) setProfileId(id);
+    });
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (submitting) return
+    event.preventDefault();
+    if (submitting) return;
 
-    const amountIrR = parseInvoiceBankReceiptAmountIrR(normalizeIrrAmountDigits(amountInput))
+    const amountIrR = parseInvoiceBankReceiptAmountIrR(normalizeIrrAmountDigits(amountInput));
     if (amountIrR === null) {
-      setError('invalid-amount')
-      setSuccess(false)
-      return
+      setError('invalid-amount');
+      setSuccess(false);
+      return;
     }
-    const today = utcTodayIso()
+    const today = utcTodayIso();
     if (!paymentDate || paymentDate > today) {
-      setError('invalid-date')
-      setSuccess(false)
-      return
+      setError('invalid-date');
+      setSuccess(false);
+      return;
     }
     if (payerReference.trim().length === 0) {
-      setError('invalid-payer-ref')
-      setSuccess(false)
-      return
+      setError('invalid-payer-ref');
+      setSuccess(false);
+      return;
     }
     if (!file || !isAllowedInvoiceReceiptFile(file)) {
-      setError('invalid-file')
-      setSuccess(false)
-      return
+      setError('invalid-file');
+      setSuccess(false);
+      return;
     }
     if (!profileId) {
-      setError('no-profile')
-      setSuccess(false)
-      return
+      setError('no-profile');
+      setSuccess(false);
+      return;
     }
 
-    setSubmitting(true)
-    setError(null)
-    setSuccess(false)
+    setSubmitting(true);
+    setError(null);
+    setSuccess(false);
     try {
-      const attachmentKey = await uploadInvoiceReceiptAttachment(file, profileId)
+      const attachmentKey = await uploadInvoiceReceiptAttachment(file, profileId);
       if (!attachmentKey) {
-        setError('upload')
-        return
+        setError('upload');
+        return;
       }
       const result = await submitInvoiceBankReceipt({
         invoiceId,
@@ -108,24 +108,24 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
         payerReference: payerReference.trim(),
         attachmentKey,
         ...(customerNote.trim() === '' ? {} : { customerNote: customerNote.trim() }),
-      })
+      });
       if (!result.ok) {
-        setError(mapInvoiceReceiptSubmitError(result.status))
-        return
+        setError(mapInvoiceReceiptSubmitError(result.status));
+        return;
       }
-      setSuccess(true)
-      setFile(null)
-      setAmountInput('')
-      setPayerReference('')
-      setCustomerNote('')
+      setSuccess(true);
+      setFile(null);
+      setAmountInput('');
+      setPayerReference('');
+      setCustomerNote('');
     } catch {
-      setError('upload')
+      setError('upload');
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   }
 
-  const errorMessage = error === null ? null : t(ERROR_I18N[error], locale)
+  const errorMessage = error === null ? null : t(ERROR_I18N[error], locale);
 
   return (
     <form
@@ -178,8 +178,8 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           disabled={submitting}
           aria-invalid={error === 'invalid-amount'}
           onChange={(event) => {
-            setAmountInput(normalizeIrrAmountDigits(event.target.value))
-            if (error === 'invalid-amount') setError(null)
+            setAmountInput(normalizeIrrAmountDigits(event.target.value));
+            if (error === 'invalid-amount') setError(null);
           }}
           className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
@@ -199,8 +199,8 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           disabled={submitting}
           aria-invalid={error === 'invalid-date'}
           onChange={(event) => {
-            setPaymentDate(event.target.value)
-            if (error === 'invalid-date') setError(null)
+            setPaymentDate(event.target.value);
+            if (error === 'invalid-date') setError(null);
           }}
           className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
@@ -224,8 +224,8 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           disabled={submitting}
           aria-invalid={error === 'invalid-payer-ref'}
           onChange={(event) => {
-            setPayerReference(event.target.value)
-            if (error === 'invalid-payer-ref') setError(null)
+            setPayerReference(event.target.value);
+            if (error === 'invalid-payer-ref') setError(null);
           }}
           className="mt-1 h-10 w-full rounded-lg border border-gray-300 px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
@@ -245,9 +245,9 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           aria-invalid={error === 'invalid-file'}
           aria-describedby="invoice-receipt-file-hint"
           onChange={(event) => {
-            const next = event.target.files?.[0] ?? null
-            setFile(next)
-            if (error === 'invalid-file' || error === 'upload') setError(null)
+            const next = event.target.files?.[0] ?? null;
+            setFile(next);
+            if (error === 'invalid-file' || error === 'upload') setError(null);
           }}
           className="mt-1 block w-full text-sm text-gray-600 file:me-4 file:rounded-lg file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary"
         />
@@ -284,5 +284,5 @@ export function InvoiceBankReceiptUploadForm({ invoiceId }: InvoiceBankReceiptUp
           : t('invoices.details.receiptSubmit', locale)}
       </button>
     </form>
-  )
+  );
 }

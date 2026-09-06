@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 /** Regex stripping a leading unread-count prefix like `(3) ` from a title. */
-const UNREAD_PREFIX = /^\(\d+\)\s*/
+const UNREAD_PREFIX = /^\(\d+\)\s*/;
 
 /**
  * Reflect the unread count in the document title while the tab is
@@ -18,16 +18,15 @@ const UNREAD_PREFIX = /^\(\d+\)\s*/
 export function useUnreadDocumentTitle(unreadCount: number): void {
   useEffect(() => {
     const apply = () => {
-      const base = document.title.replace(UNREAD_PREFIX, '')
-      document.title =
-        document.hidden && unreadCount > 0 ? `(${unreadCount}) ${base}` : base
-    }
-    apply()
-    document.addEventListener('visibilitychange', apply)
+      const base = document.title.replace(UNREAD_PREFIX, '');
+      document.title = document.hidden && unreadCount > 0 ? `(${unreadCount}) ${base}` : base;
+    };
+    apply();
+    document.addEventListener('visibilitychange', apply);
     return () => {
-      document.removeEventListener('visibilitychange', apply)
+      document.removeEventListener('visibilitychange', apply);
       // Always restore the clean base title on unmount.
-      document.title = document.title.replace(UNREAD_PREFIX, '')
-    }
-  }, [unreadCount])
+      document.title = document.title.replace(UNREAD_PREFIX, '');
+    };
+  }, [unreadCount]);
 }

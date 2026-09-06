@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Zod schema for OTP verification request body.
@@ -9,9 +9,9 @@ export const VerifyOtpSchema = z.object({
     .string()
     .length(6, { message: 'VALIDATION:INPUT:INVALID' })
     .regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
-})
+});
 
-export type VerifyOtpInput = z.infer<typeof VerifyOtpSchema>
+export type VerifyOtpInput = z.infer<typeof VerifyOtpSchema>;
 
 /**
  * Successful OTP verification response during registration flow.
@@ -19,15 +19,15 @@ export type VerifyOtpInput = z.infer<typeof VerifyOtpSchema>
  */
 export interface RegisterVerifyResponse {
   /** The newly created user's UUID. */
-  userId: string
+  userId: string;
   /** Opaque session identifier (stored in HttpOnly cookie). */
-  sessionId: string
+  sessionId: string;
   /** CSRF token bound to the session for state-changing requests. */
-  csrfToken: string
+  csrfToken: string;
   /** Refresh token for session renewal (rotated on use). */
-  refreshToken: string
+  refreshToken: string;
   /** ISO 8601 timestamp of when the session expires. */
-  expiresAt: string
+  expiresAt: string;
 }
 
 /**
@@ -35,6 +35,6 @@ export interface RegisterVerifyResponse {
  */
 export const ResendOtpSchema = z.object({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
-})
+});
 
-export type ResendOtpInput = z.infer<typeof ResendOtpSchema>
+export type ResendOtpInput = z.infer<typeof ResendOtpSchema>;

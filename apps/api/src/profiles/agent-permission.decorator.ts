@@ -1,10 +1,10 @@
-import { SetMetadata } from '@nestjs/common'
-import type { AgentPermission } from '@barghsa/shared/agent-permissions'
+import { SetMetadata } from '@nestjs/common';
+import type { AgentPermission } from '@barghsa/shared/agent-permissions';
 
 /**
  * Metadata key used to attach the required agent permission to a route.
  */
-export const AGENT_PERMISSION_KEY = 'barghsa:agent-permission'
+export const AGENT_PERMISSION_KEY = 'barghsa:agent-permission';
 
 /**
  * Declare the agent permission required to access a route handler or
@@ -19,4 +19,4 @@ export const AGENT_PERMISSION_KEY = 'barghsa:agent-permission'
  * ```
  */
 export const RequireAgentPermission = (permission: AgentPermission) =>
-  SetMetadata(AGENT_PERMISSION_KEY, permission)
+  SetMetadata(AGENT_PERMISSION_KEY, permission);

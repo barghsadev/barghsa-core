@@ -12,8 +12,8 @@
 
 // ─── Roles ────────────────────────────────────────────────────────────
 
-export const AGENT_ROLES = ['Owner', 'Manager', 'Finance', 'Legal'] as const
-export type AgentRole = (typeof AGENT_ROLES)[number]
+export const AGENT_ROLES = ['Owner', 'Manager', 'Finance', 'Legal'] as const;
+export type AgentRole = (typeof AGENT_ROLES)[number];
 
 // ─── Permissions ──────────────────────────────────────────────────────
 
@@ -58,9 +58,9 @@ export const AGENT_PERMISSIONS = [
   // ── Addresses ────────────────────────────────────────────────
   'addresses:view',
   'addresses:edit',
-] as const
+] as const;
 
-export type AgentPermission = (typeof AGENT_PERMISSIONS)[number]
+export type AgentPermission = (typeof AGENT_PERMISSIONS)[number];
 
 // ─── Permission Matrix ────────────────────────────────────────────────
 //
@@ -111,49 +111,41 @@ const PERMISSION_MATRIX: Record<AgentRole, ReadonlySet<AgentPermission>> = {
     'contracts:reject',
     'contracts:request-changes',
   ]),
-}
+};
 
 // ─── Public API ───────────────────────────────────────────────────────
 
 /**
  * Check whether a given role has a specific permission.
  */
-export function hasPermission(
-  role: AgentRole,
-  permission: AgentPermission,
-): boolean {
-  return PERMISSION_MATRIX[role].has(permission)
+export function hasPermission(role: AgentRole, permission: AgentPermission): boolean {
+  return PERMISSION_MATRIX[role].has(permission);
 }
 
 /**
  * Return the set of permissions granted to a specific role.
  */
 export function getRolePermissions(role: AgentRole): readonly AgentPermission[] {
-  return [...PERMISSION_MATRIX[role]]
+  return [...PERMISSION_MATRIX[role]];
 }
 
 /**
  * Return the union of permissions granted to a list of roles (additive).
  * Used when an agent has multiple roles.
  */
-export function getCombinedPermissions(
-  roles: AgentRole[],
-): Set<AgentPermission> {
-  const combined = new Set<AgentPermission>()
+export function getCombinedPermissions(roles: AgentRole[]): Set<AgentPermission> {
+  const combined = new Set<AgentPermission>();
   for (const role of roles) {
     for (const perm of PERMISSION_MATRIX[role]) {
-      combined.add(perm)
+      combined.add(perm);
     }
   }
-  return combined
+  return combined;
 }
 
 /**
  * Check whether any of the given roles has a specific permission.
  */
-export function hasAnyRolePermission(
-  roles: AgentRole[],
-  permission: AgentPermission,
-): boolean {
-  return roles.some((role) => PERMISSION_MATRIX[role].has(permission))
+export function hasAnyRolePermission(roles: AgentRole[], permission: AgentPermission): boolean {
+  return roles.some((role) => PERMISSION_MATRIX[role].has(permission));
 }

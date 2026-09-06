@@ -16,8 +16,8 @@
  * so a debit cannot commit without a retryable cache.
  */
 
-import { Injectable } from '@nestjs/common'
-import { isExpiredInFlightIdempotencyClaim } from '@barghsa/shared/finance'
+import { Injectable } from '@nestjs/common';
+import { isExpiredInFlightIdempotencyClaim } from '@barghsa/shared/finance';
 
 /**
  * Minimal transaction-scoped client. A `pg` PoolClient satisfies it;
@@ -26,33 +26,33 @@ import { isExpiredInFlightIdempotencyClaim } from '@barghsa/shared/finance'
 export interface IdempotencyQueryClient {
   query: (
     text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 export type IdempotencyClaimResult =
   | { kind: 'claimed' }
   | { kind: 'cached'; response: unknown; entityId: string | null }
-  | { kind: 'in_flight' }
+  | { kind: 'in_flight' };
 
 export interface ClaimIdempotencyKeyInput {
-  key: string
-  entityType: string
-  entityId: string
-  expiresAt: Date
-  now: Date
+  key: string;
+  entityType: string;
+  entityId: string;
+  expiresAt: Date;
+  now: Date;
 }
 
 export interface PersistIdempotencyResponseInput {
-  key: string
-  entityType: string
-  entityId: string
-  response: unknown
+  key: string;
+  entityType: string;
+  entityId: string;
+  response: unknown;
 }
 
 /** Thrown when the claimed in-flight row is gone before the cache write. */
 export const IDEMPOTENCY_CACHE_PERSIST_FAILED =
-  'Idempotency cache row missing for claimed (idempotencyKey, entityType)'
+  'Idempotency cache row missing for claimed (idempotencyKey, entityType)';
 
 @Injectable()
 export class IdempotencyKeysRepository {
@@ -63,25 +63,24 @@ export class IdempotencyKeysRepository {
    */
   async claimOrLoad(
     client: IdempotencyQueryClient,
-    input: ClaimIdempotencyKeyInput,
+    input: ClaimIdempotencyKeyInput
   ): Promise<IdempotencyClaimResult> {
-    const inserted = await this.insertClaim(client, input)
-    if (inserted) return { kind: 'claimed' }
+    const inserted = await this.insertClaim(client, input);
+    if (inserted) return { kind: 'claimed' };
 
     const existing = await client.query(
       `SELECT entity_id, response, expires_at
          FROM idempotency_keys
         WHERE idempotency_key = $1 AND entity_type = $2
         FOR UPDATE`,
-      [input.key, input.entityType],
-    )
+      [input.key, input.entityType]
+    );
     const row = existing.rows[0] as
-      | { entity_id: string | null; response: unknown; expires_at: Date | string | null }
-      | undefined
+      { entity_id: string | null; response: unknown; expires_at: Date | string | null } | undefined;
     if (!row) {
-      const retried = await this.insertClaim(client, input)
-      if (retried) return { kind: 'claimed' }
-      return { kind: 'in_flight' }
+      const retried = await this.insertClaim(client, input);
+      if (retried) return { kind: 'claimed' };
+      return { kind: 'in_flight' };
     }
     if (row.response == null) {
       if (
@@ -91,21 +90,21 @@ export class IdempotencyKeysRepository {
           now: input.now,
         })
       ) {
-        const reclaimed = await this.reclaimExpiredClaim(client, input)
-        if (reclaimed) return { kind: 'claimed' }
+        const reclaimed = await this.reclaimExpiredClaim(client, input);
+        if (reclaimed) return { kind: 'claimed' };
       }
-      return { kind: 'in_flight' }
+      return { kind: 'in_flight' };
     }
     return {
       kind: 'cached',
       response: row.response,
       entityId: row.entity_id,
-    }
+    };
   }
 
   async persistResponse(
     client: IdempotencyQueryClient,
-    input: PersistIdempotencyResponseInput,
+    input: PersistIdempotencyResponseInput
   ): Promise<void> {
     const result = await client.query(
       `UPDATE idempotency_keys
@@ -116,16 +115,16 @@ export class IdempotencyKeysRepository {
           AND entity_type = $2
           AND response IS NULL
         RETURNING id`,
-      [input.key, input.entityType, JSON.stringify(input.response), input.entityId],
-    )
+      [input.key, input.entityType, JSON.stringify(input.response), input.entityId]
+    );
     if (result.rows.length === 0) {
-      throw new Error(IDEMPOTENCY_CACHE_PERSIST_FAILED)
+      throw new Error(IDEMPOTENCY_CACHE_PERSIST_FAILED);
     }
   }
 
   private async insertClaim(
     client: IdempotencyQueryClient,
-    input: ClaimIdempotencyKeyInput,
+    input: ClaimIdempotencyKeyInput
   ): Promise<boolean> {
     const result = await client.query(
       `INSERT INTO idempotency_keys
@@ -133,14 +132,14 @@ export class IdempotencyKeysRepository {
        VALUES ($1, $2, $3, $4)
        ON CONFLICT (idempotency_key, entity_type) DO NOTHING
        RETURNING id`,
-      [input.key, input.entityType, input.entityId, input.expiresAt],
-    )
-    return result.rows.length > 0
+      [input.key, input.entityType, input.entityId, input.expiresAt]
+    );
+    return result.rows.length > 0;
   }
 
   private async reclaimExpiredClaim(
     client: IdempotencyQueryClient,
-    input: ClaimIdempotencyKeyInput,
+    input: ClaimIdempotencyKeyInput
   ): Promise<boolean> {
     const result = await client.query(
       `UPDATE idempotency_keys
@@ -153,8 +152,8 @@ export class IdempotencyKeysRepository {
           AND expires_at IS NOT NULL
           AND expires_at <= $5
         RETURNING id`,
-      [input.key, input.entityType, input.entityId, input.expiresAt, input.now],
-    )
-    return result.rows.length > 0
+      [input.key, input.entityType, input.entityId, input.expiresAt, input.now]
+    );
+    return result.rows.length > 0;
   }
 }

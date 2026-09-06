@@ -1,2 +1,2 @@
-export { UserSettingsController } from './user-settings.controller.js'
-export { UserSettingsModule } from './user-settings.module.js'
+export { UserSettingsController } from './user-settings.controller.js';
+export { UserSettingsModule } from './user-settings.module.js';

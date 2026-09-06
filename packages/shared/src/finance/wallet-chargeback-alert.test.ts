@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { WALLET_CHARGEBACK_REASON } from './wallet-chargeback.js'
+import { describe, expect, it } from 'vitest';
+import { WALLET_CHARGEBACK_REASON } from './wallet-chargeback.js';
 import {
   CHARGEBACK_UNRESOLVED_STATUS_LABELS,
   FINANCE_CHARGEBACK_ALERT_BODY_I18N_KEY,
@@ -15,41 +15,39 @@ import {
   financeChargebackAlertIdempotencyKey,
   needsFinanceChargebackAlert,
   summarizeUnresolvedChargebackCounts,
-} from './wallet-chargeback-alert.js'
+} from './wallet-chargeback-alert.js';
 
 describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
   it('pins the event key, channels, role, and dashboard window', () => {
-    expect(FINANCE_CHARGEBACK_ALERT_EVENT_KEY).toBe('finance.chargeback_unresolved')
-    expect(FINANCE_CHARGEBACK_ALERT_PERMISSION).toBe(
-      'admin:finance:wallet:chargeback-alerts',
-    )
-    expect(FINANCE_CHARGEBACK_ALERT_ROLE_ID).toBe('role-finance')
-    expect(FINANCE_CHARGEBACK_ALERT_CHANNELS).toEqual(['in_app', 'email'])
-    expect(FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE).toBe('/admin')
+    expect(FINANCE_CHARGEBACK_ALERT_EVENT_KEY).toBe('finance.chargeback_unresolved');
+    expect(FINANCE_CHARGEBACK_ALERT_PERMISSION).toBe('admin:finance:wallet:chargeback-alerts');
+    expect(FINANCE_CHARGEBACK_ALERT_ROLE_ID).toBe('role-finance');
+    expect(FINANCE_CHARGEBACK_ALERT_CHANNELS).toEqual(['in_app', 'email']);
+    expect(FINANCE_CHARGEBACK_ALERT_DASHBOARD_ROUTE).toBe('/admin');
     expect(FINANCE_CHARGEBACK_ALERT_TITLE_I18N_KEY).toBe(
-      'notifications.finance.chargeback_unresolved.title',
-    )
+      'notifications.finance.chargeback_unresolved.title'
+    );
     expect(FINANCE_CHARGEBACK_ALERT_BODY_I18N_KEY).toBe(
-      'notifications.finance.chargeback_unresolved.body',
-    )
-    expect(FINANCE_CHARGEBACK_WARNING_LIMIT).toBe(20)
-    expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unmatched.en).toContain('unmatched')
-    expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unresolved.fa).toContain('برگشت')
-  })
+      'notifications.finance.chargeback_unresolved.body'
+    );
+    expect(FINANCE_CHARGEBACK_WARNING_LIMIT).toBe(20);
+    expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unmatched.en).toContain('unmatched');
+    expect(CHARGEBACK_UNRESOLVED_STATUS_LABELS.unresolved.fa).toContain('برگشت');
+  });
 
   it('alerts only unmatched and reversal-failed chargebacks', () => {
-    expect(needsFinanceChargebackAlert('unmatched')).toBe(true)
-    expect(needsFinanceChargebackAlert('unresolved')).toBe(true)
-    expect(needsFinanceChargebackAlert('reversed')).toBe(false)
-    expect(needsFinanceChargebackAlert('processing')).toBe(false)
-    expect(needsFinanceChargebackAlert('duplicate')).toBe(false)
-  })
+    expect(needsFinanceChargebackAlert('unmatched')).toBe(true);
+    expect(needsFinanceChargebackAlert('unresolved')).toBe(true);
+    expect(needsFinanceChargebackAlert('reversed')).toBe(false);
+    expect(needsFinanceChargebackAlert('processing')).toBe(false);
+    expect(needsFinanceChargebackAlert('duplicate')).toBe(false);
+  });
 
   it('scopes the outbox idempotency key to event + recipient profile', () => {
     expect(financeChargebackAlertIdempotencyKey('evt-1', 'profile-a')).toBe(
-      'finance.chargeback_unresolved:evt-1:profile-a',
-    )
-  })
+      'finance.chargeback_unresolved:evt-1:profile-a'
+    );
+  });
 
   it('builds the template payload from the verified notification', () => {
     const payload = buildFinanceChargebackAlertPayload({
@@ -66,7 +64,7 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
         amountIrR: 250_000n,
         reason: WALLET_CHARGEBACK_REASON,
       },
-    })
+    });
     expect(payload).toEqual({
       event_id: 'evt-1',
       status: 'unmatched',
@@ -77,8 +75,8 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
       original_transaction_id: '',
       reason: WALLET_CHARGEBACK_REASON,
       link_route: '/admin',
-    })
-  })
+    });
+  });
 
   it('summarizes unmatched vs reversal-failed counts for the dashboard', () => {
     expect(emptyUnresolvedChargebackWarning()).toEqual({
@@ -86,12 +84,12 @@ describe('wallet chargeback finance alert helpers (T-04.2.04.03)', () => {
       unmatchedCount: 0,
       reversalFailedCount: 0,
       items: [],
-    })
+    });
     expect(
       summarizeUnresolvedChargebackCounts([
         { status: 'unmatched', n: 2 },
         { status: 'unresolved', n: 3 },
-      ]),
-    ).toEqual({ count: 5, unmatchedCount: 2, reversalFailedCount: 3 })
-  })
-})
+      ])
+    ).toEqual({ count: 5, unmatchedCount: 2, reversalFailedCount: 3 });
+  });
+});

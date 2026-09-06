@@ -33,17 +33,17 @@ export interface ContractElectricityLimits {
    * Max % by which a customer may request an increase to the contracted
    * electricity quantity. Integer, 0..1000. 0 forbids increases entirely.
    */
-  maxQuantityIncreasePercent: number
+  maxQuantityIncreasePercent: number;
   /**
    * Max contract duration for advanced electricity orders, in Jalali
    * months. Integer, 1..1200 (up to 100 years).
    */
-  maxContractDuration: number
+  maxContractDuration: number;
   /**
    * Minimum lead time (days) between "today" and an advanced order's
    * start date. Integer, 0..36500. 0 means the start can be today.
    */
-  leadTimeDays: number
+  leadTimeDays: number;
 }
 
 /**
@@ -56,17 +56,17 @@ export const DEFAULT_CONTRACT_ELECTRICITY_LIMITS: ContractElectricityLimits = {
   maxQuantityIncreasePercent: 20,
   maxContractDuration: 24,
   leadTimeDays: 0,
-}
+};
 
 /** `app_config` key holding the contract electricity limits (T-09.12.06). */
-export const CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY = 'electricity.contract_limits'
+export const CONTRACT_ELECTRICITY_LIMITS_CONFIG_KEY = 'electricity.contract_limits';
 
 /** Maximum allowed quantity-increase percentage. */
-export const MAX_CONTRACT_QUANTITY_INCREASE_PERCENT = 1000
+export const MAX_CONTRACT_QUANTITY_INCREASE_PERCENT = 1000;
 /** Maximum allowed contract duration in Jalali months (100 years). */
-export const MAX_CONTRACT_DURATION_MONTHS = 1200
+export const MAX_CONTRACT_DURATION_MONTHS = 1200;
 /** Maximum allowed lead time in days (100 years). */
-export const MAX_CONTRACT_LEAD_TIME_DAYS = 36500
+export const MAX_CONTRACT_LEAD_TIME_DAYS = 36500;
 
 /**
  * Result of validating a proposed contract electricity limits config for
@@ -75,8 +75,8 @@ export const MAX_CONTRACT_LEAD_TIME_DAYS = 36500
  * (English).
  */
 export interface ContractElectricityLimitsValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /**
@@ -89,7 +89,7 @@ export function isValidQuantityIncreasePercent(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 0 &&
     raw <= MAX_CONTRACT_QUANTITY_INCREASE_PERCENT
-  )
+  );
 }
 
 /**
@@ -103,7 +103,7 @@ export function isValidContractDuration(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 1 &&
     raw <= MAX_CONTRACT_DURATION_MONTHS
-  )
+  );
 }
 
 /**
@@ -117,7 +117,7 @@ export function isValidLeadTimeDays(raw: unknown): raw is number {
     Number.isSafeInteger(raw) &&
     raw >= 0 &&
     raw <= MAX_CONTRACT_LEAD_TIME_DAYS
-  )
+  );
 }
 
 /**
@@ -130,16 +130,16 @@ export function isValidLeadTimeDays(raw: unknown): raw is number {
  * payload cannot silently change the enforced limits.
  */
 export function validateContractElectricityLimits(
-  input: unknown,
+  input: unknown
 ): ContractElectricityLimitsValidationResult {
-  const issues: string[] = []
+  const issues: string[] = [];
   if (!input || typeof input !== 'object') {
     return {
       ok: false,
       issues: ['Contract electricity limits config must be an object'],
-    }
+    };
   }
-  const o = input as Record<string, unknown>
+  const o = input as Record<string, unknown>;
 
   // Reject unrecognised top-level keys so a typo'd field cannot silently
   // slip through (accepted set: snake_case wire names + camelCase aliases).
@@ -152,40 +152,38 @@ export function validateContractElectricityLimits(
         'maxContractDuration',
         'lead_time_days',
         'leadTimeDays',
-      ].includes(k),
-  )
+      ].includes(k)
+  );
   for (const key of unknownKeys) {
-    issues.push(`unknown field "${key}"`)
+    issues.push(`unknown field "${key}"`);
   }
 
-  const percent = o.max_quantity_increase_percent ?? o.maxQuantityIncreasePercent
+  const percent = o.max_quantity_increase_percent ?? o.maxQuantityIncreasePercent;
   if (percent === undefined || percent === null || percent === '') {
-    issues.push('max_quantity_increase_percent is required')
+    issues.push('max_quantity_increase_percent is required');
   } else if (!isValidQuantityIncreasePercent(percent)) {
     issues.push(
-      `max_quantity_increase_percent must be an integer between 0 and ${MAX_CONTRACT_QUANTITY_INCREASE_PERCENT}`,
-    )
+      `max_quantity_increase_percent must be an integer between 0 and ${MAX_CONTRACT_QUANTITY_INCREASE_PERCENT}`
+    );
   }
 
-  const duration = o.max_contract_duration_months ?? o.maxContractDuration
+  const duration = o.max_contract_duration_months ?? o.maxContractDuration;
   if (duration === undefined || duration === null || duration === '') {
-    issues.push('max_contract_duration_months is required')
+    issues.push('max_contract_duration_months is required');
   } else if (!isValidContractDuration(duration)) {
     issues.push(
-      `max_contract_duration_months must be an integer between 1 and ${MAX_CONTRACT_DURATION_MONTHS}`,
-    )
+      `max_contract_duration_months must be an integer between 1 and ${MAX_CONTRACT_DURATION_MONTHS}`
+    );
   }
 
-  const lead = o.lead_time_days ?? o.leadTimeDays
+  const lead = o.lead_time_days ?? o.leadTimeDays;
   if (lead === undefined || lead === null || lead === '') {
-    issues.push('lead_time_days is required')
+    issues.push('lead_time_days is required');
   } else if (!isValidLeadTimeDays(lead)) {
-    issues.push(
-      `lead_time_days must be an integer between 0 and ${MAX_CONTRACT_LEAD_TIME_DAYS}`,
-    )
+    issues.push(`lead_time_days must be an integer between 0 and ${MAX_CONTRACT_LEAD_TIME_DAYS}`);
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -195,10 +193,10 @@ export function validateContractElectricityLimits(
  * (keeps the read path total).
  */
 export function toContractElectricityLimits(input: unknown): ContractElectricityLimits {
-  const o = input && typeof input === 'object' ? (input as Record<string, unknown>) : {}
-  const percent = o.max_quantity_increase_percent ?? o.maxQuantityIncreasePercent
-  const duration = o.max_contract_duration_months ?? o.maxContractDuration
-  const lead = o.lead_time_days ?? o.leadTimeDays
+  const o = input && typeof input === 'object' ? (input as Record<string, unknown>) : {};
+  const percent = o.max_quantity_increase_percent ?? o.maxQuantityIncreasePercent;
+  const duration = o.max_contract_duration_months ?? o.maxContractDuration;
+  const lead = o.lead_time_days ?? o.leadTimeDays;
   return {
     maxQuantityIncreasePercent: isValidQuantityIncreasePercent(percent)
       ? (percent as number)
@@ -209,16 +207,16 @@ export function toContractElectricityLimits(input: unknown): ContractElectricity
     leadTimeDays: isValidLeadTimeDays(lead)
       ? (lead as number)
       : DEFAULT_CONTRACT_ELECTRICITY_LIMITS.leadTimeDays,
-  }
+  };
 }
 
 /** The snake_case shape persisted in `app_config` (T-09.12.06). */
 export function contractElectricityLimitsToStored(
-  config: ContractElectricityLimits,
+  config: ContractElectricityLimits
 ): Record<string, unknown> {
   return {
     max_quantity_increase_percent: config.maxQuantityIncreasePercent,
     max_contract_duration_months: config.maxContractDuration,
     lead_time_days: config.leadTimeDays,
-  }
+  };
 }

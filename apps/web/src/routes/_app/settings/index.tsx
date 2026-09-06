@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n'
+import { useState, useEffect, useCallback } from 'react';
+import { createFileRoute } from '@tanstack/react-router';
+import { toast } from 'sonner';
+import { t, type Locale } from '@barghsa/i18n';
 import {
   BellIcon,
   SmartphoneIcon,
@@ -14,152 +14,148 @@ import {
   UserIcon,
   MapPinIcon,
   MegaphoneIcon,
-} from 'lucide-react'
-import { Button, Card, CardContent } from '@barghsa/ui'
-import { withCsrf } from '../../../lib/csrf.js'
-import { useLocale } from '../../../hooks/useLocale.js'
+} from 'lucide-react';
+import { Button, Card, CardContent } from '@barghsa/ui';
+import { withCsrf } from '../../../lib/csrf.js';
+import { useLocale } from '../../../hooks/useLocale.js';
 
 export const Route = createFileRoute('/_app/settings/')({
   component: SettingsIndexPage,
-})
+});
 
 // ─── Types ────────────────────────────────────────────────────────────
 
-type NotificationChannel = 'SMS' | 'EMAIL' | 'IN_APP'
+type NotificationChannel = 'SMS' | 'EMAIL' | 'IN_APP';
 
 interface ChannelToggle {
-  key: NotificationChannel
-  icon: React.ReactNode
-  label: string
-  description: string
+  key: NotificationChannel;
+  icon: React.ReactNode;
+  label: string;
+  description: string;
 }
 
 interface ConsentChannelState {
-  optedIn: boolean
-  lastChangedAt: string | null
+  optedIn: boolean;
+  lastChangedAt: string | null;
 }
 
-type MarketingChannels = 'email' | 'sms'
+type MarketingChannels = 'email' | 'sms';
 
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsIndexPage() {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  const [channels, setChannels] = useState<NotificationChannel[]>([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [channels, setChannels] = useState<NotificationChannel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   // Marketing consent state (T-05.05.03)
-  const [marketing, setMarketing] = useState<
-    Record<MarketingChannels, ConsentChannelState>
-  >({
+  const [marketing, setMarketing] = useState<Record<MarketingChannels, ConsentChannelState>>({
     email: { optedIn: false, lastChangedAt: null },
     sms: { optedIn: false, lastChangedAt: null },
-  })
-  const [marketingLoading, setMarketingLoading] = useState(true)
-  const [marketingSaving, setMarketingSaving] = useState(false)
+  });
+  const [marketingLoading, setMarketingLoading] = useState(true);
+  const [marketingSaving, setMarketingSaving] = useState(false);
 
   // ── Fetch current preferences ──────────────────────────────────────
 
   const fetchPreferences = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch('/api/user/settings/notifications')
+      const response = await fetch('/api/user/settings/notifications');
       if (response.ok) {
-        const data: { channels: NotificationChannel[] } = await response.json()
-        setChannels(data.channels)
+        const data: { channels: NotificationChannel[] } = await response.json();
+        setChannels(data.channels);
       }
     } catch {
       // Silently fail — default preferences will be assumed
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchPreferences()
-  }, [fetchPreferences])
+    fetchPreferences();
+  }, [fetchPreferences]);
 
   // ── Toggle handler ─────────────────────────────────────────────────
 
   const handleToggle = (channel: NotificationChannel) => {
-    if (channel === 'IN_APP') return // In-app is always enabled
+    if (channel === 'IN_APP') return; // In-app is always enabled
     setChannels((prev) =>
-      prev.includes(channel)
-        ? prev.filter((c) => c !== channel)
-        : [...prev, channel],
-    )
-  }
+      prev.includes(channel) ? prev.filter((c) => c !== channel) : [...prev, channel]
+    );
+  };
 
   // ── Save handler ───────────────────────────────────────────────────
 
   const handleSave = useCallback(async () => {
-    setSaving(true)
+    setSaving(true);
     try {
       const response = await fetch('/api/user/settings/notifications', {
         method: 'PUT',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ channels }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        const message = (body as { message?: string }).message
-        toast.error(message || t('settings.notifications.error.save', locale))
+        const body = await response.json().catch(() => ({}));
+        const message = (body as { message?: string }).message;
+        toast.error(message || t('settings.notifications.error.save', locale));
         // Re-fetch to reset state
-        fetchPreferences()
-        return
+        fetchPreferences();
+        return;
       }
 
-      const data: { channels: NotificationChannel[] } = await response.json()
-      setChannels(data.channels)
-      toast.success(t('settings.notifications.success', locale))
+      const data: { channels: NotificationChannel[] } = await response.json();
+      setChannels(data.channels);
+      toast.success(t('settings.notifications.success', locale));
     } catch {
-      toast.error(t('settings.notifications.error.save', locale))
-      fetchPreferences()
+      toast.error(t('settings.notifications.error.save', locale));
+      fetchPreferences();
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [channels, locale, fetchPreferences])
+  }, [channels, locale, fetchPreferences]);
 
   // ── Marketing consent (T-05.05.03) ───────────────────────────────
 
   const fetchMarketingConsent = useCallback(async () => {
-    setMarketingLoading(true)
+    setMarketingLoading(true);
     try {
-      const response = await fetch('/api/user/settings/marketing-consent')
+      const response = await fetch('/api/user/settings/marketing-consent');
       if (response.ok) {
         const data: {
-          channels: Record<MarketingChannels, ConsentChannelState>
-        } = await response.json()
+          channels: Record<MarketingChannels, ConsentChannelState>;
+        } = await response.json();
         if (data.channels) {
           setMarketing({
             email: data.channels.email ?? { optedIn: false, lastChangedAt: null },
             sms: data.channels.sms ?? { optedIn: false, lastChangedAt: null },
-          })
+          });
         }
       }
     } catch {
       // Keep default (opted-out) state on failure
     } finally {
-      setMarketingLoading(false)
+      setMarketingLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchMarketingConsent()
-  }, [fetchMarketingConsent])
+    fetchMarketingConsent();
+  }, [fetchMarketingConsent]);
 
   const handleMarketingToggle = (channel: MarketingChannels) => {
     setMarketing((prev) => ({
       ...prev,
       [channel]: { ...prev[channel], optedIn: !prev[channel].optedIn },
-    }))
-  }
+    }));
+  };
 
   const handleMarketingSave = useCallback(async () => {
-    setMarketingSaving(true)
+    setMarketingSaving(true);
     try {
       const response = await fetch('/api/user/settings/marketing-consent', {
         method: 'PUT',
@@ -168,45 +164,45 @@ function SettingsIndexPage() {
           email: marketing.email.optedIn,
           sms: marketing.sms.optedIn,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
-        const message = (body as { message?: string }).message
-        toast.error(message || t('settings.marketing.error.save', locale))
-        fetchMarketingConsent()
-        return
+        const body = await response.json().catch(() => ({}));
+        const message = (body as { message?: string }).message;
+        toast.error(message || t('settings.marketing.error.save', locale));
+        fetchMarketingConsent();
+        return;
       }
 
       const data: {
-        channels: { email: ConsentChannelState; sms: ConsentChannelState }
-      } = await response.json()
+        channels: { email: ConsentChannelState; sms: ConsentChannelState };
+      } = await response.json();
       setMarketing({
         email: data.channels.email ?? { optedIn: false, lastChangedAt: null },
         sms: data.channels.sms ?? { optedIn: false, lastChangedAt: null },
-      })
-      toast.success(t('settings.marketing.success', locale))
+      });
+      toast.success(t('settings.marketing.success', locale));
     } catch {
-      toast.error(t('settings.marketing.error.save', locale))
-      fetchMarketingConsent()
+      toast.error(t('settings.marketing.error.save', locale));
+      fetchMarketingConsent();
     } finally {
-      setMarketingSaving(false)
+      setMarketingSaving(false);
     }
-  }, [marketing, locale, fetchMarketingConsent])
+  }, [marketing, locale, fetchMarketingConsent]);
 
   const formatConsentDate = (iso: string | null): string | null => {
-    if (!iso) return null
-    const date = new Date(iso)
-    if (Number.isNaN(date.getTime())) return null
-    return date.toLocaleString(locale === 'fa' ? 'fa-IR' : 'en-US')
-  }
+    if (!iso) return null;
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toLocaleString(locale === 'fa' ? 'fa-IR' : 'en-US');
+  };
 
   const renderMarketingToggle = (
     channel: MarketingChannels,
     icon: React.ReactNode,
-    label: string,
+    label: string
   ) => {
-    const state = marketing[channel]
+    const state = marketing[channel];
     return (
       <div
         className={`flex items-center justify-between rounded-lg border p-3 ${
@@ -214,16 +210,14 @@ function SettingsIndexPage() {
         }`}
       >
         <div className="flex items-center gap-3">
-          <span className={state.optedIn ? 'text-primary' : 'text-muted-foreground'}>
-            {icon}
-          </span>
+          <span className={state.optedIn ? 'text-primary' : 'text-muted-foreground'}>{icon}</span>
           <div>
             <p className="text-sm font-medium">{label}</p>
             {state.lastChangedAt ? (
               <p className="text-xs text-muted-foreground">
                 {t('settings.marketing.lastChangedAt', locale).replace(
                   '{date}',
-                  formatConsentDate(state.lastChangedAt) ?? '',
+                  formatConsentDate(state.lastChangedAt) ?? ''
                 )}
               </p>
             ) : (
@@ -250,8 +244,8 @@ function SettingsIndexPage() {
           />
         </button>
       </div>
-    )
-  }
+    );
+  };
 
   // ── Channel definitions ────────────────────────────────────────────
 
@@ -274,7 +268,7 @@ function SettingsIndexPage() {
       label: t('settings.notifications.channel.IN_APP', locale),
       description: locale === 'fa' ? 'اعلان درون برنامه‌ای' : 'In-app notifications',
     },
-  ]
+  ];
 
   // ── Render ─────────────────────────────────────────────────────────
 
@@ -287,7 +281,9 @@ function SettingsIndexPage() {
         <CardContent className="pt-6 space-y-2">
           <div className="flex items-center gap-2 mb-2">
             <GlobeIcon className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">{locale === 'fa' ? 'تنظیمات دیگر' : 'Other Settings'}</h2>
+            <h2 className="text-lg font-semibold">
+              {locale === 'fa' ? 'تنظیمات دیگر' : 'Other Settings'}
+            </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <a
@@ -334,9 +330,7 @@ function SettingsIndexPage() {
         <CardContent className="pt-6 space-y-4">
           <div className="flex items-center gap-2">
             <BellIcon className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">
-              {t('settings.notifications.title', locale)}
-            </h2>
+            <h2 className="text-lg font-semibold">{t('settings.notifications.title', locale)}</h2>
           </div>
 
           <p className="text-sm text-muted-foreground">
@@ -355,8 +349,8 @@ function SettingsIndexPage() {
           {!loading && (
             <div className="space-y-3">
               {channelToggles.map((channel) => {
-                const isEnabled = channels.includes(channel.key)
-                const isAlwaysOn = channel.key === 'IN_APP'
+                const isEnabled = channels.includes(channel.key);
+                const isAlwaysOn = channel.key === 'IN_APP';
 
                 return (
                   <div
@@ -391,7 +385,7 @@ function SettingsIndexPage() {
                       />
                     </button>
                   </div>
-                )
+                );
               })}
             </div>
           )}
@@ -403,11 +397,7 @@ function SettingsIndexPage() {
 
           {/* Save button */}
           <div className="flex justify-end">
-            <Button
-              onClick={handleSave}
-              disabled={saving || loading}
-              className="gap-2"
-            >
+            <Button onClick={handleSave} disabled={saving || loading} className="gap-2">
               {saving ? (
                 <Loader2Icon className="h-4 w-4 animate-spin" />
               ) : (
@@ -415,8 +405,7 @@ function SettingsIndexPage() {
               )}
               {saving
                 ? t('settings.notifications.saving', locale)
-                : t('settings.profile.save', locale)
-              }
+                : t('settings.profile.save', locale)}
             </Button>
           </div>
         </CardContent>
@@ -427,9 +416,7 @@ function SettingsIndexPage() {
         <CardContent className="pt-6 space-y-4">
           <div className="flex items-center gap-2">
             <MegaphoneIcon className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-semibold">
-              {t('settings.marketing.title', locale)}
-            </h2>
+            <h2 className="text-lg font-semibold">{t('settings.marketing.title', locale)}</h2>
           </div>
 
           <p className="text-sm text-muted-foreground">
@@ -448,12 +435,12 @@ function SettingsIndexPage() {
               {renderMarketingToggle(
                 'email',
                 <MailIcon className="h-5 w-5" />,
-                t('settings.marketing.optInEmailLabel', locale),
+                t('settings.marketing.optInEmailLabel', locale)
               )}
               {renderMarketingToggle(
                 'sms',
                 <SmartphoneIcon className="h-5 w-5" />,
-                t('settings.marketing.optInSmsLabel', locale),
+                t('settings.marketing.optInSmsLabel', locale)
               )}
             </div>
           )}
@@ -471,12 +458,11 @@ function SettingsIndexPage() {
               )}
               {marketingSaving
                 ? t('settings.marketing.saving', locale)
-                : t('settings.profile.save', locale)
-              }
+                : t('settings.profile.save', locale)}
             </Button>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

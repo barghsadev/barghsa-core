@@ -1,13 +1,13 @@
-import { Outlet } from '@tanstack/react-router'
-import { t } from '@barghsa/i18n'
-import { TosBanner } from '../components/TosBanner.js'
-import { useLocale } from '../hooks/useLocale.js'
+import { Outlet } from '@tanstack/react-router';
+import { t } from '@barghsa/i18n';
+import { TosBanner } from '../components/TosBanner.js';
+import { useLocale } from '../hooks/useLocale.js';
 
 /**
  * Admin layout with sidebar — renders lazy child routes via Outlet.
  */
 export default function AdminLayout() {
-  const locale = useLocale()
+  const locale = useLocale();
   return (
     <div className="flex flex-col h-screen bg-gray-50" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <TosBanner />
@@ -16,27 +16,99 @@ export default function AdminLayout() {
           <nav>
             <h2 className="text-lg font-semibold mb-4">Admin</h2>
             <ul className="space-y-2">
-              <li><a href="/admin" className="text-blue-600 hover:underline">Dashboard</a></li>
-              <li><a href="/admin/service-targets" className="text-blue-600 hover:underline">{t('admin.targets.title',locale)}</a></li>
-              <li><a href="/admin/staff-teams" className="text-blue-600 hover:underline">{t('admin.teams.title',locale)}</a></li>
-              <li><a href="/admin/tickets" className="text-blue-600 hover:underline">{t('tickets.staffTitle',locale)}</a></li>
-              <li><a href="/admin/users" className="text-blue-600 hover:underline">Users</a></li>
-              <li><a href="/admin/storage" className="text-blue-600 hover:underline">Storage</a></li>
-              <li><a href="/admin/verification" className="text-blue-600 hover:underline">Verification</a></li>
-              <li><a href="/admin/branding" className="text-blue-600 hover:underline">Branding</a></li>
-              <li><a href="/admin/geography" className="text-blue-600 hover:underline">Geography</a></li>
-              <li><a href="/admin/tos" className="text-blue-600 hover:underline">Terms of Service</a></li>
-              <li><a href="/admin/notifications" className="text-blue-600 hover:underline">Notifications</a></li>
-              <li><a href="/admin/invoices" className="text-blue-600 hover:underline">Invoices</a></li>
-              <li><a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">{t('admin.walletReceipts.nav', locale)}</a></li>
-              <li><a href="/admin/approval-requests" className="text-blue-600 hover:underline">{t('admin.approvals.title', locale)}</a></li>
-              <li><a href="/admin/providers" className="text-blue-600 hover:underline">Email Providers</a></li>
-              <li><a href="/admin/roles" className="text-blue-600 hover:underline">Roles &amp; Permissions</a></li>
+              <li>
+                <a href="/admin" className="text-blue-600 hover:underline">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="/admin/service-targets" className="text-blue-600 hover:underline">
+                  {t('admin.targets.title', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/staff-teams" className="text-blue-600 hover:underline">
+                  {t('admin.teams.title', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/tickets" className="text-blue-600 hover:underline">
+                  {t('tickets.staffTitle', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/users" className="text-blue-600 hover:underline">
+                  Users
+                </a>
+              </li>
+              <li>
+                <a href="/admin/storage" className="text-blue-600 hover:underline">
+                  Storage
+                </a>
+              </li>
+              <li>
+                <a href="/admin/verification" className="text-blue-600 hover:underline">
+                  Verification
+                </a>
+              </li>
+              <li>
+                <a href="/admin/branding" className="text-blue-600 hover:underline">
+                  Branding
+                </a>
+              </li>
+              <li>
+                <a href="/admin/geography" className="text-blue-600 hover:underline">
+                  Geography
+                </a>
+              </li>
+              <li>
+                <a href="/admin/tos" className="text-blue-600 hover:underline">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="/admin/notifications" className="text-blue-600 hover:underline">
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="/admin/invoices" className="text-blue-600 hover:underline">
+                  Invoices
+                </a>
+              </li>
+              <li>
+                <a href="/admin/wallet-receipts" className="text-blue-600 hover:underline">
+                  {t('admin.walletReceipts.nav', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/approval-requests" className="text-blue-600 hover:underline">
+                  {t('admin.approvals.title', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/providers" className="text-blue-600 hover:underline">
+                  Email Providers
+                </a>
+              </li>
+              <li>
+                <a href="/admin/roles" className="text-blue-600 hover:underline">
+                  Roles &amp; Permissions
+                </a>
+              </li>
               <li className="pt-2 mt-2 border-t border-gray-100">
                 <span className="text-xs text-gray-400 uppercase tracking-wide">CRM</span>
               </li>
-              <li><a href="/admin/crm/corrections" className="text-blue-600 hover:underline">{t('crm.corrections.title', locale)}</a></li>
-              <li><a href="/admin/crm" className="text-blue-600 hover:underline">CRM Profiles</a></li>
+              <li>
+                <a href="/admin/crm/corrections" className="text-blue-600 hover:underline">
+                  {t('crm.corrections.title', locale)}
+                </a>
+              </li>
+              <li>
+                <a href="/admin/crm" className="text-blue-600 hover:underline">
+                  CRM Profiles
+                </a>
+              </li>
             </ul>
           </nav>
         </aside>
@@ -46,5 +118,5 @@ export default function AdminLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }

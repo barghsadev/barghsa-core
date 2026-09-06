@@ -1,7 +1,7 @@
-import { sql } from 'drizzle-orm'
-import { check, text, integer, boolean, pgTable } from 'drizzle-orm/pg-core'
-import { uuidv7, irrAmount, timestamptz } from '../types'
-import { invoices } from './invoices'
+import { sql } from 'drizzle-orm';
+import { check, text, integer, boolean, pgTable } from 'drizzle-orm/pg-core';
+import { uuidv7, irrAmount, timestamptz } from '../types';
+import { invoices } from './invoices';
 
 /**
  * Invoice lines table (T-04.1.02.01).
@@ -61,7 +61,9 @@ export const invoiceLines = pgTable(
     vatRate: integer('vat_rate').notNull().default(0),
 
     /** VAT amount on this line in IRR. Zero when the line is not taxable. */
-    vatAmount: irrAmount('vat_amount').notNull().default(sql`0::bigint`),
+    vatAmount: irrAmount('vat_amount')
+      .notNull()
+      .default(sql`0::bigint`),
 
     /** Whether this line participates in VAT calculation. */
     isTaxable: boolean('is_taxable').notNull().default(true),
@@ -83,7 +85,10 @@ export const invoiceLines = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
 
     /** When the line record was last updated. */
-    updatedAt: timestamptz('updated_at').defaultNow().notNull().$onUpdate(() => new Date()),
+    updatedAt: timestamptz('updated_at')
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (table) => ({
     /** Quantity must be at least 1. */
@@ -91,27 +96,30 @@ export const invoiceLines = pgTable(
     /** Unit price cannot be negative. */
     unitPriceNonNegative: check(
       'ck_invoice_lines_unit_price_non_negative',
-      sql`${table.unitPrice} >= 0`,
+      sql`${table.unitPrice} >= 0`
     ),
     /** Line total cannot be negative. */
     lineTotalNonNegative: check(
       'ck_invoice_lines_line_total_non_negative',
-      sql`${table.lineTotal} >= 0`,
+      sql`${table.lineTotal} >= 0`
     ),
     /** VAT rate must be 0..10000 basis points (0%..100%). */
-    vatRateRange: check('ck_invoice_lines_vat_rate_range', sql`${table.vatRate} BETWEEN 0 AND 10000`),
+    vatRateRange: check(
+      'ck_invoice_lines_vat_rate_range',
+      sql`${table.vatRate} BETWEEN 0 AND 10000`
+    ),
     /** VAT amount cannot be negative. */
     vatAmountNonNegative: check(
       'ck_invoice_lines_vat_amount_non_negative',
-      sql`${table.vatAmount} >= 0`,
+      sql`${table.vatAmount} >= 0`
     ),
     /** A non-taxable line must carry zero VAT. */
     nonTaxableZeroVat: check(
       'ck_invoice_lines_non_taxable_zero_vat',
-      sql`${table.isTaxable} OR ${table.vatAmount} = 0`,
+      sql`${table.isTaxable} OR ${table.vatAmount} = 0`
     ),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the invoice_lines table with CHECK constraints.
@@ -146,4 +154,4 @@ export const createInvoiceLinesTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_invoice_lines_invoice_id ON invoice_lines (invoice_id);
   CREATE INDEX IF NOT EXISTS idx_invoice_lines_invoice_position ON invoice_lines (invoice_id, position);
-`
+`;

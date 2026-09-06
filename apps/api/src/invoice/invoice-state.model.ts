@@ -24,9 +24,9 @@ export const INVOICE_STATES = [
   'Cancelled',
   'PartiallyRefunded',
   'Refunded',
-] as const
+] as const;
 
-export type InvoiceState = (typeof INVOICE_STATES)[number]
+export type InvoiceState = (typeof INVOICE_STATES)[number];
 
 /** Named transitions, one per row in the S-04.1.01 specification table. */
 export const INVOICE_TRANSITIONS = [
@@ -38,9 +38,9 @@ export const INVOICE_TRANSITIONS = [
   'Cancel',
   'PartialRefund',
   'FullRefund',
-] as const
+] as const;
 
-export type InvoiceTransition = (typeof INVOICE_TRANSITIONS)[number]
+export type InvoiceTransition = (typeof INVOICE_TRANSITIONS)[number];
 
 /**
  * Terminal states — a transition INTO one of these closes the invoice.
@@ -51,7 +51,7 @@ export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
   'Paid',
   'Cancelled',
   'Refunded',
-] as const
+] as const;
 
 /**
  * Allowed `to` states for each `from` state.
@@ -66,9 +66,7 @@ export const INVOICE_TERMINAL_STATES: readonly InvoiceState[] = [
  *   - PartialRefund:      Paid, PartiallyRefunded → PartiallyRefunded
  *   - FullRefund:         Paid, PartiallyRefunded → Refunded
  */
-export const ALLOWED_TRANSITIONS: Readonly<
-  Record<InvoiceState, readonly InvoiceState[]>
-> = {
+export const ALLOWED_TRANSITIONS: Readonly<Record<InvoiceState, readonly InvoiceState[]>> = {
   Draft: ['Unpaid', 'Cancelled'],
   Unpaid: ['PaymentUnderReview', 'Paid', 'Overdue', 'Cancelled'],
   PaymentUnderReview: ['Unpaid', 'PartiallyFunded', 'Paid'],
@@ -78,7 +76,7 @@ export const ALLOWED_TRANSITIONS: Readonly<
   Cancelled: [],
   PartiallyRefunded: ['PartiallyRefunded', 'Refunded'],
   Refunded: [],
-}
+};
 
 /** The named transition that a given `from`→`to` pair corresponds to. */
 export const TRANSITION_BY_PAIR: Readonly<
@@ -107,15 +105,15 @@ export const TRANSITION_BY_PAIR: Readonly<
   Cancelled: {},
   PartiallyRefunded: { PartiallyRefunded: 'PartialRefund', Refunded: 'FullRefund' },
   Refunded: {},
-}
+};
 
 export interface InvoiceFinancials {
   /** Confirmed (paid) amount in IRR. */
-  paidAmount: bigint
+  paidAmount: bigint;
   /** Invoice total amount in IRR. */
-  totalAmount: bigint
+  totalAmount: bigint;
   /** Cumulative refunded amount in IRR. */
-  refundedAmount: bigint
+  refundedAmount: bigint;
 }
 
 /**
@@ -128,7 +126,7 @@ export interface TransitionContext extends InvoiceFinancials {
    * transition (e.g. the confirmed bank-receipt amount). When omitted the
    * derived confirmed amount is `paidAmount`.
    */
-  incomingPaidAmount?: bigint
+  incomingPaidAmount?: bigint;
 }
 
 /** Guard/validation result message. */
@@ -140,8 +138,7 @@ export const TRANSITION_ERRORS = {
     `Cannot reach Paid: confirmed amount ${paid} is less than total ${total}`,
   REFUNDED_MISMATCH: (refunded: bigint, paid: bigint) =>
     `Cannot reach Refunded: refunded ${refunded} does not equal paid ${paid}`,
-  PARTIALLY_FUNDED_ZERO: () =>
-    `Cannot enter PartiallyFunded with zero confirmed amount`,
+  PARTIALLY_FUNDED_ZERO: () => `Cannot enter PartiallyFunded with zero confirmed amount`,
   PARTIALLY_FUNDED_TOO_HIGH: (paid: bigint, total: bigint) =>
     `Cannot enter PartiallyFunded: confirmed amount ${paid} already covers total ${total}`,
   PARTIAL_REFUND_EXCEEDS: (refunded: bigint, paid: bigint) =>
@@ -152,16 +149,16 @@ export const TRANSITION_ERRORS = {
   NONNEGATIVE_INCOMING: () => `incoming paid amount cannot be negative`,
   CREDIT_NOT_PAYABLE: (invoiceId: string) =>
     `Invoice ${invoiceId} is a credit note and cannot enter the customer payment flow`,
-} as const
+} as const;
 
 /** Validate that a state string is one of the 9 authoritative states. */
 export function isInvoiceState(value: string): value is InvoiceState {
-  return (INVOICE_STATES as readonly string[]).includes(value)
+  return (INVOICE_STATES as readonly string[]).includes(value);
 }
 
 /** Is `from` a state from which `to` may be reached? Pure structural check. */
 export function canTransition(from: InvoiceState, to: InvoiceState): boolean {
-  return ALLOWED_TRANSITIONS[from].includes(to)
+  return ALLOWED_TRANSITIONS[from].includes(to);
 }
 
 /**
@@ -177,15 +174,12 @@ export function canTransition(from: InvoiceState, to: InvoiceState): boolean {
  * @returns `null` when the target is structurally/numerically reachable,
  *   otherwise the named error message.
  */
-export function resolveAmountError(
-  to: InvoiceState,
-  fin: TransitionContext,
-): string | null {
-  if (fin.totalAmount <= 0n) return TRANSITION_ERRORS.TOTAL_POSITIVE()
-  if (fin.paidAmount < 0n) return TRANSITION_ERRORS.NONNEGATIVE_PAID()
-  if (fin.refundedAmount < 0n) return TRANSITION_ERRORS.NONNEGATIVE_REFUNDED()
-  const incoming = fin.incomingPaidAmount ?? fin.paidAmount
-  if (incoming < 0n) return TRANSITION_ERRORS.NONNEGATIVE_INCOMING()
+export function resolveAmountError(to: InvoiceState, fin: TransitionContext): string | null {
+  if (fin.totalAmount <= 0n) return TRANSITION_ERRORS.TOTAL_POSITIVE();
+  if (fin.paidAmount < 0n) return TRANSITION_ERRORS.NONNEGATIVE_PAID();
+  if (fin.refundedAmount < 0n) return TRANSITION_ERRORS.NONNEGATIVE_REFUNDED();
+  const incoming = fin.incomingPaidAmount ?? fin.paidAmount;
+  if (incoming < 0n) return TRANSITION_ERRORS.NONNEGATIVE_INCOMING();
 
   // Effective confirmed amount after this transition records `incoming`.
   // For targets reached via the wallet pay path we require the SPEC's
@@ -195,36 +189,27 @@ export function resolveAmountError(
       // Even though a refund history may exist, Paid can be (re)entered from
       // PartiallyFunded/Unpaid with a full settlement; use the effective value.
       if (incoming < fin.totalAmount) {
-        return TRANSITION_ERRORS.PAID_AMOUNT_TOO_LOW(incoming, fin.totalAmount)
+        return TRANSITION_ERRORS.PAID_AMOUNT_TOO_LOW(incoming, fin.totalAmount);
       }
-      return null
+      return null;
     case 'Refunded':
       if (fin.refundedAmount !== fin.paidAmount) {
-        return TRANSITION_ERRORS.REFUNDED_MISMATCH(
-          fin.refundedAmount,
-          fin.paidAmount,
-        )
+        return TRANSITION_ERRORS.REFUNDED_MISMATCH(fin.refundedAmount, fin.paidAmount);
       }
-      return null
+      return null;
     case 'PartiallyFunded':
-      if (incoming <= 0n) return TRANSITION_ERRORS.PARTIALLY_FUNDED_ZERO()
+      if (incoming <= 0n) return TRANSITION_ERRORS.PARTIALLY_FUNDED_ZERO();
       if (incoming >= fin.totalAmount) {
-        return TRANSITION_ERRORS.PARTIALLY_FUNDED_TOO_HIGH(
-          incoming,
-          fin.totalAmount,
-        )
+        return TRANSITION_ERRORS.PARTIALLY_FUNDED_TOO_HIGH(incoming, fin.totalAmount);
       }
-      return null
+      return null;
     case 'PartiallyRefunded':
       if (fin.refundedAmount <= 0n || fin.refundedAmount >= fin.paidAmount) {
-        return TRANSITION_ERRORS.PARTIAL_REFUND_EXCEEDS(
-          fin.refundedAmount,
-          fin.paidAmount,
-        )
+        return TRANSITION_ERRORS.PARTIAL_REFUND_EXCEEDS(fin.refundedAmount, fin.paidAmount);
       }
-      return null
+      return null;
     default:
-      return null
+      return null;
   }
 }
 
@@ -238,27 +223,24 @@ export function resolveAmountError(
 export function validateTransition(
   from: InvoiceState,
   to: InvoiceState,
-  ctx?: TransitionContext,
+  ctx?: TransitionContext
 ): void {
-  if (!isInvoiceState(from)) throw new RangeError(TRANSITION_ERRORS.UNKNOWN_STATE(from))
-  if (!isInvoiceState(to)) throw new RangeError(TRANSITION_ERRORS.UNKNOWN_STATE(to))
+  if (!isInvoiceState(from)) throw new RangeError(TRANSITION_ERRORS.UNKNOWN_STATE(from));
+  if (!isInvoiceState(to)) throw new RangeError(TRANSITION_ERRORS.UNKNOWN_STATE(to));
 
   if (!canTransition(from, to)) {
-    throw new Error(TRANSITION_ERRORS.NOT_PART_OF_FLOW(from, to))
+    throw new Error(TRANSITION_ERRORS.NOT_PART_OF_FLOW(from, to));
   }
 
   if (ctx) {
-    const amountError = resolveAmountError(to, ctx)
-    if (amountError) throw new Error(amountError)
+    const amountError = resolveAmountError(to, ctx);
+    if (amountError) throw new Error(amountError);
   }
 }
 
 /** Resolve the named transition for a `from`→`to` pair, or null if illegal. */
-export function transitionName(
-  from: InvoiceState,
-  to: InvoiceState,
-): InvoiceTransition | null {
-  return TRANSITION_BY_PAIR[from]?.[to] ?? null
+export function transitionName(from: InvoiceState, to: InvoiceState): InvoiceTransition | null {
+  return TRANSITION_BY_PAIR[from]?.[to] ?? null;
 }
 
 /** Human-readable transition label for audit/user-facing messages. */
@@ -271,4 +253,4 @@ export const TRANSITION_LABELS: Record<InvoiceTransition, string> = {
   Cancel: 'cancel',
   PartialRefund: 'partial_refund',
   FullRefund: 'full_refund',
-}
+};

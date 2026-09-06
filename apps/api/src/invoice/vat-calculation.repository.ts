@@ -20,16 +20,13 @@
  * service.
  */
 
-import { Injectable } from '@nestjs/common'
-import { resolveVatRate } from '@barghsa/shared/finance'
+import { Injectable } from '@nestjs/common';
+import { resolveVatRate } from '@barghsa/shared/finance';
 
 /** Minimal query executor shared by the pool and a transactional client. */
 export type DbExecutor = {
-  query: <T = Record<string, unknown>>(
-    text: string,
-    values?: unknown[],
-  ) => Promise<{ rows: T[] }>
-}
+  query: <T = Record<string, unknown>>(text: string, values?: unknown[]) => Promise<{ rows: T[] }>;
+};
 
 /**
  * One resolved VAT rate at a point in time: the rate plus the rule
@@ -38,9 +35,9 @@ export type DbExecutor = {
  */
 export interface ResolvedVatRate {
   /** Rate in basis points (0..10000 = 0%..100%). */
-  rateBasisPoints: number
+  rateBasisPoints: number;
   /** Which rule produced the rate. */
-  source: 'product_override' | 'category' | 'fallback_zero'
+  source: 'product_override' | 'category' | 'fallback_zero';
 }
 
 /** Input to {@link VatCalculationRepository.resolveRate}. */
@@ -50,15 +47,15 @@ export interface ResolveVatRateInput {
    * product's own charge category (products.type) is used as the
    * category fallback unless an explicit `category` is given.
    */
-  productId?: string
+  productId?: string;
   /**
    * Explicit charge-category key. Defaults to the product's type when
    * only `productId` is given; omitted entirely → no category look-up
    * (a bare explicit-rate resolution).
    */
-  category?: string
+  category?: string;
   /** Point in time the rate must be active at (defaults to now). */
-  at?: Date
+  at?: Date;
 }
 
 @Injectable()
@@ -73,9 +70,9 @@ export class VatCalculationRepository {
    */
   async resolveRate(
     executor: DbExecutor,
-    input: ResolveVatRateInput = {},
+    input: ResolveVatRateInput = {}
   ): Promise<ResolvedVatRate> {
-    const at = input.at ?? new Date()
+    const at = input.at ?? new Date();
 
     // Precedence: active product override wins outright. Only fall back
     // to the category when no override applies — deriving the category
@@ -84,44 +81,40 @@ export class VatCalculationRepository {
     // non-null override as unconditionally winning. If it ever gains a
     // rule that compares override against category (min/max/intersect),
     // the category must be resolved here before short-circuiting.
-    const override = await this.findActiveOverrideRate(
-      executor,
-      input.productId,
-      at,
-    )
+    const override = await this.findActiveOverrideRate(executor, input.productId, at);
     if (override !== null) {
-      return resolveVatRate(override, null)
+      return resolveVatRate(override, null);
     }
 
-    let derivedCategory: string | undefined
+    let derivedCategory: string | undefined;
     if (input.productId !== undefined && input.category === undefined) {
       // Derive the product's charge category from its type so the
       // category-default rule is reachable with productId alone.
       const product = await executor.query<{ type: string }>(
         'SELECT type FROM products WHERE id = $1',
-        [input.productId],
-      )
+        [input.productId]
+      );
       if (product.rows.length > 0 && product.rows[0] !== undefined) {
-        derivedCategory = product.rows[0].type
+        derivedCategory = product.rows[0].type;
       }
     }
 
     const categoryRate = await this.findActiveCategoryRate(
       executor,
       input.category ?? derivedCategory,
-      at,
-    )
+      at
+    );
 
-    return resolveVatRate(null, categoryRate)
+    return resolveVatRate(null, categoryRate);
   }
 
   /** Active product-override rate (bps) at `at`, or null when none. */
   private async findActiveOverrideRate(
     executor: DbExecutor,
     productId: string | undefined,
-    at: Date,
+    at: Date
   ): Promise<number | null> {
-    if (productId === undefined) return null
+    if (productId === undefined) return null;
     const override = await executor.query<{ rate: number }>(
       `SELECT vc.rate
          FROM product_vat_overrides pvo
@@ -131,18 +124,18 @@ export class VatCalculationRepository {
           AND (pvo.effective_until IS NULL OR pvo.effective_until > $2)
         ORDER BY pvo.effective_from DESC
         LIMIT 1`,
-      [productId, at],
-    )
-    return override.rows[0]?.rate ?? null
+      [productId, at]
+    );
+    return override.rows[0]?.rate ?? null;
   }
 
   /** Active category rate (bps) at `at`, or null when none. */
   private async findActiveCategoryRate(
     executor: DbExecutor,
     category: string | undefined,
-    at: Date,
+    at: Date
   ): Promise<number | null> {
-    if (category === undefined) return null
+    if (category === undefined) return null;
     const config = await executor.query<{ rate: number }>(
       `SELECT rate
          FROM vat_configurations
@@ -151,8 +144,8 @@ export class VatCalculationRepository {
           AND (effective_until IS NULL OR effective_until > $2)
         ORDER BY effective_from DESC
         LIMIT 1`,
-      [category, at],
-    )
-    return config.rows[0]?.rate ?? null
+      [category, at]
+    );
+    return config.rows[0]?.rate ?? null;
   }
 }

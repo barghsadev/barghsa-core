@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js'
+import { z } from 'zod';
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import {
   Body,
   Controller,
@@ -13,19 +13,19 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AgentsService } from './agents.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AgentsService } from './agents.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('Agents')
 @Controller('api/profiles/:profileId')
 @UseGuards(SessionAuthGuard)
 export class AgentsController {
-  private readonly logger = new Logger(AgentsController.name)
+  private readonly logger = new Logger(AgentsController.name);
 
   constructor(private readonly agentsService: AgentsService) {}
 
@@ -44,25 +44,28 @@ export class AgentsController {
   @ApiResponse({ status: 200, description: 'Agent list.' })
   @ApiResponse({ status: 403, description: 'Not authorized — owner or manager role required.' })
   @ApiResponse({ status: 404, description: 'Profile not found or not a legal profile.' })
-  async listAgents(
-    @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
+  async listAgents(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
 
     // Permission check: owner or manager
-    const permitted = await this.agentsService.isOwnerOrManager(userId, profileId)
+    const permitted = await this.agentsService.isOwnerOrManager(userId, profileId);
     if (!permitted) {
       throw new HttpException(
-        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Only owner or manager can view agents' },
-        403,
-      )
+        {
+          statusCode: 403,
+          error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+          message: 'Only owner or manager can view agents',
+        },
+        403
+      );
     }
 
-    const result = await this.agentsService.listAgents(profileId)
-    this.logger.debug(`User ${userId} listed agents for profile ${profileId}: ${result.agents.length} entries`)
-    const roles = await this.agentsService.getAgentRoles(profileId, userId)
-    return { ...result, canTransferOwnership: roles.includes('Owner') }
+    const result = await this.agentsService.listAgents(profileId);
+    this.logger.debug(
+      `User ${userId} listed agents for profile ${profileId}: ${result.agents.length} entries`
+    );
+    const roles = await this.agentsService.getAgentRoles(profileId, userId);
+    return { ...result, canTransferOwnership: roles.includes('Owner') };
   }
 
   /**
@@ -79,7 +82,10 @@ export class AgentsController {
   @HttpCode(201)
   @ApiOperation({ summary: 'Create an agent invitation for a legal profile' })
   @ApiResponse({ status: 201, description: 'Invitation created.' })
-  @ApiResponse({ status: 400, description: 'Invalid input (role, username, or non-legal profile).' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input (role, username, or non-legal profile).',
+  })
   @ApiResponse({ status: 403, description: 'Not authorized — owner or manager role required.' })
   @ApiResponse({ status: 404, description: 'Profile not found.' })
   @ApiResponse({ status: 409, description: 'User already an agent or has a pending invitation.' })
@@ -87,19 +93,17 @@ export class AgentsController {
   async createInvitation(
     @Param('profileId') profileId: string,
     @Body() body: { username: string; role: string },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
     const result = await this.agentsService.createInvitation(
       profileId,
       body.username,
       body.role,
-      userId,
-    )
-    this.logger.log(
-      `Invitation ${result.id} created for profile ${profileId} by user ${userId}`,
-    )
-    return result
+      userId
+    );
+    this.logger.log(`Invitation ${result.id} created for profile ${profileId} by user ${userId}`);
+    return result;
   }
 
   /**
@@ -119,36 +123,63 @@ export class AgentsController {
   async withdrawInvitation(
     @Param('profileId') profileId: string,
     @Param('inviteId') inviteId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const userId = req.session.userId
+    const userId = req.session.userId;
 
-    await this.agentsService.withdrawInvitation(profileId, inviteId, userId)
+    await this.agentsService.withdrawInvitation(profileId, inviteId, userId);
 
-    this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`)
-    return { message: 'Invitation withdrawn successfully.' }
+    this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`);
+    return { message: 'Invitation withdrawn successfully.' };
   }
 
   @Put('agents/:userId/roles')
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
-  async setAgentRoles(@Param('profileId') profileId:string,@Param('userId') targetUserId:string,
-    @Body() body:unknown,@Req() req:AuthenticatedRequest) {
-    const parsed=z.object({roles:z.array(z.enum(['Manager','Finance','Legal'])).min(1).max(3)}).safeParse(body)
-    if (!parsed.success || !z.uuid().safeParse(profileId).success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
-    await this.agentsService.setAgentRoles(profileId,targetUserId,parsed.data.roles,req.session.userId)
-    return {roles:parsed.data.roles}
+  async setAgentRoles(
+    @Param('profileId') profileId: string,
+    @Param('userId') targetUserId: string,
+    @Body() body: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const parsed = z
+      .object({
+        roles: z
+          .array(z.enum(['Manager', 'Finance', 'Legal']))
+          .min(1)
+          .max(3),
+      })
+      .safeParse(body);
+    if (!parsed.success || !z.uuid().safeParse(profileId).success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    await this.agentsService.setAgentRoles(
+      profileId,
+      targetUserId,
+      parsed.data.roles,
+      req.session.userId
+    );
+    return { roles: parsed.data.roles };
   }
 
   @Delete('agents/:userId')
   @HttpCode(200)
   @RequiresStepUp()
   @UseGuards(StepUpGuard)
-  async removeAgent(@Param('profileId') profileId:string,@Param('userId') targetUserId:string,@Req() req:AuthenticatedRequest) {
-    if (!z.uuid().safeParse(profileId).success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
-    await this.agentsService.setAgentRoles(profileId,targetUserId,[],req.session.userId)
-    return {removed:true}
+  async removeAgent(
+    @Param('profileId') profileId: string,
+    @Param('userId') targetUserId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    if (!z.uuid().safeParse(profileId).success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    await this.agentsService.setAgentRoles(profileId, targetUserId, [], req.session.userId);
+    return { removed: true };
   }
-
 }

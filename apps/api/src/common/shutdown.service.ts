@@ -40,14 +40,12 @@ export class ShutdownService implements OnApplicationShutdown {
 
   async onApplicationShutdown(signal?: string): Promise<void> {
     this.logger.warn(
-      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${this.gracePeriodMs / 1_000}s deadline)`,
+      `Received ${signal ?? 'unknown signal'} — starting graceful shutdown (${this.gracePeriodMs / 1_000}s deadline)`
     );
 
     // Safety-net timer — if any step hangs, force exit.
     const forceExitTimer = setTimeout(() => {
-      this.logger.error(
-        'Graceful shutdown deadline exceeded — forcing exit with code 1',
-      );
+      this.logger.error('Graceful shutdown deadline exceeded — forcing exit with code 1');
       process.exit(1);
     }, this.gracePeriodMs);
     forceExitTimer.unref();
@@ -103,7 +101,9 @@ export class ShutdownService implements OnApplicationShutdown {
         process.exit(1);
       }
     } else if (!cleanShutdown) {
-      this.logger.warn('Graceful shutdown completed with errors (non-signal close — errors logged above)');
+      this.logger.warn(
+        'Graceful shutdown completed with errors (non-signal close — errors logged above)'
+      );
     }
   }
 }

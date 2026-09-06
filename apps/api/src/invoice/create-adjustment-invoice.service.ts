@@ -54,24 +54,21 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-} from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import {
-  duePeriodTypeForManual,
-  type AdjustmentKind,
-} from '@barghsa/shared/finance'
-import { v7 as uuidv7 } from 'uuid'
-import { InvoiceStateMachineService } from './invoice-state-machine.service.js'
-import type { TransitionResult } from './invoice-state-machine.service.js'
-import type { TransactionClient } from './invoice-audit.repository.js'
-import type { InvoiceState } from './invoice-state.model.js'
+} from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { duePeriodTypeForManual, type AdjustmentKind } from '@barghsa/shared/finance';
+import { v7 as uuidv7 } from 'uuid';
+import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
+import type { TransitionResult } from './invoice-state-machine.service.js';
+import type { TransactionClient } from './invoice-audit.repository.js';
+import type { InvoiceState } from './invoice-state.model.js';
 import {
   calculateManualInvoice,
   type ManualInvoiceLineInput,
-} from './manual-invoice.calculation.js'
-import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js'
-import { DueAtCalculationService } from './due-at.service.js'
-import type { ManualInvoiceLineResult } from './manual-invoice.service.js'
+} from './manual-invoice.calculation.js';
+import { buildManualInvoiceCalculationSnapshot } from './invoice-calculation-snapshot.js';
+import { DueAtCalculationService } from './due-at.service.js';
+import type { ManualInvoiceLineResult } from './manual-invoice.service.js';
 
 /**
  * Post-payment states from which an adjustment invoice is allowed.
@@ -85,11 +82,11 @@ export const ADJUSTABLE_INVOICE_STATES = [
   'PartiallyFunded',
   'PartiallyRefunded',
   'Refunded',
-] as const satisfies readonly InvoiceState[]
+] as const satisfies readonly InvoiceState[];
 
-export type AdjustableInvoiceState = (typeof ADJUSTABLE_INVOICE_STATES)[number]
+export type AdjustableInvoiceState = (typeof ADJUSTABLE_INVOICE_STATES)[number];
 
-export type { AdjustmentKind }
+export type { AdjustmentKind };
 
 export const CREATE_ADJUSTMENT_ERRORS = {
   REASON_REQUIRED: () => 'A reason is required to create an adjustment invoice',
@@ -98,128 +95,126 @@ export const CREATE_ADJUSTMENT_ERRORS = {
     `Cannot adjust invoice ${invoiceId}: no confirmed payment; use cancel-and-replace before payment`,
   STATE_NOT_ADJUSTABLE: (invoiceId: string, state: string) =>
     `Cannot adjust invoice ${invoiceId} in state '${state}'; only Paid, PartiallyFunded, PartiallyRefunded, or Refunded invoices may receive an adjustment`,
-} as const
+} as const;
 
 /** Command to create a linked post-payment adjustment invoice. */
 export interface CreateAdjustmentInvoiceCommand {
   /** Paid invoice this adjustment corrects (never edited). */
-  originalInvoiceId: string
+  originalInvoiceId: string;
   /**
    * Signed IRR amount. Positive = additional charge; negative = credit.
    * The stored invoice `total_amount` is always `abs(amount)`.
    */
-  amount: bigint
+  amount: bigint;
   /** Required customer/staff-visible reason (audited, used as line text). */
-  reason: string
+  reason: string;
   /** Finance staff member performing the action (FK `users.userId`). */
-  actorUserId: string
+  actorUserId: string;
   /** Opaque correlation ID for audit linkage. */
-  correlationId?: string
+  correlationId?: string;
   /** Source IP of the staff member (audited). */
-  ip?: string
+  ip?: string;
   /** Explicit due date (>= now) for a charge; ignored for credits. */
-  dueAt?: Date
+  dueAt?: Date;
   /** Override "now" for tests. */
-  now?: Date
+  now?: Date;
 }
 
 /** Result of a successful adjustment create. */
 export interface CreateAdjustmentInvoiceResult {
-  originalInvoiceId: string
-  originalState: InvoiceState
-  adjustmentInvoiceId: string
-  adjustmentState: InvoiceState
-  kind: AdjustmentKind
+  originalInvoiceId: string;
+  originalState: InvoiceState;
+  adjustmentInvoiceId: string;
+  adjustmentState: InvoiceState;
+  kind: AdjustmentKind;
   /** Signed IRR amount as submitted. */
-  amount: bigint
+  amount: bigint;
   /** Stored invoice total (`abs(amount)`). */
-  totalAmount: bigint
+  totalAmount: bigint;
   /** Signed liability contribution (`-totalAmount` for credits). */
-  accountingAmount: bigint
-  adjustmentForInvoiceId: string
-  profileId: string
-  contractId: string | null
-  orderId: string | null
-  consultationId: string | null
-  lines: ManualInvoiceLineResult[]
-  issuedAt: Date
+  accountingAmount: bigint;
+  adjustmentForInvoiceId: string;
+  profileId: string;
+  contractId: string | null;
+  orderId: string | null;
+  consultationId: string | null;
+  lines: ManualInvoiceLineResult[];
+  issuedAt: Date;
   /**
    * Earliest customer-payment instant. Null on credits — they must
    * never enter the payment flow. Non-null on charges.
    */
-  payableFrom: Date | null
-  dueAt: Date | null
-  issueAuditId: string
-  issueTransition: TransitionResult
+  payableFrom: Date | null;
+  dueAt: Date | null;
+  issueAuditId: string;
+  issueTransition: TransitionResult;
 }
 
 interface LockedOriginalRow {
-  id: string
-  profile_id: string
-  order_id: string | null
-  contract_id: string | null
-  consultation_id: string | null
-  type: string | null
-  state: string
-  total_amount: string
-  paid_amount: string
-  refunded_amount: string
-  metadata: unknown
+  id: string;
+  profile_id: string;
+  order_id: string | null;
+  contract_id: string | null;
+  consultation_id: string | null;
+  type: string | null;
+  state: string;
+  total_amount: string;
+  paid_amount: string;
+  refunded_amount: string;
+  metadata: unknown;
 }
 
 /** True when `state` is a post-payment state eligible for adjustment. */
-export function isAdjustableInvoiceState(
-  state: string,
-): state is AdjustableInvoiceState {
-  return (ADJUSTABLE_INVOICE_STATES as readonly string[]).includes(state)
+export function isAdjustableInvoiceState(state: string): state is AdjustableInvoiceState {
+  return (ADJUSTABLE_INVOICE_STATES as readonly string[]).includes(state);
 }
 
 export function adjustmentKindForAmount(amount: bigint): AdjustmentKind {
-  return amount > 0n ? 'charge' : 'credit'
+  return amount > 0n ? 'charge' : 'credit';
 }
 
 function asMetadataObject(value: unknown): Record<string, unknown> {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return { ...(value as Record<string, unknown>) }
+    return { ...(value as Record<string, unknown>) };
   }
   if (typeof value === 'string') {
     try {
-      const parsed: unknown = JSON.parse(value)
+      const parsed: unknown = JSON.parse(value);
       if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return { ...(parsed as Record<string, unknown>) }
+        return { ...(parsed as Record<string, unknown>) };
       }
     } catch {
       /* ignore malformed JSON */
     }
   }
-  return {}
+  return {};
 }
 
 function requireReason(reason: string): string {
-  const trimmed = typeof reason === 'string' ? reason.trim() : ''
+  const trimmed = typeof reason === 'string' ? reason.trim() : '';
   if (trimmed === '') {
-    throw new BadRequestException(CREATE_ADJUSTMENT_ERRORS.REASON_REQUIRED())
+    throw new BadRequestException(CREATE_ADJUSTMENT_ERRORS.REASON_REQUIRED());
   }
-  return trimmed
+  return trimmed;
 }
 
 function requireNonZeroAmount(amount: bigint): bigint {
   if (amount === 0n) {
-    throw new BadRequestException(CREATE_ADJUSTMENT_ERRORS.AMOUNT_ZERO())
+    throw new BadRequestException(CREATE_ADJUSTMENT_ERRORS.AMOUNT_ZERO());
   }
-  return amount
+  return amount;
 }
 
 function appendAdjustedByInvoiceId(
   metadata: Record<string, unknown>,
-  adjustmentInvoiceId: string,
+  adjustmentInvoiceId: string
 ): Record<string, unknown> {
-  const existing = metadata.adjustedByInvoiceIds
+  const existing = metadata.adjustedByInvoiceIds;
   const list = Array.isArray(existing)
     ? existing.filter((id): id is string => typeof id === 'string')
-    : []
-  if (!list.includes(adjustmentInvoiceId)) list.push(adjustmentInvoiceId)
-  return { ...metadata, adjustedByInvoiceIds: list }
+    : [];
+  if (!list.includes(adjustmentInvoiceId)) list.push(adjustmentInvoiceId);
+  return { ...metadata, adjustedByInvoiceIds: list };
 }
 
 function adjustmentLine(reason: string, absAmount: bigint): ManualInvoiceLineInput {
@@ -229,16 +224,16 @@ function adjustmentLine(reason: string, absAmount: bigint): ManualInvoiceLineInp
     unitPrice: absAmount,
     vatRate: 0,
     isTaxable: false,
-  }
+  };
 }
 
 @Injectable()
 export class CreateAdjustmentInvoiceService {
-  private readonly logger = new Logger(CreateAdjustmentInvoiceService.name)
+  private readonly logger = new Logger(CreateAdjustmentInvoiceService.name);
 
   constructor(
     private readonly stateMachine: InvoiceStateMachineService,
-    private readonly dueAtCalculation: DueAtCalculationService,
+    private readonly dueAtCalculation: DueAtCalculationService
   ) {}
 
   /**
@@ -251,24 +246,24 @@ export class CreateAdjustmentInvoiceService {
    *   or is not in an adjustable post-payment state.
    */
   async createAdjustmentInvoice(
-    cmd: CreateAdjustmentInvoiceCommand,
+    cmd: CreateAdjustmentInvoiceCommand
   ): Promise<CreateAdjustmentInvoiceResult> {
-    const reason = requireReason(cmd.reason)
-    const amount = requireNonZeroAmount(cmd.amount)
-    const kind = adjustmentKindForAmount(amount)
-    const absAmount = amount < 0n ? -amount : amount
-    const line = adjustmentLine(reason, absAmount)
-    const calculation = calculateManualInvoice([line])
-    const now = cmd.now ?? new Date()
+    const reason = requireReason(cmd.reason);
+    const amount = requireNonZeroAmount(cmd.amount);
+    const kind = adjustmentKindForAmount(amount);
+    const absAmount = amount < 0n ? -amount : amount;
+    const line = adjustmentLine(reason, absAmount);
+    const calculation = calculateManualInvoice([line]);
+    const now = cmd.now ?? new Date();
 
     if (kind === 'charge' && cmd.dueAt !== undefined && cmd.dueAt.getTime() < now.getTime()) {
-      throw new BadRequestException('dueAt cannot be in the past')
+      throw new BadRequestException('dueAt cannot be in the past');
     }
 
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
@@ -276,52 +271,44 @@ export class CreateAdjustmentInvoiceService {
            FROM invoices
           WHERE id = $1
           FOR UPDATE`,
-        [cmd.originalInvoiceId],
-      )) as { rows: LockedOriginalRow[] }
-      const original = locked.rows[0]
+        [cmd.originalInvoiceId]
+      )) as { rows: LockedOriginalRow[] };
+      const original = locked.rows[0];
       if (!original) {
-        throw new NotFoundException(`Invoice not found: ${cmd.originalInvoiceId}`)
+        throw new NotFoundException(`Invoice not found: ${cmd.originalInvoiceId}`);
       }
 
-      const paidAmount = BigInt(original.paid_amount)
+      const paidAmount = BigInt(original.paid_amount);
       if (paidAmount <= 0n) {
-        throw new ConflictException(
-          CREATE_ADJUSTMENT_ERRORS.NO_PAYMENT(cmd.originalInvoiceId),
-        )
+        throw new ConflictException(CREATE_ADJUSTMENT_ERRORS.NO_PAYMENT(cmd.originalInvoiceId));
       }
 
       if (!isAdjustableInvoiceState(original.state)) {
         throw new ConflictException(
-          CREATE_ADJUSTMENT_ERRORS.STATE_NOT_ADJUSTABLE(
-            cmd.originalInvoiceId,
-            original.state,
-          ),
-        )
+          CREATE_ADJUSTMENT_ERRORS.STATE_NOT_ADJUSTABLE(cmd.originalInvoiceId, original.state)
+        );
       }
 
-      let dueAt: Date | null = null
-      let dueMeta: Record<string, unknown> | null = null
+      let dueAt: Date | null = null;
+      let dueMeta: Record<string, unknown> | null = null;
       if (kind === 'charge') {
         const due = await this.dueAtCalculation.resolve(client, {
           serviceType: duePeriodTypeForManual(),
           issuedAt: now,
           ...(cmd.dueAt !== undefined ? { staffOverride: cmd.dueAt } : {}),
-        })
-        dueAt = due.dueAt
+        });
+        dueAt = due.dueAt;
         dueMeta = {
           dueAt: dueAt.toISOString(),
           source: due.source,
           configDays: due.configDays,
           serviceType: due.serviceType,
           periodId: due.periodId,
-        }
+        };
       }
 
-      const adjustmentId = uuidv7()
-      const calculationSnapshot = buildManualInvoiceCalculationSnapshot(
-        [line],
-        calculation,
-      )
+      const adjustmentId = uuidv7();
+      const calculationSnapshot = buildManualInvoiceCalculationSnapshot([line], calculation);
       const adjustmentMetadata = JSON.stringify({
         source: 'adjustment',
         kind,
@@ -344,7 +331,7 @@ export class CreateAdjustmentInvoiceService {
           totalAmount: calculation.totalAmount.toString(),
           rounding: 'half-up-to-nearest-IRR',
         },
-      })
+      });
 
       await client.query(
         `INSERT INTO invoices
@@ -366,8 +353,8 @@ export class CreateAdjustmentInvoiceService {
           JSON.stringify(calculationSnapshot),
           kind,
           cmd.originalInvoiceId,
-        ],
-      )
+        ]
+      );
 
       for (const [index, calculated] of calculation.lines.entries()) {
         await client.query(
@@ -386,25 +373,18 @@ export class CreateAdjustmentInvoiceService {
             calculated.vatAmount,
             calculated.isTaxable,
             index,
-          ],
-        )
+          ]
+        );
       }
 
-      const issueTransition = await this.stateMachine.transition(
-        adjustmentId,
-        'Draft',
-        'Unpaid',
-        {
-          actorUserId: cmd.actorUserId,
-          reason,
-          now,
-          client,
-          ...(cmd.correlationId !== undefined
-            ? { correlationId: cmd.correlationId }
-            : {}),
-          ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
-        },
-      )
+      const issueTransition = await this.stateMachine.transition(adjustmentId, 'Draft', 'Unpaid', {
+        actorUserId: cmd.actorUserId,
+        reason,
+        now,
+        client,
+        ...(cmd.correlationId !== undefined ? { correlationId: cmd.correlationId } : {}),
+        ...(cmd.ip !== undefined ? { ip: cmd.ip } : {}),
+      });
 
       if (kind === 'credit') {
         // Issue always stamps payable_from. Credits are not customer
@@ -414,30 +394,25 @@ export class CreateAdjustmentInvoiceService {
           `UPDATE invoices
               SET payable_from = NULL, updated_at = $2
             WHERE id = $1`,
-          [adjustmentId, now],
-        )
+          [adjustmentId, now]
+        );
       }
 
-      const originalMetadata = asMetadataObject(original.metadata)
-      const nextOriginalMetadata = appendAdjustedByInvoiceId(
-        originalMetadata,
-        adjustmentId,
-      )
+      const originalMetadata = asMetadataObject(original.metadata);
+      const nextOriginalMetadata = appendAdjustedByInvoiceId(originalMetadata, adjustmentId);
       await client.query(
         `UPDATE invoices
             SET metadata = $1::jsonb, updated_at = $2
           WHERE id = $3`,
-        [JSON.stringify(nextOriginalMetadata), now, cmd.originalInvoiceId],
-      )
+        [JSON.stringify(nextOriginalMetadata), now, cmd.originalInvoiceId]
+      );
 
-      const excerpt = await this.loadAdjustmentExcerpt(client, adjustmentId)
+      const excerpt = await this.loadAdjustmentExcerpt(client, adjustmentId);
       if (kind === 'charge' && excerpt.payableFrom === null) {
-        throw new Error(
-          `Charge adjustment ${adjustmentId} is missing payable_from`,
-        )
+        throw new Error(`Charge adjustment ${adjustmentId} is missing payable_from`);
       }
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
       return {
         originalInvoiceId: cmd.originalInvoiceId,
         originalState: original.state as InvoiceState,
@@ -458,39 +433,39 @@ export class CreateAdjustmentInvoiceService {
         dueAt: excerpt.dueAt,
         issueAuditId: issueTransition.auditId,
         issueTransition,
-      }
+      };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException ||
         error instanceof ConflictException
       ) {
-        throw error
+        throw error;
       }
-      this.logger.error(`Create adjustment invoice failed: ${String(error)}`)
-      throw error
+      this.logger.error(`Create adjustment invoice failed: ${String(error)}`);
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   private async loadAdjustmentExcerpt(
     client: TransactionClient,
-    invoiceId: string,
+    invoiceId: string
   ): Promise<{
-    profileId: string
-    contractId: string | null
-    orderId: string | null
-    consultationId: string | null
-    adjustmentForInvoiceId: string
-    state: InvoiceState
-    totalAmount: bigint
-    accountingAmount: bigint
-    lines: ManualInvoiceLineResult[]
-    issuedAt: Date
-    payableFrom: Date | null
-    dueAt: Date | null
+    profileId: string;
+    contractId: string | null;
+    orderId: string | null;
+    consultationId: string | null;
+    adjustmentForInvoiceId: string;
+    state: InvoiceState;
+    totalAmount: bigint;
+    accountingAmount: bigint;
+    lines: ManualInvoiceLineResult[];
+    issuedAt: Date;
+    payableFrom: Date | null;
+    dueAt: Date | null;
   }> {
     const invoiceResult = (await client.query(
       `SELECT id, profile_id, order_id, contract_id, consultation_id, state,
@@ -498,29 +473,29 @@ export class CreateAdjustmentInvoiceService {
               adjustment_for_invoice_id
          FROM invoices
         WHERE id = $1`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        profile_id: string
-        order_id: string | null
-        contract_id: string | null
-        consultation_id: string | null
-        state: string
-        total_amount: string
-        accounting_amount: string
-        issued_at: Date | null
-        payable_from: Date | null
-        due_at: Date | null
-        adjustment_for_invoice_id: string | null
-      }>
-    }
-    const row = invoiceResult.rows[0]
-    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`)
+        id: string;
+        profile_id: string;
+        order_id: string | null;
+        contract_id: string | null;
+        consultation_id: string | null;
+        state: string;
+        total_amount: string;
+        accounting_amount: string;
+        issued_at: Date | null;
+        payable_from: Date | null;
+        due_at: Date | null;
+        adjustment_for_invoice_id: string | null;
+      }>;
+    };
+    const row = invoiceResult.rows[0];
+    if (!row) throw new NotFoundException(`Invoice not found: ${invoiceId}`);
     if (!row.adjustment_for_invoice_id) {
       throw new NotFoundException(
-        `Adjustment invoice ${invoiceId} is missing adjustment_for_invoice_id`,
-      )
+        `Adjustment invoice ${invoiceId} is missing adjustment_for_invoice_id`
+      );
     }
 
     const linesResult = (await client.query(
@@ -529,20 +504,20 @@ export class CreateAdjustmentInvoiceService {
          FROM invoice_lines
         WHERE invoice_id = $1
         ORDER BY position ASC, created_at ASC`,
-      [invoiceId],
+      [invoiceId]
     )) as {
       rows: Array<{
-        id: string
-        description: string
-        quantity: number
-        unit_price: string
-        line_total: string
-        vat_rate: number
-        vat_amount: string
-        is_taxable: boolean
-        position: number
-      }>
-    }
+        id: string;
+        description: string;
+        quantity: number;
+        unit_price: string;
+        line_total: string;
+        vat_rate: number;
+        vat_amount: string;
+        is_taxable: boolean;
+        position: number;
+      }>;
+    };
 
     return {
       profileId: row.profile_id,
@@ -567,6 +542,6 @@ export class CreateAdjustmentInvoiceService {
         isTaxable: l.is_taxable,
         position: l.position,
       })),
-    }
+    };
   }
 }

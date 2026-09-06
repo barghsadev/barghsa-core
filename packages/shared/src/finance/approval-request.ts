@@ -1,7 +1,4 @@
-import {
-  isValidDualApprovalThreshold,
-  type DualApprovalConfig,
-} from './dual-approval-config.js'
+import { isValidDualApprovalThreshold, type DualApprovalConfig } from './dual-approval-config.js';
 
 /**
  * Dual-approval approval request contract (S-09.07, T-09.07.02).
@@ -28,31 +25,25 @@ export const APPROVAL_ACTION_TYPES = [
   'refund',
   'manual_adjustment',
   'bank_payment_confirmation',
-] as const
+] as const;
 
 /** Type of the financial action an approval request covers. */
-export type ApprovalActionType = (typeof APPROVAL_ACTION_TYPES)[number]
+export type ApprovalActionType = (typeof APPROVAL_ACTION_TYPES)[number];
 
 /** States of an approval request lifecycle. */
-export const APPROVAL_REQUEST_STATUSES = ['pending', 'approved', 'rejected'] as const
+export const APPROVAL_REQUEST_STATUSES = ['pending', 'approved', 'rejected'] as const;
 
 /** Current state of an approval request. */
-export type ApprovalRequestStatus = (typeof APPROVAL_REQUEST_STATUSES)[number]
+export type ApprovalRequestStatus = (typeof APPROVAL_REQUEST_STATUSES)[number];
 
 /** Whether a raw value is a known financial action type. */
 export function isApprovalActionType(raw: unknown): raw is ApprovalActionType {
-  return (
-    typeof raw === 'string' &&
-    (APPROVAL_ACTION_TYPES as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (APPROVAL_ACTION_TYPES as readonly string[]).includes(raw);
 }
 
 /** Whether a raw value is a valid approval request status. */
 export function isApprovalRequestStatus(raw: unknown): raw is ApprovalRequestStatus {
-  return (
-    typeof raw === 'string' &&
-    (APPROVAL_REQUEST_STATUSES as readonly string[]).includes(raw)
-  )
+  return typeof raw === 'string' && (APPROVAL_REQUEST_STATUSES as readonly string[]).includes(raw);
 }
 
 /**
@@ -63,29 +54,29 @@ export function isApprovalRequestStatus(raw: unknown): raw is ApprovalRequestSta
  */
 export interface ApprovalRequestInput {
   /** Financial action being approved. */
-  actionType: ApprovalActionType
+  actionType: ApprovalActionType;
   /** IRR amount of the action, a positive safe integer. */
-  amountIrR: number
+  amountIrR: number;
   /** Human-readable reason for the financial action. */
-  reason: string
+  reason: string;
   /** Optional transaction details (JSON-serializable object). */
-  details?: Record<string, unknown> | null
+  details?: Record<string, unknown> | null;
 }
 
 /** Result of validating a proposed approval request. */
 export interface ApprovalRequestValidationResult {
-  ok: boolean
-  issues: string[]
+  ok: boolean;
+  issues: string[];
 }
 
 /** Upper bounds protecting the audit payload and API surface from abuse. */
 export const APPROVAL_BOUNDS = {
   reasonMaxLength: 2000,
   detailsMaxJsonLength: 100_000,
-} as const
+} as const;
 
 /** Max length for the review reason when rejecting a request. */
-export const APPROVAL_REVIEW_REASON_MAX_LENGTH = 2000
+export const APPROVAL_REVIEW_REASON_MAX_LENGTH = 2000;
 
 /**
  * Validate a proposed approval request against the T-09.07.02 rules.
@@ -94,69 +85,63 @@ export const APPROVAL_REVIEW_REASON_MAX_LENGTH = 2000
  * arrays, and numeric strings are rejected rather than coerced, so a
  * malformed payload can never silently become a valid pending request.
  */
-export function validateApprovalRequestInput(
-  input: unknown,
-): ApprovalRequestValidationResult {
-  const issues: string[] = []
+export function validateApprovalRequestInput(input: unknown): ApprovalRequestValidationResult {
+  const issues: string[] = [];
 
   if (!input || typeof input !== 'object' || Array.isArray(input)) {
-    return { ok: false, issues: ['Approval request must be an object'] }
+    return { ok: false, issues: ['Approval request must be an object'] };
   }
 
-  const o = input as Record<string, unknown>
-  const actionType = o.action_type ?? o.actionType
-  const rawAmount = o.amount_irr ?? o.amountIrR
-  const reason = o.reason
-  const details = o.details
+  const o = input as Record<string, unknown>;
+  const actionType = o.action_type ?? o.actionType;
+  const rawAmount = o.amount_irr ?? o.amountIrR;
+  const reason = o.reason;
+  const details = o.details;
 
   if (actionType === undefined || actionType === null || actionType === '') {
-    issues.push('action_type is required')
+    issues.push('action_type is required');
   } else if (!isApprovalActionType(actionType)) {
-    issues.push(
-      `action_type must be one of ${APPROVAL_ACTION_TYPES.join(', ')}`,
-    )
+    issues.push(`action_type must be one of ${APPROVAL_ACTION_TYPES.join(', ')}`);
   }
 
   if (rawAmount === undefined || rawAmount === null || rawAmount === '') {
-    issues.push('amount_irr is required')
+    issues.push('amount_irr is required');
   } else if (
     typeof rawAmount !== 'number' ||
     !Number.isSafeInteger(rawAmount) ||
     rawAmount < 1 ||
     rawAmount > Number.MAX_SAFE_INTEGER
   ) {
-    issues.push(
-      `amount_irr must be an integer between 1 and ${Number.MAX_SAFE_INTEGER}`,
-    )
+    issues.push(`amount_irr must be an integer between 1 and ${Number.MAX_SAFE_INTEGER}`);
   }
 
   if (reason === undefined || reason === null) {
-    issues.push('reason is required')
+    issues.push('reason is required');
   } else if (typeof reason !== 'string' || reason.trim() === '') {
-    issues.push('reason must be a non-empty string')
+    issues.push('reason must be a non-empty string');
   } else if (reason.length > APPROVAL_BOUNDS.reasonMaxLength) {
-    issues.push(`reason must not exceed ${APPROVAL_BOUNDS.reasonMaxLength} characters`)
+    issues.push(`reason must not exceed ${APPROVAL_BOUNDS.reasonMaxLength} characters`);
   }
 
   if (details !== undefined && details !== null) {
     if (typeof details !== 'object' || Array.isArray(details)) {
-      issues.push('details must be a JSON object')
+      issues.push('details must be a JSON object');
     } else {
-      let jsonLength = 0
+      let jsonLength = 0;
       try {
-        jsonLength = JSON.stringify(details).length
+        jsonLength = JSON.stringify(details).length;
       } catch {
-        jsonLength = Number.POSITIVE_INFINITY
+        jsonLength = Number.POSITIVE_INFINITY;
       }
       if (jsonLength > APPROVAL_BOUNDS.detailsMaxJsonLength) {
         issues.push(
-          `details must not exceed ${APPROVAL_BOUNDS.detailsMaxJsonLength} characters when serialized`,
-        )
+          `details must not exceed ${APPROVAL_BOUNDS.detailsMaxJsonLength} characters when serialized`
+        );
       }
     }
   }
 
-  return { ok: issues.length === 0, issues }
+  return { ok: issues.length === 0, issues };
 }
 
 /**
@@ -166,24 +151,23 @@ export function validateApprovalRequestInput(
  */
 export function toApprovalRequestInput(input: unknown): ApprovalRequestInput {
   if (!input || typeof input !== 'object') {
-    return { actionType: 'refund', amountIrR: 0, reason: '', details: null }
+    return { actionType: 'refund', amountIrR: 0, reason: '', details: null };
   }
-  const o = input as Record<string, unknown>
-  const actionType = o.action_type ?? o.actionType
-  const rawAmount = o.amount_irr ?? o.amountIrR
+  const o = input as Record<string, unknown>;
+  const actionType = o.action_type ?? o.actionType;
+  const rawAmount = o.amount_irr ?? o.amountIrR;
   return {
     actionType: isApprovalActionType(actionType) ? actionType : 'refund',
     amountIrR:
       typeof rawAmount === 'number' && Number.isSafeInteger(rawAmount) && rawAmount > 0
         ? rawAmount
         : 0,
-    reason:
-      typeof o.reason === 'string' ? o.reason.slice(0, APPROVAL_BOUNDS.reasonMaxLength) : '',
+    reason: typeof o.reason === 'string' ? o.reason.slice(0, APPROVAL_BOUNDS.reasonMaxLength) : '',
     details:
       o.details !== undefined && o.details !== null && typeof o.details === 'object'
         ? (o.details as Record<string, unknown>)
         : null,
-  }
+  };
 }
 
 /**
@@ -205,21 +189,18 @@ export function toApprovalRequestInput(input: unknown): ApprovalRequestInput {
  * The admin service's read path normalizes corrupt rows to the disabled
  * default and logs a warning, which additionally blocks creation.
  */
-export function shouldRequireDualApproval(
-  config: DualApprovalConfig,
-  amountIrR: unknown,
-): boolean {
+export function shouldRequireDualApproval(config: DualApprovalConfig, amountIrR: unknown): boolean {
   if (
     config == null ||
     !isValidDualApprovalThreshold(config.thresholdIrR) ||
     config.thresholdIrR === 0
   ) {
-    return false
+    return false;
   }
   return (
     typeof amountIrR === 'number' &&
     Number.isSafeInteger(amountIrR) &&
     amountIrR > 0 &&
     amountIrR >= config.thresholdIrR
-  )
+  );
 }

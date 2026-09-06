@@ -1,9 +1,9 @@
-import { sql } from 'drizzle-orm'
-import { uuid, text, timestamp, pgTable, jsonb, check, index } from 'drizzle-orm/pg-core'
-import { uuidv7 } from '../types'
-import { users } from './users'
-import { staffTeams } from './staff-teams'
-import { profiles } from './profiles'
+import { sql } from 'drizzle-orm';
+import { uuid, text, timestamp, pgTable, jsonb, check, index } from 'drizzle-orm/pg-core';
+import { uuidv7 } from '../types';
+import { users } from './users';
+import { staffTeams } from './staff-teams';
+import { profiles } from './profiles';
 
 /**
  * Tickets table (T-06.01.01).
@@ -42,8 +42,7 @@ export const tickets = pgTable(
     body: text('body').notNull(),
 
     /** Optional FK to the profile this ticket relates to. */
-    profileId: uuid('profile_id')
-      .references(() => profiles.id, { onDelete: 'set null' }),
+    profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'set null' }),
 
     /** Optional related entity type discriminator. */
     relatedEntityType: text('related_entity_type', {
@@ -64,10 +63,11 @@ export const tickets = pgTable(
       .default('normal'),
 
     /** Which staff member is assigned to this ticket (nullable). */
-    assignedTo: text('assigned_to')
-      .references(() => users.userId, { onDelete: 'set null' }),
+    assignedTo: text('assigned_to').references(() => users.userId, { onDelete: 'set null' }),
 
-    assignedTeamId: uuid('assigned_team_id').references(() => staffTeams.id, { onDelete: 'set null' }),
+    assignedTeamId: uuid('assigned_team_id').references(() => staffTeams.id, {
+      onDelete: 'set null',
+    }),
 
     /** Ticket lifecycle status. */
     status: text('status', {
@@ -77,21 +77,24 @@ export const tickets = pgTable(
       .default('open'),
 
     /** When the ticket was created. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
     /** Last update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
   },
   (table) => [
-    check('tickets_attachments_array', sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`),
-    index('tickets_assigned_open_idx').on(table.assignedTo).where(sql`${table.status} NOT IN ('resolved','closed')`),
-    index('tickets_assigned_team_idx').on(table.assignedTeamId).where(sql`${table.assignedTeamId} IS NOT NULL`),
-  ],
-)
+    check(
+      'tickets_attachments_array',
+      sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`
+    ),
+    index('tickets_assigned_open_idx')
+      .on(table.assignedTo)
+      .where(sql`${table.status} NOT IN ('resolved','closed')`),
+    index('tickets_assigned_team_idx')
+      .on(table.assignedTeamId)
+      .where(sql`${table.assignedTeamId} IS NOT NULL`),
+  ]
+);
 
 /**
  * SQL to create the tickets table.
@@ -117,4 +120,4 @@ export const createTicketsTable = sql`
   CREATE INDEX IF NOT EXISTS idx_tickets_profile_id ON tickets (profile_id);
   CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets (status);
   CREATE INDEX IF NOT EXISTS idx_tickets_priority ON tickets (priority);
-`
+`;

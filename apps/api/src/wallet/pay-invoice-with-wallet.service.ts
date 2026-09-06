@@ -41,9 +41,9 @@ import {
   Logger,
   NotFoundException,
   Optional,
-} from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
+} from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_DESCRIPTION,
@@ -63,80 +63,73 @@ import {
   serializePayInvoiceWithWalletCache,
   walletAvailableBalance,
   type PayInvoiceWithWalletCachedResponse,
-} from '@barghsa/shared/finance'
-import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js'
-import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js'
-import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
-import {
-  isInvoiceState,
-  type InvoiceState,
-} from '../invoice/invoice-state.model.js'
-import {
-  WalletService,
-  type TransactionRow,
-  type WalletQueryClient,
-} from './wallet.service.js'
+} from '@barghsa/shared/finance';
+import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js';
+import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js';
+import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
+import { isInvoiceState, type InvoiceState } from '../invoice/invoice-state.model.js';
+import { WalletService, type TransactionRow, type WalletQueryClient } from './wallet.service.js';
 
 export interface PayInvoiceWithWalletOptions {
   /** Override "now" for tests (payableFrom + paid_at). */
-  now?: Date
+  now?: Date;
   /** Source IP of the paying user; omit for system-initiated calls. */
-  ip?: string
+  ip?: string;
   /** Opaque correlation ID linking related events. */
-  correlationId?: string
+  correlationId?: string;
   /**
    * Audit actor. Defaults to the profile owner (`profiles.user_id`)
    * because the public signature does not take a user id.
    */
-  actorUserId?: string
+  actorUserId?: string;
 }
 
 export interface PayInvoiceWithWalletResult {
-  invoiceId: string
-  profileId: string
-  fromState: InvoiceState
-  toState: 'Paid'
-  remainingPaid: bigint
-  walletTransaction: TransactionRow
-  auditId: string
-  replayed: boolean
+  invoiceId: string;
+  profileId: string;
+  fromState: InvoiceState;
+  toState: 'Paid';
+  remainingPaid: bigint;
+  walletTransaction: TransactionRow;
+  auditId: string;
+  replayed: boolean;
 }
 
 interface LockedInvoiceRow {
-  id: string
-  profile_id: string
-  state: string
-  total_amount: string | number | bigint
-  paid_amount: string | number | bigint
-  refunded_amount: string | number | bigint
-  adjustment_kind: string | null
-  payable_from: Date | string | null
+  id: string;
+  profile_id: string;
+  state: string;
+  total_amount: string | number | bigint;
+  paid_amount: string | number | bigint;
+  refunded_amount: string | number | bigint;
+  adjustment_kind: string | null;
+  payable_from: Date | string | null;
 }
 
 interface LockedWalletRow {
-  profile_id: string
-  posted_balance: string | number | bigint
-  reserved_balance: string | number | bigint
-  available_balance: string | number | bigint
-  version: number
+  profile_id: string;
+  posted_balance: string | number | bigint;
+  reserved_balance: string | number | bigint;
+  available_balance: string | number | bigint;
+  version: number;
 }
 
 @Injectable()
 export class PayInvoiceWithWalletService {
-  private readonly logger = new Logger(PayInvoiceWithWalletService.name)
-  private readonly invoiceStateMachine: InvoiceStateMachineService
-  private readonly idempotencyKeys: IdempotencyKeysRepository
+  private readonly logger = new Logger(PayInvoiceWithWalletService.name);
+  private readonly invoiceStateMachine: InvoiceStateMachineService;
+  private readonly idempotencyKeys: IdempotencyKeysRepository;
 
   constructor(
     private readonly walletService: WalletService,
     @Optional()
     invoiceStateMachine?: InvoiceStateMachineService,
     @Optional()
-    idempotencyKeys?: IdempotencyKeysRepository,
+    idempotencyKeys?: IdempotencyKeysRepository
   ) {
     this.invoiceStateMachine =
-      invoiceStateMachine ?? new InvoiceStateMachineService(new InvoiceAuditRepository())
-    this.idempotencyKeys = idempotencyKeys ?? new IdempotencyKeysRepository()
+      invoiceStateMachine ?? new InvoiceStateMachineService(new InvoiceAuditRepository());
+    this.idempotencyKeys = idempotencyKeys ?? new IdempotencyKeysRepository();
   }
 
   /**
@@ -147,22 +140,22 @@ export class PayInvoiceWithWalletService {
     invoiceId: string,
     profileId: string,
     idempotencyKey: string,
-    options: PayInvoiceWithWalletOptions = {},
+    options: PayInvoiceWithWalletOptions = {}
   ): Promise<PayInvoiceWithWalletResult> {
-    const ids = parsePayInvoiceWithWalletIds(invoiceId, profileId)
+    const ids = parsePayInvoiceWithWalletIds(invoiceId, profileId);
     if (!ids.ok) {
-      throw new BadRequestException(ids.message)
+      throw new BadRequestException(ids.message);
     }
     if (!idempotencyKey.trim()) {
-      throw new BadRequestException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_REQUIRED())
+      throw new BadRequestException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_REQUIRED());
     }
 
-    const now = options.now ?? new Date()
-    const key = idempotencyKey.trim()
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const now = options.now ?? new Date();
+    const key = idempotencyKey.trim();
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const claim = await this.idempotencyKeys.claimOrLoad(client, {
         key,
@@ -170,39 +163,40 @@ export class PayInvoiceWithWalletService {
         entityId: ids.invoiceId,
         expiresAt: idempotencyKeyExpiresAt(now),
         now,
-      })
+      });
       if (claim.kind === 'cached') {
-        const parsed = parsePayInvoiceWithWalletCache(claim.response)
+        const parsed = parsePayInvoiceWithWalletCache(claim.response);
         if (!parsed) {
-          throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+          throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
         }
-        this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId)
-        await client.query('COMMIT')
-        return resultFromCache(parsed)
+        this.assertCachedMatchesRequest(parsed, ids.invoiceId, ids.profileId);
+        await client.query('COMMIT');
+        return resultFromCache(parsed);
       }
       if (claim.kind === 'in_flight') {
-        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT())
+        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_IN_FLIGHT());
       }
 
       // Wallet first, then invoice: every other money mutation already
       // locks the wallet row, so this order cannot deadlock against them.
-      const wallet = await this.lockWallet(client, ids.profileId)
-      const invoice = await this.lockInvoice(client, ids.invoiceId)
+      const wallet = await this.lockWallet(client, ids.profileId);
+      const invoice = await this.lockInvoice(client, ids.invoiceId);
       if (invoice.profile_id.toLowerCase() !== ids.profileId) {
-        throw new NotFoundException(`Invoice not found: ${ids.invoiceId}`)
+        throw new NotFoundException(`Invoice not found: ${ids.invoiceId}`);
       }
 
-      const actorUserId = options.actorUserId ?? (await this.profileOwnerUserId(client, invoice.profile_id))
-      const totalAmount = BigInt(invoice.total_amount)
-      const paidAmount = BigInt(invoice.paid_amount)
+      const actorUserId =
+        options.actorUserId ?? (await this.profileOwnerUserId(client, invoice.profile_id));
+      const totalAmount = BigInt(invoice.total_amount);
+      const paidAmount = BigInt(invoice.paid_amount);
       const remaining = remainingForWalletPayment({
         totalAmount,
         paidAmount,
         state: invoice.state,
         adjustmentKind: invoice.adjustment_kind,
-      })
+      });
 
-      const existing = await this.findLedgerByIdempotencyKey(client, key)
+      const existing = await this.findLedgerByIdempotencyKey(client, key);
       if (existing) {
         return await this.replayOrReject({
           client,
@@ -213,23 +207,23 @@ export class PayInvoiceWithWalletService {
           now,
           idempotencyKey: key,
           ...optionalAudit(options),
-        })
+        });
       }
 
-      this.assertPayable(invoice, remaining, now)
-      this.assertAvailableBalance(wallet, remaining)
+      this.assertPayable(invoice, remaining, now);
+      this.assertAvailableBalance(wallet, remaining);
 
-      const paidAfter = paidAmount + remaining
-      const postedBefore = BigInt(wallet.posted_balance)
-      const reserved = BigInt(wallet.reserved_balance)
-      const available = this.lockedAvailableBalance(wallet)
+      const paidAfter = paidAmount + remaining;
+      const postedBefore = BigInt(wallet.posted_balance);
+      const reserved = BigInt(wallet.reserved_balance);
+      const available = this.lockedAvailableBalance(wallet);
       const debit = await this.debitExactRemaining(client, {
         invoice,
         remaining,
         paidAfter,
         idempotencyKey: key,
         expectedVersion: wallet.version,
-      })
+      });
 
       await this.recordWalletPaymentAudit(client, {
         invoice,
@@ -241,7 +235,7 @@ export class PayInvoiceWithWalletService {
         actorUserId,
         now,
         ...optionalAudit(options),
-      })
+      });
 
       const transition = await this.settleInvoice(client, {
         invoice,
@@ -250,7 +244,7 @@ export class PayInvoiceWithWalletService {
         actorUserId,
         now,
         ...optionalAudit(options),
-      })
+      });
 
       const result: PayInvoiceWithWalletResult = {
         invoiceId: invoice.id,
@@ -261,58 +255,52 @@ export class PayInvoiceWithWalletService {
         walletTransaction: debit,
         auditId: transition.auditId,
         replayed: false,
-      }
-      await this.persistCachedResult(client, key, invoice.id, result)
-      await client.query('COMMIT')
+      };
+      await this.persistCachedResult(client, key, invoice.id, result);
+      await client.query('COMMIT');
       this.logger.log(
-        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`,
-      )
-      return result
+        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`
+      );
+      return result;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      throw error
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   private assertPayable(invoice: LockedInvoiceRow, remaining: bigint, now: Date): void {
     if (invoice.adjustment_kind === 'credit') {
-      throw new BadRequestException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(invoice.id),
-      )
+      throw new BadRequestException(PAY_INVOICE_WITH_WALLET_ERRORS.CREDIT_NOT_PAYABLE(invoice.id));
     }
     if (!isInvoiceState(invoice.state)) {
-      throw new ConflictException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(invoice.state),
-      )
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(invoice.state));
     }
     if (invoice.state === 'Paid') {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID());
     }
     if (!this.invoiceStateMachine.canPayFromWallet(invoice.state, invoice.adjustment_kind)) {
-      throw new ConflictException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(invoice.state),
-      )
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(invoice.state));
     }
     if (remaining <= 0n) {
-      throw new BadRequestException(PAY_INVOICE_WITH_WALLET_ERRORS.NOTHING_TO_PAY())
+      throw new BadRequestException(PAY_INVOICE_WITH_WALLET_ERRORS.NOTHING_TO_PAY());
     }
-    const payableFrom = toDate(invoice.payable_from)
+    const payableFrom = toDate(invoice.payable_from);
     if (payableFrom && now < payableFrom) {
       throw new BadRequestException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.NOT_YET_PAYABLE(payableFrom.toISOString()),
-      )
+        PAY_INVOICE_WITH_WALLET_ERRORS.NOT_YET_PAYABLE(payableFrom.toISOString())
+      );
     }
   }
 
   private lockedAvailableBalance(wallet: LockedWalletRow): bigint {
     const derived = walletAvailableBalance(
       BigInt(wallet.posted_balance),
-      BigInt(wallet.reserved_balance),
-    )
-    const locked = BigInt(wallet.available_balance)
-    return locked === derived ? locked : derived
+      BigInt(wallet.reserved_balance)
+    );
+    const locked = BigInt(wallet.available_balance);
+    return locked === derived ? locked : derived;
   }
 
   /**
@@ -324,14 +312,14 @@ export class PayInvoiceWithWalletService {
   private async debitExactRemaining(
     client: WalletQueryClient,
     input: {
-      invoice: LockedInvoiceRow
-      remaining: bigint
-      paidAfter: bigint
-      idempotencyKey: string
-      expectedVersion: number
-    },
+      invoice: LockedInvoiceRow;
+      remaining: bigint;
+      paidAfter: bigint;
+      idempotencyKey: string;
+      expectedVersion: number;
+    }
   ): Promise<TransactionRow> {
-    let debit: TransactionRow
+    let debit: TransactionRow;
     try {
       debit = await this.walletService.debit(
         input.invoice.profile_id,
@@ -348,16 +336,16 @@ export class PayInvoiceWithWalletService {
           expectedVersion: input.expectedVersion,
         },
         input.idempotencyKey,
-        client,
-      )
+        client
+      );
     } catch (error) {
       if (
         error instanceof ConflictException &&
         isWalletDebitIdempotencyCollision(conflictMessage(error))
       ) {
-        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+        throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
       }
-      throw error
+      throw error;
     }
 
     if (
@@ -372,40 +360,40 @@ export class PayInvoiceWithWalletService {
         remaining: input.remaining,
       })
     ) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
-    return debit
+    return debit;
   }
 
   private assertAvailableBalance(wallet: LockedWalletRow, remaining: bigint): void {
-    const available = this.lockedAvailableBalance(wallet)
+    const available = this.lockedAvailableBalance(wallet);
     if (!availableCoversRemaining(available, remaining)) {
       throw new BadRequestException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(available, remaining),
-      )
+        PAY_INVOICE_WITH_WALLET_ERRORS.INSUFFICIENT_BALANCE(available, remaining)
+      );
     }
   }
 
   private assertCachedMatchesRequest(
     cached: PayInvoiceWithWalletCachedResponse,
     invoiceId: string,
-    profileId: string,
+    profileId: string
   ): void {
     if (!cachedWalletPaymentMatchesRequest(cached, invoiceId, profileId)) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
   }
 
   private async replayOrReject(input: {
-    client: WalletQueryClient
-    invoice: LockedInvoiceRow
-    existing: TransactionRow
-    remaining: bigint
-    actorUserId: string
-    now: Date
-    idempotencyKey: string
-    ip?: string
-    correlationId?: string
+    client: WalletQueryClient;
+    invoice: LockedInvoiceRow;
+    existing: TransactionRow;
+    remaining: bigint;
+    actorUserId: string;
+    now: Date;
+    idempotencyKey: string;
+    ip?: string;
+    correlationId?: string;
   }): Promise<PayInvoiceWithWalletResult> {
     const matching = isMatchingWalletInvoicePayment({
       walletId: input.existing.walletId,
@@ -415,12 +403,12 @@ export class PayInvoiceWithWalletService {
       state: input.existing.state,
       refId: input.existing.refId,
       amount: input.existing.amount,
-    })
+    });
     if (!matching) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
 
-    const debitAmount = -input.existing.amount
+    const debitAmount = -input.existing.amount;
     if (input.invoice.state === 'Paid') {
       const result: PayInvoiceWithWalletResult = {
         invoiceId: input.invoice.id,
@@ -431,19 +419,23 @@ export class PayInvoiceWithWalletService {
         walletTransaction: input.existing,
         auditId: '',
         replayed: true,
-      }
-      await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result)
-      await input.client.query('COMMIT')
-      return result
+      };
+      await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result);
+      await input.client.query('COMMIT');
+      return result;
     }
 
     if (input.remaining > 0n && debitAmount !== input.remaining) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.IDEMPOTENCY_COLLISION());
     }
 
-    this.assertPayable(input.invoice, input.remaining > 0n ? input.remaining : debitAmount, input.now)
+    this.assertPayable(
+      input.invoice,
+      input.remaining > 0n ? input.remaining : debitAmount,
+      input.now
+    );
 
-    const paidAfter = BigInt(input.invoice.paid_amount) + debitAmount
+    const paidAfter = BigInt(input.invoice.paid_amount) + debitAmount;
     const transition = await this.settleInvoice(input.client, {
       invoice: input.invoice,
       remaining: debitAmount,
@@ -451,7 +443,7 @@ export class PayInvoiceWithWalletService {
       actorUserId: input.actorUserId,
       now: input.now,
       ...optionalAudit(input),
-    })
+    });
     const result: PayInvoiceWithWalletResult = {
       invoiceId: input.invoice.id,
       profileId: input.invoice.profile_id,
@@ -461,30 +453,30 @@ export class PayInvoiceWithWalletService {
       walletTransaction: input.existing,
       auditId: transition.auditId,
       replayed: true,
-    }
-    await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result)
-    await input.client.query('COMMIT')
-    return result
+    };
+    await this.persistCachedResult(input.client, input.idempotencyKey, input.invoice.id, result);
+    await input.client.query('COMMIT');
+    return result;
   }
 
   private async settleInvoice(
     client: WalletQueryClient,
     input: {
-      invoice: LockedInvoiceRow
-      remaining: bigint
-      paidAfter: bigint
-      actorUserId: string
-      now: Date
-      ip?: string
-      correlationId?: string
-    },
+      invoice: LockedInvoiceRow;
+      remaining: bigint;
+      paidAfter: bigint;
+      actorUserId: string;
+      now: Date;
+      ip?: string;
+      correlationId?: string;
+    }
   ) {
     if (!isInvoiceState(input.invoice.state)) {
       throw new ConflictException(
-        PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(input.invoice.state),
-      )
+        PAY_INVOICE_WITH_WALLET_ERRORS.STATE_NOT_PAYABLE(input.invoice.state)
+      );
     }
-    const fromState = input.invoice.state
+    const fromState = input.invoice.state;
     const updated = await client.query(
       `UPDATE invoices
           SET paid_amount = paid_amount + $2::bigint,
@@ -493,13 +485,13 @@ export class PayInvoiceWithWalletService {
           AND state = $3
           AND paid_amount + $2::bigint <= total_amount
         RETURNING paid_amount, total_amount`,
-      [input.invoice.id, input.remaining.toString(), fromState],
-    )
+      [input.invoice.id, input.remaining.toString(), fromState]
+    );
     if (updated.rows.length === 0) {
-      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID())
+      throw new ConflictException(PAY_INVOICE_WITH_WALLET_ERRORS.ALREADY_PAID());
     }
 
-    const totalAmount = BigInt(input.invoice.total_amount)
+    const totalAmount = BigInt(input.invoice.total_amount);
     return this.invoiceStateMachine.transition(input.invoice.id, fromState, 'Paid', {
       actorUserId: input.actorUserId,
       now: input.now,
@@ -512,7 +504,7 @@ export class PayInvoiceWithWalletService {
       client,
       ...(input.ip !== undefined ? { ip: input.ip } : {}),
       ...(input.correlationId !== undefined ? { correlationId: input.correlationId } : {}),
-    })
+    });
   }
 
   /**
@@ -523,19 +515,19 @@ export class PayInvoiceWithWalletService {
   private async recordWalletPaymentAudit(
     client: WalletQueryClient,
     input: {
-      invoice: LockedInvoiceRow
-      debitId: string
-      remaining: bigint
-      postedBefore: bigint
-      reserved: bigint
-      available: bigint
-      actorUserId: string
-      now: Date
-      ip?: string
-      correlationId?: string
-    },
+      invoice: LockedInvoiceRow;
+      debitId: string;
+      remaining: bigint;
+      postedBefore: bigint;
+      reserved: bigint;
+      available: bigint;
+      actorUserId: string;
+      now: Date;
+      ip?: string;
+      correlationId?: string;
+    }
   ): Promise<string> {
-    const auditId = uuidv7()
+    const auditId = uuidv7();
     const metadata = payInvoiceWithWalletAuditMetadata({
       invoiceId: input.invoice.id,
       profileId: input.invoice.profile_id,
@@ -546,7 +538,7 @@ export class PayInvoiceWithWalletService {
       reservedBalance: input.reserved,
       availableBalance: input.available,
       fromState: input.invoice.state,
-    })
+    });
     await client.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -558,9 +550,9 @@ export class PayInvoiceWithWalletService {
         input.correlationId ?? null,
         input.ip ?? null,
         input.now,
-      ],
-    )
-    return auditId
+      ]
+    );
+    return auditId;
   }
 
   private async lockWallet(client: WalletQueryClient, profileId: string): Promise<LockedWalletRow> {
@@ -570,74 +562,74 @@ export class PayInvoiceWithWalletService {
          FROM wallets
         WHERE profile_id = $1
         FOR UPDATE OF wallets`,
-      [profileId],
-    )
-    const row = (result.rows as LockedWalletRow[])[0]
+      [profileId]
+    );
+    const row = (result.rows as LockedWalletRow[])[0];
     if (!row) {
-      throw new NotFoundException(`Wallet not found: ${profileId}`)
+      throw new NotFoundException(`Wallet not found: ${profileId}`);
     }
-    return row
+    return row;
   }
 
-  private async lockInvoice(client: WalletQueryClient, invoiceId: string): Promise<LockedInvoiceRow> {
+  private async lockInvoice(
+    client: WalletQueryClient,
+    invoiceId: string
+  ): Promise<LockedInvoiceRow> {
     const result = await client.query(
       `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount,
               adjustment_kind, payable_from
          FROM invoices
         WHERE id = $1
         FOR UPDATE OF invoices`,
-      [invoiceId],
-    )
-    const row = (result.rows as LockedInvoiceRow[])[0]
+      [invoiceId]
+    );
+    const row = (result.rows as LockedInvoiceRow[])[0];
     if (!row) {
-      throw new NotFoundException(`Invoice not found: ${invoiceId}`)
+      throw new NotFoundException(`Invoice not found: ${invoiceId}`);
     }
-    return row
+    return row;
   }
 
   private async profileOwnerUserId(client: WalletQueryClient, profileId: string): Promise<string> {
-    const result = await client.query(
-      `SELECT user_id FROM profiles WHERE id = $1`,
-      [profileId],
-    )
-    const row = (result.rows as Array<{ user_id: string }>)[0]
+    const result = await client.query(`SELECT user_id FROM profiles WHERE id = $1`, [profileId]);
+    const row = (result.rows as Array<{ user_id: string }>)[0];
     if (!row?.user_id) {
-      throw new NotFoundException(`Profile not found: ${profileId}`)
+      throw new NotFoundException(`Profile not found: ${profileId}`);
     }
-    return row.user_id
+    return row.user_id;
   }
 
   private async findLedgerByIdempotencyKey(
     client: WalletQueryClient,
-    idempotencyKey: string,
+    idempotencyKey: string
   ): Promise<TransactionRow | null> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [idempotencyKey],
-    )
-    const row = result.rows[0]
-    if (!row || typeof row !== 'object') return null
-    return mapLedger(row as Record<string, unknown>)
+      [idempotencyKey]
+    );
+    const row = result.rows[0];
+    if (!row || typeof row !== 'object') return null;
+    return mapLedger(row as Record<string, unknown>);
   }
 
   private async persistCachedResult(
     client: WalletQueryClient,
     idempotencyKey: string,
     entityId: string,
-    result: PayInvoiceWithWalletResult,
+    result: PayInvoiceWithWalletResult
   ): Promise<void> {
     await this.idempotencyKeys.persistResponse(client, {
       key: idempotencyKey,
       entityType: INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
       entityId,
       response: serializePayInvoiceWithWalletCache(result),
-    })
+    });
   }
 }
 
 function resultFromCache(cached: PayInvoiceWithWalletCachedResponse): PayInvoiceWithWalletResult {
-  const tx = cached.walletTransaction
-  const fromState: InvoiceState = isInvoiceState(cached.fromState) ? cached.fromState : 'Paid'
+  const tx = cached.walletTransaction;
+  const fromState: InvoiceState = isInvoiceState(cached.fromState) ? cached.fromState : 'Paid';
   return {
     invoiceId: cached.invoiceId,
     profileId: cached.profileId,
@@ -660,7 +652,7 @@ function resultFromCache(cached: PayInvoiceWithWalletCachedResponse): PayInvoice
     },
     auditId: cached.auditId,
     replayed: true,
-  }
+  };
 }
 
 function mapLedger(row: Record<string, unknown>): TransactionRow {
@@ -678,33 +670,33 @@ function mapLedger(row: Record<string, unknown>): TransactionRow {
       row.reverses_transaction_id == null ? null : String(row.reverses_transaction_id),
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
-  }
+  };
 }
 
 function optionalAudit(options: { ip?: string; correlationId?: string }): {
-  ip?: string
-  correlationId?: string
+  ip?: string;
+  correlationId?: string;
 } {
   return {
     ...(options.ip !== undefined ? { ip: options.ip } : {}),
     ...(options.correlationId !== undefined ? { correlationId: options.correlationId } : {}),
-  }
+  };
 }
 
 function conflictMessage(error: ConflictException): string {
-  const response = error.getResponse()
-  if (typeof response === 'string') return response
+  const response = error.getResponse();
+  if (typeof response === 'string') return response;
   if (typeof response === 'object' && response !== null && 'message' in response) {
-    const message = (response as { message: unknown }).message
-    if (typeof message === 'string') return message
-    if (Array.isArray(message)) return message.map(String).join(' ')
+    const message = (response as { message: unknown }).message;
+    if (typeof message === 'string') return message;
+    if (Array.isArray(message)) return message.map(String).join(' ');
   }
-  return error.message
+  return error.message;
 }
 
 function toDate(value: Date | string | null): Date | null {
-  if (value == null) return null
-  if (value instanceof Date) return value
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? null : parsed
+  if (value == null) return null;
+  if (value instanceof Date) return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }

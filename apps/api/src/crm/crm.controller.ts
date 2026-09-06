@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
   Get,
@@ -8,18 +8,18 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CrmService, type CrmListUsersFilters } from './crm.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CrmService, type CrmListUsersFilters } from './crm.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 @ApiTags('CRM')
 @Controller('api/crm')
 @UseGuards(SessionAuthGuard)
 export class CrmController {
-  private readonly logger = new Logger(CrmController.name)
+  private readonly logger = new Logger(CrmController.name);
 
   constructor(private readonly crmService: CrmService) {}
 
@@ -128,60 +128,63 @@ export class CrmController {
     @Query('sort') sort: string | undefined,
     @Query('order') order: string | undefined,
     @Req() req: AuthenticatedRequest,
-    @Query('staffOnly') staffOnly?: string,
+    @Query('staffOnly') staffOnly?: string
   ) {
-    const isAdmin = hasStaffPermission(req, 'crm:read')
+    const isAdmin = hasStaffPermission(req, 'crm:read');
 
     if (!isAdmin) {
-      this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access CRM`,
-      )
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to access CRM`);
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
     // Build filters object from query params
-    const filters: CrmListUsersFilters = {}
-    if (staffOnly === 'true') filters.staffOnly = true
+    const filters: CrmListUsersFilters = {};
+    if (staffOnly === 'true') filters.staffOnly = true;
     if (type === 'INDIVIDUAL' || type === 'LEGAL') {
-      filters.type = type
+      filters.type = type;
     }
-    if (verification === 'VERIFIED' || verification === 'UNVERIFIED' || verification === 'PENDING' || verification === 'DISABLED') {
-      filters.verification = verification
+    if (
+      verification === 'VERIFIED' ||
+      verification === 'UNVERIFIED' ||
+      verification === 'PENDING' ||
+      verification === 'DISABLED'
+    ) {
+      filters.verification = verification;
     }
     if (search) {
-      filters.search = search
+      filters.search = search;
     }
     if (dateFrom) {
-      filters.dateFrom = dateFrom
+      filters.dateFrom = dateFrom;
     }
     if (dateTo) {
-      filters.dateTo = dateTo
+      filters.dateTo = dateTo;
     }
     if (sort === 'createdAt') {
-      filters.sort = sort
+      filters.sort = sort;
     }
     if (order === 'asc' || order === 'desc') {
-      filters.order = order
+      filters.order = order;
     }
 
-    const parsedLimit = limit ? parseInt(limit, 10) : 20
+    const parsedLimit = limit ? parseInt(limit, 10) : 20;
     const result = await this.crmService.listUsers(
       cursor ?? null,
       isNaN(parsedLimit) ? 20 : parsedLimit,
-      filters,
-    )
+      filters
+    );
 
     this.logger.debug(
-      `CRM users list: returned ${result.users.length} user(s), hasMore=${result.hasMore}`,
-    )
+      `CRM users list: returned ${result.users.length} user(s), hasMore=${result.hasMore}`
+    );
 
-    return result
+    return result;
   }
 }

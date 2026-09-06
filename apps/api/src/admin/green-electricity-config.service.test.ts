@@ -1,50 +1,51 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { HttpException } from '@nestjs/common'
-import type { AdminService as AdminServiceType } from './admin.service.js'
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { HttpException } from '@nestjs/common';
+import type { AdminService as AdminServiceType } from './admin.service.js';
 import {
   DEFAULT_GREEN_ELECTRICITY_CONFIG,
   GREEN_ELECTRICITY_CONFIG_KEY,
-} from '@barghsa/shared/finance'
+} from '@barghsa/shared/finance';
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
-  const mockQuery = vi.fn()
-  const mockConnect = vi.fn()
-  const pool = { query: mockQuery, connect: mockConnect }
-  return { mockQuery, mockConnect, pool }
+  const mockQuery = vi.fn();
+  const mockConnect = vi.fn();
+  const pool = { query: mockQuery, connect: mockConnect };
+  return { mockQuery, mockConnect, pool };
 }
 
 function mockClient() {
-  const mockClientQuery = vi.fn()
-  const mockRelease = vi.fn()
-  const client = { query: mockClientQuery, release: mockRelease }
-  return { mockClientQuery, mockRelease, client }
+  const mockClientQuery = vi.fn();
+  const mockRelease = vi.fn();
+  const client = { query: mockClientQuery, release: mockRelease };
+  return { mockClientQuery, mockRelease, client };
 }
 
-const MOCK_ROLES = [
-  { id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] },
-]
+const MOCK_ROLES = [{ id: 'role-admin' as const, name: 'Admin', description: '', permissions: [] }];
 
-function mockDbModule(pool: { query: ReturnType<typeof vi.fn>; connect: ReturnType<typeof vi.fn> }) {
-  return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES }
+function mockDbModule(pool: {
+  query: ReturnType<typeof vi.fn>;
+  connect: ReturnType<typeof vi.fn>;
+}) {
+  return { getDbPool: () => pool, PREDEFINED_ROLES: MOCK_ROLES };
 }
 
-let AdminService: typeof AdminServiceType
-let service: AdminServiceType
+let AdminService: typeof AdminServiceType;
+let service: AdminServiceType;
 
 beforeEach(() => {
-  vi.resetModules()
-  vi.restoreAllMocks()
-})
+  vi.resetModules();
+  vi.restoreAllMocks();
+});
 
 /** Load AdminService with a mocked @barghsa/db pool, and return the pool. */
 async function loadService() {
-  const { pool, mockQuery, mockConnect } = mockPool()
-  vi.doMock('@barghsa/db', () => mockDbModule(pool))
-  const { AdminService: Svc } = await import('./admin.service.js')
-  service = new Svc()
-  return { pool, mockQuery, mockConnect }
+  const { pool, mockQuery, mockConnect } = mockPool();
+  vi.doMock('@barghsa/db', () => mockDbModule(pool));
+  const { AdminService: Svc } = await import('./admin.service.js');
+  service = new Svc();
+  return { pool, mockQuery, mockConnect };
 }
 
 const VALID_INPUT = {
@@ -58,25 +59,24 @@ const VALID_INPUT = {
     average_power_threshold_kw: 500,
     mandatory_green_share_percent: 10,
   },
-}
+};
 
 // ─── Tests — getGreenElectricityConfig ───────────────────────────────
 
 describe('AdminService.getGreenElectricityConfig (T-09.10.02)', () => {
   it('returns the T-09.10.02 defaults when no value is persisted', async () => {
-    const { mockQuery } = await loadService()
-    mockQuery.mockResolvedValueOnce({ rows: [] })
+    const { mockQuery } = await loadService();
+    mockQuery.mockResolvedValueOnce({ rows: [] });
 
-    const result = await service.getGreenElectricityConfig()
-    expect(result).toEqual(DEFAULT_GREEN_ELECTRICITY_CONFIG)
-    expect(mockQuery).toHaveBeenCalledWith(
-      expect.stringContaining('app_config'),
-      [GREEN_ELECTRICITY_CONFIG_KEY],
-    )
-  })
+    const result = await service.getGreenElectricityConfig();
+    expect(result).toEqual(DEFAULT_GREEN_ELECTRICITY_CONFIG);
+    expect(mockQuery).toHaveBeenCalledWith(expect.stringContaining('app_config'), [
+      GREEN_ELECTRICITY_CONFIG_KEY,
+    ]);
+  });
 
   it('maps a stored snake_case value to the camelCase config shape', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [
         {
@@ -94,89 +94,101 @@ describe('AdminService.getGreenElectricityConfig (T-09.10.02)', () => {
           },
         },
       ],
-    })
+    });
 
-    const result = await service.getGreenElectricityConfig()
+    const result = await service.getGreenElectricityConfig();
     expect(result.simpleOrder).toEqual({
       mandatoryGreenEnabled: true,
       averagePowerThresholdKw: 2000,
       mandatoryGreenSharePercent: 8,
-    })
+    });
     expect(result.advancedOrder).toEqual({
       mandatoryGreenEnabled: true,
       averagePowerThresholdKw: 1500,
       mandatoryGreenSharePercent: 5,
-    })
-  })
+    });
+  });
 
   it('serves the defaults and warns on a corrupt persisted value', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ value: { simple_order: 'corrupted' } }],
-    })
+    });
 
-    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined)
-    const result = await service.getGreenElectricityConfig()
-    expect(result).toEqual(DEFAULT_GREEN_ELECTRICITY_CONFIG)
-    expect(warnSpy).toHaveBeenCalledTimes(1)
-  })
-})
+    const warnSpy = vi.spyOn(service['logger'], 'warn').mockImplementation(() => undefined);
+    const result = await service.getGreenElectricityConfig();
+    expect(result).toEqual(DEFAULT_GREEN_ELECTRICITY_CONFIG);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+  });
+});
 
 // ─── Tests — setGreenElectricityConfig ───────────────────────────────
 
 describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
   it('rejects a non-object body with a 400', async () => {
-    const { pool } = await loadService()
+    const { pool } = await loadService();
     await expect(
-      service.setGreenElectricityConfig('nope', 'admin-1', '127.0.0.1'),
-    ).rejects.toMatchObject({ status: 400 })
-    expect(pool.connect).not.toHaveBeenCalled()
-  })
+      service.setGreenElectricityConfig('nope', 'admin-1', '127.0.0.1')
+    ).rejects.toMatchObject({ status: 400 });
+    expect(pool.connect).not.toHaveBeenCalled();
+  });
 
   it('rejects a negative threshold with a 400', async () => {
-    await loadService()
+    await loadService();
     await expect(
       service.setGreenElectricityConfig(
         {
-          simple_order: { mandatory_green_enabled: true, average_power_threshold_kw: -1, mandatory_green_share_percent: 4 },
+          simple_order: {
+            mandatory_green_enabled: true,
+            average_power_threshold_kw: -1,
+            mandatory_green_share_percent: 4,
+          },
           advanced_order: VALID_INPUT.advanced_order,
         },
         'admin-1',
-        '127.0.0.1',
-      ),
-    ).rejects.toThrowError(HttpException)
-  })
+        '127.0.0.1'
+      )
+    ).rejects.toThrowError(HttpException);
+  });
 
   it('rejects a share above 100 with a 400', async () => {
-    await loadService()
+    await loadService();
     await expect(
       service.setGreenElectricityConfig(
         {
-          simple_order: { mandatory_green_enabled: true, average_power_threshold_kw: 1000, mandatory_green_share_percent: 101 },
+          simple_order: {
+            mandatory_green_enabled: true,
+            average_power_threshold_kw: 1000,
+            mandatory_green_share_percent: 101,
+          },
           advanced_order: VALID_INPUT.advanced_order,
         },
         'admin-1',
-        '127.0.0.1',
-      ),
-    ).rejects.toMatchObject({ status: 400 })
-  })
+        '127.0.0.1'
+      )
+    ).rejects.toMatchObject({ status: 400 });
+  });
 
   it('rejects a coercible string threshold with a 400 (no silent coercion)', async () => {
-    await loadService()
+    await loadService();
     await expect(
       service.setGreenElectricityConfig(
         {
-          simple_order: { mandatory_green_enabled: true, average_power_threshold_kw: '1000', mandatory_green_share_percent: 4 },
+          simple_order: {
+            mandatory_green_enabled: true,
+            average_power_threshold_kw: '1000',
+            mandatory_green_share_percent: 4,
+          },
           advanced_order: VALID_INPUT.advanced_order,
         },
         'admin-1',
-        '127.0.0.1',
-      ),
-    ).rejects.toMatchObject({ status: 400 })
-  })
+        '127.0.0.1'
+      )
+    ).rejects.toMatchObject({ status: 400 });
+  });
 
   it('rejects a mode with an omitted mandatory_green_enabled flag', async () => {
-    const { pool } = await loadService()
+    const { pool } = await loadService();
     await expect(
       service.setGreenElectricityConfig(
         {
@@ -184,26 +196,26 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
           advanced_order: VALID_INPUT.advanced_order,
         },
         'admin-1',
-        '127.0.0.1',
-      ),
-    ).rejects.toMatchObject({ status: 400 })
-    expect(pool.connect).not.toHaveBeenCalled()
-  })
+        '127.0.0.1'
+      )
+    ).rejects.toMatchObject({ status: 400 });
+    expect(pool.connect).not.toHaveBeenCalled();
+  });
 
   it('persists a camelCase payload with mandatoryGreenEnabled:false as disabled', async () => {
-    const { mockConnect, mockQuery } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
+    const { mockConnect, mockQuery } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
-    }) // green product state (no mode enabled, so gate passes)
+    }); // green product state (no mode enabled, so gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
       .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+      .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
     await service.setGreenElectricityConfig(
       {
@@ -219,22 +231,22 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
         },
       },
       'admin-1',
-      '127.0.0.1',
-    )
+      '127.0.0.1'
+    );
 
-    const appConfigQuery = client.query.mock.calls[2]!
-    const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string)
-    expect(stored.simple_order.mandatory_green_enabled).toBe(false)
-    expect(stored.advanced_order.mandatory_green_enabled).toBe(false)
-  })
+    const appConfigQuery = client.query.mock.calls[2]!;
+    const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string);
+    expect(stored.simple_order.mandatory_green_enabled).toBe(false);
+    expect(stored.advanced_order.mandatory_green_enabled).toBe(false);
+  });
 
   it('persists the config, bumps config version, and records an audit', async () => {
-    const { pool, mockConnect, mockQuery } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
+    const { pool, mockConnect, mockQuery } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
-    }) // green product state (activatable → gate passes)
+    }); // green product state (activatable → gate passes)
     // Call order: BEGIN, SELECT ... FOR UPDATE (no existing row),
     // INSERT RETURNING version, config_version, audit_log, COMMIT
     client.query
@@ -243,62 +255,78 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
       .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+      .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
 
-    expect(mockConnect).toHaveBeenCalledTimes(1)
-    const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]))
-    expect(queries[0]!).toMatch(/BEGIN/)
-    expect(queries[1]!).toMatch(/SELECT.*app_config.*FOR UPDATE/)
-    expect(queries[2]!).toMatch(/INSERT INTO app_config/)
-    expect(queries[3]!).toMatch(/config_version/)
-    expect(queries[4]!).toMatch(/audit_log/)
-    expect(queries[5]!).toMatch(/COMMIT/)
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]));
+    expect(queries[0]!).toMatch(/BEGIN/);
+    expect(queries[1]!).toMatch(/SELECT.*app_config.*FOR UPDATE/);
+    expect(queries[2]!).toMatch(/INSERT INTO app_config/);
+    expect(queries[3]!).toMatch(/config_version/);
+    expect(queries[4]!).toMatch(/audit_log/);
+    expect(queries[5]!).toMatch(/COMMIT/);
 
-    const appConfigQuery = client.query.mock.calls[2]!
-    expect((appConfigQuery[1] as unknown[])[0]).toBe(GREEN_ELECTRICITY_CONFIG_KEY)
-    const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string)
+    const appConfigQuery = client.query.mock.calls[2]!;
+    expect((appConfigQuery[1] as unknown[])[0]).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
+    const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string);
     expect(stored).toEqual({
-      simple_order: { mandatory_green_enabled: true, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-      advanced_order: { mandatory_green_enabled: false, average_power_threshold_kw: 500, mandatory_green_share_percent: 10 },
-    })
+      simple_order: {
+        mandatory_green_enabled: true,
+        average_power_threshold_kw: 1000,
+        mandatory_green_share_percent: 4,
+      },
+      advanced_order: {
+        mandatory_green_enabled: false,
+        average_power_threshold_kw: 500,
+        mandatory_green_share_percent: 10,
+      },
+    });
 
-    const auditQuery = client.query.mock.calls[4]!
-    const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string)
+    const auditQuery = client.query.mock.calls[4]!;
+    const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
       key: GREEN_ELECTRICITY_CONFIG_KEY,
       previousValue: null,
       previousVersion: 0,
       newValue: stored,
       version: 1,
-    })
+    });
 
-    expect(client.release).toHaveBeenCalledTimes(1)
+    expect(client.release).toHaveBeenCalledTimes(1);
     // pool.query runs exactly once for the T-09.10.03 green product state
     // check (the GET config read path does not run during set).
-    expect(pool.query).toHaveBeenCalledTimes(1)
+    expect(pool.query).toHaveBeenCalledTimes(1);
     expect(pool.query).toHaveBeenCalledWith(
       expect.stringContaining('FROM products WHERE system_key'),
-      ['green_electricity'],
-    )
-  })
+      ['green_electricity']
+    );
+  });
 
   it('records the previous value and version in the audit trail on overwrite', async () => {
-    const { mockConnect, mockQuery } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
+    const { mockConnect, mockQuery } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
-    }) // green product state (activatable → gate passes)
+    }); // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({
         rows: [
           {
             value: {
-              simple_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-              advanced_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
+              simple_order: {
+                mandatory_green_enabled: false,
+                average_power_threshold_kw: 1000,
+                mandatory_green_share_percent: 4,
+              },
+              advanced_order: {
+                mandatory_green_enabled: false,
+                average_power_threshold_kw: 1000,
+                mandatory_green_share_percent: 4,
+              },
             },
             version: 3,
           },
@@ -307,173 +335,189 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       .mockResolvedValueOnce({ rows: [{ version: 4 }] })
       .mockResolvedValueOnce({ rows: [] }) // config_version
       .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+      .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+    await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
 
-    const auditQuery = client.query.mock.calls[4]!
-    const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string)
-    expect(auditMetadata.key).toBe(GREEN_ELECTRICITY_CONFIG_KEY)
-    expect(auditMetadata.previousVersion).toBe(3)
-    expect(auditMetadata.version).toBe(4)
+    const auditQuery = client.query.mock.calls[4]!;
+    const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
+    expect(auditMetadata.key).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
+    expect(auditMetadata.previousVersion).toBe(3);
+    expect(auditMetadata.version).toBe(4);
     expect(auditMetadata.previousValue).toEqual({
-      simple_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-      advanced_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-    })
-  })
+      simple_order: {
+        mandatory_green_enabled: false,
+        average_power_threshold_kw: 1000,
+        mandatory_green_share_percent: 4,
+      },
+      advanced_order: {
+        mandatory_green_enabled: false,
+        average_power_threshold_kw: 1000,
+        mandatory_green_share_percent: 4,
+      },
+    });
+  });
 
   it('returns the persisted camelCase config', async () => {
-    const { mockConnect, mockQuery } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
+    const { mockConnect, mockQuery } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 1_000_000 }],
-    }) // green product state (activatable → gate passes)
+    }); // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
       .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+      .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
-    const result = await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
+    const result = await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
     expect(result.simpleOrder).toEqual({
       mandatoryGreenEnabled: true,
       averagePowerThresholdKw: 1000,
       mandatoryGreenSharePercent: 4,
-    })
+    });
     expect(result.advancedOrder).toEqual({
       mandatoryGreenEnabled: false,
       averagePowerThresholdKw: 500,
       mandatoryGreenSharePercent: 10,
-    })
-  })
-})
+    });
+  });
+});
 
 // ─── Tests — T-09.10.03 activation safety gate ──────────────────────
 
 describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)', () => {
   it('blocks enabling a mode when the green product is absent', async () => {
-    const { pool, mockQuery } = await loadService()
-    mockQuery.mockResolvedValueOnce({ rows: [] }) // no green product row
+    const { pool, mockQuery } = await loadService();
+    mockQuery.mockResolvedValueOnce({ rows: [] }); // no green product row
 
     const err = (await service
       .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
-      .catch((e: unknown) => e)) as HttpException
-    expect(err.getStatus()).toBe(400)
-    expect(String(err.message)).toMatch(/Cannot activate/i)
-    expect(String(err.message)).toMatch(/missing/i)
-    expect(pool.connect).not.toHaveBeenCalled()
-  })
+      .catch((e: unknown) => e)) as HttpException;
+    expect(err.getStatus()).toBe(400);
+    expect(String(err.message)).toMatch(/Cannot activate/i);
+    expect(String(err.message)).toMatch(/missing/i);
+    expect(pool.connect).not.toHaveBeenCalled();
+  });
 
   it('blocks enabling a mode when the green product is inactive', async () => {
-    const { pool, mockQuery } = await loadService()
+    const { pool, mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'inactive', price: 1_000_000 }],
-    })
+    });
 
     const err = (await service
       .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
-      .catch((e: unknown) => e)) as HttpException
-    expect(err.getStatus()).toBe(400)
-    expect(String(err.message)).toMatch(/inactive/i)
-    expect(pool.connect).not.toHaveBeenCalled()
-  })
+      .catch((e: unknown) => e)) as HttpException;
+    expect(err.getStatus()).toBe(400);
+    expect(String(err.message)).toMatch(/inactive/i);
+    expect(pool.connect).not.toHaveBeenCalled();
+  });
 
   it('blocks enabling a mode when the green product is unpriced', async () => {
-    const { pool, mockQuery } = await loadService()
+    const { pool, mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: null }],
-    })
+    });
 
     const err = (await service
       .setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1')
-      .catch((e: unknown) => e)) as HttpException
-    expect(err.getStatus()).toBe(400)
-    expect(String(err.message)).toMatch(/unpriced/i)
-    expect(pool.connect).not.toHaveBeenCalled()
-  })
+      .catch((e: unknown) => e)) as HttpException;
+    expect(err.getStatus()).toBe(400);
+    expect(String(err.message)).toMatch(/unpriced/i);
+    expect(pool.connect).not.toHaveBeenCalled();
+  });
 
   it('allows a save that disables both modes even when the product is unusable', async () => {
-    const { mockConnect, mockQuery } = await loadService()
-    const { client } = mockClient()
-    mockConnect.mockResolvedValue(client)
+    const { mockConnect, mockQuery } = await loadService();
+    const { client } = mockClient();
+    mockConnect.mockResolvedValue(client);
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'inactive', price: null }],
-    }) // product unusable, but no mode is enabled → gate passes
+    }); // product unusable, but no mode is enabled → gate passes
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
       .mockResolvedValueOnce({ rows: [] }) // audit_log
-      .mockResolvedValueOnce({ rows: [] }) // COMMIT
+      .mockResolvedValueOnce({ rows: [] }); // COMMIT
 
     const bothDisabled = {
-      simple_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-      advanced_order: { mandatory_green_enabled: false, average_power_threshold_kw: 1000, mandatory_green_share_percent: 4 },
-    }
-    await service.setGreenElectricityConfig(bothDisabled, 'admin-1', '127.0.0.1')
-    expect(mockConnect).toHaveBeenCalledTimes(1)
-  })
-})
+      simple_order: {
+        mandatory_green_enabled: false,
+        average_power_threshold_kw: 1000,
+        mandatory_green_share_percent: 4,
+      },
+      advanced_order: {
+        mandatory_green_enabled: false,
+        average_power_threshold_kw: 1000,
+        mandatory_green_share_percent: 4,
+      },
+    };
+    await service.setGreenElectricityConfig(bothDisabled, 'admin-1', '127.0.0.1');
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+  });
+});
 
 // ─── Tests — product state + safety status (T-09.10.03) ─────────────
 
 describe('AdminService green rule safety (T-09.10.03)', () => {
   it('getGreenElectricityProductState maps an absent row', async () => {
-    const { mockQuery } = await loadService()
-    mockQuery.mockResolvedValueOnce({ rows: [] })
-    const state = await service.getGreenElectricityProductState()
-    expect(state).toEqual({ exists: false, status: null, priceIrR: null })
-  })
+    const { mockQuery } = await loadService();
+    mockQuery.mockResolvedValueOnce({ rows: [] });
+    const state = await service.getGreenElectricityProductState();
+    expect(state).toEqual({ exists: false, status: null, priceIrR: null });
+  });
 
   it('getGreenElectricityProductState maps an active priced row', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 5_000_000 }],
-    })
-    const state = await service.getGreenElectricityProductState()
-    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 5_000_000 })
-  })
+    });
+    const state = await service.getGreenElectricityProductState();
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 5_000_000 });
+  });
 
   it('getGreenElectricityProductState treats a zero/string zero price as unpriced', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: '0' }], // node-pg NUMERIC arrives as string
-    })
-    const state = await service.getGreenElectricityProductState()
-    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 0 })
+    });
+    const state = await service.getGreenElectricityProductState();
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: 0 });
     // priceIrR 0 flows through greenProductBlockReasons as 'unpriced' — the
     // activation gate stays closed for a zero-priced product.
-    expect(state.priceIrR === 0 ? 'unpriced' : '').toBe('unpriced')
-  })
+    expect(state.priceIrR === 0 ? 'unpriced' : '').toBe('unpriced');
+  });
 
   it('getGreenElectricityProductState treats an unparseable price as unpriced (fail-closed)', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'active', price: 'not-a-number' }],
-    })
-    const state = await service.getGreenElectricityProductState()
-    expect(state).toEqual({ exists: true, status: 'active', priceIrR: null })
-  })
+    });
+    const state = await service.getGreenElectricityProductState();
+    expect(state).toEqual({ exists: true, status: 'active', priceIrR: null });
+  });
 
   it('safety status fails closed when an active rule is unsupported', async () => {
-    const { mockQuery } = await loadService()
+    const { mockQuery } = await loadService();
     // getGreenElectricityConfig: no persisted value → defaults (simple enabled)
-    mockQuery.mockResolvedValueOnce({ rows: [] })
+    mockQuery.mockResolvedValueOnce({ rows: [] });
     // getGreenElectricityProductState: product inactive + unpriced
     mockQuery.mockResolvedValueOnce({
       rows: [{ status: 'inactive', price: null }],
-    })
+    });
 
-    const status = await service.getGreenElectricitySafetyStatus()
-    expect(status.simpleOrder.ruleActive).toBe(true)
-    expect(status.simpleOrder.blocked).toBe(true)
-    expect(status.simpleOrder.reasons).toContain('inactive')
+    const status = await service.getGreenElectricitySafetyStatus();
+    expect(status.simpleOrder.ruleActive).toBe(true);
+    expect(status.simpleOrder.blocked).toBe(true);
+    expect(status.simpleOrder.reasons).toContain('inactive');
     // advanced mode is disabled by default → not blocked
-    expect(status.advancedOrder.ruleActive).toBe(false)
-    expect(status.advancedOrder.blocked).toBe(false)
-  })
-})
+    expect(status.advancedOrder.ruleActive).toBe(false);
+    expect(status.advancedOrder.blocked).toBe(false);
+  });
+});

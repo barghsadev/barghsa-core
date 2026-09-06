@@ -3,7 +3,7 @@
 **Status:** Accepted  
 **Date:** 2026-08-24  
 **Deciders:** Platform Engineering Team  
-**Dependencies:** T-04.01.01, S-02.01  
+**Dependencies:** T-04.01.01, S-02.01
 
 ## Context
 
@@ -77,17 +77,17 @@ pgbouncer:
   image: bitnami/pgbouncer:latest
   container_name: barghsa-pgbouncer
   ports:
-    - "6432:6432"
+    - '6432:6432'
   environment:
     PGBOUNCER_DATABASE: barghsa
     PGBOUNCER_HOST: postgres
-    PGBOUNCER_PORT: "5432"
+    PGBOUNCER_PORT: '5432'
     PGBOUNCER_USER: barghsa
     PGBOUNCER_PASSWORD: barghsa-dev-password
-    PGBOUNCER_MAX_CLIENT_CONN: "200"
-    PGBOUNCER_DEFAULT_POOL_SIZE: "30"
-    PGBOUNCER_RESERVE_POOL_SIZE: "10"
-    PGBOUNCER_RESERVE_POOL_TIMEOUT: "3"
+    PGBOUNCER_MAX_CLIENT_CONN: '200'
+    PGBOUNCER_DEFAULT_POOL_SIZE: '30'
+    PGBOUNCER_RESERVE_POOL_SIZE: '10'
+    PGBOUNCER_RESERVE_POOL_TIMEOUT: '3'
   depends_on:
     postgres:
       condition: service_healthy
@@ -98,6 +98,7 @@ pgbouncer:
 The application connects to PgBouncer via `PGBOUNCER_URL` (e.g., `postgres://barghsa:password@pgbouncer:6432/barghsa`). When `PGBOUNCER_URL` is not set, the application falls back to `DATABASE_URL` (direct PostgreSQL connection).
 
 Env vars:
+
 - `DATABASE_URL` — direct PostgreSQL connection (used when PgBouncer is not configured)
 - `PGBOUNCER_URL` — PgBouncer connection (used when available; overrides `DATABASE_URL`)
 - `PGDIRECT_URL` — direct PostgreSQL connection for admin/migration operations (bypasses PgBouncer)
@@ -105,6 +106,7 @@ Env vars:
 ## Review
 
 This ADR should be reviewed when:
+
 - The platform adds read replicas or sharding
 - Session-level features (LISTEN/NOTIFY, prepared statements) are needed
 - The number of API replicas exceeds 10

@@ -1,5 +1,11 @@
-import { Injectable, Optional, BadRequestException, ConflictException, NotFoundException } from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
+import {
+  Injectable,
+  Optional,
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
 import {
   WALLET_TOP_UP_LIMIT_CONFIG_KEY,
   WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
@@ -20,42 +26,42 @@ import {
   isWalletTransactionUuid,
   reversalAmount,
   walletReversalMetadata,
-} from '@barghsa/shared/finance'
-import { ConfigCacheService } from '../config-cache/config-cache.service.js'
+} from '@barghsa/shared/finance';
+import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 
-const PG_UNIQUE_VIOLATION = '23505'
-const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency'
+const PG_UNIQUE_VIOLATION = '23505';
+const WALLET_TX_IDEMPOTENCY_CONSTRAINT = 'idx_wallet_tx_idempotency';
 
 /** Ledger types that post as a credit (positive amount, money in). */
-const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating'] as const
-type WalletCreditType = (typeof WALLET_CREDIT_TYPES)[number]
+const WALLET_CREDIT_TYPES = ['topup', 'refund', 'compensating'] as const;
+type WalletCreditType = (typeof WALLET_CREDIT_TYPES)[number];
 
 /** Ledger types that post as a debit (negative amount, money out). */
-const WALLET_DEBIT_TYPES = ['payment', 'compensating'] as const
-type WalletDebitType = (typeof WALLET_DEBIT_TYPES)[number]
+const WALLET_DEBIT_TYPES = ['payment', 'compensating'] as const;
+type WalletDebitType = (typeof WALLET_DEBIT_TYPES)[number];
 
 export interface WalletRow {
-  profileId: string
-  postedBalance: bigint
-  reservedBalance: bigint
-  version: number
-  updatedAt: Date
-  availableBalance: bigint
+  profileId: string;
+  postedBalance: bigint;
+  reservedBalance: bigint;
+  version: number;
+  updatedAt: Date;
+  availableBalance: bigint;
 }
 
 export interface TransactionRow {
-  id: string
-  walletId: string
-  type: string
-  amount: bigint
-  state: string
-  idempotencyKey: string
-  refId: string | null
-  description: string | null
-  metadata: unknown | null
-  reversesTransactionId: string | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  walletId: string;
+  type: string;
+  amount: bigint;
+  state: string;
+  idempotencyKey: string;
+  refId: string | null;
+  description: string | null;
+  metadata: unknown | null;
+  reversesTransactionId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
@@ -65,10 +71,10 @@ export interface TransactionRow {
  * originating domain entity (invoice, refund, provider event, …).
  */
 export interface WalletCreditRef {
-  type: WalletCreditType
-  refId?: string | null
-  description?: string | null
-  metadata?: unknown
+  type: WalletCreditType;
+  refId?: string | null;
+  description?: string | null;
+  metadata?: unknown;
 }
 
 /**
@@ -82,11 +88,11 @@ export interface WalletCreditRef {
  * differs — optimistic second line of defense after the row lock.
  */
 export interface WalletDebitRef {
-  type: WalletDebitType
-  refId?: string | null
-  description?: string | null
-  metadata?: unknown
-  expectedVersion?: number
+  type: WalletDebitType;
+  refId?: string | null;
+  description?: string | null;
+  metadata?: unknown;
+  expectedVersion?: number;
 }
 
 /**
@@ -96,9 +102,9 @@ export interface WalletDebitRef {
  * held during the payment flow.
  */
 export interface WalletReserveRef {
-  refId?: string | null
-  description?: string | null
-  metadata?: unknown
+  refId?: string | null;
+  description?: string | null;
+  metadata?: unknown;
 }
 
 /**
@@ -110,53 +116,51 @@ export interface WalletReserveRef {
 export interface WalletQueryClient {
   query: (
     text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 @Injectable()
 export class WalletService {
-  constructor(
-    @Optional() private readonly configCache?: ConfigCacheService,
-  ) {}
+  constructor(@Optional() private readonly configCache?: ConfigCacheService) {}
 
   /**
    * Get a wallet by profile ID. Returns null if no wallet exists yet.
    */
   async getWallet(profileId: string): Promise<WalletRow | null> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT *, (posted_balance - reserved_balance) AS available_balance
        FROM wallets WHERE profile_id = $1`,
-      [profileId],
-    )
+      [profileId]
+    );
 
-    if (result.rows.length === 0) return null
-    return mapWallet(result.rows[0])
+    if (result.rows.length === 0) return null;
+    return mapWallet(result.rows[0]);
   }
 
   /**
    * Create a wallet for a profile. Idempotent — returns existing if present.
    */
   async createWallet(profileId: string): Promise<WalletRow> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Try INSERT; if concurrent insert won the race, fall back to SELECT
     const result = await pool.query(
       `INSERT INTO wallets (profile_id) VALUES ($1)
        ON CONFLICT (profile_id) DO NOTHING
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
-      [profileId],
-    )
+      [profileId]
+    );
 
     if (result.rows.length === 0) {
       // Another request created the wallet first — return that one
-      const existing = await this.getWallet(profileId)
-      if (!existing) throw new NotFoundException('Wallet creation failed despite insert attempt')
-      return existing
+      const existing = await this.getWallet(profileId);
+      if (!existing) throw new NotFoundException('Wallet creation failed despite insert attempt');
+      return existing;
     }
 
-    return mapWallet(result.rows[0])
+    return mapWallet(result.rows[0]);
   }
 
   /**
@@ -201,33 +205,33 @@ export class WalletService {
     expectedVersion: number,
     client?: WalletQueryClient,
     options?: {
-      requireNonNegativePostedBalance?: boolean
-      requireAvailableAtLeast?: bigint
-    },
+      requireNonNegativePostedBalance?: boolean;
+      requireAvailableAtLeast?: bigint;
+    }
   ): Promise<WalletRow> {
     if (!walletId.trim()) {
-      throw new BadRequestException('Wallet id is required')
+      throw new BadRequestException('Wallet id is required');
     }
     if (delta === 0n) {
-      throw new BadRequestException('Posted-balance delta must be non-zero')
+      throw new BadRequestException('Posted-balance delta must be non-zero');
     }
     if (!Number.isInteger(expectedVersion) || expectedVersion < 0) {
-      throw new BadRequestException('Expected version must be a non-negative integer')
+      throw new BadRequestException('Expected version must be a non-negative integer');
     }
 
     const postedGuard = options?.requireNonNegativePostedBalance
       ? '\n         AND posted_balance >= 0'
-      : ''
-    const availableFloor = options?.requireAvailableAtLeast
+      : '';
+    const availableFloor = options?.requireAvailableAtLeast;
     const availableGuard =
       availableFloor !== undefined
         ? '\n         AND (posted_balance - reserved_balance) >= $4::bigint'
-        : ''
+        : '';
     const params: unknown[] =
       availableFloor !== undefined
         ? [delta, walletId, expectedVersion, availableFloor]
-        : [delta, walletId, expectedVersion]
-    const queryable = client ?? getDbPool()
+        : [delta, walletId, expectedVersion];
+    const queryable = client ?? getDbPool();
     const result = await queryable.query(
       `UPDATE wallets
        SET posted_balance = posted_balance + $1::bigint,
@@ -236,12 +240,12 @@ export class WalletService {
        WHERE profile_id = $2
          AND version = $3${postedGuard}${availableGuard}
        RETURNING *, (posted_balance - reserved_balance) AS available_balance`,
-      params,
-    )
+      params
+    );
     if (result.rows.length === 0) {
-      throw new ConflictException('Wallet optimistic lock failed: version mismatch')
+      throw new ConflictException('Wallet optimistic lock failed: version mismatch');
     }
-    return mapWallet(result.rows[0] as Parameters<typeof mapWallet>[0])
+    return mapWallet(result.rows[0] as Parameters<typeof mapWallet>[0]);
   }
 
   /**
@@ -273,53 +277,55 @@ export class WalletService {
     amount: bigint,
     ref: WalletCreditRef,
     idempotencyKey: string,
-    client?: WalletQueryClient,
+    client?: WalletQueryClient
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new BadRequestException('Credit amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Credit amount must be positive');
     if (!idempotencyKey.trim()) {
-      throw new BadRequestException('Idempotency key is required')
+      throw new BadRequestException('Idempotency key is required');
     }
-    assertNotReversalLedgerType(ref.type)
+    assertNotReversalLedgerType(ref.type);
     if (!isWalletCreditType(ref.type)) {
-      throw new BadRequestException(`Credit type must be one of: ${WALLET_CREDIT_TYPES.join(', ')}`)
+      throw new BadRequestException(
+        `Credit type must be one of: ${WALLET_CREDIT_TYPES.join(', ')}`
+      );
     }
 
-    const pool = getDbPool()
-    const ownsTransaction = client === undefined
-    const ownedClient = ownsTransaction ? await pool.connect() : undefined
-    const queryable: WalletQueryClient = client ?? ownedClient!
+    const pool = getDbPool();
+    const ownsTransaction = client === undefined;
+    const ownedClient = ownsTransaction ? await pool.connect() : undefined;
+    const queryable: WalletQueryClient = client ?? ownedClient!;
     // PostgreSQL UUID columns return canonical lowercase; callers may pass
     // any valid spelling. Ownership checks must use the row's profile_id.
-    let canonicalWalletId: string | undefined
+    let canonicalWalletId: string | undefined;
     try {
       if (ownsTransaction) {
-        await queryable.query('BEGIN')
+        await queryable.query('BEGIN');
       }
 
       const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
+        [walletId]
+      );
       if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${walletId}`)
+        throw new NotFoundException(`Wallet not found: ${walletId}`);
       }
       const wallet = walletResult.rows[0] as {
-        version: number
-        profile_id: string
-      }
-      canonicalWalletId = wallet.profile_id
+        version: number;
+        profile_id: string;
+      };
+      canonicalWalletId = wallet.profile_id;
 
       const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey],
-      )
+        [idempotencyKey]
+      );
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow
-        assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref)
+        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow;
+        assertMatchingCreditReplay(existing, canonicalWalletId, amount, ref);
         if (ownsTransaction) {
-          await queryable.query('COMMIT')
+          await queryable.query('COMMIT');
         }
-        return mapTransaction(existing)
+        return mapTransaction(existing);
       }
 
       const txResult = await queryable.query(
@@ -335,49 +341,45 @@ export class WalletService {
           ref.refId ?? null,
           ref.description ?? null,
           ref.metadata === undefined ? null : JSON.stringify(ref.metadata),
-        ],
-      )
+        ]
+      );
 
       try {
-        await this.applyPostedBalanceDelta(
-          canonicalWalletId,
-          amount,
-          wallet.version,
-          queryable,
-          { requireNonNegativePostedBalance: true },
-        )
+        await this.applyPostedBalanceDelta(canonicalWalletId, amount, wallet.version, queryable, {
+          requireNonNegativePostedBalance: true,
+        });
       } catch (error) {
         if (error instanceof ConflictException) {
           throw new ConflictException(
-            'Wallet credit rejected: version mismatch or postedBalance < 0',
-          )
+            'Wallet credit rejected: version mismatch or postedBalance < 0'
+          );
         }
-        throw error
+        throw error;
       }
 
       if (ownsTransaction) {
-        await queryable.query('COMMIT')
+        await queryable.query('COMMIT');
       }
-      return mapTransaction(txResult.rows[0])
+      return mapTransaction(txResult.rows[0]);
     } catch (error) {
       if (ownsTransaction) {
-        await queryable.query('ROLLBACK')
+        await queryable.query('ROLLBACK');
         if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
           const existing = await pool.query(
             `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-            [idempotencyKey],
-          )
+            [idempotencyKey]
+          );
           if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-            throw new ConflictException('Idempotency key already used')
+            throw new ConflictException('Idempotency key already used');
           }
-          const committed = existing.rows[0]!
-          assertMatchingCreditReplay(committed, canonicalWalletId, amount, ref)
-          return mapTransaction(committed)
+          const committed = existing.rows[0]!;
+          assertMatchingCreditReplay(committed, canonicalWalletId, amount, ref);
+          return mapTransaction(committed);
         }
       }
-      throw error
+      throw error;
     } finally {
-      ownedClient?.release()
+      ownedClient?.release();
     }
   }
 
@@ -412,71 +414,71 @@ export class WalletService {
     amount: bigint,
     ref: WalletDebitRef,
     idempotencyKey: string,
-    client?: WalletQueryClient,
+    client?: WalletQueryClient
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new BadRequestException('Debit amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Debit amount must be positive');
     if (!idempotencyKey.trim()) {
-      throw new BadRequestException('Idempotency key is required')
+      throw new BadRequestException('Idempotency key is required');
     }
-    assertNotReversalLedgerType(ref.type)
+    assertNotReversalLedgerType(ref.type);
     if (!isWalletDebitType(ref.type)) {
-      throw new BadRequestException(`Debit type must be one of: ${WALLET_DEBIT_TYPES.join(', ')}`)
+      throw new BadRequestException(`Debit type must be one of: ${WALLET_DEBIT_TYPES.join(', ')}`);
     }
 
-    const pool = getDbPool()
-    const ownsTransaction = client === undefined
-    const ownedClient = ownsTransaction ? await pool.connect() : undefined
-    const queryable: WalletQueryClient = client ?? ownedClient!
+    const pool = getDbPool();
+    const ownsTransaction = client === undefined;
+    const ownedClient = ownsTransaction ? await pool.connect() : undefined;
+    const queryable: WalletQueryClient = client ?? ownedClient!;
     // PostgreSQL UUID columns return canonical lowercase; callers may pass
     // any valid spelling. Ownership checks must use the row's profile_id.
-    let canonicalWalletId: string | undefined
+    let canonicalWalletId: string | undefined;
     try {
       if (ownsTransaction) {
-        await queryable.query('BEGIN')
+        await queryable.query('BEGIN');
       }
 
       const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
+        [walletId]
+      );
       if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${walletId}`)
+        throw new NotFoundException(`Wallet not found: ${walletId}`);
       }
       const wallet = walletResult.rows[0] as {
-        version: number
-        profile_id: string
-        posted_balance: string | number | bigint
-        reserved_balance: string | number | bigint
-      }
-      canonicalWalletId = wallet.profile_id
+        version: number;
+        profile_id: string;
+        posted_balance: string | number | bigint;
+        reserved_balance: string | number | bigint;
+      };
+      canonicalWalletId = wallet.profile_id;
 
       const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey],
-      )
+        [idempotencyKey]
+      );
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow
-        assertMatchingDebitReplay(existing, canonicalWalletId, amount, ref)
+        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow;
+        assertMatchingDebitReplay(existing, canonicalWalletId, amount, ref);
         if (ownsTransaction) {
-          await queryable.query('COMMIT')
+          await queryable.query('COMMIT');
         }
-        return mapTransaction(existing)
+        return mapTransaction(existing);
       }
 
       if (
         ref.expectedVersion !== undefined &&
         Number(wallet.version) !== Number(ref.expectedVersion)
       ) {
-        throw new ConflictException('Wallet optimistic lock failed: version mismatch')
+        throw new ConflictException('Wallet optimistic lock failed: version mismatch');
       }
 
-      const posted = BigInt(wallet.posted_balance)
-      const reserved = BigInt(wallet.reserved_balance)
-      const available = posted - reserved
+      const posted = BigInt(wallet.posted_balance);
+      const reserved = BigInt(wallet.reserved_balance);
+      const available = posted - reserved;
       if (available < amount) {
         throw new BadRequestException(
-          `Insufficient balance: available=${available.toString()}, required=${amount.toString()}`,
-        )
+          `Insufficient balance: available=${available.toString()}, required=${amount.toString()}`
+        );
       }
 
       const reserveResult = await queryable.query(
@@ -488,14 +490,14 @@ export class WalletService {
            AND version = $3
            AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
-        [amount, canonicalWalletId, wallet.version],
-      )
+        [amount, canonicalWalletId, wallet.version]
+      );
       if (reserveResult.rows.length === 0) {
         throw new ConflictException(
-          'Wallet debit reserve rejected: version mismatch or insufficient availableBalance',
-        )
+          'Wallet debit reserve rejected: version mismatch or insufficient availableBalance'
+        );
       }
-      const reservedWallet = reserveResult.rows[0] as { version: number }
+      const reservedWallet = reserveResult.rows[0] as { version: number };
 
       const completeResult = await queryable.query(
         `UPDATE wallets
@@ -508,12 +510,12 @@ export class WalletService {
            AND reserved_balance >= $1::bigint
            AND posted_balance >= $1::bigint
          RETURNING *`,
-        [amount, canonicalWalletId, reservedWallet.version],
-      )
+        [amount, canonicalWalletId, reservedWallet.version]
+      );
       if (completeResult.rows.length === 0) {
         throw new ConflictException(
-          'Wallet debit complete rejected: version mismatch or reserved/posted shortfall',
-        )
+          'Wallet debit complete rejected: version mismatch or reserved/posted shortfall'
+        );
       }
 
       const txResult = await queryable.query(
@@ -529,32 +531,32 @@ export class WalletService {
           ref.refId ?? null,
           ref.description ?? null,
           ref.metadata === undefined ? null : JSON.stringify(ref.metadata),
-        ],
-      )
+        ]
+      );
 
       if (ownsTransaction) {
-        await queryable.query('COMMIT')
+        await queryable.query('COMMIT');
       }
-      return mapTransaction(txResult.rows[0])
+      return mapTransaction(txResult.rows[0]);
     } catch (error) {
       if (ownsTransaction) {
-        await queryable.query('ROLLBACK')
+        await queryable.query('ROLLBACK');
         if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
           const existing = await pool.query(
             `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-            [idempotencyKey],
-          )
+            [idempotencyKey]
+          );
           if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-            throw new ConflictException('Idempotency key already used')
+            throw new ConflictException('Idempotency key already used');
           }
-          const committed = existing.rows[0]!
-          assertMatchingDebitReplay(committed, canonicalWalletId, amount, ref)
-          return mapTransaction(committed)
+          const committed = existing.rows[0]!;
+          assertMatchingDebitReplay(committed, canonicalWalletId, amount, ref);
+          return mapTransaction(committed);
         }
       }
-      throw error
+      throw error;
     } finally {
-      ownedClient?.release()
+      ownedClient?.release();
     }
   }
 
@@ -581,54 +583,54 @@ export class WalletService {
     walletId: string,
     amount: bigint,
     idempotencyKey: string,
-    ref?: WalletReserveRef,
+    ref?: WalletReserveRef
   ): Promise<TransactionRow> {
-    if (amount <= 0n) throw new BadRequestException('Reserve amount must be positive')
+    if (amount <= 0n) throw new BadRequestException('Reserve amount must be positive');
     if (!idempotencyKey.trim()) {
-      throw new BadRequestException('Idempotency key is required')
+      throw new BadRequestException('Idempotency key is required');
     }
 
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
     // PostgreSQL UUID columns return canonical lowercase; callers may pass
     // any valid spelling. Ownership checks must use the row's profile_id.
-    let canonicalWalletId: string | undefined
+    let canonicalWalletId: string | undefined;
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const walletResult = await client.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [walletId],
-      )
+        [walletId]
+      );
       if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${walletId}`)
+        throw new NotFoundException(`Wallet not found: ${walletId}`);
       }
       const wallet = walletResult.rows[0] as {
-        version: number
-        profile_id: string
-        posted_balance: string | number | bigint
-        reserved_balance: string | number | bigint
-      }
-      canonicalWalletId = wallet.profile_id
+        version: number;
+        profile_id: string;
+        posted_balance: string | number | bigint;
+        reserved_balance: string | number | bigint;
+      };
+      canonicalWalletId = wallet.profile_id;
 
       const idemResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey],
-      )
+        [idempotencyKey]
+      );
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0]!
-        assertMatchingReserveReplay(existing, canonicalWalletId, amount, ref)
-        await client.query('COMMIT')
-        return mapTransaction(existing)
+        const existing = idemResult.rows[0]!;
+        assertMatchingReserveReplay(existing, canonicalWalletId, amount, ref);
+        await client.query('COMMIT');
+        return mapTransaction(existing);
       }
 
-      const posted = BigInt(wallet.posted_balance)
-      const reserved = BigInt(wallet.reserved_balance)
-      const available = posted - reserved
+      const posted = BigInt(wallet.posted_balance);
+      const reserved = BigInt(wallet.reserved_balance);
+      const available = posted - reserved;
       if (available < amount) {
         throw new BadRequestException(
-          `Insufficient balance for reservation: available=${available.toString()}, required=${amount.toString()}`,
-        )
+          `Insufficient balance for reservation: available=${available.toString()}, required=${amount.toString()}`
+        );
       }
 
       const updateResult = await client.query(
@@ -640,12 +642,12 @@ export class WalletService {
            AND version = $3
            AND (posted_balance - reserved_balance) >= $1::bigint
          RETURNING *`,
-        [amount, canonicalWalletId, wallet.version],
-      )
+        [amount, canonicalWalletId, wallet.version]
+      );
       if (updateResult.rows.length === 0) {
         throw new ConflictException(
-          'Wallet reserve rejected: version mismatch or insufficient availableBalance',
-        )
+          'Wallet reserve rejected: version mismatch or insufficient availableBalance'
+        );
       }
 
       const txResult = await client.query(
@@ -660,28 +662,28 @@ export class WalletService {
           ref?.refId ?? null,
           ref?.description ?? null,
           ref?.metadata === undefined ? null : JSON.stringify(ref.metadata),
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
-      return mapTransaction(txResult.rows[0])
+      await client.query('COMMIT');
+      return mapTransaction(txResult.rows[0]);
     } catch (error) {
-      await client.query('ROLLBACK')
+      await client.query('ROLLBACK');
       if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
         const existing = await pool.query(
           `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-          [idempotencyKey],
-        )
+          [idempotencyKey]
+        );
         if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-          throw new ConflictException('Idempotency key already used')
+          throw new ConflictException('Idempotency key already used');
         }
-        const committed = existing.rows[0]!
-        assertMatchingReserveReplay(committed, canonicalWalletId, amount, ref)
-        return mapTransaction(committed)
+        const committed = existing.rows[0]!;
+        assertMatchingReserveReplay(committed, canonicalWalletId, amount, ref);
+        return mapTransaction(committed);
       }
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -703,58 +705,58 @@ export class WalletService {
    */
   async release(reservationId: string): Promise<TransactionRow> {
     if (!reservationId.trim()) {
-      throw new BadRequestException('Reservation id is required')
+      throw new BadRequestException('Reservation id is required');
     }
 
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const reservationResult = await client.query(
         `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
-        [reservationId],
-      )
+        [reservationId]
+      );
       if (reservationResult.rows.length === 0) {
-        throw new NotFoundException(`Reservation not found: ${reservationId}`)
+        throw new NotFoundException(`Reservation not found: ${reservationId}`);
       }
       const reservation = reservationResult.rows[0]! as {
-        id: string
-        wallet_id: string
-        type: string
-        amount: string | number | bigint
-        state: string
-      }
+        id: string;
+        wallet_id: string;
+        type: string;
+        amount: string | number | bigint;
+        state: string;
+      };
       // PostgreSQL UUID columns return canonical lowercase; callers may pass
       // any valid spelling. Mutations must use the locked row's id.
-      const canonicalReservationId = reservation.id
+      const canonicalReservationId = reservation.id;
       if (reservation.type !== 'reservation') {
-        throw new ConflictException('Ledger row is not a reservation')
+        throw new ConflictException('Ledger row is not a reservation');
       }
       if (reservation.state === 'Released') {
-        await client.query('COMMIT')
-        return mapTransaction(reservationResult.rows[0])
+        await client.query('COMMIT');
+        return mapTransaction(reservationResult.rows[0]);
       }
       if (reservation.state !== 'Reserved') {
         throw new ConflictException(
-          `Reservation cannot be released from state ${reservation.state}`,
-        )
+          `Reservation cannot be released from state ${reservation.state}`
+        );
       }
 
-      const amount = BigInt(reservation.amount)
+      const amount = BigInt(reservation.amount);
       if (amount <= 0n) {
-        throw new ConflictException('Reservation amount must be positive')
+        throw new ConflictException('Reservation amount must be positive');
       }
 
       const walletResult = await client.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [reservation.wallet_id],
-      )
+        [reservation.wallet_id]
+      );
       if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${reservation.wallet_id}`)
+        throw new NotFoundException(`Wallet not found: ${reservation.wallet_id}`);
       }
-      const wallet = walletResult.rows[0] as { version: number; profile_id: string }
-      const canonicalWalletId = wallet.profile_id
+      const wallet = walletResult.rows[0] as { version: number; profile_id: string };
+      const canonicalWalletId = wallet.profile_id;
 
       const updateResult = await client.query(
         `UPDATE wallets
@@ -765,12 +767,12 @@ export class WalletService {
            AND version = $3
            AND reserved_balance >= $1::bigint
          RETURNING *`,
-        [amount, canonicalWalletId, wallet.version],
-      )
+        [amount, canonicalWalletId, wallet.version]
+      );
       if (updateResult.rows.length === 0) {
         throw new ConflictException(
-          'Wallet release rejected: version mismatch or reservedBalance shortfall',
-        )
+          'Wallet release rejected: version mismatch or reservedBalance shortfall'
+        );
       }
 
       const releasedResult = await client.query(
@@ -780,21 +782,21 @@ export class WalletService {
            AND type = 'reservation'
            AND state = 'Reserved'
          RETURNING *`,
-        [canonicalReservationId],
-      )
+        [canonicalReservationId]
+      );
       if (releasedResult.rows.length === 0) {
         throw new ConflictException(
-          'Wallet release rejected: reservation state changed concurrently',
-        )
+          'Wallet release rejected: reservation state changed concurrently'
+        );
       }
 
-      await client.query('COMMIT')
-      return mapTransaction(releasedResult.rows[0])
+      await client.query('COMMIT');
+      return mapTransaction(releasedResult.rows[0]);
     } catch (error) {
-      await client.query('ROLLBACK')
-      throw error
+      await client.query('ROLLBACK');
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -825,118 +827,118 @@ export class WalletService {
     originalTransactionId: string,
     reason: string,
     idempotencyKey: string,
-    client?: WalletQueryClient,
+    client?: WalletQueryClient
   ): Promise<TransactionRow> {
-    const trimmedReason = reason.trim()
+    const trimmedReason = reason.trim();
     if (!isWalletTransactionUuid(originalTransactionId)) {
-      throw new BadRequestException(WALLET_REVERSAL_ERRORS.ORIGINAL_ID_REQUIRED())
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.ORIGINAL_ID_REQUIRED());
     }
     if (!trimmedReason) {
-      throw new BadRequestException(WALLET_REVERSAL_ERRORS.REASON_REQUIRED())
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.REASON_REQUIRED());
     }
     if (!idempotencyKey.trim()) {
-      throw new BadRequestException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_REQUIRED())
+      throw new BadRequestException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_REQUIRED());
     }
 
-    const pool = getDbPool()
-    const ownsTransaction = client === undefined
-    const ownedClient = ownsTransaction ? await pool.connect() : undefined
-    const queryable: WalletQueryClient = client ?? ownedClient!
-    let canonicalWalletId: string | undefined
-    let canonicalOriginalId: string | undefined
-    let originalAmount: bigint | undefined
+    const pool = getDbPool();
+    const ownsTransaction = client === undefined;
+    const ownedClient = ownsTransaction ? await pool.connect() : undefined;
+    const queryable: WalletQueryClient = client ?? ownedClient!;
+    let canonicalWalletId: string | undefined;
+    let canonicalOriginalId: string | undefined;
+    let originalAmount: bigint | undefined;
     try {
       if (ownsTransaction) {
-        await queryable.query('BEGIN')
+        await queryable.query('BEGIN');
       }
 
       const originalResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE id = $1 FOR UPDATE`,
-        [originalTransactionId],
-      )
+        [originalTransactionId]
+      );
       if (originalResult.rows.length === 0) {
-        throw new NotFoundException(WALLET_REVERSAL_ERRORS.NOT_FOUND(originalTransactionId))
+        throw new NotFoundException(WALLET_REVERSAL_ERRORS.NOT_FOUND(originalTransactionId));
       }
       const original = originalResult.rows[0] as {
-        id: string
-        wallet_id: string
-        type: string
-        amount: string | number | bigint
-        state: string
-        ref_id: string | null
-      }
-      canonicalOriginalId = original.id
-      originalAmount = BigInt(original.amount)
+        id: string;
+        wallet_id: string;
+        type: string;
+        amount: string | number | bigint;
+        state: string;
+        ref_id: string | null;
+      };
+      canonicalOriginalId = original.id;
+      originalAmount = BigInt(original.amount);
 
       if (!isReversibleWalletLedgerType(original.type)) {
-        throw new BadRequestException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_TYPE(original.type))
+        throw new BadRequestException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_TYPE(original.type));
       }
       if (!isReversibleWalletLedgerState(original.state)) {
-        throw new ConflictException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_STATE(original.state))
+        throw new ConflictException(WALLET_REVERSAL_ERRORS.NOT_REVERSIBLE_STATE(original.state));
       }
 
       const walletResult = await queryable.query(
         `SELECT * FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [original.wallet_id],
-      )
+        [original.wallet_id]
+      );
       if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${original.wallet_id}`)
+        throw new NotFoundException(`Wallet not found: ${original.wallet_id}`);
       }
       const wallet = walletResult.rows[0] as {
-        version: number
-        profile_id: string
-        posted_balance: string | number | bigint
-        reserved_balance: string | number | bigint
-      }
-      canonicalWalletId = wallet.profile_id
+        version: number;
+        profile_id: string;
+        posted_balance: string | number | bigint;
+        reserved_balance: string | number | bigint;
+      };
+      canonicalWalletId = wallet.profile_id;
 
       const idemResult = await queryable.query(
         `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-        [idempotencyKey],
-      )
+        [idempotencyKey]
+      );
       if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow
+        const existing = idemResult.rows[0] as WalletLedgerIdempotencyRow;
         assertMatchingReversalReplay(
           existing,
           canonicalWalletId,
           canonicalOriginalId,
           originalAmount,
-          trimmedReason,
-        )
+          trimmedReason
+        );
         if (ownsTransaction) {
-          await queryable.query('COMMIT')
+          await queryable.query('COMMIT');
         }
-        return mapTransaction(existing)
+        return mapTransaction(existing);
       }
 
       const existingReversal = await queryable.query(
         `SELECT id FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-        [canonicalOriginalId],
-      )
+        [canonicalOriginalId]
+      );
       if (existingReversal.rows.length > 0) {
-        throw new ConflictException(WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId))
+        throw new ConflictException(WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId));
       }
 
-      const posted = BigInt(wallet.posted_balance)
-      const reserved = BigInt(wallet.reserved_balance)
-      const available = posted - reserved
+      const posted = BigInt(wallet.posted_balance);
+      const reserved = BigInt(wallet.reserved_balance);
+      const available = posted - reserved;
       if (!availableCoversReversal(available, originalAmount)) {
         throw new BadRequestException(
           WALLET_REVERSAL_ERRORS.INSUFFICIENT_BALANCE(
             available,
-            availableRequiredForReversal(originalAmount),
-          ),
-        )
+            availableRequiredForReversal(originalAmount)
+          )
+        );
       }
 
-      const compensatingAmount = reversalAmount(originalAmount)
+      const compensatingAmount = reversalAmount(originalAmount);
       const metadata = walletReversalMetadata({
         originalTransactionId: canonicalOriginalId,
         originalType: original.type,
         originalAmount,
         originalRefId: original.ref_id,
         reason: trimmedReason,
-      })
+      });
 
       const txResult = await queryable.query(
         `INSERT INTO wallet_transactions
@@ -953,10 +955,10 @@ export class WalletService {
           trimmedReason,
           JSON.stringify(metadata),
           canonicalOriginalId,
-        ],
-      )
+        ]
+      );
 
-      const availableFloor = availableRequiredForReversal(originalAmount)
+      const availableFloor = availableRequiredForReversal(originalAmount);
       try {
         await this.applyPostedBalanceDelta(
           canonicalWalletId,
@@ -966,24 +968,24 @@ export class WalletService {
           {
             requireNonNegativePostedBalance: true,
             ...(availableFloor > 0n ? { requireAvailableAtLeast: availableFloor } : {}),
-          },
-        )
+          }
+        );
       } catch (error) {
         if (error instanceof ConflictException) {
           throw new ConflictException(
-            'Wallet reversal rejected: version mismatch or availableBalance shortfall',
-          )
+            'Wallet reversal rejected: version mismatch or availableBalance shortfall'
+          );
         }
-        throw error
+        throw error;
       }
 
       if (ownsTransaction) {
-        await queryable.query('COMMIT')
+        await queryable.query('COMMIT');
       }
-      return mapTransaction(txResult.rows[0])
+      return mapTransaction(txResult.rows[0]);
     } catch (error) {
       if (ownsTransaction) {
-        await queryable.query('ROLLBACK')
+        await queryable.query('ROLLBACK');
         if (
           canonicalWalletId !== undefined &&
           canonicalOriginalId !== undefined &&
@@ -993,50 +995,46 @@ export class WalletService {
         ) {
           const existing = await pool.query(
             `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-            [idempotencyKey],
-          )
+            [idempotencyKey]
+          );
           if (existing.rows.length > 0) {
-            const committed = existing.rows[0]!
+            const committed = existing.rows[0]!;
             assertMatchingReversalReplay(
               committed,
               canonicalWalletId,
               canonicalOriginalId,
               originalAmount,
-              trimmedReason,
-            )
-            return mapTransaction(committed)
+              trimmedReason
+            );
+            return mapTransaction(committed);
           }
           if (isPgUniqueViolation(error, WALLET_TX_REVERSES_CONSTRAINT)) {
             throw new ConflictException(
-              WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId),
-            )
+              WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(canonicalOriginalId)
+            );
           }
-          throw new ConflictException('Idempotency key already used')
+          throw new ConflictException('Idempotency key already used');
         }
       }
-      throw error
+      throw error;
     } finally {
-      ownedClient?.release()
+      ownedClient?.release();
     }
   }
 
   /**
    * Get transaction history for a wallet.
    */
-  async getTransactions(
-    walletId: string,
-    limit = 50,
-    offset = 0,
-  ): Promise<TransactionRow[]> {
-    const pool = getDbPool()
+  async getTransactions(walletId: string, limit = 50, offset = 0): Promise<TransactionRow[]> {
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT * FROM wallet_transactions
        WHERE wallet_id = $1
        ORDER BY created_at DESC
        LIMIT $2 OFFSET $3`,
-      [walletId, limit, offset],
-    )
-    return result.rows.map(mapTransaction)
+      [walletId, limit, offset]
+    );
+    return result.rows.map(mapTransaction);
   }
 
   /**
@@ -1052,31 +1050,32 @@ export class WalletService {
    * returns `null` so GET can omit the cap and submission can fail closed.
    */
   async resolveOnlineTopUpLimit(
-    client?: WalletQueryClient,
+    client?: WalletQueryClient
   ): Promise<OnlineTopUpLimitSnapshot | null> {
     if (client) {
-      await client.query(
-        `SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`,
-        [WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE, WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-      )
+      await client.query(`SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`, [
+        WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+        WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+      ]);
       const result = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-      )
-      return snapshotFromConfigRow(result.rows[0])
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY]
+      );
+      return snapshotFromConfigRow(result.rows[0]);
     }
 
     if (this.configCache) {
-      const fetched = await this.configCache.getWithVersion<unknown>(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
-      return snapshotFromConfigValue(fetched.value, fetched.version)
+      const fetched = await this.configCache.getWithVersion<unknown>(
+        WALLET_TOP_UP_LIMIT_CONFIG_KEY
+      );
+      return snapshotFromConfigValue(fetched.value, fetched.version);
     }
 
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value, version FROM app_config WHERE key = $1`,
-      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-    )
-    return snapshotFromConfigRow(result.rows[0])
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value, version FROM app_config WHERE key = $1`, [
+      WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+    ]);
+    return snapshotFromConfigRow(result.rows[0]);
   }
 
   /**
@@ -1098,42 +1097,42 @@ export class WalletService {
    */
   async validateOnlineTopUpAmount(
     amountIrR: bigint,
-    client?: WalletQueryClient,
+    client?: WalletQueryClient
   ): Promise<OnlineTopUpLimitSnapshot> {
     if (amountIrR <= 0n) {
-      throw new BadRequestException('Online top-up amount must be positive')
+      throw new BadRequestException('Online top-up amount must be positive');
     }
-    const snapshot = await this.resolveOnlineTopUpLimit(client)
+    const snapshot = await this.resolveOnlineTopUpLimit(client);
     if (snapshot === null) {
       throw new BadRequestException({
         message: ONLINE_TOP_UP_LIMIT_UNAVAILABLE_MESSAGE,
-      })
+      });
     }
     if (!isOnlineWalletTopUpAllowed({ limitIrR: snapshot.onlineTopUpLimit }, amountIrR)) {
       throw new BadRequestException({
         message: onlineTopUpLimitExceededMessage(amountIrR, snapshot),
         onlineTopUpLimit: snapshot.onlineTopUpLimit,
         configVersion: snapshot.configVersion,
-      })
+      });
     }
-    return snapshot
+    return snapshot;
   }
 }
 
 function snapshotFromConfigRow(row: unknown): OnlineTopUpLimitSnapshot | null {
   if (!row || typeof row !== 'object') {
-    return snapshotFromConfigValue(null, 0)
+    return snapshotFromConfigValue(null, 0);
   }
-  const rec = row as { value?: unknown; version?: unknown }
-  return snapshotFromConfigValue(rec.value, rec.version)
+  const rec = row as { value?: unknown; version?: unknown };
+  return snapshotFromConfigValue(rec.value, rec.version);
 }
 
 function snapshotFromConfigValue(
   value: unknown,
-  version: unknown,
+  version: unknown
 ): OnlineTopUpLimitSnapshot | null {
-  const resolved = resolveOnlineTopUpLimitSnapshot(value, version)
-  return resolved.ok ? resolved.snapshot : null
+  const resolved = resolveOnlineTopUpLimitSnapshot(value, version);
+  return resolved.ok ? resolved.snapshot : null;
 }
 
 function mapWallet(row: any): WalletRow {
@@ -1143,8 +1142,8 @@ function mapWallet(row: any): WalletRow {
     reservedBalance: BigInt(row.reserved_balance),
     version: row.version,
     updatedAt: row.updated_at,
-    availableBalance: BigInt(row.available_balance ?? (row.posted_balance - row.reserved_balance)),
-  }
+    availableBalance: BigInt(row.available_balance ?? row.posted_balance - row.reserved_balance),
+  };
 }
 
 function mapTransaction(row: any): TransactionRow {
@@ -1161,15 +1160,15 @@ function mapTransaction(row: any): TransactionRow {
     reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-  }
+  };
 }
 
 function isWalletCreditType(type: string): type is WalletCreditType {
-  return (WALLET_CREDIT_TYPES as readonly string[]).includes(type)
+  return (WALLET_CREDIT_TYPES as readonly string[]).includes(type);
 }
 
 function isWalletDebitType(type: string): type is WalletDebitType {
-  return (WALLET_DEBIT_TYPES as readonly string[]).includes(type)
+  return (WALLET_DEBIT_TYPES as readonly string[]).includes(type);
 }
 
 /**
@@ -1179,19 +1178,19 @@ function isWalletDebitType(type: string): type is WalletDebitType {
  */
 function assertNotReversalLedgerType(type: string): void {
   if (type === WALLET_REVERSAL_TYPE) {
-    throw new BadRequestException(WALLET_REVERSAL_ERRORS.USE_REVERSE_TRANSACTION())
+    throw new BadRequestException(WALLET_REVERSAL_ERRORS.USE_REVERSE_TRANSACTION());
   }
 }
 
 type WalletLedgerIdempotencyRow = {
-  wallet_id: string
-  type: string
-  amount: string | number | bigint
-  state: string
-  ref_id?: string | null
-  description?: string | null
-  reverses_transaction_id?: string | null
-}
+  wallet_id: string;
+  type: string;
+  amount: string | number | bigint;
+  state: string;
+  ref_id?: string | null;
+  description?: string | null;
+  reverses_transaction_id?: string | null;
+};
 
 /**
  * Idempotent credit replay is only valid for the same Completed credit
@@ -1203,20 +1202,20 @@ function assertMatchingCreditReplay(
   existing: WalletLedgerIdempotencyRow,
   canonicalWalletId: string,
   amount: bigint,
-  ref: WalletCreditRef,
+  ref: WalletCreditRef
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
-    throw new ConflictException('Idempotency key already used for a different wallet')
+    throw new ConflictException('Idempotency key already used for a different wallet');
   }
-  const existingRefId = existing.ref_id ?? null
-  const expectedRefId = ref.refId ?? null
+  const existingRefId = existing.ref_id ?? null;
+  const expectedRefId = ref.refId ?? null;
   const isSameCredit =
     existing.state === 'Completed' &&
     existing.type === ref.type &&
     BigInt(existing.amount) === amount &&
-    existingRefId === expectedRefId
+    existingRefId === expectedRefId;
   if (!isSameCredit) {
-    throw new ConflictException('Idempotency key already used for a different wallet operation')
+    throw new ConflictException('Idempotency key already used for a different wallet operation');
   }
 }
 
@@ -1230,20 +1229,20 @@ function assertMatchingDebitReplay(
   existing: WalletLedgerIdempotencyRow,
   canonicalWalletId: string,
   amount: bigint,
-  ref: WalletDebitRef,
+  ref: WalletDebitRef
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
-    throw new ConflictException('Idempotency key already used for a different wallet')
+    throw new ConflictException('Idempotency key already used for a different wallet');
   }
-  const existingRefId = existing.ref_id ?? null
-  const expectedRefId = ref.refId ?? null
+  const existingRefId = existing.ref_id ?? null;
+  const expectedRefId = ref.refId ?? null;
   const isSameDebit =
     existing.state === 'Completed' &&
     existing.type === ref.type &&
     BigInt(existing.amount) === -amount &&
-    existingRefId === expectedRefId
+    existingRefId === expectedRefId;
   if (!isSameDebit) {
-    throw new ConflictException('Idempotency key already used for a different wallet operation')
+    throw new ConflictException('Idempotency key already used for a different wallet operation');
   }
 }
 
@@ -1257,20 +1256,20 @@ function assertMatchingReserveReplay(
   existing: WalletLedgerIdempotencyRow,
   canonicalWalletId: string,
   amount: bigint,
-  ref?: WalletReserveRef,
+  ref?: WalletReserveRef
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
-    throw new ConflictException('Idempotency key already used for a different wallet')
+    throw new ConflictException('Idempotency key already used for a different wallet');
   }
-  const existingRefId = existing.ref_id ?? null
-  const expectedRefId = ref?.refId ?? null
+  const existingRefId = existing.ref_id ?? null;
+  const expectedRefId = ref?.refId ?? null;
   const isSameReservation =
     existing.state === 'Reserved' &&
     existing.type === 'reservation' &&
     BigInt(existing.amount) === amount &&
-    existingRefId === expectedRefId
+    existingRefId === expectedRefId;
   if (!isSameReservation) {
-    throw new ConflictException('Idempotency key already used for a different wallet operation')
+    throw new ConflictException('Idempotency key already used for a different wallet operation');
   }
 }
 
@@ -1283,10 +1282,10 @@ function assertMatchingReversalReplay(
   canonicalWalletId: string,
   originalTransactionId: string,
   originalAmount: bigint,
-  reason: string,
+  reason: string
 ): void {
   if (existing.wallet_id !== canonicalWalletId) {
-    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_WALLET())
+    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_WALLET());
   }
   const matches = isMatchingReversalReplay(
     {
@@ -1302,16 +1301,16 @@ function assertMatchingReversalReplay(
       originalTransactionId,
       originalAmount,
       reason,
-    },
-  )
+    }
+  );
   if (!matches) {
-    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_COLLISION())
+    throw new ConflictException(WALLET_REVERSAL_ERRORS.IDEMPOTENCY_COLLISION());
   }
 }
 
 function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
-  if (!error || typeof error !== 'object') return false
-  const pgError = error as { code?: string; constraint?: string }
-  if (pgError.code !== PG_UNIQUE_VIOLATION) return false
-  return constraint === undefined || pgError.constraint === constraint
+  if (!error || typeof error !== 'object') return false;
+  const pgError = error as { code?: string; constraint?: string };
+  if (pgError.code !== PG_UNIQUE_VIOLATION) return false;
+  return constraint === undefined || pgError.constraint === constraint;
 }

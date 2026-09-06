@@ -1,20 +1,24 @@
-import { randomUUID, createHash } from 'node:crypto'
-import type { Pool } from 'pg'
-import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery'
-import { createAuthSender, type AuthMessage } from './providers.js'
+import { randomUUID, createHash } from 'node:crypto';
+import type { Pool } from 'pg';
+import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import { createAuthSender, type AuthMessage } from './providers.js';
 
 interface DeliveryRow {
-  id: string
-  challenge_id: string
-  code_hash: string
-  encrypted_payload: string | null
-  attempts: number
+  id: string;
+  challenge_id: string;
+  code_hash: string;
+  encrypted_payload: string | null;
+  attempts: number;
 }
 
 /** One durable claim per call. Provider I/O never holds a database transaction. */
-export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool)): Promise<'idle' | 'sent' | 'cancelled' | 'retry' | 'dead'> {
-  const token = randomUUID()
-  const claimed = await pool.query<DeliveryRow>(`
+export async function runAuthDelivery(
+  pool: Pool,
+  send = createAuthSender(pool)
+): Promise<'idle' | 'sent' | 'cancelled' | 'retry' | 'dead'> {
+  const token = randomUUID();
+  const claimed = await pool.query<DeliveryRow>(
+    `
     WITH candidate AS (
       SELECT id FROM auth_delivery_outbox
       WHERE (status='pending' AND available_at <= NOW()) OR (status='leased' AND lease_until <= NOW())
@@ -22,16 +26,21 @@ export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool))
     )
     UPDATE auth_delivery_outbox d SET status='leased', lease_token=$1,
       lease_until=NOW()+INTERVAL '60 seconds', attempts=attempts+1
-    FROM candidate c WHERE d.id=c.id RETURNING d.*`, [token])
-  const row = claimed.rows[0]
-  if (!row) return 'idle'
+    FROM candidate c WHERE d.id=c.id RETURNING d.*`,
+    [token]
+  );
+  const row = claimed.rows[0];
+  if (!row) return 'idle';
   const finish = async (status: string, ref: string | null = null) => {
-    const result = await pool.query(`UPDATE auth_delivery_outbox SET status=$3, encrypted_payload=NULL,
+    const result = await pool.query(
+      `UPDATE auth_delivery_outbox SET status=$3, encrypted_payload=NULL,
       lease_token=NULL, lease_until=NULL, provider_ref=$4, last_error=NULL WHERE id=$1 AND lease_token=$2`,
-    [row.id, token, status, ref])
-    if (result.rowCount !== 1) throw new Error('Auth delivery lease lost')
-  }
-  const valid = await pool.query<{ purpose: string; destination: string }>(`
+      [row.id, token, status, ref]
+    );
+    if (result.rowCount !== 1) throw new Error('Auth delivery lease lost');
+  };
+  const valid = await pool.query<{ purpose: string; destination: string }>(
+    `
     SELECT c.purpose,c.destination FROM otp_challenges c JOIN auth_delivery_outbox d ON d.challenge_id=c.challenge_id
     WHERE d.id=$1 AND c.otp_hash=d.code_hash AND c.consumed_at IS NULL
       AND c.expires_at > NOW() AND d.expires_at > NOW() AND c.attempts_remaining > 0
@@ -39,29 +48,50 @@ export async function runAuthDelivery(pool: Pool, send = createAuthSender(pool))
     UNION ALL
     SELECT 'staff_activation' AS purpose,u.username AS destination FROM auth_delivery_outbox d JOIN users u ON u.user_id=d.user_id
     WHERE d.id=$1 AND d.kind='staff_activation' AND u.activation_token=d.code_hash AND u.is_staff=true
-      AND u.disabled_at IS NULL AND u.activation_token_expires_at > NOW() AND d.expires_at > NOW()`, [row.id])
-  const challenge = valid.rows[0]
+      AND u.disabled_at IS NULL AND u.activation_token_expires_at > NOW() AND d.expires_at > NOW()`,
+    [row.id]
+  );
+  const challenge = valid.rows[0];
   if (!challenge) {
-    await finish('cancelled')
-    return 'cancelled'
+    await finish('cancelled');
+    return 'cancelled';
   }
   if (row.attempts > 5) {
-    await finish('dead')
-    return 'dead'
+    await finish('dead');
+    return 'dead';
   }
   try {
-    const payload = decryptAuthDelivery(row.id, row.encrypted_payload ?? '') as Partial<AuthMessage> | null
-    if (!payload || typeof payload.code !== 'string' || payload.destination !== challenge.destination ||
-      createHash('sha256').update(payload.code).digest('hex') !== row.code_hash) throw new Error('Invalid auth delivery payload')
-    const ref = await send({ id: row.id, code: payload.code, destination: challenge.destination, purpose: challenge.purpose, ...(typeof payload.activationUrl === 'string' ? { activationUrl: payload.activationUrl } : {}) })
-    await finish('sent', ref)
-    return 'sent'
+    const payload = decryptAuthDelivery(
+      row.id,
+      row.encrypted_payload ?? ''
+    ) as Partial<AuthMessage> | null;
+    if (
+      !payload ||
+      typeof payload.code !== 'string' ||
+      payload.destination !== challenge.destination ||
+      createHash('sha256').update(payload.code).digest('hex') !== row.code_hash
+    )
+      throw new Error('Invalid auth delivery payload');
+    const ref = await send({
+      id: row.id,
+      code: payload.code,
+      destination: challenge.destination,
+      purpose: challenge.purpose,
+      ...(typeof payload.activationUrl === 'string'
+        ? { activationUrl: payload.activationUrl }
+        : {}),
+    });
+    await finish('sent', ref);
+    return 'sent';
   } catch {
-    const dead = row.attempts >= 5
-    await pool.query(`UPDATE auth_delivery_outbox SET status=$3,
+    const dead = row.attempts >= 5;
+    await pool.query(
+      `UPDATE auth_delivery_outbox SET status=$3,
       available_at=NOW()+($4 * INTERVAL '1 second'), lease_token=NULL, lease_until=NULL,
       last_error='delivery_failed', encrypted_payload=CASE WHEN $3='dead' THEN NULL ELSE encrypted_payload END
-      WHERE id=$1 AND lease_token=$2`, [row.id, token, dead ? 'dead' : 'pending', Math.min(120, 5 * 2 ** (row.attempts - 1))])
-    return dead ? 'dead' : 'retry'
+      WHERE id=$1 AND lease_token=$2`,
+      [row.id, token, dead ? 'dead' : 'pending', Math.min(120, 5 * 2 ** (row.attempts - 1))]
+    );
+    return dead ? 'dead' : 'retry';
   }
 }

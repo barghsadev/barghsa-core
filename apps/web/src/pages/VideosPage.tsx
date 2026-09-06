@@ -7,5 +7,5 @@ export default function VideosPage() {
       <h1 className="text-2xl font-bold mb-4">Video Uploads</h1>
       <p className="text-gray-600">Inspection footage and media management.</p>
     </div>
-  )
+  );
 }

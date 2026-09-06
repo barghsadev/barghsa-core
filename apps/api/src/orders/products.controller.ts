@@ -1,14 +1,14 @@
-import { Controller, Get, Logger, UseGuards } from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { getDbPool } from '@barghsa/db'
-import { SessionOptionalGuard } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { getDbPool } from '@barghsa/db';
+import { SessionOptionalGuard } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 @ApiTags('Products')
 @Controller('api/products')
 @UseGuards(SessionOptionalGuard)
 export class ProductsController {
-  private readonly logger = new Logger(ProductsController.name)
+  private readonly logger = new Logger(ProductsController.name);
 
   /**
    * GET /api/products
@@ -39,12 +39,12 @@ export class ProductsController {
     },
   })
   async getActiveProducts() {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT id, type, system_key, title, description, price, status
        FROM products WHERE status = 'active'
-       ORDER BY system_key NULLS LAST`,
-    )
+       ORDER BY system_key NULLS LAST`
+    );
     return result.rows.map((row: Record<string, unknown>) => ({
       id: row.id as string,
       type: row.type as string,
@@ -53,6 +53,6 @@ export class ProductsController {
       description: row.description as Record<string, string> | null,
       price: row.price ? String(row.price) : null,
       status: row.status as string,
-    }))
+    }));
   }
 }

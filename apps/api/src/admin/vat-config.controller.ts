@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -11,91 +11,86 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   CHARGE_CATEGORIES,
   PRODUCT_OVERRIDE_CATEGORY,
   type VatConfigDto,
   type VatProductOverrideDto,
   type VatResolution,
-} from '@barghsa/shared/finance'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { VatConfigService } from './vat-config.service.js'
+} from '@barghsa/shared/finance';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { VatConfigService } from './vat-config.service.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const categorySchema = z.enum([...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY])
-const bpsSchema = z.number().int().min(0).max(10_000)
+const categorySchema = z.enum([...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY]);
+const bpsSchema = z.number().int().min(0).max(10_000);
 const effectiveDateSchema = z
   .string()
   .datetime({ offset: true })
   .or(z.string().datetime({ local: true }))
-  .optional()
+  .optional();
 
 export const CreateVatRateSchema = z.object({
   category: categorySchema,
   rateBasisPoints: bpsSchema,
   effectiveFrom: effectiveDateSchema,
-})
+});
 
 export const EndVatRateSchema = z.object({
   effectiveUntil: effectiveDateSchema,
-})
+});
 
 export const CreateProductOverrideSchema = z.object({
   productId: z.string().uuid('Expected a UUID'),
   vatConfigId: z.string().uuid('Expected a UUID'),
   effectiveFrom: effectiveDateSchema,
-})
+});
 
 export const EndProductOverrideSchema = z.object({
   effectiveUntil: effectiveDateSchema,
-})
+});
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /** Validate a route @Param id as a UUID, surfacing 400 instead of a DB 500. */
 function assertUuid(id: string, label = 'id'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
 /** Validate an optional `?category=` query filter. */
 function assertCategoryFilter(raw: string | undefined): string | undefined {
-  if (raw === undefined) return undefined
-  const parsed = categorySchema.safeParse(raw)
+  if (raw === undefined) return undefined;
+  const parsed = categorySchema.safeParse(raw);
   if (!parsed.success) {
     httpError(
       ErrorCodes.VALIDATION_PARSE_ZOD.code,
       `Invalid category: expected one of ${CHARGE_CATEGORIES.join(', ')}`,
-      400,
-    )
+      400
+    );
   }
-  return parsed.data
+  return parsed.data;
 }
 
 function validationDetails(issues: z.ZodIssue[]): Array<{ path: string; message: string }> {
-  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }))
+  return issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message }));
 }
 
 /**
@@ -127,8 +122,8 @@ export class VatConfigController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage VAT configuration',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -137,18 +132,18 @@ export class VatConfigController {
   @ApiResponse({ status: 200, description: 'Versioned VAT rates by category, newest first.' })
   async list(
     @Req() req: AuthenticatedRequest,
-    @Query('category') category?: string,
+    @Query('category') category?: string
   ): Promise<VatConfigDto[]> {
-    this.assertFinancePermission(req)
-    return this.service.list(assertCategoryFilter(category))
+    this.assertFinancePermission(req);
+    return this.service.list(assertCategoryFilter(category));
   }
 
   @Get('overrides')
   @ApiOperation({ summary: 'List product VAT overrides (admin)' })
   @ApiResponse({ status: 200, description: 'All product overrides with linked rates.' })
   async listOverrides(@Req() req: AuthenticatedRequest): Promise<VatProductOverrideDto[]> {
-    this.assertFinancePermission(req)
-    return this.service.listOverrides()
+    this.assertFinancePermission(req);
+    return this.service.listOverrides();
   }
 
   @Get('resolve')
@@ -163,26 +158,26 @@ export class VatConfigController {
     @Req() req: AuthenticatedRequest,
     @Query('productId') productId?: string,
     @Query('category') category?: string,
-    @Query('at') at?: string,
+    @Query('at') at?: string
   ): Promise<VatResolution> {
-    this.assertFinancePermission(req)
-    if (productId !== undefined) assertUuid(productId, 'productId')
+    this.assertFinancePermission(req);
+    if (productId !== undefined) assertUuid(productId, 'productId');
     if (at !== undefined) {
-      const parsed = effectiveDateSchema.safeParse(at)
+      const parsed = effectiveDateSchema.safeParse(at);
       if (!parsed.success) {
         httpError(
           ErrorCodes.VALIDATION_PARSE_ZOD.code,
           'Invalid at: expected an ISO-8601 timestamp',
-          400,
-        )
+          400
+        );
       }
     }
-    const categoryFiltered = category !== undefined ? assertCategoryFilter(category) : undefined
+    const categoryFiltered = category !== undefined ? assertCategoryFilter(category) : undefined;
     return this.service.resolve({
       ...(productId !== undefined ? { productId } : {}),
       ...(categoryFiltered !== undefined ? { category: categoryFiltered } : {}),
       ...(at !== undefined ? { at } : {}),
-    })
+    });
   }
 
   @Post()
@@ -200,25 +195,27 @@ export class VatConfigController {
   @ApiResponse({ status: 201, description: 'VAT rate recorded.' })
   async createRate(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateVatRateSchema>,
+    @Body() body: z.infer<typeof CreateVatRateSchema>
   ): Promise<VatConfigDto> {
-    this.assertFinancePermission(req)
-    const parsed = CreateVatRateSchema.safeParse(body)
+    this.assertFinancePermission(req);
+    const parsed = CreateVatRateSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid VAT rate payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.createRate({
       category: parsed.data.category,
       rateBasisPoints: parsed.data.rateBasisPoints,
-      ...(parsed.data.effectiveFrom !== undefined ? { effectiveFrom: parsed.data.effectiveFrom } : {}),
+      ...(parsed.data.effectiveFrom !== undefined
+        ? { effectiveFrom: parsed.data.effectiveFrom }
+        : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post(':id/end')
@@ -235,25 +232,27 @@ export class VatConfigController {
   async endRate(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof EndVatRateSchema>,
+    @Body() body: z.infer<typeof EndVatRateSchema>
   ): Promise<VatConfigDto> {
-    this.assertFinancePermission(req)
-    assertUuid(id)
-    const parsed = EndVatRateSchema.safeParse(body ?? {})
+    this.assertFinancePermission(req);
+    assertUuid(id);
+    const parsed = EndVatRateSchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid VAT rate payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.endRate({
       id,
-      ...(parsed.data.effectiveUntil !== undefined ? { effectiveUntil: parsed.data.effectiveUntil } : {}),
+      ...(parsed.data.effectiveUntil !== undefined
+        ? { effectiveUntil: parsed.data.effectiveUntil }
+        : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post('overrides')
@@ -263,32 +262,34 @@ export class VatConfigController {
   @ApiOperation({
     summary: 'Create a product VAT override (admin)',
     description:
-      'While the override is active, the product uses the linked vatConfig\'s rate ' +
+      "While the override is active, the product uses the linked vatConfig's rate " +
       'instead of its category default. The previously-open override for the product ' +
       'is closed at the new effectiveFrom.',
   })
   @ApiResponse({ status: 201, description: 'Product VAT override created.' })
   async createOverride(
     @Req() req: AuthenticatedRequest,
-    @Body() body: z.infer<typeof CreateProductOverrideSchema>,
+    @Body() body: z.infer<typeof CreateProductOverrideSchema>
   ): Promise<VatProductOverrideDto> {
-    this.assertFinancePermission(req)
-    const parsed = CreateProductOverrideSchema.safeParse(body)
+    this.assertFinancePermission(req);
+    const parsed = CreateProductOverrideSchema.safeParse(body);
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid product override payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.createProductOverride({
       productId: parsed.data.productId,
       vatConfigId: parsed.data.vatConfigId,
-      ...(parsed.data.effectiveFrom !== undefined ? { effectiveFrom: parsed.data.effectiveFrom } : {}),
+      ...(parsed.data.effectiveFrom !== undefined
+        ? { effectiveFrom: parsed.data.effectiveFrom }
+        : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 
   @Post('overrides/:id/end')
@@ -305,24 +306,26 @@ export class VatConfigController {
   async endOverride(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: z.infer<typeof EndProductOverrideSchema>,
+    @Body() body: z.infer<typeof EndProductOverrideSchema>
   ): Promise<VatProductOverrideDto> {
-    this.assertFinancePermission(req)
-    assertUuid(id)
-    const parsed = EndProductOverrideSchema.safeParse(body ?? {})
+    this.assertFinancePermission(req);
+    assertUuid(id);
+    const parsed = EndProductOverrideSchema.safeParse(body ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Invalid product override payload',
         400,
-        validationDetails(parsed.error.issues),
-      )
+        validationDetails(parsed.error.issues)
+      );
     }
     return this.service.endProductOverride({
       id,
-      ...(parsed.data.effectiveUntil !== undefined ? { effectiveUntil: parsed.data.effectiveUntil } : {}),
+      ...(parsed.data.effectiveUntil !== undefined
+        ? { effectiveUntil: parsed.data.effectiveUntil }
+        : {}),
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 }

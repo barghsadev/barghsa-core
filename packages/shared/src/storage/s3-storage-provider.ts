@@ -108,7 +108,7 @@ export class S3StorageProvider implements StorageProvider {
     key: string,
     body: ReadableStream | Blob | Uint8Array | string,
     contentType: string,
-    metadata?: StorageMetadata,
+    metadata?: StorageMetadata
   ): Promise<void> {
     const resolvedKey = this.resolveKey(key);
 
@@ -130,13 +130,10 @@ export class S3StorageProvider implements StorageProvider {
     try {
       await this.client.send(new PutObjectCommand(input));
     } catch (err) {
-      this.logger?.error(
-        `[s3-storage-provider] Failed to put object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to put object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to put object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -150,7 +147,7 @@ export class S3StorageProvider implements StorageProvider {
 
     try {
       const response = await this.client.send(
-        new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
+        new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey })
       );
 
       if (!response.Body) {
@@ -172,13 +169,10 @@ export class S3StorageProvider implements StorageProvider {
       if (err instanceof NoSuchKey || (err as { name?: string }).name === 'NoSuchKey') {
         throw new StorageObjectNotFound(key);
       }
-      this.logger?.error(
-        `[s3-storage-provider] Failed to get object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to get object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to get object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -191,17 +185,12 @@ export class S3StorageProvider implements StorageProvider {
     const resolvedKey = this.resolveKey(key);
 
     try {
-      await this.client.send(
-        new DeleteObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-      );
+      await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: resolvedKey }));
     } catch (err) {
-      this.logger?.error(
-        `[s3-storage-provider] Failed to delete object "${resolvedKey}":`,
-        err,
-      );
+      this.logger?.error(`[s3-storage-provider] Failed to delete object "${resolvedKey}":`, err);
       throw new StorageProviderError(
         `Failed to delete object "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -217,16 +206,16 @@ export class S3StorageProvider implements StorageProvider {
       return await getSignedUrl(
         this.client,
         new PutObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
+        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN }
       );
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to generate presigned PUT URL for "${resolvedKey}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to generate presigned PUT URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -242,16 +231,16 @@ export class S3StorageProvider implements StorageProvider {
       return await getSignedUrl(
         this.client,
         new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
-        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN },
+        { expiresIn: expiresIn ?? DEFAULT_EXPIRES_IN }
       );
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to generate presigned GET URL for "${resolvedKey}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to generate presigned GET URL for "${resolvedKey}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }
@@ -263,7 +252,7 @@ export class S3StorageProvider implements StorageProvider {
   async listObjects(
     prefix: string,
     maxKeys?: number,
-    continuationToken?: string,
+    continuationToken?: string
   ): Promise<{
     items: StorageObjectSummary[];
     isTruncated: boolean;
@@ -285,9 +274,7 @@ export class S3StorageProvider implements StorageProvider {
       const response = await this.client.send(new ListObjectsV2Command(input));
 
       const items: StorageObjectSummary[] = (response.Contents ?? []).map((obj) => ({
-        key: obj.Key?.startsWith(this.prefix)
-          ? obj.Key.slice(this.prefix.length)
-          : (obj.Key ?? ''),
+        key: obj.Key?.startsWith(this.prefix) ? obj.Key.slice(this.prefix.length) : (obj.Key ?? ''),
         size: obj.Size ?? 0,
         etag: obj.ETag ?? undefined,
         lastModified: obj.LastModified ?? undefined,
@@ -301,11 +288,11 @@ export class S3StorageProvider implements StorageProvider {
     } catch (err) {
       this.logger?.error(
         `[s3-storage-provider] Failed to list objects with prefix "${resolvedPrefix}":`,
-        err,
+        err
       );
       throw new StorageProviderError(
         `Failed to list objects with prefix "${resolvedPrefix}": ${err instanceof Error ? err.message : String(err)}`,
-        err,
+        err
       );
     }
   }

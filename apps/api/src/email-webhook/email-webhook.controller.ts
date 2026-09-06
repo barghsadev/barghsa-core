@@ -1,14 +1,14 @@
-import { Controller, Post, HttpCode, HttpStatus, Req } from '@nestjs/common'
-import type { IncomingMessage } from 'node:http'
-import { EmailWebhookService } from './email-webhook.service'
-import type { ResendWebhookHeaders } from './email-webhook.types'
+import { Controller, Post, HttpCode, HttpStatus, Req } from '@nestjs/common';
+import type { IncomingMessage } from 'node:http';
+import { EmailWebhookService } from './email-webhook.service';
+import type { ResendWebhookHeaders } from './email-webhook.types';
 
 /**
  * Minimal request surface extended with `rawBody` (populated by Nest's
  * `rawBody: true` body option configured in `main.ts`).
  */
 interface WebhookRequest extends IncomingMessage {
-  rawBody?: Buffer
+  rawBody?: Buffer;
 }
 
 /**
@@ -35,9 +35,9 @@ export class EmailWebhookController {
       id: req.headers['svix-id'] as string | undefined,
       timestamp: req.headers['svix-timestamp'] as string | undefined,
       signature: req.headers['svix-signature'] as string | undefined,
-    }
-    const rawBody = req.rawBody?.toString('utf8') ?? ''
-    await this.webhookService.handle(headers, rawBody)
-    return { received: true }
+    };
+    const rawBody = req.rawBody?.toString('utf8') ?? '';
+    await this.webhookService.handle(headers, rawBody);
+    return { received: true };
   }
 }

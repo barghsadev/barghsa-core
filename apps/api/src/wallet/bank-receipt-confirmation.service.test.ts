@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { HttpException } from '@nestjs/common'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { HttpException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_CONFIRM_ERRORS,
   BANK_RECEIPT_CONFIRMED_EVENT,
@@ -12,44 +12,44 @@ import {
   BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY,
   bankReceiptCreditIdempotencyKey,
   bankReceiptOverpaymentCreditIdempotencyKey,
-} from '@barghsa/shared/finance'
-import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js'
-import type { WalletService } from './wallet.service.js'
-import type { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js'
+} from '@barghsa/shared/finance';
+import { BankReceiptConfirmationService } from './bank-receipt-confirmation.service.js';
+import type { WalletService } from './wallet.service.js';
+import type { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 
 const mockPool = {
   query: vi.fn(),
   connect: vi.fn(),
-}
+};
 
 const mockClient = {
   query: vi.fn(),
   release: vi.fn(),
-}
+};
 
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
-}))
+}));
 
-const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
-const OTHER_PROFILE = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb'
-const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc'
-const CREDIT_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd'
-const INVOICE_ID = '11111111-1111-7111-8111-111111111111'
-const ACTOR_ID = 'staff-1'
-const CUSTOMER_USER_ID = 'customer-1'
-const AMOUNT = 250_000n
-const OVERPAY_RECEIPT = 1_200_000n
-const INVOICE_REMAINING = 400_000n
-const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf'
-const NOW = new Date('2026-09-02T08:00:00.000Z')
+const PROFILE_ID = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
+const OTHER_PROFILE = 'bbbbbbbb-bbbb-7bbb-8bbb-bbbbbbbbbbbb';
+const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
+const CREDIT_ID = 'dddddddd-dddd-7ddd-8ddd-dddddddddddd';
+const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
+const ACTOR_ID = 'staff-1';
+const CUSTOMER_USER_ID = 'customer-1';
+const AMOUNT = 250_000n;
+const OVERPAY_RECEIPT = 1_200_000n;
+const INVOICE_REMAINING = 400_000n;
+const ATTACHMENT = 'uploads/document/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.pdf';
+const NOW = new Date('2026-09-02T08:00:00.000Z');
 
 const RECEIPT = {
   paymentDate: '2026-08-15',
   payerReference: 'TRK-998877',
   attachmentKey: ATTACHMENT,
   customerNote: 'Branch transfer',
-}
+};
 
 function makePendingRow(overrides: Record<string, unknown> = {}) {
   return {
@@ -69,7 +69,7 @@ function makePendingRow(overrides: Record<string, unknown> = {}) {
     created_at: new Date('2026-09-01T10:00:00.000Z'),
     updated_at: new Date('2026-09-01T10:00:00.000Z'),
     ...overrides,
-  }
+  };
 }
 
 function makeWalletService() {
@@ -87,7 +87,7 @@ function makeWalletService() {
       createdAt: NOW,
       updatedAt: NOW,
     }),
-  }
+  };
 }
 
 function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
@@ -99,41 +99,41 @@ function makeInvoiceRow(overrides: Record<string, unknown> = {}) {
     paid_amount: '600000',
     refunded_amount: '0',
     ...overrides,
-  }
+  };
 }
 
 type ScriptOptions = {
-  locked?: ReturnType<typeof makePendingRow> | null
-  released?: ReturnType<typeof makePendingRow> | null
-  rejected?: ReturnType<typeof makePendingRow> | null
-  listed?: ReturnType<typeof makePendingRow>[]
-  getRow?: ReturnType<typeof makePendingRow> | null
-  existingCredit?: ReturnType<typeof makePendingRow> | null
-  invoice?: ReturnType<typeof makeInvoiceRow> | null
-  invoiceUpdated?: boolean
-  wallet?: { profile_id: string } | null
-  profile?: { userId: string } | null
-  outboxInserted?: boolean
-}
+  locked?: ReturnType<typeof makePendingRow> | null;
+  released?: ReturnType<typeof makePendingRow> | null;
+  rejected?: ReturnType<typeof makePendingRow> | null;
+  listed?: ReturnType<typeof makePendingRow>[];
+  getRow?: ReturnType<typeof makePendingRow> | null;
+  existingCredit?: ReturnType<typeof makePendingRow> | null;
+  invoice?: ReturnType<typeof makeInvoiceRow> | null;
+  invoiceUpdated?: boolean;
+  wallet?: { profile_id: string } | null;
+  profile?: { userId: string } | null;
+  outboxInserted?: boolean;
+};
 
 function script(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
-      return { rows: [] }
+      return { rows: [] };
     }
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
-      return { rows: [] }
+      return { rows: [] };
     }
     if (sql.includes('FROM wallet_transactions WHERE id = $1 FOR UPDATE')) {
-      if (opts.locked === null) return { rows: [] }
-      return { rows: [opts.locked ?? makePendingRow()] }
+      if (opts.locked === null) return { rows: [] };
+      return { rows: [opts.locked ?? makePendingRow()] };
     }
     if (sql.includes('FROM wallets') && sql.includes('FOR UPDATE')) {
-      if (opts.wallet === null) return { rows: [] }
-      return { rows: [{ profile_id: PROFILE_ID }] }
+      if (opts.wallet === null) return { rows: [] };
+      return { rows: [{ profile_id: PROFILE_ID }] };
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
-      return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
+      return { rows: opts.existingCredit ? [opts.existingCredit] : [] };
     }
     if (sql.includes("SET state = 'Released'")) {
       return {
@@ -155,7 +155,7 @@ function script(opts: ScriptOptions = {}) {
               },
             }),
         ],
-      }
+      };
     }
     if (sql.includes("SET state = 'Rejected'")) {
       return {
@@ -177,63 +177,63 @@ function script(opts: ScriptOptions = {}) {
               },
             }),
         ],
-      }
+      };
     }
     if (sql.includes('FROM invoices')) {
-      if (opts.invoice === null) return { rows: [] }
-      return { rows: [opts.invoice ?? makeInvoiceRow()] }
+      if (opts.invoice === null) return { rows: [] };
+      return { rows: [opts.invoice ?? makeInvoiceRow()] };
     }
     if (sql.includes('UPDATE invoices')) {
-      if (opts.invoiceUpdated === false) return { rows: [] }
-      return { rows: [{ id: INVOICE_ID }] }
+      if (opts.invoiceUpdated === false) return { rows: [] };
+      return { rows: [{ id: INVOICE_ID }] };
     }
     if (sql.includes('FROM profiles WHERE id')) {
-      if (opts.profile === null) return { rows: [] }
-      return { rows: [{ user_id: opts.profile?.userId ?? CUSTOMER_USER_ID }] }
+      if (opts.profile === null) return { rows: [] };
+      return { rows: [{ user_id: opts.profile?.userId ?? CUSTOMER_USER_ID }] };
     }
     if (sql.includes('INSERT INTO notification_outbox')) {
-      if (opts.outboxInserted === false) return { rows: [] }
-      return { rows: [{ id: 'outbox-1' }] }
+      if (opts.outboxInserted === false) return { rows: [] };
+      return { rows: [{ id: 'outbox-1' }] };
     }
     if (sql.includes('FROM notification_outbox WHERE idempotency_key')) {
-      return { rows: [{ id: 'outbox-1' }] }
+      return { rows: [{ id: 'outbox-1' }] };
     }
     if (sql.includes('INSERT INTO notification_job')) {
-      return { rows: [] }
+      return { rows: [] };
     }
     if (sql.includes('INSERT INTO audit_log')) {
-      return { rows: [] }
+      return { rows: [] };
     }
-    return { rows: [] }
-  })
+    return { rows: [] };
+  });
 
   mockPool.query.mockImplementation(async (sql: string) => {
     if (sql.includes("metadata->>'channel'")) {
-      return { rows: opts.listed ?? [makePendingRow()] }
+      return { rows: opts.listed ?? [makePendingRow()] };
     }
     if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
-      return { rows: opts.existingCredit ? [opts.existingCredit] : [] }
+      return { rows: opts.existingCredit ? [opts.existingCredit] : [] };
     }
     if (sql.includes('FROM wallet_transactions WHERE id')) {
-      if (opts.getRow === null) return { rows: [] }
-      return { rows: [opts.getRow ?? makePendingRow()] }
+      if (opts.getRow === null) return { rows: [] };
+      return { rows: [opts.getRow ?? makePendingRow()] };
     }
-    return { rows: [] }
-  })
+    return { rows: [] };
+  });
 }
 
 describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
-  let walletService: ReturnType<typeof makeWalletService>
-  let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> }
-  let service: BankReceiptConfirmationService
+  let walletService: ReturnType<typeof makeWalletService>;
+  let invoiceStateMachine: { transition: ReturnType<typeof vi.fn> };
+  let service: BankReceiptConfirmationService;
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockPool.connect.mockResolvedValue(mockClient)
-    mockClient.release.mockImplementation(() => {})
-    mockClient.query.mockReset()
-    mockPool.query.mockReset()
-    walletService = makeWalletService()
+    vi.clearAllMocks();
+    mockPool.connect.mockResolvedValue(mockClient);
+    mockClient.release.mockImplementation(() => {});
+    mockClient.query.mockReset();
+    mockPool.query.mockReset();
+    walletService = makeWalletService();
     invoiceStateMachine = {
       transition: vi.fn().mockResolvedValue({
         invoiceId: INVOICE_ID,
@@ -242,18 +242,18 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         transition: 'ConfirmBankReceipt',
         auditId: 'invoice-audit-1',
       }),
-    }
+    };
     service = new BankReceiptConfirmationService(
       walletService as unknown as WalletService,
       null,
-      invoiceStateMachine as unknown as InvoiceStateMachineService,
-    )
-  })
+      invoiceStateMachine as unknown as InvoiceStateMachineService
+    );
+  });
 
   it('lists pending bank-receipt top-ups and skips credit', async () => {
-    script()
-    const items = await service.listPending()
-    expect(items).toHaveLength(1)
+    script();
+    const items = await service.listPending();
+    expect(items).toHaveLength(1);
     expect(items[0]).toMatchObject({
       transactionId: TX_ID,
       amount: '250000',
@@ -261,26 +261,26 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       canDecide: true,
       payerReference: 'TRK-998877',
       attachmentKey: ATTACHMENT,
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('returns 404 for a missing or non-receipt transaction', async () => {
-    script({ getRow: null })
-    const rejection = await service.get(TX_ID).catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
-    expect((rejection as HttpException).getStatus()).toBe(404)
-  })
+    script({ getRow: null });
+    const rejection = await service.get(TX_ID).catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
+    expect((rejection as HttpException).getStatus()).toBe(404);
+  });
 
   it('credits the wallet via WalletService.credit() on confirm', async () => {
-    script()
+    script();
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       correlationId: 'corr-1',
       now: NOW,
-    })
+    });
     expect(walletService.credit).toHaveBeenCalledWith(
       PROFILE_ID,
       AMOUNT,
@@ -289,52 +289,52 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         refId: TX_ID,
       }),
       bankReceiptCreditIdempotencyKey(TX_ID),
-      mockClient,
-    )
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-    expect(result.state).toBe('Released')
-    expect(result.canDecide).toBe(false)
-    expect(result.creditTransactionId).toBe(CREDIT_ID)
-    expect(result.overpayment).toBeNull()
-    expect(result.notificationOutboxId).toBe('outbox-1')
+      mockClient
+    );
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+    expect(result.state).toBe('Released');
+    expect(result.canDecide).toBe(false);
+    expect(result.creditTransactionId).toBe(CREDIT_ID);
+    expect(result.overpayment).toBeNull();
+    expect(result.notificationOutboxId).toBe('outbox-1');
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO audit_log')),
-    ).toBe(true)
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO audit_log'))
+    ).toBe(true);
     const audit = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO audit_log'),
-    )
-    expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_CONFIRMED_EVENT)
+      String(sql).includes('INSERT INTO audit_log')
+    );
+    expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_CONFIRMED_EVENT);
     const outbox = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO notification_outbox'),
-    )
-    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID)
-    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY)
-  })
+      String(sql).includes('INSERT INTO notification_outbox')
+    );
+    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID);
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY);
+  });
 
   it('rejects a receipt without calling credit', async () => {
-    script()
+    script();
     const result = await service.reject({
       transactionId: TX_ID,
       raw: { reason: '  Illegible scan  ' },
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       now: NOW,
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
-    expect(result.state).toBe('Rejected')
-    expect(result.canDecide).toBe(false)
-    expect(result.staffDecision?.reason).toBe('Illegible scan')
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
+    expect(result.state).toBe('Rejected');
+    expect(result.canDecide).toBe(false);
+    expect(result.staffDecision?.reason).toBe('Illegible scan');
     const audit = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO audit_log'),
-    )
-    expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_REJECTED_EVENT)
+      String(sql).includes('INSERT INTO audit_log')
+    );
+    expect(audit?.[1]?.[2]).toBe(BANK_RECEIPT_REJECTED_EVENT);
     const outbox = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO notification_outbox'),
-    )
-    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID)
-    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY)
-    expect(result.notificationOutboxId).toBe('outbox-1')
-  })
+      String(sql).includes('INSERT INTO notification_outbox')
+    );
+    expect(outbox?.[1]?.[1]).toBe(CUSTOMER_USER_ID);
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_FAILED_NOTIFICATION_EVENT_KEY);
+    expect(result.notificationOutboxId).toBe('outbox-1');
+  });
 
   it('requires a customer-visible reject reason before locking', async () => {
     const rejection = await service
@@ -344,31 +344,31 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         actorUserId: ACTOR_ID,
         ip: '10.0.0.9',
       })
-      .catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
+      .catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
       message: BANK_RECEIPT_CONFIRM_ERRORS.BAD_REASON(),
-    })
-    expect(mockPool.connect).not.toHaveBeenCalled()
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    });
+    expect(mockPool.connect).not.toHaveBeenCalled();
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('conflicts when confirming an already rejected receipt', async () => {
-    script({ locked: makePendingRow({ state: 'Rejected' }) })
+    script({ locked: makePendingRow({ state: 'Rejected' }) });
     const rejection = await service
       .confirm({
         transactionId: TX_ID,
         actorUserId: ACTOR_ID,
         ip: '10.0.0.9',
       })
-      .catch((error: unknown) => error)
-    expect((rejection as HttpException).getStatus()).toBe(409)
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+      .catch((error: unknown) => error);
+    expect((rejection as HttpException).getStatus()).toBe(409);
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('conflicts when rejecting an already confirmed receipt', async () => {
-    script({ locked: makePendingRow({ state: 'Released' }) })
+    script({ locked: makePendingRow({ state: 'Released' }) });
     const rejection = await service
       .reject({
         transactionId: TX_ID,
@@ -376,13 +376,13 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         actorUserId: ACTOR_ID,
         ip: '10.0.0.9',
       })
-      .catch((error: unknown) => error)
-    expect((rejection as HttpException).getStatus()).toBe(409)
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+      .catch((error: unknown) => error);
+    expect((rejection as HttpException).getStatus()).toBe(409);
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it('conflicts when the profile owner cannot be notified on reject', async () => {
-    script({ profile: null })
+    script({ profile: null });
     const rejection = await service
       .reject({
         transactionId: TX_ID,
@@ -391,30 +391,30 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         ip: '10.0.0.9',
         now: NOW,
       })
-      .catch((error: unknown) => error)
-    expect((rejection as HttpException).getStatus()).toBe(409)
+      .catch((error: unknown) => error);
+    expect((rejection as HttpException).getStatus()).toBe(409);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       message: BANK_RECEIPT_CONFIRM_ERRORS.OWNER_UNNOTIFIABLE(),
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
     expect(
-      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'")),
-    ).toBe(false)
-  })
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes("SET state = 'Rejected'"))
+    ).toBe(false);
+  });
 
   it('credits only the excess when the receipt exceeds invoice remaining', async () => {
     script({
       locked: makePendingRow({ amount: OVERPAY_RECEIPT.toString() }),
       invoice: makeInvoiceRow({ total_amount: '1000000', paid_amount: '600000' }),
-    })
+    });
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
-    })
-    expect(walletService.credit).toHaveBeenCalledTimes(1)
+    });
+    expect(walletService.credit).toHaveBeenCalledTimes(1);
     expect(walletService.credit).toHaveBeenCalledWith(
       PROFILE_ID,
       OVERPAY_RECEIPT - INVOICE_REMAINING,
@@ -423,22 +423,22 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         description: BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION,
       }),
       bankReceiptOverpaymentCreditIdempotencyKey(TX_ID),
-      mockClient,
-    )
+      mockClient
+    );
     expect(
       mockClient.query.mock.calls.some(
         ([sql, params]) =>
           String(sql).includes('UPDATE invoices') &&
           Array.isArray(params) &&
-          params[1] === INVOICE_REMAINING.toString(),
-      ),
-    ).toBe(true)
+          params[1] === INVOICE_REMAINING.toString()
+      )
+    ).toBe(true);
     expect(result.overpayment).toMatchObject({
       invoiceId: INVOICE_ID,
       remainingBefore: INVOICE_REMAINING.toString(),
       invoiceAllocation: INVOICE_REMAINING.toString(),
       walletCreditAmount: (OVERPAY_RECEIPT - INVOICE_REMAINING).toString(),
-    })
+    });
     expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
       1,
       INVOICE_ID,
@@ -448,8 +448,8 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         actorUserId: ACTOR_ID,
         client: mockClient,
         now: NOW,
-      }),
-    )
+      })
+    );
     expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
       2,
       INVOICE_ID,
@@ -461,26 +461,26 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
           totalAmount: 1_000_000n,
           incomingPaidAmount: 1_000_000n,
         }),
-      }),
-    )
-    const sqlOrder = mockClient.query.mock.calls.map(([sql]) => String(sql))
+      })
+    );
+    const sqlOrder = mockClient.query.mock.calls.map(([sql]) => String(sql));
     const walletLockAt = sqlOrder.findIndex(
-      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE'),
-    )
+      (sql) => sql.includes('FROM wallets') && sql.includes('FOR UPDATE')
+    );
     const invoiceLockAt = sqlOrder.findIndex(
-      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE'),
-    )
-    expect(walletLockAt).toBeGreaterThanOrEqual(0)
-    expect(invoiceLockAt).toBeGreaterThan(walletLockAt)
+      (sql) => sql.includes('FROM invoices') && sql.includes('FOR UPDATE')
+    );
+    expect(walletLockAt).toBeGreaterThanOrEqual(0);
+    expect(invoiceLockAt).toBeGreaterThan(walletLockAt);
     const audit = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO audit_log'),
-    )
-    expect(audit?.[1]?.[3]).toContain('"walletCreditAmount":"800000"')
-    expect(result.notificationOutboxId).toBe('outbox-1')
+      String(sql).includes('INSERT INTO audit_log')
+    );
+    expect(audit?.[1]?.[3]).toContain('"walletCreditAmount":"800000"');
+    expect(result.notificationOutboxId).toBe('outbox-1');
     const outbox = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO notification_outbox'),
-    )
-    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY)
+      String(sql).includes('INSERT INTO notification_outbox')
+    );
+    expect(outbox?.[1]?.[2]).toBe(BANK_RECEIPT_TOPUP_COMPLETED_NOTIFICATION_EVENT_KEY);
     expect(outbox?.[1]?.[3]).toMatchObject({
       amount: '800000',
       transactionId: CREDIT_ID,
@@ -490,68 +490,68 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       remaining_before: '400000',
       wallet_credit_amount: '800000',
       is_overpayment: true,
-    })
-    expect(outbox?.[1]?.[3]).not.toMatchObject({ amount: OVERPAY_RECEIPT.toString() })
-  })
+    });
+    expect(outbox?.[1]?.[3]).not.toMatchObject({ amount: OVERPAY_RECEIPT.toString() });
+  });
 
   it('does not credit the wallet when the receipt equals invoice remaining', async () => {
     script({
       locked: makePendingRow({ amount: INVOICE_REMAINING.toString() }),
       invoice: makeInvoiceRow({ total_amount: '1000000', paid_amount: '600000' }),
-    })
+    });
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
     expect(result.overpayment).toMatchObject({
       invoiceAllocation: INVOICE_REMAINING.toString(),
       walletCreditAmount: '0',
       overpaymentCreditTransactionId: null,
-    })
-    expect(result.notificationOutboxId).toBeUndefined()
+    });
+    expect(result.notificationOutboxId).toBeUndefined();
     expect(
       mockClient.query.mock.calls.some(([sql]) =>
-        String(sql).includes('INSERT INTO notification_outbox'),
-      ),
-    ).toBe(false)
+        String(sql).includes('INSERT INTO notification_outbox')
+      )
+    ).toBe(false);
     expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
       INVOICE_ID,
       'PaymentUnderReview',
       'Paid',
       expect.objectContaining({
         financials: expect.objectContaining({ paidAmount: 1_000_000n }),
-      }),
-    )
-  })
+      })
+    );
+  });
 
   it('confirms a partial allocation to PartiallyFunded without setting Paid', async () => {
     script({
       locked: makePendingRow({ amount: '300000' }),
       invoice: makeInvoiceRow({ paid_amount: '0' }),
-    })
+    });
     const result = await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
     expect(result.overpayment).toMatchObject({
       invoiceAllocation: '300000',
       walletCreditAmount: '0',
-    })
+    });
     expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
       1,
       INVOICE_ID,
       'Unpaid',
       'PaymentUnderReview',
-      expect.any(Object),
-    )
+      expect.any(Object)
+    );
     expect(invoiceStateMachine.transition).toHaveBeenNthCalledWith(
       2,
       INVOICE_ID,
@@ -562,56 +562,56 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
           paidAmount: 300_000n,
           totalAmount: 1_000_000n,
         }),
-      }),
-    )
-  })
+      })
+    );
+  });
 
   it('confirms PaymentUnderReview directly without SubmitBankReceipt', async () => {
     script({
       locked: makePendingRow({ amount: '1000000' }),
       invoice: makeInvoiceRow({ state: 'PaymentUnderReview', paid_amount: '0' }),
-    })
+    });
     await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
-    })
-    expect(invoiceStateMachine.transition).toHaveBeenCalledTimes(1)
+    });
+    expect(invoiceStateMachine.transition).toHaveBeenCalledTimes(1);
     expect(invoiceStateMachine.transition).toHaveBeenCalledWith(
       INVOICE_ID,
       'PaymentUnderReview',
       'Paid',
-      expect.any(Object),
-    )
-  })
+      expect.any(Object)
+    );
+  });
 
   it('credits the full receipt to the wallet when the invoice is already paid', async () => {
     script({
       invoice: makeInvoiceRow({ state: 'Paid', total_amount: '1000000', paid_amount: '1000000' }),
-    })
+    });
     await service.confirm({
       transactionId: TX_ID,
       actorUserId: ACTOR_ID,
       ip: '10.0.0.9',
       invoiceId: INVOICE_ID,
       now: NOW,
-    })
+    });
     expect(walletService.credit).toHaveBeenCalledWith(
       PROFILE_ID,
       AMOUNT,
       expect.objectContaining({ description: BANK_RECEIPT_OVERPAYMENT_CREDIT_DESCRIPTION }),
       bankReceiptOverpaymentCreditIdempotencyKey(TX_ID),
-      mockClient,
-    )
-    expect(mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices'))).toBe(
-      false,
-    )
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+      mockClient
+    );
+    expect(
+      mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices'))
+    ).toBe(false);
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
     const paidOutbox = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('INSERT INTO notification_outbox'),
-    )
+      String(sql).includes('INSERT INTO notification_outbox')
+    );
     expect(paidOutbox?.[1]?.[3]).toMatchObject({
       amount: AMOUNT.toString(),
       invoice_id: INVOICE_ID,
@@ -619,11 +619,11 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
       remaining_before: '0',
       wallet_credit_amount: AMOUNT.toString(),
       is_overpayment: true,
-    })
-  })
+    });
+  });
 
   it('rejects an invoice that belongs to a different profile', async () => {
-    script({ invoice: makeInvoiceRow({ profile_id: OTHER_PROFILE }) })
+    script({ invoice: makeInvoiceRow({ profile_id: OTHER_PROFILE }) });
     const rejection = await service
       .confirm({
         transactionId: TX_ID,
@@ -632,20 +632,20 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         invoiceId: INVOICE_ID,
         now: NOW,
       })
-      .catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
-    expect((rejection as HttpException).getStatus()).toBe(409)
+      .catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
+    expect((rejection as HttpException).getStatus()).toBe(409);
     expect((rejection as HttpException).getResponse()).toMatchObject({
       error: ErrorCodes.CONFLICT_STATE.code,
       message: BANK_RECEIPT_OVERPAYMENT_ERRORS.PROFILE_MISMATCH(),
-    })
-    expect(walletService.credit).not.toHaveBeenCalled()
-  })
+    });
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
 
   it.each(['Draft', 'Cancelled', 'Refunded', 'PartiallyRefunded'] as const)(
     'conflicts when confirming against a %s invoice',
     async (state) => {
-      script({ invoice: makeInvoiceRow({ state, paid_amount: '0' }) })
+      script({ invoice: makeInvoiceRow({ state, paid_amount: '0' }) });
       const rejection = await service
         .confirm({
           transactionId: TX_ID,
@@ -654,27 +654,27 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
           invoiceId: INVOICE_ID,
           now: NOW,
         })
-        .catch((error: unknown) => error)
-      expect(rejection).toBeInstanceOf(HttpException)
-      expect((rejection as HttpException).getStatus()).toBe(409)
+        .catch((error: unknown) => error);
+      expect(rejection).toBeInstanceOf(HttpException);
+      expect((rejection as HttpException).getStatus()).toBe(409);
       expect((rejection as HttpException).getResponse()).toMatchObject({
         error: ErrorCodes.CONFLICT_STATE.code,
         message: BANK_RECEIPT_OVERPAYMENT_ERRORS.INVOICE_STATE_NOT_SETTLEABLE(state),
-      })
-      expect(walletService.credit).not.toHaveBeenCalled()
-      expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
+      });
+      expect(walletService.credit).not.toHaveBeenCalled();
+      expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
       expect(
-        mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices')),
-      ).toBe(false)
-    },
-  )
+        mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE invoices'))
+      ).toBe(false);
+    }
+  );
 
   it('returns 404 when the wallet is missing during invoice-linked confirm', async () => {
     script({
       locked: makePendingRow({ amount: OVERPAY_RECEIPT.toString() }),
       invoice: makeInvoiceRow(),
       wallet: null,
-    })
+    });
     const rejection = await service
       .confirm({
         transactionId: TX_ID,
@@ -683,10 +683,10 @@ describe('BankReceiptConfirmationService (T-04.2.02.04)', () => {
         invoiceId: INVOICE_ID,
         now: NOW,
       })
-      .catch((error: unknown) => error)
-    expect(rejection).toBeInstanceOf(HttpException)
-    expect((rejection as HttpException).getStatus()).toBe(404)
-    expect(walletService.credit).not.toHaveBeenCalled()
-    expect(invoiceStateMachine.transition).not.toHaveBeenCalled()
-  })
-})
+      .catch((error: unknown) => error);
+    expect(rejection).toBeInstanceOf(HttpException);
+    expect((rejection as HttpException).getStatus()).toBe(404);
+    expect(walletService.credit).not.toHaveBeenCalled();
+    expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
+  });
+});

@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm'
-import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core';
 
 /**
  * Sessions table (T-01.02.03 / T-02.02.01 / T-02.02.04).
@@ -20,50 +20,43 @@ import { pgTable, text, boolean, timestamp, jsonb } from 'drizzle-orm/pg-core'
  * - `created_at` — when the session was created.
  * - `updated_at` — last activity update timestamp.
  */
-export const sessions = pgTable(
-  'sessions',
-  {
-    /** Opaque session identifier (UUIDv7). Stored in HttpOnly cookie. */
-    sessionId: text('session_id').primaryKey(),
+export const sessions = pgTable('sessions', {
+  /** Opaque session identifier (UUIDv7). Stored in HttpOnly cookie. */
+  sessionId: text('session_id').primaryKey(),
 
-    /** The user this session belongs to. */
-    userId: text('user_id').notNull(),
+  /** The user this session belongs to. */
+  userId: text('user_id').notNull(),
 
-    /** CSRF token bound to this session, rotated on auth events (T-02.02.03). */
-    csrfToken: text('csrf_token').notNull(),
+  /** CSRF token bound to this session, rotated on auth events (T-02.02.03). */
+  csrfToken: text('csrf_token').notNull(),
 
-    /** SHA-256 hash of the current refresh token (rotated on use). */
-    refreshTokenHash: text('refresh_token_hash'),
+  /** SHA-256 hash of the current refresh token (rotated on use). */
+  refreshTokenHash: text('refresh_token_hash'),
 
-    /** UUIDv7 grouping refresh tokens into revocation families. */
-    familyId: text('family_id'),
+  /** UUIDv7 grouping refresh tokens into revocation families. */
+  familyId: text('family_id'),
 
-    /** JSON metadata about the device (fingerprint, user agent, IP hint). */
-    deviceInfo: jsonb('device_info'),
+  /** JSON metadata about the device (fingerprint, user agent, IP hint). */
+  deviceInfo: jsonb('device_info'),
 
-    /** Timestamp of last step-up authentication (T-02.02.04). Null until first step-up. */
-    stepUpVerifiedAt: timestamp('step_up_verified_at', { withTimezone: true, mode: 'date' }),
+  /** Timestamp of last step-up authentication (T-02.02.04). Null until first step-up. */
+  stepUpVerifiedAt: timestamp('step_up_verified_at', { withTimezone: true, mode: 'date' }),
 
-    /** Absolute session expiry (default 24h from creation). */
-    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
+  /** Absolute session expiry (default 24h from creation). */
+  expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
 
-    /** Idle timeout deadline (default 30min from last activity). */
-    idleDeadline: timestamp('idle_deadline', { withTimezone: true, mode: 'date' }).notNull(),
+  /** Idle timeout deadline (default 30min from last activity). */
+  idleDeadline: timestamp('idle_deadline', { withTimezone: true, mode: 'date' }).notNull(),
 
-    /** Null until the session is explicitly revoked (T-02.02.02). */
-    revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'date' }),
+  /** Null until the session is explicitly revoked (T-02.02.02). */
+  revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'date' }),
 
-    /** Creation timestamp. */
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
+  /** Creation timestamp. */
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 
-    /** Last activity update timestamp. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last activity update timestamp. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create or migrate the sessions table.
@@ -90,7 +83,7 @@ export const createSessionsTable = sql`
   CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions (expires_at);
   CREATE INDEX IF NOT EXISTS idx_sessions_idle_deadline ON sessions (idle_deadline);
   CREATE INDEX IF NOT EXISTS idx_sessions_family_id ON sessions (family_id);
-`
+`;
 
 /**
  * SQL to add new columns to an existing sessions table (backward-compatible migration).
@@ -111,4 +104,4 @@ export const migrateSessionsTable = sql`
       ALTER TABLE sessions ADD COLUMN step_up_verified_at TIMESTAMPTZ;
     END IF;
   END $$;
-`
+`;

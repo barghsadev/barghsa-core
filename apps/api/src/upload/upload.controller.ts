@@ -23,18 +23,18 @@ import {
   type PresignedUrlResponse,
   type VerifyUploadResponse,
 } from './upload.types.js';
-import {
-  getCategoryDescriptions,
-  resolveCategory,
-  UPLOAD_CATEGORIES,
-} from './upload.config.js';
+import { getCategoryDescriptions, resolveCategory, UPLOAD_CATEGORIES } from './upload.config.js';
 import {
   UploadPolicyResolver,
   effectiveAllowsExtension,
   effectiveAllowsMime,
   effectiveAllowsSize,
 } from './upload-policy.resolver.js';
-import { pickDetectedContentType, sniffContentTypes, SNIFF_SAMPLE_BYTES } from './content-type-sniffer.js';
+import {
+  pickDetectedContentType,
+  sniffContentTypes,
+  SNIFF_SAMPLE_BYTES,
+} from './content-type-sniffer.js';
 
 const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 3600; // 1 hour
@@ -47,7 +47,7 @@ export class UploadController {
     @Inject(IMMUTABLE_STORAGE_SERVICE)
     private readonly immutableStorageService: ImmutableStorageRecordService | null,
     @Inject(UploadPolicyResolver)
-    private readonly policyResolver: UploadPolicyResolver,
+    private readonly policyResolver: UploadPolicyResolver
   ) {}
 
   /**
@@ -65,9 +65,7 @@ export class UploadController {
    */
   @Post('presigned-url')
   @HttpCode(HttpStatus.OK)
-  async getPresignedUrl(
-    @Body() raw: unknown,
-  ): Promise<PresignedUrlResponse> {
+  async getPresignedUrl(@Body() raw: unknown): Promise<PresignedUrlResponse> {
     this.ensureStorageReady();
 
     // Parse and validate request
@@ -123,16 +121,13 @@ export class UploadController {
     // into the key — `uploads/<category>/<uuid><ext>` — so the verify
     // seam can re-derive it server-side instead of trusting a
     // client-supplied body field (T-09.12.05).
-    const ext = (req.fileName.includes('.')
+    const ext = req.fileName.includes('.')
       ? req.fileName.slice(req.fileName.lastIndexOf('.')).toLowerCase()
-      : '');
+      : '';
     const uniqueKey = `${UPLOAD_PREFIX}${category}/${randomUUID()}${ext}`;
 
     try {
-      const presignedUrl = await this.storage!.presignedPutUrl(
-        uniqueKey,
-        DEFAULT_EXPIRES_IN,
-      );
+      const presignedUrl = await this.storage!.presignedPutUrl(uniqueKey, DEFAULT_EXPIRES_IN);
 
       return {
         key: uniqueKey,
@@ -140,10 +135,7 @@ export class UploadController {
         expiresIn: DEFAULT_EXPIRES_IN,
       };
     } catch (err) {
-      throw new InternalServerErrorException(
-        'Failed to generate presigned URL',
-        { cause: err },
-      );
+      throw new InternalServerErrorException('Failed to generate presigned URL', { cause: err });
     }
   }
 
@@ -170,9 +162,7 @@ export class UploadController {
    */
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
-  async verifyUpload(
-    @Param('key') key: string,
-  ): Promise<VerifyUploadResponse> {
+  async verifyUpload(@Param('key') key: string): Promise<VerifyUploadResponse> {
     this.ensureStorageReady();
 
     // Security: reject keys that try to escape the prefix
@@ -238,14 +228,14 @@ export class UploadController {
     @Param('key') key: string,
     @Body()
     body: {
-      fileName?: string
-      contentType?: string
-      fileSize?: number
-      category?: string
-      purpose?: string
-      profileId?: string
+      fileName?: string;
+      contentType?: string;
+      fileSize?: number;
+      category?: string;
+      purpose?: string;
+      profileId?: string;
     },
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ key: string; status: string }> {
     this.ensureStorageReady();
     this.ensureImmutableServiceReady();
@@ -262,8 +252,8 @@ export class UploadController {
       });
     }
 
-    let detectedContentType: string
-    let actualFileSize: number
+    let detectedContentType: string;
+    let actualFileSize: number;
     try {
       const inspected = await this.inspectUploadedObject(key, category);
       if (inspected.kind !== 'confirmed') {
@@ -272,8 +262,8 @@ export class UploadController {
           status: inspected.kind,
         });
       }
-      detectedContentType = inspected.detected
-      const trustedSize = parseTrustedContentLength(inspected.contentLength)
+      detectedContentType = inspected.detected;
+      const trustedSize = parseTrustedContentLength(inspected.contentLength);
       if (trustedSize === null || trustedSize === 0) {
         throw new BadRequestException({
           message: 'Uploaded object size could not be determined from storage',
@@ -301,7 +291,7 @@ export class UploadController {
           policySource: policy.source,
         });
       }
-      actualFileSize = trustedSize
+      actualFileSize = trustedSize;
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new BadRequestException({
@@ -350,7 +340,7 @@ export class UploadController {
    */
   private async inspectUploadedObject(
     key: string,
-    category: string,
+    category: string
   ): Promise<
     | { kind: 'confirmed'; detected: string; contentLength: number | undefined }
     | { kind: 'type_mismatch'; detected: string | null; allowed: readonly string[] }
@@ -434,7 +424,7 @@ export class UploadController {
   private ensureStorageReady(): void {
     if (!this.storage) {
       throw new ServiceUnavailableException(
-        'Storage service is not configured. Set S3_BUCKET and S3_REGION environment variables.',
+        'Storage service is not configured. Set S3_BUCKET and S3_REGION environment variables.'
       );
     }
   }
@@ -442,14 +432,18 @@ export class UploadController {
   private ensureImmutableServiceReady(): void {
     if (!this.immutableStorageService) {
       throw new ServiceUnavailableException(
-        'Immutable storage service is not configured. Storage provider must be enabled.',
+        'Immutable storage service is not configured. Storage provider must be enabled.'
       );
     }
   }
 }
 
 function parseTrustedContentLength(contentLength: number | undefined): number | null {
-  if (typeof contentLength !== 'number' || !Number.isSafeInteger(contentLength) || contentLength < 0) {
+  if (
+    typeof contentLength !== 'number' ||
+    !Number.isSafeInteger(contentLength) ||
+    contentLength < 0
+  ) {
     return null;
   }
   return contentLength;

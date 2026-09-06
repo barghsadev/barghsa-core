@@ -1,6 +1,6 @@
-import { jsonb, integer, text, timestamp } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table.js'
-import { users } from './users.js'
+import { jsonb, integer, text, timestamp } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table.js';
+import { users } from './users.js';
 
 /**
  * Background job failure ledger (S-09.09, T-09.09.02).
@@ -69,7 +69,9 @@ export const backgroundJobs = createTable('background_jobs', {
   payload: jsonb('payload').notNull().default({}),
 
   /** First time this failure was recorded. */
-  firstFailedAt: timestamp('first_failed_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
+  firstFailedAt: timestamp('first_failed_at', { withTimezone: true, mode: 'date' })
+    .notNull()
+    .defaultNow(),
 
   /** Most recent attempt time. */
   lastRunAt: timestamp('last_run_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
@@ -84,4 +86,4 @@ export const backgroundJobs = createTable('background_jobs', {
 
   /** When the job was resolved. */
   resolvedAt: timestamp('resolved_at', { withTimezone: true, mode: 'date' }),
-})
+});

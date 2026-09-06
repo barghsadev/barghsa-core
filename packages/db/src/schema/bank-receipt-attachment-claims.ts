@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm'
-import { check, pgTable, text } from 'drizzle-orm/pg-core'
-import { timestamptz } from '../types'
+import { sql } from 'drizzle-orm';
+import { check, pgTable, text } from 'drizzle-orm/pg-core';
+import { timestamptz } from '../types';
 
 /**
  * Cross-flow bank-receipt attachment claims (T-04.3.01.02).
@@ -11,12 +11,8 @@ import { timestamptz } from '../types'
  * One `storage_key` is owned by either a wallet top-up or an invoice
  * receipt. Same-flow retries reuse the row; the other flow is rejected.
  */
-export const BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES = [
-  'wallet_topup',
-  'invoice_receipt',
-] as const
-export type BankReceiptAttachmentClaimType =
-  (typeof BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES)[number]
+export const BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES = ['wallet_topup', 'invoice_receipt'] as const;
+export type BankReceiptAttachmentClaimType = (typeof BANK_RECEIPT_ATTACHMENT_CLAIM_TYPES)[number];
 
 /**
  * Durable claim that a storage object backs exactly one payment flow.
@@ -50,14 +46,14 @@ export const bankReceiptAttachmentClaims = pgTable(
   (table) => ({
     storageKeyNonblank: check(
       'chk_bank_receipt_attachment_claims_storage_key_nonblank',
-      sql`length(trim(${table.storageKey})) > 0`,
+      sql`length(trim(${table.storageKey})) > 0`
     ),
     claimTypeCheck: check(
       'chk_bank_receipt_attachment_claims_type',
-      sql`${table.claimType} IN ('wallet_topup', 'invoice_receipt')`,
+      sql`${table.claimType} IN ('wallet_topup', 'invoice_receipt')`
     ),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the bank_receipt_attachment_claims table
@@ -92,4 +88,4 @@ export const createBankReceiptAttachmentClaimsTable = sql`
     BEFORE UPDATE ON bank_receipt_attachment_claims
     FOR EACH ROW
     EXECUTE FUNCTION update_bank_receipt_attachment_claims_updated_at();
-`
+`;

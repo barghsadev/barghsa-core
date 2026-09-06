@@ -1,9 +1,9 @@
-import { domainCheckEntries } from '../domain-checks'
-import { sql } from 'drizzle-orm'
-import { integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
-import { baseColumns } from '../base-table'
-import { timestamptz, uuidv7 } from '../types'
-import { invoices } from './invoices'
+import { domainCheckEntries } from '../domain-checks';
+import { sql } from 'drizzle-orm';
+import { integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { baseColumns } from '../base-table';
+import { timestamptz, uuidv7 } from '../types';
+import { invoices } from './invoices';
 
 /**
  * Canonical reminder offsets in days relative to `invoices.due_at`
@@ -12,15 +12,15 @@ import { invoices } from './invoices'
  * Must stay in lock-step with `@barghsa/shared/finance` INVOICE_REMINDER_OFFSETS
  * (T-04.1.04.02) and `chk_invoice_reminder_schedule_offset` in migration 0060.
  */
-export const INVOICE_REMINDER_OFFSETS = [-7, -3, -1, 0, 1, 7] as const
-export type InvoiceReminderOffset = (typeof INVOICE_REMINDER_OFFSETS)[number]
+export const INVOICE_REMINDER_OFFSETS = [-7, -3, -1, 0, 1, 7] as const;
+export type InvoiceReminderOffset = (typeof INVOICE_REMINDER_OFFSETS)[number];
 
 /**
  * Delivery channels for a scheduled reminder. Matches the notification
  * transport set (`in_app` always; `email`/`sms` per profile preferences).
  */
-export const INVOICE_REMINDER_CHANNELS = ['in_app', 'email', 'sms'] as const
-export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
+export const INVOICE_REMINDER_CHANNELS = ['in_app', 'email', 'sms'] as const;
+export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number];
 
 /**
  * Lifecycle of one schedule row.
@@ -30,8 +30,8 @@ export type InvoiceReminderChannel = (typeof INVOICE_REMINDER_CHANNELS)[number]
  * - `cancelled` — stopped because the invoice reached Paid/Cancelled/Refunded
  *   (T-04.1.04.06; trigger `trg_cancel_invoice_reminders_on_stop_state`)
  */
-export const INVOICE_REMINDER_STATUSES = ['scheduled', 'sent', 'cancelled'] as const
-export type InvoiceReminderStatus = (typeof INVOICE_REMINDER_STATUSES)[number]
+export const INVOICE_REMINDER_STATUSES = ['scheduled', 'sent', 'cancelled'] as const;
+export type InvoiceReminderStatus = (typeof INVOICE_REMINDER_STATUSES)[number];
 
 /**
  * Invoice reminder schedule (T-04.1.04.01).
@@ -101,10 +101,10 @@ export const invoiceReminderSchedule = pgTable(
      * Created by migration 0061.
      */
     invoiceOffsetChannelUnique: uniqueIndex(
-      'uq_invoice_reminder_schedule_invoice_offset_channel',
+      'uq_invoice_reminder_schedule_invoice_offset_channel'
     ).on(table.invoiceId, table.offset, table.channel),
-  }),
-)
+  })
+);
 
 /** SQL to create the invoice_reminder_schedule table (migrations 0060 + 0061). */
 export const createInvoiceReminderScheduleTable = sql`
@@ -156,7 +156,7 @@ export const createInvoiceReminderScheduleTable = sql`
     BEFORE UPDATE ON invoice_reminder_schedule
     FOR EACH ROW
     EXECUTE FUNCTION update_invoice_reminder_schedule_updated_at();
-`
+`;
 
 /**
  * Cancel remaining unsent (`scheduled`) reminder rows for one invoice
@@ -166,4 +166,4 @@ export const createInvoiceReminderScheduleTable = sql`
 export const CANCEL_FUTURE_INVOICE_REMINDERS_SQL = `UPDATE invoice_reminder_schedule
         SET status = 'cancelled'
         WHERE invoice_id = $1
-          AND status = 'scheduled'`
+          AND status = 'scheduled'`;

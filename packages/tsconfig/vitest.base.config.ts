@@ -1,4 +1,4 @@
-import { defineConfig, type UserConfig } from 'vitest/config'
+import { defineConfig, type UserConfig } from 'vitest/config';
 
 /**
  * Deep merge of coverage threshold values, enforcing minimum floors.
@@ -7,14 +7,14 @@ import { defineConfig, type UserConfig } from 'vitest/config'
  */
 function mergeThresholds(
   base: Record<string, number>,
-  overrides: Record<string, number | undefined>,
+  overrides: Record<string, number | undefined>
 ): Record<string, number> {
-  const merged: Record<string, number> = {}
+  const merged: Record<string, number> = {};
   for (const key of Object.keys(base)) {
-    const override = overrides[key]
-    merged[key] = override !== undefined ? Math.max(base[key]!, override) : base[key]!
+    const override = overrides[key];
+    merged[key] = override !== undefined ? Math.max(base[key]!, override) : base[key]!;
   }
-  return merged
+  return merged;
 }
 
 /**
@@ -32,8 +32,9 @@ function mergeThresholds(
  * thresholds, never lower them.
  */
 export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
-  const overrideTest = overrides.test ?? ({} as Record<string, unknown>)
-  const overrideCoverage = (overrideTest as Record<string, unknown>).coverage ?? ({} as Record<string, unknown>)
+  const overrideTest = overrides.test ?? ({} as Record<string, unknown>);
+  const overrideCoverage =
+    (overrideTest as Record<string, unknown>).coverage ?? ({} as Record<string, unknown>);
 
   const baseCoverage = {
     provider: 'v8' as const,
@@ -53,13 +54,13 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
       functions: 0,
       statements: 0,
     },
-  }
+  };
 
-  const userThresholds = (overrideCoverage as Record<string, unknown>).thresholds ?? {}
+  const userThresholds = (overrideCoverage as Record<string, unknown>).thresholds ?? {};
   const mergedThresholds = mergeThresholds(
     baseCoverage.thresholds,
-    userThresholds as Record<string, number>,
-  )
+    userThresholds as Record<string, number>
+  );
 
   return defineConfig({
     // Top-level overrides (plugins, resolve, etc.)
@@ -81,5 +82,5 @@ export function createVitestConfig(overrides: UserConfig = {}): UserConfig {
         thresholds: mergedThresholds,
       },
     },
-  })
+  });
 }

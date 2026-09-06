@@ -83,7 +83,7 @@ export interface StorageProvider {
     key: string,
     body: ReadableStream | Blob | Uint8Array | string,
     contentType: string,
-    metadata?: StorageMetadata,
+    metadata?: StorageMetadata
   ): Promise<void>;
 
   /**
@@ -125,7 +125,7 @@ export interface StorageProvider {
   listObjects(
     prefix: string,
     maxKeys?: number,
-    continuationToken?: string,
+    continuationToken?: string
   ): Promise<{
     items: StorageObjectSummary[];
     isTruncated: boolean;
@@ -141,7 +141,7 @@ export interface StorageProvider {
 export class StorageObjectNotFound extends Error {
   constructor(
     public readonly key: string,
-    message?: string,
+    message?: string
   ) {
     super(message ?? `Object not found: ${key}`);
     this.name = 'StorageObjectNotFound';
@@ -152,7 +152,7 @@ export class StorageObjectNotFound extends Error {
 export class StorageProviderError extends Error {
   constructor(
     message: string,
-    public readonly cause?: unknown,
+    public readonly cause?: unknown
   ) {
     super(message);
     this.name = 'StorageProviderError';

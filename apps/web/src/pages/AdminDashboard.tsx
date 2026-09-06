@@ -1,111 +1,112 @@
 /**
  * Admin dashboard page — heavy module, lazy-loaded.
  */
-import { useEffect, useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { AlertTriangle, ShieldCheck } from 'lucide-react'
-import { t } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
+import { useEffect, useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import { AlertTriangle, ShieldCheck } from 'lucide-react';
+import { t } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
 
 interface PendingVerificationProfile {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  firstName: string | null
-  lastName: string | null
-  legalName: string | null
-  createdAt: string
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  firstName: string | null;
+  lastName: string | null;
+  legalName: string | null;
+  createdAt: string;
 }
 
 interface PendingVerificationData {
-  count: number
-  profiles: PendingVerificationProfile[]
+  count: number;
+  profiles: PendingVerificationProfile[];
 }
 
 interface UnresolvedChargebackItem {
-  eventId: string
-  status: 'unmatched' | 'unresolved'
-  amountIrR: string | null
-  walletId: string | null
-  originalTransactionId: string | null
-  reason: string | null
-  createdAt: string
+  eventId: string;
+  status: 'unmatched' | 'unresolved';
+  amountIrR: string | null;
+  walletId: string | null;
+  originalTransactionId: string | null;
+  reason: string | null;
+  createdAt: string;
 }
 
 interface UnresolvedChargebackWarning {
-  count: number
-  unmatchedCount: number
-  reversalFailedCount: number
-  items: UnresolvedChargebackItem[]
+  count: number;
+  unmatchedCount: number;
+  reversalFailedCount: number;
+  items: UnresolvedChargebackItem[];
 }
 
 export default function AdminDashboard() {
-  const [data, setData] = useState<PendingVerificationData | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isError, setIsError] = useState(false)
-  const [chargebacks, setChargebacks] = useState<UnresolvedChargebackWarning | null>(null)
-  const [chargebacksLoading, setChargebacksLoading] = useState(true)
-  const [chargebacksError, setChargebacksError] = useState(false)
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
+  const [data, setData] = useState<PendingVerificationData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [chargebacks, setChargebacks] = useState<UnresolvedChargebackWarning | null>(null);
+  const [chargebacksLoading, setChargebacksLoading] = useState(true);
+  const [chargebacksError, setChargebacksError] = useState(false);
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
 
   useEffect(() => {
-    let cancelled = false
-    let intervalId: ReturnType<typeof setInterval> | null = null
+    let cancelled = false;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     const fetchData = async () => {
       try {
         const res = await fetch('/api/crm/dashboard/pending-verification', {
           credentials: 'include',
-        })
-        if (!res.ok) throw new Error('Failed to fetch')
-        const json = await res.json() as PendingVerificationData
+        });
+        if (!res.ok) throw new Error('Failed to fetch');
+        const json = (await res.json()) as PendingVerificationData;
         if (!cancelled) {
-          setData(json)
-          setIsLoading(false)
-          setIsError(false)
+          setData(json);
+          setIsLoading(false);
+          setIsError(false);
         }
       } catch {
         if (!cancelled) {
-          setIsLoading(false)
-          setIsError(true)
+          setIsLoading(false);
+          setIsError(true);
         }
       }
-    }
+    };
 
     const fetchChargebacks = async () => {
       try {
         const res = await fetch('/api/admin/wallet/chargebacks/unresolved-warning', {
           credentials: 'include',
-        })
-        if (!res.ok) throw new Error('Failed to fetch')
-        const json = await res.json() as UnresolvedChargebackWarning
+        });
+        if (!res.ok) throw new Error('Failed to fetch');
+        const json = (await res.json()) as UnresolvedChargebackWarning;
         if (!cancelled) {
-          setChargebacks(json)
-          setChargebacksLoading(false)
-          setChargebacksError(false)
+          setChargebacks(json);
+          setChargebacksLoading(false);
+          setChargebacksError(false);
         }
       } catch {
         if (!cancelled) {
-          setChargebacksLoading(false)
-          setChargebacksError(true)
+          setChargebacksLoading(false);
+          setChargebacksError(true);
         }
       }
-    }
+    };
 
-    fetchData()
-    fetchChargebacks()
+    fetchData();
+    fetchChargebacks();
     intervalId = setInterval(() => {
-      fetchData()
-      fetchChargebacks()
-    }, 30_000)
+      fetchData();
+      fetchChargebacks();
+    }, 30_000);
 
     return () => {
-      cancelled = true
-      if (intervalId) clearInterval(intervalId)
-    }
-  }, [])
+      cancelled = true;
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, []);
 
-  const showChargebackWarning = !chargebacksLoading && !chargebacksError && (chargebacks?.count ?? 0) > 0
+  const showChargebackWarning =
+    !chargebacksLoading && !chargebacksError && (chargebacks?.count ?? 0) > 0;
 
   return (
     <div dir={isRtl ? 'rtl' : 'ltr'}>
@@ -178,9 +179,14 @@ export default function AdminDashboard() {
           </div>
           <div role="status" aria-live="polite" aria-busy={isLoading}>
             {isLoading ? (
-              <div className="h-6 w-12 bg-gray-200 animate-pulse rounded" aria-label={t('dashboard.admin.pendingVerification.loading', locale)} />
+              <div
+                className="h-6 w-12 bg-gray-200 animate-pulse rounded"
+                aria-label={t('dashboard.admin.pendingVerification.loading', locale)}
+              />
             ) : isError ? (
-              <p className="text-sm text-red-500">{t('dashboard.admin.pendingVerification.error', locale)}</p>
+              <p className="text-sm text-red-500">
+                {t('dashboard.admin.pendingVerification.error', locale)}
+              </p>
             ) : (
               <>
                 <p
@@ -189,7 +195,9 @@ export default function AdminDashboard() {
                 >
                   {data?.count ?? 0}
                 </p>
-                <p className="text-sm text-gray-500">{t('dashboard.admin.pendingVerification.label', locale)}</p>
+                <p className="text-sm text-gray-500">
+                  {t('dashboard.admin.pendingVerification.label', locale)}
+                </p>
               </>
             )}
           </div>
@@ -204,5 +212,5 @@ export default function AdminDashboard() {
         </Link>
       </div>
     </div>
-  )
+  );
 }

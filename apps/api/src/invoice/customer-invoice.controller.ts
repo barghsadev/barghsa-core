@@ -23,24 +23,18 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import {
   CustomerInvoiceDetailsService,
   type CustomerInvoiceDetailsDto,
   type CustomerInvoiceListDto,
-} from './customer-invoice-details.service.js'
-import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js'
+} from './customer-invoice-details.service.js';
+import { InvoiceBankReceiptUploadService } from './invoice-bank-receipt-upload.service.js';
 
 const InvoiceBankReceiptBodySchema = z
   .object({
@@ -50,36 +44,32 @@ const InvoiceBankReceiptBodySchema = z
     attachmentKey: z.string().min(1),
     customerNote: z.string().optional(),
   })
-  .strict()
+  .strict();
 
 export interface InvoiceBankReceiptResponse {
-  ok: true
-  receiptId: string
-  invoiceId: string
-  amount: string
-  currency: 'IRR'
-  state: 'Submitted'
-  paymentDate: string
-  payerReference: string
-  attachmentKey: string
+  ok: true;
+  receiptId: string;
+  invoiceId: string;
+  amount: string;
+  currency: 'IRR';
+  state: 'Submitted';
+  paymentDate: string;
+  payerReference: string;
+  attachmentKey: string;
 }
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+function httpError(code: string, message: string, statusCode = 400): never {
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 function assertUuid(id: string, label = 'invoiceId'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
     httpError(
       ErrorCodes.VALIDATION_PARSE_ZOD.code,
       `Invalid ${label}: expected a UUID`,
-      HttpStatus.BAD_REQUEST,
-    )
+      HttpStatus.BAD_REQUEST
+    );
   }
 }
 
@@ -90,21 +80,20 @@ function assertUuid(id: string, label = 'invoiceId'): void {
 export class CustomerInvoiceController {
   constructor(
     private readonly service: CustomerInvoiceDetailsService,
-    private readonly bankReceiptUpload: InvoiceBankReceiptUploadService,
+    private readonly bankReceiptUpload: InvoiceBankReceiptUploadService
   ) {}
 
   @Get()
   @RateLimit({ namespace: 'invoices:list:user', limit: 60, windowMs: 60_000 })
   @ApiOperation({
     summary: 'List invoices for the active profile',
-    description:
-      'Returns non-draft invoices on the caller\'s active profile, newest first.',
+    description: "Returns non-draft invoices on the caller's active profile, newest first.",
   })
   @ApiResponse({ status: 200, description: 'Invoice list for the active profile.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'No active profile' })
   async list(@Req() req: AuthenticatedRequest): Promise<CustomerInvoiceListDto> {
-    return this.service.listForUser(req.session.userId)
+    return this.service.listForUser(req.session.userId);
   }
 
   @Get(':invoiceId')
@@ -122,10 +111,10 @@ export class CustomerInvoiceController {
   @ApiResponse({ status: 404, description: 'Invoice not found for the active profile' })
   async get(
     @Req() req: AuthenticatedRequest,
-    @Param('invoiceId') invoiceId: string,
+    @Param('invoiceId') invoiceId: string
   ): Promise<CustomerInvoiceDetailsDto> {
-    assertUuid(invoiceId)
-    return this.service.getForUser(req.session.userId, invoiceId)
+    assertUuid(invoiceId);
+    return this.service.getForUser(req.session.userId, invoiceId);
   }
 
   /**
@@ -146,20 +135,23 @@ export class CustomerInvoiceController {
   @ApiResponse({ status: 400, description: 'Invalid amount, date, payer reference, or file' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Invoice not found for the active profile' })
-  @ApiResponse({ status: 409, description: 'Invoice cannot receive a receipt, or attachment reused' })
+  @ApiResponse({
+    status: 409,
+    description: 'Invoice cannot receive a receipt, or attachment reused',
+  })
   async submitBankReceipt(
     @Req() req: AuthenticatedRequest,
     @Param('invoiceId') invoiceId: string,
-    @Body() rawBody: unknown,
+    @Body() rawBody: unknown
   ): Promise<InvoiceBankReceiptResponse> {
-    assertUuid(invoiceId)
-    const parsed = InvoiceBankReceiptBodySchema.safeParse(rawBody ?? {})
+    assertUuid(invoiceId);
+    const parsed = InvoiceBankReceiptBodySchema.safeParse(rawBody ?? {});
     if (!parsed.success) {
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD.code,
         'Bank receipt body must include amount, paymentDate, payerReference, and attachmentKey',
-        HttpStatus.BAD_REQUEST,
-      )
+        HttpStatus.BAD_REQUEST
+      );
     }
 
     const result = await this.bankReceiptUpload.submit({
@@ -170,7 +162,7 @@ export class CustomerInvoiceController {
       payerReference: parsed.data.payerReference,
       attachmentKey: parsed.data.attachmentKey,
       customerNote: parsed.data.customerNote,
-    })
+    });
 
     return {
       ok: true,
@@ -182,6 +174,6 @@ export class CustomerInvoiceController {
       paymentDate: result.paymentDate,
       payerReference: result.payerReference,
       attachmentKey: result.attachmentKey,
-    }
+    };
   }
 }

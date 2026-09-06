@@ -1,7 +1,7 @@
-import { domainChecks } from './domain-checks'
-import { pgTable } from 'drizzle-orm/pg-core'
-import type { PgColumnBuilderBase } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from './types'
+import { domainChecks } from './domain-checks';
+import { pgTable } from 'drizzle-orm/pg-core';
+import type { PgColumnBuilderBase } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from './types';
 
 /**
  * Base columns shared by every domain table.
@@ -23,7 +23,7 @@ export const baseColumns = {
     .defaultNow()
     .notNull()
     .$onUpdate(() => new Date()),
-} as const
+} as const;
 
 /**
  * Create a domain table with the standard base columns pre-included.
@@ -47,7 +47,7 @@ export const baseColumns = {
  */
 export function createTable<TColumns extends Record<string, PgColumnBuilderBase>>(
   name: string,
-  columns: TColumns,
+  columns: TColumns
 ) {
-  return pgTable(name, { ...baseColumns, ...columns }, () => domainChecks(name))
+  return pgTable(name, { ...baseColumns, ...columns }, () => domainChecks(name));
 }

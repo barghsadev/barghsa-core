@@ -51,15 +51,15 @@ Task IDs repeat across epic files. Always use `<fname>#<id>`, for example:
 
 ## State machine and ownership
 
-| State | Owner | Permitted action | Next state |
-|---|---|---|---|
-| `idle` | Supervisor | Reconcile PRs, persist immutable assignment, dispatch Cursor | `building` |
-| `building` | Cursor | Implement, test, commit, push, author/update PR | `in_review` |
-| `in_review` | Codex | Review exact PR HEAD and post structured artifact | `approved` or `fixing` |
-| `fixing` | Cursor | Fix same PR, rerun checks, push, invalidate old review | `in_review` |
-| `approved` | Supervisor | Re-read approval and enforce merge gates | `idle` after verified merge |
-| `blocked` | Human | Resolve manual blocker | explicit recovery |
-| `complete` | None | Queue exhausted | terminal |
+| State       | Owner      | Permitted action                                             | Next state                  |
+| ----------- | ---------- | ------------------------------------------------------------ | --------------------------- |
+| `idle`      | Supervisor | Reconcile PRs, persist immutable assignment, dispatch Cursor | `building`                  |
+| `building`  | Cursor     | Implement, test, commit, push, author/update PR              | `in_review`                 |
+| `in_review` | Codex      | Review exact PR HEAD and post structured artifact            | `approved` or `fixing`      |
+| `fixing`    | Cursor     | Fix same PR, rerun checks, push, invalidate old review       | `in_review`                 |
+| `approved`  | Supervisor | Re-read approval and enforce merge gates                     | `idle` after verified merge |
+| `blocked`   | Human      | Resolve manual blocker                                       | explicit recovery           |
+| `complete`  | None       | Queue exhausted                                              | terminal                    |
 
 Only one active task and one loop-owned PR may exist. Every supervisor transition must be committed, pushed to the dedicated state branch, and read back before proceeding. The builder cannot change the selected identity or completion/event history. State defaults to `~/.local/state/barghsa-loop`; configure `BARGHSA_LOOP_STATE_DIR` outside the product checkout.
 
@@ -78,16 +78,20 @@ The supervisor launches Cursor with the exact task block and required branch. Cu
 
 ```markdown
 ## What
+
 - concrete implementation summary
 
 ## Acceptance criteria
+
 - [x] criterion actually verified
 - [ ] criterion not verified, with reason
 
 ## Validation
+
 - `exact command` — pass/fail/not available
 
 ## Risks / limitations
+
 - known limits, or `None`
 ```
 

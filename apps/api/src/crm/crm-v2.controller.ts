@@ -1,6 +1,6 @@
-import { z } from 'zod'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { z } from 'zod';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -14,12 +14,19 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CrmV2Service } from './crm-v2.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CrmV2Service } from './crm-v2.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 /**
  * DTO for updating a CRM profile's editable fields.
@@ -28,10 +35,10 @@ import { ErrorCodes } from '@barghsa/shared/errors'
  * For LEGAL profiles, legal-entity fields are also blocked for direct edit.
  */
 export interface UpdateProfileDto {
-  title?: string | null
+  title?: string | null;
   /** Profile contact details; never verified account sign-in destinations. */
-  email?: string | null
-  mobile?: string | null
+  email?: string | null;
+  mobile?: string | null;
 }
 
 /**
@@ -39,9 +46,9 @@ export interface UpdateProfileDto {
  */
 export interface VerifyProfileDto {
   /** The verification action to perform. */
-  action: string
+  action: string;
   /** Reason for the action (required for unverify/reverify). */
-  reason?: string
+  reason?: string;
 }
 
 /**
@@ -49,7 +56,7 @@ export interface VerifyProfileDto {
  */
 export interface ForcePasswordChangeDto {
   /** Reason for forcing the password change. */
-  reason: string
+  reason: string;
 }
 
 /**
@@ -57,7 +64,7 @@ export interface ForcePasswordChangeDto {
  */
 export interface ExpireSessionsDto {
   /** Reason for expiring sessions. */
-  reason: string
+  reason: string;
 }
 
 /**
@@ -65,14 +72,14 @@ export interface ExpireSessionsDto {
  */
 export interface DeleteProfileDto {
   /** Reason for the profile deletion. */
-  reason: string
+  reason: string;
 }
 
 @ApiTags('CRM V2')
 @Controller('api/crm')
 @UseGuards(SessionAuthGuard, StepUpGuard)
 export class CrmV2Controller {
-  private readonly logger = new Logger(CrmV2Controller.name)
+  private readonly logger = new Logger(CrmV2Controller.name);
 
   constructor(private readonly crmV2Service: CrmV2Service) {}
 
@@ -119,27 +126,24 @@ export class CrmV2Controller {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
-  async getProfileDetail(
-    @Param('profileId') profileId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const isAdmin = hasStaffPermission(req, 'crm:read')
+  async getProfileDetail(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+    const isAdmin = hasStaffPermission(req, 'crm:read');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access CRM profile detail`,
-      )
+        `Non-admin user ${req.session.userId} attempted to access CRM profile detail`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    const result = await this.crmV2Service.getProfileDetail(profileId)
+    const result = await this.crmV2Service.getProfileDetail(profileId);
 
     if (!result) {
       throw new HttpException(
@@ -148,21 +152,24 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     this.logger.debug(
       `CRM profile detail: profileId=${profileId}, userId=${result.user.userId}, ` +
-      `status=${result.profile.status}, sessions=${result.sessions.count}`,
-    )
+        `status=${result.profile.status}, sessions=${result.sessions.count}`
+    );
 
-    return { ...result, viewerPermissions: {
-      canEdit: hasStaffPermission(req, 'crm:edit'),
-      canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
-      canVerify: hasStaffPermission(req, 'crm:verify'),
-      canManageUser: hasStaffPermission(req, 'admin:users:edit'),
-    } }
+    return {
+      ...result,
+      viewerPermissions: {
+        canEdit: hasStaffPermission(req, 'crm:edit'),
+        canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
+        canVerify: hasStaffPermission(req, 'crm:verify'),
+        canManageUser: hasStaffPermission(req, 'admin:users:edit'),
+      },
+    };
   }
 
   /**
@@ -192,8 +199,16 @@ export class CrmV2Controller {
       type: 'object',
       properties: {
         title: { type: 'string', nullable: true, description: 'Profile title' },
-        email: { type: 'string', nullable: true, description: 'User email (stored on users table)' },
-        mobile: { type: 'string', nullable: true, description: 'User mobile (stored on users table)' },
+        email: {
+          type: 'string',
+          nullable: true,
+          description: 'User email (stored on users table)',
+        },
+        mobile: {
+          type: 'string',
+          nullable: true,
+          description: 'User mobile (stored on users table)',
+        },
       },
     },
   })
@@ -205,35 +220,47 @@ export class CrmV2Controller {
   async updateProfile(
     @Param('profileId') profileId: string,
     @Body() dto: UpdateProfileDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'crm:edit')
+    const isAdmin = hasStaffPermission(req, 'crm:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to update CRM profile ${profileId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to update CRM profile ${profileId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
     if (!z.string().uuid().safeParse(profileId).success) {
-      throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
     }
-    const parsed = z.object({
-      title: z.string().max(256).nullable().optional(),
-      email: z.string().max(254).nullable().optional(),
-      mobile: z.string().max(32).nullable().optional(),
-    }).strict().safeParse(dto)
+    const parsed = z
+      .object({
+        title: z.string().max(256).nullable().optional(),
+        email: z.string().max(254).nullable().optional(),
+        mobile: z.string().max(32).nullable().optional(),
+      })
+      .strict()
+      .safeParse(dto);
     if (!parsed.success) {
-      throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-        message: 'Only title, email and mobile can be edited directly with valid text values' }, 400)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Only title, email and mobile can be edited directly with valid text values',
+        },
+        400
+      );
     }
 
     const result = await this.crmV2Service.updateProfile(
@@ -244,8 +271,8 @@ export class CrmV2Controller {
         ...(parsed.data.mobile !== undefined ? { mobile: parsed.data.mobile } : {}),
       },
       req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
@@ -254,8 +281,8 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if ('error' in result) {
@@ -265,16 +292,19 @@ export class CrmV2Controller {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: result.error,
         },
-        400,
-      )
+        400
+      );
     }
 
-    return { ...result, viewerPermissions: {
-      canEdit: hasStaffPermission(req, 'crm:edit'),
-      canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
-      canVerify: hasStaffPermission(req, 'crm:verify'),
-      canManageUser: hasStaffPermission(req, 'admin:users:edit'),
-    } }
+    return {
+      ...result,
+      viewerPermissions: {
+        canEdit: hasStaffPermission(req, 'crm:edit'),
+        canEditIdentity: hasStaffPermission(req, 'crm:edit-identity'),
+        canVerify: hasStaffPermission(req, 'crm:verify'),
+        canManageUser: hasStaffPermission(req, 'admin:users:edit'),
+      },
+    };
   }
 
   /**
@@ -304,8 +334,15 @@ export class CrmV2Controller {
       type: 'object',
       required: ['action'],
       properties: {
-        action: { type: 'string', enum: ['verify', 'unverify', 'reverify'], description: 'Verification action' },
-        reason: { type: 'string', description: 'Reason for the action (required for unverify/reverify)' },
+        action: {
+          type: 'string',
+          enum: ['verify', 'unverify', 'reverify'],
+          description: 'Verification action',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for the action (required for unverify/reverify)',
+        },
       },
     },
   })
@@ -317,33 +354,50 @@ export class CrmV2Controller {
   async verifyProfile(
     @Param('profileId') profileId: string,
     @Body() dto: VerifyProfileDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'crm:verify')
+    const isAdmin = hasStaffPermission(req, 'crm:verify');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to verify profile ${profileId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to verify profile ${profileId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = z.object({ action: z.enum(['verify','unverify','reverify']), reason: z.string().trim().max(1000).optional() }).strict().safeParse(dto)
-    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid verification action or reason' }, 400)
+    const parsed = z
+      .object({
+        action: z.enum(['verify', 'unverify', 'reverify']),
+        reason: z.string().trim().max(1000).optional(),
+      })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid verification action or reason',
+        },
+        400
+      );
 
     const result = await this.crmV2Service.verifyProfile(
       profileId,
-      { action: parsed.data.action, ...(parsed.data.reason !== undefined ? { reason: parsed.data.reason } : {}) },
+      {
+        action: parsed.data.action,
+        ...(parsed.data.reason !== undefined ? { reason: parsed.data.reason } : {}),
+      },
       req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
@@ -352,8 +406,8 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if ('error' in result) {
@@ -363,16 +417,16 @@ export class CrmV2Controller {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: result.error,
         },
-        400,
-      )
+        400
+      );
     }
 
     this.logger.debug(
       `Verification changed: profileId=${profileId}, ${result.previousStatus} → ${result.newStatus}, ` +
-      `action=${dto.action}, actor=${req.session.userId}`,
-    )
+        `action=${dto.action}, actor=${req.session.userId}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -409,33 +463,44 @@ export class CrmV2Controller {
   async forcePasswordChange(
     @Param('userId') userId: string,
     @Body() dto: ForcePasswordChangeDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to force password change for user ${userId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to force password change for user ${userId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
-    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+    const parsed = z
+      .object({ reason: z.string().trim().min(1).max(1000) })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'A valid reason is required',
+        },
+        400
+      );
 
     const result = await this.crmV2Service.forcePasswordChange(
       userId,
       parsed.data.reason,
       req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
@@ -444,8 +509,8 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'User not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if ('error' in result) {
@@ -455,15 +520,15 @@ export class CrmV2Controller {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: result.error,
         },
-        400,
-      )
+        400
+      );
     }
 
     this.logger.debug(
-      `Password change forced: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`,
-    )
+      `Password change forced: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -500,33 +565,44 @@ export class CrmV2Controller {
   async expireSessions(
     @Param('userId') userId: string,
     @Body() dto: ExpireSessionsDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to expire sessions for user ${userId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to expire sessions for user ${userId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
-    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+    const parsed = z
+      .object({ reason: z.string().trim().min(1).max(1000) })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'A valid reason is required',
+        },
+        400
+      );
 
     const result = await this.crmV2Service.expireSessions(
       userId,
       parsed.data.reason,
       req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
@@ -535,8 +611,8 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'User not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if ('error' in result) {
@@ -546,15 +622,15 @@ export class CrmV2Controller {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: result.error,
         },
-        400,
-      )
+        400
+      );
     }
 
     this.logger.debug(
-      `Sessions expired: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`,
-    )
+      `Sessions expired: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -599,33 +675,44 @@ export class CrmV2Controller {
   async deleteProfile(
     @Param('profileId') profileId: string,
     @Body() dto: DeleteProfileDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ) {
-    const isAdmin = hasStaffPermission(req, 'admin:users:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:users:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to delete profile ${profileId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to delete profile ${profileId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = z.object({ reason: z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
-    if (!parsed.success) throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'A valid reason is required' }, 400)
+    const parsed = z
+      .object({ reason: z.string().trim().min(1).max(1000) })
+      .strict()
+      .safeParse(dto);
+    if (!parsed.success)
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'A valid reason is required',
+        },
+        400
+      );
 
     const result = await this.crmV2Service.deleteProfile(
       profileId,
       parsed.data.reason,
       req.session.userId,
-      req.ip ?? 'unknown',
-    )
+      req.ip ?? 'unknown'
+    );
 
     if (!result) {
       throw new HttpException(
@@ -634,16 +721,18 @@ export class CrmV2Controller {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if ('errorCode' in result) {
       // Map business-constraint error codes to appropriate HTTP statuses
-      const httpStatus = result.errorCode === 'CRM:PROFILE:DELETION_BLOCKED'
-        || result.errorCode === 'CRM:PROFILE:ALREADY_ARCHIVED'
-        || result.errorCode === 'CRM:PROFILE:LAST_OWNER'
-        ? 409 : 400
+      const httpStatus =
+        result.errorCode === 'CRM:PROFILE:DELETION_BLOCKED' ||
+        result.errorCode === 'CRM:PROFILE:ALREADY_ARCHIVED' ||
+        result.errorCode === 'CRM:PROFILE:LAST_OWNER'
+          ? 409
+          : 400;
 
       throw new HttpException(
         {
@@ -651,15 +740,13 @@ export class CrmV2Controller {
           error: result.errorCode,
           message: result.error,
         },
-        httpStatus,
-      )
+        httpStatus
+      );
     }
 
-    this.logger.debug(
-      `Profile ${profileId} archived by ${req.session.userId}: ${dto.reason}`,
-    )
+    this.logger.debug(`Profile ${profileId} archived by ${req.session.userId}: ${dto.reason}`);
 
-    return { success: true, profileId, archivedAt: result.archivedAt }
+    return { success: true, profileId, archivedAt: result.archivedAt };
   }
 
   /**
@@ -673,7 +760,9 @@ export class CrmV2Controller {
    */
   @Get('dashboard/pending-verification')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Get pending verification profile count and last 5 entries for dashboard widget' })
+  @ApiOperation({
+    summary: 'Get pending verification profile count and last 5 entries for dashboard widget',
+  })
   @ApiResponse({
     status: 200,
     description: 'Pending verification widget data.',
@@ -701,22 +790,22 @@ export class CrmV2Controller {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Staff or admin role required' })
   async getPendingVerification(@Req() req: AuthenticatedRequest) {
-    const isAdmin = hasStaffPermission(req, 'crm:verify')
+    const isAdmin = hasStaffPermission(req, 'crm:verify');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`,
-      )
+        `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Staff or admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
-    return this.crmV2Service.getPendingVerification()
+    return this.crmV2Service.getPendingVerification();
   }
 }

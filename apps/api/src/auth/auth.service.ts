@@ -1,20 +1,23 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { createHash } from 'node:crypto'
-import { v7 as uuidv7 } from 'uuid'
-import * as argon2 from 'argon2'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { rateLimitKey } from '@barghsa/shared/rate-limit'
-import type { RegisterInput, RegisterResponse } from './dto/register.dto.js'
-import type { RegisterVerifyResponse } from './dto/otp.dto.js'
-import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js'
-import type { ForceChangePasswordInput, ForceChangePasswordResponse } from './dto/force-change-password.dto.js'
-import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js'
-import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js'
-import { OtpService, OtpAttemptRejected } from './otp.service.js'
-import { SessionService } from '../session/session.service.js'
-import { RateLimitService } from '../rate-limit/rate-limit.service.js'
-import { TosService } from '../tos/tos.service.js'
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { createHash } from 'node:crypto';
+import { v7 as uuidv7 } from 'uuid';
+import * as argon2 from 'argon2';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { rateLimitKey } from '@barghsa/shared/rate-limit';
+import type { RegisterInput, RegisterResponse } from './dto/register.dto.js';
+import type { RegisterVerifyResponse } from './dto/otp.dto.js';
+import type { LoginInput, LoginResponse, LoginVerifyResponse } from './dto/login.dto.js';
+import type {
+  ForceChangePasswordInput,
+  ForceChangePasswordResponse,
+} from './dto/force-change-password.dto.js';
+import type { ForgotPasswordInput, ForgotPasswordResponse } from './dto/forgot-password.dto.js';
+import type { ResetPasswordInput, ResetPasswordResponse } from './dto/reset-password.dto.js';
+import { OtpService, OtpAttemptRejected } from './otp.service.js';
+import { SessionService } from '../session/session.service.js';
+import { RateLimitService } from '../rate-limit/rate-limit.service.js';
+import { TosService } from '../tos/tos.service.js';
 
 /**
  * Service handling registration and login business logic.
@@ -24,7 +27,7 @@ import { TosService } from '../tos/tos.service.js'
  */
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name)
+  private readonly logger = new Logger(AuthService.name);
 
   /**
    * Pre-computed Argon2id hash of a dummy string, used to equalize response
@@ -32,14 +35,14 @@ export class AuthService {
    * timing side-channel (T-02.01.02 hardening).
    * Lazy-initialized so module load doesn't block on hashing.
    */
-  private static _dummyHash: string | null = null
-  private static _dummyHashPromise: Promise<void> | null = null
+  private static _dummyHash: string | null = null;
+  private static _dummyHashPromise: Promise<void> | null = null;
 
   constructor(
     private readonly otpService: OtpService,
     private readonly sessionService: SessionService,
     private readonly rateLimitService: RateLimitService,
-    private readonly tosService: TosService,
+    private readonly tosService: TosService
   ) {}
 
   /**
@@ -49,19 +52,19 @@ export class AuthService {
    * dummy hash, the timing side-channel guard simply degrades gracefully.
    */
   private async ensureDummyHash(): Promise<void> {
-    if (AuthService._dummyHash) return
+    if (AuthService._dummyHash) return;
     if (!AuthService._dummyHashPromise) {
       AuthService._dummyHashPromise = argon2
         .hash('__barghsa_timing_constant__')
         .then((hash) => {
-          AuthService._dummyHash = hash
+          AuthService._dummyHash = hash;
         })
         .catch(() => {
           // argon2 mock or unavailability — timing guard degrades gracefully
-          AuthService._dummyHashPromise = null
-        })
+          AuthService._dummyHashPromise = null;
+        });
     }
-    return AuthService._dummyHashPromise
+    return AuthService._dummyHashPromise;
   }
 
   /**
@@ -71,50 +74,53 @@ export class AuthService {
    * that also stores the password hash and TOS version for atomic consumption
    * on OTP verify. Returns a `challengeId` for the next step (OTP verification).
    */
-  async register(
-    input: RegisterInput,
-    ip: string,
-  ): Promise<RegisterResponse> {
+  async register(input: RegisterInput, ip: string): Promise<RegisterResponse> {
     await this.rateLimitService.enforceSecurityRateLimit(
-      rateLimitKey('registration:destination', createHash('sha256').update(input.username).digest('hex')), 10, 3_600_000)
-    const pool = getDbPool()
-    const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [input.username])
+      rateLimitKey(
+        'registration:destination',
+        createHash('sha256').update(input.username).digest('hex')
+      ),
+      10,
+      3_600_000
+    );
+    const pool = getDbPool();
+    const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [input.username]);
     if (existing.rows.length) {
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
           error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code,
         },
-        ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
-      )
+        ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus
+      );
     }
 
     // Bind consent to the published version actually shown by the client.
     const terms = await pool.query(
       `SELECT id FROM tos_versions WHERE id::text=$1 AND is_active=true
        AND status='published' AND published_at IS NOT NULL`,
-      [input.tosVersionId],
-    )
+      [input.tosVersionId]
+    );
     if (!terms.rows.length) {
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
           error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code,
         },
-        ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
-      )
+        ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus
+      );
     }
 
     // ── Create OTP challenge (storing password hash and TOS version) ──
-    const passwordHash = await argon2.hash(input.password)
+    const passwordHash = await argon2.hash(input.password);
     const { challengeId } = await this.otpService.createChallenge(
       input.username,
       ip,
       passwordHash,
-      input.tosVersionId,
-    )
+      input.tosVersionId
+    );
 
-    return { challengeId }
+    return { challengeId };
   }
 
   /**
@@ -133,26 +139,36 @@ export class AuthService {
    * between "user not found" and "wrong password" to prevent enumeration.
    */
   async login(input: LoginInput, ip: string): Promise<LoginResponse> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     if (input.deviceInfo?.fingerprint) {
       await this.rateLimitService.enforceSecurityRateLimit(
-        rateLimitKey('login:device', createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')), 50, 900_000)
+        rateLimitKey(
+          'login:device',
+          createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')
+        ),
+        50,
+        900_000
+      );
     }
 
     // Kick off dummy hash computation if not yet ready (settles in ~200ms;
     // by the time the client types a password on the next request it's ready)
-    this.ensureDummyHash()
+    this.ensureDummyHash();
 
     // Keep account-specific failures separate from the broad IP request guard.
     // Hash the tuple so delimiters cannot collide and account names are not logged.
-    const rateLimitKeyStr = rateLimitKey('login:failures', createHash('sha256')
-      .update(JSON.stringify([input.username, ip])).digest('hex'))
+    const rateLimitKeyStr = rateLimitKey(
+      'login:failures',
+      createHash('sha256')
+        .update(JSON.stringify([input.username, ip]))
+        .digest('hex')
+    );
     const delayForFailures = async (previousFailures: number) => {
-      if (previousFailures < 5) return
-      const delayMs = Math.min(500 * 2 ** Math.min(previousFailures - 5, 4), 5000)
-      await new Promise(resolve => setTimeout(resolve, delayMs))
-    }
+      if (previousFailures < 5) return;
+      const delayMs = Math.min(500 * 2 ** Math.min(previousFailures - 5, 4), 5000);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    };
 
     try {
       // 1. Look up user by normalized username
@@ -161,29 +177,26 @@ export class AuthService {
                 password_change_token, password_change_token_expires_at, is_admin, is_staff, disabled_at, auth_version
          FROM users
          WHERE username = $1`,
-        [input.username],
-      )
+        [input.username]
+      );
 
-      const userFound = userResult.rows.length > 0
-      const dummyHash = AuthService._dummyHash
+      const userFound = userResult.rows.length > 0;
+      const dummyHash = AuthService._dummyHash;
 
       // 2. Verify password with Argon2id (falling through to dummy hash
       //    when user not found, to equalize response timing)
-      let passwordValid = false
+      let passwordValid = false;
 
       if (userFound) {
         try {
-          passwordValid = await argon2.verify(
-            userResult.rows[0].password_hash,
-            input.password,
-          )
+          passwordValid = await argon2.verify(userResult.rows[0].password_hash, input.password);
         } catch {
           // Corrupted or malformed password_hash — treat as invalid credential
           // without revealing internal hash format details
         }
       } else if (dummyHash) {
         try {
-          await argon2.verify(dummyHash, input.password)
+          await argon2.verify(dummyHash, input.password);
         } catch {
           // Dummy hash not ready yet — timing inequality is acceptable on
           // first few requests; the hash settles within ~200ms of app start
@@ -193,20 +206,26 @@ export class AuthService {
       if (!userFound || !passwordValid) {
         // Atomic increment counts only credential failures, including simultaneous
         // failures. The sixth failure waits even when all six started together.
-        const ceiling = 2_147_483_647
-        const counter = await this.rateLimitService.checkSecurityRateLimit(rateLimitKeyStr, ceiling, 900_000)
-        await delayForFailures(ceiling - counter.remaining - 1)
+        const ceiling = 2_147_483_647;
+        const counter = await this.rateLimitService.checkSecurityRateLimit(
+          rateLimitKeyStr,
+          ceiling,
+          900_000
+        );
+        await delayForFailures(ceiling - counter.remaining - 1);
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_LOGIN_INVALID_CREDENTIALS.code },
-          401,
-        )
+          401
+        );
       }
 
-      await delayForFailures(await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000))
+      await delayForFailures(
+        await this.rateLimitService.getSecurityCount(rateLimitKeyStr, 900_000)
+      );
 
       // 3b. Extract user properties
-      const userId = userResult.rows[0].user_id
-      const isStaff = userResult.rows[0].is_admin === true || userResult.rows[0].is_staff === true
+      const userId = userResult.rows[0].user_id;
+      const isStaff = userResult.rows[0].is_admin === true || userResult.rows[0].is_staff === true;
 
       // 3b2. Reject disabled accounts (T-10.01.01). Checked *after* the
       // password verifies so account existence is not leaked to callers
@@ -214,11 +233,11 @@ export class AuthService {
       // branch below). A disabled account never gets a password-change token,
       // a session, or an OTP challenge.
       if (userResult.rows[0].disabled_at) {
-        this.logger.warn(`Login blocked for disabled user ${userId} from ${ip}`)
+        this.logger.warn(`Login blocked for disabled user ${userId} from ${ip}`);
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
-          403,
-        )
+          403
+        );
       }
 
       // 3c. Check if user must change password (T-02.01.04)
@@ -226,39 +245,42 @@ export class AuthService {
       // No session is established for the must-change-password flow, so the
       // user must re-authenticate (with MFA if required) after the password
       // change. MFA is therefore deferred rather than skipped.
-      const mustChangePassword = userResult.rows[0].must_change_password ?? false
+      const mustChangePassword = userResult.rows[0].must_change_password ?? false;
 
       if (mustChangePassword) {
         // Generate a short-lived token to authorize the password change
-        const passwordChangeToken = uuidv7()
-        const tokenExpiry = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
+        const passwordChangeToken = uuidv7();
+        const tokenExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
         const issued = await pool.query(
           `UPDATE users
            SET password_change_token = $1, password_change_token_expires_at = $2, updated_at = NOW()
            WHERE user_id = $3 AND auth_version = $4`,
-          [passwordChangeToken, tokenExpiry, userId, userResult.rows[0].auth_version],
-        )
+          [passwordChangeToken, tokenExpiry, userId, userResult.rows[0].auth_version]
+        );
 
         if (issued.rowCount === 0) {
-          throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+          throw new HttpException(
+            { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
+            401
+          );
         }
 
-        this.logger.log(`Password change required for user ${userId} from ${ip}`)
+        this.logger.log(`Password change required for user ${userId} from ${ip}`);
 
         return {
           requiresOtp: false,
           mustChangePassword: true,
           passwordChangeToken,
-        }
+        };
       }
 
       // 4. Check if risk-based OTP enforcement is needed (T-02.01.03)
       const deviceFingerprint = input.deviceInfo?.fingerprint
         ? createHash('sha256').update(input.deviceInfo.fingerprint).digest('hex')
-        : null
+        : null;
 
-      let requiresOtp = false
+      let requiresOtp = false;
 
       // Check device trust for all users
       if (deviceFingerprint) {
@@ -267,22 +289,22 @@ export class AuthService {
            WHERE user_id = $1 AND device_fingerprint = $2
              AND expires_at > NOW()
            LIMIT 1`,
-          [userId, deviceFingerprint],
-        )
+          [userId, deviceFingerprint]
+        );
 
         if (trustResult.rows.length > 0 && !isStaff) {
           // Trusted device found — skip OTP for customers
-          requiresOtp = false
+          requiresOtp = false;
         } else if (isStaff) {
           // Staff on an untrusted device: mandatory MFA
-          requiresOtp = true
+          requiresOtp = true;
         } else {
           // Customer on an untrusted device: risk-based MFA
-          requiresOtp = true
+          requiresOtp = true;
         }
       } else {
         // No device info provided — always require OTP (conservative)
-        requiresOtp = true
+        requiresOtp = true;
       }
 
       if (requiresOtp) {
@@ -291,25 +313,29 @@ export class AuthService {
           input.username,
           ip,
           'login',
-          userResult.rows[0].auth_version,
-        )
+          userResult.rows[0].auth_version
+        );
 
-        this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`)
+        this.logger.log(`OTP challenge created for login: user ${userId} from ${ip}`);
 
         return {
           requiresOtp: true,
           challengeId,
           userIsStaff: isStaff,
-        }
+        };
       }
 
       // 4. Create session via SessionService
       const session = await this.sessionService.createSession(
         userId,
         isStaff,
-        { ip, ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}), ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}) },
-        userResult.rows[0].auth_version,
-      )
+        {
+          ip,
+          ...(input.deviceInfo?.userAgent ? { userAgent: input.deviceInfo.userAgent } : {}),
+          ...(input.deviceInfo?.fingerprint ? { fingerprint: input.deviceInfo.fingerprint } : {}),
+        },
+        userResult.rows[0].auth_version
+      );
 
       // Record last successful login (T-10.01.01) — best-effort; a failed
       // analytics write must never fail the login itself.
@@ -317,14 +343,14 @@ export class AuthService {
         .query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
         .catch(() => {
           // Non-critical — the login already succeeded
-        })
+        });
 
       // Reset rate-limit counters on successful login
       await this.rateLimitService.resetSecurityRateLimit(rateLimitKeyStr).catch(() => {
         // Non-critical — counter will expire naturally
-      })
+      });
 
-      this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`)
+      this.logger.log(`User logged in: ${userId} (${input.username}) from ${ip}`);
 
       return {
         requiresOtp: false,
@@ -333,16 +359,13 @@ export class AuthService {
         csrfToken: session.csrfToken,
         refreshToken: session.refreshToken,
         expiresAt: session.expiresAt.toISOString(),
-      }
+      };
     } catch (err) {
       // Re-throw HttpExceptions as-is (safe structured errors)
-      if (err instanceof HttpException) throw err
+      if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Login failed for user ${input.username}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
-        500,
-      )
+      this.logger.error(`Login failed for user ${input.username}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code }, 500);
     }
   }
 
@@ -358,13 +381,13 @@ export class AuthService {
    */
   async forceChangePassword(
     input: ForceChangePasswordInput,
-    ip: string,
+    ip: string
   ): Promise<ForceChangePasswordResponse> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Look up the user by password change token
       const userResult = await client.query(
@@ -373,31 +396,34 @@ export class AuthService {
          FROM users
          WHERE password_change_token = $1
          FOR UPDATE`,
-        [input.passwordChangeToken],
-      )
+        [input.passwordChangeToken]
+      );
 
       if (userResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
-          400,
-        )
+          400
+        );
       }
 
-      const user = userResult.rows[0]
+      const user = userResult.rows[0];
 
       // 2. Verify the token hasn't expired
       if (!user.must_change_password) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
-          400,
-        )
+          400
+        );
       }
 
-      if (user.password_change_token_expires_at && new Date(user.password_change_token_expires_at) < new Date()) {
+      if (
+        user.password_change_token_expires_at &&
+        new Date(user.password_change_token_expires_at) < new Date()
+      ) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_LOGIN_MUST_CHANGE_PASSWORD.code },
-          400,
-        )
+          400
+        );
       }
 
       // 3. Check password history (last 5 passwords)
@@ -406,49 +432,53 @@ export class AuthService {
          WHERE user_id = $1
          ORDER BY version DESC
          LIMIT 5`,
-        [user.user_id],
-      )
+        [user.user_id]
+      );
 
-      const newHash = await argon2.hash(input.newPassword)
+      const newHash = await argon2.hash(input.newPassword);
 
       // 3a. Check against the current password (must differ from current)
-      const isSameAsCurrent = await argon2.verify(user.password_hash, input.newPassword).catch(() => false)
+      const isSameAsCurrent = await argon2
+        .verify(user.password_hash, input.newPassword)
+        .catch(() => false);
       if (isSameAsCurrent) {
-        await client.query('ROLLBACK')
-        this.logger.warn(`Password reuse (same as current) detected for user ${user.user_id} from ${ip}`)
+        await client.query('ROLLBACK');
+        this.logger.warn(
+          `Password reuse (same as current) detected for user ${user.user_id} from ${ip}`
+        );
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
-          422,
-        )
+          422
+        );
       }
 
       // 3b. Check password history (last 5 passwords)
       for (const entry of historyResult.rows) {
-        const isReused = await argon2.verify(entry.password_hash, input.newPassword).catch(() => false)
+        const isReused = await argon2
+          .verify(entry.password_hash, input.newPassword)
+          .catch(() => false);
         if (isReused) {
-          await client.query('ROLLBACK')
-          this.logger.warn(`Password reuse detected for user ${user.user_id} from ${ip}`)
+          await client.query('ROLLBACK');
+          this.logger.warn(`Password reuse detected for user ${user.user_id} from ${ip}`);
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
-            422,
-          )
+            422
+          );
         }
       }
 
       // 4. Record current password in history, then update user
-      const version = historyResult.rows.length > 0
-        ? historyResult.rows[0].version + 1
-        : 1
+      const version = historyResult.rows.length > 0 ? historyResult.rows[0].version + 1 : 1;
 
-      const historyId = uuidv7()
-      const now = new Date()
+      const historyId = uuidv7();
+      const now = new Date();
 
       // Insert old password into history
       await client.query(
         `INSERT INTO password_history (id, user_id, password_hash, version, created_at)
          VALUES ($1, $2, $3, $4, $5)`,
-        [historyId, user.user_id, user.password_hash, version, now],
-      )
+        [historyId, user.user_id, user.password_hash, version, now]
+      );
 
       // Update user: new password hash, clear change flag and token
       await client.query(
@@ -459,41 +489,38 @@ export class AuthService {
              password_change_token_expires_at = NULL,
              updated_at = $2
          WHERE user_id = $3`,
-        [newHash, now, user.user_id],
-      )
+        [newHash, now, user.user_id]
+      );
 
       // Changing credentials invalidates every existing session and its CSRF
       // token, including sessions opened before the forced-change flag was set.
       await client.query(
         `UPDATE sessions SET revoked_at = $1, updated_at = $1
          WHERE user_id = $2 AND revoked_at IS NULL`,
-        [now, user.user_id],
-      )
+        [now, user.user_id]
+      );
       await client.query(
         `UPDATE refresh_tokens SET consumed_at = $1
          WHERE user_id = $2 AND consumed_at IS NULL`,
-        [now, user.user_id],
-      )
+        [now, user.user_id]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Password changed for user ${user.user_id} from ${ip}`)
+      this.logger.log(`Password changed for user ${user.user_id} from ${ip}`);
 
       return {
         message: 'Password changed successfully. Please log in with your new password.',
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
 
-      if (err instanceof HttpException) throw err
+      if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Force password change failed: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      this.logger.error(`Force password change failed: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -506,42 +533,70 @@ export class AuthService {
    *
    * Rate limits are enforced per-destination and per-IP (5 starts per hour).
    */
-  async forgotPassword(
-    input: ForgotPasswordInput,
-    ip: string,
-  ): Promise<ForgotPasswordResponse> {
+  async forgotPassword(input: ForgotPasswordInput, ip: string): Promise<ForgotPasswordResponse> {
     await this.rateLimitService.enforceSecurityRateLimit(
-      rateLimitKey('password-reset:destination', createHash('sha256').update(input.username).digest('hex')), 5, 3_600_000)
-    const { challengeId } = await this.otpService.createPasswordResetChallenge(input.username, ip)
+      rateLimitKey(
+        'password-reset:destination',
+        createHash('sha256').update(input.username).digest('hex')
+      ),
+      5,
+      3_600_000
+    );
+    const { challengeId } = await this.otpService.createPasswordResetChallenge(input.username, ip);
     return {
       challengeId,
       sent: true,
       message: 'If an account exists, a verification code has been queued.',
-    }
+    };
   }
 
-  async activateStaff(token: string, newPassword: string, ip: string): Promise<{ activated: true }> {
-    const tokenHash = createHash('sha256').update(token).digest('hex')
-    const passwordHash = await argon2.hash(newPassword)
-    const client = await getDbPool().connect()
+  async activateStaff(
+    token: string,
+    newPassword: string,
+    ip: string
+  ): Promise<{ activated: true }> {
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const passwordHash = await argon2.hash(newPassword);
+    const client = await getDbPool().connect();
     try {
-      await client.query('BEGIN')
-      const account = await client.query<{ user_id: string }>(`SELECT user_id FROM users
-        WHERE activation_token=$1 AND activation_token_expires_at > NOW() AND is_staff=true AND disabled_at IS NULL FOR UPDATE`, [tokenHash])
-      if (account.rows.length !== 1) throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
-      const userId = account.rows[0]!.user_id
-      await client.query(`UPDATE users SET password_hash=$1,must_change_password=false,activation_token=NULL,
-        activation_token_expires_at=NULL,updated_at=NOW() WHERE user_id=$2`, [passwordHash, userId])
-      await client.query('UPDATE sessions SET revoked_at=NOW() WHERE user_id=$1 AND revoked_at IS NULL', [userId])
-      await client.query('UPDATE refresh_tokens SET consumed_at=NOW() WHERE user_id=$1 AND consumed_at IS NULL', [userId])
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
-        VALUES ($1,$2,'staff_user_activated',$3,$4,$5,NOW())`, [uuidv7(),userId,JSON.stringify({ targetUserId: userId }),uuidv7(),ip])
-      await client.query('COMMIT')
-      return { activated: true }
+      await client.query('BEGIN');
+      const account = await client.query<{ user_id: string }>(
+        `SELECT user_id FROM users
+        WHERE activation_token=$1 AND activation_token_expires_at > NOW() AND is_staff=true AND disabled_at IS NULL FOR UPDATE`,
+        [tokenHash]
+      );
+      if (account.rows.length !== 1)
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
+          401
+        );
+      const userId = account.rows[0]!.user_id;
+      await client.query(
+        `UPDATE users SET password_hash=$1,must_change_password=false,activation_token=NULL,
+        activation_token_expires_at=NULL,updated_at=NOW() WHERE user_id=$2`,
+        [passwordHash, userId]
+      );
+      await client.query(
+        'UPDATE sessions SET revoked_at=NOW() WHERE user_id=$1 AND revoked_at IS NULL',
+        [userId]
+      );
+      await client.query(
+        'UPDATE refresh_tokens SET consumed_at=NOW() WHERE user_id=$1 AND consumed_at IS NULL',
+        [userId]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'staff_user_activated',$3,$4,$5,NOW())`,
+        [uuidv7(), userId, JSON.stringify({ targetUserId: userId }), uuidv7(), ip]
+      );
+      await client.query('COMMIT');
+      return { activated: true };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      throw error
-    } finally { client.release() }
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -558,15 +613,15 @@ export class AuthService {
     ip: string,
     trustDevice: boolean,
     deviceFingerprint?: string,
-    userAgent?: string,
+    userAgent?: string
   ): Promise<LoginVerifyResponse> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    let userId: string
-    let authVersion: number
+    const pool = getDbPool();
+    const client = await pool.connect();
+    let userId: string;
+    let authVersion: number;
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Lock and fetch the challenge row
       const challengeResult = await client.query(
@@ -575,49 +630,43 @@ export class AuthService {
          FROM otp_challenges
          WHERE challenge_id = $1 AND purpose = 'login'
          FOR UPDATE`,
-        [challengeId],
-      )
+        [challengeId]
+      );
 
       if (challengeResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const challengeRow = challengeResult.rows[0]
+      const challengeRow = challengeResult.rows[0];
 
       // Check consumed
       if (challengeRow.consumed_at) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
       // Check expiry
       if (new Date(challengeRow.expires_at) < new Date()) {
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
       // Check attempts
       if (challengeRow.attempts_remaining <= 0) {
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
-          401,
-        )
+          401
+        );
       }
 
       // Check user_id
       if (!challengeRow.user_id) {
-        this.logger.error(`Login challenge ${challengeId} missing user_id`)
+        this.logger.error(`Login challenge ${challengeId} missing user_id`);
         throw new HttpException(
           { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
-          500,
-        )
+          500
+        );
       }
 
       // 1b. Reject disabled accounts (T-10.01.01) — the OTP grants a fresh
@@ -625,88 +674,86 @@ export class AuthService {
       // inside the transaction; the catch below rolls back and re-throws.
       const challengeUserStatus = await client.query(
         `SELECT disabled_at FROM users WHERE user_id = $1`,
-        [challengeRow.user_id],
-      )
-      if (
-        challengeUserStatus.rows.length > 0 &&
-        challengeUserStatus.rows[0].disabled_at
-      ) {
-        this.logger.warn(`OTP login blocked for disabled user ${challengeRow.user_id} from ${ip}`)
+        [challengeRow.user_id]
+      );
+      if (challengeUserStatus.rows.length > 0 && challengeUserStatus.rows[0].disabled_at) {
+        this.logger.warn(`OTP login blocked for disabled user ${challengeRow.user_id} from ${ip}`);
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
-          403,
-        )
+          403
+        );
       }
 
-      await this.otpService.assertCurrentAccount(challengeRow.user_id, challengeRow.auth_version, client)
-      authVersion = challengeRow.auth_version
+      await this.otpService.assertCurrentAccount(
+        challengeRow.user_id,
+        challengeRow.auth_version,
+        client
+      );
+      authVersion = challengeRow.auth_version;
 
       // 2. Verify OTP inside the transaction
-      const submittedHash = this.otpService.hashOtp(otp)
+      const submittedHash = this.otpService.hashOtp(otp);
       if (!this.otpService.compareOtpHashes(submittedHash, challengeRow.otp_hash)) {
         // Decrement attempts inside the transaction and commit
         await client.query(
           `UPDATE otp_challenges
            SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
            WHERE challenge_id = $1 AND attempts_remaining > 0`,
-          [challengeId],
-        )
-        await client.query('COMMIT')
+          [challengeId]
+        );
+        await client.query('COMMIT');
 
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code }, 401);
       }
 
       // 3. Consume OTP (in transaction)
-      userId = challengeRow.user_id
-      const now = new Date()
+      userId = challengeRow.user_id;
+      const now = new Date();
 
       // Consume the OTP challenge
       const consumeResult = await client.query(
         `UPDATE otp_challenges
          SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
          WHERE challenge_id = $2 AND consumed_at IS NULL`,
-        [now, challengeId],
-      )
+        [now, challengeId]
+      );
 
       if (consumeResult.rowCount === 0) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
       const session = await this.sessionService.createSession(
         userId,
         false,
-        { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
+        {
+          ip,
+          ...(userAgent ? { userAgent } : {}),
+          ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}),
+        },
         authVersion,
-        client,
-      )
+        client
+      );
 
-      await client.query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
+      await client.query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId]);
 
       // 5. Optionally mark device as trusted
       if (trustDevice && deviceFingerprint) {
-        const trustNow = new Date()
-        const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000)
-        const trustId = uuidv7()
+        const trustNow = new Date();
+        const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const trustId = uuidv7();
 
         await client.query(
           `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
            VALUES ($1, $2, $3, $4, $5, $6)
            ON CONFLICT (user_id, device_fingerprint) DO UPDATE
              SET trusted_at = $5, expires_at = $6, updated_at = NOW()`,
-          [trustId, userId, deviceFingerprint, userAgent ?? null, trustNow, trustExpiresAt],
-        )
-
+          [trustId, userId, deviceFingerprint, userAgent ?? null, trustNow, trustExpiresAt]
+        );
       }
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`)
+      this.logger.log(`Login OTP verified: user ${userId} from ${ip}`);
 
       return {
         userId,
@@ -714,17 +761,16 @@ export class AuthService {
         csrfToken: session.csrfToken,
         refreshToken: session.refreshToken,
         expiresAt: session.expiresAt.toISOString(),
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Login OTP transaction failed for challenge ${challengeId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(
+        `Login OTP transaction failed for challenge ${challengeId}: ${String(err)}`
+      );
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -738,15 +784,15 @@ export class AuthService {
     challengeId: string,
     otp: string,
     ip: string,
-    userAgent?: string,
+    userAgent?: string
   ): Promise<RegisterVerifyResponse> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    let userId: string | undefined
-    let row: any
+    const pool = getDbPool();
+    const client = await pool.connect();
+    let userId: string | undefined;
+    let row: any;
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Lock and fetch the challenge row
       const challengeResult = await client.query(
@@ -755,89 +801,77 @@ export class AuthService {
          FROM otp_challenges
          WHERE challenge_id = $1 AND purpose = 'registration'
          FOR UPDATE`,
-        [challengeId],
-      )
+        [challengeId]
+      );
 
       if (challengeResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      row = challengeResult.rows[0]
+      row = challengeResult.rows[0];
 
       // Check consumed
       if (row.consumed_at) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
       // Check expiry
       if (new Date(row.expires_at) < new Date()) {
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
       // Check attempts
       if (row.attempts_remaining <= 0) {
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
-          401,
-        )
+          401
+        );
       }
 
       // Check password_hash was stored (should always be present for registration)
       if (!row.password_hash || !row.tos_version_id) {
-        this.logger.error(`Missing registration data for challenge ${challengeId}`)
+        this.logger.error(`Missing registration data for challenge ${challengeId}`);
         throw new HttpException(
           {
             statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
             error: ErrorCodes.AUTH_REGISTER_FAILED.code,
           },
-          ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-        )
+          ErrorCodes.AUTH_REGISTER_FAILED.httpStatus
+        );
       }
 
       // 2. Verify OTP inside the transaction
-      const submittedHash = this.otpService.hashOtp(otp)
+      const submittedHash = this.otpService.hashOtp(otp);
       if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
         // Decrement attempts inside the transaction and commit
         await client.query(
           `UPDATE otp_challenges
            SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
            WHERE challenge_id = $1 AND attempts_remaining > 0`,
-          [challengeId],
-        )
-        await client.query('COMMIT')
+          [challengeId]
+        );
+        await client.query('COMMIT');
 
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code }, 401);
       }
 
       // 3. Create user + consume OTP atomically (in transaction)
-      userId = uuidv7()
-      const now = new Date()
+      userId = uuidv7();
+      const now = new Date();
 
       // Consume the OTP challenge
       const consumeResult = await client.query(
         `UPDATE otp_challenges
          SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
          WHERE challenge_id = $2 AND consumed_at IS NULL`,
-        [now, challengeId],
-      )
+        [now, challengeId]
+      );
 
       if (consumeResult.rowCount === 0) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
       // Create user record
@@ -845,15 +879,8 @@ export class AuthService {
         `INSERT INTO users (user_id, username, password_hash, locale,
                             last_accepted_tos_version, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, $6)`,
-        [
-          userId,
-          row.destination,
-          row.password_hash,
-          'fa',
-          row.tos_version_id,
-          now,
-        ],
-      )
+        [userId, row.destination, row.password_hash, 'fa', row.tos_version_id, now]
+      );
 
       // Pending invitations are discoverable by the verified username after
       // registration. Only the invitation acceptance endpoint grants membership.
@@ -864,26 +891,26 @@ export class AuthService {
         `SELECT id FROM tos_versions
          WHERE id::text=$1 AND status='published' AND published_at IS NOT NULL
          FOR SHARE`,
-        [row.tos_version_id],
-      )
+        [row.tos_version_id]
+      );
 
-      const tosVersionId = tosResult.rows.length > 0
-        ? tosResult.rows[0].id
-        : null
+      const tosVersionId = tosResult.rows.length > 0 ? tosResult.rows[0].id : null;
 
       if (tosVersionId) {
-        const acceptanceId = uuidv7()
+        const acceptanceId = uuidv7();
         await client.query(
           `INSERT INTO tos_acceptances (id, user_id, version_id, accepted_at, ip_address, user_agent)
            VALUES ($1, $2, $3, $4, $5, $6)`,
-          [acceptanceId, userId, tosVersionId, now, ip, userAgent ?? null],
-        )
+          [acceptanceId, userId, tosVersionId, now, ip, userAgent ?? null]
+        );
       } else {
         throw new HttpException(
-          { statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
-            error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code },
-          ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
-        )
+          {
+            statusCode: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus,
+            error: ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.code,
+          },
+          ErrorCodes.AUTH_REGISTER_TOS_NOT_ACCEPTED.httpStatus
+        );
       }
 
       const session = await this.sessionService.createSession(
@@ -891,12 +918,12 @@ export class AuthService {
         false,
         { ip, ...(userAgent ? { userAgent } : {}) },
         undefined,
-        client,
-      )
+        client
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`)
+      this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`);
 
       return {
         userId,
@@ -904,20 +931,20 @@ export class AuthService {
         csrfToken: session.csrfToken,
         refreshToken: session.refreshToken,
         expiresAt: session.expiresAt.toISOString(),
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Registration session creation failed for user ${userId}: ${String(err)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Registration session creation failed for user ${userId}: ${String(err)}`);
       throw new HttpException(
         {
           statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
           error: ErrorCodes.AUTH_REGISTER_FAILED.code,
         },
-        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-      )
+        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -939,15 +966,12 @@ export class AuthService {
    * Rate limits: 5 reset attempts per hour per destination (enforced by
    * the controller via @RateLimit).
    */
-  async resetPassword(
-    input: ResetPasswordInput,
-    ip: string,
-  ): Promise<ResetPasswordResponse> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+  async resetPassword(input: ResetPasswordInput, ip: string): Promise<ResetPasswordResponse> {
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Lock and fetch the challenge row
       const challengeResult = await client.query(
@@ -956,106 +980,91 @@ export class AuthService {
          FROM otp_challenges
          WHERE challenge_id = $1 AND purpose = 'password_reset'
          FOR UPDATE`,
-        [input.challengeId],
-      )
+        [input.challengeId]
+      );
 
       if (challengeResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const row = challengeResult.rows[0]
+      const row = challengeResult.rows[0];
 
       // Check consumed
       if (row.consumed_at) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
       // Check expiry
       if (new Date(row.expires_at) < new Date()) {
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code }, 401);
       }
 
       // Check attempts remaining
       if (row.attempts_remaining <= 0) {
         throw new HttpException(
           { statusCode: 401, error: ErrorCodes.AUTH_OTP_MAX_ATTEMPTS.code },
-          401,
-        )
+          401
+        );
       }
 
       // Check user_id is set (forgot-password challenges set user_id)
       if (!row.user_id) {
-        this.logger.error(`Reset-password challenge ${input.challengeId} missing user_id`)
+        this.logger.error(`Reset-password challenge ${input.challengeId} missing user_id`);
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-          400,
-        )
+          400
+        );
       }
 
       // 1b. Reject disabled accounts (T-10.01.01) — a disabled account must
       // not be able to reset its password, which would let it log back in.
       const passwordResetUserStatus = await client.query(
         `SELECT disabled_at FROM users WHERE user_id = $1`,
-        [row.user_id],
-      )
-      if (
-        passwordResetUserStatus.rows.length > 0 &&
-        passwordResetUserStatus.rows[0].disabled_at
-      ) {
-        await client.query('ROLLBACK').catch(() => {})
-        this.logger.warn(`Password reset blocked for disabled user ${row.user_id} from ${ip}`)
+        [row.user_id]
+      );
+      if (passwordResetUserStatus.rows.length > 0 && passwordResetUserStatus.rows[0].disabled_at) {
+        await client.query('ROLLBACK').catch(() => {});
+        this.logger.warn(`Password reset blocked for disabled user ${row.user_id} from ${ip}`);
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
-          403,
-        )
+          403
+        );
       }
 
       // 2. Verify OTP inside the transaction
-      const submittedHash = this.otpService.hashOtp(input.otp)
+      const submittedHash = this.otpService.hashOtp(input.otp);
       if (!this.otpService.compareOtpHashes(submittedHash, row.otp_hash)) {
         // Decrement attempts and commit the transaction
         await client.query(
           `UPDATE otp_challenges
            SET attempts_remaining = attempts_remaining - 1, updated_at = NOW()
            WHERE challenge_id = $1 AND attempts_remaining > 0`,
-          [input.challengeId],
-        )
-        await client.query('COMMIT')
+          [input.challengeId]
+        );
+        await client.query('COMMIT');
 
-        throw new HttpException(
-          { statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code },
-          401,
-        )
+        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_OTP_INVALID.code }, 401);
       }
 
       // 3. Consume OTP
-      const now = new Date()
+      const now = new Date();
       const consumeResult = await client.query(
         `UPDATE otp_challenges
          SET consumed_at = $1, attempts_remaining = 0, updated_at = $1
          WHERE challenge_id = $2 AND consumed_at IS NULL`,
-        [now, input.challengeId],
-      )
+        [now, input.challengeId]
+      );
 
       if (consumeResult.rowCount === 0) {
-        throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code },
-          409,
-        )
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
-      const userId = row.user_id
+      const userId = row.user_id;
 
-      await this.otpService.assertCurrentAccount(userId, row.auth_version, client)
+      await this.otpService.assertCurrentAccount(userId, row.auth_version, client);
 
       // 4. Check password history (last 5 passwords)
       const historyResult = await client.query(
@@ -1063,113 +1072,112 @@ export class AuthService {
          WHERE user_id = $1
          ORDER BY version DESC
          LIMIT 5`,
-        [userId],
-      )
+        [userId]
+      );
 
       // Fetch current password hash
       const userResult = await client.query(
         `SELECT password_hash FROM users WHERE user_id = $1 FOR UPDATE`,
-        [userId],
-      )
+        [userId]
+      );
 
       if (userResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const currentHash = userResult.rows[0].password_hash
-      const newHash = await argon2.hash(input.newPassword)
+      const currentHash = userResult.rows[0].password_hash;
+      const newHash = await argon2.hash(input.newPassword);
 
       // 4a. Check against current password
-      const isSameAsCurrent = await argon2.verify(currentHash, input.newPassword).catch(() => false)
+      const isSameAsCurrent = await argon2
+        .verify(currentHash, input.newPassword)
+        .catch(() => false);
       if (isSameAsCurrent) {
-        await client.query('ROLLBACK')
-        this.logger.warn(`Password reuse (same as current) detected for user ${userId} from ${ip}`)
+        await client.query('ROLLBACK');
+        this.logger.warn(`Password reuse (same as current) detected for user ${userId} from ${ip}`);
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
-          422,
-        )
+          422
+        );
       }
 
       // 4b. Check password history
       for (const entry of historyResult.rows) {
-        const isReused = await argon2.verify(entry.password_hash, input.newPassword).catch(() => false)
+        const isReused = await argon2
+          .verify(entry.password_hash, input.newPassword)
+          .catch(() => false);
         if (isReused) {
-          await client.query('ROLLBACK')
-          this.logger.warn(`Password reuse detected for user ${userId} from ${ip}`)
+          await client.query('ROLLBACK');
+          this.logger.warn(`Password reuse detected for user ${userId} from ${ip}`);
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
-            422,
-          )
+            422
+          );
         }
       }
 
       // 5. Record current password in history
-      const version = historyResult.rows.length > 0
-        ? historyResult.rows[0].version + 1
-        : 1
+      const version = historyResult.rows.length > 0 ? historyResult.rows[0].version + 1 : 1;
 
-      const historyId = uuidv7()
+      const historyId = uuidv7();
 
       await client.query(
         `INSERT INTO password_history (id, user_id, password_hash, version, created_at)
          VALUES ($1, $2, $3, $4, $5)`,
-        [historyId, userId, currentHash, version, now],
-      )
+        [historyId, userId, currentHash, version, now]
+      );
 
       // 6. Update user's password hash
       await client.query(
         `UPDATE users
          SET password_hash = $1, updated_at = $2
          WHERE user_id = $3`,
-        [newHash, now, userId],
-      )
+        [newHash, now, userId]
+      );
 
       // 7. Invalidate ALL existing sessions and refresh tokens
       await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE user_id = $2 AND revoked_at IS NULL`,
-        [now, userId],
-      )
+        [now, userId]
+      );
 
       await client.query(
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE user_id = $2 AND consumed_at IS NULL`,
-        [now, userId],
-      )
+        [now, userId]
+      );
 
       // 8. Record audit event
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
 
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [auditId, userId, 'password_reset', null, correlationId, ip, now],
-      )
+        [auditId, userId, 'password_reset', null, correlationId, ip, now]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Password reset for user ${userId} from ${ip}`)
+      this.logger.log(`Password reset for user ${userId} from ${ip}`);
 
       return {
         message: 'Your password has been reset. Please log in with your new password.',
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
 
-      this.logger.error(`Password reset failed: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      this.logger.error(`Password reset failed: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1178,27 +1186,28 @@ export class AuthService {
   /**
    * Get current user info (username, email, mobile).
    */
-  async getUser(
-    userId: string,
-  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null; requiresTosAcceptance: boolean }> {
-    const pool = getDbPool()
+  async getUser(userId: string): Promise<{
+    userId: string;
+    username: string;
+    email: string | null;
+    mobile: string | null;
+    requiresTosAcceptance: boolean;
+  }> {
+    const pool = getDbPool();
 
     const result = await pool.query(
       `SELECT user_id, username, email, mobile FROM users WHERE user_id = $1`,
-      [userId],
-    )
+      [userId]
+    );
 
     if (result.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
-    const row = result.rows[0]
+    const row = result.rows[0];
 
     // Check TOS re-acceptance status (T-04.01.03)
-    const requiresTosAcceptance = await this.tosService.requiresReAcceptance(userId)
+    const requiresTosAcceptance = await this.tosService.requiresReAcceptance(userId);
 
     return {
       userId: row.user_id,
@@ -1206,7 +1215,7 @@ export class AuthService {
       email: row.email ?? null,
       mobile: row.mobile ?? null,
       requiresTosAcceptance,
-    }
+    };
   }
 
   /**
@@ -1220,60 +1229,75 @@ export class AuthService {
   async sendChangeUsernameOtp(
     userId: string,
     newUsername: string,
-    ip: string,
+    ip: string
   ): Promise<{ challengeId: string; destination: string; previousDestination: string }> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // 1. Fetch current user
     const userResult = await pool.query(
       `SELECT username, auth_version FROM users WHERE user_id = $1`,
-      [userId],
-    )
+      [userId]
+    );
 
     if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
-    const currentUsername = userResult.rows[0].username
+    const currentUsername = userResult.rows[0].username;
 
     // 2. Check it's not the same
     if (currentUsername === newUsername) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_SAME.code },
-        400,
-      )
+        400
+      );
     }
 
     // 3. Check uniqueness
-    const takenResult = await pool.query(
-      `SELECT 1 FROM users WHERE username = $1 LIMIT 1`,
-      [newUsername],
-    )
+    const takenResult = await pool.query(`SELECT 1 FROM users WHERE username = $1 LIMIT 1`, [
+      newUsername,
+    ]);
 
     if (takenResult.rows.length > 0) {
       throw new HttpException(
         { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-        409,
-      )
+        409
+      );
     }
 
     // Both codes and delivery rows are one issuance transaction.
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      const binding = { purpose: 'change_username' as const, userId, authVersion: userResult.rows[0].auth_version }
-      const previous = await this.otpService.createChallenge(currentUsername, ip, undefined, undefined, binding, client)
-      const next = await this.otpService.createChallenge(newUsername, ip, undefined, undefined,
-        { ...binding, previousChallengeId: previous.challengeId }, client)
-      await client.query('COMMIT')
-      return { ...next, previousDestination: currentUsername }
+      await client.query('BEGIN');
+      const binding = {
+        purpose: 'change_username' as const,
+        userId,
+        authVersion: userResult.rows[0].auth_version,
+      };
+      const previous = await this.otpService.createChallenge(
+        currentUsername,
+        ip,
+        undefined,
+        undefined,
+        binding,
+        client
+      );
+      const next = await this.otpService.createChallenge(
+        newUsername,
+        ip,
+        undefined,
+        undefined,
+        { ...binding, previousChallengeId: previous.challengeId },
+        client
+      );
+      await client.query('COMMIT');
+      return { ...next, previousDestination: currentUsername };
     } catch (error) {
-      await client.query('ROLLBACK')
-      throw error
-    } finally { client.release() }
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -1289,92 +1313,101 @@ export class AuthService {
     otp: string,
     ip: string,
     currentSessionId: string,
-    previousOtp: string,
+    previousOtp: string
   ): Promise<{ message: string }> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
         `SELECT destination, previous_challenge_id, consumed_at FROM otp_challenges
          WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
-        [challengeId, userId, 'change_username'],
-      )
+        [challengeId, userId, 'change_username']
+      );
 
       if (challengeResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
       if (challengeResult.rows[0].consumed_at) {
-        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
-      const challengeDestination = challengeResult.rows[0].destination
+      const challengeDestination = challengeResult.rows[0].destination;
 
       // Verify the challenge was created for the new username (operation scoping)
       if (challengeDestination !== newUsername) {
         this.logger.warn(
-          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${newUsername}`,
-        )
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${newUsername}`
+        );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400,
-        )
+          400
+        );
       }
 
-      const previousId = challengeResult.rows[0].previous_challenge_id
-      const previous = previousId ? await client.query(
-        `SELECT c.destination FROM otp_challenges c JOIN users u ON u.user_id=c.user_id
+      const previousId = challengeResult.rows[0].previous_challenge_id;
+      const previous = previousId
+        ? await client.query(
+            `SELECT c.destination FROM otp_challenges c JOIN users u ON u.user_id=c.user_id
          WHERE c.challenge_id=$1 AND c.user_id=$2 AND c.purpose='change_username'
            AND c.previous_challenge_id IS NULL AND c.destination=u.username
-         FOR UPDATE OF c`, [previousId,userId],
-      ) : null
+         FOR UPDATE OF c`,
+            [previousId, userId]
+          )
+        : null;
       if (!previous?.rows.length) {
-        throw new HttpException({ statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code }, 400)
+        throw new HttpException(
+          { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
+          400
+        );
       }
       // Validate both before consuming either. A wrong code commits only its
       // attempt decrement; a later account-write failure rolls everything back.
-      await this.otpService.verifyChallenge(previousId, previousOtp, ip, client, false)
-      await this.otpService.verifyChallenge(challengeId, otp, ip, client, false)
-      await client.query(`UPDATE otp_challenges SET consumed_at=NOW(),attempts_remaining=0,updated_at=NOW()
-        WHERE challenge_id=ANY($1::text[])`, [[previousId,challengeId]])
+      await this.otpService.verifyChallenge(previousId, previousOtp, ip, client, false);
+      await this.otpService.verifyChallenge(challengeId, otp, ip, client, false);
+      await client.query(
+        `UPDATE otp_challenges SET consumed_at=NOW(),attempts_remaining=0,updated_at=NOW()
+        WHERE challenge_id=ANY($1::text[])`,
+        [[previousId, challengeId]]
+      );
 
       // 3. Re-check uniqueness inside the transaction
       const takenResult = await client.query(
         `SELECT 1 FROM users WHERE username = $1 AND user_id != $2 LIMIT 1`,
-        [newUsername, userId],
-      )
+        [newUsername, userId]
+      );
 
       if (takenResult.rows.length > 0) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-          409,
-        )
+          409
+        );
       }
 
       // 3. Determine contact columns based on username type
-      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      const isNewEmail = emailRe.test(newUsername)
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isNewEmail = emailRe.test(newUsername);
       const userResult = await client.query(
         `SELECT username, email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
-        [userId],
-      )
+        [userId]
+      );
 
       if (userResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const currentUser = userResult.rows[0]
-      const now = new Date()
+      const currentUser = userResult.rows[0];
+      const now = new Date();
 
       // Update username and the corresponding contact column
       if (isNewEmail) {
@@ -1383,17 +1416,17 @@ export class AuthService {
             `UPDATE users
              SET username = $1, email = $1, updated_at = $2
              WHERE user_id = $3`,
-            [newUsername, now, userId],
-          )
+            [newUsername, now, userId]
+          );
         } catch (err: any) {
           if (err?.code === '23505') {
             // Unique constraint violation — another user claimed this username
             throw new HttpException(
               { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-              409,
-            )
+              409
+            );
           }
-          throw err
+          throw err;
         }
       } else {
         // It's a mobile number
@@ -1402,17 +1435,17 @@ export class AuthService {
             `UPDATE users
              SET username = $1, mobile = $1, updated_at = $2
              WHERE user_id = $3`,
-            [newUsername, now, userId],
-          )
+            [newUsername, now, userId]
+          );
         } catch (err: any) {
           if (err?.code === '23505') {
             // Unique constraint violation — another user claimed this username
             throw new HttpException(
               { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
-              409,
-            )
+              409
+            );
           }
-          throw err
+          throw err;
         }
       }
 
@@ -1421,34 +1454,41 @@ export class AuthService {
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE user_id = $2 AND session_id != $3 AND revoked_at IS NULL`,
-        [now, userId, currentSessionId],
-      )
+        [now, userId, currentSessionId]
+      );
 
       // 5. Record audit event
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [auditId, userId, 'username_changed', JSON.stringify({ oldUsername: currentUser.username, newUsername }), correlationId, ip, now],
-      )
+        [
+          auditId,
+          userId,
+          'username_changed',
+          JSON.stringify({ oldUsername: currentUser.username, newUsername }),
+          correlationId,
+          ip,
+          now,
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Username changed: user ${userId} from ${ip} (${currentUser.username} → ${newUsername})`)
+      this.logger.log(
+        `Username changed: user ${userId} from ${ip} (${currentUser.username} → ${newUsername})`
+      );
 
-      return { message: 'Username changed successfully.' }
+      return { message: 'Username changed successfully.' };
     } catch (err) {
       // Verification is the first mutation; retain its failed-attempt counter.
-      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK')
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Username change failed for user ${userId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Username change failed for user ${userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1462,62 +1502,63 @@ export class AuthService {
     userId: string,
     contactType: 'email' | 'mobile',
     contactValue: string,
-    ip: string,
+    ip: string
   ): Promise<{ challengeId: string; destination: string }> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // 1. Check current user's contact fields
     const userResult = await pool.query(
       `SELECT email, mobile, auth_version FROM users WHERE user_id = $1`,
-      [userId],
-    )
+      [userId]
+    );
 
     if (userResult.rows.length === 0) {
-      throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-        404,
-      )
+      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
 
-    const user = userResult.rows[0]
+    const user = userResult.rows[0];
 
     // 2. Validate the user doesn't already have this contact type
     if (contactType === 'email' && user.email) {
       throw new HttpException(
         { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
-        409,
-      )
+        409
+      );
     }
 
     if (contactType === 'mobile' && user.mobile) {
       throw new HttpException(
         { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
-        409,
-      )
+        409
+      );
     }
 
     // 3. Validate the contact value is appropriate
     if (contactType === 'email') {
-      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRe.test(contactValue)) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400,
-        )
+          400
+        );
       }
     } else {
       // mobile — must be E.164
-      const e164Re = /^\+[1-9]\d{6,14}$/
+      const e164Re = /^\+[1-9]\d{6,14}$/;
       if (!e164Re.test(contactValue)) {
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400,
-        )
+          400
+        );
       }
     }
 
     // 4. Create OTP challenge
-    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, { purpose: contactType === 'email' ? 'add_email' : 'add_mobile', userId, authVersion: user.auth_version })
+    return this.otpService.createChallenge(contactValue, ip, undefined, undefined, {
+      purpose: contactType === 'email' ? 'add_email' : 'add_mobile',
+      userId,
+      authVersion: user.auth_version,
+    });
   }
 
   /**
@@ -1531,110 +1572,116 @@ export class AuthService {
     contactValue: string,
     challengeId: string,
     otp: string,
-    ip: string,
+    ip: string
   ): Promise<{ message: string }> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
         `SELECT destination FROM otp_challenges
          WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
-        [challengeId, userId, contactType === 'email' ? 'add_email' : 'add_mobile'],
-      )
+        [challengeId, userId, contactType === 'email' ? 'add_email' : 'add_mobile']
+      );
 
       if (challengeResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
       if (challengeResult.rows[0].consumed_at) {
-        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409)
+        throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
-      const challengeDestination = challengeResult.rows[0].destination
+      const challengeDestination = challengeResult.rows[0].destination;
 
       // Verify the challenge was created for the contact value (operation scoping)
       if (challengeDestination !== contactValue) {
         this.logger.warn(
-          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${contactValue}`,
-        )
+          `Challenge destination mismatch: challenge ${challengeId} was for ${challengeDestination} but request is for ${contactValue}`
+        );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
-          400,
-        )
+          400
+        );
       }
 
       // 2. Verify OTP
-      await this.otpService.verifyChallenge(challengeId, otp, ip, client)
+      await this.otpService.verifyChallenge(challengeId, otp, ip, client);
 
       // 2. Re-check user doesn't already have this contact type
       const userResult = await client.query(
         `SELECT email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
-        [userId],
-      )
+        [userId]
+      );
 
       if (userResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const user = userResult.rows[0]
+      const user = userResult.rows[0];
 
       if (contactType === 'email' && user.email) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
-          409,
-        )
+          409
+        );
       }
 
       if (contactType === 'mobile' && user.mobile) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
-          409,
-        )
+          409
+        );
       }
 
       // 3. Update the contact column
-      const now = new Date()
-      const column = contactType === 'email' ? 'email' : 'mobile'
-      await client.query(
-        `UPDATE users SET ${column} = $1, updated_at = $2 WHERE user_id = $3`,
-        [contactValue, now, userId],
-      )
+      const now = new Date();
+      const column = contactType === 'email' ? 'email' : 'mobile';
+      await client.query(`UPDATE users SET ${column} = $1, updated_at = $2 WHERE user_id = $3`, [
+        contactValue,
+        now,
+        userId,
+      ]);
 
       // 4. Record audit event
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [auditId, userId, 'contact_added', JSON.stringify({ contactType, contactValue }), correlationId, ip, now],
-      )
+        [
+          auditId,
+          userId,
+          'contact_added',
+          JSON.stringify({ contactType, contactValue }),
+          correlationId,
+          ip,
+          now,
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Contact added: user ${userId} ${contactType}=${contactValue} from ${ip}`)
+      this.logger.log(`Contact added: user ${userId} ${contactType}=${contactValue} from ${ip}`);
 
-      return { message: 'Contact added successfully.' }
+      return { message: 'Contact added successfully.' };
     } catch (err) {
       // Verification is the first mutation; retain its failed-attempt counter.
-      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK')
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 }

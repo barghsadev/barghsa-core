@@ -11,14 +11,10 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/routeTree.gen.ts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/routeTree.gen.ts"],
   "references": [
-    {"path": "../../packages/shared"},
-    {"path": "../../packages/i18n"},
-    {"path": "../../packages/ui"}
+    { "path": "../../packages/shared" },
+    { "path": "../../packages/i18n" },
+    { "path": "../../packages/ui" }
   ]
 }

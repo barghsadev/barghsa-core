@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -11,37 +11,34 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   ReconciliationExceptionsService,
   type ReconciliationExceptionDto,
-} from './reconciliation-exceptions.service.js'
-import {
-  RECONCILIATION_STATUSES,
-  RECONCILIATION_SEVERITIES,
-} from '@barghsa/shared/admin'
+} from './reconciliation-exceptions.service.js';
+import { RECONCILIATION_STATUSES, RECONCILIATION_SEVERITIES } from '@barghsa/shared/admin';
 
 /** Zod schema for the resolution/close note body (mandatory, bounded). */
 export const ResolutionNoteSchema = z.object({
   note: z.string().trim().min(1).max(1000),
-})
+});
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(200).optional(),
   offset: z.coerce.number().int().min(0).optional(),
-})
+});
 
 /** Swagger enum values for the reconciliation statuses. */
-const STATUSES = [...RECONCILIATION_STATUSES] as const
+const STATUSES = [...RECONCILIATION_STATUSES] as const;
 
 /** Swagger enum values for the reconciliation severities. */
-const SEVERITIES = [...RECONCILIATION_SEVERITIES] as const
+const SEVERITIES = [...RECONCILIATION_SEVERITIES] as const;
 
 /**
  * Reconciliation exception review controller (S-09.09, T-09.09.01).
@@ -64,11 +61,9 @@ const SEVERITIES = [...RECONCILIATION_SEVERITIES] as const
 @Controller('api/admin/reconciliation/items')
 @UseGuards(SessionAuthGuard)
 export class ReconciliationExceptionsController {
-  private readonly logger = new Logger(ReconciliationExceptionsController.name)
+  private readonly logger = new Logger(ReconciliationExceptionsController.name);
 
-  constructor(
-    private readonly reconciliationService: ReconciliationExceptionsService,
-  ) {}
+  constructor(private readonly reconciliationService: ReconciliationExceptionsService) {}
 
   /**
    * Permission gate for viewing the reconciliation review queue.
@@ -78,16 +73,16 @@ export class ReconciliationExceptionsController {
   private assertViewPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:reconciliation:view')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to view reconciliation exceptions`,
-      )
+        `Non-admin user ${req.session.userId} attempted to view reconciliation exceptions`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to view reconciliation exceptions',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -99,16 +94,16 @@ export class ReconciliationExceptionsController {
   private assertResolvePermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:reconciliation:resolve')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to resolve a reconciliation exception`,
-      )
+        `Non-admin user ${req.session.userId} attempted to resolve a reconciliation exception`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to resolve reconciliation exceptions',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -131,18 +126,19 @@ export class ReconciliationExceptionsController {
     @Query('severity') severity: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto[]> {
-    this.assertViewPermission(req)
-    const options: Parameters<ReconciliationExceptionsService['listReconciliationExceptions']>[0] = {}
+    this.assertViewPermission(req);
+    const options: Parameters<ReconciliationExceptionsService['listReconciliationExceptions']>[0] =
+      {};
     if (status !== undefined) {
-      options.status = status as NonNullable<typeof options.status>
+      options.status = status as NonNullable<typeof options.status>;
     }
     if (severity !== undefined) {
-      options.severity = severity as NonNullable<typeof options.severity>
+      options.severity = severity as NonNullable<typeof options.severity>;
     }
     if (limit !== undefined || offset !== undefined) {
-      const parsed = ListQuerySchema.safeParse({ limit, offset })
+      const parsed = ListQuerySchema.safeParse({ limit, offset });
       if (!parsed.success) {
         throw new HttpException(
           {
@@ -150,13 +146,13 @@ export class ReconciliationExceptionsController {
             error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
             message: 'limit must be an integer 1..200 and offset a non-negative integer',
           },
-          400,
-        )
+          400
+        );
       }
-      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit
-      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset
+      if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
+      if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
-    return this.reconciliationService.listReconciliationExceptions(options)
+    return this.reconciliationService.listReconciliationExceptions(options);
   }
 
   /**
@@ -176,11 +172,15 @@ export class ReconciliationExceptionsController {
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async investigateItem(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {
-    this.assertResolvePermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.reconciliationService.investigateReconciliationException(id, req.session.userId, ip)
+    this.assertResolvePermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.reconciliationService.investigateReconciliationException(
+      id,
+      req.session.userId,
+      ip
+    );
   }
 
   /**
@@ -208,10 +208,10 @@ export class ReconciliationExceptionsController {
   async resolveItem(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {
-    this.assertResolvePermission(req)
-    const parsed = ResolutionNoteSchema.safeParse(rawBody)
+    this.assertResolvePermission(req);
+    const parsed = ResolutionNoteSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -219,16 +219,16 @@ export class ReconciliationExceptionsController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'note is required when resolving a reconciliation exception',
         },
-        400,
-      )
+        400
+      );
     }
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.reconciliationService.resolveReconciliationException(
       id,
       req.session.userId,
       ip,
-      parsed.data.note,
-    )
+      parsed.data.note
+    );
   }
 
   /**
@@ -257,10 +257,10 @@ export class ReconciliationExceptionsController {
   async closeItem(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<ReconciliationExceptionDto> {
-    this.assertResolvePermission(req)
-    const parsed = ResolutionNoteSchema.safeParse(rawBody)
+    this.assertResolvePermission(req);
+    const parsed = ResolutionNoteSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         {
@@ -268,10 +268,15 @@ export class ReconciliationExceptionsController {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'note is required when closing a reconciliation exception',
         },
-        400,
-      )
+        400
+      );
     }
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.reconciliationService.closeReconciliationException(id, req.session.userId, ip, parsed.data.note)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.reconciliationService.closeReconciliationException(
+      id,
+      req.session.userId,
+      ip,
+      parsed.data.note
+    );
   }
 }

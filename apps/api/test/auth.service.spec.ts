@@ -10,17 +10,17 @@ const mockCreateChallenge = vi.fn().mockResolvedValue({
   destination: 'user@example.com',
 });
 
-const mockCreateSession = vi.fn().mockImplementation(
-  async (userId: string) => ({
-    sessionId: 'mock-session-id-' + userId,
-    csrfToken: 'mock-csrf-token',
-    refreshToken: 'mock-refresh-token',
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-  }),
-);
+const mockCreateSession = vi.fn().mockImplementation(async (userId: string) => ({
+  sessionId: 'mock-session-id-' + userId,
+  csrfToken: 'mock-csrf-token',
+  refreshToken: 'mock-refresh-token',
+  expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+}));
 
 vi.mock('argon2', () => ({
-  hash: vi.fn().mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
+  hash: vi
+    .fn()
+    .mockResolvedValue('$argon2id$v=19$m=65536,t=3,p=1$mockhash$mockhashmockhashmockhash'),
 }));
 
 const mockQuery = vi.fn();
@@ -74,8 +74,10 @@ describe('AuthService', () => {
     vi.clearAllMocks();
     mockQuery.mockReset();
     mockQuery.mockImplementation(async (sql: string, params: unknown[]) => ({
-      rows: sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
-        ? [{ id: params[0] }] : [],
+      rows:
+        sql.includes('FROM tos_versions') && params[0] === '00000000-0000-4000-8000-000000000001'
+          ? [{ id: params[0] }]
+          : [],
     }));
     mockConnect.mockResolvedValue(mockClient);
     mockClient.query.mockReset();
@@ -85,9 +87,14 @@ describe('AuthService', () => {
       return { rows: [] };
     });
     mockClient.release.mockReset();
-    service = new AuthService(mockOtpService, mockSessionService,
-      { enforceSecurityRateLimit: vi.fn().mockResolvedValue(undefined) } as unknown as import('../src/rate-limit/rate-limit.service.js').RateLimitService,
-      {} as import('../src/tos/tos.service.js').TosService);
+    service = new AuthService(
+      mockOtpService,
+      mockSessionService,
+      {
+        enforceSecurityRateLimit: vi.fn().mockResolvedValue(undefined),
+      } as unknown as import('../src/rate-limit/rate-limit.service.js').RateLimitService,
+      {} as import('../src/tos/tos.service.js').TosService
+    );
   });
 
   describe('register', () => {
@@ -98,20 +105,31 @@ describe('AuthService', () => {
           password: 'StrongPass1',
           tosVersionId: '00000000-0000-4000-8000-000000000001',
         },
-        '127.0.0.1',
+        '127.0.0.1'
       );
 
       expect(result).toHaveProperty('challengeId');
       expect(typeof result.challengeId).toBe('string');
-      expect(mockCreateChallenge).toHaveBeenCalledWith('user@example.com', '127.0.0.1', expect.stringContaining('$argon2id'), '00000000-0000-4000-8000-000000000001');
+      expect(mockCreateChallenge).toHaveBeenCalledWith(
+        'user@example.com',
+        '127.0.0.1',
+        expect.stringContaining('$argon2id'),
+        '00000000-0000-4000-8000-000000000001'
+      );
     });
 
     it('rejects an existing username without creating a challenge', async () => {
       mockQuery.mockResolvedValueOnce({ rows: [{ user_id: 'existing' }] });
-      const error = await service.register({
-        username: 'user@example.com', password: 'StrongPass1',
-        tosVersionId: '00000000-0000-4000-8000-000000000001',
-      }, '127.0.0.1').catch(error => error);
+      const error = await service
+        .register(
+          {
+            username: 'user@example.com',
+            password: 'StrongPass1',
+            tosVersionId: '00000000-0000-4000-8000-000000000001',
+          },
+          '127.0.0.1'
+        )
+        .catch((error) => error);
       expect(error).toBeInstanceOf(HttpException);
       expect(error.getStatus()).toBe(409);
       expect(mockCreateChallenge).not.toHaveBeenCalled();
@@ -125,8 +143,8 @@ describe('AuthService', () => {
             password: 'StrongPass1',
             tosVersionId: 'invalid-version',
           },
-          '127.0.0.1',
-        ),
+          '127.0.0.1'
+        )
       ).rejects.toThrow(HttpException);
 
       try {
@@ -136,7 +154,7 @@ describe('AuthService', () => {
             password: 'StrongPass1',
             tosVersionId: 'invalid-version',
           },
-          '127.0.0.1',
+          '127.0.0.1'
         );
       } catch (e) {
         expect(e).toBeInstanceOf(HttpException);
@@ -151,7 +169,8 @@ describe('AuthService', () => {
 
     it('creates user, session, and returns credentials on success', async () => {
       mockClient.query.mockImplementation(async (sql: string) => {
-        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+        if (sql.includes('FROM tos_versions'))
+          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -199,7 +218,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration('nonexistent', KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration('nonexistent', KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -218,7 +237,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -239,7 +258,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -260,7 +279,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1'),
+        service.completeRegistration(challengeId, KNOWN_OTP, '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       try {
@@ -292,7 +311,8 @@ describe('AuthService', () => {
     it('throws 401 and decrements attempts on invalid OTP', async () => {
       let decrementCalled = false;
       mockClient.query.mockImplementation(async (sql: string) => {
-        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+        if (sql.includes('FROM tos_versions'))
+          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }
@@ -305,7 +325,7 @@ describe('AuthService', () => {
       });
 
       await expect(
-        service.completeRegistration(challengeId, 'wrong-otp', '127.0.0.1'),
+        service.completeRegistration(challengeId, 'wrong-otp', '127.0.0.1')
       ).rejects.toThrow(HttpException);
 
       expect(decrementCalled).toBe(true);
@@ -322,7 +342,8 @@ describe('AuthService', () => {
     it('rolls back on user INSERT failure and throws AUTH_REGISTER_FAILED', async () => {
       let rolledBack = false;
       mockClient.query.mockImplementation(async (sql: string) => {
-        if (sql.includes('FROM tos_versions')) return { rows: [{ id: makeChallengeRow().tos_version_id }] };
+        if (sql.includes('FROM tos_versions'))
+          return { rows: [{ id: makeChallengeRow().tos_version_id }] };
         if (sql.includes('FOR UPDATE')) {
           return { rows: [makeChallengeRow()] };
         }

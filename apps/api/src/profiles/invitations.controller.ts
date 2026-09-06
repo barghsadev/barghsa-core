@@ -8,18 +8,18 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AgentsService } from './agents.service.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AgentsService } from './agents.service.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 @ApiTags('Invitations')
 @Controller('api/invitations')
 @UseGuards(SessionAuthGuard)
 export class InvitationsController {
-  private readonly logger = new Logger(InvitationsController.name)
+  private readonly logger = new Logger(InvitationsController.name);
 
   constructor(private readonly agentsService: AgentsService) {}
 
@@ -35,10 +35,10 @@ export class InvitationsController {
   @ApiOperation({ summary: 'List pending invitations for the current user' })
   @ApiResponse({ status: 200, description: 'Pending invitations list.' })
   async listPendingInvitations(@Req() req: AuthenticatedRequest) {
-    const userId = req.session.userId
-    const result = await this.agentsService.listPendingInvitations(userId)
-    this.logger.debug(`User ${userId} has ${result.invitations.length} pending invitations`)
-    return result
+    const userId = req.session.userId;
+    const result = await this.agentsService.listPendingInvitations(userId);
+    this.logger.debug(`User ${userId} has ${result.invitations.length} pending invitations`);
+    return result;
   }
 
   /**
@@ -57,14 +57,11 @@ export class InvitationsController {
   @ApiResponse({ status: 400, description: 'Invitation not in Pending status or expired.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
   @ApiResponse({ status: 409, description: 'Already an agent of this profile.' })
-  async acceptInvitation(
-    @Param('inviteId') inviteId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-    await this.agentsService.acceptInvitation(inviteId, userId)
-    this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`)
-    return { message: 'Invitation accepted successfully.' }
+  async acceptInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
+    await this.agentsService.acceptInvitation(inviteId, userId);
+    this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`);
+    return { message: 'Invitation accepted successfully.' };
   }
 
   /**
@@ -80,13 +77,10 @@ export class InvitationsController {
   @ApiResponse({ status: 200, description: 'Invitation declined.' })
   @ApiResponse({ status: 400, description: 'Invitation not in Pending status.' })
   @ApiResponse({ status: 404, description: 'Invitation not found.' })
-  async declineInvitation(
-    @Param('inviteId') inviteId: string,
-    @Req() req: AuthenticatedRequest,
-  ) {
-    const userId = req.session.userId
-    await this.agentsService.declineInvitation(inviteId, userId)
-    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`)
-    return { message: 'Invitation declined successfully.' }
+  async declineInvitation(@Param('inviteId') inviteId: string, @Req() req: AuthenticatedRequest) {
+    const userId = req.session.userId;
+    await this.agentsService.declineInvitation(inviteId, userId);
+    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
+    return { message: 'Invitation declined successfully.' };
   }
 }

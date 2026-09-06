@@ -1,14 +1,14 @@
-import { VerificationEvidenceService } from './verification-evidence.service.js'
-import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.module.js'
-import { Module } from '@nestjs/common'
-import { CrmController } from './crm.controller.js'
-import { CrmV2Controller } from './crm-v2.controller.js'
-import { VerificationCaseController } from './verification-case.controller.js'
-import { CrmService } from './crm.service.js'
-import { CrmV2Service } from './crm-v2.service.js'
-import { VerificationCaseService } from './verification-case.service.js'
-import { SessionModule } from '../session/session.module.js'
-import { NotificationsModule } from '../notifications/index.js'
+import { VerificationEvidenceService } from './verification-evidence.service.js';
+import { StaffAssignmentModule } from '../staff-assignment/staff-assignment.module.js';
+import { Module } from '@nestjs/common';
+import { CrmController } from './crm.controller.js';
+import { CrmV2Controller } from './crm-v2.controller.js';
+import { VerificationCaseController } from './verification-case.controller.js';
+import { CrmService } from './crm.service.js';
+import { CrmV2Service } from './crm-v2.service.js';
+import { VerificationCaseService } from './verification-case.service.js';
+import { SessionModule } from '../session/session.module.js';
+import { NotificationsModule } from '../notifications/index.js';
 
 @Module({
   imports: [StaffAssignmentModule, SessionModule, NotificationsModule],

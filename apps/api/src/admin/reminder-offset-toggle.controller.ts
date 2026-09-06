@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -9,31 +9,26 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   REMINDER_OFFSET_TOGGLE_PERMISSION,
   type ReminderOffsetToggleDto,
-} from '@barghsa/shared/finance'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js'
+} from '@barghsa/shared/finance';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { ReminderOffsetToggleService } from './reminder-offset-toggle.service.js';
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /**
@@ -61,8 +56,8 @@ export class ReminderOffsetToggleController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${REMINDER_OFFSET_TOGGLE_PERMISSION})`,
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -74,8 +69,8 @@ export class ReminderOffsetToggleController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async list(@Req() req: AuthenticatedRequest): Promise<ReminderOffsetToggleDto[]> {
-    this.assertTogglePermission(req)
-    return this.service.list()
+    this.assertTogglePermission(req);
+    return this.service.list();
   }
 
   @Put()
@@ -107,13 +102,13 @@ export class ReminderOffsetToggleController {
   @ApiResponse({ status: 403, description: 'Admin role or step-up required' })
   async set(
     @Req() req: AuthenticatedRequest,
-    @Body() body: unknown,
+    @Body() body: unknown
   ): Promise<ReminderOffsetToggleDto[]> {
-    this.assertTogglePermission(req)
+    this.assertTogglePermission(req);
     return this.service.set({
       raw: body,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 }

@@ -1,24 +1,24 @@
-import { useState, useEffect, useCallback } from 'react'
-import { withCsrf } from '../lib/csrf.js'
+import { useState, useEffect, useCallback } from 'react';
+import { withCsrf } from '../lib/csrf.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 interface StorageConfig {
-  endpoint: string
-  region: string
-  bucket: string
-  accessKeyId: string
-  hasSecretKey: boolean
-  forcePathStyle: boolean
-  privateEndpointUrl: string
-  publicEndpointUrl: string
+  endpoint: string;
+  region: string;
+  bucket: string;
+  accessKeyId: string;
+  hasSecretKey: boolean;
+  forcePathStyle: boolean;
+  privateEndpointUrl: string;
+  publicEndpointUrl: string;
 }
 
 interface TestConnectionResult {
-  success: boolean
-  message: string
+  success: boolean;
+  message: string;
 }
 
 /**
@@ -27,14 +27,14 @@ interface TestConnectionResult {
  * The secret key is write-only — never returned by GET.
  */
 interface StorageConfigUpdate {
-  endpoint?: string | undefined
-  region?: string | undefined
-  bucket?: string | undefined
-  accessKeyId?: string | undefined
-  secretAccessKey?: string | undefined
-  forcePathStyle?: boolean | undefined
-  privateEndpointUrl?: string | undefined
-  publicEndpointUrl?: string | undefined
+  endpoint?: string | undefined;
+  region?: string | undefined;
+  bucket?: string | undefined;
+  accessKeyId?: string | undefined;
+  secretAccessKey?: string | undefined;
+  forcePathStyle?: boolean | undefined;
+  privateEndpointUrl?: string | undefined;
+  publicEndpointUrl?: string | undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -42,13 +42,13 @@ interface StorageConfigUpdate {
 // ---------------------------------------------------------------------------
 
 function apiUrl(path: string): string {
-  return `/api/admin/storage${path}`
+  return `/api/admin/storage${path}`;
 }
 
 async function fetchConfig(): Promise<StorageConfig> {
-  const res = await fetch(apiUrl('/config'))
-  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`)
-  return res.json()
+  const res = await fetch(apiUrl('/config'));
+  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
+  return res.json();
 }
 
 async function saveConfig(data: StorageConfigUpdate): Promise<StorageConfig> {
@@ -56,9 +56,9 @@ async function saveConfig(data: StorageConfigUpdate): Promise<StorageConfig> {
     method: 'PUT',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
-  })
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`)
-  return res.json()
+  });
+  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
+  return res.json();
 }
 
 async function testConnection(data: StorageConfigUpdate): Promise<TestConnectionResult> {
@@ -66,9 +66,9 @@ async function testConnection(data: StorageConfigUpdate): Promise<TestConnection
     method: 'POST',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
-  })
-  if (!res.ok) throw new Error(`Connection test failed: ${res.statusText}`)
-  return res.json()
+  });
+  if (!res.ok) throw new Error(`Connection test failed: ${res.statusText}`);
+  return res.json();
 }
 
 // ---------------------------------------------------------------------------
@@ -76,49 +76,49 @@ async function testConnection(data: StorageConfigUpdate): Promise<TestConnection
 // ---------------------------------------------------------------------------
 
 export default function AdminStorageConfig() {
-  const [config, setConfig] = useState<StorageConfig | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [testing, setTesting] = useState(false)
-  const [testResult, setTestResult] = useState<TestConnectionResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const [config, setConfig] = useState<StorageConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<TestConnectionResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // Editable form fields — initialised from config
-  const [endpoint, setEndpoint] = useState('')
-  const [region, setRegion] = useState('')
-  const [bucket, setBucket] = useState('')
-  const [accessKeyId, setAccessKeyId] = useState('')
-  const [secretAccessKey, setSecretAccessKey] = useState('')
-  const [forcePathStyle, setForcePathStyle] = useState(false)
-  const [privateEndpointUrl, setPrivateEndpointUrl] = useState('')
-  const [publicEndpointUrl, setPublicEndpointUrl] = useState('')
+  const [endpoint, setEndpoint] = useState('');
+  const [region, setRegion] = useState('');
+  const [bucket, setBucket] = useState('');
+  const [accessKeyId, setAccessKeyId] = useState('');
+  const [secretAccessKey, setSecretAccessKey] = useState('');
+  const [forcePathStyle, setForcePathStyle] = useState(false);
+  const [privateEndpointUrl, setPrivateEndpointUrl] = useState('');
+  const [publicEndpointUrl, setPublicEndpointUrl] = useState('');
 
   useEffect(() => {
     fetchConfig()
       .then((cfg) => {
-        setConfig(cfg)
-        setEndpoint(cfg.endpoint)
-        setRegion(cfg.region)
-        setBucket(cfg.bucket)
-        setAccessKeyId(cfg.accessKeyId)
-        setForcePathStyle(cfg.forcePathStyle)
-        setPrivateEndpointUrl(cfg.privateEndpointUrl)
-        setPublicEndpointUrl(cfg.publicEndpointUrl)
+        setConfig(cfg);
+        setEndpoint(cfg.endpoint);
+        setRegion(cfg.region);
+        setBucket(cfg.bucket);
+        setAccessKeyId(cfg.accessKeyId);
+        setForcePathStyle(cfg.forcePathStyle);
+        setPrivateEndpointUrl(cfg.privateEndpointUrl);
+        setPublicEndpointUrl(cfg.publicEndpointUrl);
       })
       .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   const clearMessages = useCallback(() => {
-    setError(null)
-    setSuccess(null)
-    setTestResult(null)
-  }, [])
+    setError(null);
+    setSuccess(null);
+    setTestResult(null);
+  }, []);
 
   const handleSave = useCallback(async () => {
-    clearMessages()
-    setSaving(true)
+    clearMessages();
+    setSaving(true);
     try {
       await saveConfig({
         endpoint: endpoint || undefined,
@@ -129,22 +129,32 @@ export default function AdminStorageConfig() {
         forcePathStyle,
         privateEndpointUrl: privateEndpointUrl || undefined,
         publicEndpointUrl: publicEndpointUrl || undefined,
-      })
-      setSuccess('Configuration saved.')
-      setSecretAccessKey('') // Clear secret key field after save
+      });
+      setSuccess('Configuration saved.');
+      setSecretAccessKey(''); // Clear secret key field after save
       // Refresh config to reflect saved state
-      const cfg = await fetchConfig()
-      setConfig(cfg)
+      const cfg = await fetchConfig();
+      setConfig(cfg);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Save failed')
+      setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [endpoint, region, bucket, accessKeyId, secretAccessKey, forcePathStyle, privateEndpointUrl, publicEndpointUrl, clearMessages])
+  }, [
+    endpoint,
+    region,
+    bucket,
+    accessKeyId,
+    secretAccessKey,
+    forcePathStyle,
+    privateEndpointUrl,
+    publicEndpointUrl,
+    clearMessages,
+  ]);
 
   const handleTest = useCallback(async () => {
-    clearMessages()
-    setTesting(true)
+    clearMessages();
+    setTesting(true);
     try {
       const result = await testConnection({
         endpoint: endpoint || undefined,
@@ -153,14 +163,17 @@ export default function AdminStorageConfig() {
         accessKeyId: accessKeyId || undefined,
         secretAccessKey: secretAccessKey || undefined,
         forcePathStyle,
-      })
-      setTestResult(result)
+      });
+      setTestResult(result);
     } catch (err: unknown) {
-      setTestResult({ success: false, message: err instanceof Error ? err.message : 'Test failed' })
+      setTestResult({
+        success: false,
+        message: err instanceof Error ? err.message : 'Test failed',
+      });
     } finally {
-      setTesting(false)
+      setTesting(false);
     }
-  }, [endpoint, region, bucket, accessKeyId, secretAccessKey, forcePathStyle, clearMessages])
+  }, [endpoint, region, bucket, accessKeyId, secretAccessKey, forcePathStyle, clearMessages]);
 
   // -----------------------------------------------------------------------
   // Loading / empty state
@@ -171,7 +184,7 @@ export default function AdminStorageConfig() {
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-500">Loading storage configuration...</p>
       </div>
-    )
+    );
   }
 
   // -----------------------------------------------------------------------
@@ -197,13 +210,14 @@ export default function AdminStorageConfig() {
       <div className="space-y-4 max-w-xl">
         {/* Endpoint */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Endpoint
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Endpoint</label>
           <input
             type="text"
             value={endpoint}
-            onChange={(e) => { clearMessages(); setEndpoint(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setEndpoint(e.target.value);
+            }}
             placeholder="http://localhost:9000"
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -211,13 +225,14 @@ export default function AdminStorageConfig() {
 
         {/* Region */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Region
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Region</label>
           <input
             type="text"
             value={region}
-            onChange={(e) => { clearMessages(); setRegion(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setRegion(e.target.value);
+            }}
             placeholder="us-east-1"
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -225,13 +240,14 @@ export default function AdminStorageConfig() {
 
         {/* Bucket */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Bucket
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bucket</label>
           <input
             type="text"
             value={bucket}
-            onChange={(e) => { clearMessages(); setBucket(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setBucket(e.target.value);
+            }}
             placeholder="my-bucket"
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -239,13 +255,14 @@ export default function AdminStorageConfig() {
 
         {/* Access Key ID */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Access Key ID
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Access Key ID</label>
           <input
             type="text"
             value={accessKeyId}
-            onChange={(e) => { clearMessages(); setAccessKeyId(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setAccessKeyId(e.target.value);
+            }}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoComplete="off"
           />
@@ -256,13 +273,18 @@ export default function AdminStorageConfig() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Secret Access Key
             {config?.hasSecretKey && !secretAccessKey && (
-              <span className="ml-2 text-xs text-gray-500 font-normal">(configured — leave blank to keep current)</span>
+              <span className="ml-2 text-xs text-gray-500 font-normal">
+                (configured — leave blank to keep current)
+              </span>
             )}
           </label>
           <input
             type="password"
             value={secretAccessKey}
-            onChange={(e) => { clearMessages(); setSecretAccessKey(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setSecretAccessKey(e.target.value);
+            }}
             placeholder={config?.hasSecretKey ? '••••••••' : 'Enter secret key'}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoComplete="new-password"
@@ -275,7 +297,10 @@ export default function AdminStorageConfig() {
             type="checkbox"
             id="force-path-style"
             checked={forcePathStyle}
-            onChange={(e) => { clearMessages(); setForcePathStyle(e.target.checked) }}
+            onChange={(e) => {
+              clearMessages();
+              setForcePathStyle(e.target.checked);
+            }}
             className="rounded border-gray-300"
           />
           <label htmlFor="force-path-style" className="text-sm font-medium text-gray-700">
@@ -291,7 +316,10 @@ export default function AdminStorageConfig() {
           <input
             type="text"
             value={privateEndpointUrl}
-            onChange={(e) => { clearMessages(); setPrivateEndpointUrl(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setPrivateEndpointUrl(e.target.value);
+            }}
             placeholder="http://minio:9000"
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -305,7 +333,10 @@ export default function AdminStorageConfig() {
           <input
             type="text"
             value={publicEndpointUrl}
-            onChange={(e) => { clearMessages(); setPublicEndpointUrl(e.target.value) }}
+            onChange={(e) => {
+              clearMessages();
+              setPublicEndpointUrl(e.target.value);
+            }}
             placeholder="https://storage.example.com"
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -332,12 +363,16 @@ export default function AdminStorageConfig() {
 
         {/* Connection test result */}
         {testResult && (
-          <div className={`mt-4 p-3 rounded text-sm ${testResult.success ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
-            <p className="font-medium">{testResult.success ? '✓ Connection successful' : '✗ Connection failed'}</p>
+          <div
+            className={`mt-4 p-3 rounded text-sm ${testResult.success ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}
+          >
+            <p className="font-medium">
+              {testResult.success ? '✓ Connection successful' : '✗ Connection failed'}
+            </p>
             <p className="mt-1">{testResult.message}</p>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

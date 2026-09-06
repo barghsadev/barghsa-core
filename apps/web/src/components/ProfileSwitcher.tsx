@@ -1,34 +1,34 @@
-import { refreshProfileContext } from '../lib/profile-context.js'
-import { withCsrf } from '../lib/csrf.js'
-import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import { Badge } from '@barghsa/ui'
+import { refreshProfileContext } from '../lib/profile-context.js';
+import { withCsrf } from '../lib/csrf.js';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import { Badge } from '@barghsa/ui';
 
 /** Profile shape returned by GET /api/profiles (T-03.01.01). */
 export interface SwitcherProfile {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
-  title: string | null
-  firstName: string | null
-  lastName: string | null
-  nationalId: string | null
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  isDefault: boolean;
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
+  title: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  nationalId: string | null;
 }
 
 export interface ProfileSwitchResponse {
-  activeProfileId: string | null
+  activeProfileId: string | null;
 }
 
 interface ProfilesResponse {
-  profiles: SwitcherProfile[]
-  hasDefault: boolean
-  activeProfileId: string | null
+  profiles: SwitcherProfile[];
+  hasDefault: boolean;
+  activeProfileId: string | null;
 }
 
 interface ProfileSwitcherProps {
-  locale?: Locale
+  locale?: Locale;
 }
 
 /**
@@ -47,14 +47,14 @@ interface ProfileSwitcherProps {
  * the selector.
  */
 export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
-  const router = useRouter()
-  const [profiles, setProfiles] = useState<SwitcherProfile[] | null>(null)
-  const [activeProfileId, setActiveProfileId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [switching, setSwitching] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [profiles, setProfiles] = useState<SwitcherProfile[] | null>(null);
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [switching, setSwitching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const isRtl = locale === 'fa'
+  const isRtl = locale === 'fa';
 
   async function loadProfiles() {
     try {
@@ -62,92 +62,92 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         method: 'GET',
         credentials: 'include',
         headers: { Accept: 'application/json' },
-      })
+      });
       if (response.status === 401) {
         // Not authenticated — render nothing.
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
       if (!response.ok) {
-        setLoading(false)
-        return
+        setLoading(false);
+        return;
       }
-      const data: ProfilesResponse = await response.json()
-      setProfiles(data.profiles)
-      setActiveProfileId(data.activeProfileId)
-      setLoading(false)
+      const data: ProfilesResponse = await response.json();
+      setProfiles(data.profiles);
+      setActiveProfileId(data.activeProfileId);
+      setLoading(false);
     } catch {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    const refresh = () => { void loadProfiles() }
-    window.addEventListener('barghsa:profiles-changed', refresh)
-    return () => window.removeEventListener('barghsa:profiles-changed', refresh)
-  }, [])
+    const refresh = () => {
+      void loadProfiles();
+    };
+    window.addEventListener('barghsa:profiles-changed', refresh);
+    return () => window.removeEventListener('barghsa:profiles-changed', refresh);
+  }, []);
 
   // Re-run whenever the active profile may have changed externally (e.g.
   // onboarding completion or a navigation). Keeps the sidebar in sync.
   useEffect(() => {
-    setLoading(true)
-    loadProfiles()
+    setLoading(true);
+    loadProfiles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.state.location.pathname])
+  }, [router.state.location.pathname]);
 
   const activeProfile = useMemo(
     () => profiles?.find((p) => p.id === activeProfileId) ?? null,
-    [profiles, activeProfileId],
-  )
+    [profiles, activeProfileId]
+  );
 
   const profileName = useMemo(() => {
-    if (!activeProfile) return null
-    const parts = [activeProfile.title, activeProfile.firstName, activeProfile.lastName]
-      .filter(Boolean)
-    return parts.length > 0 ? parts.join(' ') : null
-  }, [activeProfile])
+    if (!activeProfile) return null;
+    const parts = [activeProfile.title, activeProfile.firstName, activeProfile.lastName].filter(
+      Boolean
+    );
+    return parts.length > 0 ? parts.join(' ') : null;
+  }, [activeProfile]);
 
   // Single profile (or none renderable) — no switching needed.
-  if (loading || !profiles || profiles.length === 0) return null
+  if (loading || !profiles || profiles.length === 0) return null;
   if (profiles.length === 1 && activeProfile) {
     return (
-      <div
-        className="flex items-center gap-2 px-1 py-2"
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
+      <div className="flex items-center gap-2 px-1 py-2" dir={isRtl ? 'rtl' : 'ltr'}>
         <span className="text-xs font-medium text-gray-600 truncate">
           {profileName ?? t('dashboard.profile.unnamed', locale)}
         </span>
         <TypeBadge profileType={activeProfile?.profileType} locale={locale} />
       </div>
-    )
+    );
   }
 
   async function handleSwitch(profileId: string) {
-    if (!profileId || profileId === activeProfileId || switching) return
-    setSwitching(true)
-    setError(null)
+    if (!profileId || profileId === activeProfileId || switching) return;
+    setSwitching(true);
+    setError(null);
     try {
       const response = await fetch(`/api/profiles/switch/${profileId}`, {
         method: 'POST',
         credentials: 'include',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-      })
+      });
       if (!response.ok) {
-        setError(t('dashboard.profile.switchError', locale))
-        setSwitching(false)
-        return
+        setError(t('dashboard.profile.switchError', locale));
+        setSwitching(false);
+        return;
       }
-      const data: ProfileSwitchResponse = await response.json()
+      const data: ProfileSwitchResponse = await response.json();
       if (data.activeProfileId !== profileId) {
-        setError(t('dashboard.profile.switchError', locale))
-        return
+        setError(t('dashboard.profile.switchError', locale));
+        return;
       }
-      refreshProfileContext()
+      refreshProfileContext();
     } catch {
-      setError(t('dashboard.profile.switchError', locale))
+      setError(t('dashboard.profile.switchError', locale));
     } finally {
-      setSwitching(false)
+      setSwitching(false);
     }
   }
 
@@ -169,7 +169,11 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
         className="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none disabled:opacity-50"
         aria-label={t('dashboard.profile.switchLabel', locale)}
       >
-        {!activeProfile && <option value="" disabled>{t('dashboard.profile.choose', locale)}</option>}
+        {!activeProfile && (
+          <option value="" disabled>
+            {t('dashboard.profile.choose', locale)}
+          </option>
+        )}
         {profiles.map((profile) => (
           <option key={profile.id} value={profile.id}>
             {formatProfileOption(profile, locale)}
@@ -180,35 +184,39 @@ export function ProfileSwitcher({ locale = 'fa' }: ProfileSwitcherProps) {
       {switching && (
         <p className="text-xs text-gray-500">{t('dashboard.profile.switching', locale)}</p>
       )}
-      {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
+      {error && (
+        <p className="text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      )}
     </div>
-  )
+  );
 }
 
 function formatProfileOption(profile: SwitcherProfile, locale: Locale): string {
-  const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean)
-  const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale)
+  const parts = [profile.title, profile.firstName, profile.lastName].filter(Boolean);
+  const name = parts.length > 0 ? parts.join(' ') : t('dashboard.profile.unnamed', locale);
   const type =
     profile.profileType === 'LEGAL'
       ? t('dashboard.profile.typeLegal', locale)
-      : t('dashboard.profile.typeIndividual', locale)
-  return `${name} (${type})`
+      : t('dashboard.profile.typeIndividual', locale);
+  return `${name} (${type})`;
 }
 
 function TypeBadge({
   profileType,
   locale,
 }: {
-  profileType: SwitcherProfile['profileType'] | undefined
-  locale: Locale
+  profileType: SwitcherProfile['profileType'] | undefined;
+  locale: Locale;
 }) {
-  if (!profileType) return null
-  const isLegal = profileType === 'LEGAL'
+  if (!profileType) return null;
+  const isLegal = profileType === 'LEGAL';
   return (
     <Badge variant={isLegal ? 'secondary' : 'outline'} className="shrink-0">
       {isLegal
         ? t('dashboard.profile.typeLegal', locale)
         : t('dashboard.profile.typeIndividual', locale)}
     </Badge>
-  )
+  );
 }

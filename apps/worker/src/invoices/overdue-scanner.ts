@@ -1,13 +1,13 @@
-import { randomUUID } from 'node:crypto'
-import type { Pool, PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
+import { randomUUID } from 'node:crypto';
+import type { Pool, PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
 import {
   MARK_OVERDUE_AUDIT_EVENT,
   MARK_OVERDUE_REASON,
   MARK_OVERDUE_TRANSITION,
   OVERDUE_ELIGIBLE_STATES,
   isEligibleForOverdueMark,
-} from '@barghsa/shared/finance'
+} from '@barghsa/shared/finance';
 
 /**
  * Invoice overdue scanner (S-04.1.03, T-04.1.03.04).
@@ -44,55 +44,55 @@ import {
  */
 
 /** Default number of past-due invoices claimed per tick. */
-export const DEFAULT_OVERDUE_BATCH_SIZE = 200
+export const DEFAULT_OVERDUE_BATCH_SIZE = 200;
 
 /** Stable worker task key recorded in `background_jobs`. */
-export const INVOICE_OVERDUE_JOB_TYPE = 'invoice_overdue_scan' as const
+export const INVOICE_OVERDUE_JOB_TYPE = 'invoice_overdue_scan' as const;
 
 /** Outcome of one overdue scan. */
 export interface OverdueScanResult {
   /** Candidate rows fetched this tick (before per-row lock/re-check). */
-  scanned: number
+  scanned: number;
   /** Invoices successfully moved to Overdue. */
-  marked: number
+  marked: number;
   /**
    * Candidates skipped because a concurrent worker held the row, the
    * invoice was no longer eligible after lock, or the lock returned nothing.
    */
-  skipped: number
+  skipped: number;
   /** True when the candidate query hit the batch cap. */
-  truncated: boolean
+  truncated: boolean;
   /** Per-invoice (or actor-resolution) failure messages. */
-  errors: string[]
+  errors: string[];
 }
 
 /** Behavioural override hooks for tests. */
 export interface OverdueScanOptions {
-  pool?: Pool
-  now?: () => Date
-  logger?: { warn: (msg: string) => void; info: (msg: string) => void }
-  batchSize?: number
+  pool?: Pool;
+  now?: () => Date;
+  logger?: { warn: (msg: string) => void; info: (msg: string) => void };
+  batchSize?: number;
   /**
    * Audit actor. When set, the users lookup is skipped (unit tests).
    * Production leaves this unset so the worker resolves a real user.
    */
-  actorUserId?: string
+  actorUserId?: string;
   /** Correlation id shared by every mark in this tick. */
-  correlationId?: string
+  correlationId?: string;
   /** Audit row id factory (uuid v4 by default). */
-  newId?: () => string
+  newId?: () => string;
 }
 
 const defaultLogger = {
   warn: (msg: string): void => {
     // eslint-disable-next-line no-console
-    console.warn(`[worker] ${msg}`)
+    console.warn(`[worker] ${msg}`);
   },
   info: (msg: string): void => {
     // eslint-disable-next-line no-console
-    console.log(`[worker] ${msg}`)
+    console.log(`[worker] ${msg}`);
   },
-}
+};
 
 /**
  * Candidate selector. `invoices.state` is PostgreSQL type `invoice_state`;
@@ -106,34 +106,34 @@ export const FIND_OVERDUE_CANDIDATES_SQL = `SELECT id, state, due_at
           AND due_at IS NOT NULL
           AND due_at < $2
         ORDER BY due_at ASC, id ASC
-        LIMIT $3`
+        LIMIT $3`;
 
 const LOCK_INVOICE_SQL = `SELECT id, state, due_at
         FROM invoices
         WHERE id = $1
-        FOR UPDATE SKIP LOCKED`
+        FOR UPDATE SKIP LOCKED`;
 
 const UPDATE_OVERDUE_SQL = `UPDATE invoices
         SET state = 'Overdue',
             overdue_at = $2,
             updated_at = NOW()
         WHERE id = $1
-          AND state = $3::invoice_state`
+          AND state = $3::invoice_state`;
 
 const INSERT_AUDIT_SQL = `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
-const LOOKUP_USER_SQL = `SELECT user_id FROM users WHERE user_id = $1 LIMIT 1`
+const LOOKUP_USER_SQL = `SELECT user_id FROM users WHERE user_id = $1 LIMIT 1`;
 
 const LOOKUP_ADMIN_SQL = `SELECT user_id FROM users
         WHERE is_admin = TRUE
         ORDER BY created_at ASC
-        LIMIT 1`
+        LIMIT 1`;
 
 interface CandidateRow {
-  id: string
-  state: string
-  due_at: Date | string | null
+  id: string;
+  state: string;
+  due_at: Date | string | null;
 }
 
 /**
@@ -142,34 +142,31 @@ interface CandidateRow {
  * Preference: explicit option (tests) → `WORKER_SYSTEM_ACTOR_USER_ID` when
  * that user exists → oldest platform admin. Null means the scan must abort.
  */
-export async function resolveOverdueActor(
-  pool: Pool,
-  explicit?: string,
-): Promise<string | null> {
+export async function resolveOverdueActor(pool: Pool, explicit?: string): Promise<string | null> {
   if (typeof explicit === 'string' && explicit.trim() !== '') {
-    return explicit
+    return explicit;
   }
-  const envId = process.env['WORKER_SYSTEM_ACTOR_USER_ID']
+  const envId = process.env['WORKER_SYSTEM_ACTOR_USER_ID'];
   if (typeof envId === 'string' && envId.trim() !== '') {
-    const found = await pool.query<{ user_id: string }>(LOOKUP_USER_SQL, [envId.trim()])
-    if (found.rows[0]) return found.rows[0].user_id
+    const found = await pool.query<{ user_id: string }>(LOOKUP_USER_SQL, [envId.trim()]);
+    if (found.rows[0]) return found.rows[0].user_id;
   }
-  const admin = await pool.query<{ user_id: string }>(LOOKUP_ADMIN_SQL)
-  return admin.rows[0]?.user_id ?? null
+  const admin = await pool.query<{ user_id: string }>(LOOKUP_ADMIN_SQL);
+  return admin.rows[0]?.user_id ?? null;
 }
 
 /**
  * Run one overdue-marking pass.
  */
 export async function scanOverdueInvoices(
-  options: OverdueScanOptions = {},
+  options: OverdueScanOptions = {}
 ): Promise<OverdueScanResult> {
-  const pool = options.pool ?? getDbPool()
-  const now = options.now?.() ?? new Date()
-  const logger = options.logger ?? defaultLogger
-  const batchSize = options.batchSize ?? DEFAULT_OVERDUE_BATCH_SIZE
-  const newId = options.newId ?? randomUUID
-  const correlationId = options.correlationId ?? newId()
+  const pool = options.pool ?? getDbPool();
+  const now = options.now?.() ?? new Date();
+  const logger = options.logger ?? defaultLogger;
+  const batchSize = options.batchSize ?? DEFAULT_OVERDUE_BATCH_SIZE;
+  const newId = options.newId ?? randomUUID;
+  const correlationId = options.correlationId ?? newId();
 
   const result: OverdueScanResult = {
     scanned: 0,
@@ -177,79 +174,75 @@ export async function scanOverdueInvoices(
     skipped: 0,
     truncated: false,
     errors: [],
-  }
+  };
 
-  const actorUserId = await resolveOverdueActor(pool, options.actorUserId)
+  const actorUserId = await resolveOverdueActor(pool, options.actorUserId);
   if (actorUserId === null) {
     const message =
-      'invoice overdue scan aborted: no system actor (set WORKER_SYSTEM_ACTOR_USER_ID or create a platform admin)'
-    result.errors.push(message)
-    logger.warn(message)
-    return result
+      'invoice overdue scan aborted: no system actor (set WORKER_SYSTEM_ACTOR_USER_ID or create a platform admin)';
+    result.errors.push(message);
+    logger.warn(message);
+    return result;
   }
 
   const candidates = await pool.query<CandidateRow>(FIND_OVERDUE_CANDIDATES_SQL, [
     [...OVERDUE_ELIGIBLE_STATES],
     now,
     batchSize,
-  ])
-  result.scanned = candidates.rows.length
+  ]);
+  result.scanned = candidates.rows.length;
   if (candidates.rows.length >= batchSize) {
-    result.truncated = true
+    result.truncated = true;
   }
 
   for (const candidate of candidates.rows) {
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
       const marked = await markOneOverdue(client, {
         invoiceId: candidate.id,
         actorUserId,
         now,
         correlationId,
         newId,
-      })
+      });
       if (marked) {
-        await client.query('COMMIT')
-        result.marked += 1
+        await client.query('COMMIT');
+        result.marked += 1;
       } else {
-        await client.query('ROLLBACK')
-        result.skipped += 1
+        await client.query('ROLLBACK');
+        result.skipped += 1;
       }
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`
-      result.errors.push(message)
-      logger.warn(`Overdue mark failed: ${message}`)
+      await client.query('ROLLBACK').catch(() => {});
+      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+      result.errors.push(message);
+      logger.warn(`Overdue mark failed: ${message}`);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
-  return result
+  return result;
 }
 
 async function markOneOverdue(
   client: PoolClient,
   input: {
-    invoiceId: string
-    actorUserId: string
-    now: Date
-    correlationId: string
-    newId: () => string
-  },
+    invoiceId: string;
+    actorUserId: string;
+    now: Date;
+    correlationId: string;
+    newId: () => string;
+  }
 ): Promise<boolean> {
-  const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [input.invoiceId])
-  const row = locked.rows[0]
-  if (!row) return false
-  if (!isEligibleForOverdueMark(row.state, row.due_at, input.now)) return false
+  const locked = await client.query<CandidateRow>(LOCK_INVOICE_SQL, [input.invoiceId]);
+  const row = locked.rows[0];
+  if (!row) return false;
+  if (!isEligibleForOverdueMark(row.state, row.due_at, input.now)) return false;
 
-  const updated = await client.query(UPDATE_OVERDUE_SQL, [
-    row.id,
-    input.now,
-    row.state,
-  ])
-  if ((updated.rowCount ?? 0) !== 1) return false
+  const updated = await client.query(UPDATE_OVERDUE_SQL, [row.id, input.now, row.state]);
+  if ((updated.rowCount ?? 0) !== 1) return false;
 
   const metadata = JSON.stringify({
     invoiceId: row.id,
@@ -257,7 +250,7 @@ async function markOneOverdue(
     toState: 'Overdue',
     transition: MARK_OVERDUE_TRANSITION,
     reason: MARK_OVERDUE_REASON,
-  })
+  });
 
   await client.query(INSERT_AUDIT_SQL, [
     input.newId(),
@@ -267,7 +260,7 @@ async function markOneOverdue(
     input.correlationId,
     null,
     input.now,
-  ])
+  ]);
 
-  return true
+  return true;
 }

@@ -1,6 +1,6 @@
-import { sql } from 'drizzle-orm'
-import { bigint, jsonb, text, timestamp } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
+import { sql } from 'drizzle-orm';
+import { bigint, jsonb, text, timestamp } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
 
 /**
  * Storage record status.
@@ -13,8 +13,8 @@ import { createTable } from '../base-table'
  *   A future lifecycle policy can expire `removed` records after a
  *   configurable retention period.
  */
-export const storageRecordStatus = ['active', 'immutable', 'removed'] as const
-export type StorageRecordStatus = (typeof storageRecordStatus)[number]
+export const storageRecordStatus = ['active', 'immutable', 'removed'] as const;
+export type StorageRecordStatus = (typeof storageRecordStatus)[number];
 
 /**
  * Storage records table.
@@ -58,7 +58,7 @@ export const storageRecords = createTable('storage_records', {
 
   /** When the record was soft-deleted. */
   removedAt: timestamp('removed_at', { withTimezone: true, mode: 'date' }),
-})
+});
 
 /**
  * SQL to create the storage_records table.
@@ -82,4 +82,4 @@ export const createStorageRecordsTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_storage_records_status ON storage_records (status);
   CREATE INDEX IF NOT EXISTS idx_storage_records_category ON storage_records (category);
-`
+`;

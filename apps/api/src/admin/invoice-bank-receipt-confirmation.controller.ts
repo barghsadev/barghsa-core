@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -10,43 +10,45 @@ import {
   Post,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   BANK_RECEIPT_REJECT_REASON_MAX_LENGTH,
   INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION,
-} from '@barghsa/shared/finance'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { CorrelationIdProvider } from '../common/correlation-id.middleware.js'
+} from '@barghsa/shared/finance';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
 import {
   InvoiceBankReceiptConfirmationService,
   type InvoiceBankReceiptAllocationPreviewDto,
   type InvoiceBankReceiptConfirmDto,
-} from '../invoice/invoice-bank-receipt-confirmation.service.js'
+} from '../invoice/invoice-bank-receipt-confirmation.service.js';
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 function assertUuid(id: string, label = 'receiptId'): void {
-  const parsed = z.string().uuid('Expected a UUID').safeParse(id)
+  const parsed = z.string().uuid('Expected a UUID').safeParse(id);
   if (!parsed.success) {
-    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400)
+    httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, `Invalid ${label}: expected a UUID`, 400);
   }
 }
 
@@ -79,7 +81,7 @@ function assertUuid(id: string, label = 'receiptId'): void {
 export class InvoiceBankReceiptConfirmationController {
   constructor(
     private readonly service: InvoiceBankReceiptConfirmationService,
-    private readonly correlationId: CorrelationIdProvider,
+    private readonly correlationId: CorrelationIdProvider
   ) {}
 
   private assertConfirmPermission(req: AuthenticatedRequest): void {
@@ -87,8 +89,8 @@ export class InvoiceBankReceiptConfirmationController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION})`,
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -96,12 +98,10 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiOperation({ summary: 'List invoice bank receipts awaiting finance confirmation' })
   @ApiResponse({ status: 200, description: 'Submitted / UnderReview receipts.' })
   @ApiResponse({ status: 403, description: 'Finance permission required' })
-  async list(
-    @Req() req: AuthenticatedRequest,
-  ): Promise<{ items: InvoiceBankReceiptConfirmDto[] }> {
-    this.assertConfirmPermission(req)
-    const items = await this.service.listPending()
-    return { items }
+  async list(@Req() req: AuthenticatedRequest): Promise<{ items: InvoiceBankReceiptConfirmDto[] }> {
+    this.assertConfirmPermission(req);
+    const items = await this.service.listPending();
+    return { items };
   }
 
   @Get(':receiptId/allocation')
@@ -117,11 +117,11 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiResponse({ status: 409, description: 'Invoice cannot receive a bank-receipt allocation' })
   async allocation(
     @Req() req: AuthenticatedRequest,
-    @Param('receiptId') receiptId: string,
+    @Param('receiptId') receiptId: string
   ): Promise<InvoiceBankReceiptAllocationPreviewDto> {
-    this.assertConfirmPermission(req)
-    assertUuid(receiptId)
-    return this.service.previewAllocation(receiptId)
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    return this.service.previewAllocation(receiptId);
   }
 
   @Get(':receiptId')
@@ -132,11 +132,11 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiResponse({ status: 404, description: 'Receipt not found' })
   async get(
     @Req() req: AuthenticatedRequest,
-    @Param('receiptId') receiptId: string,
+    @Param('receiptId') receiptId: string
   ): Promise<InvoiceBankReceiptConfirmDto> {
-    this.assertConfirmPermission(req)
-    assertUuid(receiptId)
-    return this.service.get(receiptId)
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    return this.service.get(receiptId);
   }
 
   @Post(':receiptId/confirm')
@@ -158,17 +158,17 @@ export class InvoiceBankReceiptConfirmationController {
   @ApiResponse({ status: 409, description: 'Receipt is not awaiting confirmation' })
   async confirm(
     @Req() req: AuthenticatedRequest,
-    @Param('receiptId') receiptId: string,
+    @Param('receiptId') receiptId: string
   ): Promise<InvoiceBankReceiptConfirmDto> {
-    this.assertConfirmPermission(req)
-    assertUuid(receiptId)
-    const correlationId = this.correlationId.getCorrelationId()
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    const correlationId = this.correlationId.getCorrelationId();
     return this.service.confirm({
       receiptId,
       actorUserId: req.session.userId,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
-    })
+    });
   }
 
   @Post(':receiptId/reject')
@@ -195,7 +195,10 @@ export class InvoiceBankReceiptConfirmationController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Receipt rejected; customer notified; balances unchanged.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Receipt rejected; customer notified; balances unchanged.',
+  })
   @ApiResponse({ status: 400, description: 'Reason missing or invalid' })
   @ApiResponse({ status: 403, description: 'Permission or step-up required' })
   @ApiResponse({ status: 404, description: 'Receipt not found' })
@@ -203,17 +206,17 @@ export class InvoiceBankReceiptConfirmationController {
   async reject(
     @Req() req: AuthenticatedRequest,
     @Param('receiptId') receiptId: string,
-    @Body() body: Record<string, unknown>,
+    @Body() body: Record<string, unknown>
   ): Promise<InvoiceBankReceiptConfirmDto> {
-    this.assertConfirmPermission(req)
-    assertUuid(receiptId)
-    const correlationId = this.correlationId.getCorrelationId()
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    const correlationId = this.correlationId.getCorrelationId();
     return this.service.reject({
       receiptId,
       raw: body,
       actorUserId: req.session.userId,
       ip: requestIp(req),
       ...(correlationId ? { correlationId } : {}),
-    })
+    });
   }
 }

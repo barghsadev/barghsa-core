@@ -1,64 +1,68 @@
-import { Injectable, Logger, HttpException } from '@nestjs/common'
-import type { PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
-import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation'
-import { hasAnyRolePermission, type AgentPermission, type AgentRole } from '@barghsa/shared/agent-permissions'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { ConfigCacheService } from '../config-cache/config-cache.service.js'
-import { NotificationsService } from '../notifications/notifications.service.js'
+import { Injectable, Logger, HttpException } from '@nestjs/common';
+import type { PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
+import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
+import {
+  hasAnyRolePermission,
+  type AgentPermission,
+  type AgentRole,
+} from '@barghsa/shared/agent-permissions';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { ConfigCacheService } from '../config-cache/config-cache.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
 
 export interface ProfileRow {
-  id: string
-  userId: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
-  title: string | null
-  firstName: string | null
-  lastName: string | null
-  nationalId: string | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  userId: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  isDefault: boolean;
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
+  title: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  nationalId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AddressRow {
-  id: string
-  profileId: string
-  provinceId: string
-  cityId: string
-  fullAddress: string
-  postalCode: string
-  mainAddress: boolean
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  profileId: string;
+  provinceId: string;
+  cityId: string;
+  fullAddress: string;
+  postalCode: string;
+  mainAddress: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProfileDto {
-  id: string
-  profileType: 'INDIVIDUAL' | 'LEGAL'
-  isDefault: boolean
-  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED'
-  title: string | null
-  firstName: string | null
-  lastName: string | null
-  nationalId: string | null
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  profileType: 'INDIVIDUAL' | 'LEGAL';
+  isDefault: boolean;
+  status: 'DRAFT' | 'ACTIVE' | 'PENDING_VERIFICATION' | 'VERIFIED' | 'SUSPENDED';
+  title: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  nationalId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProfilesResponseDto {
-  profiles: ProfileDto[]
-  hasDefault: boolean
-  activeProfileId: string | null
+  profiles: ProfileDto[];
+  hasDefault: boolean;
+  activeProfileId: string | null;
 }
 
 export interface VerificationStatusDto {
-  activeProfileId: string | null
-  profileStatus: string | null
-  isVerified: boolean
-  verificationRequired: boolean
-  verificationMethod: 'api' | 'manual'
-  canAutoVerify: boolean
+  activeProfileId: string | null;
+  profileStatus: string | null;
+  isVerified: boolean;
+  verificationRequired: boolean;
+  verificationMethod: 'api' | 'manual';
+  canAutoVerify: boolean;
 }
 
 function mapRow(row: Record<string, unknown>): ProfileRow {
@@ -74,7 +78,7 @@ function mapRow(row: Record<string, unknown>): ProfileRow {
     nationalId: (row.national_id as string) ?? null,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
-  }
+  };
 }
 
 function mapToDto(row: ProfileRow): ProfileDto {
@@ -89,7 +93,7 @@ function mapToDto(row: ProfileRow): ProfileDto {
     nationalId: row.nationalId,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
-  }
+  };
 }
 
 function mapAddressRow(row: Record<string, unknown>): AddressRow {
@@ -103,26 +107,26 @@ function mapAddressRow(row: Record<string, unknown>): AddressRow {
     mainAddress: row.main_address as boolean,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
-  }
+  };
 }
 
 /** Config key for verification enforcement flag. */
-const VERIFICATION_REQUIRED_KEY = 'verification.required'
+const VERIFICATION_REQUIRED_KEY = 'verification.required';
 
 /** Config key for verification method ('api' or 'manual'). */
-const VERIFICATION_METHOD_KEY = 'verification.method'
+const VERIFICATION_METHOD_KEY = 'verification.method';
 
 @Injectable()
 export class ProfilesService {
-  private readonly logger = new Logger(ProfilesService.name)
+  private readonly logger = new Logger(ProfilesService.name);
 
   constructor(
     private readonly configCache: ConfigCacheService,
-    private readonly notificationsService: NotificationsService,
+    private readonly notificationsService: NotificationsService
   ) {}
 
   async getProfilesByUserId(userId: string): Promise<ProfilesResponseDto> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     const result = await pool.query(
       `SELECT p.id,p.user_id,p.profile_type,(p.user_id=$1 AND p.is_default) AS is_default,
@@ -132,31 +136,31 @@ export class ProfilesService {
        WHERE NOT p.archived AND (p.user_id=$1 OR (p.profile_type='LEGAL' AND EXISTS (
          SELECT 1 FROM profile_agents pa WHERE pa.profile_id=p.id AND pa.user_id=$1 AND pa.role IN ('Manager','Finance','Legal'))))
        ORDER BY is_active DESC NULLS LAST,p.created_at ASC`,
-      [userId],
-    )
+      [userId]
+    );
 
-    const profiles = result.rows.map(mapRow).map(mapToDto)
-    const defaultProfile = result.rows.find((p) => p.is_active === true)
+    const profiles = result.rows.map(mapRow).map(mapToDto);
+    const defaultProfile = result.rows.find((p) => p.is_active === true);
 
     return {
       profiles,
       hasDefault: !!defaultProfile,
       activeProfileId: defaultProfile?.id ?? null,
-    }
+    };
   }
 
   async getProfileById(profileId: string): Promise<ProfileRow | null> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     const result = await pool.query(
       `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
        FROM profiles
        WHERE id = $1 AND NOT archived`,
-      [profileId],
-    )
+      [profileId]
+    );
 
-    if (result.rows.length === 0) return null
-    return mapRow(result.rows[0])
+    if (result.rows.length === 0) return null;
+    return mapRow(result.rows[0]);
   }
 
   /**
@@ -165,13 +169,25 @@ export class ProfilesService {
    * Owners may use all customer capabilities. Legal-profile agents need the
    * specific current role permission requested by the caller.
    */
-  async getAccessibleProfile(userId: string, profileId: string, permission: AgentPermission = 'profile:view'): Promise<ProfileRow | null> {
-    const profile = await this.getProfileById(profileId)
-    if (!profile) return null
-    if (profile.userId === userId) return profile
-    if (profile.profileType !== 'LEGAL') return null
-    const roles = await getDbPool().query(`SELECT role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal')`,[profileId,userId])
-    return hasAnyRolePermission(roles.rows.map(r=>r.role as AgentRole),permission) ? profile : null
+  async getAccessibleProfile(
+    userId: string,
+    profileId: string,
+    permission: AgentPermission = 'profile:view'
+  ): Promise<ProfileRow | null> {
+    const profile = await this.getProfileById(profileId);
+    if (!profile) return null;
+    if (profile.userId === userId) return profile;
+    if (profile.profileType !== 'LEGAL') return null;
+    const roles = await getDbPool().query(
+      `SELECT role FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal')`,
+      [profileId, userId]
+    );
+    return hasAnyRolePermission(
+      roles.rows.map((r) => r.role as AgentRole),
+      permission
+    )
+      ? profile
+      : null;
   }
 
   /**
@@ -179,33 +195,55 @@ export class ProfilesService {
    * Recheck access under locks and audit selection in the same transaction.
    */
   async setDefaultProfile(userId: string, profileId: string): Promise<void> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
-      const profile = (await client.query('SELECT user_id,profile_type FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',[profileId])).rows[0]
-      if (!profile) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
-      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE',[userId])
-      if (profile.user_id!==userId) {
-        const membership=await client.query(`SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal') FOR SHARE`,[profileId,userId])
-        if (profile.profile_type!=='LEGAL' || !membership.rows.length) throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code},404)
+      const profile = (
+        await client.query(
+          'SELECT user_id,profile_type FROM profiles WHERE id=$1 AND NOT archived FOR SHARE',
+          [profileId]
+        )
+      ).rows[0];
+      if (!profile)
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      if (profile.user_id !== userId) {
+        const membership = await client.query(
+          `SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal') FOR SHARE`,
+          [profileId, userId]
+        );
+        if (profile.profile_type !== 'LEGAL' || !membership.rows.length)
+          throw new HttpException(
+            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+            404
+          );
       }
-      await client.query(`INSERT INTO user_profile_contexts(user_id,profile_id) VALUES ($1,$2)
-        ON CONFLICT (user_id) DO UPDATE SET profile_id=EXCLUDED.profile_id,updated_at=NOW()`,[userId,profileId])
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'profile_context_changed',jsonb_build_object('profileId',$2::text),uuid_generate_v7(),NOW())`,[userId,profileId])
+      await client.query(
+        `INSERT INTO user_profile_contexts(user_id,profile_id) VALUES ($1,$2)
+        ON CONFLICT (user_id) DO UPDATE SET profile_id=EXCLUDED.profile_id,updated_at=NOW()`,
+        [userId, profileId]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'profile_context_changed',jsonb_build_object('profileId',$2::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId]
+      );
 
-      await client.query('COMMIT')
-      this.logger.debug(`Default profile set to ${profileId} for user ${userId}`)
+      await client.query('COMMIT');
+      this.logger.debug(`Default profile set to ${profileId} for user ${userId}`);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
-      })
-      throw error
+      });
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -221,9 +259,9 @@ export class ProfilesService {
    * Dependencies: T-03.01.01 (profiles), E-07 (verification settings UI).
    */
   async getVerificationStatus(userId: string): Promise<VerificationStatusDto> {
-    const profiles = await this.getProfilesByUserId(userId)
-    const defaultProfile = profiles.profiles.find((p) => p.id === profiles.activeProfileId)
-    const mode = await this.getVerificationMode()
+    const profiles = await this.getProfilesByUserId(userId);
+    const defaultProfile = profiles.profiles.find((p) => p.id === profiles.activeProfileId);
+    const mode = await this.getVerificationMode();
 
     if (!defaultProfile) {
       // No default profile — no verification context
@@ -234,12 +272,12 @@ export class ProfilesService {
         verificationRequired: mode !== 'DISABLED',
         verificationMethod: mode === 'API' ? 'api' : 'manual',
         canAutoVerify: false,
-      }
+      };
     }
 
-    const isVerified = defaultProfile.status === 'VERIFIED'
-    const verificationRequired = mode !== 'DISABLED'
-    const verificationMethod = mode === 'API' ? 'api' : 'manual'
+    const isVerified = defaultProfile.status === 'VERIFIED';
+    const verificationRequired = mode !== 'DISABLED';
+    const verificationMethod = mode === 'API' ? 'api' : 'manual';
 
     return {
       activeProfileId: defaultProfile.id,
@@ -249,30 +287,35 @@ export class ProfilesService {
       verificationMethod,
       // No real provider has been selected. Never offer simulated approval.
       canAutoVerify: false,
-    }
+    };
   }
 
   /** Canonical admin setting takes precedence over legacy verification flags. */
   async getVerificationMode(): Promise<'DISABLED' | 'MANUAL' | 'API'> {
-    const mode = await this.configCache.get<string>('profile_verification_mode')
-    if (mode === 'DISABLED' || mode === 'MANUAL' || mode === 'API') return mode
+    const mode = await this.configCache.get<string>('profile_verification_mode');
+    if (mode === 'DISABLED' || mode === 'MANUAL' || mode === 'API') return mode;
     // An invalid explicit setting must not disable enforcement.
-    if (mode != null) return 'MANUAL'
-    const required = await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY)
-    if (required !== true) return 'DISABLED'
-    return await this.configCache.get<string>(VERIFICATION_METHOD_KEY) === 'api' ? 'API' : 'MANUAL'
+    if (mode != null) return 'MANUAL';
+    const required = await this.configCache.get<boolean>(VERIFICATION_REQUIRED_KEY);
+    if (required !== true) return 'DISABLED';
+    return (await this.configCache.get<string>(VERIFICATION_METHOD_KEY)) === 'api'
+      ? 'API'
+      : 'MANUAL';
   }
 
   /** External approval is unavailable until a real provider and durable result path exist. */
   async verifyProfileApi(userId: string, profileId: string): Promise<never> {
-    const profile = await this.getProfileById(profileId)
+    const profile = await this.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
-      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404)
+      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
     }
-    throw new HttpException({
-      error: ErrorCodes.VERIFICATION_PROVIDER_UNAVAILABLE.code,
-      message: 'Automatic identity verification is currently unavailable.',
-    }, 503)
+    throw new HttpException(
+      {
+        error: ErrorCodes.VERIFICATION_PROVIDER_UNAVAILABLE.code,
+        message: 'Automatic identity verification is currently unavailable.',
+      },
+      503
+    );
   }
 
   /**
@@ -283,44 +326,41 @@ export class ProfilesService {
    * the newly created profile is set as default so the app-level
    * profile check (T-03.01.01) proceeds past onboarding.
    */
-  async createProfile(
-    userId: string,
-    profileType: 'INDIVIDUAL' | 'LEGAL',
-  ): Promise<ProfileRow> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+  async createProfile(userId: string, profileType: 'INDIVIDUAL' | 'LEGAL'): Promise<ProfileRow> {
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // If the user has no default profile yet, set this one as default.
       const existing = await client.query(
         `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
-        [userId],
-      )
-      const becomesDefault = existing.rows.length === 0
+        [userId]
+      );
+      const becomesDefault = existing.rows.length === 0;
 
       const result = await client.query(
         `INSERT INTO profiles (user_id, profile_type, is_default, status)
          VALUES ($1, $2, $3, 'DRAFT')
          RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
-        [userId, profileType, becomesDefault],
-      )
+        [userId, profileType, becomesDefault]
+      );
 
-      const row = mapRow(result.rows[0])
+      const row = mapRow(result.rows[0]);
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
       this.logger.log(
-        `Profile ${row.id} (${profileType}) created for user ${userId}${becomesDefault ? ' as default' : ''}`,
-      )
-      return row
+        `Profile ${row.id} (${profileType}) created for user ${userId}${becomesDefault ? ' as default' : ''}`
+      );
+      return row;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
-      })
-      throw error
+      });
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -340,20 +380,20 @@ export class ProfilesService {
     userId: string,
     profileId: string,
     data: {
-      title?: string | undefined
-      firstName: string
-      lastName: string
-      nationalId: string
-      provinceId: string
-      cityId: string
-      fullAddress: string
-      postalCode: string
-    },
+      title?: string | undefined;
+      firstName: string;
+      lastName: string;
+      nationalId: string;
+      provinceId: string;
+      cityId: string;
+      fullAddress: string;
+      postalCode: string;
+    }
   ): Promise<ProfileRow> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Validate the profile exists and belongs to the user
-    const profile = await this.getProfileById(profileId)
+    const profile = await this.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
       throw new HttpException(
         {
@@ -361,8 +401,8 @@ export class ProfilesService {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if (profile.status !== 'DRAFT') {
@@ -372,8 +412,8 @@ export class ProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Profile is not in draft state',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Validate national ID format and checksum
@@ -384,8 +424,8 @@ export class ProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Invalid national ID format',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Validate postal code
@@ -396,13 +436,13 @@ export class ProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Invalid postal code format',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Update profile with individual fields
       const profileResult = await client.query(
@@ -410,18 +450,11 @@ export class ProfilesService {
          SET title = $1, first_name = $2, last_name = $3, national_id = $4, updated_at = NOW()
          WHERE id = $5 AND user_id = $6
          RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
-        [
-          data.title ?? null,
-          data.firstName,
-          data.lastName,
-          data.nationalId,
-          profileId,
-          userId,
-        ],
-      )
+        [data.title ?? null, data.firstName, data.lastName, data.nationalId, profileId, userId]
+      );
 
       if (profileResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         // Should not happen since we validated ownership above
         throw new HttpException(
           {
@@ -429,45 +462,37 @@ export class ProfilesService {
             error: ErrorCodes.NOT_FOUND_RESOURCE.code,
             message: 'Profile not found',
           },
-          404,
-        )
+          404
+        );
       }
 
       // Create the main address record
       await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
          VALUES ($1, $2, $3, $4, $5, true)`,
-        [
-          profileId,
-          data.provinceId,
-          data.cityId,
-          data.fullAddress,
-          data.postalCode,
-        ],
-      )
+        [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode]
+      );
 
       // Transition profile from DRAFT to ACTIVE
-      await client.query(
-        `UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`,
-        [profileId, await this.getVerificationMode() === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION'],
-      )
+      await client.query(`UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`, [
+        profileId,
+        (await this.getVerificationMode()) === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
+      ]);
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(
-        `Individual profile ${profileId} saved for user ${userId}`,
-      )
+      this.logger.log(`Individual profile ${profileId} saved for user ${userId}`);
 
       // Re-fetch the profile to get the updated status (ACTIVE)
-      const updatedProfile = await this.getProfileById(profileId)
-      return updatedProfile ?? mapRow(profileResult.rows[0])
+      const updatedProfile = await this.getProfileById(profileId);
+      return updatedProfile ?? mapRow(profileResult.rows[0]);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
-      })
+      });
 
       // Re-throw HTTP exceptions as-is
-      if (error instanceof HttpException) throw error
+      if (error instanceof HttpException) throw error;
 
       // Check for unique constraint violation on national_id (PostgreSQL code 23505)
       if (error instanceof Error && (error as { code?: string }).code === '23505') {
@@ -477,13 +502,13 @@ export class ProfilesService {
             error: ErrorCodes.CONFLICT_DUPLICATE.code,
             message: 'This national ID is already registered',
           },
-          409,
-        )
+          409
+        );
       }
 
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -494,57 +519,73 @@ export class ProfilesService {
    * automatically set as main. Otherwise it defaults to non-main.
    * Validation: province/city must exist, postal code format checked.
    */
-  async requireAddressEditor(userId: string, profileId: string, client?: PoolClient): Promise<ProfileRow> {
-    const db = client ?? getDbPool()
-    const result = await db.query(`SELECT * FROM profiles WHERE id=$1 AND NOT archived${client ? ' FOR UPDATE' : ''}`,[profileId])
-    const profile = result.rows[0]
+  async requireAddressEditor(
+    userId: string,
+    profileId: string,
+    client?: PoolClient
+  ): Promise<ProfileRow> {
+    const db = client ?? getDbPool();
+    const result = await db.query(
+      `SELECT * FROM profiles WHERE id=$1 AND NOT archived${client ? ' FOR UPDATE' : ''}`,
+      [profileId]
+    );
+    const profile = result.rows[0];
     if (profile) {
-      if (profile.user_id===userId) return mapRow(profile)
-      if (profile.profile_type==='LEGAL') {
-        const membership = await db.query(`SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager'${client ? ' FOR SHARE' : ''}`,[profileId,userId])
-        if (membership.rows.length) return mapRow(profile)
+      if (profile.user_id === userId) return mapRow(profile);
+      if (profile.profile_type === 'LEGAL') {
+        const membership = await db.query(
+          `SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role='Manager'${client ? ' FOR SHARE' : ''}`,
+          [profileId, userId]
+        );
+        if (membership.rows.length) return mapRow(profile);
       }
     }
-    throw new HttpException({statusCode:404,error:ErrorCodes.NOT_FOUND_RESOURCE.code,message:'Profile not found'},404)
+    throw new HttpException(
+      { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+      404
+    );
   }
 
   async createAddress(
     userId: string,
     profileId: string,
     data: {
-      provinceId: string
-      cityId: string
-      fullAddress: string
-      postalCode: string
-      mainAddress?: boolean
-    },
+      provinceId: string;
+      cityId: string;
+      fullAddress: string;
+      postalCode: string;
+      mainAddress?: boolean;
+    }
   ): Promise<AddressRow> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    await this.requireAddressEditor(userId,profileId)
-
+    await this.requireAddressEditor(userId, profileId);
 
     // Validate postal code
     if (!validatePostalCode(data.postalCode)) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid postal code format' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid postal code format',
+        },
+        400
+      );
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await this.requireAddressEditor(userId,profileId,client)
+      await client.query('BEGIN');
+      await this.requireAddressEditor(userId, profileId, client);
 
       // Check if there's an existing main address
       const existingMain = await client.query(
         `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
-        [profileId],
-      )
-      const hasMainAddress = existingMain.rows.length > 0
+        [profileId]
+      );
+      const hasMainAddress = existingMain.rows.length > 0;
 
-      const isMain = !hasMainAddress
+      const isMain = !hasMainAddress;
 
       // If user explicitly requested main but one already exists, error
       if (data.mainAddress === true && hasMainAddress) {
@@ -552,36 +593,44 @@ export class ProfilesService {
           {
             statusCode: 400,
             error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'A main address already exists. Use the set-main endpoint to change the main address.',
+            message:
+              'A main address already exists. Use the set-main endpoint to change the main address.',
           },
-          400,
-        )
+          400
+        );
       }
 
       const result = await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
          VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
-        [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain],
-      )
+        [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, isMain]
+      );
 
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
-      await client.query('COMMIT')
-      this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`)
-      return mapAddressRow(result.rows[0])
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_created',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId, result.rows[0].id]
+      );
+      await client.query('COMMIT');
+      this.logger.log(`Address ${result.rows[0].id} created for profile ${profileId}`);
+      return mapAddressRow(result.rows[0]);
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
       // Check foreign key violation on province or city
       if (error instanceof Error && (error as { code?: string }).code === '23503') {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid province or city reference' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Invalid province or city reference',
+          },
+          400
+        );
       }
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -597,102 +646,124 @@ export class ProfilesService {
     profileId: string,
     addressId: string,
     data: {
-      provinceId?: string
-      cityId?: string
-      fullAddress?: string
-      postalCode?: string
-    },
+      provinceId?: string;
+      cityId?: string;
+      fullAddress?: string;
+      postalCode?: string;
+    }
   ): Promise<AddressRow> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    await this.requireAddressEditor(userId,profileId)
-
+    await this.requireAddressEditor(userId, profileId);
 
     // Verify the address belongs to the profile
-    const existing = await this.getProfileAddresses(profileId)
-    const address = existing.find((a) => a.id === addressId)
+    const existing = await this.getProfileAddresses(profileId);
+    const address = existing.find((a) => a.id === addressId);
     if (!address) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Address not found',
+        },
+        404
+      );
     }
 
     // Validate postal code if provided
     if (data.postalCode !== undefined && !validatePostalCode(data.postalCode)) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid postal code format' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Invalid postal code format',
+        },
+        400
+      );
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await this.requireAddressEditor(userId,profileId,client)
+      await client.query('BEGIN');
+      await this.requireAddressEditor(userId, profileId, client);
 
-      const updates: string[] = []
-      const params: unknown[] = []
-      let paramIndex = 1
+      const updates: string[] = [];
+      const params: unknown[] = [];
+      let paramIndex = 1;
 
       if (data.provinceId !== undefined) {
-        updates.push(`province_id = $${paramIndex++}`)
-        params.push(data.provinceId)
+        updates.push(`province_id = $${paramIndex++}`);
+        params.push(data.provinceId);
       }
       if (data.cityId !== undefined) {
-        updates.push(`city_id = $${paramIndex++}`)
-        params.push(data.cityId)
+        updates.push(`city_id = $${paramIndex++}`);
+        params.push(data.cityId);
       }
       if (data.fullAddress !== undefined) {
-        updates.push(`full_address = $${paramIndex++}`)
-        params.push(data.fullAddress)
+        updates.push(`full_address = $${paramIndex++}`);
+        params.push(data.fullAddress);
       }
       if (data.postalCode !== undefined) {
-        updates.push(`postal_code = $${paramIndex++}`)
-        params.push(data.postalCode)
+        updates.push(`postal_code = $${paramIndex++}`);
+        params.push(data.postalCode);
       }
 
       if (updates.length === 0) {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'No fields to update' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'No fields to update',
+          },
+          400
+        );
       }
 
-      updates.push(`updated_at = NOW()`)
-      params.push(addressId, profileId)
+      updates.push(`updated_at = NOW()`);
+      params.push(addressId, profileId);
 
       const result = await client.query(
         `UPDATE addresses SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND profile_id = $${paramIndex++}
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
-        params,
-      )
+        params
+      );
 
       if (result.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
-          404,
-        )
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Address not found',
+          },
+          404
+        );
       }
 
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
-      await client.query('COMMIT')
-      this.logger.log(`Address ${addressId} updated for profile ${profileId}`)
-      return mapAddressRow(result.rows[0])
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_updated',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId, result.rows[0].id]
+      );
+      await client.query('COMMIT');
+      this.logger.log(`Address ${addressId} updated for profile ${profileId}`);
+      return mapAddressRow(result.rows[0]);
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       if (error instanceof Error && (error as { code?: string }).code === '23503') {
         throw new HttpException(
-          { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Invalid province or city reference' },
-          400,
-        )
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Invalid province or city reference',
+          },
+          400
+        );
       }
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -703,24 +774,23 @@ export class ProfilesService {
    * address. Orders retain copied snapshot fields independently of the saved
    * address, so removing the saved address preserves order history.
    */
-  async deleteAddress(
-    userId: string,
-    profileId: string,
-    addressId: string,
-  ): Promise<void> {
-    const pool = getDbPool()
+  async deleteAddress(userId: string, profileId: string, addressId: string): Promise<void> {
+    const pool = getDbPool();
 
-    await this.requireAddressEditor(userId,profileId)
-
+    await this.requireAddressEditor(userId, profileId);
 
     // Verify the address belongs to the profile
-    const existing = await this.getProfileAddresses(profileId)
-    const address = existing.find((a) => a.id === addressId)
+    const existing = await this.getProfileAddresses(profileId);
+    const address = existing.find((a) => a.id === addressId);
     if (!address) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Address not found',
+        },
+        404
+      );
     }
 
     // Prevent deleting the main address without setting a new one first
@@ -731,27 +801,43 @@ export class ProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Cannot delete the main address. Set a different address as main first.',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Orders own copied snapshot fields; deleting a saved address cannot
     // alter historical order data. Serialize against main-address switching.
-    const client=await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await this.requireAddressEditor(userId,profileId,client)
-      const deleted=await client.query(
-        `DELETE FROM addresses WHERE id=$1 AND profile_id=$2 AND NOT main_address RETURNING id`,[addressId,profileId],
-      )
-      if (deleted.rowCount!==1) throw new HttpException({statusCode:409,error:ErrorCodes.CONFLICT_STATE.code,message:'Address changed or is now the main address'},409)
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_deleted',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,addressId])
-      await client.query('COMMIT')
-    } catch(error) {await client.query('ROLLBACK').catch(()=>{});throw error}
-    finally {client.release()}
+      await client.query('BEGIN');
+      await this.requireAddressEditor(userId, profileId, client);
+      const deleted = await client.query(
+        `DELETE FROM addresses WHERE id=$1 AND profile_id=$2 AND NOT main_address RETURNING id`,
+        [addressId, profileId]
+      );
+      if (deleted.rowCount !== 1)
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: ErrorCodes.CONFLICT_STATE.code,
+            message: 'Address changed or is now the main address',
+          },
+          409
+        );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_deleted',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId, addressId]
+      );
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
 
-    this.logger.log(`Address ${addressId} deleted for profile ${profileId}`)
+    this.logger.log(`Address ${addressId} deleted for profile ${profileId}`);
   }
 
   /**
@@ -761,68 +847,74 @@ export class ProfilesService {
    * address as the new main address. Wrapped in a transaction for
    * consistency.
    */
-  async setMainAddress(
-    userId: string,
-    profileId: string,
-    addressId: string,
-  ): Promise<AddressRow> {
-    const pool = getDbPool()
+  async setMainAddress(userId: string, profileId: string, addressId: string): Promise<AddressRow> {
+    const pool = getDbPool();
 
-    await this.requireAddressEditor(userId,profileId)
-
+    await this.requireAddressEditor(userId, profileId);
 
     // Verify the address belongs to the profile
-    const existing = await this.getProfileAddresses(profileId)
-    const address = existing.find((a) => a.id === addressId)
+    const existing = await this.getProfileAddresses(profileId);
+    const address = existing.find((a) => a.id === addressId);
     if (!address) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Address not found',
+        },
+        404
+      );
     }
 
     if (address.mainAddress) {
       // Already the main address — no-op
-      return address
+      return address;
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await this.requireAddressEditor(userId,profileId,client)
+      await client.query('BEGIN');
+      await this.requireAddressEditor(userId, profileId, client);
 
       // Unset the current main address
       await client.query(
         `UPDATE addresses SET main_address = false, updated_at = NOW() WHERE profile_id = $1 AND main_address = true`,
-        [profileId],
-      )
+        [profileId]
+      );
 
       // Set the new main address
       const result = await client.query(
         `UPDATE addresses SET main_address = true, updated_at = NOW() WHERE id = $1 AND profile_id = $2
          RETURNING id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at`,
-        [addressId, profileId],
-      )
+        [addressId, profileId]
+      );
 
       if (result.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Address not found' },
-          404,
-        )
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Address not found',
+          },
+          404
+        );
       }
 
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
-        VALUES (uuid_generate_v7(),$1,'address_main_changed',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,[userId,profileId,result.rows[0].id])
-      await client.query('COMMIT')
-      this.logger.log(`Address ${addressId} set as main for profile ${profileId}`)
-      return mapAddressRow(result.rows[0])
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+        VALUES (uuid_generate_v7(),$1,'address_main_changed',jsonb_build_object('profileId',$2::text,'addressId',$3::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId, result.rows[0].id]
+      );
+      await client.query('COMMIT');
+      this.logger.log(`Address ${addressId} set as main for profile ${profileId}`);
+      return mapAddressRow(result.rows[0]);
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
-      throw error
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -830,22 +922,22 @@ export class ProfilesService {
    * Get all addresses for a profile.
    */
   async getProfileAddresses(profileId: string): Promise<AddressRow[]> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at
        FROM addresses
        WHERE profile_id = $1
        ORDER BY main_address DESC, created_at ASC`,
-      [profileId],
-    )
-    return result.rows.map(mapAddressRow)
+      [profileId]
+    );
+    return result.rows.map(mapAddressRow);
   }
 
   /**
    * Get legal profile info for a legal entity profile.
    */
   async getLegalProfileInfo(profileId: string): Promise<Record<string, unknown> | null> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT id, legal_name, national_identifier, registration_number,
               company_type_id, registration_date, economic_code,
@@ -855,12 +947,12 @@ export class ProfilesService {
               created_at, updated_at
        FROM legal_profiles
        WHERE id = $1`,
-      [profileId],
-    )
+      [profileId]
+    );
 
-    if (result.rows.length === 0) return null
+    if (result.rows.length === 0) return null;
 
-    const row = result.rows[0]
+    const row = result.rows[0];
     return {
       id: row.id as string,
       legalName: row.legal_name as string,
@@ -877,7 +969,7 @@ export class ProfilesService {
       officialPostalCode: (row.official_postal_code as string) ?? null,
       representativeTitle: row.representative_title as string,
       representativeRelationship: row.representative_relationship as string,
-    }
+    };
   }
 
   /**
@@ -891,104 +983,130 @@ export class ProfilesService {
     userId: string,
     profileId: string,
     data: {
-      title?: string | undefined
-      firstName?: string | undefined
-      lastName?: string | undefined
-      nationalId?: string | undefined
-      provinceId?: string | undefined
-      cityId?: string | undefined
-      fullAddress?: string | undefined
-      postalCode?: string | undefined
-    },
+      title?: string | undefined;
+      firstName?: string | undefined;
+      lastName?: string | undefined;
+      nationalId?: string | undefined;
+      provinceId?: string | undefined;
+      cityId?: string | undefined;
+      fullAddress?: string | undefined;
+      postalCode?: string | undefined;
+    }
   ): Promise<ProfileRow> {
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const pool = getDbPool();
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Build dynamic SET clause for profile fields
-      const profileUpdates: string[] = []
-      const profileParams: unknown[] = []
-      let paramIndex = 1
+      const profileUpdates: string[] = [];
+      const profileParams: unknown[] = [];
+      let paramIndex = 1;
 
       if (data.title !== undefined) {
-        profileUpdates.push(`title = $${paramIndex++}`)
-        profileParams.push(data.title || null)
+        profileUpdates.push(`title = $${paramIndex++}`);
+        profileParams.push(data.title || null);
       }
       if (data.firstName !== undefined) {
-        profileUpdates.push(`first_name = $${paramIndex++}`)
-        profileParams.push(data.firstName)
+        profileUpdates.push(`first_name = $${paramIndex++}`);
+        profileParams.push(data.firstName);
       }
       if (data.lastName !== undefined) {
-        profileUpdates.push(`last_name = $${paramIndex++}`)
-        profileParams.push(data.lastName)
+        profileUpdates.push(`last_name = $${paramIndex++}`);
+        profileParams.push(data.lastName);
       }
       if (data.nationalId !== undefined) {
-        profileUpdates.push(`national_id = $${paramIndex++}`)
-        profileParams.push(data.nationalId)
+        profileUpdates.push(`national_id = $${paramIndex++}`);
+        profileParams.push(data.nationalId);
       }
 
       if (profileUpdates.length > 0) {
-        profileUpdates.push(`updated_at = NOW()`)
-        const profileQuery = `UPDATE profiles SET ${profileUpdates.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`
-        const profileResult = await client.query(profileQuery, [...profileParams, profileId, userId])
+        profileUpdates.push(`updated_at = NOW()`);
+        const profileQuery = `UPDATE profiles SET ${profileUpdates.join(', ')} WHERE id = $${paramIndex++} AND user_id = $${paramIndex++} RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`;
+        const profileResult = await client.query(profileQuery, [
+          ...profileParams,
+          profileId,
+          userId,
+        ]);
 
         if (profileResult.rows.length === 0) {
-          await client.query('ROLLBACK')
+          await client.query('ROLLBACK');
           throw new HttpException(
-            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
-            404,
-          )
+            {
+              statusCode: 404,
+              error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+              message: 'Profile not found',
+            },
+            404
+          );
         }
       }
 
       // If address fields are provided, create a new address record
-      if (data.provinceId !== undefined || data.cityId !== undefined || data.fullAddress !== undefined || data.postalCode !== undefined) {
+      if (
+        data.provinceId !== undefined ||
+        data.cityId !== undefined ||
+        data.fullAddress !== undefined ||
+        data.postalCode !== undefined
+      ) {
         // Read current main address status
         const existingMain = await client.query(
           `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
-          [profileId],
-        )
-        const hasMainAddress = existingMain.rows.length > 0
+          [profileId]
+        );
+        const hasMainAddress = existingMain.rows.length > 0;
 
         if (data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
           // If this is the first address, make it main; otherwise add as non-main
           await client.query(
             `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
              VALUES ($1, $2, $3, $4, $5, $6)`,
-            [profileId, data.provinceId, data.cityId, data.fullAddress, data.postalCode, !hasMainAddress],
-          )
+            [
+              profileId,
+              data.provinceId,
+              data.cityId,
+              data.fullAddress,
+              data.postalCode,
+              !hasMainAddress,
+            ]
+          );
         }
       }
 
       // If only profile updates were made, update_at was already set
       if (profileUpdates.length === 0) {
-        await client.query(
-          `UPDATE profiles SET updated_at = NOW() WHERE id = $1`,
-          [profileId],
-        )
+        await client.query(`UPDATE profiles SET updated_at = NOW() WHERE id = $1`, [profileId]);
       }
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      const updated = await this.getProfileById(profileId)
-      return updated ?? (() => { throw new Error('Profile not found after update') })()
+      const updated = await this.getProfileById(profileId);
+      return (
+        updated ??
+        (() => {
+          throw new Error('Profile not found after update');
+        })()
+      );
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
 
-      if (error instanceof HttpException) throw error
+      if (error instanceof HttpException) throw error;
 
       if (error instanceof Error && (error as { code?: string }).code === '23505') {
         throw new HttpException(
-          { statusCode: 409, error: ErrorCodes.CONFLICT_DUPLICATE.code, message: 'This national ID is already registered' },
-          409,
-        )
+          {
+            statusCode: 409,
+            error: ErrorCodes.CONFLICT_DUPLICATE.code,
+            message: 'This national ID is already registered',
+          },
+          409
+        );
       }
 
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1001,12 +1119,9 @@ export class ProfilesService {
    * Idempotent: if already ACTIVE (e.g. saved by an earlier direct
    * save endpoint), returns success without changes.
    */
-  async completeOnboarding(
-    userId: string,
-    profileId: string,
-  ): Promise<ProfileRow> {
-    const pool = getDbPool()
-    const profile = await this.getProfileById(profileId)
+  async completeOnboarding(userId: string, profileId: string): Promise<ProfileRow> {
+    const pool = getDbPool();
+    const profile = await this.getProfileById(profileId);
 
     if (!profile || profile.userId !== userId) {
       throw new HttpException(
@@ -1015,50 +1130,50 @@ export class ProfilesService {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     // Idempotent — if already active/verified, just return
     if (profile.status !== 'DRAFT') {
-      return profile
+      return profile;
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Determine target status based on verification settings
-      const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED'
-      const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE'
+      const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
+      const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE';
 
       // Set as default if user has no default profile yet
       const existing = await client.query(
         `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
-        [userId],
-      )
-      const becomesDefault = profile.isDefault || existing.rows.length === 0
+        [userId]
+      );
+      const becomesDefault = profile.isDefault || existing.rows.length === 0;
 
       await client.query(
         `UPDATE profiles
          SET status = $1, is_default = $2, updated_at = NOW()
          WHERE id = $3`,
-        [targetStatus, becomesDefault, profileId],
-      )
+        [targetStatus, becomesDefault, profileId]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Onboarding completed for profile ${profileId} (${targetStatus})${becomesDefault ? ' as default' : ''}`,
-      )
+        `Onboarding completed for profile ${profileId} (${targetStatus})${becomesDefault ? ' as default' : ''}`
+      );
 
-      const updated = await this.getProfileById(profileId)
-      return updated ?? profile
+      const updated = await this.getProfileById(profileId);
+      return updated ?? profile;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      throw error
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1073,11 +1188,11 @@ export class ProfilesService {
    * Used by ProfileVerifiedGuard and order submission endpoints.
    */
   async canPlaceCommercialOrder(userId: string): Promise<boolean> {
-    const status = await this.getVerificationStatus(userId)
-    if (!status.activeProfileId) return false
+    const status = await this.getVerificationStatus(userId);
+    if (!status.activeProfileId) return false;
     // If verification is not required, commercial orders are allowed
-    if (!status.verificationRequired) return true
+    if (!status.verificationRequired) return true;
     // If verification is required, the profile must be verified
-    return status.isVerified
+    return status.isVerified;
   }
 }

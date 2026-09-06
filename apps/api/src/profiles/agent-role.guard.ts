@@ -4,14 +4,14 @@ import {
   type ExecutionContext,
   ForbiddenException,
   Logger,
-} from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { hasAnyRolePermission } from '@barghsa/shared/agent-permissions'
-import type { AgentPermission } from '@barghsa/shared/agent-permissions'
-import { AGENT_PERMISSION_KEY } from './agent-permission.decorator.js'
-import { AgentsService } from './agents.service.js'
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { hasAnyRolePermission } from '@barghsa/shared/agent-permissions';
+import type { AgentPermission } from '@barghsa/shared/agent-permissions';
+import { AGENT_PERMISSION_KEY } from './agent-permission.decorator.js';
+import { AgentsService } from './agents.service.js';
 
 /**
  * NestJS guard that enforces agent role-based permissions on
@@ -33,41 +33,35 @@ import { AgentsService } from './agents.service.js'
  */
 @Injectable()
 export class AgentRoleGuard implements CanActivate {
-  private readonly logger = new Logger(AgentRoleGuard.name)
+  private readonly logger = new Logger(AgentRoleGuard.name);
 
   constructor(
     private readonly reflector: Reflector,
-    private readonly agentsService: AgentsService,
+    private readonly agentsService: AgentsService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermission: AgentPermission | undefined =
-      this.reflector.get<AgentPermission>(
-        AGENT_PERMISSION_KEY,
-        context.getHandler(),
-      ) ??
-      this.reflector.get<AgentPermission>(
-        AGENT_PERMISSION_KEY,
-        context.getClass(),
-      )
+      this.reflector.get<AgentPermission>(AGENT_PERMISSION_KEY, context.getHandler()) ??
+      this.reflector.get<AgentPermission>(AGENT_PERMISSION_KEY, context.getClass());
 
     // No permission required — allow
     if (!requiredPermission) {
-      this.logger.warn('AgentRoleGuard used without @RequireAgentPermission() decorator')
-      return true
+      this.logger.warn('AgentRoleGuard used without @RequireAgentPermission() decorator');
+      return true;
     }
 
-    const http = context.switchToHttp()
-    const request: AuthenticatedRequest = http.getRequest()
-    const response = http.getResponse()
+    const http = context.switchToHttp();
+    const request: AuthenticatedRequest = http.getRequest();
+    const response = http.getResponse();
 
     // Must have an authenticated session
     if (!request.session) {
-      this.logger.warn('AgentRoleGuard: no authenticated session')
+      this.logger.warn('AgentRoleGuard: no authenticated session');
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-      })
+      });
     }
 
     // Extract profile ID from route params
@@ -76,46 +70,44 @@ export class AgentRoleGuard implements CanActivate {
         ? request.params.profileId
         : typeof request.params.id === 'string'
           ? request.params.id
-          : undefined
+          : undefined;
     if (!profileId) {
-      this.logger.warn('AgentRoleGuard: no profile ID in route params')
+      this.logger.warn('AgentRoleGuard: no profile ID in route params');
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-      })
+      });
     }
 
-    const userId = request.session.userId
+    const userId = request.session.userId;
 
     // Look up the caller's agent roles in this profile
-    const roles = await this.agentsService.getAgentRoles(profileId, userId)
+    const roles = await this.agentsService.getAgentRoles(profileId, userId);
 
     if (roles.length === 0) {
-      this.logger.warn(
-        `AgentRoleGuard: user ${userId} is not an agent of profile ${profileId}`,
-      )
+      this.logger.warn(`AgentRoleGuard: user ${userId} is not an agent of profile ${profileId}`);
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_INSUFFICIENT_ROLE.code,
-      })
+      });
     }
 
     // Check if any of the user's roles grant the required permission
     if (!hasAnyRolePermission(roles, requiredPermission)) {
       this.logger.warn(
         `AgentRoleGuard: user ${userId} role(s) [${roles.join(', ')}] ` +
-          `lack permission '${requiredPermission}' for profile ${profileId}`,
-      )
+          `lack permission '${requiredPermission}' for profile ${profileId}`
+      );
       // Set the error code header for the frontend to read
       if (typeof response?.setHeader === 'function') {
-        response.setHeader('X-Required-Permission', requiredPermission)
+        response.setHeader('X-Required-Permission', requiredPermission);
       }
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_INSUFFICIENT_ROLE.code,
-      })
+      });
     }
 
-    return true
+    return true;
   }
 }

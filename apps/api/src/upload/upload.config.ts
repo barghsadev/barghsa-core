@@ -43,12 +43,7 @@ const DEFAULT_CATEGORIES: Record<string, UploadCategoryConfig> = {
     maxSizeBytes: 20 * MB,
   },
   video: {
-    allowedMimeTypes: [
-      'video/mp4',
-      'video/webm',
-      'video/quicktime',
-      'video/x-matroska',
-    ],
+    allowedMimeTypes: ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-matroska'],
     allowedExtensions: ['.mp4', '.webm', '.mov', '.mkv'],
     maxSizeBytes: 100 * MB,
   },
@@ -127,18 +122,12 @@ export function getDeploymentMaxSizeBytes(category?: string): number {
   return getCategoryConfig(category).maxSizeBytes;
 }
 
-export function isAllowedMimeType(
-  mimeType: string,
-  category?: string,
-): boolean {
+export function isAllowedMimeType(mimeType: string, category?: string): boolean {
   const cfg = getCategoryConfig(category);
   return cfg.allowedMimeTypes.includes(mimeType);
 }
 
-export function isAllowedExtension(
-  fileName: string,
-  category?: string,
-): boolean {
+export function isAllowedExtension(fileName: string, category?: string): boolean {
   const ext = extractExtension(fileName);
   const cfg = getCategoryConfig(category);
   return cfg.allowedExtensions.length === 0 || cfg.allowedExtensions.includes(ext);
@@ -150,14 +139,15 @@ function extractExtension(fileName: string): string {
   return fileName.slice(dot).toLowerCase();
 }
 
-export function getCategoryDescriptions(): Record<string, { readonly allowedExtensions: string; readonly maxSize: string }> {
+export function getCategoryDescriptions(): Record<
+  string,
+  { readonly allowedExtensions: string; readonly maxSize: string }
+> {
   const result: Record<string, { allowedExtensions: string; maxSize: string }> = {};
   for (const [cat, cfg] of Object.entries(DEFAULT_CATEGORIES)) {
     result[cat] = {
       allowedExtensions:
-        cfg.allowedExtensions.length > 0
-          ? cfg.allowedExtensions.join(', ')
-          : 'any',
+        cfg.allowedExtensions.length > 0 ? cfg.allowedExtensions.join(', ') : 'any',
       maxSize: `${cfg.maxSizeBytes / MB} MB`,
     };
   }

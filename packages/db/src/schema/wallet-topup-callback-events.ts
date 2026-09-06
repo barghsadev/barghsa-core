@@ -1,7 +1,7 @@
-import { domainChecks } from '../domain-checks'
-import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { walletTransactions, wallets } from './wallets.js'
+import { domainChecks } from '../domain-checks';
+import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { walletTransactions, wallets } from './wallets.js';
 
 /**
  * Durable ledger of authenticated online top-up provider callbacks
@@ -48,5 +48,5 @@ export const walletTopupCallbackEvents = pgTable(
     uniqueIndex('uq_wallet_topup_callback_event_id').on(table.eventId),
     index('idx_wtce_pending_tx').on(table.pendingTransactionId),
     index('idx_wtce_wallet').on(table.walletId),
-  ],
-)
+  ]
+);

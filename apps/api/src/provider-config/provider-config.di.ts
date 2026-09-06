@@ -18,14 +18,14 @@
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface PoolClient {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  release: () => void
+  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>;
+  release: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ProviderPool {
-  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>
-  connect: () => Promise<PoolClient>
+  query: (text: string, params?: unknown[]) => Promise<{ rows: any[]; rowCount?: number | null }>;
+  connect: () => Promise<PoolClient>;
 }
 
 /**
@@ -34,4 +34,4 @@ export interface ProviderPool {
  * services fall back to the shared `getDbPool()` pool. Tests construct the
  * services directly with a mock pool as the first constructor argument.
  */
-export const PROVIDER_CONFIG_POOL = Symbol('PROVIDER_CONFIG_POOL')
+export const PROVIDER_CONFIG_POOL = Symbol('PROVIDER_CONFIG_POOL');

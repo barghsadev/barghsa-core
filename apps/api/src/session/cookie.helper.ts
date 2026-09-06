@@ -1,17 +1,17 @@
-import type { Request, Response } from 'express'
-import { randomBytes } from 'node:crypto'
+import type { Request, Response } from 'express';
+import { randomBytes } from 'node:crypto';
 
 /**
  * Session cookie name.
  * Centralized here so all auth endpoints use the same name.
  */
-export const SESSION_COOKIE_NAME = 'barghsa_session'
+export const SESSION_COOKIE_NAME = 'barghsa_session';
 
 /**
  * Refresh token cookie name.
  * Separate HttpOnly cookie so JS cannot access the long-lived credential.
  */
-export const REFRESH_COOKIE_NAME = 'barghsa_refresh'
+export const REFRESH_COOKIE_NAME = 'barghsa_refresh';
 
 /**
  * Centralized SameSite policy (owned by E-06).
@@ -24,20 +24,20 @@ export const REFRESH_COOKIE_NAME = 'barghsa_refresh'
  * When E-06 is implemented, this value should be moved to a configuration
  * store so it can be changed per-route/topology without code changes.
  */
-export const SESSION_COOKIE_SAMESITE = 'lax' as const
+export const SESSION_COOKIE_SAMESITE = 'lax' as const;
 
 /**
  * Session cookie path.
  * Narrow path prevents the cookie from being sent to unexpected routes.
  */
-export const SESSION_COOKIE_PATH = '/'
+export const SESSION_COOKIE_PATH = '/';
 
 /**
  * CSRF token cookie name.
  * Non-HttpOnly so JavaScript can read it and send as X-CSRF-Token header.
  * SameSite=Strict provides browser-level CSRF defense as secondary layer.
  */
-export const CSRF_COOKIE_NAME = 'barghsa_csrf'
+export const CSRF_COOKIE_NAME = 'barghsa_csrf';
 
 /**
  * Set the CSRF token cookie on the response.
@@ -51,9 +51,9 @@ export const CSRF_COOKIE_NAME = 'barghsa_csrf'
  * csrfToken — the cookie is just a transport mechanism for the frontend.
  */
 export function setCsrfCookie(res: Response, csrfToken: string): void {
-  const isSecure = process.env.NODE_ENV === 'production'
+  const isSecure = process.env.NODE_ENV === 'production';
   // Max age matches absolute session timeout (24h)
-  const maxAge = 24 * 60 * 60 * 1000
+  const maxAge = 24 * 60 * 60 * 1000;
 
   res.cookie(CSRF_COOKIE_NAME, csrfToken, {
     httpOnly: false,
@@ -61,7 +61,7 @@ export function setCsrfCookie(res: Response, csrfToken: string): void {
     sameSite: 'strict',
     path: '/',
     maxAge,
-  })
+  });
 }
 
 /**
@@ -73,7 +73,7 @@ export function clearCsrfCookie(res: Response): void {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     path: '/',
-  })
+  });
 }
 
 /**
@@ -87,13 +87,9 @@ export function clearCsrfCookie(res: Response): void {
  * - Path: '/' (narrow to API scope when path routing is defined)
  * - MaxAge: based on session expiry (cookie auto-deletes when session expires)
  */
-export function setSessionCookie(
-  res: Response,
-  sessionId: string,
-  expiresAt: Date,
-): void {
-  const isSecure = process.env.NODE_ENV === 'production'
-  const maxAge = Math.max(0, expiresAt.getTime() - Date.now())
+export function setSessionCookie(res: Response, sessionId: string, expiresAt: Date): void {
+  const isSecure = process.env.NODE_ENV === 'production';
+  const maxAge = Math.max(0, expiresAt.getTime() - Date.now());
 
   res.cookie(SESSION_COOKIE_NAME, sessionId, {
     httpOnly: true,
@@ -101,7 +97,7 @@ export function setSessionCookie(
     sameSite: SESSION_COOKIE_SAMESITE,
     path: SESSION_COOKIE_PATH,
     maxAge,
-  })
+  });
 }
 
 /**
@@ -112,13 +108,9 @@ export function setSessionCookie(
  *
  * Has a longer maxAge than the session cookie (matches refresh token lifespan).
  */
-export function setRefreshCookie(
-  res: Response,
-  refreshToken: string,
-  expiresAt: Date,
-): void {
-  const isSecure = process.env.NODE_ENV === 'production'
-  const maxAge = Math.max(0, expiresAt.getTime() - Date.now())
+export function setRefreshCookie(res: Response, refreshToken: string, expiresAt: Date): void {
+  const isSecure = process.env.NODE_ENV === 'production';
+  const maxAge = Math.max(0, expiresAt.getTime() - Date.now());
 
   res.cookie(REFRESH_COOKIE_NAME, refreshToken, {
     httpOnly: true,
@@ -126,7 +118,7 @@ export function setRefreshCookie(
     sameSite: SESSION_COOKIE_SAMESITE,
     path: '/api/auth/refresh',
     maxAge,
-  })
+  });
 }
 
 /**
@@ -140,7 +132,7 @@ export function clearSessionCookie(res: Response): void {
     secure: process.env.NODE_ENV === 'production',
     sameSite: SESSION_COOKIE_SAMESITE,
     path: SESSION_COOKIE_PATH,
-  })
+  });
 }
 
 /**
@@ -152,19 +144,23 @@ export function clearRefreshCookie(res: Response): void {
     secure: process.env.NODE_ENV === 'production',
     sameSite: SESSION_COOKIE_SAMESITE,
     path: '/api/auth/refresh',
-  })
+  });
 }
 
 /** Random device possession proof. Public user-agent strings cannot confer trust. */
 export function getOrCreateDeviceCookie(req: Request, res: Response): string {
-  const secure = process.env.NODE_ENV === 'production'
+  const secure = process.env.NODE_ENV === 'production';
   // __Host- prevents a sibling subdomain from planting a known trust cookie.
-  const name = secure ? '__Host-barghsa_device' : 'barghsa_device'
-  const existing = req.cookies?.[name]
-  if (typeof existing === 'string' && /^[a-f0-9]{64}$/.test(existing)) return existing
-  const token = randomBytes(32).toString('hex')
+  const name = secure ? '__Host-barghsa_device' : 'barghsa_device';
+  const existing = req.cookies?.[name];
+  if (typeof existing === 'string' && /^[a-f0-9]{64}$/.test(existing)) return existing;
+  const token = randomBytes(32).toString('hex');
   res.cookie(name, token, {
-    httpOnly: true, secure, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 60 * 60 * 1000,
-  })
-  return token
+    httpOnly: true,
+    secure,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+  return token;
 }

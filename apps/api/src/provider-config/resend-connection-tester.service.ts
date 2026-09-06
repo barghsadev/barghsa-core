@@ -1,5 +1,5 @@
-import { Injectable, Inject, Logger, Optional } from '@nestjs/common'
-import type { ResendConfig } from './resend-config.schema'
+import { Injectable, Inject, Logger, Optional } from '@nestjs/common';
+import type { ResendConfig } from './resend-config.schema';
 
 /**
  * Live Resend connection tester (E-05, T-05.06.03).
@@ -11,24 +11,24 @@ import type { ResendConfig } from './resend-config.schema'
  */
 
 export interface ResendTestResult {
-  ok: boolean
+  ok: boolean;
   /** Safe, non-secret human-readable error when `ok` is false. */
-  error?: string
+  error?: string;
 }
 
 /** A domain record returned by the Resend `/domains` endpoint. */
 export interface ResendDomainRecord {
-  id: string
-  name: string
-  status: string
+  id: string;
+  name: string;
+  status: string;
 }
 
 /** Shape of the Resend `/emails` POST response. */
 export interface ResendEmailResponse {
   /** Present on success. */
-  id?: string
+  id?: string;
   /** Provider error message (Resend returns `message`, sometimes nested). */
-  message?: string
+  message?: string;
 }
 
 /**
@@ -36,29 +36,29 @@ export interface ResendEmailResponse {
  * real credentials (`RESEND_API_CLIENT`).
  */
 export interface ResendApiClientLike {
-  listDomains: (apiKey: string) => Promise<ResendDomainRecord[]>
+  listDomains: (apiKey: string) => Promise<ResendDomainRecord[]>;
   sendEmail: (
     apiKey: string,
-    payload: { from: string; to: string; subject: string; text?: string },
-  ) => Promise<ResendEmailResponse>
+    payload: { from: string; to: string; subject: string; text?: string }
+  ) => Promise<ResendEmailResponse>;
 }
 
 /** Injection token to override the Resend HTTP client (used by tests). */
-export const RESEND_API_CLIENT = Symbol('RESEND_API_CLIENT')
+export const RESEND_API_CLIENT = Symbol('RESEND_API_CLIENT');
 
-const RESEND_API_BASE = 'https://api.resend.com'
+const RESEND_API_BASE = 'https://api.resend.com';
 
 const defaultApiClient: ResendApiClientLike = {
   async listDomains(apiKey) {
     const res = await fetch(`${RESEND_API_BASE}/domains`, {
       headers: { Authorization: `Bearer ${apiKey}` },
       signal: AbortSignal.timeout(15_000),
-    })
+    });
     if (!res.ok) {
-      throw new Error(await safeApiError(res, 'listing domains'))
+      throw new Error(await safeApiError(res, 'listing domains'));
     }
-    const body = (await res.json()) as { data?: ResendDomainRecord[] }
-    return body.data ?? []
+    const body = (await res.json()) as { data?: ResendDomainRecord[] };
+    return body.data ?? [];
   },
   async sendEmail(apiKey, payload) {
     const res = await fetch(`${RESEND_API_BASE}/emails`, {
@@ -69,52 +69,52 @@ const defaultApiClient: ResendApiClientLike = {
       },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(15_000),
-    })
+    });
     if (res.status === 200 || res.status === 201) {
-      const body = (await res.json()) as { id?: string }
-      return body.id ? { id: body.id } : {}
+      const body = (await res.json()) as { id?: string };
+      return body.id ? { id: body.id } : {};
     }
-    return await safeApiError(res, 'sending test email').then((msg) => ({ message: msg }))
+    return await safeApiError(res, 'sending test email').then((msg) => ({ message: msg }));
   },
-}
+};
 
 /** Extract a safe error message from a non-2xx Resend response. */
 async function safeApiError(res: Response, action?: string): Promise<string> {
-  let detail = ''
+  let detail = '';
   try {
-    const body = (await res.json()) as { message?: string }
-    detail = body.message ?? ''
+    const body = (await res.json()) as { message?: string };
+    detail = body.message ?? '';
   } catch {
     /* non-JSON error body */
   }
-  const prefix = action ? `${action}` : 'Resend request'
-  return `${prefix} failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`
+  const prefix = action ? `${action}` : 'Resend request';
+  return `${prefix} failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`;
 }
 
 /** Strip the API key credential material that Resend may echo back. */
 function redactApiKey(message: string, apiKey: string): string {
-  if (!apiKey) return message
-  return message.split(apiKey).join('••••')
+  if (!apiKey) return message;
+  return message.split(apiKey).join('••••');
 }
 
 @Injectable()
 export class ResendConnectionTesterService {
-  private readonly logger = new Logger(ResendConnectionTesterService.name)
-  private readonly client: ResendApiClientLike
+  private readonly logger = new Logger(ResendConnectionTesterService.name);
+  private readonly client: ResendApiClientLike;
 
   constructor(
     @Optional()
     @Inject(RESEND_API_CLIENT)
-    injectedClient?: ResendApiClientLike,
+    injectedClient?: ResendApiClientLike
   ) {
-    this.client = injectedClient ?? defaultApiClient
+    this.client = injectedClient ?? defaultApiClient;
   }
 
   /** Domain to verify: explicit `sending_domain`, else the `from_email` domain. */
   private targetDomain(config: ResendConfig): string {
-    if (config.sending_domain?.trim()) return config.sending_domain.trim()
-    const at = config.from_email.lastIndexOf('@')
-    return at >= 0 ? config.from_email.slice(at + 1) : config.from_email
+    if (config.sending_domain?.trim()) return config.sending_domain.trim();
+    const at = config.from_email.lastIndexOf('@');
+    return at >= 0 ? config.from_email.slice(at + 1) : config.from_email;
   }
 
   /**
@@ -122,50 +122,53 @@ export class ResendConnectionTesterService {
    * the admin's address. Never throws; returns a safe, non-secret result.
    */
   async test(config: ResendConfig, recipient: string): Promise<ResendTestResult> {
-    const domain = this.targetDomain(config)
+    const domain = this.targetDomain(config);
 
     // 1. Validate domain verification.
-    let domains: ResendDomainRecord[]
+    let domains: ResendDomainRecord[];
     try {
-      domains = await this.client.listDomains(config.api_key)
+      domains = await this.client.listDomains(config.api_key);
     } catch (err) {
-      const message = redactApiKey((err as Error).message, config.api_key)
-      this.logger.warn(`Resend domain lookup failed for ${domain}: ${message}`)
-      return { ok: false, error: `Could not verify sending domain: ${message}` }
+      const message = redactApiKey((err as Error).message, config.api_key);
+      this.logger.warn(`Resend domain lookup failed for ${domain}: ${message}`);
+      return { ok: false, error: `Could not verify sending domain: ${message}` };
     }
-    const match = domains.find((d) => d.name.toLowerCase() === domain.toLowerCase())
+    const match = domains.find((d) => d.name.toLowerCase() === domain.toLowerCase());
     if (!match) {
       return {
         ok: false,
         error: `Sending domain "${domain}" is not registered in this Resend account.`,
-      }
+      };
     }
     if (match.status !== 'verified') {
       return {
         ok: false,
         error: `Sending domain "${domain}" is not verified yet (status: ${match.status}). Complete DNS verification in Resend first.`,
-      }
+      };
     }
 
     // 2. Send a real test email to the admin's address.
     const from = config.from_name?.trim()
       ? `"${config.from_name.trim()}" <${config.from_email}>`
-      : config.from_email
+      : config.from_email;
     try {
       const result = await this.client.sendEmail(config.api_key, {
         from,
         to: recipient,
         subject: 'Barghsa connection test',
         text: 'This is a test email from Barghsa to confirm the Resend email provider configuration.',
-      })
-      if (result.id) return { ok: true }
-      const message = redactApiKey(result.message ?? 'Resend did not confirm delivery', config.api_key)
-      this.logger.warn(`Resend test-send failed: ${message}`)
-      return { ok: false, error: message }
+      });
+      if (result.id) return { ok: true };
+      const message = redactApiKey(
+        result.message ?? 'Resend did not confirm delivery',
+        config.api_key
+      );
+      this.logger.warn(`Resend test-send failed: ${message}`);
+      return { ok: false, error: message };
     } catch (err) {
-      const message = redactApiKey((err as Error).message, config.api_key)
-      this.logger.warn(`Resend test-send failed: ${message}`)
-      return { ok: false, error: message }
+      const message = redactApiKey((err as Error).message, config.api_key);
+      this.logger.warn(`Resend test-send failed: ${message}`);
+      return { ok: false, error: message };
     }
   }
 }

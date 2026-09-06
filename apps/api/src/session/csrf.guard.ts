@@ -5,12 +5,12 @@ import {
   ForbiddenException,
   UnauthorizedException,
   Logger,
-} from '@nestjs/common'
-import type { Request } from 'express'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { correlationIdStorage } from '../common/correlation-id.middleware.js'
-import type { AuthenticatedRequest } from './session.guard.js'
-import { SESSION_COOKIE_NAME } from './cookie.helper.js'
+} from '@nestjs/common';
+import type { Request } from 'express';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import type { AuthenticatedRequest } from './session.guard.js';
+import { SESSION_COOKIE_NAME } from './cookie.helper.js';
 
 /**
  * CSRF protection guard (T-02.02.03).
@@ -46,70 +46,73 @@ import { SESSION_COOKIE_NAME } from './cookie.helper.js'
  */
 @Injectable()
 export class CsrfGuard implements CanActivate {
-  private readonly logger = new Logger(CsrfGuard.name)
+  private readonly logger = new Logger(CsrfGuard.name);
 
   /** HTTP methods that are exempt from CSRF checks (safe methods). */
-  private readonly SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
+  private readonly SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
   /** Name of the custom header carrying the CSRF token. */
-  private readonly CSRF_HEADER = 'x-csrf-token'
+  private readonly CSRF_HEADER = 'x-csrf-token';
 
   canActivate(context: ExecutionContext): boolean {
-    const request: Request = context.switchToHttp().getRequest()
-    const method = request.method.toUpperCase()
+    const request: Request = context.switchToHttp().getRequest();
+    const method = request.method.toUpperCase();
 
     // ── Safe methods are always allowed ─────────────────────────
     if (this.SAFE_METHODS.has(method)) {
-      return true
+      return true;
     }
 
     // ── Check if a skip decorator is present ────────────────────
-    const handler = context.getHandler()
-    const skipCsrf = Reflect.getMetadata('skipCsrf', handler)
+    const handler = context.getHandler();
+    const skipCsrf = Reflect.getMetadata('skipCsrf', handler);
     if (skipCsrf) {
-      return true
+      return true;
     }
 
     // ── No session → nothing to validate ────────────────────────
-    const authRequest = request as AuthenticatedRequest
+    const authRequest = request as AuthenticatedRequest;
     if (!authRequest.session) {
       if (request.cookies?.[SESSION_COOKIE_NAME]) {
-        throw new UnauthorizedException({ statusCode: 401, error: ErrorCodes.AUTH_UNAUTHENTICATED.code })
+        throw new UnauthorizedException({
+          statusCode: 401,
+          error: ErrorCodes.AUTH_UNAUTHENTICATED.code,
+        });
       }
-      return true
+      return true;
     }
 
     // ── Validate the CSRF token header ──────────────────────────
-    const headerToken = request.headers[this.CSRF_HEADER]
-    const sessionToken = authRequest.session.csrfToken
+    const headerToken = request.headers[this.CSRF_HEADER];
+    const sessionToken = authRequest.session.csrfToken;
 
     if (!headerToken || typeof headerToken !== 'string') {
-      const correlationId = correlationIdStorage.getStore()
+      const correlationId = correlationIdStorage.getStore();
       this.logger.warn(
         `CSRF check failed: missing X-CSRF-Token header | ` +
-        `session=${authRequest.session.sessionId} | ` +
-        `method=${method} | correlationId=${correlationId ?? 'none'}`,
-      )
+          `session=${authRequest.session.sessionId} | ` +
+          `method=${method} | correlationId=${correlationId ?? 'none'}`
+      );
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      })
+      });
     }
 
     if (headerToken !== sessionToken) {
-      const correlationId = correlationIdStorage.getStore()
+      const correlationId = correlationIdStorage.getStore();
       this.logger.warn(
         `CSRF check failed: token mismatch | ` +
-        `session=${authRequest.session.sessionId} | ` +
-        `method=${method} | correlationId=${correlationId ?? 'none'}`,
-      )
+          `session=${authRequest.session.sessionId} | ` +
+          `method=${method} | correlationId=${correlationId ?? 'none'}`
+      );
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_CSRF_INVALID.code,
-      })
+      });
     }
 
-    return true
+    return true;
   }
 }
 
@@ -130,9 +133,9 @@ export function SkipCsrf(): MethodDecorator {
   return (
     _target: object,
     _propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
+    descriptor: TypedPropertyDescriptor<any>
   ) => {
-    Reflect.defineMetadata('skipCsrf', true, descriptor.value!)
-    return descriptor
-  }
+    Reflect.defineMetadata('skipCsrf', true, descriptor.value!);
+    return descriptor;
+  };
 }

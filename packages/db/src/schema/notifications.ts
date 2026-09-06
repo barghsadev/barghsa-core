@@ -1,7 +1,7 @@
-import { uuid, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table.js'
-import { users } from './users.js'
-import { profiles } from './profiles.js'
+import { uuid, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table.js';
+import { users } from './users.js';
+import { profiles } from './profiles.js';
 
 /**
  * Notification type enum.
@@ -13,7 +13,7 @@ export const notificationType = pgEnum('notification_type', [
   'profile_unverified',
   'profile_pending',
   'general',
-])
+]);
 
 /**
  * In-app notifications table (minimal stub for E-02 scope).
@@ -32,8 +32,7 @@ export const notifications = createTable('notifications', {
     .references(() => users.userId, { onDelete: 'cascade' }),
 
   /** Optional FK to the related profile, for context. */
-  profileId: uuid('profile_id')
-    .references(() => profiles.id, { onDelete: 'set null' }),
+  profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'set null' }),
 
   /** Notification type for categorisation and display. */
   type: notificationType('type').notNull().default('general'),
@@ -52,4 +51,4 @@ export const notifications = createTable('notifications', {
 
   /** When the notification was read, if ever. */
   readAt: timestamp('read_at', { withTimezone: true, mode: 'date' }),
-})
+});

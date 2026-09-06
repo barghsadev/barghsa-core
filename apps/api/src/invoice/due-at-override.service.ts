@@ -12,9 +12,9 @@
  * Overdue. Terminal / settled invoices keep their original due date.
  */
 
-import { HttpException, Injectable, Logger } from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
+import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   DUE_AT_OVERRIDE_ERRORS,
   buildDueAtOverrideSnapshot,
@@ -22,68 +22,68 @@ import {
   parseDueAtOverrideBody,
   readDueAtOverrideSnapshot,
   type InvoiceDueAtOverrideSnapshot,
-} from '@barghsa/shared/finance'
-import type { InvoiceState } from './invoice-state.model.js'
-import { InvoiceAuditRepository } from './invoice-audit.repository.js'
-import type { TransactionClient } from './invoice-audit.repository.js'
+} from '@barghsa/shared/finance';
+import type { InvoiceState } from './invoice-state.model.js';
+import { InvoiceAuditRepository } from './invoice-audit.repository.js';
+import type { TransactionClient } from './invoice-audit.repository.js';
 
 /** Public DTO returned by get / override. */
 export interface InvoiceDueAtDto {
-  invoiceId: string
-  state: InvoiceState
-  issuedAt: string | null
-  payableFrom: string | null
-  dueAt: string | null
-  canOverride: boolean
-  dueAtOverride: InvoiceDueAtOverrideSnapshot | null
-  auditId?: string
+  invoiceId: string;
+  state: InvoiceState;
+  issuedAt: string | null;
+  payableFrom: string | null;
+  dueAt: string | null;
+  canOverride: boolean;
+  dueAtOverride: InvoiceDueAtOverrideSnapshot | null;
+  auditId?: string;
 }
 
 export interface OverrideInvoiceDueAtInput {
-  invoiceId: string
-  raw: unknown
-  actorUserId: string
-  ip: string
-  correlationId?: string
-  now?: Date
+  invoiceId: string;
+  raw: unknown;
+  actorUserId: string;
+  ip: string;
+  correlationId?: string;
+  now?: Date;
 }
 
 interface InvoiceDueAtRow {
-  id: string
-  state: InvoiceState
-  issued_at: Date | null
-  payable_from: Date | null
-  due_at: Date | null
-  metadata: unknown
+  id: string;
+  state: InvoiceState;
+  issued_at: Date | null;
+  payable_from: Date | null;
+  due_at: Date | null;
+  metadata: unknown;
 }
 
 function httpError(code: string, message: string, statusCode: number): never {
-  throw new HttpException({ statusCode, error: code, message }, statusCode)
+  throw new HttpException({ statusCode, error: code, message }, statusCode);
 }
 
 function iso(value: Date | null): string | null {
-  return value ? value.toISOString() : null
+  return value ? value.toISOString() : null;
 }
 
 function asMetadataObject(value: unknown): Record<string, unknown> {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return { ...(value as Record<string, unknown>) }
+    return { ...(value as Record<string, unknown>) };
   }
   if (typeof value === 'string') {
     try {
-      const parsed: unknown = JSON.parse(value)
+      const parsed: unknown = JSON.parse(value);
       if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        return { ...(parsed as Record<string, unknown>) }
+        return { ...(parsed as Record<string, unknown>) };
       }
     } catch {
       /* ignore malformed JSON */
     }
   }
-  return {}
+  return {};
 }
 
 function toDto(row: InvoiceDueAtRow, extra: { auditId?: string } = {}): InvoiceDueAtDto {
-  const metadata = asMetadataObject(row.metadata)
+  const metadata = asMetadataObject(row.metadata);
   return {
     invoiceId: row.id,
     state: row.state,
@@ -93,12 +93,12 @@ function toDto(row: InvoiceDueAtRow, extra: { auditId?: string } = {}): InvoiceD
     canOverride: isDueAtOverrideableState(row.state),
     dueAtOverride: readDueAtOverrideSnapshot(metadata),
     ...(extra.auditId ? { auditId: extra.auditId } : {}),
-  }
+  };
 }
 
 @Injectable()
 export class DueAtOverrideService {
-  private readonly logger = new Logger(DueAtOverrideService.name)
+  private readonly logger = new Logger(DueAtOverrideService.name);
 
   constructor(private readonly auditRepository: InvoiceAuditRepository) {}
 
@@ -106,17 +106,17 @@ export class DueAtOverrideService {
    * Load the current due-date snapshot for the staff override UI.
    */
   async get(invoiceId: string): Promise<InvoiceDueAtDto> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = (await pool.query(
       `SELECT id, state, issued_at, payable_from, due_at, metadata
        FROM invoices WHERE id = $1`,
-      [invoiceId],
-    )) as { rows: InvoiceDueAtRow[] }
-    const row = result.rows[0]
+      [invoiceId]
+    )) as { rows: InvoiceDueAtRow[] };
+    const row = result.rows[0];
     if (!row) {
-      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404)
+      httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${invoiceId}`, 404);
     }
-    return toDto(row)
+    return toDto(row);
   }
 
   /**
@@ -124,61 +124,53 @@ export class DueAtOverrideService {
    * invoice row, persist due_at + metadata, write the audit entry.
    */
   async override(input: OverrideInvoiceDueAtInput): Promise<InvoiceDueAtDto> {
-    const parsed = parseDueAtOverrideBody(input.raw)
+    const parsed = parseDueAtOverrideBody(input.raw);
     if (!parsed.ok) {
-      httpError(
-        ErrorCodes.VALIDATION_INPUT_INVALID.code,
-        parsed.issues.join('; '),
-        400,
-      )
+      httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, parsed.issues.join('; '), 400);
     }
 
-    const now = input.now ?? new Date()
-    const pool = getDbPool()
-    const client = await pool.connect()
+    const now = input.now ?? new Date();
+    const pool = getDbPool();
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const locked = (await client.query(
         `SELECT id, state, issued_at, payable_from, due_at, metadata
          FROM invoices WHERE id = $1 FOR UPDATE`,
-        [input.invoiceId],
-      )) as { rows: InvoiceDueAtRow[] }
-      const row = locked.rows[0]
+        [input.invoiceId]
+      )) as { rows: InvoiceDueAtRow[] };
+      const row = locked.rows[0];
       if (!row) {
-        await client.query('ROLLBACK')
-        httpError(
-          ErrorCodes.NOT_FOUND_RESOURCE.code,
-          `Invoice not found: ${input.invoiceId}`,
-          404,
-        )
+        await client.query('ROLLBACK');
+        httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, `Invoice not found: ${input.invoiceId}`, 404);
       }
 
       if (!isDueAtOverrideableState(row.state)) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         httpError(
           ErrorCodes.CONFLICT_STATE.code,
           DUE_AT_OVERRIDE_ERRORS.STATE_NOT_OVERRIDEABLE(row.state),
-          409,
-        )
+          409
+        );
       }
 
       if (row.issued_at && parsed.value.dueAt.getTime() < row.issued_at.getTime()) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         httpError(
           ErrorCodes.VALIDATION_INPUT_INVALID.code,
           DUE_AT_OVERRIDE_ERRORS.BEFORE_ISSUED_AT(),
-          400,
-        )
+          400
+        );
       }
 
       if (row.due_at && parsed.value.dueAt.getTime() === row.due_at.getTime()) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         httpError(
           ErrorCodes.VALIDATION_INPUT_INVALID.code,
           DUE_AT_OVERRIDE_ERRORS.UNCHANGED(),
-          400,
-        )
+          400
+        );
       }
 
       const snapshot = buildDueAtOverrideSnapshot({
@@ -187,16 +179,16 @@ export class DueAtOverrideService {
         reason: parsed.value.reason,
         actorUserId: input.actorUserId,
         overriddenAt: now,
-      })
+      });
 
-      const metadata = asMetadataObject(row.metadata)
+      const metadata = asMetadataObject(row.metadata);
       const existingDue =
         metadata.due && typeof metadata.due === 'object' && !Array.isArray(metadata.due)
           ? (metadata.due as Record<string, unknown>)
-          : {}
+          : {};
       const history = Array.isArray(metadata.dueAtOverrides)
         ? (metadata.dueAtOverrides as unknown[])
-        : []
+        : [];
       const nextMetadata = {
         ...metadata,
         due: {
@@ -207,14 +199,14 @@ export class DueAtOverrideService {
         },
         dueAtOverride: snapshot,
         dueAtOverrides: [...history, snapshot],
-      }
+      };
 
       await client.query(
         `UPDATE invoices
          SET due_at = $1, metadata = $2::jsonb, updated_at = $3
          WHERE id = $4`,
-        [parsed.value.dueAt, JSON.stringify(nextMetadata), now, input.invoiceId],
-      )
+        [parsed.value.dueAt, JSON.stringify(nextMetadata), now, input.invoiceId]
+      );
 
       const auditId = await this.auditRepository.recordDueAtOverride(
         client as TransactionClient,
@@ -226,14 +218,14 @@ export class DueAtOverrideService {
           correlationId: input.correlationId,
           ip: input.ip,
         },
-        now,
-      )
+        now
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Staff ${input.actorUserId} overrode dueAt on invoice ${input.invoiceId} → ${snapshot.dueAt}`,
-      )
+        `Staff ${input.actorUserId} overrode dueAt on invoice ${input.invoiceId} → ${snapshot.dueAt}`
+      );
 
       return toDto(
         {
@@ -241,17 +233,17 @@ export class DueAtOverrideService {
           due_at: parsed.value.dueAt,
           metadata: nextMetadata,
         },
-        { auditId },
-      )
+        { auditId }
+      );
     } catch (err) {
       try {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
       } catch {
         /* rollback of a failed TX is best-effort */
       }
-      throw err
+      throw err;
     } finally {
-      client.release()
+      client.release();
     }
   }
 }

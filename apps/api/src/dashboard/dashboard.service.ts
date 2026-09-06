@@ -1,14 +1,18 @@
-import {hasAnyRolePermission,type AgentRole,type AgentPermission} from '@barghsa/shared/agent-permissions'
-import { activeProfileSql } from '../profiles/profile-context.js'
-import { Injectable } from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance'
+import {
+  hasAnyRolePermission,
+  type AgentRole,
+  type AgentPermission,
+} from '@barghsa/shared/agent-permissions';
+import { activeProfileSql } from '../profiles/profile-context.js';
+import { Injectable } from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { UNPAID_CUSTOMER_INVOICE_PREDICATE } from '@barghsa/shared/finance';
 
 export interface QuickStatusCounts {
-  activeContracts: number
-  pendingOrders: number
-  openTickets: number
-  unpaidInvoices: number
+  activeContracts: number;
+  pendingOrders: number;
+  openTickets: number;
+  unpaidInvoices: number;
 }
 
 /**
@@ -21,17 +25,18 @@ export interface QuickStatusCounts {
  */
 @Injectable()
 export class DashboardService {
-
   /**
    * Resolve the user's default profile ID, or null if they have none.
    */
-  private async getDefaultProfileId(userId: string): Promise<{id:string;is_owner:boolean;roles:AgentRole[]} | null> {
-    const pool = getDbPool()
-    const result = await pool.query<{id:string;is_owner:boolean;roles:AgentRole[]}>(
+  private async getDefaultProfileId(
+    userId: string
+  ): Promise<{ id: string; is_owner: boolean; roles: AgentRole[] } | null> {
+    const pool = getDbPool();
+    const result = await pool.query<{ id: string; is_owner: boolean; roles: AgentRole[] }>(
       activeProfileSql('profile:view'),
-      [userId],
-    )
-    return result.rows[0] ?? null
+      [userId]
+    );
+    return result.rows[0] ?? null;
   }
 
   /**
@@ -55,40 +60,47 @@ export class DashboardService {
    *   are excluded — they reduce liability rather than adding a bill.
    */
   async getQuickStatusCounts(userId: string): Promise<QuickStatusCounts> {
-    const context = await this.getDefaultProfileId(userId)
-    const profileId=context?.id
+    const context = await this.getDefaultProfileId(userId);
+    const profileId = context?.id;
     if (!profileId) {
-      return { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 }
+      return { activeContracts: 0, pendingOrders: 0, openTickets: 0, unpaidInvoices: 0 };
     }
 
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const allowed=(permission:AgentPermission)=>context?.is_owner===true || hasAnyRolePermission(context?.roles ?? [],permission)
+    const allowed = (permission: AgentPermission) =>
+      context?.is_owner === true || hasAnyRolePermission(context?.roles ?? [], permission);
     const [ordersResult, ticketsResult, invoicesResult] = await Promise.all([
-      allowed('orders:view') ? pool.query<{ status: string; cnt: number }>(
-        `SELECT status, COUNT(*)::int AS cnt
+      allowed('orders:view')
+        ? pool.query<{ status: string; cnt: number }>(
+            `SELECT status, COUNT(*)::int AS cnt
          FROM orders
          WHERE profile_id = $1 AND status IN ('CONFIRMED', 'PENDING')
          GROUP BY status`,
-        [profileId],
-      ) : Promise.resolve({rows:[]}),
-      allowed('orders:view') ? pool.query<{ cnt: number }>(
-        `SELECT COUNT(*)::int AS cnt
+            [profileId]
+          )
+        : Promise.resolve({ rows: [] }),
+      allowed('orders:view')
+        ? pool.query<{ cnt: number }>(
+            `SELECT COUNT(*)::int AS cnt
          FROM tickets
          WHERE profile_id = $1 AND status IN ('open', 'in_progress', 'waiting_customer', 'waiting_staff')`,
-        [profileId],
-      ) : Promise.resolve({rows:[{cnt:0}]}),
-      allowed('invoices:view') ? pool.query<{ cnt: number }>(
-        `SELECT COUNT(*)::int AS cnt
+            [profileId]
+          )
+        : Promise.resolve({ rows: [{ cnt: 0 }] }),
+      allowed('invoices:view')
+        ? pool.query<{ cnt: number }>(
+            `SELECT COUNT(*)::int AS cnt
          FROM invoices
          WHERE profile_id = $1 AND ${UNPAID_CUSTOMER_INVOICE_PREDICATE}`,
-        [profileId],
-      ) : Promise.resolve({rows:[{cnt:0}]}),
-    ])
+            [profileId]
+          )
+        : Promise.resolve({ rows: [{ cnt: 0 }] }),
+    ]);
 
-    const orderCounts: Record<string, number> = {}
+    const orderCounts: Record<string, number> = {};
     for (const row of ordersResult.rows) {
-      orderCounts[row.status] = row.cnt
+      orderCounts[row.status] = row.cnt;
     }
 
     return {
@@ -96,6 +108,6 @@ export class DashboardService {
       pendingOrders: orderCounts['PENDING'] ?? 0,
       openTickets: ticketsResult.rows[0]?.cnt ?? 0,
       unpaidInvoices: invoicesResult.rows[0]?.cnt ?? 0,
-    }
+    };
   }
 }

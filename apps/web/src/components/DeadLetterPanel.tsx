@@ -1,7 +1,7 @@
-import { withCsrf } from '../lib/csrf.js'
-import { useState, useEffect, useCallback } from 'react'
-import { t } from '@barghsa/i18n'
-import type { Locale } from '@barghsa/i18n'
+import { withCsrf } from '../lib/csrf.js';
+import { useState, useEffect, useCallback } from 'react';
+import { t } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n';
 
 /**
  * Admin dead-letter queue panel (E-05, T-05.01.06).
@@ -17,24 +17,24 @@ import type { Locale } from '@barghsa/i18n'
  */
 
 interface DeadLetterRow {
-  id: string
-  outboxId: string
-  jobId: string
-  channel: 'in_app' | 'email' | 'sms'
-  eventKey: string
-  severity: 'error' | 'critical'
-  profileId: string | null
-  userId: string | null
-  cause: string | null
-  errorCategory: string | null
-  attempts: number
-  maxAttempts: number
-  idempotencyKey: string
-  status: 'open' | 'retried' | 'resolved' | 'dismissed'
-  resolvedAt: string | null
-  resolvedBy: string | null
-  createdAt: string
-  updatedAt: string
+  id: string;
+  outboxId: string;
+  jobId: string;
+  channel: 'in_app' | 'email' | 'sms';
+  eventKey: string;
+  severity: 'error' | 'critical';
+  profileId: string | null;
+  userId: string | null;
+  cause: string | null;
+  errorCategory: string | null;
+  attempts: number;
+  maxAttempts: number;
+  idempotencyKey: string;
+  status: 'open' | 'retried' | 'resolved' | 'dismissed';
+  resolvedAt: string | null;
+  resolvedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const STATUS_LABELS: Record<DeadLetterRow['status'], string> = {
@@ -42,78 +42,83 @@ const STATUS_LABELS: Record<DeadLetterRow['status'], string> = {
   retried: 'Retried',
   resolved: 'Resolved',
   dismissed: 'Dismissed',
-}
+};
 
 function channelLabel(channel: DeadLetterRow['channel'], uiLocale: Locale): string {
   const key = `admin.notifications.deadLetter.channel${
     channel === 'email' ? 'Email' : channel === 'sms' ? 'Sms' : 'InApp'
-  }` as const
-  return t(key, uiLocale)
+  }` as const;
+  return t(key, uiLocale);
 }
 
 function statusLabel(status: DeadLetterRow['status'], uiLocale: Locale): string {
-  const key =
-    `admin.notifications.deadLetter.status${
-      status === 'open' ? 'Open' : status === 'retried' ? 'Retried' : status === 'resolved' ? 'Resolved' : 'Dismissed'
-    }` as const
-  return t(key, uiLocale)
+  const key = `admin.notifications.deadLetter.status${
+    status === 'open'
+      ? 'Open'
+      : status === 'retried'
+        ? 'Retried'
+        : status === 'resolved'
+          ? 'Resolved'
+          : 'Dismissed'
+  }` as const;
+  return t(key, uiLocale);
 }
 
 export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
-  const [rows, setRows] = useState<DeadLetterRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [openOnly, setOpenOnly] = useState(true)
-  const [busyId, setBusyId] = useState<string | null>(null)
+  const [rows, setRows] = useState<DeadLetterRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [openOnly, setOpenOnly] = useState(true);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
-      const qs = openOnly ? '?status=open' : ''
-      const res = await fetch(`/api/admin/notifications/dead-letters${qs}`)
+      const qs = openOnly ? '?status=open' : '';
+      const res = await fetch(`/api/admin/notifications/dead-letters${qs}`);
       if (res.status === 403) {
-        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale))
-        return
+        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale));
+        return;
       }
       if (!res.ok) {
-        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
-        return
+        setError(t('admin.notifications.deadLetter.loadFailed', uiLocale));
+        return;
       }
-      const data = (await res.json()) as DeadLetterRow[]
-      setRows(data)
+      const data = (await res.json()) as DeadLetterRow[];
+      setRows(data);
     } catch {
-      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale))
+      setError(t('admin.notifications.deadLetter.loadFailed', uiLocale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [openOnly, uiLocale])
+  }, [openOnly, uiLocale]);
 
   useEffect(() => {
-    void load()
-  }, [load])
+    void load();
+  }, [load]);
 
   async function act(id: string, action: 'retry' | 'resolve' | 'dismiss') {
-    setError(null)
-    setBusyId(id)
+    setError(null);
+    setBusyId(id);
     try {
       const res = await fetch(`/api/admin/notifications/dead-letters/${id}/${action}`, {
         headers: withCsrf(),
         method: 'POST',
-      })
+      });
       if (res.status === 403) {
-        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale))
-        return
+        setError(t('admin.notifications.deadLetter.accessDenied', uiLocale));
+        return;
       }
       if (!res.ok) {
-        setError(t('admin.notifications.deadLetter.actionFailed', uiLocale))
-        return
+        setError(t('admin.notifications.deadLetter.actionFailed', uiLocale));
+        return;
       }
-      await load()
+      await load();
     } catch {
-      setError(t('admin.notifications.deadLetter.actionFailed', uiLocale))
+      setError(t('admin.notifications.deadLetter.actionFailed', uiLocale));
     } finally {
-      setBusyId(null)
+      setBusyId(null);
     }
   }
 
@@ -252,5 +257,5 @@ export default function DeadLetterPanel({ uiLocale }: { uiLocale: Locale }) {
         </div>
       )}
     </section>
-  )
+  );
 }

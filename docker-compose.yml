@@ -18,7 +18,6 @@
 name: barghsa-dev
 
 services:
-
   # ─────────────────────────────────────────────────────────────
   # PostgreSQL 16 with PostGIS
   # ─────────────────────────────────────────────────────────────
@@ -26,7 +25,7 @@ services:
     image: postgis/postgres:16
     container_name: barghsa-postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       POSTGRES_DB: barghsa
       POSTGRES_USER: barghsa
@@ -41,7 +40,7 @@ services:
       - ./postgres-config/barghsa-postgres.conf:/etc/postgresql/postgresql.conf.d/99-barghsa.conf:ro
       - ./packages/db/scripts/backup/archive-wal.sh:/usr/local/bin/archive-wal.sh:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U barghsa"]
+      test: ['CMD-SHELL', 'pg_isready -U barghsa']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -55,22 +54,22 @@ services:
     image: bitnami/pgbouncer:1.23
     container_name: barghsa-pgbouncer
     ports:
-      - "6432:6432"
+      - '6432:6432'
     environment:
       PGBOUNCER_DATABASE: barghsa
       PGBOUNCER_HOST: postgres
-      PGBOUNCER_PORT: "5432"
+      PGBOUNCER_PORT: '5432'
       PGBOUNCER_USER: barghsa
       PGBOUNCER_PASSWORD: barghsa-dev-password
-      PGBOUNCER_MAX_CLIENT_CONN: "200"
-      PGBOUNCER_DEFAULT_POOL_SIZE: "30"
-      PGBOUNCER_RESERVE_POOL_SIZE: "10"
-      PGBOUNCER_RESERVE_POOL_TIMEOUT: "3"
+      PGBOUNCER_MAX_CLIENT_CONN: '200'
+      PGBOUNCER_DEFAULT_POOL_SIZE: '30'
+      PGBOUNCER_RESERVE_POOL_SIZE: '10'
+      PGBOUNCER_RESERVE_POOL_TIMEOUT: '3'
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -p 6432 -U barghsa 2>/dev/null || exit 1"]
+      test: ['CMD-SHELL', 'pg_isready -h localhost -p 6432 -U barghsa 2>/dev/null || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -84,10 +83,10 @@ services:
     image: redis:7-alpine
     container_name: barghsa-redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
     # No persistent volume — Redis is a cache; loss is acceptable in dev.
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
       timeout: 3s
       retries: 5
@@ -101,8 +100,8 @@ services:
     image: minio/minio
     container_name: barghsa-minio
     ports:
-      - "9000:9000"   # S3 API
-      - "9001:9001"   # Web console
+      - '9000:9000' # S3 API
+      - '9001:9001' # Web console
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin-dev
@@ -110,7 +109,7 @@ services:
       - minio-data:/data
     command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 5s
       timeout: 3s
       retries: 5

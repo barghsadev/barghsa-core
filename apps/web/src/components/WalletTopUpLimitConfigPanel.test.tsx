@@ -1,190 +1,202 @@
-import { act } from 'react'
-import { createRoot, type Root } from 'react-dom/client'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import WalletTopUpLimitConfigPanel from './WalletTopUpLimitConfigPanel.js'
+import { act } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import WalletTopUpLimitConfigPanel from './WalletTopUpLimitConfigPanel.js';
 
 function jsonResponse(body: unknown, status = 200) {
   return {
     ok: status >= 200 && status < 300,
     status,
     json: async () => body,
-  }
+  };
 }
 
 function setInputValue(el: HTMLInputElement, value: string) {
-  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
-  setter?.call(el, value)
-  el.dispatchEvent(new Event('input', { bubbles: true }))
+  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  setter?.call(el, value);
+  el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 describe('WalletTopUpLimitConfigPanel (T-04.2.02.06)', () => {
-  let container: HTMLDivElement
-  let root: Root
-  let fetchMock: ReturnType<typeof vi.fn>
+  let container: HTMLDivElement;
+  let root: Root;
+  let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    document.documentElement.lang = 'en'
-    container = document.createElement('div')
-    document.body.appendChild(container)
+    document.documentElement.lang = 'en';
+    container = document.createElement('div');
+    document.body.appendChild(container);
     fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input)
-      const method = (init?.method ?? 'GET').toUpperCase()
+      const url = String(input);
+      const method = (init?.method ?? 'GET').toUpperCase();
       if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
-        return jsonResponse({ limitIrR: 2_000_000_000, version: 0 })
+        return jsonResponse({ limitIrR: 2_000_000_000, version: 0 });
       }
       if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'PUT') {
-        const body = JSON.parse(String(init?.body)) as { limit_irr: number }
-        return jsonResponse({ limitIrR: body.limit_irr, version: 1 })
+        const body = JSON.parse(String(init?.body)) as { limit_irr: number };
+        return jsonResponse({ limitIrR: body.limit_irr, version: 1 });
       }
-      return jsonResponse({}, 404)
-    })
-    vi.stubGlobal('fetch', fetchMock)
-    root = createRoot(container)
-  })
+      return jsonResponse({}, 404);
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    root = createRoot(container);
+  });
 
   afterEach(async () => {
     await act(async () => {
-      root.unmount()
-    })
-    container.remove()
-    vi.unstubAllGlobals()
-    vi.restoreAllMocks()
-  })
+      root.unmount();
+    });
+    container.remove();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
 
   async function renderPanel() {
     await act(async () => {
-      root.render(<WalletTopUpLimitConfigPanel />)
-    })
+      root.render(<WalletTopUpLimitConfigPanel />);
+    });
     await act(async () => {
-      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean))
-    })
+      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean));
+    });
   }
 
   it('loads the current limit, formats it, and shows the Toman equivalent', async () => {
-    await renderPanel()
-    expect(container.textContent).toContain('Online wallet top-up limit')
-    expect(container.textContent).toContain('Changing this limit affects all future online top-ups')
-    const input = container.querySelector('[data-testid="wallet-top-up-limit-input"]') as HTMLInputElement
-    expect(input.value.replace(/[^\d]/g, '')).toBe('2000000000')
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-toman"]')?.textContent).toContain(
-      '200,000,000',
-    )
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
-      'Config version: 0',
-    )
+    await renderPanel();
+    expect(container.textContent).toContain('Online wallet top-up limit');
+    expect(container.textContent).toContain(
+      'Changing this limit affects all future online top-ups'
+    );
+    const input = container.querySelector(
+      '[data-testid="wallet-top-up-limit-input"]'
+    ) as HTMLInputElement;
+    expect(input.value.replace(/[^\d]/g, '')).toBe('2000000000');
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-toman"]')?.textContent
+    ).toContain('200,000,000');
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent
+    ).toContain('Config version: 0');
     const get = fetchMock.mock.calls.find(
       ([url, init]) =>
         String(url).endsWith('/api/admin/config/wallet-top-up-limit') &&
-        (init as RequestInit | undefined)?.method !== 'PUT',
-    )
-    expect(get?.[1]).toMatchObject({ credentials: 'include' })
-  })
+        (init as RequestInit | undefined)?.method !== 'PUT'
+    );
+    expect(get?.[1]).toMatchObject({ credentials: 'include' });
+  });
 
   it('PUTs a new integer limit and shows the saved version', async () => {
-    await renderPanel()
-    const input = container.querySelector('[data-testid="wallet-top-up-limit-input"]') as HTMLInputElement
-    const form = input.closest('form') as HTMLFormElement
+    await renderPanel();
+    const input = container.querySelector(
+      '[data-testid="wallet-top-up-limit-input"]'
+    ) as HTMLInputElement;
+    const form = input.closest('form') as HTMLFormElement;
     await act(async () => {
-      setInputValue(input, '500000000')
-    })
+      setInputValue(input, '500000000');
+    });
     await act(async () => {
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    })
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
     await act(async () => {
-      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean))
-    })
+      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean));
+    });
 
     const put = fetchMock.mock.calls.find(
       ([url, init]) =>
         String(url).endsWith('/api/admin/config/wallet-top-up-limit') &&
-        (init as RequestInit | undefined)?.method === 'PUT',
-    )
-    expect(put).toBeTruthy()
+        (init as RequestInit | undefined)?.method === 'PUT'
+    );
+    expect(put).toBeTruthy();
     expect(JSON.parse(String((put![1] as RequestInit).body))).toEqual({
       limit_irr: 500_000_000,
       expected_version: 0,
-    })
-    expect(container.textContent).toContain('Saved')
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
-      'Config version: 1',
-    )
-  })
+    });
+    expect(container.textContent).toContain('Saved');
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent
+    ).toContain('Config version: 1');
+  });
 
   it('reloads the current version and shows a conflict when expected_version is stale', async () => {
-    let version = 0
+    let version = 0;
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input)
-      const method = (init?.method ?? 'GET').toUpperCase()
+      const url = String(input);
+      const method = (init?.method ?? 'GET').toUpperCase();
       if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
-        return jsonResponse({ limitIrR: version === 0 ? 2_000_000_000 : 75_000, version })
+        return jsonResponse({ limitIrR: version === 0 ? 2_000_000_000 : 75_000, version });
       }
       if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'PUT') {
-        version = 2
-        return jsonResponse({ message: 'stale' }, 409)
+        version = 2;
+        return jsonResponse({ message: 'stale' }, 409);
       }
-      return jsonResponse({}, 404)
-    })
-    await renderPanel()
-    const form = container.querySelector('form') as HTMLFormElement
+      return jsonResponse({}, 404);
+    });
+    await renderPanel();
+    const form = container.querySelector('form') as HTMLFormElement;
     await act(async () => {
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    })
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
     await act(async () => {
-      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean))
-    })
-    expect(container.textContent).toContain('The limit was updated by another admin')
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
-      'Config version: 2',
-    )
-  })
+      await Promise.all(fetchMock.mock.results.map((entry) => entry.value).filter(Boolean));
+    });
+    expect(container.textContent).toContain('The limit was updated by another admin');
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent
+    ).toContain('Config version: 2');
+  });
 
   it('rejects a non-integer client-side without calling PUT', async () => {
-    await renderPanel()
-    const input = container.querySelector('[data-testid="wallet-top-up-limit-input"]') as HTMLInputElement
-    const form = input.closest('form') as HTMLFormElement
+    await renderPanel();
+    const input = container.querySelector(
+      '[data-testid="wallet-top-up-limit-input"]'
+    ) as HTMLInputElement;
+    const form = input.closest('form') as HTMLFormElement;
     await act(async () => {
-      setInputValue(input, '')
-    })
+      setInputValue(input, '');
+    });
     await act(async () => {
-      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    })
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
 
     expect(
-      fetchMock.mock.calls.some(
-        ([, init]) => (init as RequestInit | undefined)?.method === 'PUT',
-      ),
-    ).toBe(false)
-    expect(container.textContent).toContain('Limit must be an integer between 0 and')
+      fetchMock.mock.calls.some(([, init]) => (init as RequestInit | undefined)?.method === 'PUT')
+    ).toBe(false);
+    expect(container.textContent).toContain('Limit must be an integer between 0 and');
     expect(
-      container.querySelector('[data-testid="wallet-top-up-limit-input"]')?.getAttribute('aria-invalid'),
-    ).toBe('true')
-  })
+      container
+        .querySelector('[data-testid="wallet-top-up-limit-input"]')
+        ?.getAttribute('aria-invalid')
+    ).toBe('true');
+  });
 
   it('hides the panel when the admin is not allowed to read the config', async () => {
     fetchMock.mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input)
-      const method = (init?.method ?? 'GET').toUpperCase()
+      const url = String(input);
+      const method = (init?.method ?? 'GET').toUpperCase();
       if (url.endsWith('/api/admin/config/wallet-top-up-limit') && method === 'GET') {
-        return jsonResponse({ message: 'Admin role required' }, 403)
+        return jsonResponse({ message: 'Admin role required' }, 403);
       }
-      return jsonResponse({}, 404)
-    })
-    await renderPanel()
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-panel"]')).toBeNull()
-    expect(container.textContent).not.toContain('Failed to load')
-  })
+      return jsonResponse({}, 404);
+    });
+    await renderPanel();
+    expect(container.querySelector('[data-testid="wallet-top-up-limit-panel"]')).toBeNull();
+    expect(container.textContent).not.toContain('Failed to load');
+  });
 
   it('renders the Persian copy and RTL dir for the versioned config panel', async () => {
-    document.documentElement.lang = 'fa'
-    await renderPanel()
-    const panel = container.querySelector('[data-testid="wallet-top-up-limit-panel"]') as HTMLElement
-    expect(panel.getAttribute('dir')).toBe('rtl')
-    expect(panel.textContent).toContain('سقف شارژ آنلاین کیف پول')
-    expect(panel.textContent).toContain('تغییر این سقف فقط روی شارژهای آنلاین بعدی اثر می‌گذارد')
-    expect(container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent).toContain(
-      'نسخه پیکربندی: 0',
-    )
-    const input = container.querySelector('[data-testid="wallet-top-up-limit-input"]') as HTMLInputElement
-    expect(input.getAttribute('dir')).toBe('ltr')
-  })
-})
+    document.documentElement.lang = 'fa';
+    await renderPanel();
+    const panel = container.querySelector(
+      '[data-testid="wallet-top-up-limit-panel"]'
+    ) as HTMLElement;
+    expect(panel.getAttribute('dir')).toBe('rtl');
+    expect(panel.textContent).toContain('سقف شارژ آنلاین کیف پول');
+    expect(panel.textContent).toContain('تغییر این سقف فقط روی شارژهای آنلاین بعدی اثر می‌گذارد');
+    expect(
+      container.querySelector('[data-testid="wallet-top-up-limit-current"]')?.textContent
+    ).toContain('نسخه پیکربندی: 0');
+    const input = container.querySelector(
+      '[data-testid="wallet-top-up-limit-input"]'
+    ) as HTMLInputElement;
+    expect(input.getAttribute('dir')).toBe('ltr');
+  });
+});

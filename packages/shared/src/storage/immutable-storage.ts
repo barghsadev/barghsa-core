@@ -10,62 +10,59 @@
  * object is accidentally overwritten, previous versions are preserved.
  */
 
-import type { StorageProvider } from './storage-provider.js'
-import { StorageObjectNotFound } from './storage-provider.js'
+import type { StorageProvider } from './storage-provider.js';
+import { StorageObjectNotFound } from './storage-provider.js';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 /** Storage record lifecycle status. */
-export type StorageRecordStatus = 'active' | 'immutable' | 'removed'
+export type StorageRecordStatus = 'active' | 'immutable' | 'removed';
 
 /** Minimal DB interface required by the immutable storage service. */
 export interface DbAdapter {
   createStorageRecord(params: {
-    storageKey: string
-    fileName?: string | null
-    contentType?: string | null
-    fileSize?: number | null
-    category?: string | null
-    metadata?: Record<string, unknown> | null
-  }): Promise<void>
+    storageKey: string;
+    fileName?: string | null;
+    contentType?: string | null;
+    fileSize?: number | null;
+    category?: string | null;
+    metadata?: Record<string, unknown> | null;
+  }): Promise<void>;
 
-  getStorageRecordStatus(storageKey: string): Promise<StorageRecordStatus | null>
+  getStorageRecordStatus(storageKey: string): Promise<StorageRecordStatus | null>;
 
-  markStorageRecordImmutable(storageKey: string, signedBy?: string): Promise<void>
+  markStorageRecordImmutable(storageKey: string, signedBy?: string): Promise<void>;
 
-  softDeleteStorageRecord(storageKey: string): Promise<void>
+  softDeleteStorageRecord(storageKey: string): Promise<void>;
 
-  updateStorageRecordMetadata(
-    storageKey: string,
-    metadata: Record<string, unknown>,
-  ): Promise<void>
+  updateStorageRecordMetadata(storageKey: string, metadata: Record<string, unknown>): Promise<void>;
 }
 
 /** Options for creating a storage record. */
 export interface CreateRecordOptions {
-  storageKey: string
-  fileName?: string | undefined
-  contentType?: string | undefined
-  fileSize?: number | undefined
-  category?: string | undefined
-  metadata?: Record<string, unknown> | undefined
+  storageKey: string;
+  fileName?: string | undefined;
+  contentType?: string | undefined;
+  fileSize?: number | undefined;
+  category?: string | undefined;
+  metadata?: Record<string, unknown> | undefined;
 }
 
 /** Result of a storage record query. */
 export interface StorageRecordInfo {
-  key: string
-  status: StorageRecordStatus
-  fileName: string | null
-  contentType: string | null
-  fileSize: number | null
-  category: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
-  signedAt: Date | null
-  signedBy: string | null
-  removedAt: Date | null
+  key: string;
+  status: StorageRecordStatus;
+  fileName: string | null;
+  contentType: string | null;
+  fileSize: number | null;
+  category: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  signedAt: Date | null;
+  signedBy: string | null;
+  removedAt: Date | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -76,14 +73,14 @@ export interface StorageRecordInfo {
 export class ImmutableRecordDeleteError extends Error {
   constructor(
     public readonly storageKey: string,
-    status: StorageRecordStatus,
+    status: StorageRecordStatus
   ) {
     super(
       `Cannot physically delete storage record "${storageKey}": status is "${status}". ` +
-      'Use soft delete instead — the record will be marked as removed in PostgreSQL ' +
-      'while the underlying object is retained in S3.',
-    )
-    this.name = 'ImmutableRecordDeleteError'
+        'Use soft delete instead — the record will be marked as removed in PostgreSQL ' +
+        'while the underlying object is retained in S3.'
+    );
+    this.name = 'ImmutableRecordDeleteError';
   }
 }
 
@@ -107,7 +104,7 @@ export class ImmutableRecordDeleteError extends Error {
 export class ImmutableStorageRecordService {
   constructor(
     private readonly storage: StorageProvider,
-    private readonly db: DbAdapter,
+    private readonly db: DbAdapter
   ) {}
 
   // -----------------------------------------------------------------------
@@ -128,7 +125,7 @@ export class ImmutableStorageRecordService {
       fileSize: options.fileSize ?? null,
       category: options.category ?? null,
       metadata: (options.metadata as Record<string, unknown> | null) ?? null,
-    })
+    });
   }
 
   // -----------------------------------------------------------------------
@@ -141,7 +138,7 @@ export class ImmutableStorageRecordService {
    * Returns `null` when the record does not exist in the database.
    */
   async getRecordStatus(storageKey: string): Promise<StorageRecordStatus | null> {
-    return this.db.getStorageRecordStatus(storageKey)
+    return this.db.getStorageRecordStatus(storageKey);
   }
 
   // -----------------------------------------------------------------------
@@ -160,18 +157,18 @@ export class ImmutableStorageRecordService {
   async markAsImmutable(storageKey: string, signedBy?: string): Promise<void> {
     // Verify the object actually exists in storage
     try {
-      await this.storage.getObject(storageKey)
+      await this.storage.getObject(storageKey);
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new StorageObjectNotFound(
           storageKey,
-          `Cannot mark "${storageKey}" as immutable: object not found in storage.`,
-        )
+          `Cannot mark "${storageKey}" as immutable: object not found in storage.`
+        );
       }
-      throw err
+      throw err;
     }
 
-    await this.db.markStorageRecordImmutable(storageKey, signedBy)
+    await this.db.markStorageRecordImmutable(storageKey, signedBy);
   }
 
   // -----------------------------------------------------------------------
@@ -192,30 +189,30 @@ export class ImmutableStorageRecordService {
    *   immutable record (the soft delete is still performed).
    */
   async deleteRecord(storageKey: string): Promise<void> {
-    const status = await this.db.getStorageRecordStatus(storageKey)
+    const status = await this.db.getStorageRecordStatus(storageKey);
 
     if (!status) {
       // No existing record — physical delete is fine
-      await this.storage.deleteObject(storageKey)
-      await this.db.createStorageRecord({ storageKey })
-      await this.db.softDeleteStorageRecord(storageKey)
-      return
+      await this.storage.deleteObject(storageKey);
+      await this.db.createStorageRecord({ storageKey });
+      await this.db.softDeleteStorageRecord(storageKey);
+      return;
     }
 
     if (status === 'removed') {
       // Already soft-deleted — no further action needed (S3 object retained)
-      return
+      return;
     }
 
     if (status === 'immutable') {
       // Soft delete only — retain the underlying S3 object
-      await this.db.softDeleteStorageRecord(storageKey)
-      throw new ImmutableRecordDeleteError(storageKey, status)
+      await this.db.softDeleteStorageRecord(storageKey);
+      throw new ImmutableRecordDeleteError(storageKey, status);
     }
 
     // Status is 'active' — physical delete + soft delete record
-    await this.storage.deleteObject(storageKey)
-    await this.db.softDeleteStorageRecord(storageKey)
+    await this.storage.deleteObject(storageKey);
+    await this.db.softDeleteStorageRecord(storageKey);
   }
 
   // -----------------------------------------------------------------------
@@ -225,10 +222,7 @@ export class ImmutableStorageRecordService {
   /**
    * Update the metadata associated with a storage record.
    */
-  async updateMetadata(
-    storageKey: string,
-    metadata: Record<string, unknown>,
-  ): Promise<void> {
-    await this.db.updateStorageRecordMetadata(storageKey, metadata)
+  async updateMetadata(storageKey: string, metadata: Record<string, unknown>): Promise<void> {
+    await this.db.updateStorageRecordMetadata(storageKey, metadata);
   }
 }

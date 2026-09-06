@@ -1,58 +1,53 @@
-import {
-  Injectable,
-  Logger,
-  HttpException,
-  UnauthorizedException,
-} from '@nestjs/common'
-import { randomBytes, createHash } from 'node:crypto'
-import type { PoolClient } from 'pg'
-import { v7 as uuidv7 } from 'uuid'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { resolveStaffPermissions } from './staff-permissions.js'
+import { Injectable, Logger, HttpException, UnauthorizedException } from '@nestjs/common';
+import { randomBytes, createHash } from 'node:crypto';
+import type { PoolClient } from 'pg';
+import { v7 as uuidv7 } from 'uuid';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { resolveStaffPermissions } from './staff-permissions.js';
 
 /** Session idle timeout: 30 minutes */
-export const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000
+export const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 /** Session absolute timeout: 24 hours */
-export const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000
+export const SESSION_ABSOLUTE_TIMEOUT_MS = 24 * 60 * 60 * 1000;
 /** Refresh token length (bytes before hex encoding) */
-const REFRESH_TOKEN_BYTES = 32
+const REFRESH_TOKEN_BYTES = 32;
 /** CSRF token length (bytes before hex encoding) */
-const CSRF_TOKEN_BYTES = 32
+const CSRF_TOKEN_BYTES = 32;
 /** Max sessions per user to prevent resource abuse */
-const MAX_SESSIONS_PER_USER = 50
+const MAX_SESSIONS_PER_USER = 50;
 
 /** Active session data returned from validation. */
 export interface ValidatedSession {
-  sessionId: string
-  userId: string
-  csrfToken: string
-  isAdmin: boolean
-  permissions?: string[]
-  expiresAt: Date
-  idleDeadline: Date
-  stepUpVerifiedAt: Date | null
+  sessionId: string;
+  userId: string;
+  csrfToken: string;
+  isAdmin: boolean;
+  permissions?: string[];
+  expiresAt: Date;
+  idleDeadline: Date;
+  stepUpVerifiedAt: Date | null;
 }
 
 /** Device info metadata stored with the session. */
 export interface DeviceInfo {
-  ip?: string
-  userAgent?: string
-  fingerprint?: string
+  ip?: string;
+  userAgent?: string;
+  fingerprint?: string;
 }
 
 /** Result of creating a new session. */
 export interface CreatedSession {
-  sessionId: string
-  csrfToken: string
-  refreshToken: string
-  expiresAt: Date
+  sessionId: string;
+  csrfToken: string;
+  refreshToken: string;
+  expiresAt: Date;
 }
 
 /** Result of rotating a refresh token. */
 export interface RefreshResult {
-  refreshToken: string
-  sessionId: string
+  refreshToken: string;
+  sessionId: string;
 }
 
 /**
@@ -69,7 +64,7 @@ export interface RefreshResult {
  */
 @Injectable()
 export class SessionService {
-  private readonly logger = new Logger(SessionService.name)
+  private readonly logger = new Logger(SessionService.name);
 
   /**
    * Create a new session for a user.
@@ -94,29 +89,40 @@ export class SessionService {
     isAdmin: boolean,
     deviceInfo?: DeviceInfo,
     expectedAuthVersion?: number,
-    transactionClient?: PoolClient,
+    transactionClient?: PoolClient
   ): Promise<CreatedSession> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
-    const sessionId = uuidv7()
-    const csrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex')
-    const refreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex')
-    const refreshTokenHash = createHash('sha256').update(refreshToken).digest('hex')
-    const familyId = uuidv7()
-    const now = new Date()
-    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+    const sessionId = uuidv7();
+    const csrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex');
+    const refreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
+    const refreshTokenHash = createHash('sha256').update(refreshToken).digest('hex');
+    const familyId = uuidv7();
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS);
+    const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS);
 
-    const client = transactionClient ?? await pool.connect()
+    const client = transactionClient ?? (await pool.connect());
     try {
-      if (!transactionClient) await client.query('BEGIN')
+      if (!transactionClient) await client.query('BEGIN');
       // Lock the account even when no expected auth version was supplied.
       // Locking existing sessions alone cannot serialize an empty set or
       // prevent another transaction from inserting after the count snapshot.
-      const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
-      if (!account.rows[0] || account.rows[0].disabled_at || (expectedAuthVersion !== undefined &&
-        (!Number.isInteger(expectedAuthVersion) || account.rows[0].auth_version !== expectedAuthVersion))) {
-        throw new HttpException({ statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code }, 401)
+      const account = await client.query(
+        'SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [userId]
+      );
+      if (
+        !account.rows[0] ||
+        account.rows[0].disabled_at ||
+        (expectedAuthVersion !== undefined &&
+          (!Number.isInteger(expectedAuthVersion) ||
+            account.rows[0].auth_version !== expectedAuthVersion))
+      ) {
+        throw new HttpException(
+          { statusCode: 401, error: ErrorCodes.AUTH_TOKEN_INVALID.code },
+          401
+        );
       }
 
       // 1. Enforce the cap on currently usable sessions for this account.
@@ -125,9 +131,9 @@ export class SessionService {
          FROM sessions
          WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
          FOR UPDATE`,
-        [userId],
-      )
-      const currentCount = lockResult.rows.length
+        [userId]
+      );
+      const currentCount = lockResult.rows.length;
       if (currentCount >= MAX_SESSIONS_PER_USER) {
         // Also repair any pre-existing over-cap set while making room.
         await client.query(
@@ -139,12 +145,12 @@ export class SessionService {
              ORDER BY created_at ASC, session_id ASC
              LIMIT $3
            )`,
-          [now, userId, currentCount - MAX_SESSIONS_PER_USER + 1],
-        )
+          [now, userId, currentCount - MAX_SESSIONS_PER_USER + 1]
+        );
         this.logger.warn(
           `Session limit (${MAX_SESSIONS_PER_USER}) reached for user ${userId}; ` +
-            `revoked oldest active sessions to create a new one.`,
-        )
+            `revoked oldest active sessions to create a new one.`
+        );
       }
 
       // 2. Insert session
@@ -163,33 +169,30 @@ export class SessionService {
           expiresAt,
           idleDeadline,
           now,
-        ],
-      )
+        ]
+      );
 
       // 3. Insert initial refresh token record
-      const tokenId = uuidv7()
+      const tokenId = uuidv7();
       await client.query(
         `INSERT INTO refresh_tokens
          (id, family_id, token_hash, user_id, session_id, version, created_at)
          VALUES ($1, $2, $3, $4, $5, 1, $6)`,
-        [tokenId, familyId, refreshTokenHash, userId, sessionId, now],
-      )
+        [tokenId, familyId, refreshTokenHash, userId, sessionId, now]
+      );
 
-      if (!transactionClient) await client.query('COMMIT')
+      if (!transactionClient) await client.query('COMMIT');
 
-      if (!transactionClient) this.logger.log(`Session created: ${sessionId} for user ${userId}`)
+      if (!transactionClient) this.logger.log(`Session created: ${sessionId} for user ${userId}`);
 
-      return { sessionId, csrfToken, refreshToken, expiresAt }
+      return { sessionId, csrfToken, refreshToken, expiresAt };
     } catch (err) {
-      if (!transactionClient) await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      if (!transactionClient) await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      if (!transactionClient) client.release()
+      if (!transactionClient) client.release();
     }
   }
 
@@ -211,10 +214,10 @@ export class SessionService {
    */
   async validateSession(
     sessionId: string,
-    touchOnValidate = true,
+    touchOnValidate = true
   ): Promise<ValidatedSession | null> {
-    const pool = getDbPool()
-    const now = new Date()
+    const pool = getDbPool();
+    const now = new Date();
 
     try {
       const result = await pool.query(
@@ -229,39 +232,39 @@ export class SessionService {
          JOIN users u ON u.user_id = s.user_id
          WHERE s.session_id = $1
          LIMIT 1`,
-        [sessionId],
-      )
+        [sessionId]
+      );
 
       if (result.rows.length === 0) {
-        return null
+        return null;
       }
 
-      const row = result.rows[0]
+      const row = result.rows[0];
 
       // Check revocation
       if (row.revoked_at || row.disabled_at) {
-        return null
+        return null;
       }
 
       // Check absolute expiry
       if (new Date(row.expires_at) <= now) {
-        return null
+        return null;
       }
 
       // Check idle timeout
       if (new Date(row.idle_deadline) <= now) {
-        return null
+        return null;
       }
 
       // Touch the session (extend idle deadline) if requested
       if (touchOnValidate) {
-        const newIdleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
+        const newIdleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS);
         await pool.query(
           `UPDATE sessions
            SET idle_deadline = $1, updated_at = $2
            WHERE session_id = $3`,
-          [newIdleDeadline, now, sessionId],
-        )
+          [newIdleDeadline, now, sessionId]
+        );
       }
 
       return {
@@ -273,11 +276,11 @@ export class SessionService {
         expiresAt: row.expires_at,
         idleDeadline: row.idle_deadline,
         stepUpVerifiedAt: row.step_up_verified_at ?? null,
-      }
+      };
     } catch (err) {
-      this.logger.error(`Failed to validate session ${sessionId}: ${String(err)}`)
+      this.logger.error(`Failed to validate session ${sessionId}: ${String(err)}`);
       // On transient DB errors, return null (conservative — force re-auth)
-      return null
+      return null;
     }
   }
 
@@ -296,22 +299,25 @@ export class SessionService {
    * infrastructure. Full session rotation wiring across all events is
    * completed in T-02.02.02 (Session revocation).
    */
-  async rotateSession(
-    oldSessionId: string,
-    reason: string,
-  ): Promise<CreatedSession | null> {
-    const pool = getDbPool()
-    const now = new Date()
+  async rotateSession(oldSessionId: string, reason: string): Promise<CreatedSession | null> {
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Match creation's account-before-session lock order. The old session
       // is re-read after locking, so a concurrent revocation cannot revive it.
-      const account = await client.query(`SELECT u.user_id,u.disabled_at FROM users u
-        JOIN sessions s ON s.user_id=u.user_id WHERE s.session_id=$1 FOR UPDATE OF u`, [oldSessionId])
-      if (!account.rows[0] || account.rows[0].disabled_at) { await client.query('ROLLBACK'); return null }
+      const account = await client.query(
+        `SELECT u.user_id,u.disabled_at FROM users u
+        JOIN sessions s ON s.user_id=u.user_id WHERE s.session_id=$1 FOR UPDATE OF u`,
+        [oldSessionId]
+      );
+      if (!account.rows[0] || account.rows[0].disabled_at) {
+        await client.query('ROLLBACK');
+        return null;
+      }
 
       // 1. Fetch and lock the old session
       const oldResult = await client.query(
@@ -320,32 +326,32 @@ export class SessionService {
          FROM sessions
          WHERE session_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
          FOR UPDATE`,
-        [oldSessionId],
-      )
+        [oldSessionId]
+      );
 
       if (oldResult.rows.length === 0) {
-        await client.query('ROLLBACK')
-        return null
+        await client.query('ROLLBACK');
+        return null;
       }
 
-      const oldRow = oldResult.rows[0]
+      const oldRow = oldResult.rows[0];
 
       // 2. Revoke the old session
       await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE session_id = $2`,
-        [now, oldSessionId],
-      )
+        [now, oldSessionId]
+      );
 
       // 3. Create a new session with fresh identifier and CSRF token
-      const newSessionId = uuidv7()
-      const newCsrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex')
-      const newRefreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex')
-      const newRefreshTokenHash = createHash('sha256').update(newRefreshToken).digest('hex')
-      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
-      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
-      const familyId = oldRow.family_id ?? uuidv7()
+      const newSessionId = uuidv7();
+      const newCsrfToken = randomBytes(CSRF_TOKEN_BYTES).toString('hex');
+      const newRefreshToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
+      const newRefreshTokenHash = createHash('sha256').update(newRefreshToken).digest('hex');
+      const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS);
+      const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS);
+      const familyId = oldRow.family_id ?? uuidv7();
 
       await client.query(
         `INSERT INTO sessions
@@ -362,68 +368,65 @@ export class SessionService {
           expiresAt,
           idleDeadline,
           now,
-        ],
-      )
+        ]
+      );
 
       // 4. Insert new refresh token record (next version in the same family)
       const verResult = await client.query(
         `SELECT COALESCE(MAX(version), 0) + 1 AS next_ver
          FROM refresh_tokens
          WHERE family_id = $1`,
-        [familyId],
-      )
-      const nextVersion = Number(verResult.rows[0]?.next_ver ?? 1)
+        [familyId]
+      );
+      const nextVersion = Number(verResult.rows[0]?.next_ver ?? 1);
 
-      const tokenId = uuidv7()
+      const tokenId = uuidv7();
       await client.query(
         `INSERT INTO refresh_tokens
          (id, family_id, token_hash, user_id, session_id, version, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [tokenId, familyId, newRefreshTokenHash, oldRow.user_id, newSessionId, nextVersion, now],
-      )
+        [tokenId, familyId, newRefreshTokenHash, oldRow.user_id, newSessionId, nextVersion, now]
+      );
 
       // 5. Consume all previous refresh tokens in this family (they're now rotated)
       await client.query(
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE family_id = $2 AND consumed_at IS NULL AND id != $3`,
-        [now, familyId, tokenId],
-      )
+        [now, familyId, tokenId]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Session rotated: ${oldSessionId} → ${newSessionId} (reason: ${reason}) for user ${oldRow.user_id}`,
-      )
+        `Session rotated: ${oldSessionId} → ${newSessionId} (reason: ${reason}) for user ${oldRow.user_id}`
+      );
 
       return {
         sessionId: newSessionId,
         csrfToken: newCsrfToken,
         refreshToken: newRefreshToken,
         expiresAt,
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to rotate session ${oldSessionId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to rotate session ${oldSessionId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   /** Check the session token without consuming the refresh credential or extending idle time. */
   async validateRefreshCsrf(token: string, csrfToken: string): Promise<boolean> {
-    const tokenHash = createHash('sha256').update(token).digest('hex')
+    const tokenHash = createHash('sha256').update(token).digest('hex');
     const result = await getDbPool().query<{ csrf_token: string }>(
       `SELECT s.csrf_token FROM refresh_tokens r
        JOIN sessions s ON s.session_id = r.session_id
        WHERE r.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > NOW() AND s.idle_deadline > NOW()`,
-      [tokenHash],
-    )
-    return result.rows.length === 1 && result.rows[0]!.csrf_token === csrfToken
+      [tokenHash]
+    );
+    return result.rows.length === 1 && result.rows[0]!.csrf_token === csrfToken;
   }
 
   /**
@@ -441,13 +444,13 @@ export class SessionService {
    * Refresh retains the session and its CSRF token; session rotation replaces both.
    */
   async redeemRefreshToken(token: string): Promise<RefreshResult> {
-    const pool = getDbPool()
-    const tokenHash = createHash('sha256').update(token).digest('hex')
-    const now = new Date()
+    const pool = getDbPool();
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // 1. Look up the token, lock for update
       const tokenResult = await client.query(
@@ -455,18 +458,18 @@ export class SessionService {
          FROM refresh_tokens
          WHERE token_hash = $1
          FOR UPDATE`,
-        [tokenHash],
-      )
+        [tokenHash]
+      );
 
       if (tokenResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_TOKEN_INVALID.code,
-        })
+        });
       }
 
-      const tokenRow = tokenResult.rows[0]
+      const tokenRow = tokenResult.rows[0];
 
       // 1b. Reject tokens belonging to a disabled account (T-10.01.01).
       // Disable consumes every active refresh token, so an unconsumed token
@@ -474,17 +477,14 @@ export class SessionService {
       // mint a fresh session for a disabled user either way.
       const refreshUserStatus = await client.query(
         `SELECT disabled_at FROM users WHERE user_id = $1`,
-        [tokenRow.user_id],
-      )
-      if (
-        refreshUserStatus.rows.length > 0 &&
-        refreshUserStatus.rows[0].disabled_at
-      ) {
-        await client.query('ROLLBACK')
+        [tokenRow.user_id]
+      );
+      if (refreshUserStatus.rows.length > 0 && refreshUserStatus.rows[0].disabled_at) {
+        await client.query('ROLLBACK');
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code,
-        })
+        });
       }
 
       // 2. Check for token reuse (already consumed)
@@ -494,28 +494,28 @@ export class SessionService {
           `UPDATE refresh_tokens
            SET consumed_at = $1
            WHERE family_id = $2 AND consumed_at IS NULL`,
-          [now, tokenRow.family_id],
-        )
+          [now, tokenRow.family_id]
+        );
 
         // Revoke all sessions in this family
         await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
            WHERE family_id = $2 AND revoked_at IS NULL`,
-          [now, tokenRow.family_id],
-        )
+          [now, tokenRow.family_id]
+        );
 
-        await client.query('COMMIT')
+        await client.query('COMMIT');
 
         this.logger.warn(
           `Refresh token reuse detected! Token family ${tokenRow.family_id} ` +
-            `for user ${tokenRow.user_id} revoked. Potential token theft.`,
-        )
+            `for user ${tokenRow.user_id} revoked. Potential token theft.`
+        );
 
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_TOKEN_INVALID.code,
-        })
+        });
       }
 
       // 3. Check that the associated session is still valid
@@ -524,25 +524,29 @@ export class SessionService {
          FROM sessions
          WHERE session_id = $1
          FOR UPDATE`,
-        [tokenRow.session_id],
-      )
+        [tokenRow.session_id]
+      );
 
       if (sessionResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_TOKEN_INVALID.code,
-        })
+        });
       }
 
-      const sessionRow = sessionResult.rows[0]
+      const sessionRow = sessionResult.rows[0];
 
-      if (sessionRow.revoked_at || new Date(sessionRow.expires_at).getTime() <= Date.now() || new Date(sessionRow.idle_deadline).getTime() <= Date.now()) {
-        await client.query('ROLLBACK')
+      if (
+        sessionRow.revoked_at ||
+        new Date(sessionRow.expires_at).getTime() <= Date.now() ||
+        new Date(sessionRow.idle_deadline).getTime() <= Date.now()
+      ) {
+        await client.query('ROLLBACK');
         throw new UnauthorizedException({
           statusCode: 401,
           error: ErrorCodes.AUTH_TOKEN_EXPIRED.code,
-        })
+        });
       }
 
       // 4. Consume the current token
@@ -550,13 +554,13 @@ export class SessionService {
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE id = $2`,
-        [now, tokenRow.id],
-      )
+        [now, tokenRow.id]
+      );
 
       // 5. Generate a new refresh token in the same family
-      const newToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex')
-      const newTokenHash = createHash('sha256').update(newToken).digest('hex')
-      const newTokenId = uuidv7()
+      const newToken = randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
+      const newTokenHash = createHash('sha256').update(newToken).digest('hex');
+      const newTokenId = uuidv7();
 
       await client.query(
         `INSERT INTO refresh_tokens
@@ -570,38 +574,30 @@ export class SessionService {
           tokenRow.session_id,
           tokenRow.version + 1,
           now,
-        ],
-      )
+        ]
+      );
 
       // 6. Update the session's refresh token hash
       await client.query(
         `UPDATE sessions
          SET refresh_token_hash = $1, idle_deadline = $2, updated_at = $3
          WHERE session_id = $4`,
-        [
-          newTokenHash,
-          new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS),
-          now,
-          tokenRow.session_id,
-        ],
-      )
+        [newTokenHash, new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS), now, tokenRow.session_id]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       return {
         refreshToken: newToken,
         sessionId: tokenRow.session_id,
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof UnauthorizedException) throw err
-      this.logger.error(`Failed to redeem refresh token: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof UnauthorizedException) throw err;
+      this.logger.error(`Failed to redeem refresh token: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -610,13 +606,13 @@ export class SessionService {
    * Configurable via STEP_UP_WINDOW_MS env var.
    */
   static readonly STEP_UP_WINDOW_MS = (() => {
-    const fromEnv = process.env['STEP_UP_WINDOW_MS']
+    const fromEnv = process.env['STEP_UP_WINDOW_MS'];
     if (fromEnv) {
-      const parsed = Number(fromEnv)
-      if (!Number.isNaN(parsed) && parsed > 0) return parsed
+      const parsed = Number(fromEnv);
+      if (!Number.isNaN(parsed) && parsed > 0) return parsed;
     }
-    return 15 * 60 * 1000 // 15 minutes
-  })()
+    return 15 * 60 * 1000; // 15 minutes
+  })();
 
   /**
    * Set the step_up_verified_at timestamp on a session.
@@ -626,25 +622,22 @@ export class SessionService {
    * which the StepUpGuard checks against the configured window.
    */
   async setStepUpVerifiedTimestamp(sessionId: string): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
+    const pool = getDbPool();
+    const now = new Date();
 
     try {
       await pool.query(
         `UPDATE sessions
          SET step_up_verified_at = $1, updated_at = $1
          WHERE session_id = $2`,
-        [now, sessionId],
-      )
-      this.logger.log(`Step-up verified for session ${sessionId}`)
+        [now, sessionId]
+      );
+      this.logger.log(`Step-up verified for session ${sessionId}`);
     } catch (err) {
       this.logger.error(
-        `Failed to set step_up_verified_at for session ${sessionId}: ${String(err)}`,
-      )
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+        `Failed to set step_up_verified_at for session ${sessionId}: ${String(err)}`
+      );
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     }
   }
 
@@ -654,33 +647,33 @@ export class SessionService {
    * Also consumes all active refresh tokens in the session's family.
    */
   async revokeSession(sessionId: string): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Fetch family ID before revoking
       const sessionResult = await client.query(
         `SELECT family_id FROM sessions WHERE session_id = $1 FOR UPDATE`,
-        [sessionId],
-      )
+        [sessionId]
+      );
 
       if (sessionResult.rows.length === 0) {
-        await client.query('ROLLBACK')
-        return
+        await client.query('ROLLBACK');
+        return;
       }
 
-      const familyId = sessionResult.rows[0].family_id
+      const familyId = sessionResult.rows[0].family_id;
 
       // Revoke the session
       await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE session_id = $2`,
-        [now, sessionId],
-      )
+        [now, sessionId]
+      );
 
       // Consume all active tokens in this family
       if (familyId) {
@@ -688,22 +681,19 @@ export class SessionService {
           `UPDATE refresh_tokens
            SET consumed_at = $1
            WHERE family_id = $2 AND consumed_at IS NULL`,
-          [now, familyId],
-        )
+          [now, familyId]
+        );
       }
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Session revoked: ${sessionId}`)
+      this.logger.log(`Session revoked: ${sessionId}`);
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to revoke session ${sessionId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to revoke session ${sessionId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -713,16 +703,13 @@ export class SessionService {
    * Optionally excludes a specific session (e.g. the current one).
    * Also consumes all active refresh tokens for the user.
    */
-  async revokeAllUserSessions(
-    userId: string,
-    excludeSessionId?: string,
-  ): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
+  async revokeAllUserSessions(userId: string, excludeSessionId?: string): Promise<void> {
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Revoke all sessions except the excluded one
       if (excludeSessionId) {
@@ -731,15 +718,15 @@ export class SessionService {
            SET revoked_at = $1, updated_at = $1
            WHERE user_id = $2 AND revoked_at IS NULL
              AND session_id != $3`,
-          [now, userId, excludeSessionId],
-        )
+          [now, userId, excludeSessionId]
+        );
       } else {
         await client.query(
           `UPDATE sessions
            SET revoked_at = $1, updated_at = $1
            WHERE user_id = $2 AND revoked_at IS NULL`,
-          [now, userId],
-        )
+          [now, userId]
+        );
       }
 
       // Consume all active refresh tokens for this user
@@ -747,23 +734,18 @@ export class SessionService {
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE user_id = $2 AND consumed_at IS NULL`,
-        [now, userId],
-      )
+        [now, userId]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`All sessions revoked for user ${userId}`)
+      this.logger.log(`All sessions revoked for user ${userId}`);
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(
-        `Failed to revoke all sessions for user ${userId}: ${String(err)}`,
-      )
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to revoke all sessions for user ${userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -773,39 +755,36 @@ export class SessionService {
    * Called when token reuse is detected (potential theft).
    */
   async revokeFamily(familyId: string): Promise<void> {
-    const pool = getDbPool()
-    const now = new Date()
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE family_id = $2 AND revoked_at IS NULL`,
-        [now, familyId],
-      )
+        [now, familyId]
+      );
 
       await client.query(
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE family_id = $2 AND consumed_at IS NULL`,
-        [now, familyId],
-      )
+        [now, familyId]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.warn(`Token family revoked: ${familyId}`)
+      this.logger.warn(`Token family revoked: ${familyId}`);
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to revoke token family ${familyId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to revoke token family ${familyId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -816,23 +795,23 @@ export class SessionService {
    * Returns true if the password matches, false on any error (no timing leakage).
    */
   async verifyUserPassword(userId: string, password: string): Promise<boolean> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     try {
       const userResult = await pool.query(
         `SELECT password_hash FROM users WHERE user_id = $1 LIMIT 1`,
-        [userId],
-      )
+        [userId]
+      );
 
       if (userResult.rows.length === 0) {
-        return false
+        return false;
       }
 
-      const { verify } = await import('argon2')
-      return await verify(userResult.rows[0].password_hash, password).catch(() => false)
+      const { verify } = await import('argon2');
+      return await verify(userResult.rows[0].password_hash, password).catch(() => false);
     } catch (err) {
-      this.logger.error(`Password verification failed for user ${userId}: ${String(err)}`)
-      return false
+      this.logger.error(`Password verification failed for user ${userId}: ${String(err)}`);
+      return false;
     }
   }
 
@@ -848,9 +827,9 @@ export class SessionService {
    * Designed for periodic cleanup (e.g. every hour via cron).
    */
   async cleanupExpired(): Promise<{ deletedSessions: number; deletedTokens: number }> {
-    const pool = getDbPool()
-    const now = new Date()
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    const pool = getDbPool();
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     try {
       // Delete expired sessions (absolute or idle timeout)
@@ -859,29 +838,29 @@ export class SessionService {
          WHERE (expires_at <= $1 OR idle_deadline <= $1 OR
                 (revoked_at IS NOT NULL AND revoked_at <= $2))
            AND created_at < $1`,
-        [now, thirtyDaysAgo],
-      )
+        [now, thirtyDaysAgo]
+      );
 
       // Delete orphaned or consumed refresh tokens
       const tokenResult = await pool.query(
         `DELETE FROM refresh_tokens
          WHERE consumed_at IS NOT NULL AND consumed_at <= $1`,
-        [thirtyDaysAgo],
-      )
+        [thirtyDaysAgo]
+      );
 
       if ((sessionResult.rowCount ?? 0) > 0 || (tokenResult.rowCount ?? 0) > 0) {
         this.logger.log(
-          `Cleanup: removed ${sessionResult.rowCount} sessions, ${tokenResult.rowCount} refresh tokens`,
-        )
+          `Cleanup: removed ${sessionResult.rowCount} sessions, ${tokenResult.rowCount} refresh tokens`
+        );
       }
 
       return {
         deletedSessions: sessionResult.rowCount ?? 0,
         deletedTokens: tokenResult.rowCount ?? 0,
-      }
+      };
     } catch (err) {
-      this.logger.error(`Failed to cleanup expired sessions: ${String(err)}`)
-      return { deletedSessions: 0, deletedTokens: 0 }
+      this.logger.error(`Failed to cleanup expired sessions: ${String(err)}`);
+      return { deletedSessions: 0, deletedTokens: 0 };
     }
   }
 
@@ -893,7 +872,7 @@ export class SessionService {
    * purposes (e.g. displaying session list in settings).
    */
   async getSessionById(sessionId: string) {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     try {
       const result = await pool.query(
@@ -902,13 +881,13 @@ export class SessionService {
          FROM sessions
          WHERE session_id = $1
          LIMIT 1`,
-        [sessionId],
-      )
+        [sessionId]
+      );
 
-      return result.rows[0] ?? null
+      return result.rows[0] ?? null;
     } catch (err) {
-      this.logger.error(`Failed to get session ${sessionId}: ${String(err)}`)
-      return null
+      this.logger.error(`Failed to get session ${sessionId}: ${String(err)}`);
+      return null;
     }
   }
 
@@ -919,7 +898,7 @@ export class SessionService {
    * settings/security pages.
    */
   async getUserSessions(userId: string) {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     try {
       const result = await pool.query(
@@ -928,13 +907,13 @@ export class SessionService {
          FROM sessions
          WHERE user_id = $1 AND revoked_at IS NULL AND expires_at > NOW()
          ORDER BY created_at DESC`,
-        [userId],
-      )
+        [userId]
+      );
 
-      return result.rows
+      return result.rows;
     } catch (err) {
-      this.logger.error(`Failed to get sessions for user ${userId}: ${String(err)}`)
-      return []
+      this.logger.error(`Failed to get sessions for user ${userId}: ${String(err)}`);
+      return [];
     }
   }
 }

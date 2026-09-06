@@ -19,22 +19,26 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { setupBucket } from '@barghsa/shared/storage';
 
 async function main(): Promise<void> {
-  const bucket = process.argv.find((_, i) => process.argv[i - 1] === '--bucket')
-    ?? process.env['S3_BUCKET'];
-  const region = process.argv.find((_, i) => process.argv[i - 1] === '--region')
-    ?? process.env['S3_REGION'] ?? 'us-east-1';
+  const bucket =
+    process.argv.find((_, i) => process.argv[i - 1] === '--bucket') ?? process.env['S3_BUCKET'];
+  const region =
+    process.argv.find((_, i) => process.argv[i - 1] === '--region') ??
+    process.env['S3_REGION'] ??
+    'us-east-1';
 
   if (!bucket) {
     console.error(
       'Usage: ts-node scripts/setup-bucket.ts --bucket <name> [--region <region>]\n' +
-      'Or set S3_BUCKET environment variable.',
+        'Or set S3_BUCKET environment variable.'
     );
     process.exit(1);
   }
 
   const endpoint = process.env['S3_ENDPOINT'];
 
-  console.log(`\n🔧 Setting up bucket: ${bucket} (region: ${region})${endpoint ? ` @ ${endpoint}` : ''}\n`);
+  console.log(
+    `\n🔧 Setting up bucket: ${bucket} (region: ${region})${endpoint ? ` @ ${endpoint}` : ''}\n`
+  );
 
   const client = new S3Client({
     region,

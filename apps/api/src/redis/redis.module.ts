@@ -19,9 +19,7 @@ export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
         const config: RedisConfig = {
           url: rawUrl,
           host: rawHost,
-          port: process.env['REDIS_PORT']
-            ? Number(process.env['REDIS_PORT'])
-            : undefined,
+          port: process.env['REDIS_PORT'] ? Number(process.env['REDIS_PORT']) : undefined,
           password: process.env['REDIS_PASSWORD'],
           tls: process.env['NODE_ENV'] === 'production' ? true : undefined,
         };

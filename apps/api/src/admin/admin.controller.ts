@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   BadRequestException,
@@ -15,25 +15,35 @@ import {
   Query,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { z } from 'zod'
-import { AdminService, type UpdateStaffRolesResult, type StaffRoleDto, type EffectivePermissionsResult, type StaffListResult, type DisableStaffResult, type StaffListQuery, type StaffAuditResult, type StaffAuditQuery } from './admin.service.js'
-import { BrandConfigService } from './brand-config.service.js'
-import { TosService } from '../tos/tos.service.js'
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
+import {
+  AdminService,
+  type UpdateStaffRolesResult,
+  type StaffRoleDto,
+  type EffectivePermissionsResult,
+  type StaffListResult,
+  type DisableStaffResult,
+  type StaffListQuery,
+  type StaffAuditResult,
+  type StaffAuditQuery,
+} from './admin.service.js';
+import { BrandConfigService } from './brand-config.service.js';
+import { TosService } from '../tos/tos.service.js';
 import {
   NotificationTemplateService,
   type NotificationTemplateResult,
   type CreateNotificationTemplateInput,
   type PageTemplatesOptions,
   type RenderedTemplate,
-} from '../notifications/notification-template.service.js'
-import { NotificationsService } from '../notifications/notifications.service.js'
-import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { SessionAuthGuard } from '../session/session.guard.js'
-import type { AuthenticatedRequest } from '../session/session.guard.js'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '../notifications/notification-template.service.js';
+import { NotificationsService } from '../notifications/notifications.service.js';
+import type { TosVersionDetail, UpdateTosVersionFields } from '../tos/tos.service.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { ErrorCodes } from '@barghsa/shared/errors';
 
 /**
  * Zod schema for the create-staff-user request body.
@@ -48,47 +58,59 @@ export const CreateStaffUserSchema = z.object({
     .refine(
       (val) => {
         // Must be a valid email or E.164 phone number
-        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        const e164Re = /^\+[1-9]\d{6,14}$/
-        return emailRe.test(val) || e164Re.test(val)
+        const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const e164Re = /^\+[1-9]\d{6,14}$/;
+        return emailRe.test(val) || e164Re.test(val);
       },
-      { message: 'AUTH:REGISTER:INVALID_USERNAME' },
+      { message: 'AUTH:REGISTER:INVALID_USERNAME' }
     ),
   firstName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
   lastName: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(100),
   roleIds: z.array(z.string().min(1).max(100)).max(50).optional().default([]),
   activationMethod: z.enum(['tempPassword', 'link']),
-})
+});
 
-export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>
+export type CreateStaffUserDto = z.infer<typeof CreateStaffUserSchema>;
 
 /**
  * Zod schema for brand config body (T-09.01.01).
  *
  * Validates the config JSON for the PUT /api/admin/branding/config endpoint.
  */
-const hexColorRe = /^#[0-9a-fA-F]{6}$/
+const hexColorRe = /^#[0-9a-fA-F]{6}$/;
 
 export const UpsertBrandConfigSchema = z.object({
   config: z.object({
     appTitle: z.string().min(1).max(100).optional().default('Barghsa'),
     slogan: z.string().max(200).optional().default(''),
-    primaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#2563eb'),
-    secondaryColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#64748b'),
-    accentColor: z.string().regex(hexColorRe, 'Must be a valid 6-char hex color').optional().default('#f59e0b'),
+    primaryColor: z
+      .string()
+      .regex(hexColorRe, 'Must be a valid 6-char hex color')
+      .optional()
+      .default('#2563eb'),
+    secondaryColor: z
+      .string()
+      .regex(hexColorRe, 'Must be a valid 6-char hex color')
+      .optional()
+      .default('#64748b'),
+    accentColor: z
+      .string()
+      .regex(hexColorRe, 'Must be a valid 6-char hex color')
+      .optional()
+      .default('#f59e0b'),
     logoUrl: z.string().url().nullable().optional().default(null),
     faviconUrl: z.string().url().nullable().optional().default(null),
     darkMode: z.boolean().optional().default(false),
   }),
-})
+});
 export interface BrandConfigDto {
-  id: string
-  config: Record<string, unknown>
-  version: number
-  status: 'draft' | 'active'
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  config: Record<string, unknown>;
+  version: number;
+  status: 'draft' | 'active';
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -96,9 +118,9 @@ export interface BrandConfigDto {
  */
 export const SetProfileVerificationModeSchema = z.object({
   mode: z.enum(['DISABLED', 'MANUAL', 'API']),
-})
+});
 
-export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificationModeSchema>
+export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificationModeSchema>;
 
 /**
  * Zod schema for the update-staff-roles request body.
@@ -106,18 +128,18 @@ export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificatio
 export const UpdateStaffRolesSchema = z.object({
   roleIds: z.array(z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' })),
   reason: z.string().max(500).optional(),
-})
+});
 
 /**
  * API response for the create-staff-user endpoint.
  */
 export interface CreateStaffUserApiResponse {
-  userId: string
-  username: string
-  activationMethod: 'tempPassword' | 'link'
-  temporaryPassword?: string
-  deliveryStatus?: 'queued'
-  message: string
+  userId: string;
+  username: string;
+  activationMethod: 'tempPassword' | 'link';
+  temporaryPassword?: string;
+  deliveryStatus?: 'queued';
+  message: string;
 }
 
 /**
@@ -132,7 +154,7 @@ export interface CreateStaffUserApiResponse {
 @Controller('api/admin')
 @UseGuards(SessionAuthGuard)
 export class AdminController {
-  private readonly logger = new Logger(AdminController.name)
+  private readonly logger = new Logger(AdminController.name);
 
   /**
    * Permission gate for notification-template admin operations.
@@ -146,8 +168,8 @@ export class AdminController {
     if (!hasStaffPermission(req, 'admin:notifications:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -156,7 +178,7 @@ export class AdminController {
     private readonly brandConfigService: BrandConfigService,
     private readonly tosService: TosService,
     private readonly notificationTemplateService: NotificationTemplateService,
-    private readonly notificationsService: NotificationsService,
+    private readonly notificationsService: NotificationsService
   ) {}
 
   /**
@@ -175,8 +197,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage notification delivery configuration',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -185,10 +207,15 @@ export class AdminController {
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
   @ApiOperation({ summary: 'Replace a pending staff activation link' })
-  async resendStaffActivation(@Param('userId') userId: string, @Req() req: AuthenticatedRequest): Promise<{ deliveryStatus: 'queued' }> {
-    if (!hasStaffPermission(req,'admin:users:create')) throw new HttpException({ error:ErrorCodes.AUTHZ_FORBIDDEN.code },403)
-    if (!z.string().uuid().safeParse(userId).success) throw new HttpException({ error:ErrorCodes.VALIDATION_INPUT_INVALID.code },400)
-    return this.adminService.resendStaffActivation(userId,req.session.userId,req.ip ?? 'unknown')
+  async resendStaffActivation(
+    @Param('userId') userId: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<{ deliveryStatus: 'queued' }> {
+    if (!hasStaffPermission(req, 'admin:users:create'))
+      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+    if (!z.string().uuid().safeParse(userId).success)
+      throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+    return this.adminService.resendStaffActivation(userId, req.session.userId, req.ip ?? 'unknown');
   }
 
   /**
@@ -216,8 +243,16 @@ export class AdminController {
         username: { type: 'string', description: 'Email or E.164 phone number' },
         firstName: { type: 'string', description: 'Staff first name' },
         lastName: { type: 'string', description: 'Staff last name' },
-        roleIds: { type: 'array', items: { type: 'string', format: 'uuid' }, description: 'Initial role IDs (optional)' },
-        activationMethod: { type: 'string', enum: ['tempPassword', 'link'], description: 'How the staff user activates their account' },
+        roleIds: {
+          type: 'array',
+          items: { type: 'string', format: 'uuid' },
+          description: 'Initial role IDs (optional)',
+        },
+        activationMethod: {
+          type: 'string',
+          enum: ['tempPassword', 'link'],
+          description: 'How the staff user activates their account',
+        },
       },
     },
   })
@@ -230,8 +265,15 @@ export class AdminController {
         userId: { type: 'string', description: 'New staff user UUID' },
         username: { type: 'string', description: 'Normalized username' },
         activationMethod: { type: 'string', enum: ['tempPassword', 'link'] },
-        temporaryPassword: { type: 'string', description: 'Temporary password (shown once, only for tempPassword method)' },
-        deliveryStatus: { type: 'string', enum: ['queued'], description: 'Activation email queued for delivery' },
+        temporaryPassword: {
+          type: 'string',
+          description: 'Temporary password (shown once, only for tempPassword method)',
+        },
+        deliveryStatus: {
+          type: 'string',
+          enum: ['queued'],
+          description: 'Activation email queued for delivery',
+        },
         message: { type: 'string', description: 'Human-readable success message' },
       },
     },
@@ -242,57 +284,48 @@ export class AdminController {
   @ApiResponse({ status: 409, description: 'Username already taken' })
   async createStaffUser(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<CreateStaffUserApiResponse> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = hasStaffPermission(req, 'admin:users:create')
+    const isAdmin = hasStaffPermission(req, 'admin:users:create');
 
     if (!isAdmin) {
-      this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to create a staff user`,
-      )
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to create a staff user`);
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
     // ── Validate with Zod ────────────────────────────────────────
-    const parsed = CreateStaffUserSchema.safeParse(rawBody)
+    const parsed = CreateStaffUserSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
-      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code
+      const firstIssue = parsed.error.issues[0];
+      const message = firstIssue?.message ?? ErrorCodes.VALIDATION_INPUT_INVALID.code;
 
       if (message === 'AUTH:REGISTER:INVALID_USERNAME') {
-        throw new HttpException(
-          { statusCode: 400, error: message },
-          400,
-        )
+        throw new HttpException({ statusCode: 400, error: message }, 400);
       }
 
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     // ── Delegate to service ──────────────────────────────────────
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    const result = await this.adminService.createStaffUser(
-      parsed.data,
-      req.session.userId,
-      ip,
-    )
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    const result = await this.adminService.createStaffUser(parsed.data, req.session.userId, ip);
 
     this.logger.log(
       `Staff user created: userId=${result.userId}, username=${result.username}, ` +
-      `method=${result.activationMethod}, actor=${req.session.userId}`,
-    )
+        `method=${result.activationMethod}, actor=${req.session.userId}`
+    );
 
     // Build response — include activation-specific fields
     const response: CreateStaffUserApiResponse = {
@@ -300,17 +333,17 @@ export class AdminController {
       username: result.username,
       activationMethod: result.activationMethod,
       message: result.message,
-    }
+    };
 
     if (result.activationMethod === 'tempPassword' && 'temporaryPassword' in result) {
-      response.temporaryPassword = result.temporaryPassword
+      response.temporaryPassword = result.temporaryPassword;
     }
 
     if (result.activationMethod === 'link' && 'deliveryStatus' in result) {
-      response.deliveryStatus = result.deliveryStatus
+      response.deliveryStatus = result.deliveryStatus;
     }
 
-    return response
+    return response;
   }
 
   /**
@@ -359,51 +392,51 @@ export class AdminController {
   async updateStaffRoles(
     @Param('userId') userId: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<UpdateStaffRolesResult> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = hasStaffPermission(req, 'admin:roles:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:roles:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to update roles for user ${userId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to update roles for user ${userId}`
+      );
       throw new HttpException(
         {
           statusCode: 403,
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required',
         },
-        403,
-      )
+        403
+      );
     }
 
     // ── Validate with Zod ────────────────────────────────────────
-    const parsed = UpdateStaffRolesSchema.safeParse(rawBody)
+    const parsed = UpdateStaffRolesSchema.safeParse(rawBody);
 
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     // ── Delegate to service ──────────────────────────────────────
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     const result = await this.adminService.updateStaffRoles(
       userId,
       parsed.data.roleIds,
       req.session.userId,
       ip,
-      parsed.data.reason,
-    )
+      parsed.data.reason
+    );
 
     this.logger.log(
       `Roles updated for user ${userId}: [${result.previousRoleIds.join(',')}] → ` +
-      `[${result.roleIds.join(',')}], actor=${req.session.userId}`,
-    )
+        `[${result.roleIds.join(',')}], actor=${req.session.userId}`
+    );
 
-    return result
+    return result;
   }
 
   /**
@@ -437,21 +470,21 @@ export class AdminController {
   async listStaff(
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<StaffListResult> {
     if (!hasStaffPermission(req, 'admin:staff:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff accounts`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff accounts`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN
-    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN
-    const listQuery: StaffListQuery = {}
-    if (Number.isFinite(parsedLimit)) listQuery.limit = parsedLimit
-    if (Number.isFinite(parsedOffset)) listQuery.offset = parsedOffset
-    return this.adminService.listStaff(listQuery)
+    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN;
+    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN;
+    const listQuery: StaffListQuery = {};
+    if (Number.isFinite(parsedLimit)) listQuery.limit = parsedLimit;
+    if (Number.isFinite(parsedOffset)) listQuery.offset = parsedOffset;
+    return this.adminService.listStaff(listQuery);
   }
 
   /**
@@ -489,27 +522,27 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Staff user not found' })
   async disableStaff(
     @Param('userId') userId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<DisableStaffResult> {
     // ── Permission check: admin only ─────────────────────────────
-    const isAdmin = hasStaffPermission(req, 'admin:staff:edit')
+    const isAdmin = hasStaffPermission(req, 'admin:staff:edit');
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to disable staff user ${userId}`,
-      )
+        `Non-admin user ${req.session.userId} attempted to disable staff user ${userId}`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.adminService.disableStaff({
       userId,
       actorUserId: req.session.userId,
       ip,
-    })
+    });
   }
 
   /**
@@ -524,9 +557,21 @@ export class AdminController {
    */
   @Get('staff/audit')
   @ApiOperation({ summary: 'Staff permission audit timeline (role changes)' })
-  @ApiQuery({ name: 'userId', required: false, description: 'Filter to role changes of one staff user (UUID)' })
-  @ApiQuery({ name: 'from', required: false, description: 'Inclusive lower bound (ISO timestamp) on event time' })
-  @ApiQuery({ name: 'to', required: false, description: 'Inclusive upper bound (ISO timestamp) on event time' })
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'Filter to role changes of one staff user (UUID)',
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    description: 'Inclusive lower bound (ISO timestamp) on event time',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    description: 'Inclusive upper bound (ISO timestamp) on event time',
+  })
   @ApiQuery({ name: 'limit', required: false, description: 'Page size (1..200, default 50)' })
   @ApiQuery({ name: 'offset', required: false, description: 'Pagination offset (default 0)' })
   @ApiResponse({
@@ -550,26 +595,28 @@ export class AdminController {
     @Query('to') to: string | undefined,
     @Query('limit') limit: string | undefined,
     @Query('offset') offset: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<StaffAuditResult> {
     if (!hasStaffPermission(req, 'admin:staff:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read the staff permission audit`)
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to read the staff permission audit`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const auditQuery: StaffAuditQuery = {}
-    if (userId !== undefined) auditQuery.userId = userId
-    if (from !== undefined) auditQuery.from = from
-    if (to !== undefined) auditQuery.to = to
-    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN
-    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN
-    if (Number.isFinite(parsedLimit)) auditQuery.limit = parsedLimit
-    if (Number.isFinite(parsedOffset)) auditQuery.offset = parsedOffset
+    const auditQuery: StaffAuditQuery = {};
+    if (userId !== undefined) auditQuery.userId = userId;
+    if (from !== undefined) auditQuery.from = from;
+    if (to !== undefined) auditQuery.to = to;
+    const parsedLimit = limit !== undefined ? Number.parseInt(limit, 10) : Number.NaN;
+    const parsedOffset = offset !== undefined ? Number.parseInt(offset, 10) : Number.NaN;
+    if (Number.isFinite(parsedLimit)) auditQuery.limit = parsedLimit;
+    if (Number.isFinite(parsedOffset)) auditQuery.offset = parsedOffset;
 
-    return this.adminService.listStaffAudit(auditQuery)
+    return this.adminService.listStaffAudit(auditQuery);
   }
 
   /**
@@ -590,13 +637,13 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listRoles(@Req() req: AuthenticatedRequest): Promise<StaffRoleDto[]> {
     if (!hasStaffPermission(req, 'admin:roles:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff roles`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff roles`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.adminService.listStaffRoles()
+    return this.adminService.listStaffRoles();
   }
 
   /**
@@ -619,16 +666,18 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async getEffectivePermissions(
     @Param('userId') userId: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<EffectivePermissionsResult> {
     if (!hasStaffPermission(req, 'staff:roles:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read effective permissions`)
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to read effective permissions`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.adminService.getEffectivePermissions(userId)
+    return this.adminService.getEffectivePermissions(userId);
   }
 
   /**
@@ -639,20 +688,29 @@ export class AdminController {
    */
   @Get('config/profile-verification-mode')
   @ApiOperation({ summary: 'Get profile verification mode' })
-  @ApiResponse({ status: 200, description: 'Current verification mode.', schema: { type: 'object', properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Current verification mode.',
+    schema: {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+    },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getProfileVerificationMode(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const isAdmin = hasStaffPermission(req, 'admin:config:read')
+    const isAdmin = hasStaffPermission(req, 'admin:config:read');
     if (!isAdmin) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read profile verification mode`)
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to read profile verification mode`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.adminService.getProfileVerificationMode()
+    return this.adminService.getProfileVerificationMode();
   }
 
   /**
@@ -670,32 +728,45 @@ export class AdminController {
       properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
     },
   })
-  @ApiResponse({ status: 200, description: 'Verification mode updated.', schema: { type: 'object', properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Verification mode updated.',
+    schema: {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] } },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Invalid mode' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setProfileVerificationMode(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const isAdmin = hasStaffPermission(req, 'admin:config:write')
+    const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to set profile verification mode`)
+      this.logger.warn(
+        `Non-admin user ${req.session.userId} attempted to set profile verification mode`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    const parsed = SetProfileVerificationModeSchema.safeParse(rawBody)
+    const parsed = SetProfileVerificationModeSchema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'Mode must be one of: DISABLED, MANUAL, API' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'Mode must be one of: DISABLED, MANUAL, API',
+        },
+        400
+      );
     }
 
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setProfileVerificationMode(parsed.data.mode, req.session.userId, ip)
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setProfileVerificationMode(parsed.data.mode, req.session.userId, ip);
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -710,19 +781,21 @@ export class AdminController {
    */
   @Get('branding/config')
   @ApiOperation({ summary: 'Get active brand configuration' })
-  @ApiResponse({ status: 200, description: 'Active brand configuration.', schema: { type: 'object' } })
+  @ApiResponse({
+    status: 200,
+    description: 'Active brand configuration.',
+    schema: { type: 'object' },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async getActiveBrandConfig(
-    @Req() req: AuthenticatedRequest,
-  ): Promise<BrandConfigDto> {
+  async getActiveBrandConfig(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:read')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read brand config`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read brand config`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.brandConfigService.getActiveConfig()
+    return this.brandConfigService.getActiveConfig();
   }
 
   /**
@@ -733,19 +806,21 @@ export class AdminController {
    */
   @Get('branding/configs')
   @ApiOperation({ summary: 'List all brand config versions' })
-  @ApiResponse({ status: 200, description: 'List of brand configs.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'List of brand configs.',
+    schema: { type: 'array', items: { type: 'object' } },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async listBrandConfigs(
-    @Req() req: AuthenticatedRequest,
-  ): Promise<BrandConfigDto[]> {
+  async listBrandConfigs(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto[]> {
     if (!hasStaffPermission(req, 'admin:branding:read')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list brand configs`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list brand configs`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.brandConfigService.listConfigs()
+    return this.brandConfigService.listConfigs();
   }
 
   /**
@@ -769,32 +844,32 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async upsertBrandConfig(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to update brand config`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to update brand config`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
     // Validate with Zod
-    const parsed = UpsertBrandConfigSchema.safeParse(rawBody)
+    const parsed = UpsertBrandConfigSchema.safeParse(rawBody);
 
     if (!parsed.success) {
-      const firstIssue = parsed.error.issues[0]
+      const firstIssue = parsed.error.issues[0];
       throw new HttpException(
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: firstIssue?.message ?? 'Invalid brand config',
         },
-        400,
-      )
+        400
+      );
     }
 
-    return this.brandConfigService.upsertDraft(parsed.data.config, req.session.userId)
+    return this.brandConfigService.upsertDraft(parsed.data.config, req.session.userId);
   }
 
   /**
@@ -809,17 +884,15 @@ export class AdminController {
   @ApiResponse({ status: 200, description: 'Draft config activated.', schema: { type: 'object' } })
   @ApiResponse({ status: 400, description: 'No draft config to activate' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async activateBrandConfig(
-    @Req() req: AuthenticatedRequest,
-  ): Promise<BrandConfigDto> {
+  async activateBrandConfig(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.brandConfigService.activateDraft(req.session.userId)
+    return this.brandConfigService.activateDraft(req.session.userId);
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -836,17 +909,15 @@ export class AdminController {
   @ApiOperation({ summary: 'List all TOS versions' })
   @ApiResponse({ status: 200, description: 'List of TOS versions.' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
-  async listTosVersions(
-    @Req() req: AuthenticatedRequest,
-  ) {
+  async listTosVersions(@Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list TOS versions`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list TOS versions`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.tosService.listVersions()
+    return this.tosService.listVersions();
   }
 
   /**
@@ -861,15 +932,15 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Version not found' })
   async getTosVersion(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<TosVersionDetail> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    return this.tosService.getVersion(id)
+    return this.tosService.getVersion(id);
   }
 
   /**
@@ -897,30 +968,30 @@ export class AdminController {
   @ApiResponse({ status: 409, description: 'Draft or version ID already exists' })
   async createTosVersion(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<TosVersionDetail> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
     const schema = z.object({
       versionId: z.string().min(1).max(50),
       contentFa: z.string().min(1),
       contentEn: z.string().min(1),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
-    return this.tosService.createVersion(parsed.data, req.session.userId)
+    return this.tosService.createVersion(parsed.data, req.session.userId);
   }
 
   /**
@@ -947,44 +1018,52 @@ export class AdminController {
   async updateTosVersion(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<TosVersionDetail> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
     const schema = z.object({
       versionId: z.string().min(1).max(50).optional(),
       contentFa: z.string().min(1).optional(),
       contentEn: z.string().min(1).optional(),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     // Filter to only defined fields for the service call
-    const updateFields: Record<string, unknown> = {}
-    if (parsed.data.versionId !== undefined) updateFields.versionId = parsed.data.versionId
-    if (parsed.data.contentFa !== undefined) updateFields.contentFa = parsed.data.contentFa
-    if (parsed.data.contentEn !== undefined) updateFields.contentEn = parsed.data.contentEn
+    const updateFields: Record<string, unknown> = {};
+    if (parsed.data.versionId !== undefined) updateFields.versionId = parsed.data.versionId;
+    if (parsed.data.contentFa !== undefined) updateFields.contentFa = parsed.data.contentFa;
+    if (parsed.data.contentEn !== undefined) updateFields.contentEn = parsed.data.contentEn;
 
     // At least one field must be provided
     if (Object.keys(updateFields).length === 0) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'At least one field must be provided' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'At least one field must be provided',
+        },
+        400
+      );
     }
 
-    return this.tosService.updateVersion(id, updateFields as UpdateTosVersionFields, req.session.userId)
+    return this.tosService.updateVersion(
+      id,
+      updateFields as UpdateTosVersionFields,
+      req.session.userId
+    );
   }
 
   /**
@@ -1003,7 +1082,11 @@ export class AdminController {
       type: 'object',
       required: ['changeType'],
       properties: {
-        changeType: { type: 'string', enum: ['major', 'minor'], description: 'Material change (major) → triggers re-acceptance' },
+        changeType: {
+          type: 'string',
+          enum: ['major', 'minor'],
+          description: 'Material change (major) → triggers re-acceptance',
+        },
       },
     },
   })
@@ -1013,28 +1096,28 @@ export class AdminController {
   async publishTosVersion(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<TosVersionDetail> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
     const schema = z.object({
       changeType: z.enum(['major', 'minor']),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
-    return this.tosService.publishVersion(id, parsed.data, req.session.userId)
+    return this.tosService.publishVersion(id, parsed.data, req.session.userId);
   }
 
   /**
@@ -1049,18 +1132,15 @@ export class AdminController {
   @ApiResponse({ status: 204, description: 'Draft discarded.' })
   @ApiResponse({ status: 400, description: 'Version is published and cannot be deleted' })
   @ApiResponse({ status: 404, description: 'Version not found' })
-  async deleteTosVersion(
-    @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
-  ): Promise<void> {
+  async deleteTosVersion(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<void> {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
 
-    await this.tosService.deleteVersion(id)
+    await this.tosService.deleteVersion(id);
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -1076,22 +1156,26 @@ export class AdminController {
    */
   @Get('notifications/templates')
   @ApiOperation({ summary: 'List notification templates' })
-  @ApiResponse({ status: 200, description: 'List of notification templates.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'List of notification templates.',
+    schema: { type: 'array', items: { type: 'object' } },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listNotificationTemplates(
     @Query('locale') locale: string | undefined,
     @Query('channel') channel: string | undefined,
     @Query('status') status: string | undefined,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult[]> {
-    this.assertNotificationPermission(req)
+    this.assertNotificationPermission(req);
 
-    const options: PageTemplatesOptions = {}
-    if (locale === 'fa' || locale === 'en') options.locale = locale
-    if (channel === 'email' || channel === 'sms' || channel === 'in_app') options.channel = channel
-    if (status === 'draft' || status === 'active') options.status = status
+    const options: PageTemplatesOptions = {};
+    if (locale === 'fa' || locale === 'en') options.locale = locale;
+    if (channel === 'email' || channel === 'sms' || channel === 'in_app') options.channel = channel;
+    if (status === 'draft' || status === 'active') options.status = status;
 
-    return this.notificationTemplateService.list(options)
+    return this.notificationTemplateService.list(options);
   }
 
   /**
@@ -1102,14 +1186,18 @@ export class AdminController {
   @Get('notifications/templates/:id')
   @ApiOperation({ summary: 'Get a notification template by ID' })
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
-  @ApiResponse({ status: 200, description: 'Notification template details.', schema: { type: 'object' } })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification template details.',
+    schema: { type: 'object' },
+  })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async getNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
-    this.assertNotificationPermission(req)
-    return this.notificationTemplateService.getById(id)
+    this.assertNotificationPermission(req);
+    return this.notificationTemplateService.getById(id);
   }
 
   /**
@@ -1132,7 +1220,10 @@ export class AdminController {
         channel: { type: 'string', enum: ['email', 'sms', 'in_app'] },
         locale: { type: 'string', enum: ['fa', 'en'] },
         subject: { type: 'string', description: 'Email subject (email channel only)' },
-        bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
+        bodyTemplate: {
+          type: 'string',
+          description: 'Template body with {{variable}} placeholders',
+        },
         variables: {
           type: 'array',
           items: {
@@ -1142,7 +1233,11 @@ export class AdminController {
                 type: 'object',
                 properties: {
                   name: { type: 'string', description: 'Placeholder name' },
-                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                  description: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'Human-readable description',
+                  },
                 },
                 required: ['name'],
               },
@@ -1155,12 +1250,15 @@ export class AdminController {
   })
   @ApiResponse({ status: 201, description: 'Draft template created.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
-  @ApiResponse({ status: 409, description: 'Template already exists for this event+channel+locale' })
+  @ApiResponse({
+    status: 409,
+    description: 'Template already exists for this event+channel+locale',
+  })
   async createNotificationTemplate(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
-    this.assertNotificationPermission(req)
+    this.assertNotificationPermission(req);
 
     const schema = z.object({
       eventKey: z.string().min(1).max(100),
@@ -1176,17 +1274,17 @@ export class AdminController {
               name: z.string().min(1).max(100),
               description: z.string().max(500).nullable().optional(),
             }),
-          ]),
+          ])
         )
         .default([]),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     const input: CreateNotificationTemplateInput = {
@@ -1196,9 +1294,9 @@ export class AdminController {
       subject: parsed.data.subject ?? null,
       bodyTemplate: parsed.data.bodyTemplate,
       variables: parsed.data.variables,
-    }
+    };
 
-    return this.notificationTemplateService.create(input, req.session.userId)
+    return this.notificationTemplateService.create(input, req.session.userId);
   }
 
   /**
@@ -1226,7 +1324,11 @@ export class AdminController {
                 type: 'object',
                 properties: {
                   name: { type: 'string', description: 'Placeholder name' },
-                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                  description: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'Human-readable description',
+                  },
                 },
                 required: ['name'],
               },
@@ -1243,9 +1345,9 @@ export class AdminController {
   async updateNotificationTemplate(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
-    this.assertNotificationPermission(req)
+    this.assertNotificationPermission(req);
 
     const schema = z.object({
       subject: z.string().max(200).nullable().optional(),
@@ -1258,37 +1360,42 @@ export class AdminController {
               name: z.string().min(1).max(100),
               description: z.string().max(500).nullable().optional(),
             }),
-          ]),
+          ])
         )
         .optional(),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     // At least one field must be provided
-    const hasChanges = parsed.data.subject !== undefined ||
+    const hasChanges =
+      parsed.data.subject !== undefined ||
       parsed.data.bodyTemplate !== undefined ||
-      parsed.data.variables !== undefined
+      parsed.data.variables !== undefined;
 
     if (!hasChanges) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'At least one field must be provided' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'At least one field must be provided',
+        },
+        400
+      );
     }
 
-    const input: Record<string, unknown> = {}
-    if (parsed.data.subject !== undefined) input.subject = parsed.data.subject
-    if (parsed.data.bodyTemplate !== undefined) input.bodyTemplate = parsed.data.bodyTemplate
-    if (parsed.data.variables !== undefined) input.variables = parsed.data.variables
+    const input: Record<string, unknown> = {};
+    if (parsed.data.subject !== undefined) input.subject = parsed.data.subject;
+    if (parsed.data.bodyTemplate !== undefined) input.bodyTemplate = parsed.data.bodyTemplate;
+    if (parsed.data.variables !== undefined) input.variables = parsed.data.variables;
 
-    return this.notificationTemplateService.update(id, input, req.session.userId)
+    return this.notificationTemplateService.update(id, input, req.session.userId);
   }
 
   /**
@@ -1308,10 +1415,10 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Template not found' })
   async publishNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
-    this.assertNotificationPermission(req)
-    return this.notificationTemplateService.publish(id, req.session.userId)
+    this.assertNotificationPermission(req);
+    return this.notificationTemplateService.publish(id, req.session.userId);
   }
 
   /**
@@ -1330,10 +1437,10 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Template not found' })
   async unpublishNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<NotificationTemplateResult> {
-    this.assertNotificationPermission(req)
-    return this.notificationTemplateService.unpublish(id, req.session.userId)
+    this.assertNotificationPermission(req);
+    return this.notificationTemplateService.unpublish(id, req.session.userId);
   }
 
   /**
@@ -1353,10 +1460,10 @@ export class AdminController {
   @ApiResponse({ status: 404, description: 'Template not found' })
   async deleteNotificationTemplate(
     @Param('id') id: string,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<void> {
-    this.assertNotificationPermission(req)
-    await this.notificationTemplateService.delete(id, req.session.userId)
+    this.assertNotificationPermission(req);
+    await this.notificationTemplateService.delete(id, req.session.userId);
   }
 
   /**
@@ -1375,7 +1482,10 @@ export class AdminController {
       type: 'object',
       required: ['bodyTemplate', 'variables'],
       properties: {
-        bodyTemplate: { type: 'string', description: 'Template body with {{variable}} placeholders' },
+        bodyTemplate: {
+          type: 'string',
+          description: 'Template body with {{variable}} placeholders',
+        },
         variables: {
           type: 'array',
           items: {
@@ -1385,7 +1495,11 @@ export class AdminController {
                 type: 'object',
                 properties: {
                   name: { type: 'string', description: 'Placeholder name' },
-                  description: { type: 'string', nullable: true, description: 'Human-readable description' },
+                  description: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'Human-readable description',
+                  },
                 },
                 required: ['name'],
               },
@@ -1393,7 +1507,10 @@ export class AdminController {
           },
           description: 'Allow-listed variable names (+ optional descriptions)',
         },
-        sampleData: { type: 'object', description: 'Optional sample values keyed by variable name' },
+        sampleData: {
+          type: 'object',
+          description: 'Optional sample values keyed by variable name',
+        },
       },
     },
   })
@@ -1402,9 +1519,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async previewNotificationTemplateBody(
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: AuthenticatedRequest
   ): Promise<RenderedTemplate> {
-    this.assertNotificationPermission(req)
+    this.assertNotificationPermission(req);
 
     const schema = z.object({
       bodyTemplate: z.string().min(1),
@@ -1416,25 +1533,25 @@ export class AdminController {
               name: z.string().min(1).max(100),
               description: z.string().max(500).nullable().optional(),
             }),
-          ]),
+          ])
         )
         .default([]),
       sampleData: z.record(z.string(), z.string()).optional(),
-    })
+    });
 
-    const parsed = schema.safeParse(rawBody)
+    const parsed = schema.safeParse(rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
     return this.notificationTemplateService.previewFromBody(
       parsed.data.bodyTemplate,
       parsed.data.variables,
-      parsed.data.sampleData,
-    )
+      parsed.data.sampleData
+    );
   }
 
   /**
@@ -1467,33 +1584,40 @@ export class AdminController {
     },
   })
   @ApiResponse({ status: 200, description: 'Test message delivered.' })
-  @ApiResponse({ status: 403, description: 'Destination not owned / not allow-listed, or admin role required' })
+  @ApiResponse({
+    status: 403,
+    description: 'Destination not owned / not allow-listed, or admin role required',
+  })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async testSendNotificationTemplate(
     @Param('id') id: string,
     @Body() rawBody: unknown,
-    @Req() req: AuthenticatedRequest,
-  ): Promise<{ ok: boolean; destination: 'in_app' | 'email' | 'sms'; lastTestStatus: 'delivered' | 'failed' }> {
-    this.assertNotificationPermission(req)
+    @Req() req: AuthenticatedRequest
+  ): Promise<{
+    ok: boolean;
+    destination: 'in_app' | 'email' | 'sms';
+    lastTestStatus: 'delivered' | 'failed';
+  }> {
+    this.assertNotificationPermission(req);
 
     const parsed = z
       .object({
         destination: z.string().trim().max(320).optional(),
       })
-      .safeParse(rawBody ?? {})
+      .safeParse(rawBody ?? {});
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
-        400,
-      )
+        400
+      );
     }
 
-    const destination = parsed.data.destination
+    const destination = parsed.data.destination;
     return this.notificationTemplateService.testSend(
       id,
       req.session.userId,
-      destination !== undefined ? { destination } : undefined,
-    )
+      destination !== undefined ? { destination } : undefined
+    );
   }
 
   /**
@@ -1512,7 +1636,11 @@ export class AdminController {
   @ApiQuery({ name: 'status', required: false, enum: ['delivered', 'failed'] })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'offset', required: false, type: Number })
-  @ApiResponse({ status: 200, description: 'List of delivery log rows.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'List of delivery log rows.',
+    schema: { type: 'array', items: { type: 'object' } },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listDeliveryLogs(
     @Req() req: AuthenticatedRequest,
@@ -1520,32 +1648,32 @@ export class AdminController {
     @Query('channel') channel?: 'in_app' | 'email' | 'sms',
     @Query('status') status?: 'delivered' | 'failed',
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+    @Query('offset') offset?: string
   ) {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read delivery logs`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read delivery logs`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
     const options: {
-      notificationId?: string
-      channel?: 'in_app' | 'email' | 'sms'
-      status?: 'delivered' | 'failed'
-      limit?: number
-      offset?: number
-    } = {}
-    if (notificationId) options.notificationId = notificationId
-    if (channel) options.channel = channel
-    if (status) options.status = status
-    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN
-    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN
+      notificationId?: string;
+      channel?: 'in_app' | 'email' | 'sms';
+      status?: 'delivered' | 'failed';
+      limit?: number;
+      offset?: number;
+    } = {};
+    if (notificationId) options.notificationId = notificationId;
+    if (channel) options.channel = channel;
+    if (status) options.status = status;
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN;
+    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN;
     // Ignore non-numeric limit/offset so malformed queries fall back to the
     // service defaults instead of producing a NaN SQL binding (500 today).
-    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit
-    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
-    return this.notificationsService.findDeliveryLogs(options)
+    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit;
+    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset;
+    return this.notificationsService.findDeliveryLogs(options);
   }
 
   /**
@@ -1564,7 +1692,11 @@ export class AdminController {
   @ApiQuery({ name: 'channel', required: false, enum: ['in_app', 'email', 'sms'] })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiQuery({ name: 'offset', required: false, type: Number })
-  @ApiResponse({ status: 200, description: 'List of dead-letter rows.', schema: { type: 'array', items: { type: 'object' } } })
+  @ApiResponse({
+    status: 200,
+    description: 'List of dead-letter rows.',
+    schema: { type: 'array', items: { type: 'object' } },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listDeadLetters(
     @Req() req: AuthenticatedRequest,
@@ -1572,30 +1704,30 @@ export class AdminController {
     @Query('severity') severity?: 'error' | 'critical',
     @Query('channel') channel?: 'in_app' | 'email' | 'sms',
     @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
+    @Query('offset') offset?: string
   ) {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read dead-letters`)
+      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read dead-letters`);
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
     const options: {
-      status?: 'open' | 'retried' | 'resolved' | 'dismissed'
-      severity?: 'error' | 'critical'
-      channel?: 'in_app' | 'email' | 'sms'
-      limit?: number
-      offset?: number
-    } = {}
-    if (status) options.status = status
-    if (severity) options.severity = severity
-    if (channel) options.channel = channel
-    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN
-    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN
-    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit
-    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset
-    return this.notificationsService.listDeadLetters(options)
+      status?: 'open' | 'retried' | 'resolved' | 'dismissed';
+      severity?: 'error' | 'critical';
+      channel?: 'in_app' | 'email' | 'sms';
+      limit?: number;
+      offset?: number;
+    } = {};
+    if (status) options.status = status;
+    if (severity) options.severity = severity;
+    if (channel) options.channel = channel;
+    const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN;
+    const parsedOffset = offset !== undefined ? parseInt(offset, 10) : NaN;
+    if (Number.isFinite(parsedLimit)) options.limit = parsedLimit;
+    if (Number.isFinite(parsedOffset)) options.offset = parsedOffset;
+    return this.notificationsService.listDeadLetters(options);
   }
 
   /**
@@ -1609,25 +1741,37 @@ export class AdminController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Retry a dead-lettered notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
-  @ApiResponse({ status: 200, description: 'Dead-letter record re-queued.', schema: { type: 'object' } })
+  @ApiResponse({
+    status: 200,
+    description: 'Dead-letter record re-queued.',
+    schema: { type: 'object' },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async retryDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    const result = await this.notificationsService.deadLetterAction(id, 'retry', req.session.userId)
+    const result = await this.notificationsService.deadLetterAction(
+      id,
+      'retry',
+      req.session.userId
+    );
     if (result === null) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Dead-letter record not found',
+        },
+        404
+      );
     }
-    this.logger.log(`Admin ${req.session.userId} retried dead-letter ${id}`)
-    return result
+    this.logger.log(`Admin ${req.session.userId} retried dead-letter ${id}`);
+    return result;
   }
 
   /**
@@ -1640,25 +1784,37 @@ export class AdminController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Resolve a dead-lettered notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
-  @ApiResponse({ status: 200, description: 'Dead-letter record resolved.', schema: { type: 'object' } })
+  @ApiResponse({
+    status: 200,
+    description: 'Dead-letter record resolved.',
+    schema: { type: 'object' },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async resolveDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    const result = await this.notificationsService.deadLetterAction(id, 'resolve', req.session.userId)
+    const result = await this.notificationsService.deadLetterAction(
+      id,
+      'resolve',
+      req.session.userId
+    );
     if (result === null) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Dead-letter record not found',
+        },
+        404
+      );
     }
-    this.logger.log(`Admin ${req.session.userId} resolved dead-letter ${id}`)
-    return result
+    this.logger.log(`Admin ${req.session.userId} resolved dead-letter ${id}`);
+    return result;
   }
 
   /**
@@ -1671,25 +1827,37 @@ export class AdminController {
   @HttpCode(200)
   @ApiOperation({ summary: 'Dismiss a dead-lettered notification (admin)' })
   @ApiParam({ name: 'id', description: 'Dead-letter record UUID' })
-  @ApiResponse({ status: 200, description: 'Dead-letter record dismissed.', schema: { type: 'object' } })
+  @ApiResponse({
+    status: 200,
+    description: 'Dead-letter record dismissed.',
+    schema: { type: 'object' },
+  })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Dead-letter record not found' })
   async dismissDeadLetter(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
-        403,
-      )
+        403
+      );
     }
-    const result = await this.notificationsService.deadLetterAction(id, 'dismiss', req.session.userId)
+    const result = await this.notificationsService.deadLetterAction(
+      id,
+      'dismiss',
+      req.session.userId
+    );
     if (result === null) {
       throw new HttpException(
-        { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Dead-letter record not found' },
-        404,
-      )
+        {
+          statusCode: 404,
+          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+          message: 'Dead-letter record not found',
+        },
+        404
+      );
     }
-    this.logger.log(`Admin ${req.session.userId} dismissed dead-letter ${id}`)
-    return result
+    this.logger.log(`Admin ${req.session.userId} dismissed dead-letter ${id}`);
+    return result;
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -1720,8 +1888,8 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getDeliveryWindow(@Req() req: AuthenticatedRequest) {
-    this.assertNotificationDeliveryEditPermission(req)
-    return this.adminService.getDeliveryWindowConfig()
+    this.assertNotificationDeliveryEditPermission(req);
+    return this.adminService.getDeliveryWindowConfig();
   }
 
   /**
@@ -1768,9 +1936,9 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setDeliveryWindow(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertNotificationDeliveryEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip)
+    this.assertNotificationDeliveryEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setDeliveryWindowConfig(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -1788,8 +1956,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage financial threshold configuration',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -1815,8 +1983,8 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getDualApprovalThreshold(@Req() req: AuthenticatedRequest) {
-    this.assertFinancialThresholdPermission(req)
-    return this.adminService.getDualApprovalThresholdConfig()
+    this.assertFinancialThresholdPermission(req);
+    return this.adminService.getDualApprovalThresholdConfig();
   }
 
   /**
@@ -1859,9 +2027,9 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setDualApprovalThreshold(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertFinancialThresholdPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session.userId, ip)
+    this.assertFinancialThresholdPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setDualApprovalThresholdConfig(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -1888,8 +2056,8 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getWalletTopUpLimit(@Req() req: AuthenticatedRequest) {
-    this.assertFinancialThresholdPermission(req)
-    return this.adminService.getWalletTopUpLimitConfig()
+    this.assertFinancialThresholdPermission(req);
+    return this.adminService.getWalletTopUpLimitConfig();
   }
 
   /**
@@ -1935,9 +2103,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 409, description: 'Stale expected_version' })
   async setWalletTopUpLimit(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertFinancialThresholdPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session.userId, ip)
+    this.assertFinancialThresholdPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setWalletTopUpLimitConfig(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -1955,8 +2123,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage electricity ordering settings',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -1998,8 +2166,8 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getGreenElectricityRules(@Req() req: AuthenticatedRequest) {
-    this.assertElectricitySettingsPermission(req)
-    return this.adminService.getGreenElectricityConfig()
+    this.assertElectricitySettingsPermission(req);
+    return this.adminService.getGreenElectricityConfig();
   }
 
   /**
@@ -2049,8 +2217,8 @@ export class AdminController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getGreenElectricitySafetyStatus(@Req() req: AuthenticatedRequest) {
-    this.assertElectricitySettingsPermission(req)
-    return this.adminService.getGreenElectricitySafetyStatus()
+    this.assertElectricitySettingsPermission(req);
+    return this.adminService.getGreenElectricitySafetyStatus();
   }
 
   /**
@@ -2078,7 +2246,11 @@ export class AdminController {
       properties: {
         simple_order: {
           type: 'object',
-          required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
+          required: [
+            'mandatory_green_enabled',
+            'average_power_threshold_kw',
+            'mandatory_green_share_percent',
+          ],
           properties: {
             mandatory_green_enabled: { type: 'boolean', example: true },
             average_power_threshold_kw: { type: 'integer', example: 1000, minimum: 0 },
@@ -2087,7 +2259,11 @@ export class AdminController {
         },
         advanced_order: {
           type: 'object',
-          required: ['mandatory_green_enabled', 'average_power_threshold_kw', 'mandatory_green_share_percent'],
+          required: [
+            'mandatory_green_enabled',
+            'average_power_threshold_kw',
+            'mandatory_green_share_percent',
+          ],
           properties: {
             mandatory_green_enabled: { type: 'boolean', example: false },
             average_power_threshold_kw: { type: 'integer', example: 1000, minimum: 0 },
@@ -2125,9 +2301,9 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setGreenElectricityRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertElectricitySettingsPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setGreenElectricityConfig(rawBody, req.session.userId, ip)
+    this.assertElectricitySettingsPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setGreenElectricityConfig(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -2145,8 +2321,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage service response targets',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -2173,8 +2349,8 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getServiceResponseTargets(@Req() req: AuthenticatedRequest) {
-    this.assertServiceTargetsEditPermission(req)
-    return this.adminService.getServiceResponseTargets()
+    this.assertServiceTargetsEditPermission(req);
+    return this.adminService.getServiceResponseTargets();
   }
 
   /**
@@ -2214,9 +2390,9 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setServiceResponseTargets(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertServiceTargetsEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setServiceResponseTargets(rawBody, req.session.userId, ip)
+    this.assertServiceTargetsEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setServiceResponseTargets(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -2236,8 +2412,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage the service escalation policy',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -2260,8 +2436,20 @@ export class AdminController {
           type: 'object',
           nullable: true,
           properties: {
-            level2: { type: 'object', properties: { delayHours: { type: 'number', nullable: true }, channels: { type: 'array', items: { type: 'string' } } } },
-            level3: { type: 'object', properties: { delayHours: { type: 'number', nullable: true }, channels: { type: 'array', items: { type: 'string' } } } },
+            level2: {
+              type: 'object',
+              properties: {
+                delayHours: { type: 'number', nullable: true },
+                channels: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            level3: {
+              type: 'object',
+              properties: {
+                delayHours: { type: 'number', nullable: true },
+                channels: { type: 'array', items: { type: 'string' } },
+              },
+            },
           },
         },
         verification_case: { type: 'object', nullable: true },
@@ -2271,8 +2459,8 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getEscalationPolicy(@Req() req: AuthenticatedRequest) {
-    this.assertEscalationEditPermission(req)
-    return this.adminService.getEscalationPolicy()
+    this.assertEscalationEditPermission(req);
+    return this.adminService.getEscalationPolicy();
   }
 
   /**
@@ -2295,8 +2483,28 @@ export class AdminController {
           type: 'object',
           nullable: true,
           properties: {
-            level2: { type: 'object', properties: { delayHours: { type: 'number', nullable: true, example: 24 }, channels: { type: 'array', items: { type: 'string', enum: ['in_app', 'email'] }, example: ['in_app', 'email'] } } },
-            level3: { type: 'object', properties: { delayHours: { type: 'number', nullable: true, example: 48 }, channels: { type: 'array', items: { type: 'string', enum: ['in_app', 'email'] }, example: ['in_app'] } } },
+            level2: {
+              type: 'object',
+              properties: {
+                delayHours: { type: 'number', nullable: true, example: 24 },
+                channels: {
+                  type: 'array',
+                  items: { type: 'string', enum: ['in_app', 'email'] },
+                  example: ['in_app', 'email'],
+                },
+              },
+            },
+            level3: {
+              type: 'object',
+              properties: {
+                delayHours: { type: 'number', nullable: true, example: 48 },
+                channels: {
+                  type: 'array',
+                  items: { type: 'string', enum: ['in_app', 'email'] },
+                  example: ['in_app'],
+                },
+              },
+            },
           },
         },
         verification_case: { type: 'object', nullable: true },
@@ -2317,9 +2525,9 @@ export class AdminController {
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setEscalationPolicy(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertEscalationEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setEscalationPolicy(rawBody, req.session.userId, ip)
+    this.assertEscalationEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setEscalationPolicy(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -2338,8 +2546,8 @@ export class AdminController {
           error: ErrorCodes.AUTHZ_FORBIDDEN.code,
           message: 'Admin role required to manage staff teams',
         },
-        403,
-      )
+        403
+      );
     }
   }
 
@@ -2350,10 +2558,18 @@ export class AdminController {
    * ids, ordered by name.
    */
   @Get('staff-teams/members')
-  async staffTeamCandidates(@Req() req: AuthenticatedRequest, @Query('q') q?: string, @Query('teamId') teamId?: string) {
-    this.assertStaffTeamsEditPermission(req)
-    if ((q !== undefined && typeof q !== 'string') || (teamId !== undefined && typeof teamId !== 'string')) throw new BadRequestException('Invalid staff search')
-    return this.adminService.staffTeamCandidates(q ?? '',teamId)
+  async staffTeamCandidates(
+    @Req() req: AuthenticatedRequest,
+    @Query('q') q?: string,
+    @Query('teamId') teamId?: string
+  ) {
+    this.assertStaffTeamsEditPermission(req);
+    if (
+      (q !== undefined && typeof q !== 'string') ||
+      (teamId !== undefined && typeof teamId !== 'string')
+    )
+      throw new BadRequestException('Invalid staff search');
+    return this.adminService.staffTeamCandidates(q ?? '', teamId);
   }
 
   @Get('staff-teams')
@@ -2372,7 +2588,11 @@ export class AdminController {
           skillTags: { type: 'array', items: { type: 'string' } },
           isActive: { type: 'boolean' },
           memberUserIds: { type: 'array', items: { type: 'string' } },
-          leadUserId: { type: 'string', nullable: true, description: 'Selected team member who receives escalation alerts' },
+          leadUserId: {
+            type: 'string',
+            nullable: true,
+            description: 'Selected team member who receives escalation alerts',
+          },
           createdAt: { type: 'string' },
           updatedAt: { type: 'string' },
         },
@@ -2382,8 +2602,8 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listStaffTeams(@Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    return this.adminService.listStaffTeams()
+    this.assertStaffTeamsEditPermission(req);
+    return this.adminService.listStaffTeams();
   }
 
   /**
@@ -2406,7 +2626,11 @@ export class AdminController {
         description: { type: 'string', nullable: true },
         skillTags: { type: 'array', items: { type: 'string' }, example: ['billing'] },
         memberUserIds: { type: 'array', items: { type: 'string' } },
-          leadUserId: { type: 'string', nullable: true, description: 'Selected team member who receives escalation alerts' },
+        leadUserId: {
+          type: 'string',
+          nullable: true,
+          description: 'Selected team member who receives escalation alerts',
+        },
       },
     },
   })
@@ -2422,7 +2646,11 @@ export class AdminController {
         skillTags: { type: 'array', items: { type: 'string' } },
         isActive: { type: 'boolean' },
         memberUserIds: { type: 'array', items: { type: 'string' } },
-          leadUserId: { type: 'string', nullable: true, description: 'Selected team member who receives escalation alerts' },
+        leadUserId: {
+          type: 'string',
+          nullable: true,
+          description: 'Selected team member who receives escalation alerts',
+        },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },
@@ -2434,9 +2662,9 @@ export class AdminController {
   @ApiResponse({ status: 409, description: 'Team name already taken' })
   @HttpCode(201)
   async createStaffTeam(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.createStaffTeam(rawBody, req.session.userId, ip)
+    this.assertStaffTeamsEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.createStaffTeam(rawBody, req.session.userId, ip);
   }
 
   /**
@@ -2459,7 +2687,11 @@ export class AdminController {
         description: { type: 'string', nullable: true },
         skillTags: { type: 'array', items: { type: 'string' } },
         memberUserIds: { type: 'array', items: { type: 'string' } },
-          leadUserId: { type: 'string', nullable: true, description: 'Selected team member who receives escalation alerts' },
+        leadUserId: {
+          type: 'string',
+          nullable: true,
+          description: 'Selected team member who receives escalation alerts',
+        },
       },
     },
   })
@@ -2475,7 +2707,11 @@ export class AdminController {
         skillTags: { type: 'array', items: { type: 'string' } },
         isActive: { type: 'boolean' },
         memberUserIds: { type: 'array', items: { type: 'string' } },
-          leadUserId: { type: 'string', nullable: true, description: 'Selected team member who receives escalation alerts' },
+        leadUserId: {
+          type: 'string',
+          nullable: true,
+          description: 'Selected team member who receives escalation alerts',
+        },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },
@@ -2486,10 +2722,14 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Team not found' })
   @ApiResponse({ status: 409, description: 'Team name already taken' })
-  async updateStaffTeam(@Param('id', new ParseUUIDPipe()) id: string, @Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.updateStaffTeam(id, rawBody, req.session.userId, ip)
+  async updateStaffTeam(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() rawBody: unknown,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.assertStaffTeamsEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.updateStaffTeam(id, rawBody, req.session.userId, ip);
   }
 
   /**
@@ -2504,14 +2744,21 @@ export class AdminController {
   @RequiresStepUp()
   @ApiOperation({ summary: 'Delete a staff team (admin)' })
   @ApiParam({ name: 'id', description: 'Staff team UUID', type: 'string' })
-  @ApiResponse({ status: 200, description: 'Team deleted.', schema: { type: 'object', properties: { deleted: { type: 'boolean' } } } })
+  @ApiResponse({
+    status: 200,
+    description: 'Team deleted.',
+    schema: { type: 'object', properties: { deleted: { type: 'boolean' } } },
+  })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Team not found' })
-  async deleteStaffTeam(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.deleteStaffTeam(id, req.session.userId, ip)
+  async deleteStaffTeam(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    this.assertStaffTeamsEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.deleteStaffTeam(id, req.session.userId, ip);
   }
 
   /**
@@ -2543,8 +2790,8 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getStaffAssignmentRules(@Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    return this.adminService.getStaffAssignmentRules()
+    this.assertStaffTeamsEditPermission(req);
+    return this.adminService.getStaffAssignmentRules();
   }
 
   /**
@@ -2569,8 +2816,16 @@ export class AdminController {
         ticket: {
           type: 'object',
           properties: {
-            teamId: { type: 'string', nullable: true, example: '00000000-0000-7000-8000-000000000000' },
-            strategy: { type: 'string', enum: ['round_robin', 'expertise', 'load'], example: 'round_robin' },
+            teamId: {
+              type: 'string',
+              nullable: true,
+              example: '00000000-0000-7000-8000-000000000000',
+            },
+            strategy: {
+              type: 'string',
+              enum: ['round_robin', 'expertise', 'load'],
+              example: 'round_robin',
+            },
           },
         },
         verification_case: {
@@ -2604,8 +2859,8 @@ export class AdminController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async setStaffAssignmentRules(@Body() rawBody: unknown, @Req() req: AuthenticatedRequest) {
-    this.assertStaffTeamsEditPermission(req)
-    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown'
-    return this.adminService.setStaffAssignmentRules(rawBody, req.session.userId, ip)
+    this.assertStaffTeamsEditPermission(req);
+    const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
+    return this.adminService.setStaffAssignmentRules(rawBody, req.session.userId, ip);
   }
 }

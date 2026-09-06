@@ -87,15 +87,14 @@ export class UploadPolicyResolver {
       // DB outage → deployment baseline. Logged; uploads must not freeze
       // because the admin config store is temporarily unreachable.
       this.logger.warn(
-        `Upload policy lookup failed for category "${category}"; falling back to deployment limits: ${String(error)}`,
+        `Upload policy lookup failed for category "${category}"; falling back to deployment limits: ${String(error)}`
       );
     }
 
     if (dbPolicy === null) {
       return {
         ...base,
-        allowedExtensions:
-          deploymentExtensions.length === 0 ? null : [...deploymentExtensions],
+        allowedExtensions: deploymentExtensions.length === 0 ? null : [...deploymentExtensions],
         source: 'deployment',
         policyId: null,
       };
@@ -105,8 +104,8 @@ export class UploadPolicyResolver {
     // policy whose entries all disappeared from the deployment set (e.g.
     // the deployment dropped a format after the policy was written)
     // yields an EMPTY list — which denies every extension (fails closed).
-    const intersected = dbPolicy.allowed_extensions.filter((ext) =>
-      deploymentExtensions.length === 0 || deploymentExtensions.includes(ext),
+    const intersected = dbPolicy.allowed_extensions.filter(
+      (ext) => deploymentExtensions.length === 0 || deploymentExtensions.includes(ext)
     );
 
     return {
@@ -128,7 +127,7 @@ export class UploadPolicyResolver {
           AND (effective_until IS NULL OR effective_until > $2)
         ORDER BY effective_from DESC
         LIMIT 1`,
-      [category, new Date()],
+      [category, new Date()]
     );
     return result.rows[0] ?? null;
   }
@@ -139,10 +138,7 @@ export class UploadPolicyResolver {
 // ---------------------------------------------------------------------------
 
 /** Whether a file name's extension is allowed by an effective policy. */
-export function effectiveAllowsExtension(
-  policy: EffectiveUploadPolicy,
-  fileName: string,
-): boolean {
+export function effectiveAllowsExtension(policy: EffectiveUploadPolicy, fileName: string): boolean {
   if (policy.allowedExtensions === null) return true;
   const dot = fileName.lastIndexOf('.');
   if (dot === -1) return false;

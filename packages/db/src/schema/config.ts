@@ -1,5 +1,5 @@
-import { sql } from 'drizzle-orm'
-import { integer, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm';
+import { integer, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 /**
  * Application configuration table.
@@ -19,24 +19,19 @@ import { integer, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
  * Row layout uses the `key` as the natural primary key, which is both the
  * stable identifier and the Redis cache key suffix (`config:entry:<key>`).
  */
-export const appConfig = pgTable(
-  'app_config',
-  {
-    /** Configuration key, e.g. `vat_rate`, `product_min_price`, `threshold.peak_hours`. */
-    key: text('key').primaryKey(),
+export const appConfig = pgTable('app_config', {
+  /** Configuration key, e.g. `vat_rate`, `product_min_price`, `threshold.peak_hours`. */
+  key: text('key').primaryKey(),
 
-    /** Configuration value — any JSON-serializable type. */
-    value: jsonb('value').notNull(),
+  /** Configuration value — any JSON-serializable type. */
+  value: jsonb('value').notNull(),
 
-    /** Monotonically increasing version number incremented on every update. */
-    version: integer('version').notNull().default(1),
+  /** Monotonically increasing version number incremented on every update. */
+  version: integer('version').notNull().default(1),
 
-    /** When this config entry was last updated. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** When this config entry was last updated. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * Global configuration version counter.
@@ -46,21 +41,16 @@ export const appConfig = pgTable(
  * the global version has changed since the cache entry was populated, all cached
  * config is considered potentially stale even if the per-entry version matches.
  */
-export const configVersion = pgTable(
-  'config_version',
-  {
-    /** Singleton row identifier — always `'global'`. */
-    id: text('id').primaryKey().default('global'),
+export const configVersion = pgTable('config_version', {
+  /** Singleton row identifier — always `'global'`. */
+  id: text('id').primaryKey().default('global'),
 
-    /** Monotonically increasing version number bumped on every config write. */
-    version: integer('version').notNull().default(1),
+  /** Monotonically increasing version number bumped on every config write. */
+  version: integer('version').notNull().default(1),
 
-    /** Last time any config entry was modified. */
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-      .defaultNow()
-      .notNull(),
-  },
-)
+  /** Last time any config entry was modified. */
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+});
 
 /**
  * SQL to create the app_config table.
@@ -72,7 +62,7 @@ export const createAppConfigTable = sql`
     version INTEGER NOT NULL DEFAULT 1,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );
-`
+`;
 
 /**
  * SQL to create the config_version table.
@@ -88,4 +78,4 @@ export const createConfigVersionTable = sql`
   INSERT INTO config_version (id, version)
   VALUES ('global', 1)
   ON CONFLICT (id) DO NOTHING;
-`
+`;

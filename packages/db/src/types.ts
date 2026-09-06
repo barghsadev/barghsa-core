@@ -1,5 +1,5 @@
-import { customType, bigint, numeric, timestamp } from 'drizzle-orm/pg-core'
-import { sql } from 'drizzle-orm'
+import { customType, bigint, numeric, timestamp } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 /**
  * PostgreSQL `uuid` column with `uuid_generate_v7()` default.
@@ -19,12 +19,12 @@ import { sql } from 'drizzle-orm'
  */
 const uuidv7Column = customType<{ data: string; default: true }>({
   dataType() {
-    return 'uuid'
+    return 'uuid';
   },
-})
+});
 
 export const uuidv7 = (name?: string) =>
-  (name ? uuidv7Column(name) : uuidv7Column()).default(sql`uuid_generate_v7()`)
+  (name ? uuidv7Column(name) : uuidv7Column()).default(sql`uuid_generate_v7()`);
 
 /**
  * PostgreSQL `timestamp with time zone` — always UTC.
@@ -40,7 +40,7 @@ export const uuidv7 = (name?: string) =>
 export const timestamptz = (name?: string) =>
   name
     ? timestamp(name, { withTimezone: true, mode: 'date' })
-    : timestamp({ withTimezone: true, mode: 'date' })
+    : timestamp({ withTimezone: true, mode: 'date' });
 
 /**
  * 64-bit signed integer (`bigint`) for IRR amounts.
@@ -57,7 +57,7 @@ export const timestamptz = (name?: string) =>
  * ```
  */
 export const irrAmount = (name?: string) =>
-  name ? bigint(name, { mode: 'bigint' }) : bigint({ mode: 'bigint' })
+  name ? bigint(name, { mode: 'bigint' }) : bigint({ mode: 'bigint' });
 
 /**
  * Fixed-precision decimal (`numeric(20, 6)`) for rates and quantities.
@@ -71,7 +71,7 @@ export const irrAmount = (name?: string) =>
  * ```
  */
 export const fixedDecimal = (name?: string) =>
-  name ? numeric(name, { precision: 20, scale: 6 }) : numeric({ precision: 20, scale: 6 })
+  name ? numeric(name, { precision: 20, scale: 6 }) : numeric({ precision: 20, scale: 6 });
 
 /**
  * PostgreSQL `tstzrange` — half-open range `[start, end)`.
@@ -90,9 +90,9 @@ export const fixedDecimal = (name?: string) =>
  */
 export const halfOpenRange = customType<{ data: string; driverData: string }>({
   dataType() {
-    return 'tstzrange'
+    return 'tstzrange';
   },
-})
+});
 
 /**
  * Build a PostgreSQL tstzrange literal string with `[start, end)` bounds.
@@ -105,8 +105,8 @@ export const halfOpenRange = customType<{ data: string; driverData: string }>({
  * @returns A PostgreSQL tstzrange literal, e.g. `'[2026-01-01T00:00:00Z,2027-01-01T00:00:00Z)'`
  */
 export function halfOpenRangeValue(start: string, end: string): string {
-  return `[${start},${end})`
+  return `[${start},${end})`;
 }
 
 // Re-export drizzle-orm pgEnum for enum-like status fields
-export { pgEnum } from 'drizzle-orm/pg-core'
+export { pgEnum } from 'drizzle-orm/pg-core';

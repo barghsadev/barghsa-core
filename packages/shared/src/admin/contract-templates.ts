@@ -12,13 +12,13 @@
 // Constants
 // ---------------------------------------------------------------------------
 
-export const CONTRACT_TEMPLATE_STATUSES = ['active', 'inactive'] as const
-export type ContractTemplateStatus = (typeof CONTRACT_TEMPLATE_STATUSES)[number]
+export const CONTRACT_TEMPLATE_STATUSES = ['active', 'inactive'] as const;
+export type ContractTemplateStatus = (typeof CONTRACT_TEMPLATE_STATUSES)[number];
 
-export const CONTRACT_TEMPLATE_STATUS_DEFAULT: ContractTemplateStatus = 'active'
+export const CONTRACT_TEMPLATE_STATUS_DEFAULT: ContractTemplateStatus = 'active';
 
 /** Max placeholders kept per version — guards against pathological files. */
-export const MAX_CONTRACT_TEMPLATE_PLACEHOLDERS = 100
+export const MAX_CONTRACT_TEMPLATE_PLACEHOLDERS = 100;
 
 /**
  * Placeholder regex: `{{ name }}` with an optional single layer of
@@ -28,8 +28,7 @@ export const MAX_CONTRACT_TEMPLATE_PLACEHOLDERS = 100
  * conventional Mustache/Handlebars variable syntax without pulling in a
  * template engine.
  */
-export const CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN =
-  /\{\{\s*([A-Za-z][A-Za-z0-9_]*)\s*\}\}/g
+export const CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN = /\{\{\s*([A-Za-z][A-Za-z0-9_]*)\s*\}\}/g;
 
 // ---------------------------------------------------------------------------
 // Extraction
@@ -45,17 +44,17 @@ export const CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN =
  *   null/undefined).
  */
 export function extractContractTemplatePlaceholders(content: string): string[] {
-  const seen = new Set<string>()
-  const result: string[] = []
+  const seen = new Set<string>();
+  const result: string[] = [];
   for (const match of content.matchAll(CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN)) {
-    const name = (match[1] ?? '').trim()
+    const name = (match[1] ?? '').trim();
     if (name !== '' && !seen.has(name)) {
-      seen.add(name)
-      result.push(name)
-      if (result.length >= MAX_CONTRACT_TEMPLATE_PLACEHOLDERS) break
+      seen.add(name);
+      result.push(name);
+      if (result.length >= MAX_CONTRACT_TEMPLATE_PLACEHOLDERS) break;
     }
   }
-  return result
+  return result;
 }
 
 // ---------------------------------------------------------------------------
@@ -63,26 +62,26 @@ export function extractContractTemplatePlaceholders(content: string): string[] {
 // ---------------------------------------------------------------------------
 
 export interface ContractTemplateVersionDto {
-  versionNumber: number
-  storageKey: string
-  fileName: string
-  contentType: string | null
-  fileSize: number | null
-  placeholders: string[]
-  createdBy: string
-  createdAt: string
+  versionNumber: number;
+  storageKey: string;
+  fileName: string;
+  contentType: string | null;
+  fileSize: number | null;
+  placeholders: string[];
+  createdBy: string;
+  createdAt: string;
 }
 
 export interface ContractTemplateDto {
-  id: string
-  name: string
-  description: string | null
-  status: ContractTemplateStatus
-  createdBy: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  name: string;
+  description: string | null;
+  status: ContractTemplateStatus;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
   /** Total version count (0 for a template with no uploads yet). */
-  versionCount: number
+  versionCount: number;
   /** Highest version, if any. */
-  latestVersion: ContractTemplateVersionDto | null
+  latestVersion: ContractTemplateVersionDto | null;
 }

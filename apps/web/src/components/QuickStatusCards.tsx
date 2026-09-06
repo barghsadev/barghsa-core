@@ -1,18 +1,18 @@
-import { Link } from '@tanstack/react-router'
-import { t, type Locale } from '@barghsa/i18n'
-import type { JSX } from 'react'
+import { Link } from '@tanstack/react-router';
+import { t, type Locale } from '@barghsa/i18n';
+import type { JSX } from 'react';
 
 export interface QuickStatusCardsProps {
   /** Active contracts (confirmed electricity orders). */
-  activeContracts: number
+  activeContracts: number;
   /** Pending orders awaiting processing. */
-  pendingOrders: number
+  pendingOrders: number;
   /** Open support tickets. */
-  openTickets: number
+  openTickets: number;
   /** Unpaid / overdue invoices. */
-  unpaidInvoices: number
+  unpaidInvoices: number;
   /** UI locale. */
-  locale?: Locale
+  locale?: Locale;
 }
 
 /** ─── Inline SVG icons ─────────────────────────────────────────────── */
@@ -35,7 +35,7 @@ function ContractIcon({ className }: { className?: string }) {
       <line x1="16" y1="17" x2="8" y2="17" />
       <polyline points="10 9 9 9 8 9" />
     </svg>
-  )
+  );
 }
 
 function OrderIcon({ className }: { className?: string }) {
@@ -55,7 +55,7 @@ function OrderIcon({ className }: { className?: string }) {
       <line x1="12" y1="12" x2="12" y2="22" />
       <line x1="8" y1="6" x2="16" y2="10" />
     </svg>
-  )
+  );
 }
 
 function TicketIcon({ className }: { className?: string }) {
@@ -75,7 +75,7 @@ function TicketIcon({ className }: { className?: string }) {
       <path d="M13 9h.01" />
       <path d="M9 13h.01" />
     </svg>
-  )
+  );
 }
 
 function InvoiceIcon({ className }: { className?: string }) {
@@ -97,7 +97,7 @@ function InvoiceIcon({ className }: { className?: string }) {
       <path d="M10 9v4" />
       <line x1="7" y1="12" x2="13" y2="12" />
     </svg>
-  )
+  );
 }
 
 /** ─── Per-card colour helpers ────────────────────────────────────────── */
@@ -106,8 +106,8 @@ function InvoiceIcon({ className }: { className?: string }) {
  * Active contracts: any count is a positive signal → green always.
  */
 function contractColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-gray-400 bg-white'
-  return 'border-l-4 border-green-500 bg-green-50'
+  if (count === 0) return 'border-l-4 border-gray-400 bg-white';
+  return 'border-l-4 border-green-500 bg-green-50';
 }
 
 /**
@@ -119,9 +119,9 @@ function contractColor(count: number): string {
  * exists; see T-08.01.03.
  */
 function orderColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
-  return 'border-l-4 border-red-500 bg-red-50'
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
+  return 'border-l-4 border-red-500 bg-red-50';
 }
 
 /**
@@ -131,9 +131,9 @@ function orderColor(count: number): string {
  * attention, and a growing backlog (3+) signals the customer needs to act.
  */
 function ticketColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
-  return 'border-l-4 border-red-500 bg-red-50'
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
+  return 'border-l-4 border-red-500 bg-red-50';
 }
 
 /**
@@ -144,21 +144,21 @@ function ticketColor(count: number): string {
  * placeholders pending operational data.
  */
 function invoiceColor(count: number): string {
-  if (count === 0) return 'border-l-4 border-green-500 bg-green-50'
-  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50'
-  return 'border-l-4 border-red-500 bg-red-50'
+  if (count === 0) return 'border-l-4 border-green-500 bg-green-50';
+  if (count <= 2) return 'border-l-4 border-yellow-500 bg-yellow-50';
+  return 'border-l-4 border-red-500 bg-red-50';
 }
 
 /** ─── Card definitions ─────────────────────────────────────────────── */
 
 interface CardDef {
-  key: string
-  icon: (props: { className?: string }) => JSX.Element
-  labelKey: string
-  href: string
-  search?: Record<string, string>
-  count: number
-  colorFn: (count: number) => string
+  key: string;
+  icon: (props: { className?: string }) => JSX.Element;
+  labelKey: string;
+  href: string;
+  search?: Record<string, string>;
+  count: number;
+  colorFn: (count: number) => string;
 }
 
 /**
@@ -174,7 +174,7 @@ export function QuickStatusCards({
   unpaidInvoices,
   locale = 'fa',
 }: QuickStatusCardsProps) {
-  const isRtl = locale === 'fa'
+  const isRtl = locale === 'fa';
 
   const cards: CardDef[] = [
     {
@@ -212,16 +212,13 @@ export function QuickStatusCards({
       count: unpaidInvoices,
       colorFn: invoiceColor,
     },
-  ]
+  ];
 
   return (
-    <div
-      className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-      dir={isRtl ? 'rtl' : 'ltr'}
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" dir={isRtl ? 'rtl' : 'ltr'}>
       {cards.map((card) => {
-        const Icon = card.icon
-        const colorClass = card.colorFn(card.count)
+        const Icon = card.icon;
+        const colorClass = card.colorFn(card.count);
 
         return (
           <Link
@@ -236,14 +233,12 @@ export function QuickStatusCards({
                 <p className="text-sm text-gray-500 mb-1">
                   {t(card.labelKey as keyof typeof t, locale)}
                 </p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {card.count}
-                </p>
+                <p className="text-2xl font-semibold text-gray-900">{card.count}</p>
               </div>
             </div>
           </Link>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

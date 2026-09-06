@@ -1,26 +1,18 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Query,
-  Req,
-} from '@nestjs/common'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import type { IncomingMessage } from 'node:http'
-import { RateLimit } from '../rate-limit/rate-limit.decorator.js'
-import { SkipCsrf } from '../session/csrf.guard.js'
-import { OnlineTopUpCallbackService } from './online-topup-callback.service.js'
+import { Controller, Get, HttpCode, HttpStatus, Post, Query, Req } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import type { IncomingMessage } from 'node:http';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
+import { SkipCsrf } from '../session/csrf.guard.js';
+import { OnlineTopUpCallbackService } from './online-topup-callback.service.js';
 
 interface CallbackRequest extends IncomingMessage {
-  rawBody?: Buffer
+  rawBody?: Buffer;
 }
 
 export interface ZarinpalReturnQuery {
-  orderId: string
-  authority: string
-  status: string
+  orderId: string;
+  authority: string;
+  status: string;
 }
 
 /**
@@ -29,23 +21,23 @@ export interface ZarinpalReturnQuery {
  * query-key casing cannot drop a real return.
  */
 export function readZarinpalReturnQuery(
-  query: Record<string, unknown>,
+  query: Record<string, unknown>
 ): ZarinpalReturnQuery | null {
-  const orderId = firstQueryValue(query, 'orderId')
-  const authority = firstQueryValue(query, 'Authority')
-  const status = firstQueryValue(query, 'Status')
-  if (!orderId || !authority || !status) return null
-  return { orderId, authority, status }
+  const orderId = firstQueryValue(query, 'orderId');
+  const authority = firstQueryValue(query, 'Authority');
+  const status = firstQueryValue(query, 'Status');
+  if (!orderId || !authority || !status) return null;
+  return { orderId, authority, status };
 }
 
 function firstQueryValue(query: Record<string, unknown>, name: string): string {
-  const wanted = name.toLowerCase()
+  const wanted = name.toLowerCase();
   for (const [key, value] of Object.entries(query)) {
-    if (key.toLowerCase() !== wanted) continue
-    if (typeof value === 'string') return value.trim()
-    if (Array.isArray(value) && typeof value[0] === 'string') return value[0].trim()
+    if (key.toLowerCase() !== wanted) continue;
+    if (typeof value === 'string') return value.trim();
+    if (Array.isArray(value) && typeof value[0] === 'string') return value[0].trim();
   }
-  return ''
+  return '';
 }
 
 /**
@@ -71,14 +63,17 @@ export class OnlineTopUpCallbackController {
   @ApiOperation({
     summary: 'ZarinPal browser return; credits only after server-side verify',
   })
-  @ApiResponse({ status: 200, description: 'Return accepted (credited, unpaid, duplicate, or ignored).' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return accepted (credited, unpaid, duplicate, or ignored).',
+  })
   @ApiResponse({ status: 401, description: 'orderId/Authority did not match a pending top-up' })
   async browserReturn(@Query() query: Record<string, unknown>) {
-    const zarinpal = readZarinpalReturnQuery(query)
+    const zarinpal = readZarinpalReturnQuery(query);
     if (!zarinpal) {
-      return { ok: true, credited: false, reason: 'browser_redirect_ignored' as const }
+      return { ok: true, credited: false, reason: 'browser_redirect_ignored' as const };
     }
-    return this.callbackService.handleZarinpalReturn(zarinpal)
+    return this.callbackService.handleZarinpalReturn(zarinpal);
   }
 
   @Post('callback')
@@ -87,20 +82,23 @@ export class OnlineTopUpCallbackController {
   @RateLimit({ namespace: 'wallet:top-up:callback', limit: 60, windowMs: 60_000 })
   @ApiOperation({ summary: 'Authenticated payment-provider callback for an online wallet top-up' })
   @ApiResponse({ status: 200, description: 'Callback accepted (credited or duplicate/unpaid).' })
-  @ApiResponse({ status: 401, description: 'Invalid signature, replay window, or merchant context' })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid signature, replay window, or merchant context',
+  })
   @ApiResponse({ status: 503, description: 'Callback signing secret is not configured' })
   async receive(@Req() req: CallbackRequest) {
     const headers = {
       eventId: headerValue(req.headers['x-barghsa-event-id']),
       timestamp: headerValue(req.headers['x-barghsa-timestamp']),
       signature: headerValue(req.headers['x-barghsa-signature']),
-    }
-    const rawBody = req.rawBody?.toString('utf8') ?? ''
-    return this.callbackService.handle({ headers, rawBody })
+    };
+    const rawBody = req.rawBody?.toString('utf8') ?? '';
+    return this.callbackService.handle({ headers, rawBody });
   }
 }
 
 function headerValue(value: string | string[] | undefined): string | undefined {
-  if (Array.isArray(value)) return value[0]
-  return value
+  if (Array.isArray(value)) return value[0];
+  return value;
 }

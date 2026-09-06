@@ -88,9 +88,7 @@ function buildS3Config(dto: UpdateStorageConfigDto): Record<string, unknown> {
 export class StorageAdminController {
   private readonly logger = new Logger(StorageAdminController.name);
 
-  constructor(
-    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null,
-  ) {}
+  constructor(@Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null) {}
 
   /**
    * GET /api/admin/storage/config
@@ -122,7 +120,10 @@ export class StorageAdminController {
       ['S3_BUCKET', dto.bucket],
       ['S3_ACCESS_KEY_ID', dto.accessKeyId],
       ['S3_SECRET_ACCESS_KEY', dto.secretAccessKey],
-      ['S3_FORCE_PATH_STYLE', dto.forcePathStyle !== undefined ? String(dto.forcePathStyle) : undefined],
+      [
+        'S3_FORCE_PATH_STYLE',
+        dto.forcePathStyle !== undefined ? String(dto.forcePathStyle) : undefined,
+      ],
       ['S3_PRIVATE_ENDPOINT', dto.privateEndpointUrl],
       ['S3_PUBLIC_ENDPOINT', dto.publicEndpointUrl],
     ];
@@ -153,7 +154,7 @@ export class StorageAdminController {
         {
           warn: (msg, ...meta) => this.logger.warn(msg, ...meta),
           error: (msg, ...meta) => this.logger.error(msg, ...meta),
-        },
+        }
       );
 
       // Simple probe: try to list objects with maxKeys=1.

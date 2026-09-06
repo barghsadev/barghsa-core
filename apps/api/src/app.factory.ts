@@ -10,7 +10,10 @@ import { Reflector } from '@nestjs/core';
 export async function createApplication() {
   const proxies = trustedProxyIps();
   const app = await NestFactory.create(AppModule, { rawBody: true });
-  app.getHttpAdapter().getInstance().set('trust proxy', proxies.length ? proxies : false);
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .set('trust proxy', proxies.length ? proxies : false);
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
   // NestJS will call OnApplicationShutdown lifecycle hooks on all registered

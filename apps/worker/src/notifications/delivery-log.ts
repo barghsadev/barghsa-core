@@ -1,5 +1,5 @@
-import type { NotificationChannel } from '@barghsa/shared/notifications'
-import { sanitizeError } from './error-redact.js'
+import type { NotificationChannel } from '@barghsa/shared/notifications';
+import { sanitizeError } from './error-redact.js';
 
 /**
  * Delivery log writer (E-05, T-05.01.05).
@@ -23,25 +23,25 @@ import { sanitizeError } from './error-redact.js'
  *     clear permanent/transient signal.
  */
 
-export type DeliveryErrorCategory = 'transient' | 'permanent' | 'provider'
+export type DeliveryErrorCategory = 'transient' | 'permanent' | 'provider';
 
 export interface WriteDeliveryLogInput {
   /** The outbox notification id this attempt belongs to. */
-  notificationId: string
+  notificationId: string;
   /** The channel delivered. */
-  channel: NotificationChannel
+  channel: NotificationChannel;
   /** Whether the provider accepted the delivery. */
-  delivered: boolean
+  delivered: boolean;
   /** 1-based attempt number within this channel's job. */
-  attemptNumber: number
+  attemptNumber: number;
   /** Provider reference returned by the transport, if any. */
-  providerRef: string | null
+  providerRef: string | null;
   /** Provider round-trip latency in milliseconds, if measurable. */
-  latencyMs: number | null
+  latencyMs: number | null;
   /** Raw error message (sanitized before persistence). */
-  error?: string | null
+  error?: string | null;
   /** Precomputed error category; otherwise derived heuristically. */
-  errorCategory?: DeliveryErrorCategory | null
+  errorCategory?: DeliveryErrorCategory | null;
 }
 
 /**
@@ -51,18 +51,18 @@ export interface WriteDeliveryLogInput {
  * backoff ladder still attempts recovery.
  */
 export function classifyDeliveryError(message: string): DeliveryErrorCategory {
-  const m = message.toLowerCase()
+  const m = message.toLowerCase();
   if (
     /(\b4\d{2}\b|\bvalidation\b|\bforbidden\b|\bbad request\b|\bunauthorized\b|\brejected\b|\bnot found\b|\binvalid\b)/.test(
-      m,
+      m
     )
   ) {
-    return 'permanent'
+    return 'permanent';
   }
   if (/(timeout|\b5\d{2}\b|unavailable|unreachable|refused|temporary|overloaded)/.test(m)) {
-    return 'transient'
+    return 'transient';
   }
-  return 'provider'
+  return 'provider';
 }
 
 /**
@@ -72,10 +72,10 @@ export function classifyDeliveryError(message: string): DeliveryErrorCategory {
 export async function writeDeliveryLog(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pool: any,
-  input: WriteDeliveryLogInput,
+  input: WriteDeliveryLogInput
 ): Promise<void> {
-  const safeError = input.error ? sanitizeError(input.error) : null
-  const category = input.errorCategory ?? (safeError ? classifyDeliveryError(safeError) : null)
+  const safeError = input.error ? sanitizeError(input.error) : null;
+  const category = input.errorCategory ?? (safeError ? classifyDeliveryError(safeError) : null);
   await pool.query(
     `INSERT INTO notification_delivery_log
        (notification_id, channel, status, attempt_number, provider_ref,
@@ -90,6 +90,6 @@ export async function writeDeliveryLog(
       input.latencyMs ?? null,
       input.delivered ? null : category,
       safeError,
-    ],
-  )
+    ]
+  );
 }

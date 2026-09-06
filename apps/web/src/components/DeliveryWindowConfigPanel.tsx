@@ -1,8 +1,8 @@
-import { withCsrf } from '../lib/csrf.js'
-import { useState, useEffect, useCallback } from 'react'
-import type { FormEvent } from 'react'
-import { t } from '@barghsa/i18n'
-import type { Locale } from '@barghsa/i18n'
+import { withCsrf } from '../lib/csrf.js';
+import { useState, useEffect, useCallback } from 'react';
+import type { FormEvent } from 'react';
+import { t } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n';
 
 /**
  * Delivery-window configuration panel (E-05, T-05.03.03).
@@ -21,83 +21,92 @@ import type { Locale } from '@barghsa/i18n'
  */
 
 interface DeliveryWindowConfig {
-  timezone: string
-  startHour: number
-  endHour: number
+  timezone: string;
+  startHour: number;
+  endHour: number;
 }
 
 interface DeliveryWindowConfigPanelProps {
-  uiLocale: Locale
+  uiLocale: Locale;
 }
 
-const DEFAULT_WINDOW: DeliveryWindowConfig = { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 }
+const DEFAULT_WINDOW: DeliveryWindowConfig = { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 };
 
 /** Common IANA timezones relevant to the platform's Iranian user base. */
-const TIMEZONE_OPTIONS = ['Asia/Tehran', 'UTC', 'Asia/Dubai', 'Europe/Berlin', 'Europe/London', 'America/New_York']
+const TIMEZONE_OPTIONS = [
+  'Asia/Tehran',
+  'UTC',
+  'Asia/Dubai',
+  'Europe/Berlin',
+  'Europe/London',
+  'America/New_York',
+];
 
 /** Generate 0–23 hour options (as integers, formatters render as HH:00). */
 function hourOptions(): number[] {
-  const out: number[] = []
-  for (let h = 0; h < 24; h++) out.push(h)
-  return out
+  const out: number[] = [];
+  for (let h = 0; h < 24; h++) out.push(h);
+  return out;
 }
 
 /** Render an hour-of-day as an HH:00 clock string (24h). */
 function formatHour(hour: number): string {
-  const hh = String(hour).padStart(2, '0')
-  return `${hh}:00`
+  const hh = String(hour).padStart(2, '0');
+  return `${hh}:00`;
 }
 
 export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowConfigPanelProps) {
-  const [config, setConfig] = useState<DeliveryWindowConfig | null>(null)
-  const [timezone, setTimezone] = useState(DEFAULT_WINDOW.timezone)
-  const [startHour, setStartHour] = useState(DEFAULT_WINDOW.startHour)
-  const [endHour, setEndHour] = useState(DEFAULT_WINDOW.endHour)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [clientIssue, setClientIssue] = useState<string | null>(null)
+  const [config, setConfig] = useState<DeliveryWindowConfig | null>(null);
+  const [timezone, setTimezone] = useState(DEFAULT_WINDOW.timezone);
+  const [startHour, setStartHour] = useState(DEFAULT_WINDOW.startHour);
+  const [endHour, setEndHour] = useState(DEFAULT_WINDOW.endHour);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [clientIssue, setClientIssue] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      setLoading(true)
-      const res = await fetch('/api/admin/config/delivery-window')
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as DeliveryWindowConfig
-      setConfig(data)
-      setTimezone(data.timezone)
-      setStartHour(data.startHour)
-      setEndHour(data.endHour)
+      setLoading(true);
+      const res = await fetch('/api/admin/config/delivery-window');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as DeliveryWindowConfig;
+      setConfig(data);
+      setTimezone(data.timezone);
+      setStartHour(data.startHour);
+      setEndHour(data.endHour);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.window.loadFailed', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.window.loadFailed', uiLocale)
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [uiLocale])
+  }, [uiLocale]);
 
   useEffect(() => {
-    load()
-  }, [load])
+    load();
+  }, [load]);
 
   /** Client-side validation mirroring the shared rules (T-05.03.03). */
   function validate(start: number, end: number): string | null {
-    if (start >= end) return t('admin.notifications.window.errBeforeEnd', uiLocale)
-    if (end - start < 4) return t('admin.notifications.window.errTooShort', uiLocale)
-    return null
+    if (start >= end) return t('admin.notifications.window.errBeforeEnd', uiLocale);
+    if (end - start < 4) return t('admin.notifications.window.errTooShort', uiLocale);
+    return null;
   }
 
   async function handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    const issue = validate(startHour, endHour)
+    e.preventDefault();
+    const issue = validate(startHour, endHour);
     if (issue) {
-      setClientIssue(issue)
-      return
+      setClientIssue(issue);
+      return;
     }
-    setClientIssue(null)
-    setSaving(true)
-    setSaved(false)
-    setError(null)
+    setClientIssue(null);
+    setSaving(true);
+    setSaved(false);
+    setError(null);
     try {
       const res = await fetch('/api/admin/config/delivery-window', {
         method: 'PUT',
@@ -107,18 +116,20 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           start_hour: startHour,
           end_hour: endHour,
         }),
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as DeliveryWindowConfig
-      setConfig(data)
-      setSaved(true)
+      const data = (await res.json()) as DeliveryWindowConfig;
+      setConfig(data);
+      setSaved(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.window.saveFailed', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.window.saveFailed', uiLocale)
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
@@ -127,14 +138,16 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
       <div className="bg-white rounded-lg border border-gray-200 p-6 text-gray-500">
         {t('admin.notifications.window.loading', uiLocale)}
       </div>
-    )
+    );
   }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
       <div>
         <h2 className="text-lg font-semibold">{t('admin.notifications.window.title', uiLocale)}</h2>
-        <p className="text-sm text-gray-500 mt-1">{t('admin.notifications.window.description', uiLocale)}</p>
+        <p className="text-sm text-gray-500 mt-1">
+          {t('admin.notifications.window.description', uiLocale)}
+        </p>
       </div>
 
       {error && (
@@ -153,7 +166,8 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
         {/* Timezone */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('admin.notifications.window.timezone', uiLocale)} <span className="text-red-500">*</span>
+            {t('admin.notifications.window.timezone', uiLocale)}{' '}
+            <span className="text-red-500">*</span>
           </label>
           <select
             value={timezone}
@@ -172,7 +186,8 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('admin.notifications.window.start', uiLocale)} <span className="text-red-500">*</span>
+              {t('admin.notifications.window.start', uiLocale)}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <select
               value={startHour}
@@ -188,7 +203,8 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('admin.notifications.window.end', uiLocale)} <span className="text-red-500">*</span>
+              {t('admin.notifications.window.end', uiLocale)}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <select
               value={endHour}
@@ -204,9 +220,7 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
           </div>
         </div>
 
-        {clientIssue && (
-          <p className="text-sm text-red-600">{clientIssue}</p>
-        )}
+        {clientIssue && <p className="text-sm text-red-600">{clientIssue}</p>}
 
         {config && (
           <p className="text-xs text-gray-400">
@@ -223,11 +237,17 @@ export default function DeliveryWindowConfigPanel({ uiLocale }: DeliveryWindowCo
             disabled={saving}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
           >
-            {saving ? t('admin.notifications.window.saving', uiLocale) : t('admin.notifications.window.save', uiLocale)}
+            {saving
+              ? t('admin.notifications.window.saving', uiLocale)
+              : t('admin.notifications.window.save', uiLocale)}
           </button>
-          {saved && <span className="text-sm text-green-600">{t('admin.notifications.window.saved', uiLocale)}</span>}
+          {saved && (
+            <span className="text-sm text-green-600">
+              {t('admin.notifications.window.saved', uiLocale)}
+            </span>
+          )}
         </div>
       </form>
     </div>
-  )
+  );
 }

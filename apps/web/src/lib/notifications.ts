@@ -1,6 +1,6 @@
-import { notificationLink } from '@barghsa/shared/notifications'
-import { t, type Locale } from '@barghsa/i18n'
-import { withCsrf } from './csrf.js'
+import { notificationLink } from '@barghsa/shared/notifications';
+import { t, type Locale } from '@barghsa/i18n';
+import { withCsrf } from './csrf.js';
 
 /**
  * Notification center client (E-05, T-05.02.03).
@@ -17,43 +17,37 @@ import { withCsrf } from './csrf.js'
 
 /** A single notification as surfaced by the center. */
 export interface NotificationItem {
-  id: string
+  id: string;
   /** Business type — security | payment | contract | order | system | … */
-  type: string
+  type: string;
   /** i18n key resolving to the title template. */
-  localizedContent?: Record<string, { title: string; body: string }> | null
-  titleI18nKey: string
+  localizedContent?: Record<string, { title: string; body: string }> | null;
+  titleI18nKey: string;
   /** i18n key resolving to the body template. */
-  bodyI18nKey: string
+  bodyI18nKey: string;
   /** JSON interpolation variables used when rendering title/body. */
-  params: Record<string, unknown>
+  params: Record<string, unknown>;
   /** Optional client route the item links to (e.g. '/electricity/order'). */
-  linkRoute: string | null
+  linkRoute: string | null;
   /** Query/params for the linked route. */
-  linkParams: Record<string, unknown> | null
-  isRead: boolean
-  readAt: string | null
-  createdAt: string
+  linkParams: Record<string, unknown> | null;
+  isRead: boolean;
+  readAt: string | null;
+  createdAt: string;
 }
 
 /** A cursor-keyed page of notifications plus the unread count. */
 export interface NotificationPage {
-  data: NotificationItem[]
-  next_cursor: string | null
-  unread_count: number
+  data: NotificationItem[];
+  next_cursor: string | null;
+  unread_count: number;
 }
 
 /** Supported notification center filters. */
-export type NotificationFilter = 'all' | 'unread'
+export type NotificationFilter = 'all' | 'unread';
 
 /** All keys a notification `type` maps to (with a system fallback). */
-export const NOTIFICATION_TYPES = [
-  'security',
-  'payment',
-  'contract',
-  'order',
-  'system',
-] as const
+export const NOTIFICATION_TYPES = ['security', 'payment', 'contract', 'order', 'system'] as const;
 
 /**
  * Map a backend `type` string to its i18n label key. Unknown types fall back
@@ -61,9 +55,9 @@ export const NOTIFICATION_TYPES = [
  */
 export function notificationTypeLabelKey(type: string): string {
   if ((NOTIFICATION_TYPES as readonly string[]).includes(type)) {
-    return `notifications.type.${type}`
+    return `notifications.type.${type}`;
   }
-  return 'notifications.type.system'
+  return 'notifications.type.system';
 }
 
 /**
@@ -76,30 +70,27 @@ export function notificationTypeLabelKey(type: string): string {
 export async function fetchNotifications(
   cursor?: string,
   filter: NotificationFilter = 'all',
-  limit = 20,
+  limit = 20
 ): Promise<NotificationPage> {
-  const params = new URLSearchParams({ filter, limit: String(limit) })
-  if (cursor) params.set('cursor', cursor)
+  const params = new URLSearchParams({ filter, limit: String(limit) });
+  if (cursor) params.set('cursor', cursor);
   const res = await fetch(`/api/v1/notifications?${params.toString()}`, {
     credentials: 'include',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return (await res.json()) as NotificationPage
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as NotificationPage;
 }
 
 /** Mark a single notification read. Returns the fresh unread count. */
 export async function markOneRead(id: string): Promise<number> {
-  const res = await fetch(
-    `/api/v1/notifications/${encodeURIComponent(id)}/read`,
-    {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-    },
-  )
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const body = (await res.json()) as { unread_count: number }
-  return body.unread_count
+  const res = await fetch(`/api/v1/notifications/${encodeURIComponent(id)}/read`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: withCsrf({ 'Content-Type': 'application/json' }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const body = (await res.json()) as { unread_count: number };
+  return body.unread_count;
 }
 
 /** Mark every notification in the active profile read. Returns the new count. */
@@ -108,10 +99,10 @@ export async function markAllRead(): Promise<number> {
     method: 'PATCH',
     credentials: 'include',
     headers: withCsrf({ 'Content-Type': 'application/json' }),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const body = (await res.json()) as { unread_count: number }
-  return body.unread_count
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const body = (await res.json()) as { unread_count: number };
+  return body.unread_count;
 }
 
 /**
@@ -124,10 +115,10 @@ export async function markAllRead(): Promise<number> {
 export async function fetchUnreadCount(): Promise<number> {
   const res = await fetch('/api/v1/notifications/unread-count', {
     credentials: 'include',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  const body = (await res.json()) as { unread_count: number }
-  return body.unread_count
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const body = (await res.json()) as { unread_count: number };
+  return body.unread_count;
 }
 
 /**
@@ -138,20 +129,15 @@ export async function fetchUnreadCount(): Promise<number> {
  * render regardless of authoring style. Unknown placeholders are left as-is so
  * missing data never surfaces as `undefined`.
  */
-export function interpolate(
-  template: string,
-  params: Record<string, unknown> = {},
-): string {
+export function interpolate(template: string, params: Record<string, unknown> = {}): string {
   return template.replace(/\{\{?(\w+)\}?\}/g, (match, name: string) =>
-    params[name] !== undefined && params[name] !== null
-      ? String(params[name])
-      : match,
-  )
+    params[name] !== undefined && params[name] !== null ? String(params[name]) : match
+  );
 }
 
 const RELATIVE_UNITS: Array<{
-  unit: Intl.RelativeTimeFormatUnit
-  seconds: number
+  unit: Intl.RelativeTimeFormatUnit;
+  seconds: number;
 }> = [
   { unit: 'year', seconds: 365 * 24 * 60 * 60 },
   { unit: 'month', seconds: 30 * 24 * 60 * 60 },
@@ -159,7 +145,7 @@ const RELATIVE_UNITS: Array<{
   { unit: 'day', seconds: 24 * 60 * 60 },
   { unit: 'hour', seconds: 60 * 60 },
   { unit: 'minute', seconds: 60 },
-]
+];
 
 /**
  * Format a past timestamp as a compact relative string in the active locale,
@@ -169,38 +155,35 @@ const RELATIVE_UNITS: Array<{
 export function formatRelativeTime(
   date: string | Date,
   locale: Locale,
-  now: Date = new Date(),
+  now: Date = new Date()
 ): string {
-  const target = date instanceof Date ? date : new Date(date)
-  if (Number.isNaN(target.getTime())) return '—'
-  const diffSeconds = Math.floor((target.getTime() - now.getTime()) / 1000)
+  const target = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(target.getTime())) return '—';
+  const diffSeconds = Math.floor((target.getTime() - now.getTime()) / 1000);
 
-  if (diffSeconds > -30) return ''
+  if (diffSeconds > -30) return '';
 
-  const abs = Math.abs(diffSeconds)
-  const rtf = new Intl.RelativeTimeFormat(
-    locale === 'fa' ? 'fa-IR' : 'en',
-    { numeric: 'auto' },
-  )
+  const abs = Math.abs(diffSeconds);
+  const rtf = new Intl.RelativeTimeFormat(locale === 'fa' ? 'fa-IR' : 'en', { numeric: 'auto' });
 
   for (const { unit, seconds } of RELATIVE_UNITS) {
     if (abs >= seconds) {
-      return rtf.format(Math.round(diffSeconds / seconds), unit)
+      return rtf.format(Math.round(diffSeconds / seconds), unit);
     }
   }
   // Extremely recent (sub-minute)
-  return rtf.format(Math.round(diffSeconds / 60), 'minute')
+  return rtf.format(Math.round(diffSeconds / 60), 'minute');
 }
 
 /** True when the given timestamp is older than the supplied cutoff. */
 export function isOlderThan(
   date: string | Date,
   cutoffMs: number,
-  now: Date = new Date(),
+  now: Date = new Date()
 ): boolean {
-  const target = date instanceof Date ? date : new Date(date)
-  if (Number.isNaN(target.getTime())) return false
-  return now.getTime() - target.getTime() > cutoffMs
+  const target = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(target.getTime())) return false;
+  return now.getTime() - target.getTime() > cutoffMs;
 }
 
 /**
@@ -209,23 +192,29 @@ export function isOlderThan(
  * item as non-navigable.
  */
 export function toNavigationTarget(item: NotificationItem): {
-  to: string
-  search?: Record<string, unknown>
+  to: string;
+  search?: Record<string, unknown>;
 } | null {
-  const link = notificationLink(item.linkRoute)
-  if (!link) return null
+  const link = notificationLink(item.linkRoute);
+  if (!link) return null;
   const target: { to: string; search?: Record<string, unknown> } = {
     to: link,
-  }
+  };
   if (item.linkParams && Object.keys(item.linkParams).length > 0) {
-    target.search = item.linkParams as Record<string, unknown>
+    target.search = item.linkParams as Record<string, unknown>;
   }
-  return target
+  return target;
 }
 
-export function notificationContent(item: NotificationItem, locale: Locale): { title: string; body: string } {
-  return item.localizedContent?.[locale] ?? item.localizedContent?.original ?? {
-    title: interpolate(t(item.titleI18nKey, locale), item.params),
-    body: interpolate(t(item.bodyI18nKey, locale), item.params),
-  }
+export function notificationContent(
+  item: NotificationItem,
+  locale: Locale
+): { title: string; body: string } {
+  return (
+    item.localizedContent?.[locale] ??
+    item.localizedContent?.original ?? {
+      title: interpolate(t(item.titleI18nKey, locale), item.params),
+      body: interpolate(t(item.bodyI18nKey, locale), item.params),
+    }
+  );
 }

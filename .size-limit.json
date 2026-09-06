@@ -1,9 +1,7 @@
 [
   {
     "name": "Login",
-    "entries": [
-      "src/routes/login.tsx?tsr-split=component"
-    ],
+    "entries": ["src/routes/login.tsx?tsr-split=component"],
     "limitKB": 150
   },
   {
@@ -24,9 +22,7 @@
   },
   {
     "name": "Password recovery",
-    "entries": [
-      "src/routes/forgot-password.tsx?tsr-split=component"
-    ],
+    "entries": ["src/routes/forgot-password.tsx?tsr-split=component"],
     "limitKB": 150
   },
   {

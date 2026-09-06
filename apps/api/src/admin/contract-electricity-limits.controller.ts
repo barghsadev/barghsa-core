@@ -1,4 +1,4 @@
-import { hasStaffPermission } from '../session/staff-permissions.js'
+import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
   Controller,
@@ -9,28 +9,23 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import type { ContractElectricityLimits } from '@barghsa/shared/admin'
-import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js'
-import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
-import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js'
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import type { ContractElectricityLimits } from '@barghsa/shared/admin';
+import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { ContractElectricityLimitsService } from './contract-electricity-limits.service.js';
 
-function httpError(
-  code: string,
-  message: string,
-  statusCode = 400,
-  details?: unknown,
-): never {
+function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
     { statusCode, error: code, message, ...(details ? { details } : {}) },
-    statusCode,
-  )
+    statusCode
+  );
 }
 
 function requestIp(req: AuthenticatedRequest): string {
-  return req.ip ?? req.socket?.remoteAddress ?? 'unknown'
+  return req.ip ?? req.socket?.remoteAddress ?? 'unknown';
 }
 
 /**
@@ -77,8 +72,8 @@ export class ContractElectricityLimitsController {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         'Admin role required to manage contract electricity limits',
-        HttpStatus.FORBIDDEN,
-      )
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 
@@ -109,8 +104,8 @@ export class ContractElectricityLimitsController {
   })
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async get(@Req() req: AuthenticatedRequest): Promise<ContractElectricityLimits> {
-    this.assertElectricitySettingsPermission(req)
-    return this.service.get()
+    this.assertElectricitySettingsPermission(req);
+    return this.service.get();
   }
 
   @Put()
@@ -152,13 +147,13 @@ export class ContractElectricityLimitsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async update(
     @Req() req: AuthenticatedRequest,
-    @Body() body: Record<string, unknown>,
+    @Body() body: Record<string, unknown>
   ): Promise<ContractElectricityLimits> {
-    this.assertElectricitySettingsPermission(req)
+    this.assertElectricitySettingsPermission(req);
     return this.service.update({
       raw: body,
       actorUserId: req.session.userId,
       ip: requestIp(req),
-    })
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * SMS.ir provider configuration schema (T-09.06.02).
@@ -21,7 +21,10 @@ import { z } from 'zod'
  * client cannot redirect the provider to an arbitrary endpoint.
  */
 
-const TemplateVariableMappingSchema = z.record(z.string().min(1).max(255), z.string().min(1).max(255))
+const TemplateVariableMappingSchema = z.record(
+  z.string().min(1).max(255),
+  z.string().min(1).max(255)
+);
 
 /** One internal-event -> SMS.ir template mapping (T-09.06.02 admin UI). */
 export const SmsirTemplateMappingSchema = z.object({
@@ -31,7 +34,7 @@ export const SmsirTemplateMappingSchema = z.object({
   template_id: z.string().min(1).max(128),
   /** Map of internal template variable name -> SMS.ir parameter name. */
   variables: TemplateVariableMappingSchema.optional(),
-})
+});
 
 export const SmsirConfigSchema = z.object({
   /** SMS.ir API key (encrypted at rest — never surfaced). */
@@ -52,34 +55,34 @@ export const SmsirConfigSchema = z.object({
   low_credit_threshold: z.number().int().min(0).max(1_000_000_000).default(0),
   /** Internal event -> SMS.ir template mappings. */
   template_mappings: z.array(SmsirTemplateMappingSchema).optional(),
-})
+});
 
-export type SmsirConfig = z.infer<typeof SmsirConfigSchema>
-export type SmsirTemplateMapping = z.infer<typeof SmsirTemplateMappingSchema>
+export type SmsirConfig = z.infer<typeof SmsirConfigSchema>;
+export type SmsirTemplateMapping = z.infer<typeof SmsirTemplateMappingSchema>;
 
 export interface SmsirConfigParseOk {
-  ok: true
-  config: SmsirConfig
+  ok: true;
+  config: SmsirConfig;
 }
 
 export interface SmsirConfigParseError {
-  ok: false
-  error: string
+  ok: false;
+  error: string;
 }
 
-export type SmsirConfigParseResult = SmsirConfigParseOk | SmsirConfigParseError
+export type SmsirConfigParseResult = SmsirConfigParseOk | SmsirConfigParseError;
 
 /** Parse an opaque stored config blob into a validated `SmsirConfig`. */
 export function parseSmsirConfig(raw: unknown): SmsirConfigParseResult {
-  const parsed = SmsirConfigSchema.safeParse(raw)
+  const parsed = SmsirConfigSchema.safeParse(raw);
   if (!parsed.success) {
     const details = parsed.error.issues
       .map((issue) => {
-        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
-        return `${path}: ${issue.message}`
+        const path = issue.path.length > 0 ? issue.path.join('.') : '(root)';
+        return `${path}: ${issue.message}`;
       })
-      .join('; ')
-    return { ok: false, error: details }
+      .join('; ');
+    return { ok: false, error: details };
   }
-  return { ok: true, config: parsed.data }
+  return { ok: true, config: parsed.data };
 }

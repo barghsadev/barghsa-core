@@ -17,7 +17,11 @@ export const PresignedUrlRequestSchema = z
     /**
      * File size in bytes.
      */
-    fileSize: z.number().int().positive().max(50 * 1024 * 1024),
+    fileSize: z
+      .number()
+      .int()
+      .positive()
+      .max(50 * 1024 * 1024),
     /**
      * Upload category — determines allowed types and max size.
      */

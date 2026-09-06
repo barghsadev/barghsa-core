@@ -1,6 +1,6 @@
-import type { Pool, PoolClient } from 'pg'
-import { getDbPool } from '@barghsa/db'
-import { REMINDER_STOP_STATES, isReminderStopState } from '@barghsa/shared/finance'
+import type { Pool, PoolClient } from 'pg';
+import { getDbPool } from '@barghsa/db';
+import { REMINDER_STOP_STATES, isReminderStopState } from '@barghsa/shared/finance';
 
 /**
  * Cancel remaining unsent reminder rows (T-04.1.04.06 / S-04.1.04).
@@ -20,7 +20,7 @@ import { REMINDER_STOP_STATES, isReminderStopState } from '@barghsa/shared/finan
 export const CANCEL_FUTURE_INVOICE_REMINDERS_SQL = `UPDATE invoice_reminder_schedule
         SET status = 'cancelled'
         WHERE invoice_id = $1
-          AND status = 'scheduled'`
+          AND status = 'scheduled'`;
 
 /**
  * Catch-up for invoices already in a stop state that still have
@@ -32,14 +32,14 @@ export const CANCEL_SCHEDULED_REMINDERS_FOR_STOP_STATES_SQL = `UPDATE invoice_re
         FROM invoices AS i
         WHERE s.invoice_id = i.id
           AND s.status = 'scheduled'
-          AND i.state = ANY($1::invoice_state[])`
+          AND i.state = ANY($1::invoice_state[])`;
 
 export interface CancelRemindersResult {
   /** Rows rewritten from `scheduled` to `cancelled`. */
-  cancelled: number
+  cancelled: number;
 }
 
-type Queryable = Pick<Pool, 'query'> | Pick<PoolClient, 'query'>
+type Queryable = Pick<Pool, 'query'> | Pick<PoolClient, 'query'>;
 
 /**
  * Mark every remaining `scheduled` row for `invoiceId` as `cancelled`.
@@ -47,10 +47,10 @@ type Queryable = Pick<Pool, 'query'> | Pick<PoolClient, 'query'>
  */
 export async function cancelFutureInvoiceReminders(
   client: Queryable,
-  invoiceId: string,
+  invoiceId: string
 ): Promise<CancelRemindersResult> {
-  const result = await client.query(CANCEL_FUTURE_INVOICE_REMINDERS_SQL, [invoiceId])
-  return { cancelled: result.rowCount ?? 0 }
+  const result = await client.query(CANCEL_FUTURE_INVOICE_REMINDERS_SQL, [invoiceId]);
+  return { cancelled: result.rowCount ?? 0 };
 }
 
 /**
@@ -61,11 +61,11 @@ export async function cancelFutureInvoiceReminders(
 export async function cancelRemindersIfStopState(
   client: Queryable,
   invoiceId: string,
-  state: string,
+  state: string
 ): Promise<boolean> {
-  if (!isReminderStopState(state)) return false
-  await cancelFutureInvoiceReminders(client, invoiceId)
-  return true
+  if (!isReminderStopState(state)) return false;
+  await cancelFutureInvoiceReminders(client, invoiceId);
+  return true;
 }
 
 /**
@@ -74,11 +74,11 @@ export async function cancelRemindersIfStopState(
  * the application-level equivalent.
  */
 export async function cancelScheduledRemindersForStoppedInvoices(
-  options: { pool?: Pool } = {},
+  options: { pool?: Pool } = {}
 ): Promise<CancelRemindersResult> {
-  const pool = options.pool ?? getDbPool()
+  const pool = options.pool ?? getDbPool();
   const result = await pool.query(CANCEL_SCHEDULED_REMINDERS_FOR_STOP_STATES_SQL, [
     [...REMINDER_STOP_STATES],
-  ])
-  return { cancelled: result.rowCount ?? 0 }
+  ]);
+  return { cancelled: result.rowCount ?? 0 };
 }

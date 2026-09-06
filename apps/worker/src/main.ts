@@ -118,7 +118,6 @@ async function main(): Promise<void> {
 
   const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
 
-
   /* ------------------------------------------------------------------ */
   /*  Graceful shutdown handler                                          */
   /* ------------------------------------------------------------------ */
@@ -128,7 +127,7 @@ async function main(): Promise<void> {
     draining = true;
 
     logger.warn(
-      `Received ${signal} — starting graceful shutdown (${GRACE_PERIOD_MS / 1_000}s deadline)`,
+      `Received ${signal} — starting graceful shutdown (${GRACE_PERIOD_MS / 1_000}s deadline)`
     );
 
     const forceExitTimer = setTimeout(() => {
@@ -182,7 +181,11 @@ async function main(): Promise<void> {
   pollers.every(async () => {
     const outcome = await runAuthDelivery(getDbPool());
     if (outcome === 'retry' || outcome === 'dead') {
-      await recordJobFailure({ jobType: 'auth_delivery', error: 'delivery_failed', errorCategory: 'transient' });
+      await recordJobFailure({
+        jobType: 'auth_delivery',
+        error: 'delivery_failed',
+        errorCategory: 'transient',
+      });
     } else if (outcome === 'sent') {
       await recordJobSuccess('auth_delivery');
     }
@@ -192,9 +195,14 @@ async function main(): Promise<void> {
   // Poll for due outbox rows, dispatch channels, and record outcomes.
   // The in-app transport is mandatory and always registered so every row that
   // requests `in_app` delivery lands a durable `in_app_notifications` row.
-  const transports = { in_app: new InAppNotificationTransport(), email: new EmailNotificationTransport(), sms: new SmsNotificationTransport() };
+  const transports = {
+    in_app: new InAppNotificationTransport(),
+    email: new EmailNotificationTransport(),
+    sms: new SmsNotificationTransport(),
+  };
   const outboxInterval = Number(process.env['OUTBOX_POLL_MS'] ?? '2000');
-  const OUTBOX_POLL_MS = Number.isFinite(outboxInterval) && outboxInterval >= 1000 ? outboxInterval : 2000;
+  const OUTBOX_POLL_MS =
+    Number.isFinite(outboxInterval) && outboxInterval >= 1000 ? outboxInterval : 2000;
   const outboxPoller = pollers.every(async () => {
     if (draining) return;
     try {
@@ -203,7 +211,12 @@ async function main(): Promise<void> {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }
       if (r.failed > 0) {
-        await recordJobFailure({ jobType: 'notification_outbox_poll', error: 'notification_delivery_failed', errorCategory: 'transient', payload: { failed: r.failed, delivered: r.delivered } });
+        await recordJobFailure({
+          jobType: 'notification_outbox_poll',
+          error: 'notification_delivery_failed',
+          errorCategory: 'transient',
+          payload: { failed: r.failed, delivered: r.delivered },
+        });
       } else if (r.delivered > 0) {
         await recordJobSuccess('notification_outbox_poll');
       }
@@ -229,14 +242,16 @@ async function main(): Promise<void> {
   // pipeline). No-op when no config row exists, so a fresh installation is
   // silent until an admin configures targets.
   const BREACH_SCAN_DEFAULT_MS = 300000;
-  const breachScanRaw = Number(process.env['SERVICE_BREACH_SCAN_MS'] ?? String(BREACH_SCAN_DEFAULT_MS));
+  const breachScanRaw = Number(
+    process.env['SERVICE_BREACH_SCAN_MS'] ?? String(BREACH_SCAN_DEFAULT_MS)
+  );
   const SERVICE_BREACH_SCAN_MS =
     Number.isFinite(breachScanRaw) && breachScanRaw >= 1000
       ? breachScanRaw
       : BREACH_SCAN_DEFAULT_MS;
   if (SERVICE_BREACH_SCAN_MS !== breachScanRaw) {
     logger.warn(
-      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`,
+      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`
     );
   }
   let breachScanInFlight = false;
@@ -247,7 +262,7 @@ async function main(): Promise<void> {
       const result = await scanServiceBreaches();
       if (result.alerted > 0 || result.errors.length > 0) {
         logger.info(
-          `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`,
+          `Breach scan: alerted=${result.alerted} skipped=${result.skippedDuplicates} pruned=${result.pruned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -283,14 +298,16 @@ async function main(): Promise<void> {
   // so a fresh installation escalates nothing until an admin configures a
   // policy.
   const ESCALATION_SCAN_DEFAULT_MS = 300000;
-  const escalationScanRaw = Number(process.env['SERVICE_ESCALATION_SCAN_MS'] ?? String(ESCALATION_SCAN_DEFAULT_MS));
+  const escalationScanRaw = Number(
+    process.env['SERVICE_ESCALATION_SCAN_MS'] ?? String(ESCALATION_SCAN_DEFAULT_MS)
+  );
   const SERVICE_ESCALATION_SCAN_MS =
     Number.isFinite(escalationScanRaw) && escalationScanRaw >= 1000
       ? escalationScanRaw
       : ESCALATION_SCAN_DEFAULT_MS;
   if (SERVICE_ESCALATION_SCAN_MS !== escalationScanRaw) {
     logger.warn(
-      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`,
+      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`
     );
   }
   let escalationScanInFlight = false;
@@ -299,11 +316,16 @@ async function main(): Promise<void> {
     escalationScanInFlight = true;
     try {
       const result = await scanServiceEscalations();
-      if (result.escalated.ticket.level2 + result.escalated.ticket.level3 +
-          result.escalated.verification_case.level2 + result.escalated.verification_case.level3 > 0 ||
-          result.errors.length > 0) {
+      if (
+        result.escalated.ticket.level2 +
+          result.escalated.ticket.level3 +
+          result.escalated.verification_case.level2 +
+          result.escalated.verification_case.level3 >
+          0 ||
+        result.errors.length > 0
+      ) {
         logger.info(
-          `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`,
+          `Escalation scan: ticket(l2=${result.escalated.ticket.level2},l3=${result.escalated.ticket.level3}) case(l2=${result.escalated.verification_case.level2},l3=${result.escalated.verification_case.level3}) errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -336,14 +358,16 @@ async function main(): Promise<void> {
   // Periodically marks Unpaid / Partially funded invoices whose dueAt is
   // strictly in the past as Overdue. No late fees; reminders continue.
   const OVERDUE_SCAN_DEFAULT_MS = 300000;
-  const overdueScanRaw = Number(process.env['INVOICE_OVERDUE_SCAN_MS'] ?? String(OVERDUE_SCAN_DEFAULT_MS));
+  const overdueScanRaw = Number(
+    process.env['INVOICE_OVERDUE_SCAN_MS'] ?? String(OVERDUE_SCAN_DEFAULT_MS)
+  );
   const INVOICE_OVERDUE_SCAN_MS =
     Number.isFinite(overdueScanRaw) && overdueScanRaw >= 1000
       ? overdueScanRaw
       : OVERDUE_SCAN_DEFAULT_MS;
   if (INVOICE_OVERDUE_SCAN_MS !== overdueScanRaw) {
     logger.warn(
-      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`,
+      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`
     );
   }
   let overdueScanInFlight = false;
@@ -354,7 +378,7 @@ async function main(): Promise<void> {
       const result = await scanOverdueInvoices();
       if (result.marked > 0 || result.errors.length > 0) {
         logger.info(
-          `Overdue scan: marked=${result.marked} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Overdue scan: marked=${result.marked} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -388,7 +412,7 @@ async function main(): Promise<void> {
   // datetimes computed from dueAt + canonical offsets and inserted.
   const REMINDER_SCHEDULE_DEFAULT_MS = 60_000;
   const reminderScheduleRaw = Number(
-    process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? String(REMINDER_SCHEDULE_DEFAULT_MS),
+    process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? String(REMINDER_SCHEDULE_DEFAULT_MS)
   );
   const INVOICE_REMINDER_SCHEDULE_MS =
     Number.isFinite(reminderScheduleRaw) && reminderScheduleRaw >= 1000
@@ -396,7 +420,7 @@ async function main(): Promise<void> {
       : REMINDER_SCHEDULE_DEFAULT_MS;
   if (INVOICE_REMINDER_SCHEDULE_MS !== reminderScheduleRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`,
+      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`
     );
   }
   let reminderScheduleInFlight = false;
@@ -407,7 +431,7 @@ async function main(): Promise<void> {
       const result = await scheduleIssuedInvoiceReminders();
       if (result.scheduled > 0 || result.errors.length > 0) {
         logger.info(
-          `Reminder schedule: scheduled=${result.scheduled} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Reminder schedule: scheduled=${result.scheduled} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -440,7 +464,7 @@ async function main(): Promise<void> {
   // Hourly cron: due `scheduled` reminder rows are claimed, invoice state
   // is re-checked, and delivery is written through the notification outbox.
   const reminderSendRaw = Number(
-    process.env['INVOICE_REMINDER_SEND_MS'] ?? String(DEFAULT_REMINDER_SEND_INTERVAL_MS),
+    process.env['INVOICE_REMINDER_SEND_MS'] ?? String(DEFAULT_REMINDER_SEND_INTERVAL_MS)
   );
   const INVOICE_REMINDER_SEND_MS =
     Number.isFinite(reminderSendRaw) && reminderSendRaw >= 1000
@@ -448,7 +472,7 @@ async function main(): Promise<void> {
       : DEFAULT_REMINDER_SEND_INTERVAL_MS;
   if (INVOICE_REMINDER_SEND_MS !== reminderSendRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`,
+      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`
     );
   }
   let reminderSendInFlight = false;
@@ -459,7 +483,7 @@ async function main(): Promise<void> {
       const result = await sendDueInvoiceReminders();
       if (result.sent > 0 || result.errors.length > 0) {
         logger.info(
-          `Reminder send: sent=${result.sent} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Reminder send: sent=${result.sent} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -492,7 +516,8 @@ async function main(): Promise<void> {
   // Hourly cron: compare each wallet's cached posted/reserved balances
   // against the ledger sums and open a finance-queue exception on drift.
   const walletReconcileRaw = Number(
-    process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? String(DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS),
+    process.env['WALLET_RECONCILIATION_SCAN_MS'] ??
+      String(DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS)
   );
   const WALLET_RECONCILIATION_SCAN_MS =
     Number.isFinite(walletReconcileRaw) && walletReconcileRaw >= 1000
@@ -500,7 +525,7 @@ async function main(): Promise<void> {
       : DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS;
   if (WALLET_RECONCILIATION_SCAN_MS !== walletReconcileRaw) {
     logger.warn(
-      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`,
+      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`
     );
   }
   let walletReconcileInFlight = false;
@@ -511,7 +536,7 @@ async function main(): Promise<void> {
       const result = await reconcileWalletBalances();
       if (result.reported > 0 || result.errors.length > 0) {
         logger.info(
-          `Wallet reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Wallet reconciliation: reported=${result.reported} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -545,7 +570,7 @@ async function main(): Promise<void> {
   // auto-rejected. Provider authority stays on metadata so a later
   // authenticated callback can still credit.
   const onlineTopUpExpiryRaw = Number(
-    process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? String(DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS),
+    process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? String(DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS)
   );
   const ONLINE_TOPUP_EXPIRY_SCAN_MS =
     Number.isFinite(onlineTopUpExpiryRaw) && onlineTopUpExpiryRaw >= 1000
@@ -553,7 +578,7 @@ async function main(): Promise<void> {
       : DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS;
   if (ONLINE_TOPUP_EXPIRY_SCAN_MS !== onlineTopUpExpiryRaw) {
     logger.warn(
-      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`,
+      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`
     );
   }
   let onlineTopUpExpiryInFlight = false;
@@ -564,7 +589,7 @@ async function main(): Promise<void> {
       const result = await expireStaleOnlineTopUps();
       if (result.rejected > 0 || result.errors.length > 0) {
         logger.info(
-          `Online top-up expiry: rejected=${result.rejected} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`,
+          `Online top-up expiry: rejected=${result.rejected} skipped=${result.skipped} scanned=${result.scanned} errors=${result.errors.length}`
         );
       }
       if (result.errors.length > 0) {
@@ -594,7 +619,7 @@ async function main(): Promise<void> {
   process.on('SIGINT', () => clearInterval(onlineTopUpExpiryScanner));
 
   logger.info(
-    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry active',
+    'Worker initialised — outbox poll loop + breach scan + escalation scan + invoice overdue scan + invoice reminder scheduler + invoice reminder sender + wallet reconciliation + online top-up expiry active'
   );
 }
 

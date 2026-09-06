@@ -8,9 +8,9 @@
  * @module notifications
  * @see INotificationTransport
  */
-export * from './notification-transport.js'
-export * from './notification-registry.js'
-export * from './delivery-window-config.js'
-export * from './template-engine.js'
-export * from './navigation.js'
-export * from './inbox-content.js'
+export * from './notification-transport.js';
+export * from './notification-registry.js';
+export * from './delivery-window-config.js';
+export * from './template-engine.js';
+export * from './navigation.js';
+export * from './inbox-content.js';

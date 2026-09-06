@@ -47,7 +47,7 @@ export interface PingResult {
  */
 export async function createRedisClient(
   config: RedisConfig,
-  logger?: Logger,
+  logger?: Logger
 ): Promise<Redis | null> {
   // --- Resolve config -------------------------------------------------------
   const merged: RedisConfig = { ...DEFAULT_REDIS_CONFIG, ...config };
@@ -114,7 +114,7 @@ export async function createRedisClient(
   } catch (err) {
     logger?.warn(
       '[redis-factory] Initial connection failed, returning null (degraded):',
-      err instanceof Error ? err.message : String(err),
+      err instanceof Error ? err.message : String(err)
     );
     client.disconnect();
     return null;
@@ -131,9 +131,7 @@ export async function createRedisClient(
  *
  * Safe to call with `null` — returns `{ ok: false, latencyMs: 0, error: 'not connected' }`.
  */
-export async function pingRedis(
-  client: Redis | null,
-): Promise<PingResult> {
+export async function pingRedis(client: Redis | null): Promise<PingResult> {
   if (!client) {
     return { ok: false, latencyMs: 0, error: 'not connected' };
   }

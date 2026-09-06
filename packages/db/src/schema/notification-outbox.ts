@@ -1,9 +1,18 @@
-import { domainChecks } from '../domain-checks'
-import { sql } from 'drizzle-orm'
-import { jsonb, pgTable, text, integer, timestamp, uniqueIndex, uuid, check } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { profiles } from './profiles.js'
-import { users } from './users.js'
+import { domainChecks } from '../domain-checks';
+import { sql } from 'drizzle-orm';
+import {
+  jsonb,
+  pgTable,
+  text,
+  integer,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  check,
+} from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { profiles } from './profiles.js';
+import { users } from './users.js';
 
 /**
  * Notification outbox (E-05, T-05.01.01 / T-05.01.02).
@@ -31,8 +40,7 @@ export const notificationOutbox = pgTable(
     id: uuidv7('id').primaryKey().notNull(),
 
     /** FK to the recipient profile (owner of the notification). */
-    profileId: uuid('profile_id')
-      .references(() => profiles.id, { onDelete: 'cascade' }),
+    profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'cascade' }),
 
     /** FK to the recipient user when the target is a user (in-app delivery). */
     userId: text('user_id').references(() => users.userId, { onDelete: 'cascade' }),
@@ -48,14 +56,7 @@ export const notificationOutbox = pgTable(
 
     /** Delivery lifecycle status. */
     status: text('status', {
-      enum: [
-        'queued',
-        'scheduled',
-        'sending',
-        'delivered',
-        'failed',
-        'cancelled',
-      ],
+      enum: ['queued', 'scheduled', 'sending', 'delivered', 'failed', 'cancelled'],
     })
       .notNull()
       .default('queued'),
@@ -97,10 +98,13 @@ export const notificationOutbox = pgTable(
   },
   (table) => [
     ...domainChecks('notification_outbox'),
-    check('notification_outbox_recipient_check', sql`${table.profileId} IS NOT NULL OR ${table.userId} IS NOT NULL`),
+    check(
+      'notification_outbox_recipient_check',
+      sql`${table.profileId} IS NOT NULL OR ${table.userId} IS NOT NULL`
+    ),
     uniqueIndex('uq_notification_outbox_idempotency').on(table.idempotencyKey),
-  ],
-)
+  ]
+);
 
 /**
  * Job queue table (T-05.01.03) — one row per channel disposition of an outbox
@@ -128,7 +132,9 @@ export const notificationJob = pgTable(
       .default('queued'),
 
     /** Queue priority: 'urgent' dispatches before 'normal'. */
-    priority: text('priority', { enum: ['urgent', 'normal'] }).notNull().default('normal'),
+    priority: text('priority', { enum: ['urgent', 'normal'] })
+      .notNull()
+      .default('normal'),
 
     /** Number of attempts so far for this job (channel). */
     attempts: integer('attempts').notNull().default(0),
@@ -156,5 +162,8 @@ export const notificationJob = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (table) => [...domainChecks('notification_job'),uniqueIndex('uq_notification_job_outbox_channel').on(table.outboxId, table.channel)],
-)
+  (table) => [
+    ...domainChecks('notification_job'),
+    uniqueIndex('uq_notification_job_outbox_channel').on(table.outboxId, table.channel),
+  ]
+);

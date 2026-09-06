@@ -21,20 +21,20 @@
  * math stays dependency-free there.
  */
 
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 import {
   VatCalculationRepository,
   type DbExecutor,
   type ResolveVatRateInput,
   type ResolvedVatRate,
-} from './vat-calculation.repository.js'
-import { roundHalfUpDiv } from './manual-invoice.calculation.js'
+} from './vat-calculation.repository.js';
+import { roundHalfUpDiv } from './manual-invoice.calculation.js';
 
 /** Error messages for the money-math surface. */
 export const VAT_CALC_ERRORS = {
   NEGATIVE_NET: () => 'VAT net base cannot be negative',
   BAD_RATE: () => 'VAT rate must be an integer in basis points between 0 and 10000 (0%..100%)',
-} as const
+} as const;
 
 @Injectable()
 export class VatCalculationService {
@@ -47,11 +47,8 @@ export class VatCalculationService {
    * → 0% (fallback). Result carries the rule that produced the rate so
    * callers can snapshot it (metadata `vat.source`).
    */
-  resolveRate(
-    executor: DbExecutor,
-    input: ResolveVatRateInput = {},
-  ): Promise<ResolvedVatRate> {
-    return this.repository.resolveRate(executor, input)
+  resolveRate(executor: DbExecutor, input: ResolveVatRateInput = {}): Promise<ResolvedVatRate> {
+    return this.repository.resolveRate(executor, input);
   }
 
   /**
@@ -67,16 +64,12 @@ export class VatCalculationService {
    */
   vatAmount(netAmount: bigint, rateBasisPoints: number, isTaxable = true): bigint {
     if (netAmount < 0n) {
-      throw new RangeError(VAT_CALC_ERRORS.NEGATIVE_NET())
+      throw new RangeError(VAT_CALC_ERRORS.NEGATIVE_NET());
     }
-    if (
-      !Number.isInteger(rateBasisPoints) ||
-      rateBasisPoints < 0 ||
-      rateBasisPoints > 10_000
-    ) {
-      throw new RangeError(VAT_CALC_ERRORS.BAD_RATE())
+    if (!Number.isInteger(rateBasisPoints) || rateBasisPoints < 0 || rateBasisPoints > 10_000) {
+      throw new RangeError(VAT_CALC_ERRORS.BAD_RATE());
     }
-    if (!isTaxable) return 0n
-    return roundHalfUpDiv(netAmount * BigInt(rateBasisPoints), 10_000n)
+    if (!isTaxable) return 0n;
+    return roundHalfUpDiv(netAmount * BigInt(rateBasisPoints), 10_000n);
   }
 }

@@ -1,27 +1,27 @@
-import { Injectable, Logger, HttpException } from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { ProfilesService, type ProfileRow } from './profiles.service.js'
+import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { ProfilesService, type ProfileRow } from './profiles.service.js';
 
 export interface LegalProfileRow {
-  id: string
-  legalName: string
-  nationalIdentifier: string
-  registrationNumber: string
-  companyTypeId: string | null
-  registrationDate: string | null
-  economicCode: string | null
-  officialPhone: string | null
-  officialEmail: string | null
-  officialProvinceId: string | null
-  officialCityId: string | null
-  officialFullAddress: string | null
-  officialPostalCode: string | null
-  representativeTitle: string
-  representativeRelationship: string
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  legalName: string;
+  nationalIdentifier: string;
+  registrationNumber: string;
+  companyTypeId: string | null;
+  registrationDate: string | null;
+  economicCode: string | null;
+  officialPhone: string | null;
+  officialEmail: string | null;
+  officialProvinceId: string | null;
+  officialCityId: string | null;
+  officialFullAddress: string | null;
+  officialPostalCode: string | null;
+  representativeTitle: string;
+  representativeRelationship: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 function mapLegalProfileRow(row: Record<string, unknown>): LegalProfileRow {
@@ -43,12 +43,12 @@ function mapLegalProfileRow(row: Record<string, unknown>): LegalProfileRow {
     representativeRelationship: row.representative_relationship as string,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
-  }
+  };
 }
 
 @Injectable()
 export class LegalProfilesService {
-  private readonly logger = new Logger(LegalProfilesService.name)
+  private readonly logger = new Logger(LegalProfilesService.name);
 
   constructor(private readonly profilesService: ProfilesService) {}
 
@@ -68,26 +68,26 @@ export class LegalProfilesService {
     userId: string,
     profileId: string,
     data: {
-      legalName: string
-      nationalIdentifier: string
-      registrationNumber: string
-      companyTypeId?: string | undefined
-      registrationDate?: string | undefined
-      economicCode?: string | undefined
-      officialPhone?: string | undefined
-      officialEmail?: string | undefined
-      officialProvinceId?: string | undefined
-      officialCityId?: string | undefined
-      officialFullAddress?: string | undefined
-      officialPostalCode?: string | undefined
-      representativeTitle: string
-      representativeRelationship: string
-    },
+      legalName: string;
+      nationalIdentifier: string;
+      registrationNumber: string;
+      companyTypeId?: string | undefined;
+      registrationDate?: string | undefined;
+      economicCode?: string | undefined;
+      officialPhone?: string | undefined;
+      officialEmail?: string | undefined;
+      officialProvinceId?: string | undefined;
+      officialCityId?: string | undefined;
+      officialFullAddress?: string | undefined;
+      officialPostalCode?: string | undefined;
+      representativeTitle: string;
+      representativeRelationship: string;
+    }
   ): Promise<ProfileRow> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // Validate the profile exists and belongs to the user
-    const profile = await this.profilesService.getProfileById(profileId)
+    const profile = await this.profilesService.getProfileById(profileId);
     if (!profile || profile.userId !== userId) {
       throw new HttpException(
         {
@@ -95,8 +95,8 @@ export class LegalProfilesService {
           error: ErrorCodes.NOT_FOUND_RESOURCE.code,
           message: 'Profile not found',
         },
-        404,
-      )
+        404
+      );
     }
 
     if (profile.status !== 'DRAFT') {
@@ -106,8 +106,8 @@ export class LegalProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Profile is not in draft state',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Validate national identifier format
@@ -118,8 +118,8 @@ export class LegalProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Invalid national identifier format',
         },
-        400,
-      )
+        400
+      );
     }
 
     // Validate postal code if provided
@@ -130,13 +130,13 @@ export class LegalProfilesService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'Invalid postal code format',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Update the base profile with title from legal name
       const profileResult = await client.query(
@@ -144,19 +144,19 @@ export class LegalProfilesService {
          SET title = $1, updated_at = NOW()
          WHERE id = $2 AND user_id = $3
          RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
-        [data.legalName, profileId, userId],
-      )
+        [data.legalName, profileId, userId]
+      );
 
       if (profileResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
           {
             statusCode: 404,
             error: ErrorCodes.NOT_FOUND_RESOURCE.code,
             message: 'Profile not found',
           },
-          404,
-        )
+          404
+        );
       }
 
       // Create the legal profile record
@@ -184,11 +184,16 @@ export class LegalProfilesService {
           data.officialPostalCode ?? null,
           data.representativeTitle,
           data.representativeRelationship,
-        ],
-      )
+        ]
+      );
 
       // Create the main address record if official address is provided
-      if (data.officialProvinceId && data.officialCityId && data.officialFullAddress && data.officialPostalCode) {
+      if (
+        data.officialProvinceId &&
+        data.officialCityId &&
+        data.officialFullAddress &&
+        data.officialPostalCode
+      ) {
         await client.query(
           `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
            VALUES ($1, $2, $3, $4, $5, true)`,
@@ -198,32 +203,32 @@ export class LegalProfilesService {
             data.officialCityId,
             data.officialFullAddress,
             data.officialPostalCode,
-          ],
-        )
+          ]
+        );
       }
 
       // Transition profile from DRAFT to ACTIVE
-      await client.query(
-        `UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`,
-        [profileId, await this.profilesService.getVerificationMode() === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION'],
-      )
+      await client.query(`UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`, [
+        profileId,
+        (await this.profilesService.getVerificationMode()) === 'DISABLED'
+          ? 'ACTIVE'
+          : 'PENDING_VERIFICATION',
+      ]);
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(
-        `Legal profile ${profileId} saved for user ${userId}`,
-      )
+      this.logger.log(`Legal profile ${profileId} saved for user ${userId}`);
 
       // Re-fetch the profile to get the updated status (ACTIVE)
-      const updatedProfile = await this.profilesService.getProfileById(profileId)
-      return updatedProfile ?? mapLegalProfileRow(profileResult.rows[0]) as unknown as ProfileRow
+      const updatedProfile = await this.profilesService.getProfileById(profileId);
+      return updatedProfile ?? (mapLegalProfileRow(profileResult.rows[0]) as unknown as ProfileRow);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
-      })
+      });
 
       // Re-throw HTTP exceptions as-is
-      if (error instanceof HttpException) throw error
+      if (error instanceof HttpException) throw error;
 
       // Check for unique constraint violation on national_identifier (Pg code 23505)
       if (error instanceof Error && (error as { code?: string }).code === '23505') {
@@ -233,13 +238,13 @@ export class LegalProfilesService {
             error: ErrorCodes.CONFLICT_DUPLICATE.code,
             message: 'This national identifier is already registered',
           },
-          409,
-        )
+          409
+        );
       }
 
-      throw error
+      throw error;
     } finally {
-      client.release()
+      client.release();
     }
   }
 }

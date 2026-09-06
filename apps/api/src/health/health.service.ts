@@ -36,16 +36,14 @@ export class HealthService implements OnModuleInit {
 
   constructor(
     @Inject(REDIS_CLIENT)
-    private readonly redis: Redis | null,
+    private readonly redis: Redis | null
   ) {}
 
   onModuleInit(): void {
     // Detect whether object storage is configured by checking
     // environment variables. These services are optional — the API remains
     // ready without them, but degraded-route indicators are emitted.
-    this.objectStorageConfigured = !!(
-      process.env['S3_ENDPOINT'] ?? process.env['MINIO_ENDPOINT']
-    );
+    this.objectStorageConfigured = !!(process.env['S3_ENDPOINT'] ?? process.env['MINIO_ENDPOINT']);
   }
 
   /**
@@ -78,9 +76,11 @@ export class HealthService implements OnModuleInit {
     //   - Redis down  → overall ok (warning emitted via header)
     //   - Object storage down → overall degraded
     const overall =
-      pg.status === 'down' ? 'down' as const
-      : obj.status !== 'ok'   ? 'degraded' as const
-      : 'ok' as const;
+      pg.status === 'down'
+        ? ('down' as const)
+        : obj.status !== 'ok'
+          ? ('degraded' as const)
+          : ('ok' as const);
 
     return {
       status: overall,
@@ -120,9 +120,10 @@ export class HealthService implements OnModuleInit {
       return {
         status: 'ok',
         latencyMs: 0,
-        details: process.env['REDIS_URL'] || process.env['REDIS_HOST']
-          ? { error: 'Configured Redis unavailable', degraded: true }
-          : { info: 'Redis not configured — skipping' },
+        details:
+          process.env['REDIS_URL'] || process.env['REDIS_HOST']
+            ? { error: 'Configured Redis unavailable', degraded: true }
+            : { info: 'Redis not configured — skipping' },
       };
     }
 

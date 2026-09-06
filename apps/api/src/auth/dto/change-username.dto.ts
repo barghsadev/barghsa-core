@@ -1,15 +1,15 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 /**
  * Normalizes Iranian mobile numbers to E.164 format.
  */
-const IRANIAN_MOBILE_RE = /^09\d{9}$/
+const IRANIAN_MOBILE_RE = /^09\d{9}$/;
 
 function toE164(value: string): string {
   if (IRANIAN_MOBILE_RE.test(value)) {
-    return `+98${value.slice(1)}`
+    return `+98${value.slice(1)}`;
   }
-  return value
+  return value;
 }
 
 /**
@@ -24,21 +24,21 @@ const usernameSchema = z
   .transform(toE164)
   .refine(
     (val) => {
-      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      const e164Re = /^\+[1-9]\d{6,14}$/
-      return emailRe.test(val) || e164Re.test(val)
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const e164Re = /^\+[1-9]\d{6,14}$/;
+      return emailRe.test(val) || e164Re.test(val);
     },
-    { message: 'AUTH:CHANGE_USERNAME:INVALID' },
-  )
+    { message: 'AUTH:CHANGE_USERNAME:INVALID' }
+  );
 
 /**
  * Zod schema for initiating a username change (sends OTP).
  */
 export const ChangeUsernameSendOtpSchema = z.object({
   newUsername: usernameSchema,
-})
+});
 
-export type ChangeUsernameSendOtpInput = z.infer<typeof ChangeUsernameSendOtpSchema>
+export type ChangeUsernameSendOtpInput = z.infer<typeof ChangeUsernameSendOtpSchema>;
 
 /**
  * Zod schema for completing a username change (verifies OTP).
@@ -51,22 +51,22 @@ export const ChangeUsernameVerifySchema = z.object({
     .string()
     .length(6, { message: 'VALIDATION:INPUT:INVALID' })
     .regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
-})
+});
 
-export type ChangeUsernameVerifyInput = z.infer<typeof ChangeUsernameVerifySchema>
+export type ChangeUsernameVerifyInput = z.infer<typeof ChangeUsernameVerifySchema>;
 
 /**
  * Response from initiating a username change.
  */
 export interface ChangeUsernameSendOtpResponse {
-  challengeId: string
-  destination: string
-  previousDestination: string
+  challengeId: string;
+  destination: string;
+  previousDestination: string;
 }
 
 /**
  * Response from completing a username change.
  */
 export interface ChangeUsernameVerifyResponse {
-  message: string
+  message: string;
 }

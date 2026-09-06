@@ -1,6 +1,6 @@
-import { uuid, pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core'
-import { uuidv7, timestamptz } from '../types.js'
-import { notificationOutbox } from './notification-outbox.js'
+import { uuid, pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core';
+import { uuidv7, timestamptz } from '../types.js';
+import { notificationOutbox } from './notification-outbox.js';
 
 /**
  * Durable record of a verified Resend webhook event (E-05, T-05.06.07).
@@ -64,5 +64,5 @@ export const emailWebhookEvents = pgTable(
     // Triaging by provider message id (delivery-state reconciliation).
     index('idx_ewe_message').on(table.messageId),
     index('idx_ewe_address').on(table.toAddress),
-  ],
-)
+  ]
+);

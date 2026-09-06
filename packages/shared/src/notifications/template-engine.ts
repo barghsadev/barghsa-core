@@ -31,13 +31,13 @@ const BLOCKED_KEYS: ReadonlySet<string> = new Set([
   'prototype',
   'constructor',
   'hasOwnProperty',
-])
+]);
 
 /** Characters allowed in a variable name (matches the DB schema contract). */
-const NAME_RE = /^[A-Za-z0-9_.]+$/
+const NAME_RE = /^[A-Za-z0-9_.]+$/;
 
 /** Matches a single `{{...}}` placeholder (captures the raw inner name). */
-const PLACEHOLDER_RE = /{{([^{}]+)}}/g
+const PLACEHOLDER_RE = /{{([^{}]+)}}/g;
 
 /**
  * Escape a string for safe HTML/text output, preventing injection of
@@ -49,7 +49,7 @@ export function escapeHtml(value: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+    .replace(/'/g, '&#39;');
 }
 
 /**
@@ -63,58 +63,55 @@ export function escapeHtml(value: string): string {
  *  - `Symbol`-keyed / inherited members.
  */
 export function resolvePath(root: unknown, path: string): unknown {
-  if (path === '') return undefined
-  const segments = path.split('.')
-  let node: unknown = root
+  if (path === '') return undefined;
+  const segments = path.split('.');
+  let node: unknown = root;
   for (const segment of segments) {
     // Guard object-internal keys at every level.
-    if (!NAME_RE.test(segment) || BLOCKED_KEYS.has(segment)) return undefined
-    if (node === null || node === undefined) return undefined
-    if (typeof node !== 'object') return undefined
-    const desc = Object.getOwnPropertyDescriptor(
-      node as Record<string, unknown>,
-      segment,
-    )
+    if (!NAME_RE.test(segment) || BLOCKED_KEYS.has(segment)) return undefined;
+    if (node === null || node === undefined) return undefined;
+    if (typeof node !== 'object') return undefined;
+    const desc = Object.getOwnPropertyDescriptor(node as Record<string, unknown>, segment);
     // Refuse inherited + non-enumerable + symbol properties entirely.
-    if (!desc || !desc.enumerable || !('value' in desc)) return undefined
-    node = desc.value
+    if (!desc || !desc.enumerable || !('value' in desc)) return undefined;
+    node = desc.value;
   }
-  return node
+  return node;
 }
 
 export interface RenderOptions {
   /** False for plain-text channels and email subjects; HTML bodies escape values. */
-  escapeValues?: boolean
+  escapeValues?: boolean;
 
   /** Map of variable name -> value available at render time. */
-  data?: Record<string, unknown> | null | undefined
+  data?: Record<string, unknown> | null | undefined;
 }
 
 export interface RenderResult {
   /** The fully rendered, escaped output string. */
-  output: string
+  output: string;
   /**
    * Variable names that appeared in the template but had no (defined) value
    * in `data`. Useful for highlighting missing required variables in preview.
    */
-  missing: string[]
+  missing: string[];
   /**
    * Raw `{{...}}` placeholders that are NOT allow-listed. These are rendered
    * verbatim (escaped) and recorded here for diagnostics.
    */
-  unknown: string[]
+  unknown: string[];
 }
 
 /** Collect every distinct variable name appearing in a template body. */
 export function collectVariables(template: string): string[] {
-  const names = new Set<string>()
-  const re = /{{([^{}]+)}}/g
-  let m: RegExpExecArray | null
+  const names = new Set<string>();
+  const re = /{{([^{}]+)}}/g;
+  let m: RegExpExecArray | null;
   while ((m = re.exec(template)) !== null) {
-    const raw = m[1]!.trim()
-    if (NAME_RE.test(raw)) names.add(raw)
+    const raw = m[1]!.trim();
+    if (NAME_RE.test(raw)) names.add(raw);
   }
-  return [...names]
+  return [...names];
 }
 
 /**
@@ -132,38 +129,38 @@ export function collectVariables(template: string): string[] {
 export function renderTemplate(
   template: string,
   allowList: Iterable<string>,
-  options?: RenderOptions,
+  options?: RenderOptions
 ): RenderResult {
-  const allowed = new Set<string>(allowList)
-  const data: Record<string, unknown> = options?.data ?? {}
-  const missing = new Set<string>()
-  const unknown = new Set<string>()
+  const allowed = new Set<string>(allowList);
+  const data: Record<string, unknown> = options?.data ?? {};
+  const missing = new Set<string>();
+  const unknown = new Set<string>();
 
   const output = template.replace(PLACEHOLDER_RE, (match, raw: string) => {
-    const name = raw.trim()
+    const name = raw.trim();
     if (!NAME_RE.test(name) || !allowed.has(name)) {
       // Unknown placeholder: never substitute, echo escaped literal.
-      unknown.add(name)
-      return escapeHtml(match)
+      unknown.add(name);
+      return escapeHtml(match);
     }
-    const value = resolvePath(data, name)
+    const value = resolvePath(data, name);
     if (value === undefined || value === null) {
-      missing.add(name)
-      return ''
+      missing.add(name);
+      return '';
     }
     if (typeof value === 'object' || typeof value === 'function') {
       // Never stringify internal object/function shapes into a message.
-      missing.add(name)
-      return ''
+      missing.add(name);
+      return '';
     }
-    return options?.escapeValues === false ? String(value) : escapeHtml(String(value))
-  })
+    return options?.escapeValues === false ? String(value) : escapeHtml(String(value));
+  });
 
   return {
     output,
     missing: [...missing],
     unknown: [...unknown],
-  }
+  };
 }
 
 /**
@@ -172,26 +169,26 @@ export function renderTemplate(
  */
 export function validateTemplate(
   template: string,
-  allowList: Iterable<string>,
+  allowList: Iterable<string>
 ): { message: string; variable?: string }[] {
-  const allowed = new Set<string>(allowList)
-  const problems: { message: string; variable?: string }[] = []
+  const allowed = new Set<string>(allowList);
+  const problems: { message: string; variable?: string }[] = [];
 
-  const opens = (template.match(/\{\{/g) ?? []).length
-  const closes = (template.match(/\}\}/g) ?? []).length
+  const opens = (template.match(/\{\{/g) ?? []).length;
+  const closes = (template.match(/\}\}/g) ?? []).length;
   if (opens !== closes) {
-    problems.push({ message: 'Template contains an unclosed {{...}} placeholder' })
+    problems.push({ message: 'Template contains an unclosed {{...}} placeholder' });
   }
 
-  const re = /\{\{([^{}]+)\}\}/g
-  let m: RegExpExecArray | null
+  const re = /\{\{([^{}]+)\}\}/g;
+  let m: RegExpExecArray | null;
   while ((m = re.exec(template)) !== null) {
-    const name = m[1]!.trim()
+    const name = m[1]!.trim();
     if (!NAME_RE.test(name)) {
-      problems.push({ message: `Invalid variable name "${name}" in template`, variable: name })
+      problems.push({ message: `Invalid variable name "${name}" in template`, variable: name });
     } else if (!allowed.has(name)) {
-      problems.push({ message: `Variable "${name}" is not in the allow-list`, variable: name })
+      problems.push({ message: `Variable "${name}" is not in the allow-list`, variable: name });
     }
   }
-  return problems
+  return problems;
 }

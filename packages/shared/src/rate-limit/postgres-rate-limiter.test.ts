@@ -116,7 +116,7 @@ describe('PostgresRateLimiterStore', () => {
 
       expect(total).toBe(7);
       expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('cleaned up 7 expired rows'),
+        expect.stringContaining('cleaned up 7 expired rows')
       );
     });
 

@@ -1,47 +1,47 @@
-import { withCsrf } from '../lib/csrf.js'
-import { useState, useEffect, useCallback, useRef } from 'react'
-import type { FormEvent } from 'react'
-import { t } from '@barghsa/i18n'
-import { useLocale } from '../hooks/useLocale.js'
-import DeadLetterPanel from '../components/DeadLetterPanel.js'
-import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js'
-import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js'
+import { withCsrf } from '../lib/csrf.js';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { FormEvent } from 'react';
+import { t } from '@barghsa/i18n';
+import { useLocale } from '../hooks/useLocale.js';
+import DeadLetterPanel from '../components/DeadLetterPanel.js';
+import DeliveryWindowConfigPanel from '../components/DeliveryWindowConfigPanel.js';
+import TemplatePreviewPanel from '../components/TemplatePreviewPanel.js';
 
 interface NotificationVariable {
-  name: string
-  description: string | null
+  name: string;
+  description: string | null;
 }
 
 interface NotificationTemplate {
-  id: string
-  eventKey: string
-  channel: 'email' | 'sms' | 'in_app'
-  locale: 'fa' | 'en'
-  subject: string | null
-  bodyTemplate: string
-  variables: NotificationVariable[]
-  status: 'draft' | 'active' | 'archived'
-  isActive: boolean
-  version: number
-  publishedAt: string | null
-  createdBy: string | null
-  createdAt: string
-  updatedAt: string
+  id: string;
+  eventKey: string;
+  channel: 'email' | 'sms' | 'in_app';
+  locale: 'fa' | 'en';
+  subject: string | null;
+  bodyTemplate: string;
+  variables: NotificationVariable[];
+  status: 'draft' | 'active' | 'archived';
+  isActive: boolean;
+  version: number;
+  publishedAt: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
-type TemplateChannel = 'email' | 'sms' | 'in_app'
-type TemplateLocale = 'fa' | 'en'
+type TemplateChannel = 'email' | 'sms' | 'in_app';
+type TemplateLocale = 'fa' | 'en';
 
 const CHANNEL_LABELS: Record<TemplateChannel, string> = {
   email: 'Email',
   sms: 'SMS',
   in_app: 'In-App',
-}
+};
 
 const LOCALE_LABELS: Record<TemplateLocale, string> = {
   fa: 'فارسی',
   en: 'English',
-}
+};
 
 /**
  * Known notification event keys used in the system.
@@ -65,10 +65,10 @@ const KNOWN_EVENT_KEYS = [
   'support_ticket_created',
   'support_ticket_resolved',
   'agent_assigned',
-]
+];
 
-const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app']
-const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en']
+const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app'];
+const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en'];
 
 /** HTML-escape a value for safe display in a rendered template (mirrors server). */
 function escapeHtml(value: string): string {
@@ -77,22 +77,26 @@ function escapeHtml(value: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+    .replace(/'/g, '&#39;');
 }
 
 /** Neutral sample values for each allow-listed variable name (preview / test-send). */
 function buildSampleData(variables: NotificationVariable[]): Record<string, string> {
-  const data: Record<string, string> = {}
+  const data: Record<string, string> = {};
   for (const v of variables) {
-    const key = v.name.trim()
-    if (key) data[key] = key.replace(/([A-Z])/g, ' $1').trim().toLowerCase()
+    const key = v.name.trim();
+    if (key)
+      data[key] = key
+        .replace(/([A-Z])/g, ' $1')
+        .trim()
+        .toLowerCase();
   }
-  return data
+  return data;
 }
 
 /** Select just the allow-listed variable names. */
 function variableNames(variables: NotificationVariable[]): string[] {
-  return variables.map((v) => v.name.trim()).filter(Boolean)
+  return variables.map((v) => v.name.trim()).filter(Boolean);
 }
 
 /** Substitute {{variable}} placeholders with escaped sample values.
@@ -101,16 +105,16 @@ function variableNames(variables: NotificationVariable[]): string[] {
 function renderTemplate(
   template: string,
   variables: NotificationVariable[],
-  data?: Record<string, string>,
+  data?: Record<string, string>
 ): string {
-  const allowed = new Set(variableNames(variables))
-  const ctx = data ?? buildSampleData(variables)
+  const allowed = new Set(variableNames(variables));
+  const ctx = data ?? buildSampleData(variables);
   return template.replace(/{{([^{}]+)}}/g, (match, raw: string) => {
-    const name = raw.trim()
-    if (!allowed.has(name)) return escapeHtml(match)
-    const value = ctx[name]
-    return escapeHtml(value === undefined ? '' : value)
-  })
+    const name = raw.trim();
+    if (!allowed.has(name)) return escapeHtml(match);
+    const value = ctx[name];
+    return escapeHtml(value === undefined ? '' : value);
+  });
 }
 
 /**
@@ -120,26 +124,24 @@ function renderTemplate(
  * description defaults to null (legacy template strings round-trip cleanly).
  */
 function parseVariablesText(text: string): NotificationVariable[] {
-  const out: NotificationVariable[] = []
-  const seen = new Set<string>()
+  const out: NotificationVariable[] = [];
+  const seen = new Set<string>();
   for (const raw of text.split(/[,\n]/)) {
-    const entry = raw.trim()
-    if (!entry) continue
-    const colon = entry.indexOf(':')
-    const name = (colon === -1 ? entry : entry.slice(0, colon)).trim()
-    if (!name || seen.has(name)) continue
-    seen.add(name)
-    const description = colon === -1 ? null : entry.slice(colon + 1).trim()
-    out.push({ name, description: description || null })
+    const entry = raw.trim();
+    if (!entry) continue;
+    const colon = entry.indexOf(':');
+    const name = (colon === -1 ? entry : entry.slice(0, colon)).trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    const description = colon === -1 ? null : entry.slice(colon + 1).trim();
+    out.push({ name, description: description || null });
   }
-  return out
+  return out;
 }
 
 /** Serialize variable definitions back to the comma-separated text format. */
 function variablesToText(variables: NotificationVariable[]): string {
-  return variables
-    .map((v) => (v.description ? `${v.name}: ${v.description}` : v.name))
-    .join(', ')
+  return variables.map((v) => (v.description ? `${v.name}: ${v.description}` : v.name)).join(', ');
 }
 
 /**
@@ -149,147 +151,149 @@ function variablesToText(variables: NotificationVariable[]): string {
  * publishing active templates, and unpublishing.
  */
 export default function AdminNotificationsPage() {
-  const uiLocale = useLocale()
-  const [templates, setTemplates] = useState<NotificationTemplate[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const uiLocale = useLocale();
+  const [templates, setTemplates] = useState<NotificationTemplate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters
-  const [filterLocale, setFilterLocale] = useState<string>('')
-  const [filterChannel, setFilterChannel] = useState<string>('')
-  const [filterStatus, setFilterStatus] = useState<string>('')
+  const [filterLocale, setFilterLocale] = useState<string>('');
+  const [filterChannel, setFilterChannel] = useState<string>('');
+  const [filterStatus, setFilterStatus] = useState<string>('');
 
   // Editor state
-  const [showEditor, setShowEditor] = useState(false)
-  const [editId, setEditId] = useState<string | null>(null)
-  const [eventKey, setEventKey] = useState('')
-  const [channel, setChannel] = useState<TemplateChannel>('email')
-  const [locale, setLocale] = useState<TemplateLocale>('en')
-  const [subject, setSubject] = useState('')
-  const [bodyTemplate, setBodyTemplate] = useState('')
-  const [variablesStr, setVariablesStr] = useState('')
-  const [saving, setSaving] = useState(false)
+  const [showEditor, setShowEditor] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [eventKey, setEventKey] = useState('');
+  const [channel, setChannel] = useState<TemplateChannel>('email');
+  const [locale, setLocale] = useState<TemplateLocale>('en');
+  const [subject, setSubject] = useState('');
+  const [bodyTemplate, setBodyTemplate] = useState('');
+  const [variablesStr, setVariablesStr] = useState('');
+  const [saving, setSaving] = useState(false);
 
   // Publish confirm state
-  const [publishId, setPublishId] = useState<string | null>(null)
-  const [publishing, setPublishing] = useState(false)
+  const [publishId, setPublishId] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState(false);
 
   // Test-send state
-  const [testSending, setTestSending] = useState(false)
-  const [testSendMsg, setTestSendMsg] = useState<string | null>(null)
-  const [testDestination, setTestDestination] = useState('')
-  const bodyRef = useRef<HTMLTextAreaElement | null>(null)
+  const [testSending, setTestSending] = useState(false);
+  const [testSendMsg, setTestSendMsg] = useState<string | null>(null);
+  const [testDestination, setTestDestination] = useState('');
+  const bodyRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const parsedVariables = parseVariablesText(variablesStr)
+  const parsedVariables = parseVariablesText(variablesStr);
 
   const fetchTemplates = useCallback(async () => {
     try {
-      setLoading(true)
-      const params = new URLSearchParams()
-      if (filterLocale) params.set('locale', filterLocale)
-      if (filterChannel) params.set('channel', filterChannel)
-      if (filterStatus) params.set('status', filterStatus)
-      const qs = params.toString()
-      const res = await fetch(`/api/admin/notifications/templates${qs ? `?${qs}` : ''}`)
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
-      setTemplates(data ?? [])
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (filterLocale) params.set('locale', filterLocale);
+      if (filterChannel) params.set('channel', filterChannel);
+      if (filterStatus) params.set('status', filterStatus);
+      const qs = params.toString();
+      const res = await fetch(`/api/admin/notifications/templates${qs ? `?${qs}` : ''}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setTemplates(data ?? []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.load', uiLocale))
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.load', uiLocale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [filterLocale, filterChannel, filterStatus, uiLocale])
+  }, [filterLocale, filterChannel, filterStatus, uiLocale]);
 
   useEffect(() => {
-    fetchTemplates()
-  }, [fetchTemplates])
+    fetchTemplates();
+  }, [fetchTemplates]);
 
   function openCreate() {
-    setEditId(null)
-    setEventKey(KNOWN_EVENT_KEYS[0]!)
-    setChannel('email')
-    setLocale('en')
-    setSubject('')
-    setBodyTemplate('')
-    setVariablesStr('')
-    setTestSendMsg(null)
-    setTestDestination('')
-    setShowEditor(true)
+    setEditId(null);
+    setEventKey(KNOWN_EVENT_KEYS[0]!);
+    setChannel('email');
+    setLocale('en');
+    setSubject('');
+    setBodyTemplate('');
+    setVariablesStr('');
+    setTestSendMsg(null);
+    setTestDestination('');
+    setShowEditor(true);
   }
 
   function openEdit(template: NotificationTemplate) {
-    setEditId(template.id)
-    setEventKey(template.eventKey)
-    setChannel(template.channel)
-    setLocale(template.locale)
-    setSubject(template.subject ?? '')
-    setBodyTemplate(template.bodyTemplate)
-    setVariablesStr(variablesToText(template.variables))
-    setTestSendMsg(null)
-    setTestDestination('')
-    setShowEditor(true)
+    setEditId(template.id);
+    setEventKey(template.eventKey);
+    setChannel(template.channel);
+    setLocale(template.locale);
+    setSubject(template.subject ?? '');
+    setBodyTemplate(template.bodyTemplate);
+    setVariablesStr(variablesToText(template.variables));
+    setTestSendMsg(null);
+    setTestDestination('');
+    setShowEditor(true);
   }
 
   function closeEditor() {
-    setShowEditor(false)
-    setEditId(null)
+    setShowEditor(false);
+    setEditId(null);
   }
 
   /** Insert a {{variable}} placeholder at the caret position in the body. */
   function insertVariable(variable: string) {
-    const el = bodyRef.current
+    const el = bodyRef.current;
     if (!el) {
-      setBodyTemplate((prev) => `${prev}{{${variable}}}`)
-      return
+      setBodyTemplate((prev) => `${prev}{{${variable}}}`);
+      return;
     }
-    const start = el.selectionStart ?? bodyTemplate.length
-    const end = el.selectionEnd ?? bodyTemplate.length
-    const insert = `{{${variable}}}`
-    const next = bodyTemplate.slice(0, start) + insert + bodyTemplate.slice(end)
-    setBodyTemplate(next)
+    const start = el.selectionStart ?? bodyTemplate.length;
+    const end = el.selectionEnd ?? bodyTemplate.length;
+    const insert = `{{${variable}}}`;
+    const next = bodyTemplate.slice(0, start) + insert + bodyTemplate.slice(end);
+    setBodyTemplate(next);
     requestAnimationFrame(() => {
       if (el) {
-        const pos = start + insert.length
-        el.focus()
-        el.setSelectionRange(pos, pos)
+        const pos = start + insert.length;
+        el.focus();
+        el.setSelectionRange(pos, pos);
       }
-    })
+    });
   }
 
   async function handleTestSend() {
     if (!editId) {
-      setTestSendMsg(null)
-      return
+      setTestSendMsg(null);
+      return;
     }
-    setTestSending(true)
-    setTestSendMsg(null)
+    setTestSending(true);
+    setTestSendMsg(null);
     try {
-      const body: Record<string, unknown> = {}
-      const dest = testDestination.trim()
-      if (dest) body.destination = dest
+      const body: Record<string, unknown> = {};
+      const dest = testDestination.trim();
+      if (dest) body.destination = dest;
       const res = await fetch(`/api/admin/notifications/templates/${editId}/test-send`, {
         method: 'POST',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(body),
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      setTestSendMsg(t('admin.notifications.testSent', uiLocale))
+      setTestSendMsg(t('admin.notifications.testSent', uiLocale));
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.error.testSend', uiLocale)
+      );
     } finally {
-      setTestSending(false)
+      setTestSending(false);
     }
   }
 
   async function handleSave(e: FormEvent) {
-    e.preventDefault()
-    setSaving(true)
+    e.preventDefault();
+    setSaving(true);
 
-    const variables = parseVariablesText(variablesStr)
+    const variables = parseVariablesText(variablesStr);
 
     const body: Record<string, unknown> = {
       eventKey,
@@ -297,8 +301,8 @@ export default function AdminNotificationsPage() {
       locale,
       bodyTemplate,
       variables,
-    }
-    if (subject) body.subject = subject
+    };
+    if (subject) body.subject = subject;
 
     try {
       if (editId) {
@@ -308,16 +312,16 @@ export default function AdminNotificationsPage() {
           subject: subject || null,
           bodyTemplate,
           variables,
-        }
+        };
 
         const res = await fetch(`/api/admin/notifications/templates/${editId}`, {
           method: 'PUT',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(updateBody),
-        })
+        });
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+          const errData = await res.json().catch(() => ({}));
+          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
         }
       } else {
         // Create new draft
@@ -325,83 +329,89 @@ export default function AdminNotificationsPage() {
           method: 'POST',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(body),
-        })
+        });
         if (!res.ok) {
-          const errData = await res.json().catch(() => ({}))
-          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+          const errData = await res.json().catch(() => ({}));
+          throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
         }
       }
 
-      closeEditor()
-      await fetchTemplates()
+      closeEditor();
+      await fetchTemplates();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.save', uiLocale))
+      setError(err instanceof Error ? err.message : t('admin.notifications.error.save', uiLocale));
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   async function handlePublish() {
-    if (!publishId) return
-    setPublishing(true)
+    if (!publishId) return;
+    setPublishing(true);
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${publishId}/publish`, {
         headers: withCsrf(),
         method: 'POST',
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
 
-      setPublishId(null)
-      await fetchTemplates()
+      setPublishId(null);
+      await fetchTemplates();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.publish', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.error.publish', uiLocale)
+      );
     } finally {
-      setPublishing(false)
+      setPublishing(false);
     }
   }
 
   async function handleUnpublish(id: string) {
-    if (!window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))) return
+    if (!window.confirm(t('admin.notifications.unpublishConfirm', uiLocale))) return;
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}/unpublish`, {
         headers: withCsrf(),
         method: 'POST',
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      await fetchTemplates()
+      await fetchTemplates();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.unpublish', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.error.unpublish', uiLocale)
+      );
     }
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm(t('admin.notifications.deleteConfirm', uiLocale))) return
+    if (!window.confirm(t('admin.notifications.deleteConfirm', uiLocale))) return;
 
     try {
       const res = await fetch(`/api/admin/notifications/templates/${id}`, {
         headers: withCsrf(),
         method: 'DELETE',
-      })
+      });
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}))
-        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`)
+        const errData = await res.json().catch(() => ({}));
+        throw new Error((errData as { message?: string }).message ?? `HTTP ${res.status}`);
       }
-      await fetchTemplates()
+      await fetchTemplates();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.notifications.error.delete', uiLocale))
+      setError(
+        err instanceof Error ? err.message : t('admin.notifications.error.delete', uiLocale)
+      );
     }
   }
 
   if (loading && templates.length === 0) {
-    return <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>
+    return <div className="p-4 text-gray-500">{t('admin.notifications.loading', uiLocale)}</div>;
   }
 
   return (
@@ -473,7 +483,10 @@ export default function AdminNotificationsPage() {
 
       {/* Editor form */}
       {showEditor && (
-        <form onSubmit={handleSave} className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
+        <form
+          onSubmit={handleSave}
+          className="bg-white rounded-lg border border-gray-200 p-6 space-y-4"
+        >
           <h2 className="text-lg font-semibold">
             {editId
               ? t('admin.notifications.editTitle', uiLocale)
@@ -573,9 +586,12 @@ export default function AdminNotificationsPage() {
           {/* Body template + variable sidebar + preview */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              {t('admin.notifications.bodyTemplate', uiLocale)} <span className="text-red-500">*</span>
+              {t('admin.notifications.bodyTemplate', uiLocale)}{' '}
+              <span className="text-red-500">*</span>
             </label>
-            <p className="text-xs text-gray-400 mb-1">{t('admin.notifications.bodyHint', uiLocale)}</p>
+            <p className="text-xs text-gray-400 mb-1">
+              {t('admin.notifications.bodyHint', uiLocale)}
+            </p>
             <div className="flex gap-4">
               <div className="flex-1">
                 <textarea
@@ -627,7 +643,9 @@ export default function AdminNotificationsPage() {
               </h4>
               {channel === 'email' && subject.trim() !== '' && (
                 <p className="text-sm text-gray-700 mb-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-                  <span className="font-semibold">{t('admin.notifications.subjectLabel', uiLocale)}</span>{' '}
+                  <span className="font-semibold">
+                    {t('admin.notifications.subjectLabel', uiLocale)}
+                  </span>{' '}
                   {renderTemplate(subject, parsedVariables)}
                 </p>
               )}
@@ -689,9 +707,7 @@ export default function AdminNotificationsPage() {
                     ? t('admin.notifications.sending', uiLocale)
                     : t('admin.notifications.testSend', uiLocale)}
                 </button>
-                {testSendMsg && (
-                  <span className="text-sm text-green-600">{testSendMsg}</span>
-                )}
+                {testSendMsg && <span className="text-sm text-green-600">{testSendMsg}</span>}
               </>
             )}
             <button
@@ -746,13 +762,27 @@ export default function AdminNotificationsPage() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.event', uiLocale)}</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.channel', uiLocale)}</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.locale', uiLocale)}</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.status', uiLocale)}</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.subject', uiLocale)}</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.active', uiLocale)}</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">{t('admin.notifications.col.actions', uiLocale)}</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.col.event', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.channel', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.locale', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.col.status', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.col.subject', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.col.active', uiLocale)}
+              </th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                {t('admin.notifications.col.actions', uiLocale)}
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -800,7 +830,9 @@ export default function AdminNotificationsPage() {
                 </td>
                 <td className="px-4 py-3">
                   {template.isActive ? (
-                    <span className="text-green-600 text-sm font-medium">✓ {t('admin.notifications.active', uiLocale)}</span>
+                    <span className="text-green-600 text-sm font-medium">
+                      ✓ {t('admin.notifications.active', uiLocale)}
+                    </span>
                   ) : (
                     <span className="text-gray-400 text-sm">—</span>
                   )}
@@ -851,5 +883,5 @@ export default function AdminNotificationsPage() {
         </table>
       </div>
     </div>
-  )
+  );
 }

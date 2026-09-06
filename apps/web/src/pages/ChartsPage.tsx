@@ -7,5 +7,5 @@ export default function ChartsPage() {
       <h1 className="text-2xl font-bold mb-4">Charts & Analytics</h1>
       <p className="text-gray-600">Electricity market data visualization.</p>
     </div>
-  )
+  );
 }

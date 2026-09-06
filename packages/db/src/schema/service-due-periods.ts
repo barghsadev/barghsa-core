@@ -1,8 +1,8 @@
-import { sql } from 'drizzle-orm'
-import { integer, text } from 'drizzle-orm/pg-core'
-import { createTable } from '../base-table'
-import { timestamptz } from '../types'
-import { users } from './users'
+import { sql } from 'drizzle-orm';
+import { integer, text } from 'drizzle-orm/pg-core';
+import { createTable } from '../base-table';
+import { timestamptz } from '../types';
+import { users } from './users';
 
 /**
  * Service due periods (T-04.1.03.01) — admin-configured default invoice
@@ -44,7 +44,7 @@ export const serviceDuePeriods = createTable('service_due_periods', {
   createdBy: text('created_by')
     .notNull()
     .references(() => users.userId, { onDelete: 'restrict' }),
-})
+});
 
 /** SQL to create the service_due_periods table (migration 0059 source). */
 export const createServiceDuePeriodsTable = sql`
@@ -104,4 +104,4 @@ export const createServiceDuePeriodsTable = sql`
     BEFORE UPDATE ON service_due_periods
     FOR EACH ROW
     EXECUTE FUNCTION update_service_due_periods_updated_at();
-`
+`;

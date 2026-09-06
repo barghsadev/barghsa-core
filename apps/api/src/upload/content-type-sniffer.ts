@@ -24,49 +24,49 @@
  */
 
 /** How many leading bytes the caller should sample from the object. */
-export const SNIFF_SAMPLE_BYTES = 4096
+export const SNIFF_SAMPLE_BYTES = 4096;
 
 function bytesAt(bytes: Uint8Array, offset: number, signature: string): boolean {
-  if (offset + signature.length > bytes.length) return false
+  if (offset + signature.length > bytes.length) return false;
   for (let i = 0; i < signature.length; i++) {
-    if (bytes[offset + i] !== signature.charCodeAt(i)) return false
+    if (bytes[offset + i] !== signature.charCodeAt(i)) return false;
   }
-  return true
+  return true;
 }
 
 function hasAscii(bytes: Uint8Array, needle: string, withinBytes: number): boolean {
-  const limit = Math.min(bytes.length, withinBytes)
-  if (limit < needle.length) return false
+  const limit = Math.min(bytes.length, withinBytes);
+  if (limit < needle.length) return false;
   for (let i = 0; i <= limit - needle.length; i++) {
-    let match = true
+    let match = true;
     for (let j = 0; j < needle.length; j++) {
       if (bytes[i + j] !== needle.charCodeAt(j)) {
-        match = false
-        break
+        match = false;
+        break;
       }
     }
-    if (match) return true
+    if (match) return true;
   }
-  return false
+  return false;
 }
 
 /** First non-whitespace code unit, or -1 when all leading bytes are whitespace. */
 function firstNonWhitespaceByte(bytes: Uint8Array): number {
-  const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES)
+  const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES);
   for (let i = 0; i < limit; i++) {
-    const b = bytes[i]!
-    if (b !== 0x20 && b !== 0x09 && b !== 0x0a && b !== 0x0d) return b
+    const b = bytes[i]!;
+    if (b !== 0x20 && b !== 0x09 && b !== 0x0a && b !== 0x0d) return b;
   }
-  return -1
+  return -1;
 }
 
 /** True when the sampled bytes contain a 0x00 (binary marker). */
 function hasNulByte(bytes: Uint8Array): boolean {
-  const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES)
+  const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES);
   for (let i = 0; i < limit; i++) {
-    if (bytes[i] === 0) return true
+    if (bytes[i] === 0) return true;
   }
-  return false
+  return false;
 }
 
 /**
@@ -78,12 +78,12 @@ function hasNulByte(bytes: Uint8Array): boolean {
  * MIME set. Unknown bytes return an empty array.
  */
 export function sniffContentTypes(bytes: Uint8Array): string[] {
-  if (bytes.length === 0) return []
+  if (bytes.length === 0) return [];
 
-  if (bytes.length >= 5 && bytesAt(bytes, 0, '%PDF-')) return ['application/pdf']
+  if (bytes.length >= 5 && bytesAt(bytes, 0, '%PDF-')) return ['application/pdf'];
 
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
-    return ['image/jpeg']
+    return ['image/jpeg'];
   }
 
   if (
@@ -97,71 +97,88 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
     bytes[6] === 0x1a &&
     bytes[7] === 0x0a
   ) {
-    return ['image/png']
+    return ['image/png'];
   }
 
   if (bytes.length >= 6 && (bytesAt(bytes, 0, 'GIF87a') || bytesAt(bytes, 0, 'GIF89a'))) {
-    return ['image/gif']
+    return ['image/gif'];
   }
 
   // RIFF container: WEBP at bytes 8..12.
   if (bytes.length >= 12 && bytesAt(bytes, 0, 'RIFF') && bytesAt(bytes, 8, 'WEBP')) {
-    return ['image/webp']
+    return ['image/webp'];
   }
 
   // ISO BMFF container (mp4/mov/avif): 'ftyp' brand at bytes 4..12.
   if (bytes.length >= 12 && bytesAt(bytes, 4, 'ftyp')) {
-    const brand = String.fromCharCode(bytes[8]!, bytes[9]!, bytes[10]!, bytes[11]!)
-    if (brand === 'avif' || brand === 'avis') return ['image/avif']
-    if (brand === 'qt  ') return ['video/quicktime']
-    return ['video/mp4']
+    const brand = String.fromCharCode(bytes[8]!, bytes[9]!, bytes[10]!, bytes[11]!);
+    if (brand === 'avif' || brand === 'avis') return ['image/avif'];
+    if (brand === 'qt  ') return ['video/quicktime'];
+    return ['video/mp4'];
   }
 
   // EBML container: webm (contains 'webm' marker) vs mkv.
-  if (bytes.length >= 4 && bytes[0] === 0x1a && bytes[1] === 0x45 && bytes[2] === 0xdf && bytes[3] === 0xa3) {
-    return hasAscii(bytes, 'webm', SNIFF_SAMPLE_BYTES) ? ['video/webm'] : ['video/x-matroska']
+  if (
+    bytes.length >= 4 &&
+    bytes[0] === 0x1a &&
+    bytes[1] === 0x45 &&
+    bytes[2] === 0xdf &&
+    bytes[3] === 0xa3
+  ) {
+    return hasAscii(bytes, 'webm', SNIFF_SAMPLE_BYTES) ? ['video/webm'] : ['video/x-matroska'];
   }
 
   // ZIP container: office OpenXML documents and plain archives.
-  if (bytes.length >= 4 && bytes[0] === 0x50 && bytes[1] === 0x4b && (bytes[2] === 0x03 || bytes[2] === 0x05 || bytes[2] === 0x07)) {
+  if (
+    bytes.length >= 4 &&
+    bytes[0] === 0x50 &&
+    bytes[1] === 0x4b &&
+    (bytes[2] === 0x03 || bytes[2] === 0x05 || bytes[2] === 0x07)
+  ) {
     return [
       'application/zip',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    ]
+    ];
   }
 
   // OLE2 container: legacy .doc/.xls.
-  if (bytes.length >= 8 && bytes[0] === 0xd0 && bytes[1] === 0xcf && bytes[2] === 0x11 && bytes[3] === 0xe0) {
-    return ['application/msword', 'application/vnd.ms-excel']
+  if (
+    bytes.length >= 8 &&
+    bytes[0] === 0xd0 &&
+    bytes[1] === 0xcf &&
+    bytes[2] === 0x11 &&
+    bytes[3] === 0xe0
+  ) {
+    return ['application/msword', 'application/vnd.ms-excel'];
   }
 
-  if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) return ['application/gzip']
+  if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) return ['application/gzip'];
 
-  if (bytes.length >= 262 && bytesAt(bytes, 257, 'ustar')) return ['application/x-tar']
+  if (bytes.length >= 262 && bytesAt(bytes, 257, 'ustar')) return ['application/x-tar'];
 
   // Textual files: JSON, SVG/XML, then a conservative utf-8-ish text probe.
-  const first = firstNonWhitespaceByte(bytes)
+  const first = firstNonWhitespaceByte(bytes);
   if (!hasNulByte(bytes)) {
-    if (first === 0x7b || first === 0x5b) return ['application/json']
-    if (hasAscii(bytes, '<svg', SNIFF_SAMPLE_BYTES)) return ['image/svg+xml']
-    if (hasAscii(bytes, '<?xml', SNIFF_SAMPLE_BYTES)) return ['application/xml', 'text/xml']
-    if (hasAscii(bytes, '<html', SNIFF_SAMPLE_BYTES)) return ['text/html']
+    if (first === 0x7b || first === 0x5b) return ['application/json'];
+    if (hasAscii(bytes, '<svg', SNIFF_SAMPLE_BYTES)) return ['image/svg+xml'];
+    if (hasAscii(bytes, '<?xml', SNIFF_SAMPLE_BYTES)) return ['application/xml', 'text/xml'];
+    if (hasAscii(bytes, '<html', SNIFF_SAMPLE_BYTES)) return ['text/html'];
     // Printable-text probe: reject control bytes outside tab/LF/CR so a
     // random binary blob is not classified as text.
-    const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES)
-    let textual = true
+    const limit = Math.min(bytes.length, SNIFF_SAMPLE_BYTES);
+    let textual = true;
     for (let i = 0; i < limit; i++) {
-      const b = bytes[i]!
+      const b = bytes[i]!;
       if (b < 0x09 || (b > 0x0d && b < 0x20)) {
-        textual = false
-        break
+        textual = false;
+        break;
       }
     }
-    if (textual) return ['text/plain']
+    if (textual) return ['text/plain'];
   }
 
-  return []
+  return [];
 }
 
 /**
@@ -172,10 +189,10 @@ export function sniffContentTypes(bytes: Uint8Array): string[] {
  */
 export function pickDetectedContentType(
   candidates: readonly string[],
-  allowedMimeTypes: readonly string[],
+  allowedMimeTypes: readonly string[]
 ): string | null {
   for (const candidate of candidates) {
-    if (allowedMimeTypes.includes(candidate)) return candidate
+    if (allowedMimeTypes.includes(candidate)) return candidate;
   }
-  return null
+  return null;
 }

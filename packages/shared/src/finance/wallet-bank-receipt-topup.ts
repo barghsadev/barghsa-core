@@ -12,29 +12,26 @@
  * @module finance
  */
 
-import { parseOnlineTopUpAmountIrR } from './wallet-topup-config.js'
+import { parseOnlineTopUpAmountIrR } from './wallet-topup-config.js';
 
 /** Channel discriminator stored on the Pending ledger row metadata. */
-export const BANK_RECEIPT_TOPUP_CHANNEL = 'bank_receipt' as const
+export const BANK_RECEIPT_TOPUP_CHANNEL = 'bank_receipt' as const;
 
 /**
  * Intended-purpose value persisted on `storage_records.metadata` when a
  * customer uploads a bank-receipt scan. Top-up submission requires this
  * exact purpose so an unrelated verified object cannot back a claim.
  */
-export const BANK_RECEIPT_STORAGE_PURPOSE = 'bank_receipt' as const
+export const BANK_RECEIPT_STORAGE_PURPOSE = 'bank_receipt' as const;
 
 export type BankReceiptStorageRejection =
-  | 'missing'
-  | 'unverified'
-  | 'wrong_owner'
-  | 'wrong_purpose'
+  'missing' | 'unverified' | 'wrong_owner' | 'wrong_purpose';
 
 /** Human-readable description written on the Pending ledger row. */
-export const BANK_RECEIPT_TOPUP_DESCRIPTION = 'Bank receipt wallet top-up'
+export const BANK_RECEIPT_TOPUP_DESCRIPTION = 'Bank receipt wallet top-up';
 
 /** Allowed object-storage categories for a receipt scan or photo. */
-export const BANK_RECEIPT_ATTACHMENT_CATEGORIES = ['document', 'image'] as const
+export const BANK_RECEIPT_ATTACHMENT_CATEGORIES = ['document', 'image'] as const;
 
 /** Receipt files: PDF scans or common photo formats. */
 export const BANK_RECEIPT_ATTACHMENT_EXTENSIONS = [
@@ -43,50 +40,44 @@ export const BANK_RECEIPT_ATTACHMENT_EXTENSIONS = [
   '.jpeg',
   '.png',
   '.webp',
-] as const
+] as const;
 
 const ATTACHMENT_KEY_RE =
-  /^uploads\/(document|image)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\.pdf|\.jpg|\.jpeg|\.png|\.webp)$/i
+  /^uploads\/(document|image)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(\.pdf|\.jpg|\.jpeg|\.png|\.webp)$/i;
 
-const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/
+const ISO_DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
-const MAX_PAYER_REFERENCE_LENGTH = 128
-const MAX_CUSTOMER_NOTE_LENGTH = 2000
+const MAX_PAYER_REFERENCE_LENGTH = 128;
+const MAX_CUSTOMER_NOTE_LENGTH = 2000;
 
 export interface BankReceiptTopUpDetails {
-  paymentDate: string
-  payerReference: string
-  attachmentKey: string
-  customerNote: string | null
+  paymentDate: string;
+  payerReference: string;
+  attachmentKey: string;
+  customerNote: string | null;
 }
 
 export interface BankReceiptTopUpParseSuccess {
-  ok: true
-  amountIrR: bigint
-  receipt: BankReceiptTopUpDetails
+  ok: true;
+  amountIrR: bigint;
+  receipt: BankReceiptTopUpDetails;
 }
 
 export interface BankReceiptTopUpParseFailure {
-  ok: false
-  field:
-    | 'amount'
-    | 'paymentDate'
-    | 'payerReference'
-    | 'attachmentKey'
-    | 'customerNote'
-  message: string
+  ok: false;
+  field: 'amount' | 'paymentDate' | 'payerReference' | 'attachmentKey' | 'customerNote';
+  message: string;
 }
 
 export type BankReceiptTopUpParseResult =
-  | BankReceiptTopUpParseSuccess
-  | BankReceiptTopUpParseFailure
+  BankReceiptTopUpParseSuccess | BankReceiptTopUpParseFailure;
 
 /**
  * Parse a bank-receipt top-up amount. Same positive-int8 rules as online
  * top-up amounts; the online per-transaction ceiling is **not** applied.
  */
 export function parseBankReceiptTopUpAmountIrR(raw: unknown): bigint | null {
-  return parseOnlineTopUpAmountIrR(raw)
+  return parseOnlineTopUpAmountIrR(raw);
 }
 
 /**
@@ -96,34 +87,34 @@ export function parseBankReceiptTopUpAmountIrR(raw: unknown): bigint | null {
  */
 export function parseBankReceiptPaymentDate(
   raw: unknown,
-  todayIso: string = utcTodayIso(),
+  todayIso: string = utcTodayIso()
 ): string | null {
-  if (typeof raw !== 'string') return null
-  const trimmed = raw.trim()
-  const match = ISO_DATE_RE.exec(trimmed)
-  if (!match) return null
-  const year = Number(match[1])
-  const month = Number(match[2])
-  const day = Number(match[3])
-  const utc = new Date(Date.UTC(year, month - 1, day))
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  const match = ISO_DATE_RE.exec(trimmed);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const utc = new Date(Date.UTC(year, month - 1, day));
   if (
     utc.getUTCFullYear() !== year ||
     utc.getUTCMonth() !== month - 1 ||
     utc.getUTCDate() !== day
   ) {
-    return null
+    return null;
   }
-  if (!ISO_DATE_RE.test(todayIso) || trimmed > todayIso) return null
-  return trimmed
+  if (!ISO_DATE_RE.test(todayIso) || trimmed > todayIso) return null;
+  return trimmed;
 }
 
 /** Payer / tracking reference from the bank slip. */
 export function parseBankReceiptPayerReference(raw: unknown): string | null {
-  if (typeof raw !== 'string') return null
-  const trimmed = raw.trim()
-  if (trimmed.length < 1 || trimmed.length > MAX_PAYER_REFERENCE_LENGTH) return null
-  if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null
-  return trimmed
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (trimmed.length < 1 || trimmed.length > MAX_PAYER_REFERENCE_LENGTH) return null;
+  if (/[\u0000-\u001f\u007f]/.test(trimmed)) return null;
+  return trimmed;
 }
 
 /**
@@ -132,26 +123,26 @@ export function parseBankReceiptPayerReference(raw: unknown): string | null {
  * permitted receipt extension. Rejects path traversal.
  */
 export function parseBankReceiptAttachmentKey(raw: unknown): string | null {
-  if (typeof raw !== 'string') return null
-  const trimmed = raw.trim()
-  if (trimmed.includes('..') || trimmed.includes('\\')) return null
-  if (!ATTACHMENT_KEY_RE.test(trimmed)) return null
-  return trimmed
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (trimmed.includes('..') || trimmed.includes('\\')) return null;
+  if (!ATTACHMENT_KEY_RE.test(trimmed)) return null;
+  return trimmed;
 }
 
 /** Optional customer note. Blank input becomes `null`. */
 export function parseBankReceiptCustomerNote(raw: unknown): string | null | undefined {
-  if (raw === undefined || raw === null) return null
-  if (typeof raw !== 'string') return undefined
-  const trimmed = raw.trim()
-  if (trimmed.length === 0) return null
-  if (trimmed.length > MAX_CUSTOMER_NOTE_LENGTH) return undefined
-  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) return undefined
-  return trimmed
+  if (raw === undefined || raw === null) return null;
+  if (typeof raw !== 'string') return undefined;
+  const trimmed = raw.trim();
+  if (trimmed.length === 0) return null;
+  if (trimmed.length > MAX_CUSTOMER_NOTE_LENGTH) return undefined;
+  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(trimmed)) return undefined;
+  return trimmed;
 }
 
 export function utcTodayIso(now: Date = new Date()): string {
-  return now.toISOString().slice(0, 10)
+  return now.toISOString().slice(0, 10);
 }
 
 /**
@@ -160,57 +151,57 @@ export function utcTodayIso(now: Date = new Date()): string {
  */
 export function parseBankReceiptTopUpSubmission(
   input: unknown,
-  todayIso: string = utcTodayIso(),
+  todayIso: string = utcTodayIso()
 ): BankReceiptTopUpParseResult {
   if (!input || typeof input !== 'object') {
-    return { ok: false, field: 'amount', message: 'Bank receipt top-up body must be an object' }
+    return { ok: false, field: 'amount', message: 'Bank receipt top-up body must be an object' };
   }
-  const body = input as Record<string, unknown>
+  const body = input as Record<string, unknown>;
 
-  const amountIrR = parseBankReceiptTopUpAmountIrR(body.amount)
+  const amountIrR = parseBankReceiptTopUpAmountIrR(body.amount);
   if (amountIrR === null) {
     return {
       ok: false,
       field: 'amount',
       message: 'Bank receipt top-up amount must be a positive integer IRR value',
-    }
+    };
   }
 
-  const paymentDate = parseBankReceiptPaymentDate(body.paymentDate, todayIso)
+  const paymentDate = parseBankReceiptPaymentDate(body.paymentDate, todayIso);
   if (paymentDate === null) {
     return {
       ok: false,
       field: 'paymentDate',
       message: 'Payment date must be a calendar YYYY-MM-DD value that is not in the future',
-    }
+    };
   }
 
-  const payerReference = parseBankReceiptPayerReference(body.payerReference)
+  const payerReference = parseBankReceiptPayerReference(body.payerReference);
   if (payerReference === null) {
     return {
       ok: false,
       field: 'payerReference',
       message: 'Payer reference is required (1–128 characters)',
-    }
+    };
   }
 
-  const attachmentKey = parseBankReceiptAttachmentKey(body.attachmentKey)
+  const attachmentKey = parseBankReceiptAttachmentKey(body.attachmentKey);
   if (attachmentKey === null) {
     return {
       ok: false,
       field: 'attachmentKey',
       message:
         'Attachment key must be a verified uploads/document or uploads/image object with a PDF or image extension',
-    }
+    };
   }
 
-  const customerNote = parseBankReceiptCustomerNote(body.customerNote)
+  const customerNote = parseBankReceiptCustomerNote(body.customerNote);
   if (customerNote === undefined) {
     return {
       ok: false,
       field: 'customerNote',
       message: 'Customer note must be at most 2000 characters',
-    }
+    };
   }
 
   return {
@@ -222,12 +213,12 @@ export function parseBankReceiptTopUpSubmission(
       attachmentKey,
       customerNote,
     },
-  }
+  };
 }
 
 /** Metadata written onto the Pending `topup` ledger row. */
 export function bankReceiptTopUpMetadata(
-  receipt: BankReceiptTopUpDetails,
+  receipt: BankReceiptTopUpDetails
 ): Record<string, unknown> {
   return {
     channel: BANK_RECEIPT_TOPUP_CHANNEL,
@@ -237,29 +228,26 @@ export function bankReceiptTopUpMetadata(
       attachmentKey: receipt.attachmentKey,
       customerNote: receipt.customerNote,
     },
-  }
+  };
 }
 
 export function isBankReceiptTopUpMetadata(metadata: unknown): boolean {
-  if (!metadata || typeof metadata !== 'object') return false
-  return (metadata as { channel?: unknown }).channel === BANK_RECEIPT_TOPUP_CHANNEL
+  if (!metadata || typeof metadata !== 'object') return false;
+  return (metadata as { channel?: unknown }).channel === BANK_RECEIPT_TOPUP_CHANNEL;
 }
 
-export function receiptDetailsMatch(
-  metadata: unknown,
-  receipt: BankReceiptTopUpDetails,
-): boolean {
-  if (!metadata || typeof metadata !== 'object') return false
-  const record = metadata as { channel?: unknown; receipt?: unknown }
-  if (record.channel !== BANK_RECEIPT_TOPUP_CHANNEL) return false
-  if (!record.receipt || typeof record.receipt !== 'object') return false
-  const stored = record.receipt as Record<string, unknown>
+export function receiptDetailsMatch(metadata: unknown, receipt: BankReceiptTopUpDetails): boolean {
+  if (!metadata || typeof metadata !== 'object') return false;
+  const record = metadata as { channel?: unknown; receipt?: unknown };
+  if (record.channel !== BANK_RECEIPT_TOPUP_CHANNEL) return false;
+  if (!record.receipt || typeof record.receipt !== 'object') return false;
+  const stored = record.receipt as Record<string, unknown>;
   return (
     stored.paymentDate === receipt.paymentDate &&
     stored.payerReference === receipt.payerReference &&
     stored.attachmentKey === receipt.attachmentKey &&
     (stored.customerNote ?? null) === receipt.customerNote
-  )
+  );
 }
 
 /**
@@ -268,10 +256,10 @@ export function receiptDetailsMatch(
  * existence — the record endpoint must persist this payload.
  */
 export function bankReceiptStorageProvenance(input: {
-  uploadedBy: string
-  profileId?: string
-  purpose?: string
-  verifiedAt?: string
+  uploadedBy: string;
+  profileId?: string;
+  purpose?: string;
+  verifiedAt?: string;
 }): Record<string, unknown> {
   return {
     verified: true,
@@ -279,7 +267,7 @@ export function bankReceiptStorageProvenance(input: {
     uploadedBy: input.uploadedBy,
     profileId: input.profileId ?? null,
     purpose: input.purpose ?? BANK_RECEIPT_STORAGE_PURPOSE,
-  }
+  };
 }
 
 /**
@@ -290,22 +278,22 @@ export function bankReceiptStorageProvenance(input: {
 export function evaluateBankReceiptStorageMetadata(
   metadata: unknown,
   actorId: string,
-  profileId: string,
+  profileId: string
 ): { ok: true } | { ok: false; reason: BankReceiptStorageRejection } {
   if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
-    return { ok: false, reason: 'missing' }
+    return { ok: false, reason: 'missing' };
   }
-  const record = metadata as Record<string, unknown>
+  const record = metadata as Record<string, unknown>;
   if (record.verified !== true) {
-    return { ok: false, reason: 'unverified' }
+    return { ok: false, reason: 'unverified' };
   }
   if (record.purpose !== BANK_RECEIPT_STORAGE_PURPOSE) {
-    return { ok: false, reason: 'wrong_purpose' }
+    return { ok: false, reason: 'wrong_purpose' };
   }
-  const uploadedBy = typeof record.uploadedBy === 'string' ? record.uploadedBy : ''
-  const boundProfile = typeof record.profileId === 'string' ? record.profileId : ''
+  const uploadedBy = typeof record.uploadedBy === 'string' ? record.uploadedBy : '';
+  const boundProfile = typeof record.profileId === 'string' ? record.profileId : '';
   if (uploadedBy !== actorId && boundProfile !== profileId) {
-    return { ok: false, reason: 'wrong_owner' }
+    return { ok: false, reason: 'wrong_owner' };
   }
-  return { ok: true }
+  return { ok: true };
 }

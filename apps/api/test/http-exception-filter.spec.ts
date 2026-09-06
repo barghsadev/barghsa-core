@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpExceptionFilter } from '../src/common/http-exception.filter.js';
-import { CorrelationIdMiddleware, CorrelationIdProvider, correlationIdStorage } from '../src/common/correlation-id.middleware.js';
+import {
+  CorrelationIdMiddleware,
+  CorrelationIdProvider,
+  correlationIdStorage,
+} from '../src/common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ZodError, ZodIssue } from 'zod';
 
@@ -25,9 +25,13 @@ describe('CorrelationIdMiddleware', () => {
     const res = { setHeader: vi.fn() } as any;
     let capturedId: string | undefined;
 
-    middleware.use(req, res, vi.fn(() => {
-      capturedId = correlationIdStorage.getStore();
-    }));
+    middleware.use(
+      req,
+      res,
+      vi.fn(() => {
+        capturedId = correlationIdStorage.getStore();
+      })
+    );
 
     // Should have set the header
     expect(res.setHeader).toHaveBeenCalledWith('X-Correlation-ID', expect.any(String));
@@ -42,9 +46,13 @@ describe('CorrelationIdMiddleware', () => {
     const res = { setHeader: vi.fn() } as any;
     let capturedId: string | undefined;
 
-    middleware.use(req, res, vi.fn(() => {
-      capturedId = correlationIdStorage.getStore();
-    }));
+    middleware.use(
+      req,
+      res,
+      vi.fn(() => {
+        capturedId = correlationIdStorage.getStore();
+      })
+    );
 
     expect(res.setHeader).toHaveBeenCalledWith('X-Correlation-ID', inboundId);
     expect(capturedId).toBe(inboundId);
@@ -94,11 +102,7 @@ describe('HttpExceptionFilter', () => {
     vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
   });
 
-  function createMockHost(
-    statusCode: number,
-    body: unknown,
-    headers: Record<string, string> = {},
-  ) {
+  function createMockHost(statusCode: number, body: unknown, headers: Record<string, string> = {}) {
     const json = vi.fn();
     const status = vi.fn(() => ({ json }));
     const response = { status } as any;
@@ -116,13 +120,15 @@ describe('HttpExceptionFilter', () => {
   }
 
   it('returns 400 with VALIDATION:PARSE:ZOD_ERROR for ZodError', () => {
-    const issues: ZodIssue[] = [{
-      code: 'invalid_type',
-      expected: 'string',
-      received: 'undefined',
-      path: ['name'],
-      message: 'Required',
-    }];
+    const issues: ZodIssue[] = [
+      {
+        code: 'invalid_type',
+        expected: 'string',
+        received: 'undefined',
+        path: ['name'],
+        message: 'Required',
+      },
+    ];
     const zodError = new ZodError(issues);
     const { json, status, host } = createMockHost(400, {});
 
@@ -160,7 +166,7 @@ describe('HttpExceptionFilter', () => {
         onlineTopUpLimit: 50_000,
         configVersion: 2,
       },
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.BAD_REQUEST
     );
     const { json, status, host } = createMockHost(400, {});
 
@@ -185,7 +191,7 @@ describe('HttpExceptionFilter', () => {
         onlineTopUpLimit: -1,
         configVersion: 2,
       },
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.BAD_REQUEST
     );
     const { json, host } = createMockHost(400, {});
 
@@ -280,7 +286,7 @@ describe('HttpExceptionFilter', () => {
   it('never leaks raw 5xx error messages to the client', () => {
     const exception = new HttpException(
       'Internal: connection pool timeout hitting primary DB replica',
-      HttpStatus.INTERNAL_SERVER_ERROR,
+      HttpStatus.INTERNAL_SERVER_ERROR
     );
     const { json, status, host } = createMockHost(500, {});
 
@@ -372,7 +378,7 @@ describe('HttpExceptionFilter + CorrelationIdMiddleware (integration)', () => {
       expect(json).toHaveBeenCalledWith(
         expect.objectContaining({
           error: expect.objectContaining({ code: expectedCode }),
-        }),
+        })
       );
     }
   });

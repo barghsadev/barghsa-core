@@ -1,16 +1,16 @@
-import { createHash, randomBytes, randomUUID } from 'node:crypto'
-import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery'
-import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common'
-import { v7 as uuidv7 } from 'uuid'
-import * as argon2 from 'argon2'
-import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db'
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
+import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common';
+import { v7 as uuidv7 } from 'uuid';
+import * as argon2 from 'argon2';
+import { getDbPool, PREDEFINED_ROLES } from '@barghsa/db';
 import {
   DELIVERY_WINDOW_CONFIG_KEY,
   DEFAULT_DELIVERY_WINDOW,
   toDeliveryWindowConfig,
   validateWindowConfig,
   type DeliveryWindowConfig,
-} from '@barghsa/shared/notifications'
+} from '@barghsa/shared/notifications';
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   DEFAULT_DUAL_APPROVAL_CONFIG,
@@ -36,7 +36,7 @@ import {
   GREEN_ELECTRICITY_SYSTEM_KEY,
   evaluateGreenRuleEnforcement,
   type GreenElectricityProductState,
-} from '@barghsa/shared/finance'
+} from '@barghsa/shared/finance';
 import {
   SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
   SERVICE_RESPONSE_TARGET_TYPES,
@@ -57,37 +57,37 @@ import {
   toEscalationPolicies,
   validateEscalationPolicies,
   type EscalationPolicies,
-} from '@barghsa/shared/admin'
-import { ErrorCodes } from '@barghsa/shared/errors'
-import { ConfigCacheService } from '../config-cache/config-cache.service.js'
+} from '@barghsa/shared/admin';
+import { ErrorCodes } from '@barghsa/shared/errors';
+import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 
 /**
  * Supported activation methods for new staff users.
  * - `tempPassword`: generate a temporary password, force change on first login.
  * - `link`: generate a time-limited activation link (24h).
  */
-export type ActivationMethod = 'tempPassword' | 'link'
+export type ActivationMethod = 'tempPassword' | 'link';
 
 /**
  * Result of updating a staff user's roles.
  */
 export interface UpdateStaffRolesResult {
-  userId: string
-  roleIds: string[]
-  previousRoleIds: string[]
+  userId: string;
+  roleIds: string[];
+  previousRoleIds: string[];
 }
 
 /**
  * A staff role with its permission set (T-09.05.01).
  */
 export interface StaffRoleDto {
-  roleId: string
-  name: string
-  description: string
-  permissions: string[]
-  predefined: boolean
-  createdAt: string
-  updatedAt: string
+  roleId: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  predefined: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -95,9 +95,9 @@ export interface StaffRoleDto {
  */
 export interface PermissionDescriptor {
   /** Canonical permission string, e.g. `tickets:read`. */
-  permission: string
+  permission: string;
   /** Group label derived from the permission prefix (e.g. `tickets`). */
-  group: string
+  group: string;
 }
 
 /**
@@ -107,23 +107,23 @@ export interface PermissionDescriptor {
  * A platform admin (`is_admin`) resolves to the wildcard `*` set.
  */
 export interface EffectivePermissionsResult {
-  userId: string
-  isAdmin: boolean
-  roleIds: string[]
-  roleNames: string[]
-  permissions: PermissionDescriptor[]
-  isWildcard: boolean
+  userId: string;
+  isAdmin: boolean;
+  roleIds: string[];
+  roleNames: string[];
+  permissions: PermissionDescriptor[];
+  isWildcard: boolean;
 }
 
 /**
  * Input for creating a staff user.
  */
 export interface CreateStaffUserInput {
-  username: string
-  firstName: string
-  lastName: string
-  roleIds?: string[]
-  activationMethod: ActivationMethod
+  username: string;
+  firstName: string;
+  lastName: string;
+  roleIds?: string[];
+  activationMethod: ActivationMethod;
 }
 
 /**
@@ -131,67 +131,67 @@ export interface CreateStaffUserInput {
  * Depending on activationMethod, either a temporary password or a queued activation email.
  */
 export type CreateStaffUserResult = {
-  userId: string
-  username: string
-  activationMethod: ActivationMethod
+  userId: string;
+  username: string;
+  activationMethod: ActivationMethod;
 } & (
   | { temporaryPassword: string; activationToken?: never; message: string }
   | { deliveryStatus: 'queued'; temporaryPassword?: never; message: string }
-)
+);
 
 // ─── Staff user list & disable types (T-10.01.01) ────────────────────
 
 /** Pagination for the staff list. */
 export interface StaffListQuery {
-  limit?: number
-  offset?: number
+  limit?: number;
+  offset?: number;
 }
 
 /** One role held by a staff user (aggregated into the list row). */
 export interface StaffUserRoleSummary {
-  roleId: string
-  name: string
+  roleId: string;
+  name: string;
 }
 
 /** One staff account in the admin staff list. */
 export interface StaffUserSummary {
-  userId: string
-  username: string
-  email: string | null
-  mobile: string | null
-  firstName: string | null
-  lastName: string | null
-  roles: StaffUserRoleSummary[]
-  isAdmin: boolean
-  lastLoginAt: string | null
-  disabledAt: string | null
-  status: 'active' | 'disabled'
-  createdAt: string
+  userId: string;
+  username: string;
+  email: string | null;
+  mobile: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  roles: StaffUserRoleSummary[];
+  isAdmin: boolean;
+  lastLoginAt: string | null;
+  disabledAt: string | null;
+  status: 'active' | 'disabled';
+  createdAt: string;
 }
 
 /** Paginated staff list result. */
 export interface StaffListResult {
-  items: StaffUserSummary[]
-  total: number
-  limit: number
-  offset: number
+  items: StaffUserSummary[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 /** Input for disabling a staff account. */
 export interface DisableStaffInput {
-  userId: string
-  actorUserId: string
-  ip: string
+  userId: string;
+  actorUserId: string;
+  ip: string;
 }
 
 /** Result of disabling a staff account. */
 export interface DisableStaffResult {
-  userId: string
-  username: string
-  status: 'disabled'
-  disabledAt: string
+  userId: string;
+  username: string;
+  status: 'disabled';
+  disabledAt: string;
   /** True when the account was already disabled (idempotent no-op). */
-  alreadyDisabled: boolean
+  alreadyDisabled: boolean;
 }
 
 // ─── Staff permission audit types (T-10.01.02) ────────────────────────
@@ -205,19 +205,19 @@ export interface DisableStaffResult {
  */
 export interface StaffAuditQuery {
   /** Restrict to role changes for a single staff user (UUID). */
-  userId?: string
+  userId?: string;
   /** Inclusive lower bound (ISO timestamp) on the event time. */
-  from?: string
+  from?: string;
   /** Inclusive upper bound (ISO timestamp) on the event time. */
-  to?: string
-  limit?: number
-  offset?: number
+  to?: string;
+  limit?: number;
+  offset?: number;
 }
 
 /** A role granted or revoked by a `role_change` audit event. */
 export interface StaffAuditRoleChange {
-  roleId: string
-  roleName: string
+  roleId: string;
+  roleName: string;
 }
 
 /**
@@ -228,36 +228,36 @@ export interface StaffAuditRoleChange {
  * [admin] on [date]" / "Removed [role] by [admin] on [date]".
  */
 export interface StaffAuditEvent {
-  id: string
+  id: string;
   /** The staff user whose roles changed. */
-  targetUserId: string
-  targetUsername: string | null
+  targetUserId: string;
+  targetUsername: string | null;
   /** The admin who performed the change. */
-  actorUserId: string
-  actorUsername: string | null
-  addedRoles: StaffAuditRoleChange[]
-  removedRoles: StaffAuditRoleChange[]
-  previousRoleIds: string[]
-  newRoleIds: string[]
-  reason: string | null
-  correlationId: string | null
-  ip: string | null
-  createdAt: string
+  actorUserId: string;
+  actorUsername: string | null;
+  addedRoles: StaffAuditRoleChange[];
+  removedRoles: StaffAuditRoleChange[];
+  previousRoleIds: string[];
+  newRoleIds: string[];
+  reason: string | null;
+  correlationId: string | null;
+  ip: string | null;
+  createdAt: string;
 }
 
 /** Paginated staff permission audit result. */
 export interface StaffAuditResult {
-  items: StaffAuditEvent[]
-  total: number
-  limit: number
-  offset: number
+  items: StaffAuditEvent[];
+  total: number;
+  limit: number;
+  offset: number;
 }
 
 /**
  * Character set for generating temporary passwords.
  * Ambiguous characters (0/O, 1/l/I) are excluded to avoid confusion.
  */
-const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
 
 /**
  * Parse a stored permission set defensively. Handles both a JSON string
@@ -267,15 +267,15 @@ const PASSWORD_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
  */
 function parsePermissionsStored(raw: unknown): string[] {
   if (Array.isArray(raw)) {
-    return raw.filter((p): p is string => typeof p === 'string')
+    return raw.filter((p): p is string => typeof p === 'string');
   }
-  if (typeof raw !== 'string') return []
+  if (typeof raw !== 'string') return [];
   try {
-    const parsed = JSON.parse(raw)
-    if (Array.isArray(parsed)) return parsed.filter((p): p is string => typeof p === 'string')
-    return []
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed.filter((p): p is string => typeof p === 'string');
+    return [];
   } catch {
-    return []
+    return [];
   }
 }
 
@@ -289,74 +289,74 @@ function parsePermissionsStored(raw: unknown): string[] {
  * rather than at fixed offsets.
  */
 function generateTemporaryPassword(): string {
-  const crypto = globalThis.crypto
-  const length = 12
-  const array = new Uint8Array(length)
-  crypto.getRandomValues(array)
+  const crypto = globalThis.crypto;
+  const length = 12;
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
 
   // Build a random string from the character set
-  let result = ''
+  let result = '';
   for (let i = 0; i < length; i++) {
-    result += PASSWORD_CHARS[array[i]! % PASSWORD_CHARS.length]
+    result += PASSWORD_CHARS[array[i]! % PASSWORD_CHARS.length];
   }
 
   // Ensure at least one uppercase, one lowercase, one digit by
   // replacing characters at random positions if the character class
   // is missing from the generated result.
-  const upperRe = /[A-Z]/
-  const lowerRe = /[a-z]/
-  const digitRe = /[2-9]/
+  const upperRe = /[A-Z]/;
+  const lowerRe = /[a-z]/;
+  const digitRe = /[2-9]/;
 
-  const UPPER_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-  const LOWER_CHARS = 'abcdefghjkmnpqrstuvwxyz'
-  const DIGITS = '23456789'
+  const UPPER_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const LOWER_CHARS = 'abcdefghjkmnpqrstuvwxyz';
+  const DIGITS = '23456789';
 
-  const posBuf = new Uint8Array(1)
-  const selBuf = new Uint8Array(1)
+  const posBuf = new Uint8Array(1);
+  const selBuf = new Uint8Array(1);
 
   if (!upperRe.test(result)) {
-    crypto.getRandomValues(posBuf)
-    const pos = posBuf[0]! % length
-    crypto.getRandomValues(selBuf)
-    const replacement = UPPER_CHARS[selBuf[0]! % UPPER_CHARS.length]
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+    crypto.getRandomValues(posBuf);
+    const pos = posBuf[0]! % length;
+    crypto.getRandomValues(selBuf);
+    const replacement = UPPER_CHARS[selBuf[0]! % UPPER_CHARS.length];
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
   }
 
   if (!lowerRe.test(result)) {
-    crypto.getRandomValues(posBuf)
-    const pos = posBuf[0]! % length
-    crypto.getRandomValues(selBuf)
-    const replacement = LOWER_CHARS[selBuf[0]! % LOWER_CHARS.length]
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+    crypto.getRandomValues(posBuf);
+    const pos = posBuf[0]! % length;
+    crypto.getRandomValues(selBuf);
+    const replacement = LOWER_CHARS[selBuf[0]! % LOWER_CHARS.length];
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
   }
 
   if (!digitRe.test(result)) {
-    crypto.getRandomValues(posBuf)
-    const pos = posBuf[0]! % length
-    crypto.getRandomValues(selBuf)
-    const replacement = DIGITS[selBuf[0]! % DIGITS.length]
-    result = result.slice(0, pos) + replacement + result.slice(pos + 1)
+    crypto.getRandomValues(posBuf);
+    const pos = posBuf[0]! % length;
+    crypto.getRandomValues(selBuf);
+    const replacement = DIGITS[selBuf[0]! % DIGITS.length];
+    result = result.slice(0, pos) + replacement + result.slice(pos + 1);
   }
 
-  return result
+  return result;
 }
 
 /**
  * PostgreSQL error code for unique constraint violation.
  */
-const PG_UNIQUE_VIOLATION = '23505'
+const PG_UNIQUE_VIOLATION = '23505';
 
 /**
  * UUID (versions 1–8) matcher for validating the audit `userId` filter.
  */
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Shape of the `role_change` metadata written by `updateStaffRoles`. */
 interface RoleChangeMetadata {
-  targetUserId: string
-  previousRoleIds: string[]
-  newRoleIds: string[]
-  reason: string | null
+  targetUserId: string;
+  previousRoleIds: string[];
+  newRoleIds: string[];
+  reason: string | null;
 }
 
 /**
@@ -366,25 +366,25 @@ interface RoleChangeMetadata {
  * timeline.
  */
 function parseRoleChangeMetadata(raw: unknown): RoleChangeMetadata | null {
-  let parsed: unknown = raw
+  let parsed: unknown = raw;
   if (typeof raw === 'string') {
     try {
-      parsed = JSON.parse(raw)
+      parsed = JSON.parse(raw);
     } catch {
-      return null
+      return null;
     }
   }
-  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null
-  const meta = parsed as Record<string, unknown>
-  if (typeof meta.targetUserId !== 'string') return null
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
+  const meta = parsed as Record<string, unknown>;
+  if (typeof meta.targetUserId !== 'string') return null;
   const previousRoleIds = Array.isArray(meta.previousRoleIds)
     ? meta.previousRoleIds.filter((id): id is string => typeof id === 'string')
-    : []
+    : [];
   const newRoleIds = Array.isArray(meta.newRoleIds)
     ? meta.newRoleIds.filter((id): id is string => typeof id === 'string')
-    : []
-  const reason = typeof meta.reason === 'string' ? meta.reason : null
-  return { targetUserId: meta.targetUserId, previousRoleIds, newRoleIds, reason }
+    : [];
+  const reason = typeof meta.reason === 'string' ? meta.reason : null;
+  return { targetUserId: meta.targetUserId, previousRoleIds, newRoleIds, reason };
 }
 
 /**
@@ -395,49 +395,102 @@ function parseRoleChangeMetadata(raw: unknown): RoleChangeMetadata | null {
  */
 @Injectable()
 export class AdminService {
-  private readonly logger = new Logger(AdminService.name)
+  private readonly logger = new Logger(AdminService.name);
 
-  constructor(
-    @Optional() private readonly configCache?: ConfigCacheService,
-  ) {}
+  constructor(@Optional() private readonly configCache?: ConfigCacheService) {}
 
-  private prepareStaffActivation(username: string): { tokenHash: string; expiresAt: Date; id: string; payload: string } {
+  private prepareStaffActivation(username: string): {
+    tokenHash: string;
+    expiresAt: Date;
+    id: string;
+    payload: string;
+  } {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
-      throw new HttpException({ error: 'VALIDATION:INPUT:INVALID', message: 'Link activation requires an email address' }, 400)
+      throw new HttpException(
+        { error: 'VALIDATION:INPUT:INVALID', message: 'Link activation requires an email address' },
+        400
+      );
     }
-    const rawToken = randomBytes(32).toString('hex')
-    const tokenHash = createHash('sha256').update(rawToken).digest('hex')
+    const rawToken = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
     try {
-      const origin = new URL(process.env.APP_PUBLIC_URL ?? '')
-      if (origin.protocol !== 'https:' && !(process.env.NODE_ENV !== 'production' && origin.protocol === 'http:' && ['localhost','127.0.0.1'].includes(origin.hostname))) throw new Error('Invalid public URL')
-      const link = new URL('/activate', origin.origin)
-      link.hash = new URLSearchParams({ token: rawToken }).toString()
-      const id = randomUUID()
-      return { id,tokenHash,expiresAt:new Date(Date.now()+24*60*60*1000),payload:encryptAuthDelivery(id,{code:rawToken,destination:username,activationUrl:link.toString()}) }
+      const origin = new URL(process.env.APP_PUBLIC_URL ?? '');
+      if (
+        origin.protocol !== 'https:' &&
+        !(
+          process.env.NODE_ENV !== 'production' &&
+          origin.protocol === 'http:' &&
+          ['localhost', '127.0.0.1'].includes(origin.hostname)
+        )
+      )
+        throw new Error('Invalid public URL');
+      const link = new URL('/activate', origin.origin);
+      link.hash = new URLSearchParams({ token: rawToken }).toString();
+      const id = randomUUID();
+      return {
+        id,
+        tokenHash,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        payload: encryptAuthDelivery(id, {
+          code: rawToken,
+          destination: username,
+          activationUrl: link.toString(),
+        }),
+      };
     } catch {
-      throw new HttpException({ statusCode:503,error:ErrorCodes.AUTH_DELIVERY_UNAVAILABLE.code },503)
+      throw new HttpException(
+        { statusCode: 503, error: ErrorCodes.AUTH_DELIVERY_UNAVAILABLE.code },
+        503
+      );
     }
   }
 
-  async resendStaffActivation(userId: string, actorUserId: string, ip: string): Promise<{ deliveryStatus: 'queued' }> {
-    const client = await getDbPool().connect()
+  async resendStaffActivation(
+    userId: string,
+    actorUserId: string,
+    ip: string
+  ): Promise<{ deliveryStatus: 'queued' }> {
+    const client = await getDbPool().connect();
     try {
-      await client.query('BEGIN')
-      const found = await client.query<{ username: string }>(`SELECT username FROM users WHERE user_id=$1 AND is_staff=true
-        AND disabled_at IS NULL AND activation_token IS NOT NULL AND must_change_password=true FOR UPDATE`, [userId])
-      if (found.rows.length !== 1) throw new HttpException({ error:'VALIDATION:INPUT:INVALID',message:'Staff activation is not pending' },409)
-      const recent = await client.query(`SELECT 1 FROM auth_delivery_outbox WHERE user_id=$1 AND kind='staff_activation' AND created_at>NOW()-INTERVAL '1 minute'`,[userId])
-      if (recent.rows.length) throw new HttpException({ error:'AUTH:OTP:RATE_LIMITED' },429)
-      const delivery = this.prepareStaffActivation(found.rows[0]!.username)
-      await client.query('UPDATE users SET activation_token=$1,activation_token_expires_at=$2,updated_at=NOW() WHERE user_id=$3',[delivery.tokenHash,delivery.expiresAt,userId])
-      await client.query(`INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
-        VALUES ($1,'staff_activation',$2,$3,$4,$5)`,[delivery.id,userId,delivery.tokenHash,delivery.payload,delivery.expiresAt])
-      await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
-        VALUES ($1,$2,'staff_activation_reissued',$3,$4,$5,NOW())`,[uuidv7(),actorUserId,JSON.stringify({targetUserId:userId}),uuidv7(),ip])
-      await client.query('COMMIT')
-      return { deliveryStatus:'queued' }
-    } catch (error) { await client.query('ROLLBACK').catch(() => {}); throw error }
-    finally { client.release() }
+      await client.query('BEGIN');
+      const found = await client.query<{ username: string }>(
+        `SELECT username FROM users WHERE user_id=$1 AND is_staff=true
+        AND disabled_at IS NULL AND activation_token IS NOT NULL AND must_change_password=true FOR UPDATE`,
+        [userId]
+      );
+      if (found.rows.length !== 1)
+        throw new HttpException(
+          { error: 'VALIDATION:INPUT:INVALID', message: 'Staff activation is not pending' },
+          409
+        );
+      const recent = await client.query(
+        `SELECT 1 FROM auth_delivery_outbox WHERE user_id=$1 AND kind='staff_activation' AND created_at>NOW()-INTERVAL '1 minute'`,
+        [userId]
+      );
+      if (recent.rows.length) throw new HttpException({ error: 'AUTH:OTP:RATE_LIMITED' }, 429);
+      const delivery = this.prepareStaffActivation(found.rows[0]!.username);
+      await client.query(
+        'UPDATE users SET activation_token=$1,activation_token_expires_at=$2,updated_at=NOW() WHERE user_id=$3',
+        [delivery.tokenHash, delivery.expiresAt, userId]
+      );
+      await client.query(
+        `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
+        VALUES ($1,'staff_activation',$2,$3,$4,$5)`,
+        [delivery.id, userId, delivery.tokenHash, delivery.payload, delivery.expiresAt]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        VALUES ($1,$2,'staff_activation_reissued',$3,$4,$5,NOW())`,
+        [uuidv7(), actorUserId, JSON.stringify({ targetUserId: userId }), uuidv7(), ip]
+      );
+      await client.query('COMMIT');
+      return { deliveryStatus: 'queued' };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -460,15 +513,14 @@ export class AdminService {
   async createStaffUser(
     input: CreateStaffUserInput,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<CreateStaffUserResult> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     // ── 1. Optimistic uniqueness pre-check (fast-fail) ────────────────
-    const existing = await pool.query(
-      `SELECT user_id FROM users WHERE username = $1`,
-      [input.username],
-    )
+    const existing = await pool.query(`SELECT user_id FROM users WHERE username = $1`, [
+      input.username,
+    ]);
 
     if (existing.rows.length > 0) {
       throw new HttpException(
@@ -477,14 +529,14 @@ export class AdminService {
           error: 'AUTH:REGISTER:USERNAME_TAKEN',
           message: 'Username is already taken',
         },
-        409,
-      )
+        409
+      );
     }
 
     // ── 1b. Validate role IDs against predefined roles ─────────────────
-    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
-    const assignedRoleIds = [...new Set(input.roleIds ?? [])]
-    const invalidRoleIds = assignedRoleIds.filter((rid) => !validRoleIds.has(rid))
+    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id));
+    const assignedRoleIds = [...new Set(input.roleIds ?? [])];
+    const invalidRoleIds = assignedRoleIds.filter((rid) => !validRoleIds.has(rid));
 
     if (invalidRoleIds.length > 0) {
       throw new HttpException(
@@ -493,40 +545,40 @@ export class AdminService {
           error: 'VALIDATION_INVALID_ROLES',
           message: `Invalid role IDs: ${invalidRoleIds.join(', ')}`,
         },
-        400,
-      )
+        400
+      );
     }
 
-    const userId = uuidv7()
-    const now = new Date()
+    const userId = uuidv7();
+    const now = new Date();
 
     // ── 2. Generate password or activation token ───────────────────────
-    let passwordHash: string
-    let mustChangePassword = false
-    let activationToken: string | null = null
-    let activationTokenExpiresAt: Date | null = null
-    let temporaryPassword: string | null = null
-    let activationDelivery: { id: string; payload: string } | undefined
+    let passwordHash: string;
+    let mustChangePassword = false;
+    let activationToken: string | null = null;
+    let activationTokenExpiresAt: Date | null = null;
+    let temporaryPassword: string | null = null;
+    let activationDelivery: { id: string; payload: string } | undefined;
 
     if (input.activationMethod === 'tempPassword') {
-      temporaryPassword = generateTemporaryPassword()
-      passwordHash = await argon2.hash(temporaryPassword)
-      mustChangePassword = true
+      temporaryPassword = generateTemporaryPassword();
+      passwordHash = await argon2.hash(temporaryPassword);
+      mustChangePassword = true;
     } else {
       // Generate a strong random password for the user (they'll set their own via link)
-      const strongPassword = generateTemporaryPassword()
-      passwordHash = await argon2.hash(strongPassword)
-      mustChangePassword = true
-      const prepared = this.prepareStaffActivation(input.username)
-      activationToken = prepared.tokenHash
-      activationTokenExpiresAt = prepared.expiresAt
-      activationDelivery = { id: prepared.id, payload: prepared.payload }
+      const strongPassword = generateTemporaryPassword();
+      passwordHash = await argon2.hash(strongPassword);
+      mustChangePassword = true;
+      const prepared = this.prepareStaffActivation(input.username);
+      activationToken = prepared.tokenHash;
+      activationTokenExpiresAt = prepared.expiresAt;
+      activationDelivery = { id: prepared.id, payload: prepared.payload };
     }
 
-    const client = await pool.connect()
+    const client = await pool.connect();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // ── 3. Create user record ──────────────────────────────────────
       const userResult = await client.query(
@@ -543,47 +595,55 @@ export class AdminService {
           activationTokenExpiresAt,
           now,
           now,
-        ],
-      )
+        ]
+      );
 
       if (userResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
           {
             statusCode: 500,
             error: 'INTERNAL_SERVER',
             message: 'Failed to create staff user',
           },
-          500,
-        )
+          500
+        );
       }
 
       if (activationDelivery) {
-        await client.query(`INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
+        await client.query(
+          `INSERT INTO auth_delivery_outbox(id,kind,user_id,code_hash,encrypted_payload,expires_at)
           VALUES ($1,'staff_activation',$2,$3,$4,$5)`,
-        [activationDelivery.id,userId,activationToken,activationDelivery.payload,activationTokenExpiresAt])
+          [
+            activationDelivery.id,
+            userId,
+            activationToken,
+            activationDelivery.payload,
+            activationTokenExpiresAt,
+          ]
+        );
       }
 
       // ── 4. Auto-create verified individual profile ──────────────────
-      const profileId = uuidv7()
+      const profileId = uuidv7();
       await client.query(
         `INSERT INTO profiles (id, user_id, profile_type, is_default, status, first_name, last_name, created_at, updated_at)
          VALUES ($1, $2, 'INDIVIDUAL', true, 'VERIFIED', $3, $4, $5, $6)`,
-        [profileId, userId, input.firstName, input.lastName, now, now],
-      )
+        [profileId, userId, input.firstName, input.lastName, now, now]
+      );
 
       // ── 4b. Assign initial roles ────────────────────────────────────
       if (assignedRoleIds.length > 0) {
         await client.query(
           `INSERT INTO user_roles (user_id, role_id, created_at)
            SELECT $1, role_id, $2 FROM unnest($3::text[]) AS role_id`,
-          [userId, now, assignedRoleIds],
-        )
+          [userId, now, assignedRoleIds]
+        );
       }
 
       // ── 5. Record audit event ──────────────────────────────────────
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -601,15 +661,15 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
         `Staff user created: userId=${userId}, username=${input.username}, ` +
-        `method=${input.activationMethod}, actor=${actorUserId}`,
-      )
+          `method=${input.activationMethod}, actor=${actorUserId}`
+      );
 
       // ── 6. Return result ───────────────────────────────────────────
       if (input.activationMethod === 'tempPassword' && temporaryPassword) {
@@ -618,8 +678,9 @@ export class AdminService {
           username: input.username,
           activationMethod: 'tempPassword',
           temporaryPassword,
-          message: 'Staff user created. Save the temporary password — it will never be shown again.',
-        }
+          message:
+            'Staff user created. Save the temporary password — it will never be shown again.',
+        };
       }
 
       return {
@@ -628,11 +689,11 @@ export class AdminService {
         activationMethod: 'link',
         deliveryStatus: 'queued',
         message: 'Staff user created. Activation link queued for email delivery.',
-      }
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Non-critical
-      })
+      });
 
       // Handle unique constraint violation as a TOCTOU safety net:
       // the pre-check raced with another concurrent creation.
@@ -648,23 +709,23 @@ export class AdminService {
             error: 'AUTH:REGISTER:USERNAME_TAKEN',
             message: 'Username is already taken',
           },
-          409,
-        )
+          409
+        );
       }
 
-      if (error instanceof HttpException) throw error
+      if (error instanceof HttpException) throw error;
 
-      this.logger.error(`Failed to create staff user: ${String(error)}`)
+      this.logger.error(`Failed to create staff user: ${String(error)}`);
       throw new HttpException(
         {
           statusCode: 500,
           error: 'INTERNAL_SERVER',
           message: 'Failed to create staff user',
         },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -687,27 +748,26 @@ export class AdminService {
     roleIds: string[],
     actorUserId: string,
     ip: string,
-    reason?: string,
+    reason?: string
   ): Promise<{ userId: string; roleIds: string[]; previousRoleIds: string[] }> {
-    const pool = getDbPool()
-    roleIds = [...new Set(roleIds)]
+    const pool = getDbPool();
+    roleIds = [...new Set(roleIds)];
 
     // ── 1. Validate that the target user exists ──────────────────────────
-    const userResult = await pool.query(
-      `SELECT user_id, is_admin FROM users WHERE user_id = $1`,
-      [targetUserId],
-    )
+    const userResult = await pool.query(`SELECT user_id, is_admin FROM users WHERE user_id = $1`, [
+      targetUserId,
+    ]);
 
     if (userResult.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
-        404,
-      )
+        404
+      );
     }
 
     // ── 2. Validate role IDs against predefined roles ────────────────────
-    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
-    const invalidRoleIds = roleIds.filter((rid) => !validRoleIds.has(rid))
+    const validRoleIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id));
+    const invalidRoleIds = roleIds.filter((rid) => !validRoleIds.has(rid));
 
     if (invalidRoleIds.length > 0) {
       throw new HttpException(
@@ -716,50 +776,65 @@ export class AdminService {
           error: 'VALIDATION_INVALID_ROLES',
           message: `Invalid role IDs: ${invalidRoleIds.join(', ')}`,
         },
-        400,
-      )
+        400
+      );
     }
 
-    const client = await pool.connect()
-    const now = new Date()
+    const client = await pool.connect();
+    const now = new Date();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Serialize replacement and session revocation with other account edits.
-      const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [targetUserId])
-      if (!locked.rows.length) throw new HttpException({ statusCode: 404, error: 'USER_NOT_FOUND' }, 404)
+      const locked = await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
+        targetUserId,
+      ]);
+      if (!locked.rows.length)
+        throw new HttpException({ statusCode: 404, error: 'USER_NOT_FOUND' }, 404);
 
       // ── 3. Fetch current role set ─────────────────────────────────────
       const currentRolesResult = await client.query(
         `SELECT role_id FROM user_roles WHERE user_id = $1`,
-        [targetUserId],
-      )
-      const previousRoleIds = currentRolesResult.rows.map((r: { role_id: string }) => r.role_id)
+        [targetUserId]
+      );
+      const previousRoleIds = currentRolesResult.rows.map((r: { role_id: string }) => r.role_id);
 
-      if (previousRoleIds.length === roleIds.length && previousRoleIds.every((id: string) => roleIds.includes(id))) {
-        await client.query('COMMIT')
-        return { userId: targetUserId, roleIds, previousRoleIds }
+      if (
+        previousRoleIds.length === roleIds.length &&
+        previousRoleIds.every((id: string) => roleIds.includes(id))
+      ) {
+        await client.query('COMMIT');
+        return { userId: targetUserId, roleIds, previousRoleIds };
       }
 
       // ── 4. Replace role set (delete all, insert new) ──────────────────
-      await client.query(`DELETE FROM user_roles WHERE user_id = $1`, [targetUserId])
+      await client.query(`DELETE FROM user_roles WHERE user_id = $1`, [targetUserId]);
 
       if (roleIds.length > 0) {
         await client.query(
           `INSERT INTO user_roles (user_id, role_id, created_at)
            SELECT $1, role_id, $2 FROM unnest($3::text[]) AS role_id`,
-          [targetUserId, now, roleIds],
-        )
+          [targetUserId, now, roleIds]
+        );
       }
 
-      await client.query('UPDATE users SET is_staff=true, updated_at=$2 WHERE user_id=$1', [targetUserId, now])
-      await client.query('UPDATE sessions SET revoked_at=$2, updated_at=$2 WHERE user_id=$1 AND revoked_at IS NULL', [targetUserId, now])
-      await client.query('UPDATE refresh_tokens SET consumed_at=$2 WHERE user_id=$1 AND consumed_at IS NULL', [targetUserId, now])
+      await client.query('UPDATE users SET is_staff=true, updated_at=$2 WHERE user_id=$1', [
+        targetUserId,
+        now,
+      ]);
+      await client.query(
+        'UPDATE sessions SET revoked_at=$2, updated_at=$2 WHERE user_id=$1 AND revoked_at IS NULL',
+        [targetUserId, now]
+      );
+      await client.query(
+        'UPDATE refresh_tokens SET consumed_at=$2 WHERE user_id=$1 AND consumed_at IS NULL',
+        [targetUserId, now]
+      );
 
       // ── 5. Record audit event ─────────────────────────────────────────
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -776,33 +851,33 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Roles updated for user ${targetUserId}: [${previousRoleIds.join(',')}] → [${roleIds.join(',')}], actor=${actorUserId}`,
-      )
+        `Roles updated for user ${targetUserId}: [${previousRoleIds.join(',')}] → [${roleIds.join(',')}], actor=${actorUserId}`
+      );
 
       return {
         userId: targetUserId,
         roleIds,
         previousRoleIds,
-      }
+      };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Non-critical
-      })
+      });
 
-      this.logger.error(`Failed to update roles for user ${targetUserId}: ${String(error)}`)
-      if (error instanceof HttpException) throw error
+      this.logger.error(`Failed to update roles for user ${targetUserId}: ${String(error)}`);
+      if (error instanceof HttpException) throw error;
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff roles' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -813,17 +888,17 @@ export class AdminService {
    * role as predefined based on the canonical role IDs.
    */
   async listStaffRoles(): Promise<StaffRoleDto[]> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
       `SELECT role_id, name, description, permissions, created_at, updated_at
        FROM staff_roles
-       ORDER BY name ASC`,
-    )
+       ORDER BY name ASC`
+    );
 
-    const predefinedIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id))
+    const predefinedIds = new Set<string>(PREDEFINED_ROLES.map((r) => r.id));
 
     return result.rows.map((row) => {
-      const permissions = parsePermissionsStored(row.permissions)
+      const permissions = parsePermissionsStored(row.permissions);
 
       return {
         roleId: row.role_id,
@@ -833,8 +908,8 @@ export class AdminService {
         predefined: predefinedIds.has(row.role_id),
         createdAt: row.created_at ? new Date(row.created_at).toISOString() : '',
         updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : '',
-      }
-    })
+      };
+    });
   }
 
   /**
@@ -848,40 +923,47 @@ export class AdminService {
    * @throws 404 when the user does not exist
    */
   async getEffectivePermissions(targetUserId: string): Promise<EffectivePermissionsResult> {
-    const pool = getDbPool()
+    const pool = getDbPool();
 
     const userResult = await pool.query(
       `SELECT user_id, is_admin, disabled_at FROM users WHERE user_id = $1`,
-      [targetUserId],
-    )
+      [targetUserId]
+    );
     if (userResult.rows.length === 0) {
       throw new HttpException(
         { statusCode: 404, error: 'USER_NOT_FOUND', message: 'User not found' },
-        404,
-      )
+        404
+      );
     }
-    const isAdmin = userResult.rows[0]!.is_admin === true
+    const isAdmin = userResult.rows[0]!.is_admin === true;
 
     const rolesResult = await pool.query(
       `SELECT r.role_id, r.name, r.permissions
        FROM user_roles ur
        JOIN staff_roles r ON r.role_id = ur.role_id
        WHERE ur.user_id = $1`,
-      [targetUserId],
-    )
+      [targetUserId]
+    );
 
-    const roleIds: string[] = []
-    const roleNames: string[] = []
-    const permissionSet = new Set<string>()
+    const roleIds: string[] = [];
+    const roleNames: string[] = [];
+    const permissionSet = new Set<string>();
 
     for (const row of rolesResult.rows) {
-      roleIds.push(row.role_id)
-      roleNames.push(row.name)
-      for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p)
+      roleIds.push(row.role_id);
+      roleNames.push(row.name);
+      for (const p of parsePermissionsStored(row.permissions)) permissionSet.add(p);
     }
 
     if (userResult.rows[0]!.disabled_at) {
-      return { userId: targetUserId, isAdmin, roleIds, roleNames, permissions: [], isWildcard: false }
+      return {
+        userId: targetUserId,
+        isAdmin,
+        roleIds,
+        roleNames,
+        permissions: [],
+        isWildcard: false,
+      };
     }
 
     if (isAdmin || permissionSet.has('*')) {
@@ -892,12 +974,12 @@ export class AdminService {
         roleNames,
         permissions: [{ permission: '*', group: 'admin' }],
         isWildcard: true,
-      }
+      };
     }
 
     const permissions = [...permissionSet]
       .sort()
-      .map((permission) => ({ permission, group: permission.split(':')[0] ?? 'other' }))
+      .map((permission) => ({ permission, group: permission.split(':')[0] ?? 'other' }));
 
     return {
       userId: targetUserId,
@@ -906,7 +988,7 @@ export class AdminService {
       roleNames,
       permissions,
       isWildcard: false,
-    }
+    };
   }
 
   /**
@@ -914,17 +996,17 @@ export class AdminService {
    * Defaults to 'DISABLED' if the key is not set.
    */
   async getProfileVerificationMode(): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = 'profile_verification_mode'`,
-    )
+      `SELECT value FROM app_config WHERE key = 'profile_verification_mode'`
+    );
 
     if (result.rows.length === 0) {
-      return { mode: 'DISABLED' }
+      return { mode: 'DISABLED' };
     }
 
-    const mode = result.rows[0]!.value as 'DISABLED' | 'MANUAL' | 'API'
-    return { mode }
+    const mode = result.rows[0]!.value as 'DISABLED' | 'MANUAL' | 'API';
+    return { mode };
   }
 
   /**
@@ -934,32 +1016,32 @@ export class AdminService {
   async setProfileVerificationMode(
     mode: 'DISABLED' | 'MANUAL' | 'API',
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<{ mode: 'DISABLED' | 'MANUAL' | 'API' }> {
-    const pool = getDbPool()
-    const now = new Date()
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Upsert the config value
       await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ('profile_verification_mode', $1::jsonb, 1, $2)
          ON CONFLICT (key) DO UPDATE SET value = $1::jsonb, version = app_config.version + 1, updated_at = $2`,
-        [JSON.stringify(mode), now],
-      )
+        [JSON.stringify(mode), now]
+      );
 
       // Bump global config version for cache invalidation
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -974,22 +1056,22 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Profile verification mode set to ${mode} by ${actorUserId}`)
-      return { mode }
+      this.logger.log(`Profile verification mode set to ${mode} by ${actorUserId}`);
+      return { mode };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set profile verification mode: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set profile verification mode: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1009,14 +1091,13 @@ export class AdminService {
    * (`{ timezone, startHour, endHour }`).
    */
   async getDeliveryWindowConfig(): Promise<DeliveryWindowConfig> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [DELIVERY_WINDOW_CONFIG_KEY],
-    )
-    if (result.rows.length === 0) return { ...DEFAULT_DELIVERY_WINDOW }
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      DELIVERY_WINDOW_CONFIG_KEY,
+    ]);
+    if (result.rows.length === 0) return { ...DEFAULT_DELIVERY_WINDOW };
     // Persisted value is stored snake_case ({ timezone, start_hour, end_hour }).
-    return toDeliveryWindowConfig(result.rows[0]!.value)
+    return toDeliveryWindowConfig(result.rows[0]!.value);
   }
 
   /**
@@ -1037,9 +1118,9 @@ export class AdminService {
   async setDeliveryWindowConfig(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<DeliveryWindowConfig> {
-    const validation = validateWindowConfig(input)
+    const validation = validateWindowConfig(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1047,13 +1128,13 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toDeliveryWindowConfig(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toDeliveryWindowConfig(input);
+    const pool = getDbPool();
+    const now = new Date();
 
     // Persist in the snake_case shape `loadDeliveryWindowConfig` (worker) and
     // `normalizeWindowConfig` consume.
@@ -1061,28 +1142,28 @@ export class AdminService {
       timezone: config.timezone,
       start_hour: config.startHour,
       end_hour: config.endHour,
-    }
+    };
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3`,
-        [DELIVERY_WINDOW_CONFIG_KEY, JSON.stringify(stored), now],
-      )
+        [DELIVERY_WINDOW_CONFIG_KEY, JSON.stringify(stored), now]
+      );
 
       // Bump global config version for cache invalidation (worker wake-up).
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (T-05.03.03: changes take effect for new schedules).
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1097,24 +1178,24 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Delivery window set to ${config.timezone} ${config.startHour}:00–${config.endHour}:00 by ${actorUserId}`,
-      )
-      return config
+        `Delivery window set to ${config.timezone} ${config.startHour}:00–${config.endHour}:00 by ${actorUserId}`
+      );
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set delivery window config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set delivery window config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1132,24 +1213,23 @@ export class AdminService {
    * Pending Approval when `thresholdIrR > 0 && amount > thresholdIrR`).
    */
   async getDualApprovalThresholdConfig(): Promise<DualApprovalConfig> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY],
-    )
-    if (result.rows.length === 0) return { ...DEFAULT_DUAL_APPROVAL_CONFIG }
-    const config = toDualApprovalConfig(result.rows[0]!.value)
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+    ]);
+    if (result.rows.length === 0) return { ...DEFAULT_DUAL_APPROVAL_CONFIG };
+    const config = toDualApprovalConfig(result.rows[0]!.value);
     // A persisted row that does not normalize to a *valid* config means the
     // stored value is corrupt; fail open to the disabled default but make the
     // corruption observable so it cannot silently disable dual approval.
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const persistedValue = persisted?.threshold_irr ?? persisted?.thresholdIrR
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
+    const persistedValue = persisted?.threshold_irr ?? persisted?.thresholdIrR;
     if (!isValidDualApprovalThreshold(persistedValue)) {
       this.logger.warn(
-        `Dual-approval threshold config row for key ${DUAL_APPROVAL_THRESHOLD_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving disabled default`,
-      )
+        `Dual-approval threshold config row for key ${DUAL_APPROVAL_THRESHOLD_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving disabled default`
+      );
     }
-    return config
+    return config;
   }
 
   /**
@@ -1169,9 +1249,9 @@ export class AdminService {
   async setDualApprovalThresholdConfig(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<DualApprovalConfig> {
-    const validation = validateDualApprovalConfig(input)
+    const validation = validateDualApprovalConfig(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1179,23 +1259,23 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toDualApprovalConfig(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toDualApprovalConfig(input);
+    const pool = getDbPool();
+    const now = new Date();
 
     // Persist in the snake_case shape `getDualApprovalThresholdConfig` and
     // the T-09.07.02 workflow consume.
     const stored = {
       threshold_irr: config.thresholdIrR,
-    }
+    };
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value that is being replaced — read it before
@@ -1203,34 +1283,33 @@ export class AdminService {
       // so no threshold change can be dropped from the audit trail.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY, JSON.stringify(stored), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [DUAL_APPROVAL_THRESHOLD_CONFIG_KEY, JSON.stringify(stored), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (config_change, matching other admin configs).
       // The audit trail captures the previous value and both version numbers
       // so a threshold change (e.g. lowering it to 0 and disabling dual
       // approval entirely) can be reconstructed end-to-end later.
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1248,24 +1327,24 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Dual-approval threshold set to IRR ${config.thresholdIrR} by ${actorUserId}`,
-      )
-      return config
+        `Dual-approval threshold set to IRR ${config.thresholdIrR} by ${actorUserId}`
+      );
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1285,28 +1364,30 @@ export class AdminService {
    * it cannot silently change the enforced ceiling.
    */
   async getWalletTopUpLimitConfig(): Promise<{ limitIrR: number; version: number }> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value, version FROM app_config WHERE key = $1`,
-      [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-    )
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value, version FROM app_config WHERE key = $1`, [
+      WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+    ]);
     if (result.rows.length === 0) {
-      return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: 0 }
+      return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: 0 };
     }
-    const config = toWalletTopUpLimitConfig(result.rows[0]!.value)
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const persistedValue = persisted?.limit_irr ?? persisted?.limitIrR
-    const version = Number(result.rows[0]!.version)
+    const config = toWalletTopUpLimitConfig(result.rows[0]!.value);
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
+    const persistedValue = persisted?.limit_irr ?? persisted?.limitIrR;
+    const version = Number(result.rows[0]!.version);
     if (!isValidWalletTopUpLimit(persistedValue)) {
       this.logger.warn(
-        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving default limit`,
-      )
-      return { ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG, version: Number.isFinite(version) ? version : 0 }
+        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving default limit`
+      );
+      return {
+        ...DEFAULT_WALLET_TOP_UP_LIMIT_CONFIG,
+        version: Number.isFinite(version) ? version : 0,
+      };
     }
     return {
       ...config,
       version: Number.isFinite(version) && version >= 0 ? version : 0,
-    }
+    };
   }
 
   /**
@@ -1329,9 +1410,9 @@ export class AdminService {
   async setWalletTopUpLimitConfig(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<{ limitIrR: number; version: number }> {
-    const validation = validateWalletTopUpLimitConfig(input)
+    const validation = validateWalletTopUpLimitConfig(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1339,11 +1420,11 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const expectedVersionResult = readExpectedWalletTopUpLimitVersion(input)
+    const expectedVersionResult = readExpectedWalletTopUpLimitVersion(input);
     if (!expectedVersionResult.ok) {
       throw new HttpException(
         {
@@ -1351,33 +1432,33 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: 'expected_version must be a non-negative integer',
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toWalletTopUpLimitConfig(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toWalletTopUpLimitConfig(input);
+    const pool = getDbPool();
+    const now = new Date();
 
     // Persist in the snake_case shape `getWalletTopUpLimitConfig` and the
     // T-04.2.02.01 online top-up flow consume.
     const stored = {
       limit_irr: config.limitIrR,
-    }
+    };
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // SELECT ... FOR UPDATE locks nothing when the config row does not
       // yet exist. Take the same transaction-scoped advisory lock the
       // online top-up submission path uses so a concurrent first write
       // cannot commit a tighter ceiling after a submission has already
       // observed the default (T-04.2.02.06).
-      await client.query(
-        `SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`,
-        [WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE, WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-      )
+      await client.query(`SELECT pg_advisory_xact_lock(hashtext($1), hashtext($2))`, [
+        WALLET_TOP_UP_LIMIT_LOCK_NAMESPACE,
+        WALLET_TOP_UP_LIMIT_CONFIG_KEY,
+      ]);
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value that is being replaced — read it before
@@ -1385,16 +1466,15 @@ export class AdminService {
       // once the row exists, and on the advisory lock when it does not.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [WALLET_TOP_UP_LIMIT_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersionRaw =
-        prevResult.rows.length > 0 ? Number(prevResult.rows[0]!.version) : 0
+        prevResult.rows.length > 0 ? Number(prevResult.rows[0]!.version) : 0;
       const previousVersion =
         Number.isSafeInteger(previousVersionRaw) && previousVersionRaw >= 0
           ? previousVersionRaw
-          : 0
+          : 0;
 
       if (
         expectedVersionResult.expectedVersion !== undefined &&
@@ -1406,11 +1486,11 @@ export class AdminService {
             error: ErrorCodes.CONFLICT_VERSION.code,
             message: onlineTopUpLimitVersionConflictMessage(
               expectedVersionResult.expectedVersion,
-              previousVersion,
+              previousVersion
             ),
           },
-          409,
-        )
+          409
+        );
       }
 
       const upsertResult = await client.query(
@@ -1418,21 +1498,21 @@ export class AdminService {
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [WALLET_TOP_UP_LIMIT_CONFIG_KEY, JSON.stringify(stored), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [WALLET_TOP_UP_LIMIT_CONFIG_KEY, JSON.stringify(stored), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (config_change, matching other admin configs).
       // The audit trail captures the previous value and both version numbers
       // so a limit change can be reconstructed end-to-end later.
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1450,29 +1530,29 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      await this.configCache?.invalidate(WALLET_TOP_UP_LIMIT_CONFIG_KEY)
+      await this.configCache?.invalidate(WALLET_TOP_UP_LIMIT_CONFIG_KEY);
 
       this.logger.log(
-        `Online wallet top-up limit set to IRR ${config.limitIrR} (version ${newVersion}) by ${actorUserId}`,
-      )
-      return { ...config, version: newVersion }
+        `Online wallet top-up limit set to IRR ${config.limitIrR} (version ${newVersion}) by ${actorUserId}`
+      );
+      return { ...config, version: newVersion };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
+      await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) {
-        throw error
+        throw error;
       }
-      this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`)
+      this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1492,24 +1572,23 @@ export class AdminService {
    * fail-closed safety check (T-09.10.03) is out of scope for this slice.
    */
   async getGreenElectricityConfig(): Promise<GreenElectricityConfig> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [GREEN_ELECTRICITY_CONFIG_KEY],
-    )
-    if (result.rows.length === 0) return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      GREEN_ELECTRICITY_CONFIG_KEY,
+    ]);
+    if (result.rows.length === 0) return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG };
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
     // The stored snake_case shape must itself validate; a malformed row (wrong
     // types, missing modes) is surfaced rather than silently served as a
     // confusing mix of persisted + default fields.
-    const validation = validateGreenElectricityConfig(persisted)
+    const validation = validateGreenElectricityConfig(persisted);
     if (!validation.ok) {
       this.logger.warn(
-        `Green electricity config row for key ${GREEN_ELECTRICITY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`,
-      )
-      return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG }
+        `Green electricity config row for key ${GREEN_ELECTRICITY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving defaults`
+      );
+      return { ...DEFAULT_GREEN_ELECTRICITY_CONFIG };
     }
-    return toGreenElectricityConfig(persisted)
+    return toGreenElectricityConfig(persisted);
   }
 
   /**
@@ -1532,9 +1611,9 @@ export class AdminService {
   async setGreenElectricityConfig(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<GreenElectricityConfig> {
-    const validation = validateGreenElectricityConfig(input)
+    const validation = validateGreenElectricityConfig(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1542,11 +1621,11 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toGreenElectricityConfig(input)
+    const config = toGreenElectricityConfig(input);
 
     // T-09.10.03 — Activation safety gate. A mode may only be saved with the
     // rule enabled if the green electricity product can actually support it
@@ -1559,11 +1638,11 @@ export class AdminService {
     // check) is handled by the ordering engine consulting the seam's
     // `blocked` flag and by the admin-facing safety-status path, not by
     // retrying this write.
-    const productState = await this.getGreenElectricityProductState()
+    const productState = await this.getGreenElectricityProductState();
     for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
-      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState)
-      if (!enforcement.blocked) continue
-      const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced'
+      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState);
+      if (!enforcement.blocked) continue;
+      const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced';
       throw new HttpException(
         {
           statusCode: 400,
@@ -1571,17 +1650,17 @@ export class AdminService {
           message: `Cannot activate: Green electricity product is ${enforcement.reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
           details: { mode, reasons: [...enforcement.reasons] },
         },
-        400,
-      )
+        400
+      );
     }
 
-    const pool = getDbPool()
-    const now = new Date()
-    const stored = greenElectricityConfigToStored(config)
+    const pool = getDbPool();
+    const now = new Date();
+    const stored = greenElectricityConfigToStored(config);
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced. Concurrent writers
@@ -1589,31 +1668,30 @@ export class AdminService {
       // audit trail.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [GREEN_ELECTRICITY_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [GREEN_ELECTRICITY_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [GREEN_ELECTRICITY_CONFIG_KEY, JSON.stringify(stored), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [GREEN_ELECTRICITY_CONFIG_KEY, JSON.stringify(stored), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (config_change, matching other admin configs).
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1631,24 +1709,22 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(
-        `Mandatory green-electricity rules updated by ${actorUserId}`,
-      )
-      return config
+      this.logger.log(`Mandatory green-electricity rules updated by ${actorUserId}`);
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set green electricity config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set green electricity config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1659,19 +1735,18 @@ export class AdminService {
    * about them.
    */
   async getGreenElectricityProductState(): Promise<GreenElectricityProductState> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT status, price FROM products WHERE system_key = $1`,
-      [GREEN_ELECTRICITY_SYSTEM_KEY],
-    )
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT status, price FROM products WHERE system_key = $1`, [
+      GREEN_ELECTRICITY_SYSTEM_KEY,
+    ]);
     if (result.rows.length === 0) {
-      return { exists: false, status: null, priceIrR: null }
+      return { exists: false, status: null, priceIrR: null };
     }
-    const row = result.rows[0] as { status: string; price: string | number | null }
+    const row = result.rows[0] as { status: string; price: string | number | null };
     // node-pg returns NUMERIC/BIGINT as string, but be defensive: any
     // non-finite coercion maps to `null` (unpriced) so a corrupt value can
     // never pass the activation gate as if it were priced (fail-closed).
-    const parsedPrice = row.price === null ? null : Number(row.price)
+    const parsedPrice = row.price === null ? null : Number(row.price);
     return {
       exists: true,
       status:
@@ -1679,7 +1754,7 @@ export class AdminService {
           ? row.status
           : 'inactive',
       priceIrR: parsedPrice !== null && Number.isFinite(parsedPrice) ? parsedPrice : null,
-    }
+    };
   }
 
   /**
@@ -1692,21 +1767,21 @@ export class AdminService {
    * consumer that needs the enforcement seam.
    */
   async getGreenElectricitySafetyStatus(): Promise<{
-    product: GreenElectricityProductState
-    simpleOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] }
-    advancedOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] }
+    product: GreenElectricityProductState;
+    simpleOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] };
+    advancedOrder: { ruleActive: boolean; blocked: boolean; reasons: string[] };
   }> {
     const [config, productState] = await Promise.all([
       this.getGreenElectricityConfig(),
       this.getGreenElectricityProductState(),
-    ])
-    const simpleOrder = evaluateGreenRuleEnforcement(config, 'simpleOrder', productState)
-    const advancedOrder = evaluateGreenRuleEnforcement(config, 'advancedOrder', productState)
+    ]);
+    const simpleOrder = evaluateGreenRuleEnforcement(config, 'simpleOrder', productState);
+    const advancedOrder = evaluateGreenRuleEnforcement(config, 'advancedOrder', productState);
     return {
       product: productState,
       simpleOrder: { ...simpleOrder, reasons: [...simpleOrder.reasons] },
       advancedOrder: { ...advancedOrder, reasons: [...advancedOrder.reasons] },
-    }
+    };
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -1725,28 +1800,27 @@ export class AdminService {
    * silently mean "alert everything immediately".
    */
   async getServiceResponseTargets(): Promise<ServiceResponseTargets> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [SERVICE_RESPONSE_TARGETS_CONFIG_KEY],
-    )
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+    ]);
     if (result.rows.length === 0) {
-      return { ...DEFAULT_SERVICE_RESPONSE_TARGETS }
+      return { ...DEFAULT_SERVICE_RESPONSE_TARGETS };
     }
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const config = toServiceResponseTargets(persisted)
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
+    const config = toServiceResponseTargets(persisted);
     // Detect corruption: any catalog type whose stored value survived
     // normalization differently than it was stored means the row is corrupt.
     const corrupt = SERVICE_RESPONSE_TARGET_TYPES.some((type) => {
-      const raw = persisted?.[type] ?? null
-      return raw === null ? config[type] !== null : config[type] !== raw
-    })
+      const raw = persisted?.[type] ?? null;
+      return raw === null ? config[type] !== null : config[type] !== raw;
+    });
     if (corrupt) {
       this.logger.warn(
-        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types disabled)`,
-      )
+        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types disabled)`
+      );
     }
-    return config
+    return config;
   }
 
   /**
@@ -1769,9 +1843,9 @@ export class AdminService {
   async setServiceResponseTargets(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<ServiceResponseTargets> {
-    const validation = validateServiceResponseTargets(input)
+    const validation = validateServiceResponseTargets(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1779,18 +1853,20 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toServiceResponseTargets(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toServiceResponseTargets(input);
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[SERVICE_RESPONSE_TARGETS_CONFIG_KEY])
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        SERVICE_RESPONSE_TARGETS_CONFIG_KEY,
+      ]);
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced — read it before the
@@ -1798,34 +1874,33 @@ export class AdminService {
       // no target change can be dropped from the audit trail.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY, JSON.stringify(config), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [SERVICE_RESPONSE_TARGETS_CONFIG_KEY, JSON.stringify(config), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (config_change, matching other admin configs).
       // The trail captures the previous value and both version numbers so a
       // target change (including disabling a type) can be reconstructed
       // end-to-end later.
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1843,24 +1918,24 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Service response targets set to ${JSON.stringify(config)} by ${actorUserId}`,
-      )
-      return config
+        `Service response targets set to ${JSON.stringify(config)} by ${actorUserId}`
+      );
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set service response targets config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set service response targets config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -1880,29 +1955,28 @@ export class AdminService {
    * path.
    */
   async getEscalationPolicy(): Promise<EscalationPolicies> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [ESCALATION_POLICY_CONFIG_KEY],
-    )
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      ESCALATION_POLICY_CONFIG_KEY,
+    ]);
     if (result.rows.length === 0) {
-      return structuredClone(DEFAULT_ESCALATION_POLICIES)
+      return structuredClone(DEFAULT_ESCALATION_POLICIES);
     }
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const config = toEscalationPolicies(persisted)
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
+    const config = toEscalationPolicies(persisted);
     // Corruption detection: any known service type whose stored value
     // survived normalization differently than it was stored means the row
     // is corrupt. (Level sub-values are compared structurally via JSON.)
     const corrupt = SERVICE_RESPONSE_TARGET_TYPES.some((type) => {
-      const stored = (persisted ?? {})[type] ?? null
-      return JSON.stringify(stored) !== JSON.stringify(config[type])
-    })
+      const stored = (persisted ?? {})[type] ?? null;
+      return JSON.stringify(stored) !== JSON.stringify(config[type]);
+    });
     if (corrupt) {
       this.logger.warn(
-        `Escalation policy config row for key ${ESCALATION_POLICY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types/levels disabled)`,
-      )
+        `Escalation policy config row for key ${ESCALATION_POLICY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types/levels disabled)`
+      );
     }
-    return config
+    return config;
   }
 
   /**
@@ -1925,9 +1999,9 @@ export class AdminService {
   async setEscalationPolicy(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<EscalationPolicies> {
-    const validation = validateEscalationPolicies(input)
+    const validation = validateEscalationPolicies(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -1935,49 +2009,50 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toEscalationPolicies(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toEscalationPolicies(input);
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[ESCALATION_POLICY_CONFIG_KEY])
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        ESCALATION_POLICY_CONFIG_KEY,
+      ]);
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced — read it before the
       // upsert mutates it. Concurrent writers serialize on this row lock.
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [ESCALATION_POLICY_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [ESCALATION_POLICY_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [ESCALATION_POLICY_CONFIG_KEY, JSON.stringify(config), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [ESCALATION_POLICY_CONFIG_KEY, JSON.stringify(config), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
       // Record audit event (config_change, matching other admin configs).
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -1995,24 +2070,24 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Service escalation policy set to ${JSON.stringify(config)} by ${actorUserId}`,
-      )
-      return config
+        `Service escalation policy set to ${JSON.stringify(config)} by ${actorUserId}`
+      );
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      this.logger.error(`Failed to set escalation policy config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      this.logger.error(`Failed to set escalation policy config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2032,35 +2107,36 @@ export class AdminService {
    * path.
    */
   async getStaffAssignmentRules(): Promise<StaffAssignmentRules> {
-    const pool = getDbPool()
-    const result = await pool.query(
-      `SELECT value FROM app_config WHERE key = $1`,
-      [STAFF_ASSIGNMENT_RULES_CONFIG_KEY],
-    )
+    const pool = getDbPool();
+    const result = await pool.query(`SELECT value FROM app_config WHERE key = $1`, [
+      STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+    ]);
     if (result.rows.length === 0) {
-      return structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES)
+      return structuredClone(DEFAULT_STAFF_ASSIGNMENT_RULES);
     }
-    const persisted = result.rows[0]!.value as Record<string, unknown> | null
-    const config = toStaffAssignmentRules(persisted)
+    const persisted = result.rows[0]!.value as Record<string, unknown> | null;
+    const config = toStaffAssignmentRules(persisted);
     // Detect corruption: any work type whose stored rule survived
     // normalization differently than it was stored means the row is corrupt.
     const corrupt = Object.keys(persisted ?? {}).some((workType) => {
-      const raw = (persisted as Record<string, unknown>)[workType]
-      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return true
-      const rule = raw as Record<string, unknown>
-      const normalized = config[workType as keyof StaffAssignmentRules]
+      const raw = (persisted as Record<string, unknown>)[workType];
+      if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return true;
+      const rule = raw as Record<string, unknown>;
+      const normalized = config[workType as keyof StaffAssignmentRules];
       // Unknown work type (not in STAFF_ASSIGNMENT_WORK_TYPES): treat as
       // corrupt rather than crashing on the undefined dereference below.
-      if (!normalized) return true
-      return normalized.teamId !== rule.teamId ||
+      if (!normalized) return true;
+      return (
+        normalized.teamId !== rule.teamId ||
         (typeof rule.strategy === 'string' && normalized.strategy !== rule.strategy)
-    })
+      );
+    });
     if (corrupt) {
       this.logger.warn(
-        `Staff assignment rules config row for key ${STAFF_ASSIGNMENT_RULES_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt work types fall back to manual assignment)`,
-      )
+        `Staff assignment rules config row for key ${STAFF_ASSIGNMENT_RULES_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt work types fall back to manual assignment)`
+      );
     }
-    return config
+    return config;
   }
 
   /**
@@ -2087,9 +2163,9 @@ export class AdminService {
   async setStaffAssignmentRules(
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<StaffAssignmentRules> {
-    const validation = validateStaffAssignmentRules(input)
+    const validation = validateStaffAssignmentRules(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -2097,51 +2173,67 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
-    const config = toStaffAssignmentRules(input)
-    const pool = getDbPool()
-    const now = new Date()
+    const config = toStaffAssignmentRules(input);
+    const pool = getDbPool();
+    const now = new Date();
 
-    const client = await pool.connect()
+    const client = await pool.connect();
     try {
-      await client.query('BEGIN')
-      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[STAFF_ASSIGNMENT_RULES_CONFIG_KEY])
-      const teamIds = [...new Set(Object.values(config).map(rule=>rule.teamId).filter((id): id is string=>id!==null))].sort()
-      if (teamIds.some(id=>!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id))) throw new HttpException('Invalid assignment team',400)
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+        STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
+      ]);
+      const teamIds = [
+        ...new Set(
+          Object.values(config)
+            .map((rule) => rule.teamId)
+            .filter((id): id is string => id !== null)
+        ),
+      ].sort();
+      if (
+        teamIds.some(
+          (id) => !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id)
+        )
+      )
+        throw new HttpException('Invalid assignment team', 400);
       if (teamIds.length) {
-        const teams = await client.query('SELECT id FROM staff_teams WHERE id=ANY($1::uuid[]) AND is_active ORDER BY id FOR SHARE',[teamIds])
-        if (teams.rows.length!==teamIds.length) throw new HttpException('Assignment teams must exist and be active',400)
+        const teams = await client.query(
+          'SELECT id FROM staff_teams WHERE id=ANY($1::uuid[]) AND is_active ORDER BY id FOR SHARE',
+          [teamIds]
+        );
+        if (teams.rows.length !== teamIds.length)
+          throw new HttpException('Assignment teams must exist and be active', 400);
       }
 
       const prevResult = await client.query(
         `SELECT value, version FROM app_config WHERE key = $1 FOR UPDATE`,
-        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY],
-      )
-      const previousValue =
-        prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null
+        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY]
+      );
+      const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
-        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0
+        prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
          VALUES ($1, $2::jsonb, 1, $3)
          ON CONFLICT (key) DO UPDATE SET value = $2::jsonb, version = app_config.version + 1, updated_at = $3
          RETURNING version`,
-        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY, JSON.stringify(config), now],
-      )
-      const newVersion = upsertResult.rows[0]!.version as number
+        [STAFF_ASSIGNMENT_RULES_CONFIG_KEY, JSON.stringify(config), now]
+      );
+      const newVersion = upsertResult.rows[0]!.version as number;
 
       // Bump global config version for cache invalidation.
       await client.query(
         `UPDATE config_version SET version = version + 1, updated_at = $1 WHERE id = 'global'`,
-        [now],
-      )
+        [now]
+      );
 
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -2159,25 +2251,23 @@ export class AdminService {
           correlationId,
           ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(
-        `Staff assignment rules set to ${JSON.stringify(config)} by ${actorUserId}`,
-      )
-      return config
+      this.logger.log(`Staff assignment rules set to ${JSON.stringify(config)} by ${actorUserId}`);
+      return config;
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
-      this.logger.error(`Failed to set staff assignment rules config: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(`Failed to set staff assignment rules config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2189,52 +2279,79 @@ export class AdminService {
    * admin surface can render member management without a second call.
    */
   async staffTeamCandidates(query: string, teamId?: string) {
-    if (query.length > 100 || (teamId && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(teamId))) throw new BadRequestException('Invalid staff search')
-    const pool = getDbPool()
+    if (
+      query.length > 100 ||
+      (teamId && !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(teamId))
+    )
+      throw new BadRequestException('Invalid staff search');
+    const pool = getDbPool();
     const eligible = `u.disabled_at IS NULL AND u.activation_token IS NULL AND
-      (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id))`
-    const items = await pool.query(`SELECT u.user_id AS id,u.username AS name FROM users u
-      WHERE ${eligible} AND strpos(lower(u.username),lower($1))>0 ORDER BY u.username,u.user_id LIMIT 51`,[query.trim()])
-    const selected = teamId ? await pool.query(`SELECT u.user_id AS id,u.username AS name,(${eligible}) AS eligible
-      FROM users u JOIN staff_team_members m ON m.user_id=u.user_id WHERE m.team_id=$1 ORDER BY u.username,u.user_id`,[teamId]) : {rows:[]}
-    return {items:items.rows.slice(0,50),hasMore:items.rows.length>50,selected:selected.rows}
+      (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id))`;
+    const items = await pool.query(
+      `SELECT u.user_id AS id,u.username AS name FROM users u
+      WHERE ${eligible} AND strpos(lower(u.username),lower($1))>0 ORDER BY u.username,u.user_id LIMIT 51`,
+      [query.trim()]
+    );
+    const selected = teamId
+      ? await pool.query(
+          `SELECT u.user_id AS id,u.username AS name,(${eligible}) AS eligible
+      FROM users u JOIN staff_team_members m ON m.user_id=u.user_id WHERE m.team_id=$1 ORDER BY u.username,u.user_id`,
+          [teamId]
+        )
+      : { rows: [] };
+    return {
+      items: items.rows.slice(0, 50),
+      hasMore: items.rows.length > 50,
+      selected: selected.rows,
+    };
   }
 
   async listStaffTeams(): Promise<StaffTeamRecord[]> {
-    const pool = getDbPool()
+    const pool = getDbPool();
     const teamsResult = await pool.query(
       `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
        FROM staff_teams
-       ORDER BY name ASC`,
-    )
-    if (teamsResult.rows.length === 0) return []
+       ORDER BY name ASC`
+    );
+    if (teamsResult.rows.length === 0) return [];
 
     const membersResult = await pool.query(
       `SELECT team_id, user_id
        FROM staff_team_members
        WHERE team_id = ANY($1::uuid[])
        ORDER BY created_at ASC`,
-      [teamsResult.rows.map((r: { id: string }) => r.id)],
-    )
+      [teamsResult.rows.map((r: { id: string }) => r.id)]
+    );
 
-    const membersByTeam = new Map<string, string[]>()
+    const membersByTeam = new Map<string, string[]>();
     for (const row of membersResult.rows as { team_id: string; user_id: string }[]) {
-      const list = membersByTeam.get(row.team_id) ?? []
-      list.push(row.user_id)
-      membersByTeam.set(row.team_id, list)
+      const list = membersByTeam.get(row.team_id) ?? [];
+      list.push(row.user_id);
+      membersByTeam.set(row.team_id, list);
     }
 
-    return teamsResult.rows.map((row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; lead_user_id?: string | null; created_at: Date; updated_at: Date }) => ({
-      id: row.id,
-      name: row.name,
-      description: row.description,
-      skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
-      isActive: row.is_active,
-      leadUserId: row.lead_user_id ?? null,
-      memberUserIds: membersByTeam.get(row.id) ?? [],
-      createdAt: row.created_at.toISOString(),
-      updatedAt: row.updated_at.toISOString(),
-    }))
+    return teamsResult.rows.map(
+      (row: {
+        id: string;
+        name: string;
+        description: string | null;
+        skill_tags: unknown;
+        is_active: boolean;
+        lead_user_id?: string | null;
+        created_at: Date;
+        updated_at: Date;
+      }) => ({
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        skillTags: Array.isArray(row.skill_tags) ? (row.skill_tags as string[]) : [],
+        isActive: row.is_active,
+        leadUserId: row.lead_user_id ?? null,
+        memberUserIds: membersByTeam.get(row.id) ?? [],
+        createdAt: row.created_at.toISOString(),
+        updatedAt: row.updated_at.toISOString(),
+      })
+    );
   }
 
   /**
@@ -2250,12 +2367,8 @@ export class AdminService {
    * @param ip - source IP (for audit)
    * @returns the created team record
    */
-  async createStaffTeam(
-    input: unknown,
-    actorUserId: string,
-    ip: string,
-  ): Promise<StaffTeamRecord> {
-    const validation = validateStaffTeamInput(input)
+  async createStaffTeam(input: unknown, actorUserId: string, ip: string): Promise<StaffTeamRecord> {
+    const validation = validateStaffTeamInput(input);
     if (!validation.ok) {
       throw new HttpException(
         {
@@ -2263,8 +2376,8 @@ export class AdminService {
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
           message: validation.issues.join('; '),
         },
-        400,
-      )
+        400
+      );
     }
 
     const team: StaffTeamInput = {
@@ -2273,27 +2386,27 @@ export class AdminService {
       skillTags: ((input as StaffTeamInput).skillTags ?? []).map((t: string) => t.trim()),
       memberUserIds: (input as StaffTeamInput).memberUserIds ?? [],
       leadUserId: (input as StaffTeamInput).leadUserId ?? null,
-    }
+    };
 
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const now = new Date()
-    const teamId = uuidv7()
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const now = new Date();
+    const teamId = uuidv7();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
-      await this.assertTeamMembersExist(client, team.memberUserIds)
+      await this.assertTeamMembersExist(client, team.memberUserIds);
 
       const insertResult = await client.query(
         `INSERT INTO staff_teams (id, name, description, skill_tags, is_active, created_at, updated_at, lead_user_id)
          VALUES ($1, $2, $3, $4::jsonb, true, $5, $5, $6)
          RETURNING id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at`,
-        [teamId, team.name, team.description, JSON.stringify(team.skillTags), now, team.leadUserId],
-      )
-      const row = insertResult.rows[0]!
+        [teamId, team.name, team.description, JSON.stringify(team.skillTags), now, team.leadUserId]
+      );
+      const row = insertResult.rows[0]!;
 
-      await this.insertTeamMembers(client, teamId, team.memberUserIds, now)
+      await this.insertTeamMembers(client, teamId, team.memberUserIds, now);
 
       await this.recordTeamAudit(client, 'team_create', actorUserId, ip, now, {
         teamId,
@@ -2301,15 +2414,15 @@ export class AdminService {
         leadUserId: team.leadUserId,
         memberUserIds: team.memberUserIds,
         skillTags: team.skillTags,
-      })
+      });
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${team.name}' (${teamId}) created by ${actorUserId}`)
-      return this.mapTeamRow(row, team.memberUserIds)
+      this.logger.log(`Staff team '${team.name}' (${teamId}) created by ${actorUserId}`);
+      return this.mapTeamRow(row, team.memberUserIds);
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       if (this.isUniqueViolation(error, 'uq_st_name')) {
         throw new HttpException(
           {
@@ -2317,16 +2430,16 @@ export class AdminService {
             error: 'TEAM_NAME_TAKEN',
             message: `A staff team named '${team.name}' already exists`,
           },
-          409,
-        )
+          409
+        );
       }
-      this.logger.error(`Failed to create staff team '${team.name}': ${String(error)}`)
+      this.logger.error(`Failed to create staff team '${team.name}': ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create staff team' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2347,55 +2460,67 @@ export class AdminService {
     teamId: string,
     input: unknown,
     actorUserId: string,
-    ip: string,
+    ip: string
   ): Promise<StaffTeamRecord> {
-    if (!input || typeof input !== 'object' || Array.isArray(input)) throw new HttpException('Staff team update must be an object',400)
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const now = new Date()
+    if (!input || typeof input !== 'object' || Array.isArray(input))
+      throw new HttpException('Staff team update must be an object', 400);
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const now = new Date();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const existingResult = await client.query(
         `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
          FROM staff_teams WHERE id = $1 FOR UPDATE`,
-        [teamId],
-      )
+        [teamId]
+      );
       if (existingResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: 'TEAM_NOT_FOUND', message: 'Staff team not found' },
-          404,
-        )
+          404
+        );
       }
-      const existing = existingResult.rows[0]!
+      const existing = existingResult.rows[0]!;
 
       const prevMembersResult = await client.query(
         `SELECT user_id FROM staff_team_members WHERE team_id = $1 ORDER BY created_at ASC`,
-        [teamId],
-      )
-      const previousMemberUserIds = prevMembersResult.rows.map((r: { user_id: string }) => r.user_id)
+        [teamId]
+      );
+      const previousMemberUserIds = prevMembersResult.rows.map(
+        (r: { user_id: string }) => r.user_id
+      );
 
       // Normalize the update: merge provided fields with existing values,
       // then run the full validator over the merged shape so a partial
       // update cannot bypass a rule (e.g. name length).
       const merged: StaffTeamInput = {
-        leadUserId: (input as Record<string,unknown>).leadUserId !== undefined ? (input as StaffTeamInput).leadUserId : existing.lead_user_id ?? null,
-        name: (input as Record<string, unknown>).name !== undefined
-          ? ((input as Record<string, unknown>).name as string)
-          : existing.name,
-        description: (input as Record<string, unknown>).description !== undefined
-          ? ((input as Record<string, unknown>).description as string | null)
-          : (existing.description as string | null),
-        skillTags: (input as Record<string, unknown>).skillTags !== undefined
-          ? ((input as Record<string, unknown>).skillTags as string[])
-          : (Array.isArray(existing.skill_tags) ? (existing.skill_tags as string[]) : []),
-        memberUserIds: (input as Record<string, unknown>).memberUserIds !== undefined
-          ? ((input as Record<string, unknown>).memberUserIds as string[])
-          : previousMemberUserIds,
-      }
+        leadUserId:
+          (input as Record<string, unknown>).leadUserId !== undefined
+            ? (input as StaffTeamInput).leadUserId
+            : (existing.lead_user_id ?? null),
+        name:
+          (input as Record<string, unknown>).name !== undefined
+            ? ((input as Record<string, unknown>).name as string)
+            : existing.name,
+        description:
+          (input as Record<string, unknown>).description !== undefined
+            ? ((input as Record<string, unknown>).description as string | null)
+            : (existing.description as string | null),
+        skillTags:
+          (input as Record<string, unknown>).skillTags !== undefined
+            ? ((input as Record<string, unknown>).skillTags as string[])
+            : Array.isArray(existing.skill_tags)
+              ? (existing.skill_tags as string[])
+              : [],
+        memberUserIds:
+          (input as Record<string, unknown>).memberUserIds !== undefined
+            ? ((input as Record<string, unknown>).memberUserIds as string[])
+            : previousMemberUserIds,
+      };
 
-      const validation = validateStaffTeamInput(merged)
+      const validation = validateStaffTeamInput(merged);
       if (!validation.ok) {
         throw new HttpException(
           {
@@ -2403,29 +2528,36 @@ export class AdminService {
             error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
             message: validation.issues.join('; '),
           },
-          400,
-        )
+          400
+        );
       }
 
       // Post-validation normalization mirrors createStaffTeam: trim the name
       // and each skill tag so both endpoints store identical shapes.
-      merged.name = merged.name.trim()
-      merged.skillTags = merged.skillTags.map((t: string) => t.trim())
+      merged.name = merged.name.trim();
+      merged.skillTags = merged.skillTags.map((t: string) => t.trim());
 
-      await this.assertTeamMembersExist(client, merged.memberUserIds)
+      await this.assertTeamMembersExist(client, merged.memberUserIds);
 
       const updateResult = await client.query(
         `UPDATE staff_teams
          SET name = $2, description = $3, skill_tags = $4::jsonb, updated_at = $5, lead_user_id = $6
          WHERE id = $1
          RETURNING id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at`,
-        [teamId, merged.name, merged.description, JSON.stringify(merged.skillTags), now, merged.leadUserId],
-      )
-      const row = updateResult.rows[0]!
+        [
+          teamId,
+          merged.name,
+          merged.description,
+          JSON.stringify(merged.skillTags),
+          now,
+          merged.leadUserId,
+        ]
+      );
+      const row = updateResult.rows[0]!;
 
       // Replace membership set (delete stale, insert new).
-      await client.query(`DELETE FROM staff_team_members WHERE team_id = $1`, [teamId])
-      await this.insertTeamMembers(client, teamId, merged.memberUserIds, now)
+      await client.query(`DELETE FROM staff_team_members WHERE team_id = $1`, [teamId]);
+      await this.insertTeamMembers(client, teamId, merged.memberUserIds, now);
 
       await this.recordTeamAudit(client, 'team_update', actorUserId, ip, now, {
         teamId,
@@ -2437,15 +2569,15 @@ export class AdminService {
         memberUserIds: merged.memberUserIds,
         previousSkillTags: Array.isArray(existing.skill_tags) ? existing.skill_tags : [],
         skillTags: merged.skillTags,
-      })
+      });
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${merged.name}' (${teamId}) updated by ${actorUserId}`)
-      return this.mapTeamRow(row, merged.memberUserIds)
+      this.logger.log(`Staff team '${merged.name}' (${teamId}) updated by ${actorUserId}`);
+      return this.mapTeamRow(row, merged.memberUserIds);
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       if (this.isUniqueViolation(error, 'uq_st_name')) {
         throw new HttpException(
           {
@@ -2453,16 +2585,16 @@ export class AdminService {
             error: 'TEAM_NAME_TAKEN',
             message: `A staff team named '${(input as Record<string, unknown>).name}' already exists`,
           },
-          409,
-        )
+          409
+        );
       }
-      this.logger.error(`Failed to update staff team ${teamId}: ${String(error)}`)
+      this.logger.error(`Failed to update staff team ${teamId}: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff team' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2478,47 +2610,51 @@ export class AdminService {
    * @param actorUserId - admin user performing the change (for audit)
    * @param ip - source IP (for audit)
    */
-  async deleteStaffTeam(teamId: string, actorUserId: string, ip: string): Promise<{ deleted: true }> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const now = new Date()
+  async deleteStaffTeam(
+    teamId: string,
+    actorUserId: string,
+    ip: string
+  ): Promise<{ deleted: true }> {
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const now = new Date();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       const existingResult = await client.query(
         `SELECT id, name FROM staff_teams WHERE id = $1 FOR UPDATE`,
-        [teamId],
-      )
+        [teamId]
+      );
       if (existingResult.rows.length === 0) {
         throw new HttpException(
           { statusCode: 404, error: 'TEAM_NOT_FOUND', message: 'Staff team not found' },
-          404,
-        )
+          404
+        );
       }
-      const existing = existingResult.rows[0]!
+      const existing = existingResult.rows[0]!;
 
-      await client.query(`DELETE FROM staff_teams WHERE id = $1`, [teamId])
+      await client.query(`DELETE FROM staff_teams WHERE id = $1`, [teamId]);
 
       await this.recordTeamAudit(client, 'team_delete', actorUserId, ip, now, {
         teamId,
         name: existing.name,
-      })
+      });
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${existing.name}' (${teamId}) deleted by ${actorUserId}`)
-      return { deleted: true }
+      this.logger.log(`Staff team '${existing.name}' (${teamId}) deleted by ${actorUserId}`);
+      return { deleted: true };
     } catch (error) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (error instanceof HttpException) throw error
-      this.logger.error(`Failed to delete staff team ${teamId}: ${String(error)}`)
+      await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
+      this.logger.error(`Failed to delete staff team ${teamId}: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to delete staff team' },
-        500,
-      )
+        500
+      );
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2526,16 +2662,16 @@ export class AdminService {
 
   private async assertTeamMembersExist(
     client: { query: (sql: string, params?: unknown[]) => Promise<{ rows: unknown[] }> },
-    memberUserIds: string[],
+    memberUserIds: string[]
   ): Promise<void> {
-    if (memberUserIds.length === 0) return
+    if (memberUserIds.length === 0) return;
     const result = await client.query(
       `SELECT u.user_id FROM users u WHERE u.user_id = ANY($1::text[]) AND u.disabled_at IS NULL AND u.activation_token IS NULL
         AND (u.is_admin OR u.is_staff OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id)) ORDER BY u.user_id FOR NO KEY UPDATE OF u`,
-      [memberUserIds],
-    )
-    const found = new Set((result.rows as { user_id: string }[]).map((r) => r.user_id))
-    const missing = memberUserIds.filter((id) => !found.has(id))
+      [memberUserIds]
+    );
+    const found = new Set((result.rows as { user_id: string }[]).map((r) => r.user_id));
+    const missing = memberUserIds.filter((id) => !found.has(id));
     if (missing.length > 0) {
       throw new HttpException(
         {
@@ -2543,8 +2679,8 @@ export class AdminService {
           error: 'MEMBER_USER_NOT_FOUND',
           message: `Unknown member user id(s): ${missing.join(', ')}`,
         },
-        400,
-      )
+        400
+      );
     }
   }
 
@@ -2552,22 +2688,22 @@ export class AdminService {
     client: { query: (sql: string, params?: unknown[]) => Promise<unknown> },
     teamId: string,
     memberUserIds: string[],
-    now: Date,
+    now: Date
   ): Promise<void> {
-    if (memberUserIds.length === 0) return
+    if (memberUserIds.length === 0) return;
     // Batch insert; ids are validated + deduped by the input validator.
-    const params: unknown[] = []
+    const params: unknown[] = [];
     const values = memberUserIds
       .map((userId) => {
-        const base = params.length
-        params.push(uuidv7(), teamId, userId, now, now)
-        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`
+        const base = params.length;
+        params.push(uuidv7(), teamId, userId, now, now);
+        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`;
       })
-      .join(', ')
+      .join(', ');
     await client.query(
       `INSERT INTO staff_team_members (id, team_id, user_id, created_at, updated_at) VALUES ${values}`,
-      params,
-    )
+      params
+    );
   }
 
   private async recordTeamAudit(
@@ -2576,25 +2712,34 @@ export class AdminService {
     actorUserId: string,
     ip: string,
     now: Date,
-    metadata: Record<string, unknown>,
+    metadata: Record<string, unknown>
   ): Promise<void> {
-    const auditId = uuidv7()
-    const correlationId = uuidv7()
+    const auditId = uuidv7();
+    const correlationId = uuidv7();
     await client.query(
       `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
        VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-      [auditId, actorUserId, event, JSON.stringify(metadata), correlationId, ip, now],
-    )
+      [auditId, actorUserId, event, JSON.stringify(metadata), correlationId, ip, now]
+    );
   }
 
   private isUniqueViolation(error: unknown, constraint: string): boolean {
-    const e = error as { code?: string; constraint?: string } | null
-    return e?.code === '23505' && e?.constraint === constraint
+    const e = error as { code?: string; constraint?: string } | null;
+    return e?.code === '23505' && e?.constraint === constraint;
   }
 
   private mapTeamRow(
-    row: { id: string; name: string; description: string | null; skill_tags: unknown; is_active: boolean; lead_user_id?: string | null; created_at: Date; updated_at: Date },
-    memberUserIds: string[],
+    row: {
+      id: string;
+      name: string;
+      description: string | null;
+      skill_tags: unknown;
+      is_active: boolean;
+      lead_user_id?: string | null;
+      created_at: Date;
+      updated_at: Date;
+    },
+    memberUserIds: string[]
   ): StaffTeamRecord {
     return {
       id: row.id,
@@ -2606,7 +2751,7 @@ export class AdminService {
       memberUserIds,
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
-    }
+    };
   }
 
   // ── Staff user list & disable (T-10.01.01) ───────────────────────────
@@ -2623,31 +2768,31 @@ export class AdminService {
    * @param query - Pagination (limit clamped to 1..200, default 50).
    */
   async listStaff(query: StaffListQuery = {}): Promise<StaffListResult> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200)
-    const offset = Math.max(Math.trunc(query.offset ?? 0), 0)
+    const pool = getDbPool();
+    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200);
+    const offset = Math.max(Math.trunc(query.offset ?? 0), 0);
 
-    const staffWhere = `u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`
+    const staffWhere = `u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id)`;
 
     const countResult = await pool.query<{ total: number }>(
       `SELECT COUNT(*)::int AS total
        FROM users u
-       WHERE ${staffWhere}`,
-    )
-    const total = countResult.rows[0]?.total ?? 0
+       WHERE ${staffWhere}`
+    );
+    const total = countResult.rows[0]?.total ?? 0;
 
     const listResult = await pool.query<{
-      user_id: string
-      username: string
-      email: string | null
-      mobile: string | null
-      is_admin: boolean
-      created_at: Date
-      last_login_at: Date | null
-      disabled_at: Date | null
-      first_name: string | null
-      last_name: string | null
-      roles: unknown
+      user_id: string;
+      username: string;
+      email: string | null;
+      mobile: string | null;
+      is_admin: boolean;
+      created_at: Date;
+      last_login_at: Date | null;
+      disabled_at: Date | null;
+      first_name: string | null;
+      last_name: string | null;
+      roles: unknown;
     }>(
       `SELECT u.user_id, u.username, u.email, u.mobile, u.is_admin,
               u.created_at, u.last_login_at, u.disabled_at,
@@ -2669,8 +2814,8 @@ export class AdminService {
                 p.first_name, p.last_name
        ORDER BY u.created_at DESC
        LIMIT $1 OFFSET $2`,
-      [limit, offset],
-    )
+      [limit, offset]
+    );
 
     const items: StaffUserSummary[] = listResult.rows.map((row) => ({
       userId: row.user_id,
@@ -2679,17 +2824,15 @@ export class AdminService {
       mobile: row.mobile,
       firstName: row.first_name,
       lastName: row.last_name,
-      roles: Array.isArray(row.roles)
-        ? (row.roles as { roleId: string; name: string }[])
-        : [],
+      roles: Array.isArray(row.roles) ? (row.roles as { roleId: string; name: string }[]) : [],
       isAdmin: row.is_admin,
       lastLoginAt: row.last_login_at ? row.last_login_at.toISOString() : null,
       disabledAt: row.disabled_at ? row.disabled_at.toISOString() : null,
       status: row.disabled_at ? 'disabled' : 'active',
       createdAt: row.created_at.toISOString(),
-    }))
+    }));
 
-    return { items, total, limit, offset }
+    return { items, total, limit, offset };
   }
 
   /**
@@ -2708,62 +2851,62 @@ export class AdminService {
    * @throws 400 when an admin attempts to disable their own account
    */
   async disableStaff(input: DisableStaffInput): Promise<DisableStaffResult> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const now = new Date()
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const now = new Date();
 
     try {
-      await client.query('BEGIN')
+      await client.query('BEGIN');
 
       // Lock the target row; staff-only so the endpoint cannot probe
       // arbitrary customer accounts.
       const targetResult = await client.query<{
-        user_id: string
-        username: string
-        disabled_at: Date | null
+        user_id: string;
+        username: string;
+        disabled_at: Date | null;
       }>(
         `SELECT u.user_id, u.username, u.disabled_at
          FROM users u
          WHERE u.user_id = $1
            AND (u.is_staff = true OR u.is_admin = true OR EXISTS (SELECT 1 FROM user_roles x WHERE x.user_id = u.user_id))
          FOR UPDATE`,
-        [input.userId],
-      )
+        [input.userId]
+      );
 
       if (targetResult.rows.length === 0) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
-          404,
-        )
+          404
+        );
       }
 
-      const target = targetResult.rows[0]!
+      const target = targetResult.rows[0]!;
 
       if (input.userId === input.actorUserId) {
-        await client.query('ROLLBACK')
+        await client.query('ROLLBACK');
         throw new HttpException(
           {
             statusCode: 400,
             error: 'STAFF_DISABLE_SELF',
             message: 'An admin cannot disable their own account',
           },
-          400,
-        )
+          400
+        );
       }
 
       if (target.disabled_at) {
-        await client.query('COMMIT')
+        await client.query('COMMIT');
         this.logger.log(
-          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${input.actorUserId}`,
-        )
+          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${input.actorUserId}`
+        );
         return {
           userId: target.user_id,
           username: target.username,
           status: 'disabled',
           disabledAt: target.disabled_at.toISOString(),
           alreadyDisabled: true,
-        }
+        };
       }
 
       // Mark disabled + revoke sessions + consume refresh tokens in ONE
@@ -2772,26 +2915,26 @@ export class AdminService {
         `UPDATE users
          SET disabled_at = $1, updated_at = $1
          WHERE user_id = $2`,
-        [now, target.user_id],
-      )
+        [now, target.user_id]
+      );
 
       await client.query(
         `UPDATE sessions
          SET revoked_at = $1, updated_at = $1
          WHERE user_id = $2 AND revoked_at IS NULL`,
-        [now, target.user_id],
-      )
+        [now, target.user_id]
+      );
 
       await client.query(
         `UPDATE refresh_tokens
          SET consumed_at = $1
          WHERE user_id = $2 AND consumed_at IS NULL`,
-        [now, target.user_id],
-      )
+        [now, target.user_id]
+      );
 
       // Audit trail: who disabled whom, when, and the correlation id.
-      const auditId = uuidv7()
-      const correlationId = uuidv7()
+      const auditId = uuidv7();
+      const correlationId = uuidv7();
       await client.query(
         `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
          VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
@@ -2807,14 +2950,14 @@ export class AdminService {
           correlationId,
           input.ip,
           now,
-        ],
-      )
+        ]
+      );
 
-      await client.query('COMMIT')
+      await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user ${target.user_id} (${target.username}) disabled by ${input.actorUserId}; ${'all sessions revoked'}`,
-      )
+        `Staff user ${target.user_id} (${target.username}) disabled by ${input.actorUserId}; ${'all sessions revoked'}`
+      );
 
       return {
         userId: target.user_id,
@@ -2822,17 +2965,14 @@ export class AdminService {
         status: 'disabled',
         disabledAt: now.toISOString(),
         alreadyDisabled: false,
-      }
+      };
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Failed to disable staff user ${input.userId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code },
-        500,
-      )
+      await client.query('ROLLBACK').catch(() => {});
+      if (err instanceof HttpException) throw err;
+      this.logger.error(`Failed to disable staff user ${input.userId}: ${String(err)}`);
+      throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
-      client.release()
+      client.release();
     }
   }
 
@@ -2855,37 +2995,53 @@ export class AdminService {
    * @throws 400 when `userId` is not a UUID or the date range is invalid
    */
   async listStaffAudit(query: StaffAuditQuery = {}): Promise<StaffAuditResult> {
-    const pool = getDbPool()
-    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200)
-    const offset = Math.max(Math.trunc(query.offset ?? 0), 0)
+    const pool = getDbPool();
+    const limit = Math.min(Math.max(Math.trunc(query.limit ?? 50), 1), 200);
+    const offset = Math.max(Math.trunc(query.offset ?? 0), 0);
 
     // ── Validate filters ───────────────────────────────────────────
     if (query.userId !== undefined && !UUID_RE.test(query.userId)) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'userId must be a valid UUID' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'userId must be a valid UUID',
+        },
+        400
+      );
     }
 
-    const from = query.from !== undefined ? new Date(query.from) : null
-    const to = query.to !== undefined ? new Date(query.to) : null
+    const from = query.from !== undefined ? new Date(query.from) : null;
+    const to = query.to !== undefined ? new Date(query.to) : null;
     if (query.from !== undefined && Number.isNaN(from!.getTime())) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'from must be a valid ISO timestamp' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'from must be a valid ISO timestamp',
+        },
+        400
+      );
     }
     if (query.to !== undefined && Number.isNaN(to!.getTime())) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'to must be a valid ISO timestamp' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'to must be a valid ISO timestamp',
+        },
+        400
+      );
     }
     if (from && to && from.getTime() > to.getTime()) {
       throw new HttpException(
-        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code, message: 'from must not be after to' },
-        400,
-      )
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: 'from must not be after to',
+        },
+        400
+      );
     }
 
     // ── Count ──────────────────────────────────────────────────────
@@ -2896,31 +3052,31 @@ export class AdminService {
          AND ($1::text IS NULL OR a.metadata::jsonb->>'targetUserId' = $1)
          AND ($2::timestamptz IS NULL OR a.created_at >= $2)
          AND ($3::timestamptz IS NULL OR a.created_at <= $3)`,
-      [query.userId ?? null, from, to],
-    )
-    const total = countResult.rows[0]?.total ?? 0
+      [query.userId ?? null, from, to]
+    );
+    const total = countResult.rows[0]?.total ?? 0;
 
     if (total === 0) {
-      return { items: [], total, limit, offset }
+      return { items: [], total, limit, offset };
     }
 
     // ── Role names for diff rendering ──────────────────────────────
     const rolesResult = await pool.query<{ role_id: string; name: string }>(
-      `SELECT role_id, name FROM staff_roles`,
-    )
-    const roleNames = new Map(rolesResult.rows.map((r) => [r.role_id, r.name]))
+      `SELECT role_id, name FROM staff_roles`
+    );
+    const roleNames = new Map(rolesResult.rows.map((r) => [r.role_id, r.name]));
 
     // ── Page ───────────────────────────────────────────────────────
     const listResult = await pool.query<{
-      id: string
-      actor_user_id: string
-      target_user_id: string | null
-      target_username: string | null
-      actor_username: string | null
-      metadata: unknown
-      correlation_id: string | null
-      ip: string | null
-      created_at: Date
+      id: string;
+      actor_user_id: string;
+      target_user_id: string | null;
+      target_username: string | null;
+      actor_username: string | null;
+      metadata: unknown;
+      correlation_id: string | null;
+      ip: string | null;
+      created_at: Date;
     }>(
       `SELECT a.id,
               a.user_id AS actor_user_id,
@@ -2940,17 +3096,17 @@ export class AdminService {
          AND ($3::timestamptz IS NULL OR a.created_at <= $3)
        ORDER BY a.created_at DESC, a.id DESC
        LIMIT $4 OFFSET $5`,
-      [query.userId ?? null, from, to, limit, offset],
-    )
+      [query.userId ?? null, from, to, limit, offset]
+    );
 
     const items: StaffAuditEvent[] = listResult.rows.map((row) => {
-      const meta = parseRoleChangeMetadata(row.metadata)
-      const previousRoleIds = Array.isArray(meta?.previousRoleIds) ? meta!.previousRoleIds : []
-      const newRoleIds = Array.isArray(meta?.newRoleIds) ? meta!.newRoleIds : []
-      const addedRoleIds = newRoleIds.filter((id) => !previousRoleIds.includes(id))
-      const removedRoleIds = previousRoleIds.filter((id) => !newRoleIds.includes(id))
+      const meta = parseRoleChangeMetadata(row.metadata);
+      const previousRoleIds = Array.isArray(meta?.previousRoleIds) ? meta!.previousRoleIds : [];
+      const newRoleIds = Array.isArray(meta?.newRoleIds) ? meta!.newRoleIds : [];
+      const addedRoleIds = newRoleIds.filter((id) => !previousRoleIds.includes(id));
+      const removedRoleIds = previousRoleIds.filter((id) => !newRoleIds.includes(id));
       const withNames = (ids: string[]): StaffAuditRoleChange[] =>
-        ids.map((roleId) => ({ roleId, roleName: roleNames.get(roleId) ?? roleId }))
+        ids.map((roleId) => ({ roleId, roleName: roleNames.get(roleId) ?? roleId }));
 
       return {
         id: row.id,
@@ -2966,9 +3122,9 @@ export class AdminService {
         correlationId: row.correlation_id,
         ip: row.ip,
         createdAt: row.created_at.toISOString(),
-      }
-    })
+      };
+    });
 
-    return { items, total, limit, offset }
+    return { items, total, limit, offset };
   }
 }

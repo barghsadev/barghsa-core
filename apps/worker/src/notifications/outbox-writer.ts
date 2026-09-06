@@ -1,7 +1,7 @@
-import { createHash } from 'node:crypto'
-import type { PoolClient } from 'pg'
-import type { NotificationChannel } from '@barghsa/shared/notifications'
-import { maxAttemptsForType, priorityForType } from './retry-schedule.js'
+import { createHash } from 'node:crypto';
+import type { PoolClient } from 'pg';
+import type { NotificationChannel } from '@barghsa/shared/notifications';
+import { maxAttemptsForType, priorityForType } from './retry-schedule.js';
 
 /**
  * Transactional outbox write pipeline (E-05, T-05.01.02).
@@ -23,39 +23,39 @@ import { maxAttemptsForType, priorityForType } from './retry-schedule.js'
 
 export interface EnqueueOutboxInput {
   /** Owner of the notification (recipient profile). */
-  profileId: string | null
+  profileId: string | null;
   /** Recipient user id (in-app delivery target). Falls back to profileId. */
-  userId?: string | null
+  userId?: string | null;
   /** Business event key, e.g. 'profile_verified'. Used for template lookup. */
-  eventKey: string
+  eventKey: string;
   /** JSON variables used to render the message. Defaults to {}. */
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown>;
   /** Target channels. In-app is always mandatory for business events. */
-  channels: NotificationChannel[]
+  channels: NotificationChannel[];
   /** Stable business occurrence key, reused on retries (e.g. top-up ID).
    * A type/profile-only default would silently suppress later occurrences.
    */
-  idempotencyKey: string
+  idempotencyKey: string;
   /** 'queued' (immediate) or 'scheduled' (deferred until scheduledFor). */
-  status?: 'queued' | 'scheduled'
+  status?: 'queued' | 'scheduled';
   /** When the row first becomes eligible for dispatch (delivery window). */
-  scheduledFor?: Date | null
+  scheduledFor?: Date | null;
   /** Bounded retry cap (T-05.01.03). Default 5. */
-  maxAttempts?: number
+  maxAttempts?: number;
   /** Queue priority per job: 'urgent' before 'normal'. Default 'normal'. */
-  priority?: 'urgent' | 'normal'
+  priority?: 'urgent' | 'normal';
 }
 
 export interface EnqueueOutboxResult {
   /** The outbox row id, or null when a duplicate idempotency key was skipped. */
-  outboxId: string | null
+  outboxId: string | null;
   /** True when a new row was inserted; false when a duplicate was ignored. */
-  inserted: boolean
+  inserted: boolean;
 }
 
 /** Default idempotency key — sha256(eventKey + ':' + profileId). */
 export function deriveIdempotencyKey(eventKey: string, profileId: string): string {
-  return createHash('sha256').update(`${eventKey}:${profileId}`).digest('hex')
+  return createHash('sha256').update(`${eventKey}:${profileId}`).digest('hex');
 }
 
 /**
@@ -64,8 +64,10 @@ export function deriveIdempotencyKey(eventKey: string, profileId: string): strin
  * Every other event keeps the pre-reminder formula so a job that was
  * already attempted before this deploy presents the same key on retry.
  */
-export const CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS: ReadonlySet<string> =
-  new Set(['payment.invoice_reminder', 'payment.bank_receipt_rejected'])
+export const CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS: ReadonlySet<string> = new Set([
+  'payment.invoice_reminder',
+  'payment.bank_receipt_rejected',
+]);
 
 /**
  * Per-channel idempotency key (T-05.01.04).
@@ -88,20 +90,22 @@ export function deriveChannelIdempotencyKey(
   profileId: string,
   outboxIdempotencyKey?: string,
   version = 1,
-  outboxId?: string,
+  outboxId?: string
 ): string {
   if (version === 2) {
-    if (!outboxId) throw new Error('version 2 delivery requires an outbox occurrence ID')
-    return createHash('sha256').update(JSON.stringify(['notification-v2', outboxId, channel, profileId])).digest('hex')
+    if (!outboxId) throw new Error('version 2 delivery requires an outbox occurrence ID');
+    return createHash('sha256')
+      .update(JSON.stringify(['notification-v2', outboxId, channel, profileId]))
+      .digest('hex');
   }
-  if (version !== 1) throw new Error('Unsupported delivery identity version')
+  if (version !== 1) throw new Error('Unsupported delivery identity version');
   const includeOutboxKey =
     outboxIdempotencyKey !== undefined &&
-    CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(eventKey)
+    CHANNEL_IDEMPOTENCY_INCLUDES_OUTBOX_KEY_EVENTS.has(eventKey);
   const material = includeOutboxKey
     ? `${eventKey}:${channel}:${profileId}:${outboxIdempotencyKey}`
-    : `${eventKey}:${channel}:${profileId}`
-  return createHash('sha256').update(material).digest('hex')
+    : `${eventKey}:${channel}:${profileId}`;
+  return createHash('sha256').update(material).digest('hex');
 }
 
 /**
@@ -113,25 +117,26 @@ export function deriveChannelIdempotencyKey(
  */
 export async function enqueueOutbox(
   client: PoolClient,
-  input: EnqueueOutboxInput,
+  input: EnqueueOutboxInput
 ): Promise<EnqueueOutboxResult> {
-  if (!input.profileId && !input.userId) throw new Error('enqueueOutbox requires a profile or account recipient')
-  const idempotencyKey = input.idempotencyKey
+  if (!input.profileId && !input.userId)
+    throw new Error('enqueueOutbox requires a profile or account recipient');
+  const idempotencyKey = input.idempotencyKey;
   if (typeof idempotencyKey !== 'string' || !idempotencyKey.trim()) {
-    throw new Error('enqueueOutbox requires a stable business occurrence idempotency key')
+    throw new Error('enqueueOutbox requires a stable business occurrence idempotency key');
   }
-  const channels = [...new Set(input.channels)]
-  const status = input.status ?? 'queued'
+  const channels = [...new Set(input.channels)];
+  const status = input.status ?? 'queued';
   // Per-type config (T-05.01.03): max_attempts and queue priority resolve from
   // the code-defined notification-type registry unless the caller overrides.
-  const maxAttempts = input.maxAttempts ?? maxAttemptsForType(input.eventKey)
-  const priority = input.priority ?? priorityForType(input.eventKey)
+  const maxAttempts = input.maxAttempts ?? maxAttemptsForType(input.eventKey);
+  const priority = input.priority ?? priorityForType(input.eventKey);
 
   if (channels.length === 0) {
-    throw new Error('enqueueOutbox requires at least one channel')
+    throw new Error('enqueueOutbox requires at least one channel');
   }
   if (!channels.includes('in_app')) {
-    throw new Error('in_app channel is mandatory for notification delivery')
+    throw new Error('in_app channel is mandatory for notification delivery');
   }
 
   const insertResult = await client.query<{ id: string }>(
@@ -151,32 +156,32 @@ export async function enqueueOutbox(
       idempotencyKey,
       maxAttempts,
       input.scheduledFor ?? null,
-    ],
-  )
+    ]
+  );
 
   if (insertResult.rowCount === 0 || !insertResult.rows[0]) {
-    return { outboxId: null, inserted: false }
+    return { outboxId: null, inserted: false };
   }
 
-  const outboxId = insertResult.rows[0].id
+  const outboxId = insertResult.rows[0].id;
 
   // One job per channel. ON CONFLICT (outbox_id, channel) DO NOTHING keeps the
   // insert idempotent across re-runs of the same outbox row.
-  const jobValues: unknown[] = []
-  const placeholders: string[] = []
+  const jobValues: unknown[] = [];
+  const placeholders: string[] = [];
   channels.forEach((channel, i) => {
-    const base = i * 5
-    placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`)
-    jobValues.push(outboxId, channel, 'queued', priority, maxAttempts)
-  })
+    const base = i * 5;
+    placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`);
+    jobValues.push(outboxId, channel, 'queued', priority, maxAttempts);
+  });
 
   await client.query(
     `INSERT INTO notification_job
        (outbox_id, channel, status, priority, max_attempts)
      VALUES ${placeholders.join(', ')}
      ON CONFLICT (outbox_id, channel) DO NOTHING`,
-    jobValues,
-  )
+    jobValues
+  );
 
-  return { outboxId, inserted: true }
+  return { outboxId, inserted: true };
 }

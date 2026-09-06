@@ -1,4 +1,4 @@
-import { createHash, timingSafeEqual } from 'node:crypto'
+import { createHash, timingSafeEqual } from 'node:crypto';
 import {
   BadRequestException,
   ConflictException,
@@ -7,9 +7,9 @@ import {
   Injectable,
   Logger,
   Optional,
-} from '@nestjs/common'
-import { getDbPool } from '@barghsa/db'
-import { ErrorCodes } from '@barghsa/shared/errors'
+} from '@nestjs/common';
+import { getDbPool } from '@barghsa/db';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   WALLET_CHARGEBACK_EVENT_CONSTRAINT,
   WALLET_REVERSAL_ERRORS,
@@ -23,55 +23,55 @@ import {
   type ParsedChargebackNotification,
   needsFinanceChargebackAlert,
   type WalletChargebackEventStatus,
-} from '@barghsa/shared/finance'
-import { WalletService, type TransactionRow } from './wallet.service.js'
-import { ChargebackAlertService } from './chargeback-alert.service.js'
+} from '@barghsa/shared/finance';
+import { WalletService, type TransactionRow } from './wallet.service.js';
+import { ChargebackAlertService } from './chargeback-alert.service.js';
 import {
   resolvePaymentGatewayMerchantId,
   resolvePaymentGatewayWebhookSecret,
-} from './payment-gateway.js'
+} from './payment-gateway.js';
 import {
   verifyPaymentCallbackSignature,
   type PaymentCallbackHeaders,
-} from './payment-callback-verifier.js'
+} from './payment-callback-verifier.js';
 import {
   PAYMENT_CALLBACK_CONFIG,
   type PaymentCallbackConfig,
-} from './online-topup-callback.service.js'
+} from './online-topup-callback.service.js';
 
-const PG_UNIQUE_VIOLATION = '23505'
+const PG_UNIQUE_VIOLATION = '23505';
 
 export interface HandleChargebackInput {
-  headers: PaymentCallbackHeaders
-  rawBody: string
+  headers: PaymentCallbackHeaders;
+  rawBody: string;
 }
 
 export interface HandleChargebackResult {
-  ok: true
-  processed: boolean
-  mapped: boolean
-  reversed: boolean
-  originalTransactionId: string | null
-  reversalTransactionId: string | null
-  matchMethod: ChargebackMatchMethod | null
-  status: WalletChargebackEventStatus
+  ok: true;
+  processed: boolean;
+  mapped: boolean;
+  reversed: boolean;
+  originalTransactionId: string | null;
+  reversalTransactionId: string | null;
+  matchMethod: ChargebackMatchMethod | null;
+  status: WalletChargebackEventStatus;
 }
 
 interface ChargebackEventRow {
-  eventId: string
-  originalTransactionId: string | null
-  reversalTransactionId: string | null
-  walletId: string | null
-  status: WalletChargebackEventStatus
-  matchMethod: ChargebackMatchMethod | null
-  raw: unknown
+  eventId: string;
+  originalTransactionId: string | null;
+  reversalTransactionId: string | null;
+  walletId: string | null;
+  status: WalletChargebackEventStatus;
+  matchMethod: ChargebackMatchMethod | null;
+  raw: unknown;
 }
 
 interface QueryClient {
   query: (
     text: string,
-    params?: unknown[],
-  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>
+    params?: unknown[]
+  ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
 
 /**
@@ -88,7 +88,7 @@ interface QueryClient {
  */
 @Injectable()
 export class ChargebackDetectionService {
-  private readonly logger = new Logger(ChargebackDetectionService.name)
+  private readonly logger = new Logger(ChargebackDetectionService.name);
 
   constructor(
     private readonly walletService: WalletService,
@@ -96,105 +96,103 @@ export class ChargebackDetectionService {
     @Inject(PAYMENT_CALLBACK_CONFIG)
     private readonly injectedConfig?: PaymentCallbackConfig,
     @Optional()
-    private readonly alertService?: ChargebackAlertService,
+    private readonly alertService?: ChargebackAlertService
   ) {}
 
   async handle(input: HandleChargebackInput): Promise<HandleChargebackResult> {
-    const config = this.resolveConfig()
+    const config = this.resolveConfig();
     if (!config.webhookSecret) {
-      this.logger.warn(
-        'Payment chargeback received but PAYMENT_GATEWAY_WEBHOOK_SECRET is not set',
-      )
+      this.logger.warn('Payment chargeback received but PAYMENT_GATEWAY_WEBHOOK_SECRET is not set');
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_UNCONFIGURED,
-        'Payment provider callback signing secret is not configured',
-      )
+        'Payment provider callback signing secret is not configured'
+      );
     }
 
     const verification = verifyPaymentCallbackSignature(
       input.rawBody,
       input.headers,
-      config.webhookSecret,
-    )
+      config.webhookSecret
+    );
     if (!verification.ok) {
       if (verification.reason === 'replayed') {
-        this.logger.warn('Rejected replayed or expired payment chargeback signature')
+        this.logger.warn('Rejected replayed or expired payment chargeback signature');
         httpError(
           ErrorCodes.PROVIDER_CALLBACK_REPLAYED,
-          'Payment provider callback is expired or replayed',
-        )
+          'Payment provider callback is expired or replayed'
+        );
       }
-      this.logger.warn(`Rejected payment chargeback signature (${verification.reason})`)
+      this.logger.warn(`Rejected payment chargeback signature (${verification.reason})`);
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Invalid payment provider callback signature',
-      )
+        'Invalid payment provider callback signature'
+      );
     }
 
-    const eventId = input.headers.eventId!.trim()
+    const eventId = input.headers.eventId!.trim();
     if (!eventId) {
-      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback event id is required')
+      httpError(ErrorCodes.PROVIDER_CALLBACK_INVALID, 'Payment callback event id is required');
     }
 
-    const parsed = parseChargebackNotificationJson(input.rawBody)
+    const parsed = parseChargebackNotificationJson(input.rawBody);
     if (!parsed.ok) {
       if (parsed.reason === 'invalid_json') {
-        httpError(ErrorCodes.VALIDATION_PARSE_JSON, 'Payment chargeback body must be JSON')
+        httpError(ErrorCodes.VALIDATION_PARSE_JSON, 'Payment chargeback body must be JSON');
       }
       if (parsed.reason === 'invalid_amount') {
         httpError(
           ErrorCodes.VALIDATION_INPUT_INVALID,
-          'Payment chargeback amount must be a positive integer IRR value',
-        )
+          'Payment chargeback amount must be a positive integer IRR value'
+        );
       }
       httpError(
         ErrorCodes.VALIDATION_PARSE_ZOD,
-        'Payment chargeback body must include type, merchantId, amountIrR, and a chargeback locator',
-      )
+        'Payment chargeback body must include type, merchantId, amountIrR, and a chargeback locator'
+      );
     }
 
     if (parsed.notification.merchantId !== config.merchantId) {
-      this.logger.warn('Payment chargeback merchant id did not match configured merchant context')
+      this.logger.warn('Payment chargeback merchant id did not match configured merchant context');
       httpError(
         ErrorCodes.PROVIDER_CALLBACK_INVALID,
-        'Payment callback merchant context is invalid',
-      )
+        'Payment callback merchant context is invalid'
+      );
     }
 
-    return this.processVerifiedNotification(eventId, parsed.notification)
+    return this.processVerifiedNotification(eventId, parsed.notification);
   }
 
   private async processVerifiedNotification(
     eventId: string,
-    notification: ParsedChargebackNotification,
+    notification: ParsedChargebackNotification
   ): Promise<HandleChargebackResult> {
-    const pool = getDbPool()
-    const client = await pool.connect()
-    const lockKeys = chargebackEventLockKeys(eventId)
+    const pool = getDbPool();
+    const client = await pool.connect();
+    const lockKeys = chargebackEventLockKeys(eventId);
     try {
-      await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys)
+      await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
-        const claim = await this.claimEvent(client, eventId, notification)
+        const claim = await this.claimEvent(client, eventId, notification);
         if (!claim.inserted) {
-          const existing = claim.existing
+          const existing = claim.existing;
           if (!existing) {
             httpError(
               ErrorCodes.PROVIDER_CALLBACK_INVALID,
-              'Payment chargeback event id could not be claimed',
-            )
+              'Payment chargeback event id could not be claimed'
+            );
           }
-          assertClaimedNotificationMatches(existing.raw, notification)
+          assertClaimedNotificationMatches(existing.raw, notification);
           if (existing.status !== 'processing') {
             await this.alertIfUnresolved(client, existing.status, eventId, notification, {
               walletId: existing.walletId,
               originalTransactionId: existing.originalTransactionId,
-            })
-            return alreadyProcessedResult(existing)
+            });
+            return alreadyProcessedResult(existing);
           }
         }
 
-        const candidates = await this.loadCandidates(client, notification)
-        const match = matchChargebackToTopUp(notification, candidates)
+        const candidates = await this.loadCandidates(client, notification);
+        const match = matchChargebackToTopUp(notification, candidates);
         if (!match) {
           await this.finalizeEvent(client, eventId, {
             status: 'unmatched',
@@ -202,12 +200,12 @@ export class ChargebackDetectionService {
             reversalTransactionId: null,
             walletId: null,
             matchMethod: null,
-          })
-          this.logger.warn(`Chargeback ${eventId} could not be mapped to an original top-up`)
+          });
+          this.logger.warn(`Chargeback ${eventId} could not be mapped to an original top-up`);
           await this.alertIfUnresolved(client, 'unmatched', eventId, notification, {
             walletId: null,
             originalTransactionId: null,
-          })
+          });
           return {
             ok: true,
             processed: true,
@@ -217,10 +215,10 @@ export class ChargebackDetectionService {
             reversalTransactionId: null,
             matchMethod: null,
             status: 'unmatched',
-          }
+          };
         }
 
-        const existingReversal = await this.findExistingReversal(client, match.original.id)
+        const existingReversal = await this.findExistingReversal(client, match.original.id);
         if (existingReversal) {
           await this.finalizeEvent(client, eventId, {
             status: 'reversed',
@@ -228,7 +226,7 @@ export class ChargebackDetectionService {
             reversalTransactionId: existingReversal.id,
             walletId: match.original.walletId,
             matchMethod: match.method,
-          })
+          });
           return {
             ok: true,
             processed: true,
@@ -238,10 +236,10 @@ export class ChargebackDetectionService {
             reversalTransactionId: existingReversal.id,
             matchMethod: match.method,
             status: 'reversed',
-          }
+          };
         }
 
-        let reversal: TransactionRow
+        let reversal: TransactionRow;
         try {
           // Reverse on the advisory-lock client so this handler never
           // checks out a second pooled connection while the lock is held.
@@ -250,20 +248,20 @@ export class ChargebackDetectionService {
               match.original.id,
               notification.reason,
               chargebackReversalIdempotencyKey(eventId),
-              client,
-            )
+              client
+            );
             await this.finalizeEvent(client, eventId, {
               status: 'reversed',
               originalTransactionId: match.original.id,
               reversalTransactionId: posted.id,
               walletId: match.original.walletId,
               matchMethod: match.method,
-            })
-            return posted
-          })
+            });
+            return posted;
+          });
         } catch (error) {
           if (isAlreadyReversedError(error, match.original.id)) {
-            const raced = await this.findExistingReversal(client, match.original.id)
+            const raced = await this.findExistingReversal(client, match.original.id);
             if (raced) {
               await this.finalizeEvent(client, eventId, {
                 status: 'reversed',
@@ -271,7 +269,7 @@ export class ChargebackDetectionService {
                 reversalTransactionId: raced.id,
                 walletId: match.original.walletId,
                 matchMethod: match.method,
-              })
+              });
               return {
                 ok: true,
                 processed: true,
@@ -281,7 +279,7 @@ export class ChargebackDetectionService {
                 reversalTransactionId: raced.id,
                 matchMethod: match.method,
                 status: 'reversed',
-              }
+              };
             }
           }
           if (isInsufficientReversalError(error)) {
@@ -291,14 +289,14 @@ export class ChargebackDetectionService {
               reversalTransactionId: null,
               walletId: match.original.walletId,
               matchMethod: match.method,
-            })
+            });
             this.logger.warn(
-              `Chargeback ${eventId} mapped to ${match.original.id} but reversal could not post`,
-            )
+              `Chargeback ${eventId} mapped to ${match.original.id} but reversal could not post`
+            );
             await this.alertIfUnresolved(client, 'unresolved', eventId, notification, {
               walletId: match.original.walletId,
               originalTransactionId: match.original.id,
-            })
+            });
             return {
               ok: true,
               processed: true,
@@ -308,14 +306,14 @@ export class ChargebackDetectionService {
               reversalTransactionId: null,
               matchMethod: match.method,
               status: 'unresolved',
-            }
+            };
           }
-          throw error
+          throw error;
         }
 
         this.logger.log(
-          `Chargeback ${eventId} reversed top-up ${match.original.id} as ${reversal.id}`,
-        )
+          `Chargeback ${eventId} reversed top-up ${match.original.id} as ${reversal.id}`
+        );
         return {
           ok: true,
           processed: true,
@@ -325,27 +323,27 @@ export class ChargebackDetectionService {
           reversalTransactionId: reversal.id,
           matchMethod: match.method,
           status: 'reversed',
-        }
+        };
       } finally {
-        await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys)
+        await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys);
       }
     } finally {
-      client.release()
+      client.release();
     }
   }
 
   private resolveConfig(): PaymentCallbackConfig {
-    if (this.injectedConfig) return this.injectedConfig
+    if (this.injectedConfig) return this.injectedConfig;
     return {
       webhookSecret: resolvePaymentGatewayWebhookSecret(),
       merchantId: resolvePaymentGatewayMerchantId(),
-    }
+    };
   }
 
   private async claimEvent(
     client: QueryClient,
     eventId: string,
-    notification: ParsedChargebackNotification,
+    notification: ParsedChargebackNotification
   ): Promise<{ inserted: boolean; existing: ChargebackEventRow | null }> {
     try {
       const inserted = await client.query(
@@ -354,40 +352,40 @@ export class ChargebackDetectionService {
          ON CONFLICT (event_id) DO NOTHING
          RETURNING event_id, original_transaction_id, reversal_transaction_id,
                    wallet_id, status, match_method, raw`,
-        [eventId, JSON.stringify(chargebackEventRaw(notification))],
-      )
+        [eventId, JSON.stringify(chargebackEventRaw(notification))]
+      );
       if (inserted.rows.length > 0) {
         return {
           inserted: true,
           existing: mapEvent(inserted.rows[0] as Parameters<typeof mapEvent>[0]),
-        }
+        };
       }
     } catch (error) {
-      if (!isPgUniqueViolation(error, WALLET_CHARGEBACK_EVENT_CONSTRAINT)) throw error
+      if (!isPgUniqueViolation(error, WALLET_CHARGEBACK_EVENT_CONSTRAINT)) throw error;
     }
 
-    const existing = await this.loadEvent(client, eventId)
-    return { inserted: false, existing }
+    const existing = await this.loadEvent(client, eventId);
+    return { inserted: false, existing };
   }
 
   private async loadEvent(
     client: QueryClient,
-    eventId: string,
+    eventId: string
   ): Promise<ChargebackEventRow | null> {
     const result = await client.query(
       `SELECT event_id, original_transaction_id, reversal_transaction_id,
               wallet_id, status, match_method, raw
          FROM wallet_chargeback_events
         WHERE event_id = $1`,
-      [eventId],
-    )
-    if (result.rows.length === 0) return null
-    return mapEvent(result.rows[0] as Parameters<typeof mapEvent>[0])
+      [eventId]
+    );
+    if (result.rows.length === 0) return null;
+    return mapEvent(result.rows[0] as Parameters<typeof mapEvent>[0]);
   }
 
   private async loadCandidates(
     client: QueryClient,
-    notification: ParsedChargebackNotification,
+    notification: ParsedChargebackNotification
   ): Promise<ChargebackTopUpCandidate[]> {
     if (notification.merchantOrderId) {
       const result = await client.query(
@@ -398,12 +396,9 @@ export class ChargebackDetectionService {
               idempotency_key = $1
               OR metadata->>'pendingTransactionId' = $2
             )`,
-        [
-          chargebackCreditIdempotencyKey(notification.merchantOrderId),
-          notification.merchantOrderId,
-        ],
-      )
-      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]))
+        [chargebackCreditIdempotencyKey(notification.merchantOrderId), notification.merchantOrderId]
+      );
+      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]));
     }
 
     if (notification.providerRefId) {
@@ -412,9 +407,9 @@ export class ChargebackDetectionService {
           WHERE type = 'topup'
             AND state = 'Completed'
             AND ref_id = $1`,
-        [notification.providerRefId],
-      )
-      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]))
+        [notification.providerRefId]
+      );
+      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]));
     }
 
     if (notification.authority) {
@@ -427,24 +422,24 @@ export class ChargebackDetectionService {
               OR metadata->>'authority' = $1
               OR metadata->'gateway'->>'authority' = $1
             )`,
-        [notification.authority],
-      )
-      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]))
+        [notification.authority]
+      );
+      return result.rows.map((row) => mapCandidate(row as Parameters<typeof mapCandidate>[0]));
     }
 
-    return []
+    return [];
   }
 
   private async findExistingReversal(
     client: QueryClient,
-    originalTransactionId: string,
+    originalTransactionId: string
   ): Promise<TransactionRow | null> {
     const result = await client.query(
       `SELECT * FROM wallet_transactions WHERE reverses_transaction_id = $1`,
-      [originalTransactionId],
-    )
-    if (result.rows.length === 0) return null
-    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0])
+      [originalTransactionId]
+    );
+    if (result.rows.length === 0) return null;
+    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
   }
 
   private async alertIfUnresolved(
@@ -452,29 +447,29 @@ export class ChargebackDetectionService {
     status: WalletChargebackEventStatus,
     eventId: string,
     notification: ParsedChargebackNotification,
-    refs: { walletId: string | null; originalTransactionId: string | null },
+    refs: { walletId: string | null; originalTransactionId: string | null }
   ): Promise<void> {
-    if (!this.alertService) return
-    if (!needsFinanceChargebackAlert(status)) return
+    if (!this.alertService) return;
+    if (!needsFinanceChargebackAlert(status)) return;
     await this.alertService.notifyUnresolved(client, {
       eventId,
       status,
       notification,
       walletId: refs.walletId,
       originalTransactionId: refs.originalTransactionId,
-    })
+    });
   }
 
   private async finalizeEvent(
     client: QueryClient,
     eventId: string,
     input: {
-      status: Exclude<WalletChargebackEventStatus, 'processing'>
-      originalTransactionId: string | null
-      reversalTransactionId: string | null
-      walletId: string | null
-      matchMethod: ChargebackMatchMethod | null
-    },
+      status: Exclude<WalletChargebackEventStatus, 'processing'>;
+      originalTransactionId: string | null;
+      reversalTransactionId: string | null;
+      walletId: string | null;
+      matchMethod: ChargebackMatchMethod | null;
+    }
   ): Promise<void> {
     await client.query(
       `UPDATE wallet_chargeback_events
@@ -492,8 +487,8 @@ export class ChargebackDetectionService {
         input.reversalTransactionId,
         input.walletId,
         input.matchMethod,
-      ],
-    )
+      ]
+    );
   }
 }
 
@@ -502,22 +497,19 @@ export class ChargebackDetectionService {
  * chargeback advisory lock. `WalletService.reverseTransaction` must use
  * this same client so the handler never waits on a nested pool checkout.
  */
-async function withLockClientTransaction<T>(
-  client: QueryClient,
-  fn: () => Promise<T>,
-): Promise<T> {
-  await client.query('BEGIN')
+async function withLockClientTransaction<T>(client: QueryClient, fn: () => Promise<T>): Promise<T> {
+  await client.query('BEGIN');
   try {
-    const result = await fn()
-    await client.query('COMMIT')
-    return result
+    const result = await fn();
+    await client.query('COMMIT');
+    return result;
   } catch (error) {
     try {
-      await client.query('ROLLBACK')
+      await client.query('ROLLBACK');
     } catch {
       // Preserve the original reversal/mapping error.
     }
-    throw error
+    throw error;
   }
 }
 
@@ -530,41 +522,41 @@ function chargebackEventRaw(notification: ParsedChargebackNotification): Record<
     authority: notification.authority,
     amountIrR: notification.amountIrR.toString(),
     reason: notification.reason,
-  }
+  };
 }
 
 function chargebackPayloadDigest(notification: ParsedChargebackNotification): Buffer {
   return createHash('sha256')
     .update(JSON.stringify(chargebackEventRaw(notification)))
-    .digest()
+    .digest();
 }
 
 function assertClaimedNotificationMatches(
   storedRaw: unknown,
-  notification: ParsedChargebackNotification,
+  notification: ParsedChargebackNotification
 ): void {
-  const claimed = parseChargebackNotification(storedRaw)
+  const claimed = parseChargebackNotification(storedRaw);
   const digestMatches =
     claimed.ok &&
     timingSafeEqual(
       chargebackPayloadDigest(claimed.notification),
-      chargebackPayloadDigest(notification),
-    )
+      chargebackPayloadDigest(notification)
+    );
   if (!digestMatches) {
     httpError(
       ErrorCodes.PROVIDER_CALLBACK_INVALID,
-      'Payment chargeback event payload does not match the claimed notification',
-    )
+      'Payment chargeback event payload does not match the claimed notification'
+    );
   }
 }
 
 export function chargebackEventLockKeys(eventId: string): [number, number] {
-  const digest = createHash('sha256').update(`wallet-chargeback:${eventId}`).digest()
-  return [digest.readInt32BE(0), digest.readInt32BE(4)]
+  const digest = createHash('sha256').update(`wallet-chargeback:${eventId}`).digest();
+  return [digest.readInt32BE(0), digest.readInt32BE(4)];
 }
 
 function alreadyProcessedResult(existing: ChargebackEventRow): HandleChargebackResult {
-  const terminal = existing.status === 'duplicate' ? 'duplicate' : existing.status
+  const terminal = existing.status === 'duplicate' ? 'duplicate' : existing.status;
   return {
     ok: true,
     processed: false,
@@ -574,17 +566,17 @@ function alreadyProcessedResult(existing: ChargebackEventRow): HandleChargebackR
     reversalTransactionId: existing.reversalTransactionId,
     matchMethod: existing.matchMethod,
     status: terminal,
-  }
+  };
 }
 
 function mapEvent(row: {
-  event_id: string
-  original_transaction_id: string | null
-  reversal_transaction_id: string | null
-  wallet_id: string | null
-  status: string
-  match_method: string | null
-  raw?: unknown
+  event_id: string;
+  original_transaction_id: string | null;
+  reversal_transaction_id: string | null;
+  wallet_id: string | null;
+  status: string;
+  match_method: string | null;
+  raw?: unknown;
 }): ChargebackEventRow {
   return {
     eventId: row.event_id,
@@ -594,18 +586,18 @@ function mapEvent(row: {
     status: row.status as WalletChargebackEventStatus,
     matchMethod: row.match_method as ChargebackMatchMethod | null,
     raw: row.raw ?? null,
-  }
+  };
 }
 
 function mapCandidate(row: {
-  id: string
-  wallet_id: string
-  type: string
-  amount: string | number | bigint
-  state: string
-  idempotency_key: string
-  ref_id?: string | null
-  metadata?: unknown
+  id: string;
+  wallet_id: string;
+  type: string;
+  amount: string | number | bigint;
+  state: string;
+  idempotency_key: string;
+  ref_id?: string | null;
+  metadata?: unknown;
 }): ChargebackTopUpCandidate {
   return {
     id: row.id,
@@ -616,22 +608,22 @@ function mapCandidate(row: {
     idempotencyKey: row.idempotency_key,
     refId: row.ref_id ?? null,
     metadata: row.metadata ?? null,
-  }
+  };
 }
 
 function mapTransaction(row: {
-  id: string
-  wallet_id: string
-  type: string
-  amount: string | number | bigint
-  state: string
-  idempotency_key: string
-  ref_id?: string | null
-  description?: string | null
-  metadata?: unknown
-  reverses_transaction_id?: string | null
-  created_at: Date
-  updated_at: Date
+  id: string;
+  wallet_id: string;
+  type: string;
+  amount: string | number | bigint;
+  state: string;
+  idempotency_key: string;
+  ref_id?: string | null;
+  description?: string | null;
+  metadata?: unknown;
+  reverses_transaction_id?: string | null;
+  created_at: Date;
+  updated_at: Date;
 }): TransactionRow {
   return {
     id: row.id,
@@ -646,43 +638,43 @@ function mapTransaction(row: {
     reversesTransactionId: row.reverses_transaction_id ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-  }
+  };
 }
 
 function isPgUniqueViolation(error: unknown, constraint?: string): boolean {
-  if (!error || typeof error !== 'object') return false
-  const pgError = error as { code?: string; constraint?: string }
-  if (pgError.code !== PG_UNIQUE_VIOLATION) return false
-  return constraint === undefined || pgError.constraint === constraint
+  if (!error || typeof error !== 'object') return false;
+  const pgError = error as { code?: string; constraint?: string };
+  if (pgError.code !== PG_UNIQUE_VIOLATION) return false;
+  return constraint === undefined || pgError.constraint === constraint;
 }
 
 function nestMessage(error: unknown): string {
   if (error instanceof HttpException) {
-    const body = error.getResponse()
-    if (typeof body === 'string') return body
+    const body = error.getResponse();
+    if (typeof body === 'string') return body;
     if (body && typeof body === 'object' && 'message' in body) {
-      const message = (body as { message: unknown }).message
-      if (typeof message === 'string') return message
+      const message = (body as { message: unknown }).message;
+      if (typeof message === 'string') return message;
     }
   }
-  if (error instanceof Error) return error.message
-  return ''
+  if (error instanceof Error) return error.message;
+  return '';
 }
 
 function isAlreadyReversedError(error: unknown, originalId: string): boolean {
-  if (!(error instanceof ConflictException)) return false
-  return nestMessage(error) === WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(originalId)
+  if (!(error instanceof ConflictException)) return false;
+  return nestMessage(error) === WALLET_REVERSAL_ERRORS.ALREADY_REVERSED(originalId);
 }
 
 function isInsufficientReversalError(error: unknown): boolean {
-  if (!(error instanceof BadRequestException)) return false
-  return nestMessage(error).startsWith('Insufficient balance')
+  if (!(error instanceof BadRequestException)) return false;
+  return nestMessage(error).startsWith('Insufficient balance');
 }
 
 function httpError(
   def: { code: string; httpStatus: number },
   message: string,
-  statusCode = def.httpStatus,
+  statusCode = def.httpStatus
 ): never {
-  throw new HttpException({ statusCode, error: def.code, message }, statusCode)
+  throw new HttpException({ statusCode, error: def.code, message }, statusCode);
 }

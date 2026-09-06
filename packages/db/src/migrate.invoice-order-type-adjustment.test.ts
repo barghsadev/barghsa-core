@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import { sql } from 'drizzle-orm'
-import { migrate } from 'drizzle-orm/node-postgres/migrator'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { createIsolatedTestDb, dropTestSchema } from './test/testDb'
-import type { IsolatedTestDb } from './test/testDb'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { sql } from 'drizzle-orm';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createIsolatedTestDb, dropTestSchema } from './test/testDb';
+import type { IsolatedTestDb } from './test/testDb';
 
 /**
  * Proves production `migrate()` (drizzle-orm journal discovery) applies
@@ -18,80 +18,74 @@ import type { IsolatedTestDb } from './test/testDb'
  * to also exclude adjustment rows.
  */
 
-const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle')
-const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json')
-const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql')
-const AMOUNT_MIGRATION = resolve(
-  DRIZZLE_FOLDER,
-  '0052_add_invoice_amount_check_constraints.sql',
-)
-const IDEMPOTENCY_MIGRATION = resolve(
-  DRIZZLE_FOLDER,
-  '0057_add_invoice_type_idempotency.sql',
-)
+const DRIZZLE_FOLDER = resolve(__dirname, '../drizzle');
+const JOURNAL_PATH = resolve(DRIZZLE_FOLDER, 'meta/_journal.json');
+const UUIDV7_MIGRATION = resolve(DRIZZLE_FOLDER, '0000_init_uuidv7_function.sql');
+const AMOUNT_MIGRATION = resolve(DRIZZLE_FOLDER, '0052_add_invoice_amount_check_constraints.sql');
+const IDEMPOTENCY_MIGRATION = resolve(DRIZZLE_FOLDER, '0057_add_invoice_type_idempotency.sql');
 const CORRECTION_MIGRATION = resolve(
   DRIZZLE_FOLDER,
-  '0064_add_invoice_correction_self_references.sql',
-)
+  '0064_add_invoice_correction_self_references.sql'
+);
 const REPLACEMENT_INDEX_MIGRATION = resolve(
   DRIZZLE_FOLDER,
-  '0065_invoice_order_type_unique_exclude_replacements.sql',
-)
-const ADJUSTMENT_TAG = '0066_invoice_order_type_unique_exclude_adjustments'
+  '0065_invoice_order_type_unique_exclude_replacements.sql'
+);
+const ADJUSTMENT_TAG = '0066_invoice_order_type_unique_exclude_adjustments';
 /** `when` of journal tag 0065 — last entry before 0066 was registered. */
-const PRIOR_JOURNAL_HEAD_WHEN = 1788566400000
+const PRIOR_JOURNAL_HEAD_WHEN = 1788566400000;
 
 describe('drizzle migrate() applies invoice order-type adjustment unique index (T-04.1.05.03)', () => {
-  let ctx: IsolatedTestDb
-  let rewriteWhen: number
+  let ctx: IsolatedTestDb;
+  let rewriteWhen: number;
 
   beforeAll(async () => {
     const journal = JSON.parse(readFileSync(JOURNAL_PATH, 'utf8')) as {
-      entries: Array<{ tag: string; when: number }>
-    }
-    const rewriteEntry = journal.entries.find((entry) => entry.tag === ADJUSTMENT_TAG)
+      entries: Array<{ tag: string; when: number }>;
+    };
+    const rewriteEntry = journal.entries.find((entry) => entry.tag === ADJUSTMENT_TAG);
     if (!rewriteEntry) {
       throw new Error(
-        `${ADJUSTMENT_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`,
-      )
+        `${ADJUSTMENT_TAG} is missing from drizzle/meta/_journal.json; migrate() would skip it`
+      );
     }
     if (rewriteEntry.when <= PRIOR_JOURNAL_HEAD_WHEN) {
       throw new Error(
-        `${ADJUSTMENT_TAG} journal 'when' (${rewriteEntry.when}) must be after 0065 (${PRIOR_JOURNAL_HEAD_WHEN})`,
-      )
+        `${ADJUSTMENT_TAG} journal 'when' (${rewriteEntry.when}) must be after 0065 (${PRIOR_JOURNAL_HEAD_WHEN})`
+      );
     }
-    rewriteWhen = rewriteEntry.when
+    rewriteWhen = rewriteEntry.when;
 
-    ctx = await createIsolatedTestDb()
+    ctx = await createIsolatedTestDb();
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
     await ctx.db.execute(sql`
       CREATE TYPE invoice_state AS ENUM (
         'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
         'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS profiles (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS orders (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
       )
-    `)
+    `);
     // 0078 (bank_receipts) is journaled after this head and needs users.
     await ctx.db.execute(sql`
       CREATE TABLE IF NOT EXISTS users (
         user_id TEXT PRIMARY KEY
       )
-    `)
+    `);
 
-    await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim())
+    await ctx.pool.query(readFileSync(AMOUNT_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(IDEMPOTENCY_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(CORRECTION_MIGRATION, 'utf-8').trim());
+    await ctx.pool.query(readFileSync(REPLACEMENT_INDEX_MIGRATION, 'utf-8').trim());
 
     await ctx.pool.query(`
       CREATE TABLE IF NOT EXISTS __drizzle_migrations (
@@ -99,22 +93,22 @@ describe('drizzle migrate() applies invoice order-type adjustment unique index (
         hash text NOT NULL,
         created_at bigint
       )
-    `)
-    await ctx.pool.query(
-      `INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`,
-      ['prior-journal-head-0065', PRIOR_JOURNAL_HEAD_WHEN],
-    )
+    `);
+    await ctx.pool.query(`INSERT INTO __drizzle_migrations (hash, created_at) VALUES ($1, $2)`, [
+      'prior-journal-head-0065',
+      PRIOR_JOURNAL_HEAD_WHEN,
+    ]);
 
     await migrate(ctx.db, {
       migrationsFolder: DRIZZLE_FOLDER,
       migrationsSchema: ctx.schemaName,
-    })
-  }, 60_000)
+    });
+  }, 60_000);
 
   afterAll(async () => {
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
-  })
+    await ctx.pool.end();
+    await dropTestSchema(ctx.schemaName);
+  });
 
   it('rewrites uq_invoices_order_id_type through the journaled migrate() path', async () => {
     const def = await ctx.db.execute<{ indexdef: string }>(sql`
@@ -123,11 +117,11 @@ describe('drizzle migrate() applies invoice order-type adjustment unique index (
        WHERE schemaname = current_schema()
          AND tablename = 'invoices'
          AND indexname = 'uq_invoices_order_id_type'
-    `)
-    expect(def.rows).toHaveLength(1)
-    expect(def.rows[0]!.indexdef).toMatch(/replaces_invoice_id IS NULL/i)
-    expect(def.rows[0]!.indexdef).toMatch(/adjustment_for_invoice_id IS NULL/i)
-  })
+    `);
+    expect(def.rows).toHaveLength(1);
+    expect(def.rows[0]!.indexdef).toMatch(/replaces_invoice_id IS NULL/i);
+    expect(def.rows[0]!.indexdef).toMatch(/adjustment_for_invoice_id IS NULL/i);
+  });
 
   it('records 0066 in the migrator bookkeeping table', async () => {
     const rows = await ctx.pool.query<{ created_at: string }>(
@@ -135,9 +129,9 @@ describe('drizzle migrate() applies invoice order-type adjustment unique index (
        FROM __drizzle_migrations
        WHERE created_at > $1
        ORDER BY created_at ASC`,
-      [PRIOR_JOURNAL_HEAD_WHEN],
-    )
-    expect(rows.rows.length).toBeGreaterThanOrEqual(1)
-    expect(rows.rows.map((row) => Number(row.created_at))).toContain(rewriteWhen)
-  })
-})
+      [PRIOR_JOURNAL_HEAD_WHEN]
+    );
+    expect(rows.rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows.rows.map((row) => Number(row.created_at))).toContain(rewriteWhen);
+  });
+});

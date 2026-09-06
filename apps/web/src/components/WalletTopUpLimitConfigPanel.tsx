@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
-import { t, type Locale } from '@barghsa/i18n'
-import { validateWalletTopUpLimitConfig } from '@barghsa/shared/finance'
-import { useLocale } from '../hooks/useLocale.js'
-import { withCsrf } from '../lib/csrf.js'
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { t, type Locale } from '@barghsa/i18n';
+import { validateWalletTopUpLimitConfig } from '@barghsa/shared/finance';
+import { useLocale } from '../hooks/useLocale.js';
+import { withCsrf } from '../lib/csrf.js';
 
 /**
  * Admin panel for the versioned `onlineTopUpLimit` (T-04.2.02.06).
@@ -13,95 +13,95 @@ import { withCsrf } from '../lib/csrf.js'
  */
 
 interface WalletTopUpLimitDto {
-  limitIrR: number
-  version?: number
+  limitIrR: number;
+  version?: number;
 }
 
 function normalizeIrrDigits(raw: string): string {
-  let ascii = ''
+  let ascii = '';
   for (const ch of raw) {
-    const code = ch.codePointAt(0) ?? 0
+    const code = ch.codePointAt(0) ?? 0;
     if (code >= 0x06f0 && code <= 0x06f9) {
-      ascii += String(code - 0x06f0)
+      ascii += String(code - 0x06f0);
     } else if (code >= 0x0660 && code <= 0x0669) {
-      ascii += String(code - 0x0660)
+      ascii += String(code - 0x0660);
     } else {
-      ascii += ch
+      ascii += ch;
     }
   }
-  return ascii.replace(/[^\d]/g, '')
+  return ascii.replace(/[^\d]/g, '');
 }
 
 function formatGroupedIrr(digits: string, locale: Locale): string {
-  if (digits === '') return ''
+  if (digits === '') return '';
   try {
-    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(BigInt(digits))
+    return new Intl.NumberFormat(locale === 'fa' ? 'fa-IR' : 'en-US').format(BigInt(digits));
   } catch {
-    return digits
+    return digits;
   }
 }
 
 export default function WalletTopUpLimitConfigPanel() {
-  const locale = useLocale()
-  const isRtl = locale === 'fa'
-  const [config, setConfig] = useState<WalletTopUpLimitDto | null>(null)
-  const [limitDigits, setLimitDigits] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [forbidden, setForbidden] = useState(false)
-  const [clientIssue, setClientIssue] = useState<string | null>(null)
+  const locale = useLocale();
+  const isRtl = locale === 'fa';
+  const [config, setConfig] = useState<WalletTopUpLimitDto | null>(null);
+  const [limitDigits, setLimitDigits] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [forbidden, setForbidden] = useState(false);
+  const [clientIssue, setClientIssue] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      setLoading(true)
-      setForbidden(false)
+      setLoading(true);
+      setForbidden(false);
       const res = await fetch('/api/admin/config/wallet-top-up-limit', {
         credentials: 'include',
-      })
+      });
       if (res.status === 403) {
-        setForbidden(true)
-        return
+        setForbidden(true);
+        return;
       }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = (await res.json()) as WalletTopUpLimitDto
-      setConfig(data)
-      setLimitDigits(String(data.limitIrR))
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = (await res.json()) as WalletTopUpLimitDto;
+      setConfig(data);
+      setLimitDigits(String(data.limitIrR));
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.walletLimit.loadFailed', locale))
+      setError(err instanceof Error ? err.message : t('admin.walletLimit.loadFailed', locale));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [locale])
+  }, [locale]);
 
   useEffect(() => {
-    void load()
-  }, [load])
+    void load();
+  }, [load]);
 
   const tomanPreview = useMemo(() => {
-    if (limitDigits === '') return null
+    if (limitDigits === '') return null;
     try {
-      return BigInt(limitDigits) / 10n
+      return BigInt(limitDigits) / 10n;
     } catch {
-      return null
+      return null;
     }
-  }, [limitDigits])
+  }, [limitDigits]);
 
   async function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    const raw = limitDigits === '' ? undefined : Number(limitDigits)
-    const validation = validateWalletTopUpLimitConfig({ limit_irr: raw })
+    event.preventDefault();
+    const raw = limitDigits === '' ? undefined : Number(limitDigits);
+    const validation = validateWalletTopUpLimitConfig({ limit_irr: raw });
     if (!validation.ok) {
       setClientIssue(
-        t('admin.walletLimit.invalid', locale).replace('{max}', String(Number.MAX_SAFE_INTEGER)),
-      )
-      return
+        t('admin.walletLimit.invalid', locale).replace('{max}', String(Number.MAX_SAFE_INTEGER))
+      );
+      return;
     }
-    setClientIssue(null)
-    setSaving(true)
-    setSaved(false)
-    setError(null)
+    setClientIssue(null);
+    setSaving(true);
+    setSaved(false);
+    setError(null);
     try {
       const res = await fetch('/api/admin/config/wallet-top-up-limit', {
         method: 'PUT',
@@ -111,28 +111,28 @@ export default function WalletTopUpLimitConfigPanel() {
           limit_irr: raw,
           expected_version: config?.version ?? 0,
         }),
-      })
+      });
       if (res.status === 409) {
-        await load()
-        throw new Error(t('admin.walletLimit.conflict', locale))
+        await load();
+        throw new Error(t('admin.walletLimit.conflict', locale));
       }
       if (!res.ok) {
-        const errData = (await res.json().catch(() => ({}))) as { message?: string }
-        throw new Error(errData.message ?? `HTTP ${res.status}`)
+        const errData = (await res.json().catch(() => ({}))) as { message?: string };
+        throw new Error(errData.message ?? `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as WalletTopUpLimitDto
-      setConfig(data)
-      setLimitDigits(String(data.limitIrR))
-      setSaved(true)
+      const data = (await res.json()) as WalletTopUpLimitDto;
+      setConfig(data);
+      setLimitDigits(String(data.limitIrR));
+      setSaved(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('admin.walletLimit.saveFailed', locale))
+      setError(err instanceof Error ? err.message : t('admin.walletLimit.saveFailed', locale));
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   if (forbidden) {
-    return null
+    return null;
   }
 
   if (loading && !config) {
@@ -144,7 +144,7 @@ export default function WalletTopUpLimitConfigPanel() {
       >
         {t('admin.walletLimit.loading', locale)}
       </div>
-    )
+    );
   }
 
   const describedBy = [
@@ -153,7 +153,7 @@ export default function WalletTopUpLimitConfigPanel() {
     clientIssue ? 'online-top-up-limit-error' : null,
   ]
     .filter(Boolean)
-    .join(' ')
+    .join(' ');
 
   return (
     <section
@@ -179,14 +179,20 @@ export default function WalletTopUpLimitConfigPanel() {
       </p>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded" role="alert">
+        <div
+          className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded"
+          role="alert"
+        >
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
-          <label htmlFor="online-top-up-limit" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="online-top-up-limit"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             {t('admin.walletLimit.label', locale)} <span className="text-red-500">*</span>
           </label>
           <input
@@ -199,19 +205,23 @@ export default function WalletTopUpLimitConfigPanel() {
             dir="ltr"
             value={formatGroupedIrr(limitDigits, locale)}
             onChange={(event) => {
-              setLimitDigits(normalizeIrrDigits(event.target.value))
-              setSaved(false)
-              setClientIssue(null)
+              setLimitDigits(normalizeIrrDigits(event.target.value));
+              setSaved(false);
+              setClientIssue(null);
             }}
             className="w-full border border-gray-300 rounded px-3 py-2"
             aria-invalid={clientIssue !== null}
             aria-describedby={describedBy}
           />
           {tomanPreview !== null && (
-            <p id="online-top-up-limit-toman" className="mt-1 text-sm text-gray-500" data-testid="wallet-top-up-limit-toman">
+            <p
+              id="online-top-up-limit-toman"
+              className="mt-1 text-sm text-gray-500"
+              data-testid="wallet-top-up-limit-toman"
+            >
               {t('admin.walletLimit.toman', locale).replace(
                 '{amount}',
-                formatGroupedIrr(tomanPreview.toString(), locale),
+                formatGroupedIrr(tomanPreview.toString(), locale)
               )}
             </p>
           )}
@@ -230,7 +240,10 @@ export default function WalletTopUpLimitConfigPanel() {
             {typeof config.version === 'number' && (
               <>
                 {' · '}
-                {t('admin.walletLimit.version', locale).replace('{version}', String(config.version))}
+                {t('admin.walletLimit.version', locale).replace(
+                  '{version}',
+                  String(config.version)
+                )}
               </>
             )}
           </p>
@@ -253,5 +266,5 @@ export default function WalletTopUpLimitConfigPanel() {
         </div>
       </form>
     </section>
-  )
+  );
 }

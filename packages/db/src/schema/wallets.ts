@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm';
 import {
   check,
   foreignKey,
@@ -9,9 +9,9 @@ import {
   text,
   uniqueIndex,
   uuid,
-} from 'drizzle-orm/pg-core'
-import { uuidv7, irrAmount, timestamptz } from '../types'
-import { profiles } from './profiles'
+} from 'drizzle-orm/pg-core';
+import { uuidv7, irrAmount, timestamptz } from '../types';
+import { profiles } from './profiles';
 
 /**
  * Wallet table (T-04.2.01.01).
@@ -50,10 +50,14 @@ export const wallets = pgTable(
       .references(() => profiles.id, { onDelete: 'restrict' }),
 
     /** Sum of all completed credits minus completed debits. IRR, stored as int8. */
-    postedBalance: irrAmount('posted_balance').notNull().default(sql`0::bigint`),
+    postedBalance: irrAmount('posted_balance')
+      .notNull()
+      .default(sql`0::bigint`),
 
     /** Sum of all active reservations. IRR, stored as int8. */
-    reservedBalance: irrAmount('reserved_balance').notNull().default(sql`0::bigint`),
+    reservedBalance: irrAmount('reserved_balance')
+      .notNull()
+      .default(sql`0::bigint`),
 
     /**
      * Optimistic lock version. Incremented on every mutation.
@@ -74,10 +78,10 @@ export const wallets = pgTable(
      */
     availableBalanceNonneg: check(
       'chk_wallets_available_balance_nonneg',
-      sql`(${table.postedBalance} - ${table.reservedBalance}) >= 0`,
+      sql`(${table.postedBalance} - ${table.reservedBalance}) >= 0`
     ),
-  }),
-)
+  })
+);
 
 /**
  * Ledger type discriminator (T-04.2.01.02 / S-04.2.01).
@@ -92,8 +96,8 @@ export const WALLET_TRANSACTION_TYPES = [
   'release',
   'reversal',
   'compensating',
-] as const
-export type WalletTransactionType = (typeof WALLET_TRANSACTION_TYPES)[number]
+] as const;
+export type WalletTransactionType = (typeof WALLET_TRANSACTION_TYPES)[number];
 
 /**
  * Ledger lifecycle states (T-04.2.01.02 / S-04.2.01).
@@ -108,8 +112,8 @@ export const WALLET_TRANSACTION_STATES = [
   'Rejected',
   'Released',
   'Reversed',
-] as const
-export type WalletTransactionState = (typeof WALLET_TRANSACTION_STATES)[number]
+] as const;
+export type WalletTransactionState = (typeof WALLET_TRANSACTION_STATES)[number];
 
 /**
  * Wallet transaction ledger table (T-04.2.01.02).
@@ -175,7 +179,9 @@ export const walletTransactions = pgTable(
     description: text('description'),
 
     /** Extensible metadata payload. */
-    metadata: jsonb('metadata').notNull().default(sql`'{}'::jsonb`),
+    metadata: jsonb('metadata')
+      .notNull()
+      .default(sql`'{}'::jsonb`),
 
     /**
      * Bank-receipt object-storage key. NULL for non-receipt ledger rows.
@@ -195,9 +201,7 @@ export const walletTransactions = pgTable(
     reversesTransactionId: uuid('reverses_transaction_id'),
 
     /** When the transaction was created. */
-    createdAt: timestamptz('created_at')
-      .defaultNow()
-      .notNull(),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
 
     /** When the transaction was last updated. */
     updatedAt: timestamptz('updated_at')
@@ -208,11 +212,11 @@ export const walletTransactions = pgTable(
   (table) => ({
     typeCheck: check(
       'chk_wallet_transactions_type',
-      sql`${table.type} IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating')`,
+      sql`${table.type} IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating')`
     ),
     stateCheck: check(
       'chk_wallet_transactions_state',
-      sql`${table.state} IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')`,
+      sql`${table.state} IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed')`
     ),
     amountNonzero: check('chk_wallet_transactions_amount_nonzero', sql`${table.amount} <> 0`),
     /**
@@ -226,7 +230,7 @@ export const walletTransactions = pgTable(
      */
     reversalOriginalCheck: check(
       'chk_wallet_tx_reversal_original',
-      sql`(${table.type} = 'reversal' AND ${table.reversesTransactionId} IS NOT NULL) OR (${table.type} <> 'reversal' AND ${table.reversesTransactionId} IS NULL)`,
+      sql`(${table.type} = 'reversal' AND ${table.reversesTransactionId} IS NOT NULL) OR (${table.type} <> 'reversal' AND ${table.reversesTransactionId} IS NULL)`
     ),
     walletIdIdx: index('idx_wallet_tx_wallet_id').on(table.walletId),
     stateIdx: index('idx_wallet_tx_state').on(table.state),
@@ -267,10 +271,10 @@ export const walletTransactions = pgTable(
     onlinePendingExpiryIdx: index('idx_wallet_tx_online_pending_created')
       .on(table.createdAt, table.id)
       .where(
-        sql`${table.type} = 'topup' AND ${table.state} = 'Pending' AND (${table.metadata}->>'channel') = 'online'`,
+        sql`${table.type} = 'topup' AND ${table.state} = 'Pending' AND (${table.metadata}->>'channel') = 'online'`
       ),
-  }),
-)
+  })
+);
 
 /**
  * SQL to create the wallets table.
@@ -285,7 +289,7 @@ export const createWalletsTable = sql`
     CONSTRAINT chk_wallets_available_balance_nonneg
       CHECK ((posted_balance - reserved_balance) >= 0)
   );
-`
+`;
 
 /**
  * SQL to create the wallet_transactions table (migration 0068 source).
@@ -346,4 +350,4 @@ export const createWalletTransactionsTable = sql`
     BEFORE UPDATE ON wallet_transactions
     FOR EACH ROW
     EXECUTE FUNCTION update_wallet_transactions_updated_at();
-`
+`;
