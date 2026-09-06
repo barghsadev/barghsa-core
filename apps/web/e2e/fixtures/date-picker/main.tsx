@@ -4,15 +4,18 @@ import { DatePicker } from '../../../../../packages/ui/src/components/base-ui/da
 
 function Fixture() {
   const params = new URLSearchParams(location.search);
-  const [locale, setLocale] = React.useState<'en' | 'fa'>('en');
-  const [date, setDate] = React.useState<Date | undefined>(new Date(2026, 2, 22, 12));
+  const [locale, setLocale] = React.useState<'en' | 'fa'>(params.has('fa') ? 'fa' : 'en');
+  const [date, setDate] = React.useState<Date | undefined>(
+    params.has('timezone') ? new Date('2026-03-20T21:00:00Z') : new Date(2026, 2, 22, 12)
+  );
   const [range, setRange] = React.useState<{ from: Date | undefined; to?: Date } | undefined>({
     from: date,
   });
   const shared = {
     locale,
-    minDate: new Date(2026, 2, 21, 12),
-    maxDate: new Date(2026, 2, 23, 12),
+    timezone: params.get('timezone') ?? undefined,
+    minDate: params.has('timezone') ? new Date('2026-03-20T20:30:00Z') : new Date(2026, 2, 21, 12),
+    maxDate: params.has('timezone') ? new Date('2026-03-22T20:30:00Z') : new Date(2026, 2, 23, 12),
     label: 'Delivery date',
     disabled: params.has('disabled'),
     error: params.has('error') ? 'Choose an allowed date' : undefined,
@@ -26,7 +29,14 @@ function Fixture() {
         <DatePicker {...shared} value={date} onChange={setDate} />
       )}
       <output aria-label="Stored value">
-        {JSON.stringify(params.has('range') ? range : date)}
+        {JSON.stringify(
+          params.has('range')
+            ? {
+                from: range?.from && new Date(range.from.getTime()),
+                to: range?.to && new Date(range.to.getTime()),
+              }
+            : date && new Date(date.getTime())
+        )}
       </output>
       <DatePicker locale={locale} />
     </main>

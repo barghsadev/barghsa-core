@@ -83,3 +83,39 @@ test('disabled picker cannot open and validation error describes the control', a
   await expect(trigger).toHaveAccessibleDescription('Choose an allowed date');
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
+
+for (const browserZone of ['UTC', 'America/Los_Angeles']) {
+  test.describe(`explicit Tehran zone in ${browserZone}`, () => {
+    test.use({ timezoneId: browserZone });
+    for (const locale of ['en', 'fa']) {
+      test(`displays and selects ${locale} days in the configured zone`, async ({ page }) => {
+        await page.goto(`${url}?timezone=Asia%2FTehran&${locale}`);
+        const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+        await expect(trigger).toContainText(locale === 'fa' ? '1405/01/01' : '2026/03/21');
+        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+          '"2026-03-20T21:00:00.000Z"'
+        );
+        await trigger.click();
+        const dialog = page.getByRole('dialog');
+        const nextDay = dialog.getByRole('button', {
+          name: locale === 'fa' ? / ۲-ام فروردین ۱۴۰۵/ : /March 22nd/,
+        });
+        await expect(
+          dialog.getByRole('button', {
+            name: locale === 'fa' ? / ۴-ام فروردین ۱۴۰۵/ : /March 24th/,
+          })
+        ).toBeDisabled();
+        await nextDay.click();
+        await expect(trigger).toContainText(locale === 'fa' ? '1405/01/02' : '2026/03/22');
+        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+          '"2026-03-21T20:30:00.000Z"'
+        );
+        await page.getByRole('button', { name: 'Switch language' }).click();
+        await expect(trigger).toContainText(locale === 'fa' ? '2026/03/22' : '1405/01/02');
+        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+          '"2026-03-21T20:30:00.000Z"'
+        );
+      });
+    }
+  });
+}

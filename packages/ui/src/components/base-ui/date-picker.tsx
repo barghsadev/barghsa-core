@@ -6,7 +6,7 @@ import { format as dateFnsFormat } from 'date-fns';
 import { format as jalaliFormat } from 'date-fns-jalali';
 import { faIR as jalaliLocale } from 'date-fns-jalali/locale';
 import { CalendarIcon } from 'lucide-react';
-import { type DateRange, type Locale } from 'react-day-picker';
+import { TZDate, type DateRange, type Locale } from 'react-day-picker';
 import { faIR as dayPickerPersian } from 'react-day-picker/locale/fa-IR';
 
 import { cn } from '../../lib/utils';
@@ -21,6 +21,8 @@ interface DatePickerBaseProps {
   /** Prefer locale; jalali remains supported for existing callers. */
   jalali?: boolean;
   locale?: 'fa' | 'en';
+  /** IANA zone for both display and selection; omit for legacy browser-local dates. */
+  timezone?: string;
   /** Inclusive calendar-day limits. Existing values are never silently changed. */
   minDate?: Date;
   maxDate?: Date;
@@ -50,6 +52,7 @@ function DatePicker({
   calendarMode = 'single',
   jalali: jalaliOverride,
   locale,
+  timezone,
   minDate,
   maxDate,
   disabled = false,
@@ -80,14 +83,34 @@ function DatePicker({
     [jalali]
   );
 
+  const calendarDateLib = React.useMemo(() => {
+    if (!jalali) return undefined;
+    if (!timezone) return jalaliCalendar;
+    return {
+      ...jalaliCalendar,
+      // The Jalali library's constructor creates browser-local dates. Translate
+      // calendar fields before constructing midnight in the requested zone.
+      newDate: (year: number, month: number, day: number) => {
+        const gregorian = jalaliCalendar.newDate(year, month, day, 12);
+        return new TZDate(
+          gregorian.getFullYear(),
+          gregorian.getMonth(),
+          gregorian.getDate(),
+          timezone
+        );
+      },
+    };
+  }, [jalali, timezone]);
+
   const formatDate = React.useCallback(
-    (date: Date) => {
+    (instant: Date) => {
+      const date = timezone ? new TZDate(instant.getTime(), timezone) : instant;
       if (jalali) {
         return jalaliFormat(date, 'yyyy/MM/dd', { locale: jalaliLocale });
       }
       return dateFnsFormat(date, 'yyyy/MM/dd');
     },
-    [jalali]
+    [jalali, timezone]
   );
 
   const formatRange = React.useCallback(
@@ -148,7 +171,8 @@ function DatePicker({
             selected={value as DateRange | undefined}
             onSelect={onChange as (range: DateRange | undefined) => void}
             disabled={disabledDays}
-            dateLib={jalali ? jalaliCalendar : undefined}
+            dateLib={calendarDateLib}
+            timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
             locale={calendarLocale}
@@ -163,7 +187,8 @@ function DatePicker({
               setOpen(false);
             }}
             disabled={disabledDays}
-            dateLib={jalali ? jalaliCalendar : undefined}
+            dateLib={calendarDateLib}
+            timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={jalali ? 'arabext' : 'latn'}
             locale={calendarLocale}
