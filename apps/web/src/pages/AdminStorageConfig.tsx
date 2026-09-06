@@ -1,10 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { withCsrf } from '../lib/csrf.js';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
+import { useEffect, useState, type FormEvent } from 'react';
+import { t } from '@barghsa/i18n';
+import { Button, Input, Label } from '@barghsa/ui';
+import { useLocale } from '../hooks/useLocale.js';
+import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 interface StorageConfig {
   endpoint: string;
   region: string;
@@ -14,401 +12,222 @@ interface StorageConfig {
   forcePathStyle: boolean;
   privateEndpointUrl: string;
   publicEndpointUrl: string;
+  version: number;
 }
-
-interface TestConnectionResult {
-  success: boolean;
-  message: string;
-}
-
-/**
- * Fields accepted for updating storage config.
- * All fields are optional; omitted fields keep their current value.
- * The secret key is write-only — never returned by GET.
- */
-interface StorageConfigUpdate {
-  endpoint?: string | undefined;
-  region?: string | undefined;
-  bucket?: string | undefined;
-  accessKeyId?: string | undefined;
-  secretAccessKey?: string | undefined;
-  forcePathStyle?: boolean | undefined;
-  privateEndpointUrl?: string | undefined;
-  publicEndpointUrl?: string | undefined;
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function apiUrl(path: string): string {
-  return `/api/admin/storage${path}`;
-}
-
-async function fetchConfig(): Promise<StorageConfig> {
-  const res = await fetch(apiUrl('/config'));
-  if (!res.ok) throw new Error(`Failed to fetch config: ${res.statusText}`);
-  return res.json();
-}
-
-async function saveConfig(data: StorageConfigUpdate): Promise<StorageConfig> {
-  const res = await fetch(apiUrl('/config'), {
-    method: 'PUT',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error(`Failed to save config: ${res.statusText}`);
-  return res.json();
-}
-
-async function testConnection(data: StorageConfigUpdate): Promise<TestConnectionResult> {
-  const res = await fetch(apiUrl('/test-connection'), {
-    method: 'POST',
-    headers: withCsrf({ 'Content-Type': 'application/json' }),
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error(`Connection test failed: ${res.statusText}`);
-  return res.json();
-}
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
+const textFields = [
+  'endpoint',
+  'region',
+  'bucket',
+  'accessKeyId',
+  'privateEndpointUrl',
+  'publicEndpointUrl',
+] as const;
 export default function AdminStorageConfig() {
+  const locale = useLocale(),
+    label = (key: string) => t(`admin.storage.${key}`, locale);
   const [config, setConfig] = useState<StorageConfig | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [testResult, setTestResult] = useState<TestConnectionResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
-  // Editable form fields — initialised from config
-  const [endpoint, setEndpoint] = useState('');
-  const [region, setRegion] = useState('');
-  const [bucket, setBucket] = useState('');
-  const [accessKeyId, setAccessKeyId] = useState('');
-  const [secretAccessKey, setSecretAccessKey] = useState('');
-  const [forcePathStyle, setForcePathStyle] = useState(false);
-  const [privateEndpointUrl, setPrivateEndpointUrl] = useState('');
-  const [publicEndpointUrl, setPublicEndpointUrl] = useState('');
-
+  const [secret, setSecret] = useState(''),
+    [clearSecret, setClearSecret] = useState(false);
+  const [revision, setRevision] = useState(0),
+    [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false),
+    [denied, setDenied] = useState(false);
+  const [notice, setNotice] = useState<'saved' | 'tested' | null>(null);
+  const [action, setAction] = useState<TeamAction | null>(null);
   useEffect(() => {
-    fetchConfig()
-      .then((cfg) => {
-        setConfig(cfg);
-        setEndpoint(cfg.endpoint);
-        setRegion(cfg.region);
-        setBucket(cfg.bucket);
-        setAccessKeyId(cfg.accessKeyId);
-        setForcePathStyle(cfg.forcePathStyle);
-        setPrivateEndpointUrl(cfg.privateEndpointUrl);
-        setPublicEndpointUrl(cfg.publicEndpointUrl);
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const clearMessages = useCallback(() => {
-    setError(null);
-    setSuccess(null);
-    setTestResult(null);
-  }, []);
-
-  const handleSave = useCallback(async () => {
-    clearMessages();
-    setSaving(true);
-    try {
-      await saveConfig({
-        endpoint: endpoint || undefined,
-        region: region || undefined,
-        bucket: bucket || undefined,
-        accessKeyId: accessKeyId || undefined,
-        secretAccessKey: secretAccessKey || undefined,
-        forcePathStyle,
-        privateEndpointUrl: privateEndpointUrl || undefined,
-        publicEndpointUrl: publicEndpointUrl || undefined,
-      });
-      setSuccess('Configuration saved.');
-      setSecretAccessKey(''); // Clear secret key field after save
-      // Refresh config to reflect saved state
-      const cfg = await fetchConfig();
-      setConfig(cfg);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Save failed');
-    } finally {
-      setSaving(false);
-    }
-  }, [
-    endpoint,
-    region,
-    bucket,
-    accessKeyId,
-    secretAccessKey,
-    forcePathStyle,
-    privateEndpointUrl,
-    publicEndpointUrl,
-    clearMessages,
-  ]);
-
-  const handleTest = useCallback(async () => {
-    clearMessages();
-    setTesting(true);
-    try {
-      const result = await testConnection({
-        endpoint: endpoint || undefined,
-        region: region || undefined,
-        bucket: bucket || undefined,
-        accessKeyId: accessKeyId || undefined,
-        secretAccessKey: secretAccessKey || undefined,
-        forcePathStyle,
-      });
-      setTestResult(result);
-    } catch (err: unknown) {
-      setTestResult({
-        success: false,
-        message: err instanceof Error ? err.message : 'Test failed',
-      });
-    } finally {
-      setTesting(false);
-    }
-  }, [endpoint, region, bucket, accessKeyId, secretAccessKey, forcePathStyle, clearMessages]);
-
-  // -----------------------------------------------------------------------
-  // Loading / empty state
-  // -----------------------------------------------------------------------
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">Loading storage configuration...</p>
-      </div>
-    );
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    setDenied(false);
+    setConfig(null);
+    void (async () => {
+      try {
+        const response = await fetch('/api/admin/storage/config', { signal: controller.signal });
+        if (response.status === 403) {
+          if (!controller.signal.aborted) setDenied(true);
+          return;
+        }
+        if (!response.ok) throw new Error('Unavailable');
+        const data = (await response.json()) as StorageConfig;
+        if (!controller.signal.aborted) {
+          setConfig(data);
+          setSecret('');
+          setClearSecret(false);
+        }
+      } catch {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+    return () => controller.abort();
+  }, [revision]);
+  function prepare(kind: 'save' | 'test', event?: FormEvent) {
+    event?.preventDefault();
+    if (!config) return;
+    setNotice(null);
+    const { hasSecretKey: _masked, ...fields } = config;
+    const body = {
+      ...fields,
+      ...(clearSecret ? { secretAccessKey: '' } : secret ? { secretAccessKey: secret } : {}),
+    };
+    setAction({
+      title: label(kind),
+      description: label(kind === 'save' ? 'saveDescription' : 'testDescription'),
+      path: `/api/admin/storage/${kind === 'save' ? 'config' : 'test-connection'}`,
+      method: kind === 'save' ? 'PUT' : 'POST',
+      body,
+      conflictMessage: label('changed'),
+      forbiddenMessage: label('forbidden'),
+      errorMessages: {
+        'STORAGE:CONFIG_CHANGED': label('changed'),
+        'STORAGE:CONNECTION_FAILED': label('connectionFailed'),
+        'STORAGE:LOCATION_IN_USE': label('locationInUse'),
+        'STORAGE:SECRET_REENTRY_REQUIRED': label('secretReentry'),
+        'STORAGE:CREDENTIAL_PAIR_REQUIRED': label('credentialPair'),
+        'STORAGE:ENCRYPTION_UNAVAILABLE': label('encryptionUnavailable'),
+        'VALIDATION:INPUT_INVALID': label('invalid'),
+      },
+    });
   }
-
-  // -----------------------------------------------------------------------
-  // Render
-  // -----------------------------------------------------------------------
-
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Storage Configuration</h1>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded text-green-700 text-sm">
-          {success}
-        </div>
-      )}
-
-      <div className="space-y-4 max-w-xl">
-        {/* Endpoint */}
+    <section
+      className="mx-auto max-w-3xl space-y-5 p-4 md:p-6"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <label
-            htmlFor="adminstorageconfig-field-1"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Endpoint
-          </label>
-          <input
-            id="adminstorageconfig-field-1"
-            type="text"
-            value={endpoint}
-            onChange={(e) => {
-              clearMessages();
-              setEndpoint(e.target.value);
-            }}
-            placeholder="http://localhost:9000"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <h1 className="text-2xl font-bold">{label('title')}</h1>
+          <p className="mt-2 text-muted-foreground">{label('description')}</p>
         </div>
-
-        {/* Region */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-2"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Region
-          </label>
-          <input
-            id="adminstorageconfig-field-2"
-            type="text"
-            value={region}
-            onChange={(e) => {
-              clearMessages();
-              setRegion(e.target.value);
-            }}
-            placeholder="us-east-1"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Bucket */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-3"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Bucket
-          </label>
-          <input
-            id="adminstorageconfig-field-3"
-            type="text"
-            value={bucket}
-            onChange={(e) => {
-              clearMessages();
-              setBucket(e.target.value);
-            }}
-            placeholder="my-bucket"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Access Key ID */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-4"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Access Key ID
-          </label>
-          <input
-            id="adminstorageconfig-field-4"
-            type="text"
-            value={accessKeyId}
-            onChange={(e) => {
-              clearMessages();
-              setAccessKeyId(e.target.value);
-            }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="off"
-          />
-        </div>
-
-        {/* Secret Access Key (write-only) */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-5"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Secret Access Key
-            {config?.hasSecretKey && !secretAccessKey && (
-              <span className="ml-2 text-xs text-gray-500 font-normal">
-                (configured — leave blank to keep current)
-              </span>
-            )}
-          </label>
-          <input
-            id="adminstorageconfig-field-5"
-            type="password"
-            value={secretAccessKey}
-            onChange={(e) => {
-              clearMessages();
-              setSecretAccessKey(e.target.value);
-            }}
-            placeholder={config?.hasSecretKey ? '••••••••' : 'Enter secret key'}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoComplete="new-password"
-          />
-        </div>
-
-        {/* Force Path Style */}
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="force-path-style"
-            checked={forcePathStyle}
-            onChange={(e) => {
-              clearMessages();
-              setForcePathStyle(e.target.checked);
-            }}
-            className="rounded border-gray-300"
-          />
-          <label htmlFor="force-path-style" className="text-sm font-medium text-gray-700">
-            Force path-style addressing
-          </label>
-        </div>
-
-        {/* Private Endpoint URL */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-6"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Private Endpoint URL
-          </label>
-          <input
-            id="adminstorageconfig-field-6"
-            type="text"
-            value={privateEndpointUrl}
-            onChange={(e) => {
-              clearMessages();
-              setPrivateEndpointUrl(e.target.value);
-            }}
-            placeholder="http://minio:9000"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Public Endpoint URL */}
-        <div>
-          <label
-            htmlFor="adminstorageconfig-field-7"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Public Endpoint URL
-          </label>
-          <input
-            id="adminstorageconfig-field-7"
-            type="text"
-            value={publicEndpointUrl}
-            onChange={(e) => {
-              clearMessages();
-              setPublicEndpointUrl(e.target.value);
-            }}
-            placeholder="https://storage.example.com"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Buttons */}
-        <div className="flex gap-3 pt-2">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? 'Saving...' : 'Save Configuration'}
-          </button>
-
-          <button
-            onClick={handleTest}
-            disabled={testing}
-            className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {testing ? 'Testing...' : 'Test Connection'}
-          </button>
-        </div>
-
-        {/* Connection test result */}
-        {testResult && (
-          <div
-            className={`mt-4 p-3 rounded text-sm ${testResult.success ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-red-50 border border-red-200 text-red-700'}`}
-          >
-            <p className="font-medium">
-              {testResult.success ? '✓ Connection successful' : '✗ Connection failed'}
-            </p>
-            <p className="mt-1">{testResult.message}</p>
-          </div>
-        )}
+        <Button
+          variant="outline"
+          disabled={loading || !!action}
+          onClick={() => {
+            setNotice(null);
+            setRevision((value) => value + 1);
+          }}
+        >
+          {label('refresh')}
+        </Button>
       </div>
-    </div>
+      {loading && <p role="status">{label('loading')}</p>}
+      {error && (
+        <div role="alert">
+          <p>{label('loadError')}</p>
+          <Button onClick={() => setRevision((value) => value + 1)}>{label('reload')}</Button>
+        </div>
+      )}
+      {denied && <p role="alert">{label('forbidden')}</p>}
+      {notice && (
+        <p role="status" className="rounded-md border p-3">
+          {label(notice)}
+        </p>
+      )}
+      {!loading && !error && !denied && config && (
+        <form onSubmit={(event) => prepare('save', event)} className="space-y-5">
+          <p className="text-sm text-muted-foreground">
+            {label(config.version ? 'savedVersion' : 'deploymentVersion').replace(
+              '{version}',
+              new Intl.NumberFormat(locale).format(config.version)
+            )}
+          </p>
+          <p className="rounded-md border bg-muted/30 p-3 text-sm">{label('locationWarning')}</p>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {textFields.map((field) => (
+              <div key={field} className="space-y-2">
+                <Label htmlFor={`storage-${field}`}>{label(field)}</Label>
+                <Input
+                  id={`storage-${field}`}
+                  dir="ltr"
+                  value={config[field]}
+                  autoComplete="off"
+                  spellCheck={false}
+                  required={field === 'region' || field === 'bucket'}
+                  maxLength={field.includes('Endpoint') || field === 'endpoint' ? 2048 : 256}
+                  disabled={!!action}
+                  onChange={(event) => {
+                    setConfig({ ...config, [field]: event.target.value });
+                    setNotice(null);
+                  }}
+                />
+              </div>
+            ))}
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="storage-secret">{label('secret')}</Label>
+              <Input
+                id="storage-secret"
+                type="password"
+                dir="ltr"
+                autoComplete="new-password"
+                maxLength={4096}
+                value={secret}
+                disabled={!!action || clearSecret}
+                onChange={(event) => {
+                  setSecret(event.target.value);
+                  setNotice(null);
+                }}
+                aria-describedby="storage-secret-help"
+              />
+              <p id="storage-secret-help" className="text-sm text-muted-foreground">
+                {label(config.hasSecretKey ? 'secretStored' : 'secretMissing')}
+              </p>
+              {config.hasSecretKey && (
+                <div className="flex items-center gap-2">
+                  <input
+                    id="storage-clear-secret"
+                    type="checkbox"
+                    checked={clearSecret}
+                    disabled={!!action}
+                    onChange={(event) => {
+                      setClearSecret(event.target.checked);
+                      setSecret('');
+                    }}
+                  />
+                  <Label htmlFor="storage-clear-secret">{label('clearSecret')}</Label>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              id="storage-path-style"
+              type="checkbox"
+              checked={config.forcePathStyle}
+              disabled={!!action}
+              onChange={(event) => setConfig({ ...config, forcePathStyle: event.target.checked })}
+            />
+            <Label htmlFor="storage-path-style">{label('forcePathStyle')}</Label>
+          </div>
+          <p className="text-sm text-muted-foreground">{label('endpointHelp')}</p>
+          <div className="flex flex-wrap gap-3">
+            <Button type="submit" disabled={!!action}>
+              {label('save')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!!action}
+              onClick={() => prepare('test')}
+            >
+              {label('test')}
+            </Button>
+          </div>
+        </form>
+      )}
+      {action && (
+        <TeamActionDialog
+          action={action}
+          onClose={() => setAction(null)}
+          onSuccess={async () => {
+            if (action.method === 'PUT') {
+              setSecret('');
+              setNotice('saved');
+              setRevision((value) => value + 1);
+            } else setNotice('tested');
+          }}
+        />
+      )}
+    </section>
   );
 }

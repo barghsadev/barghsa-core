@@ -5,6 +5,52 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.storage.title': 'تنظیمات ذخیره‌سازی',
+  'admin.storage.description': 'ذخیره‌سازی خصوصی فایل‌ها و اسناد نگهداری‌شده را تنظیم کنید.',
+  'admin.storage.refresh': 'تازه‌سازی',
+  'admin.storage.loading': 'در حال دریافت تنظیمات ذخیره‌سازی…',
+  'admin.storage.loadError': 'دریافت تنظیمات ذخیره‌سازی انجام نشد.',
+  'admin.storage.reload': 'تلاش مجدد',
+  'admin.storage.forbidden': 'اجازه مدیریت ذخیره‌سازی را ندارید.',
+  'admin.storage.save': 'ذخیره و فعال‌سازی',
+  'admin.storage.test': 'آزمایش اتصال',
+  'admin.storage.saveDescription':
+    'پیش از ذخیره و فعال‌سازی این نسخه، اتصال هر دو نشانی آزمایش می‌شود.',
+  'admin.storage.testDescription': 'این تنظیمات را بدون ذخیره آزمایش کنید.',
+  'admin.storage.changed':
+    'تنظیمات تغییر کرده است. این پنجره را ببندید، تازه‌سازی کنید و تغییرات را دوباره بررسی کنید.',
+  'admin.storage.connectionFailed':
+    'اتصال ناموفق بود. نشانی‌ها، مخزن و اطلاعات دسترسی را بررسی کنید.',
+  'admin.storage.locationInUse':
+    'فایل‌ها از این محل استفاده می‌کنند. جابه‌جایی ذخیره‌سازی به مهاجرت برنامه‌ریزی‌شده نیاز دارد.',
+  'admin.storage.secretReentry': 'هنگام تغییر محل ذخیره‌سازی، کلید محرمانه را دوباره وارد کنید.',
+  'admin.storage.credentialPair':
+    'کلید دسترسی و کلید محرمانه را با هم وارد کنید؛ یا برای استفاده از دسترسی مدیریت‌شده سرور، هر دو را پاک کنید.',
+  'admin.storage.encryptionUnavailable':
+    'تا تنظیم رمزنگاری ذخیره‌سازی روی سرور، ذخیره کلید محرمانه ممکن نیست.',
+  'admin.storage.invalid':
+    'فیلدهای ضروری را بررسی کنید و نشانی‌ها را بدون مسیر یا اطلاعات ورود بنویسید.',
+  'admin.storage.saved': 'اتصال تأیید شد. تنظیمات ذخیره و فعال شد.',
+  'admin.storage.tested': 'اتصال تأیید شد. این تغییرات ذخیره نشده است.',
+  'admin.storage.savedVersion': 'نسخه ذخیره‌شده {version}',
+  'admin.storage.deploymentVersion': 'در حال استفاده از تنظیمات استقرار.',
+  'admin.storage.locationWarning':
+    'پس از ایجاد فایل، محل ذخیره‌سازی از این صفحه تغییر نمی‌کند. اطلاعات دسترسی پس از آزمایش موفق اتصال قابل تغییر است.',
+  'admin.storage.endpoint': 'نشانی پیش‌فرض',
+  'admin.storage.region': 'منطقه',
+  'admin.storage.bucket': 'مخزن',
+  'admin.storage.accessKeyId': 'کلید دسترسی',
+  'admin.storage.privateEndpointUrl': 'نشانی خصوصی',
+  'admin.storage.publicEndpointUrl': 'نشانی مرورگر',
+  'admin.storage.secret': 'کلید محرمانه',
+  'admin.storage.secretStored':
+    'کلید محرمانه ذخیره شده است. برای حفظ آن، این فیلد را خالی بگذارید. کلید ذخیره‌شده نمایش داده نمی‌شود.',
+  'admin.storage.secretMissing':
+    'کلید محرمانه ذخیره نشده است. با خالی بودن هر دو کلید، دسترسی مدیریت‌شده سرور قابل استفاده است.',
+  'admin.storage.clearSecret': 'حذف کلید محرمانه ذخیره‌شده',
+  'admin.storage.forcePathStyle': 'استفاده از نام مخزن در مسیر نشانی',
+  'admin.storage.endpointHelp':
+    'نشانی خصوصی و مرورگر در صورت خالی بودن از نشانی پیش‌فرض استفاده می‌کنند. برای AWS S3 استاندارد، همه نشانی‌ها را خالی بگذارید.',
   'admin.jobs.title': 'کارهای ناموفق',
   'admin.jobs.description':
     'خطاهای کارهای دوره‌ای را بررسی کنید، اجرای دوباره بخواهید یا خطا را حل‌شده علامت بزنید.',
@@ -1704,6 +1750,53 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.storage.title': 'Storage settings',
+  'admin.storage.description':
+    'Configure private object storage for uploads and retained documents.',
+  'admin.storage.refresh': 'Refresh',
+  'admin.storage.loading': 'Loading storage settings…',
+  'admin.storage.loadError': 'Storage settings could not be loaded.',
+  'admin.storage.reload': 'Try again',
+  'admin.storage.forbidden': 'You do not have permission to manage storage.',
+  'admin.storage.save': 'Save and activate',
+  'admin.storage.test': 'Test connection',
+  'admin.storage.saveDescription':
+    'Both endpoints will be tested before this version is saved and activated.',
+  'admin.storage.testDescription': 'Test these settings without saving them.',
+  'admin.storage.changed':
+    'These settings changed. Close this dialog, refresh, and review your changes.',
+  'admin.storage.connectionFailed':
+    'Connection failed. Check the endpoints, bucket and credentials.',
+  'admin.storage.locationInUse':
+    'Files already use this location. Moving storage requires a planned migration.',
+  'admin.storage.secretReentry': 'Enter the secret again when changing a storage location.',
+  'admin.storage.credentialPair':
+    'Provide both access and secret keys, or clear both to use server-managed credentials.',
+  'admin.storage.encryptionUnavailable':
+    'Saving secrets is unavailable until storage encryption is configured on the server.',
+  'admin.storage.invalid':
+    'Check the required fields and use endpoint origins without paths or credentials.',
+  'admin.storage.saved': 'Connection verified. Settings saved and active.',
+  'admin.storage.tested': 'Connection verified. These changes have not been saved.',
+  'admin.storage.savedVersion': 'Saved version {version}',
+  'admin.storage.deploymentVersion': 'Currently using deployment settings.',
+  'admin.storage.locationWarning':
+    'Once files exist, storage locations cannot be changed here. Credentials can be rotated after a successful connection test.',
+  'admin.storage.endpoint': 'Default endpoint',
+  'admin.storage.region': 'Region',
+  'admin.storage.bucket': 'Bucket',
+  'admin.storage.accessKeyId': 'Access key',
+  'admin.storage.privateEndpointUrl': 'Private endpoint',
+  'admin.storage.publicEndpointUrl': 'Browser endpoint',
+  'admin.storage.secret': 'Secret key',
+  'admin.storage.secretStored':
+    'A secret is saved. Leave this blank to keep it. Saved secrets are never displayed.',
+  'admin.storage.secretMissing':
+    'No secret key is saved. Server-managed credentials may be used when both key fields are empty.',
+  'admin.storage.clearSecret': 'Remove the saved secret key',
+  'admin.storage.forcePathStyle': 'Use path-style bucket addressing',
+  'admin.storage.endpointHelp':
+    'Private and browser endpoints fall back to the default endpoint when blank. Leave all endpoints blank for standard AWS S3.',
   'admin.jobs.title': 'Failed jobs',
   'admin.jobs.description':
     'Inspect recurring worker failures, request another attempt, or mark a failure resolved.',

@@ -23,3 +23,4 @@ export type {
   StorageRecordInfo,
 } from './immutable-storage.js';
 export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './immutable-storage.js';
+export * from './runtime-config.js';

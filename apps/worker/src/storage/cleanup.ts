@@ -1,21 +1,9 @@
+import { loadStoredStorageConfiguration } from '@barghsa/db';
 import type { Pool } from 'pg';
-import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
 
-export function cleanupStorageProvider(): StorageProvider | null {
-  const bucket = process.env.S3_BUCKET,
-    region = process.env.S3_REGION;
-  if (!bucket || !region) return null;
-  return createStorageProvider({
-    type: 's3',
-    bucket,
-    region,
-    ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT } : {}),
-    ...(process.env.S3_ACCESS_KEY_ID ? { accessKeyId: process.env.S3_ACCESS_KEY_ID } : {}),
-    ...(process.env.S3_SECRET_ACCESS_KEY
-      ? { secretAccessKey: process.env.S3_SECRET_ACCESS_KEY }
-      : {}),
-    forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
-  });
+export function cleanupStorageProvider(): StorageProvider {
+  return runtimeStorageProvider(loadStoredStorageConfiguration);
 }
 const pending = `status='removed' AND signed_at IS NULL AND metadata->>'deletionRequested'='true'
   AND (storage_key NOT LIKE 'uploads/%' OR removed_at<=NOW()-INTERVAL '65 minutes')

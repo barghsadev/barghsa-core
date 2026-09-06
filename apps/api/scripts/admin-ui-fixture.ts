@@ -1,10 +1,21 @@
+import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../src/test/http-fixture';
 import { setup, teardown } from '../../../packages/db/src/test/globalSetup';
 
 async function main() {
   await setup();
-  const http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  const storage = createServer((_request, response) => {
+    response.setHeader('Content-Type', 'application/xml');
+    response.end(
+      '<ListBucketResult><Name>test-evidence</Name><KeyCount>0</KeyCount><IsTruncated>false</IsTruncated></ListBucketResult>'
+    );
+  });
+  await new Promise<void>((done) => storage.listen(0, '127.0.0.1', done));
+  const http = await startHttpFixture(
+    process.env.TEST_DATABASE_URL!,
+    `http://127.0.0.1:${(storage.address() as { port: number }).port}`
+  );
   const session = randomUUID(),
     csrf = randomUUID();
   await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES
@@ -64,6 +75,7 @@ async function main() {
     if (closing) return;
     closing = true;
     await http.close();
+    await new Promise<void>((done) => storage.close(() => done()));
     await teardown();
     process.exit(0);
   };

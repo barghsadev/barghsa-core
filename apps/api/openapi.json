@@ -6786,7 +6786,7 @@
         "operationId": "StorageAdminController_testConnection",
         "parameters": [],
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },

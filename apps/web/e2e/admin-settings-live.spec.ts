@@ -590,3 +590,72 @@ for (const locale of ['en', 'fa'])
     ).toBe(true);
     expect(policies.map((policy) => policy.maxSizeBytes)).toEqual([2 * 1024 * 1024, 1024 * 1024]);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`storage configuration persists through the real API (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    await page.goto('/admin/storage');
+    await expect(page.getByLabel(fa ? 'مخزن' : 'Bucket', { exact: true })).toHaveValue(
+      'test-evidence'
+    );
+    await page
+      .getByLabel(fa ? 'کلید دسترسی' : 'Access key', { exact: true })
+      .fill(`browser-key-${locale}`);
+    await page
+      .getByLabel(fa ? 'کلید محرمانه' : 'Secret key', { exact: true })
+      .fill(`browser-secret-${locale}`);
+    await page
+      .getByRole('button', { name: fa ? 'آزمایش اتصال' : 'Test connection', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('status')).toContainText(fa ? 'ذخیره نشده' : 'not been saved');
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره و فعال‌سازی' : 'Save and activate', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByLabel(fa ? 'کلید محرمانه' : 'Secret key', { exact: true })).toHaveValue(
+      ''
+    );
+    await expect(page.getByRole('status')).toContainText(fa ? 'ذخیره و فعال' : 'saved and active');
+    await page.reload();
+    await expect(page.getByLabel(fa ? 'کلید دسترسی' : 'Access key', { exact: true })).toHaveValue(
+      `browser-key-${locale}`
+    );
+    const saved = await page.request.get(`${http.base}/api/admin/storage/config`, {
+      headers: { cookie: `barghsa_session=${http.session}` },
+    });
+    expect(await saved.json()).toMatchObject({
+      accessKeyId: `browser-key-${locale}`,
+      hasSecretKey: true,
+    });
+    expect(await saved.text()).not.toContain(`browser-secret-${locale}`);
+    await page.screenshot({ path: `/tmp/storage-config-${locale}.png`, fullPage: true });
+  });

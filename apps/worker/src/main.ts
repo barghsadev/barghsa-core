@@ -179,7 +179,7 @@ async function main(): Promise<void> {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
 
-  let cleanupProvider: ReturnType<typeof cleanupStorageProvider> = null;
+  let cleanupProvider: ReturnType<typeof cleanupStorageProvider> | null = null;
   try {
     cleanupProvider = cleanupStorageProvider();
   } catch {

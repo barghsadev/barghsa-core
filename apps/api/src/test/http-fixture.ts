@@ -61,10 +61,13 @@ export async function startHttpFixture(
         API_TRUSTED_PROXY_IPS: trustedProxyAddresses,
         APP_PUBLIC_URL: 'https://app.example.test',
         AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
+        STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
         REDIS_URL: '',
         REDIS_HOST: '',
         S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '',
         S3_REGION: localStorageEndpoint ? 'us-east-1' : '',
+        S3_PRIVATE_ENDPOINT: '',
+        S3_PUBLIC_ENDPOINT: '',
         ...(localStorageEndpoint
           ? {
               S3_ENDPOINT: localStorageEndpoint,

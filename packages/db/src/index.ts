@@ -449,3 +449,18 @@ export * from './schema/user-profile-contexts';
 export * from './schema/onboarding-drafts';
 
 export * from './schema/account-login-identifiers';
+
+/** Read runtime storage settings without consuming a slot held by a business transaction. */
+export async function loadStoredStorageConfiguration(): Promise<unknown | null> {
+  const connection = createDirectDbPool({ poolMax: 1, poolMin: 0 }, { shared: false });
+  try {
+    const row = (
+      await connection.query<{ value: unknown }>(
+        "SELECT value FROM app_config WHERE key='storage.active'"
+      )
+    ).rows[0];
+    return row?.value ?? null;
+  } finally {
+    await connection.end();
+  }
+}
