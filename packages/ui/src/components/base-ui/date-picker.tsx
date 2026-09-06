@@ -23,6 +23,7 @@ interface DatePickerBaseProps {
   locale?: 'fa' | 'en';
   /** IANA zone for both display and selection; omit for legacy browser-local dates. */
   timezone?: string;
+  numerals?: 'arabext' | 'latn';
   /** Inclusive calendar-day limits. Existing values are never silently changed. */
   minDate?: Date;
   maxDate?: Date;
@@ -54,6 +55,7 @@ function DatePicker({
   jalali: jalaliOverride,
   locale,
   timezone,
+  numerals: numeralOverride,
   minDate,
   maxDate,
   disabled = false,
@@ -69,6 +71,7 @@ function DatePicker({
   const [open, setOpen] = React.useState(false);
   const errorId = React.useId();
   const jalali = locale ? locale === 'fa' : (jalaliOverride ?? true);
+  const numerals = numeralOverride ?? (jalali ? 'arabext' : 'latn');
   const prompt = placeholder ?? (jalali ? 'انتخاب تاریخ' : 'Select date');
   const disabledDays = [
     ...(minDate ? [{ before: minDate }] : []),
@@ -104,15 +107,44 @@ function DatePicker({
   }, [jalali, timezone]);
 
   const formatDate = React.useCallback(
-    (instant: Date) => {
-      const date = timezone ? new TZDate(instant.getTime(), timezone) : instant;
-      if (jalali) {
-        return jalaliFormat(date, 'yyyy/MM/dd', { locale: jalaliLocale });
-      }
-      return dateFnsFormat(date, 'yyyy/MM/dd');
+    (date: Date) => {
+      const formatter = new Intl.DateTimeFormat(jalali ? 'fa-IR' : 'en-US', {
+        calendar: jalali ? 'persian' : 'gregory',
+        numberingSystem: numerals,
+        timeZone: timezone,
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      if (!jalali) return formatter.format(date);
+      const parts = formatter.formatToParts(date);
+      const part = (type: Intl.DateTimeFormatPartTypes) =>
+        parts.find((item) => item.type === type)?.value ?? '';
+      const fullDate = `${part('weekday')}، ${part('day')} ${part('month')} ${part('year')}`;
+      const gregorianYear = new Intl.DateTimeFormat('en-US', {
+        calendar: 'gregory',
+        numberingSystem: numerals,
+        timeZone: timezone,
+        year: 'numeric',
+      }).format(date);
+      return `${fullDate} (${gregorianYear})`;
     },
-    [jalali, timezone]
+    [jalali, timezone, numerals]
   );
+
+  const calendarFormatters = {
+    formatMonthDropdown: (date: Date) =>
+      jalali ? jalaliFormat(date, 'LLLL', { locale: jalaliLocale }) : dateFnsFormat(date, 'LLLL'),
+    formatYearDropdown: (date: Date) => {
+      const years = jalali
+        ? `${jalaliFormat(date, 'yyyy')} / ${dateFnsFormat(date, 'yyyy')}`
+        : dateFnsFormat(date, 'yyyy');
+      return numerals === 'arabext'
+        ? years.replace(/[0-9]/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]!)
+        : years;
+    },
+  };
 
   const formatRange = React.useCallback(
     (range: DateRange) => {
@@ -156,7 +188,7 @@ function DatePicker({
             role="combobox"
             aria-expanded={open && !disabled}
             className={cn(
-              'w-full justify-start gap-2 text-start font-normal',
+              'h-auto min-h-8 w-full justify-start gap-2 text-start font-normal',
               !value && 'text-muted-foreground',
               className
             )}
@@ -194,7 +226,9 @@ function DatePicker({
             dateLib={calendarDateLib}
             timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
-            numerals={jalali ? 'arabext' : 'latn'}
+            numerals={numerals}
+            captionLayout="dropdown-months"
+            formatters={calendarFormatters}
             locale={calendarLocale}
             defaultMonth={value ? (value as DateRange).from : undefined}
           />
@@ -210,7 +244,9 @@ function DatePicker({
             dateLib={calendarDateLib}
             timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
-            numerals={jalali ? 'arabext' : 'latn'}
+            numerals={numerals}
+            captionLayout="dropdown-months"
+            formatters={calendarFormatters}
             locale={calendarLocale}
             defaultMonth={value as Date | undefined}
           />

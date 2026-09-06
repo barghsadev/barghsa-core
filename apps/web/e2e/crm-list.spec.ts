@@ -116,7 +116,7 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
   await firstDay.click();
   await expect.poll(() => requests.at(-1)?.searchParams.get('dateFrom')).toBe('2026-03-21');
   await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toContainText(
-    '1405/01/01'
+    '۱ فروردین ۱۴۰۵'
   );
 });
 test('Jalali leap-day selection and keyboard dismissal preserve the date', async ({ page }) => {
@@ -146,5 +146,5 @@ test('Jalali leap-day selection and keyboard dismissal preserve the date', async
   await page.keyboard.press('Escape');
   await expect(calendar).toHaveCount(0);
   await expect(trigger).toBeFocused();
-  await expect(trigger).toContainText('1403/12/30');
+  await expect(trigger).toContainText('۳۰ اسفند ۱۴۰۳');
 });

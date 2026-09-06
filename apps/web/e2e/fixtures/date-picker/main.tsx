@@ -1,3 +1,4 @@
+import '@barghsa/ui/styles.css';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { DatePicker } from '../../../../../packages/ui/src/components/base-ui/date-picker';
@@ -18,6 +19,7 @@ function Fixture() {
   });
   const shared = {
     locale,
+    numerals: params.has('latin') ? ('latn' as const) : undefined,
     timezone: dst ? 'America/New_York' : (params.get('timezone') ?? undefined),
     minDate: dst
       ? new Date('2026-03-07T05:00:00Z')

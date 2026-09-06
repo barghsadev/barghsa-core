@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { build, preview, type PreviewServer } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -17,7 +18,7 @@ test.beforeAll(async () => {
   await build({
     configFile: false,
     root,
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     logLevel: 'error',
     build: { outDir, emptyOutDir: true },
   });
@@ -93,7 +94,7 @@ for (const browserZone of ['UTC', 'America/Los_Angeles']) {
       test(`displays and selects ${locale} days in the configured zone`, async ({ page }) => {
         await page.goto(`${url}?timezone=Asia%2FTehran&${locale}`);
         const trigger = page.getByRole('combobox', { name: 'Delivery date' });
-        await expect(trigger).toContainText(locale === 'fa' ? '1405/01/01' : '2026/03/21');
+        await expect(trigger).toContainText(locale === 'fa' ? '۱ فروردین ۱۴۰۵' : 'March 21, 2026');
         await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
           '"2026-03-20T21:00:00.000Z"'
         );
@@ -108,12 +109,12 @@ for (const browserZone of ['UTC', 'America/Los_Angeles']) {
           })
         ).toBeDisabled();
         await nextDay.click();
-        await expect(trigger).toContainText(locale === 'fa' ? '1405/01/02' : '2026/03/22');
+        await expect(trigger).toContainText(locale === 'fa' ? '۲ فروردین ۱۴۰۵' : 'March 22, 2026');
         await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
           '"2026-03-21T20:30:00.000Z"'
         );
         await page.getByRole('button', { name: 'Switch language' }).click();
-        await expect(trigger).toContainText(locale === 'fa' ? '2026/03/22' : '1405/01/02');
+        await expect(trigger).toContainText(locale === 'fa' ? 'March 22, 2026' : '۲ فروردین ۱۴۰۵');
         await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
           '"2026-03-21T20:30:00.000Z"'
         );
@@ -131,7 +132,7 @@ test('range end excludes the next day and keeps calendar days across DST', async
   await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
     '{"from":"2026-03-07T05:00:00.000Z","to":"2026-03-10T04:00:00.000Z"}'
   );
-  await expect(trigger).toContainText('2026/03/10 (end excluded)');
+  await expect(trigger).toContainText('March 10, 2026 (end excluded)');
   await expect(
     dialog.getByRole('gridcell').filter({ has: page.getByRole('button', { name: /March 9th/ }) })
   ).toHaveAttribute('aria-selected', 'true');
@@ -157,5 +158,25 @@ test('a fresh one-day range has a nonempty half-open interval', async ({ page })
   await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
     '{"from":"2026-03-23T00:00:00.000Z","to":"2026-03-24T00:00:00.000Z"}'
   );
-  await expect(trigger).toContainText('2026/03/24 (end excluded)');
+  await expect(trigger).toContainText('March 24, 2026 (end excluded)');
+});
+
+test('Persian mobile month selection shows both years and allows Latin digits', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${url}?fa&latin`);
+  const trigger = page.getByRole('combobox', { name: 'Delivery date' });
+  await expect(trigger).toContainText('2 فروردین 1405 (2026)');
+  await trigger.click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('1405 / 2026');
+  const month = dialog.getByRole('combobox', { name: 'ماه را انتخاب کنید' });
+  await month.selectOption({ label: 'اردیبهشت' });
+  await expect(dialog.getByRole('grid')).toHaveAttribute('aria-label', /اردیبهشت/);
+  await expect(trigger).toContainText('2 فروردین 1405 (2026)');
+  const bounds = await dialog.boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+  await page.screenshot({ path: '/tmp/audit-date-picker-fa-mobile.png', animations: 'disabled' });
 });

@@ -1499,3 +1499,9 @@ Review and validation: eight component browser checks pass, including Persian an
 Range values now use the required half-open interval. The calendar highlights included days, while the returned to value is midnight at the beginning of the next excluded day. Calendar-day arithmetic respects the configured timezone and daylight-saving transitions. The displayed interval states that its end is excluded. No current product page uses range mode, so no existing inclusive consumer was silently reinterpreted.
 
 Review and validation: all ten browser component checks pass. Added a fresh one-day interval and a three-day New York interval spanning spring DST, verifying exact UTC endpoints, excluded-day highlighting and reopening. The latter is correctly 71 hours, not an assumed 72. Root build, types, lint and bundle checks pass. Full date formatting, responsive month controls and account timezone integration remain open.
+
+### Complete localized picker labels and month controls (F20)
+
+The selected value now shows the full date. Persian mode uses Persian digits by default and includes the Gregorian year; callers can explicitly select Latin digits. Both calendar years appear beside the month dropdown. The native month selector works at mobile width, and long labels wrap. Persian date parts are assembled in day/month/year order because the browser's default formatter used an unexpected order.
+
+Review and validation: eleven styled browser component checks pass, including a 390px Persian month-selection check with Latin digits and unchanged stored selection. Reviewed the completed-animation mobile screenshot. All five production CRM checks pass with full Persian labels, including Nowruz and Esfand leap day. Root build, types, lint and bundle checks pass. Global account timezone and administrator numeral preference wiring remain separate open work. The component offers those controls; it does not claim every page consumes the preferences.
