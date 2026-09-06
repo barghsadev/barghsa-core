@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js';
 import { createHash } from 'node:crypto';
@@ -319,6 +320,11 @@ export class InvoiceBankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          input.actorUserId,
+          'admin:finance:invoices:bank-receipt-confirm'
+        );
         const receipt = await this.lockReceipt(client, input.receiptId);
 
         if (receipt.state === 'Confirmed') {
@@ -571,6 +577,11 @@ export class InvoiceBankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          input.actorUserId,
+          'admin:finance:invoices:bank-receipt-confirm'
+        );
         const receipt = await this.lockReceipt(client, input.receiptId);
 
         if (receipt.state === 'Rejected') {

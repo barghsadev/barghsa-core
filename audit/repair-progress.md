@@ -1079,3 +1079,11 @@ Converted the wallet bank-receipt confirmation suite to the full production data
 ### Invoice receipt confirmation and rejection on production migrations (F02/F14)
 
 Converted both invoice receipt settlement suites to fully migrated databases with separate customer and audit-actor users. Review preserved allocation/excess arithmetic, replay, concurrent receipt settlement, notification rollback, and confirmation-versus-rejection conflicts. All 15 tests passed across the two suites; root type checking and lint passed. No service behavior changed in this step. HTTP staff permissions and other invoice fixtures remain separate work.
+
+### Hold current finance authority through invoice receipt decisions (F04/F14)
+
+Invoice receipt confirmation and rejection previously relied on the controller's permission snapshot. Both now acquire the actor account and current role grants inside the decision transaction before locking or changing the receipt. Revoked, disabled, or activation-pending actors cannot proceed, including idempotent repeats. Existing rollback and advisory-lock cleanup remain in place.
+
+Review caught a regression in test meaning: the old audit-failure fixture used a nonexistent actor, which the new authority check rejects before auditing. Replaced that shortcut with a trigger that fails the specific confirmation/rejection audit insert for a valid finance actor. The tests assert the exact injected error and unchanged receipt, invoice, wallet credit, and rejection outbox.
+
+Validation: 62 focused unit, migrated service, dual-approval, and real HTTP tests passed. The final audit-injection rerun passed all 15 receipt tests. The HTTP race pauses after the session guard at the actor lock, revokes the role, resumes both decision types, and verifies 403 with no settlement. API build, root types, lint, contract, and whitespace checks pass. Wallet receipt authority and other finance actions remain separate follow-up work.

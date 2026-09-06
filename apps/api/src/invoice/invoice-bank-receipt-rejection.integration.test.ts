@@ -82,6 +82,10 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
       CUSTOMER_USER_ID,
       PROFILE_B,
     ]);
+    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id=$1`, [ACTOR_USER_ID]);
+    await ctx.pool.query(`INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance')`, [
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1), ($2)`, [
       PROFILE_A,
       PROFILE_B,
@@ -367,17 +371,29 @@ describe('InvoiceBankReceiptConfirmationService.reject — real PostgreSQL (T-04
     });
     const before = await invoiceSettlement(invoiceId);
 
+    await ctx.pool
+      .query(`CREATE FUNCTION reject_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        IF NEW.event = 'invoice.bank_receipt.rejected' THEN
+          RAISE EXCEPTION 'receipt audit unavailable';
+        END IF;
+        RETURN NEW;
+      END $$;
+      CREATE TRIGGER reject_receipt_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION reject_receipt_audit()`);
     const failure = await service
       .reject({
         receiptId,
         raw: { reason: 'Illegible scan' },
-        actorUserId: 'missing-staff',
+        actorUserId: ACTOR_USER_ID,
         ip: '10.0.0.9',
         now: NOW,
       })
-      .catch((error: unknown) => error);
+      .catch((error: unknown) => error)
+      .finally(() => ctx.pool.query('DROP TRIGGER reject_receipt_audit ON audit_log'));
 
     expect(failure).toBeInstanceOf(Error);
+    expect(failure).toMatchObject({ message: 'receipt audit unavailable' });
     const stored = await ctx.pool.query<{ state: string; rejection_reason: string | null }>(
       `SELECT state, rejection_reason FROM bank_receipts WHERE id = $1`,
       [receiptId]

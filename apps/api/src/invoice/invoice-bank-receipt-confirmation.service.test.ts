@@ -33,6 +33,11 @@ const mockClient = {
   release: vi.fn(),
 };
 
+// Permission locking is covered through real HTTP and migrated integration tests.
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
 }));
