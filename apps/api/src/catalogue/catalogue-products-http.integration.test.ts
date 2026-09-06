@@ -194,3 +194,80 @@ it('resolves effective scheduled prices in public and staff reads without rewrit
     (await http.pool.query('SELECT price FROM products WHERE id=$1', [id])).rows[0].price
   ).toBe('1000');
 });
+
+it('validates category types on edit and treats repeated categories as a set', async () => {
+  const category = 'electricity_generation_station_consultation';
+  const response = await request('', 'POST', {
+    ...createBody,
+    type: 'consultation',
+    categories: [category, category],
+  });
+  expect(response.status).toBe(201);
+  const product = (await response.json()) as { id: string; categories: string[] };
+  expect(product.categories).toEqual([category]);
+  expect(
+    (await request(`/${product.id}`, 'PUT', { categories: [category, category] })).status
+  ).toBe(200);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'")).rows
+  ).toHaveLength(0);
+  for (const id of [product.id, await seed()]) {
+    expect((await request(`/${id}`, 'PUT', { categories: ['green_electricity'] })).status).toBe(
+      400
+    );
+  }
+  expect(await (await request(`/${product.id}`)).json()).toMatchObject({ categories: [category] });
+  const changed = 'electricity_saving_certificate_consultation';
+  expect((await request(`/${product.id}`, 'PUT', { categories: [changed, changed] })).status).toBe(
+    200
+  );
+  expect(await (await request(`/${product.id}`)).json()).toMatchObject({ categories: [changed] });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='catalogue_product_updated'"
+      )
+    ).rows
+  ).toEqual([{ metadata: { productId: product.id, categories: [changed] } }]);
+});
+
+it('rejects unknown fields, blank localized titles and ambiguous price dates without mutations', async () => {
+  const id = await seed();
+  for (const body of [
+    { ...createBody, ignored: true },
+    { ...createBody, title: { fa: ' ', en: 'Valid' } },
+    { ...createBody, title: { fa: 'Valid', en: ' ' } },
+    { ...createBody, title: { ...createBody.title, ignored: true } },
+    { ...createBody, description: { fa: '', en: '', ignored: true } },
+  ])
+    expect((await request('', 'POST', body)).status).toBe(400);
+  for (const body of [
+    { status: 'inactive', ignored: true },
+    { title: { fa: ' ', en: 'Valid' } },
+    { description: { fa: '', en: '', ignored: true } },
+  ])
+    expect((await request(`/${id}`, 'PUT', body)).status).toBe(400);
+  for (const body of [
+    { price: '2000', ignored: true },
+    { price: '2000', effectiveFrom: '2035-01-02T12:00:00' },
+  ])
+    expect((await request(`/${id}/prices`, 'POST', body)).status).toBe(400);
+  expect(
+    (await http.pool.query('SELECT status,price FROM products WHERE id=$1', [id])).rows[0]
+  ).toEqual({ status: 'active', price: '1000' });
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'catalogue_product_%'")).rows
+  ).toHaveLength(0);
+  expect(
+    (
+      await request(`/${id}/prices`, 'POST', {
+        price: '2000',
+        effectiveFrom: '2035-01-02T12:00:00+03:30',
+      })
+    ).status
+  ).toBe(200);
+  expect(await (await request(`/${id}`)).json()).toMatchObject({
+    price: '1000',
+    priceHistory: [{ price: '2000', effectiveFrom: '2035-01-02T08:30:00.000Z' }],
+  });
+});

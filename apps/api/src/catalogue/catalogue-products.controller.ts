@@ -37,14 +37,18 @@ const typeSchema = z.enum(PRODUCT_TYPES);
 /** Product types admin can create: electricity is the immutable system set. */
 const creatableTypeSchema = typeSchema.exclude(['electricity']);
 const statusSchema = z.enum(['active', 'inactive']);
-const localizedTextSchema = z.object({
-  fa: z.string().min(1, 'Persian title is required').max(300),
-  en: z.string().min(1, 'English title is required').max(300),
-});
-const descriptionSchema = z.object({
-  fa: z.string().max(4000).optional().default(''),
-  en: z.string().max(4000).optional().default(''),
-});
+const localizedTextSchema = z
+  .object({
+    fa: z.string().trim().min(1, 'Persian title is required').max(300),
+    en: z.string().trim().min(1, 'English title is required').max(300),
+  })
+  .strict();
+const descriptionSchema = z
+  .object({
+    fa: z.string().max(4000).optional().default(''),
+    en: z.string().max(4000).optional().default(''),
+  })
+  .strict();
 const categorySchema = z.enum([...CONSULTATION_CATEGORIES, ...ELECTRICITY_CATEGORIES]);
 // IRR amounts are BIGINT columns; accept digits-only strings up to 18 digits
 // (safe within BIGINT range) and reject anything else before it reaches PG.
@@ -53,14 +57,16 @@ const irrPriceSchema = z
   .regex(/^\d{1,18}$/, 'Price must be a non-negative integer in IRR (up to 18 digits)');
 const kwhSchema = z.string().regex(/^\d{1,18}$/, 'kWh value must be a non-negative integer');
 
-export const CreateProductSchema = z.object({
-  type: creatableTypeSchema,
-  title: localizedTextSchema,
-  description: descriptionSchema.optional(),
-  price: irrPriceSchema.nullable().optional(),
-  status: statusSchema.optional(),
-  categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
-});
+export const CreateProductSchema = z
+  .object({
+    type: creatableTypeSchema,
+    title: localizedTextSchema,
+    description: descriptionSchema.optional(),
+    price: irrPriceSchema.nullable().optional(),
+    status: statusSchema.optional(),
+    categories: z.array(categorySchema).max(10, 'At most 10 categories').optional(),
+  })
+  .strict();
 
 export const UpdateProductSchema = z
   .object({
@@ -71,16 +77,15 @@ export const UpdateProductSchema = z
     minKwh: kwhSchema.optional(),
     maxKwh: kwhSchema.optional(),
   })
+  .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AddPriceSchema = z.object({
-  price: irrPriceSchema,
-  effectiveFrom: z
-    .string()
-    .datetime({ offset: true })
-    .or(z.string().datetime({ local: true }))
-    .optional(),
-});
+export const AddPriceSchema = z
+  .object({
+    price: irrPriceSchema,
+    effectiveFrom: z.string().datetime({ offset: true }).optional(),
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(

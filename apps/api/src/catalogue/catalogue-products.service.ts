@@ -258,6 +258,7 @@ export class CatalogueProductsService {
    */
   create(input: CreateProductInput): Promise<ProductDetailDto> {
     return this.withTransaction(input.actorUserId, async (q) => {
+      input = { ...input, categories: [...new Set(input.categories)] };
       const id = uuidv7();
       this.assertCategorySetForType(input.type, input.categories);
 
@@ -316,6 +317,11 @@ export class CatalogueProductsService {
     return this.withTransaction(input.actorUserId, async (q) => {
       const current = await this.findProduct(q, id, true);
       if (!current) throw this.productNotFound(id);
+
+      if (input.categories !== undefined) {
+        input = { ...input, categories: [...new Set(input.categories)] };
+        this.assertCategorySetForType(current.type, input.categories!);
+      }
 
       // Load current aggregate values so the no-op diff is exact.
       const [aggregates, currentLimits] = await Promise.all([
