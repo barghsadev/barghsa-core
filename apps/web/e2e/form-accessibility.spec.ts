@@ -298,3 +298,61 @@ for (const locale of ['en', 'fa']) {
     await expect.poll(() => submissions).toBe(1);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`type picker opens the individual form and submits required details (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/onboarding/start', (route) =>
+      route.fulfill({ status: 201, json: { profileId: 'profile-one' } })
+    );
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({ json: [{ id: 'province-one', nameFa: 'استان', nameEn: 'Province' }] })
+    );
+    await page.route('**/api/geography/provinces/province-one/cities', (route) =>
+      route.fulfill({ json: [{ id: 'city-one', nameFa: 'شهر', nameEn: 'City' }] })
+    );
+    let sent: Record<string, unknown> | undefined;
+    await page.route('**/api/onboarding/individual/*', (route) => {
+      sent = route.request().postDataJSON();
+      return route.fulfill({ status: 400, json: { message: 'Test response' } });
+    });
+    await page.goto('/onboarding');
+    await page
+      .getByRole('button')
+      .filter({
+        has: page.getByRole('heading', {
+          name: locale === 'fa' ? 'حقیقی' : 'Individual',
+          exact: true,
+        }),
+      })
+      .click();
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'ادامه' : 'Continue', exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/onboarding\/individual\/profile-one$/);
+    await expect(page.locator('#firstName')).toHaveAccessibleName(
+      locale === 'fa' ? /نام/ : /First Name/i
+    );
+    await page.locator('#firstName').fill('Person');
+    await page.locator('#lastName').fill('Owner');
+    await page.locator('#nationalId').fill('1234567891');
+    await page.locator('#provinceId').selectOption('province-one');
+    await page.locator('#cityId').selectOption('city-one');
+    await page.locator('#fullAddress').fill('Street');
+    await page.locator('#postalCode').fill('1234567890');
+    await page.locator('button[type="submit"]').click();
+    await expect
+      .poll(() => sent)
+      .toMatchObject({
+        firstName: 'Person',
+        lastName: 'Owner',
+        nationalId: '1234567891',
+        provinceId: 'province-one',
+        cityId: 'city-one',
+        fullAddress: 'Street',
+        postalCode: '1234567890',
+      });
+  });
+}

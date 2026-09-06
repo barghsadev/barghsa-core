@@ -803,3 +803,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Profile creation and draft completion lock the owning account before checking whether a default exists. Completion keeps the existing profile-before-account lock order used by selection and ownership changes. Concurrent requests cannot both claim the absent default and fail with a unique-index error.
 - Draft creation and its `profile_draft_created` audit commit together. An audit failure rolls back the new draft.
 - Review: forty service tests and fourteen actual HTTP cases pass. Controlled account-lock tests release two competing creations, and creation competing with completion; both requests succeed and exactly one default remains. Audit-failure rollback also passes. API build/typecheck, repository lint, formatting and diff review pass. No migration or historical default rewrite was required.
+
+### F07/F20 — Validate individual onboarding and exercise the actual picker flow
+
+- Start and individual-save endpoints validate runtime bodies before using string methods. Individual required text is trimmed/bounded, geography IDs are UUIDs, and all three profile-specific onboarding route IDs are validated. Malformed objects, numeric fields and invalid IDs produce 400 without modifying the draft.
+- Individual onboarding uses the live locale. Its geography fetches reject unsuccessful responses and province changes clear stale city values/options. Both Persian and English browser tests start at the type picker, navigate to the individual child form, and submit the required fields.
+- Review: eighteen focused HTTP tests, ten production-browser tests, both application builds, all eleven typecheck tasks, repository lint, formatting, OpenAPI drift and diff checks pass. The preceding default-selection checkpoint also passed the broader API suite: 2,567 tests across 201 files, before this bounded change. No production state was touched.

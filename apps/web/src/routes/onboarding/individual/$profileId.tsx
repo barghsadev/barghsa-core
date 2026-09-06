@@ -1,8 +1,9 @@
+import { useLocale } from '../../../hooks/useLocale.js';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon } from 'lucide-react';
@@ -39,7 +40,7 @@ interface FormErrors {
 function IndividualProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/individual/$profileId' });
   const router = useRouter();
-  const locale: Locale = 'fa';
+  const locale = useLocale();
   const isRtl = locale === 'fa';
 
   // Form state
@@ -69,7 +70,10 @@ function IndividualProfileFormPage() {
     let cancelled = false;
     setLoadingProvinces(true);
     fetch('/api/geography/provinces', { credentials: 'include' })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Geography unavailable');
+        return res.json();
+      })
       .then((data: Province[]) => {
         if (!cancelled) {
           setProvinces(data);
@@ -96,9 +100,13 @@ function IndividualProfileFormPage() {
     }
     let cancelled = false;
     setLoadingCities(true);
+    setCities([]);
     setSelectedCityId('');
     fetch(`/api/geography/provinces/${selectedProvinceId}/cities`, { credentials: 'include' })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Geography unavailable');
+        return res.json();
+      })
       .then((data: City[]) => {
         if (!cancelled) {
           setCities(data);
@@ -445,7 +453,11 @@ function IndividualProfileFormPage() {
                 <select
                   id="provinceId"
                   value={selectedProvinceId}
-                  onChange={(e) => setSelectedProvinceId(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedProvinceId(e.target.value);
+                    setSelectedCityId('');
+                    setCities([]);
+                  }}
                   onBlur={() => handleBlur('provinceId')}
                   disabled={submitting}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"

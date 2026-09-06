@@ -403,3 +403,51 @@ it('rolls back profile creation when its audit fails', async () => {
   expect(response.status).toBe(500);
   expect((await http.pool.query('SELECT id FROM profiles')).rows).toEqual(before);
 });
+
+it('rejects malformed onboarding bodies and route IDs with validation responses', async () => {
+  const send = (path: string, body: unknown) =>
+    fetch(`${http.base}/api/onboarding/${path}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
+  for (const body of [
+    null,
+    [],
+    {},
+    { profileType: [] },
+    { profileType: 123 },
+    { profileType: 'unknown' },
+  ]) {
+    expect((await send('start', body)).status).toBe(400);
+  }
+  const valid = {
+    firstName: 'Person',
+    lastName: 'Owner',
+    nationalId: '1234567891',
+    provinceId,
+    cityId,
+    fullAddress: 'Street',
+    postalCode: '1234567890',
+  };
+  for (const body of [
+    null,
+    [],
+    {},
+    { ...valid, firstName: [] },
+    { ...valid, lastName: 123 },
+    { ...valid, title: {} },
+    { ...valid, provinceId: 'bad' },
+    { ...valid, cityId: 123 },
+    { ...valid, fullAddress: ' ' },
+    { ...valid, postalCode: 123 },
+    { ...valid, nationalId: 123 },
+  ]) {
+    expect((await send(`individual/${profileId}`, body)).status).toBe(400);
+  }
+  for (const route of ['individual', 'legal', 'complete'])
+    expect((await send(`${route}/bad`, valid)).status).toBe(400);
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  expect((await send(`individual/${profileId}`, valid)).status).toBe(200);
+});
