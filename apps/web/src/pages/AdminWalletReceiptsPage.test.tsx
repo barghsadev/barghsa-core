@@ -160,6 +160,28 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     expect(container.textContent).toContain('Receipt confirmed and wallet credited')
   })
 
+  it.each(['en','fa'] as const)('keeps a pending approval visible and preserves its invoice in %s', async locale => {
+    document.documentElement.lang=locale
+    let parked=false
+    const bound=receiptDto(TX_A,{dualApproval:{requestId:'approval-1',initiatorId:'finance-1',invoiceId:INVOICE_ID}})
+    vi.stubGlobal('fetch',vi.fn(async(input:RequestInfo|URL,init?:RequestInit)=>{
+      const url=String(input)
+      if(url.endsWith(`/${TX_A}/confirm`)) { parked=true;return {ok:true,json:async()=>bound} as Response }
+      if(parked&&url.endsWith(`/bank-receipt-top-ups/${TX_A}`))return {ok:true,json:async()=>bound} as Response
+      return defaultFetch(input,init)
+    }))
+    await act(async()=>{root.render(<AdminWalletReceiptsPage />)})
+    await flush()
+    await act(async()=>{(container.querySelector('[data-testid="wallet-receipt-confirm"]') as HTMLButtonElement).click()})
+    await flush()
+    expect(container.textContent).toContain(locale==='en'?'Waiting for a different finance reviewer':'رسید در انتظار تأیید کارشناس مالی دیگری است')
+    expect(container.textContent).not.toContain(locale==='en'?'Receipt confirmed and wallet credited':'رسید تأیید شد و کیف پول شارژ گردید')
+    const invoice=container.querySelector('input[name="invoiceId"]') as HTMLInputElement
+    expect(invoice.value).toBe(INVOICE_ID)
+    expect(invoice.readOnly).toBe(true)
+    expect(container.querySelector('[data-testid="wallet-receipt-confirm"]')).toBeTruthy()
+  })
+
   it('requires a rejection reason before posting reject', async () => {
     await act(async () => {
       root.render(<AdminWalletReceiptsPage />)

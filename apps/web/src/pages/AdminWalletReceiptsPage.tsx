@@ -45,6 +45,7 @@ interface BankReceiptReviewDto {
   walletId: string
   amount: string
   currency: 'IRR'
+  dualApproval?: {requestId:string;initiatorId:string;invoiceId:string|null} | null
   state: string
   paymentDate: string | null
   payerReference: string | null
@@ -254,7 +255,7 @@ export default function AdminWalletReceiptsPage() {
     }
     const fromList = items.find((row) => row.transactionId === selectedId)
     if (fromList) setSelected(fromList)
-    setInvoiceId('')
+    setInvoiceId(fromList?.dualApproval?.invoiceId ?? '')
     setAllocation(null)
     setAllocationError(null)
     let cancelled = false
@@ -263,7 +264,7 @@ export default function AdminWalletReceiptsPage() {
         const res = await fetch(`/api/admin/wallet/bank-receipt-top-ups/${selectedId}`)
         if (!res.ok) return
         const data = (await res.json()) as BankReceiptReviewDto
-        if (!cancelled) setSelected(data)
+        if (!cancelled) { setSelected(data); setInvoiceId(data.dualApproval?.invoiceId ?? '') }
       } catch {
         /* keep list snapshot */
       }
@@ -362,6 +363,13 @@ export default function AdminWalletReceiptsPage() {
       return 'error'
     }
     const dto = data as BankReceiptReviewDto
+    if (dto.state === 'Pending' && dto.dualApproval) {
+      setStatus(t('admin.walletReceipts.approvalPending', locale))
+      setSelected(dto)
+      setItems(current => current.map(row => row.transactionId === dto.transactionId ? dto : row))
+      setInvoiceId(dto.dualApproval.invoiceId ?? '')
+      return 'ok'
+    }
     const overpay = dto.overpayment && BigInt(dto.overpayment.walletCreditAmount) > 0n
     setStatus(
       action.kind === 'confirm'
@@ -579,6 +587,11 @@ export default function AdminWalletReceiptsPage() {
                 {t('admin.walletReceipts.reviewTitle', locale)}
               </h2>
 
+              {selected.dualApproval && selected.state === 'Pending' && (
+                <p className="rounded border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950" role="status">
+                  {t('admin.walletReceipts.approvalPending', locale)}
+                </p>
+              )}
               <dl className="grid grid-cols-1 gap-2 text-sm">
                 <div>
                   <dt className="text-gray-500">{t('admin.walletReceipts.amount', locale)}</dt>
@@ -656,6 +669,7 @@ export default function AdminWalletReceiptsPage() {
                     <input
                       id="apply-invoice-id"
                       name="invoiceId"
+                      readOnly={Boolean(selected.dualApproval)}
                       type="text"
                       dir="ltr"
                       inputMode="text"

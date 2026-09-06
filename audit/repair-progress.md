@@ -376,3 +376,9 @@ Review/validation: 42 receipt/approval checks pass, including production HTTP fo
 Rejecting a wallet receipt now resolves its bound pending approval in the same transaction and enforces a different finance reviewer. If the generic approval queue already rejected it, receipt rejection preserves that original reason in the customer notice and audit. Approved requests cannot be overwritten by rejection, and rejected receipts cannot later settle.
 
 Review/validation: 45 wallet/production-HTTP checks and API typecheck pass. HTTP cases prove self-rejection refusal, synchronized statuses, original generic-rejection reasons and zero wallet credit. Pending approval UI remains the next step.
+
+### F13.6 Truthful pending wallet receipt UI
+
+The staff wallet receipt screen distinguishes pending dual approval from completed credit. It keeps the receipt selected/in the queue, shows a bilingual pending notice, restores the bound invoice and makes that destination read-only while review is pending.
+
+Review/validation: all 13 receipt UI checks pass, including fa/en pending responses, absence of the former false credit-success message and preserved invoice binding; web typecheck passes. The i18n package was rebuilt before checking the new dictionary entries. The separate approval queue screen remains next.
