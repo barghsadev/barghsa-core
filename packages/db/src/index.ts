@@ -464,3 +464,5 @@ export async function loadStoredStorageConfiguration(): Promise<unknown | null> 
     await connection.end();
   }
 }
+
+export * from './schema/ai-model-test-jobs.js';

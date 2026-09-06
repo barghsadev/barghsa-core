@@ -1235,3 +1235,9 @@ Review and validation: all four focused production-browser checks pass. Both lan
 Moved provider request handling and token encryption into the server-only shared AI module. The API retains small Nest injection adapters and its encryption-configuration warning. Moved the corresponding transport, token and tester regressions with the implementation, avoiding separate worker copies.
 
 Review and validation: all 48 focused API service/controller/production-migrated HTTP checks pass after the move. Shared tests, root types, lint and whitespace checks pass. This is preparation for worker execution; the API still runs its existing synchronous test path until the queue integration lands.
+
+### Add the durable AI test queue and worker claim handler (F02/F17)
+
+Migration 0115 adds short-lived model-test jobs bound to model version and requesting staff member. It stores no copied credential. The worker handler claims exclusively, rechecks current grants and model version, reads the existing encrypted token, and writes safe results only while its lease and deadline remain valid. Expired leases can be retried once; terminal previews expire after one day. Cancellation and replacement leases fence late results. The existing permission parser is shared with the API without broadening accepted grants.
+
+Review and validation: ten production-migrated worker tests pass for competing claims, invalid authority/model/token/deadline, stale worker results, cancellation, retry limits, constraints and retention. Fresh/repeated/populated migration checks pass with 0115; review made table/index creation replay-safe for the populated adoption scenario. API permission/model HTTP checks pass, as do the full worker suite, root build, types, lint and whitespace checks. The API and production poller are not wired to this queue yet; that is the next integration step. No production migration was run.

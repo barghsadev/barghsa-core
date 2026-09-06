@@ -6,3 +6,5 @@ export * from './background-jobs.js';
 export * from './contract-templates.js';
 export * from './upload-policies.js';
 export * from './contract-electricity-limits.js';
+
+export * from './staff-permissions.js';
