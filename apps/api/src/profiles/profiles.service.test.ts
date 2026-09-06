@@ -135,6 +135,7 @@ describe('ProfilesService', () => {
       // No existing default profile
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
+        .mockResolvedValueOnce({ rows: [] }) // account lock
         .mockResolvedValueOnce({ rows: [] }) // check existing default
         .mockResolvedValueOnce({
           rows: [
@@ -153,6 +154,7 @@ describe('ProfilesService', () => {
             },
           ],
         })
+        .mockResolvedValueOnce({}) // audit
         .mockResolvedValueOnce(undefined); // COMMIT (void)
 
       const result = await service.createProfile('user-1', 'INDIVIDUAL');
@@ -163,10 +165,10 @@ describe('ProfilesService', () => {
       expect(result.isDefault).toBe(true);
 
       // Should have called BEGIN, check default, INSERT, COMMIT
-      expect(mockClient.query).toHaveBeenCalledTimes(4);
+      expect(mockClient.query).toHaveBeenCalledTimes(6);
       expect(mockClient.query.mock.calls[0]![0]).toBe('BEGIN');
-      expect(mockClient.query.mock.calls[2]![0]).toContain('INSERT INTO profiles');
-      expect(mockClient.query.mock.calls[3]![0]).toBe('COMMIT');
+      expect(mockClient.query.mock.calls[3]![0]).toContain('INSERT INTO profiles');
+      expect(mockClient.query.mock.calls[5]![0]).toBe('COMMIT');
       expect(mockClient.release).toHaveBeenCalledTimes(1);
     });
 
@@ -174,6 +176,7 @@ describe('ProfilesService', () => {
       // Existing default profile found
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
+        .mockResolvedValueOnce({ rows: [] }) // account lock
         .mockResolvedValueOnce({ rows: [{ id: 'existing' }] }) // default exists
         .mockResolvedValueOnce({
           rows: [
@@ -191,6 +194,7 @@ describe('ProfilesService', () => {
             },
           ],
         })
+        .mockResolvedValueOnce({}) // audit
         .mockResolvedValueOnce(undefined); // COMMIT (void)
 
       const result = await service.createProfile('user-1', 'LEGAL');
@@ -203,12 +207,13 @@ describe('ProfilesService', () => {
     it('rolls back on database error', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN (void)
+        .mockResolvedValueOnce({ rows: [] }) // account lock
         .mockRejectedValueOnce(new Error('DB error')) // check fails
         .mockResolvedValueOnce(undefined); // ROLLBACK (void)
 
       await expect(service.createProfile('user-1', 'INDIVIDUAL')).rejects.toThrow('DB error');
 
-      expect(mockClient.query.mock.calls[2]![0]).toBe('ROLLBACK');
+      expect(mockClient.query.mock.calls[3]![0]).toBe('ROLLBACK');
       expect(mockClient.release).toHaveBeenCalledTimes(1);
     });
   });
@@ -371,6 +376,7 @@ describe('ProfilesService', () => {
         ],
       });
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
+      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       // Check existing default profiles
       mockClient.query.mockResolvedValueOnce({ rows: [] });
       // UPDATE status to ACTIVE
@@ -411,6 +417,7 @@ describe('ProfilesService', () => {
         ],
       });
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
+      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       mockClient.query.mockResolvedValueOnce({ rows: [] }); // no existing default
       mockClient.query.mockResolvedValueOnce({ rowCount: 1 }); // UPDATE
       mockClient.query.mockResolvedValueOnce({}); // COMMIT

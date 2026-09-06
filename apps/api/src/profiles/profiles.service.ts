@@ -346,6 +346,9 @@ export class ProfilesService {
     try {
       await client.query('BEGIN');
 
+      // Serialize the absence check with other creation/completion transactions.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+
       // If the user has no default profile yet, set this one as default.
       const existing = await client.query(
         `SELECT id FROM profiles WHERE user_id = $1 AND is_default = true LIMIT 1`,
@@ -361,6 +364,11 @@ export class ProfilesService {
       );
 
       const row = mapRow(result.rows[0]);
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES (uuid_generate_v7(),$1,'profile_draft_created',jsonb_build_object('profileId',$2::text,'profileType',$3::text,'isDefault',$4::boolean),uuid_generate_v7(),NOW())`,
+        [userId, row.id, profileType, becomesDefault]
+      );
 
       await client.query('COMMIT');
       this.logger.log(
@@ -1292,6 +1300,9 @@ export class ProfilesService {
       // Determine target status based on verification settings
       const verificationRequired = (await this.getVerificationMode()) !== 'DISABLED';
       const targetStatus = verificationRequired ? 'PENDING_VERIFICATION' : 'ACTIVE';
+
+      // Profile locks precede account locks, as in profile context/ownership changes.
+      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
 
       // Set as default if user has no default profile yet
       const existing = await client.query(

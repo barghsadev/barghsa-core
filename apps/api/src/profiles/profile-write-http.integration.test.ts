@@ -329,3 +329,77 @@ it('does not finalize a legacy legal draft missing its required company type', a
   );
   expect((await complete()).status).toBe(200);
 });
+
+for (const includeCompletion of [false, true]) {
+  it(`serializes default selection across concurrent ${includeCompletion ? 'creation and completion' : 'creations'}`, async () => {
+    if (includeCompletion) {
+      await http.pool.query("UPDATE profiles SET national_id='1234567891' WHERE id=$1", [
+        profileId,
+      ]);
+      await http.pool.query(
+        "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Street','1234567890',true)",
+        [profileId, provinceId, cityId]
+      );
+    }
+    const client = await http.pool.connect();
+    let requests: Promise<Response[]> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='profile-owner' FOR UPDATE");
+      const create = () =>
+        fetch(`${http.base}/api/onboarding/start`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ profileType: 'LEGAL' }),
+        });
+      requests = Promise.all([
+        create(),
+        includeCompletion
+          ? fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers })
+          : create(),
+      ]);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query='SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(2);
+      await client.query('COMMIT');
+      expect((await requests).map((response) => response.status).sort()).toEqual(
+        includeCompletion ? [200, 201] : [201, 201]
+      );
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM profiles WHERE user_id='profile-owner' AND is_default"
+          )
+        ).rows
+      ).toHaveLength(1);
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_draft_created'")).rows
+      ).toHaveLength(includeCompletion ? 1 : 2);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await requests;
+    }
+  });
+}
+it('rolls back profile creation when its audit fails', async () => {
+  await http.pool.query(
+    "CREATE FUNCTION reject_draft_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_draft_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='profile_draft_created') EXECUTE FUNCTION reject_draft_audit()"
+  );
+  const before = (await http.pool.query('SELECT id FROM profiles')).rows;
+  const response = await fetch(`${http.base}/api/onboarding/start`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ profileType: 'LEGAL' }),
+  });
+  expect(response.status).toBe(500);
+  expect((await http.pool.query('SELECT id FROM profiles')).rows).toEqual(before);
+});
