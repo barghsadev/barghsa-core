@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Button } from '@barghsa/ui';
 import { Link, Outlet } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
 import { useLocale } from '../hooks/useLocale.js';
@@ -24,6 +26,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps) {
   const currentLocale = useLocale();
   const locale = localeOverride ?? currentLocale;
+  const [menuOpen, setMenuOpen] = useState(false);
   const isRtl = locale === 'fa';
 
   const navItems: Array<{ to: string; label: string }> = [
@@ -43,6 +46,9 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
 
   return (
     <div className="min-h-dvh flex flex-col bg-gray-50" dir={isRtl ? 'rtl' : 'ltr'}>
+      <a href="#dashboard-content" className="sr-only focus:not-sr-only focus:p-3">
+        {t('shell.skipContent', locale)}
+      </a>
       {/* TOS re-acceptance banner — shown on top of the dashboard when needed */}
       <TosBanner locale={locale} />
 
@@ -55,13 +61,25 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
         <Link to="/" className="text-lg font-bold text-primary no-underline">
           {t('auth.brand.title', locale)}
         </Link>
+        <Button
+          variant="outline"
+          className="md:hidden"
+          aria-expanded={menuOpen}
+          aria-controls="dashboard-navigation"
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          {t('shell.menu', locale)}
+        </Button>
         <NotificationBell />
       </header>
 
       {/* Main layout: sidebar + content */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 flex-col md:flex-row">
         {/* Sidebar */}
-        <aside className="w-64 shrink-0 border-inset-end border-gray-200 bg-white p-4">
+        <aside
+          id="dashboard-navigation"
+          className={`${menuOpen ? 'block' : 'hidden'} w-full shrink-0 border-e border-gray-200 bg-white p-4 md:block md:w-64`}
+        >
           <div className="space-y-4">
             {/* Profile switcher — top of sidebar */}
             <div className="border-b border-gray-200 pb-4">
@@ -80,6 +98,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
                   <li key={item.to}>
                     <Link
                       to={item.to}
+                      onClick={() => setMenuOpen(false)}
                       className="block rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       activeProps={{ className: 'bg-primary/10 text-primary font-medium' }}
                     >
@@ -93,7 +112,11 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto p-6 md:p-8">
+        <main
+          id="dashboard-content"
+          tabIndex={-1}
+          className="min-w-0 flex-1 overflow-auto p-4 md:p-8"
+        >
           <Outlet />
         </main>
       </div>
