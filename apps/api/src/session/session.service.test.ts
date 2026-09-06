@@ -450,6 +450,7 @@ describe('SessionService', () => {
       const oldSession = makeSessionRow({ family_id: 'family-001' })
 
       mockClient.query.mockImplementation(async (sql: string) => {
+        if (sql.includes('FROM users u')) return { rows: [{ user_id: 'user-001', disabled_at: null }] }
         if (sql === 'COMMIT') return { rows: [] }
         if (sql.startsWith('ROLLBACK')) return { rows: [] }
         // Find old session FOR UPDATE

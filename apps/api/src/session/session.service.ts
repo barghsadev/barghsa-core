@@ -307,12 +307,18 @@ export class SessionService {
     try {
       await client.query('BEGIN')
 
+      // Match creation's account-before-session lock order. The old session
+      // is re-read after locking, so a concurrent revocation cannot revive it.
+      const account = await client.query(`SELECT u.user_id,u.disabled_at FROM users u
+        JOIN sessions s ON s.user_id=u.user_id WHERE s.session_id=$1 FOR UPDATE OF u`, [oldSessionId])
+      if (!account.rows[0] || account.rows[0].disabled_at) { await client.query('ROLLBACK'); return null }
+
       // 1. Fetch and lock the old session
       const oldResult = await client.query(
         `SELECT session_id, user_id, csrf_token, family_id,
                 device_info, expires_at, idle_deadline
          FROM sessions
-         WHERE session_id = $1 AND revoked_at IS NULL
+         WHERE session_id = $1 AND revoked_at IS NULL AND expires_at > NOW() AND idle_deadline > NOW()
          FOR UPDATE`,
         [oldSessionId],
       )
@@ -371,8 +377,8 @@ export class SessionService {
       const tokenId = uuidv7()
       await client.query(
         `INSERT INTO refresh_tokens
-         (id, family_id, token_hash, user_id, session_id, version, consumed_at, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+         (id, family_id, token_hash, user_id, session_id, version, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
         [tokenId, familyId, newRefreshTokenHash, oldRow.user_id, newSessionId, nextVersion, now],
       )
 
@@ -414,7 +420,7 @@ export class SessionService {
     const result = await getDbPool().query<{ csrf_token: string }>(
       `SELECT s.csrf_token FROM refresh_tokens r
        JOIN sessions s ON s.session_id = r.session_id
-       WHERE r.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > NOW()`,
+       WHERE r.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > NOW() AND s.idle_deadline > NOW()`,
       [tokenHash],
     )
     return result.rows.length === 1 && result.rows[0]!.csrf_token === csrfToken
@@ -531,7 +537,7 @@ export class SessionService {
 
       const sessionRow = sessionResult.rows[0]
 
-      if (sessionRow.revoked_at || new Date(sessionRow.expires_at) <= now) {
+      if (sessionRow.revoked_at || new Date(sessionRow.expires_at).getTime() <= Date.now() || new Date(sessionRow.idle_deadline).getTime() <= Date.now()) {
         await client.query('ROLLBACK')
         throw new UnauthorizedException({
           statusCode: 401,

@@ -54,3 +54,59 @@ it('rolls back cap eviction if the new refresh credential cannot commit', async 
   expect((await usable()).map(row => row.session_id).sort()).toEqual(original)
   expect((await db.pool.query('SELECT id FROM refresh_tokens')).rows).toHaveLength(50)
 })
+
+it('rotates an actual session with a usable fresh refresh credential and invalidates the old credentials', async () => {
+  const original = await service.createSession('cap-user',false)
+  const rotated = await service.rotateSession(original.sessionId,'test rotation')
+  expect(rotated).not.toBeNull()
+  expect(rotated!.sessionId).not.toBe(original.sessionId)
+  expect(rotated!.csrfToken).not.toBe(original.csrfToken)
+  expect(rotated!.refreshToken).not.toBe(original.refreshToken)
+  expect(await service.rotateSession(original.sessionId,'repeat')).toBeNull()
+  const tokens = (await db.pool.query('SELECT session_id,consumed_at FROM refresh_tokens ORDER BY version')).rows
+  expect(tokens).toHaveLength(2)
+  expect(tokens[0].consumed_at).not.toBeNull()
+  expect(tokens[1]).toMatchObject({ session_id:rotated!.sessionId,consumed_at:null })
+  expect(await service.validateRefreshCsrf(rotated!.refreshToken,original.csrfToken)).toBe(false)
+  expect(await service.validateRefreshCsrf(rotated!.refreshToken,rotated!.csrfToken)).toBe(true)
+  expect(await service.redeemRefreshToken(rotated!.refreshToken)).toMatchObject({ sessionId:rotated!.sessionId })
+  // Replaying the consumed old credential still triggers family revocation.
+  await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({ status:401 })
+  expect(await usable()).toHaveLength(0)
+})
+it('cannot rotate a disabled, idle-expired or absolutely expired session', async () => {
+  for (const condition of ['idle','absolute','disabled']) {
+    const original = await service.createSession('cap-user',false)
+    if (condition === 'disabled') await db.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='cap-user'")
+    else await db.pool.query(`UPDATE sessions SET ${condition === 'idle' ? 'idle_deadline' : 'expires_at'}=NOW()-INTERVAL '1 second' WHERE session_id=$1`,[original.sessionId])
+    expect(await service.rotateSession(original.sessionId,'test rejection')).toBeNull()
+    expect((await db.pool.query('SELECT id FROM refresh_tokens WHERE session_id=$1',[original.sessionId])).rows).toHaveLength(1)
+  }
+})
+it('keeps the original session usable when rotation cannot write its new credential', async () => {
+  const original = await service.createSession('cap-user',false)
+  await db.pool.query(`CREATE FUNCTION fail_rotation_refresh() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test rotation failure'; END $$;
+    CREATE TRIGGER fail_rotation_refresh BEFORE INSERT ON refresh_tokens FOR EACH ROW EXECUTE FUNCTION fail_rotation_refresh()`)
+  await expect(service.rotateSession(original.sessionId,'test rollback')).rejects.toMatchObject({ status:500 })
+  expect((await usable()).map(row => row.session_id)).toEqual([original.sessionId])
+  expect(await service.validateRefreshCsrf(original.refreshToken,original.csrfToken)).toBe(true)
+  expect((await db.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([{ consumed_at:null }])
+})
+it('concurrent rotation and creation keep the account within its usable-session cap', async () => {
+  const sessions = await Promise.all(Array.from({length:50},() => service.createSession('cap-user',false)))
+  await Promise.all([
+    ...sessions.slice(-10).map(session => service.rotateSession(session.sessionId,'concurrent rotation')),
+    ...Array.from({length:10},() => service.createSession('cap-user',false)),
+  ])
+  expect(await usable()).toHaveLength(50)
+})
+
+it('does not revive an idle-expired session through refresh', async () => {
+  const original = await service.createSession('cap-user',false)
+  await db.pool.query("UPDATE sessions SET idle_deadline=NOW()-INTERVAL '1 second' WHERE session_id=$1",[original.sessionId])
+  const before = (await db.pool.query('SELECT idle_deadline,refresh_token_hash FROM sessions WHERE session_id=$1',[original.sessionId])).rows[0]
+  expect(await service.validateRefreshCsrf(original.refreshToken,original.csrfToken)).toBe(false)
+  await expect(service.redeemRefreshToken(original.refreshToken)).rejects.toMatchObject({ status:401 })
+  expect((await db.pool.query('SELECT idle_deadline,refresh_token_hash FROM sessions WHERE session_id=$1',[original.sessionId])).rows[0]).toEqual(before)
+  expect((await db.pool.query('SELECT consumed_at FROM refresh_tokens')).rows).toEqual([{ consumed_at:null }])
+})

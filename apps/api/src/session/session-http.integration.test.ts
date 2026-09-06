@@ -72,7 +72,7 @@ it('authenticates parsed cookies and rejects unsafe requests before extending or
   expect((await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status).toBe(401)
 }, 15000)
 
-it('requires CSRF for refresh, recovers idle expiry, and retains refresh reuse revocation', async () => {
+it('requires CSRF for refresh, rejects idle expiry, and retains refresh reuse revocation', async () => {
   const auth = await login()
   for (const token of [undefined, 'wrong-token']) {
     const headers: Record<string, string> = { Cookie: auth.cookie }
@@ -83,12 +83,15 @@ it('requires CSRF for refresh, recovers idle expiry, and retains refresh reuse r
     .toEqual([{ consumed_at: null }])
   await pool!.query("UPDATE sessions SET idle_deadline=NOW()-INTERVAL '1 minute' WHERE session_id=$1", [auth.sessionId])
   expect((await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status).toBe(401)
-  const headers = { Cookie: auth.cookie, 'X-CSRF-Token': auth.token }
+  expect((await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers: { Cookie: auth.cookie, 'X-CSRF-Token': auth.token } })).status).toBe(403)
+  expect((await pool.query('SELECT consumed_at FROM refresh_tokens WHERE session_id=$1', [auth.sessionId])).rows).toEqual([{ consumed_at: null }])
+  const fresh = await login()
+  const headers = { Cookie: fresh.cookie, 'X-CSRF-Token': fresh.token }
   const refreshed = await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers })
   expect(refreshed.status, await refreshed.text()).toBe(200)
-  expect((await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: auth.cookie } })).status).toBe(200)
+  expect((await fetch(`${base}/api/auth/sessions`, { headers: { Cookie: fresh.cookie } })).status).toBe(200)
   expect((await fetch(`${base}/api/auth/refresh`, { method: 'POST', headers })).status).toBe(401)
-  expect((await pool!.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [auth.sessionId])).rows[0].revoked_at).not.toBeNull()
+  expect((await pool!.query('SELECT revoked_at FROM sessions WHERE session_id=$1', [fresh.sessionId])).rows[0].revoked_at).not.toBeNull()
 }, 15000)
 
 it('invalidates old sessions and refresh tokens atomically on a forced password change', async () => {
