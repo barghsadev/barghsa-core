@@ -6,6 +6,10 @@ import {
   GREEN_ELECTRICITY_CONFIG_KEY,
 } from '@barghsa/shared/finance';
 
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -210,6 +214,8 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     }); // green product state (no mode enabled, so gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
+      .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -233,7 +239,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       '127.0.0.1'
     );
 
-    const appConfigQuery = client.query.mock.calls[2]!;
+    const appConfigQuery = client.query.mock.calls[4]!;
     const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string);
     expect(stored.simple_order.mandatory_green_enabled).toBe(false);
     expect(stored.advanced_order.mandatory_green_enabled).toBe(false);
@@ -250,6 +256,8 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     // INSERT RETURNING version, config_version, audit_log, COMMIT
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
+      .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -261,13 +269,13 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1);
     const queries = client.query.mock.calls.map((c: unknown[]) => String(c[0]));
     expect(queries[0]!).toMatch(/BEGIN/);
-    expect(queries[1]!).toMatch(/SELECT.*app_config.*FOR UPDATE/);
-    expect(queries[2]!).toMatch(/INSERT INTO app_config/);
-    expect(queries[3]!).toMatch(/config_version/);
-    expect(queries[4]!).toMatch(/audit_log/);
-    expect(queries[5]!).toMatch(/COMMIT/);
+    expect(queries[3]!).toMatch(/SELECT.*app_config.*FOR UPDATE/);
+    expect(queries[4]!).toMatch(/INSERT INTO app_config/);
+    expect(queries[5]!).toMatch(/config_version/);
+    expect(queries[6]!).toMatch(/audit_log/);
+    expect(queries[7]!).toMatch(/COMMIT/);
 
-    const appConfigQuery = client.query.mock.calls[2]!;
+    const appConfigQuery = client.query.mock.calls[4]!;
     expect((appConfigQuery[1] as unknown[])[0]).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
     const stored = JSON.parse((appConfigQuery[1] as unknown[])[1] as string);
     expect(stored).toEqual({
@@ -283,7 +291,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
       },
     });
 
-    const auditQuery = client.query.mock.calls[4]!;
+    const auditQuery = client.query.mock.calls[6]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata).toEqual({
       key: GREEN_ELECTRICITY_CONFIG_KEY,
@@ -312,6 +320,8 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     }); // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
+      .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
       .mockResolvedValueOnce({
         rows: [
           {
@@ -338,7 +348,7 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
 
     await service.setGreenElectricityConfig(VALID_INPUT, 'admin-1', '127.0.0.1');
 
-    const auditQuery = client.query.mock.calls[4]!;
+    const auditQuery = client.query.mock.calls[6]!;
     const auditMetadata = JSON.parse((auditQuery[1] as unknown[])[3] as string);
     expect(auditMetadata.key).toBe(GREEN_ELECTRICITY_CONFIG_KEY);
     expect(auditMetadata.previousVersion).toBe(3);
@@ -366,6 +376,8 @@ describe('AdminService.setGreenElectricityConfig (T-09.10.02)', () => {
     }); // green product state (activatable → gate passes)
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
+      .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version
@@ -439,6 +451,8 @@ describe('AdminService.setGreenElectricityConfig activation safety (T-09.10.03)'
     }); // product unusable, but no mode is enabled → gate passes
     client.query
       .mockResolvedValueOnce({ rows: [] }) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // serialize initial config creation
+      .mockResolvedValueOnce({ rows: [{ status: 'active', price: 1000000 }] }) // locked product check
       .mockResolvedValueOnce({ rows: [] }) // SELECT ... FOR UPDATE
       .mockResolvedValueOnce({ rows: [{ version: 1 }] }) // INSERT RETURNING
       .mockResolvedValueOnce({ rows: [] }) // config_version

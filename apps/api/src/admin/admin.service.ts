@@ -1,3 +1,4 @@
+import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
@@ -1643,32 +1644,7 @@ export class AdminService {
 
     const config = toGreenElectricityConfig(input);
 
-    // T-09.10.03 — Activation safety gate. A mode may only be saved with the
-    // rule enabled if the green electricity product can actually support it
-    // (exists, active, priced). If any mode ends up enabled while the product
-    // is not activatable we refuse to persist, so a mandatory-green rule can
-    // never be activated against an unsupported product. The gate shares the
-    // fail-closed policy with the safety-status endpoint via the
-    // evaluateGreenRuleEnforcement seam. Note: the product row is read before
-    // the transaction opens; post-save drift (product deactivated after this
-    // check) is handled by the ordering engine consulting the seam's
-    // `blocked` flag and by the admin-facing safety-status path, not by
-    // retrying this write.
-    const productState = await this.getGreenElectricityProductState();
-    for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
-      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState);
-      if (!enforcement.blocked) continue;
-      const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced';
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: `Cannot activate: Green electricity product is ${enforcement.reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
-          details: { mode, reasons: [...enforcement.reasons] },
-        },
-        400
-      );
-    }
+    await this.assertGreenElectricityActivation(config);
 
     const pool = getDbPool();
     const now = new Date();
@@ -1677,6 +1653,9 @@ export class AdminService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:catalogue:edit');
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('green-electricity-config'))");
+      await this.assertGreenElectricityActivation(config, client);
 
       // Lock the existing row (if any) so the previous value recorded in the
       // audit trail is the true value being replaced. Concurrent writers
@@ -1734,6 +1713,7 @@ export class AdminService {
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
+      if (error instanceof HttpException) throw error;
       this.logger.error(`Failed to set green electricity config: ${String(error)}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
@@ -1744,17 +1724,41 @@ export class AdminService {
     }
   }
 
+  private async assertGreenElectricityActivation(
+    config: GreenElectricityConfig,
+    client?: PoolClient
+  ) {
+    const productState = await this.getGreenElectricityProductState(client);
+    for (const mode of GREEN_ELECTRICITY_ORDER_MODES) {
+      const enforcement = evaluateGreenRuleEnforcement(config, mode, productState);
+      if (!enforcement.blocked) continue;
+      const modeLabel = mode === 'simpleOrder' ? 'simple' : 'advanced';
+      throw new HttpException(
+        {
+          statusCode: 400,
+          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+          message: `Cannot activate: Green electricity product is ${enforcement.reasons.join(' and ')} for the ${modeLabel} order rule. Fix the product state or disable the rule.`,
+          details: { mode, reasons: [...enforcement.reasons] },
+        },
+        400
+      );
+    }
+  }
+
   /**
    * Read the current state of the system `green_electricity` product from the
    * `products` table. Absent row and missing/unpriced/zero price are all
    * modelled explicitly so the activation and fail-closed checks can reason
    * about them.
    */
-  async getGreenElectricityProductState(): Promise<GreenElectricityProductState> {
+  async getGreenElectricityProductState(
+    client?: PoolClient
+  ): Promise<GreenElectricityProductState> {
     const pool = getDbPool();
-    const result = await pool.query(`SELECT status, price FROM products WHERE system_key = $1`, [
-      GREEN_ELECTRICITY_SYSTEM_KEY,
-    ]);
+    const result = await (client ?? pool).query(
+      `SELECT status, price FROM products WHERE system_key = $1${client ? ' FOR SHARE' : ''}`,
+      [GREEN_ELECTRICITY_SYSTEM_KEY]
+    );
     if (result.rows.length === 0) {
       return { exists: false, status: null, priceIrR: null };
     }
