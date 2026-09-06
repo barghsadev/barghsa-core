@@ -1,3 +1,6 @@
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { VatConfigService as ServiceType } from './vat-config.service.js';
 

@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -288,7 +289,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const open = await this.findOpenRate(q, input.category);
       if (open !== null) {
         const openFrom = new Date(open.effective_from);
@@ -393,7 +394,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const current = await this.findConfigById(q, input.id);
       if (!current) throw this.vatConfigNotFound(input.id);
 
@@ -462,7 +463,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveFrom');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       // The config row must exist and be override-eligible.
       const config = await this.findConfigById(q, input.vatConfigId);
       if (!config) throw this.vatConfigNotFound(input.vatConfigId);
@@ -567,7 +568,7 @@ export class VatConfigService {
       throw this.invalidEffectiveDate('effectiveUntil');
     }
 
-    return this.withTransaction(async (q) => {
+    return this.withTransaction(input.actorUserId, async (q) => {
       const current = await this.findOverrideById(q, input.id);
       if (!current) throw this.overrideNotFound(input.id);
 
@@ -768,11 +769,19 @@ export class VatConfigService {
   }
 
   /** Run `fn` inside a single DB transaction on one client; any error rolls back. */
-  private async withTransaction<T>(fn: (q: DbExecutor) => Promise<T>): Promise<T> {
+  private async withTransaction<T>(
+    actorUserId: string,
+    fn: (q: DbExecutor) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
     let committed = false;
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:finance:edit');
+      // Serialize category rates and dependent overrides, including empty histories.
+      await client.query(
+        "SELECT pg_advisory_xact_lock(hashtextextended('barghsa:vat-configuration', 0))"
+      );
       const result = await fn(client);
       await client.query('COMMIT');
       committed = true;
