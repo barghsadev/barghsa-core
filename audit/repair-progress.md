@@ -370,3 +370,9 @@ Review/validation: the complete API suite passes 2,494 checks across 188 files; 
 Invoice receipt initiation now saves a fingerprint of the receipt identity, profile, invoice, amount, bank reference, attachment and customer note in its own audit. Confirmation verifies that trusted initiation record and the exact request amount/action before accepting approval; arbitrary generic request details cannot authorize settlement. Both original approvers must remain eligible, and a distinct current finance actor performs the second confirmation. Shared actor validation is used by wallet and invoice gates.
 
 Review/validation: 42 receipt/approval checks pass, including production HTTP for overdue receipt settlement, changed bank reference, forged generic request details and revoked reviewer permission; API typecheck passes. Legacy pending/approved invoice requests without the new evidence fingerprint are deliberately held for manual reconciliation, preserving their history instead of inferring approval from current data. Receipt rejection synchronization and pending-approval UI remain next.
+
+### F13.5 Synchronize wallet receipt rejection
+
+Rejecting a wallet receipt now resolves its bound pending approval in the same transaction and enforces a different finance reviewer. If the generic approval queue already rejected it, receipt rejection preserves that original reason in the customer notice and audit. Approved requests cannot be overwritten by rejection, and rejected receipts cannot later settle.
+
+Review/validation: 45 wallet/production-HTTP checks and API typecheck pass. HTTP cases prove self-rejection refusal, synchronized statuses, original generic-rejection reasons and zero wallet credit. Pending approval UI remains the next step.

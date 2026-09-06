@@ -356,3 +356,19 @@ it('cannot use a generic approval for an invoice receipt or an approval from a r
   await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('reviewer','role-finance')")
   expect((await http.pool.query('SELECT paid_amount FROM invoices WHERE id=$1',[receipt.invoice])).rows[0].paid_amount).toBe('0')
 })
+
+it('rejects the receipt and its approval together and preserves a generic rejection reason',async()=>{
+  for(const generic of [false,true]) {
+    const receipt=await walletReceipt()
+    const pending=await (await confirmWallet('initiator',receipt.id)).json() as {dualApproval:{requestId:string}}
+    const rejectReceipt=(user:string)=>fetch(`${http.base}/api/admin/wallet/bank-receipt-top-ups/${receipt.id}/reject`,{method:'POST',headers:headers[user]!,body:JSON.stringify({reason:'Receipt is illegible'})})
+    if(generic)expect((await decide('reviewer',pending.dualApproval.requestId,'reject')).status).toBe(200)
+    else expect((await rejectReceipt('initiator')).status).toBe(403)
+    const result=await rejectReceipt('reviewer')
+    expect(result.status,await result.clone().text()).toBe(200)
+    expect(await result.json()).toMatchObject({state:'Rejected',staffDecision:{reason:generic?'Rejected after review':'Receipt is illegible'}})
+    expect((await http.pool.query('SELECT status FROM approval_requests WHERE id=$1',[pending.dualApproval.requestId])).rows[0].status).toBe('rejected')
+    expect((await confirmWallet('initiator',receipt.id)).status).toBe(409)
+    expect((await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1',[receipt.profile])).rows[0].posted_balance).toBe('0')
+  }
+})

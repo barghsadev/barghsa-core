@@ -1,4 +1,4 @@
-import { gateWalletReceiptApproval, walletReceiptApproval, type WalletReceiptApproval } from './bank-receipt-approval.js'
+import { gateWalletReceiptApproval, rejectWalletReceiptApproval, walletReceiptApproval, type WalletReceiptApproval } from './bank-receipt-approval.js'
 import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
 import {
@@ -509,6 +509,10 @@ export class BankReceiptConfirmationService {
           )
         }
 
+        const rejectionReason = await rejectWalletReceiptApproval(client, {
+          id: pending.id, metadata: pending.metadata, actorUserId: input.actorUserId,
+          reason: parsed.reason, ip: input.ip, now,
+        })
         const ownerUserId = await this.loadProfileOwnerUserId(client, pending.walletId)
         if (!ownerUserId) {
           await client.query('ROLLBACK')
@@ -523,7 +527,7 @@ export class BankReceiptConfirmationService {
           decision: 'rejected',
           actorUserId: input.actorUserId,
           decidedAt: now,
-          reason: parsed.reason,
+          reason: rejectionReason,
         })
         const updated = await this.markRejected(client, pending.id, decision)
         const notify = await this.enqueueCustomerNotice(client, {
@@ -533,7 +537,7 @@ export class BankReceiptConfirmationService {
           userId: ownerUserId,
           payload: buildBankReceiptTopUpFailedNotificationPayload({
             amount: pending.amount.toString(),
-            reason: parsed.reason,
+            reason: rejectionReason,
             pendingTransactionId: pending.id,
           }),
         })
@@ -546,7 +550,7 @@ export class BankReceiptConfirmationService {
             transactionId: pending.id,
             walletId: pending.walletId,
             amount: pending.amount.toString(),
-            reason: parsed.reason,
+            reason: rejectionReason,
             customerVisible: true,
             previousState: 'Pending',
             newState: 'Rejected',

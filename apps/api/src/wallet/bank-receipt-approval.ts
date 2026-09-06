@@ -176,3 +176,22 @@ export async function gateWalletReceiptApproval(
   await requireCurrentFinancePermission(client, request.reviewer_id);
   return null;
 }
+
+/** Keep a receipt rejection and its pending approval decision in one transaction. */
+export async function rejectWalletReceiptApproval(client:WalletQueryClient,input:{
+  id:string;metadata:unknown;actorUserId:string;reason:string;ip:string;now:Date;
+}):Promise<string> {
+  const binding=walletReceiptApproval(input.metadata)
+  if(!binding)return input.reason
+  const row=(await client.query('SELECT * FROM approval_requests WHERE id=$1 FOR UPDATE',[binding.requestId])).rows[0] as Record<string,unknown>|undefined
+  const details=row?.details as Record<string,unknown>|undefined
+  if(!row||row.initiator_id!==binding.initiatorId||details?.receiptId!==input.id||details?.fingerprint!==binding.fingerprint)conflict('Receipt approval binding is invalid')
+  if(row.status==='rejected') {
+    if(typeof row.review_reason!=='string'||!row.review_reason.trim())conflict('Approval rejection has no reason')
+    return row.review_reason
+  }
+  if(row.status!=='pending')conflict('An approved receipt request cannot be rejected')
+  await requireCurrentFinancePermission(client,input.actorUserId)
+  await applyApprovalRequestResolutionOnClient(client,{requestId:binding.requestId,reviewerUserId:input.actorUserId,initiatorId:binding.initiatorId,status:'pending',decision:'reject',reviewReason:input.reason,now:input.now,ip:input.ip,actionType:row.action_type,amountIrR:row.amount_irr})
+  return input.reason
+}
