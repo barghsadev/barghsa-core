@@ -1381,3 +1381,9 @@ Review and validation: eight agent/template production-browser checks pass, foll
 All four VAT mutations now hold current admin:finance:edit authority and a transaction-scoped VAT configuration lock. The lock covers category rates and dependent overrides, including empty histories, so overlapping writes read the previous committed result before deciding whether to change or audit it.
 
 Review and validation: all 45 VAT service/controller/production-migrated HTTP checks pass. New HTTP cases cover all four audit rollbacks and permission revocations, duplicate end-date requests and an end-date request waiting behind a newer committed state. Root types, lint and whitespace checks pass. Immediately before this repair, checkpoint 967a4d5 passed the full API suite with 2,793 tests across 220 files and the shared suite with 692 tests across 55 files. VAT input strictness and its administration screen remain open.
+
+### Validate VAT inputs and expose restricted product choices (F17/F20)
+
+VAT mutation payloads reject unknown fields. Supplied effective timestamps must include an explicit offset, avoiding server-timezone interpretation; omitted timestamps retain immediate behavior. Added a finance-permission product-choice endpoint returning only IDs, localized titles and types.
+
+Review and validation: 27 VAT controller/production-migrated HTTP checks pass. New cases cover malformed IDs, excessive rates, unknown fields, ambiguous create/end timestamps, explicit +03:30 conversion to the correct UTC instant and the restricted choice response. API build, root types/lint and whitespace checks pass; reviewed the added OpenAPI route. Existing API clients sending offset-free timestamps must include Z or a numeric offset. The new editor will send explicit UTC timestamps.

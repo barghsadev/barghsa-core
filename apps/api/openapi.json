@@ -3276,6 +3276,26 @@
         ]
       }
     },
+    "/api/admin/finance/vat/products": {
+      "get": {
+        "operationId": "VatConfigController_products",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List product choices for VAT overrides",
+        "tags": [
+          "Admin · VAT Configuration"
+        ]
+      }
+    },
     "/api/admin/finance/vat/resolve": {
       "get": {
         "description": "Product override wins; category active rate applies otherwise; 0% fallback. Used by the invoice snapshot seam (T-03.02.05.03) and admin preview.",

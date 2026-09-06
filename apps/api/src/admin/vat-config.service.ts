@@ -171,6 +171,15 @@ export class VatConfigService {
     return result.rows.map((row) => this.toConfigDto(row));
   }
 
+  async products(): Promise<Array<{ id: string; title: Record<string, string>; type: string }>> {
+    const result = await getDbPool().query<{
+      id: string;
+      title: Record<string, string>;
+      type: string;
+    }>('SELECT id, title, type FROM products ORDER BY system_key, id');
+    return result.rows;
+  }
+
   /** List product overrides with the linked rate/category denormalized. */
   async listOverrides(): Promise<VatProductOverrideDto[]> {
     const pool = getDbPool();

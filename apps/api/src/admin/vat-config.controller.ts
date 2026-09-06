@@ -30,31 +30,35 @@ import { VatConfigService } from './vat-config.service.js';
 
 const categorySchema = z.enum([...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY]);
 const bpsSchema = z.number().int().min(0).max(10_000);
-const effectiveDateSchema = z
-  .string()
-  .datetime({ offset: true })
-  .or(z.string().datetime({ local: true }))
-  .optional();
+const effectiveDateSchema = z.string().datetime({ offset: true }).optional();
 
-export const CreateVatRateSchema = z.object({
-  category: categorySchema,
-  rateBasisPoints: bpsSchema,
-  effectiveFrom: effectiveDateSchema,
-});
+export const CreateVatRateSchema = z
+  .object({
+    category: categorySchema,
+    rateBasisPoints: bpsSchema,
+    effectiveFrom: effectiveDateSchema,
+  })
+  .strict();
 
-export const EndVatRateSchema = z.object({
-  effectiveUntil: effectiveDateSchema,
-});
+export const EndVatRateSchema = z
+  .object({
+    effectiveUntil: effectiveDateSchema,
+  })
+  .strict();
 
-export const CreateProductOverrideSchema = z.object({
-  productId: z.string().uuid('Expected a UUID'),
-  vatConfigId: z.string().uuid('Expected a UUID'),
-  effectiveFrom: effectiveDateSchema,
-});
+export const CreateProductOverrideSchema = z
+  .object({
+    productId: z.string().uuid('Expected a UUID'),
+    vatConfigId: z.string().uuid('Expected a UUID'),
+    effectiveFrom: effectiveDateSchema,
+  })
+  .strict();
 
-export const EndProductOverrideSchema = z.object({
-  effectiveUntil: effectiveDateSchema,
-});
+export const EndProductOverrideSchema = z
+  .object({
+    effectiveUntil: effectiveDateSchema,
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -136,6 +140,13 @@ export class VatConfigController {
   ): Promise<VatConfigDto[]> {
     this.assertFinancePermission(req);
     return this.service.list(assertCategoryFilter(category));
+  }
+
+  @Get('products')
+  @ApiOperation({ summary: 'List product choices for VAT overrides' })
+  async products(@Req() req: AuthenticatedRequest) {
+    this.assertFinancePermission(req);
+    return this.service.products();
   }
 
   @Get('overrides')

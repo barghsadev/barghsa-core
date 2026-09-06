@@ -184,3 +184,44 @@ it('preserves the latest VAT state after waiting for another writer', async () =
     await pending;
   }
 });
+
+it.each([
+  ['', { category: 'electricity', rateBasisPoints: 900, unexpected: true }],
+  ['', { category: 'electricity', rateBasisPoints: 10001 }],
+  ['', { category: 'electricity', rateBasisPoints: 900, effectiveFrom: '2027-01-01T00:00:00' }],
+  ['/rate/end', { effectiveUntil: '2027-01-01T00:00:00' }],
+  ['/rate/end', { unexpected: true }],
+  ['/overrides', { productId: 'invalid', vatConfigId: 'invalid' }],
+  ['/override/end', { unexpected: true }],
+] as const)('rejects invalid VAT payload %s %j', async (path, body) => {
+  const response = await fetch(
+    `${http.base}/api/admin/finance/vat${path.replace('/rate', `/${rateId}`).replace('/override/', `/overrides/${overrideId}/`)}`,
+    { method: 'POST', headers, body: JSON.stringify(body) }
+  );
+  expect(response.status).toBe(400);
+  await unchanged();
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toHaveLength(0);
+});
+it('preserves the explicit effective-date offset', async () => {
+  const response = await fetch(`${http.base}/api/admin/finance/vat`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      category: 'electricity',
+      rateBasisPoints: 1000,
+      effectiveFrom: '2026-02-01T03:30:00+03:30',
+    }),
+  });
+  expect(response.status).toBe(201);
+  expect(await response.json()).toMatchObject({ effectiveFrom: '2026-02-01T00:00:00.000Z' });
+});
+
+it('exposes only product choices to the finance editor', async () => {
+  const response = await fetch(`${http.base}/api/admin/finance/vat/products`, { headers });
+  expect(response.status).toBe(200);
+  const rows = (await response.json()) as Array<Record<string, unknown>>;
+  expect(rows.find((row) => row.id === productId)).toMatchObject({ title: { en: 'VAT product' } });
+  for (const row of rows) expect(Object.keys(row).sort()).toEqual(['id', 'title', 'type']);
+});
