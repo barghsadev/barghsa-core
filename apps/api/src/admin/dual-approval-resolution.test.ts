@@ -33,7 +33,8 @@ describe('applyApprovalRequestResolutionOnClient', () => {
       reviewReason: null,
     })
 
-    expect(client.query).toHaveBeenCalledTimes(2)
+    const notice=client.query.mock.calls.find(call=>String(call[0]).includes('INSERT INTO in_app_notifications'))
+    expect(notice?.[1]?.[1]).toBe('user-1')
     expect(String(client.query.mock.calls[0]![0])).toContain('UPDATE approval_requests')
     expect(client.query.mock.calls[0]![1]).toEqual([
       'approved',

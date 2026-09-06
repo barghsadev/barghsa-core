@@ -436,3 +436,42 @@ it('notifies eligible reviewers exactly once for receipt-created approvals and r
     }
   }
 },20000)
+
+it('commits direct receipt decision notices with settlement or rejection and retries without duplicate notices',async()=>{
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW()")
+  for(const kind of ['wallet','invoice'] as const) for(const decision of ['approve','reject'] as const) {
+    const receipt=kind==='wallet'?await walletReceipt():await invoiceReceipt()
+    const start=await (kind==='wallet'?confirmWallet('initiator',receipt.id):confirmInvoice('initiator',receipt.id))
+    expect(start.status,await start.clone().text()).toBe(200)
+    const request=(await http.pool.query("SELECT id FROM approval_requests WHERE details->>'receiptId'=$1",[receipt.id])).rows[0]
+    const perform=()=>decision==='approve'
+      ? kind==='wallet'?confirmWallet('reviewer',receipt.id):confirmInvoice('reviewer',receipt.id)
+      : fetch(`${http.base}/api/admin/${kind==='wallet'?'wallet/bank-receipt-top-ups':'invoices/bank-receipts'}/${receipt.id}/reject`,{
+          method:'POST',headers:headers.reviewer!,body:JSON.stringify({reason:'Receipt could not be verified'}),
+        })
+    await http.pool.query(`CREATE FUNCTION fail_receipt_decision_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+      IF NEW.recipient_user_id='initiator' THEN RAISE EXCEPTION 'test decision notice failure'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER fail_receipt_decision_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_receipt_decision_notice()`)
+    try {
+      expect((await perform()).status).toBe(500)
+      expect((await http.pool.query('SELECT status FROM approval_requests WHERE id=$1',[request.id])).rows[0].status).toBe('pending')
+      if(kind==='wallet') {
+        expect((await http.pool.query('SELECT state FROM wallet_transactions WHERE id=$1',[receipt.id])).rows[0].state).toBe('Pending')
+        expect((await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1',[receipt.profile])).rows[0].posted_balance).toBe('0')
+      } else {
+        expect((await http.pool.query('SELECT state FROM bank_receipts WHERE id=$1',[receipt.id])).rows[0].state).toBe('UnderReview')
+        expect((await http.pool.query('SELECT paid_amount FROM invoices WHERE id=$1',[(receipt as {invoice:string}).invoice])).rows[0].paid_amount).toBe('0')
+      }
+      expect((await http.pool.query("SELECT count(*)::int AS count FROM audit_log WHERE event IN ('approval_request_approved','approval_request_rejected') AND metadata::jsonb->>'requestId'=$1",[request.id])).rows[0].count).toBe(0)
+    } finally { await http.pool.query('DROP TRIGGER fail_receipt_decision_notice ON in_app_notifications; DROP FUNCTION fail_receipt_decision_notice()') }
+    const retried=await perform()
+    expect(retried.status,await retried.clone().text()).toBe(200)
+    await perform()
+    const notices=(await http.pool.query(`SELECT recipient_user_id,profile_id,localized_content FROM in_app_notifications
+      WHERE recipient_user_id='initiator' AND localized_content::text LIKE $1`,[`%${request.id}%`])).rows
+    expect(notices).toHaveLength(1)
+    expect(notices[0].profile_id).toBeNull()
+    expect(notices[0].localized_content.en.title).toBe(decision==='approve'?'Request approved':'Request rejected')
+    if(decision==='reject')expect(notices[0].localized_content.en.body).toContain('Receipt could not be verified')
+  }
+},20000)

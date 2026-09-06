@@ -1,3 +1,5 @@
+import { notifyApprovalResolved } from './approval-notifications.js'
+import type { NotificationsService } from '../notifications/notifications.service.js'
 import { HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -42,6 +44,7 @@ export interface ApplyApprovalRequestResolutionInput {
 export async function applyApprovalRequestResolutionOnClient(
   client: DualApprovalQueryClient,
   input: ApplyApprovalRequestResolutionInput,
+  notifications?: Pick<NotificationsService, 'create'>,
 ): Promise<void> {
   if (input.status !== 'pending') {
     throw new HttpException(
@@ -96,4 +99,6 @@ export async function applyApprovalRequestResolutionOnClient(
       input.now,
     ],
   )
+  await notifyApprovalResolved(client, input, notifications)
+
 }

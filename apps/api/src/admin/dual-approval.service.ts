@@ -346,9 +346,7 @@ export class DualApprovalService {
         status: row.status,
         actionType: row.action_type,
         amountIrR: row.amount_irr,
-      })
-
-      await this.notifyInitiator(client, requestId, row.initiator_id, decision, reviewReason)
+      }, this.notificationsService)
 
       await client.query('COMMIT')
 
@@ -415,23 +413,6 @@ export class DualApprovalService {
     }, this.notificationsService)
   }
 
-  /** Notice and decision commit together, including the original rejection reason. */
-  private async notifyInitiator(
-    client: DualApprovalQueryClient,
-    requestId: string,
-    initiatorUserId: string,
-    decision: 'approve' | 'reject',
-    reviewReason: string | null,
-  ): Promise<void> {
-    const localizedContent = {
-      fa: { title: decision === 'approve' ? 'درخواست تأیید شد' : 'درخواست تأیید رد شد',
-        body: decision === 'approve' ? `درخواست ${requestId} تأیید شد. عملیات پرداخت باید جداگانه تکمیل شود.` : `درخواست ${requestId} رد شد. دلیل: ${reviewReason ?? ''}` },
-      en: { title: decision === 'approve' ? 'Request approved' : 'Request rejected',
-        body: decision === 'approve' ? `Request ${requestId} was approved. Complete the payment action separately.` : `Request ${requestId} was rejected. Reason: ${reviewReason ?? ''}` },
-    }
-    await this.notificationsService.create({ userId: initiatorUserId, type: 'general',
-      ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
-  }
 
 }
 

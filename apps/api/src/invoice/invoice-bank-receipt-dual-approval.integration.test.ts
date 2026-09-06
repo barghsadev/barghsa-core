@@ -20,11 +20,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import { HttpException } from '@nestjs/common'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { v7 as uuidv7 } from 'uuid'
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test'
-import type { IsolatedTestDb } from '@barghsa/db/test'
+import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db'
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
   INVOICE_BANK_RECEIPT_CONFIRM_ERRORS,
@@ -35,6 +32,7 @@ import {
   INVOICE_BANK_RECEIPT_REJECTED_EVENT,
 } from '@barghsa/shared/finance'
 import { ErrorCodes } from '@barghsa/shared/errors'
+import { NotificationsService } from '../notifications/notifications.service.js'
 import { DualApprovalService } from '../admin/dual-approval.service.js'
 import {
   APPROVAL_REQUEST_APPROVED_EVENT,
@@ -60,43 +58,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   }
 })
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql',
-)
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql',
-)
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql',
-)
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql',
-)
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql',
-)
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql',
-)
-const BANK_RECEIPTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0078_create_bank_receipts.sql',
-)
-const APPROVAL_REQUESTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0036_create_approval_requests.sql',
-)
-const OUTBOX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0025_create_notification_outbox.sql',
-)
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
 const FIRST_STAFF = 'staff-dual-approval-first'
 const SECOND_STAFF = 'staff-dual-approval-second'
@@ -110,12 +71,12 @@ function receiptKey(suffix: string): string {
 }
 
 describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQL (T-04.3.01.05)', () => {
-  let ctx: IsolatedTestDb
+  let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>
   let walletService: WalletService
   let service: InvoiceBankReceiptConfirmationService
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8)
+    ctx = await createMigratedTestDb()
     poolHolder.pool = ctx.pool
     walletService = new WalletService()
     service = new InvoiceBankReceiptConfirmationService(
@@ -124,48 +85,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       new InvoiceStateMachineService(new InvoiceAuditRepository()),
     )
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY,
-        username TEXT, is_admin boolean NOT NULL DEFAULT true, disabled_at timestamptz, activation_token text
-      )
-    `)
-    await ctx.pool.query('CREATE TABLE staff_roles(role_id text PRIMARY KEY, permissions text); CREATE TABLE user_roles(user_id text, role_id text)')
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7(),
-        user_id TEXT NOT NULL REFERENCES users(user_id)
-      )
-    `)
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TYPE invoice_state AS ENUM (
-        'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-        'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-      )
-    `)
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `)
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(BANK_RECEIPTS_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(APPROVAL_REQUESTS_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(readFileSync(OUTBOX_MIGRATION, 'utf-8').trim())
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS app_config (
-        key TEXT PRIMARY KEY,
-        value JSONB NOT NULL,
-        version INTEGER NOT NULL DEFAULT 1,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      )
-    `)
-    await ctx.pool.query(`INSERT INTO users (user_id, username) VALUES ($1, $2), ($3, $4), ($5, $6)`, [
+    await ctx.pool.query(`INSERT INTO users (user_id, username, password_hash, is_staff) VALUES ($1, $2, 'test-only', true), ($3, $4, 'test-only', true), ($5, $6, 'test-only', false)`, [
       FIRST_STAFF,
       'first-finance',
       SECOND_STAFF,
@@ -173,7 +93,8 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
       CUSTOMER_USER_ID,
       'customer-dual',
     ])
-    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance'),($2,'role-finance')", [FIRST_STAFF,SECOND_STAFF])
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id, status) VALUES ($1, $2, 'ACTIVE')`, [
       PROFILE_A,
       CUSTOMER_USER_ID,
     ])
@@ -182,8 +103,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
 
   afterAll(async () => {
     poolHolder.pool = null
-    await ctx.pool.end()
-    await dropTestSchema(ctx.schemaName)
+    await ctx?.close()
   })
 
   async function setThreshold(thresholdIrR: number | null, raw?: unknown): Promise<void> {
@@ -558,9 +478,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(pending).toHaveLength(1)
     expect(pending[0]!.status).toBe('pending')
 
-    const dualApproval = new DualApprovalService({
-      create: vi.fn().mockResolvedValue({ id: 'n-1' }),
-    } as never)
+    const dualApproval = new DualApprovalService(new NotificationsService())
     await dualApproval.rejectApprovalRequest(
       pending[0]!.id,
       SECOND_STAFF,

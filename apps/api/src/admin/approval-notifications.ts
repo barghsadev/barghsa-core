@@ -29,3 +29,20 @@ export async function notifyApprovalRequested(
       ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
   }
 }
+
+/** Both queue decisions and direct receipt decisions notify inside their transaction. */
+export async function notifyApprovalResolved(
+  client: DualApprovalQueryClient,
+  input: { requestId: string; initiatorId: string; decision: 'approve'|'reject'; reviewReason: string|null },
+  notifications: Pick<NotificationsService, 'create'> = new NotificationsService(),
+): Promise<void> {
+  const approved=input.decision==='approve'
+  const localizedContent = {
+    fa: { title: approved ? 'درخواست تأیید شد' : 'درخواست تأیید رد شد',
+      body: approved ? `درخواست ${input.requestId} تأیید شد. وضعیت پرداخت را در رسید یا عملیات مربوط بررسی کنید.` : `درخواست ${input.requestId} رد شد. دلیل: ${input.reviewReason ?? ''}` },
+    en: { title: approved ? 'Request approved' : 'Request rejected',
+      body: approved ? `Request ${input.requestId} was approved. Check the related receipt or action for payment status.` : `Request ${input.requestId} was rejected. Reason: ${input.reviewReason ?? ''}` },
+  }
+  await notifications.create({ userId: input.initiatorId, type: 'general',
+    ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
+}
