@@ -17,10 +17,13 @@ function Fixture() {
   const [range, setRange] = React.useState<{ from: Date | undefined; to?: Date } | undefined>({
     from: params.has('empty') ? undefined : date,
   });
+  const [defaultDate, setDefaultDate] = React.useState<Date | undefined>(
+    new Date('2026-03-20T21:00:00Z')
+  );
   const shared = {
     locale,
     numerals: params.has('latin') ? ('latn' as const) : undefined,
-    timezone: dst ? 'America/New_York' : (params.get('timezone') ?? undefined),
+    timezone: dst ? 'America/New_York' : (params.get('timezone') ?? 'UTC'),
     minDate: dst
       ? new Date('2026-03-07T05:00:00Z')
       : params.has('timezone')
@@ -54,6 +57,10 @@ function Fixture() {
         )}
       </output>
       <DatePicker locale={locale} />
+      <DatePicker label="Default date" value={defaultDate} onChange={setDefaultDate} />
+      <output aria-label="Default stored value">
+        {defaultDate && new Date(defaultDate.getTime()).toISOString()}
+      </output>
     </main>
   );
 }

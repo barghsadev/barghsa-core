@@ -58,7 +58,7 @@ for (const mode of ['single', 'range']) {
     await expect(trigger).toBeFocused();
     await trigger.click();
     await dialog.getByRole('button', { name: /March 23rd/ }).press('Enter');
-    await expect(page.getByRole('status', { name: 'Stored value' })).toContainText(
+    await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toContainText(
       mode === 'range' ? '2026-03-24T00:00:00.000Z' : '2026-03-23'
     );
   });
@@ -66,16 +66,16 @@ for (const mode of ['single', 'range']) {
 
 test('locale switches calendar and placeholder without changing stored date', async ({ page }) => {
   await page.goto(url);
-  const value = await page.getByRole('status', { name: 'Stored value' }).textContent();
+  const value = await page.getByRole('status', { name: 'Stored value', exact: true }).textContent();
   await expect(page.getByRole('combobox', { name: 'Select date', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Switch language' }).click();
-  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(value!);
+  await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(value!);
   await expect(page.getByRole('combobox', { name: 'انتخاب تاریخ', exact: true })).toBeVisible();
   await page.getByRole('combobox', { name: 'Delivery date' }).click();
   await expect(page.getByRole('dialog').getByRole('grid')).toHaveAttribute('aria-label', /فروردین/);
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Switch language' }).click();
-  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(value!);
+  await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(value!);
 });
 
 test('disabled picker cannot open and validation error describes the control', async ({ page }) => {
@@ -95,7 +95,7 @@ for (const browserZone of ['UTC', 'America/Los_Angeles']) {
         await page.goto(`${url}?timezone=Asia%2FTehran&${locale}`);
         const trigger = page.getByRole('combobox', { name: 'Delivery date' });
         await expect(trigger).toContainText(locale === 'fa' ? '۱ فروردین ۱۴۰۵' : 'March 21, 2026');
-        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+        await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
           '"2026-03-20T21:00:00.000Z"'
         );
         await trigger.click();
@@ -110,12 +110,12 @@ for (const browserZone of ['UTC', 'America/Los_Angeles']) {
         ).toBeDisabled();
         await nextDay.click();
         await expect(trigger).toContainText(locale === 'fa' ? '۲ فروردین ۱۴۰۵' : 'March 22, 2026');
-        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+        await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
           '"2026-03-21T20:30:00.000Z"'
         );
         await page.getByRole('button', { name: 'Switch language' }).click();
         await expect(trigger).toContainText(locale === 'fa' ? 'March 22, 2026' : '۲ فروردین ۱۴۰۵');
-        await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+        await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
           '"2026-03-21T20:30:00.000Z"'
         );
       });
@@ -129,7 +129,7 @@ test('range end excludes the next day and keeps calendar days across DST', async
   await trigger.click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('button', { name: /March 9th/ }).click();
-  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+  await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
     '{"from":"2026-03-07T05:00:00.000Z","to":"2026-03-10T04:00:00.000Z"}'
   );
   await expect(trigger).toContainText('March 10, 2026 (end excluded)');
@@ -155,7 +155,7 @@ test('a fresh one-day range has a nonempty half-open interval', async ({ page })
     .getByRole('dialog')
     .getByRole('button', { name: /March 23rd/ })
     .click();
-  await expect(page.getByRole('status', { name: 'Stored value' })).toHaveText(
+  await expect(page.getByRole('status', { name: 'Stored value', exact: true })).toHaveText(
     '{"from":"2026-03-23T00:00:00.000Z","to":"2026-03-24T00:00:00.000Z"}'
   );
   await expect(trigger).toContainText('March 24, 2026 (end excluded)');
@@ -179,4 +179,18 @@ test('Persian mobile month selection shows both years and allows Latin digits', 
   expect(bounds!.x).toBeGreaterThanOrEqual(0);
   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
   await page.screenshot({ path: '/tmp/audit-date-picker-fa-mobile.png', animations: 'disabled' });
+});
+
+test('default picker uses Persian and Tehran while keeping UTC instants', async ({ page }) => {
+  await page.goto(url);
+  const trigger = page.getByRole('combobox', { name: 'Default date', exact: true });
+  await expect(trigger).toContainText('۱ فروردین ۱۴۰۵');
+  await trigger.click();
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: / ۲-ام فروردین ۱۴۰۵/ })
+    .click();
+  await expect(page.getByRole('status', { name: 'Default stored value', exact: true })).toHaveText(
+    '2026-03-21T20:30:00.000Z'
+  );
 });

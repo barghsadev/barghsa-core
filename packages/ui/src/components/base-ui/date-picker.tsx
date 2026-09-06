@@ -21,7 +21,7 @@ interface DatePickerBaseProps {
   /** Prefer locale; jalali remains supported for existing callers. */
   jalali?: boolean;
   locale?: 'fa' | 'en';
-  /** IANA zone for both display and selection; omit for legacy browser-local dates. */
+  /** IANA zone for display and selection. Defaults to Iran. */
   timezone?: string;
   numerals?: 'arabext' | 'latn';
   /** Inclusive calendar-day limits. Existing values are never silently changed. */
@@ -54,7 +54,7 @@ function DatePicker({
   calendarMode = 'single',
   jalali: jalaliOverride,
   locale,
-  timezone,
+  timezone = 'Asia/Tehran',
   numerals: numeralOverride,
   minDate,
   maxDate,
@@ -89,7 +89,6 @@ function DatePicker({
 
   const calendarDateLib = React.useMemo(() => {
     if (!jalali) return undefined;
-    if (!timezone) return jalaliCalendar;
     return {
       ...jalaliCalendar,
       // The Jalali library's constructor creates browser-local dates. Translate
@@ -155,8 +154,7 @@ function DatePicker({
     [formatDate, jalali]
   );
 
-  const dayStart = (date: Date) =>
-    startOfDay(timezone ? new TZDate(date.getTime(), timezone) : date);
+  const dayStart = (date: Date) => startOfDay(new TZDate(date.getTime(), timezone));
   const interval = calendarMode === 'range' ? (value as DateRange | undefined) : undefined;
   const calendarRange = interval
     ? {

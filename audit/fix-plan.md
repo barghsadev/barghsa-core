@@ -437,6 +437,8 @@ Task scope is enumerated in [findings.json](findings.json) and the per-task regi
 
 Priority P2. Finding type: verification_gap.
 
+Repair status: the shared picker and all five current consumers now use the saved account timezone. Bounds, full Persian/English labels, numeral controls, month selection, half-open ranges, Nowruz/Esfand and DST checks are implemented. The current checkpoint passes 37 focused browser checks; details and limitations are in [repair-progress.md](repair-progress.md). Global non-picker date displays, administrator numeral preference wiring and the remaining accessibility diagnostics still require work. The evidence below records the original audit baseline.
+
 Foundational components exist, but accessibility and localized behavior are not certified by the current test run. React Doctor reported 237 diagnostics including 92 accessibility warnings; these require triage, not blanket fixes. The date picker formats selected text as Jalali while using the generic DayPicker calendar with a cast locale, so actual Jalali month/day behavior needs a focused verification. Some shell components default to Persian.
 
 Evidence: [packages/ui/src/components/base-ui/date-picker.tsx:111](/Users/majid/www/barghsa/barghsa-core/packages/ui/src/components/base-ui/date-picker.tsx:111), [packages/ui/src/components/ui/calendar.tsx:9](/Users/majid/www/barghsa/barghsa-core/packages/ui/src/components/ui/calendar.tsx:9), [apps/web/src/pages/DashboardLayout.tsx:22](/Users/majid/www/barghsa/barghsa-core/apps/web/src/pages/DashboardLayout.tsx:22).
