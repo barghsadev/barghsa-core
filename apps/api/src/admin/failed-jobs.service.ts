@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -120,11 +121,7 @@ export class FailedJobsService {
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
   async retryFailedJob(jobId: string, actorUserId: string, ip: string): Promise<FailedJobDto> {
-    return this.transition(jobId, actorUserId, ip, 'retrying', {
-      allowedFrom: ['failed', 'dead_letter'],
-      event: 'job_retry_requested',
-      resetAttempts: true,
-    });
+    return (await this.transition([jobId], actorUserId, ip, 'retrying', false))[0]!;
   }
 
   /**
@@ -158,21 +155,7 @@ export class FailedJobsService {
       );
     }
 
-    getDbPool();
-    const results: FailedJobDto[] = [];
-    for (const id of ids) {
-      try {
-        results.push(await this.retryFailedJob(id, actorUserId, ip));
-      } catch (err) {
-        // Non-retryable / not-found rows are skipped in a bulk request.
-        if (err instanceof HttpException) {
-          const code = (err.getResponse() as { statusCode?: number })?.statusCode;
-          if (code === 404 || code === 409) continue;
-        }
-        this.logger.warn(`Bulk retry: job ${id} could not be retried: ${String(err)}`);
-      }
-    }
-    return results;
+    return this.transition([...new Set(ids)].sort(), actorUserId, ip, 'retrying', true);
   }
 
   /**
@@ -183,128 +166,82 @@ export class FailedJobsService {
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
   async resolveFailedJob(jobId: string, actorUserId: string, ip: string): Promise<FailedJobDto> {
-    return this.transition(jobId, actorUserId, ip, 'resolved', {
-      allowedFrom: ['failed', 'retrying', 'dead_letter'],
-      event: 'job_resolved',
-      resetAttempts: false,
-    });
+    return (await this.transition([jobId], actorUserId, ip, 'resolved', false))[0]!;
   }
 
-  // ─── Internals ─────────────────────────────────────────────────────────
-
-  /**
-   * Shared state-transition path for admin retry/resolve. The state change
-   * and its audit row commit atomically under a row lock.
-   */
   private async transition(
-    jobId: string,
+    ids: string[],
     actorUserId: string,
     ip: string,
-    toStatus: BackgroundJobStatus,
-    opts: {
-      allowedFrom: BackgroundJobStatus[];
-      event: string;
-      resetAttempts: boolean;
-    }
-  ): Promise<FailedJobDto> {
-    const pool = getDbPool();
+    toStatus: 'retrying' | 'resolved',
+    skipInvalid: boolean
+  ): Promise<FailedJobDto[]> {
+    const client = await getDbPool().connect();
     const now = new Date();
-
-    const client = await pool.connect();
-    let committed = false;
     try {
       await client.query('BEGIN');
-
-      const result = await client.query(
-        `SELECT bj.*, resolver.username AS resolved_by_username
-           FROM background_jobs bj
-           LEFT JOIN users resolver ON resolver.user_id = bj.resolved_by_id
-          WHERE bj.id = $1
-          FOR UPDATE OF bj`,
-        [jobId]
+      await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
+      const found = await client.query(
+        `SELECT * FROM background_jobs WHERE id=ANY($1::uuid[]) ORDER BY id FOR UPDATE`,
+        [ids]
       );
-
-      const row = result.rows[0] as
-        (Record<string, unknown> & { status: string; job_type: string }) | undefined;
-
-      if (!row) {
-        await client.query('ROLLBACK');
+      if (!skipInvalid && !found.rows.length)
         throw new HttpException(
-          {
-            statusCode: 404,
-            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-            message: 'Background job not found',
-          },
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
-      }
-
-      if (!opts.allowedFrom.includes(row.status as BackgroundJobStatus)) {
-        await client.query('ROLLBACK');
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: ErrorCodes.CONFLICT_STATE.code,
-            message: `Background job status '${row.status}' cannot be changed to '${toStatus}'`,
-          },
-          409
-        );
-      }
-
-      if (toStatus === 'retrying') {
+      const results: FailedJobDto[] = [];
+      const allowed =
+        toStatus === 'retrying' ? ['failed', 'dead_letter'] : ['failed', 'retrying', 'dead_letter'];
+      for (const row of found.rows) {
+        if (!allowed.includes(row.status)) {
+          if (skipInvalid) continue;
+          throw new HttpException({ statusCode: 409, error: ErrorCodes.CONFLICT_STATE.code }, 409);
+        }
+        if (toStatus === 'retrying') {
+          await client.query(
+            `UPDATE background_jobs SET status='retrying',attempts=1,next_run_at=$2,
+            resolved_by_id=NULL,resolved_at=NULL,updated_at=$2 WHERE id=$1`,
+            [row.id, now]
+          );
+        } else {
+          await client.query(
+            `UPDATE background_jobs SET status='resolved',resolved_by_id=$2,
+            resolved_at=$3,next_run_at=NULL,updated_at=$3 WHERE id=$1`,
+            [row.id, actorUserId, now]
+          );
+        }
         await client.query(
-          `UPDATE background_jobs
-              SET status = 'retrying',
-                  attempts = CASE WHEN $2 THEN 1 ELSE attempts END,
-                  next_run_at = $3,
-                  resolved_by_id = NULL,
-                  resolved_at = NULL,
-                  updated_at = $3
-            WHERE id = $1`,
-          [jobId, opts.resetAttempts, now]
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+          VALUES($1,$2,$3,$4::jsonb,$5,$6,$7)`,
+          [
+            uuidv7(),
+            actorUserId,
+            toStatus === 'retrying' ? 'job_retry_requested' : 'job_resolved',
+            JSON.stringify({
+              backgroundJobId: row.id,
+              jobType: row.job_type,
+              fromStatus: row.status,
+              toStatus,
+            }),
+            uuidv7(),
+            ip,
+            now,
+          ]
         );
-      } else {
-        // resolved — terminal.
-        await client.query(
-          `UPDATE background_jobs
-              SET status = 'resolved',
-                  resolved_by_id = $2,
-                  resolved_at = $3,
-                  next_run_at = NULL,
-                  updated_at = $3
-            WHERE id = $1`,
-          [jobId, actorUserId, now]
+        const updated = await client.query(
+          `SELECT bj.*,resolver.username AS resolved_by_username
+          FROM background_jobs bj LEFT JOIN users resolver ON resolver.user_id=bj.resolved_by_id WHERE bj.id=$1`,
+          [row.id]
         );
+        results.push(toFailedJobDto(updated.rows[0]!));
       }
-
-      await client.query(
-        `INSERT INTO audit_log (id, user_id, event, metadata, correlation_id, ip, created_at)
-         VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7)`,
-        [
-          uuidv7(),
-          actorUserId,
-          opts.event,
-          JSON.stringify({
-            backgroundJobId: jobId,
-            jobType: row.job_type,
-            fromStatus: row.status,
-            toStatus,
-          }),
-          uuidv7(),
-          ip,
-          now,
-        ]
-      );
-
       await client.query('COMMIT');
-      committed = true;
-
-      this.logger.log(`Background job ${jobId} ${toStatus} by ${actorUserId}`);
+      return results;
     } catch (error) {
-      if (committed) throw error;
-      if (error instanceof HttpException) throw error;
       await client.query('ROLLBACK').catch(() => {});
-      this.logger.error(`Failed to transition background job: ${String(error)}`);
+      if (error instanceof HttpException) throw error;
+      this.logger.error('Failed to persist background-job transition');
       throw new HttpException(
         {
           statusCode: 500,
@@ -316,31 +253,6 @@ export class FailedJobsService {
     } finally {
       client.release();
     }
-
-    return this.getJobDto(jobId);
-  }
-
-  /** Fetch a single failed-job row by id (post-commit read for the DTO). */
-  private async getJobDto(id: string): Promise<FailedJobDto> {
-    const pool = getDbPool();
-    const result = await pool.query(
-      `SELECT bj.*, resolver.username AS resolved_by_username
-         FROM background_jobs bj
-         LEFT JOIN users resolver ON resolver.user_id = bj.resolved_by_id
-        WHERE bj.id = $1`,
-      [id]
-    );
-    if (result.rows.length === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Background job not found',
-        },
-        404
-      );
-    }
-    return toFailedJobDto(result.rows[0]!);
   }
 }
 

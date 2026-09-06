@@ -18,9 +18,13 @@ const nonAdminReq = {
 
 function makeController() {
   const list = vi.fn().mockResolvedValue([]);
-  const retry = vi.fn().mockResolvedValue({ id: 'job-1', status: 'retrying' });
+  const retry = vi
+    .fn()
+    .mockResolvedValue({ id: '10000000-0000-4000-8000-000000000001', status: 'retrying' });
   const retryBulk = vi.fn().mockResolvedValue([]);
-  const resolve = vi.fn().mockResolvedValue({ id: 'job-1', status: 'resolved' });
+  const resolve = vi
+    .fn()
+    .mockResolvedValue({ id: '10000000-0000-4000-8000-000000000001', status: 'resolved' });
   const service = {
     listFailedJobs: list,
     retryFailedJob: retry,
@@ -56,9 +60,9 @@ describe('failed-jobs permission gates (T-09.09.02)', () => {
   it('rejects non-admin on retry/resolve/retry-bulk with the AUTHZ_FORBIDDEN contract', async () => {
     const { controller } = makeController();
     for (const promise of [
-      controller.retryJob('job-1', nonAdminReq),
-      controller.resolveJob('job-1', nonAdminReq),
-      controller.retryBulk({ ids: ['job-1'] }, nonAdminReq),
+      controller.retryJob('10000000-0000-4000-8000-000000000001', nonAdminReq),
+      controller.resolveJob('10000000-0000-4000-8000-000000000001', nonAdminReq),
+      controller.retryBulk({ ids: ['10000000-0000-4000-8000-000000000001'] }, nonAdminReq),
     ]) {
       const rejection = await promise.catch((e: unknown) => e);
       expect(rejection).toMatchObject({ status: 403 });
@@ -122,7 +126,7 @@ describe('failed-jobs body validation', () => {
   it('rejects a non-array ids body on retry-bulk with 400', async () => {
     const { controller, service } = makeController();
     const rejection = await controller
-      .retryBulk({ ids: 'job-1' }, adminReq)
+      .retryBulk({ ids: '10000000-0000-4000-8000-000000000001' }, adminReq)
       .catch((e: unknown) => e);
     expect(rejection).toMatchObject({ status: 400 });
     expect(service.retryFailedJobsBulk).not.toHaveBeenCalled();
@@ -130,9 +134,12 @@ describe('failed-jobs body validation', () => {
 
   it('passes a valid ids body through to the service for admin', async () => {
     const { controller, service } = makeController();
-    await controller.retryBulk({ ids: ['job-1', 'job-2'] }, adminReq);
+    await controller.retryBulk(
+      { ids: ['10000000-0000-4000-8000-000000000001', '10000000-0000-4000-8000-000000000002'] },
+      adminReq
+    );
     expect(service.retryFailedJobsBulk).toHaveBeenCalledWith(
-      ['job-1', 'job-2'],
+      ['10000000-0000-4000-8000-000000000001', '10000000-0000-4000-8000-000000000002'],
       'admin-1',
       '127.0.0.1'
     );
@@ -140,13 +147,21 @@ describe('failed-jobs body validation', () => {
 
   it('calls the single-retry service for admin with the derived ip', async () => {
     const { controller, service } = makeController();
-    await controller.retryJob('job-1', adminReq);
-    expect(service.retryFailedJob).toHaveBeenCalledWith('job-1', 'admin-1', '127.0.0.1');
+    await controller.retryJob('10000000-0000-4000-8000-000000000001', adminReq);
+    expect(service.retryFailedJob).toHaveBeenCalledWith(
+      '10000000-0000-4000-8000-000000000001',
+      'admin-1',
+      '127.0.0.1'
+    );
   });
 
   it('calls the resolve service for admin', async () => {
     const { controller, service } = makeController();
-    await controller.resolveJob('job-1', adminReq);
-    expect(service.resolveFailedJob).toHaveBeenCalledWith('job-1', 'admin-1', '127.0.0.1');
+    await controller.resolveJob('10000000-0000-4000-8000-000000000001', adminReq);
+    expect(service.resolveFailedJob).toHaveBeenCalledWith(
+      '10000000-0000-4000-8000-000000000001',
+      'admin-1',
+      '127.0.0.1'
+    );
   });
 });

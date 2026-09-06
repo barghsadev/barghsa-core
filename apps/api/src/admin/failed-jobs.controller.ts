@@ -11,10 +11,12 @@ import {
   Query,
   Req,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { FailedJobsService, type FailedJobDto } from './failed-jobs.service.js';
@@ -22,14 +24,26 @@ import { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from '@barghsa/shared/a
 
 /** Strict validation for the list view's limit/offset query params. */
 const ListQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(200).optional(),
-  offset: z.coerce.number().int().min(0).optional(),
+  limit: z
+    .string()
+    .regex(/^[1-9]\d*$/)
+    .transform(Number)
+    .pipe(z.number().int().min(1).max(200))
+    .optional(),
+  offset: z
+    .string()
+    .regex(/^\d+$/)
+    .transform(Number)
+    .pipe(z.number().int().min(0).max(1000000))
+    .optional(),
 });
 
 /** Strict validation for the bulk-retry body. */
-const BulkRetrySchema = z.object({
-  ids: z.array(z.string().trim().min(1)).min(1).max(200),
-});
+const BulkRetrySchema = z
+  .object({
+    ids: z.array(z.string().uuid()).min(1).max(200),
+  })
+  .strict();
 
 /** Swagger enum values for the background job statuses. */
 const STATUSES = [...BACKGROUND_JOB_STATUSES] as const;
@@ -59,6 +73,14 @@ export class FailedJobsController {
   private readonly logger = new Logger(FailedJobsController.name);
 
   constructor(private readonly failedJobsService: FailedJobsService) {}
+
+  @Get('access')
+  access(@Req() req: AuthenticatedRequest) {
+    return {
+      canView: hasStaffPermission(req, 'admin:jobs:view'),
+      canRetry: hasStaffPermission(req, 'admin:jobs:retry'),
+    };
+  }
 
   /**
    * Permission gate for viewing the failed-jobs dashboard.
@@ -152,6 +174,8 @@ export class FailedJobsController {
    * A resolved job or an unknown id is rejected (409/404).
    */
   @Post(':id/retry')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Retry a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
@@ -160,7 +184,10 @@ export class FailedJobsController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
-  async retryJob(@Param('id') id: string, @Req() req: AuthenticatedRequest): Promise<FailedJobDto> {
+  async retryJob(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);
     const ip = req.ip ?? req.socket?.remoteAddress ?? 'unknown';
     return this.failedJobsService.retryFailedJob(id, req.session.userId, ip);
@@ -173,6 +200,8 @@ export class FailedJobsController {
    * ids are skipped. Body: `{ "ids": ["...", "..."] }`.
    */
   @Post('retry-bulk')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Bulk-retry failed background jobs (admin)' })
   @ApiBody({
@@ -214,6 +243,8 @@ export class FailedJobsController {
    * Mark a failed/retrying/dead-lettered job resolved (terminal).
    */
   @Post(':id/resolve')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Resolve a failed background job (admin)' })
   @ApiParam({ name: 'id', description: 'Background job ID' })
@@ -223,7 +254,7 @@ export class FailedJobsController {
   @ApiResponse({ status: 404, description: 'Job not found' })
   @ApiResponse({ status: 409, description: 'State transition not allowed' })
   async resolveJob(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: AuthenticatedRequest
   ): Promise<FailedJobDto> {
     this.assertRetryPermission(req);

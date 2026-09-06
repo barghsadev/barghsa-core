@@ -2747,6 +2747,20 @@
         ]
       }
     },
+    "/api/admin/failed-jobs/access": {
+      "get": {
+        "operationId": "FailedJobsController_access",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/failed-jobs/retry-bulk": {
       "post": {
         "operationId": "FailedJobsController_retryBulk",
