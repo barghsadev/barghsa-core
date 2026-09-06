@@ -489,6 +489,12 @@ export class ProfilesService {
 
       await requireAddressGeography(client, data.provinceId, data.cityId);
 
+      // The profile row is already locked; retain any preliminary address as history.
+      await client.query(
+        'UPDATE addresses SET main_address=false,updated_at=NOW() WHERE profile_id=$1 AND main_address',
+        [profileId]
+      );
+
       // Create the main address record
       await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
@@ -501,6 +507,12 @@ export class ProfilesService {
         profileId,
         (await this.getVerificationMode()) === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
       ]);
+
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES(uuid_generate_v7(),$1,'individual_profile_saved',jsonb_build_object('profileId',$2::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId]
+      );
 
       await client.query('COMMIT');
 

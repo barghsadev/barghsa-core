@@ -850,3 +850,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Changed addresses become main in the same transaction while retaining historical rows. Repeating unchanged values adds no duplicate. An audit failure rolls back both the new row and the old main flag. The official company address snapshot remains separate from subsequent contact-address changes.
 - The detail response advertises the existing own-staff individual identity exception; write authorization is still checked by the server. Company profiles retain their editable title and show representative details without unrelated individual identity inputs. Pending verification has a localized status badge.
 - Review: 157 profile tests and 21 production-browser tests pass, including real HTTP rollback/idempotency and both-language settings readback, changed-field payloads, dependent city reset and verified identity permissions. Workspace build/typecheck, repository lint, OpenAPI drift, 26 route budgets and diff checks pass. Legal identity editing before verification remains a separate unfinished requirement.
+
+### F07/F08 — Complete drafts that already have a main address
+
+- Individual and legal onboarding demote preliminary main addresses under the existing profile lock before inserting the submitted main address. Historical address contents remain intact, and the unique main-address rule remains enforced.
+- Individual onboarding now records its successful save in the same transaction, matching legal onboarding. Failed audit writes restore the original draft, address contents and main flag.
+- Review: all 159 profile tests pass. New actual HTTP cases exercise both profile types with an existing main address, forced audit failure, retry, exactly one final main address and one committed audit. API build, workspace typecheck, repository lint, formatting and diff review pass.

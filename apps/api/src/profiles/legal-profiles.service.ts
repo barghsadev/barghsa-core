@@ -297,6 +297,12 @@ export class LegalProfilesService {
         ]
       );
 
+      // The profile row is already locked; retain any preliminary address as history.
+      await client.query(
+        'UPDATE addresses SET main_address=false,updated_at=NOW() WHERE profile_id=$1 AND main_address',
+        [profileId]
+      );
+
       // Every completed legal profile has an official main address.
       await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)

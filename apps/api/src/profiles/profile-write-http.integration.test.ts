@@ -687,3 +687,72 @@ it('advertises the own-staff identity exception and switches edited addresses wi
   expect((await update({ ...body, fullAddress: 'Failed Street' })).status).toBe(500);
   expect((await read()).addresses).toEqual(first.addresses);
 });
+
+for (const kind of ['individual', 'legal'] as const) {
+  it(`finalizes a ${kind} draft with a preliminary main address and rolls back audit failures`, async () => {
+    if (kind === 'legal')
+      await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+    const old = (
+      await http.pool.query(
+        "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Preliminary Street','1234567890',true) RETURNING id",
+        [profileId, provinceId, cityId]
+      )
+    ).rows[0].id;
+    const address = { provinceId, cityId, fullAddress: 'Final Street', postalCode: '1234567890' };
+    const body =
+      kind === 'individual'
+        ? { ...address, firstName: 'Person', lastName: 'Owner', nationalId: '1234567891' }
+        : {
+            ...representativeData(),
+            legalName: 'Company',
+            nationalIdentifier: '12345678901',
+            registrationNumber: '123',
+            companyTypeId: 'limited-liability',
+            representativeTitle: 'CEO',
+            representativeRelationship: 'director',
+            officialProvinceId: provinceId,
+            officialCityId: cityId,
+            officialFullAddress: address.fullAddress,
+            officialPostalCode: address.postalCode,
+          };
+    const submit = () =>
+      fetch(`${http.base}/api/onboarding/${kind}/${profileId}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+    await http.pool.query(
+      `CREATE FUNCTION reject_completion_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test rollback'; END $$; CREATE TRIGGER reject_completion_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='${kind}_profile_saved') EXECUTE FUNCTION reject_completion_audit()`
+    );
+    expect((await submit()).status).toBe(500);
+    expect((await snapshot()).status).toBe('DRAFT');
+    expect(
+      (
+        await http.pool.query(
+          'SELECT id,main_address,full_address FROM addresses WHERE profile_id=$1',
+          [profileId]
+        )
+      ).rows
+    ).toEqual([{ id: old, main_address: true, full_address: 'Preliminary Street' }]);
+    await http.pool.query('DROP TRIGGER reject_completion_audit ON audit_log');
+    expect((await submit()).status).toBe(200);
+    const addresses = (
+      await http.pool.query(
+        'SELECT id,main_address,full_address FROM addresses WHERE profile_id=$1',
+        [profileId]
+      )
+    ).rows;
+    expect(addresses).toHaveLength(kind === 'individual' ? 2 : 3);
+    expect(addresses.find((a) => a.id === old)).toMatchObject({
+      main_address: false,
+      full_address: 'Preliminary Street',
+    });
+    expect(addresses.filter((a) => a.main_address)).toEqual([
+      expect.objectContaining({ full_address: 'Final Street' }),
+    ]);
+    expect(
+      (await http.pool.query('SELECT id FROM audit_log WHERE event=$1', [`${kind}_profile_saved`]))
+        .rows
+    ).toHaveLength(1);
+  });
+}
