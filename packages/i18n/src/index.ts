@@ -1220,6 +1220,8 @@ export const fa: I18nDictionary = {
   'electricity.order.addressLoadFailed':
     'بارگذاری آدرس‌های ذخیره‌شده انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
   'electricity.order.productLoadFailed': 'بارگذاری محصولات برق انجام نشد. دوباره تلاش کنید.',
+  'electricity.order.provinceLoadFailed': 'بارگذاری استان‌ها انجام نشد. دوباره تلاش کنید.',
+  'electricity.order.cityLoadFailed': 'بارگذاری شهرهای این استان انجام نشد. دوباره تلاش کنید.',
   'electricity.order.checking': 'در حال بررسی وضعیت پروفایل…',
   'electricity.order.checkFailed':
     'بررسی وضعیت پروفایل انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
@@ -3216,6 +3218,8 @@ export const en: I18nDictionary = {
   'electricity.order.addressLoadFailed':
     'Could not load saved addresses. Try again before creating an order.',
   'electricity.order.productLoadFailed': 'Could not load electricity products. Try again.',
+  'electricity.order.provinceLoadFailed': 'Could not load provinces. Try again.',
+  'electricity.order.cityLoadFailed': 'Could not load cities for this province. Try again.',
   'electricity.order.checking': 'Checking profile eligibility…',
   'electricity.order.checkFailed':
     'Could not check profile eligibility. Try again before creating an order.',

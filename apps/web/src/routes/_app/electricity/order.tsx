@@ -72,6 +72,11 @@ function ElectricityOrderPage() {
   const [addressError, setAddressError] = useState(false);
   const addressGeneration = useRef(0);
   const [provinces, setProvinces] = useState<Province[]>([]);
+  const [provinceError, setProvinceError] = useState(false);
+  const [loadingProvinces, setLoadingProvinces] = useState(true);
+  const provinceGeneration = useRef(0);
+  const [cityError, setCityError] = useState(false);
+  const [loadingCities, setLoadingCities] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
   const cityGeneration = useRef(0);
   /** City name lookup map: cityId -> { nameFa, nameEn } */
@@ -216,14 +221,27 @@ function ElectricityOrderPage() {
   // ── Fetch provinces ─────────────────────────────────────────────────
 
   const fetchProvinces = useCallback(async () => {
+    const current = ++provinceGeneration.current;
+    setLoadingProvinces(true);
+    setProvinceError(false);
+    setProvinces([]);
     try {
       const res = await fetch('/api/geography/provinces');
-      if (res.ok) {
-        const data: Province[] = await res.json();
-        setProvinces(data);
-      }
+      if (!res.ok) throw new Error('Provinces unavailable');
+      const data: unknown = await res.json();
+      if (
+        !Array.isArray(data) ||
+        data.some(
+          (place) =>
+            !place || ['id', 'nameFa', 'nameEn'].some((key) => typeof place[key] !== 'string')
+        )
+      )
+        throw new Error('Invalid provinces');
+      if (current === provinceGeneration.current) setProvinces(data);
     } catch {
-      // Silently fail
+      if (current === provinceGeneration.current) setProvinceError(true);
+    } finally {
+      if (current === provinceGeneration.current) setLoadingProvinces(false);
     }
   }, []);
 
@@ -234,23 +252,33 @@ function ElectricityOrderPage() {
     if (updateForm) {
       setCities([]);
       setFormCityId('');
+      setCityError(false);
+      setLoadingCities(true);
     }
     try {
       const res = await fetch(`/api/geography/provinces/${provinceId}/cities`);
-      if (res.ok) {
-        const data: City[] = await res.json();
-        if (current !== null && current === cityGeneration.current) setCities(data);
-        // Add to city name lookup map
-        setCityMap((prev) => {
-          const next = { ...prev };
-          for (const city of data) {
-            next[city.id] = { nameFa: city.nameFa, nameEn: city.nameEn };
-          }
-          return next;
-        });
-      }
+      if (!res.ok) throw new Error('Cities unavailable');
+      const data: unknown = await res.json();
+      if (
+        !Array.isArray(data) ||
+        data.some(
+          (place) =>
+            !place ||
+            place.provinceId !== provinceId ||
+            ['id', 'nameFa', 'nameEn'].some((key) => typeof place[key] !== 'string')
+        )
+      )
+        throw new Error('Invalid cities');
+      if (current !== null && current === cityGeneration.current) setCities(data);
+      setCityMap((prev) => {
+        const next = { ...prev };
+        for (const city of data) next[city.id] = { nameFa: city.nameFa, nameEn: city.nameEn };
+        return next;
+      });
     } catch {
-      // Silently fail
+      if (current !== null && current === cityGeneration.current) setCityError(true);
+    } finally {
+      if (current !== null && current === cityGeneration.current) setLoadingCities(false);
     }
   }, []);
 
@@ -263,6 +291,7 @@ function ElectricityOrderPage() {
     return () => {
       ++verificationGeneration.current;
       ++productGeneration.current;
+      ++provinceGeneration.current;
     };
   }, [checkVerification, fetchProducts, fetchProvinces]);
 
@@ -278,6 +307,8 @@ function ElectricityOrderPage() {
       fetchCities(formProvinceId);
     } else {
       ++cityGeneration.current;
+      setCityError(false);
+      setLoadingCities(false);
       setCities([]);
       setFormCityId('');
     }
@@ -321,6 +352,15 @@ function ElectricityOrderPage() {
 
   const handleSaveNewAddress = useCallback(async () => {
     if (checking || blocked !== false || verificationError || loadingAddresses || addressError)
+      return;
+    if (
+      loadingProvinces ||
+      provinceError ||
+      loadingCities ||
+      cityError ||
+      !provinces.some((province) => province.id === formProvinceId) ||
+      !cities.some((city) => city.id === formCityId && city.provinceId === formProvinceId)
+    )
       return;
     if (!formProvinceId || !formCityId || !formFullAddress.trim() || !formPostalCode.trim()) {
       toast.error(t('settings.addresses.error.create', locale));
@@ -369,6 +409,12 @@ function ElectricityOrderPage() {
     }
   }, [
     formProvinceId,
+    loadingProvinces,
+    provinceError,
+    loadingCities,
+    cityError,
+    provinces,
+    cities,
     formCityId,
     formFullAddress,
     formPostalCode,
@@ -697,6 +743,22 @@ function ElectricityOrderPage() {
                     {t('electricity.order.newAddressTitle', locale)}
                   </h3>
 
+                  {provinceError && (
+                    <div role="alert" className="space-y-2">
+                      <p>{t('electricity.order.provinceLoadFailed', locale)}</p>
+                      <Button onClick={() => void fetchProvinces()}>
+                        {t('electricity.order.retry', locale)}
+                      </Button>
+                    </div>
+                  )}
+                  {cityError && (
+                    <div role="alert" className="space-y-2">
+                      <p>{t('electricity.order.cityLoadFailed', locale)}</p>
+                      <Button onClick={() => void fetchCities(formProvinceId)}>
+                        {t('electricity.order.retry', locale)}
+                      </Button>
+                    </div>
+                  )}
                   {/* Province */}
                   <div>
                     <label
@@ -707,6 +769,7 @@ function ElectricityOrderPage() {
                     </label>
                     <select
                       id="order-address-province"
+                      disabled={loadingProvinces || provinceError || savingAddress}
                       value={formProvinceId}
                       onChange={(e) => {
                         setFormProvinceId(e.target.value);
@@ -736,7 +799,7 @@ function ElectricityOrderPage() {
                       id="order-address-city"
                       value={formCityId}
                       onChange={(e) => setFormCityId(e.target.value)}
-                      disabled={!formProvinceId}
+                      disabled={!formProvinceId || loadingCities || cityError || savingAddress}
                       className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       dir={locale === 'fa' ? 'rtl' : 'ltr'}
                     >
@@ -805,7 +868,13 @@ function ElectricityOrderPage() {
                     </Button>
                     <Button
                       onClick={handleSaveNewAddress}
-                      disabled={savingAddress}
+                      disabled={
+                        savingAddress ||
+                        loadingProvinces ||
+                        provinceError ||
+                        loadingCities ||
+                        cityError
+                      }
                       className="gap-2"
                     >
                       {savingAddress ? (

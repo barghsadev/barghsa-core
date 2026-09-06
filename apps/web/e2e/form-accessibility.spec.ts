@@ -1660,3 +1660,82 @@ for (const locale of ['en', 'fa']) {
     expect(reads).toBe(3);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering geography failures are retryable and reject cities from another province (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+      expect(route.request().method()).toBe('GET');
+      return route.fulfill({ json: { addresses: [] } });
+    });
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    let provinces = 0,
+      cities = 0;
+    await page.route('**/api/geography/provinces', (route) => {
+      provinces++;
+      if (provinces === 1) return route.fulfill({ status: 503, json: {} });
+      return route.fulfill({
+        json: provinces === 2 ? [null] : [{ id: 'province', nameFa: 'استان', nameEn: 'Province' }],
+      });
+    });
+    await page.route('**/api/geography/provinces/province/cities', (route) => {
+      cities++;
+      if (cities === 1) return route.fulfill({ status: 503, json: {} });
+      return route.fulfill({
+        json: [
+          {
+            id: 'city',
+            provinceId: cities === 2 ? 'wrong-province' : 'province',
+            nameFa: 'شهر',
+            nameEn: 'City',
+          },
+        ],
+      });
+    });
+    await page.goto('/electricity/order');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+        exact: true,
+      })
+      .click();
+    const province = page.locator('#order-address-province'),
+      city = page.locator('#order-address-city');
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const alert = page.getByRole('alert');
+      await expect(alert).toContainText(
+        locale === 'fa' ? 'بارگذاری استان‌ها انجام نشد' : 'Could not load provinces'
+      );
+      await expect(province).toBeDisabled();
+      await alert
+        .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+        .click();
+    }
+    await province.selectOption('province');
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const alert = page.getByRole('alert');
+      await expect(alert).toContainText(
+        locale === 'fa'
+          ? 'بارگذاری شهرهای این استان انجام نشد'
+          : 'Could not load cities for this province'
+      );
+      await expect(city).toBeDisabled();
+      await expect(city).toHaveValue('');
+      await alert
+        .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+        .click();
+    }
+    await city.selectOption('city');
+    await expect(city).toHaveValue('city');
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    expect(provinces).toBe(3);
+    expect(cities).toBe(3);
+  });
+}
