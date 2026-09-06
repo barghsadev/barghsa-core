@@ -1063,3 +1063,11 @@ Converted the reversal, chargeback detection, and finance alert integration suit
 Review: retained reversal sign, balance, duplicate/replay, transaction rollback, unmatched alert, and concurrent handler assertions. The shared fixture accepts an explicit pool maximum so the four-handler deadlock regression still runs with exactly four service connections. Finance alert checks now exercise production foreign keys and seeded staff roles. These are service integration tests, not evidence of a live payment provider or externally delivered alerts.
 
 Validation: all 27 tests across the three suites passed; root type checking and lint passed; whitespace review passed. Production application behavior is unchanged in this step. Remaining callback and receipt confirmation suites are still under review.
+
+### Repair callback processing constraint omitted from production migrations (F02/F14)
+
+Moving the payment callback suite to full production migrations reproduced a product failure: seven of eight tests failed because `chk_wallet_topup_callback_events_status` rejected `processing`. The historical test fixture applied migration 0071, but the consolidated production chain retained the earlier terminal-only constraint. Every new callback claim failed before wallet credit.
+
+Added additive migration 0112 to permit the existing service's processing state while retaining the three terminal states. No rows are deleted or rewritten. The migration is journaled after 0111; the baseline test explicitly recreates the old constraint before its populated upgrade check and verifies that processing is restored. The converted callback suite retains signed callbacks, replay binding, crash recovery, provider-return verification, and delayed paid returns after expiry or an earlier unpaid return.
+
+Review and validation: all eight callback tests pass with the full migration chain; fresh install, repeat migration, and populated baseline upgrade test pass; root type checking and lint pass. Provider verification is a local fake in this suite, so this does not certify a real payment-provider deployment. Apply 0112 before expecting deployed callback handling to work. No production migration was run.

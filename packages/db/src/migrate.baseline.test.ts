@@ -70,6 +70,7 @@ describe('complete production schema baseline', () => {
         '0109_onboarding_drafts',
         '0110_legal_documents',
         '0111_account_login_identifiers',
+        '0112_wallet_callback_processing',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -119,6 +120,20 @@ describe('complete production schema baseline', () => {
           )
         ).rejects.toMatchObject({ code: '23514' });
       }
+
+      const callbackConstraint = async () =>
+        (
+          await pool.query(`SELECT pg_get_constraintdef(oid) AS definition
+          FROM pg_constraint WHERE conrelid = 'wallet_topup_callback_events'::regclass
+          AND conname = 'chk_wallet_topup_callback_events_status'`)
+        ).rows[0].definition as string;
+      expect(await callbackConstraint()).toContain('processing');
+      await pool.query(`ALTER TABLE wallet_topup_callback_events
+        DROP CONSTRAINT chk_wallet_topup_callback_events_status;
+        ALTER TABLE wallet_topup_callback_events
+        ADD CONSTRAINT chk_wallet_topup_callback_events_status
+        CHECK (status IN ('credited', 'unpaid', 'duplicate'))`);
+      expect(await callbackConstraint()).not.toContain('processing');
 
       // Representative deployed state: populated current product/finance
       // tables with the old migration journal and missing unjournaled schema.
@@ -232,6 +247,7 @@ describe('complete production schema baseline', () => {
           )
         ).rows[0].permissions
       ).toBe('["legal:read"]');
+      expect(await callbackConstraint()).toContain('processing');
       expect((await pool.query('SELECT * FROM products ORDER BY id')).rows).toEqual(productsBefore);
       expect(
         (

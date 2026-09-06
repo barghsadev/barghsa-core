@@ -14,10 +14,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ONLINE_TOPUP_EXPIRY_REASON } from '@barghsa/shared/finance';
 import { WalletService } from './wallet.service.js';
@@ -44,23 +41,6 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const CALLBACK_EVENTS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0070_create_wallet_topup_callback_events.sql'
-);
-const CALLBACK_EVENTS_PROCESSING_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0071_wallet_topup_callback_events_processing_status.sql'
-);
-
 const PROFILE_A = 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa';
 const SECRET = 'integration-webhook-secret';
 const MERCHANT = 'barghsa-test-merchant';
@@ -68,13 +48,13 @@ const AMOUNT = 25_000n;
 const AUTHORITY = 'auth-integration-1';
 
 describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let walletService: WalletService;
   let service: OnlineTopUpCallbackService;
   let pendingId: string;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 4);
     poolHolder.pool = ctx.pool;
     walletService = new WalletService();
     const gateway: PaymentGateway = {
@@ -93,16 +73,11 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       merchantId: MERCHANT,
     });
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CALLBACK_EVENTS_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(CALLBACK_EVENTS_PROCESSING_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [PROFILE_A]);
+    await ctx.pool.query(`INSERT INTO users (user_id, username, password_hash)
+      VALUES ('wallet-test-owner', 'wallet-test@example.test', 'test-only')`);
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, 'wallet-test-owner')`, [
+      PROFILE_A,
+    ]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [PROFILE_A]);
 
     const pending = await ctx.pool.query<{ id: string }>(
@@ -127,8 +102,7 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   function signed(body: Record<string, unknown>, eventId: string) {

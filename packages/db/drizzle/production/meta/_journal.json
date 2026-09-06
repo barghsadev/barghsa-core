@@ -225,6 +225,13 @@
       "when": 1791331200014,
       "tag": "0111_account_login_identifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 112,
+      "version": "7",
+      "when": 1791331200015,
+      "tag": "0112_wallet_callback_processing",
+      "breakpoints": true
     }
   ]
 }
