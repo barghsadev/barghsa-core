@@ -50,6 +50,8 @@ export interface OutboxRow {
 export interface OutboxReaderOptions {
   /** Transport registry keyed by channel. In-app is mandatory. */
   transports: Partial<Record<NotificationChannel, INotificationTransport>>
+  /** Pool override for isolated database checks. */
+  pool?: { query: (sql: string, params?: any[]) => Promise<any> }
   /** Maximum rows to claim per poll (default 20). */
   leaseSize?: number
   /** Lease duration in ms (default 60s). */
@@ -67,12 +69,12 @@ export interface OutboxReaderOptions {
 export async function leaseOutbox(options?: OutboxReaderOptions): Promise<OutboxRow[]> {
   const limit = Math.max(1, options?.leaseSize ?? DEFAULT_LEASE_SIZE)
   const leaseMs = options?.leaseDurationMs ?? DEFAULT_LEASE_MS
-  const pool = getDbPool()
+  const pool = options?.pool ?? getDbPool()
   const now = new Date()
   const leaseUntil = new Date(Date.now() + leaseMs)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const result = await pool.query<any>(
+  const result = await pool.query(
     `UPDATE notification_outbox ob
         SET locked_until = $1,
             updated_at = NOW()

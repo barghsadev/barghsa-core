@@ -99,13 +99,22 @@ export async function runOutboxPoll(
     )
 
     try {
+      // Reuse committed channel outcomes. A later failure must not resend a
+      // delivered leg or reconsider a previously recorded consent skip.
+      const completed = await pool.query(
+        `SELECT channel FROM notification_job WHERE outbox_id=$1
+          AND (status='done' OR (status='failed' AND last_error LIKE 'skipped:%'))`, [row.id],
+      )
+      const completedChannels = new Set(completed.rows.map((job: { channel: string }) => job.channel))
+      const pendingChannels = row.channels.filter(channel => !completedChannels.has(channel))
+
       // T-05.05.02 — resolve which requested channels are actually available
       // (verified destinations + marketing consent) before dispatching, so we
       // never send an external leg the recipient can't or hasn't opted into.
       const availability =
         options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id)
       const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT
-      const decision = resolveChannelAvailability(row.eventKey, row.channels, ctx)
+      const decision = resolveChannelAvailability(row.eventKey, pendingChannels, ctx)
       await markSkippedJobs(pool, row, decision.skipped)
 
       const outcomes = await dispatchOutbox({ ...row, channels: decision.allowed }, options?.transports ?? {})
@@ -341,7 +350,8 @@ async function failAllJobs(
       `UPDATE notification_job
           SET status = $2, attempts = $3, last_error = $4, run_after = $5,
               updated_at = NOW()
-        WHERE outbox_id = $1
+        WHERE outbox_id = $1 AND status NOT IN ('done','dead_letter')
+          AND NOT (status='failed' AND COALESCE(last_error,'') LIKE 'skipped:%')
         RETURNING id, channel`,
       [row.id, exhausted ? 'dead_letter' : 'retrying', attempts, safeMessage || null, runAfter],
     )
@@ -367,7 +377,7 @@ async function failAllJobs(
     }
     // Exception path: dispatch threw before per-channel outcomes were recorded,
     // so append one delivery log per requested channel describing the failure.
-    for (const channel of row.channels) {
+    for (const { channel } of jobUpdates.rows as Array<{ channel: NotificationChannel }>) {
       recordDeliveryAttempt(channel, 'failed')
       await writeDeliveryLog(qpool, {
         notificationId: row.id,

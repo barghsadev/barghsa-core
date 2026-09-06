@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { InAppNotificationTransport } from './in-app-transport.js'
+import { runOutboxPoll } from './outbox-runner.js'
 import { enqueueOutbox } from './outbox-writer.js'
 import { dispatchOutbox, type OutboxRow } from './outbox-reader.js'
 
@@ -110,4 +111,30 @@ it('enqueues two occurrences while a repeated business key inserts no second job
     await client.query('COMMIT')
   } catch (error) { await client.query('ROLLBACK'); throw error }
   finally { client.release() }
+})
+
+it('the real runner reuses delivered channel outcomes after an email failure', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  const client = await pool.connect()
+  let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, eventKey: 'wallet.topup_completed', channels: ['in_app', 'email'], idempotencyKey: 'runner:retry' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  let inAppCalls = 0, emailCalls = 0
+  const inApp = new InAppNotificationTransport(pool)
+  const transports = {
+    in_app: { channel: 'in_app' as const, async send(payload: Parameters<InAppNotificationTransport['send']>[0]) { inAppCalls++; return inApp.send(payload) } },
+    email: { channel: 'email' as const, async send() { emailCalls++; if (emailCalls === 1) throw new Error('email timeout'); return { status: 'delivered' as const, providerRef: 'email-retry-ref' } } },
+  }
+  const options = { pool, transports, availability: () => ({ verifiedEmail: true, verifiedPhone: false, marketingOptedIn: {} }), deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 })
+  expect((await pool.query("SELECT status,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='in_app'", [id])).rows[0].status).toBe('done')
+  await pool.query('UPDATE notification_outbox SET locked_until=NULL WHERE id=$1', [id])
+  expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, delivered: 1 })
+  expect(inAppCalls).toBe(1)
+  expect(emailCalls).toBe(2)
+  expect((await pool.query('SELECT status FROM notification_outbox WHERE id=$1', [id])).rows[0].status).toBe('delivered')
+  expect((await pool.query("SELECT count(*)::int AS count FROM notification_delivery_log WHERE notification_id=$1 AND channel='in_app'", [id])).rows[0].count).toBe(1)
 })
