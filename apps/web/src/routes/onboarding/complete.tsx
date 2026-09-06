@@ -1,13 +1,14 @@
+import { useLocale } from '../../hooks/useLocale.js';
 import { withCsrf } from '../../lib/csrf.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
-import { t, type Locale } from '@barghsa/i18n';
+import { t } from '@barghsa/i18n';
 import { Button } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/complete')({
   component: OnboardingCompletePage,
-  validateSearch: (search: Record<string, string | undefined>) => ({
-    profileId: search.profileId as string | undefined,
+  validateSearch: (search: Record<string, unknown>) => ({
+    profileId: typeof search.profileId === 'string' ? search.profileId : undefined,
   }),
 });
 
@@ -43,130 +44,108 @@ function Confetti() {
   });
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden" aria-hidden="true">
+    <div
+      className="pointer-events-none fixed inset-0 z-50 overflow-hidden motion-reduce:hidden"
+      aria-hidden="true"
+    >
+      <style>{`@keyframes confetti-drop {0% {transform:translateY(-10vh) rotate(0deg);opacity:1;}100% {transform:translateY(100vh) rotate(720deg);opacity:0;}} .animate-confetti-drop {animation:confetti-drop ease-in forwards;}`}</style>
       {particles}
     </div>
   );
 }
 
 function OnboardingCompletePage() {
-  const locale: Locale = 'fa';
-  const isRtl = locale === 'fa';
+  const locale = useLocale();
   const router = useRouter();
-  const { profileId: searchProfileId } = useSearch({ from: Route.id });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleAddAnother() {
-    router.navigate({ to: '/onboarding', replace: true });
-  }
-
-  async function handleGoToDashboard() {
-    setLoading(true);
-    setError(null);
-
-    try {
-      // If we have a profileId from search params, complete that one.
-      // Otherwise (e.g. direct URL access), try the first ACTIVE/DRAFT profile.
-      const profileId = searchProfileId
-        ? searchProfileId
-        : await (async () => {
-            const profilesRes = await fetch('/api/profiles', { credentials: 'include' });
-            if (!profilesRes.ok) return null;
-            const profilesData = (await profilesRes.json()) as {
-              profiles: Array<{ id: string; status: string }>;
-            };
-            const p = profilesData.profiles?.find(
-              (p: { status: string }) => p.status === 'ACTIVE' || p.status === 'DRAFT'
-            );
-            return p?.id ?? null;
-          })();
-
-      if (profileId) {
-        await fetch(`/api/onboarding/complete/${profileId}`, {
-          headers: withCsrf(),
-          method: 'POST',
-          credentials: 'include',
-        }).catch(() => {
-          // Idempotent — failure is non-blocking
-        });
-      }
-
-      router.navigate({ to: '/app', replace: true });
-    } catch {
-      setError(t('onboarding.complete.error', locale) || 'An error occurred');
-      setLoading(false);
+  const { profileId } = useSearch({ from: Route.id });
+  const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading');
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    if (!profileId) {
+      setStatus('error');
+      return;
     }
-  }
-
+    const controller = new AbortController();
+    setStatus('loading');
+    fetch(`/api/onboarding/complete/${encodeURIComponent(profileId)}`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: withCsrf(),
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Completion failed');
+        const body = (await response.json()) as { id?: string; status?: string };
+        if (
+          body.id !== profileId ||
+          !['ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(body.status ?? '')
+        )
+          throw new Error('Unexpected completed profile');
+        if (!controller.signal.aborted) setStatus('complete');
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setStatus('error');
+      });
+    return () => controller.abort();
+  }, [profileId, retry]);
   return (
     <div
       className="container relative mx-auto flex min-h-screen items-center justify-center p-4"
-      dir={isRtl ? 'rtl' : 'ltr'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <Confetti />
-
-      <div className="max-w-md text-center">
-        {/* Success icon */}
-        <div
-          className="mx-auto mb-6 flex h-20 w-20 animate-bounce-once items-center justify-center rounded-full bg-green-100"
-          aria-hidden="true"
-        >
-          <svg
-            className="h-10 w-10 text-green-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2.5}
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-        </div>
-
-        <h1 className="mb-2 text-2xl font-bold">{t('onboarding.complete.title', locale)}</h1>
-        <p className="mb-8 text-muted-foreground">{t('onboarding.complete.subtitle', locale)}</p>
-
-        {error && (
-          <p className="mb-4 text-sm text-destructive" role="alert">
-            {error}
-          </p>
+      {status === 'complete' && <Confetti />}
+      <div className="max-w-md text-center space-y-5">
+        <h1 className="text-2xl font-bold">
+          {t(
+            status === 'complete'
+              ? 'onboarding.complete.title'
+              : status === 'loading'
+                ? 'onboarding.complete.finalizing'
+                : 'onboarding.complete.failedTitle',
+            locale
+          )}
+        </h1>
+        {status === 'complete' ? (
+          <>
+            <p>{t('onboarding.complete.subtitle', locale)}</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.navigate({ to: '/onboarding', replace: true })}
+              >
+                {t('onboarding.complete.addAnother', locale)}
+              </Button>
+              <Button type="button" onClick={() => router.navigate({ to: '/app', replace: true })}>
+                {t('onboarding.complete.goToDashboard', locale)}
+              </Button>
+            </div>
+          </>
+        ) : status === 'loading' ? (
+          <p role="status">{t('onboarding.complete.finalizing', locale)}</p>
+        ) : (
+          <>
+            <p role="alert">
+              {t(
+                profileId ? 'onboarding.complete.error' : 'onboarding.complete.missingProfile',
+                locale
+              )}
+            </p>
+            {profileId && (
+              <Button type="button" onClick={() => setRetry((value) => value + 1)}>
+                {t('onboarding.draft.retry', locale)}
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.navigate({ to: '/onboarding', replace: true })}
+            >
+              {t('onboarding.complete.backToSetup', locale)}
+            </Button>
+          </>
         )}
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button type="button" variant="outline" onClick={handleAddAnother} disabled={loading}>
-            {t('onboarding.complete.addAnother', locale)}
-          </Button>
-          <Button type="button" onClick={handleGoToDashboard} disabled={loading}>
-            {loading ? '…' : t('onboarding.complete.goToDashboard', locale)}
-          </Button>
-        </div>
       </div>
-
-      {/* Keyframe for confetti drop */}
-      <style>{`
-        @keyframes confetti-drop {
-          0% {
-            transform: translateY(-10vh) rotate(0deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-        .animate-confetti-drop {
-          animation: confetti-drop ease-in forwards;
-        }
-        @keyframes bounce-once {
-          0% { transform: scale(0.3); opacity: 0; }
-          50% { transform: scale(1.05); }
-          70% { transform: scale(0.9); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-bounce-once {
-          animation: bounce-once 0.6s ease-out forwards;
-        }
-      `}</style>
     </div>
   );
 }

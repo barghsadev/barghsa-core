@@ -5,6 +5,12 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.complete.finalizing': 'در حال تکمیل پروفایل…',
+  'onboarding.complete.failedTitle': 'تکمیل پروفایل انجام نشد',
+  'onboarding.complete.missingProfile':
+    'پروفایلی برای تکمیل انتخاب نشده است. به تنظیم پروفایل برگردید.',
+  'onboarding.complete.backToSetup': 'بازگشت به تنظیم پروفایل',
+
   'onboarding.documents.title': 'مدارک ثبتی',
   'onboarding.documents.loadError': 'مدارک دریافت نشد. دوباره تلاش کنید.',
   'onboarding.documents.empty': 'مدرکی پیوست نشده است.',
@@ -1460,6 +1466,12 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.complete.finalizing': 'Completing profile…',
+  'onboarding.complete.failedTitle': 'Profile completion failed',
+  'onboarding.complete.missingProfile':
+    'No profile was selected for completion. Return to profile setup.',
+  'onboarding.complete.backToSetup': 'Return to profile setup',
+
   'onboarding.documents.title': 'Registration documents',
   'onboarding.documents.loadError': 'Documents could not be loaded. Retry.',
   'onboarding.documents.empty': 'No documents attached.',

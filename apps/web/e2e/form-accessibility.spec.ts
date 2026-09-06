@@ -621,3 +621,79 @@ test('legal profile settings show attachment names and refresh expiring download
   await page.getByRole('button', { name: 'Refresh download links', exact: true }).click();
   await expect(link).toHaveAttribute('href', 'https://storage.example.test/document?version=2');
 });
+
+for (const locale of ['en', 'fa']) {
+  test(`completion waits for the selected profile and permits retry after failure (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let fail = true;
+    const requested: string[] = [];
+    await page.route('**/api/onboarding/complete/*', (route) => {
+      requested.push(route.request().url());
+      return route.fulfill(
+        fail
+          ? { status: 503, json: {} }
+          : { json: { id: 'profile-one', status: 'PENDING_VERIFICATION' } }
+      );
+    });
+    await page.goto('/onboarding/complete?profileId=profile-one');
+    await expect(
+      page.getByRole('heading', {
+        name: locale === 'fa' ? 'تکمیل پروفایل انجام نشد' : 'Profile completion failed',
+        exact: true,
+      })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'رفتن به داشبورد' : 'Go to dashboard',
+        exact: true,
+      })
+    ).toHaveCount(0);
+    fail = false;
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
+      .click();
+    await expect(
+      page.getByRole('heading', {
+        name: locale === 'fa' ? 'آماده شروع!' : 'Ready to go!',
+        exact: true,
+      })
+    ).toBeVisible();
+    expect(requested).toHaveLength(2);
+    expect(requested.every((url) => url.endsWith('/api/onboarding/complete/profile-one'))).toBe(
+      true
+    );
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'رفتن به داشبورد' : 'Go to dashboard',
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(/\/app$/);
+    expect(requested).toHaveLength(2);
+  });
+}
+test('completion does not guess a profile and rejects mismatched success responses', async ({
+  page,
+}) => {
+  await shell(page);
+  let requests = 0;
+  await page.route('**/api/onboarding/complete/*', (route) => {
+    requests++;
+    return route.fulfill({ json: { id: 'different-profile', status: 'ACTIVE' } });
+  });
+  await page.goto('/onboarding/complete');
+  await expect(
+    page.getByText('No profile was selected for completion. Return to profile setup.', {
+      exact: true,
+    })
+  ).toBeVisible();
+  expect(requests).toBe(0);
+  await page.goto('/onboarding/complete?profileId=profile-one');
+  await expect(
+    page.getByRole('heading', { name: 'Profile completion failed', exact: true })
+  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Go to dashboard', exact: true })).toHaveCount(0);
+  expect(requests).toBe(1);
+});
