@@ -32,9 +32,11 @@ const slotKeySchema = z.enum(AGENT_SLOT_KEYS);
 const uuidSchema = z.string().uuid('Expected a UUID');
 
 /** PUT body: the agent to serve the slot, or null to clear the assignment. */
-export const AssignAgentSchema = z.object({
-  agentId: uuidSchema.nullable(),
-});
+export const AssignAgentSchema = z
+  .object({
+    agentId: uuidSchema.nullable(),
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(

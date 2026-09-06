@@ -167,3 +167,25 @@ it('refuses an agent deleted during assignment without writing an audit', async 
     await pending;
   }
 });
+
+it('rejects unknown slot-assignment payload fields', async () => {
+  expect(
+    (
+      await fetch(`${http.base}/api/admin/agent-slots/individual_chatbot/agent`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ agentId, unexpected: true }),
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT agent_id FROM ai_agent_slots WHERE slot_key='individual_chatbot'"
+      )
+    ).rows
+  ).toEqual([{ agent_id: null }]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_slot_%'")).rows
+  ).toHaveLength(0);
+});

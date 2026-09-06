@@ -285,3 +285,51 @@ it.each(['kb', 'policy'] as const)(
     ).toHaveLength(1);
   }
 );
+
+it('rejects blank titles and unexpected agent fields without mutations', async () => {
+  for (const body of [{ title: '   ' }, { title: 'Valid', unexpected: true }]) {
+    for (const method of ['POST', 'PUT']) {
+      expect(
+        (
+          await fetch(`${http.base}/api/admin/agents${method === 'PUT' ? `/${agentId}` : ''}`, {
+            method,
+            headers,
+            body: JSON.stringify({ ...body, ...(method === 'POST' ? { modelId } : {}) }),
+          })
+        ).status
+      ).toBe(400);
+    }
+  }
+  expect((await http.pool.query('SELECT title FROM ai_agents')).rows).toEqual([
+    { title: 'Support' },
+  ]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_agent_%'")).rows
+  ).toHaveLength(0);
+  const response = await fetch(`${http.base}/api/admin/agents/${agentId}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ title: '  Trimmed agent  ' }),
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({ title: 'Trimmed agent' });
+});
+it.each(['kb', 'policy'] as const)('rejects unknown %s link payload fields', async (kind) => {
+  const id = await prepareLink({ kind, action: 'add' });
+  expect(
+    (
+      await fetch(
+        `${http.base}/api/admin/agents/${agentId}/${kind === 'kb' ? 'kbs' : 'policies'}`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            ...(kind === 'kb' ? { kbId: id } : { policyId: id }),
+            unexpected: true,
+          }),
+        }
+      )
+    ).status
+  ).toBe(400);
+  await unchangedLink({ kind, action: 'add' });
+});

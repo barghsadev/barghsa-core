@@ -22,22 +22,24 @@ import { AiAgentsService, type AgentDto, type AgentDetailDto } from './ai-agents
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
-const titleSchema = z.string().min(1, 'Title is required').max(120);
+const titleSchema = z.string().trim().min(1, 'Title is required').max(120);
 const descriptionSchema = z.string().max(2000).default('');
 // All agent/model/KB/policy ids are UUID columns; reject anything else before
 // it reaches Postgres (where 22P02 would otherwise surface as a raw 500).
 const uuidSchema = z.string().uuid('Expected a UUID');
 const idListSchema = z.array(uuidSchema).max(200, 'An agent can reference at most 200 items');
 
-export const CreateAgentSchema = z.object({
-  title: titleSchema,
-  description: descriptionSchema.optional(),
-  modelId: uuidSchema,
-  kbIds: idListSchema.optional(),
-  policyIds: idListSchema.optional(),
-  // Optional initial active/inactive state; defaults to enabled.
-  enabled: z.boolean().optional(),
-});
+export const CreateAgentSchema = z
+  .object({
+    title: titleSchema,
+    description: descriptionSchema.optional(),
+    modelId: uuidSchema,
+    kbIds: idListSchema.optional(),
+    policyIds: idListSchema.optional(),
+    // Optional initial active/inactive state; defaults to enabled.
+    enabled: z.boolean().optional(),
+  })
+  .strict();
 
 export const UpdateAgentSchema = z
   .object({
@@ -48,15 +50,20 @@ export const UpdateAgentSchema = z
     policyIds: idListSchema.optional(),
     enabled: z.boolean().optional(),
   })
+  .strict()
   .refine((v) => Object.keys(v).length > 0, 'At least one field must be provided');
 
-export const AddAgentKbSchema = z.object({
-  kbId: uuidSchema,
-});
+export const AddAgentKbSchema = z
+  .object({
+    kbId: uuidSchema,
+  })
+  .strict();
 
-export const AddAgentPolicySchema = z.object({
-  policyId: uuidSchema,
-});
+export const AddAgentPolicySchema = z
+  .object({
+    policyId: uuidSchema,
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(

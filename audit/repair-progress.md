@@ -1327,3 +1327,9 @@ Review and validation: 38 existing service/controller checks and eight productio
 Individual KB/policy link and unlink operations now use the same transaction helper and agent-row lock as bulk agent edits. Current authority remains held until commit, and audit failures roll back the link. Duplicate adds retain their no-op behavior; unlinking retains the referenced KB or policy.
 
 Review and validation: 23 service checks and all 18 production-migrated agent HTTP checks pass. Added all four link audit rollbacks and permission-revocation races, plus successful add/duplicate/remove cases for each relationship. Reviewed transaction connection usage and updated unit fixtures to account for BEGIN. Root types, lint and whitespace checks pass. Agent input strictness, group references, the editor and real test-chat execution remain open.
+
+### Validate agent and slot mutation payloads (F17)
+
+Agent metadata now trims titles and rejects blank titles and unknown fields. Individual KB/policy links and slot assignments reject unknown payload fields while retaining existing UUID validation.
+
+Review and validation: all 83 agent/slot service/controller/production-migrated HTTP checks pass. New HTTP cases verify invalid create/edit/link/assignment requests leave records and audits unchanged, and valid titles are trimmed. Root types, lint and whitespace checks pass. Before this final validation change, the full API suite passed 2,766 tests across 219 files after all preceding repairs. Group references, the agent editor and test-chat integration remain open.
