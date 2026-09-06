@@ -396,3 +396,43 @@ it('commits bilingual private approval notices with the decision and rolls back 
   }
   expect((await decide('reviewer', pending)).status).toBe(200);
 });
+
+it('notifies eligible reviewers exactly once for receipt-created approvals and rolls back failed notices',async()=>{
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW()")
+  await http.pool.query(`UPDATE app_config SET value='{"threshold_irr":100000}' WHERE key='finance.dual_approval_threshold'`)
+  await http.pool.query(`INSERT INTO users(user_id,username,password_hash,is_staff,disabled_at,activation_token)
+    VALUES ('notice-disabled','notice-disabled@example.test','test-only',true,NOW(),NULL),
+           ('notice-unactivated','notice-unactivated@example.test','test-only',true,NULL,$1)`,['f'.repeat(64)])
+  await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('notice-disabled','role-finance'),('notice-unactivated','role-finance')")
+  for(const kind of ['wallet','invoice'] as const) {
+    const receipt=kind==='wallet'?await walletReceipt(9007199254740993n):await invoiceReceipt()
+    const confirm=()=>kind==='wallet'?confirmWallet('initiator',receipt.id):confirmInvoice('initiator',receipt.id)
+    const noticesBefore=(await http.pool.query('SELECT count(*)::int AS count FROM in_app_notifications')).rows[0].count
+    await http.pool.query(`CREATE FUNCTION fail_receipt_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+      IF NEW.recipient_user_id='reviewer' THEN RAISE EXCEPTION 'test receipt notice failure'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER fail_receipt_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_receipt_notice()`)
+    try {
+      expect((await confirm()).status).toBe(500)
+      expect((await http.pool.query("SELECT count(*)::int AS count FROM approval_requests WHERE details->>'receiptId'=$1",[receipt.id])).rows[0].count).toBe(0)
+      expect((await http.pool.query('SELECT count(*)::int AS count FROM in_app_notifications')).rows[0].count).toBe(noticesBefore)
+      if(kind==='wallet') {
+        expect((await http.pool.query('SELECT state,metadata FROM wallet_transactions WHERE id=$1',[receipt.id])).rows[0]).toMatchObject({state:'Pending'})
+        expect((await http.pool.query("SELECT metadata->'dualApproval' AS binding FROM wallet_transactions WHERE id=$1",[receipt.id])).rows[0].binding).toBeNull()
+      } else expect((await http.pool.query('SELECT state FROM bank_receipts WHERE id=$1',[receipt.id])).rows[0].state).toBe('Submitted')
+    } finally { await http.pool.query('DROP TRIGGER fail_receipt_notice ON in_app_notifications; DROP FUNCTION fail_receipt_notice()') }
+    const responses=await Promise.all([confirm(),confirm()])
+    for(const response of responses)expect(response.status,await response.clone().text()).toBe(200)
+    const requests=(await http.pool.query("SELECT id,amount_irr FROM approval_requests WHERE details->>'receiptId'=$1",[receipt.id])).rows
+    expect(requests).toHaveLength(1)
+    const requestId=requests[0].id
+    const notices=(await http.pool.query(`SELECT recipient_user_id,profile_id,localized_content,link_route FROM in_app_notifications
+      WHERE localized_content::text LIKE $1`,[`%${requestId}%`])).rows
+    expect(notices).toHaveLength(1)
+    expect(notices[0]).toMatchObject({recipient_user_id:'reviewer',profile_id:null,link_route:'/admin/approval-requests',localized_content:{en:{title:'Financial approval requested'}}})
+    expect(notices[0].localized_content.fa.title).toBe('درخواست تأیید دومرحله‌ای جدید')
+    if(kind==='wallet') {
+      expect(requests[0].amount_irr).toBe('9007199254740993')
+      expect(notices[0].localized_content.en.body).toContain('9,007,199,254,740,993 IRR')
+    }
+  }
+},20000)

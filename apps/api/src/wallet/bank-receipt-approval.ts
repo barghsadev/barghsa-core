@@ -1,3 +1,4 @@
+import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { createHash, randomUUID } from "node:crypto";
 import { HttpException } from "@nestjs/common";
 import { ErrorCodes } from "@barghsa/shared/errors";
@@ -126,6 +127,8 @@ export async function gateWalletReceiptApproval(
         input.ip,
       ],
     );
+    await notifyApprovalRequested(client, { requestId: binding.requestId,
+      amountIrR: input.amount.toString(), initiatorUserId: input.actorUserId });
     return binding;
   }
   if (saved.fingerprint !== fingerprint)

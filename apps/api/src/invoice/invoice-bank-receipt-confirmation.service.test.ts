@@ -141,6 +141,7 @@ function script(opts: ScriptOptions = {}) {
       if (opts.locked === null) return { rows: [] }
       return { rows: [opts.locked ?? makeReceiptRow()] }
     }
+    if (sql.includes('SELECT u.user_id, u.is_admin')) return { rows: [] }
     if (sql.includes('AS role_permissions')) return { rows: [{is_admin:true,role_permissions:[]}] }
     if (sql.includes('SELECT metadata::jsonb AS metadata FROM audit_log')) return {rows:[{metadata:{fingerprint:invoiceReceiptFingerprint((opts.locked ?? makeReceiptRow()) as Parameters<typeof invoiceReceiptFingerprint>[0])}}]}
     if (sql.includes('FROM app_config')) {

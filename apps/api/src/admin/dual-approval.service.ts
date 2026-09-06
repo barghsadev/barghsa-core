@@ -18,7 +18,7 @@ import { ErrorCodes } from '@barghsa/shared/errors'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import { applyApprovalRequestResolutionOnClient } from './dual-approval-resolution.js'
 import type { DualApprovalQueryClient } from './dual-approval-resolution.js'
-import { resolveStaffPermissions } from '../session/staff-permissions.js'
+import { notifyApprovalRequested } from './approval-notifications.js'
 
 /**
  * The financial actions covered by the dual-approval workflow, exposed for
@@ -410,25 +410,9 @@ export class DualApprovalService {
     amountIrR: number,
     initiatorUserId: string,
   ): Promise<void> {
-    const result = await client.query(
-      `SELECT u.user_id, u.is_admin,
-              ARRAY(SELECT r.permissions FROM user_roles ur
-                    JOIN staff_roles r ON r.role_id=ur.role_id
-                    WHERE ur.user_id=u.user_id) AS role_permissions
-       FROM users u WHERE u.disabled_at IS NULL AND u.activation_token IS NULL AND u.user_id <> $1
-         AND (u.is_admin=TRUE OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`,
-      [initiatorUserId],
-    )
-    const localizedContent = {
-      fa: { title: 'درخواست تأیید دومرحله‌ای جدید', body: `درخواست ${requestId} به مبلغ ${amountIrR} ریال برای بررسی در صف تأییدهای مالی قرار گرفت.` },
-      en: { title: 'Financial approval requested', body: `Request ${requestId} for ${amountIrR} IRR requires a second financial reviewer.` },
-    }
-    for (const row of result.rows as { user_id: string; is_admin: boolean; role_permissions: unknown }[]) {
-      const permissions = resolveStaffPermissions(row.role_permissions)
-      if (!row.is_admin && !permissions.includes('*') && !permissions.includes('admin:financial:edit')) continue
-      await this.notificationsService.create({ userId: row.user_id, type: 'general',
-        ...localizedContent.fa, localizedContent, link: '/admin/approval-requests' }, client)
-    }
+    await notifyApprovalRequested(client, {
+      requestId, amountIrR: String(amountIrR), initiatorUserId,
+    }, this.notificationsService)
   }
 
   /** Notice and decision commit together, including the original rejection reason. */

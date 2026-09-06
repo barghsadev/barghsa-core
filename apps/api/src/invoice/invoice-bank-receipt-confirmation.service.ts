@@ -1,3 +1,4 @@
+import { notifyApprovalRequested } from '../admin/approval-notifications.js'
 import { requireCurrentFinancePermission } from '../admin/approval-permissions.js'
 import { createHash } from 'node:crypto'
 import { v7 as uuidv7 } from 'uuid'
@@ -755,6 +756,8 @@ export class InvoiceBankReceiptConfirmationService {
       },
       occurredAt: input.now,
     })
+    await notifyApprovalRequested(client, { requestId,
+      amountIrR: input.receipt.amount.toString(), initiatorUserId: input.actorUserId })
     const pending: DualApprovalRequestSummary = {
       id: requestId,
       initiatorId: input.actorUserId,
