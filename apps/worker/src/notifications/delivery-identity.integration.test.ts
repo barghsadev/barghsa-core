@@ -1,3 +1,5 @@
+import { createServer } from 'node:http'
+import { EmailNotificationTransport } from './email-transport.js'
 import { afterAll, beforeAll, expect, it, vi } from 'vitest'
 import { Pool } from 'pg'
 import { randomUUID } from 'node:crypto'
@@ -284,4 +286,49 @@ it('uses the explicit recipient, applies address suppression, and refuses disabl
   expect(await loadNotificationRecipient(pool, id)).toBeNull()
   await pool.query('UPDATE notification_outbox SET user_id=NULL WHERE id=$1', [id])
   expect(await loadNotificationRecipient(pool, id)).toMatchObject({ userId: 'delivery-owner', email: 'delivery@example.test', emailSuppressed: false })
+})
+
+
+it('delivers a queued email with the recipient locale, template and durable receipt through a controlled HTTP provider', async () => {
+  await pool.query("UPDATE notification_outbox SET status='cancelled' WHERE status IN ('queued','scheduled','sending')")
+  await pool.query("UPDATE users SET activation_token=NULL,disabled_at=NULL WHERE user_id='delivery-recipient'")
+  await pool.query("DELETE FROM email_suppressions WHERE lower(address)='recipient@example.test'")
+  await pool.query(`INSERT INTO email_provider_configs(transport,label,status,config,created_by,last_test_status,supersedes_id)
+    VALUES ('resend','Local test','active',$1,'delivery-owner','passed',NULL)`, [JSON.stringify({ api_key: 'local-test-only', from_email: 'sender@example.test' })])
+  await pool.query(`INSERT INTO notification_templates(event_key,channel,locale,subject,body_template,variables,status,is_active,created_by)
+    VALUES ('wallet.topup_completed','email','en','Top-up {{amount}}','<p>{{name}}: {{amount}}</p>','["name","amount"]','active',true,'delivery-owner')`)
+  const received: Array<{ key: string; content: Record<string, unknown> }> = []
+  let responseCode = 503
+  const server = createServer(async (req, res) => {
+    const chunks: Buffer[] = []
+    for await (const chunk of req) chunks.push(Buffer.from(chunk))
+    received.push({ key: String(req.headers['idempotency-key']), content: JSON.parse(Buffer.concat(chunks).toString()) })
+    res.writeHead(responseCode, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ id: 'queued-email-receipt' }))
+  })
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+  const address = server.address()
+  if (!address || typeof address === 'string') throw new Error('No local provider endpoint')
+  const email = new EmailNotificationTransport(pool, async (_url, options) => fetch(`http://127.0.0.1:${address.port}`, options))
+  const client = await pool.connect()
+  let id: string | null
+  try {
+    await client.query('BEGIN')
+    id = (await enqueueOutbox(client, { profileId, userId: 'delivery-recipient', eventKey: 'wallet.topup_completed', channels: ['in_app', 'email'],
+      payload: { name: 'A&B <customer>', amount: '5000' }, idempotencyKey: 'real-email:test' })).outboxId
+    await client.query('COMMIT')
+  } finally { client.release() }
+  const options = { pool, transports: { email, in_app: new InAppNotificationTransport(pool) }, deliveryWindow: { timezone: 'UTC', startHour: 0, endHour: 24 } }
+  try {
+    expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, failed: 1 })
+    responseCode = 200
+    await pool.query("UPDATE notification_job SET run_after=NOW()-INTERVAL '1 second' WHERE outbox_id=$1 AND channel='email'", [id])
+    await pool.query("UPDATE notification_outbox SET scheduled_for=NOW()-INTERVAL '1 second' WHERE id=$1", [id])
+    expect(await runOutboxPoll(options)).toMatchObject({ leased: 1, delivered: 1, failed: 0 })
+    expect(received).toHaveLength(2)
+    expect(received[0]!.key).toBe(received[1]!.key)
+    expect(received[1]!.content).toMatchObject({ to: ['Recipient@example.test'], subject: 'Top-up 5000', html: '<p>A&amp;B &lt;customer&gt;: 5000</p>' })
+    expect((await pool.query("SELECT status,provider_ref FROM notification_job WHERE outbox_id=$1 AND channel='email'", [id])).rows[0])
+      .toEqual({ status: 'done', provider_ref: 'queued-email-receipt' })
+    expect((await pool.query('SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1', [`outbox:${id}`])).rows[0].count).toBe(1)
+  } finally { await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())) }
 })

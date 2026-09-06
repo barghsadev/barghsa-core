@@ -1,3 +1,4 @@
+import { createEmailSender } from '@barghsa/shared/notification-delivery'
 import { Injectable, Logger, HttpException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
@@ -198,11 +199,12 @@ export class NotificationTemplateService {
     template: string,
     variables: TemplateVariableInput[],
     data?: Record<string, unknown>,
+    escapeValues = true,
   ): string {
     const allowed = NotificationTemplateService.normalizeVariables(
       variables,
     ).map((v) => v.name)
-    return renderTemplate(template, allowed, { data }).output
+    return renderTemplate(template, allowed, { data, escapeValues }).output
   }
 
   /**
@@ -458,8 +460,8 @@ export class NotificationTemplateService {
     const tpl = await this.getById(id)
     const data = sampleData ?? this.buildSampleData(tpl.variables)
     return {
-      subject: tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data) : null,
-      body: this.render(tpl.bodyTemplate, tpl.variables, data),
+      subject: tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null,
+      body: this.render(tpl.bodyTemplate, tpl.variables, data, tpl.channel === 'email'),
       variables: tpl.variables,
     }
   }
@@ -488,35 +490,42 @@ export class NotificationTemplateService {
     id: string,
     actorUserId: string,
     options?: { destination?: string },
-  ): Promise<{ ok: boolean; destination: 'in_app'; lastTestStatus: 'delivered' | 'failed' }> {
+  ): Promise<{ ok: boolean; destination: 'in_app' | 'email'; lastTestStatus: 'delivered' | 'failed' }> {
     const pool = getDbPool()
     const tpl = await this.getById(id)
     const data = this.buildSampleData(tpl.variables)
-    const renderedBody = this.render(tpl.bodyTemplate, tpl.variables, data)
+    const renderedBody = this.render(tpl.bodyTemplate, tpl.variables, data, tpl.channel === 'email')
     const renderedSubject =
-      tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data) : null
+      tpl.subject !== null ? this.render(tpl.subject, tpl.variables, data, false) : null
 
     const destination = options?.destination?.trim() || null
     await this.assertAllowedTestDestination(actorUserId, destination)
-    // 'in_app' when the default inbox is used, 'external' when a real
-    // email/phone destination was supplied and validated.
     const destinationKind = tpl.channel
 
     try {
-      if (tpl.channel !== 'in_app') {
+      let providerRef: string | undefined
+      if (tpl.channel === 'sms') {
         throw new HttpException({ statusCode: 503, error: 'NOTIFICATION_TEMPLATE_TRANSPORT_UNAVAILABLE',
           message: 'The selected channel has no configured template delivery adapter' }, 503)
       }
-      if (destination) {
-        throw new HttpException({ statusCode: 400, error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH',
-          message: 'In-app tests use your own inbox' }, 400)
+      if (tpl.channel === 'email') {
+        if (!destination) throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DESTINATION_REQUIRED' }, 400)
+        try {
+          providerRef = await createEmailSender(pool)({ destination, subject: renderedSubject ?? `Test: ${tpl.eventKey}`,
+            html: renderedBody, idempotencyKey: `template-test:${id}:${uuidv7()}` })
+        } catch { throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_DELIVERY_FAILED' }, 503) }
+      } else {
+        if (destination) {
+          throw new HttpException({ statusCode: 400, error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH',
+            message: 'In-app tests use your own inbox' }, 400)
+        }
+        await this.notificationsService.create({
+          userId: actorUserId,
+          type: 'general',
+          title: renderedSubject ?? `Test: ${tpl.eventKey}`,
+          body: renderedBody,
+        })
       }
-      await this.notificationsService.create({
-        userId: actorUserId,
-        type: 'general',
-        title: renderedSubject ?? `Test: ${tpl.eventKey}`,
-        body: renderedBody,
-      })
 
       await pool.query(
         `UPDATE notification_templates
@@ -524,13 +533,13 @@ export class NotificationTemplateService {
          WHERE id = $2`,
         [new Date(), id],
       )
-      await this.writeTestAudit(id, tpl.eventKey, actorUserId, destinationKind, 'delivered')
+      await this.writeTestAudit(id, tpl.eventKey, actorUserId, destinationKind, 'delivered', providerRef)
 
       this.logger.log(
         `Notification template test-sent: id=${id} event=${tpl.eventKey} by ${actorUserId}`,
       )
 
-      return { ok: true, destination: 'in_app', lastTestStatus: 'delivered' }
+      return { ok: true, destination: tpl.channel, lastTestStatus: 'delivered' }
     } catch (err) {
       // Record the failed attempt even when delivery errored so the admin's
       // template list shows test history accurately.
@@ -597,7 +606,7 @@ export class NotificationTemplateService {
       username: string
       email: string | null
       mobile: string | null
-    }>(`SELECT username, email, mobile FROM users WHERE user_id = $1`, [actorUserId])
+    }>(`SELECT username, email, mobile FROM users WHERE user_id = $1 AND disabled_at IS NULL AND activation_token IS NULL`, [actorUserId])
     const actor = user.rows[0]
 
     const contacts = actor
@@ -630,6 +639,7 @@ export class NotificationTemplateService {
     actorUserId: string,
     destinationKind: string,
     status: 'delivered' | 'failed',
+    providerRef?: string,
   ): Promise<void> {
     const pool = getDbPool()
     await pool
@@ -644,6 +654,7 @@ export class NotificationTemplateService {
             templateId,
             eventKey,
             destinationKind,
+            providerRef: providerRef ?? null,
             deliveredTo: status === 'delivered' ? destinationKind : null,
             status,
             isTest: true,
