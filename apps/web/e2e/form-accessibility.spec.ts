@@ -1289,3 +1289,83 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(3);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`delivery window retries failed reads and confirms exact saved values (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/notifications/templates*', (route) =>
+      route.fulfill({ json: [] })
+    );
+    let reads = 0;
+    let writes = 0;
+    let finish: (() => void) | undefined;
+    await page.route('**/api/admin/config/delivery-window', async (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill(
+          reads === 1
+            ? {
+                status: locale === 'en' ? 503 : 200,
+                json: { timezone: 'Invalid', startHour: 9, endHour: 21 },
+              }
+            : { json: { timezone: 'Asia/Tokyo', startHour: 9, endHour: 21 } }
+        );
+      }
+      writes++;
+      expect(route.request().postDataJSON()).toEqual({
+        timezone: 'Asia/Tokyo',
+        start_hour: 8,
+        end_hour: 21,
+      });
+      if (writes === 1) {
+        await new Promise<void>((resolve) => {
+          finish = resolve;
+        });
+        return route.fulfill({ status: 503, json: { message: { invalid: true } } });
+      }
+      return route.fulfill({
+        json: { timezone: 'Asia/Tokyo', startHour: writes === 2 ? 9 : 8, endHour: 21 },
+      });
+    });
+    await page.goto('/admin/notifications');
+    const panel = page.getByRole('region', {
+      name: locale === 'fa' ? 'پنجره ارسال روزانه' : 'Daily Delivery Window',
+      exact: true,
+    });
+    const save = panel.getByRole('button', {
+      name: locale === 'fa' ? 'ذخیره' : 'Save',
+      exact: true,
+    });
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(save).toBeDisabled();
+    await expect(panel.locator('select').first()).toBeDisabled();
+    await panel
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+      .click();
+    await expect(panel.locator('#delivery-window-timezone')).toHaveValue('Asia/Tokyo');
+    const start = panel.locator('#delivery-window-start');
+    await start.selectOption('8');
+    await save.click();
+    await expect.poll(() => writes).toBe(1);
+    await expect(start).toBeDisabled();
+    finish!();
+    await expect(panel.getByRole('alert')).toContainText(
+      locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save'
+    );
+    await expect(start).toHaveValue('8');
+    await expect(save).toBeEnabled();
+    await save.click();
+    await expect.poll(() => writes).toBe(2);
+    await expect(panel.getByRole('alert')).toBeVisible();
+    await expect(panel.getByRole('status')).toHaveCount(0);
+    await save.click();
+    await expect(panel.getByRole('status')).toBeVisible();
+    await expect(panel.getByRole('alert')).toHaveCount(0);
+    await start.selectOption('7');
+    await expect(panel.getByRole('status')).toHaveCount(0);
+    expect(reads).toBe(2);
+    expect(writes).toBe(3);
+  });
+}
