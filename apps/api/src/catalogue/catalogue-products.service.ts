@@ -1,3 +1,10 @@
+import {
+  DEFAULT_GREEN_ELECTRICITY_CONFIG,
+  GREEN_ELECTRICITY_CONFIG_KEY,
+  GREEN_ELECTRICITY_SYSTEM_KEY,
+  toGreenElectricityConfig,
+  validateGreenElectricityConfig,
+} from '@barghsa/shared/finance';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -239,6 +246,47 @@ export class CatalogueProductsService {
       ...this.toDto(withAggregates[0]!),
       priceHistory: history.map((row) => this.toHistoryDto(row)),
     };
+  }
+
+  /** Configuration references only; no customer or invoice data is returned. */
+  async ruleReferences(id: string): Promise<{ greenModes: string[]; vatOverride: boolean }> {
+    const pool = getDbPool();
+    const product = await this.findProduct(pool, id);
+    if (!product) throw this.productNotFound(id);
+    const greenModes: string[] = [];
+    if (product.system_key === GREEN_ELECTRICITY_SYSTEM_KEY) {
+      const stored = await pool.query('SELECT value FROM app_config WHERE key = $1', [
+        GREEN_ELECTRICITY_CONFIG_KEY,
+      ]);
+      let config = DEFAULT_GREEN_ELECTRICITY_CONFIG;
+      if (stored.rows.length) {
+        const value = stored.rows[0]!.value;
+        if (!validateGreenElectricityConfig(value).ok) {
+          throw new HttpException(
+            {
+              statusCode: 503,
+              error: 'CONFIG:STORED_VALUE_INVALID',
+              message: 'Stored ordering configuration is invalid',
+            },
+            503
+          );
+        }
+        config = toGreenElectricityConfig(value);
+      }
+      if (config.simpleOrder.mandatoryGreenEnabled) greenModes.push('simpleOrder');
+      if (config.advancedOrder.mandatoryGreenEnabled) greenModes.push('advancedOrder');
+    }
+    const overrides = await pool.query(
+      `SELECT EXISTS (
+        SELECT 1 FROM product_vat_overrides o
+        JOIN vat_configurations v ON v.id = o.vat_config_id
+        WHERE o.product_id = $1
+          AND GREATEST(o.effective_from, v.effective_from, NOW())
+            < LEAST(COALESCE(o.effective_until, 'infinity'::timestamptz), COALESCE(v.effective_until, 'infinity'::timestamptz))
+      ) AS referenced`,
+      [id]
+    );
+    return { greenModes, vatOverride: overrides.rows[0]!.referenced as boolean };
   }
 
   // ─── Mutations ──────────────────────────────────────────────────────────

@@ -271,3 +271,56 @@ it('rejects unknown fields, blank localized titles and ambiguous price dates wit
     priceHistory: [{ price: '2000', effectiveFrom: '2035-01-02T08:30:00.000Z' }],
   });
 });
+
+it('reports enabled green rules and intersecting current or scheduled VAT references', async () => {
+  await http.pool.query(
+    "INSERT INTO products(system_key,title,price,status) VALUES ('green_electricity','{\"en\":\"Green test\"}',1000,'active') ON CONFLICT(system_key) DO NOTHING"
+  );
+  const green = (
+    await http.pool.query("SELECT id FROM products WHERE system_key='green_electricity'")
+  ).rows[0].id as string;
+  expect(await (await request(`/${green}/rule-references`)).json()).toEqual({
+    greenModes: ['simpleOrder'],
+    vatOverride: false,
+  });
+  const id = await seed();
+  expect(await (await request(`/${id}/rule-references`)).json()).toEqual({
+    greenModes: [],
+    vatOverride: false,
+  });
+  const rate = (
+    await http.pool.query(
+      "INSERT INTO vat_configurations(category,rate,effective_from,created_by) VALUES ('product_override',900,NOW()+INTERVAL '2 days','operator') RETURNING id"
+    )
+  ).rows[0].id;
+  const override = (
+    await http.pool.query(
+      "INSERT INTO product_vat_overrides(product_id,vat_config_id,effective_from,created_by) VALUES ($1,$2,NOW()+INTERVAL '1 day','operator') RETURNING id",
+      [id, rate]
+    )
+  ).rows[0].id;
+  expect(await (await request(`/${id}/rule-references`)).json()).toEqual({
+    greenModes: [],
+    vatOverride: true,
+  });
+  await http.pool.query(
+    "UPDATE product_vat_overrides SET effective_until=NOW()+INTERVAL '36 hours' WHERE id=$1",
+    [override]
+  );
+  expect(await (await request(`/${id}/rule-references`)).json()).toEqual({
+    greenModes: [],
+    vatOverride: false,
+  });
+  expect((await request(`/${id}/rule-references`, 'GET', undefined, 'other')).status).toBe(403);
+  expect((await request('/invalid/rule-references')).status).toBe(400);
+  expect((await request(`/${randomUUID()}/rule-references`)).status).toBe(404);
+  try {
+    await http.pool.query(
+      "INSERT INTO app_config(key,value) VALUES ('electricity.green_mandatory_rules','{}') ON CONFLICT(key) DO UPDATE SET value='{}'"
+    );
+    expect((await request(`/${green}/rule-references`)).status).toBe(503);
+    expect((await request(`/${id}/rule-references`)).status).toBe(200);
+  } finally {
+    await http.pool.query("DELETE FROM app_config WHERE key='electricity.green_mandatory_rules'");
+  }
+});

@@ -1429,3 +1429,9 @@ Review and validation: both migrated-API browser flows pass, covering creation, 
 Catalogue edits now validate selected categories against the product type, matching creation. Both paths deduplicate categories before storing or comparing them, so repeated selections do not produce database errors or false change audits. Mutation schemas reject unknown fields, trim localized titles before blank validation and require explicit timezone offsets for scheduled prices.
 
 Review and validation: all 59 catalogue service/controller/production-migrated HTTP checks pass. Added HTTP coverage verifies invalid cross-type edits leave stored categories intact, repeated selections produce one category and no duplicate audit, changed selections appear once in the audit, malformed payloads do not mutate state, and a +03:30 future price preserves its UTC instant without changing today's price. Root types, lint and whitespace checks pass. The catalogue screen and its rule-reference warning remain open.
+
+### Expose catalogue rule references for deactivation warnings (F17)
+
+Added a catalogue-permission lookup returning enabled green ordering modes and whether a product has a VAT override whose effective window intersects its linked rate now or in the future. It returns configuration flags only. Invalid persisted green configuration reports an error instead of hiding the dependency.
+
+Review and validation: all 11 production-migrated catalogue HTTP checks pass. The new case covers the default enabled green mode, future VAT overlap, non-overlapping windows, missing products, malformed IDs, denied access and malformed saved configuration. The initial test assumed system products were seeded by migrations; added the explicit local fixture before rerunning. API build, root types/lint and whitespace checks pass; reviewed the added OpenAPI route. This is a warning lookup, not a new prohibition on deactivation.

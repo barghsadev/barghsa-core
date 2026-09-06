@@ -1028,6 +1028,35 @@
         ]
       }
     },
+    "/api/admin/catalogue/products/{id}/rule-references": {
+      "get": {
+        "operationId": "CatalogueProductsController_ruleReferences",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get enabled or scheduled configuration references before deactivation",
+        "tags": [
+          "Admin · Product Catalogue"
+        ]
+      }
+    },
     "/api/admin/config/assignment-rules": {
       "get": {
         "operationId": "AdminController_getStaffAssignmentRules",

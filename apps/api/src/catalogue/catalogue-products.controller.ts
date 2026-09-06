@@ -178,6 +178,19 @@ export class CatalogueProductsController {
     return this.service.get(id);
   }
 
+  @Get(':id/rule-references')
+  @ApiOperation({
+    summary: 'Get enabled or scheduled configuration references before deactivation',
+  })
+  async ruleReferences(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string
+  ): Promise<{ greenModes: string[]; vatOverride: boolean }> {
+    this.assertCataloguePermission(req);
+    assertUuid(id);
+    return this.service.ruleReferences(id);
+  }
+
   @Post()
   @HttpCode(201)
   @UseGuards(StepUpGuard)
