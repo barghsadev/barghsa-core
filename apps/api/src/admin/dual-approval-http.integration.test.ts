@@ -704,3 +704,64 @@ it('rechecks invoice receipt authority after waiting for the actor lock', async 
     }
   }
 });
+
+it('rechecks wallet receipt authority after waiting for the actor lock', async () => {
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='reviewer'");
+  for (const action of ['confirm', 'reject']) {
+    const receipt = await walletReceipt();
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='reviewer' FOR UPDATE");
+      pending = fetch(
+        `${http.base}/api/admin/wallet/bank-receipt-top-ups/${receipt.id}/${action}`,
+        {
+          method: 'POST',
+          headers: headers.reviewer!,
+          body: JSON.stringify({ reason: 'Receipt does not match' }),
+        }
+      );
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query("DELETE FROM user_roles WHERE user_id='reviewer'");
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(403);
+      expect(
+        (await http.pool.query('SELECT state FROM wallet_transactions WHERE id=$1', [receipt.id]))
+          .rows[0].state
+      ).toBe('Pending');
+      expect(
+        (
+          await http.pool.query('SELECT posted_balance FROM wallets WHERE profile_id=$1', [
+            receipt.profile,
+          ])
+        ).rows[0].posted_balance
+      ).toBe('0');
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM wallet_transactions WHERE wallet_id=$1 AND state='Completed'",
+            [receipt.profile]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('reviewer','role-finance') ON CONFLICT DO NOTHING"
+      );
+    }
+  }
+});

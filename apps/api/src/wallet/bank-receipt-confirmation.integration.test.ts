@@ -95,6 +95,10 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
       ($1, 'customer@example.test', 'test-only'), ($2, 'staff@example.test', 'test-only')`,
       [CUSTOMER_USER_ID, ACTOR_USER_ID]
     );
+    await ctx.pool.query(`UPDATE users SET is_staff=true WHERE user_id=$1`, [ACTOR_USER_ID]);
+    await ctx.pool.query(`INSERT INTO user_roles(user_id, role_id) VALUES ($1, 'role-finance')`, [
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2), ($3, $2)`, [
       PROFILE_A,
       CUSTOMER_USER_ID,
@@ -390,15 +394,27 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
   it('rolls back the pending-state change when the audit insert fails', async () => {
     const pendingId = await insertPending('audit-fail');
     const before = await walletBalances();
+    await ctx.pool
+      .query(`CREATE OR REPLACE FUNCTION reject_wallet_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        IF NEW.event = 'wallet.bank_receipt.rejected' THEN
+          RAISE EXCEPTION 'wallet receipt audit unavailable';
+        END IF;
+        RETURN NEW;
+      END $$;
+      CREATE TRIGGER reject_wallet_receipt_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION reject_wallet_receipt_audit()`);
     const rejection = await service
       .reject({
         transactionId: pendingId,
         raw: { reason: 'Missing stamp' },
-        actorUserId: 'missing-staff',
+        actorUserId: ACTOR_USER_ID,
         ip: '10.0.0.9',
         now: NOW,
       })
-      .catch((error: unknown) => error);
+      .catch((error: unknown) => error)
+      .finally(() => ctx.pool.query('DROP TRIGGER reject_wallet_receipt_audit ON audit_log'));
+    expect(rejection).toMatchObject({ message: 'wallet receipt audit unavailable' });
 
     expect(rejection).toBeInstanceOf(Error);
     const pending = await ctx.pool.query<{ state: string }>(
@@ -413,14 +429,26 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
   it('rolls back credit, balance, and receipt when confirm audit insert fails', async () => {
     const pendingId = await insertPending('confirm-audit-fail');
     const before = await walletBalances();
+    await ctx.pool
+      .query(`CREATE OR REPLACE FUNCTION reject_wallet_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        IF NEW.event = 'wallet.bank_receipt.confirmed' THEN
+          RAISE EXCEPTION 'wallet receipt audit unavailable';
+        END IF;
+        RETURN NEW;
+      END $$;
+      CREATE TRIGGER reject_wallet_receipt_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION reject_wallet_receipt_audit()`);
     const failure = await service
       .confirm({
         transactionId: pendingId,
-        actorUserId: 'missing-staff',
+        actorUserId: ACTOR_USER_ID,
         ip: '10.0.0.9',
         now: NOW,
       })
-      .catch((error: unknown) => error);
+      .catch((error: unknown) => error)
+      .finally(() => ctx.pool.query('DROP TRIGGER reject_wallet_receipt_audit ON audit_log'));
+    expect(failure).toMatchObject({ message: 'wallet receipt audit unavailable' });
 
     expect(failure).toBeInstanceOf(Error);
 
@@ -670,15 +698,27 @@ describe('BankReceiptConfirmationService — real PostgreSQL (T-04.2.02.04)', ()
     const beforePaid = await invoicePaid(invoiceId);
     const beforeWallet = await walletBalances();
 
+    await ctx.pool
+      .query(`CREATE OR REPLACE FUNCTION reject_wallet_receipt_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        IF NEW.event = 'wallet.bank_receipt.confirmed' THEN
+          RAISE EXCEPTION 'wallet receipt audit unavailable';
+        END IF;
+        RETURN NEW;
+      END $$;
+      CREATE TRIGGER reject_wallet_receipt_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION reject_wallet_receipt_audit()`);
     const failure = await service
       .confirm({
         transactionId: pendingId,
-        actorUserId: 'missing-staff',
+        actorUserId: ACTOR_USER_ID,
         ip: '10.0.0.9',
         invoiceId,
         now: NOW,
       })
-      .catch((error: unknown) => error);
+      .catch((error: unknown) => error)
+      .finally(() => ctx.pool.query('DROP TRIGGER reject_wallet_receipt_audit ON audit_log'));
+    expect(failure).toMatchObject({ message: 'wallet receipt audit unavailable' });
 
     expect(failure).toBeInstanceOf(Error);
     expect(await invoicePaid(invoiceId)).toBe(beforePaid);

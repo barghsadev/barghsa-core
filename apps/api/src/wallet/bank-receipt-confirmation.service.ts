@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import {
   gateWalletReceiptApproval,
   rejectWalletReceiptApproval,
@@ -282,6 +283,11 @@ export class BankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          input.actorUserId,
+          'admin:finance:wallet:bank-receipt-confirm'
+        );
         const pending = await this.lockBankReceipt(client, input.transactionId);
 
         if (pending.state === 'Released') {
@@ -467,6 +473,11 @@ export class BankReceiptConfirmationService {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
         await client.query('BEGIN');
+        await requireStaffMutationPermission(
+          client,
+          input.actorUserId,
+          'admin:finance:wallet:bank-receipt-confirm'
+        );
         const pending = await this.lockBankReceipt(client, input.transactionId);
 
         if (pending.state === 'Rejected') {

@@ -27,6 +27,11 @@ const mockClient = {
   release: vi.fn(),
 };
 
+// Current authority is exercised by the migrated service and HTTP race suites.
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
 }));

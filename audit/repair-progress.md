@@ -1087,3 +1087,9 @@ Invoice receipt confirmation and rejection previously relied on the controller's
 Review caught a regression in test meaning: the old audit-failure fixture used a nonexistent actor, which the new authority check rejects before auditing. Replaced that shortcut with a trigger that fails the specific confirmation/rejection audit insert for a valid finance actor. The tests assert the exact injected error and unchanged receipt, invoice, wallet credit, and rejection outbox.
 
 Validation: 62 focused unit, migrated service, dual-approval, and real HTTP tests passed. The final audit-injection rerun passed all 15 receipt tests. The HTTP race pauses after the session guard at the actor lock, revokes the role, resumes both decision types, and verifies 403 with no settlement. API build, root types, lint, contract, and whitespace checks pass. Wallet receipt authority and other finance actions remain separate follow-up work.
+
+### Hold current finance authority through wallet receipt decisions (F04/F14)
+
+Wallet receipt confirmation/rejection now use the same transaction-held actor and current-grant checks as invoice receipts. Converted all three rollback tests from nonexistent actors to failures of the actual final audit insert, including invoice allocation plus excess wallet credit. This preserves evidence that later failures undo earlier financial changes.
+
+Review and validation: 50 focused unit, migrated transaction, and real HTTP tests pass. Both wallet decision routes reject permission revocation after the session guard with 403 and preserve Pending state and zero balance. API build, root types, lint, and whitespace checks pass. The full database suite also passed 564 tests across 76 files with migration 0112. No deployment or external financial action occurred.
