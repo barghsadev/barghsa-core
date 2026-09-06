@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -65,26 +66,7 @@ export class LegalProfilesService {
    * @param profileId - The draft profile ID from onboarding start.
    * @param data - Legal profile fields.
    */
-  async saveLegalProfile(
-    userId: string,
-    profileId: string,
-    data: {
-      legalName: string;
-      nationalIdentifier: string;
-      registrationNumber: string;
-      companyTypeId?: string | undefined;
-      registrationDate?: string | undefined;
-      economicCode?: string | undefined;
-      officialPhone?: string | undefined;
-      officialEmail?: string | undefined;
-      officialProvinceId?: string | undefined;
-      officialCityId?: string | undefined;
-      officialFullAddress?: string | undefined;
-      officialPostalCode?: string | undefined;
-      representativeTitle: string;
-      representativeRelationship: string;
-    }
-  ): Promise<ProfileRow> {
+  async saveLegalProfile(userId: string, profileId: string, input: unknown): Promise<ProfileRow> {
     const pool = getDbPool();
 
     // Validate the profile exists and belongs to the user
@@ -111,29 +93,41 @@ export class LegalProfilesService {
       );
     }
 
-    // Validate national identifier format
-    if (!validateLegalNationalIdentifier(data.nationalIdentifier)) {
+    const parsed = z
+      .object({
+        legalName: z.string().trim().min(1).max(200),
+        nationalIdentifier: z
+          .string()
+          .trim()
+          .refine(validateLegalNationalIdentifier, 'Invalid national identifier format'),
+        registrationNumber: z.string().trim().min(1).max(50),
+        companyTypeId: z.string().trim().min(1).max(100),
+        registrationDate: z.string().date().optional(),
+        economicCode: z.string().trim().max(50).optional(),
+        officialPhone: z.string().trim().max(30).optional(),
+        officialEmail: z.string().trim().email().max(254).optional(),
+        officialProvinceId: z.string().uuid(),
+        officialCityId: z.string().uuid(),
+        officialFullAddress: z.string().trim().min(1).max(500),
+        officialPostalCode: z
+          .string()
+          .trim()
+          .refine(validatePostalCode, 'Invalid postal code format'),
+        representativeTitle: z.string().trim().min(1).max(100),
+        representativeRelationship: z.string().trim().min(1).max(100),
+      })
+      .safeParse(input);
+    if (!parsed.success) {
       throw new HttpException(
         {
           statusCode: 400,
           error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid national identifier format',
+          message: parsed.error.issues[0]?.message ?? 'Invalid legal profile data',
         },
         400
       );
     }
-
-    // Validate postal code if provided
-    if (data.officialPostalCode && !validatePostalCode(data.officialPostalCode)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid postal code format',
-        },
-        400
-      );
-    }
+    const data = parsed.data;
 
     const client = await pool.connect();
     try {
@@ -160,8 +154,19 @@ export class LegalProfilesService {
         );
       }
 
-      if (data.officialProvinceId && data.officialCityId) {
-        await requireAddressGeography(client, data.officialProvinceId, data.officialCityId);
+      await requireAddressGeography(client, data.officialProvinceId, data.officialCityId);
+      const companyType = await client.query('SELECT id FROM company_types WHERE id=$1 FOR SHARE', [
+        data.companyTypeId,
+      ]);
+      if (!companyType.rows.length) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: 'Select an existing company type',
+          },
+          400
+        );
       }
 
       // Create the legal profile record
@@ -192,25 +197,18 @@ export class LegalProfilesService {
         ]
       );
 
-      // Create the main address record if official address is provided
-      if (
-        data.officialProvinceId &&
-        data.officialCityId &&
-        data.officialFullAddress &&
-        data.officialPostalCode
-      ) {
-        await client.query(
-          `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
+      // Every completed legal profile has an official main address.
+      await client.query(
+        `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
            VALUES ($1, $2, $3, $4, $5, true)`,
-          [
-            profileId,
-            data.officialProvinceId,
-            data.officialCityId,
-            data.officialFullAddress,
-            data.officialPostalCode,
-          ]
-        );
-      }
+        [
+          profileId,
+          data.officialProvinceId,
+          data.officialCityId,
+          data.officialFullAddress,
+          data.officialPostalCode,
+        ]
+      );
 
       // Transition profile from DRAFT to ACTIVE
       await client.query(`UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`, [

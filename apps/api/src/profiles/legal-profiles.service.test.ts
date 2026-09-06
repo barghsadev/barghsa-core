@@ -59,6 +59,10 @@ describe('LegalProfilesService', () => {
       nationalIdentifier: '12345678901',
       registrationNumber: '56789',
       companyTypeId: 'limited-liability',
+      officialProvinceId: '11111111-1111-4111-8111-111111111111',
+      officialCityId: '22222222-2222-4222-8222-222222222222',
+      officialFullAddress: 'Street',
+      officialPostalCode: '1234567890',
       representativeTitle: 'CEO',
       representativeRelationship: 'Director',
     };
@@ -75,7 +79,10 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({
           rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'DRAFT' }],
         }) // UPDATE profiles
+        .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
+        .mockResolvedValueOnce({ rowCount: 1 }) // INSERT address
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE profiles status -> ACTIVE
         .mockResolvedValueOnce(undefined); // COMMIT
 
@@ -90,7 +97,9 @@ describe('LegalProfilesService', () => {
       expect(result.title).toBe('Barghsa LLC');
 
       // Check the INSERT included the legal profile data
-      const insertCall = mockClient.query.mock.calls[2];
+      const insertCall = mockClient.query.mock.calls.find(([sql]) =>
+        String(sql).includes('INSERT INTO legal_profiles')
+      );
       expect(insertCall).toBeDefined();
       expect(insertCall![0]).toContain('INSERT INTO legal_profiles');
       expect(insertCall![1]).toContain('prof-legal-1');
@@ -190,6 +199,8 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({
           rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'DRAFT' }],
         })
+        .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockRejectedValueOnce(Object.assign(new Error('duplicate key'), { code: '23505' })) // INSERT fails
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
@@ -208,7 +219,8 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({
           rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'DRAFT' }],
         })
-        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // validate geography
+        .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] }) // validate geography
+        .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT addresses
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE status -> ACTIVE
@@ -220,8 +232,8 @@ describe('LegalProfilesService', () => {
 
       await service.saveLegalProfile('user-1', 'prof-legal-1', {
         ...validData,
-        officialProvinceId: 'prov-1',
-        officialCityId: 'city-1',
+        officialProvinceId: validData.officialProvinceId,
+        officialCityId: validData.officialCityId,
         officialFullAddress: '123 Main St, Tehran',
         officialPostalCode: '1234567890',
       });
@@ -232,8 +244,8 @@ describe('LegalProfilesService', () => {
       );
       expect(addressInsert).toBeDefined();
       expect(addressInsert![0]).toContain('INSERT INTO addresses');
-      expect(addressInsert![1]).toContain('prov-1');
-      expect(addressInsert![1]).toContain('city-1');
+      expect(addressInsert![1]).toContain(validData.officialProvinceId);
+      expect(addressInsert![1]).toContain(validData.officialCityId);
     });
 
     it('rolls back on database error', async () => {
@@ -246,6 +258,8 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({
           rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'DRAFT' }],
         })
+        .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockRejectedValueOnce(new Error('DB error')) // INSERT fails
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
@@ -253,7 +267,7 @@ describe('LegalProfilesService', () => {
         'DB error'
       );
 
-      expect(mockClient.query.mock.calls[3]![0]).toBe('ROLLBACK');
+      expect(mockClient.query).toHaveBeenLastCalledWith('ROLLBACK');
       expect(mockClient.release).toHaveBeenCalledTimes(1);
     });
   });

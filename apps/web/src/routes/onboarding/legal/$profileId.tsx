@@ -1,8 +1,9 @@
+import { t } from '@barghsa/i18n';
 import { withCsrf } from '../../../lib/csrf.js';
 import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { type Locale } from '@barghsa/i18n';
+import { useLocale } from '../../../hooks/useLocale.js';
 import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';
@@ -51,7 +52,7 @@ interface FormErrors {
 function LegalProfileFormPage() {
   const { profileId } = useParams({ from: '/onboarding/legal/$profileId' });
   const router = useRouter();
-  const locale: Locale = 'fa';
+  const locale = useLocale();
   const isRtl = locale === 'fa';
 
   // ── Form state ──────────────────────────────────────────
@@ -158,9 +159,13 @@ function LegalProfileFormPage() {
     }
     let cancelled = false;
     setLoadingCities(true);
+    setCities([]);
     setOfficialCityId('');
     fetch(`/api/geography/provinces/${officialProvinceId}/cities`, { credentials: 'include' })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Cities unavailable');
+        return res.json();
+      })
       .then((data: City[]) => {
         if (!cancelled) {
           setCities(data);
@@ -213,15 +218,17 @@ function LegalProfileFormPage() {
             return isRtl ? 'ایمیل معتبر نیست' : 'Invalid email format';
           return undefined;
         case 'officialProvinceId':
-          return undefined; // optional
+          return value ? undefined : t('onboarding.legal.required.province', locale);
         case 'officialCityId':
-          return undefined; // optional
+          return value ? undefined : t('onboarding.legal.required.city', locale);
         case 'officialFullAddress':
+          if (!value.trim()) return t('onboarding.legal.required.fullAddress', locale);
           if (value && value.length > 500)
             return isRtl ? 'حداکثر ۵۰۰ کاراکتر' : 'Max 500 characters';
           return undefined;
         case 'officialPostalCode':
-          if (value && !validatePostalCode(value.trim()))
+          if (!value.trim()) return t('onboarding.legal.required.postalCode', locale);
+          if (!validatePostalCode(value.trim()))
             return isRtl ? 'کد پستی معتبر نیست' : 'Invalid postal code';
           return undefined;
         case 'representativeTitle':
@@ -238,7 +245,7 @@ function LegalProfileFormPage() {
           return undefined;
       }
     },
-    [isRtl]
+    [isRtl, locale]
   );
 
   const handleBlur = useCallback(
@@ -290,6 +297,10 @@ function LegalProfileFormPage() {
       registrationNumber: validateField('registrationNumber', registrationNumber),
       companyTypeId: validateField('companyTypeId', companyTypeId),
       officialPostalCode: validateField('officialPostalCode', officialPostalCode),
+      officialProvinceId: validateField('officialProvinceId', officialProvinceId),
+      officialCityId: validateField('officialCityId', officialCityId),
+      officialFullAddress: validateField('officialFullAddress', officialFullAddress),
+      officialEmail: validateField('officialEmail', officialEmail),
       representativeTitle: validateField('representativeTitle', representativeTitle),
       representativeRelationship: validateField(
         'representativeRelationship',
@@ -303,6 +314,10 @@ function LegalProfileFormPage() {
       registrationNumber: true,
       companyTypeId: true,
       officialPostalCode: true,
+      officialProvinceId: true,
+      officialCityId: true,
+      officialFullAddress: true,
+      officialEmail: true,
       representativeTitle: true,
       representativeRelationship: true,
     });
@@ -313,6 +328,10 @@ function LegalProfileFormPage() {
     registrationNumber,
     companyTypeId,
     officialPostalCode,
+    officialProvinceId,
+    officialCityId,
+    officialFullAddress,
+    officialEmail,
     representativeTitle,
     representativeRelationship,
     validateField,
@@ -696,8 +715,13 @@ function LegalProfileFormPage() {
                 ) : (
                   <select
                     id="officialProvinceId"
+                    required
                     value={officialProvinceId}
-                    onChange={(e) => setOfficialProvinceId(e.target.value)}
+                    onChange={(e) => {
+                      setOfficialProvinceId(e.target.value);
+                      setOfficialCityId('');
+                      setCities([]);
+                    }}
                     onBlur={() => handleBlur('officialProvinceId')}
                     disabled={submitting}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -709,6 +733,11 @@ function LegalProfileFormPage() {
                       </option>
                     ))}
                   </select>
+                )}
+                {touched.officialProvinceId && errors.officialProvinceId && (
+                  <p className="text-sm text-destructive" role="alert">
+                    {errors.officialProvinceId}
+                  </p>
                 )}
               </div>
 
@@ -723,6 +752,7 @@ function LegalProfileFormPage() {
                 ) : (
                   <select
                     id="officialCityId"
+                    required
                     value={officialCityId}
                     onChange={(e) => setOfficialCityId(e.target.value)}
                     onBlur={() => handleBlur('officialCityId')}
@@ -737,6 +767,11 @@ function LegalProfileFormPage() {
                     ))}
                   </select>
                 )}
+                {touched.officialCityId && errors.officialCityId && (
+                  <p className="text-sm text-destructive" role="alert">
+                    {errors.officialCityId}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -745,6 +780,7 @@ function LegalProfileFormPage() {
               <Label htmlFor="officialFullAddress">{isRtl ? 'آدرس کامل' : 'Full Address'}</Label>
               <textarea
                 id="officialFullAddress"
+                required
                 maxLength={500}
                 rows={3}
                 value={officialFullAddress}

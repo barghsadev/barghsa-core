@@ -1256,17 +1256,25 @@ export class ProfilesService {
       } else if (locked.profile_type === 'LEGAL') {
         const legal = (
           await client.query(
-            'SELECT legal_name,national_identifier,registration_number,representative_title,representative_relationship FROM legal_profiles WHERE id=$1 FOR SHARE',
+            'SELECT l.* FROM legal_profiles l JOIN company_types c ON c.id=l.company_type_id WHERE l.id=$1 FOR SHARE OF l,c',
             [profileId]
           )
         ).rows[0];
         identityComplete =
+          !!legal?.official_full_address?.trim() &&
+          typeof legal?.official_postal_code === 'string' &&
+          validatePostalCode(legal.official_postal_code) &&
+          !!legal?.official_province_id &&
+          !!legal?.official_city_id &&
           !!legal?.legal_name?.trim() &&
           !!legal?.registration_number?.trim() &&
           !!legal?.representative_title?.trim() &&
           !!legal?.representative_relationship?.trim() &&
           typeof legal?.national_identifier === 'string' &&
           validateLegalNationalIdentifier(legal.national_identifier);
+        if (identityComplete) {
+          await requireAddressGeography(client, legal.official_province_id, legal.official_city_id);
+        }
       }
       if (
         !identityComplete ||

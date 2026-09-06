@@ -45,6 +45,7 @@ import { Route as AdminTosRouteImport } from './routes/admin/tos'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
 import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
 import { Route as OnboardingCompleteRouteImport } from './routes/onboarding/complete'
 import { Route as RegisterIndexRouteImport } from './routes/register/index'
 import { Route as RegisterVerifyRouteImport } from './routes/register/verify'
@@ -244,6 +245,11 @@ const AdminWalletReceiptsRoute = AdminWalletReceiptsRouteImport.update({
   path: '/wallet-receipts',
   getParentRoute: () => AdminRoute,
 } as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OnboardingRoute,
+} as any)
 const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
   id: '/complete',
   path: '/complete',
@@ -381,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
@@ -404,7 +411,6 @@ export interface FileRoutesByTo {
   '/activate': typeof ActivateRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
-  '/onboarding': typeof OnboardingRouteWithChildren
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/ai': typeof AppAiRoute
@@ -434,6 +440,7 @@ export interface FileRoutesByTo {
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin': typeof AdminIndexRoute
+  '/onboarding': typeof OnboardingIndexRoute
   '/register': typeof RegisterIndexRoute
   '/electricity/order': typeof AppElectricityOrderRoute
   '/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
@@ -492,6 +499,7 @@ export interface FileRoutesById {
   '/onboarding/complete': typeof OnboardingCompleteRoute
   '/register/verify': typeof RegisterVerifyRoute
   '/admin/': typeof AdminIndexRoute
+  '/onboarding/': typeof OnboardingIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_app/electricity/order': typeof AppElectricityOrderRoute
   '/_app/invoices/$invoiceId': typeof AppInvoicesInvoiceIdRoute
@@ -550,6 +558,7 @@ export interface FileRouteTypes {
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
+    | '/onboarding/'
     | '/register/'
     | '/electricity/order'
     | '/invoices/$invoiceId'
@@ -573,7 +582,6 @@ export interface FileRouteTypes {
     | '/activate'
     | '/forgot-password'
     | '/login'
-    | '/onboarding'
     | '/support'
     | '/terms'
     | '/ai'
@@ -603,6 +611,7 @@ export interface FileRouteTypes {
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin'
+    | '/onboarding'
     | '/register'
     | '/electricity/order'
     | '/invoices/$invoiceId'
@@ -660,6 +669,7 @@ export interface FileRouteTypes {
     | '/onboarding/complete'
     | '/register/verify'
     | '/admin/'
+    | '/onboarding/'
     | '/register/'
     | '/_app/electricity/order'
     | '/_app/invoices/$invoiceId'
@@ -946,6 +956,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWalletReceiptsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRoute
+    }
     '/onboarding/complete': {
       id: '/onboarding/complete'
       path: '/complete'
@@ -1190,12 +1207,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface OnboardingRouteChildren {
   OnboardingCompleteRoute: typeof OnboardingCompleteRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
   OnboardingIndividualProfileIdRoute: typeof OnboardingIndividualProfileIdRoute
   OnboardingLegalProfileIdRoute: typeof OnboardingLegalProfileIdRoute
 }
 
 const OnboardingRouteChildren: OnboardingRouteChildren = {
   OnboardingCompleteRoute: OnboardingCompleteRoute,
+  OnboardingIndexRoute: OnboardingIndexRoute,
   OnboardingIndividualProfileIdRoute: OnboardingIndividualProfileIdRoute,
   OnboardingLegalProfileIdRoute: OnboardingLegalProfileIdRoute,
 }

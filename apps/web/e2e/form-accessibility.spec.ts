@@ -239,3 +239,62 @@ for (const locale of ['en', 'fa']) {
     await expect(province).toHaveValue('province-one');
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`legal onboarding requires official address and clears a city after province changes (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({
+        json: [
+          { id: 'province-a', nameFa: 'استان الف', nameEn: 'Province A' },
+          { id: 'province-b', nameFa: 'استان ب', nameEn: 'Province B' },
+        ],
+      })
+    );
+    await page.route('**/api/geography/company-types', (route) =>
+      route.fulfill({ json: [{ id: 'limited-liability', nameFa: 'شرکت', nameEn: 'Company' }] })
+    );
+    await page.route('**/api/geography/provinces/*/cities', (route) =>
+      route.fulfill({
+        json: [
+          {
+            id: route.request().url().includes('province-a') ? 'city-a' : 'city-b',
+            nameFa: 'شهر',
+            nameEn: 'City',
+          },
+        ],
+      })
+    );
+    let submissions = 0;
+    await page.route('**/api/onboarding/legal/*', (route) => {
+      submissions++;
+      return route.fulfill({ status: 400, json: { message: 'Test response' } });
+    });
+    await page.goto('/onboarding/legal/profile-one');
+    await page.locator('#legalName').fill('Company');
+    await page.locator('#nationalIdentifier').fill('12345678901');
+    await page.locator('#registrationNumber').fill('123');
+    await page.locator('#companyTypeId').selectOption('limited-liability');
+    await page.locator('#representativeTitle').fill('CEO');
+    await page.locator('#representativeRelationship').fill('director');
+    await page.locator('button[type="submit"]').click();
+    expect(submissions).toBe(0);
+    await expect(
+      page.getByText(locale === 'fa' ? 'آدرس کامل الزامی است' : 'Full address is required', {
+        exact: true,
+      })
+    ).toBeVisible();
+    await page.locator('#officialProvinceId').selectOption('province-a');
+    await page.locator('#officialCityId').selectOption('city-a');
+    await page.locator('#officialProvinceId').selectOption('province-b');
+    await expect(page.locator('#officialCityId')).toHaveValue('');
+    await expect(page.locator('#officialCityId option[value="city-a"]')).toHaveCount(0);
+    await page.locator('#officialCityId').selectOption('city-b');
+    await page.locator('#officialFullAddress').fill('Street');
+    await page.locator('#officialPostalCode').fill('1234567890');
+    await page.locator('button[type="submit"]').click();
+    await expect.poll(() => submissions).toBe(1);
+  });
+}

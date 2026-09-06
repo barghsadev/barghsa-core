@@ -137,6 +137,7 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
             postalCode: '1234567890',
           }
         : {
+            companyTypeId: 'limited-liability',
             legalName: 'Company',
             nationalIdentifier: '12345678901',
             registrationNumber: '123',
@@ -246,4 +247,85 @@ it('does not finalize a legal draft without its legal entity record', async () =
   });
   expect(response.status).toBe(400);
   expect((await snapshot()).status).toBe('DRAFT');
+});
+
+it('requires complete legal details and rejects invalid company and geography selections without writes', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "INSERT INTO company_types(id,name_en,name_fa) VALUES ('test-company','Test','آزمایش')"
+  );
+  const body = {
+    legalName: 'Company',
+    nationalIdentifier: '12345678901',
+    registrationNumber: '123',
+    companyTypeId: 'test-company',
+    representativeTitle: 'CEO',
+    representativeRelationship: 'director',
+    officialProvinceId: provinceId,
+    officialCityId: cityId,
+    officialFullAddress: 'Street',
+    officialPostalCode: '1234567890',
+  };
+  const submit = (input: unknown) =>
+    fetch(`${http.base}/api/onboarding/legal/${profileId}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(input),
+    });
+  for (const key of [
+    'companyTypeId',
+    'officialProvinceId',
+    'officialCityId',
+    'officialFullAddress',
+    'officialPostalCode',
+  ]) {
+    const incomplete: Record<string, unknown> = { ...body };
+    delete incomplete[key];
+    expect((await submit(incomplete)).status).toBe(400);
+  }
+  for (const input of [
+    null,
+    [],
+    { ...body, legalName: [] },
+    { ...body, companyTypeId: 'missing' },
+    { ...body, officialCityId: randomUUID() },
+    { ...body, officialCityId: 'bad' },
+    { ...body, officialFullAddress: ' ' },
+    { ...body, registrationDate: '2026-02-30' },
+    { ...body, officialEmail: 'invalid' },
+  ]) {
+    expect((await submit(input)).status).toBe(400);
+  }
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM legal_profiles')).rows).toHaveLength(0);
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  expect((await submit(body)).status).toBe(200);
+  expect(
+    (
+      await http.pool.query('SELECT id FROM addresses WHERE profile_id=$1 AND main_address', [
+        profileId,
+      ])
+    ).rows
+  ).toHaveLength(1);
+});
+
+it('does not finalize a legacy legal draft missing its required company type', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "INSERT INTO legal_profiles(id,legal_name,national_identifier,registration_number,representative_title,representative_relationship,official_province_id,official_city_id,official_full_address,official_postal_code) VALUES ($1,'Company','12345678901','123','CEO','director',$2,$3,'Street','1234567890')",
+    [profileId, provinceId, cityId]
+  );
+  await http.pool.query(
+    "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Street','1234567890',true)",
+    [profileId, provinceId, cityId]
+  );
+  const complete = () =>
+    fetch(`${http.base}/api/onboarding/complete/${profileId}`, { method: 'POST', headers });
+  expect((await complete()).status).toBe(400);
+  expect((await snapshot()).status).toBe('DRAFT');
+  await http.pool.query(
+    "UPDATE legal_profiles SET company_type_id='limited-liability' WHERE id=$1",
+    [profileId]
+  );
+  expect((await complete()).status).toBe(200);
 });

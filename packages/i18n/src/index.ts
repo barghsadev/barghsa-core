@@ -5,6 +5,10 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.legal.required.province': 'استان الزامی است',
+  'onboarding.legal.required.city': 'شهر الزامی است',
+  'onboarding.legal.required.fullAddress': 'آدرس کامل الزامی است',
+  'onboarding.legal.required.postalCode': 'کد پستی الزامی است',
   ...authFA,
   'admin.teams.lead': 'سرپرست تیم',
   'admin.teams.noLead': 'بدون سرپرست — ارجاع هشدار به مدیران',
@@ -1428,6 +1432,10 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.legal.required.province': 'Province is required',
+  'onboarding.legal.required.city': 'City is required',
+  'onboarding.legal.required.fullAddress': 'Full address is required',
+  'onboarding.legal.required.postalCode': 'Postal code is required',
   ...authEN,
   'admin.teams.lead': 'Team lead',
   'admin.teams.noLead': 'No lead — escalate to administrators',

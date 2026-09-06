@@ -16,3 +16,13 @@ WHERE p.status<>'DRAFT' AND NOT p.archived
       (NULLIF(btrim(p.first_name),'') IS NULL OR NULLIF(btrim(p.last_name),'') IS NULL
        OR NULLIF(btrim(p.national_id),'') IS NULL))
     OR (p.profile_type='LEGAL' AND l.id IS NULL));
+
+-- Legal profiles built before required official-address/company validation.
+SELECT p.id, p.status, l.company_type_id
+FROM profiles p
+LEFT JOIN legal_profiles l ON l.id=p.id
+LEFT JOIN company_types c ON c.id=l.company_type_id
+WHERE p.profile_type='LEGAL' AND p.status<>'DRAFT' AND NOT p.archived
+  AND (c.id IS NULL OR l.official_province_id IS NULL OR l.official_city_id IS NULL
+    OR NULLIF(btrim(l.official_full_address),'') IS NULL
+    OR NULLIF(btrim(l.official_postal_code),'') IS NULL);
