@@ -195,3 +195,96 @@ for (const locale of ['en', 'fa'])
     await page.reload();
     await expect(page.getByLabel(enabled, { exact: true })).not.toBeChecked();
   });
+
+for (const locale of ['en', 'fa'])
+  test(`staff creation, role changes and disabling persist through the migrated API (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa',
+      username = `new-staff-${locale}@example.test`;
+    await page.goto('/admin/users');
+    await page
+      .getByRole('button', { name: fa ? 'ایجاد حساب کارمند' : 'Create staff user', exact: true })
+      .click();
+    await page.locator('#staff-username').fill(username);
+    await page.locator('#staff-firstName').fill('New');
+    await page.locator('#staff-lastName').fill(`Staff ${locale}`);
+    await page
+      .getByRole('radio', {
+        name: fa ? 'رمز عبور موقت یک‌بارمصرف' : 'One-time temporary password',
+        exact: true,
+      })
+      .check();
+    await page
+      .locator('form')
+      .getByRole('button', { name: fa ? 'ایجاد حساب کارمند' : 'Create staff user', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    const password = await page.locator('#staff-created-password').inputValue();
+    expect(password.length).toBeGreaterThanOrEqual(12);
+    expect(
+      await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }))
+    ).not.toContain(password);
+    await page
+      .getByRole('button', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
+      .click();
+    await expect(page.locator('#staff-created-password')).toHaveCount(0);
+    const row = page.getByRole('row').filter({ hasText: username });
+    await expect(row).toContainText(fa ? 'بدون نقش' : 'No roles');
+    await row
+      .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
+      .click();
+    await page.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
+    await page.locator('#staff-role-reason').fill('Assign finance duties');
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(row).toContainText(fa ? 'مالی' : 'Finance');
+    await row
+      .getByRole('button', { name: fa ? 'غیرفعال‌سازی حساب' : 'Disable account', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await expect(row).toContainText(fa ? 'غیرفعال' : 'Disabled');
+    await expect(page.locator('#staff-created-password')).toHaveCount(0);
+    const response = await page.request.get(`${http.base}/api/admin/staff`, {
+      headers: { cookie: `barghsa_session=${http.session}` },
+    });
+    const result = await response.json();
+    expect(
+      result.items.find((user: { username: string }) => user.username === username)
+    ).toMatchObject({ status: 'disabled', isAdmin: false, roles: [{ roleId: 'role-finance' }] });
+  });

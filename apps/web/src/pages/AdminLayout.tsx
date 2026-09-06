@@ -38,7 +38,7 @@ export default function AdminLayout() {
               </li>
               <li>
                 <a href="/admin/users" className="text-blue-600 hover:underline">
-                  Users
+                  {t('admin.staff.title', locale)}
                 </a>
               </li>
               <li>

@@ -35,7 +35,7 @@ export function TeamActionDialog({
 }: {
   action: TeamAction;
   onClose: () => void;
-  onSuccess: () => Promise<void>;
+  onSuccess: (result: unknown) => Promise<void>;
 }) {
   const locale = useLocale();
   const [busy, setBusy] = useState(false);
@@ -94,7 +94,7 @@ export function TeamActionDialog({
         window.location.assign('/login');
         return;
       }
-      await onSuccess();
+      await onSuccess(data);
       onClose();
     } catch {
       setError(t('team.error', locale));
