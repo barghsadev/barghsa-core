@@ -44,6 +44,7 @@ import { Route as AdminStaffTeamsRouteImport } from './routes/admin/staff-teams'
 import { Route as AdminStorageRouteImport } from './routes/admin/storage'
 import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTosRouteImport } from './routes/admin/tos'
+import { Route as AdminUploadPoliciesRouteImport } from './routes/admin/upload-policies'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
 import { Route as AdminWalletReceiptsRouteImport } from './routes/admin/wallet-receipts'
@@ -243,6 +244,11 @@ const AdminTosRoute = AdminTosRouteImport.update({
   path: '/tos',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminUploadPoliciesRoute = AdminUploadPoliciesRouteImport.update({
+  id: '/upload-policies',
+  path: '/upload-policies',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -396,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
@@ -451,6 +458,7 @@ export interface FileRoutesByTo {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
@@ -512,6 +520,7 @@ export interface FileRoutesById {
   '/admin/storage': typeof AdminStorageRoute
   '/admin/tickets': typeof AdminTicketsRoute
   '/admin/tos': typeof AdminTosRoute
+  '/admin/upload-policies': typeof AdminUploadPoliciesRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/admin/wallet-receipts': typeof AdminWalletReceiptsRoute
@@ -573,6 +582,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
     | '/admin/verification'
     | '/admin/wallet-receipts'
@@ -628,6 +638,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
     | '/admin/verification'
     | '/admin/wallet-receipts'
@@ -688,6 +699,7 @@ export interface FileRouteTypes {
     | '/admin/storage'
     | '/admin/tickets'
     | '/admin/tos'
+    | '/admin/upload-policies'
     | '/admin/users'
     | '/admin/verification'
     | '/admin/wallet-receipts'
@@ -974,6 +986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTosRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/upload-policies': {
+      id: '/admin/upload-policies'
+      path: '/upload-policies'
+      fullPath: '/admin/upload-policies'
+      preLoaderRoute: typeof AdminUploadPoliciesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -1218,6 +1237,7 @@ interface AdminRouteChildren {
   AdminStorageRoute: typeof AdminStorageRoute
   AdminTicketsRoute: typeof AdminTicketsRoute
   AdminTosRoute: typeof AdminTosRoute
+  AdminUploadPoliciesRoute: typeof AdminUploadPoliciesRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
   AdminWalletReceiptsRoute: typeof AdminWalletReceiptsRoute
@@ -1240,6 +1260,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminStorageRoute: AdminStorageRoute,
   AdminTicketsRoute: AdminTicketsRoute,
   AdminTosRoute: AdminTosRoute,
+  AdminUploadPoliciesRoute: AdminUploadPoliciesRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
   AdminWalletReceiptsRoute: AdminWalletReceiptsRoute,

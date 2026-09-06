@@ -70,6 +70,11 @@ export default function AdminLayout() {
                 </a>
               </li>
               <li>
+                <a href="/admin/upload-policies" className="text-blue-600 hover:underline">
+                  {t('admin.uploadPolicies.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/storage" className="text-blue-600 hover:underline">
                   {t('admin.nav.storage', locale)}
                 </a>

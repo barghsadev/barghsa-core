@@ -507,3 +507,86 @@ for (const locale of ['en', 'fa'])
     await page.reload();
     await expect(page.locator('tbody tr').filter({ hasText: `triage.${locale}.` })).toHaveCount(0);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`upload policies edit, retain history and end through the real API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa',
+      category = fa ? 'image' : 'document',
+      name = fa ? 'تصاویر' : 'Documents';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    await page.goto('/admin/upload-policies');
+    const row = page
+      .locator('tbody tr')
+      .filter({ has: page.getByRole('rowheader', { name, exact: true }) });
+    await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
+    for (const value of ['1', '2']) {
+      await row
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      let dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText(
+        fa ? 'بارگذاری‌های در حال انجام' : 'uploads already in progress'
+      );
+      for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.uncheck();
+      await dialog.getByLabel(fa ? '.png' : '.pdf', { exact: true }).check();
+      await dialog.locator('#upload-policy-size').fill(value);
+      await dialog
+        .getByRole('button', { name: fa ? 'ذخیره سیاست' : 'Save policy', exact: true })
+        .click();
+      dialog = page.getByRole('dialog');
+      await expect(dialog).toHaveCount(1);
+      await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+      await expect(dialog).toHaveCount(0);
+      await expect(row).toContainText(fa ? 'سیاست ثبت‌شده' : 'Configured policy');
+    }
+    await row.locator('summary').click();
+    await expect(row.locator('ol li')).toHaveCount(2);
+    await expect(row.locator('ol')).toContainText(fa ? 'پایان‌یافته' : 'Ended');
+    await page.reload();
+    await expect(row).toContainText(fa ? 'سیاست ثبت‌شده' : 'Configured policy');
+    await row
+      .getByRole('button', { name: `${fa ? 'پایان سیاست' : 'End policy'} ${name}`, exact: true })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(fa ? 'ممکن است فایل‌های بیشتری' : 'may allow more files');
+    await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
+    const response = await page.request.get(
+      `${http.base}/api/admin/upload-policies?category=${category}`,
+      { headers: { cookie: `barghsa_session=${http.session}` } }
+    );
+    const policies = (await response.json()) as Array<{
+      status: string;
+      maxSizeBytes: number;
+      createdBy: string;
+    }>;
+    expect(policies).toHaveLength(2);
+    expect(
+      policies.every(
+        (policy) => policy.status === 'expired' && policy.createdBy === 'team-ui-admin'
+      )
+    ).toBe(true);
+    expect(policies.map((policy) => policy.maxSizeBytes)).toEqual([2 * 1024 * 1024, 1024 * 1024]);
+  });
