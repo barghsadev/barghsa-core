@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n';
-import { Button, DatePicker, Label } from '@barghsa/ui';
+import { Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 
 interface Event {
@@ -21,6 +22,7 @@ export function StaffPermissionHistory({
   target: { userId: string; username: string } | null;
   onClose: () => void;
 }) {
+  const zone = useTimezone();
   const locale = useLocale(),
     label = (key: string) => t(`admin.staff.audit.${key}`, locale);
   const [from, setFrom] = useState<Date>(),
@@ -80,16 +82,14 @@ export function StaffPermissionHistory({
         className="space-y-3"
         onSubmit={(event) => {
           event.preventDefault();
-          if (invalid) return;
+          if (invalid || zone.status !== 'ready') return;
           const next: { from?: string; to?: string } = {};
           if (from) {
-            const start = new Date(from);
-            start.setHours(0, 0, 0, 0);
+            const { start } = datePickerDayBounds(from, zone.timezone);
             next.from = start.toISOString();
           }
           if (to) {
-            const end = new Date(to);
-            end.setHours(23, 59, 59, 999);
+            const { end } = datePickerDayBounds(to, zone.timezone);
             next.to = end.toISOString();
           }
           setOffset(0);
@@ -103,7 +103,9 @@ export function StaffPermissionHistory({
               id="staff-audit-from"
               label={label('from')}
               placeholder={label('from')}
-              jalali={locale === 'fa'}
+              locale={locale}
+              timezone={zone.timezone}
+              disabled={zone.status !== 'ready'}
               {...(from ? { value: from } : {})}
               onChange={setFrom}
             />
@@ -114,12 +116,14 @@ export function StaffPermissionHistory({
               id="staff-audit-to"
               label={label('to')}
               placeholder={label('to')}
-              jalali={locale === 'fa'}
+              locale={locale}
+              timezone={zone.timezone}
+              disabled={zone.status !== 'ready'}
               {...(to ? { value: to } : {})}
               onChange={setTo}
             />
           </div>
-          <Button type="submit" disabled={invalid}>
+          <Button type="submit" disabled={invalid || zone.status !== 'ready'}>
             {label('apply')}
           </Button>
           <Button
@@ -136,19 +140,22 @@ export function StaffPermissionHistory({
           </Button>
         </div>
         <p className="text-sm text-gray-600">
-          {label('timezone').replace(
-            '{timezone}',
-            Intl.DateTimeFormat().resolvedOptions().timeZone
-          )}
+          {zone.status === 'ready' && label('timezone').replace('{timezone}', zone.timezone)}
         </p>
         {invalid && <p role="alert">{label('invalidRange')}</p>}
       </form>
-      {loading ? (
+      {loading || zone.status === 'loading' ? (
         <p role="status">{label('loading')}</p>
-      ) : error ? (
+      ) : error || zone.status === 'error' ? (
         <div role="alert">
           {label('error')}{' '}
-          <Button variant="outline" onClick={() => setRevision((value) => value + 1)}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setRevision((value) => value + 1);
+              if (zone.status === 'error') zone.retry();
+            }}
+          >
             {label('retry')}
           </Button>
         </div>
@@ -165,6 +172,7 @@ export function StaffPermissionHistory({
                   {label('by')} <bdi>{event.actorUsername ?? event.actorUserId}</bdi> ·{' '}
                   <time dateTime={event.createdAt}>
                     {new Intl.DateTimeFormat(locale, {
+                      timeZone: zone.timezone,
                       dateStyle: 'medium',
                       timeStyle: 'short',
                     }).format(new Date(event.createdAt))}

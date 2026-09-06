@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ timezoneId: 'America/Los_Angeles' });
+
 for (const locale of ['en', 'fa'] as const) {
   test(`staff permissions, confirmation and step-up failures remain recoverable (${locale})`, async ({
     page,
@@ -115,7 +117,6 @@ for (const locale of ['en', 'fa'] as const) {
   test(`permission history filters full calendar days and preserves retry (${locale})`, async ({
     page,
   }) => {
-    await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
     await page.addInitScript((value) => {
       new MutationObserver(() => {
         if (document.documentElement) document.documentElement.lang = value;
@@ -124,8 +125,14 @@ for (const locale of ['en', 'fa'] as const) {
     const fa = locale === 'fa',
       target = '10000000-0000-4000-8000-000000000003';
     let fail = true;
+    let failTimezone = true;
     const queries: URLSearchParams[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      failTimezone
+        ? route.fulfill(fa ? { json: { timezone: 'invalid-zone' } } : { status: 503, json: {} })
+        : route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+    );
     await page.route('**/api/admin/staff-access', (route) =>
       route.fulfill({
         json: {
@@ -189,7 +196,11 @@ for (const locale of ['en', 'fa'] as const) {
       name: fa ? 'تاریخچه مجوزها' : 'Permission history',
       exact: true,
     });
+    // Load timezone Date subclasses before Playwright replaces Date.prototype.
+    await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
     await expect(history.getByRole('alert')).toBeVisible();
+    await expect(page.locator('#staff-audit-from')).toBeDisabled();
+    failTimezone = false;
     fail = false;
     await history.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
     await expect(history).toContainText('New duties');
@@ -219,13 +230,8 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: fa ? 'اعمال فیلتر' : 'Apply filters', exact: true })
       .click();
     await expect.poll(() => queries.at(-1)?.get('from')).not.toBeNull();
-    const expected = await page.evaluate(() => {
-      const start = new Date('2026-03-21T12:00:00Z'),
-        end = new Date(start);
-      start.setHours(0, 0, 0, 0);
-      end.setHours(23, 59, 59, 999);
-      return { from: start.toISOString(), to: end.toISOString() };
-    });
+    const expected = { from: '2026-03-20T20:30:00.000Z', to: '2026-03-21T20:29:59.999Z' };
+    await expect(history).toContainText('Asia/Tehran');
     expect(queries.at(-1)?.get('from')).toBe(expected.from);
     expect(queries.at(-1)?.get('to')).toBe(expected.to);
     expect(queries.at(-1)?.get('offset')).toBe('0');

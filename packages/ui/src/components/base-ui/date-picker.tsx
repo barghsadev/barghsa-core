@@ -256,5 +256,11 @@ function DatePicker({
   );
 }
 
-export { DatePicker };
+/** Inclusive timestamp bounds for APIs that accept an inclusive `to` filter. */
+function datePickerDayBounds(date: Date, timezone: string): { start: Date; end: Date } {
+  const start = startOfDay(new TZDate(date.getTime(), timezone));
+  return { start: new Date(start.getTime()), end: new Date(addDays(start, 1).getTime() - 1) };
+}
+
+export { DatePicker, datePickerDayBounds };
 export type { DatePickerProps, DatePickerSingleProps, DatePickerRangeProps };

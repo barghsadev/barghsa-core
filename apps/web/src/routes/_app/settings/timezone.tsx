@@ -257,6 +257,7 @@ function SettingsTimezonePage() {
         return;
       }
 
+      window.dispatchEvent(new Event('barghsa:timezone-changed'));
       toast.success(t('settings.timezone.success', locale));
     } catch {
       toast.error(t('settings.timezone.error.save', locale));

@@ -770,7 +770,7 @@ export const fa: I18nDictionary = {
   'admin.staff.audit.to': 'تا تاریخ',
   'admin.staff.audit.apply': 'اعمال فیلتر',
   'admin.staff.audit.clear': 'پاک کردن تاریخ‌ها',
-  'admin.staff.audit.timezone': 'تاریخ‌ها و ساعت‌ها بر اساس منطقه زمانی مرورگر هستند: {timezone}',
+  'admin.staff.audit.timezone': 'تاریخ‌ها و ساعت‌ها بر اساس منطقه زمانی حساب هستند: {timezone}',
   'admin.staff.audit.invalidRange': 'تاریخ شروع نباید بعد از تاریخ پایان باشد.',
   'admin.staff.audit.loading': 'در حال بارگذاری تاریخچه…',
   'admin.staff.audit.error': 'تاریخچه مجوزها بارگذاری نشد یا مجوز مشاهده آن را ندارید.',
@@ -2843,7 +2843,7 @@ export const en: I18nDictionary = {
   'admin.staff.audit.to': 'To date',
   'admin.staff.audit.apply': 'Apply filters',
   'admin.staff.audit.clear': 'Clear dates',
-  'admin.staff.audit.timezone': 'Dates and times use your browser timezone: {timezone}',
+  'admin.staff.audit.timezone': 'Dates and times use your account timezone: {timezone}',
   'admin.staff.audit.invalidRange': 'The start date must not be after the end date.',
   'admin.staff.audit.loading': 'Loading history…',
   'admin.staff.audit.error':
