@@ -2435,6 +2435,12 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        actorUserId,
+        'admin:staff-teams:edit',
+        team.memberUserIds
+      );
 
       await this.assertTeamMembersExist(client, team.memberUserIds);
 
@@ -2510,6 +2516,26 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      // Discover accounts before locking the team, then lock all accounts in
+      // the same order as role changes. Verify membership again under the team
+      // lock so a concurrent edit cannot introduce an account we did not lock.
+      const observedMembers = await client.query<{ user_id: string }>(
+        'SELECT user_id FROM staff_team_members WHERE team_id=$1 ORDER BY user_id',
+        [teamId]
+      );
+      const suppliedMembers = (input as Record<string, unknown>).memberUserIds;
+      const accountIds = [
+        ...observedMembers.rows.map((row) => row.user_id),
+        ...(Array.isArray(suppliedMembers)
+          ? suppliedMembers.filter((id): id is string => typeof id === 'string')
+          : []),
+      ];
+      await requireStaffMutationPermission(
+        client,
+        actorUserId,
+        'admin:staff-teams:edit',
+        accountIds
+      );
 
       const existingResult = await client.query(
         `SELECT id, name, description, skill_tags, is_active, lead_user_id, created_at, updated_at
@@ -2531,6 +2557,13 @@ export class AdminService {
       const previousMemberUserIds = prevMembersResult.rows.map(
         (r: { user_id: string }) => r.user_id
       );
+
+      if (
+        JSON.stringify([...previousMemberUserIds].sort()) !==
+        JSON.stringify(observedMembers.rows.map((row) => row.user_id).sort())
+      ) {
+        throw new HttpException('Team membership changed; reload and retry', 409);
+      }
 
       // Normalize the update: merge provided fields with existing values,
       // then run the full validator over the merged shape so a partial
@@ -2661,6 +2694,7 @@ export class AdminService {
 
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actorUserId, 'admin:staff-teams:edit');
 
       const existingResult = await client.query(
         `SELECT id, name FROM staff_teams WHERE id = $1 FOR UPDATE`,

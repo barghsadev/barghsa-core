@@ -1663,3 +1663,9 @@ Review and validation: 49 focused configuration checks passed, including 16 migr
 Response targets, escalation policies and staff assignment rules now recheck their distinct current staff capability inside the write transaction, before configuration/team locks. Revoked grants return 403 and leave configuration, versions and audit history unchanged.
 
 Review and validation: all 86 focused checks across seven files passed, including 28 migrated HTTP checks covering seven configuration endpoints. Corrected two new fixture mistakes before the final run: the assignment route name and mandatory in-app escalation channel. Root types, lint and contract checks passed. Team CRUD authority and its account-lock ordering remain the next bounded review.
+
+### Protect team CRUD authority and account lock ordering (F04/F16)
+
+Team create/update/delete now recheck the operator's current team-edit permission inside the transaction. Creates and updates lock the operator and member accounts together in sorted order, matching role-change locking. Updates discover membership before locking accounts and recheck it under the team lock; a changed membership returns 409 without overwriting it, and a fresh retry succeeds.
+
+Review and validation: 71 focused checks passed, including real HTTP grant-revocation tests for all three team writes, overlapping operator/member creation and a membership-change race. The full API regression passed 2,896 tests across 224 files. Root types, lint and contract checks passed. The shared permission helper retains single-target support for existing callers. No schema or remote state changed.

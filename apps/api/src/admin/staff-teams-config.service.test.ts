@@ -6,6 +6,11 @@ import {
   STAFF_ASSIGNMENT_RULES_CONFIG_KEY,
 } from '@barghsa/shared/admin';
 
+// Transaction authority is covered by the migrated HTTP fixture.
+vi.mock('./staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ─── Helpers ──────────────────────────────────────────────────────────
 
 function mockPool() {
@@ -318,6 +323,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       mockConnect.mockResolvedValue(client);
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // observed members
         .mockResolvedValueOnce({ rows: [] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
@@ -342,6 +348,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       const updatedRow = { ...existingRow, name: 'Billing Plus' };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // observed members
         .mockResolvedValueOnce({ rows: [existingRow] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // prev members
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }, { user_id: 'u-2' }] }) // members exist check
@@ -395,6 +402,7 @@ describe('AdminService staff team CRUD (T-09.08.02)', () => {
       };
       client.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // observed members
         .mockResolvedValueOnce({ rows: [existingRow] }) // SELECT FOR UPDATE
         .mockResolvedValueOnce({ rows: [{ user_id: 'u-1' }] }) // prev members
         .mockResolvedValueOnce({ rows: [] }); // ROLLBACK

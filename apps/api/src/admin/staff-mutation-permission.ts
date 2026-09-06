@@ -8,7 +8,7 @@ export async function requireStaffMutationPermission(
   client: Pick<PoolClient, 'query'>,
   actorUserId: string,
   permission: string,
-  targetUserId?: string
+  targetUserId?: string | readonly string[]
 ): Promise<void> {
   const users = await client.query<{
     user_id: string;
@@ -18,7 +18,14 @@ export async function requireStaffMutationPermission(
   }>(
     `SELECT user_id,is_admin,disabled_at,activation_token IS NOT NULL AS activation_pending
       FROM users WHERE user_id=ANY($1::text[]) ORDER BY user_id FOR UPDATE`,
-    [[...new Set([actorUserId, ...(targetUserId ? [targetUserId] : [])])]]
+    [
+      [
+        ...new Set([
+          actorUserId,
+          ...(typeof targetUserId === 'string' ? [targetUserId] : (targetUserId ?? [])),
+        ]),
+      ],
+    ]
   );
   const actor = users.rows.find((row) => row.user_id === actorUserId);
   if (actor && !actor.disabled_at && !actor.activation_pending) {

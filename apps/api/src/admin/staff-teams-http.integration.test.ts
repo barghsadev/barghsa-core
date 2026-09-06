@@ -5,7 +5,9 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
-  for (const user of ['admin', 'customer', 'member', 'disabled']) {
+  await http.pool.query(`INSERT INTO staff_roles(role_id,name,description,permissions)
+    VALUES ('team-editor','Team editor','Fixture','["admin:staff-teams:edit"]')`);
+  for (const user of ['admin', 'customer', 'member', 'disabled', 'operator']) {
     await http.pool.query(
       `INSERT INTO users(user_id,username,password_hash,is_admin,is_staff,disabled_at)
       VALUES ($1,$2,'test-only',$3,$4,$5)`,
@@ -17,6 +19,10 @@ beforeAll(async () => {
         user === 'disabled' ? new Date() : null,
       ]
     );
+    if (user === 'operator')
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','team-editor')"
+      );
     const session = randomUUID(),
       csrf = randomUUID();
     await http.pool.query(
@@ -237,4 +243,121 @@ it('persists fallback priority and validates every fallback team', async () => {
   await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1', [second.id]);
   expect((await call('config/assignment-rules', 'PUT', config)).status).toBe(400);
   expect(await (await call('config/assignment-rules')).json()).toMatchObject(config);
+});
+
+for (const method of ['POST', 'PUT', 'DELETE'] as const) {
+  it(`${method} team rejects permission revoked while waiting and preserves all rows`, async () => {
+    const created = await team();
+    const path = method === 'POST' ? 'staff-teams' : `staff-teams/${created.id}`;
+    const snapshot = async () => ({
+      teams: (await http.pool.query('SELECT * FROM staff_teams ORDER BY id')).rows,
+      members: (await http.pool.query('SELECT * FROM staff_team_members ORDER BY team_id,user_id'))
+        .rows,
+      audit: (await http.pool.query('SELECT * FROM audit_log ORDER BY id')).rows,
+    });
+    const before = await snapshot();
+    const client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
+      pending = call(
+        path,
+        method,
+        method === 'DELETE'
+          ? undefined
+          : { name: `Changed ${randomUUID()}`, memberUserIds: ['member'] },
+        'operator'
+      );
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE '%activation_pending%'"
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query("DELETE FROM user_roles WHERE user_id='operator'");
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(403);
+      expect(await snapshot()).toEqual(before);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','team-editor') ON CONFLICT DO NOTHING"
+      );
+    }
+    expect(
+      (
+        await call(
+          path,
+          method,
+          method === 'DELETE' ? undefined : { name: `Retry ${randomUUID()}` },
+          'operator'
+        )
+      ).status
+    ).toBe(method === 'POST' ? 201 : 200);
+  });
+}
+
+it('locks overlapping operator/member accounts in one order for concurrent team creation', async () => {
+  const responses = await Promise.all([
+    call(
+      'staff-teams',
+      'POST',
+      { name: `First ${randomUUID()}`, memberUserIds: ['operator'] },
+      'admin'
+    ),
+    call(
+      'staff-teams',
+      'POST',
+      { name: `Second ${randomUUID()}`, memberUserIds: ['admin'] },
+      'operator'
+    ),
+  ]);
+  expect(responses.map((response) => response.status)).toEqual([201, 201]);
+});
+
+it('rejects a membership change discovered after account locks without overwriting it', async () => {
+  const created = await team();
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM staff_teams WHERE id=$1 FOR UPDATE', [created.id]);
+    pending = call(`staff-teams/${created.id}`, 'PUT', { name: 'Stale edit' }, 'operator');
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE '%FROM staff_teams WHERE id = $1 FOR UPDATE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('DELETE FROM staff_team_members WHERE team_id=$1', [created.id]);
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT name FROM staff_teams WHERE id=$1', [created.id])).rows[0].name
+    ).toBe(created.name);
+    expect(
+      (await http.pool.query('SELECT * FROM staff_team_members WHERE team_id=$1', [created.id]))
+        .rows
+    ).toEqual([]);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
+  expect(
+    (await call(`staff-teams/${created.id}`, 'PUT', { name: 'Fresh edit' }, 'operator')).status
+  ).toBe(200);
 });
