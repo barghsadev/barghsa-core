@@ -623,6 +623,9 @@ export const fa: I18nDictionary = {
   'settings.addresses.error.load': 'خطا در بارگذاری آدرس‌ها',
   'settings.addresses.error.loadProvinces': 'بارگذاری استان‌ها با خطا مواجه شد',
   'settings.addresses.error.loadCities': 'بارگذاری شهرها با خطا مواجه شد',
+  'settings.addresses.retry': 'تلاش دوباره',
+  'settings.addresses.unknownProvince': 'استان نامشخص',
+  'settings.addresses.unknownCity': 'شهر نامشخص',
   'settings.addresses.loading': 'در حال بارگذاری…',
 
   // ── Electricity Order ─────────────────────────────────────
@@ -2036,6 +2039,9 @@ export const en: I18nDictionary = {
   'settings.addresses.error.load': 'Failed to load addresses',
   'settings.addresses.error.loadProvinces': 'Failed to load provinces',
   'settings.addresses.error.loadCities': 'Failed to load cities',
+  'settings.addresses.retry': 'Try again',
+  'settings.addresses.unknownProvince': 'Unknown province',
+  'settings.addresses.unknownCity': 'Unknown city',
   'settings.addresses.loading': 'Loading…',
 
   // ── Electricity Order ─────────────────────────────────────

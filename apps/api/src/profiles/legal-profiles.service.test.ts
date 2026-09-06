@@ -208,6 +208,7 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({
           rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'DRAFT' }],
         })
+        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // validate geography
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT addresses
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE status -> ACTIVE
@@ -226,7 +227,9 @@ describe('LegalProfilesService', () => {
       });
 
       // Check the address INSERT was called
-      const addressInsert = mockClient.query.mock.calls[3];
+      const addressInsert = mockClient.query.mock.calls.find(([sql]) =>
+        String(sql).includes('INSERT INTO addresses')
+      );
       expect(addressInsert).toBeDefined();
       expect(addressInsert![0]).toContain('INSERT INTO addresses');
       expect(addressInsert![1]).toContain('prov-1');

@@ -1,3 +1,4 @@
+import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
@@ -157,6 +158,10 @@ export class LegalProfilesService {
           },
           404
         );
+      }
+
+      if (data.officialProvinceId && data.officialCityId) {
+        await requireAddressGeography(client, data.officialProvinceId, data.officialCityId);
       }
 
       // Create the legal profile record

@@ -489,6 +489,7 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // active city belongs to province
         .mockResolvedValueOnce({ rows: [] }) // check existing main
         .mockResolvedValueOnce({ rows: [addressRow] }) // INSERT RETURNING
         .mockResolvedValueOnce(undefined); // COMMIT
@@ -510,6 +511,7 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // active city belongs to province
         .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] }) // check existing main
         .mockResolvedValueOnce({ rows: [{ ...addressRow, main_address: false }] }) // INSERT
         .mockResolvedValueOnce(undefined); // COMMIT
@@ -537,6 +539,7 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // active city belongs to province
         .mockResolvedValueOnce({ rows: [{ id: 'existing-main' }] })
         .mockResolvedValueOnce(undefined); // ROLLBACK (catch block)
 
@@ -582,6 +585,7 @@ describe('ProfilesService', () => {
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
         .mockResolvedValueOnce({ rows: [profileRow] }) // lock current profile authority
+        .mockResolvedValueOnce({ rows: [{ id: 'city-1' }] }) // active city belongs to province
         .mockResolvedValueOnce({ rows: [] }) // check existing main
         .mockRejectedValueOnce(fkError)
         .mockResolvedValueOnce(undefined); // ROLLBACK

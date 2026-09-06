@@ -157,3 +157,112 @@ it('serializes two main switches and deletion racing a switch', async () => {
     ).rows[0].count
   ).toBe(1);
 });
+
+it('rejects cross-province and inactive selections without changing addresses or audit history', async () => {
+  const original = await create();
+  const otherProvince = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES ('دیگر','Other') RETURNING id"
+    )
+  ).rows[0].id;
+  const before = (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [original.id]))
+    .rows[0];
+  const auditBefore = (await http.pool.query('SELECT count(*)::int AS count FROM audit_log'))
+    .rows[0].count;
+  const payload = {
+    provinceId: otherProvince,
+    cityId,
+    fullAddress: 'Invalid pair',
+    postalCode: '1234567890',
+  };
+  expect((await request('POST', '', 'owner', payload)).status).toBe(400);
+  expect(
+    (await request('PUT', `/${original.id}`, 'owner', { provinceId: otherProvince })).status
+  ).toBe(400);
+  await http.pool.query("UPDATE cities SET status='inactive' WHERE id=$1", [cityId]);
+  expect((await request('POST', '', 'owner', { ...payload, provinceId })).status).toBe(400);
+  expect((await request('PUT', `/${original.id}`, 'owner', { cityId })).status).toBe(400);
+  await http.pool.query("UPDATE cities SET status='active' WHERE id=$1", [cityId]);
+  await http.pool.query("UPDATE provinces SET status='inactive' WHERE id=$1", [provinceId]);
+  expect((await request('POST', '', 'owner', { ...payload, provinceId })).status).toBe(400);
+  expect(
+    (await http.pool.query('SELECT * FROM addresses WHERE id=$1', [original.id])).rows[0]
+  ).toEqual(before);
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM audit_log')).rows[0].count
+  ).toBe(auditBefore);
+  // Historical geography remains intact; a text correction need not reselect a retired city.
+  expect(
+    (await request('PUT', `/${original.id}`, 'owner', { fullAddress: 'Corrected street' })).status
+  ).toBe(200);
+});
+
+it('validates an address selection again after concurrent geography deactivation', async () => {
+  const client = await http.pool.connect();
+  let creating: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE cities SET status='inactive' WHERE id=$1", [cityId]);
+    creating = request('POST', '', 'owner', {
+      provinceId,
+      cityId,
+      fullAddress: 'Blocked selection',
+      postalCode: '1234567890',
+    });
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT c.id FROM provinces p JOIN cities c%'`
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await creating).status).toBe(400);
+    expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='address_created'")).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await creating;
+  }
+});
+
+it('rejects malformed address fields and route IDs as client errors', async () => {
+  const original = await create();
+  const valid = { provinceId, cityId, fullAddress: 'Street', postalCode: '1234567890' };
+  for (const body of [
+    null,
+    [],
+    { ...valid, cityId: 123 },
+    { ...valid, provinceId: 'invalid' },
+    { ...valid, fullAddress: '   ' },
+    { ...valid, mainAddress: 'yes' },
+  ]) {
+    expect((await request('POST', '', 'owner', body)).status).toBe(400);
+  }
+  for (const body of [
+    {},
+    { cityId: [] },
+    { fullAddress: ' ' },
+    { postalCode: 123 },
+    { cityId: 'invalid' },
+  ]) {
+    expect((await request('PUT', `/${original.id}`, 'owner', body)).status).toBe(400);
+  }
+  expect((await request('DELETE', '/invalid')).status).toBe(400);
+  expect((await request('POST', '/invalid/set-main')).status).toBe(400);
+  const response = await request('GET');
+  expect(response.status).toBe(200);
+  expect((await response.json()).addresses[0]).toMatchObject({
+    provinceNameFa: 'استان',
+    provinceNameEn: 'Province',
+    cityNameFa: 'شهر',
+    cityNameEn: 'City',
+  });
+});

@@ -9,6 +9,7 @@ import {
   HttpException,
   Logger,
   Param,
+  ParseUUIDPipe,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -22,6 +23,15 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
+
+const addressFields = z.object({
+  provinceId: z.string().trim().uuid(),
+  cityId: z.string().trim().uuid(),
+  fullAddress: z.string().trim().min(1).max(500),
+  postalCode: z.string().trim().refine(validatePostalCode),
+});
+const createAddressInput = addressFields.extend({ mainAddress: z.boolean().optional() });
+const updateAddressInput = addressFields.partial().refine((data) => Object.keys(data).length > 0);
 
 @ApiTags('Profiles')
 @Controller('api/profiles')
@@ -542,7 +552,10 @@ export class ProfilesController {
   @ApiResponse({ status: 200, description: 'List of addresses.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
-  async listAddresses(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
+  async listAddresses(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
     const userId = req.session.userId;
 
     await this.profilesService.requireAddressEditor(userId, profileId);
@@ -566,7 +579,7 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async createAddress(
-    @Param('profileId') profileId: string,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Body()
     body: {
       provinceId: string;
@@ -579,67 +592,13 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    // Required field validation
-    if (!body.provinceId?.trim()) {
+    const parsed = createAddressInput.safeParse(body);
+    if (!parsed.success)
       throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-          message: 'Province is required',
-        },
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    }
-    if (!body.cityId?.trim()) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-          message: 'City is required',
-        },
-        400
-      );
-    }
-    if (!body.fullAddress?.trim()) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-          message: 'Full address is required',
-        },
-        400
-      );
-    }
-    if (!body.postalCode?.trim()) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-          message: 'Postal code is required',
-        },
-        400
-      );
-    }
-
-    // Field length validation
-    if (body.fullAddress.length > 500) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Full address must be 500 characters or fewer',
-        },
-        400
-      );
-    }
-
-    const address = await this.profilesService.createAddress(userId, profileId, {
-      provinceId: body.provinceId.trim(),
-      cityId: body.cityId.trim(),
-      fullAddress: body.fullAddress.trim(),
-      postalCode: body.postalCode.trim(),
-      ...(body.mainAddress === true ? { mainAddress: true } : {}),
-    });
+    const address = await this.profilesService.createAddress(userId, profileId, parsed.data);
 
     this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`);
     return address;
@@ -661,8 +620,8 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async updateAddress(
-    @Param('profileId') profileId: string,
-    @Param('addressId') addressId: string,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Param('addressId', new ParseUUIDPipe()) addressId: string,
     @Body()
     body: {
       provinceId?: string;
@@ -674,24 +633,18 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    // Field length validation
-    if (body.fullAddress !== undefined && body.fullAddress.length > 500) {
+    const parsed = updateAddressInput.safeParse(body);
+    if (!parsed.success)
       throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Full address must be 500 characters or fewer',
-        },
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    }
-
-    const address = await this.profilesService.updateAddress(userId, profileId, addressId, {
-      ...(body.provinceId !== undefined ? { provinceId: body.provinceId.trim() } : {}),
-      ...(body.cityId !== undefined ? { cityId: body.cityId.trim() } : {}),
-      ...(body.fullAddress !== undefined ? { fullAddress: body.fullAddress.trim() } : {}),
-      ...(body.postalCode !== undefined ? { postalCode: body.postalCode.trim() } : {}),
-    });
+    const address = await this.profilesService.updateAddress(
+      userId,
+      profileId,
+      addressId,
+      parsed.data
+    );
 
     this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`);
     return address;
@@ -715,8 +668,8 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async deleteAddress(
-    @Param('profileId') profileId: string,
-    @Param('addressId') addressId: string,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Param('addressId', new ParseUUIDPipe()) addressId: string,
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;
@@ -740,8 +693,8 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Address or profile not found' })
   async setMainAddress(
-    @Param('profileId') profileId: string,
-    @Param('addressId') addressId: string,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Param('addressId', new ParseUUIDPipe()) addressId: string,
     @Req() req: AuthenticatedRequest
   ) {
     const userId = req.session.userId;

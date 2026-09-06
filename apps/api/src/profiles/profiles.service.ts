@@ -1,3 +1,4 @@
+import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -30,6 +31,10 @@ export interface AddressRow {
   profileId: string;
   provinceId: string;
   cityId: string;
+  provinceNameFa?: string;
+  provinceNameEn?: string;
+  cityNameFa?: string;
+  cityNameEn?: string;
   fullAddress: string;
   postalCode: string;
   mainAddress: boolean;
@@ -102,6 +107,10 @@ function mapAddressRow(row: Record<string, unknown>): AddressRow {
     profileId: row.profile_id as string,
     provinceId: row.province_id as string,
     cityId: row.city_id as string,
+    ...(typeof row.province_name_fa === 'string' ? { provinceNameFa: row.province_name_fa } : {}),
+    ...(typeof row.province_name_en === 'string' ? { provinceNameEn: row.province_name_en } : {}),
+    ...(typeof row.city_name_fa === 'string' ? { cityNameFa: row.city_name_fa } : {}),
+    ...(typeof row.city_name_en === 'string' ? { cityNameEn: row.city_name_en } : {}),
     fullAddress: row.full_address as string,
     postalCode: row.postal_code as string,
     mainAddress: row.main_address as boolean,
@@ -466,6 +475,8 @@ export class ProfilesService {
         );
       }
 
+      await requireAddressGeography(client, data.provinceId, data.cityId);
+
       // Create the main address record
       await client.query(
         `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)
@@ -578,6 +589,8 @@ export class ProfilesService {
       await client.query('BEGIN');
       await this.requireAddressEditor(userId, profileId, client);
 
+      await requireAddressGeography(client, data.provinceId, data.cityId);
+
       // Check if there's an existing main address
       const existingMain = await client.query(
         `SELECT id FROM addresses WHERE profile_id = $1 AND main_address = true LIMIT 1`,
@@ -686,6 +699,25 @@ export class ProfilesService {
     try {
       await client.query('BEGIN');
       await this.requireAddressEditor(userId, profileId, client);
+
+      if (data.provinceId !== undefined || data.cityId !== undefined) {
+        const current = (
+          await client.query(
+            'SELECT province_id,city_id FROM addresses WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+            [addressId, profileId]
+          )
+        ).rows[0];
+        if (!current)
+          throw new HttpException(
+            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+            404
+          );
+        await requireAddressGeography(
+          client,
+          data.provinceId ?? current.province_id,
+          data.cityId ?? current.city_id
+        );
+      }
 
       const updates: string[] = [];
       const params: unknown[] = [];
@@ -924,10 +956,12 @@ export class ProfilesService {
   async getProfileAddresses(profileId: string): Promise<AddressRow[]> {
     const pool = getDbPool();
     const result = await pool.query(
-      `SELECT id, profile_id, province_id, city_id, full_address, postal_code, main_address, created_at, updated_at
-       FROM addresses
-       WHERE profile_id = $1
-       ORDER BY main_address DESC, created_at ASC`,
+      `SELECT a.id, a.profile_id, a.province_id, a.city_id, a.full_address, a.postal_code, a.main_address, a.created_at, a.updated_at,
+              p.name_fa AS province_name_fa,p.name_en AS province_name_en,
+              c.name_fa AS city_name_fa,c.name_en AS city_name_en
+       FROM addresses a LEFT JOIN provinces p ON p.id=a.province_id LEFT JOIN cities c ON c.id=a.city_id
+       WHERE a.profile_id = $1
+       ORDER BY a.main_address DESC, a.created_at ASC`,
       [profileId]
     );
     return result.rows.map(mapAddressRow);
@@ -1058,6 +1092,7 @@ export class ProfilesService {
         const hasMainAddress = existingMain.rows.length > 0;
 
         if (data.provinceId && data.cityId && data.fullAddress && data.postalCode) {
+          await requireAddressGeography(client, data.provinceId, data.cityId);
           // If this is the first address, make it main; otherwise add as non-main
           await client.query(
             `INSERT INTO addresses (profile_id, province_id, city_id, full_address, postal_code, main_address)

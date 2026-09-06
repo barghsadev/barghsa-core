@@ -141,3 +141,101 @@ test('branding controls have distinct labels and color IDs', async ({ page }) =>
   await page.keyboard.press('Space');
   await expect(toggle).toBeChecked();
 });
+
+for (const locale of ['en', 'fa']) {
+  test(`province changes clear the selected city and ignore late results (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({
+        json: {
+          addresses: [
+            {
+              id: 'saved',
+              provinceId: 'province-one',
+              cityId: 'city-one',
+              fullAddress: 'Stored street',
+              provinceNameFa: 'استان ذخیره‌شده',
+              provinceNameEn: 'Saved Province',
+              cityNameFa: 'شهر ذخیره‌شده',
+              cityNameEn: 'Saved City',
+              postalCode: '1234567890',
+              mainAddress: true,
+            },
+          ],
+        },
+      })
+    );
+    await page.route('**/api/geography/provinces', (route) =>
+      route.fulfill({
+        json: [
+          { id: 'province-one', nameFa: 'یک', nameEn: 'One' },
+          { id: 'province-two', nameFa: 'دو', nameEn: 'Two' },
+        ],
+      })
+    );
+    let fail = false;
+    await page.route('**/api/geography/provinces/province-one/cities', (route) =>
+      route.fulfill(
+        fail
+          ? { status: 503, json: {} }
+          : {
+              json: [
+                {
+                  id: 'city-one',
+                  provinceId: 'province-one',
+                  nameFa: 'شهر یک',
+                  nameEn: 'City One',
+                },
+              ],
+            }
+      )
+    );
+    let delayed: import('@playwright/test').Route | undefined;
+    await page.route('**/api/geography/provinces/province-two/cities', (route) => {
+      delayed = route;
+    });
+    await page.goto('/settings/addresses');
+    await expect(
+      page.getByText(
+        locale === 'fa' ? 'استان ذخیره‌شده، شهر ذخیره‌شده' : 'Saved Province، Saved City'
+      )
+    ).toBeVisible();
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address', exact: true })
+      .click();
+    const dialog = page.getByRole('dialog');
+    const province = dialog.getByRole('combobox').nth(0);
+    const city = dialog.getByRole('combobox').nth(1);
+    await province.selectOption('province-one');
+    await expect(city).toBeEnabled();
+    await city.selectOption('city-one');
+    await province.selectOption('province-two');
+    await expect(city).toHaveValue('');
+    await expect(city).toBeDisabled();
+    await expect.poll(() => !!delayed).toBe(true);
+    fail = true;
+    await province.selectOption('province-one');
+    await expect(dialog.getByRole('alert')).toContainText(
+      locale === 'fa' ? 'بارگذاری شهرها با خطا مواجه شد' : 'Failed to load cities'
+    );
+    fail = false;
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again' })
+      .click();
+    await expect(city).toBeEnabled();
+    await city.selectOption('city-one');
+    // The earlier request may already have been cancelled by AbortController.
+    await delayed!
+      .fulfill({
+        json: [
+          { id: 'city-two', provinceId: 'province-two', nameFa: 'شهر دو', nameEn: 'City Two' },
+        ],
+      })
+      .catch(() => {});
+    await expect(city).toHaveValue('city-one');
+    await expect(city.getByRole('option')).toHaveCount(2);
+    await expect(province).toHaveValue('province-one');
+  });
+}
