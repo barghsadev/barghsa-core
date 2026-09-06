@@ -901,7 +901,7 @@ export class AgentsService {
          AND (t.from_user_id=$1 OR t.to_user_id=$1) ORDER BY t.created_at DESC`, [userId],
     )
     return { transfers: result.rows.map(r=>({ id:r.id,profileId:r.profile_id,
-      fromUserId:r.from_user_id,toUserId:r.to_user_id,expiresAt:r.expires_at,profileName:r.profile_name })) }
+      fromUserId:r.from_user_id,toUserId:r.to_user_id,expiresAt:r.expires_at,profileName:r.profile_name, direction:r.to_user_id===userId ? 'incoming' : 'outgoing' })) }
   }
 
   async resolveOwnershipTransfer(profileId: string, transferId: string, userId: string,

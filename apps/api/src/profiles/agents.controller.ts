@@ -61,7 +61,8 @@ export class AgentsController {
 
     const result = await this.agentsService.listAgents(profileId)
     this.logger.debug(`User ${userId} listed agents for profile ${profileId}: ${result.agents.length} entries`)
-    return result
+    const roles = await this.agentsService.getAgentRoles(profileId, userId)
+    return { ...result, canTransferOwnership: roles.includes('Owner') }
   }
 
   /**

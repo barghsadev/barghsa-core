@@ -4,6 +4,7 @@ import { useLocale } from '../hooks/useLocale.js'
 import { ProfileSwitcher } from '../components/ProfileSwitcher.js'
 import { TosBanner } from '../components/TosBanner.js'
 import { InvitationBanner } from '../components/InvitationBanner.js'
+import { OwnershipBanner } from '../components/OwnershipBanner.js'
 import { NotificationBell } from '../components/NotificationBell.js'
 
 interface DashboardLayoutProps {
@@ -35,6 +36,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
     { to: '/documents', label: t('dashboard.nav.documents', locale) },
     { to: '/videos', label: t('dashboard.nav.videos', locale) },
     { to: '/notifications', label: t('notifications.nav', locale) },
+    { to: '/settings/team', label: t('team.title', locale) },
     { to: '/settings', label: t('dashboard.nav.settings', locale) },
   ]
 
@@ -45,6 +47,7 @@ export function DashboardLayout({ locale: localeOverride }: DashboardLayoutProps
 
       {/* Invitation banner — shows pending agent invitations */}
       <InvitationBanner locale={locale} />
+      <OwnershipBanner />
 
       {/* App header — brand + notification center bell (T-05.02.03) */}
       <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:px-6">

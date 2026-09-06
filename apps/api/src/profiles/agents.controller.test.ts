@@ -3,6 +3,7 @@ import { AgentsController } from './agents.controller.js'
 
 const mockAgentsService = {
   isOwnerOrManager: vi.fn(),
+  getAgentRoles: vi.fn().mockResolvedValue(['Owner']),
   listAgents: vi.fn(),
   withdrawInvitation: vi.fn(),
 }
@@ -29,6 +30,8 @@ describe('AgentsController', () => {
       const result = await controller.listAgents('prof-1', req)
 
       expect(result.agents).toHaveLength(1)
+      expect(result.canTransferOwnership).toBe(true)
+      expect(mockAgentsService.getAgentRoles).toHaveBeenCalledWith('prof-1', 'user-1')
       expect(mockAgentsService.isOwnerOrManager).toHaveBeenCalledWith('user-1', 'prof-1')
     })
 
