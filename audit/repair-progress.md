@@ -1715,3 +1715,9 @@ Review and validation: 20 affected browser checks passed across ordering, wallet
 Province and form-city loads now distinguish failure from empty data, validate response fields and provide localized retry. Form-city responses must belong to the selected province. Dependent controls and saving stay disabled while required location data is loading or unavailable; the save handler also validates the current province/city selection. Obsolete responses cannot change the current loading/error state.
 
 Review and validation: all twelve ordering browser checks passed, including failed/malformed province lists, failed/wrong-province city lists and successful retries in Persian and English. Root build, types, lint, formatting and route budgets pass; ordering measures 249.05 KB against 250 KB. Background saved-address name lookup may still fall back to IDs if unavailable; this bounded change covers editable location lists.
+
+### Validate and report flaky-test quarantines (F19)
+
+Replaced the always-zero placeholder with a registry validator and JSON/CI summary report. Missing or malformed registries fail closed; owners, issue links, normalized test identity, severity and 1–30 day expiry are validated. Expired critical entries fail CI; active and expired counts remain distinct. CI runs reporting after earlier failures and uploads the generated report. Runtime flakes are explicitly unmeasured, not reported as zero.
+
+Review and validation: eight tests passed with invalid-field subcases, duplicate/missing fields, inclusive UTC expiry, critical/non-critical expiry, missing/malformed input, report replacement and workflow output checks. The actual empty registry passes with zero active quarantines and null runtime measurement. Workflow/docs formatting and whitespace checks pass. Automatic promotion and observed runner retry reporting remain separate work.

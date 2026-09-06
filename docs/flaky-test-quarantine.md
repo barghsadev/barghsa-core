@@ -90,7 +90,20 @@ Quarantine records live in a file at `scripts/quarantine-registry.json`. Each re
 ### CI Reporting
 
 The script `scripts/check-flaky-tests.sh` reads the quarantine registry and reports the
-flaky count. The CI workflow calls this script after the test step.
+active quarantine count. The CI workflow runs it even when preceding tests fail and
+uploads its JSON report. Missing or invalid registries and expired critical records
+fail the check. Expired non-critical records are reported separately.
+
+Owners use `@user` or `@organization/team`; issue links must be GitHub issue URLs.
+Severity is `critical` or `non-critical`. Test paths are normalized repository-relative
+paths; duplicate path/name pairs are rejected. Quarantines must start on or before
+the current UTC date and expire 1–30 days later. Records remain active through their
+expiry date, inclusive.
+
+This report counts registered quarantines. It does not infer flakes from test runner
+results: `observed_runtime_flake_count` is explicitly `null`. An empty registry does
+not prove a run contained no flaky tests. Automatic production promotion remains
+the separate gate described above.
 
 ## References
 

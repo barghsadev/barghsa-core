@@ -147,12 +147,15 @@ jobs:
             packages/*/coverage/
           retention-days: 14
       - name: Report flaky test count
+        if: always()
         id: flaky-check
-        run: ./scripts/check-flaky-tests.sh
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_flaky_tests.py'
+          ./scripts/check-flaky-tests.sh --report "$RUNNER_TEMP/flaky-test-report.json"
       - name: Upload flaky test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: flaky-test-report
-          path: scripts/quarantine-registry.json
+          path: ${{ runner.temp }}/flaky-test-report.json
           retention-days: 7
