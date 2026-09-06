@@ -2,7 +2,7 @@
  * Real-PostgreSQL integration tests for AutoInvoiceService (T-04.1.02.03).
  *
  * Runs the actual service against a Testcontainers-managed PostgreSQL 17
- * instance (migrations 0052 → 0053 → 0054 → 0055 → 0057 → 0058 + audit_log) and proves:
+ * instance with the full production migration chain and proves:
  *
  *   1. Order → invoice creation is ATOMIC: the invoice, its lines, its
  *      product-composition items and the audit entry land in ONE
@@ -533,5 +533,30 @@ describe('AutoInvoiceService — real PostgreSQL integration (T-04.1.02.03)', ()
     expect(result.lines[0]!.vatAmount).toBe(pure.lines[0]!.vatAmount);
     // Net 900,000 + 9% VAT 81,000 = 981,000
     expect(result.totalAmount).toBe(981_000n);
+  });
+  it('snapshots the scheduled price effective at invoice time and preserves it after later prices', async () => {
+    const orderId = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+    await insertOrder(orderId);
+    await ctx.pool.query(
+      "INSERT INTO product_price_versions(product_id,price,effective_from,effective_until,created_by) VALUES ($1,2000000,'2026-08-01T00:00:00Z','2026-09-01T00:00:00Z',$2),($1,3000000,'2026-09-01T00:00:00Z',NULL,$2)",
+      [PRODUCT_ID, ACTOR_USER_ID]
+    );
+    try {
+      const result = await service.createInvoiceForOrder({
+        orderId,
+        actorUserId: ACTOR_USER_ID,
+        now: new Date('2026-08-15T00:00:00Z'),
+      });
+      expect(result.lines[0]!.unitPrice).toBe(2000000n);
+      expect(
+        (
+          await ctx.pool.query('SELECT unit_price FROM invoice_lines WHERE invoice_id=$1', [
+            result.invoiceId,
+          ])
+        ).rows[0].unit_price
+      ).toBe('2000000');
+    } finally {
+      await ctx.pool.query('DELETE FROM product_price_versions WHERE product_id=$1', [PRODUCT_ID]);
+    }
   });
 });

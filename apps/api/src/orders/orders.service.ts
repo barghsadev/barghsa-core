@@ -188,7 +188,7 @@ export class OrdersService {
       // Validate the product exists, is active, and fetch its price +
       // type (the price is the order total for gift-code math).
       const productResult = await client.query<{ id: string; type: string; price: string | null }>(
-        `SELECT id, type, price FROM products WHERE id = $1 AND status = 'active' FOR SHARE`,
+        `SELECT id, type, effective_product_price(id) AS price FROM products WHERE id = $1 AND status = 'active' FOR SHARE`,
         [dto.productId]
       );
       if (productResult.rows.length === 0) {

@@ -284,7 +284,7 @@ it('archival waits for an order already holding the profile lock and then sees t
         Number(
           (
             await http.pool.query(
-              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id, type, price FROM products%'"
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%effective_product_price(id) AS price FROM products%'"
             )
           ).rows[0].count
         )

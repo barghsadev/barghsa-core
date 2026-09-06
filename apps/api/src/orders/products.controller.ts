@@ -41,7 +41,7 @@ export class ProductsController {
   async getActiveProducts() {
     const pool = getDbPool();
     const result = await pool.query(
-      `SELECT id, type, system_key, title, description, price, status
+      `SELECT id, type, system_key, title, description, effective_product_price(id) AS price, status
        FROM products WHERE status = 'active'
        ORDER BY system_key NULLS LAST`
     );

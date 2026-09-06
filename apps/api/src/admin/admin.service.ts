@@ -1756,7 +1756,7 @@ export class AdminService {
   ): Promise<GreenElectricityProductState> {
     const pool = getDbPool();
     const result = await (client ?? pool).query(
-      `SELECT status, price FROM products WHERE system_key = $1${client ? ' FOR SHARE' : ''}`,
+      `SELECT status, effective_product_price(id) AS price FROM products WHERE system_key = $1${client ? ' FOR SHARE' : ''}`,
       [GREEN_ELECTRICITY_SYSTEM_KEY]
     );
     if (result.rows.length === 0) {

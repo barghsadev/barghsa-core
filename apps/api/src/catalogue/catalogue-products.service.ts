@@ -23,7 +23,7 @@ import { getDbPool } from '@barghsa/db';
  * - Versioned price changes with effective dates. Every price change
  *   appends a `product_price_versions` row (new version starts at the
  *   requested effective_from, previous open version is closed there);
- *   `products.price` mirrors the newest version. An identical re-submit
+ *   `products.price` caches immediate writes; reads resolve the effective version. An identical re-submit
  *   is a no-op that emits no audit.
  * - Every mutation runs in ONE database transaction on a single client
  *   (BEGIN/COMMIT/ROLLBACK) and records an `audit_log` event with
@@ -213,10 +213,12 @@ export class CatalogueProductsService {
     const pool = getDbPool();
     const rows = type
       ? await pool.query<ProductRow>(
-          'SELECT * FROM products WHERE type = $1 ORDER BY created_at DESC, id',
+          'SELECT products.*, effective_product_price(id) AS price FROM products WHERE type = $1 ORDER BY created_at DESC, id',
           [type]
         )
-      : await pool.query<ProductRow>('SELECT * FROM products ORDER BY created_at DESC, id');
+      : await pool.query<ProductRow>(
+          'SELECT products.*, effective_product_price(id) AS price FROM products ORDER BY created_at DESC, id'
+        );
 
     const withAggregates = await this.loadAggregates(pool, rows.rows);
     return withAggregates.map((row) => this.toDto(row));
@@ -525,7 +527,7 @@ export class CatalogueProductsService {
   /**
    * Add a versioned price change with an effective date. Closes the
    * previously-open version at `effectiveFrom` and appends the new one;
-   * `products.price` mirrors the newest version. A re-submit of the
+   * `products.price` caches immediate writes; reads resolve the effective version. A re-submit of the
    * currently-active price is a no-op (no audit).
    *
    * Overlap safety: the DB EXCLUDE constraint (migration 0015) rejects
@@ -689,8 +691,8 @@ export class CatalogueProductsService {
    * record a price CHANGE, and a same-price version records nothing, so the
    * no-op is reachable via HTTP where effectiveFrom defaults to "now").
    * The caller then emits no audit (no-op discipline). `products.price`
-   * mirrors the newest version so list/detail reads (and the public
-   * endpoint) keep showing the latest price.
+   * retains immediate writes; catalogue and public reads resolve the
+   * version effective at their calculation time.
    */
   private async insertPriceVersion(
     q: DbExecutor,
@@ -743,8 +745,7 @@ export class CatalogueProductsService {
     // Mirror the newest price into products.price ONLY once it is effective
     // (from <= now), so the "current" price never leads its own effective
     // date. A future-dated version is recorded in the history but does not
-    // promote the current price until a scheduler / read-time resolution
-    // applies it.
+    // rewrite the legacy cache. effective_product_price resolves it when due.
     if (from.getTime() <= Date.now()) {
       await q.query('UPDATE products SET price = $1, updated_at = NOW() WHERE id = $2', [
         input.price,
@@ -768,7 +769,7 @@ export class CatalogueProductsService {
 
   private async findProduct(q: DbExecutor, id: string, lock = false): Promise<ProductRow | null> {
     const result = await q.query<ProductRow>(
-      `SELECT id, type, system_key, title, description, price, status, created_at, updated_at
+      `SELECT id, type, system_key, title, description, effective_product_price(id) AS price, status, created_at, updated_at
          FROM products
         WHERE id = $1${lock ? ' FOR UPDATE' : ''}`,
       [id]

@@ -213,9 +213,9 @@ export class AutoInvoiceService {
 
       // --- 3. Load the product for the price/title/type snapshot ---
       const productResult = (await client.query(
-        `SELECT id, type, system_key, title, price
+        `SELECT id, type, system_key, title, effective_product_price(id, $2) AS price
            FROM products WHERE id = $1`,
-        [order.product_id]
+        [order.product_id, now]
       )) as { rows: ProductSnapshotRow[] };
       const product = productResult.rows[0];
       if (!product) {

@@ -167,3 +167,30 @@ it('serializes two staff edits so the second identical edit is a no-op', async (
     (await http.pool.query("SELECT id FROM audit_log WHERE event='catalogue_product_updated'")).rows
   ).toHaveLength(1);
 });
+
+it('resolves effective scheduled prices in public and staff reads without rewriting the legacy price', async () => {
+  const id = await seed();
+  const version = (
+    await http.pool.query(
+      "INSERT INTO product_price_versions(product_id,price,effective_from,created_by) VALUES ($1,9007199254740993,NOW()+INTERVAL '1 day','operator') RETURNING id",
+      [id]
+    )
+  ).rows[0].id;
+  expect(await (await request(`/${id}`)).json()).toMatchObject({ price: '1000' });
+  await http.pool.query(
+    "UPDATE product_price_versions SET effective_from=NOW()-INTERVAL '1 day' WHERE id=$1",
+    [version]
+  );
+  expect(await (await request(`/${id}`)).json()).toMatchObject({ price: '9007199254740993' });
+  const listed = await (await request()).json();
+  expect(listed).toEqual(
+    expect.arrayContaining([expect.objectContaining({ id, price: '9007199254740993' })])
+  );
+  const publicRows = await (await fetch(`${http.base}/api/products`)).json();
+  expect(publicRows).toEqual(
+    expect.arrayContaining([expect.objectContaining({ id, price: '9007199254740993' })])
+  );
+  expect(
+    (await http.pool.query('SELECT price FROM products WHERE id=$1', [id])).rows[0].price
+  ).toBe('1000');
+});

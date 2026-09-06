@@ -72,6 +72,7 @@ describe('complete production schema baseline', () => {
         '0111_account_login_identifiers',
         '0112_wallet_callback_processing',
         '0113_invoice_accounting_generated',
+        '0114_effective_product_price',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });

@@ -239,6 +239,13 @@
       "when": 1791331200016,
       "tag": "0113_invoice_accounting_generated",
       "breakpoints": true
+    },
+    {
+      "idx": 114,
+      "version": "7",
+      "when": 1791331200017,
+      "tag": "0114_effective_product_price",
+      "breakpoints": true
     }
   ]
 }
