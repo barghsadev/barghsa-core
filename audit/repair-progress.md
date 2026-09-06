@@ -1309,3 +1309,9 @@ Review and validation: all 72 policy service/controller/production-migrated HTTP
 Slot assignment/clearing now rechecks and holds current admin:ai:agents authority inside its existing transaction. The existing slot lock, audit rollback, foreign-key conflict handling and duplicate-assignment behavior remain in force.
 
 Review and validation: 17 existing unit/controller checks and six production-migrated HTTP checks pass. HTTP covers assigning/clearing after grant revocation, both audit-failure rollbacks, shared-agent usage, duplicate suppression and concurrent agent deletion returning 409 without changing the slot or audit. Corrected the fixture's missing model creator before rerunning. Root types, lint and whitespace checks pass. The slot administration screen remains open.
+
+### Add agent-slot administration (F17)
+
+Added /admin/agent-slots in Persian and English for the five predefined chatbot slots. Staff can choose an agent or clear an assignment, see disabled-agent status and cross-slot use, and confirm through the existing password-verification dialog. Identical assignments disable Save; failed reads and lost authority remove stale controls.
+
+Review and validation: four production-browser checks pass. Controlled checks verify failed loads, wrong/correct password retries, identical captured assignments, disabled/shared-agent notices and permission loss. Migrated-API checks assign/reload, reuse one agent across two slots and clear an assignment in both languages. Reviewed the Persian mobile screenshot and verified no horizontal page overflow. Root build, types, lint, contract and bundle checks pass. This manages configuration; actual chatbot consumers and the AI agent editor remain separate review items.

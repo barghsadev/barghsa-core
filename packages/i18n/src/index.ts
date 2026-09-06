@@ -5,6 +5,28 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.slots.title': 'جایگاه‌های عامل',
+  'admin.slots.description':
+    'عامل هر گفت‌وگو را انتخاب کنید. یک عامل می‌تواند در چند جایگاه استفاده شود.',
+  'admin.slots.refresh': 'تازه‌سازی',
+  'admin.slots.saved': 'تخصیص ذخیره شد.',
+  'admin.slots.loading': 'در حال دریافت جایگاه‌های عامل…',
+  'admin.slots.denied': 'اجازه مدیریت جایگاه‌های عامل را ندارید.',
+  'admin.slots.error': 'دریافت جایگاه‌ها انجام نشد. برای تلاش مجدد تازه‌سازی کنید.',
+  'admin.slots.save': 'ذخیره تخصیص',
+  'admin.slots.confirm': 'این تخصیص ذخیره شود؟',
+  'admin.slots.unassigned': 'بدون عامل',
+  'admin.slots.agent': 'عامل',
+  'admin.slots.disabled': 'غیرفعال',
+  'admin.slots.disabledHelp': 'این عامل غیرفعال است. تخصیص آن باعث فعال شدن نمی‌شود.',
+  'admin.slots.conflict': 'عامل دیگر در دسترس نیست. تازه‌سازی و دوباره انتخاب کنید.',
+  'admin.slots.shared': 'تخصیص‌یافته به',
+  'admin.slots.individual_chatbot': 'گفت‌وگوی شخص حقیقی',
+  'admin.slots.legal_entity_chatbot': 'گفت‌وگوی شخص حقوقی',
+  'admin.slots.staff_chatbot': 'گفت‌وگوی کارکنان',
+  'admin.slots.website_chatbot': 'گفت‌وگوی وب‌سایت',
+  'admin.slots.telegram_chatbot': 'گفت‌وگوی تلگرام',
+
   'admin.policies.title': 'سیاست‌های هوش مصنوعی',
   'admin.policies.policies': 'سیاست‌ها',
   'admin.policies.policy-groups': 'گروه‌های سیاست',
@@ -1981,6 +2003,28 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.slots.title': 'Agent slots',
+  'admin.slots.description':
+    'Choose the agent assigned to each chatbot. One agent can serve several slots.',
+  'admin.slots.refresh': 'Refresh',
+  'admin.slots.saved': 'Assignment saved.',
+  'admin.slots.loading': 'Loading agent slots…',
+  'admin.slots.denied': 'You do not have permission to manage agent slots.',
+  'admin.slots.error': 'Could not load agent slots. Refresh to retry.',
+  'admin.slots.save': 'Save assignment',
+  'admin.slots.confirm': 'Save this assignment?',
+  'admin.slots.unassigned': 'No agent assigned',
+  'admin.slots.agent': 'Agent',
+  'admin.slots.disabled': 'Disabled',
+  'admin.slots.disabledHelp': 'This agent is disabled. Assigning it does not enable it.',
+  'admin.slots.conflict': 'The agent is no longer available. Refresh and choose again.',
+  'admin.slots.shared': 'Also assigned to',
+  'admin.slots.individual_chatbot': 'Individual chatbot',
+  'admin.slots.legal_entity_chatbot': 'Legal entity chatbot',
+  'admin.slots.staff_chatbot': 'Staff chatbot',
+  'admin.slots.website_chatbot': 'Website chatbot',
+  'admin.slots.telegram_chatbot': 'Telegram chatbot',
+
   'admin.policies.title': 'AI policies',
   'admin.policies.policies': 'Policies',
   'admin.policies.policy-groups': 'Policy groups',

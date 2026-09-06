@@ -1305,3 +1305,111 @@ for (const locale of ['en', 'fa'])
       (await page.request.get(`${http.base}/api/admin/policies/${kb.id}`, { headers })).status()
     ).toBe(404);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`agent slot UI persists through the migrated API (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    const modelResponse = await page.request.post(`${http.base}/api/admin/ai-models`, {
+      headers,
+      data: {
+        title: `Slot model ${locale}`,
+        providerType: 'openai_compatible',
+        baseUrl: 'https://example.test',
+        modelName: 'test',
+      },
+    });
+    expect(modelResponse.status()).toBe(201);
+    const model = await modelResponse.json();
+    const agentResponse = await page.request.post(`${http.base}/api/admin/agents`, {
+      headers,
+      data: { title: `Slot support ${locale}`, modelId: model.id, kbIds: [], policyIds: [] },
+    });
+    expect(agentResponse.status()).toBe(201);
+    const agent = await agentResponse.json();
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    await page.goto('/admin/agent-slots');
+    const individual = page.getByLabel(
+      fa ? 'عامل · گفت‌وگوی شخص حقیقی' : 'Agent · Individual chatbot',
+      { exact: true }
+    );
+    await individual.selectOption(agent.id);
+    await page
+      .getByRole('button', {
+        name: fa ? 'ذخیره تخصیص گفت‌وگوی شخص حقیقی' : 'Save assignment Individual chatbot',
+        exact: true,
+      })
+      .click();
+    await confirm();
+    await page.reload();
+    await expect(individual).toHaveValue(agent.id);
+    await page
+      .getByLabel(fa ? 'عامل · گفت‌وگوی کارکنان' : 'Agent · Staff chatbot', { exact: true })
+      .selectOption(agent.id);
+    await expect(
+      page.getByText(
+        fa ? 'تخصیص‌یافته به: گفت‌وگوی شخص حقیقی' : 'Also assigned to: Individual chatbot',
+        { exact: true }
+      )
+    ).toBeVisible();
+    await page
+      .getByRole('button', {
+        name: fa ? 'ذخیره تخصیص گفت‌وگوی کارکنان' : 'Save assignment Staff chatbot',
+        exact: true,
+      })
+      .click();
+    await confirm();
+    const slots = (await (
+      await page.request.get(`${http.base}/api/admin/agent-slots`, { headers })
+    ).json()) as Array<{ slotKey: string; agent: { id: string } | null; alsoUsedIn: string[] }>;
+    expect(slots.find((slot) => slot.slotKey === 'staff_chatbot')).toMatchObject({
+      agent: { id: agent.id },
+      alsoUsedIn: ['individual_chatbot'],
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/agent-slots-${locale}.png`, fullPage: true });
+    await individual.selectOption('');
+    await page
+      .getByRole('button', {
+        name: fa ? 'ذخیره تخصیص گفت‌وگوی شخص حقیقی' : 'Save assignment Individual chatbot',
+        exact: true,
+      })
+      .click();
+    await confirm();
+    expect(
+      (
+        (await (
+          await page.request.get(`${http.base}/api/admin/agent-slots`, { headers })
+        ).json()) as typeof slots
+      ).find((slot) => slot.slotKey === 'individual_chatbot')?.agent
+    ).toBeNull();
+    await page.request.delete(`${http.base}/api/admin/agents/${agent.id}`, { headers });
+    await page.request.delete(`${http.base}/api/admin/ai-models/${model.id}`, { headers });
+  });
