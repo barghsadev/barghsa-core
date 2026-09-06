@@ -35,6 +35,11 @@ export default function AdminLayout() {
             <h2 className="text-lg font-semibold mb-4">{t('admin.nav.title', locale)}</h2>
             <ul className="space-y-2">
               <li>
+                <a href="/admin/knowledge-bases" className="text-blue-600 hover:underline">
+                  {t('admin.kb.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/ai-models" className="text-blue-600 hover:underline">
                   {t('admin.aiModels.title', locale)}
                 </a>

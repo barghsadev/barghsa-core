@@ -1267,3 +1267,9 @@ Review and validation: 33 existing service/controller checks and all 32 producti
 All KB/group route IDs now require UUIDs, including nested document/member IDs. Metadata schemas trim titles, reject blank titles and unknown fields, and retain length limits. Membership payloads require a UUID; document keys reject whitespace-only input without rewriting valid storage keys.
 
 Review and validation: 46 production-migrated HTTP checks and 18 service checks pass. The controller recheck passes all 15 tests after replacing a legacy fake ID with a UUID. Invalid requests leave metadata, links and audits unchanged. Root types, lint and whitespace checks pass. The management editor and document-processing dependency remain open.
+
+### Add knowledge-base and group administration (F17)
+
+Added the lazy /admin/knowledge-bases page and navigation entry, using the established admin layout. Persian/English controls support KB/group creation, editing and deletion, group membership changes, document names and truthful processing status. Mutations capture the proposal in the existing password-verification dialog. Failed reads expose refresh; permission loss removes editor controls.
+
+Review and validation: four controlled production-browser checks pass for failed reads, wrong/correct password retries, identical proposals, permission loss, group links and document status. Two additional browser checks pass against the production-migrated API for create/edit/reload, group membership, unlink and deletion in both languages. Reviewed the Persian 390px screenshot and checked no horizontal page overflow. Root build, final types/lint, contract and bundle checks pass. Document selection/attachment controls are next; this step does not implement the deferred chunk/embedding processor.

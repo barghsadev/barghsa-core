@@ -1015,3 +1015,116 @@ for (const locale of ['en', 'fa'])
     await confirm();
     await expect(card).toHaveCount(0);
   });
+
+for (const locale of ['en', 'fa'])
+  test(`knowledge-base UI persists through the migrated API (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const name = `KB live ${locale}`,
+      renamed = `${name} edited`,
+      groupName = `KB group ${locale}`;
+    await page.goto('/admin/knowledge-bases');
+    await page
+      .getByRole('button', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
+      .click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
+    await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+      .click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: renamed, exact: true })).toBeVisible();
+    const headers = { cookie: `barghsa_session=${http.session}` };
+    const kbs = (await (
+      await page.request.get(`${http.base}/api/admin/knowledge-bases`, { headers })
+    ).json()) as Array<{ id: string; title: string; description: string }>;
+    const kb = kbs.find((item) => item.title === renamed)!;
+    expect(kb.description).toBe('Meter guidance');
+    await page
+      .getByRole('button', {
+        name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups',
+        exact: true,
+      })
+      .click();
+    await page.getByRole('button', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
+    await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);
+    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${groupName}`, exact: true })
+      .click();
+    await page
+      .getByLabel(fa ? 'انتخاب پایگاه دانش' : 'Choose a knowledge base', { exact: true })
+      .selectOption(kb.id);
+    await page
+      .getByRole('button', { name: fa ? 'افزودن به گروه' : 'Add to group', exact: true })
+      .click();
+    await confirm();
+    const groups = (await (
+      await page.request.get(`${http.base}/api/admin/kb-groups`, { headers })
+    ).json()) as Array<{ id: string; title: string; memberCount: number }>;
+    const group = groups.find((item) => item.title === groupName)!;
+    expect(group.memberCount).toBe(1);
+    await page
+      .getByRole('button', {
+        name: `${fa ? 'حذف از گروه' : 'Remove from group'} ${renamed}`,
+        exact: true,
+      })
+      .click();
+    await confirm();
+    expect(
+      (
+        await (
+          await page.request.get(`${http.base}/api/admin/kb-groups/${group.id}`, { headers })
+        ).json()
+      ).members
+    ).toEqual([]);
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
+      .click();
+    await confirm();
+    await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
+    await page
+      .getByRole('button', { name: fa ? 'پایگاه‌های دانش' : 'Knowledge bases', exact: true })
+      .click();
+    await page
+      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
+      .click();
+    await confirm();
+    expect(
+      (
+        await page.request.get(`${http.base}/api/admin/knowledge-bases/${kb.id}`, { headers })
+      ).status()
+    ).toBe(404);
+  });
