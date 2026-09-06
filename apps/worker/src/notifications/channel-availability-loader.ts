@@ -1,25 +1,7 @@
-/**
- * Channel availability context loader (E-05, T-05.05.02).
- *
- * Resolves, for one outbox row, the {@link ChannelAvailabilityContext} the
- * pure availability rule needs: whether the recipient profile owns verified
- * email and phone destinations, and whether the user has opted in to marketing
- * on each external channel (T-05.05.01 `user_notification_preferences`).
- *
- * Verified destinations: Barghsa verifies a user's contact at registration —
- * the username is a normalized, OTP-verified email or E.164 phone (T-01), so a
- * non-null `users.email` is a verified email destination and a non-null
- * `users.mobile` is a verified SMS destination. The loader reads the user's
- * verified contact fields (routed through the row's profile → user link) and
- * the marketing opt-in rows so the runner can gate external dispatch.
- *
- * The loader returns a default context (`no verified destination, no consent`)
- * when the profile/user cannot be found, which the availability rule interprets
- * as "skip all external legs" — safe: a notification is never shipped to an
- * unverified or un-consented external channel. It never throws on a missing
- * recipient so one bad row cannot poison a whole poll.
- *
- * @module notifications
+/** Resolve the queued recipient's verified contacts and profile marketing preferences.
+ * An explicit outbox user wins over the current profile owner. Disabled users
+ * and pending staff activations have no external destination. Complaint and
+ * bounce suppression applies independently of marketing consent.
  */
 import type { NotificationChannel } from '@barghsa/shared/notifications'
 import type { ChannelAvailabilityContext } from './channel-availability.js'
@@ -48,22 +30,8 @@ export async function loadChannelAvailabilityContext(
   pool: AvailabilityPool,
   outboxId: string,
 ): Promise<ChannelAvailabilityContext> {
-  // Resolve the recipient's verified contact fields through the row's
-  // profile→user link (covers rows where a user_id is present too, since the
-  // outbox always carries a profile_id). Verified email/phone map to the
-  // registration-verified `users.mobile` / `users.email` columns.
-  const contact = await pool.query(
-    `SELECT u.email, u.mobile
-       FROM notification_outbox o
-       JOIN profiles p ON p.id = o.profile_id
-       JOIN users u ON u.user_id = p.user_id
-      WHERE o.id = $1`,
-    [outboxId],
-  )
-
-  const row = contact.rows[0]
+  const row = await loadNotificationRecipient(pool, outboxId)
   if (!row) return EMPTY_AVAILABILITY_CONTEXT
-
   const verifiedEmail = Boolean(row.email)
   const verifiedPhone = Boolean(row.mobile)
 
@@ -85,7 +53,33 @@ export async function loadChannelAvailabilityContext(
     consents[ch] = Boolean(p.marketing_opted_in)
   }
 
-  return { verifiedEmail, verifiedPhone, marketingOptedIn: consents }
+  return { verifiedEmail, verifiedPhone, emailSuppressed: row.emailSuppressed, marketingOptedIn: consents }
 }
 
 export type { NotificationChannel }
+export interface NotificationRecipient {
+  userId: string
+  profileId: string
+  email: string | null
+  mobile: string | null
+  locale: 'fa' | 'en'
+  emailSuppressed: boolean
+}
+
+/** The queue's explicit recipient wins; absent recipients use the current owner. */
+export async function loadNotificationRecipient(pool: AvailabilityPool, outboxId: string): Promise<NotificationRecipient | null> {
+  const result = await pool.query(`SELECT o.profile_id,u.user_id,u.locale,
+      COALESCE(u.email,CASE WHEN u.username LIKE '%@%' THEN u.username END) AS email,
+      COALESCE(u.mobile,CASE WHEN u.username LIKE '+%' THEN u.username END) AS mobile,
+      EXISTS (SELECT 1 FROM email_suppressions s WHERE lower(s.address)=lower(
+        COALESCE(u.email,CASE WHEN u.username LIKE '%@%' THEN u.username END))) AS email_suppressed
+    FROM notification_outbox o JOIN profiles p ON p.id=o.profile_id
+    JOIN users u ON u.user_id=COALESCE(o.user_id,p.user_id)
+    WHERE o.id=$1 AND u.disabled_at IS NULL AND u.activation_token IS NULL`, [outboxId])
+  const row = result.rows[0]
+  if (!row) return null
+  return { userId: row.user_id as string, profileId: row.profile_id as string,
+    email: typeof row.email === 'string' && row.email.trim() ? row.email.trim() : null,
+    mobile: typeof row.mobile === 'string' && row.mobile.trim() ? row.mobile.trim() : null,
+    locale: row.locale === 'en' ? 'en' : 'fa', emailSuppressed: row.email_suppressed === true }
+}

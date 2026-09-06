@@ -3,6 +3,8 @@ import { Pool } from 'pg'
 import { randomUUID } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { loadNotificationRecipient, loadChannelAvailabilityContext } from './channel-availability-loader.js'
+import { resolveChannelAvailability } from './channel-availability.js'
 import { InAppNotificationTransport } from './in-app-transport.js'
 import { runOutboxPoll } from './outbox-runner.js'
 import { enqueueOutbox } from './outbox-writer.js'
@@ -263,4 +265,23 @@ it('a replaced claim cannot send the next channel or overwrite its successor', a
   expect(keys[0]).toBe(keys[1])
   expect(smsCalls).toBe(1)
   expect((await pool.query('SELECT count(*)::int AS count FROM in_app_notifications WHERE delivery_key=$1', [`outbox:${id}`])).rows[0].count).toBe(1)
+})
+
+
+it('uses the explicit recipient, applies address suppression, and refuses disabled or unactivated recipients', async () => {
+  const id = randomUUID()
+  await pool.query("INSERT INTO users(user_id,username,password_hash,locale) VALUES ('delivery-recipient','Recipient@example.test','test-only','en')")
+  await pool.query(`INSERT INTO notification_outbox(id,profile_id,user_id,event_key,payload,channels,idempotency_key)
+    VALUES ($1::uuid,$2,'delivery-recipient','wallet.topup_completed','{}',ARRAY['email'],$1::text)`, [id, profileId])
+  expect(await loadNotificationRecipient(pool, id)).toMatchObject({ userId: 'delivery-recipient', email: 'Recipient@example.test', locale: 'en', emailSuppressed: false })
+  await pool.query("INSERT INTO email_suppressions(address,reason,profile_id,source_event_id) VALUES ('recipient@example.test','complaint',$1,NULL)", [profileId])
+  const availability = await loadChannelAvailabilityContext(pool, id)
+  expect(resolveChannelAvailability('wallet.topup_completed', ['in_app', 'email'], availability))
+    .toEqual({ allowed: ['in_app'], skipped: [{ channel: 'email', reason: 'email_suppressed' }] })
+  await pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='delivery-recipient'")
+  expect(await loadNotificationRecipient(pool, id)).toBeNull()
+  await pool.query("UPDATE users SET disabled_at=NULL,activation_token='pending' WHERE user_id='delivery-recipient'")
+  expect(await loadNotificationRecipient(pool, id)).toBeNull()
+  await pool.query('UPDATE notification_outbox SET user_id=NULL WHERE id=$1', [id])
+  expect(await loadNotificationRecipient(pool, id)).toMatchObject({ userId: 'delivery-owner', email: 'delivery@example.test', emailSuppressed: false })
 })

@@ -53,12 +53,14 @@ export interface ChannelAvailabilityContext {
   verifiedEmail: boolean
   /** Whether the profile owns a verified phone (SMS) destination. */
   verifiedPhone: boolean
+  /** Hard bounce or complaint suppression, independent of marketing consent. */
+  emailSuppressed?: boolean
   /** Whether the user has opted in to marketing on each external channel. */
   marketingOptedIn: Partial<Record<'email' | 'sms', boolean>>
 }
 
 /** Reason an external channel leg was skipped by the availability gate. */
-export type ChannelSkipReason = 'verified_destination_missing' | 'marketing_opt_in_required'
+export type ChannelSkipReason = 'verified_destination_missing' | 'marketing_opt_in_required' | 'email_suppressed'
 
 /** One skipped channel leg and why it was dropped. */
 export interface SkippedChannel {
@@ -103,6 +105,7 @@ export function externalChannelAllowed(
   channel: 'email' | 'sms',
   ctx: ChannelAvailabilityContext,
 ): { allowed: boolean; reason?: ChannelSkipReason } {
+  if (channel === 'email' && ctx.emailSuppressed) return { allowed: false, reason: 'email_suppressed' }
   if (!hasVerifiedDestination(channel, ctx)) {
     return { allowed: false, reason: 'verified_destination_missing' }
   }
