@@ -190,6 +190,7 @@ interface KbGroupBaseRow {
 }
 
 interface StorageRecordRow {
+  metadata: Record<string, unknown> | null;
   storage_key: string;
   file_name: string | null;
   content_type: string | null;
@@ -197,7 +198,6 @@ interface StorageRecordRow {
   status: 'active' | 'immutable' | 'removed';
 }
 
-const PG_UNIQUE_VIOLATION = '23505';
 const PG_FOREIGN_KEY_VIOLATION = '23503';
 
 @Injectable()
@@ -374,35 +374,53 @@ export class KnowledgeBasesService {
    * a no-op returning the existing link (idempotent).
    */
   async attachDocument(input: AttachDocumentInput): Promise<KbDocumentDto> {
-    const kb = await this.findKb(input.kbId);
-    if (!kb) throw this.kbNotFound(input.kbId);
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const kb = await this.findKb(input.kbId, client);
+      if (!kb) throw this.kbNotFound(input.kbId);
 
-    const record = await this.findStorageRecord(input.storageKey);
-    if (!record) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'STORAGE_RECORD_NOT_FOUND',
-          message: `Storage record "${input.storageKey}" not found in the document system`,
-        },
-        404
-      );
-    }
-    if (record.status === 'removed') {
-      throw new HttpException(
-        {
-          statusCode: 409,
-          error: 'STORAGE_RECORD_REMOVED',
-          message: `Storage record "${input.storageKey}" has been removed`,
-        },
-        409
-      );
-    }
+      const record = await this.findStorageRecord(input.storageKey, client);
+      if (!record) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: 'STORAGE_RECORD_NOT_FOUND',
+            message: `Storage record "${input.storageKey}" not found in the document system`,
+          },
+          404
+        );
+      }
+      if (record.status === 'removed') {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'STORAGE_RECORD_REMOVED',
+            message: `Storage record "${input.storageKey}" has been removed`,
+          },
+          409
+        );
+      }
 
-    const id = uuidv7();
-    const now = new Date();
-    try {
-      const result = await getDbPool().query<KbDocumentRow>(
+      if (record.metadata?.uploadedBy !== input.actorUserId) {
+        await requireStaffMutationPermission(client, input.actorUserId, 'admin:storage:edit');
+      }
+      if (
+        ['provisionalUpload', 'deletionRequested'].some(
+          (key) => record.metadata?.[key] === true || record.metadata?.[key] === 'true'
+        )
+      ) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'STORAGE_RECORD_REMOVED',
+            message: 'Upload is incomplete or pending deletion',
+          },
+          409
+        );
+      }
+
+      const id = uuidv7();
+      const now = new Date();
+      const result = await client.query<KbDocumentRow>(
         `INSERT INTO kb_documents
            (id, kb_id, storage_key, file_name, mime_type, size_bytes,
             processing_status, created_by, created_at, updated_at)
@@ -422,17 +440,23 @@ export class KnowledgeBasesService {
         ]
       );
       if (result.rows[0]) {
-        await this.recordAudit('kb_document_attached', input.actorUserId, input.ip, {
-          targetId: input.kbId,
-          storageKey: input.storageKey,
-        });
+        await this.recordAudit(
+          'kb_document_attached',
+          input.actorUserId,
+          input.ip,
+          {
+            targetId: input.kbId,
+            storageKey: input.storageKey,
+          },
+          client
+        );
         this.logger.log(
           `Document attached to KB: kb=${input.kbId}, key=${input.storageKey}, actor=${input.actorUserId}`
         );
         return this.docToDto(result.rows[0]);
       }
       // Already attached: return the existing link.
-      const existing = await this.findDocumentLink(input.kbId, input.storageKey);
+      const existing = await this.findDocumentLink(input.kbId, input.storageKey, client);
       if (!existing) {
         throw new HttpException(
           {
@@ -444,13 +468,7 @@ export class KnowledgeBasesService {
         );
       }
       return this.docToDto(existing);
-    } catch (error) {
-      if (this.isPgError(error, PG_UNIQUE_VIOLATION)) {
-        const existing = await this.findDocumentLink(input.kbId, input.storageKey);
-        if (existing) return this.docToDto(existing);
-      }
-      throw error;
-    }
+    });
   }
 
   /**
@@ -465,31 +483,39 @@ export class KnowledgeBasesService {
     actorUserId: string,
     ip: string
   ): Promise<void> {
-    const kb = await this.findKb(kbId);
-    if (!kb) throw this.kbNotFound(kbId);
+    return this.withTransaction(actorUserId, async (client) => {
+      const kb = await this.findKb(kbId, client);
+      if (!kb) throw this.kbNotFound(kbId);
 
-    const link = await this.findDocumentLinkById(documentId, kbId);
-    if (!link) {
-      throw new HttpException(
+      const link = await this.findDocumentLinkById(documentId, kbId, client);
+      if (!link) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: 'KB_DOCUMENT_NOT_FOUND',
+            message: `Document link ${documentId} is not attached to KB ${kbId}`,
+          },
+          404
+        );
+      }
+      await client.query('DELETE FROM kb_documents WHERE id = $1 AND kb_id = $2', [
+        documentId,
+        kbId,
+      ]);
+      await this.recordAudit(
+        'kb_document_detached',
+        actorUserId,
+        ip,
         {
-          statusCode: 404,
-          error: 'KB_DOCUMENT_NOT_FOUND',
-          message: `Document link ${documentId} is not attached to KB ${kbId}`,
+          targetId: kbId,
+          storageKey: link.storage_key,
         },
-        404
+        client
       );
-    }
-    await getDbPool().query('DELETE FROM kb_documents WHERE id = $1 AND kb_id = $2', [
-      documentId,
-      kbId,
-    ]);
-    await this.recordAudit('kb_document_detached', actorUserId, ip, {
-      targetId: kbId,
-      storageKey: link.storage_key,
+      this.logger.log(
+        `Document detached from KB: kb=${kbId}, key=${link.storage_key}, actor=${actorUserId}`
+      );
     });
-    this.logger.log(
-      `Document detached from KB: kb=${kbId}, key=${link.storage_key}, actor=${actorUserId}`
-    );
   }
 
   // ─── KB group CRUD ───────────────────────────────────────────────────────
@@ -636,39 +662,48 @@ export class KnowledgeBasesService {
 
   /** Link a KB into a group (idempotent; both records must exist). */
   async addGroupMember(input: AddGroupMemberInput): Promise<void> {
-    const group = await this.findGroup(input.groupId);
-    if (!group) throw this.groupNotFound(input.groupId);
-    const kb = await this.findKb(input.kbId);
-    if (!kb) throw this.kbNotFound(input.kbId);
+    return this.withTransaction(input.actorUserId, async (client) => {
+      const group = await this.findGroup(input.groupId, client);
+      if (!group) throw this.groupNotFound(input.groupId);
+      const kb = await this.findKb(input.kbId, client);
+      if (!kb) throw this.kbNotFound(input.kbId);
 
-    try {
-      await getDbPool().query(
-        `INSERT INTO kb_group_members (group_id, kb_id, created_at)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (group_id, kb_id) DO NOTHING`,
-        [input.groupId, input.kbId, new Date()]
-      );
-    } catch (error) {
-      if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
-        // Race: one side was deleted between the existence check and insert.
-        throw new HttpException(
-          {
-            statusCode: 409,
-            error: 'KB_GROUP_MEMBER_LINK_FAILED',
-            message: 'Knowledge base or group no longer exists',
-          },
-          409
+      try {
+        const inserted = await client.query(
+          `INSERT INTO kb_group_members (group_id, kb_id, created_at)
+           VALUES ($1, $2, $3)
+           ON CONFLICT (group_id, kb_id) DO NOTHING`,
+          [input.groupId, input.kbId, new Date()]
         );
+        if (inserted.rowCount === 0) return;
+      } catch (error) {
+        if (this.isPgError(error, PG_FOREIGN_KEY_VIOLATION)) {
+          // Translate missing-reference failures before rolling back the transaction.
+          throw new HttpException(
+            {
+              statusCode: 409,
+              error: 'KB_GROUP_MEMBER_LINK_FAILED',
+              message: 'Knowledge base or group no longer exists',
+            },
+            409
+          );
+        }
+        throw error;
       }
-      throw error;
-    }
-    await this.recordAudit('kb_group_member_added', input.actorUserId, input.ip, {
-      targetId: input.groupId,
-      kbId: input.kbId,
+      await this.recordAudit(
+        'kb_group_member_added',
+        input.actorUserId,
+        input.ip,
+        {
+          targetId: input.groupId,
+          kbId: input.kbId,
+        },
+        client
+      );
+      this.logger.log(
+        `KB linked into group: group=${input.groupId}, kb=${input.kbId}, actor=${input.actorUserId}`
+      );
     });
-    this.logger.log(
-      `KB linked into group: group=${input.groupId}, kb=${input.kbId}, actor=${input.actorUserId}`
-    );
   }
 
   /** Remove a KB from a group. */
@@ -678,28 +713,36 @@ export class KnowledgeBasesService {
     actorUserId: string,
     ip: string
   ): Promise<void> {
-    const group = await this.findGroup(groupId);
-    if (!group) throw this.groupNotFound(groupId);
+    return this.withTransaction(actorUserId, async (client) => {
+      const group = await this.findGroup(groupId, client);
+      if (!group) throw this.groupNotFound(groupId);
 
-    const result = await getDbPool().query(
-      'DELETE FROM kb_group_members WHERE group_id = $1 AND kb_id = $2',
-      [groupId, kbId]
-    );
-    if ((result.rowCount ?? 0) === 0) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: 'KB_GROUP_MEMBER_NOT_FOUND',
-          message: `KB ${kbId} is not a member of group ${groupId}`,
-        },
-        404
+      const result = await client.query(
+        'DELETE FROM kb_group_members WHERE group_id = $1 AND kb_id = $2',
+        [groupId, kbId]
       );
-    }
-    await this.recordAudit('kb_group_member_removed', actorUserId, ip, {
-      targetId: groupId,
-      kbId,
+      if ((result.rowCount ?? 0) === 0) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: 'KB_GROUP_MEMBER_NOT_FOUND',
+            message: `KB ${kbId} is not a member of group ${groupId}`,
+          },
+          404
+        );
+      }
+      await this.recordAudit(
+        'kb_group_member_removed',
+        actorUserId,
+        ip,
+        {
+          targetId: groupId,
+          kbId,
+        },
+        client
+      );
+      this.logger.log(`KB removed from group: group=${groupId}, kb=${kbId}, actor=${actorUserId}`);
     });
-    this.logger.log(`KB removed from group: group=${groupId}, kb=${kbId}, actor=${actorUserId}`);
   }
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -724,18 +767,25 @@ export class KnowledgeBasesService {
     return result.rows[0] ?? null;
   }
 
-  private async findStorageRecord(storageKey: string): Promise<StorageRecordRow | null> {
-    const result = await getDbPool().query<StorageRecordRow>(
-      `SELECT storage_key, file_name, content_type, file_size, status
+  private async findStorageRecord(
+    storageKey: string,
+    client?: PoolClient
+  ): Promise<StorageRecordRow | null> {
+    const result = await (client ?? getDbPool()).query<StorageRecordRow>(
+      `SELECT storage_key, file_name, content_type, file_size, status, metadata
          FROM storage_records
-        WHERE storage_key = $1`,
+        WHERE storage_key = $1${client ? ' FOR SHARE' : ''}`,
       [storageKey]
     );
     return result.rows[0] ?? null;
   }
 
-  private async findDocumentLink(kbId: string, storageKey: string): Promise<KbDocumentRow | null> {
-    const result = await getDbPool().query<KbDocumentRow>(
+  private async findDocumentLink(
+    kbId: string,
+    storageKey: string,
+    client?: PoolClient
+  ): Promise<KbDocumentRow | null> {
+    const result = await (client ?? getDbPool()).query<KbDocumentRow>(
       `SELECT id, kb_id, storage_key, file_name, mime_type, size_bytes,
               processing_status, processing_error, created_at, updated_at
          FROM kb_documents
@@ -747,9 +797,10 @@ export class KnowledgeBasesService {
 
   private async findDocumentLinkById(
     documentId: string,
-    kbId: string
+    kbId: string,
+    client?: PoolClient
   ): Promise<KbDocumentRow | null> {
-    const result = await getDbPool().query<KbDocumentRow>(
+    const result = await (client ?? getDbPool()).query<KbDocumentRow>(
       `SELECT id, kb_id, storage_key, file_name, mime_type, size_bytes,
               processing_status, processing_error, created_at, updated_at
          FROM kb_documents

@@ -30,7 +30,7 @@ afterAll(async () => {
 });
 beforeEach(async () => {
   await http.pool.query(
-    "DELETE FROM knowledge_bases; DELETE FROM kb_groups; DELETE FROM audit_log WHERE event LIKE 'kb_%'"
+    "DELETE FROM knowledge_bases; DELETE FROM kb_groups; DELETE FROM storage_records WHERE storage_key LIKE 'kb-test/%'; DELETE FROM audit_log WHERE event LIKE 'kb_%'"
   );
   ids = {
     kb: (
@@ -150,5 +150,196 @@ it.each(entities)(
     expect(
       (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
     ).toHaveLength(3);
+  }
+);
+
+type LinkAction = 'attach' | 'detach' | 'add' | 'remove';
+async function prepareLink(action: LinkAction) {
+  const key = `kb-test/${randomUUID()}`;
+  await http.pool.query(
+    "INSERT INTO storage_records(storage_key,file_name,content_type,file_size,status,metadata) VALUES ($1,'Test.pdf','application/pdf',1024,'active','{\"uploadedBy\":\"kb-admin\"}')",
+    [key]
+  );
+  let documentId = randomUUID();
+  if (action === 'detach')
+    documentId = (
+      await http.pool.query(
+        "INSERT INTO kb_documents(kb_id,storage_key,file_name,created_by) VALUES ($1,$2,'Test.pdf','kb-admin') RETURNING id",
+        [ids.kb, key]
+      )
+    ).rows[0].id;
+  if (action === 'add') await http.pool.query('DELETE FROM kb_group_members');
+  return { key, documentId };
+}
+function linkRequest(action: LinkAction, item: { key: string; documentId: string }) {
+  const path =
+    action === 'attach'
+      ? `knowledge-bases/${ids.kb}/documents`
+      : action === 'detach'
+        ? `knowledge-bases/${ids.kb}/documents/${item.documentId}`
+        : action === 'add'
+          ? `kb-groups/${ids.group}/members`
+          : `kb-groups/${ids.group}/members/${ids.kb}`;
+  return fetch(`${http.base}/api/admin/${path}`, {
+    method: action === 'attach' || action === 'add' ? 'POST' : 'DELETE',
+    headers,
+    ...(action === 'attach'
+      ? { body: JSON.stringify({ storageKey: item.key }) }
+      : action === 'add'
+        ? { body: JSON.stringify({ kbId: ids.kb }) }
+        : {}),
+  });
+}
+async function assertLinkUnchanged(action: LinkAction) {
+  expect((await http.pool.query('SELECT id FROM kb_documents')).rows).toHaveLength(
+    action === 'detach' ? 1 : 0
+  );
+  expect((await http.pool.query('SELECT group_id FROM kb_group_members')).rows).toHaveLength(
+    action === 'add' ? 0 : 1
+  );
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+  ).toHaveLength(0);
+}
+it.each(['attach', 'detach', 'add', 'remove'] as const)(
+  'rolls back %s when auditing fails',
+  async (action) => {
+    const item = await prepareLink(action);
+    await http.pool.query(
+      "CREATE OR REPLACE FUNCTION reject_kb_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test KB audit failure'; END $$; CREATE TRIGGER reject_kb_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'kb_%') EXECUTE FUNCTION reject_kb_audit()"
+    );
+    try {
+      expect((await linkRequest(action, item)).status).toBe(500);
+      await assertLinkUnchanged(action);
+    } finally {
+      await http.pool.query('DROP TRIGGER reject_kb_audit ON audit_log');
+    }
+  }
+);
+it.each(['attach', 'detach', 'add', 'remove'] as const)(
+  'rechecks current authority for %s',
+  async (action) => {
+    const item = await prepareLink(action),
+      client = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await client.query('BEGIN');
+      await client.query("SELECT user_id FROM users WHERE user_id='kb-admin' FOR UPDATE");
+      pending = linkRequest(action, item);
+      await expect
+        .poll(async () =>
+          Number(
+            (
+              await http.pool.query(
+                "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+              )
+            ).rows[0].count
+          )
+        )
+        .toBe(1);
+      await client.query("DELETE FROM user_roles WHERE user_id='kb-admin'");
+      await client.query('COMMIT');
+      expect((await pending).status).toBe(403);
+      await assertLinkUnchanged(action);
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await pending;
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('kb-admin','kb-editor') ON CONFLICT DO NOTHING"
+      );
+    }
+  }
+);
+it.each(['attach', 'detach', 'add', 'remove'] as const)(
+  'persists %s and retains the stored file',
+  async (action) => {
+    const item = await prepareLink(action);
+    expect((await linkRequest(action, item)).status).toBe(action === 'attach' ? 200 : 204);
+    expect((await http.pool.query('SELECT id FROM kb_documents')).rows).toHaveLength(
+      action === 'attach' ? 1 : 0
+    );
+    expect((await http.pool.query('SELECT group_id FROM kb_group_members')).rows).toHaveLength(
+      action === 'remove' ? 0 : 1
+    );
+    expect(
+      (await http.pool.query('SELECT status FROM storage_records WHERE storage_key=$1', [item.key]))
+        .rows
+    ).toEqual([{ status: 'active' }]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    ).toHaveLength(1);
+  }
+);
+it("requires storage administration for another user's document", async () => {
+  const item = await prepareLink('attach');
+  await http.pool.query(
+    'UPDATE storage_records SET metadata=\'{"uploadedBy":"other-user"}\' WHERE storage_key=$1',
+    [item.key]
+  );
+  expect((await linkRequest('attach', item)).status).toBe(403);
+  await assertLinkUnchanged('attach');
+  try {
+    await http.pool.query(
+      'UPDATE staff_roles SET permissions=\'["admin:ai:kb","admin:storage:edit"]\' WHERE role_id=\'kb-editor\''
+    );
+    expect((await linkRequest('attach', item)).status).toBe(200);
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions='[\"admin:ai:kb\"]' WHERE role_id='kb-editor'"
+    );
+  }
+});
+it('rejects storage removal committed while attachment waits for its lock', async () => {
+  const item = await prepareLink('attach'),
+    client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("UPDATE storage_records SET status='removed' WHERE storage_key=$1", [
+      item.key,
+    ]);
+    pending = linkRequest('attach', item);
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%FROM storage_records%FOR SHARE%' "
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(409);
+    await assertLinkUnchanged('attach');
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
+});
+it.each(['provisionalUpload', 'deletionRequested'])(
+  'rejects an active record carrying %s',
+  async (flag) => {
+    const item = await prepareLink('attach');
+    await http.pool.query(
+      'UPDATE storage_records SET metadata=metadata||jsonb_build_object($2::text,true) WHERE storage_key=$1',
+      [item.key, flag]
+    );
+    expect((await linkRequest('attach', item)).status).toBe(409);
+    await assertLinkUnchanged('attach');
+  }
+);
+it.each(['attach', 'add'] as const)(
+  'repeating %s writes one link and one audit',
+  async (action) => {
+    const item = await prepareLink(action);
+    expect((await linkRequest(action, item)).status).toBe(action === 'attach' ? 200 : 204);
+    expect((await linkRequest(action, item)).status).toBe(action === 'attach' ? 200 : 204);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'kb_%'")).rows
+    ).toHaveLength(1);
   }
 );
