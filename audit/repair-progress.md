@@ -1297,3 +1297,9 @@ Review and validation: 46 controller/production-migrated HTTP tests pass, includ
 Added /admin/policies with Persian/English policy lists, type badges, enabled status, structured per-type fields and group management. List rules use one entry per line; response style exposes tone, optional language and maximum length. Changing type clears the prior rule fields. Save/delete/membership actions use the existing captured password-verification flow.
 
 Review and validation: four production-browser checks pass. Controlled password retry/permission-loss checks cover data scopes and prohibited actions. Migrated-API checks create allowed topics, change to response style, disable/reload, verify exact stored rules and manage groups in both languages. Reviewed the Persian mobile screenshot; no horizontal page overflow. Root build, types, lint, contract and bundle checks pass. The complete API suite passed 2,738 tests across 217 files after the preceding knowledge-base/policy API changes. Rule-document whitespace and unknown-field validation is the next review finding; agent policy enforcement remains a separate consumer review.
+
+### Normalize and validate AI policy rule documents (F17)
+
+All four rule schemas now reject unknown fields and whitespace-only entries. Creation and updates persist the validated, trimmed document. Rule comparison uses semantic object equality so key order does not cause a change audit. Optional response language must be nonblank when supplied.
+
+Review and validation: all 72 policy service/controller/production-migrated HTTP checks pass. Added real HTTP coverage for every rule type, trimmed storage, invalid create/rules-only updates, unknown fields, unchanged records after rejection and repeated equivalent rules without duplicate audits. Root types, lint and whitespace checks pass. This validates configuration storage; agent-side enforcement and integration still require separate review.

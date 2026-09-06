@@ -1,4 +1,5 @@
 import type { PoolClient } from 'pg';
+import { isDeepStrictEqual } from 'node:util';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -226,6 +227,17 @@ export class AiPoliciesService {
       const id = uuidv7();
       const now = new Date();
       const enabled = input.enabled ?? true;
+      const parsedRules = rulesSchemas[input.policyType].safeParse(input.rules);
+      if (!parsedRules.success)
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: 'AI_POLICY_RULES_INVALID',
+            message: 'Invalid policy rules',
+            details: rulesErrorDetails(parsedRules.error.issues),
+          },
+          400
+        );
 
       const result = await client.query<PolicyBaseRow>(
         `INSERT INTO ai_policies
@@ -237,7 +249,7 @@ export class AiPoliciesService {
           input.title,
           input.description,
           input.policyType,
-          JSON.stringify(input.rules),
+          JSON.stringify(parsedRules.data),
           enabled,
           input.actorUserId,
           now,
@@ -280,6 +292,7 @@ export class AiPoliciesService {
       // kind. Enforced here (where the DB state is known) as well as in the
       // controller's create-time schema.
       const effectiveType = input.policyType ?? existing.policy_type;
+      let normalizedRules: Record<string, unknown> | undefined;
       if (input.rules !== undefined) {
         const parsedRules = rulesSchemas[effectiveType].safeParse(input.rules);
         if (!parsedRules.success) {
@@ -293,6 +306,7 @@ export class AiPoliciesService {
             400
           );
         }
+        normalizedRules = parsedRules.data as Record<string, unknown>;
       }
       if (input.policyType !== undefined && input.rules === undefined) {
         throw new HttpException(
@@ -326,16 +340,12 @@ export class AiPoliciesService {
         if (input.policyType !== existing.policy_type) changedFields.push('policy_type');
         push('policy_type', input.policyType);
       }
-      // Stable deep comparison via JSON serialization (rules is a plain JSONB doc).
-      // NOTE: key-order-sensitive — {b,a} vs {a,b} counts as changed. This is an
-      // accepted false-positive-only tradeoff (never a false negative), so the
-      // audit may over-report an identical-in-semantics rules edit but never
-      // misses a real guardrail change.
+      // JSONB may reorder object keys; semantic equality avoids duplicate change audits.
       const rulesActuallyChanged =
-        input.rules !== undefined && JSON.stringify(input.rules) !== JSON.stringify(existing.rules);
+        input.rules !== undefined && !isDeepStrictEqual(normalizedRules, existing.rules);
       if (input.rules !== undefined) {
         if (rulesActuallyChanged) changedFields.push('rules');
-        push('rules', JSON.stringify(input.rules));
+        push('rules', JSON.stringify(normalizedRules));
       }
       if (input.enabled !== undefined) {
         if (input.enabled !== existing.enabled) changedFields.push('enabled');

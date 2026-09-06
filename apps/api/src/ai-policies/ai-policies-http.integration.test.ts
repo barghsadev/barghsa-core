@@ -358,3 +358,77 @@ it('rejects malformed and unknown membership payload fields', async () => {
     (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
   ).toHaveLength(0);
 });
+
+const ruleCases = [
+  {
+    policyType: 'allowed_topics',
+    rules: { topics: ['  energy  '] },
+    expected: { topics: ['energy'] },
+    blank: { topics: ['   '] },
+  },
+  {
+    policyType: 'disallowed_actions',
+    rules: { actions: ['  trade  '] },
+    expected: { actions: ['trade'] },
+    blank: { actions: ['   '] },
+  },
+  {
+    policyType: 'data_access_scope',
+    rules: { scopes: ['  profile  '] },
+    expected: { scopes: ['profile'] },
+    blank: { scopes: ['   '] },
+  },
+  {
+    policyType: 'response_style',
+    rules: { tone: '  clear  ', language: '  fa  ', maxLength: 500 },
+    expected: { tone: 'clear', language: 'fa', maxLength: 500 },
+    blank: { tone: '  ' },
+  },
+];
+it.each(ruleCases)(
+  'normalizes $policyType rules and rejects blank or unknown fields',
+  async (entry) => {
+    const created = await fetch(`${http.base}/api/admin/policies`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        title: 'Rule validation',
+        policyType: entry.policyType,
+        rules: entry.rules,
+      }),
+    });
+    expect(created.status).toBe(201);
+    const row = (await created.json()) as { id: string; rules: unknown };
+    expect(row.rules).toEqual(entry.expected);
+    for (const rules of [entry.blank, { ...entry.rules, unexpected: true }]) {
+      for (const method of ['POST', 'PUT']) {
+        const response = await fetch(
+          `${http.base}/api/admin/policies${method === 'PUT' ? `/${row.id}` : ''}`,
+          {
+            method,
+            headers,
+            body: JSON.stringify(
+              method === 'PUT'
+                ? { rules }
+                : { title: 'Invalid rules', policyType: entry.policyType, rules }
+            ),
+          }
+        );
+        expect(response.status).toBe(400);
+      }
+    }
+    const update = await fetch(`${http.base}/api/admin/policies/${row.id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ rules: entry.rules }),
+    });
+    expect(update.status).toBe(200);
+    expect(await update.json()).toMatchObject({ rules: entry.expected });
+    expect(
+      (await http.pool.query('SELECT rules FROM ai_policies WHERE id=$1', [row.id])).rows
+    ).toEqual([{ rules: entry.expected }]);
+    expect(
+      (await http.pool.query("SELECT event FROM audit_log WHERE event LIKE 'ai_policy_%'")).rows
+    ).toEqual([{ event: 'ai_policy_created' }]);
+  }
+);
