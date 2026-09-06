@@ -27,9 +27,14 @@ export default defineConfig({
   globalSetup: './e2e/global-setup.ts',
   fullyParallel: false,
   forbidOnly: !!process.env['CI'],
+  failOnFlakyTests: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
-  reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['list'],
+    ['json', { outputFile: 'test-results/results.json' }],
+  ],
 
   use: {
     baseURL: resolvedBaseURL,

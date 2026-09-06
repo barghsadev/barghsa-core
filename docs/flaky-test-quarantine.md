@@ -105,6 +105,14 @@ results: `observed_runtime_flake_count` is explicitly `null`. An empty registry 
 not prove a run contained no flaky tests. Automatic production promotion remains
 the separate gate described above.
 
+The browser job separately emits Playwright JSON outcomes and an always-uploaded
+count summary. CI enables `failOnFlakyTests`; a failed attempt followed by a passing
+retry still fails that job. A real runner fixture verifies this using the actual
+browser configuration. Missing/malformed browser results, no successful tests,
+runner errors, unexpected outcomes and flakes fail the outcome check. Skipped tests
+are reported separately and are not counted as passes. The registry remains the
+source for known quarantines across runners; browser counts describe that run only.
+
 ## References
 
 - `README.md` — Quality gates section (release-candidate and production-promotion gates reference the flaky-test policy)

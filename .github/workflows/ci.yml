@@ -97,8 +97,22 @@ jobs:
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
       - name: Verify actual cold authentication transfers
         run: node scripts/check-auth-transfer.mjs
+      - name: Verify browser retry failure gate
+        run: node --test scripts/test-browser-flake-gate.mjs
       - name: Exercise all production browser flows and shared components
         run: node scripts/run-production-browser.mjs
+      - name: Report observed browser flakes and failures
+        if: always()
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
+          python3 scripts/check-browser-results.py --input apps/web/test-results/results.json --report "$RUNNER_TEMP/browser-outcomes.json"
+      - name: Upload browser outcome counts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-outcomes
+          path: ${{ runner.temp }}/browser-outcomes.json
+          retention-days: 14
       - name: Upload production browser failures
         if: failure()
         uses: actions/upload-artifact@v4
