@@ -33,6 +33,22 @@ const addressFields = z.object({
 const createAddressInput = addressFields.extend({ mainAddress: z.boolean().optional() });
 const updateAddressInput = addressFields.partial().refine((data) => Object.keys(data).length > 0);
 
+const updateProfileInput = addressFields
+  .partial()
+  .extend({
+    title: z.string().trim().max(50).optional(),
+    firstName: z.string().trim().min(1).max(100).optional(),
+    lastName: z.string().trim().min(1).max(100).optional(),
+    nationalId: z.string().trim().refine(validateNationalId).optional(),
+  })
+  .refine((data) => Object.keys(data).length > 0)
+  .refine((data) => {
+    const values = [data.provinceId, data.cityId, data.fullAddress, data.postalCode];
+    return (
+      values.every((value) => value === undefined) || values.every((value) => value !== undefined)
+    );
+  });
+
 @ApiTags('Profiles')
 @Controller('api/profiles')
 @UseGuards(SessionAuthGuard)
@@ -372,7 +388,7 @@ export class ProfilesController {
   @ApiResponse({ status: 403, description: 'Field is read-only after verification' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async updateProfile(
-    @Param('id') profileId: string,
+    @Param('id', new ParseUUIDPipe()) profileId: string,
     @Body()
     body: {
       title?: string;
@@ -388,141 +404,13 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
 
-    const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    // Prevent updating identity fields if profile is verified (unless admin)
-    const isAdmin = req.session.isAdmin ?? false;
-    const isVerified = profile.status === 'VERIFIED';
-
-    if (isVerified && !isAdmin) {
-      if (
-        body.firstName !== undefined ||
-        body.lastName !== undefined ||
-        body.nationalId !== undefined
-      ) {
-        throw new HttpException(
-          {
-            statusCode: 403,
-            error: ErrorCodes.AUTHZ_FORBIDDEN.code,
-            message:
-              'Identity fields are read-only after verification. Contact support to make changes.',
-          },
-          403
-        );
-      }
-    }
-
-    // Field length validation
-    if (body.title !== undefined && body.title.length > 50) {
+    const parsed = updateProfileInput.safeParse(body);
+    if (!parsed.success)
       throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Title must be 50 characters or fewer',
-        },
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    }
-    if (body.firstName !== undefined) {
-      if (!body.firstName.trim()) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-            message: 'First name cannot be empty',
-          },
-          400
-        );
-      }
-      if (body.firstName.length > 100) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'First name must be 100 characters or fewer',
-          },
-          400
-        );
-      }
-    }
-    if (body.lastName !== undefined) {
-      if (!body.lastName.trim()) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-            message: 'Last name cannot be empty',
-          },
-          400
-        );
-      }
-      if (body.lastName.length > 100) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'Last name must be 100 characters or fewer',
-          },
-          400
-        );
-      }
-    }
-    if (body.nationalId !== undefined) {
-      if (!body.nationalId.trim()) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_MISSING.code,
-            message: 'National ID cannot be empty',
-          },
-          400
-        );
-      }
-      if (!validateNationalId(body.nationalId.trim())) {
-        throw new HttpException(
-          {
-            statusCode: 400,
-            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-            message: 'Invalid national ID format',
-          },
-          400
-        );
-      }
-    }
-    if (body.fullAddress !== undefined && body.fullAddress.length > 500) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Full address must be 500 characters or fewer',
-        },
-        400
-      );
-    }
-    if (body.postalCode !== undefined && !validatePostalCode(body.postalCode.trim())) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid postal code format',
-        },
-        400
-      );
-    }
-
-    const updated = await this.profilesService.updateProfile(userId, profileId, {
-      title: body.title?.trim() ?? undefined,
-      firstName: body.firstName?.trim() ?? undefined,
-      lastName: body.lastName?.trim() ?? undefined,
-      nationalId: body.nationalId?.trim() ?? undefined,
-      provinceId: body.provinceId?.trim() ?? undefined,
-      cityId: body.cityId?.trim() ?? undefined,
-      fullAddress: body.fullAddress?.trim() ?? undefined,
-      postalCode: body.postalCode?.trim() ?? undefined,
-    });
+    const updated = await this.profilesService.updateProfile(userId, profileId, parsed.data);
 
     this.logger.log(`Profile ${profileId} updated for user ${userId}`);
 

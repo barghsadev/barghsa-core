@@ -89,7 +89,7 @@ export class LegalProfilesService {
 
     // Validate the profile exists and belongs to the user
     const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
+    if (!profile || profile.userId !== userId || profile.profileType !== 'LEGAL') {
       throw new HttpException(
         {
           statusCode: 404,
@@ -143,7 +143,7 @@ export class LegalProfilesService {
       const profileResult = await client.query(
         `UPDATE profiles
          SET title = $1, updated_at = NOW()
-         WHERE id = $2 AND user_id = $3
+         WHERE id = $2 AND user_id = $3 AND profile_type='LEGAL' AND status='DRAFT' AND NOT archived
          RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
         [data.legalName, profileId, userId]
       );

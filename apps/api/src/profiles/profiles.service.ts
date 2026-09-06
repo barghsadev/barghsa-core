@@ -403,7 +403,7 @@ export class ProfilesService {
 
     // Validate the profile exists and belongs to the user
     const profile = await this.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
+    if (!profile || profile.userId !== userId || profile.profileType !== 'INDIVIDUAL') {
       throw new HttpException(
         {
           statusCode: 404,
@@ -457,7 +457,7 @@ export class ProfilesService {
       const profileResult = await client.query(
         `UPDATE profiles
          SET title = $1, first_name = $2, last_name = $3, national_id = $4, updated_at = NOW()
-         WHERE id = $5 AND user_id = $6
+         WHERE id = $5 AND user_id = $6 AND profile_type='INDIVIDUAL' AND status='DRAFT' AND NOT archived
          RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
         [data.title ?? null, data.firstName, data.lastName, data.nationalId, profileId, userId]
       );
@@ -565,7 +565,7 @@ export class ProfilesService {
       cityId: string;
       fullAddress: string;
       postalCode: string;
-      mainAddress?: boolean;
+      mainAddress?: boolean | undefined;
     }
   ): Promise<AddressRow> {
     const pool = getDbPool();
@@ -659,10 +659,10 @@ export class ProfilesService {
     profileId: string,
     addressId: string,
     data: {
-      provinceId?: string;
-      cityId?: string;
-      fullAddress?: string;
-      postalCode?: string;
+      provinceId?: string | undefined;
+      cityId?: string | undefined;
+      fullAddress?: string | undefined;
+      postalCode?: string | undefined;
     }
   ): Promise<AddressRow> {
     const pool = getDbPool();
@@ -1032,6 +1032,37 @@ export class ProfilesService {
 
     try {
       await client.query('BEGIN');
+      // Recheck ownership and verification while holding the profile lock.
+      // Controller prechecks cannot authorize a write after a concurrent change.
+      const current = (
+        await client.query(
+          'SELECT profile_type,status FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR UPDATE',
+          [profileId, userId]
+        )
+      ).rows[0];
+      if (!current)
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      const identityChanged =
+        data.firstName !== undefined ||
+        data.lastName !== undefined ||
+        data.nationalId !== undefined;
+      if (identityChanged && current.status === 'VERIFIED') {
+        const account = (
+          await client.query('SELECT is_staff,is_admin,disabled_at FROM users WHERE user_id=$1', [
+            userId,
+          ])
+        ).rows[0];
+        const ownStaffIndividual =
+          current.profile_type === 'INDIVIDUAL' &&
+          account &&
+          !account.disabled_at &&
+          (account.is_staff || account.is_admin);
+        if (!ownStaffIndividual)
+          throw new HttpException({ statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+      }
 
       // Build dynamic SET clause for profile fields
       const profileUpdates: string[] = [];
@@ -1114,6 +1145,19 @@ export class ProfilesService {
         await client.query(`UPDATE profiles SET updated_at = NOW() WHERE id = $1`, [profileId]);
       }
 
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES (uuid_generate_v7(),$1,'profile_self_updated',$2::jsonb,uuid_generate_v7(),NOW())`,
+        [
+          userId,
+          JSON.stringify({
+            profileId,
+            fields: Object.entries(data)
+              .filter(([, value]) => value !== undefined)
+              .map(([key]) => key),
+          }),
+        ]
+      );
       await client.query('COMMIT');
 
       const updated = await this.getProfileById(profileId);

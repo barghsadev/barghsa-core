@@ -259,7 +259,8 @@ it('rejects malformed address fields and route IDs as client errors', async () =
   expect((await request('POST', '/invalid/set-main')).status).toBe(400);
   const response = await request('GET');
   expect(response.status).toBe(200);
-  expect((await response.json()).addresses[0]).toMatchObject({
+  const listed = (await response.json()) as { addresses: Record<string, unknown>[] };
+  expect(listed.addresses[0]).toMatchObject({
     provinceNameFa: 'استان',
     provinceNameEn: 'Province',
     cityNameFa: 'شهر',
