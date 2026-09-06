@@ -1,0 +1,204 @@
+import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import { startHttpFixture } from '../test/http-fixture.js';
+let http: Awaited<ReturnType<typeof startHttpFixture>>;
+const headers: Record<string, Record<string, string>> = {};
+beforeAll(async () => {
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  await http.pool.query(
+    `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('test-ai-model','Jobs','Test role','["admin:ai:models","admin:ai:models"]'),('test-ai-model-view','View jobs','Test role','["admin:ai:models"]')`
+  );
+  for (const [user, role] of [
+    ['operator', 'test-ai-model'],
+    ['viewer', 'test-ai-model-view'],
+    ['other', null],
+  ] as const) {
+    await http.pool.query(
+      "INSERT INTO users(user_id,username,password_hash,is_staff) VALUES ($1,$2,'test-only',true)",
+      [user, `${user}@example.test`]
+    );
+    if (role)
+      await http.pool.query('INSERT INTO user_roles(user_id,role_id) VALUES ($1,$2)', [user, role]);
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await http.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
+      [session, user, csrf, randomUUID()]
+    );
+    headers[user] = {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    };
+  }
+}, 40000);
+afterAll(async () => {
+  await http?.close();
+}, 15000);
+const path = '/api/admin/ai-models';
+const input = {
+  title: 'Local model',
+  providerType: 'openai_compatible',
+  baseUrl: 'https://model.example.test/v1',
+  modelName: 'test-model',
+  apiToken: 'local-secret-never-returned',
+};
+beforeEach(async () => {
+  await http.pool.query('DELETE FROM ai_models');
+  await http.pool.query("DELETE FROM audit_log WHERE event LIKE 'ai_model_%'");
+});
+function request(suffix = '', method = 'GET', body?: unknown) {
+  return fetch(`${http.base}${path}${suffix}`, {
+    method,
+    headers: headers.operator!,
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
+}
+async function seed() {
+  return (
+    await http.pool.query(
+      "INSERT INTO ai_models(title,provider_type,base_url,model_name,created_by) VALUES ('Original','openai_compatible','https://model.example.test/v1','original-model','operator') RETURNING id"
+    )
+  ).rows[0].id as string;
+}
+it.each(['create', 'update', 'delete'])(
+  'rolls back %s when its audit write fails',
+  async (action) => {
+    const id = await seed();
+    await http.pool.query(
+      "CREATE OR REPLACE FUNCTION reject_ai_model_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test AI audit failure'; END $$; CREATE TRIGGER reject_ai_model_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_model_%') EXECUTE FUNCTION reject_ai_model_audit()"
+    );
+    try {
+      const response =
+        action === 'create'
+          ? await request('', 'POST', input)
+          : action === 'update'
+            ? await request(`/${id}`, 'PUT', { title: 'Changed' })
+            : await request(`/${id}`, 'DELETE');
+      expect(response.status).toBe(500);
+      const rows = (await http.pool.query('SELECT id,title FROM ai_models')).rows;
+      expect(rows).toEqual([{ id, title: 'Original' }]);
+    } finally {
+      await http.pool.query('DROP TRIGGER reject_ai_model_audit ON audit_log');
+    }
+  }
+);
+it.each(['create', 'update', 'delete'])('rejects revoked authority during %s', async (action) => {
+  const id = await seed(),
+    client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query("SELECT user_id FROM users WHERE user_id='operator' FOR UPDATE");
+    pending =
+      action === 'create'
+        ? request('', 'POST', input)
+        : action === 'update'
+          ? request(`/${id}`, 'PUT', { title: 'Changed' })
+          : request(`/${id}`, 'DELETE');
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query("DELETE FROM user_roles WHERE user_id='operator'");
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(403);
+    expect((await http.pool.query('SELECT id,title FROM ai_models')).rows).toEqual([
+      { id, title: 'Original' },
+    ]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+    ).toHaveLength(0);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT pid FROM pg_stat_activity WHERE datname=current_database() AND state='idle in transaction'"
+        )
+      ).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+    await http.pool.query(
+      "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','test-ai-model') ON CONFLICT DO NOTHING"
+    );
+  }
+});
+it('encrypts tokens, retains masked credentials, clears stale test results and supports explicit removal', async () => {
+  const response = await request('', 'POST', input);
+  expect(response.status).toBe(201);
+  const created = (await response.json()) as { id: string; apiTokenMasked: string };
+  expect(JSON.stringify(created)).not.toContain(input.apiToken);
+  const encrypted = (
+    await http.pool.query('SELECT api_token FROM ai_models WHERE id=$1', [created.id])
+  ).rows[0].api_token;
+  expect(encrypted).toMatch(/^v1:/);
+  expect(encrypted).not.toContain(input.apiToken);
+  await http.pool.query(
+    "UPDATE ai_models SET last_test_status='passed',last_tested_at=NOW() WHERE id=$1",
+    [created.id]
+  );
+  expect(
+    (
+      await request(`/${created.id}`, 'PUT', {
+        title: 'New title',
+        apiToken: created.apiTokenMasked,
+      })
+    ).status
+  ).toBe(200);
+  expect(
+    (await http.pool.query('SELECT api_token FROM ai_models WHERE id=$1', [created.id])).rows[0]
+      .api_token
+  ).toBe(encrypted);
+  await http.pool.query(
+    "UPDATE ai_models SET last_test_status='passed',last_tested_at=NOW() WHERE id=$1",
+    [created.id]
+  );
+  const changed = await request(`/${created.id}`, 'PUT', { modelName: 'new-model' });
+  expect(changed.status).toBe(200);
+  expect(await changed.json()).toMatchObject({
+    status: 'unknown',
+    lastTestedAt: null,
+    lastTestError: null,
+  });
+  expect((await request(`/${created.id}`, 'PUT', { apiToken: '' })).status).toBe(200);
+  expect(
+    (await http.pool.query('SELECT api_token FROM ai_models WHERE id=$1', [created.id])).rows[0]
+      .api_token
+  ).toBeNull();
+  expect((await request(`/${created.id}`, 'DELETE')).status).toBe(204);
+  expect(
+    JSON.stringify(
+      (await http.pool.query("SELECT metadata FROM audit_log WHERE event LIKE 'ai_model_%'")).rows
+    )
+  ).not.toContain(input.apiToken);
+});
+
+it('preserves models referenced by an agent and records no deletion audit', async () => {
+  const id = await seed();
+  const agent = (
+    await http.pool.query(
+      "INSERT INTO ai_agents(title,model_id,created_by) VALUES ('Dependent agent',$1,'operator') RETURNING id",
+      [id]
+    )
+  ).rows[0].id;
+  try {
+    expect((await request(`/${id}`, 'DELETE')).status).toBe(409);
+    expect((await http.pool.query('SELECT id FROM ai_models WHERE id=$1', [id])).rows).toHaveLength(
+      1
+    );
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_deleted'")).rows
+    ).toHaveLength(0);
+  } finally {
+    await http.pool.query('DELETE FROM ai_agents WHERE id=$1', [agent]);
+  }
+});

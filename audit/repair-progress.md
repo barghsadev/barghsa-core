@@ -1193,3 +1193,9 @@ This adds the editor and current product-state warnings. Product-limit compatibi
 Added /admin/contract-limits with Persian/English navigation, bounded integer inputs for quantity increases, Jalali-month duration and lead days, and explanations for zero values. The page describes the new-draft scope, preserves a captured proposal through password verification, reloads committed settings, and hides the form on denied or damaged/unavailable configuration reads.
 
 Review and validation: all 22 live admin browser checks passed. Both languages save zero increase allowance, independent duration values and seven-day lead time, then verify the exact persisted API response after reload. Two controlled browser checks passed for unavailable configuration, native invalid-value rejection, wrong/correct password recovery, unchanged retry payload and permission loss. Reviewed the Persian screenshot. Root build, type checking, lint and all 29 bundle budgets pass. This completes the existing configuration editor; enforcement by the unbuilt advanced-order/contract modules remains their separate backlog dependency.
+
+### Make AI model changes atomic and recheck authority (F04/F17)
+
+Model create, edit and delete now hold current AI-model administration permission through one transaction with their audit entry. Edits lock the model before deriving changes. Changes to connection fields invalidate prior test status; title-only changes preserve it. Stored tokens remain encrypted and masked, with explicit clearing supported.
+
+Review and validation: all 20 focused service and production-migrated HTTP checks pass. HTTP checks cover final audit failure for each mutation, permission revocation after guards, encrypted storage and masked responses/audits, connection-change invalidation, and rejection of deleting an agent-referenced model. Root types and lint pass. The connection-test path, worker requirement and model editor remain open for subsequent steps.

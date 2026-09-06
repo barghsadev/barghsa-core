@@ -1,3 +1,6 @@
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
 import type { AiModelsService as AiModelsServiceType } from './ai-models.service.js';
@@ -7,7 +10,7 @@ import type { AiModelApiClientLike } from './ai-model-tester.service.js';
 const TEST_KEY = Buffer.from('0123456789abcdef0123456789abcdef');
 
 function mockPool() {
-  const mockQuery = vi.fn();
+  const mockQuery = vi.fn<(...args: unknown[]) => Promise<{ rows: unknown[] }>>();
   const pool = { query: mockQuery };
   return { mockQuery, pool };
 }
@@ -50,8 +53,19 @@ beforeEach(() => {
 });
 
 /** Load AiModelsService with a mocked @barghsa/db pool + real sealed deps. */
-async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
-  vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
+async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery'] }) {
+  vi.doMock('@barghsa/db', () => ({
+    getDbPool: () => ({
+      ...pool,
+      connect: async () => ({
+        query: (sql: string, ...args: unknown[]) =>
+          ['BEGIN', 'COMMIT', 'ROLLBACK'].includes(sql)
+            ? Promise.resolve({ rows: [] })
+            : pool.query(sql, ...args),
+        release: vi.fn(),
+      }),
+    }),
+  }));
   const { AiModelsService: Svc } = await import('./ai-models.service.js');
   const secrets = new AiModelSecretsService(TEST_KEY);
   const tester = new (await import('./ai-model-tester.service.js')).AiModelTesterService(

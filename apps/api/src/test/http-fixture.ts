@@ -62,6 +62,7 @@ export async function startHttpFixture(
         APP_PUBLIC_URL: 'https://app.example.test',
         AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
         STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
+        AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
         REDIS_URL: '',
         REDIS_HOST: '',
         S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '',
