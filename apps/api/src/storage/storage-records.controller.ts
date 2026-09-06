@@ -1,3 +1,7 @@
+import { UseGuards } from '@nestjs/common';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { StorageAdminGuard } from './storage-admin.guard.js';
 import {
   Controller,
   Get,
@@ -60,6 +64,7 @@ function toResponse(info: StorageRecordInfo): StorageRecordResponse {
 // ---------------------------------------------------------------------------
 
 @Controller('api/admin/storage/records')
+@UseGuards(SessionAuthGuard, StorageAdminGuard)
 export class StorageRecordsController {
   private readonly logger = new Logger(StorageRecordsController.name);
 
@@ -101,6 +106,8 @@ export class StorageRecordsController {
    * call, the object cannot be physically deleted — only soft-deleted.
    */
   @Post(':key/sign')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(HttpStatus.OK)
   async signRecord(
     @Param('key') key: string,
@@ -143,6 +150,8 @@ export class StorageRecordsController {
    * - Already-removed records: no-op (204).
    */
   @Delete(':key')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRecord(@Param('key') key: string): Promise<void> {
     try {

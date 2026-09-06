@@ -1,3 +1,4 @@
+import { SessionModule } from '../session/session.module.js';
 import { Global, Logger, Module } from '@nestjs/common';
 import { createDbInstance, type DbInstance } from '@barghsa/db';
 import { storageRecords } from '@barghsa/db/schema/storage-record';
@@ -13,6 +14,7 @@ import { StorageRecordsController } from './storage-records.controller.js';
 
 @Global()
 @Module({
+  imports: [SessionModule],
   controllers: [StorageAdminController, StorageRecordsController],
   providers: [
     {

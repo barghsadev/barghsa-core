@@ -1,3 +1,7 @@
+import { UseGuards } from '@nestjs/common';
+import { SessionAuthGuard } from '../session/session.guard.js';
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
+import { StorageAdminGuard } from './storage-admin.guard.js';
 import {
   Controller,
   Get,
@@ -85,6 +89,7 @@ function buildS3Config(dto: UpdateStorageConfigDto): Record<string, unknown> {
 // ---------------------------------------------------------------------------
 
 @Controller('api/admin/storage')
+@UseGuards(SessionAuthGuard, StorageAdminGuard)
 export class StorageAdminController {
   private readonly logger = new Logger(StorageAdminController.name);
 
@@ -110,6 +115,8 @@ export class StorageAdminController {
    * Secret key is accepted on write but will not be returned by GET.
    */
   @Put('config')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @HttpCode(HttpStatus.OK)
   updateConfig(@Body() dto: UpdateStorageConfigDto): StorageConfigDto {
     // Apply updates to environment variables (in-memory for the current process).
@@ -146,6 +153,8 @@ export class StorageAdminController {
    * anything.
    */
   @Post('test-connection')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   async testConnection(@Body() dto: UpdateStorageConfigDto): Promise<TestConnectionResult> {
     try {
       const config = buildS3Config(dto);
