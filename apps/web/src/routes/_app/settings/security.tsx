@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useLocale } from '../../../hooks/useLocale.js';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t, type Locale } from '@barghsa/i18n';
@@ -11,7 +12,17 @@ import {
   Trash2Icon,
   ShieldAlertIcon,
 } from 'lucide-react';
-import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import {
+  Button,
+  Input,
+  Label,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@barghsa/ui';
 import { withCsrf } from '../../../lib/csrf.js';
 
 export const Route = createFileRoute('/_app/settings/security')({
@@ -155,7 +166,9 @@ function SessionDetails({ session, locale }: { session: SessionItem; locale: Loc
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsSecurityPage() {
-  const locale: Locale = 'fa'; // TODO: read from user preference / locale context (project-wide)
+  const locale = useLocale();
+  const revokingRef = useRef(false);
+  const revokeTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   const [sessions, setSessions] = useState<SessionItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -164,6 +177,7 @@ function SettingsSecurityPage() {
   // Revoke per session — confirm dialog state
   const [revokeConfirmId, setRevokeConfirmId] = useState<string | null>(null);
   const [revokingId, setRevokingId] = useState<string | null>(null);
+  const [revokeError, setRevokeError] = useState<string | null>(null);
 
   // Revoke-all dialog
   const [showRevokeAll, setShowRevokeAll] = useState(false);
@@ -205,10 +219,11 @@ function SettingsSecurityPage() {
   // ── Revoke a single session (with confirmation) ────────────────────
 
   const handleConfirmRevoke = useCallback(async () => {
-    if (!revokeConfirmId) return;
+    if (!revokeConfirmId || revokingRef.current) return;
+    revokingRef.current = true;
 
     setRevokingId(revokeConfirmId);
-    setRevokeConfirmId(null);
+    setRevokeError(null);
 
     try {
       const response = await fetch(`/api/auth/sessions/${revokeConfirmId}`, {
@@ -217,27 +232,32 @@ function SettingsSecurityPage() {
       });
 
       if (!response.ok) {
-        toast.error(t('settings.security.error.revoke', locale));
+        setRevokeError(t('settings.security.error.revoke', locale));
         return;
       }
 
+      setRevokeConfirmId(null);
       toast.success(t('settings.security.revoked', locale));
       setSessions((prev) => prev.filter((s) => s.sessionId !== revokeConfirmId));
     } catch {
-      toast.error(t('settings.security.error.revoke', locale));
+      setRevokeError(t('settings.security.error.revoke', locale));
     } finally {
+      revokingRef.current = false;
       setRevokingId(null);
     }
   }, [revokeConfirmId, locale]);
 
   const handleCancelRevokeConfirm = useCallback(() => {
+    if (revokingRef.current) return;
+    setRevokeError(null);
     setRevokeConfirmId(null);
   }, []);
 
   // ── Revoke all other sessions ───────────────────────────────────────
 
   const handleRevokeAll = useCallback(async () => {
-    if (!revokeAllPassword) return;
+    if (!revokeAllPassword || revokingRef.current) return;
+    revokingRef.current = true;
 
     setRevokingAll(true);
     setRevokeAllError(null);
@@ -271,16 +291,16 @@ function SettingsSecurityPage() {
     } catch {
       setRevokeAllError(t('settings.security.error.revokeAll', locale));
     } finally {
+      revokingRef.current = false;
       setRevokingAll(false);
     }
   }, [revokeAllPassword, locale, fetchSessions]);
 
-  // ── Escape-to-close handler ────────────────────────────────────────
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent, close: () => void) => {
-    if (e.key === 'Escape') {
-      close();
-    }
+  const closeRevokeAll = useCallback(() => {
+    if (revokingRef.current) return;
+    setShowRevokeAll(false);
+    setRevokeAllPassword('');
+    setRevokeAllError(null);
   }, []);
 
   // ── Current session and other sessions ──────────────────────────────
@@ -368,8 +388,12 @@ function SettingsSecurityPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    disabled={revokingId === session.sessionId}
-                    onClick={() => setRevokeConfirmId(session.sessionId)}
+                    disabled={revokingId !== null}
+                    onClick={(event) => {
+                      revokeTriggerRef.current = event.currentTarget;
+                      setRevokeError(null);
+                      setRevokeConfirmId(session.sessionId);
+                    }}
                     className="gap-1"
                   >
                     <Trash2Icon className="h-3.5 w-3.5" />
@@ -390,7 +414,11 @@ function SettingsSecurityPage() {
             <Button
               variant="destructive"
               className="w-full gap-2"
-              onClick={() => setShowRevokeAll(true)}
+              disabled={revokingId !== null}
+              onClick={(event) => {
+                revokeTriggerRef.current = event.currentTarget;
+                setShowRevokeAll(true);
+              }}
             >
               <ShieldAlertIcon className="h-4 w-4" />
               {t('settings.security.revokeAll', locale)}
@@ -411,23 +439,23 @@ function SettingsSecurityPage() {
 
       {/* ── Revoke Single Session Confirmation Dialog ──────────────── */}
       {revokeConfirmId && revokeConfirmSession && (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="revoke-dialog-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onKeyDown={(e) => handleKeyDown(e, handleCancelRevokeConfirm)}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) handleCancelRevokeConfirm();
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open) handleCancelRevokeConfirm();
           }}
         >
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg space-y-4">
+          <DialogContent
+            showCloseButton={false}
+            finalFocus={revokeTriggerRef}
+            className="sm:max-w-md p-6 space-y-4"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          >
             <div className="flex items-center gap-2">
               <ShieldAlertIcon className="h-5 w-5 text-destructive" />
-              <h3 id="revoke-dialog-title" className="text-lg font-semibold">
+              <DialogTitle className="text-lg font-semibold">
                 {t('settings.security.revoke', locale)}
-              </h3>
+              </DialogTitle>
             </div>
             <p className="text-sm text-muted-foreground">
               {t('settings.security.revokeConfirm', locale)}
@@ -448,8 +476,18 @@ function SettingsSecurityPage() {
               </p>
             </div>
 
+            {revokeError && (
+              <p role="alert" className="text-sm text-destructive">
+                {revokeError}
+              </p>
+            )}
             <div className="flex justify-end gap-3">
-              <Button variant="outline" onClick={handleCancelRevokeConfirm} autoFocus>
+              <Button
+                variant="outline"
+                disabled={revokingId !== null}
+                onClick={handleCancelRevokeConfirm}
+                autoFocus
+              >
                 {t('settings.security.cancel', locale)}
               </Button>
               <Button
@@ -462,39 +500,29 @@ function SettingsSecurityPage() {
                   : t('settings.security.revoke', locale)}
               </Button>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* ── Revoke All Confirmation Dialog ───────────────────────── */}
       {showRevokeAll && (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Dialog handles bubbled Escape/Tab and backdrop dismissal; controls remain keyboard accessible.
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="revoke-all-dialog-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          onKeyDown={(e) =>
-            handleKeyDown(e, () => {
-              setShowRevokeAll(false);
-              setRevokeAllPassword('');
-              setRevokeAllError(null);
-            })
-          }
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowRevokeAll(false);
-              setRevokeAllPassword('');
-              setRevokeAllError(null);
-            }
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open) closeRevokeAll();
           }}
         >
-          <div className="w-full max-w-md rounded-lg bg-background p-6 shadow-lg space-y-4">
+          <DialogContent
+            showCloseButton={false}
+            finalFocus={revokeTriggerRef}
+            className="sm:max-w-md p-6 space-y-4"
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+          >
             <div className="flex items-center gap-2">
               <ShieldAlertIcon className="h-5 w-5 text-destructive" />
-              <h3 id="revoke-all-dialog-title" className="text-lg font-semibold">
+              <DialogTitle className="text-lg font-semibold">
                 {t('settings.security.revokeAll', locale)}
-              </h3>
+              </DialogTitle>
             </div>
             <p className="text-sm text-muted-foreground">
               {t('settings.security.revokeAllConfirm', locale)}
@@ -506,6 +534,7 @@ function SettingsSecurityPage() {
               </Label>
               <Input
                 id="revoke-password"
+                disabled={revokingAll}
                 type="password"
                 placeholder={t('settings.security.passwordPlaceholder', locale)}
                 value={revokeAllPassword}
@@ -523,14 +552,7 @@ function SettingsSecurityPage() {
             </div>
 
             <div className="flex justify-end gap-3">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowRevokeAll(false);
-                  setRevokeAllPassword('');
-                  setRevokeAllError(null);
-                }}
-              >
+              <Button variant="outline" disabled={revokingAll} onClick={closeRevokeAll}>
                 {t('settings.security.cancel', locale)}
               </Button>
               <Button
@@ -543,8 +565,8 @@ function SettingsSecurityPage() {
                   : t('settings.security.revokeAll', locale)}
               </Button>
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

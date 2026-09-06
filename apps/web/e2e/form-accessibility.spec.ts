@@ -907,3 +907,113 @@ for (const locale of ['en', 'fa']) {
     await expect(subject).toHaveValue('Test subject');
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`session revocation dialogs contain focus and protect pending confirmation (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    const time = '2026-09-01T12:00:00.000Z';
+    const sessions = [true, false].map((isCurrentSession, index) => ({
+      sessionId: 'session-' + index,
+      deviceInfo: { userAgent: 'Windows', ip: '192.0.2.1' },
+      createdAt: time,
+      updatedAt: time,
+      expiresAt: time,
+      idleDeadline: time,
+      isCurrentSession,
+    }));
+    await page.route('**/api/auth/sessions', (route) => route.fulfill({ json: sessions }));
+    let finish: (() => void) | undefined;
+    let writes = 0;
+    await page.route('**/api/auth/sessions/revoke-all', async (route) => {
+      writes++;
+      expect(route.request().postDataJSON()).toEqual({ password: 'local-test-password' });
+      await new Promise<void>((resolve) => {
+        finish = resolve;
+      });
+      await route.fulfill({ status: 503, json: {} });
+    });
+    let finishSingle: (() => void) | undefined;
+    let singleWrites = 0;
+    await page.route('**/api/auth/sessions/session-1', async (route) => {
+      singleWrites++;
+      await new Promise<void>((resolve) => {
+        finishSingle = resolve;
+      });
+      await route.fulfill({ status: 503, json: {} });
+    });
+    await page.goto('/settings/security');
+    const single = page.getByRole('button', {
+      name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
+      exact: true,
+    });
+    await single.press('Enter');
+    const singleDialog = page.getByRole('dialog', {
+      name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
+      exact: true,
+    });
+    await expect(singleDialog).toBeVisible();
+    for (let i = 0; i < 6; i++) {
+      await page.keyboard.press(i % 2 ? 'Shift+Tab' : 'Tab');
+      await expect
+        .poll(() => singleDialog.evaluate((node) => node.contains(document.activeElement)))
+        .toBe(true);
+    }
+    await page.keyboard.press('Escape');
+    await expect(singleDialog).toHaveCount(0);
+    await expect(single).toBeFocused();
+    await single.press('Enter');
+    await singleDialog
+      .getByRole('button', { name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke', exact: true })
+      .click();
+    await expect.poll(() => singleWrites).toBe(1);
+    await page.keyboard.press('Escape');
+    await expect(singleDialog).toBeVisible();
+    await expect(
+      singleDialog.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+    ).toBeDisabled();
+    finishSingle!();
+    await expect(singleDialog.getByRole('alert')).toBeVisible();
+    await expect(
+      singleDialog.getByRole('button', {
+        name: locale === 'fa' ? 'قطع دسترسی' : 'Revoke',
+        exact: true,
+      })
+    ).toBeEnabled();
+    await page.keyboard.press('Escape');
+    await expect(singleDialog).toHaveCount(0);
+    await expect(single).toBeFocused();
+
+    const name = locale === 'fa' ? 'قطع دسترسی همه نشست‌های دیگر' : 'Revoke all other sessions';
+    const all = page.getByRole('button', { name, exact: true });
+    await all.press('Enter');
+    const dialog = page.getByRole('dialog', { name, exact: true });
+    await expect(dialog).toBeVisible();
+    const password = dialog.getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', { exact: true });
+    await password.fill('local-test-password');
+    for (let i = 0; i < 8; i++) {
+      await page.keyboard.press('Tab');
+      await expect
+        .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
+        .toBe(true);
+    }
+    await dialog.getByRole('button', { name, exact: true }).click();
+    await expect.poll(() => writes).toBe(1);
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeVisible();
+    await expect(password).toBeDisabled();
+    await expect(
+      dialog.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+    ).toBeDisabled();
+    finish!();
+    await expect(dialog.getByRole('alert')).toContainText(
+      locale === 'fa' ? 'خطا در قطع دسترسی' : 'Failed to revoke'
+    );
+    await expect(password).toBeEnabled();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(all).toBeFocused();
+    expect(writes).toBe(1);
+  });
+}
