@@ -27,6 +27,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
+      - run: pnpm check:contract
       - name: Install production browser check runtime
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
       - name: Verify actual cold authentication transfers

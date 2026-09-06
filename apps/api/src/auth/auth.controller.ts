@@ -1,3 +1,4 @@
+import { ApiZodBody } from '../openapi/zod-body.decorator.js'
 import { createHash, randomUUID } from 'node:crypto'
 import {
   Controller,
@@ -79,6 +80,7 @@ export class AuthController {
    * - 10 attempts per IP per 3600s (1h)
    */
   @SkipCsrf()
+  @ApiZodBody(RegisterSchema)
   @Post('register')
   @HttpCode(200)
   @RateLimit({ namespace: 'registration:ip', limit: 3, windowMs: 60_000, security: true })
@@ -153,6 +155,7 @@ export class AuthController {
    * to avoid revealing whether the username exists.
    */
   @SkipCsrf()
+  @ApiZodBody(LoginSchema)
   @Post('login')
   @HttpCode(200)
   @RateLimit({ namespace: 'login:account-ip', limit: 5, windowMs: 900_000, security: true })
@@ -229,6 +232,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @SkipCsrf()
+  @ApiZodBody(LoginVerifySchema)
   @Post('login/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -291,6 +295,7 @@ export class AuthController {
    * - 3 resend attempts per IP per 120s
    */
   @SkipCsrf()
+  @ApiZodBody(LoginResendSchema)
   @Post('login/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:login:resend:ip', limit: 3, windowMs: 120_000, security: true })
@@ -330,6 +335,7 @@ export class AuthController {
    * - 5 attempts per IP per 300s
    */
   @SkipCsrf()
+  @ApiZodBody(ForceChangePasswordSchema)
   @Post('force-change-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'password:change:ip', limit: 5, windowMs: 300_000, security: true })
@@ -391,6 +397,7 @@ export class AuthController {
   }
 
   @SkipCsrf()
+  @ApiZodBody(ForgotPasswordSchema)
   @Post('forgot-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'forgot-password:dest', limit: 5, windowMs: 3_600_000, security: true })
@@ -444,6 +451,7 @@ export class AuthController {
    * - 5 reset attempts per IP per hour
    */
   @SkipCsrf()
+  @ApiZodBody(ResetPasswordSchema)
   @Post('reset-password')
   @HttpCode(200)
   @RateLimit({ namespace: 'reset-password:dest', limit: 5, windowMs: 3_600_000, security: true })
@@ -501,6 +509,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @SkipCsrf()
+  @ApiZodBody(VerifyOtpSchema)
   @Post('register/verify')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -672,6 +681,7 @@ export class AuthController {
    * - 3 resend attempts per IP per 120s
    */
   @SkipCsrf()
+  @ApiZodBody(ResendOtpSchema)
   @Post('register/resend')
   @HttpCode(200)
   @RateLimit({ namespace: 'otp:resend:ip', limit: 3, windowMs: 120_000, security: true })
@@ -810,6 +820,7 @@ export class AuthController {
    * - 5 attempts per IP per 300s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(ChangeUsernameSendOtpSchema)
   @Post('change-username/send-otp')
   @HttpCode(200)
   @RateLimit({ namespace: 'change-username:user', limit: 3, windowMs: 300_000, security: true })
@@ -849,6 +860,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(ChangeUsernameVerifySchema)
   @Post('change-username')
   @HttpCode(200)
   @RateLimit({ namespace: 'change-username:verify:ip', limit: 5, windowMs: 60_000, security: true })
@@ -897,6 +909,7 @@ export class AuthController {
    * - 5 attempts per IP per 300s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(AddContactSendOtpSchema)
   @Post('add-contact/send-otp')
   @HttpCode(200)
   @RateLimit({ namespace: 'add-contact:user', limit: 3, windowMs: 300_000, security: true })
@@ -939,6 +952,7 @@ export class AuthController {
    * - 5 verification attempts per IP per 60s
    */
   @UseGuards(SessionAuthGuard)
+  @ApiZodBody(AddContactVerifySchema)
   @Post('add-contact')
   @HttpCode(200)
   @RateLimit({ namespace: 'add-contact:verify:ip', limit: 5, windowMs: 60_000, security: true })

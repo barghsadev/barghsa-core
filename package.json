@@ -20,6 +20,8 @@
     "setup:bucket": "ts-node scripts/setup-bucket.ts",
     "format:check": "turbo format:check",
     "format:write": "turbo format:write",
+    "check:contract": "node --test scripts/check-openapi.test.mjs && node scripts/check-openapi.mjs",
+    "contract:update": "pnpm --filter @barghsa/api build && node scripts/check-openapi.mjs --write",
     "check:bundle": "node --test scripts/check-route-budgets.test.mjs && node scripts/check-route-budgets.mjs",
     "db:seed": "pnpm --filter @barghsa/db db:seed"
   },
