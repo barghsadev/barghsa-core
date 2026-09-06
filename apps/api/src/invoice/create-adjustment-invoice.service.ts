@@ -1,3 +1,4 @@
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 /**
  * CreateAdjustmentInvoiceService — post-payment adjustment (T-04.1.05.03).
  *
@@ -264,6 +265,7 @@ export class CreateAdjustmentInvoiceService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      await requireStaffMutationPermission(client, cmd.actorUserId, 'invoices:write');
 
       const locked = (await client.query(
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,

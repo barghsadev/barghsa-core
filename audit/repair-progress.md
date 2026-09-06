@@ -1459,3 +1459,9 @@ Review and validation: all 15 service/controller/migrated-database/HTTP checks p
 The staff cancel-and-replace service now holds current invoices:write authority before locking or changing the original invoice. Its production-migrated fixture uses the actual Finance role. Review confirms the actor lock precedes invoice locks and remains held through both state changes and commit.
 
 All 17 unit and migrated-service checks pass. Added a grant-revocation race proving no cancellation, replacement or audit survives denial. Replaced the old missing-actor rollback shortcut with a failure of the replacement issue audit after the original cancellation; the whole correction chain rolls back. Root types, lint and whitespace checks pass. This service has no staff HTTP caller yet, so these checks certify its existing service contract rather than a new API/UI workflow.
+
+### Require current invoice authority for charge and credit adjustments (F04/F14)
+
+Adjustment creation now holds the actor's current invoices:write grant before locking the original invoice. Both positive charges and negative credit notes use the same boundary. Existing signed accounting, payability exclusions and original-document preservation remain covered.
+
+All 20 unit and production-migrated service checks pass. Added grant-revocation races and actual issue-audit failures for both signs; each preserves the original invoice and leaves no adjustment. The fixture uses the real Finance role. Root types, lint and whitespace checks pass. This repairs the existing service contract; no new staff API, refund workflow or production financial operation was added.

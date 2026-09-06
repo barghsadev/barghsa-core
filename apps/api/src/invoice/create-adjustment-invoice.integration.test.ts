@@ -62,10 +62,13 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
     );
 
     await ctx.pool.query(
-      `INSERT INTO users (user_id, username, password_hash)
-      VALUES ($1, 'invoice-staff@example.test', 'test-only')`,
+      `INSERT INTO users (user_id, username, password_hash, is_staff)
+      VALUES ($1, 'invoice-staff@example.test', 'test-only', true)`,
       [ACTOR_USER_ID]
     );
+    await ctx.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance')", [
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, $2)`, [
       PROFILE_ID,
       ACTOR_USER_ID,
@@ -405,4 +408,99 @@ describe('CreateAdjustmentInvoiceService — real PostgreSQL (T-04.1.05.03)', ()
       credit.adjustmentInvoiceId,
     ]);
   });
+  it.each([1000n, -1000n])(
+    'rolls back a %s adjustment when its issue audit fails',
+    async (amount) => {
+      const originalId = await insertInvoice({ state: 'Paid', paidAmount: ORIGINAL_TOTAL });
+      const before = (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId]))
+        .rows[0];
+      await ctx.pool.query(
+        "CREATE OR REPLACE FUNCTION reject_adjustment_issue() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test adjustment audit failure'; END $$; CREATE TRIGGER reject_adjustment_issue BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.issue') EXECUTE FUNCTION reject_adjustment_issue()"
+      );
+      try {
+        await expect(
+          service.createAdjustmentInvoice({
+            originalInvoiceId: originalId,
+            amount,
+            reason: 'Correction',
+            actorUserId: ACTOR_USER_ID,
+            now: NOW,
+          })
+        ).rejects.toThrow('test adjustment audit failure');
+        expect(
+          (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId])).rows[0]
+        ).toEqual(before);
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM invoices WHERE adjustment_for_invoice_id=$1', [
+              originalId,
+            ])
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await ctx.pool.query('DROP TRIGGER reject_adjustment_issue ON audit_log');
+      }
+    }
+  );
+
+  it.each([1000n, -1000n])(
+    'rejects a %s adjustment after current invoice authority is revoked',
+    async (amount) => {
+      const originalId = await insertInvoice({ state: 'Paid', paidAmount: ORIGINAL_TOTAL });
+      const before = (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId]))
+        .rows[0];
+      const client = await ctx.pool.connect();
+      let pending: Promise<unknown> | undefined;
+      try {
+        await client.query('BEGIN');
+        await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [
+          ACTOR_USER_ID,
+        ]);
+        pending = service
+          .createAdjustmentInvoice({
+            originalInvoiceId: originalId,
+            amount,
+            reason: 'Correction',
+            actorUserId: ACTOR_USER_ID,
+            now: NOW,
+          })
+          .then(
+            (value) => value,
+            (error) => error
+          );
+        await expect
+          .poll(async () =>
+            Number(
+              (
+                await ctx.pool.query(
+                  "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%activation_pending%ORDER BY user_id FOR UPDATE%' "
+                )
+              ).rows[0].count
+            )
+          )
+          .toBe(1);
+        await client.query('DELETE FROM user_roles WHERE user_id=$1', [ACTOR_USER_ID]);
+        await client.query('COMMIT');
+        expect(await pending).toMatchObject({ status: 403 });
+        expect(
+          (await ctx.pool.query('SELECT * FROM invoices WHERE id=$1', [originalId])).rows[0]
+        ).toEqual(before);
+        expect(
+          (
+            await ctx.pool.query('SELECT id FROM invoices WHERE adjustment_for_invoice_id=$1', [
+              originalId,
+            ])
+          ).rows
+        ).toHaveLength(0);
+      } finally {
+        await client.query('ROLLBACK');
+        client.release();
+        await pending;
+        await ctx.pool.query(
+          "INSERT INTO user_roles(user_id,role_id) VALUES ($1,'role-finance') ON CONFLICT DO NOTHING",
+          [ACTOR_USER_ID]
+        );
+      }
+    }
+  );
 });

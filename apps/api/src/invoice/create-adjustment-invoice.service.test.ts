@@ -22,6 +22,10 @@ import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { DueAtCalculationRepository } from './due-at.repository.js';
 import { DueAtCalculationService } from './due-at.service.js';
 
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 const mockClient = {
   query: vi.fn(),
   release: vi.fn(),
