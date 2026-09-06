@@ -1,3 +1,6 @@
+import { t } from '@barghsa/i18n'
+import { NotificationsService } from '../notifications/notifications.service.js'
+import type { PoolClient } from 'pg'
 import { z } from 'zod'
 import { TicketAttachmentsService } from './ticket-attachments.service.js'
 import { randomUUID } from 'node:crypto'
@@ -93,9 +96,41 @@ function mapCommentRow(row: Record<string, unknown>): TicketCommentRow {
 
 @Injectable()
 export class TicketsService {
-  constructor(private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService()) {}
+  constructor(
+    private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService(),
+    private readonly notifications: NotificationsService = new NotificationsService(),
+  ) {}
 
   private readonly logger = new Logger(TicketsService.name)
+
+  private async notifyTicket(client: PoolClient, ticket: TicketRow, actorId: string, event: 'created'|'status'|'reply'|'internal'|'assigned') {
+    const recipients = new Map<string,boolean>()
+    if (event !== 'internal' && ticket.userId !== actorId) recipients.set(ticket.userId,false)
+    if (ticket.assignedTo && ticket.assignedTo !== actorId) {
+      const user = (await client.query(`SELECT u.is_admin,
+        ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
+        FROM users u WHERE user_id=$1 AND disabled_at IS NULL AND activation_token IS NULL`,[ticket.assignedTo])).rows[0]
+      if (user && (user.is_admin || resolveStaffPermissions(user.role_permissions).some(permission=>['*','tickets:*','tickets:read','tickets:assigned'].includes(permission)))) recipients.set(ticket.assignedTo,true)
+    }
+    if (!ticket.assignedTo && (event === 'created' || actorId === ticket.userId)) {
+      const staff = (await client.query(`SELECT u.user_id,u.is_admin,
+        ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id WHERE ur.user_id=u.user_id) AS role_permissions
+        FROM users u WHERE disabled_at IS NULL AND activation_token IS NULL AND user_id<>$1
+          AND (u.is_admin OR EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id=u.user_id))`,[actorId])).rows
+      for (const user of staff) {
+        if (user.is_admin || resolveStaffPermissions(user.role_permissions).some(permission=>['*','tickets:*','tickets:read'].includes(permission))) recipients.set(user.user_id,true)
+      }
+    }
+    for (const [userId,staff] of recipients) {
+      const localizedContent = Object.fromEntries((['fa','en'] as const).map(locale=>[locale,{
+        title:t(`tickets.notice.${event}`,locale),
+        // Never copy conversation contents into notices, including internal notes.
+        body:`${ticket.subject} · ${t(`tickets.${ticket.status}`,locale)}`,
+      }])) as Record<'fa'|'en',{title:string;body:string}>
+      await this.notifications.create({userId,type:'general',title:localizedContent.en.title,
+        body:localizedContent.en.body,localizedContent,link:`${staff?'/admin':''}/tickets?ticketId=${ticket.id}`},client)
+    }
+  }
 
   async creationOptions(userId: string, profileId?: string, recordPage = 1) {
     if (!Number.isSafeInteger(recordPage) || recordPage < 1 || recordPage > 100000) throw new HttpException('Invalid record page',400)
@@ -165,6 +200,7 @@ export class TicketsService {
       const ticket = mapRow(result.rows[0])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_created',$3::jsonb)`,
         [randomUUID(),userId,JSON.stringify({ ticketId: ticket.id,profileId: ticket.profileId,attachmentCount: attachments.length })])
+      await this.notifyTicket(client, ticket, userId, 'created')
       await client.query('COMMIT')
       return ticket
     } catch (error) { await client.query('ROLLBACK'); throw error }
@@ -303,6 +339,7 @@ export class TicketsService {
       const result = await client.query('UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING *', [status,ticketId])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_status_changed',$3::jsonb)`,
         [randomUUID(),actorId,JSON.stringify({ ticketId, from: row.status, to: status })])
+      await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'status')
       await client.query('COMMIT')
       return mapRow(result.rows[0])
     } catch (error) { await client.query('ROLLBACK'); throw error }
@@ -371,6 +408,7 @@ export class TicketsService {
       await client.query('UPDATE tickets SET status=$1,updated_at=NOW() WHERE id=$2', [status,ticketId])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_comment_added',$3::jsonb)`,
         [randomUUID(),actorId,JSON.stringify({ ticketId,commentId: result.rows[0].id,visibility,from: ticket.status,to: status })])
+      await this.notifyTicket(client, mapRow({ ...ticket,status }), actorId, visibility === 'internal' ? 'internal' : 'reply')
       await client.query('COMMIT')
       return mapCommentRow(result.rows[0])
     } catch (error) { await client.query('ROLLBACK'); throw error }
@@ -499,7 +537,7 @@ export class TicketsService {
       const account = (await client.query(`SELECT u.is_admin, u.disabled_at, u.activation_token,
         ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
           WHERE ur.user_id=u.user_id) AS role_permissions
-        FROM users u WHERE u.user_id=$1 FOR UPDATE OF u`, [assigneeUserId])).rows[0]
+        FROM users u WHERE u.user_id=$1 FOR NO KEY UPDATE OF u`, [assigneeUserId])).rows[0]
       const permissions = resolveStaffPermissions(account?.role_permissions)
       if (!account || account.disabled_at || account.activation_token ||
           !(account.is_admin || permissions.includes('*') || permissions.includes('tickets:write') || permissions.includes('tickets:*') || permissions.includes('tickets:assigned'))) {
@@ -512,6 +550,7 @@ export class TicketsService {
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata)
         VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
         [randomUUID(), actorId, JSON.stringify({ ticketId, assigneeUserId, status: result.rows[0].status })])
+      await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned')
       await client.query('COMMIT')
       return mapRow(result.rows[0])
     } catch (error) {

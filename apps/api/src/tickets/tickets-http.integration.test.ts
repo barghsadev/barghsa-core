@@ -278,3 +278,39 @@ it('paginates older related records without exposing another profile',async()=>{
   expect(new Set([...first.records,...second.records].map(row=>row.id)).size).toBe(25)
   expect((await get(1.5)).status).toBe(400)
 })
+it('keeps ticket notices private, bilingual and free of internal conversation text',async()=>{
+  const id=await ticket()
+  await assign(id,'assigned')
+  await http.pool.query("DELETE FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",[id])
+  expect((await comment(id,'Confidential internal detail','internal')).status).toBe(201)
+  const internal=(await http.pool.query("SELECT recipient_user_id,localized_content,link_route FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",[id])).rows
+  expect(internal).toHaveLength(1)
+  expect(internal[0].recipient_user_id).toBe('assigned')
+  expect(internal[0].link_route).toBe(`/admin/tickets?ticketId=${id}`)
+  expect(JSON.stringify(internal)).not.toContain('Confidential internal detail')
+  expect(internal[0].localized_content.en.title).toBe('New internal ticket note')
+  expect(internal[0].localized_content.fa.title).not.toBe(internal[0].localized_content.en.title)
+  expect((await comment(id,'Public solution','public')).status).toBe(201)
+  const customer=(await http.pool.query("SELECT recipient_user_id,localized_content,link_route FROM in_app_notifications WHERE recipient_user_id='customer' AND link_route LIKE '%'||$1||'%'",[id])).rows
+  expect(customer).toHaveLength(1)
+  expect(customer[0].link_route).toBe(`/tickets?ticketId=${id}`)
+  expect(customer[0].localized_content.en.title).toBe('New ticket reply')
+  await http.pool.query("DELETE FROM user_roles WHERE user_id='assigned'")
+  try {
+    expect((await comment(id,'Customer update','public','customer')).status).toBe(201)
+    expect((await http.pool.query("SELECT id FROM in_app_notifications WHERE recipient_user_id='assigned' AND link_route LIKE '%'||$1||'%'",[id])).rows).toHaveLength(2)
+  } finally {await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES ('assigned','test-assigned')")}
+})
+it('rolls back a reply and its audit when its private notification cannot be saved',async()=>{
+  const id=await ticket()
+  await assign(id)
+  await http.pool.query(`CREATE FUNCTION fail_ticket_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+    IF NEW.link_route LIKE '%ticketId=%' THEN RAISE EXCEPTION 'test notice failure'; END IF; RETURN NEW; END $$;
+    CREATE TRIGGER fail_ticket_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_ticket_notice()`)
+  try {
+    expect((await comment(id,'Not saved')).status).toBe(500)
+    expect((await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1',[id])).rows).toHaveLength(0)
+    expect((await http.pool.query("SELECT id FROM audit_log WHERE event='ticket_comment_added' AND metadata::jsonb->>'ticketId'=$1",[id])).rows).toHaveLength(0)
+  } finally {await http.pool.query('DROP TRIGGER fail_ticket_notice ON in_app_notifications; DROP FUNCTION fail_ticket_notice()')}
+  expect((await comment(id,'Saved on retry')).status).toBe(201)
+})

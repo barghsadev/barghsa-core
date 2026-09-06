@@ -494,3 +494,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Review found the global profile check blocked support and staff pages for accounts without customer profiles. Those pages now bypass onboarding/default-profile selection, and in-flight profile checks are cancelled on navigation. Profile-dependent customer behavior remains covered by regression tests. English/Persian admin layout direction now follows the locale.
 - Review: nine Chromium ticket/profile-switch scenarios passed; 36 focused API checks passed; all workspace typechecks and the production web build passed. Rendered staff screen inspected. Build still reports the previously tracked entry bundle budget problem under F19.
 - Remaining F16 work includes configured team assignment, staff response targets/notices and final task acceptance reconciliation. Contract linking is still unavailable until that module exists.
+
+### F16.6 — Private transactional ticket notices
+
+- New/unassigned customer work alerts eligible full-access support staff. Assignment, replies and status changes notify the other relevant participant. Customer notices always link to the customer ticket; staff notices link to the staff route.
+- Internal notes never notify the customer. Notices contain the ticket subject/status, not conversation text, and include Persian/English content. Current staff access is checked before notifying an assignee.
+- Notices, ticket mutations and audit records share a transaction. A notification failure rolls back the reply and audit. Assignment account locks now allow foreign-key reads while continuing to serialize account changes, avoiding an inverted lock dependency with ticket notices.
+- Review: 38 ticket checks and API typecheck passed. New HTTP/database tests prove private recipients, localized content, no internal text, removed-access exclusion, and notification-failure rollback/retry.
+- Team/configuration consumption, response target display and final acceptance review remain open.

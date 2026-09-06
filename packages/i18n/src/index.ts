@@ -4,6 +4,11 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  "tickets.notice.created": "تیکت پشتیبانی جدید",
+  "tickets.notice.reply": "پاسخ جدید به تیکت",
+  "tickets.notice.internal": "یادداشت داخلی جدید در تیکت",
+  "tickets.notice.status": "وضعیت تیکت تغییر کرد",
+  "tickets.notice.assigned": "مسئول تیکت تغییر کرد",
   "tickets.title": "تیکت‌های پشتیبانی",
   "tickets.staffTitle": "مدیریت تیکت‌های پشتیبانی",
   "tickets.create": "ایجاد تیکت",
@@ -1444,6 +1449,11 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  "tickets.notice.created": "New support ticket",
+  "tickets.notice.reply": "New ticket reply",
+  "tickets.notice.internal": "New internal ticket note",
+  "tickets.notice.status": "Ticket status changed",
+  "tickets.notice.assigned": "Ticket assignment changed",
   "tickets.title": "Support tickets",
   "tickets.staffTitle": "Manage support tickets",
   "tickets.create": "Create ticket",
