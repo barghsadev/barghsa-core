@@ -90,13 +90,13 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     expect(String(rejectionBody(rejection).message)).toContain('does not exceed')
   })
 
-  it('refuses to create when the amount is at or below the threshold', async () => {
+  it('refuses to create when the amount is below the threshold', async () => {
     const { mockQuery } = await loadService()
     mockQuery.mockResolvedValueOnce({ rows: ENABLED_THRESHOLD_ROWS })
 
     const rejection = await service
       .createApprovalRequest(
-        { ...VALID_INPUT, amount_irr: 100_000_000 },
+        { ...VALID_INPUT, amount_irr: 99_999_999 },
         'user-1',
         '1.1.1.1',
       )
@@ -142,7 +142,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     expect(result).toMatchObject({
       id: 'req-1',
       actionType: 'refund',
-      amountIrR: 250_000_000,
+      amountIrR: '250000000',
       status: 'pending',
       initiatorId: 'user-1',
     })
@@ -270,7 +270,7 @@ describe('DualApprovalService.listApprovalRequests', () => {
     expect(result[0]).toMatchObject({
       id: 'req-1',
       actionType: 'bank_payment_confirmation',
-      amountIrR: 300_000_000,
+      amountIrR: '300000000',
       status: 'pending',
       initiatorUsername: 'staff1',
       details: { bankRef: 'BR-7' },
@@ -502,7 +502,7 @@ describe('DualApprovalService.rejectApprovalRequest', () => {
     expect(auditCall[1]).toContain('approval_request_rejected')
     expect(String(auditCall[1]![3])).toContain('"reviewReason":"Duplicate of an earlier refund"')
     // BIGINT audit amounts are normalized to JSON numbers.
-    expect(String(auditCall[1]![3])).toContain('"amountIrR":50000000')
+    expect(String(auditCall[1]![3])).toContain('"amountIrR":"50000000"')
 
     const notifyCall = notificationsService.create.mock.calls[0]![0] as { userId: string; title: string; body: string }
     expect(notifyCall.userId).toBe('user-1')
@@ -547,7 +547,7 @@ describe('toApprovalRequestDto', () => {
     expect(dto).toEqual({
       id: 'req-1',
       actionType: 'refund',
-      amountIrR: 250_000_000,
+      amountIrR: '250000000',
       initiatorId: 'user-1',
       initiatorUsername: 'staff1',
       reason: 'r',

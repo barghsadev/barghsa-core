@@ -49,7 +49,7 @@ describe('applyApprovalRequestResolutionOnClient', () => {
     expect(String(audit[1]![3])).toContain('"requestId":"req-1"')
     expect(String(audit[1]![3])).toContain('"initiatorUserId":"user-1"')
     expect(String(audit[1]![3])).toContain('"reviewerUserId":"user-2"')
-    expect(String(audit[1]![3])).toContain('"amountIrR":500000')
+    expect(String(audit[1]![3])).toContain('"amountIrR":"500000"')
     expect(audit[1]![4]).toBe('corr-1')
     expect(audit[1]![5]).toBe('10.0.0.9')
   })

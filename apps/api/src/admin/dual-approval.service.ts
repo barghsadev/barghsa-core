@@ -31,7 +31,7 @@ export const DUAL_APPROVAL_ACTION_TYPES = APPROVAL_ACTION_TYPES
 export interface ApprovalRequestDto {
   id: string
   actionType: ApprovalActionType
-  amountIrR: number
+  amountIrR: string
   initiatorId: string
   initiatorUsername: string | null
   reason: string
@@ -164,7 +164,7 @@ export class DualApprovalService {
           JSON.stringify({
             requestId: id,
             actionType: normalized.actionType,
-            amountIrR: normalized.amountIrR,
+            amountIrR: String(normalized.amountIrR),
             thresholdIrR: threshold.thresholdIrR,
           }),
           correlationId,
@@ -502,7 +502,7 @@ export function toApprovalRequestDto(
   return {
     id: String(row.id),
     actionType: row.action_type as ApprovalActionType,
-    amountIrR: Number(row.amount_irr),
+    amountIrR: String(row.amount_irr),
     initiatorId: String(row.initiator_id),
     initiatorUsername:
       row.initiator_username === null || row.initiator_username === undefined

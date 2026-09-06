@@ -731,7 +731,7 @@
 
 **T-09.07.01 — Dual-approval threshold configuration**
 
-- Description: Admin configures the IRR threshold above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.
+- Description: Admin configures the IRR threshold at or above which refunds, manual financial adjustments, and bank payment confirmations require approval by a second authorized user.
 - Technical notes: Value stored, requires step-up auth to change. Versioned config. Emergency override available (requires reason + elevated permission + immediate alert + audit).
 - UI/UX: Number input with large IRR display. Description of which actions are affected. "Changes require step-up authentication."
 - Dependencies: admin config framework, finance module
@@ -739,7 +739,7 @@
 
 **T-09.07.02 — Dual-approval workflow**
 
-- Description: When a financial action exceeds threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.
+- Description: When a financial action meets or exceeds the positive threshold, it enters Pending Approval state. Second authorized user (different from initiator) must approve or reject. Audit trail of both actions.
 - Technical notes: Initiation creates approval request with transaction details. Notification to approval-eligible staff. Second user reviews and approves/rejects. Cannot approve own requests. Queue view for pending approvals.
 - UI/UX: "Pending approvals" section in finance dashboard. Each: amount, initiator, reason, details. Approve/Reject buttons with reason (reason required for reject).
 - Dependencies: T-09.07.01

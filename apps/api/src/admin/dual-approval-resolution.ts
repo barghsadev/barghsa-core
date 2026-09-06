@@ -85,10 +85,8 @@ export async function applyApprovalRequestResolutionOnClient(
       JSON.stringify({
         requestId: input.requestId,
         actionType: input.actionType,
-        // BIGINT arrives as a string from pg; normalize to a number so
-        // both approval_request_created and the *_approved/_rejected
-        // events emit type-consistent audit metadata.
-        amountIrR: Number(input.amountIrR),
+        // Preserve int8 IRR amounts without rounding through JavaScript numbers.
+        amountIrR: String(input.amountIrR),
         initiatorUserId: input.initiatorId,
         reviewerUserId: input.reviewerUserId,
         ...(input.reviewReason !== null ? { reviewReason: input.reviewReason } : {}),

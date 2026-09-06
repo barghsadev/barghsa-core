@@ -19,7 +19,7 @@ const nonAdminReq = {
 const DTO = {
   id: 'req-1',
   actionType: 'refund',
-  amountIrR: 250_000_000,
+  amountIrR: '250000000',
   initiatorId: 'admin-1',
   initiatorUsername: 'boss',
   reason: 'refund',

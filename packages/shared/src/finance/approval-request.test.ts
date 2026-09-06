@@ -174,9 +174,9 @@ describe('shouldRequireDualApproval (T-09.07.02 routing rule)', () => {
     ).toBe(false)
   })
 
-  it('requires approval only above the configured threshold', () => {
+  it('requires approval at or above the configured threshold', () => {
     const config = { thresholdIrR: 100_000_000 }
-    expect(shouldRequireDualApproval(config, 100_000_000)).toBe(false) // equal → no
+    expect(shouldRequireDualApproval(config, 100_000_000)).toBe(true) // equal requires approval
     expect(shouldRequireDualApproval(config, 99_999_999)).toBe(false)
     expect(shouldRequireDualApproval(config, 100_000_001)).toBe(true)
   })

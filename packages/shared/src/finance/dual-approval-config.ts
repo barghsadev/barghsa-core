@@ -2,13 +2,13 @@
  * Dual-approval threshold configuration contract (S-09.07, T-09.07.01).
  *
  * Single source of truth for the `app_config` key that stores the
- * admin-configurable IRR threshold above which refunds, manual financial
+ * admin-configurable IRR threshold at or above which refunds, manual financial
  * adjustments, and bank payment confirmations require approval by a second
  * authorized user, plus the validation rules the admin API must enforce.
  *
  * Semantics: a stored threshold of `0` means dual approval is **disabled**
  * (no threshold is enforced). The dual-approval workflow (T-09.07.02) must
- * check `thresholdIrR > 0 && amount > thresholdIrR` before routing a
+ * check `thresholdIrR > 0 && amount >= thresholdIrR` before routing a
  * financial action into Pending Approval. The default returned when nothing
  * is persisted is `0` (disabled) so the feature never surprises fresh
  * installations.
@@ -19,7 +19,7 @@
 /** Admin-configurable dual-approval threshold. */
 export interface DualApprovalConfig {
   /**
-   * IRR amount above which refunds, manual financial adjustments, and bank
+   * IRR amount at or above which refunds, manual financial adjustments, and bank
    * payment confirmations require a second approver. `0` = dual approval
    * disabled (no threshold enforced).
    */

@@ -384,7 +384,7 @@ describe('InvoiceBankReceiptConfirmationService dual-approval — real PostgreSQ
     expect(resolutionMeta.initiatorUserId).toBe(FIRST_STAFF)
     expect(resolutionMeta.reviewerUserId).toBe(SECOND_STAFF)
     expect(resolutionMeta.actionType).toBe(INVOICE_BANK_RECEIPT_DUAL_APPROVAL_ACTION_TYPE)
-    expect(resolutionMeta.amountIrR).toBe(Number(THRESHOLD))
+    expect(resolutionMeta.amountIrR).toBe(String(THRESHOLD))
 
     const confirmedAudit = await ctx.pool.query<{ event: string }>(
       `SELECT event FROM audit_log

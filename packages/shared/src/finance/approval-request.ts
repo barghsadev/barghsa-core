@@ -220,6 +220,6 @@ export function shouldRequireDualApproval(
     typeof amountIrR === 'number' &&
     Number.isSafeInteger(amountIrR) &&
     amountIrR > 0 &&
-    amountIrR > config.thresholdIrR
+    amountIrR >= config.thresholdIrR
   )
 }

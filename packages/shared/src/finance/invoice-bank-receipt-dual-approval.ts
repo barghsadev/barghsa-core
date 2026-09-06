@@ -10,8 +10,8 @@
  * `paid_amount`.
  *
  * Comparison is at-or-above (S-04.3.01 / C-04.CC.02). The generic
- * T-09.07.02 helper `shouldRequireDualApproval` uses a strict `>` and JS
- * numbers; bank receipts compare bigint IRR amounts from `bank_receipts`.
+ * T-09.07.02 helper uses the same boundary for safe-integer inputs;
+ * bank receipts compare bigint IRR amounts from `bank_receipts`.
  *
  * A stored threshold of `0` or a missing `app_config` row means dual
  * approval is disabled. A present-but-corrupt row is **not** treated as
@@ -82,16 +82,16 @@ export type InvoiceBankReceiptDualApprovalThresholdRead =
  * Normalize a raw `app_config` value (or a missing row) into the
  * dual-approval threshold read used by invoice bank-receipt confirmation.
  *
- * `undefined` / `null` means no row — disabled default. A row that does
+ * `undefined` means no row — disabled default. A row that does
  * not contain a valid non-negative safe-integer threshold is corrupt.
  */
 export function readInvoiceBankReceiptDualApprovalThreshold(
   raw: unknown,
 ): InvoiceBankReceiptDualApprovalThresholdRead {
-  if (raw === undefined || raw === null) {
+  if (raw === undefined) {
     return { status: 'disabled', thresholdIrR: 0 }
   }
-  if (typeof raw !== 'object' || Array.isArray(raw)) {
+  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
     return { status: 'corrupt' }
   }
   const o = raw as Record<string, unknown>

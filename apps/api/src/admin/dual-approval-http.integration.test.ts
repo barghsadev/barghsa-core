@@ -307,3 +307,14 @@ it("applies below-threshold, disabled and corrupt configuration without bypassin
     ).rows[0].posted_balance,
   ).toBe("0");
 });
+
+it('returns and audits large IRR approval amounts without numeric rounding', async () => {
+  const amount='10000000000000001'
+  const id=await seed()
+  await http.pool.query('UPDATE approval_requests SET amount_irr=$2 WHERE id=$1',[id,amount])
+  const response=await decide('reviewer',id)
+  expect(response.status).toBe(200)
+  expect(await response.json()).toMatchObject({amountIrR:amount})
+  const audit=(await http.pool.query("SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='approval_request_approved' AND metadata::jsonb->>'requestId'=$1",[id])).rows[0]
+  expect(audit.metadata.amountIrR).toBe(amount)
+})

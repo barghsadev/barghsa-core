@@ -91,10 +91,7 @@ describe('readInvoiceBankReceiptDualApprovalThreshold (T-04.3.01.05)', () => {
       status: 'disabled',
       thresholdIrR: 0,
     })
-    expect(readInvoiceBankReceiptDualApprovalThreshold(null)).toEqual({
-      status: 'disabled',
-      thresholdIrR: 0,
-    })
+    expect(readInvoiceBankReceiptDualApprovalThreshold(null)).toEqual({ status: 'corrupt' })
   })
 
   it('treats an explicit 0 as disabled', () => {
@@ -141,14 +138,14 @@ describe('invoiceBankReceiptRequiresDualApproval (T-04.3.01.05)', () => {
     ).toBe(false)
   })
 
-  it('requires approval at and above the threshold (unlike the generic > helper)', () => {
+  it('requires approval at and above the threshold in both helpers', () => {
     const read = { status: 'enabled' as const, thresholdIrR: THRESHOLD }
     expect(invoiceBankReceiptRequiresDualApproval(read, BigInt(THRESHOLD - 1))).toBe(
       false,
     )
     expect(invoiceBankReceiptRequiresDualApproval(read, BigInt(THRESHOLD))).toBe(true)
     expect(invoiceBankReceiptRequiresDualApproval(read, BigInt(THRESHOLD + 1))).toBe(true)
-    expect(shouldRequireDualApproval({ thresholdIrR: THRESHOLD }, THRESHOLD)).toBe(false)
+    expect(shouldRequireDualApproval({ thresholdIrR: THRESHOLD }, THRESHOLD)).toBe(true)
   })
 
   it('does not require approval for a non-positive amount or a corrupt read', () => {
