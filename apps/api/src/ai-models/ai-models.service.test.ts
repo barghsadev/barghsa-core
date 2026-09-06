@@ -22,6 +22,7 @@ function mockPool() {
 function makeRow(over: Record<string, unknown> = {}) {
   return {
     id: 'row-1',
+    revision: '1',
     title: 'OpenAI GPT-4o',
     provider_type: 'openai_compatible',
     base_url: 'https://api.openai.com/v1',
@@ -315,6 +316,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       mockQuery.mockResolvedValueOnce({
         rows: [makeRow({ api_token: 'v1:AAAAAAAA:BBBBBBBB:CCCCCCCC' })],
       }); // findRow
+      mockQuery.mockResolvedValueOnce({ rows: [makeRow()] }); // version read
       mockQuery.mockResolvedValueOnce({
         rows: [
           makeRow({
@@ -344,6 +346,7 @@ describe('AiModelsService (T-09.11.01)', () => {
       mockQuery.mockResolvedValueOnce({
         rows: [makeRow({ api_token: secrets.encryptToken('sk-test-token') })],
       }); // findRow
+      mockQuery.mockResolvedValueOnce({ rows: [makeRow()] }); // version read
       mockQuery.mockResolvedValueOnce({
         rows: [
           makeRow({ api_token: secrets.encryptToken('sk-test-token'), last_test_status: 'passed' }),

@@ -1,10 +1,22 @@
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
+import { createServer, type ServerResponse } from 'node:http';
+import { once } from 'node:events';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
+const providerReplies: ServerResponse[] = [];
+const provider = createServer((_request, response) => {
+  providerReplies.push(response);
+});
+let providerBase: string;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  provider.listen(0, '127.0.0.1');
+  await once(provider, 'listening');
+  const address = provider.address();
+  if (!address || typeof address === 'string') throw new Error('Missing local provider port');
+  providerBase = `http://127.0.0.1:${address.port}/v1`;
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 10, '127.0.0.1');
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ('test-ai-model','Jobs','Test role','["admin:ai:models","admin:ai:models"]'),('test-ai-model-view','View jobs','Test role','["admin:ai:models"]')`
   );
@@ -33,6 +45,9 @@ beforeAll(async () => {
   }
 }, 40000);
 afterAll(async () => {
+  for (const response of providerReplies) response.destroy();
+  provider.closeAllConnections();
+  await new Promise<void>((resolve) => provider.close(() => resolve()));
   await http?.close();
 }, 15000);
 const path = '/api/admin/ai-models';
@@ -200,5 +215,100 @@ it('preserves models referenced by an agent and records no deletion audit', asyn
     ).toHaveLength(0);
   } finally {
     await http.pool.query('DELETE FROM ai_agents WHERE id=$1', [agent]);
+  }
+});
+
+it.each(['edit', 'delete', 'revoke', 'audit failure', 'success'] as const)(
+  'binds connection results to current model and authority: %s',
+  async (action) => {
+    const id = await seed();
+    await http.pool.query('UPDATE ai_models SET base_url=$1 WHERE id=$2', [providerBase, id]);
+    const count = providerReplies.length;
+    let pending: Promise<Response> | undefined;
+    try {
+      pending = request(`/${id}/test`, 'POST');
+      await expect.poll(() => providerReplies.length).toBe(count + 1);
+      // The slow provider must not keep a database transaction open.
+      expect(
+        (
+          await http.pool.query(
+            "SELECT pid FROM pg_stat_activity WHERE datname=current_database() AND state='idle in transaction'"
+          )
+        ).rows
+      ).toHaveLength(0);
+      if (action === 'edit') {
+        // Deliberately preserve updated_at: version checks must not lose precision.
+        await http.pool.query("UPDATE ai_models SET model_name='new-model' WHERE id=$1", [id]);
+      } else if (action === 'delete') {
+        await http.pool.query('DELETE FROM ai_models WHERE id=$1', [id]);
+      } else if (action === 'revoke') {
+        await http.pool.query("DELETE FROM user_roles WHERE user_id='operator'");
+      } else if (action === 'audit failure') {
+        await http.pool.query(
+          "CREATE OR REPLACE FUNCTION reject_ai_model_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test AI audit failure'; END $$; CREATE TRIGGER reject_ai_model_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event LIKE 'ai_model_%') EXECUTE FUNCTION reject_ai_model_audit()"
+        );
+      }
+      providerReplies[count]!.writeHead(200, { 'content-type': 'application/json' });
+      providerReplies[count]!.end(
+        JSON.stringify({ choices: [{ message: { content: 'local pong' } }] })
+      );
+      const response = await pending;
+      expect(response.status).toBe(
+        { edit: 409, delete: 404, revoke: 403, 'audit failure': 500, success: 200 }[action]
+      );
+      const rows = (
+        await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])
+      ).rows;
+      expect(rows).toEqual(
+        action === 'delete'
+          ? []
+          : [{ last_test_status: action === 'success' ? 'passed' : 'pending' }]
+      );
+      expect(
+        (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+      ).toHaveLength(action === 'success' ? 1 : 0);
+      if (action === 'success')
+        expect(await response.json()).toMatchObject({
+          test: { ok: true, responsePreview: 'local pong' },
+        });
+    } finally {
+      providerReplies[count]?.end();
+      await pending;
+      if (action === 'audit failure')
+        await http.pool.query('DROP TRIGGER IF EXISTS reject_ai_model_audit ON audit_log');
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES ('operator','test-ai-model') ON CONFLICT DO NOTHING"
+      );
+    }
+  }
+);
+
+it('does not overwrite a completed competing test', async () => {
+  const id = await seed();
+  await http.pool.query('UPDATE ai_models SET base_url=$1 WHERE id=$2', [providerBase, id]);
+  const count = providerReplies.length;
+  const first = request(`/${id}/test`, 'POST');
+  let second: Promise<Response> | undefined;
+  try {
+    await expect.poll(() => providerReplies.length).toBe(count + 1);
+    second = request(`/${id}/test`, 'POST');
+    await expect.poll(() => providerReplies.length).toBe(count + 2);
+    providerReplies[count + 1]!.end(
+      JSON.stringify({ choices: [{ message: { content: 'newer result' } }] })
+    );
+    expect((await second).status).toBe(200);
+    providerReplies[count]!.writeHead(500);
+    providerReplies[count]!.end('{}');
+    expect((await first).status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT last_test_status FROM ai_models WHERE id=$1', [id])).rows
+    ).toEqual([{ last_test_status: 'passed' }]);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='ai_model_tested'")).rows
+    ).toHaveLength(1);
+  } finally {
+    providerReplies[count]?.end();
+    providerReplies[count + 1]?.end();
+    await Promise.all([first, second]);
   }
 });

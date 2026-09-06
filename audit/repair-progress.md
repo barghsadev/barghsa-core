@@ -1205,3 +1205,9 @@ Review and validation: all 20 focused service and production-migrated HTTP check
 Connection testing now limits streamed provider bodies to 64 KiB and cancels oversized responses. It removes secrets before shortening previews and provider errors, fixing partial token exposure at the 300-character boundary. Base URLs containing credentials, query strings or fragments are rejected before credentials are sent.
 
 Review and validation: all 27 tester checks pass, including cutoff-crossing tokens in success/error responses, cancellation of an oversized stream and early URL rejection. Root types, lint and whitespace checks pass. Tests use injected clients or a mocked fetch, with no provider calls. DNS pinning, concurrent-test result binding, worker execution and the editor remain open.
+
+### Bind AI test results to the tested row version (F04/F17)
+
+Connection testing now checks current staff authority before reading credentials and again when saving a result. The network request holds no database connection or lock. Result persistence locks the model and compares its PostgreSQL tuple version, rejecting intervening edits or competing completed tests even when timestamps are identical. Deletion returns 404; permission loss returns 403. Results and audit entries commit together. Undecryptable tokens still fail without an unauthenticated provider request.
+
+Review and validation: 26 focused service and production-migrated HTTP checks pass. A local fake provider pauses replies while tests edit/delete the model, revoke authority, fail the final audit, or complete a competing request. Stale results never overwrite the current state, audit failures roll back, and slow replies leave no idle transaction. Root types, lint and whitespace checks pass. The shared HTTP fixture allows an explicit test-only provider host and clears inherited allow-list values by default. This repairs the existing synchronous path; worker execution remains open.

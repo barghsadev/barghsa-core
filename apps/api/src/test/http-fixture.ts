@@ -9,7 +9,8 @@ export async function startHttpFixture(
   testDatabaseUrl: string,
   localStorageEndpoint?: string,
   trustedProxyAddresses = '',
-  poolMax = 10
+  poolMax = 10,
+  aiModelAllowedHosts = ''
 ) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
@@ -63,6 +64,7 @@ export async function startHttpFixture(
         AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
         STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
         AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
+        AI_MODEL_BASE_URL_ALLOWLIST: aiModelAllowedHosts,
         REDIS_URL: '',
         REDIS_HOST: '',
         S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '',

@@ -8,7 +8,6 @@ import {
   AiModelTesterService,
   AI_MODEL_PROVIDER_TYPES,
   type AiModelProviderType,
-  type AiModelTestInput,
   type AiModelTestResult,
 } from './ai-model-tester.service.js';
 
@@ -273,82 +272,76 @@ export class AiModelsService {
    * the outcome, and return the refreshed model + safe result.
    */
   async test(id: string, actorUserId: string, ip: string): Promise<TestAiModelResult> {
-    const existing = await this.findRow(id);
-    if (!existing) throw this.notFound(id);
+    const existing = await this.withTransaction(actorUserId, async (client) => {
+      const row = await this.findRow(id, client);
+      if (!row) throw this.notFound(id);
+      return row;
+    });
 
-    const apiToken =
-      existing.api_token === null
-        ? null
-        : (() => {
-            try {
-              return this.secrets.decryptToken(existing.api_token);
-            } catch (error) {
-              this.logger.warn(
-                `AI model test skipped (token undecryptable): id=${id} — ${String(error)}`
-              );
-              // Do NOT ping unauthenticated: an undecryptable stored token is
-              // a key-management problem, not a provider reachability one.
-              return undefined;
-            }
-          })();
+    let apiToken: string | null | undefined;
+    try {
+      apiToken = existing.api_token === null ? null : this.secrets.decryptToken(existing.api_token);
+    } catch {
+      this.logger.warn(`AI model test skipped (token undecryptable): id=${id}`);
+    }
+    // No database locks or pool connections are held during the network call.
+    const result: AiModelTestResult =
+      apiToken === undefined
+        ? {
+            ok: false,
+            error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
+            latencyMs: 0,
+          }
+        : await this.tester.test({
+            providerType: existing.provider_type,
+            baseUrl: existing.base_url,
+            modelName: existing.model_name,
+            apiToken,
+          });
 
-    if (apiToken === undefined) {
-      const result: AiModelTestResult = {
-        ok: false,
-        error: 'Stored API token could not be decrypted (check AI_MODEL_ENCRYPTION_KEY)',
-        latencyMs: 0,
-      };
+    return this.withTransaction(actorUserId, async (client) => {
+      const current = await this.findRow(id, client);
+      if (!current) throw this.notFound(id);
+      // PostgreSQL's tuple transaction ID also detects edits with identical
+      // timestamps and competing tests. Never attach an old result to a new row.
+      if (current.revision !== existing.revision) {
+        throw new HttpException(
+          {
+            statusCode: 409,
+            error: 'AI_MODEL_CHANGED',
+            message: 'Model changed during testing; run the test again',
+          },
+          409
+        );
+      }
       const now = new Date();
-      const updated = await getDbPool().query<AiModelRow>(
+      const updated = await client.query<AiModelRow>(
         `UPDATE ai_models
             SET last_tested_at = $1,
-                last_test_status = 'failed',
-                last_test_error = $2,
+                last_test_status = $2,
+                last_test_error = $3,
                 updated_at = $1
-          WHERE id = $3
+          WHERE id = $4
           RETURNING id, title, provider_type, base_url, model_name, api_token,
                     last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
-        [now, result.error, id]
+        [now, result.ok ? 'passed' : 'failed', result.error ?? null, id]
       );
-      const row = updated.rows[0] ?? existing;
-      await this.recordAudit('ai_model_tested', row, actorUserId, ip, {
-        ok: false,
-        latencyMs: 0,
-        error: result.error,
-      });
+      const row = updated.rows[0];
+      if (!row) throw this.notFound(id);
+      await this.recordAudit(
+        'ai_model_tested',
+        row,
+        actorUserId,
+        ip,
+        {
+          ok: result.ok,
+          latencyMs: result.latencyMs,
+          error: result.error ?? null,
+        },
+        client
+      );
       return { model: this.toDto(row), test: result };
-    }
-
-    const input: AiModelTestInput = {
-      providerType: existing.provider_type,
-      baseUrl: existing.base_url,
-      modelName: existing.model_name,
-      apiToken,
-    };
-
-    const result = await this.tester.test(input);
-
-    const now = new Date();
-    const updated = await getDbPool().query<AiModelRow>(
-      `UPDATE ai_models
-          SET last_tested_at = $1,
-              last_test_status = $2,
-              last_test_error = $3,
-              updated_at = $1
-        WHERE id = $4
-        RETURNING id, title, provider_type, base_url, model_name, api_token,
-                  last_tested_at, last_test_status, last_test_error, created_at, updated_at`,
-      [now, result.ok ? 'passed' : 'failed', result.error ?? null, id]
-    );
-
-    const row = updated.rows[0] ?? existing;
-    await this.recordAudit('ai_model_tested', row, actorUserId, ip, {
-      ok: result.ok,
-      latencyMs: result.latencyMs,
-      error: result.error ?? null,
     });
-    this.logger.log(`AI model tested: id=${id}, ok=${result.ok}, latencyMs=${result.latencyMs}`);
-    return { model: this.toDto(row), test: result };
   }
 
   // ─── Helpers ────────────────────────────────────────────────────────────
@@ -380,9 +373,12 @@ export class AiModelsService {
     return this.secrets.encryptToken(trimmed);
   }
 
-  private async findRow(id: string, client?: PoolClient): Promise<AiModelRow | null> {
-    const result = await (client ?? getDbPool()).query<AiModelRow>(
-      `SELECT id, title, provider_type, base_url, model_name, api_token,
+  private async findRow(
+    id: string,
+    client?: PoolClient
+  ): Promise<(AiModelRow & { revision: string }) | null> {
+    const result = await (client ?? getDbPool()).query<AiModelRow & { revision: string }>(
+      `SELECT xmin::text AS revision, id, title, provider_type, base_url, model_name, api_token,
               last_tested_at, last_test_status, last_test_error, created_at, updated_at
          FROM ai_models
         WHERE id = $1${client ? ' FOR UPDATE' : ''}`,
