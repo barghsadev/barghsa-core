@@ -118,7 +118,7 @@ const ESCALATION_DOMAINS: readonly EscalationDomainSpec[] = [
   {
     serviceType: 'verification_case',
     openStatuses: CASE_OPEN_STATUSES,
-    findDueSql: (column) => `SELECT l.id AS ledger_id, l.item_id, vc.created_by AS responsible_user_id
+    findDueSql: (column) => `SELECT l.id AS ledger_id, l.item_id, COALESCE(vc.assigned_to,vc.created_by) AS responsible_user_id
         FROM service_breach_alerts l
         JOIN verification_cases vc ON vc.id = l.item_id
         WHERE l.service_type = $1

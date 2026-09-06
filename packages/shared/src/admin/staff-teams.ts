@@ -3,7 +3,7 @@
  * T-09.08.02).
  *
  * Single source of truth for the admin-configurable staff teams and the
- * auto-assignment rules the admin API must enforce and the future worker
+ * auto-assignment rules the admin API must enforce and the transactional API
  * assignment engine (round-robin / by expertise / by load) must consume.
  *
  * Semantics:
@@ -19,8 +19,9 @@
  *   The strategy is stored anyway (so an admin can pre-configure it) but is
  *   meaningless until a team is chosen.
  *
- * Assignment is a worker concern (T-09.08.02 engine slice, following this
- * configuration slice): this module only defines and validates the config.
+ * New tickets/corrections consume these rules in their creation transaction.
+ * Round-robin positions commit with the new item. Expertise matches the team
+ * skill tags, then uses the least-loaded eligible member of that team.
  *
  * @module admin
  */
@@ -149,7 +150,7 @@ export function validateStaffAssignmentRules(
  * Also used as the corruption-tolerant read-path normalizer: every work
  * type independently degrades to the manual default when its stored rule is
  * malformed, so a corrupt row can never crash the admin read path or the
- * future worker assignment engine — the worst a corrupt row can do is
+ * assignment engine — the worst a corrupt row can do is
  * disable auto-assignment for one work type.
  */
 export function toStaffAssignmentRules(input: unknown): StaffAssignmentRules {

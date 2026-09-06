@@ -4,6 +4,9 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  "crm.corrections.assignee": "کارشناس مسئول",
+  "crm.corrections.assignedNotice": "پرونده اصلاح هویت به شما تخصیص یافت",
+  "crm.corrections.assignedBody": "پرونده و مدارک آن را در صف اصلاح هویت بررسی کنید.",
   "tickets.team": "تیم مسئول",
   "tickets.directAssignment": "تخصیص مستقیم به کارشناس",
   "tickets.target": "زمان هدف پاسخ داخلی",
@@ -1453,6 +1456,9 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  "crm.corrections.assignee": "Assigned reviewer",
+  "crm.corrections.assignedNotice": "An identity correction was assigned to you",
+  "crm.corrections.assignedBody": "Review the case and its evidence in the identity correction queue.",
   "tickets.team": "Responsible team",
   "tickets.directAssignment": "Assign staff directly",
   "tickets.target": "Internal response target",

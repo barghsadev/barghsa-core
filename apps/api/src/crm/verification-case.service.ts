@@ -1,3 +1,6 @@
+import { t } from '@barghsa/i18n'
+import { NotificationsService } from '../notifications/notifications.service.js'
+import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js'
 import { VerificationEvidenceService } from './verification-evidence.service.js'
 import { validateNationalId, validateLegalNationalIdentifier } from '@barghsa/shared/validation'
 import { Injectable, Logger, BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common'
@@ -32,6 +35,8 @@ export interface VerificationCaseListItem {
   requestedValue: string
   reason: string
   status: string
+  assignedTo?: string | null
+  assignedName?: string | null
   createdBy: string
   createdAt: string
   updatedAt: string
@@ -48,6 +53,8 @@ export interface VerificationCaseDetail {
   evidenceDownloadUrls?: string[]
   reason: string
   status: string
+  assignedTo?: string | null
+  assignedName?: string | null
   createdBy: string
   createdAt: string
   reviewedBy: string | null
@@ -81,7 +88,7 @@ const FIELD_LABELS: Record<string, string> = {
 
 @Injectable()
 export class VerificationCaseService {
-  constructor(private readonly evidence: VerificationEvidenceService = new VerificationEvidenceService()) {}
+  constructor(private readonly evidence: VerificationEvidenceService = new VerificationEvidenceService(), private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService(), private readonly notifications: NotificationsService = new NotificationsService()) {}
   private readonly logger = new Logger(VerificationCaseService.name)
 
   /**
@@ -120,10 +127,15 @@ export class VerificationCaseService {
       if (pending.rows.length) throw new ConflictException('An unresolved correction already exists for this field')
       const evidenceKeys = await this.evidence.seal(client, dto.evidenceUrls ?? [], actorUserId, profileId)
       const id = uuidv7(), now = new Date().toISOString()
-      await client.query(`INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9)`, [id,profileId,dto.fieldName,currentValue,dto.requestedValue.trim(),JSON.stringify(evidenceKeys),dto.reason.trim(),actorUserId,now])
+      const assignment = await this.assignmentService.choose(client,'verification_case',id,actorUserId,['identity',profile.profile_type === 'LEGAL' ? 'legal' : 'individual'])
+      await client.query(`INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at,assigned_to,assigned_team_id)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9,$10,$11)`, [id,profileId,dto.fieldName,currentValue,dto.requestedValue.trim(),JSON.stringify(evidenceKeys),dto.reason.trim(),actorUserId,now,assignment?.userId ?? null,assignment?.teamId ?? null])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at) VALUES ($1,$2,'verification_case_created',$3::jsonb,$4,$5,$6)`,
         [uuidv7(),actorUserId,JSON.stringify({caseId:id,profileId,fieldName:dto.fieldName,currentValue,requestedValue:dto.requestedValue.trim(),reason:dto.reason.trim()}),uuidv7(),ip,now])
+      if (assignment) {
+        const localizedContent = {fa:{title:t('crm.corrections.assignedNotice','fa'),body:t('crm.corrections.assignedBody','fa')},en:{title:t('crm.corrections.assignedNotice','en'),body:t('crm.corrections.assignedBody','en')}}
+        await this.notifications.create({userId:assignment.userId,type:'general',title:localizedContent.en.title,body:localizedContent.en.body,localizedContent,link:`/admin/crm/corrections?profileId=${profileId}`},client)
+      }
       await client.query('COMMIT')
       return { success:true,id,status:'Open',createdAt:now }
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error }
@@ -169,7 +181,8 @@ export class VerificationCaseService {
     const total = (countResult.rows[0] as Record<string, unknown>).cnt as number
 
     const dataResult = await pool.query(
-      `SELECT id, profile_id, field_name, requested_value, reason, status, created_by,
+      `SELECT id, profile_id, field_name, requested_value, reason, status, created_by, assigned_to,
+              (SELECT username FROM users WHERE user_id=verification_cases.assigned_to) AS assigned_name,
               created_at AT TIME ZONE 'UTC' AS created_at,
               updated_at AT TIME ZONE 'UTC' AS updated_at
        FROM verification_cases
@@ -187,6 +200,8 @@ export class VerificationCaseService {
         requestedValue: row.requested_value as string,
         reason: row.reason as string,
         status: row.status as string,
+        assignedTo: (row.assigned_to as string) ?? null,
+        assignedName: (row.assigned_name as string) ?? null,
         createdBy: row.created_by as string,
         createdAt: (row.created_at as string) ?? '',
         updatedAt: (row.updated_at as string) ?? '',
@@ -207,6 +222,7 @@ export class VerificationCaseService {
     const result = await pool.query(
       `SELECT v.id, v.profile_id, p.profile_type, v.field_name, v.current_value,
               v.requested_value, v.evidence_urls, v.reason, v.status,
+              v.assigned_to,(SELECT username FROM users WHERE user_id=v.assigned_to) AS assigned_name,
               v.created_by, v.created_at AT TIME ZONE 'UTC' AS created_at,
               v.reviewed_by, v.reviewed_at AT TIME ZONE 'UTC' AS reviewed_at,
               v.reviewer_notes,
@@ -240,6 +256,8 @@ export class VerificationCaseService {
       evidenceDownloadUrls: await this.evidence.downloadUrls(evidenceUrls),
       reason: row.reason as string,
       status: row.status as string,
+      assignedTo: (row.assigned_to as string) ?? null,
+      assignedName: (row.assigned_name as string) ?? null,
       createdBy: row.created_by as string,
       createdAt: (row.created_at as string) ?? '',
       reviewedBy: (row.reviewed_by as string | null) ?? null,

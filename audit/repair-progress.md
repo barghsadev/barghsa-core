@@ -518,3 +518,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Assignment-rule writes take a transaction advisory lock before the first row exists, so concurrent initial saves preserve the actual previous version in their audits. Referenced active teams stay locked through the save.
 - Review: 35 focused admin checks passed, including four new real HTTP/PostgreSQL scenarios for permissions/step-up, membership validation, five concurrent first writes, and audit-failure rollback/retry. API typecheck and whitespace check passed.
 - The team/rule UI and automatic assignment engine remain next under F17.
+
+### F17.2 — Automatic assignment for new tickets and correction cases
+
+- New work consumes the saved rules in its creation transaction. Round-robin positions are durable; load routing counts open tickets/cases; expertise matches configured team skill tags and then selects the least-loaded eligible member. Missing/invalid rules, unavailable teams, and no eligible members leave work for manual assignment.
+- Team/account locks serialize concurrent selections and eligibility changes. Correction creators cannot receive their own case. Assignment, cursor, audit and private notification changes roll back together. Existing work is not reassigned when configuration changes.
+- Migration 0100 adds correction assignee/team fields, durable cursors and open-assignment indexes. Correction details show the reviewer; overdue scanners prefer that reviewer to the creator.
+- Review: all 2,496 API tests passed (193 files), including concurrent round-robin balance, eligibility fallback, audit rollback/retry and correction self-review exclusion. Three correction browser checks, 24 worker target tests, populated migration/rerun and workspace typechecks passed.
+- Follow-up: overdue scanners still omit staff without a default customer profile. Fix recipient handling next; team/rule administration screens and the rest of F17 remain open.

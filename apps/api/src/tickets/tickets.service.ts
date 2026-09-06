@@ -1,4 +1,5 @@
 import { SERVICE_RESPONSE_TARGETS_CONFIG_KEY, toServiceResponseTargets } from '@barghsa/shared/admin'
+import { StaffAssignmentService } from '../staff-assignment/staff-assignment.service.js'
 import { t } from '@barghsa/i18n'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import type { PoolClient } from 'pg'
@@ -102,6 +103,7 @@ export class TicketsService {
   constructor(
     private readonly attachmentService: TicketAttachmentsService = new TicketAttachmentsService(),
     private readonly notifications: NotificationsService = new NotificationsService(),
+    private readonly assignmentService: StaffAssignmentService = new StaffAssignmentService(),
   ) {}
 
   private readonly logger = new Logger(TicketsService.name)
@@ -207,9 +209,11 @@ export class TicketsService {
         if (!related.rows.length) throw new HttpException('Related record not found in this profile', 404)
       }
       const attachments = data.attachments?.length ? await this.attachmentService.seal(client,data.attachments,userId,data.profileId ?? null) : []
-      const result = await client.query(`INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,'open',$8::jsonb) RETURNING *`,
-        [userId,data.subject,data.body,data.profileId ?? null,data.relatedEntityType ?? null,data.relatedEntityId ?? null,data.priority,JSON.stringify(attachments)])
+      const id = randomUUID()
+      const assignment = await this.assignmentService.choose(client,'ticket',id,userId,[data.relatedEntityType ?? 'support'])
+      const result = await client.query(`INSERT INTO tickets(user_id,subject,body,profile_id,related_entity_type,related_entity_id,priority,status,attachments,id,assigned_to,assigned_team_id)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,CASE WHEN $10::text IS NULL THEN 'open' ELSE 'in_progress' END,$8::jsonb,$9,$10,$11) RETURNING *`,
+        [userId,data.subject,data.body,data.profileId ?? null,data.relatedEntityType ?? null,data.relatedEntityId ?? null,data.priority,JSON.stringify(attachments),id,assignment?.userId ?? null,assignment?.teamId ?? null])
       const ticket = mapRow(result.rows[0])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata) VALUES ($1,$2,'ticket_created',$3::jsonb)`,
         [randomUUID(),userId,JSON.stringify({ ticketId: ticket.id,profileId: ticket.profileId,attachmentCount: attachments.length })])

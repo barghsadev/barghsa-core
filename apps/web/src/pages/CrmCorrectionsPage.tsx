@@ -6,7 +6,7 @@ import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialo
 import { useLocale } from '../hooks/useLocale.js'
 import { uploadVerificationEvidence, isAllowedInvoiceReceiptFile } from '../lib/invoice-bank-receipt-upload.js'
 type Status = 'Open' | 'Under Review' | 'Approved' | 'Rejected'
-interface Case { id:string; profileId:string; fieldName:string; requestedValue:string; reason:string; status:Status; createdBy:string }
+interface Case { assignedName?:string|null; id:string; profileId:string; fieldName:string; requestedValue:string; reason:string; status:Status; createdBy:string }
 interface Detail extends Case { currentValue:string|null; evidenceUrls:string[]; evidenceDownloadUrls?:string[]; reviewerNotes:string|null }
 interface Queue { cases:Case[]; total:number; viewer:{userId:string;canCreate:boolean;canReview:boolean} }
 export default function CrmCorrectionsPage() {
@@ -88,7 +88,7 @@ function Corrections({profileId}:{profileId:string|undefined}) {
     {detailLoading&&<p role="status">{t('crm.list.loading',locale)}</p>}
     {detail&&<article className="space-y-3 rounded border bg-white p-4 break-words">
       <h2 className="font-semibold">{t(`crm.corrections.${detail.fieldName}`,locale)}</h2>
-      <dl className="grid gap-3 sm:grid-cols-2">{[['profile',detail.profileId],['creator',detail.createdBy],['currentValue',detail.currentValue??'—'],['newValue',detail.requestedValue],['reason',detail.reason],['status',t(`crm.corrections.${detail.status}`,locale)]].map(([key,value])=><div key={key}><dt className="text-sm text-gray-500">{t(`crm.corrections.${key}`,locale)}</dt><dd className="whitespace-pre-wrap">{value}</dd></div>)}</dl>
+      <dl className="grid gap-3 sm:grid-cols-2">{[['profile',detail.profileId],['creator',detail.createdBy],['assignee',detail.assignedName??t('tickets.unassigned',locale)],['currentValue',detail.currentValue??'—'],['newValue',detail.requestedValue],['reason',detail.reason],['status',t(`crm.corrections.${detail.status}`,locale)]].map(([key,value])=><div key={key}><dt className="text-sm text-gray-500">{t(`crm.corrections.${key}`,locale)}</dt><dd className="whitespace-pre-wrap">{value}</dd></div>)}</dl>
       {evidence.map((url,index)=><a key={url} href={url} target="_blank" rel="noopener noreferrer" className="block text-blue-700 underline">{t('crm.corrections.evidence',locale)} {index+1}</a>)}
       {!hasEvidence&&<p role="status">{t('crm.corrections.legacy',locale)}</p>}
       {detail.reviewerNotes&&<p>{detail.reviewerNotes}</p>}

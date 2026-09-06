@@ -141,6 +141,13 @@
       "when": 1791331200002,
       "tag": "0099_ticket_team",
       "breakpoints": true
+    },
+    {
+      "idx": 100,
+      "version": "7",
+      "when": 1791331200003,
+      "tag": "0100_staff_assignment",
+      "breakpoints": true
     }
   ]
 }

@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
-import { uuid, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, timestamp, index } from 'drizzle-orm/pg-core'
+import { staffTeams } from './staff-teams.js'
 import { profiles } from './profiles.js'
 import { users } from './users.js'
 
@@ -52,6 +53,9 @@ export const verificationCases = pgTable(
       .notNull()
       .references(() => users.userId, { onDelete: 'restrict' }),
 
+    assignedTo: text('assigned_to').references(() => users.userId, {onDelete:'set null'}),
+    assignedTeamId: uuid('assigned_team_id').references(() => staffTeams.id, {onDelete:'set null'}),
+
     /** The staff user who reviewed the case (reviewer). Null until reviewed. */
     reviewedBy: text('reviewed_by')
       .references(() => users.userId, { onDelete: 'restrict' }),
@@ -72,6 +76,7 @@ export const verificationCases = pgTable(
       .defaultNow()
       .notNull(),
   },
+  table => [index('verification_cases_assigned_open_idx').on(table.assignedTo).where(sql`${table.status} IN ('Open','Under Review')`)],
 )
 
 /**

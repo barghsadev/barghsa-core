@@ -88,6 +88,7 @@ export const tickets = pgTable(
   },
   (table) => [
     check('tickets_attachments_array', sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`),
+    index('tickets_assigned_open_idx').on(table.assignedTo).where(sql`${table.status} NOT IN ('resolved','closed')`),
     index('tickets_assigned_team_idx').on(table.assignedTeamId).where(sql`${table.assignedTeamId} IS NOT NULL`),
   ],
 )

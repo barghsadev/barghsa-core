@@ -1,4 +1,5 @@
-import { text, boolean, jsonb, uuid } from 'drizzle-orm/pg-core'
+import { text, boolean, jsonb, uuid, pgTable, timestamp, primaryKey, check } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
 import { createTable } from '../base-table.js'
 import { users } from './users.js'
 
@@ -7,7 +8,7 @@ import { users } from './users.js'
  *
  * One row per admin-configured staff team. Teams group staff members
  * (through {@link staffTeamMembers}) and optionally carry skill tags, which
- * the future worker assignment engine uses to implement the
+ * the API assignment engine uses to implement the
  * 'expertise'/'load' strategies (T-09.08.02). Assignment rules themselves
  * live in `app_config` under `admin.staff_assignment_rules` (see
  * @barghsa/shared/admin staff-teams.ts), like the other versioned admin
@@ -62,3 +63,11 @@ export const staffTeamMembers = createTable('staff_team_members', {
     .notNull()
     .references(() => users.userId, { onDelete: 'cascade' }),
 })
+
+/** Durable round-robin position, committed with the new work item. */
+export const staffAssignmentCursors = pgTable('staff_assignment_cursors', {
+  teamId: uuid('team_id').notNull().references(() => staffTeams.id, {onDelete:'cascade'}),
+  workType: text('work_type').notNull(),
+  lastUserId: text('last_user_id').references(() => users.userId, {onDelete:'set null'}),
+  updatedAt: timestamp('updated_at',{withTimezone:true,mode:'date'}).notNull().defaultNow(),
+}, table => [primaryKey({columns:[table.teamId,table.workType]}),check('staff_assignment_cursors_work_type_check',sql`${table.workType} IN ('ticket','verification_case')`)])

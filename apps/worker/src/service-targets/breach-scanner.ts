@@ -133,7 +133,7 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
   {
     serviceType: 'verification_case',
     openStatuses: CASE_OPEN_STATUSES,
-    findBreachedSql: `SELECT id, created_by AS recipient_user_id
+    findBreachedSql: `SELECT id, COALESCE(assigned_to,created_by) AS recipient_user_id
         FROM verification_cases
         WHERE status = ANY($1::text[])
           AND updated_at <= $2
@@ -147,7 +147,7 @@ const BREACH_DOMAINS: readonly BreachDomainSpec[] = [
               AND updated_at <= $3
           )`,
     clearSql: `DELETE FROM service_breach_alerts WHERE service_type = $1`,
-    // Cases are always created by a staff user (created_by is NOT NULL).
+    // Unassigned cases stay with their creator until a reviewer is selected.
     fallback: 'none',
   },
 ]

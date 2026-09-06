@@ -119,3 +119,26 @@ it('refuses another user’s evidence and refuses approval of legacy unsealed ev
   expect((await review(id,'Approved')).status).toBe(409)
   expect((await http.pool.query('SELECT first_name FROM profiles WHERE id=$1',[target])).rows[0].first_name).toBe('Original')
 })
+it('automatically assigns a correction to an eligible reviewer other than its creator and records a private notice',async()=>{
+  const team=randomUUID()
+  await http.pool.query("INSERT INTO staff_teams(id,name) VALUES ($1,'Identity reviewers')",[team])
+  for(const user of ['creator','reviewer'])await http.pool.query('INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,$2)',[team,user])
+  await http.pool.query(`INSERT INTO app_config(key,value) VALUES ('admin.staff_assignment_rules',$1::jsonb)
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`,[JSON.stringify({verification_case:{teamId:team,strategy:'round_robin'}})])
+  const target=await profile(),response=await create(target)
+  expect(response.status,http.logs()).toBe(201)
+  const {id}=await response.json() as {id:string}
+  expect((await http.pool.query('SELECT assigned_to,assigned_team_id FROM verification_cases WHERE id=$1',[id])).rows[0]).toEqual({assigned_to:'reviewer',assigned_team_id:team})
+  const detail=await fetch(`${http.base}/api/crm/verification-cases/${id}`,{headers:headers.reviewer!})
+  expect(await detail.json()).toMatchObject({assignedTo:'reviewer',assignedName:'reviewer@example.test'})
+  const notices=(await http.pool.query("SELECT recipient_user_id,link_route FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",[target])).rows
+  expect(notices).toEqual([{recipient_user_id:'reviewer',link_route:`/admin/crm/corrections?profileId=${target}`}])
+  expect((await review(id,'Under Review','creator')).status).toBe(403)
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='reviewer'")
+  try{
+    const fallback=await create(await profile())
+    expect(fallback.status).toBe(201)
+    const data=await fallback.json() as {id:string}
+    expect((await http.pool.query('SELECT assigned_to FROM verification_cases WHERE id=$1',[data.id])).rows[0].assigned_to).toBeNull()
+  }finally{await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='reviewer'")}
+})
