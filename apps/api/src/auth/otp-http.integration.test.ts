@@ -113,3 +113,42 @@ it('issues account-bound contact and password-reset challenges through their act
     { purpose: 'password_reset', user_id: 'otp-user', destination: 'otp-old@example.test' },
   ])
 }, 10000)
+
+
+it('rolls back OTP consumption and partial session writes when refresh-token insertion fails', async () => {
+  const id = await challenge('otp-old@example.test', 'login')
+  await http.pool.query(`CREATE FUNCTION reject_test_refresh() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION 'Injected refresh write failure'; END $$;
+    CREATE TRIGGER reject_test_refresh BEFORE INSERT ON refresh_tokens FOR EACH ROW EXECUTE FUNCTION reject_test_refresh();`)
+  const body = { challengeId: id, otp: '123456' }
+  expect((await post('login/verify', body)).status).toBe(500)
+  expect((await http.pool.query('SELECT consumed_at FROM otp_challenges WHERE challenge_id=$1', [id])).rows[0].consumed_at).toBeNull()
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM sessions WHERE user_id='otp-user'")).rows[0].count).toBe(1)
+  expect((await http.pool.query("SELECT last_login_at FROM users WHERE user_id='otp-user'")).rows[0].last_login_at).toBeNull()
+  await http.pool.query('DROP TRIGGER reject_test_refresh ON refresh_tokens')
+  const results = await Promise.all([post('login/verify', body), post('login/verify', body)])
+  expect(results.map(r => r.status).sort()).toEqual([200,409])
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM sessions WHERE user_id='otp-user'")).rows[0].count).toBe(2)
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM refresh_tokens WHERE user_id='otp-user'")).rows[0].count).toBe(1)
+}, 15000)
+
+it('rolls back registration, consent and OTP when session creation fails, then retries once', async () => {
+  const terms = randomUUID()
+  await http.pool.query(`INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,is_active,published_at)
+    VALUES ($1,'atomic-v1','قوانین','Terms','published',true,NOW())`, [terms])
+  const id = await challenge('atomic-register@example.test','registration',null)
+  await http.pool.query('UPDATE otp_challenges SET tos_version_id=$1 WHERE challenge_id=$2', [terms,id])
+  await http.pool.query(`CREATE FUNCTION reject_test_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN RAISE EXCEPTION 'Injected session write failure'; END $$;
+    CREATE TRIGGER reject_test_session BEFORE INSERT ON sessions FOR EACH ROW EXECUTE FUNCTION reject_test_session();`)
+  const body = { challengeId: id, otp: '123456' }
+  expect((await post('register/verify', body)).status).toBe(500)
+  expect((await http.pool.query('SELECT consumed_at FROM otp_challenges WHERE challenge_id=$1', [id])).rows[0].consumed_at).toBeNull()
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM users WHERE username='atomic-register@example.test'")).rows[0].count).toBe(0)
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM tos_acceptances WHERE version_id=$1', [terms])).rows[0].count).toBe(0)
+  await http.pool.query('DROP TRIGGER reject_test_session ON sessions')
+  const results = await Promise.all([post('register/verify', body), post('register/verify', body)])
+  expect(results.map(r => r.status).sort()).toEqual([200,409])
+  expect((await http.pool.query("SELECT count(*)::int AS count FROM sessions s JOIN users u ON u.user_id=s.user_id WHERE u.username='atomic-register@example.test'")).rows[0].count).toBe(1)
+  expect((await http.pool.query('SELECT count(*)::int AS count FROM tos_acceptances WHERE version_id=$1', [terms])).rows[0].count).toBe(1)
+}, 15000)

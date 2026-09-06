@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { randomBytes, createHash } from 'node:crypto'
+import type { PoolClient } from 'pg'
 import { v7 as uuidv7 } from 'uuid'
 import { getDbPool } from '@barghsa/db'
 import { ErrorCodes } from '@barghsa/shared/errors'
@@ -72,6 +73,8 @@ export class SessionService {
 
   /**
    * Create a new session for a user.
+   * A supplied client belongs to the caller: it must be in a transaction,
+   * and the caller must commit or roll back and release it.
    *
    * Generates:
    * - An opaque UUIDv7 session identifier (stored in HttpOnly cookie).
@@ -91,6 +94,7 @@ export class SessionService {
     isAdmin: boolean,
     deviceInfo?: DeviceInfo,
     expectedAuthVersion?: number,
+    transactionClient?: PoolClient,
   ): Promise<CreatedSession> {
     const pool = getDbPool()
 
@@ -103,9 +107,9 @@ export class SessionService {
     const expiresAt = new Date(now.getTime() + SESSION_ABSOLUTE_TIMEOUT_MS)
     const idleDeadline = new Date(now.getTime() + SESSION_IDLE_TIMEOUT_MS)
 
-    const client = await pool.connect()
+    const client = transactionClient ?? await pool.connect()
     try {
-      await client.query('BEGIN')
+      if (!transactionClient) await client.query('BEGIN')
       if (expectedAuthVersion !== undefined) {
         const account = await client.query('SELECT auth_version,disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
         if (!Number.isInteger(expectedAuthVersion) || account.rows[0]?.auth_version !== expectedAuthVersion || account.rows[0]?.disabled_at) {
@@ -171,13 +175,13 @@ export class SessionService {
         [tokenId, familyId, refreshTokenHash, userId, sessionId, now],
       )
 
-      await client.query('COMMIT')
+      if (!transactionClient) await client.query('COMMIT')
 
-      this.logger.log(`Session created: ${sessionId} for user ${userId}`)
+      if (!transactionClient) this.logger.log(`Session created: ${sessionId} for user ${userId}`)
 
       return { sessionId, csrfToken, refreshToken, expiresAt }
     } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
+      if (!transactionClient) await client.query('ROLLBACK').catch(() => {})
       if (err instanceof HttpException) throw err
       this.logger.error(`Failed to create session for user ${userId}: ${String(err)}`)
       throw new HttpException(
@@ -185,7 +189,7 @@ export class SessionService {
         500,
       )
     } finally {
-      client.release()
+      if (!transactionClient) client.release()
     }
   }
 

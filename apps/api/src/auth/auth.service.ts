@@ -673,35 +673,15 @@ export class AuthService {
         )
       }
 
-      await client.query('COMMIT')
-    } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      client.release()
-      // Re-throw HttpExceptions as-is
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Login OTP verify failed for challenge ${challengeId}: ${String(err)}`)
-      throw new HttpException(
-        { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
-        500,
-      )
-    }
-    client.release()
-
-    // ── Session creation (outside OTP transaction) ────────────
-    try {
       const session = await this.sessionService.createSession(
         userId,
         false,
         { ip, ...(userAgent ? { userAgent } : {}), ...(deviceFingerprint ? { fingerprint: deviceFingerprint } : {}) },
         authVersion,
+        client,
       )
 
-      // Record last successful login (T-10.01.01) — best-effort.
-      await getDbPool()
-        .query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
-        .catch(() => {
-          // Non-critical — the login already succeeded
-        })
+      await client.query(`UPDATE users SET last_login_at = NOW() WHERE user_id = $1`, [userId])
 
       // 5. Optionally mark device as trusted
       if (trustDevice && deviceFingerprint) {
@@ -709,8 +689,7 @@ export class AuthService {
         const trustExpiresAt = new Date(trustNow.getTime() + 30 * 24 * 60 * 60 * 1000)
         const trustId = uuidv7()
 
-        const pool2 = getDbPool()
-        await pool2.query(
+        await client.query(
           `INSERT INTO device_trusts (id, user_id, device_fingerprint, user_agent_hint, trusted_at, expires_at)
            VALUES ($1, $2, $3, $4, $5, $6)
            ON CONFLICT (user_id, device_fingerprint) DO UPDATE
@@ -718,8 +697,9 @@ export class AuthService {
           [trustId, userId, deviceFingerprint, userAgent ?? null, trustNow, trustExpiresAt],
         )
 
-        this.logger.log(`Device trusted for user ${userId}`)
       }
+
+      await client.query('COMMIT')
 
       this.logger.log(`Login OTP verified: user ${userId} from ${ip}`)
 
@@ -731,12 +711,15 @@ export class AuthService {
         expiresAt: session.expiresAt.toISOString(),
       }
     } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
       if (err instanceof HttpException) throw err
-      this.logger.error(`Login OTP session creation failed for user ${userId}: ${String(err)}`)
+      this.logger.error(`Login OTP transaction failed for challenge ${challengeId}: ${String(err)}`)
       throw new HttpException(
         { statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code },
         500,
       )
+    } finally {
+      client.release()
     }
   }
 
@@ -898,30 +881,15 @@ export class AuthService {
         )
       }
 
-      await client.query('COMMIT')
-    } catch (err) {
-      await client.query('ROLLBACK').catch(() => {})
-      client.release()
-      // Re-throw HttpExceptions as-is
-      if (err instanceof HttpException) throw err
-      this.logger.error(`Failed to create user for challenge ${challengeId}: ${String(err)}`)
-      throw new HttpException(
-        {
-          statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-          error: ErrorCodes.AUTH_REGISTER_FAILED.code,
-        },
-        ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
-      )
-    }
-    client.release()
-
-    // ── Session creation (outside transaction) ────────────
-    try {
       const session = await this.sessionService.createSession(
         userId,
         false,
-        { ip },
+        { ip, ...(userAgent ? { userAgent } : {}) },
+        undefined,
+        client,
       )
+
+      await client.query('COMMIT')
 
       this.logger.log(`User created: ${userId} (${row.destination}) from ${ip}`)
 
@@ -933,6 +901,8 @@ export class AuthService {
         expiresAt: session.expiresAt.toISOString(),
       }
     } catch (err) {
+      await client.query('ROLLBACK').catch(() => {})
+      if (err instanceof HttpException) throw err
       this.logger.error(`Registration session creation failed for user ${userId}: ${String(err)}`)
       throw new HttpException(
         {
@@ -941,6 +911,8 @@ export class AuthService {
         },
         ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
       )
+    } finally {
+      client.release()
     }
   }
 
