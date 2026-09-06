@@ -1582,3 +1582,81 @@ for (const locale of ['en', 'fa']) {
     expect(reads).toBe(3);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering uses the product API contract and retries unavailable products (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({ json: { addresses: [] } })
+    );
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    let reads = 0;
+    await page.route('**/api/products', (route) => {
+      reads++;
+      if (reads === 1) return route.fulfill({ status: 503, json: {} });
+      if (reads === 2) return route.fulfill({ json: [{ id: 'broken', title: null }] });
+      return route.fulfill({
+        json: [
+          {
+            id: 'hardware',
+            type: 'hardware',
+            status: 'active',
+            title: { en: 'Hardware', fa: 'سخت‌افزار' },
+            price: '100',
+          },
+          {
+            id: 'electricity',
+            type: 'electricity',
+            status: 'active',
+            title: { en: 'Green supply', fa: 'برق سبز' },
+            price: '9007199254740993',
+          },
+          {
+            id: 'inactive',
+            type: 'electricity',
+            status: 'inactive',
+            title: { en: 'Inactive', fa: 'غیرفعال' },
+            price: '200',
+          },
+        ],
+      });
+    });
+    await page.goto('/electricity/order');
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const alert = page.getByRole('alert');
+      await expect(alert).toContainText(
+        locale === 'fa' ? 'بارگذاری محصولات برق انجام نشد' : 'Could not load electricity products'
+      );
+      await expect(page.getByRole('radio')).toHaveCount(0);
+      await alert
+        .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+        .click();
+    }
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.getByRole('radio')).toHaveCount(1);
+    await expect(
+      page.getByRole('radio', { name: locale === 'fa' ? /برق سبز/ : /Green supply/ })
+    ).toBeChecked();
+    await expect(
+      page.getByText(
+        new Intl.NumberFormat(locale, {
+          style: 'currency',
+          currency: 'IRR',
+          maximumFractionDigits: 0,
+        }).format(9007199254740993n),
+        { exact: true }
+      )
+    ).toBeVisible();
+    await expect(
+      page.getByText(locale === 'fa' ? 'برق سبز' : 'Green supply', { exact: true })
+    ).toHaveCount(2);
+    expect(reads).toBe(3);
+  });
+}

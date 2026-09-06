@@ -6,7 +6,7 @@ import {
   type FormEvent,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { t } from '@barghsa/i18n';
+import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import type { Locale } from '@barghsa/i18n';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {

@@ -56,6 +56,11 @@
       "types": "./dist/wallet-limit.d.ts",
       "import": "./dist/wallet-limit.js",
       "default": "./dist/wallet-limit.js"
+    },
+    "./wallet-receipts": {
+      "types": "./dist/wallet-receipts.d.ts",
+      "import": "./dist/wallet-receipts.js",
+      "default": "./dist/wallet-receipts.js"
     }
   },
   "scripts": {

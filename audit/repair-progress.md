@@ -1703,3 +1703,9 @@ Corrected the coverage upload paths from a root-only directory to apps/*/coverag
 Review and validation: confirmed the configured output behavior and matched five existing local coverage-final.json reports under the corrected paths. Workflow formatting and whitespace checks pass. Existing reports are path evidence only, not new coverage measurements. This correction does not implement the still-open changed-code/critical-domain threshold policy or claim a remote CI run.
 
 Full browser checkpoint after 64b2260: all 240 Chromium checks passed in 2.6 minutes, including the migrated-API administration flows. All 114 web unit tests also passed. These are regression results, not complete per-task acceptance or operational certification.
+
+### Align ordering with the public product contract (F17/F20)
+
+Ordering now consumes the API's type/status/localized title fields, offers only active electricity products and uses the same localized product name in selection and review. Prices format exact integer strings through BigInt, avoiding precision loss above Number.MAX_SAFE_INTEGER. Failed/malformed product reads clear selection and offer retry; mutation handling requires a currently loaded eligible product.
+
+Review and validation: 20 affected browser checks passed across ordering, wallet settings and navigation, including real response-shaped product fixtures, wrong-domain/inactive filtering, localized selection/review names and exact 9007199254740993 IRR display. All 17 receipt/wallet unit checks passed. Root build, types, lint and bundle checks passed. Type checking caught a remaining legacy titleFa read in the review summary, which now uses the same title helper. Extracted receipt-review translations from the shared dictionary while retaining its shared navigation label; ordering is 248.76 KB against 250 KB. No commercial-order lifecycle was added.

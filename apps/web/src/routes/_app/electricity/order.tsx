@@ -15,13 +15,10 @@ export const Route = createFileRoute('/_app/electricity/order')({
 
 interface Product {
   id: string;
-  productType: string;
-  systemType: string | null;
-  titleFa: string;
+  type: string;
+  title: Record<string, string>;
   price: string | null;
-  isActive: boolean;
-  minKwh: string;
-  maxKwh: string;
+  status: string;
 }
 
 interface Address {
@@ -65,6 +62,8 @@ function ElectricityOrderPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [productError, setProductError] = useState(false);
+  const productGeneration = useRef(0);
 
   // Addresses
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -131,19 +130,45 @@ function ElectricityOrderPage() {
   // ── Fetch products ──────────────────────────────────────────────────
 
   const fetchProducts = useCallback(async () => {
+    const current = ++productGeneration.current;
+    setLoadingProducts(true);
+    setProductError(false);
+    setProducts([]);
+    setSelectedProductId('');
     try {
       const res = await fetch('/api/products');
-      if (res.ok) {
-        const data: Product[] = await res.json();
-        setProducts(data);
-        if (data.length > 0) {
-          setSelectedProductId(data[0]!.id);
-        }
-      }
+      if (!res.ok) throw new Error('Products unavailable');
+      const data: unknown = await res.json();
+      if (
+        !Array.isArray(data) ||
+        data.some(
+          (product) =>
+            !product ||
+            typeof product !== 'object' ||
+            typeof product.id !== 'string' ||
+            typeof product.type !== 'string' ||
+            typeof product.status !== 'string' ||
+            !product.title ||
+            typeof product.title !== 'object' ||
+            Array.isArray(product.title) ||
+            Object.values(product.title).some((title) => typeof title !== 'string') ||
+            !(
+              product.price === null ||
+              (typeof product.price === 'string' && /^\d+$/.test(product.price))
+            )
+        )
+      )
+        throw new Error('Invalid products');
+      if (current !== productGeneration.current) return;
+      const items: Product[] = data.filter(
+        (product) => product.type === 'electricity' && product.status === 'active'
+      );
+      setProducts(items);
+      setSelectedProductId(items[0]?.id ?? '');
     } catch {
-      // Silently fail
+      if (current === productGeneration.current) setProductError(true);
     } finally {
-      setLoadingProducts(false);
+      if (current === productGeneration.current) setLoadingProducts(false);
     }
   }, []);
 
@@ -237,6 +262,7 @@ function ElectricityOrderPage() {
     fetchProvinces();
     return () => {
       ++verificationGeneration.current;
+      ++productGeneration.current;
     };
   }, [checkVerification, fetchProducts, fetchProvinces]);
 
@@ -285,6 +311,9 @@ function ElectricityOrderPage() {
     if (mapped) return locale === 'fa' ? mapped.nameFa : mapped.nameEn;
     return cityId;
   };
+
+  const productTitle = (product?: Product) =>
+    product ? product.title[locale] || product.title.en || product.title.fa || product.id : '';
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
 
@@ -355,6 +384,12 @@ function ElectricityOrderPage() {
   // ── Submit order ────────────────────────────────────────────────────
 
   const handleSubmitOrder = useCallback(async () => {
+    if (
+      loadingProducts ||
+      productError ||
+      !products.some((product) => product.id === selectedProductId)
+    )
+      return;
     if (checking || blocked !== false || verificationError || loadingAddresses || addressError)
       return;
     if (!selectedProductId) {
@@ -404,6 +439,9 @@ function ElectricityOrderPage() {
     }
   }, [
     selectedProductId,
+    products,
+    loadingProducts,
+    productError,
     selectedAddressId,
     selectedAddress,
     activeProfileId,
@@ -515,6 +553,13 @@ function ElectricityOrderPage() {
               <Loader2Icon className="h-4 w-4 animate-spin" />
               {t('electricity.order.loadingProducts', locale)}
             </div>
+          ) : productError ? (
+            <div className="space-y-3" role="alert">
+              <p>{t('electricity.order.productLoadFailed', locale)}</p>
+              <Button onClick={() => void fetchProducts()}>
+                {t('electricity.order.retry', locale)}
+              </Button>
+            </div>
           ) : products.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               {t('electricity.order.noProducts', locale)}
@@ -539,9 +584,15 @@ function ElectricityOrderPage() {
                     className="h-4 w-4 accent-primary"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{product.titleFa}</p>
+                    <p className="text-sm font-medium">{productTitle(product)}</p>
                     {product.price && (
-                      <p className="text-xs text-muted-foreground">{product.price} IRR</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Intl.NumberFormat(locale, {
+                          style: 'currency',
+                          currency: 'IRR',
+                          maximumFractionDigits: 0,
+                        }).format(BigInt(product.price))}
+                      </p>
                     )}
                   </div>
                 </label>
@@ -786,7 +837,7 @@ function ElectricityOrderPage() {
                 {t('electricity.order.product', locale)}:
               </span>
               <span className="font-medium">
-                {products.find((p) => p.id === selectedProductId)?.titleFa ?? '—'}
+                {productTitle(products.find((p) => p.id === selectedProductId)) || '—'}
               </span>
             </div>
 
