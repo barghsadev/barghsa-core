@@ -1932,3 +1932,188 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('heading', { name: code, exact: true })).toHaveCount(0);
     expect((await detail()).code.status).toBe('active');
   });
+
+for (const locale of ['en', 'fa'])
+  test(`catalogue UI persists products, prices and system limits (${locale})`, async ({ page }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const form = page.getByRole('form', { name: fa ? 'ویرایش محصول' : 'Product editor' });
+    const save = async () => {
+      await form
+        .getByRole('button', { name: fa ? 'ذخیره محصول' : 'Save product', exact: true })
+        .click();
+      await confirm();
+    };
+    const apiBase = `${http.base}/api/admin/catalogue/products`;
+    await page.goto('/admin/catalogue');
+    for (const [type, tab] of [
+      ['consultation', fa ? 'مشاوره' : 'Consultation'],
+      ['hardware', fa ? 'تجهیزات' : 'Hardware'],
+      ['saving_plan', fa ? 'طرح‌های صرفه‌جویی' : 'Saving plans'],
+    ]) {
+      const name = `Catalogue ${type} ${locale}`;
+      await page.getByRole('tab', { name: tab, exact: true }).click();
+      await page
+        .getByRole('button', { name: fa ? 'افزودن محصول' : 'Add product', exact: true })
+        .click();
+      await form.getByLabel(fa ? 'عنوان فارسی' : 'Persian title', { exact: true }).fill(name);
+      await form.getByLabel(fa ? 'عنوان انگلیسی' : 'English title', { exact: true }).fill(name);
+      await form
+        .getByLabel(fa ? 'قیمت اولیه (ریال، اختیاری)' : 'Initial price (IRR, optional)', {
+          exact: true,
+        })
+        .fill('9007199254740993');
+      if (type === 'consultation')
+        await form
+          .getByLabel(fa ? 'مشاوره نیروگاه' : 'Generation station consultation', { exact: true })
+          .check();
+      await save();
+      await page
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      await expect(
+        form.getByLabel(fa ? 'عنوان انگلیسی' : 'English title', { exact: true })
+      ).toHaveValue(name);
+      const list = (await (
+        await page.request.get(`${apiBase}?type=${type}`, { headers })
+      ).json()) as Array<{ id: string; title: { en: string } }>;
+      const id = list.find((row) => row.title.en === name)!.id;
+      const detail = async () =>
+        await (await page.request.get(`${apiBase}/${id}`, { headers })).json();
+      expect(await detail()).toMatchObject({
+        type,
+        status: 'inactive',
+        price: '9007199254740993',
+        categories: type === 'consultation' ? ['electricity_generation_station_consultation'] : [],
+      });
+      await page.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true }).click();
+      await confirm();
+      expect(await detail()).toMatchObject({ status: 'active' });
+      await page
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      await form
+        .getByLabel(fa ? 'توضیحات انگلیسی' : 'English description', { exact: true })
+        .fill('Saved description');
+      await save();
+      expect(await detail()).toMatchObject({ description: { en: 'Saved description' } });
+      await page
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      await page
+        .getByRole('button', { name: fa ? 'افزودن نسخه قیمت' : 'Add price version', exact: true })
+        .click();
+      const priceForm = page.getByRole('form', { name: fa ? 'ویرایش قیمت' : 'Price editor' });
+      await priceForm
+        .getByLabel(fa ? 'قیمت (ریال)' : 'Price (IRR)', { exact: true })
+        .fill('9007199254740995');
+      await priceForm
+        .getByLabel(fa ? 'تعیین تاریخ اجرا' : 'Use a specific effective date', { exact: true })
+        .check();
+      await priceForm
+        .getByRole('combobox', { name: fa ? 'تاریخ اجرا' : 'Effective date', exact: true })
+        .click();
+      await page.getByRole('grid').getByRole('button').last().click();
+      await priceForm
+        .getByRole('button', { name: fa ? 'ذخیره قیمت' : 'Save price', exact: true })
+        .click();
+      await confirm();
+      const priced = await detail();
+      expect(priced.price).toBe('9007199254740993');
+      expect(priced.priceHistory).toHaveLength(2);
+      expect(priced.priceHistory[1].price).toBe('9007199254740995');
+      expect(Date.parse(priced.priceHistory[1].effectiveFrom)).toBeGreaterThan(Date.now());
+      await page
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      await expect(
+        page
+          .getByRole('region', { name: fa ? 'تاریخچه قیمت' : 'Price history' })
+          .getByRole('listitem')
+      ).toHaveCount(2);
+      await page.getByRole('button', { name: fa ? 'بایگانی' : 'Archive', exact: true }).click();
+      await confirm();
+      expect(await detail()).toMatchObject({ status: 'archived' });
+      await page
+        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+        .click();
+      await page
+        .getByRole('button', {
+          name: fa ? 'بازگردانی به غیرفعال' : 'Restore as inactive',
+          exact: true,
+        })
+        .click();
+      await confirm();
+      expect(await detail()).toMatchObject({ status: 'inactive' });
+    }
+    await page.getByRole('tab', { name: fa ? 'برق' : 'Electricity', exact: true }).click();
+    await expect(
+      page.getByRole('button', { name: fa ? 'افزودن محصول' : 'Add product', exact: true })
+    ).toHaveCount(0);
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
+      .click();
+    await expect(
+      page.getByRole('button', { name: fa ? 'بایگانی' : 'Archive', exact: true })
+    ).toHaveCount(0);
+    const minimum = form.getByLabel(fa ? 'حداقل (کیلووات‌ساعت)' : 'Minimum (kWh)', { exact: true });
+    await expect(form).toBeVisible();
+    if (!(await minimum.count()))
+      await form.getByLabel(fa ? 'تعیین محدوده مصرف' : 'Configure consumption limits').check();
+    await minimum.fill('100');
+    await form
+      .getByLabel(fa ? 'حداکثر (کیلووات‌ساعت)' : 'Maximum (kWh)', { exact: true })
+      .fill('0');
+    await save();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
+      .click();
+    await expect(minimum).toHaveValue('100');
+    await expect(
+      page.getByRole('note').filter({ hasText: fa ? 'قواعد فعال' : 'Enabled or scheduled rules' })
+    ).toBeVisible();
+    await page
+      .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toContainText(fa ? 'قاعده برق سبز' : 'green rule');
+    await confirm();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
+      .click();
+    await page.getByRole('button', { name: fa ? 'فعال‌سازی' : 'Activate', exact: true }).click();
+    await confirm();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
+      .click();
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+    ).toBe(true);
+    await expect(form).toBeVisible();
+    await page.screenshot({ path: `/tmp/catalogue-${locale}.png`, fullPage: true });
+  });

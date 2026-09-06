@@ -5,6 +5,7 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.catalogue.title': 'فهرست محصولات',
   'admin.gifts.title': 'کدهای تخفیف',
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
   'admin.templates.chooseFile': 'انتخاب فایل',
@@ -2077,6 +2078,7 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.catalogue.title': 'Product catalogue',
   'admin.gifts.title': 'Gift codes',
   'admin.vat.title': 'VAT configuration',
   'admin.templates.chooseFile': 'Choose file',
