@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js'
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
@@ -68,7 +70,7 @@ export interface DeleteProfileDto {
 
 @ApiTags('CRM V2')
 @Controller('api/crm')
-@UseGuards(SessionAuthGuard)
+@UseGuards(SessionAuthGuard, StepUpGuard)
 export class CrmV2Controller {
   private readonly logger = new Logger(CrmV2Controller.name)
 
@@ -175,6 +177,7 @@ export class CrmV2Controller {
    * Permission: admin or staff with crm:edit role required.
    */
   @Put('profiles/:profileId')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Update editable profile fields (staff)' })
   @ApiParam({
@@ -219,9 +222,23 @@ export class CrmV2Controller {
       )
     }
 
+    const parsed = z.object({
+      title: z.string().max(256).nullable().optional(),
+      email: z.string().max(254).nullable().optional(),
+      mobile: z.string().max(32).nullable().optional(),
+    }).strict().safeParse(dto)
+    if (!parsed.success) {
+      throw new HttpException({ statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+        message: 'Only title, email and mobile can be edited directly with valid text values' }, 400)
+    }
+
     const result = await this.crmV2Service.updateProfile(
       profileId,
-      dto,
+      {
+        ...(parsed.data.title !== undefined ? { title: parsed.data.title } : {}),
+        ...(parsed.data.email !== undefined ? { email: parsed.data.email } : {}),
+        ...(parsed.data.mobile !== undefined ? { mobile: parsed.data.mobile } : {}),
+      },
       req.session.userId,
       req.ip ?? 'unknown',
     )
@@ -259,15 +276,16 @@ export class CrmV2Controller {
    * POST /api/crm/profiles/:profileId/verify
    *
    * Changes the verification state of a profile. Actions:
-   * - `verify` — marks profile as VERIFIED (from DRAFT or ACTIVE)
+   * - `verify` — marks profile as VERIFIED (from DRAFT, ACTIVE or PENDING_VERIFICATION)
    * - `unverify` — reverts to ACTIVE (from VERIFIED)
-   * - `reverify` — resets to DRAFT (from VERIFIED), flags for re-verification
+   * - `reverify` — sets PENDING_VERIFICATION (from VERIFIED), flags for re-verification
    *
    * Reason is required for unverify/reverify.
    * Permission: admin or staff with crm:verify role required.
    * Audit: verification_change with before/after state, actor, reason.
    */
   @Post('profiles/:profileId/verify')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Change profile verification state (staff)' })
   @ApiParam({
@@ -357,6 +375,7 @@ export class CrmV2Controller {
    * Audit: password_change_forced with actor, reason, ip.
    */
   @Post('users/:userId/force-password-change')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Force password change for a user (admin)' })
   @ApiParam({
@@ -444,6 +463,7 @@ export class CrmV2Controller {
    * Audit: sessions_expired with actor, reason, ip.
    */
   @Post('users/:userId/expire-sessions')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Expire all sessions for a user (admin)' })
   @ApiParam({
@@ -538,6 +558,7 @@ export class CrmV2Controller {
    * Audit: profile_deleted with reason, actor, ip.
    */
   @Delete('profiles/:profileId')
+  @RequiresStepUp()
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete (archive) a customer profile (admin)' })
   @ApiParam({

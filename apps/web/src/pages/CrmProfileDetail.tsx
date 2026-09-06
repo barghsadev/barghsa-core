@@ -1,4 +1,5 @@
-import { withCsrf } from '../lib/csrf.js'
+import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button, Label } from '@barghsa/ui'
 import { useState, useEffect } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
@@ -150,16 +151,16 @@ function CrmProfileDetailContent() {
   const [activeTab, setActiveTab] = useState('overview')
   const [isEditing, setIsEditing] = useState(false)
   const [editFields, setEditFields] = useState<EditableFields>({ title: '', email: '', mobile: '' })
-  const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
+  const [pendingAction, setPendingAction] = useState<{ action: TeamAction; kind: 'edit' | 'password' | 'sessions' } | null>(null)
   const [showForcePwChange, setShowForcePwChange] = useState(false)
   const [showExpireSessions, setShowExpireSessions] = useState(false)
   const [forcePwChangeReason, setForcePwChangeReason] = useState('')
   const [expireSessionsReason, setExpireSessionsReason] = useState('')
-  const [actionLoading, setActionLoading] = useState(false)
-  const [actionError, setActionError] = useState<string | null>(null)
+  const actionLoading = false
+  const saving = pendingAction?.kind === 'edit'
+  const actionError: string | null = null
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
 
   useEffect(() => {
@@ -209,98 +210,38 @@ function CrmProfileDetailContent() {
     setSaveSuccess(false)
   }
 
-  /** Show confirmation then save */
+  function queueAction(action: TeamAction, kind: 'edit' | 'password' | 'sessions') {
+    setPendingAction({ action: { ...action, forbiddenMessage: t('crm.profile.error.accessDenied', locale),
+      conflictMessage: t('crm.profile.conflict', locale) }, kind })
+  }
   function handleConfirmSave() {
-    setShowConfirm(false)
-    setSaving(true)
-    setSaveError(null)
-    setSaveSuccess(false)
-
-    fetch(`/api/crm/profiles/${profileId}`, {
-      method: 'PUT',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({
-        title: editFields.title === '' ? null : editFields.title,
-        email: editFields.email === '' ? null : editFields.email,
-        mobile: editFields.mobile === '' ? null : editFields.mobile,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          if (res.status === 400) return res.json().then((j: { message?: string }) => { throw new Error(j.message ?? t('crm.profile.edit.error', locale)) })
-          throw new Error(t('crm.profile.edit.error', locale))
-        }
-        return res.json()
-      })
-      .then((json: ProfileDetail) => {
-        setData(json)
-        setIsEditing(false)
-        setSaveSuccess(true)
-        setSaving(false)
-        setTimeout(() => setSaveSuccess(false), 4000)
-      })
-      .catch((err: Error) => {
-        setSaveError(err.message)
-        setSaving(false)
-      })
+    queueAction({ title: t('crm.profile.edit.confirm.title', locale), description: `${t('crm.profile.edit.confirm.message', locale)} ${profileId}`,
+      path: `/api/crm/profiles/${profileId}`, method: 'PUT', body: {
+        title: editFields.title || null, email: editFields.email || null, mobile: editFields.mobile || null,
+      } }, 'edit')
   }
-
-  /** Force a password change for this user */
   function handleForcePasswordChange() {
-    if (!data) return
+    if (!data || !forcePwChangeReason.trim()) return
     setShowForcePwChange(false)
-    setActionLoading(true)
-    setActionError(null)
-    setActionSuccess(null)
-
-    fetch(`/api/crm/users/${data.user.userId}/force-password-change`, {
-      method: 'POST',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ reason: forcePwChangeReason }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(t('crm.profile.admin.forcePwChangeError', locale))
-        return res.json()
-      })
-      .then(() => {
-        setActionSuccess(t('crm.profile.admin.forcePwChangeSuccess', locale))
-        setForcePwChangeReason('')
-        setActionLoading(false)
-        setTimeout(() => setActionSuccess(null), 4000)
-      })
-      .catch((err: Error) => {
-        setActionError(err.message)
-        setActionLoading(false)
-      })
+    queueAction({ title: t('crm.profile.admin.forcePasswordChange', locale), description: `${data.user.username} · ${forcePwChangeReason.trim()}`,
+      path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/force-password-change`, method: 'POST', body: { reason: forcePwChangeReason.trim() } }, 'password')
   }
-
-  /** Expire all sessions for this user */
   function handleExpireSessions() {
-    if (!data) return
+    if (!data || !expireSessionsReason.trim()) return
     setShowExpireSessions(false)
-    setActionLoading(true)
-    setActionError(null)
-    setActionSuccess(null)
-
-    fetch(`/api/crm/users/${data.user.userId}/expire-sessions`, {
-      method: 'POST',
-      headers: withCsrf({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ reason: expireSessionsReason }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(t('crm.profile.admin.expireSessionsError', locale))
-        return res.json()
-      })
-      .then(() => {
-        setActionSuccess(t('crm.profile.admin.expireSessionsSuccess', locale))
-        setExpireSessionsReason('')
-        setActionLoading(false)
-        setTimeout(() => setActionSuccess(null), 4000)
-      })
-      .catch((err: Error) => {
-        setActionError(err.message)
-        setActionLoading(false)
-      })
+    queueAction({ title: t('crm.profile.admin.expireSessions', locale), description: `${data.user.username} · ${expireSessionsReason.trim()}`,
+      path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/expire-sessions`, method: 'POST', body: { reason: expireSessionsReason.trim() } }, 'sessions')
+  }
+  async function actionSucceeded() {
+    const kind = pendingAction?.kind
+    if (kind === 'edit') { setIsEditing(false); setSaveSuccess(true) }
+    else { setActionSuccess(t(kind === 'password' ? 'crm.profile.admin.forcePwChangeSuccess' : 'crm.profile.admin.expireSessionsSuccess', locale)); setForcePwChangeReason(''); setExpireSessionsReason('') }
+    // A committed mutation stays successful even when the subsequent read fails.
+    try {
+      const response = await fetch(`/api/crm/profiles/${profileId}`, { credentials: 'include' })
+      if (response.ok) setData(await response.json() as ProfileDetail)
+      else setError(t('crm.profile.error.generic', locale))
+    } catch { setError(t('crm.profile.error.generic', locale)) }
   }
 
   if (loading) {
@@ -381,7 +322,7 @@ function CrmProfileDetailContent() {
             ) : (
               <>
                 <button
-                  onClick={() => setShowConfirm(true)}
+                  onClick={handleConfirmSave}
                   disabled={saving}
                   className="text-sm px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
                 >
@@ -709,16 +650,7 @@ function CrmProfileDetailContent() {
           )}
         </div>
       )}
-      {showConfirm && (
-        <ConfirmModal
-          title={t('crm.profile.edit.confirm.title', locale)}
-          message={t('crm.profile.edit.confirm.message', locale)}
-          onConfirm={handleConfirmSave}
-          onCancel={() => setShowConfirm(false)}
-          cancelLabel={t('crm.profile.edit.cancel', locale)}
-          confirmLabel={t('crm.profile.edit.save', locale)}
-        />
-      )}
+      {pendingAction && <TeamActionDialog action={pendingAction.action} onClose={() => setPendingAction(null)} onSuccess={actionSucceeded} />}
       {showForcePwChange && (
         <AdminActionConfirmModal
           title={t('crm.profile.admin.forcePasswordChange', locale)}
@@ -826,55 +758,6 @@ function EditRow({
   )
 }
 
-/** Simple confirmation modal overlay */
-function ConfirmModal({
-  title,
-  message,
-  onConfirm,
-  onCancel,
-  cancelLabel,
-  confirmLabel,
-}: {
-  title: string
-  message: string
-  onConfirm: () => void
-  onCancel: () => void
-  cancelLabel: string
-  confirmLabel: string
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-      onClick={onCancel}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirm-title"
-    >
-      <div
-        className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 id="confirm-title" className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-sm text-gray-600 mb-6">{message}</p>
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-          >
-            {confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 /** Confirm modal with a reason text input for admin actions */
 function AdminActionConfirmModal({
   title,
@@ -897,45 +780,16 @@ function AdminActionConfirmModal({
   confirmLabel: string
   loading: boolean
 }) {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-      onClick={onCancel}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="admin-action-title"
-    >
-      <div
-        className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 id="admin-action-title" className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-sm text-gray-600 mb-4">{message}</p>
-        <textarea
-          value={reason}
-          onChange={(e) => onReasonChange(e.target.value)}
-          placeholder="..."
-          rows={3}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none mb-4 resize-none"
-          dir="auto"
-        />
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onCancel}
-            disabled={loading}
-            className="px-4 py-2 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors disabled:opacity-50"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={loading || !reason.trim()}
-            className="px-4 py-2 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {loading ? '...' : confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
+  return <Dialog open onOpenChange={open => { if (!open && !loading) onCancel() }}>
+    <DialogContent>
+      <form onSubmit={event => { event.preventDefault(); if (reason.trim()) onConfirm() }} className="space-y-4">
+        <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{message}</DialogDescription></DialogHeader>
+        <Label htmlFor="crm-action-reason">{message}</Label>
+        <textarea id="crm-action-reason" required maxLength={1000} value={reason} onChange={event => onReasonChange(event.target.value)} disabled={loading}
+          className="w-full rounded border p-2" dir="auto" />
+        <DialogFooter><Button type="button" variant="outline" onClick={onCancel} disabled={loading}>{cancelLabel}</Button>
+          <Button type="submit" disabled={loading || !reason.trim()}>{confirmLabel}</Button></DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
 }

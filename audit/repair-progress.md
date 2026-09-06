@@ -420,3 +420,9 @@ CRM detail/edit responses expose the current viewer's edit/verification/user-man
 Review found live bearer session IDs in the detail DTO. Replaced them with SHA-256 display references; live/expired status and counts now respect expiry and idle deadlines. No existing sessions were changed.
 
 Review/validation: 29 service/production-HTTP checks, two browser permission scenarios and all 11 workspace typechecks pass. HTTP checks prove raw customer session IDs are absent and every returned reference fails authentication. Step-up and the remaining profile action UI still require completion.
+
+### F15.4 Sensitive CRM step-up and strict editing
+
+CRM edit, verification, password-reset, session-expiry and archive endpoints now require recent password confirmation. Existing edit/password/session controls use the shared accessible confirmation dialog and preserve the selected user, profile and reason across step-up. Reason entry now uses the shared focus-managed dialog. Profile edits reject unknown/identity fields and non-text payloads instead of silently reporting success. The UI reloads the detail after an edit because the mutation response is intentionally partial.
+
+Review/validation: 30 API checks, three Chromium scenarios and all 11 workspace typechecks pass. HTTP verifies absent/expired step-up across all five mutation routes, a valid edit and forbidden identity-field rejection. Browser testing verifies the same customer/reason across session-expiry password retries. Verification/archive and identity-correction screens remain next.

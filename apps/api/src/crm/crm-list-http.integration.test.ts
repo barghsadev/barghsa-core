@@ -80,3 +80,29 @@ it('never exposes usable customer session cookies and excludes expired sessions 
     expect(impersonation.status).toBe(401)
   }
 })
+it('requires recent step-up before every sensitive CRM mutation',async()=>{
+  const id=(await http.pool.query("SELECT id FROM profiles WHERE user_id='crm-page-3'")).rows[0].id
+  const csrf=(await http.pool.query("SELECT csrf_token FROM sessions WHERE user_id='crm-admin'")).rows[0].csrf_token
+  const headers={Cookie:cookie,'X-CSRF-Token':csrf,'Content-Type':'application/json'}
+  const actions=[
+    {path:`profiles/${id}`,method:'PUT',body:{title:'Reviewed title'}},
+    {path:`profiles/${id}/verify`,method:'POST',body:{action:'verify'}},
+    {path:'users/crm-page-3/force-password-change',method:'POST',body:{reason:'Account recovery'}},
+    {path:'users/crm-page-3/expire-sessions',method:'POST',body:{reason:'Account recovery'}},
+    {path:`profiles/${id}`,method:'DELETE',body:{reason:'Requested closure'}},
+  ]
+  for(const age of ['NULL',"NOW()-INTERVAL '16 minutes'"]) {
+    await http.pool.query(`UPDATE sessions SET step_up_verified_at=${age} WHERE user_id='crm-admin'`)
+    for(const action of actions) {
+      const response=await fetch(`${http.base}/api/crm/${action.path}`,{method:action.method,headers,body:JSON.stringify(action.body)})
+      expect(response.status).toBe(403)
+      expect(await response.json()).toMatchObject({error:{code:'AUTHZ:STEP_UP_REQUIRED'}})
+    }
+  }
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='crm-admin'")
+  const edited=await fetch(`${http.base}/api/crm/profiles/${id}`,{method:'PUT',headers,body:JSON.stringify({title:'Reviewed title'})})
+  expect(edited.status).toBe(200)
+  expect(await edited.json()).toMatchObject({profile:{title:'Reviewed title'},viewerPermissions:{canEdit:true}})
+  const identity=await fetch(`${http.base}/api/crm/profiles/${id}`,{method:'PUT',headers,body:JSON.stringify({nationalId:'1234567890'})})
+  expect(identity.status).toBe(400)
+})

@@ -805,6 +805,7 @@ export const fa: I18nDictionary = {
 
   // ── CRM Profile Detail (T-05.02.01) ────────────────────────────
   'crm.profile.title': 'مشخصات پروفایل',
+  'crm.profile.conflict': 'این رکورد تغییر کرده است. پنجره را ببندید و پیش از تلاش دوباره، پروفایل را تازه‌سازی کنید.',
   'crm.profile.backToUsers': '→ بازگشت به کاربران',
   'crm.profile.tab.overview': 'خلاصه',
   'crm.profile.tab.details': 'جزئیات پروفایل',
@@ -2130,6 +2131,7 @@ export const en: I18nDictionary = {
 
     // ── CRM Profile Detail (T-05.02.01) ────────────────────────────
     'crm.profile.title': 'Profile Detail',
+    'crm.profile.conflict': 'This record has changed. Close the dialog and reload the profile before trying again.',
     'crm.profile.label.sessionId': 'Session reference',
     'crm.profile.session.revoked': 'Revoked',
     'crm.profile.session.active': 'Active',
