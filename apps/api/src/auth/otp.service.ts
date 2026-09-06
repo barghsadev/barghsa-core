@@ -140,7 +140,7 @@ export class OtpService {
     // Configuration failure must not reveal whether this destination has an account.
     this.deliveryPayload(randomUUID(), { code: '000000', destination });
     const found = await getDbPool().query<{ user_id: string; auth_version: number }>(
-      'SELECT user_id,auth_version FROM users WHERE username=$1',
+      'SELECT u.user_id,u.auth_version FROM users u JOIN account_login_identifiers i ON i.user_id=u.user_id WHERE i.destination=$1',
       [destination]
     );
     const user = found.rows[0];

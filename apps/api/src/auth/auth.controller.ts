@@ -810,9 +810,14 @@ export class AuthController {
   @ApiOperation({ summary: 'Get current user info' })
   @ApiResponse({ status: 200, description: 'User info returned.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async getUser(
-    @Req() req: AuthenticatedRequest
-  ): Promise<{ userId: string; username: string; email: string | null; mobile: string | null }> {
+  async getUser(@Req() req: AuthenticatedRequest): Promise<{
+    userId: string;
+    username: string;
+    email: string | null;
+    mobile: string | null;
+    emailVerified: boolean;
+    mobileVerified: boolean;
+  }> {
     return this.authService.getUser(req.session.userId);
   }
 

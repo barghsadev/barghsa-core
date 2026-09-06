@@ -84,7 +84,10 @@ export class AuthService {
       3_600_000
     );
     const pool = getDbPool();
-    const existing = await pool.query('SELECT 1 FROM users WHERE username=$1', [input.username]);
+    const existing = await pool.query(
+      'SELECT 1 FROM account_login_identifiers WHERE destination=$1',
+      [input.username]
+    );
     if (existing.rows.length) {
       throw new HttpException(
         {
@@ -152,18 +155,11 @@ export class AuthService {
       );
     }
 
-    // Kick off dummy hash computation if not yet ready (settles in ~200ms;
-    // by the time the client types a password on the next request it's ready)
-    this.ensureDummyHash();
+    // Wait for the shared dummy hash, including the first login after startup.
+    await this.ensureDummyHash();
 
     // Keep account-specific failures separate from the broad IP request guard.
     // Hash the tuple so delimiters cannot collide and account names are not logged.
-    const rateLimitKeyStr = rateLimitKey(
-      'login:failures',
-      createHash('sha256')
-        .update(JSON.stringify([input.username, ip]))
-        .digest('hex')
-    );
     const delayForFailures = async (previousFailures: number) => {
       if (previousFailures < 5) return;
       const delayMs = Math.min(500 * 2 ** Math.min(previousFailures - 5, 4), 5000);
@@ -173,14 +169,22 @@ export class AuthService {
     try {
       // 1. Look up user by normalized username
       const userResult = await pool.query(
-        `SELECT user_id, password_hash, must_change_password,
-                password_change_token, password_change_token_expires_at, is_admin, is_staff, disabled_at, auth_version
-         FROM users
-         WHERE username = $1`,
+        `SELECT u.user_id,u.username,u.password_hash,u.must_change_password,
+                u.password_change_token,u.password_change_token_expires_at,u.is_admin,u.is_staff,u.disabled_at,u.auth_version
+         FROM users u JOIN account_login_identifiers i ON i.user_id=u.user_id
+         WHERE i.destination=$1`,
         [input.username]
       );
 
       const userFound = userResult.rows.length > 0;
+      const rateLimitKeyStr = rateLimitKey(
+        'login:failures',
+        createHash('sha256')
+          .update(
+            JSON.stringify([userResult.rows[0]?.username?.toLowerCase() ?? input.username, ip])
+          )
+          .digest('hex')
+      );
       const dummyHash = AuthService._dummyHash;
 
       // 2. Verify password with Argon2id (falling through to dummy hash
@@ -198,8 +202,7 @@ export class AuthService {
         try {
           await argon2.verify(dummyHash, input.password);
         } catch {
-          // Dummy hash not ready yet — timing inequality is acceptable on
-          // first few requests; the hash settles within ~200ms of app start
+          // Hash verification failure still returns the generic credential error.
         }
       }
 
@@ -673,7 +676,7 @@ export class AuthService {
       // session, so it must not complete for a disabled account. Thrown
       // inside the transaction; the catch below rolls back and re-throws.
       const challengeUserStatus = await client.query(
-        `SELECT disabled_at FROM users WHERE user_id = $1`,
+        `SELECT disabled_at,username FROM users WHERE user_id = $1`,
         [challengeRow.user_id]
       );
       if (challengeUserStatus.rows.length > 0 && challengeUserStatus.rows[0].disabled_at) {
@@ -752,6 +755,19 @@ export class AuthService {
       }
 
       await client.query('COMMIT');
+
+      const primaryUsername = challengeUserStatus.rows[0]?.username;
+      if (primaryUsername)
+        await this.rateLimitService
+          .resetSecurityRateLimit(
+            rateLimitKey(
+              'login:failures',
+              createHash('sha256')
+                .update(JSON.stringify([primaryUsername.toLowerCase(), ip]))
+                .digest('hex')
+            )
+          )
+          .catch(() => {});
 
       this.logger.log(`Login OTP verified: user ${userId} from ${ip}`);
 
@@ -1198,12 +1214,17 @@ export class AuthService {
     username: string;
     email: string | null;
     mobile: string | null;
+    emailVerified: boolean;
+    mobileVerified: boolean;
     requiresTosAcceptance: boolean;
   }> {
     const pool = getDbPool();
 
     const result = await pool.query(
-      `SELECT user_id, username, email, mobile FROM users WHERE user_id = $1`,
+      `SELECT user_id,username,email,mobile,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=lower(u.email)) AS email_verified,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=u.mobile) AS mobile_verified
+       FROM users u WHERE user_id=$1`,
       [userId]
     );
 
@@ -1222,6 +1243,8 @@ export class AuthService {
       email: row.email ?? null,
       mobile: row.mobile ?? null,
       requiresTosAcceptance,
+      emailVerified: row.email_verified === true,
+      mobileVerified: row.mobile_verified === true,
     };
   }
 
@@ -1261,9 +1284,10 @@ export class AuthService {
     }
 
     // 3. Check uniqueness
-    const takenResult = await pool.query(`SELECT 1 FROM users WHERE username = $1 LIMIT 1`, [
-      newUsername,
-    ]);
+    const takenResult = await pool.query(
+      `SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2 LIMIT 1`,
+      [newUsername, userId]
+    );
 
     if (takenResult.rows.length > 0) {
       throw new HttpException(
@@ -1387,7 +1411,7 @@ export class AuthService {
 
       // 3. Re-check uniqueness inside the transaction
       const takenResult = await client.query(
-        `SELECT 1 FROM users WHERE username = $1 AND user_id != $2 LIMIT 1`,
+        `SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2 LIMIT 1`,
         [newUsername, userId]
       );
 
@@ -1515,7 +1539,10 @@ export class AuthService {
 
     // 1. Check current user's contact fields
     const userResult = await pool.query(
-      `SELECT email, mobile, auth_version FROM users WHERE user_id = $1`,
+      `SELECT email,mobile,auth_version,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=lower(u.email)) AS email_verified,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=u.mobile) AS mobile_verified
+       FROM users u WHERE user_id=$1`,
       [userId]
     );
 
@@ -1526,14 +1553,14 @@ export class AuthService {
     const user = userResult.rows[0];
 
     // 2. Validate the user doesn't already have this contact type
-    if (contactType === 'email' && user.email) {
+    if (contactType === 'email' && user.email_verified) {
       throw new HttpException(
         { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
         409
       );
     }
 
-    if (contactType === 'mobile' && user.mobile) {
+    if (contactType === 'mobile' && user.mobile_verified) {
       throw new HttpException(
         { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
         409
@@ -1559,6 +1586,16 @@ export class AuthService {
         );
       }
     }
+
+    const taken = await pool.query(
+      'SELECT 1 FROM account_login_identifiers WHERE destination=$1 AND user_id<>$2',
+      [contactValue, userId]
+    );
+    if (taken.rows.length)
+      throw new HttpException(
+        { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+        409
+      );
 
     // 4. Create OTP challenge
     return this.otpService.createChallenge(contactValue, ip, undefined, undefined, {
@@ -1589,7 +1626,7 @@ export class AuthService {
 
       // 1. Verify the challenge was created for this destination
       const challengeResult = await client.query(
-        `SELECT destination FROM otp_challenges
+        `SELECT destination,consumed_at FROM otp_challenges
          WHERE challenge_id = $1 AND user_id = $2 AND purpose = $3
          FOR UPDATE`,
         [challengeId, userId, contactType === 'email' ? 'add_email' : 'add_mobile']
@@ -1623,7 +1660,10 @@ export class AuthService {
 
       // 2. Re-check user doesn't already have this contact type
       const userResult = await client.query(
-        `SELECT email, mobile FROM users WHERE user_id = $1 FOR UPDATE`,
+        `SELECT email,mobile,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=lower(u.email)) AS email_verified,
+       EXISTS(SELECT 1 FROM account_login_identifiers i WHERE i.user_id=u.user_id AND i.destination=u.mobile) AS mobile_verified
+       FROM users u WHERE user_id=$1 FOR UPDATE`,
         [userId]
       );
 
@@ -1636,14 +1676,14 @@ export class AuthService {
 
       const user = userResult.rows[0];
 
-      if (contactType === 'email' && user.email) {
+      if (contactType === 'email' && user.email_verified) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_EMAIL.code },
           409
         );
       }
 
-      if (contactType === 'mobile' && user.mobile) {
+      if (contactType === 'mobile' && user.mobile_verified) {
         throw new HttpException(
           { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_ALREADY_HAS_MOBILE.code },
           409
@@ -1658,6 +1698,11 @@ export class AuthService {
         now,
         userId,
       ]);
+
+      await client.query(
+        'INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at) VALUES ($1,$2,$3,NOW())',
+        [contactValue, userId, contactType]
+      );
 
       // 4. Record audit event
       const auditId = uuidv7();
@@ -1684,6 +1729,11 @@ export class AuthService {
     } catch (err) {
       // Verification is the first mutation; retain its failed-attempt counter.
       await client.query(err instanceof OtpAttemptRejected ? 'COMMIT' : 'ROLLBACK');
+      if (typeof err === 'object' && err !== null && 'code' in err && err.code === '23505')
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_CHANGE_USERNAME_TAKEN.code },
+          409
+        );
       if (err instanceof HttpException) throw err;
       this.logger.error(`Add contact failed for user ${userId}: ${String(err)}`);
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
