@@ -50,6 +50,11 @@ export default function AdminLayout() {
                 </a>
               </li>
               <li>
+                <a href="/admin/gift-codes" className="text-blue-600 hover:underline">
+                  {t('admin.gifts.title', locale)}
+                </a>
+              </li>
+              <li>
                 <a href="/admin/vat" className="text-blue-600 hover:underline">
                   {t('admin.vat.title', locale)}
                 </a>

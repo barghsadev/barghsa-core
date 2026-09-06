@@ -1793,3 +1793,142 @@ for (const locale of ['en', 'fa'])
     );
     await page.screenshot({ path: `/tmp/vat-${locale}.png`, fullPage: true });
   });
+
+for (const locale of ['en', 'fa'])
+  test(`gift-code UI persists discount scope and validity through migrated API (${locale})`, async ({
+    page,
+  }) => {
+    const fa = locale === 'fa';
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const headers = {
+      cookie: `barghsa_session=${http.session}`,
+      'x-csrf-token': http.csrf,
+      origin: 'https://app.example.test',
+    };
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: { ...request.headers(), ...headers, host: new URL(http.base).host },
+      });
+      await route.fulfill({ response });
+    });
+    const confirm = async () => {
+      await page
+        .getByRole('dialog')
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    };
+    const code = `LOCAL-${locale.toUpperCase()}`,
+      form = page.getByRole('form', { name: fa ? 'تنظیمات کد تخفیف' : 'Gift-code settings' });
+    const save = async () => {
+      await form.getByRole('button', { name: fa ? 'ذخیره کد' : 'Save code', exact: true }).click();
+      await confirm();
+    };
+    await page.goto('/admin/gift-codes');
+    await page.getByRole('button', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
+    await form.getByLabel(fa ? 'کد' : 'Code', { exact: true }).fill(code.toLowerCase());
+    await form
+      .getByLabel(fa ? 'مبلغ تخفیف (ریال)' : 'Discount amount (IRR)', { exact: true })
+      .fill('1000');
+    await form.getByLabel(fa ? 'حداکثر مصرف کل' : 'Total usage limit', { exact: true }).fill('3');
+    await form
+      .getByLabel(fa ? 'حداکثر مصرف هر پروفایل' : 'Per-profile usage limit', { exact: true })
+      .fill('1');
+    await form.getByLabel(fa ? 'تجهیزات' : 'Hardware', { exact: true }).check();
+    await save();
+    const list = (await (
+      await page.request.get(`${http.base}/api/admin/promotions/gift-codes`, { headers })
+    ).json()) as Array<{ id: string; code: string; validFrom: string }>;
+    const created = list.find((row) => row.code === code)!;
+    const detail = async () =>
+      await (
+        await page.request.get(`${http.base}/api/admin/promotions/gift-codes/${created.id}/stats`, {
+          headers,
+        })
+      ).json();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${code}`, exact: true })
+      .click();
+    await form
+      .getByLabel(fa ? 'نوع تخفیف' : 'Discount type', { exact: true })
+      .selectOption('percentage');
+    await form.getByLabel(fa ? 'درصد تخفیف' : 'Discount (%)', { exact: true }).fill('25');
+    await form
+      .getByLabel(fa ? 'سقف تخفیف (ریال)' : 'Discount cap (IRR)', { exact: true })
+      .fill('5000');
+    await expect(form.getByRole('note')).toBeVisible();
+    await form
+      .getByLabel(fa ? 'افراد مجاز' : 'Eligibility', { exact: true })
+      .selectOption('profile');
+    await form
+      .getByLabel(fa ? 'Gift recipient · حقیقی' : 'Gift recipient · Individual', { exact: true })
+      .check();
+    await form.getByLabel(fa ? 'تعیین تاریخ پایان' : 'Set an expiry date', { exact: true }).check();
+    await form
+      .getByRole('combobox', { name: fa ? 'تاریخ پایان' : 'Expiry date', exact: true })
+      .click();
+    await page.getByRole('grid').getByRole('button').last().click();
+    await save();
+    const updated = await detail();
+    expect(updated.code).toMatchObject({
+      discountType: 'percentage',
+      discountValue: '2500',
+      maxCapIrr: '5000',
+      eligibility: 'profile',
+      totalLimit: 3,
+      perProfileLimit: 1,
+      categories: ['hardware'],
+      validFrom: created.validFrom,
+    });
+    expect(updated.code.profileIds).toHaveLength(1);
+    expect(Date.parse(updated.code.validUntil)).toBeGreaterThan(Date.now());
+    expect(updated.code.usage).toMatchObject({ consumed: 0, released: 0, totalDiscountIrr: '0' });
+    await page.reload();
+    await page
+      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${code}`, exact: true })
+      .click();
+    await expect(
+      form.getByLabel(fa ? 'Gift recipient · حقیقی' : 'Gift recipient · Individual', {
+        exact: true,
+      })
+    ).toBeChecked();
+    await form
+      .getByLabel(fa ? 'افراد مجاز' : 'Eligibility', { exact: true })
+      .selectOption('public');
+    await form.getByLabel(fa ? 'حداکثر مصرف کل' : 'Total usage limit', { exact: true }).fill('');
+    await save();
+    expect((await detail()).code).toMatchObject({
+      eligibility: 'public',
+      profileIds: [],
+      totalLimit: null,
+      validFrom: created.validFrom,
+      validUntil: updated.code.validUntil,
+    });
+    await page
+      .getByRole('button', { name: `${fa ? 'غیرفعال‌سازی' : 'Deactivate'} ${code}`, exact: true })
+      .click();
+    await confirm();
+    const filters = page.getByRole('form', { name: fa ? 'فیلتر کدها' : 'Gift-code filters' });
+    await filters.getByLabel(fa ? 'جست‌وجوی کد' : 'Search code', { exact: true }).fill(code);
+    await filters.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('inactive');
+    await filters.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true }).click();
+    await expect(page.getByRole('heading', { name: code, exact: true })).toBeVisible();
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await page.screenshot({ path: `/tmp/gift-codes-${locale}.png`, fullPage: true });
+    await page
+      .getByRole('button', { name: `${fa ? 'فعال‌سازی' : 'Activate'} ${code}`, exact: true })
+      .click();
+    await confirm();
+    await expect(page.getByRole('heading', { name: code, exact: true })).toHaveCount(0);
+    expect((await detail()).code.status).toBe('active');
+  });

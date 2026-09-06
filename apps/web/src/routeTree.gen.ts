@@ -41,6 +41,7 @@ import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electr
 import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
+import { Route as AdminGiftCodesRouteImport } from './routes/admin/gift-codes'
 import { Route as AdminInvoicesRouteImport } from './routes/admin/invoices'
 import { Route as AdminKnowledgeBasesRouteImport } from './routes/admin/knowledge-bases'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
@@ -237,6 +238,11 @@ const AdminFailedNotificationsRoute =
 const AdminGeographyRoute = AdminGeographyRouteImport.update({
   id: '/geography',
   path: '/geography',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGiftCodesRoute = AdminGiftCodesRouteImport.update({
+  id: '/gift-codes',
+  path: '/gift-codes',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminInvoicesRoute = AdminInvoicesRouteImport.update({
@@ -459,6 +465,7 @@ export interface FileRoutesByFullPath {
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -525,6 +532,7 @@ export interface FileRoutesByTo {
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -597,6 +605,7 @@ export interface FileRoutesById {
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
+  '/admin/gift-codes': typeof AdminGiftCodesRoute
   '/admin/invoices': typeof AdminInvoicesRoute
   '/admin/knowledge-bases': typeof AdminKnowledgeBasesRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -669,6 +678,7 @@ export interface FileRouteTypes {
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
@@ -735,6 +745,7 @@ export interface FileRouteTypes {
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
@@ -806,6 +817,7 @@ export interface FileRouteTypes {
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
+    | '/admin/gift-codes'
     | '/admin/invoices'
     | '/admin/knowledge-bases'
     | '/admin/notifications'
@@ -1083,6 +1095,13 @@ declare module '@tanstack/react-router' {
       path: '/geography'
       fullPath: '/admin/geography'
       preLoaderRoute: typeof AdminGeographyRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/gift-codes': {
+      id: '/admin/gift-codes'
+      path: '/gift-codes'
+      fullPath: '/admin/gift-codes'
+      preLoaderRoute: typeof AdminGiftCodesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/invoices': {
@@ -1424,6 +1443,7 @@ interface AdminRouteChildren {
   AdminFailedJobsRoute: typeof AdminFailedJobsRoute
   AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
+  AdminGiftCodesRoute: typeof AdminGiftCodesRoute
   AdminInvoicesRoute: typeof AdminInvoicesRoute
   AdminKnowledgeBasesRoute: typeof AdminKnowledgeBasesRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
@@ -1457,6 +1477,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminFailedJobsRoute: AdminFailedJobsRoute,
   AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,
   AdminGeographyRoute: AdminGeographyRoute,
+  AdminGiftCodesRoute: AdminGiftCodesRoute,
   AdminInvoicesRoute: AdminInvoicesRoute,
   AdminKnowledgeBasesRoute: AdminKnowledgeBasesRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,

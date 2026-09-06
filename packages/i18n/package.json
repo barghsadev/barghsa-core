@@ -21,6 +21,11 @@
       "types": "./dist/vat.d.ts",
       "import": "./dist/vat.js",
       "default": "./dist/vat.js"
+    },
+    "./gifts": {
+      "types": "./dist/gifts.d.ts",
+      "import": "./dist/gifts.js",
+      "default": "./dist/gifts.js"
     }
   },
   "scripts": {

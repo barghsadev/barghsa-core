@@ -40,6 +40,9 @@ async function main() {
   await http.pool.query(
     `INSERT INTO storage_records(storage_key,file_name,content_type,file_size,status,metadata) VALUES ('uploads/document/kb-ui.pdf','Knowledge guide.pdf','application/pdf',1024,'active','{"uploadedBy":"team-ui-admin"}')`
   );
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ('gift-ui-recipient','gift-recipient@example.test','test-only'); INSERT INTO profiles(user_id,profile_type,status,first_name) VALUES ('gift-ui-recipient','INDIVIDUAL','VERIFIED','Gift recipient')"
+  );
   const jobs: Record<string, { first: string; second: string; dead: string }> = {};
   for (const [locale, types] of [
     ['en', ['storage_cleanup', 'auth_delivery', 'invoice_overdue_scan']],
