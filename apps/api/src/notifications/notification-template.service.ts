@@ -483,24 +483,7 @@ export class NotificationTemplateService {
     }
   }
 
-  /**
-   * Test-send: render the template and deliver it to a real destination.
-   *
-   * T-05.04.04. The admin supplies a destination (their own verified contact
-   * or an allow-listed dev test address). Delivery happens through whatever
-   * transport is active today — currently in-app, because the out-of-app
-   * email/SMS provider configuration belongs to E-05 (T-05.06). The attempt
-   * is recorded on the template version (`last_test_sent_at`,
-   * `last_test_status`) and audited as a test, never touching customer data.
-   *
-   * Destination policy:
-   * - The destination must belong to the acting admin's own verified contact
-   *   (their `users.email`, `users.mobile`, or `users.username`), OR
-   * - match a dev/test-only allow-list (`TEST_SEND_ALLOWLIST`,
-   *   comma-separated) that is honored only outside production.
-   * Any other destination is rejected with 403 so a test can never be sent
-   * to an arbitrary third party.
-   */
+  /** Test the selected channel; never substitute inbox delivery for email/SMS. */
   async testSend(
     id: string,
     actorUserId: string,
@@ -517,9 +500,17 @@ export class NotificationTemplateService {
     await this.assertAllowedTestDestination(actorUserId, destination)
     // 'in_app' when the default inbox is used, 'external' when a real
     // email/phone destination was supplied and validated.
-    const destinationKind = destination ? 'external' : 'in_app'
+    const destinationKind = tpl.channel
 
     try {
+      if (tpl.channel !== 'in_app') {
+        throw new HttpException({ statusCode: 503, error: 'NOTIFICATION_TEMPLATE_TRANSPORT_UNAVAILABLE',
+          message: 'The selected channel has no configured template delivery adapter' }, 503)
+      }
+      if (destination) {
+        throw new HttpException({ statusCode: 400, error: 'NOTIFICATION_TEMPLATE_CHANNEL_MISMATCH',
+          message: 'In-app tests use your own inbox' }, 400)
+      }
       await this.notificationsService.create({
         userId: actorUserId,
         type: 'general',
@@ -562,7 +553,7 @@ export class NotificationTemplateService {
    *
    * A destination is allowed when it matches one of the acting admin's own
    * verified contacts, or when it is present in the dev/test-only allow-list
-   * (`TEST_SEND_ALLOWLIST`) honored only outside production.
+   * (`TEST_SEND_ALLOWLIST`) honored only in explicit development or test environments.
    */
   static isDestinationAllowed(
     actorContacts: Array<string | null | undefined>,
@@ -578,8 +569,8 @@ export class NotificationTemplateService {
     }
     if (own.has(target)) return true
 
-    const nodeEnv = (env?.NODE_ENV ?? 'development')
-    if (nodeEnv !== 'production') {
+    const nodeEnv = env?.NODE_ENV
+    if (nodeEnv === 'test' || nodeEnv === 'development') {
       const allowList = (env?.TEST_SEND_ALLOWLIST ?? '')
         .split(',')
         .map((s) => s.trim().toLowerCase())
@@ -653,7 +644,7 @@ export class NotificationTemplateService {
             templateId,
             eventKey,
             destinationKind,
-            deliveredTo: 'in_app', // how it was actually delivered
+            deliveredTo: status === 'delivered' ? destinationKind : null,
             status,
             isTest: true,
           }),

@@ -262,3 +262,9 @@ Review/validation: all 28 worker files / 301 tests pass. Full-schema tests prove
 External delivery now resolves the outbox's explicit user before falling back to the profile owner. Verified legacy usernames remain eligible contacts, while disabled accounts and pending staff activation do not. Case-insensitive bounce/complaint suppression gates email independently of marketing consent. API and worker now share the pure template renderer; plain-text output can preserve literal characters, and property lookup never invokes getters or traverses prototypes.
 
 Review/validation: all 28 worker files / 302 tests pass, including a production-schema recipient/suppression case. Three shared-renderer checks and all 11 workspace typechecks pass. Review found inherited random UUID defaults on nullable suppression foreign keys; the integration fixture supplies explicit values/null, and the defaults require an additive migration under F02 before that debt is closed. Real external adapters and truthful template test-send remain open; this checkpoint does not enable them.
+
+### F09.3 Remove false template test-send success
+
+Email/SMS template tests no longer create an unrelated inbox item and report delivery. Until their adapter is connected, they return an explicit unavailable response, record failure, and audit no delivered destination. In-app tests remain bound to the acting staff inbox and reject external destinations. Test-address allowlists now require explicit development/test environments, excluding unset, staging, preview and production.
+
+Review/validation: nine focused API checks and API typecheck pass. These cover both unavailable external channels, truthful persisted/audited outcomes, valid in-app delivery and environment restrictions. This is a fail-closed checkpoint; real delivery is the next step.
