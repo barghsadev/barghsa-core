@@ -99,18 +99,28 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
   describe('permission gate (admin:ai:kb)', () => {
     it('rejects non-admin sessions on every route with 403', async () => {
       await expect(controller.list(nonAdminReq)).rejects.toMatchObject({ status: 403 });
-      await expect(controller.get(nonAdminReq, '01900000-0000-7000-8000-000000000001')).rejects.toMatchObject({ status: 403 });
+      await expect(
+        controller.get(nonAdminReq, '01900000-0000-7000-8000-000000000001')
+      ).rejects.toMatchObject({ status: 403 });
       await expect(
         controller.create(nonAdminReq, { title: 'x', description: '' })
       ).rejects.toMatchObject({ status: 403 });
-      await expect(controller.update(nonAdminReq, '01900000-0000-7000-8000-000000000001', { title: 'y' })).rejects.toMatchObject({
+      await expect(
+        controller.update(nonAdminReq, '01900000-0000-7000-8000-000000000001', { title: 'y' })
+      ).rejects.toMatchObject({
         status: 403,
       });
-      await expect(controller.remove(nonAdminReq, '01900000-0000-7000-8000-000000000001')).rejects.toMatchObject({ status: 403 });
       await expect(
-        controller.attachDocument(nonAdminReq, '01900000-0000-7000-8000-000000000001', { storageKey: 'uploads/x.pdf' })
+        controller.remove(nonAdminReq, '01900000-0000-7000-8000-000000000001')
       ).rejects.toMatchObject({ status: 403 });
-      await expect(controller.detachDocument(nonAdminReq, '01900000-0000-7000-8000-000000000001', 'doc-1')).rejects.toMatchObject({
+      await expect(
+        controller.attachDocument(nonAdminReq, '01900000-0000-7000-8000-000000000001', {
+          storageKey: 'uploads/x.pdf',
+        })
+      ).rejects.toMatchObject({ status: 403 });
+      await expect(
+        controller.detachDocument(nonAdminReq, '01900000-0000-7000-8000-000000000001', 'doc-1')
+      ).rejects.toMatchObject({
         status: 403,
       });
       expect(mockListKbs).not.toHaveBeenCalled();
@@ -146,7 +156,9 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
 
   describe('PUT /api/admin/knowledge-bases/:id', () => {
     it('rejects an empty update body', async () => {
-      await expect(controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {})).rejects.toMatchObject({
+      await expect(
+        controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {})
+      ).rejects.toMatchObject({
         status: 400,
       });
       expect(mockUpdateKb).not.toHaveBeenCalled();
@@ -154,7 +166,9 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
 
     it('forwards only provided fields', async () => {
       mockUpdateKb.mockResolvedValue(baseKb({ title: 'Renamed FAQ' }));
-      const result = await controller.update(adminReq, '01900000-0000-7000-8000-000000000001', { title: 'Renamed FAQ' });
+      const result = await controller.update(adminReq, '01900000-0000-7000-8000-000000000001', {
+        title: 'Renamed FAQ',
+      });
       expect(result).toMatchObject({ title: 'Renamed FAQ' });
       expect(mockUpdateKb).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', {
         title: 'Renamed FAQ',
@@ -167,14 +181,22 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
   describe('DELETE /api/admin/knowledge-bases/:id', () => {
     it('deletes the KB', async () => {
       mockRemoveKb.mockResolvedValue(undefined);
-      await expect(controller.remove(adminReq, '01900000-0000-7000-8000-000000000001')).resolves.toBeUndefined();
-      expect(mockRemoveKb).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', 'admin-1', '10.0.0.8');
+      await expect(
+        controller.remove(adminReq, '01900000-0000-7000-8000-000000000001')
+      ).resolves.toBeUndefined();
+      expect(mockRemoveKb).toHaveBeenCalledWith(
+        '01900000-0000-7000-8000-000000000001',
+        'admin-1',
+        '10.0.0.8'
+      );
     });
   });
 
   describe('POST /api/admin/knowledge-bases/:id/documents', () => {
     it('rejects a missing storageKey', async () => {
-      await expect(controller.attachDocument(adminReq, '01900000-0000-7000-8000-000000000001', {} as never)).rejects.toMatchObject({
+      await expect(
+        controller.attachDocument(adminReq, '01900000-0000-7000-8000-000000000001', {} as never)
+      ).rejects.toMatchObject({
         status: 400,
       });
       expect(mockAttachDocument).not.toHaveBeenCalled();
@@ -182,9 +204,13 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
 
     it('attaches a document by storage key', async () => {
       mockAttachDocument.mockResolvedValue(baseDoc());
-      const result = await controller.attachDocument(adminReq, '01900000-0000-7000-8000-000000000001', {
-        storageKey: 'uploads/faq.pdf',
-      });
+      const result = await controller.attachDocument(
+        adminReq,
+        '01900000-0000-7000-8000-000000000001',
+        {
+          storageKey: 'uploads/faq.pdf',
+        }
+      );
       expect(result).toMatchObject({ storageKey: 'uploads/faq.pdf' });
       expect(mockAttachDocument).toHaveBeenCalledWith({
         kbId: '01900000-0000-7000-8000-000000000001',
@@ -198,8 +224,15 @@ describe('KnowledgeBasesController (T-09.11.02)', () => {
   describe('DELETE /api/admin/knowledge-bases/:id/documents/:documentId', () => {
     it('detaches the document', async () => {
       mockDetachDocument.mockResolvedValue(undefined);
-      await expect(controller.detachDocument(adminReq, '01900000-0000-7000-8000-000000000001', 'doc-1')).resolves.toBeUndefined();
-      expect(mockDetachDocument).toHaveBeenCalledWith('01900000-0000-7000-8000-000000000001', 'doc-1', 'admin-1', '10.0.0.8');
+      await expect(
+        controller.detachDocument(adminReq, '01900000-0000-7000-8000-000000000001', 'doc-1')
+      ).resolves.toBeUndefined();
+      expect(mockDetachDocument).toHaveBeenCalledWith(
+        '01900000-0000-7000-8000-000000000001',
+        'doc-1',
+        'admin-1',
+        '10.0.0.8'
+      );
     });
   });
 });
@@ -226,7 +259,9 @@ describe('KbGroupsController (T-09.11.02)', () => {
       await expect(
         controller.addMember(nonAdminReq, 'grp-1', { kbId: '01900000-0000-7000-8000-000000000001' })
       ).rejects.toMatchObject({ status: 403 });
-      await expect(controller.removeMember(nonAdminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')).rejects.toMatchObject({
+      await expect(
+        controller.removeMember(nonAdminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')
+      ).rejects.toMatchObject({
         status: 403,
       });
       expect(mockListGroups).not.toHaveBeenCalled();
@@ -273,8 +308,15 @@ describe('KbGroupsController (T-09.11.02)', () => {
   describe('DELETE /api/admin/kb-groups/:id/members/:kbId', () => {
     it('removes the KB from the group', async () => {
       mockRemoveGroupMember.mockResolvedValue(undefined);
-      await expect(controller.removeMember(adminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')).resolves.toBeUndefined();
-      expect(mockRemoveGroupMember).toHaveBeenCalledWith('grp-1', '01900000-0000-7000-8000-000000000001', 'admin-1', '10.0.0.8');
+      await expect(
+        controller.removeMember(adminReq, 'grp-1', '01900000-0000-7000-8000-000000000001')
+      ).resolves.toBeUndefined();
+      expect(mockRemoveGroupMember).toHaveBeenCalledWith(
+        'grp-1',
+        '01900000-0000-7000-8000-000000000001',
+        'admin-1',
+        '10.0.0.8'
+      );
     });
   });
 });

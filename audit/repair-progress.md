@@ -1613,3 +1613,13 @@ Review and validation: all 59 focused service/controller/production-migrated HTT
 The delivery-window form now requires a valid loaded configuration before editing or saving. Failed reads offer retry; obsolete reads are aborted. Saved timezones outside the short suggestion list remain selectable. Pending saves lock the form and guard duplicate submission. Success requires the returned timezone/hours to match the submitted values. Failed saves retain the draft, malformed error messages fall back to localized text, and editing clears the previous success message.
 
 Review and validation: all four notification/delivery-window browser checks pass in Persian and English. Coverage includes failed and malformed reads, disabled writes, Tokyo outside the original list, exact snake-case request values, pending-save protection, mismatched successful responses and successful retry. Root build, types, lint and bundle checks pass. The request uses the existing shared delivery-window validator; no delivery scheduler or external provider was run.
+
+### Include the complete browser and loop protocol suites in CI (F01/F19)
+
+CI now validates the generated canonical queue and runs all 46 loop protocol tests. The browser gate discovers the full Chromium suite, including migrated-API admin flows and shared components, instead of maintaining an eight-file list. Fixed four files that failed the existing formatting gate.
+
+Review found a test-state dependency when running the whole browser suite: the green-rule safety test leaves the singleton product inactive, and the catalogue test assumed it was active. The catalogue test now establishes the active product and explicit rule configuration through the disposable API before testing its UI. It still verifies both the warning and confirmed deactivate/reactivate operations. No product behavior was changed to accommodate the test.
+
+Validation: API regression passed 2,871 tests across 224 files; shared regression passed 697 tests across 55 files; all 46 loop tests and the canonical queue check passed. Lint and formatting passed. The initial full browser run passed 229 checks and failed the catalogue precondition. Final browser rerun result is recorded below. Remote CI execution, branch protection, cross-browser coverage and the remaining security/coverage gates are not certified by this change.
+
+Final browser rerun: all 230 Chromium checks passed in 3.2 minutes, including both catalogue languages after preceding green-rule mutations. No retries were enabled for this local run.

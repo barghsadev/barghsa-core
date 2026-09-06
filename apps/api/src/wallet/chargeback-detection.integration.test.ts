@@ -383,7 +383,9 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     authority: string,
     providerRef: string
   ) {
-    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, 'wallet-test-owner')`, [profileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id, user_id) VALUES ($1, 'wallet-test-owner')`, [
+      profileId,
+    ]);
     await ctx.pool.query(`INSERT INTO wallets (profile_id) VALUES ($1)`, [profileId]);
     return walletService.credit(
       profileId,

@@ -1970,6 +1970,39 @@ for (const locale of ['en', 'fa'])
       await confirm();
     };
     const apiBase = `${http.base}/api/admin/catalogue/products`;
+    // Other live checks change this singleton; establish this test's prerequisites explicitly.
+    const productsResponse = await page.request.get(apiBase, { headers });
+    expect(productsResponse.status()).toBe(200);
+    const products = (await productsResponse.json()) as Array<{ id: string; systemKey: string }>;
+    const greenProduct = products.find((product) => product.systemKey === 'green_electricity');
+    expect(greenProduct).toBeDefined();
+    expect(
+      (
+        await page.request.put(`${apiBase}/${greenProduct!.id}`, {
+          headers,
+          data: { status: 'active' },
+        })
+      ).status()
+    ).toBe(200);
+    expect(
+      (
+        await page.request.put(`${http.base}/api/admin/config/green-electricity-rules`, {
+          headers,
+          data: {
+            simple_order: {
+              mandatory_green_enabled: true,
+              average_power_threshold_kw: 1000,
+              mandatory_green_share_percent: 4,
+            },
+            advanced_order: {
+              mandatory_green_enabled: false,
+              average_power_threshold_kw: 1000,
+              mandatory_green_share_percent: 4,
+            },
+          },
+        })
+      ).status()
+    ).toBe(200);
     await page.goto('/admin/catalogue');
     for (const [type, tab] of [
       ['consultation', fa ? 'مشاوره' : 'Consultation'],
@@ -2048,7 +2081,9 @@ for (const locale of ['en', 'fa'])
       expect(priced.priceHistory).toHaveLength(2);
       expect(priced.priceHistory[1].price).toBe('9007199254740995');
       expect(Date.parse(priced.priceHistory[1].effectiveFrom)).toBeGreaterThan(Date.now());
-      expect(new Date(priced.priceHistory[1].effectiveFrom).toISOString()).toMatch(/T20:30:00\.000Z$/);
+      expect(new Date(priced.priceHistory[1].effectiveFrom).toISOString()).toMatch(
+        /T20:30:00\.000Z$/
+      );
       await page
         .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
         .click();
