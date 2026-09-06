@@ -11,6 +11,7 @@ export interface CrmUserRow {
   mobile: string | null
   registrationDate: string
   lastLogin: string | null
+  profiles: { id: string; profileType: string; status: string; title: string | null }[]
   profileCount: number
   hasIndividualProfile: boolean
   hasLegalProfile: boolean
@@ -40,6 +41,7 @@ export interface CrmListUsersFilters {
   dateFrom?: string | null
   /** Latest registration date (inclusive). */
   dateTo?: string | null
+  staffOnly?: boolean
   /** Sort column. Default: createdAt. */
   sort?: 'createdAt' | null
   /** Sort order. Default: desc. */
@@ -112,7 +114,7 @@ export class CrmService {
 
     // Profile type filter — applied as WHERE on profiles join
     if (filters?.type) {
-      whereClauses.push(`p.profile_type = $${paramIndex}`)
+      whereClauses.push(`EXISTS (SELECT 1 FROM profiles fp WHERE fp.user_id=u.user_id AND fp.archived=false AND fp.profile_type = $${paramIndex})`)
       params.push(filters.type)
       paramIndex++
     }
@@ -137,6 +139,8 @@ export class CrmService {
       }
     }
 
+    if (filters?.staffOnly) whereClauses.push('u.is_staff = true')
+
     // Date range filter
     if (filters?.dateFrom) {
       whereClauses.push(`u.created_at >= $${paramIndex}::timestamptz`)
@@ -150,10 +154,10 @@ export class CrmService {
     }
 
     // Search — full-text search across username, individual name, legal name
-    let searchJoin = ''
+
     if (filters?.search) {
       // Join legal_profiles for legal_name search
-      searchJoin = ` LEFT JOIN legal_profiles lp ON lp.id = p.id AND p.profile_type = 'LEGAL'`
+
 
       // Use PostgreSQL full-text search for structured fields
       // Combined with ILIKE for fallback/partial matching
@@ -161,11 +165,12 @@ export class CrmService {
       whereClauses.push(`(
         to_tsvector('simple', u.username) @@ plainto_tsquery('simple', $${paramIndex})
         OR u.username ILIKE $${paramIndex + 1}
-        OR to_tsvector('simple', COALESCE(p.first_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 2})
-        OR p.first_name ILIKE $${paramIndex + 3}
-        OR to_tsvector('simple', COALESCE(p.last_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 4})
-        OR p.last_name ILIKE $${paramIndex + 5}
-        OR COALESCE(lp.legal_name, '') ILIKE $${paramIndex + 6}
+        OR EXISTS (SELECT 1 FROM profiles sp LEFT JOIN legal_profiles lp ON lp.id=sp.id
+          WHERE sp.user_id=u.user_id AND sp.archived=false AND (to_tsvector('simple', COALESCE(sp.first_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 2})
+        OR sp.first_name ILIKE $${paramIndex + 3}
+        OR to_tsvector('simple', COALESCE(sp.last_name, '')) @@ plainto_tsquery('simple', $${paramIndex + 4})
+        OR sp.last_name ILIKE $${paramIndex + 5}
+        OR COALESCE(lp.legal_name, '') ILIKE $${paramIndex + 6}))
       )`)
       const ilikePattern = `%${searchTerm}%`
       for (let i = 0; i < 7; i++) {
@@ -189,13 +194,13 @@ export class CrmService {
         u.mobile,
         to_char(u.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS registration_date,
         to_char(u.last_login_at AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS last_login,
+        COALESCE(jsonb_agg(jsonb_build_object('id',p.id,'profileType',p.profile_type,'status',p.status,'title',p.title) ORDER BY p.id) FILTER (WHERE p.id IS NOT NULL),'[]'::jsonb) AS profiles,
         COUNT(p.id)::int AS profile_count,
         bool_or(p.profile_type = 'INDIVIDUAL') AS has_individual_profile,
         bool_or(p.profile_type = 'LEGAL') AS has_legal_profile,
         bool_or(p.status = 'VERIFIED') AS has_verified_profile
       FROM users u
       LEFT JOIN profiles p ON p.user_id = u.user_id AND p.archived = false
-      ${searchJoin}
       ${whereClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
       ${havingClause}
@@ -215,6 +220,7 @@ export class CrmService {
       mobile: (row.mobile as string) ?? null,
       registrationDate: (row.registration_date as string) ?? '',
       lastLogin: (row.last_login as string) ?? null,
+      profiles: (row.profiles as CrmUserRow['profiles']) ?? [],
       profileCount: (row.profile_count as number) ?? 0,
       hasIndividualProfile: (row.has_individual_profile as boolean) ?? false,
       hasLegalProfile: (row.has_legal_profile as boolean) ?? false,

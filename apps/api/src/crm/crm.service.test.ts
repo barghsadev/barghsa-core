@@ -229,7 +229,7 @@ describe('CrmService.listUsers — profile type filter', () => {
     await service.listUsers(null, 10, { type: 'INDIVIDUAL' })
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining("p.profile_type = $2"),
+      expect.stringContaining("fp.profile_type = $2"),
       expect.arrayContaining([11, 'INDIVIDUAL']),
     )
   })
@@ -244,7 +244,7 @@ describe('CrmService.listUsers — profile type filter', () => {
     await service.listUsers(null, 10, { type: 'LEGAL' })
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining("p.profile_type = $2"),
+      expect.stringContaining("fp.profile_type = $2"),
       expect.arrayContaining([11, 'LEGAL']),
     )
   })

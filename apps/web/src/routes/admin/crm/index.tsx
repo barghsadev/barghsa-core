@@ -7,8 +7,7 @@ import { RouteErrorBoundary } from '../../../components/RouteErrorBoundary.js'
  *
  * Declares the optional `verification` search param so the Admin Dashboard
  * "Show all" link (`/admin/crm?verification=PENDING`) resolves correctly and
- * type-checks. The full list view is a separate task; the index page renders
- * a placeholder for now.
+ * type-checks. The list consumes this filter when opened from the dashboard.
  */
 const verifySearch = (search: Record<string, unknown>) => ({
   verification: typeof search.verification === 'string' ? search.verification : undefined,

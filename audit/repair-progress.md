@@ -400,3 +400,9 @@ Review/validation: 30 service/production-HTTP checks and API typecheck pass. A d
 CRM user pagination now compares cursors in the requested direction, keeps database microseconds and treats user IDs as text. Invalid cursors/date ranges return 400 instead of silently restarting or failing in SQL. Pending/disabled filter aliases map to the stored PENDING_VERIFICATION/SUSPENDED states; archived profiles are excluded from active summaries. Corrected the surname full-text search parameter.
 
 Review/validation: 22 service/production-HTTP checks pass, including seven text IDs with equal/microsecond-separated timestamps in both directions, actual-state filters, surname search and invalid inputs. CRM list UI and the broader profile action matrix remain open.
+
+### F15.2 CRM list and complete profile summaries
+
+Replaced the CRM placeholder with bilingual user search, profile/verification/staff/date filters, sort direction, cursor navigation, filter clearing/removal and expandable links to profile details. Profile/name matching now uses existence checks so a matching subset cannot shrink the returned profile count or hide other active profiles. Added staff-only filtering and profile references to the authorized DTO.
+
+Review/validation: 23 API checks, three Chromium scenarios and all 11 workspace typechecks pass. The browser review found and fixed an initial debounce timer that could reset a quick page change. Gregorian date inputs are explicitly labeled; replacing them with a true Jalali picker remains next. This slice does not close the remaining detail/edit/deletion acceptance work.

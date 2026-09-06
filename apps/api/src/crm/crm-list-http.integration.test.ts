@@ -1,3 +1,4 @@
+import type { CrmUsersResponse } from './crm.service.js'
 import { beforeAll, afterAll, expect, it } from 'vitest'
 import { randomUUID } from 'node:crypto'
 import { startHttpFixture } from '../test/http-fixture.js'
@@ -26,7 +27,7 @@ for (const order of ['asc','desc']) it(`paginates text user IDs and microseconds
   do {
     const response = await list({search:'crm-page-',order,limit:'2',...(cursor?{cursor}:{})})
     expect(response.status).toBe(200)
-    const data=await response.json()
+    const data=await response.json() as CrmUsersResponse
     seen.push(...data.users.map((user:{userId:string})=>user.userId))
     cursor=data.cursor??''
     expect(seen.length).toBeLessThanOrEqual(7)
@@ -37,9 +38,21 @@ it('uses actual profile states, supports surname search, and refuses invalid cur
   for(const [verification,id] of [['PENDING','crm-page-0'],['DISABLED','crm-page-1'],['VERIFIED','crm-page-2']]) {
     const response=await list({search:'Family',verification:verification!})
     expect(response.status).toBe(200)
-    expect((await response.json()).users.map((user:{userId:string})=>user.userId)).toEqual([id])
+    expect((await response.json() as CrmUsersResponse).users.map((user:{userId:string})=>user.userId)).toEqual([id])
   }
   expect((await list({cursor:'bad'})).status).toBe(400)
   expect((await list({dateFrom:'bad'})).status).toBe(400)
   expect((await list({dateFrom:'2026-09-01',dateTo:'2026-08-01'})).status).toBe(400)
+})
+it('keeps the complete profile summary when a type or name matches only one profile',async()=>{
+  const profileId=randomUUID()
+  await http.pool.query(`INSERT INTO profiles(id,user_id,profile_type,status,title) VALUES ($1,'crm-page-0','LEGAL','ACTIVE','Additional company')`,[profileId])
+  const response=await list({type:'INDIVIDUAL',search:'Family',verification:'PENDING'})
+  expect(response.status).toBe(200)
+  const user=(await response.json() as CrmUsersResponse).users[0]!
+  expect(user.profileCount).toBe(2)
+  expect(user.hasLegalProfile).toBe(true)
+  expect(user.profiles).toContainEqual({id:profileId,profileType:'LEGAL',status:'ACTIVE',title:'Additional company'})
+  const staff=await list({staffOnly:'true',search:'crm-page-'})
+  expect((await staff.json() as CrmUsersResponse).users).toEqual([])
 })

@@ -128,6 +128,7 @@ export class CrmController {
     @Query('sort') sort: string | undefined,
     @Query('order') order: string | undefined,
     @Req() req: AuthenticatedRequest,
+    @Query('staffOnly') staffOnly?: string,
   ) {
     const isAdmin = hasStaffPermission(req, 'crm:read')
 
@@ -147,6 +148,7 @@ export class CrmController {
 
     // Build filters object from query params
     const filters: CrmListUsersFilters = {}
+    if (staffOnly === 'true') filters.staffOnly = true
     if (type === 'INDIVIDUAL' || type === 'LEGAL') {
       filters.type = type
     }
