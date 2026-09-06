@@ -152,9 +152,9 @@ export class OrdersService {
     try {
       await client.query('BEGIN');
 
-      // Validate the profile belongs to the user
+      // Hold the profile until commit so archival cannot miss this new order.
       const profileResult = await client.query(
-        `SELECT id FROM profiles WHERE id = $1 AND user_id = $2`,
+        `SELECT id FROM profiles WHERE id = $1 AND user_id = $2 AND NOT archived FOR SHARE`,
         [dto.profileId, userId]
       );
       if (profileResult.rows.length === 0) {
@@ -171,7 +171,7 @@ export class OrdersService {
       // Validate the product exists, is active, and fetch its price +
       // type (the price is the order total for gift-code math).
       const productResult = await client.query<{ id: string; type: string; price: string | null }>(
-        `SELECT id, type, price FROM products WHERE id = $1 AND is_active = true`,
+        `SELECT id, type, price FROM products WHERE id = $1 AND status = 'active' FOR SHARE`,
         [dto.productId]
       );
       if (productResult.rows.length === 0) {

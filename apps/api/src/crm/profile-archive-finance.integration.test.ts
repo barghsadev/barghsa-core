@@ -191,3 +191,127 @@ for (const channel of ['online', 'bank'] as const) {
     }
   });
 }
+
+async function prepareOrder() {
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,'archive-owner',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [session, csrf, randomUUID()]
+  );
+  // Seed an allowed system product in this isolated migrated database.
+  const productId = (
+    await http.pool.query(
+      "INSERT INTO products(type,system_key,title,status,price) VALUES ('electricity','thermal_electricity','{\"en\":\"Thermal\"}','active',100000) RETURNING id"
+    )
+  ).rows[0].id;
+  const provinceId = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES ('استان','Province') RETURNING id"
+    )
+  ).rows[0].id;
+  const cityId = (
+    await http.pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر','City') RETURNING id",
+      [provinceId]
+    )
+  ).rows[0].id;
+  const create = () =>
+    fetch(`${http.base}/api/orders`, {
+      method: 'POST',
+      headers: {
+        Cookie: `barghsa_session=${session}`,
+        'X-CSRF-Token': csrf,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        profileId,
+        productId,
+        orderType: 'electricity',
+        address: { provinceId, cityId, fullAddress: 'Order Street', postalCode: '1234567890' },
+      }),
+    });
+  return { productId, create };
+}
+it('creates an order against the migrated product schema and blocks archival while it is active', async () => {
+  const { create } = await prepareOrder();
+  const response = await create();
+  expect(response.status, http.logs()).toBe(201);
+  expect(await response.json()).toMatchObject({ snapshotFullAddress: 'Order Street' });
+  expect((await archive()).status).toBe(409);
+});
+it('order creation rechecks archival after waiting for the profile lock', async () => {
+  const { create } = await prepareOrder();
+  const client = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('UPDATE profiles SET archived=true WHERE id=$1', [profileId]);
+    pending = create();
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%AND NOT archived FOR SHARE%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await pending).status).toBe(404);
+    expect(
+      (await http.pool.query('SELECT id FROM orders WHERE profile_id=$1', [profileId])).rows
+    ).toHaveLength(0);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await pending;
+  }
+});
+it('archival waits for an order already holding the profile lock and then sees the committed order', async () => {
+  const { productId, create } = await prepareOrder();
+  const client = await http.pool.connect();
+  let creating: Promise<Response> | undefined, archiving: Promise<Response> | undefined;
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM products WHERE id=$1 FOR UPDATE', [productId]);
+    creating = create();
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id, type, price FROM products%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    archiving = archive();
+    await expect
+      .poll(async () =>
+        Number(
+          (
+            await http.pool.query(
+              "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%SELECT id,user_id,profile_type,status,archived FROM profiles%'"
+            )
+          ).rows[0].count
+        )
+      )
+      .toBe(1);
+    await client.query('COMMIT');
+    expect((await creating).status, http.logs()).toBe(201);
+    expect((await archiving).status).toBe(409);
+    expect(
+      (await http.pool.query('SELECT archived FROM profiles WHERE id=$1', [profileId])).rows[0]
+        .archived
+    ).toBe(false);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    await creating;
+    await archiving;
+  }
+});
