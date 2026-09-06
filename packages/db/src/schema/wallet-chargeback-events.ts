@@ -1,3 +1,4 @@
+import { domainChecks } from '../domain-checks'
 import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { walletTransactions, wallets } from './wallets.js'
@@ -62,6 +63,7 @@ export const walletChargebackEvents = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
+    ...domainChecks('wallet_chargeback_events'),
     uniqueIndex('uq_wallet_chargeback_event_id').on(table.eventId),
     index('idx_wce_original_tx').on(table.originalTransactionId),
     index('idx_wce_wallet').on(table.walletId),

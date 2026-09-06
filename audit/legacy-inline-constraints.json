@@ -1,0 +1,643 @@
+[
+  {
+    "table": "notification_outbox",
+    "name": "chk_ob_status",
+    "definition": "CHECK (status IN ('queued', 'scheduled', 'sending', 'delivered', 'failed', 'cancelled'))",
+    "actual": "CHECK ((status = ANY (ARRAY['queued'::text, 'scheduled'::text, 'sending'::text, 'delivered'::text, 'failed'::text, 'cancelled'::text])))",
+    "actualName": "chk_ob_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_channel",
+    "definition": "CHECK (channel IN ('in_app', 'email', 'sms'))",
+    "actual": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))",
+    "actualName": "chk_job_channel",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_status",
+    "definition": "CHECK (status IN ('queued', 'running', 'retrying', 'done', 'failed', 'dead_letter'))",
+    "actual": "CHECK ((status = ANY (ARRAY['queued'::text, 'running'::text, 'retrying'::text, 'done'::text, 'failed'::text, 'dead_letter'::text])))",
+    "actualName": "chk_job_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_priority",
+    "definition": "CHECK (priority IN ('urgent', 'normal'))",
+    "actual": "CHECK ((priority = ANY (ARRAY['urgent'::text, 'normal'::text])))",
+    "actualName": "chk_job_priority",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_channel",
+    "definition": "CHECK (channel IN ('in_app', 'email', 'sms'))",
+    "actual": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))",
+    "actualName": "chk_ndl_channel",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_status",
+    "definition": "CHECK (status IN ('delivered', 'failed'))",
+    "actual": "CHECK ((status = ANY (ARRAY['delivered'::text, 'failed'::text])))",
+    "actualName": "chk_ndl_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_error_category",
+    "definition": "CHECK (error_category IN ('transient', 'permanent', 'provider'))",
+    "actual": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))",
+    "actualName": "chk_ndl_error_category",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_channel",
+    "definition": "CHECK (channel IN ('in_app', 'email', 'sms'))",
+    "actual": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))",
+    "actualName": "chk_ndl_channel",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_severity",
+    "definition": "CHECK (severity IN ('error', 'critical'))",
+    "actual": "CHECK ((severity = ANY (ARRAY['error'::text, 'critical'::text])))",
+    "actualName": "chk_ndl_severity",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_error_category",
+    "definition": "CHECK (error_category IN ('transient', 'permanent', 'provider'))",
+    "actual": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))",
+    "actualName": "chk_ndl_error_category",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_status",
+    "definition": "CHECK (status IN ('open', 'retried', 'resolved', 'dismissed'))",
+    "actual": "CHECK ((status = ANY (ARRAY['open'::text, 'retried'::text, 'resolved'::text, 'dismissed'::text])))",
+    "actualName": "chk_ndl_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_action_type",
+    "definition": "CHECK (action_type IN ('refund', 'manual_adjustment', 'bank_payment_confirmation'))",
+    "actual": "CHECK ((action_type = ANY (ARRAY['refund'::text, 'manual_adjustment'::text, 'bank_payment_confirmation'::text])))",
+    "actualName": "chk_ar_action_type",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_amount_positive",
+    "definition": "CHECK (amount_irr > 0)",
+    "actual": "CHECK ((amount_irr > 0))",
+    "actualName": "chk_ar_amount_positive",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_status",
+    "definition": "CHECK (status IN ('pending', 'approved', 'rejected'))",
+    "actual": "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))",
+    "actualName": "chk_ar_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "chk_sba_service_type",
+    "definition": "CHECK (service_type IN ('ticket', 'verification_case'))",
+    "actual": "CHECK ((service_type = ANY (ARRAY['ticket'::text, 'verification_case'::text])))",
+    "actualName": "chk_sba_service_type",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "chk_sba_target_hours",
+    "definition": "CHECK (target_hours > 0)",
+    "actual": "CHECK ((target_hours > 0))",
+    "actualName": "chk_sba_target_hours",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "uq_sba_item",
+    "definition": "UNIQUE (service_type, item_id)",
+    "actual": "UNIQUE (service_type, item_id)",
+    "actualName": "uq_sba_item",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "staff_teams",
+    "name": "chk_st_name_length",
+    "definition": "CHECK (char_length(name) BETWEEN 1 AND 80)",
+    "actual": "CHECK (((char_length(name) >= 1) AND (char_length(name) <= 80)))",
+    "actualName": "chk_st_name_length",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "staff_teams",
+    "name": "uq_st_name",
+    "definition": "UNIQUE (name)",
+    "actual": "UNIQUE (name)",
+    "actualName": "uq_st_name",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "staff_team_members",
+    "name": "fk_stm_team",
+    "definition": "FOREIGN KEY (team_id) REFERENCES staff_teams(id) ON DELETE CASCADE",
+    "actual": "FOREIGN KEY (team_id) REFERENCES staff_teams(id) ON DELETE CASCADE",
+    "actualName": "staff_team_members_team_id_staff_teams_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "staff_team_members",
+    "name": "fk_stm_user",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE",
+    "actual": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE",
+    "actualName": "staff_team_members_user_id_users_user_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "staff_team_members",
+    "name": "uq_stm_team_member",
+    "definition": "UNIQUE (team_id, user_id)",
+    "actual": "UNIQUE (team_id, user_id)",
+    "actualName": "uq_stm_team_member",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_type",
+    "definition": "CHECK (exception_type IN ('wallet_mismatch', 'payment_mismatch'))",
+    "actual": "CHECK ((exception_type = ANY (ARRAY['wallet_mismatch'::text, 'payment_mismatch'::text])))",
+    "actualName": "chk_rex_type",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_severity",
+    "definition": "CHECK (severity IN ('low', 'medium', 'high', 'critical'))",
+    "actual": "CHECK ((severity = ANY (ARRAY['low'::text, 'medium'::text, 'high'::text, 'critical'::text])))",
+    "actualName": "chk_rex_severity",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_status",
+    "definition": "CHECK (status IN ('open', 'investigating', 'resolved', 'closed'))",
+    "actual": "CHECK ((status = ANY (ARRAY['open'::text, 'investigating'::text, 'resolved'::text, 'closed'::text])))",
+    "actualName": "chk_rex_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "fk_rex_assigned_to",
+    "definition": "FOREIGN KEY (assigned_to_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actual": "FOREIGN KEY (assigned_to_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actualName": "reconciliation_exceptions_assigned_to_id_users_user_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "fk_rex_resolved_by",
+    "definition": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actual": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actualName": "reconciliation_exceptions_resolved_by_id_users_user_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_status",
+    "definition": "CHECK (status IN ('failed', 'retrying', 'dead_letter', 'resolved'))",
+    "actual": "CHECK ((status = ANY (ARRAY['failed'::text, 'retrying'::text, 'dead_letter'::text, 'resolved'::text])))",
+    "actualName": "chk_bj_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_error_category",
+    "definition": "CHECK (error_category IN ('transient', 'permanent', 'provider'))",
+    "actual": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))",
+    "actualName": "chk_bj_error_category",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_attempts_ge_1",
+    "definition": "CHECK (attempts >= 1)",
+    "actual": "CHECK ((attempts >= 1))",
+    "actualName": "chk_bj_attempts_ge_1",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_max_attempts_ge_1",
+    "definition": "CHECK (max_attempts >= 1)",
+    "actual": "CHECK ((max_attempts >= 1))",
+    "actualName": "chk_bj_max_attempts_ge_1",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "background_jobs",
+    "name": "fk_bj_resolved_by",
+    "definition": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actual": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL",
+    "actualName": "background_jobs_resolved_by_id_users_user_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "contract_templates",
+    "name": "chk_contract_templates_status",
+    "definition": "CHECK (status IN ('active', 'inactive'))",
+    "actual": "CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text])))",
+    "actualName": "chk_contract_templates_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "contract_templates",
+    "name": "chk_contract_templates_name",
+    "definition": "CHECK (length(btrim(name)) > 0)",
+    "actual": "CHECK ((length(btrim(name)) > 0))",
+    "actualName": "chk_contract_templates_name",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "contract_template_versions",
+    "name": "chk_contract_template_versions_version_number",
+    "definition": "CHECK (version_number > 0)",
+    "actual": "CHECK ((version_number > 0))",
+    "actualName": "chk_contract_template_versions_version_number",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_category",
+    "definition": "CHECK (category IN ('document', 'image', 'video'))",
+    "actual": "CHECK ((category = ANY (ARRAY['document'::text, 'image'::text, 'video'::text])))",
+    "actualName": "chk_upload_policies_category",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_extensions",
+    "definition": "CHECK ( array_length(allowed_extensions, 1) BETWEEN 1 AND 50 AND NOT EXISTS ( SELECT 1 FROM unnest(allowed_extensions) AS e WHERE e !~ '^\\.[a-z0-9]{1,10}$' ) )",
+    "actual": "CHECK (barghsa_valid_upload_extensions(allowed_extensions))",
+    "actualName": "chk_upload_policies_extensions",
+    "missingBeforeRepair": true,
+    "repairDefinition": "CHECK (barghsa_valid_upload_extensions(allowed_extensions))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_max_size",
+    "definition": "CHECK (max_size_bytes BETWEEN 1 AND 104857600)",
+    "actual": "CHECK (((max_size_bytes >= 1) AND (max_size_bytes <= 104857600)))",
+    "actualName": "chk_upload_policies_max_size",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_effective_range",
+    "definition": "CHECK (effective_until IS NULL OR effective_from < effective_until)",
+    "actual": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))",
+    "actualName": "chk_upload_policies_effective_range",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "upload_policies",
+    "name": "excl_upload_policies_no_overlap",
+    "definition": "EXCLUDE USING GIST ( category WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::TIMESTAMPTZ), '[)') WITH && )",
+    "actual": "EXCLUDE USING gist (category WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)",
+    "actualName": "excl_upload_policies_no_overlap",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoices",
+    "name": "ck_paid_not_exceeds_total",
+    "definition": "CHECK (paid_amount <= total_amount)",
+    "actual": "CHECK ((paid_amount <= total_amount))",
+    "actualName": "ck_paid_not_exceeds_total",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoices",
+    "name": "ck_refund_not_exceeds_paid",
+    "definition": "CHECK (refunded_amount <= paid_amount)",
+    "actual": "CHECK ((refunded_amount <= paid_amount))",
+    "actualName": "ck_refund_not_exceeds_paid",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_quantity_positive",
+    "definition": "CHECK (quantity > 0)",
+    "actual": "CHECK ((quantity > 0))",
+    "actualName": "ck_invoice_lines_quantity_positive",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_unit_price_non_negative",
+    "definition": "CHECK (unit_price >= 0)",
+    "actual": "CHECK ((unit_price >= 0))",
+    "actualName": "ck_invoice_lines_unit_price_non_negative",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_line_total_non_negative",
+    "definition": "CHECK (line_total >= 0)",
+    "actual": "CHECK ((line_total >= 0))",
+    "actualName": "ck_invoice_lines_line_total_non_negative",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_vat_rate_range",
+    "definition": "CHECK (vat_rate BETWEEN 0 AND 10000)",
+    "actual": "CHECK (((vat_rate >= 0) AND (vat_rate <= 10000)))",
+    "actualName": "ck_invoice_lines_vat_rate_range",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_vat_amount_non_negative",
+    "definition": "CHECK (vat_amount >= 0)",
+    "actual": "CHECK ((vat_amount >= 0))",
+    "actualName": "ck_invoice_lines_vat_amount_non_negative",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_non_taxable_zero_vat",
+    "definition": "CHECK (is_taxable OR vat_amount = 0)",
+    "actual": "CHECK ((is_taxable OR (vat_amount = 0)))",
+    "actualName": "ck_invoice_lines_non_taxable_zero_vat",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_quantity_positive",
+    "definition": "CHECK (quantity > 0)",
+    "actual": "CHECK ((quantity > 0))",
+    "actualName": "ck_invoice_items_quantity_positive",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_unit_price_non_negative",
+    "definition": "CHECK (unit_price >= 0)",
+    "actual": "CHECK ((unit_price >= 0))",
+    "actualName": "ck_invoice_items_unit_price_non_negative",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_vat_rate_range",
+    "definition": "CHECK (vat_rate BETWEEN 0 AND 10000)",
+    "actual": "CHECK (((vat_rate >= 0) AND (vat_rate <= 10000)))",
+    "actualName": "ck_invoice_items_vat_rate_range",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_service_type",
+    "definition": "CHECK (service_type IN ('electricity', 'saving_plan', 'consultation', 'manual'))",
+    "actual": "CHECK ((service_type = ANY (ARRAY['electricity'::text, 'saving_plan'::text, 'consultation'::text, 'manual'::text])))",
+    "actualName": "chk_service_due_periods_service_type",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_default_days",
+    "definition": "CHECK (default_days BETWEEN 1 AND 365)",
+    "actual": "CHECK (((default_days >= 1) AND (default_days <= 365)))",
+    "actualName": "chk_service_due_periods_default_days",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_effective_range",
+    "definition": "CHECK (effective_until IS NULL OR effective_from < effective_until)",
+    "actual": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))",
+    "actualName": "chk_service_due_periods_effective_range",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "service_due_periods",
+    "name": "excl_service_due_periods_no_overlap",
+    "definition": "EXCLUDE USING GIST ( service_type WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::TIMESTAMPTZ), '[)') WITH && )",
+    "actual": "EXCLUDE USING gist (service_type WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)",
+    "actualName": "excl_service_due_periods_no_overlap",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_offset",
+    "definition": "CHECK (\"offset\" IN (-7, -3, -1, 0, 1, 7))",
+    "actual": "CHECK ((\"offset\" = ANY (ARRAY['-7'::integer, '-3'::integer, '-1'::integer, 0, 1, 7])))",
+    "actualName": "chk_invoice_reminder_schedule_offset",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_channel",
+    "definition": "CHECK (channel IN ('in_app', 'email', 'sms'))",
+    "actual": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))",
+    "actualName": "chk_invoice_reminder_schedule_channel",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_status",
+    "definition": "CHECK (status IN ('scheduled', 'sent', 'cancelled'))",
+    "actual": "CHECK ((status = ANY (ARRAY['scheduled'::text, 'sent'::text, 'cancelled'::text])))",
+    "actualName": "chk_invoice_reminder_schedule_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_sent_at",
+    "definition": "CHECK ( (status = 'sent' AND sent_at IS NOT NULL) OR (status <> 'sent' AND sent_at IS NULL) )",
+    "actual": "CHECK ((((status = 'sent'::text) AND (sent_at IS NOT NULL)) OR ((status <> 'sent'::text) AND (sent_at IS NULL))))",
+    "actualName": "chk_invoice_reminder_schedule_sent_at",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "chk_invoice_reminder_offset_toggles_service_type",
+    "definition": "CHECK (service_type IN ('electricity', 'saving_plan', 'consultation', 'manual'))",
+    "actual": "CHECK ((service_type = ANY (ARRAY['electricity'::text, 'saving_plan'::text, 'consultation'::text, 'manual'::text])))",
+    "actualName": "chk_invoice_reminder_offset_toggles_service_type",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "chk_invoice_reminder_offset_toggles_offset",
+    "definition": "CHECK (\"offset\" IN (-7, -3, -1, 0, 1, 7))",
+    "actual": "CHECK ((\"offset\" = ANY (ARRAY['-7'::integer, '-3'::integer, '-1'::integer, 0, 1, 7])))",
+    "actualName": "chk_invoice_reminder_offset_toggles_offset",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "uq_invoice_reminder_offset_toggles_type_offset",
+    "definition": "UNIQUE (service_type, \"offset\")",
+    "actual": "CREATE UNIQUE INDEX uq_invoice_reminder_offset_toggles_type_offset ON public.invoice_reminder_offset_toggles USING btree (service_type, \"offset\")",
+    "actualName": "uq_invoice_reminder_offset_toggles_type_offset",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_type",
+    "definition": "CHECK (type IN ('topup', 'payment', 'refund', 'reservation', 'release', 'reversal', 'compensating'))",
+    "actual": "CHECK ((type = ANY (ARRAY['topup'::text, 'payment'::text, 'refund'::text, 'reservation'::text, 'release'::text, 'reversal'::text, 'compensating'::text])))",
+    "actualName": "chk_wallet_transactions_type",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_amount_nonzero",
+    "definition": "CHECK (amount <> 0)",
+    "actual": "CHECK ((amount <> 0))",
+    "actualName": "chk_wallet_transactions_amount_nonzero",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_state",
+    "definition": "CHECK (state IN ('Pending', 'Reserved', 'Completed', 'Failed', 'Rejected', 'Released', 'Reversed'))",
+    "actual": "CHECK ((state = ANY (ARRAY['Pending'::text, 'Reserved'::text, 'Completed'::text, 'Failed'::text, 'Rejected'::text, 'Released'::text, 'Reversed'::text])))",
+    "actualName": "chk_wallet_transactions_state",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallets",
+    "name": "chk_wallets_available_balance_nonneg",
+    "definition": "CHECK ((posted_balance - reserved_balance) >= 0)",
+    "actual": "CHECK (((posted_balance - reserved_balance) >= 0))",
+    "actualName": "chk_wallets_available_balance_nonneg",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "chk_wallet_topup_callback_events_status",
+    "definition": "CHECK (status IN ('credited', 'unpaid', 'duplicate'))",
+    "actual": "CHECK ((status = ANY (ARRAY['credited'::text, 'unpaid'::text, 'duplicate'::text])))",
+    "actualName": "chk_wallet_topup_callback_events_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "idempotency_keys",
+    "name": "chk_idempotency_keys_key_nonblank",
+    "definition": "CHECK (char_length(btrim(idempotency_key)) > 0)",
+    "actual": "CHECK ((char_length(btrim(idempotency_key)) > 0))",
+    "actualName": "chk_idempotency_keys_key_nonblank",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "idempotency_keys",
+    "name": "chk_idempotency_keys_entity_type_nonblank",
+    "definition": "CHECK (char_length(btrim(entity_type)) > 0)",
+    "actual": "CHECK ((char_length(btrim(entity_type)) > 0))",
+    "actualName": "chk_idempotency_keys_entity_type_nonblank",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "chk_wallet_chargeback_events_status",
+    "definition": "CHECK (status IN ('processing', 'reversed', 'unmatched', 'unresolved', 'duplicate'))",
+    "actual": "CHECK ((status = ANY (ARRAY['processing'::text, 'reversed'::text, 'unmatched'::text, 'unresolved'::text, 'duplicate'::text])))",
+    "actualName": "chk_wallet_chargeback_events_status",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "chk_wallet_chargeback_events_match_method",
+    "definition": "CHECK (match_method IS NULL OR match_method IN ('merchant_order_id', 'provider_ref_id', 'authority'))",
+    "actual": "CHECK (((match_method IS NULL) OR (match_method = ANY (ARRAY['merchant_order_id'::text, 'provider_ref_id'::text, 'authority'::text]))))",
+    "actualName": "chk_wallet_chargeback_events_match_method",
+    "missingBeforeRepair": true
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_amount_positive",
+    "definition": "CHECK (amount > 0)",
+    "actual": "CHECK ((amount > 0))",
+    "actualName": "chk_bank_receipts_amount_positive",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_payer_reference_nonblank",
+    "definition": "CHECK (length(trim(payer_reference)) > 0)",
+    "actual": "CHECK ((length(TRIM(BOTH FROM payer_reference)) > 0))",
+    "actualName": "chk_bank_receipts_payer_reference_nonblank",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_attachment_key_nonblank",
+    "definition": "CHECK (length(trim(attachment_key)) > 0)",
+    "actual": "CHECK ((length(TRIM(BOTH FROM attachment_key)) > 0))",
+    "actualName": "chk_bank_receipts_attachment_key_nonblank",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_state",
+    "definition": "CHECK (state IN ('Submitted', 'UnderReview', 'Confirmed', 'Rejected'))",
+    "actual": "CHECK ((state = ANY (ARRAY['Submitted'::text, 'UnderReview'::text, 'Confirmed'::text, 'Rejected'::text])))",
+    "actualName": "chk_bank_receipts_state",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_state_fields",
+    "definition": "CHECK ( ( state = 'Confirmed' AND confirmed_by IS NOT NULL AND confirmed_at IS NOT NULL AND rejection_reason IS NULL ) OR ( state = 'Rejected' AND rejection_reason IS NOT NULL AND length(trim(rejection_reason)) > 0 AND confirmed_by IS NULL AND confirmed_at IS NULL ) OR ( state IN ('Submitted', 'UnderReview') AND confirmed_by IS NULL AND confirmed_at IS NULL AND rejection_reason IS NULL ) )",
+    "actual": "CHECK ((((state = 'Confirmed'::text) AND (confirmed_by IS NOT NULL) AND (confirmed_at IS NOT NULL) AND (rejection_reason IS NULL)) OR ((state = 'Rejected'::text) AND (rejection_reason IS NOT NULL) AND (length(TRIM(BOTH FROM rejection_reason)) > 0) AND (confirmed_by IS NULL) AND (confirmed_at IS NULL)) OR ((state = ANY (ARRAY['Submitted'::text, 'UnderReview'::text])) AND (confirmed_by IS NULL) AND (confirmed_at IS NULL) AND (rejection_reason IS NULL))))",
+    "actualName": "chk_bank_receipts_state_fields",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "fk_bank_receipts_invoice_profile",
+    "definition": "FOREIGN KEY (invoice_id, profile_id) REFERENCES invoices(id, profile_id) ON DELETE RESTRICT",
+    "actual": "FOREIGN KEY (invoice_id, profile_id) REFERENCES invoices(id, profile_id) ON DELETE RESTRICT",
+    "actualName": "fk_bank_receipts_invoice_profile",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipts",
+    "name": "fk_bank_receipts_confirmed_by",
+    "definition": "FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT",
+    "actual": "FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT",
+    "actualName": "bank_receipts_confirmed_by_users_user_id_fk",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipt_attachment_claims",
+    "name": "chk_bank_receipt_attachment_claims_storage_key_nonblank",
+    "definition": "CHECK (length(trim(storage_key)) > 0)",
+    "actual": "CHECK ((length(TRIM(BOTH FROM storage_key)) > 0))",
+    "actualName": "chk_bank_receipt_attachment_claims_storage_key_nonblank",
+    "missingBeforeRepair": false
+  },
+  {
+    "table": "bank_receipt_attachment_claims",
+    "name": "chk_bank_receipt_attachment_claims_type",
+    "definition": "CHECK (claim_type IN ('wallet_topup', 'invoice_receipt'))",
+    "actual": "CHECK ((claim_type = ANY (ARRAY['wallet_topup'::text, 'invoice_receipt'::text])))",
+    "actualName": "chk_bank_receipt_attachment_claims_type",
+    "missingBeforeRepair": false
+  }
+]

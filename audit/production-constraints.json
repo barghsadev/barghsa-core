@@ -1,0 +1,1857 @@
+[
+  {
+    "table": "addresses",
+    "name": "addresses_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_agent_slots",
+    "name": "ai_agent_slots_pkey",
+    "definition": "PRIMARY KEY (slot_key)"
+  },
+  {
+    "table": "ai_agents",
+    "name": "ai_agents_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_agent_kbs",
+    "name": "ai_agent_kbs_agent_id_kb_id_pk",
+    "definition": "PRIMARY KEY (agent_id, kb_id)"
+  },
+  {
+    "table": "ai_agent_policies",
+    "name": "ai_agent_policies_agent_id_policy_id_pk",
+    "definition": "PRIMARY KEY (agent_id, policy_id)"
+  },
+  {
+    "table": "ai_models",
+    "name": "ai_models_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_policies",
+    "name": "ai_policies_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_policy_groups",
+    "name": "ai_policy_groups_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "ai_policy_group_members",
+    "name": "ai_policy_group_members_group_id_policy_id_pk",
+    "definition": "PRIMARY KEY (group_id, policy_id)"
+  },
+  {
+    "table": "approval_requests",
+    "name": "approval_requests_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "audit_log",
+    "name": "audit_log_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "background_jobs",
+    "name": "background_jobs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "bank_receipt_attachment_claims",
+    "name": "chk_bank_receipt_attachment_claims_storage_key_nonblank",
+    "definition": "CHECK ((length(TRIM(BOTH FROM storage_key)) > 0))"
+  },
+  {
+    "table": "bank_receipt_attachment_claims",
+    "name": "chk_bank_receipt_attachment_claims_type",
+    "definition": "CHECK ((claim_type = ANY (ARRAY['wallet_topup'::text, 'invoice_receipt'::text])))"
+  },
+  {
+    "table": "bank_receipt_attachment_claims",
+    "name": "bank_receipt_attachment_claims_pkey",
+    "definition": "PRIMARY KEY (storage_key)"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "service_due_periods_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "sessions",
+    "name": "sessions_pkey",
+    "definition": "PRIMARY KEY (session_id)"
+  },
+  {
+    "table": "staff_roles",
+    "name": "staff_roles_pkey",
+    "definition": "PRIMARY KEY (role_id)"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_amount_positive",
+    "definition": "CHECK ((amount > 0))"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_state",
+    "definition": "CHECK ((state = ANY (ARRAY['Submitted'::text, 'UnderReview'::text, 'Confirmed'::text, 'Rejected'::text])))"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_payer_reference_nonblank",
+    "definition": "CHECK ((length(TRIM(BOTH FROM payer_reference)) > 0))"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_attachment_key_nonblank",
+    "definition": "CHECK ((length(TRIM(BOTH FROM attachment_key)) > 0))"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "chk_bank_receipts_state_fields",
+    "definition": "CHECK ((((state = 'Confirmed'::text) AND (confirmed_by IS NOT NULL) AND (confirmed_at IS NOT NULL) AND (rejection_reason IS NULL)) OR ((state = 'Rejected'::text) AND (rejection_reason IS NOT NULL) AND (length(TRIM(BOTH FROM rejection_reason)) > 0) AND (confirmed_by IS NULL) AND (confirmed_at IS NULL)) OR ((state = ANY (ARRAY['Submitted'::text, 'UnderReview'::text])) AND (confirmed_by IS NULL) AND (confirmed_at IS NULL) AND (rejection_reason IS NULL))))"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "bank_receipts_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "app_config",
+    "name": "app_config_pkey",
+    "definition": "PRIMARY KEY (key)"
+  },
+  {
+    "table": "config_version",
+    "name": "config_version_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "contract_templates",
+    "name": "contract_templates_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "contract_template_versions",
+    "name": "contract_template_versions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "contract_type_templates",
+    "name": "contract_type_templates_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "device_trusts",
+    "name": "device_trusts_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "electricity_product_limits",
+    "name": "electricity_product_limits_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "email_provider_configs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "email_suppressions",
+    "name": "email_suppressions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "email_webhook_events",
+    "name": "email_webhook_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "provinces",
+    "name": "provinces_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "cities",
+    "name": "cities_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "gift_codes",
+    "name": "gift_codes_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "gift_code_profiles",
+    "name": "gift_code_profiles_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "gift_code_redemptions",
+    "name": "gift_code_redemptions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "idempotency_keys",
+    "name": "chk_idempotency_keys_key_nonblank",
+    "definition": "CHECK ((char_length(btrim(idempotency_key)) > 0))"
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "service_breach_alerts_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "idempotency_keys",
+    "name": "chk_idempotency_keys_entity_type_nonblank",
+    "definition": "CHECK ((char_length(btrim(entity_type)) > 0))"
+  },
+  {
+    "table": "idempotency_keys",
+    "name": "idempotency_keys_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "in_app_notifications",
+    "name": "in_app_notifications_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_quantity_positive",
+    "definition": "CHECK ((quantity > 0))"
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_unit_price_non_negative",
+    "definition": "CHECK ((unit_price >= 0))"
+  },
+  {
+    "table": "invoice_items",
+    "name": "ck_invoice_items_vat_rate_range",
+    "definition": "CHECK (((vat_rate >= 0) AND (vat_rate <= 10000)))"
+  },
+  {
+    "table": "invoice_items",
+    "name": "invoice_items_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_quantity_positive",
+    "definition": "CHECK ((quantity > 0))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_unit_price_non_negative",
+    "definition": "CHECK ((unit_price >= 0))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_line_total_non_negative",
+    "definition": "CHECK ((line_total >= 0))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_vat_rate_range",
+    "definition": "CHECK (((vat_rate >= 0) AND (vat_rate <= 10000)))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_vat_amount_non_negative",
+    "definition": "CHECK ((vat_amount >= 0))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "ck_invoice_lines_non_taxable_zero_vat",
+    "definition": "CHECK ((is_taxable OR (vat_amount = 0)))"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "invoice_lines_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "invoice_reminder_offset_toggles_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "invoice_reminder_schedule_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_paid_not_exceeds_total",
+    "definition": "CHECK ((paid_amount <= total_amount))"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_refund_not_exceeds_paid",
+    "definition": "CHECK ((refunded_amount <= paid_amount))"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_invoices_adjustment_kind_matches_link",
+    "definition": "CHECK ((((adjustment_for_invoice_id IS NULL) = (adjustment_kind IS NULL)) AND ((adjustment_kind IS NULL) OR (adjustment_kind = ANY (ARRAY['charge'::text, 'credit'::text])))))"
+  },
+  {
+    "table": "invoices",
+    "name": "invoices_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "invoices",
+    "name": "uq_invoices_id_profile_id",
+    "definition": "UNIQUE (id, profile_id)"
+  },
+  {
+    "table": "kb_groups",
+    "name": "kb_groups_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "kb_group_members",
+    "name": "kb_group_members_group_id_kb_id_pk",
+    "definition": "PRIMARY KEY (group_id, kb_id)"
+  },
+  {
+    "table": "knowledge_bases",
+    "name": "knowledge_bases_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "kb_documents",
+    "name": "kb_documents_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "kb_documents",
+    "name": "uq_kbd_kb_storage",
+    "definition": "UNIQUE (kb_id, storage_key)"
+  },
+  {
+    "table": "company_types",
+    "name": "company_types_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "legal_profiles",
+    "name": "legal_profiles_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "notification_dead_letter_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "notification_dead_letter_job_id_unique",
+    "definition": "UNIQUE (job_id)"
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "notification_delivery_log_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_outbox",
+    "name": "notification_outbox_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_job",
+    "name": "notification_job_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_categories",
+    "name": "notification_categories_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "user_notification_preferences",
+    "name": "user_notification_preferences_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notification_templates",
+    "name": "notification_templates_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "notifications",
+    "name": "notifications_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "orders",
+    "name": "orders_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "otp_challenges",
+    "name": "otp_challenges_pkey",
+    "definition": "PRIMARY KEY (challenge_id)"
+  },
+  {
+    "table": "password_history",
+    "name": "password_history_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "product_categories",
+    "name": "product_categories_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "product_price_versions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "products",
+    "name": "products_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "products",
+    "name": "products_system_key_unique",
+    "definition": "UNIQUE (system_key)"
+  },
+  {
+    "table": "profile_agents",
+    "name": "profile_agents_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "profile_invitations",
+    "name": "profile_invitations_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "profile_ownership_transfers_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "profiles",
+    "name": "profiles_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "reconciliation_exceptions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "refresh_tokens",
+    "name": "refresh_tokens_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "refresh_tokens",
+    "name": "refresh_tokens_token_hash_unique",
+    "definition": "UNIQUE (token_hash)"
+  },
+  {
+    "table": "staff_roles",
+    "name": "staff_roles_name_unique",
+    "definition": "UNIQUE (name)"
+  },
+  {
+    "table": "staff_teams",
+    "name": "staff_teams_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "staff_team_members",
+    "name": "staff_team_members_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "storage_records",
+    "name": "storage_records_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "storage_records",
+    "name": "storage_records_storage_key_unique",
+    "definition": "UNIQUE (storage_key)"
+  },
+  {
+    "table": "ticket_comments",
+    "name": "ticket_comments_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "tos_acceptances",
+    "name": "tos_acceptances_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "tos_versions",
+    "name": "tos_versions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "tos_versions",
+    "name": "tos_versions_version_id_unique",
+    "definition": "UNIQUE (version_id)"
+  },
+  {
+    "table": "upload_policies",
+    "name": "upload_policies_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "users",
+    "name": "users_pkey",
+    "definition": "PRIMARY KEY (user_id)"
+  },
+  {
+    "table": "users",
+    "name": "users_username_unique",
+    "definition": "UNIQUE (username)"
+  },
+  {
+    "table": "vat_configurations",
+    "name": "vat_configurations_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "product_vat_overrides_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "wallet_chargeback_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "wallet_topup_callback_events_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "wallets",
+    "name": "chk_wallets_available_balance_nonneg",
+    "definition": "CHECK (((posted_balance - reserved_balance) >= 0))"
+  },
+  {
+    "table": "wallets",
+    "name": "wallets_pkey",
+    "definition": "PRIMARY KEY (profile_id)"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_type",
+    "definition": "CHECK ((type = ANY (ARRAY['topup'::text, 'payment'::text, 'refund'::text, 'reservation'::text, 'release'::text, 'reversal'::text, 'compensating'::text])))"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_state",
+    "definition": "CHECK ((state = ANY (ARRAY['Pending'::text, 'Reserved'::text, 'Completed'::text, 'Failed'::text, 'Rejected'::text, 'Released'::text, 'Reversed'::text])))"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_transactions_amount_nonzero",
+    "definition": "CHECK ((amount <> 0))"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "chk_wallet_tx_reversal_original",
+    "definition": "CHECK ((((type = 'reversal'::text) AND (reverses_transaction_id IS NOT NULL)) OR ((type <> 'reversal'::text) AND (reverses_transaction_id IS NULL))))"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "wallet_transactions_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "addresses",
+    "name": "addresses_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_slots",
+    "name": "ai_agent_slots_agent_id_ai_agents_id_fk",
+    "definition": "FOREIGN KEY (agent_id) REFERENCES ai_agents(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "ai_agent_slots",
+    "name": "ai_agent_slots_updated_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (updated_by) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "ai_agents",
+    "name": "ai_agents_model_id_ai_models_id_fk",
+    "definition": "FOREIGN KEY (model_id) REFERENCES ai_models(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "ai_agents",
+    "name": "ai_agents_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "ai_agent_kbs",
+    "name": "ai_agent_kbs_agent_id_ai_agents_id_fk",
+    "definition": "FOREIGN KEY (agent_id) REFERENCES ai_agents(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_kbs",
+    "name": "ai_agent_kbs_kb_id_knowledge_bases_id_fk",
+    "definition": "FOREIGN KEY (kb_id) REFERENCES knowledge_bases(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_policies",
+    "name": "ai_agent_policies_agent_id_ai_agents_id_fk",
+    "definition": "FOREIGN KEY (agent_id) REFERENCES ai_agents(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_agent_policies",
+    "name": "ai_agent_policies_policy_id_ai_policies_id_fk",
+    "definition": "FOREIGN KEY (policy_id) REFERENCES ai_policies(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_models",
+    "name": "ai_models_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "ai_policies",
+    "name": "ai_policies_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "ai_policy_groups",
+    "name": "ai_policy_groups_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "ai_policy_group_members",
+    "name": "ai_policy_group_members_group_id_ai_policy_groups_id_fk",
+    "definition": "FOREIGN KEY (group_id) REFERENCES ai_policy_groups(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ai_policy_group_members",
+    "name": "ai_policy_group_members_policy_id_ai_policies_id_fk",
+    "definition": "FOREIGN KEY (policy_id) REFERENCES ai_policies(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "approval_requests",
+    "name": "approval_requests_initiator_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (initiator_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "approval_requests",
+    "name": "approval_requests_reviewer_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (reviewer_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "audit_log",
+    "name": "audit_log_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "background_jobs",
+    "name": "background_jobs_resolved_by_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "bank_receipts_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "bank_receipts_confirmed_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (confirmed_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "bank_receipts",
+    "name": "fk_bank_receipts_invoice_profile",
+    "definition": "FOREIGN KEY (invoice_id, profile_id) REFERENCES invoices(id, profile_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "contract_templates",
+    "name": "contract_templates_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "contract_template_versions",
+    "name": "contract_template_versions_template_id_contract_templates_id_fk",
+    "definition": "FOREIGN KEY (template_id) REFERENCES contract_templates(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "contract_template_versions",
+    "name": "contract_template_versions_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "contract_type_templates",
+    "name": "contract_type_templates_template_id_contract_templates_id_fk",
+    "definition": "FOREIGN KEY (template_id) REFERENCES contract_templates(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "electricity_product_limits",
+    "name": "electricity_product_limits_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "email_provider_configs_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "email_provider_configs_activated_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (activated_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "email_suppressions",
+    "name": "email_suppressions_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "email_suppressions",
+    "name": "email_suppressions_source_event_id_email_webhook_events_id_fk",
+    "definition": "FOREIGN KEY (source_event_id) REFERENCES email_webhook_events(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "email_webhook_events",
+    "name": "email_webhook_events_outbox_id_notification_outbox_id_fk",
+    "definition": "FOREIGN KEY (outbox_id) REFERENCES notification_outbox(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "gift_codes",
+    "name": "gift_codes_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "gift_code_profiles",
+    "name": "gift_code_profiles_gift_code_id_gift_codes_id_fk",
+    "definition": "FOREIGN KEY (gift_code_id) REFERENCES gift_codes(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "gift_code_profiles",
+    "name": "gift_code_profiles_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "gift_code_redemptions",
+    "name": "gift_code_redemptions_gift_code_id_gift_codes_id_fk",
+    "definition": "FOREIGN KEY (gift_code_id) REFERENCES gift_codes(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "gift_code_redemptions",
+    "name": "gift_code_redemptions_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "gift_code_redemptions",
+    "name": "gift_code_redemptions_order_id_orders_id_fk",
+    "definition": "FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "in_app_notifications",
+    "name": "in_app_notifications_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "invoice_items",
+    "name": "invoice_items_invoice_id_invoices_id_fk",
+    "definition": "FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "invoice_items",
+    "name": "invoice_items_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "invoice_lines",
+    "name": "invoice_lines_invoice_id_invoices_id_fk",
+    "definition": "FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "invoice_reminder_offset_toggles_updated_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (updated_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "invoice_reminder_schedule_invoice_id_invoices_id_fk",
+    "definition": "FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "invoices",
+    "name": "invoices_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "invoices",
+    "name": "invoices_order_id_orders_id_fk",
+    "definition": "FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "invoices",
+    "name": "invoices_replaces_invoice_id_fkey",
+    "definition": "FOREIGN KEY (replaces_invoice_id) REFERENCES invoices(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "invoices",
+    "name": "invoices_adjustment_for_invoice_id_fkey",
+    "definition": "FOREIGN KEY (adjustment_for_invoice_id) REFERENCES invoices(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "kb_groups",
+    "name": "kb_groups_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "kb_group_members",
+    "name": "kb_group_members_group_id_kb_groups_id_fk",
+    "definition": "FOREIGN KEY (group_id) REFERENCES kb_groups(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "kb_group_members",
+    "name": "kb_group_members_kb_id_knowledge_bases_id_fk",
+    "definition": "FOREIGN KEY (kb_id) REFERENCES knowledge_bases(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "knowledge_bases",
+    "name": "knowledge_bases_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "kb_documents",
+    "name": "kb_documents_kb_id_knowledge_bases_id_fk",
+    "definition": "FOREIGN KEY (kb_id) REFERENCES knowledge_bases(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "kb_documents",
+    "name": "kb_documents_storage_key_storage_records_storage_key_fk",
+    "definition": "FOREIGN KEY (storage_key) REFERENCES storage_records(storage_key) ON DELETE RESTRICT"
+  },
+  {
+    "table": "kb_documents",
+    "name": "kb_documents_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "notification_dead_letter_outbox_id_notification_outbox_id_fk",
+    "definition": "FOREIGN KEY (outbox_id) REFERENCES notification_outbox(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "notification_dead_letter_job_id_notification_job_id_fk",
+    "definition": "FOREIGN KEY (job_id) REFERENCES notification_job(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "notification_delivery_log_notification_id_notification_outbox_i",
+    "definition": "FOREIGN KEY (notification_id) REFERENCES notification_outbox(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_outbox",
+    "name": "notification_outbox_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_outbox",
+    "name": "notification_outbox_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_job",
+    "name": "notification_job_outbox_id_notification_outbox_id_fk",
+    "definition": "FOREIGN KEY (outbox_id) REFERENCES notification_outbox(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "user_notification_preferences",
+    "name": "user_notification_preferences_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notification_templates",
+    "name": "notification_templates_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "notifications",
+    "name": "notifications_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "notifications",
+    "name": "notifications_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "orders",
+    "name": "orders_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "orders",
+    "name": "orders_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "orders",
+    "name": "orders_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "password_history",
+    "name": "password_history_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "product_categories",
+    "name": "product_categories_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "product_price_versions_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "product_price_versions_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profile_agents",
+    "name": "profile_agents_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_invitations",
+    "name": "profile_invitations_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "profile_ownership_transfers_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "profile_ownership_transfers_from_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (from_user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "profile_ownership_transfers_to_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (to_user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profiles",
+    "name": "profiles_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "reconciliation_exceptions_assigned_to_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (assigned_to_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "reconciliation_exceptions_resolved_by_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (resolved_by_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "service_due_periods_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "staff_team_members",
+    "name": "staff_team_members_team_id_staff_teams_id_fk",
+    "definition": "FOREIGN KEY (team_id) REFERENCES staff_teams(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "staff_team_members",
+    "name": "staff_team_members_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ticket_comments",
+    "name": "ticket_comments_ticket_id_tickets_id_fk",
+    "definition": "FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "ticket_comments",
+    "name": "ticket_comments_author_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_assigned_to_users_user_id_fk",
+    "definition": "FOREIGN KEY (assigned_to) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "tos_acceptances",
+    "name": "tos_acceptances_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "tos_acceptances",
+    "name": "tos_acceptances_version_id_tos_versions_id_fk",
+    "definition": "FOREIGN KEY (version_id) REFERENCES tos_versions(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "tos_versions",
+    "name": "tos_versions_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "upload_policies",
+    "name": "upload_policies_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "vat_configurations",
+    "name": "vat_configurations_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "product_vat_overrides_product_id_products_id_fk",
+    "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "product_vat_overrides_vat_config_id_vat_configurations_id_fk",
+    "definition": "FOREIGN KEY (vat_config_id) REFERENCES vat_configurations(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "product_vat_overrides_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_created_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_reviewed_by_users_user_id_fk",
+    "definition": "FOREIGN KEY (reviewed_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "wallet_chargeback_events_original_transaction_id_wallet_transac",
+    "definition": "FOREIGN KEY (original_transaction_id) REFERENCES wallet_transactions(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "wallet_chargeback_events_reversal_transaction_id_wallet_transac",
+    "definition": "FOREIGN KEY (reversal_transaction_id) REFERENCES wallet_transactions(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "wallet_chargeback_events_wallet_id_wallets_profile_id_fk",
+    "definition": "FOREIGN KEY (wallet_id) REFERENCES wallets(profile_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "wallet_topup_callback_events_pending_transaction_id_wallet_tran",
+    "definition": "FOREIGN KEY (pending_transaction_id) REFERENCES wallet_transactions(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "wallet_topup_callback_events_wallet_id_wallets_profile_id_fk",
+    "definition": "FOREIGN KEY (wallet_id) REFERENCES wallets(profile_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallets",
+    "name": "wallets_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "wallet_transactions_wallet_id_wallets_profile_id_fk",
+    "definition": "FOREIGN KEY (wallet_id) REFERENCES wallets(profile_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "wallet_transactions",
+    "name": "fk_wallet_tx_reverses_transaction",
+    "definition": "FOREIGN KEY (reverses_transaction_id) REFERENCES wallet_transactions(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "chk_product_price_versions_price_non_negative",
+    "definition": "CHECK ((price >= 0))"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "chk_product_price_versions_effective_range",
+    "definition": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))"
+  },
+  {
+    "table": "product_price_versions",
+    "name": "excl_product_price_versions_no_overlap",
+    "definition": "EXCLUDE USING gist (product_id WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)"
+  },
+  {
+    "table": "electricity_product_limits",
+    "name": "chk_electricity_product_limits_range",
+    "definition": "CHECK (((max_kwh = 0) OR (min_kwh <= max_kwh)))"
+  },
+  {
+    "table": "electricity_product_limits",
+    "name": "chk_electricity_product_limits_at_least_one",
+    "definition": "CHECK (((min_kwh > 0) OR (max_kwh > 0)))"
+  },
+  {
+    "table": "brand_config",
+    "name": "brand_config_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "tos_versions",
+    "name": "chk_tos_change_type",
+    "definition": "CHECK ((change_type = ANY (ARRAY['major'::text, 'minor'::text])))"
+  },
+  {
+    "table": "tos_versions",
+    "name": "chk_tos_status",
+    "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'published'::text])))"
+  },
+  {
+    "table": "notification_templates",
+    "name": "chk_nt_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['email'::text, 'sms'::text, 'in_app'::text])))"
+  },
+  {
+    "table": "notification_templates",
+    "name": "chk_nt_locale",
+    "definition": "CHECK ((locale = ANY (ARRAY['fa'::text, 'en'::text])))"
+  },
+  {
+    "table": "notification_templates",
+    "name": "chk_nt_status",
+    "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])))"
+  },
+  {
+    "table": "user_notification_preferences",
+    "name": "chk_unp_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['email'::text, 'sms'::text, 'in_app'::text])))"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "chk_epc_transport",
+    "definition": "CHECK ((transport = ANY (ARRAY['smtp'::text, 'resend'::text])))"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "chk_epc_status",
+    "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'superseded'::text, 'disabled'::text])))"
+  },
+  {
+    "table": "email_provider_configs",
+    "name": "chk_epc_last_test_status",
+    "definition": "CHECK ((last_test_status = ANY (ARRAY['pending'::text, 'passed'::text, 'failed'::text])))"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "sms_provider_configs_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "sms_provider_configs_created_by_fkey",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "sms_provider_configs_activated_by_fkey",
+    "definition": "FOREIGN KEY (activated_by) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "sms_provider_configs_supersedes_id_fkey",
+    "definition": "FOREIGN KEY (supersedes_id) REFERENCES sms_provider_configs(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "chk_spc_transport",
+    "definition": "CHECK ((transport = 'smsir'::text))"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "chk_spc_status",
+    "definition": "CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'superseded'::text, 'disabled'::text])))"
+  },
+  {
+    "table": "sms_provider_configs",
+    "name": "chk_spc_last_test_status",
+    "definition": "CHECK ((last_test_status = ANY (ARRAY['pending'::text, 'passed'::text, 'failed'::text])))"
+  },
+  {
+    "table": "ai_models",
+    "name": "chk_aim_provider_type",
+    "definition": "CHECK ((provider_type = ANY (ARRAY['openai_compatible'::text, 'anthropic'::text])))"
+  },
+  {
+    "table": "ai_models",
+    "name": "chk_aim_last_test_status",
+    "definition": "CHECK ((last_test_status = ANY (ARRAY['pending'::text, 'passed'::text, 'failed'::text])))"
+  },
+  {
+    "table": "ai_models",
+    "name": "chk_aim_non_empty_fields",
+    "definition": "CHECK (((title <> ''::text) AND (base_url <> ''::text) AND (model_name <> ''::text)))"
+  },
+  {
+    "table": "knowledge_bases",
+    "name": "chk_kb_title",
+    "definition": "CHECK ((title <> ''::text))"
+  },
+  {
+    "table": "kb_groups",
+    "name": "chk_kbg_title",
+    "definition": "CHECK ((title <> ''::text))"
+  },
+  {
+    "table": "kb_documents",
+    "name": "chk_kbd_processing_status",
+    "definition": "CHECK ((processing_status = ANY (ARRAY['pending'::text, 'processing'::text, 'ready'::text, 'failed'::text])))"
+  },
+  {
+    "table": "ai_policies",
+    "name": "chk_aip_title",
+    "definition": "CHECK ((title <> ''::text))"
+  },
+  {
+    "table": "ai_policy_groups",
+    "name": "chk_aipg_title",
+    "definition": "CHECK ((title <> ''::text))"
+  },
+  {
+    "table": "ai_policies",
+    "name": "chk_aip_type",
+    "definition": "CHECK ((policy_type = ANY (ARRAY['allowed_topics'::text, 'disallowed_actions'::text, 'data_access_scope'::text, 'response_style'::text])))"
+  },
+  {
+    "table": "ai_agents",
+    "name": "chk_aia_title",
+    "definition": "CHECK ((title <> ''::text))"
+  },
+  {
+    "table": "ai_agent_slots",
+    "name": "chk_aias_label",
+    "definition": "CHECK ((label <> ''::text))"
+  },
+  {
+    "table": "ai_agent_slots",
+    "name": "chk_aias_slot_key",
+    "definition": "CHECK ((slot_key = ANY (ARRAY['individual_chatbot'::text, 'legal_entity_chatbot'::text, 'staff_chatbot'::text, 'website_chatbot'::text, 'telegram_chatbot'::text])))"
+  },
+  {
+    "table": "vat_configurations",
+    "name": "chk_vat_configurations_rate_range",
+    "definition": "CHECK (((rate >= 0) AND (rate <= 10000)))"
+  },
+  {
+    "table": "vat_configurations",
+    "name": "chk_vat_configurations_effective_range",
+    "definition": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))"
+  },
+  {
+    "table": "vat_configurations",
+    "name": "excl_vat_configurations_no_overlap",
+    "definition": "EXCLUDE USING gist (category WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "chk_product_vat_overrides_effective_range",
+    "definition": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))"
+  },
+  {
+    "table": "product_vat_overrides",
+    "name": "excl_product_vat_overrides_no_overlap",
+    "definition": "EXCLUDE USING gist (product_id WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_discount_type",
+    "definition": "CHECK ((discount_type = ANY (ARRAY['fixed_irr'::text, 'percentage'::text])))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_eligibility",
+    "definition": "CHECK ((eligibility = ANY (ARRAY['public'::text, 'profile'::text])))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_status",
+    "definition": "CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text])))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_discount_value",
+    "definition": "CHECK (((discount_value > 0) AND (((discount_type = 'fixed_irr'::text) AND (max_cap_irr IS NULL)) OR ((discount_type = 'percentage'::text) AND (discount_value <= 10000) AND (max_cap_irr IS NOT NULL) AND (max_cap_irr > 0)))))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_window",
+    "definition": "CHECK (((valid_until IS NULL) OR (valid_from < valid_until)))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_limits",
+    "definition": "CHECK ((((total_limit IS NULL) OR (total_limit > 0)) AND ((per_profile_limit IS NULL) OR (per_profile_limit > 0))))"
+  },
+  {
+    "table": "gift_codes",
+    "name": "chk_gift_codes_min_order",
+    "definition": "CHECK ((min_order_amount >= 0))"
+  },
+  {
+    "table": "gift_code_redemptions",
+    "name": "chk_gift_code_redemptions_status",
+    "definition": "CHECK ((status = ANY (ARRAY['consumed'::text, 'released'::text])))"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_invoices_total_amount_nonneg",
+    "definition": "CHECK ((total_amount >= 0))"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_invoices_paid_amount_nonneg",
+    "definition": "CHECK ((paid_amount >= 0))"
+  },
+  {
+    "table": "invoices",
+    "name": "ck_invoices_refunded_amount_nonneg",
+    "definition": "CHECK ((refunded_amount >= 0))"
+  },
+  {
+    "table": "storage_records",
+    "name": "baseline_storage_records_3337202a",
+    "definition": "CHECK ((status = ANY (ARRAY['active'::text, 'immutable'::text, 'removed'::text])))"
+  },
+  {
+    "table": "sessions",
+    "name": "baseline_sessions_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "password_history",
+    "name": "baseline_password_history_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profiles",
+    "name": "baseline_profiles_b4095e54",
+    "definition": "CHECK ((profile_type = ANY (ARRAY['INDIVIDUAL'::text, 'LEGAL'::text])))"
+  },
+  {
+    "table": "profiles",
+    "name": "baseline_profiles_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "device_trusts",
+    "name": "baseline_device_trusts_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "refresh_tokens",
+    "name": "baseline_refresh_tokens_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "refresh_tokens",
+    "name": "baseline_refresh_tokens_session_id_fk",
+    "definition": "FOREIGN KEY (session_id) REFERENCES sessions(session_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "addresses",
+    "name": "baseline_addresses_profile_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "addresses",
+    "name": "addresses_province_id_provinces_id_fk",
+    "definition": "FOREIGN KEY (province_id) REFERENCES provinces(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "addresses",
+    "name": "addresses_city_id_cities_id_fk",
+    "definition": "FOREIGN KEY (city_id) REFERENCES cities(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "baseline_verification_cases_265614ef",
+    "definition": "CHECK ((status = ANY (ARRAY['Open'::text, 'Under Review'::text, 'Approved'::text, 'Rejected'::text])))"
+  },
+  {
+    "table": "verification_cases",
+    "name": "baseline_verification_cases_profile_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "baseline_verification_cases_created_by_fk",
+    "definition": "FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "verification_cases",
+    "name": "baseline_verification_cases_reviewed_by_fk",
+    "definition": "FOREIGN KEY (reviewed_by) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "legal_profiles",
+    "name": "baseline_legal_profiles_id_fk",
+    "definition": "FOREIGN KEY (id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "legal_profiles",
+    "name": "baseline_legal_profiles_company_type_id_fk",
+    "definition": "FOREIGN KEY (company_type_id) REFERENCES company_types(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profile_agents",
+    "name": "baseline_profile_agents_profile_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_invitations",
+    "name": "baseline_profile_invitations_72d6d4e5",
+    "definition": "CHECK ((status = ANY (ARRAY['Pending'::text, 'Accepted'::text, 'Withdrawn'::text, 'Declined'::text, 'Expired'::text])))"
+  },
+  {
+    "table": "profile_invitations",
+    "name": "baseline_profile_invitations_profile_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "baseline_profile_ownership_transfers_90fde1bc",
+    "definition": "CHECK ((status = ANY (ARRAY['Pending'::text, 'Completed'::text, 'Declined'::text, 'Expired'::text, 'Cancelled'::text])))"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "baseline_profile_ownership_transfers_profile_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "baseline_profile_ownership_transfers_from_user_id_fk",
+    "definition": "FOREIGN KEY (from_user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "profile_ownership_transfers",
+    "name": "baseline_profile_ownership_transfers_to_user_id_fk",
+    "definition": "FOREIGN KEY (to_user_id) REFERENCES users(user_id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "user_roles",
+    "name": "user_roles_pkey",
+    "definition": "PRIMARY KEY (user_id, role_id)"
+  },
+  {
+    "table": "cities",
+    "name": "cities_province_id_provinces_id_fk",
+    "definition": "FOREIGN KEY (province_id) REFERENCES provinces(id) ON DELETE RESTRICT"
+  },
+  {
+    "table": "otp_challenges",
+    "name": "otp_challenge_purpose_binding",
+    "definition": "CHECK (((purpose = 'legacy_invalid'::text) OR ((purpose = 'registration'::text) AND (user_id IS NULL) AND (password_hash IS NOT NULL) AND (tos_version_id IS NOT NULL)) OR ((purpose = ANY (ARRAY['login'::text, 'password_reset'::text, 'change_username'::text, 'add_email'::text, 'add_mobile'::text])) AND (user_id IS NOT NULL))))"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_status_check",
+    "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'leased'::text, 'sent'::text, 'cancelled'::text, 'dead'::text])))"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_attempts_check",
+    "definition": "CHECK ((attempts >= 0))"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_outbox_pkey",
+    "definition": "PRIMARY KEY (id)"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_outbox_challenge_id_otp_challenges_challenge_id_f",
+    "definition": "FOREIGN KEY (challenge_id) REFERENCES otp_challenges(challenge_id)"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_outbox_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+  },
+  {
+    "table": "auth_delivery_outbox",
+    "name": "auth_delivery_binding_check",
+    "definition": "CHECK ((((kind = 'otp'::text) AND (challenge_id IS NOT NULL) AND (user_id IS NULL)) OR ((kind = 'staff_activation'::text) AND (challenge_id IS NULL) AND (user_id IS NOT NULL))))"
+  },
+  {
+    "table": "profiles",
+    "name": "profiles_status_check",
+    "definition": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'ACTIVE'::text, 'PENDING_VERIFICATION'::text, 'VERIFIED'::text, 'SUSPENDED'::text])))"
+  },
+  {
+    "table": "user_profile_contexts",
+    "name": "user_profile_contexts_pkey",
+    "definition": "PRIMARY KEY (user_id)"
+  },
+  {
+    "table": "user_profile_contexts",
+    "name": "user_profile_contexts_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "user_profile_contexts",
+    "name": "user_profile_contexts_profile_id_profiles_id_fk",
+    "definition": "FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "in_app_notifications",
+    "name": "in_app_notifications_recipient_user_id_users_user_id_fk",
+    "definition": "FOREIGN KEY (recipient_user_id) REFERENCES users(user_id) ON DELETE CASCADE"
+  },
+  {
+    "table": "in_app_notifications",
+    "name": "chk_ian_recipient",
+    "definition": "CHECK (((profile_id IS NOT NULL) OR (recipient_user_id IS NOT NULL)))"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_attachments_array",
+    "definition": "CHECK (((jsonb_typeof(attachments) = 'array'::text) AND (jsonb_array_length(attachments) <= 5)))"
+  },
+  {
+    "table": "tickets",
+    "name": "tickets_assigned_team_id_fkey",
+    "definition": "FOREIGN KEY (assigned_team_id) REFERENCES staff_teams(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_assigned_to_fkey",
+    "definition": "FOREIGN KEY (assigned_to) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "verification_cases",
+    "name": "verification_cases_assigned_team_id_fkey",
+    "definition": "FOREIGN KEY (assigned_team_id) REFERENCES staff_teams(id) ON DELETE SET NULL"
+  },
+  {
+    "table": "staff_assignment_cursors",
+    "name": "staff_assignment_cursors_work_type_check",
+    "definition": "CHECK ((work_type = ANY (ARRAY['ticket'::text, 'verification_case'::text])))"
+  },
+  {
+    "table": "staff_assignment_cursors",
+    "name": "staff_assignment_cursors_pkey",
+    "definition": "PRIMARY KEY (team_id, work_type)"
+  },
+  {
+    "table": "staff_assignment_cursors",
+    "name": "staff_assignment_cursors_team_id_fkey",
+    "definition": "FOREIGN KEY (team_id) REFERENCES staff_teams(id) ON DELETE CASCADE"
+  },
+  {
+    "table": "staff_assignment_cursors",
+    "name": "staff_assignment_cursors_last_user_id_fkey",
+    "definition": "FOREIGN KEY (last_user_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "notification_outbox",
+    "name": "notification_outbox_recipient_check",
+    "definition": "CHECK (((profile_id IS NOT NULL) OR (user_id IS NOT NULL)))"
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "uq_sba_item",
+    "definition": "UNIQUE (service_type, item_id)"
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "chk_sba_service_type",
+    "definition": "CHECK ((service_type = ANY (ARRAY['ticket'::text, 'verification_case'::text])))"
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "chk_sba_target_hours",
+    "definition": "CHECK ((target_hours > 0))"
+  },
+  {
+    "table": "service_breach_alerts",
+    "name": "chk_sba_escalation_level",
+    "definition": "CHECK (((escalation_level >= 1) AND (escalation_level <= 3)))"
+  },
+  {
+    "table": "staff_teams",
+    "name": "staff_teams_lead_user_id_fkey",
+    "definition": "FOREIGN KEY (lead_user_id) REFERENCES users(user_id) ON DELETE SET NULL"
+  },
+  {
+    "table": "staff_teams",
+    "name": "uq_st_name",
+    "definition": "UNIQUE (name)"
+  },
+  {
+    "table": "staff_teams",
+    "name": "chk_st_name_length",
+    "definition": "CHECK (((char_length(name) >= 1) AND (char_length(name) <= 80)))"
+  },
+  {
+    "table": "staff_team_members",
+    "name": "uq_stm_team_member",
+    "definition": "UNIQUE (team_id, user_id)"
+  },
+  {
+    "table": "notification_outbox",
+    "name": "chk_ob_status",
+    "definition": "CHECK ((status = ANY (ARRAY['queued'::text, 'scheduled'::text, 'sending'::text, 'delivered'::text, 'failed'::text, 'cancelled'::text])))"
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_error_category",
+    "definition": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))"
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_status",
+    "definition": "CHECK ((status = ANY (ARRAY['queued'::text, 'running'::text, 'retrying'::text, 'done'::text, 'failed'::text, 'dead_letter'::text])))"
+  },
+  {
+    "table": "notification_job",
+    "name": "chk_job_priority",
+    "definition": "CHECK ((priority = ANY (ARRAY['urgent'::text, 'normal'::text])))"
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))"
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_status",
+    "definition": "CHECK ((status = ANY (ARRAY['delivered'::text, 'failed'::text])))"
+  },
+  {
+    "table": "notification_delivery_log",
+    "name": "chk_ndl_error_category",
+    "definition": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_severity",
+    "definition": "CHECK ((severity = ANY (ARRAY['error'::text, 'critical'::text])))"
+  },
+  {
+    "table": "notification_dead_letter",
+    "name": "chk_ndl_status",
+    "definition": "CHECK ((status = ANY (ARRAY['open'::text, 'retried'::text, 'resolved'::text, 'dismissed'::text])))"
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_action_type",
+    "definition": "CHECK ((action_type = ANY (ARRAY['refund'::text, 'manual_adjustment'::text, 'bank_payment_confirmation'::text])))"
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_amount_positive",
+    "definition": "CHECK ((amount_irr > 0))"
+  },
+  {
+    "table": "approval_requests",
+    "name": "chk_ar_status",
+    "definition": "CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_type",
+    "definition": "CHECK ((exception_type = ANY (ARRAY['wallet_mismatch'::text, 'payment_mismatch'::text])))"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_severity",
+    "definition": "CHECK ((severity = ANY (ARRAY['low'::text, 'medium'::text, 'high'::text, 'critical'::text])))"
+  },
+  {
+    "table": "reconciliation_exceptions",
+    "name": "chk_rex_status",
+    "definition": "CHECK ((status = ANY (ARRAY['open'::text, 'investigating'::text, 'resolved'::text, 'closed'::text])))"
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_status",
+    "definition": "CHECK ((status = ANY (ARRAY['failed'::text, 'retrying'::text, 'dead_letter'::text, 'resolved'::text])))"
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_error_category",
+    "definition": "CHECK ((error_category = ANY (ARRAY['transient'::text, 'permanent'::text, 'provider'::text])))"
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_attempts_ge_1",
+    "definition": "CHECK ((attempts >= 1))"
+  },
+  {
+    "table": "background_jobs",
+    "name": "chk_bj_max_attempts_ge_1",
+    "definition": "CHECK ((max_attempts >= 1))"
+  },
+  {
+    "table": "contract_templates",
+    "name": "chk_contract_templates_status",
+    "definition": "CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text])))"
+  },
+  {
+    "table": "contract_templates",
+    "name": "chk_contract_templates_name",
+    "definition": "CHECK ((length(btrim(name)) > 0))"
+  },
+  {
+    "table": "contract_template_versions",
+    "name": "chk_contract_template_versions_version_number",
+    "definition": "CHECK ((version_number > 0))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_category",
+    "definition": "CHECK ((category = ANY (ARRAY['document'::text, 'image'::text, 'video'::text])))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_extensions",
+    "definition": "CHECK (barghsa_valid_upload_extensions(allowed_extensions))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_max_size",
+    "definition": "CHECK (((max_size_bytes >= 1) AND (max_size_bytes <= 104857600)))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "chk_upload_policies_effective_range",
+    "definition": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))"
+  },
+  {
+    "table": "upload_policies",
+    "name": "excl_upload_policies_no_overlap",
+    "definition": "EXCLUDE USING gist (category WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_service_type",
+    "definition": "CHECK ((service_type = ANY (ARRAY['electricity'::text, 'saving_plan'::text, 'consultation'::text, 'manual'::text])))"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_default_days",
+    "definition": "CHECK (((default_days >= 1) AND (default_days <= 365)))"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "chk_service_due_periods_effective_range",
+    "definition": "CHECK (((effective_until IS NULL) OR (effective_from < effective_until)))"
+  },
+  {
+    "table": "service_due_periods",
+    "name": "excl_service_due_periods_no_overlap",
+    "definition": "EXCLUDE USING gist (service_type WITH =, tstzrange(effective_from, COALESCE(effective_until, 'infinity'::timestamp with time zone), '[)'::text) WITH &&)"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_offset",
+    "definition": "CHECK ((\"offset\" = ANY (ARRAY['-7'::integer, '-3'::integer, '-1'::integer, 0, 1, 7])))"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_channel",
+    "definition": "CHECK ((channel = ANY (ARRAY['in_app'::text, 'email'::text, 'sms'::text])))"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_status",
+    "definition": "CHECK ((status = ANY (ARRAY['scheduled'::text, 'sent'::text, 'cancelled'::text])))"
+  },
+  {
+    "table": "invoice_reminder_schedule",
+    "name": "chk_invoice_reminder_schedule_sent_at",
+    "definition": "CHECK ((((status = 'sent'::text) AND (sent_at IS NOT NULL)) OR ((status <> 'sent'::text) AND (sent_at IS NULL))))"
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "chk_invoice_reminder_offset_toggles_service_type",
+    "definition": "CHECK ((service_type = ANY (ARRAY['electricity'::text, 'saving_plan'::text, 'consultation'::text, 'manual'::text])))"
+  },
+  {
+    "table": "invoice_reminder_offset_toggles",
+    "name": "chk_invoice_reminder_offset_toggles_offset",
+    "definition": "CHECK ((\"offset\" = ANY (ARRAY['-7'::integer, '-3'::integer, '-1'::integer, 0, 1, 7])))"
+  },
+  {
+    "table": "wallet_topup_callback_events",
+    "name": "chk_wallet_topup_callback_events_status",
+    "definition": "CHECK ((status = ANY (ARRAY['credited'::text, 'unpaid'::text, 'duplicate'::text])))"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "chk_wallet_chargeback_events_status",
+    "definition": "CHECK ((status = ANY (ARRAY['processing'::text, 'reversed'::text, 'unmatched'::text, 'unresolved'::text, 'duplicate'::text])))"
+  },
+  {
+    "table": "wallet_chargeback_events",
+    "name": "chk_wallet_chargeback_events_match_method",
+    "definition": "CHECK (((match_method IS NULL) OR (match_method = ANY (ARRAY['merchant_order_id'::text, 'provider_ref_id'::text, 'authority'::text]))))"
+  }
+]

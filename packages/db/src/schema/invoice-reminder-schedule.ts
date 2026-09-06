@@ -1,3 +1,4 @@
+import { domainCheckEntries } from '../domain-checks'
 import { sql } from 'drizzle-orm'
 import { integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
 import { baseColumns } from '../base-table'
@@ -94,6 +95,7 @@ export const invoiceReminderSchedule = pgTable(
       .default('scheduled'),
   },
   (table) => ({
+    ...domainCheckEntries('invoice_reminder_schedule'),
     /**
      * Same reminder never planned twice (S-04.1.04 / T-04.1.04.04).
      * Created by migration 0061.

@@ -1,3 +1,4 @@
+import { domainChecks } from './domain-checks'
 import { pgTable } from 'drizzle-orm/pg-core'
 import type { PgColumnBuilderBase } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from './types'
@@ -48,5 +49,5 @@ export function createTable<TColumns extends Record<string, PgColumnBuilderBase>
   name: string,
   columns: TColumns,
 ) {
-  return pgTable(name, { ...baseColumns, ...columns })
+  return pgTable(name, { ...baseColumns, ...columns }, () => domainChecks(name))
 }

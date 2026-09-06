@@ -1,3 +1,4 @@
+import { domainCheckEntries } from '../domain-checks'
 import { sql } from 'drizzle-orm'
 import { boolean, integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core'
 import { baseColumns } from '../base-table'
@@ -44,6 +45,7 @@ export const invoiceReminderOffsetToggles = pgTable(
       .references(() => users.userId, { onDelete: 'restrict' }),
   },
   (table) => ({
+    ...domainCheckEntries('invoice_reminder_offset_toggles'),
     serviceTypeOffsetUnique: uniqueIndex('uq_invoice_reminder_offset_toggles_type_offset').on(
       table.serviceType,
       table.offset,

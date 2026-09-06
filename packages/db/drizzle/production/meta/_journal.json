@@ -169,6 +169,13 @@
       "when": 1791331200006,
       "tag": "0103_staff_team_leads",
       "breakpoints": true
+    },
+    {
+      "idx": 104,
+      "version": "7",
+      "when": 1791331200007,
+      "tag": "0104_restore_inline_domain_constraints",
+      "breakpoints": true
     }
   ]
 }

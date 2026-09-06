@@ -1,3 +1,4 @@
+import { domainChecks } from '../domain-checks'
 import { sql } from 'drizzle-orm'
 import { jsonb, pgTable, text, integer, timestamp, uniqueIndex, uuid, check } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
@@ -95,6 +96,7 @@ export const notificationOutbox = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    ...domainChecks('notification_outbox'),
     check('notification_outbox_recipient_check', sql`${table.profileId} IS NOT NULL OR ${table.userId} IS NOT NULL`),
     uniqueIndex('uq_notification_outbox_idempotency').on(table.idempotencyKey),
   ],
@@ -154,5 +156,5 @@ export const notificationJob = pgTable(
       .notNull()
       .$onUpdate(() => new Date()),
   },
-  (table) => [uniqueIndex('uq_notification_job_outbox_channel').on(table.outboxId, table.channel)],
+  (table) => [...domainChecks('notification_job'),uniqueIndex('uq_notification_job_outbox_channel').on(table.outboxId, table.channel)],
 )

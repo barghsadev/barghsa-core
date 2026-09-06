@@ -1,3 +1,4 @@
+import { domainChecks } from '../domain-checks'
 import { pgTable, text, integer, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { notificationOutbox } from './notification-outbox.js'
@@ -67,6 +68,7 @@ export const notificationDeliveryLog = pgTable(
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
+    ...domainChecks('notification_delivery_log'),
     // Admin panel queries by notification id first, then newest-first.
     index('idx_ndl_notification').on(table.notificationId, table.createdAt),
     // Triaging a channel or an error class across notifications.

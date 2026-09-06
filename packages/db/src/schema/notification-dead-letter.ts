@@ -1,3 +1,4 @@
+import { domainChecks } from '../domain-checks'
 import { pgTable, text, integer, index } from 'drizzle-orm/pg-core'
 import { uuidv7, timestamptz } from '../types.js'
 import { notificationOutbox } from './notification-outbox.js'
@@ -102,6 +103,7 @@ export const notificationDeadLetter = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    ...domainChecks('notification_dead_letter'),
     // Ops panel default query: open items newest-first.
     index('idx_ndl_status_created').on(table.status, table.createdAt),
     // Triage by severity across all statuses.

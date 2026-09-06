@@ -51,6 +51,7 @@ describe('seed verification', () => {
         email TEXT,
         mobile TEXT,
         password_hash TEXT NOT NULL,
+        auth_version INTEGER NOT NULL DEFAULT 0,
         locale TEXT NOT NULL DEFAULT 'fa',
         must_change_password BOOLEAN NOT NULL DEFAULT false,
         is_admin BOOLEAN NOT NULL DEFAULT false,
@@ -140,8 +141,10 @@ describe('seed verification', () => {
   it('creates an admin user when bootstrap env vars are provided', async () => {
     const originalSecret = process.env['ADMIN_BOOTSTRAP_SECRET']
     const originalEmail = process.env['ADMIN_BOOTSTRAP_EMAIL']
+    const originalPassword = process.env['ADMIN_BOOTSTRAP_PASSWORD']
 
     try {
+      process.env['ADMIN_BOOTSTRAP_PASSWORD'] = 'Fixture-only-password-123!'
       process.env['ADMIN_BOOTSTRAP_SECRET'] = 'test-secret'
       process.env['ADMIN_BOOTSTRAP_EMAIL'] = 'admin@test.example'
 
@@ -164,6 +167,8 @@ describe('seed verification', () => {
       expect(adminUser[0]!.mustChangePassword).toBe(true)
       expect(adminUser[0]!.locale).toBe('fa')
     } finally {
+      if(originalPassword===undefined)delete process.env.ADMIN_BOOTSTRAP_PASSWORD
+      else process.env.ADMIN_BOOTSTRAP_PASSWORD=originalPassword
       if (originalSecret !== undefined) {
         process.env['ADMIN_BOOTSTRAP_SECRET'] = originalSecret
       } else {
