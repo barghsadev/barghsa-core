@@ -1,3 +1,4 @@
+import { requireAddressGeography } from '../profiles/address-geography.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -185,6 +186,12 @@ export class OrdersService {
         );
       }
       const product = productResult.rows[0] as { id: string; type: string; price: string | null };
+
+      await requireAddressGeography(
+        client,
+        dto.address.provinceId.trim(),
+        dto.address.cityId.trim()
+      );
 
       // Create the order with address snapshot
       const result = await client.query(

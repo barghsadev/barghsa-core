@@ -33,6 +33,7 @@ beforeEach(() => {
     if (text === 'BEGIN' || text === 'COMMIT' || text === 'ROLLBACK') {
       return { rows: [], rowCount: 0 };
     }
+    if (text.includes('FROM provinces p JOIN cities c')) return { rows: [{ id: 'city-1' }] };
     const next = responses.shift() ?? { rows: [], rowCount: 0 };
     return next;
   });

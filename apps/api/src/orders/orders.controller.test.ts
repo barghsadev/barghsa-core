@@ -6,12 +6,12 @@ function mockOrder(overrides: Partial<OrderRow> = {}): OrderRow {
   return {
     id: 'ord-001',
     userId: 'user-1',
-    profileId: 'prof-1',
-    productId: 'prod-1',
+    profileId: '00000000-0000-4000-8000-000000000001',
+    productId: '00000000-0000-4000-8000-000000000002',
     orderType: 'electricity',
     status: 'DRAFT',
-    snapshotProvinceId: 'prov-1',
-    snapshotCityId: 'city-1',
+    snapshotProvinceId: '00000000-0000-4000-8000-000000000003',
+    snapshotCityId: '00000000-0000-4000-8000-000000000004',
     snapshotFullAddress: '123 Test St',
     snapshotPostalCode: '1234567890',
     giftCodeId: null,
@@ -45,12 +45,12 @@ describe('OrdersController', () => {
       const req = { session: { userId: 'user-1' } } as any;
 
       const body = {
-        profileId: 'prof-1',
-        productId: 'prod-1',
+        profileId: '00000000-0000-4000-8000-000000000001',
+        productId: '00000000-0000-4000-8000-000000000002',
         orderType: 'electricity' as const,
         address: {
-          provinceId: 'prov-1',
-          cityId: 'city-1',
+          provinceId: '00000000-0000-4000-8000-000000000003',
+          cityId: '00000000-0000-4000-8000-000000000004',
           fullAddress: '123 Test St',
           postalCode: '1234567890',
         },
@@ -68,12 +68,12 @@ describe('OrdersController', () => {
 
       const req = { session: { userId: 'user-1' } } as any;
       const body = {
-        profileId: 'prof-1',
-        productId: 'prod-1',
+        profileId: '00000000-0000-4000-8000-000000000001',
+        productId: '00000000-0000-4000-8000-000000000002',
         orderType: 'electricity' as const,
         address: {
-          provinceId: 'prov-1',
-          cityId: 'city-1',
+          provinceId: '00000000-0000-4000-8000-000000000003',
+          cityId: '00000000-0000-4000-8000-000000000004',
           fullAddress: '123 Test St',
           postalCode: '1234567890',
         },
@@ -85,7 +85,7 @@ describe('OrdersController', () => {
       expect(result.giftDiscountAmount).toBe('500000');
       expect(service.createOrder).toHaveBeenCalledWith(
         'user-1',
-        expect.objectContaining({ giftCode: ' SALE10 ' }),
+        expect.objectContaining({ giftCode: 'SALE10' }),
         'unknown'
       );
     });

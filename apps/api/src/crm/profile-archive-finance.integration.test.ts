@@ -216,7 +216,13 @@ async function prepareOrder() {
       [provinceId]
     )
   ).rows[0].id;
-  const create = () =>
+  const validBody = {
+    profileId,
+    productId,
+    orderType: 'electricity',
+    address: { provinceId, cityId, fullAddress: 'Order Street', postalCode: '1234567890' },
+  };
+  const create = (input: unknown = validBody) =>
     fetch(`${http.base}/api/orders`, {
       method: 'POST',
       headers: {
@@ -224,14 +230,9 @@ async function prepareOrder() {
         'X-CSRF-Token': csrf,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        profileId,
-        productId,
-        orderType: 'electricity',
-        address: { provinceId, cityId, fullAddress: 'Order Street', postalCode: '1234567890' },
-      }),
+      body: JSON.stringify(input),
     });
-  return { productId, create };
+  return { productId, create, validBody, provinceId, cityId };
 }
 it('creates an order against the migrated product schema and blocks archival while it is active', async () => {
   const { create } = await prepareOrder();
@@ -314,4 +315,40 @@ it('archival waits for an order already holding the profile lock and then sees t
     await creating;
     await archiving;
   }
+});
+
+it('rejects malformed orders and inactive or mismatched geography before writing an order', async () => {
+  const { create, validBody, cityId } = await prepareOrder();
+  const invalid = [
+    null,
+    {},
+    { ...validBody, address: null },
+    { ...validBody, profileId: 'invalid' },
+    { ...validBody, orderType: 'invalid' },
+    { ...validBody, giftCode: 42 },
+    { ...validBody, address: { ...validBody.address, fullAddress: 42 } },
+    { ...validBody, address: { ...validBody.address, postalCode: 'invalid' } },
+    { ...validBody, address: { ...validBody.address, cityId: randomUUID() } },
+  ];
+  for (const body of invalid) expect((await create(body)).status).toBe(400);
+  const otherProvince = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES ('دیگر','Other') RETURNING id"
+    )
+  ).rows[0].id;
+  expect(
+    (await create({ ...validBody, address: { ...validBody.address, provinceId: otherProvince } }))
+      .status
+  ).toBe(400);
+  expect((await fetch(`${http.base}/api/orders/not-a-uuid`, { headers })).status).toBe(400);
+  expect(
+    (await fetch(`${http.base}/api/orders/not-a-uuid/cancel`, { method: 'POST', headers })).status
+  ).toBe(400);
+  await http.pool.query("UPDATE cities SET status='inactive' WHERE id=$1", [cityId]);
+  expect((await create()).status).toBe(400);
+  expect((await http.pool.query('SELECT id FROM orders')).rows).toHaveLength(0);
+  await http.pool.query("UPDATE cities SET status='active' WHERE id=$1", [cityId]);
+  const response = await create();
+  expect(response.status).toBe(201);
+  expect(await response.json()).toMatchObject({ snapshotFullAddress: 'Order Street' });
 });

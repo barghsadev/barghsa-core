@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { validatePostalCode } from '@barghsa/shared/validation';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   Body,
   Controller,
@@ -7,6 +10,7 @@ import {
   HttpException,
   Logger,
   Param,
+  ParseUUIDPipe,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +20,19 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+
+const createOrderInput = z.object({
+  profileId: z.string().uuid(),
+  productId: z.string().uuid(),
+  orderType: z.enum(['electricity', 'savings', 'solar']),
+  address: z.object({
+    provinceId: z.string().trim().uuid(),
+    cityId: z.string().trim().uuid(),
+    fullAddress: z.string().trim().min(1).max(500),
+    postalCode: z.string().trim().refine(validatePostalCode),
+  }),
+  giftCode: z.string().trim().min(1).max(100).optional(),
+});
 
 @ApiTags('Orders')
 @Controller('api/orders')
@@ -38,37 +55,26 @@ export class OrdersController {
   @HttpCode(201)
   @RateLimit({ namespace: 'orders:create:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Create a new order with address snapshot' })
+  @ApiZodBody(createOrderInput)
   @ApiResponse({ status: 201, description: 'Order created.' })
   @ApiResponse({ status: 400, description: 'Validation error' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile or product not found' })
-  async createOrder(
-    @Body()
-    body: {
-      profileId: string;
-      productId: string;
-      orderType: 'electricity' | 'savings' | 'solar';
-      address: {
-        provinceId: string;
-        cityId: string;
-        fullAddress: string;
-        postalCode: string;
-      };
-      /** Optional gift code (T-09.12.03), redeemed atomically with the order. */
-      giftCode?: string;
-    },
-    @Req() req: AuthenticatedRequest
-  ) {
+  async createOrder(@Body() body: unknown, @Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
 
+    const parsed = createOrderInput.safeParse(body);
+    if (!parsed.success)
+      throw new HttpException(
+        { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+        400
+      );
+    const { giftCode, ...input } = parsed.data;
     const order = await this.ordersService.createOrder(
       userId,
       {
-        profileId: body.profileId,
-        productId: body.productId,
-        orderType: body.orderType,
-        address: body.address,
-        ...(body.giftCode !== undefined ? { giftCode: body.giftCode } : {}),
+        ...input,
+        ...(giftCode !== undefined ? { giftCode } : {}),
       },
       req.ip ?? 'unknown'
     );
@@ -106,7 +112,10 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: 'Order details.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  async getOrder(@Param('id') orderId: string, @Req() req: AuthenticatedRequest) {
+  async getOrder(
+    @Param('id', new ParseUUIDPipe()) orderId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
     const userId = req.session.userId;
     const order = await this.ordersService.getOrder(userId, orderId);
 
@@ -134,7 +143,10 @@ export class OrdersController {
   })
   @ApiResponse({ status: 200, description: 'Order cancelled.' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  async cancelOrder(@Param('id') orderId: string, @Req() req: AuthenticatedRequest) {
+  async cancelOrder(
+    @Param('id', new ParseUUIDPipe()) orderId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
     const userId = req.session.userId;
     const order = await this.ordersService.cancelOrder(userId, orderId, req.ip ?? 'unknown');
     if (!order) {
