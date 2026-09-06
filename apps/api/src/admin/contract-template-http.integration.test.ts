@@ -184,3 +184,47 @@ it('persists metadata and version history and protects versioned deletion', asyn
   expect((await mutation('delete')).status).toBe(409);
   expect(objects.size).toBe(1);
 });
+
+it('returns complete ordered immutable version metadata after later uploads', async () => {
+  const first = await (await mutation('upload')).json();
+  const secondResponse = await fetch(
+    `${http.base}/api/admin/contract-templates/${templateId}/versions`,
+    {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ fileName: 'revision.txt', content: '{{date}} {{amount}}' }),
+    }
+  );
+  expect(secondResponse.status).toBe(201);
+  const second = await secondResponse.json();
+  const response = await fetch(`${http.base}/api/admin/contract-templates/${templateId}`, {
+    headers,
+  });
+  expect(response.status).toBe(200);
+  expect(await response.json()).toMatchObject({
+    versionCount: 2,
+    latestVersion: second,
+    versions: [first, second],
+  });
+  expect(objects.size).toBe(2);
+});
+it.each([
+  ['POST', '', { name: '   ' }],
+  ['POST', '', { name: 'New', unexpected: true }],
+  ['PATCH', '/id', { name: '  ' }],
+  ['PATCH', '/id', { status: 'inactive', unexpected: true }],
+  ['POST', '/id/versions', { fileName: 'a.txt', content: 'Test', unexpected: true }],
+] as const)('rejects invalid template payload %s %s %j', async (method, suffix, body) => {
+  const response = await fetch(
+    `${http.base}/api/admin/contract-templates${suffix.replace('/id', `/${templateId}`)}`,
+    { method, headers, body: JSON.stringify(body) }
+  );
+  expect(response.status).toBe(400);
+  expect((await http.pool.query('SELECT name FROM contract_templates')).rows).toEqual([
+    { name: 'Original' },
+  ]);
+  expect(objects.size).toBe(0);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='change_recorded'")).rows
+  ).toHaveLength(0);
+});

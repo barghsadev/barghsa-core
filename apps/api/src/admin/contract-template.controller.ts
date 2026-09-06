@@ -19,6 +19,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   CONTRACT_TEMPLATE_STATUSES,
   type ContractTemplateDto,
+  type ContractTemplateDetailDto,
   type ContractTemplateVersionDto,
 } from '@barghsa/shared/admin';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -30,36 +31,42 @@ import { ContractTemplateService } from './contract-template.service.js';
 const statusSchema = z.enum(CONTRACT_TEMPLATE_STATUSES);
 const nameSchema = z
   .string()
+  .trim()
   .min(1, 'name is required')
-  .max(200, 'name must be 200 characters or fewer')
-  .transform((s) => s.trim());
+  .max(200, 'name must be 200 characters or fewer');
 
-const CreateContractTemplateSchema = z.object({
-  name: nameSchema,
-  description: z.string().max(2000, 'description must be 2000 characters or fewer').optional(),
-});
+const CreateContractTemplateSchema = z
+  .object({
+    name: nameSchema,
+    description: z.string().max(2000, 'description must be 2000 characters or fewer').optional(),
+  })
+  .strict();
 
-const UpdateContractTemplateSchema = z.object({
-  name: nameSchema.optional(),
-  description: z
-    .union([z.string().max(2000, 'description must be 2000 characters or fewer'), z.null()])
-    .optional(),
-  status: statusSchema.optional(),
-});
+const UpdateContractTemplateSchema = z
+  .object({
+    name: nameSchema.optional(),
+    description: z
+      .union([z.string().max(2000, 'description must be 2000 characters or fewer'), z.null()])
+      .optional(),
+    status: statusSchema.optional(),
+  })
+  .strict();
 
-const UploadVersionSchema = z.object({
-  fileName: z.string().min(1, 'fileName is required').max(255, 'fileName is too long'),
-  contentType: z
-    .string()
-    .max(100, 'contentType is too long')
-    .refine(
-      (t) => /^text\/[a-z0-9.+-]+$/i.test(t),
-      'Only text/* content types are accepted for placeholder extraction'
-    )
-    .optional()
-    .default('text/plain'),
-  content: z.string(),
-});
+const UploadVersionSchema = z
+  .object({
+    fileName: z.string().min(1, 'fileName is required').max(255, 'fileName is too long'),
+    contentType: z
+      .string()
+      .max(100, 'contentType is too long')
+      .refine(
+        (t) => /^text\/[a-z0-9.+-]+$/i.test(t),
+        'Only text/* content types are accepted for placeholder extraction'
+      )
+      .optional()
+      .default('text/plain'),
+    content: z.string(),
+  })
+  .strict();
 
 function httpError(code: string, message: string, statusCode = 400, details?: unknown): never {
   throw new HttpException(
@@ -136,7 +143,7 @@ export class ContractTemplateController {
   async get(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string
-  ): Promise<ContractTemplateDto> {
+  ): Promise<ContractTemplateDetailDto> {
     this.assertDocumentsPermission(req);
     assertUuid(id);
     return this.service.get(id);

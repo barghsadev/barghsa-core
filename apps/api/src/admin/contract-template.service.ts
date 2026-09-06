@@ -6,6 +6,7 @@ import {
   extractContractTemplatePlaceholders,
   CONTRACT_TEMPLATE_STATUS_DEFAULT,
   type ContractTemplateDto,
+  type ContractTemplateDetailDto,
   type ContractTemplateStatus,
   type ContractTemplateVersionDto,
 } from '@barghsa/shared/admin';
@@ -110,7 +111,7 @@ interface VersionRow {
   storage_key: string;
   file_name: string;
   content_type: string | null;
-  file_size: number | null;
+  file_size: number | string | null;
   placeholders: string[];
   created_by: string;
   created_at: string;
@@ -169,17 +170,13 @@ export class ContractTemplateService {
   }
 
   /** Full template detail with every version, oldest first. */
-  async get(id: string): Promise<ContractTemplateDto> {
+  async get(id: string): Promise<ContractTemplateDetailDto> {
     const pool = getDbPool();
     const row = await this.findById(pool, id);
     if (!row) throw this.notFound(id);
-    const count = await pool.query<{ n: number }>(
-      'SELECT COUNT(*)::int AS n FROM contract_template_versions WHERE template_id = $1',
-      [id]
-    );
     const versions = await this.versionsFor(pool, id);
     const latest = versions.length > 0 ? versions[versions.length - 1]! : null;
-    return this.toDto(row, count.rows[0]?.n ?? 0, latest);
+    return { ...this.toDto(row, versions.length, latest), versions };
   }
 
   // ─── Admin mutations ───────────────────────────────────────────────────
@@ -481,7 +478,7 @@ export class ContractTemplateService {
       storageKey: row.storage_key,
       fileName: row.file_name,
       contentType: row.content_type,
-      fileSize: row.file_size,
+      fileSize: row.file_size === null ? null : Number(row.file_size),
       placeholders: row.placeholders,
       createdBy: row.created_by,
       createdAt: row.created_at,

@@ -1357,3 +1357,9 @@ Review and validation: four production-browser checks pass. Controlled checks co
 Template create/edit/delete and version finalization now hold current admin:documents:edit authority through commit. Metadata edits, deletion and version allocation read the selected template under a row lock. This prevents an overlapping rename from overwriting a newer description and prevents version finalization after grant revocation. Storage writes remain outside the database transaction.
 
 Review and validation: 29 existing service/controller checks and ten production-migrated HTTP checks pass. HTTP covers all four audit rollbacks and permission races, preservation of concurrent metadata, version upload and protected deletion. The local storage fixture initially compared operation-specific URL query strings; corrected it to compare object paths, then verified failed uploads remove their object. Root types, lint and whitespace checks pass. Durable recovery after failed storage cleanup remains separate work; version history responses and the admin screen remain open.
+
+### Return complete contract-template version history and validate metadata (F17)
+
+The detail endpoint now returns ordered version metadata with a count and latest version from the same version query. File sizes are normalized to numbers on reads, matching upload responses. Metadata schemas reject blank names after trimming and unknown fields; version upload payloads reject unknown fields.
+
+Review and validation: all 45 template service/controller/production-migrated HTTP checks pass. New HTTP coverage verifies both archived files remain after a second upload and that invalid payloads leave metadata, storage and audits unchanged. The history comparison exposed the old PostgreSQL bigint string response; fixed and reran successfully. Root build, types, lint, contract and whitespace checks pass. Binary template support, the UI and the upload request-size boundary remain separate work.

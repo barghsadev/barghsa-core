@@ -85,3 +85,8 @@ export interface ContractTemplateDto {
   /** Highest version, if any. */
   latestVersion: ContractTemplateVersionDto | null;
 }
+
+export interface ContractTemplateDetailDto extends ContractTemplateDto {
+  /** Immutable version metadata, oldest first. */
+  versions: ContractTemplateVersionDto[];
+}
