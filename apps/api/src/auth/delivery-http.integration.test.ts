@@ -510,8 +510,22 @@ it('lets an administrator replace a pending activation and invalidates the previ
     Cookie: `barghsa_session=${session.session_id}`,
     'X-CSRF-Token': session.csrf_token,
   };
+  const staffStatus = async () => {
+    const response = await fetch(`${fixture.base}/api/admin/staff`, { headers });
+    expect(response.status).toBe(200);
+    const data = (await response.json()) as {
+      items: { userId: string; activationPending: boolean; activationExpiresAt: string | null }[];
+    };
+    return data.items.find((item) => item.userId === userId)!;
+  };
+  expect(await staffStatus()).toMatchObject({
+    activationPending: true,
+    activationExpiresAt: expect.any(String),
+  });
   const tooSoon = await post(`admin/users/${userId}/resend-activation`, {}, headers);
   expect(tooSoon.status, await tooSoon.text()).toBe(429);
+  expect(Number(tooSoon.headers.get('retry-after'))).toBeGreaterThan(0);
+  expect(Number(tooSoon.headers.get('retry-after'))).toBeLessThanOrEqual(60);
   await fixture.pool.query("UPDATE auth_delivery_outbox SET created_at=NOW()-INTERVAL '2 minutes'");
   const replaced = await post(`admin/users/${userId}/resend-activation`, {}, headers);
   expect(replaced.status, await replaced.text()).toBe(200);
@@ -530,6 +544,10 @@ it('lets an administrator replace a pending activation and invalidates the previ
     newPassword: 'Activated-staff-password-123!',
   });
   expect(activated.status, await activated.text()).toBe(200);
+  expect(await staffStatus()).toMatchObject({
+    activationPending: false,
+    activationExpiresAt: null,
+  });
   const afterActivation = await post(`admin/users/${userId}/resend-activation`, {}, headers);
   expect(afterActivation.status, await afterActivation.text()).toBe(409);
 });

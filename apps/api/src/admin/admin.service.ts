@@ -166,6 +166,8 @@ export interface StaffUserSummary {
   lastLoginAt: string | null;
   disabledAt: string | null;
   status: 'active' | 'disabled';
+  activationPending: boolean;
+  activationExpiresAt: string | null;
   createdAt: string;
 }
 
@@ -464,10 +466,19 @@ export class AdminService {
           409
         );
       const recent = await client.query(
-        `SELECT 1 FROM auth_delivery_outbox WHERE user_id=$1 AND kind='staff_activation' AND created_at>NOW()-INTERVAL '1 minute'`,
+        `SELECT ceil(extract(epoch FROM (max(created_at)+INTERVAL '1 minute'-NOW()))*1000)::int AS retry_after_ms
+         FROM auth_delivery_outbox WHERE user_id=$1 AND kind='staff_activation' AND created_at>NOW()-INTERVAL '1 minute'
+         HAVING count(*)>0`,
         [userId]
       );
-      if (recent.rows.length) throw new HttpException({ error: 'AUTH:OTP:RATE_LIMITED' }, 429);
+      if (recent.rows.length)
+        throw new HttpException(
+          {
+            error: 'AUTH:OTP:RATE_LIMITED',
+            retryAfterMs: Math.max(1, Number(recent.rows[0].retry_after_ms)),
+          },
+          429
+        );
       const delivery = this.prepareStaffActivation(found.rows[0]!.username);
       await client.query(
         'UPDATE users SET activation_token=$1,activation_token_expires_at=$2,updated_at=NOW() WHERE user_id=$3',
@@ -2793,12 +2804,16 @@ export class AdminService {
       created_at: Date;
       last_login_at: Date | null;
       disabled_at: Date | null;
+      activation_pending: boolean;
+      activation_expires_at: Date | null;
       first_name: string | null;
       last_name: string | null;
       roles: unknown;
     }>(
       `SELECT u.user_id, u.username, u.email, u.mobile, u.is_admin,
               u.created_at, u.last_login_at, u.disabled_at,
+              (u.is_staff AND u.disabled_at IS NULL AND u.activation_token IS NOT NULL AND u.must_change_password) AS activation_pending,
+              CASE WHEN u.activation_token IS NOT NULL THEN u.activation_token_expires_at END AS activation_expires_at,
               p.first_name, p.last_name,
               COALESCE(
                 json_agg(json_build_object('roleId', r.role_id, 'name', r.name) ORDER BY r.name)
@@ -2832,6 +2847,8 @@ export class AdminService {
       lastLoginAt: row.last_login_at ? row.last_login_at.toISOString() : null,
       disabledAt: row.disabled_at ? row.disabled_at.toISOString() : null,
       status: row.disabled_at ? 'disabled' : 'active',
+      activationPending: row.activation_pending === true,
+      activationExpiresAt: row.activation_expires_at?.toISOString() ?? null,
       createdAt: row.created_at.toISOString(),
     }));
 
