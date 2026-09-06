@@ -334,3 +334,9 @@ Review/validation: 36 focused CRM/inbox checks pass, including production-schema
 Newer-page queries fetch the nearest arrivals before reversing each page for display, so intermediate pages are no longer skipped. Cursors retain PostgreSQL microseconds instead of rounding through JavaScript dates. Invalid cursor UUIDs and read IDs return 400 through both inbox APIs.
 
 Review/validation: 18 notification-center checks pass, including full HTTP traversal in both directions, equal timestamps, sub-millisecond timestamps, default newest page and malformed inputs; API typecheck passes. No notification rows or read history are changed by this repair.
+
+### F10.7 Align the second administration recovery path
+
+The failed-notifications admin service now locks the parent before dead-letter rows, matching worker and canonical recovery ordering. It requeues only the exact linked dead-letter job, clears the expired claim token and preserves cumulative outbox attempts and saved content. Completed jobs and active claims cannot be revived.
+
+Review/validation: 25 admin/recovery checks pass, including eight concurrent admin retries producing one success, active-lease refusal, completed-job refusal with rollback and preserved attempt/snapshot evidence. This repairs the additional existing entry point; no remote job was retried.

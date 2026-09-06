@@ -272,7 +272,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const outboxUpdate = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('UPDATE notification_outbox'),
     )![0] as string
-    expect(outboxUpdate).toContain("SET status = 'queued', attempts = 0, locked_until = NULL")
+    expect(outboxUpdate).toContain("SET status = 'queued', locked_until = NULL, lease_token = NULL")
     const jobUpdate = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('UPDATE notification_job'),
     )![0] as string

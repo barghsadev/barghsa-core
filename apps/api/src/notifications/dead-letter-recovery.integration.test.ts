@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest'
 import { randomUUID } from 'node:crypto'
 import { startHttpFixture } from '../test/http-fixture.js'
+import { FailedNotificationsService } from '../admin/failed-notifications.service.js'
 import { NotificationsService } from './notifications.service.js'
 const db = vi.hoisted(() => ({ pool: null as unknown as import('pg').Pool }))
 vi.mock('@barghsa/db', async original => ({ ...await original<typeof import('@barghsa/db')>(), getDbPool: () => db.pool }))
@@ -51,4 +52,23 @@ it('never retries a resolved record or a job already delivered', async () => {
   const done = await seed()
   await db.pool.query("UPDATE notification_job SET status='done' WHERE id=$1", [done.job])
   await expect(service.deadLetterAction(done.dead, 'retry', 'triage-staff')).rejects.toMatchObject({ status: 409 })
+})
+
+it('admin retry uses the same claim safeguards and preserves cumulative attempts', async () => {
+  const admin=new FailedNotificationsService()
+  const row=await seed()
+  await db.pool.query("UPDATE notification_outbox SET attempts=9,lease_token='expired',locked_until=NOW()-INTERVAL '1 minute' WHERE id=$1",[row.outbox])
+  const results=await Promise.allSettled(Array.from({length:8},()=>admin.retryFailedNotification(row.dead,'triage-staff','127.0.0.1')))
+  expect(results.filter(result=>result.status==='fulfilled')).toHaveLength(1)
+  for(const result of results) if(result.status==='rejected')expect(result.reason).toMatchObject({status:409})
+  expect((await db.pool.query('SELECT status,attempts,lease_token FROM notification_outbox WHERE id=$1',[row.outbox])).rows[0])
+    .toEqual({status:'queued',attempts:9,lease_token:null})
+  expect((await db.pool.query('SELECT delivery_payload FROM notification_job WHERE id=$1',[row.job])).rows[0].delivery_payload).toEqual({preserved:'snapshot'})
+  const active=await seed()
+  await db.pool.query("UPDATE notification_outbox SET locked_until=NOW()+INTERVAL '1 minute',lease_token='active' WHERE id=$1",[active.outbox])
+  await expect(admin.retryFailedNotification(active.dead,'triage-staff','127.0.0.1')).rejects.toMatchObject({status:409})
+  const done=await seed()
+  await db.pool.query("UPDATE notification_job SET status='done',provider_ref='receipt' WHERE id=$1",[done.job])
+  await expect(admin.retryFailedNotification(done.dead,'triage-staff','127.0.0.1')).rejects.toMatchObject({status:409})
+  expect((await db.pool.query('SELECT status FROM notification_outbox WHERE id=$1',[done.outbox])).rows[0].status).toBe('failed')
 })

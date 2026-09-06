@@ -227,6 +227,11 @@ export class FailedNotificationsService {
       | undefined
     try {
       await client.query('BEGIN')
+      // All delivery/recovery paths lock the parent before a channel or triage
+      // row. Reversing this order can deadlock with worker finalization.
+      await client.query(`SELECT id FROM notification_outbox
+        WHERE id=(SELECT outbox_id FROM notification_dead_letter WHERE id=$1)
+        FOR UPDATE`, [id])
 
       const result = await client.query(
         `SELECT dl.*, ob.payload
@@ -264,11 +269,11 @@ export class FailedNotificationsService {
       if (opts.requeue) {
         // Re-open delivery for a *retryable* row only: the outbox row must be
         // `failed` and not mid-lease, and the channel job must still be
-        // `dead_letter`/`failed`. Guards against racing a worker that may be
+        // `dead_letter`. Guards against racing a worker that may be
         // concurrently holding/executing the job, and against double-requeue.
         const outboxUpdate = await client.query(
           `UPDATE notification_outbox
-              SET status = 'queued', attempts = 0, locked_until = NULL,
+              SET status = 'queued', locked_until = NULL, lease_token = NULL,
                   scheduled_for = NULL, last_error = NULL, updated_at = NOW()
             WHERE id = $1
               AND status IN ('failed')
@@ -279,9 +284,9 @@ export class FailedNotificationsService {
           `UPDATE notification_job
               SET status = 'queued', attempts = 0, run_after = NOW(),
                   last_error = NULL, updated_at = NOW()
-            WHERE outbox_id = $1 AND channel = $2
-              AND status IN ('dead_letter', 'failed')`,
-          [row.outbox_id, row.channel],
+            WHERE id = $1 AND outbox_id = $2
+              AND status = 'dead_letter'`,
+          [row.job_id, row.outbox_id],
         )
         // A no-op update means the row is not actually retryable (already
         // queued/in flight) — fail closed rather than reporting a false success.
