@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, DatePicker, Input, Label } from '@barghsa/ui';
+import { Button, DatePicker, datePickerAtTime, Input, Label } from '@barghsa/ui';
 import { tVat } from '@barghsa/i18n/vat';
 import {
   CHARGE_CATEGORIES,
@@ -8,6 +8,7 @@ import {
   type VatConfigDto,
   type VatProductOverrideDto,
 } from '@barghsa/shared/finance';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 type Product = { id: string; title: Record<string, string>; type: string };
@@ -17,6 +18,7 @@ type Editor =
   | { kind: 'endRate' | 'endOverride'; id: string; title: string };
 const categories = [...CHARGE_CATEGORIES, PRODUCT_OVERRIDE_CATEGORY];
 export default function AdminVatPage() {
+  const preference = useTimezone();
   const locale = useLocale(),
     label = (key: string) => tVat(`admin.vat.${key}`, locale);
   const [rates, setRates] = useState<VatConfigDto[]>([]),
@@ -35,7 +37,7 @@ export default function AdminVatPage() {
     [invalidDate, setInvalidDate] = useState(false);
   const [action, setAction] = useState<TeamAction | null>(null),
     [saved, setSaved] = useState(false);
-  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zone = preference.timezone;
   const productTitle = (id: string) => {
     const product = products.find((row) => row.id === id);
     return product?.title[locale] || product?.title.en || product?.title.fa || label('product');
@@ -85,7 +87,7 @@ export default function AdminVatPage() {
   }
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (!editor) return;
+    if (!editor || preference.status !== 'ready') return;
     let instant: string | undefined;
     if (scheduled) {
       const match = /^(\d{2}):(\d{2})$/.exec(time);
@@ -93,16 +95,8 @@ export default function AdminVatPage() {
         setInvalidDate(true);
         return;
       }
-      const hours = Number(match[1]),
-        minutes = Number(match[2]),
-        value = new Date(date);
-      value.setHours(hours, minutes, 0, 0);
-      if (
-        hours > 23 ||
-        minutes > 59 ||
-        value.getHours() !== hours ||
-        value.getMinutes() !== minutes
-      ) {
+      const value = datePickerAtTime(date, Number(match[1]), Number(match[2]), zone);
+      if (!value) {
         setInvalidDate(true);
         return;
       }
@@ -155,12 +149,17 @@ export default function AdminVatPage() {
       <h1 className="text-2xl font-semibold">{label('title')}</h1>
       <p className="text-sm text-muted-foreground">{label('precedence')}</p>
       <p className="text-sm">
-        {label('timezone')}: <bdi>{zone}</bdi>
+        {preference.status === 'ready' && (
+          <>
+            {label('timezone')}: <bdi>{zone}</bdi>
+          </>
+        )}
       </p>
       <div>
         <Button
           variant="outline"
           onClick={() => {
+            preference.retry();
             setState('loading');
             setRevision((value) => value + 1);
           }}
@@ -169,10 +168,12 @@ export default function AdminVatPage() {
         </Button>
       </div>
       {saved && <p role="status">{label('saved')}</p>}
-      {state === 'loading' && <p role="status">{label('loading')}</p>}
-      {state === 'error' && <p role="alert">{label('error')}</p>}
+      {(state === 'loading' || preference.status === 'loading') && (
+        <p role="status">{label('loading')}</p>
+      )}
+      {(state === 'error' || preference.status === 'error') && <p role="alert">{label('error')}</p>}
       {state === 'denied' && <p role="alert">{label('denied')}</p>}
-      {state === 'ready' && (
+      {state === 'ready' && preference.status === 'ready' && (
         <>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => open({ kind: 'rate' })}>{label('addRate')}</Button>
@@ -277,7 +278,8 @@ export default function AdminVatPage() {
                       id="vat-date"
                       label={label('date')}
                       placeholder={label('chooseDate')}
-                      jalali={locale === 'fa'}
+                      locale={locale}
+                      timezone={zone}
                       {...(date ? { value: date } : {})}
                       onChange={setDate}
                     />

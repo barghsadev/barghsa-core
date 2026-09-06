@@ -262,5 +262,29 @@ function datePickerDayBounds(date: Date, timezone: string): { start: Date; end: 
   return { start: new Date(start.getTime()), end: new Date(addDays(start, 1).getTime() - 1) };
 }
 
-export { DatePicker, datePickerDayBounds };
+/** Resolve wall-clock input in the account zone, rejecting invalid or skipped times. */
+function datePickerAtTime(
+  date: Date,
+  hours: number,
+  minutes: number,
+  timezone: string
+): Date | undefined {
+  if (
+    !Number.isInteger(hours) ||
+    !Number.isInteger(minutes) ||
+    hours < 0 ||
+    hours > 23 ||
+    minutes < 0 ||
+    minutes > 59
+  )
+    return undefined;
+  const value = new TZDate(date.getTime(), timezone);
+  const day = value.getDate();
+  value.setHours(hours, minutes, 0, 0);
+  if (value.getDate() !== day || value.getHours() !== hours || value.getMinutes() !== minutes)
+    return undefined;
+  return new Date(value.getTime());
+}
+
+export { DatePicker, datePickerDayBounds, datePickerAtTime };
 export type { DatePickerProps, DatePickerSingleProps, DatePickerRangeProps };

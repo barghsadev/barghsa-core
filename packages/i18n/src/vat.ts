@@ -2,7 +2,7 @@ const fa: Record<string, string> = {
   'admin.vat.title': 'تنظیمات مالیات بر ارزش افزوده',
   'admin.vat.precedence':
     'نرخ اختصاصی محصول اولویت دارد؛ سپس نرخ دسته و در نبود هر دو، صفر درصد اعمال می‌شود.',
-  'admin.vat.timezone': 'منطقه زمانی این دستگاه',
+  'admin.vat.timezone': 'منطقه زمانی حساب',
   'admin.vat.refresh': 'تازه‌سازی',
   'admin.vat.saved': 'تغییرات ذخیره شد.',
   'admin.vat.loading': 'در حال بارگذاری…',
@@ -61,7 +61,7 @@ const en: Record<string, string> = {
   'admin.vat.title': 'VAT configuration',
   'admin.vat.precedence':
     'A product override takes priority, followed by its category rate, with 0% as the fallback.',
-  'admin.vat.timezone': 'This device’s timezone',
+  'admin.vat.timezone': 'Account timezone',
   'admin.vat.refresh': 'Refresh',
   'admin.vat.saved': 'Changes saved.',
   'admin.vat.loading': 'Loading…',
