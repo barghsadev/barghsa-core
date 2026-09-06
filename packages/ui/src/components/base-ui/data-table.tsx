@@ -67,6 +67,7 @@ function useTableSort<T>(
       const aVal = col.accessorKey ? (a as Record<string, unknown>)[col.accessorKey as string] : '';
       const bVal = col.accessorKey ? (b as Record<string, unknown>)[col.accessorKey as string] : '';
 
+      if (aVal == null && bVal == null) return 0;
       if (aVal == null) return 1;
       if (bVal == null) return -1;
 
@@ -87,22 +88,16 @@ function useTableSort<T>(
 
   const toggleSort = React.useCallback(
     (columnId: string) => {
-      setSort((prev) => {
-        let next: SortState | null;
-
-        if (prev?.column !== columnId) {
-          next = { column: columnId, direction: 'asc' };
-        } else if (prev.direction === 'asc') {
-          next = { column: columnId, direction: 'desc' };
-        } else {
-          next = null;
-        }
-
-        onSortChange?.(next);
-        return next;
-      });
+      const next: SortState | null =
+        sort?.column !== columnId
+          ? { column: columnId, direction: 'asc' }
+          : sort.direction === 'asc'
+            ? { column: columnId, direction: 'desc' }
+            : null;
+      setSort(next);
+      onSortChange?.(next);
     },
-    [onSortChange]
+    [sort, onSortChange]
   );
 
   return { sortedData, sort, toggleSort };
@@ -111,12 +106,11 @@ function useTableSort<T>(
 function useTableSelection<T>(
   data: T[],
   keyExtractor: (row: T) => string | number,
-  initialSelected?: Set<string | number>,
+  controlledSelected?: Set<string | number>,
   onSelectionChange?: (selected: Set<string | number>) => void
 ) {
-  const [selected, setSelected] = React.useState<Set<string | number>>(
-    initialSelected ?? new Set()
-  );
+  const [internalSelected, setSelected] = React.useState<Set<string | number>>(new Set());
+  const selected = controlledSelected ?? internalSelected;
 
   const currentKeys = React.useMemo(() => new Set(data.map(keyExtractor)), [data, keyExtractor]);
 
@@ -124,34 +118,32 @@ function useTableSelection<T>(
 
   const someSelected = !allSelected && data.some((row) => selected.has(keyExtractor(row)));
 
+  const commitSelection = React.useCallback(
+    (next: Set<string | number>) => {
+      if (controlledSelected === undefined) setSelected(next);
+      onSelectionChange?.(next);
+    },
+    [controlledSelected, onSelectionChange]
+  );
+
   const toggleRow = React.useCallback(
     (key: string | number) => {
-      setSelected((prev) => {
-        const next = new Set(prev);
-        if (next.has(key)) {
-          next.delete(key);
-        } else {
-          next.add(key);
-        }
-        onSelectionChange?.(next);
-        return next;
-      });
+      const next = new Set(selected);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      commitSelection(next);
     },
-    [onSelectionChange]
+    [selected, commitSelection]
   );
 
   const toggleAll = React.useCallback(() => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (allSelected) {
-        for (const key of currentKeys) next.delete(key);
-      } else {
-        for (const key of currentKeys) next.add(key);
-      }
-      onSelectionChange?.(next);
-      return next;
-    });
-  }, [allSelected, currentKeys, onSelectionChange]);
+    const next = new Set(selected);
+    for (const key of currentKeys) {
+      if (allSelected) next.delete(key);
+      else next.add(key);
+    }
+    commitSelection(next);
+  }, [selected, allSelected, currentKeys, commitSelection]);
 
   return { selected, allSelected, someSelected, toggleRow, toggleAll };
 }
@@ -202,7 +194,7 @@ function DataTable<T extends Record<string, unknown>>({
     onSelectionChange
   );
 
-  const visibleColumns = columns.filter((col) => col.enableHiding !== false);
+  const visibleColumns = columns;
 
   return (
     <div className={cn('relative w-full overflow-auto rounded-lg border', className)}>
@@ -227,18 +219,28 @@ function DataTable<T extends Record<string, unknown>>({
                   col.sortable !== false && enableSort && 'cursor-pointer select-none',
                   col.headerClassName
                 )}
-                onClick={() => {
-                  if (col.sortable !== false && enableSort) {
-                    toggleSort(col.id);
-                  }
-                }}
+                aria-sort={
+                  col.sortable !== false && enableSort
+                    ? sort?.column === col.id
+                      ? sort.direction === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : 'none'
+                    : undefined
+                }
               >
-                <div className="inline-flex items-center">
-                  {col.header}
-                  {col.sortable !== false && enableSort && (
+                {col.sortable !== false && enableSort ? (
+                  <button
+                    type="button"
+                    onClick={() => toggleSort(col.id)}
+                    className="inline-flex items-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {col.header}
                     <SortIcon columnId={col.id} currentSort={sort} />
-                  )}
-                </div>
+                  </button>
+                ) : (
+                  col.header
+                )}
               </th>
             ))}
           </tr>

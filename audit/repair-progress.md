@@ -1583,3 +1583,9 @@ Review and validation: both Persian/English production-browser checks pass for a
 Connected province, city, full-address and postal-code labels to the existing ordering form controls.
 
 Review and validation: both Persian/English production-browser checks pass for accessible names, label-click focus, text entry and the disabled city selector before province selection. Root build, types, lint and bundle checks pass. This is a bounded accessibility correction; missing ordering backends and verification/address-loading failure behavior remain unverified or open and are not certified by these controlled UI checks.
+
+### Repair shared table sorting, visibility and selection (F19/F20)
+
+Sortable headers now contain native keyboard buttons and expose aria-sort. Columns with enableHiding=false stay visible. Controlled selection follows its parent's selectedRows value. Sorting and selection callbacks run in event handlers rather than state updater functions, preventing duplicate callbacks under Strict Mode. Equal missing sort values compare equally.
+
+Review and validation: four browser component checks pass for keyboard ascending/descending/reset sorting, retained fixed columns, controlled/uncontrolled selection, select-all clearing, external selection updates and exactly one callback per action under Strict Mode. The fixture compiles the actual shared component in a temporary directory and introduces no production route. Root build, types, lint and bundle checks pass. No current product consumer uses this table; this verifies the built shared component, not a future CRM migration.
