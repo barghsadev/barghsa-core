@@ -1,5 +1,6 @@
+import { provinces, cities } from './geography';
 import { sql } from 'drizzle-orm';
-import { text, pgTable, timestamp } from 'drizzle-orm/pg-core';
+import { text, uuid, pgTable, timestamp } from 'drizzle-orm/pg-core';
 import { uuidv7 } from '../types';
 
 /**
@@ -84,6 +85,20 @@ export const legalProfiles = pgTable('legal_profiles', {
 
   /** Official address postal code. */
   officialPostalCode: text('official_postal_code'),
+
+  // Nullable for existing records; new onboarding requires representative details.
+  representativeHonorific: text('representative_honorific'),
+  representativeFirstName: text('representative_first_name'),
+  representativeLastName: text('representative_last_name'),
+  representativeNationalId: text('representative_national_id'),
+  representativeProvinceId: uuid('representative_province_id').references(() => provinces.id, {
+    onDelete: 'restrict',
+  }),
+  representativeCityId: uuid('representative_city_id').references(() => cities.id, {
+    onDelete: 'restrict',
+  }),
+  representativeFullAddress: text('representative_full_address'),
+  representativePostalCode: text('representative_postal_code'),
 
   /** Authorized representative's title/position. */
   representativeTitle: text('representative_title').notNull(),

@@ -66,6 +66,7 @@ describe('complete production schema baseline', () => {
         '0105_optional_foreign_key_defaults',
         '0106_username_challenge_pair',
         '0107_profile_contact_details',
+        '0108_legal_representative',
       ],
     });
     expect(await runMigrations(options)).toEqual({ ok: true, applied: [] });
@@ -163,6 +164,9 @@ describe('complete production schema baseline', () => {
       await pool.query('ALTER TABLE otp_challenges DROP COLUMN purpose CASCADE');
       await pool.query(
         "INSERT INTO otp_challenges(challenge_id,destination,otp_hash,expires_at) VALUES ('legacy-otp','old@example.test','test-hash',NOW()+INTERVAL '1 day')"
+      );
+      await pool.query(
+        'ALTER TABLE legal_profiles DROP COLUMN representative_honorific CASCADE, DROP COLUMN representative_first_name CASCADE, DROP COLUMN representative_last_name CASCADE, DROP COLUMN representative_national_id CASCADE, DROP COLUMN representative_province_id CASCADE, DROP COLUMN representative_city_id CASCADE, DROP COLUMN representative_full_address CASCADE, DROP COLUMN representative_postal_code CASCADE'
       );
       await pool.query('DELETE FROM drizzle.__drizzle_migrations');
       await pool.query(

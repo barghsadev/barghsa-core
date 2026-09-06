@@ -5,6 +5,15 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'onboarding.legal.representativeHonorific': 'عنوان اختیاری',
+  'onboarding.legal.representativeFirstName': 'نام نماینده',
+  'onboarding.legal.representativeLastName': 'نام خانوادگی نماینده',
+  'onboarding.legal.representativeNationalId': 'کد ملی نماینده',
+  'onboarding.legal.representativeProvinceId': 'استان نماینده',
+  'onboarding.legal.representativeCityId': 'شهر نماینده',
+  'onboarding.legal.representativeFullAddress': 'آدرس کامل نماینده',
+  'onboarding.legal.representativePostalCode': 'کد پستی نماینده',
+
   'onboarding.legal.required.province': 'استان الزامی است',
   'onboarding.legal.required.city': 'شهر الزامی است',
   'onboarding.legal.required.fullAddress': 'آدرس کامل الزامی است',
@@ -1432,6 +1441,15 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'onboarding.legal.representativeHonorific': 'Honorific',
+  'onboarding.legal.representativeFirstName': 'Representative first name',
+  'onboarding.legal.representativeLastName': 'Representative last name',
+  'onboarding.legal.representativeNationalId': 'Representative national ID',
+  'onboarding.legal.representativeProvinceId': 'Representative province',
+  'onboarding.legal.representativeCityId': 'Representative city',
+  'onboarding.legal.representativeFullAddress': 'Representative full address',
+  'onboarding.legal.representativePostalCode': 'Representative postal code',
+
   'onboarding.legal.required.province': 'Province is required',
   'onboarding.legal.required.city': 'City is required',
   'onboarding.legal.required.fullAddress': 'Full address is required',

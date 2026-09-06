@@ -990,6 +990,7 @@ export class ProfilesService {
               official_phone, official_email,
               official_province_id, official_city_id, official_full_address, official_postal_code,
               representative_title, representative_relationship,
+              representative_honorific, representative_first_name, representative_last_name, representative_national_id, representative_province_id, representative_city_id, representative_full_address, representative_postal_code,
               created_at, updated_at
        FROM legal_profiles
        WHERE id = $1`,
@@ -1013,6 +1014,14 @@ export class ProfilesService {
       officialCityId: (row.official_city_id as string) ?? null,
       officialFullAddress: (row.official_full_address as string) ?? null,
       officialPostalCode: (row.official_postal_code as string) ?? null,
+      representativeHonorific: (row.representative_honorific as string) ?? null,
+      representativeFirstName: (row.representative_first_name as string) ?? null,
+      representativeLastName: (row.representative_last_name as string) ?? null,
+      representativeNationalId: (row.representative_national_id as string) ?? null,
+      representativeProvinceId: (row.representative_province_id as string) ?? null,
+      representativeCityId: (row.representative_city_id as string) ?? null,
+      representativeFullAddress: (row.representative_full_address as string) ?? null,
+      representativePostalCode: (row.representative_postal_code as string) ?? null,
       representativeTitle: row.representative_title as string,
       representativeRelationship: row.representative_relationship as string,
     };
@@ -1269,6 +1278,15 @@ export class ProfilesService {
           )
         ).rows[0];
         identityComplete =
+          !!legal?.representative_first_name?.trim() &&
+          !!legal?.representative_last_name?.trim() &&
+          typeof legal?.representative_national_id === 'string' &&
+          validateNationalId(legal.representative_national_id) &&
+          !!legal?.representative_full_address?.trim() &&
+          typeof legal?.representative_postal_code === 'string' &&
+          validatePostalCode(legal.representative_postal_code) &&
+          !!legal?.representative_province_id &&
+          !!legal?.representative_city_id &&
           !!legal?.official_full_address?.trim() &&
           typeof legal?.official_postal_code === 'string' &&
           validatePostalCode(legal.official_postal_code) &&
@@ -1281,6 +1299,11 @@ export class ProfilesService {
           typeof legal?.national_identifier === 'string' &&
           validateLegalNationalIdentifier(legal.national_identifier);
         if (identityComplete) {
+          await requireAddressGeography(
+            client,
+            legal.representative_province_id,
+            legal.representative_city_id
+          );
           await requireAddressGeography(client, legal.official_province_id, legal.official_city_id);
         }
       }

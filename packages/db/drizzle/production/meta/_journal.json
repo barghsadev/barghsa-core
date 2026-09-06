@@ -197,6 +197,13 @@
       "when": 1791331200010,
       "tag": "0107_profile_contact_details",
       "breakpoints": true
+    },
+    {
+      "idx": 108,
+      "version": "7",
+      "when": 1791331200011,
+      "tag": "0108_legal_representative",
+      "breakpoints": true
     }
   ]
 }

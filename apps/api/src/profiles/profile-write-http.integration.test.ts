@@ -4,6 +4,15 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string, provinceId: string, cityId: string;
 let headers: Record<string, string>;
+const representativeData = () => ({
+  representativeFirstName: 'Person',
+  representativeLastName: 'Owner',
+  representativeNationalId: '1234567891',
+  representativeProvinceId: provinceId,
+  representativeCityId: cityId,
+  representativeFullAddress: 'Representative Street',
+  representativePostalCode: '1234567890',
+});
 beforeEach(async () => {
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query(
@@ -138,6 +147,7 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
           }
         : {
             companyTypeId: 'limited-liability',
+            ...representativeData(),
             legalName: 'Company',
             nationalIdentifier: '12345678901',
             registrationNumber: '123',
@@ -180,7 +190,7 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
     }
     expect(
       (await http.pool.query('SELECT id FROM addresses WHERE profile_id=$1', [profileId])).rows
-    ).toHaveLength(1);
+    ).toHaveLength(type === 'LEGAL' ? 2 : 1);
     expect((await snapshot()).status).not.toBe('DRAFT');
   });
 }
@@ -255,6 +265,7 @@ it('requires complete legal details and rejects invalid company and geography se
     "INSERT INTO company_types(id,name_en,name_fa) VALUES ('test-company','Test','آزمایش')"
   );
   const body = {
+    ...representativeData(),
     legalName: 'Company',
     nationalIdentifier: '12345678901',
     registrationNumber: '123',
@@ -326,6 +337,11 @@ it('does not finalize a legacy legal draft missing its required company type', a
   await http.pool.query(
     "UPDATE legal_profiles SET company_type_id='limited-liability' WHERE id=$1",
     [profileId]
+  );
+  expect((await complete()).status).toBe(400);
+  await http.pool.query(
+    "UPDATE legal_profiles SET representative_first_name='Person',representative_last_name='Owner',representative_national_id='1234567891',representative_province_id=$2,representative_city_id=$3,representative_full_address='Street',representative_postal_code='1234567890' WHERE id=$1",
+    [profileId, provinceId, cityId]
   );
   expect((await complete()).status).toBe(200);
 });
@@ -450,4 +466,59 @@ it('rejects malformed onboarding bodies and route IDs with validation responses'
   expect((await snapshot()).status).toBe('DRAFT');
   expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
   expect((await send(`individual/${profileId}`, valid)).status).toBe(200);
+});
+
+it('validates representative identity, preserves both addresses and rolls back on legal audit failure', async () => {
+  await http.pool.query("UPDATE profiles SET profile_type='LEGAL' WHERE id=$1", [profileId]);
+  const body = {
+    ...representativeData(),
+    legalName: 'Company',
+    nationalIdentifier: '12345678901',
+    registrationNumber: '123',
+    companyTypeId: 'limited-liability',
+    representativeTitle: 'CEO',
+    representativeRelationship: 'director',
+    officialProvinceId: provinceId,
+    officialCityId: cityId,
+    officialFullAddress: 'Company Street',
+    officialPostalCode: '1234567890',
+  };
+  const submit = (input: unknown, id = profileId) =>
+    fetch(`${http.base}/api/onboarding/legal/${id}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(input),
+    });
+  for (const key of Object.keys(representativeData())) {
+    const missing: Record<string, unknown> = { ...body };
+    delete missing[key];
+    expect((await submit(missing)).status).toBe(400);
+  }
+  expect((await submit({ ...body, representativeNationalId: '1111111111' })).status).toBe(400);
+  expect((await submit({ ...body, representativeCityId: randomUUID() })).status).toBe(400);
+  await http.pool.query(
+    "CREATE FUNCTION reject_legal_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test legal audit failure'; END $$; CREATE TRIGGER reject_legal_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='legal_profile_saved') EXECUTE FUNCTION reject_legal_audit()"
+  );
+  expect((await submit(body)).status).toBe(500);
+  expect((await snapshot()).status).toBe('DRAFT');
+  expect((await http.pool.query('SELECT id FROM legal_profiles')).rows).toHaveLength(0);
+  expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
+  await http.pool.query('DROP TRIGGER reject_legal_audit ON audit_log');
+  expect((await submit(body)).status).toBe(200);
+  const result = await fetch(`${http.base}/api/profiles/${profileId}`, { headers });
+  expect(result.status).toBe(200);
+  expect(await result.json()).toMatchObject({
+    legalInfo: representativeData(),
+    addresses: expect.arrayContaining([
+      expect.objectContaining({ mainAddress: true, fullAddress: 'Company Street' }),
+      expect.objectContaining({ mainAddress: false, fullAddress: 'Representative Street' }),
+    ]),
+  });
+  const second = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES ('profile-owner','LEGAL','DRAFT') RETURNING id"
+    )
+  ).rows[0].id;
+  // A person may represent more than one company, without duplicate personal-profile identity.
+  expect((await submit({ ...body, nationalIdentifier: '12345678902' }, second)).status).toBe(200);
 });

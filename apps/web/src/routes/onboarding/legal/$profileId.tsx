@@ -4,7 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { createFileRoute, useRouter, useParams, Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useLocale } from '../../../hooks/useLocale.js';
-import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
+import {
+  validateLegalNationalIdentifier,
+  validatePostalCode,
+  validateNationalId,
+} from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { Loader2Icon, ChevronRightIcon, UploadIcon } from 'lucide-react';
 import { Button, Input, Label, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
@@ -33,6 +37,15 @@ interface CompanyType {
 }
 
 interface FormErrors {
+  representativeHonorific?: string | undefined;
+  representativeFirstName?: string | undefined;
+  representativeLastName?: string | undefined;
+  representativeNationalId?: string | undefined;
+  representativeProvinceId?: string | undefined;
+  representativeCityId?: string | undefined;
+  representativeFullAddress?: string | undefined;
+  representativePostalCode?: string | undefined;
+
   legalName?: string | undefined;
   nationalIdentifier?: string | undefined;
   registrationNumber?: string | undefined;
@@ -60,6 +73,46 @@ function LegalProfileFormPage() {
   const [representativeTitle, setRepresentativeTitle] = useState('');
   const [representativeRelationship, setRepresentativeRelationship] = useState('');
   // Legal entity section
+  const [representative, setRepresentative] = useState({
+    representativeHonorific: '',
+    representativeFirstName: '',
+    representativeLastName: '',
+    representativeNationalId: '',
+    representativeProvinceId: '',
+    representativeCityId: '',
+    representativeFullAddress: '',
+    representativePostalCode: '',
+  });
+  const [representativeCities, setRepresentativeCities] = useState<City[]>([]);
+  const [loadingRepresentativeCities, setLoadingRepresentativeCities] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    setRepresentativeCities([]);
+    if (!representative.representativeProvinceId) {
+      setLoadingRepresentativeCities(false);
+      return;
+    }
+    setLoadingRepresentativeCities(true);
+    fetch(`/api/geography/provinces/${representative.representativeProvinceId}/cities`, {
+      credentials: 'include',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Cities unavailable');
+        return response.json() as Promise<City[]>;
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) setRepresentativeCities(data);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          toast.error(t('onboarding.individual.error.loadCities', locale));
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoadingRepresentativeCities(false);
+      });
+    return () => controller.abort();
+  }, [representative.representativeProvinceId]);
   const [legalName, setLegalName] = useState('');
   const [nationalIdentifier, setNationalIdentifier] = useState('');
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -186,6 +239,32 @@ function LegalProfileFormPage() {
   // ── Field-level validation ──────────────────────────────
   const validateField = useCallback(
     (field: string, value: string): string | undefined => {
+      if (
+        [
+          'representativeHonorific',
+          'representativeFirstName',
+          'representativeLastName',
+          'representativeNationalId',
+          'representativeProvinceId',
+          'representativeCityId',
+          'representativeFullAddress',
+          'representativePostalCode',
+        ].includes(field)
+      ) {
+        if (field === 'representativeHonorific')
+          return value.length > 50
+            ? t('onboarding.individual.error.maxChars', locale).replace('{count}', '50')
+            : undefined;
+        if (!value.trim()) return t('onboarding.individual.error.required', locale);
+        if (field === 'representativeNationalId' && !validateNationalId(value.trim()))
+          return t('onboarding.individual.error.invalidNationalId', locale);
+        if (field === 'representativePostalCode' && !validatePostalCode(value.trim()))
+          return t('onboarding.individual.error.invalidPostalCode', locale);
+        const max = field === 'representativeFullAddress' ? 500 : 100;
+        return value.length > max
+          ? t('onboarding.individual.error.maxChars', locale).replace('{count}', String(max))
+          : undefined;
+      }
       switch (field) {
         case 'legalName':
           if (!value.trim()) return isRtl ? 'نام شخص حقوقی الزامی است' : 'Legal name is required';
@@ -252,6 +331,7 @@ function LegalProfileFormPage() {
     (field: string) => {
       setTouched((prev) => ({ ...prev, [field]: true }));
       const values: Record<string, string> = {
+        ...representative,
         legalName,
         nationalIdentifier,
         registrationNumber,
@@ -272,6 +352,7 @@ function LegalProfileFormPage() {
       setErrors((prev) => ({ ...prev, [field]: error }));
     },
     [
+      representative,
       legalName,
       nationalIdentifier,
       registrationNumber,
@@ -292,6 +373,9 @@ function LegalProfileFormPage() {
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {
+      ...Object.fromEntries(
+        Object.entries(representative).map(([key, value]) => [key, validateField(key, value)])
+      ),
       legalName: validateField('legalName', legalName),
       nationalIdentifier: validateField('nationalIdentifier', nationalIdentifier),
       registrationNumber: validateField('registrationNumber', registrationNumber),
@@ -309,6 +393,7 @@ function LegalProfileFormPage() {
     };
     setErrors(newErrors);
     setTouched({
+      ...Object.fromEntries(Object.keys(representative).map((key) => [key, true])),
       legalName: true,
       nationalIdentifier: true,
       registrationNumber: true,
@@ -323,6 +408,7 @@ function LegalProfileFormPage() {
     });
     return !Object.values(newErrors).some(Boolean);
   }, [
+    representative,
     legalName,
     nationalIdentifier,
     registrationNumber,
@@ -352,6 +438,9 @@ function LegalProfileFormPage() {
           credentials: 'include',
           headers: withCsrf({ 'Content-Type': 'application/json' }),
           body: JSON.stringify({
+            ...Object.fromEntries(
+              Object.entries(representative).map(([key, value]) => [key, value.trim()])
+            ),
             legalName: legalName.trim(),
             nationalIdentifier: nationalIdentifier.trim(),
             registrationNumber: registrationNumber.trim(),
@@ -413,6 +502,7 @@ function LegalProfileFormPage() {
     },
     [
       profileId,
+      representative,
       legalName,
       nationalIdentifier,
       registrationNumber,
@@ -467,20 +557,36 @@ function LegalProfileFormPage() {
           {label}
           {options?.required && <span className="text-destructive ml-0.5">*</span>}
         </Label>
-        <Input
-          id={field}
-          type={options?.type ?? 'text'}
-          inputMode={options?.inputMode}
-          required={options?.required}
-          maxLength={options?.maxLength}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onBlur={() => handleBlur(field)}
-          disabled={submitting}
-          placeholder={options?.placeholder}
-          aria-invalid={isTouched && !!error}
-          aria-describedby={error ? `${field}-error` : undefined}
-        />
+        {field === 'representativeFullAddress' ? (
+          <textarea
+            id={field}
+            required
+            rows={3}
+            maxLength={500}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            onBlur={() => handleBlur(field)}
+            disabled={submitting}
+            aria-invalid={isTouched && !!error}
+            aria-describedby={error ? `${field}-error` : undefined}
+            className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+          />
+        ) : (
+          <Input
+            id={field}
+            type={options?.type ?? 'text'}
+            inputMode={options?.inputMode}
+            required={options?.required}
+            maxLength={options?.maxLength}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={() => handleBlur(field)}
+            disabled={submitting}
+            placeholder={options?.placeholder}
+            aria-invalid={isTouched && !!error}
+            aria-describedby={error ? `${field}-error` : undefined}
+          />
+        )}
         {isTouched && error && (
           <p id={`${field}-error`} className="text-sm text-destructive" role="alert">
             {error}
@@ -527,6 +633,80 @@ function LegalProfileFormPage() {
               {isRtl ? 'اطلاعات نماینده' : 'Authorized Representative'}
             </legend>
             <div className="grid gap-4 sm:grid-cols-2">
+              {(
+                [
+                  'representativeHonorific',
+                  'representativeFirstName',
+                  'representativeLastName',
+                  'representativeNationalId',
+                  'representativeFullAddress',
+                  'representativePostalCode',
+                ] as const
+              ).map((field) => (
+                <div key={field}>
+                  {renderField(
+                    field,
+                    t(`onboarding.legal.${field}`, locale),
+                    representative[field],
+                    (value) => setRepresentative((prev) => ({ ...prev, [field]: value })),
+                    {
+                      required: field !== 'representativeHonorific',
+                      maxLength:
+                        field === 'representativeFullAddress'
+                          ? 500
+                          : field === 'representativeHonorific'
+                            ? 50
+                            : field === 'representativeNationalId' ||
+                                field === 'representativePostalCode'
+                              ? 10
+                              : 100,
+                    }
+                  )}
+                </div>
+              ))}
+              {(['representativeProvinceId', 'representativeCityId'] as const).map((field) => (
+                <div key={field} className="space-y-2">
+                  <Label htmlFor={field}>{t(`onboarding.legal.${field}`, locale)}</Label>
+                  <select
+                    id={field}
+                    required
+                    value={representative[field]}
+                    disabled={
+                      submitting ||
+                      (field === 'representativeProvinceId'
+                        ? loadingProvinces
+                        : !representative.representativeProvinceId || loadingRepresentativeCities)
+                    }
+                    onChange={(event) =>
+                      setRepresentative((prev) => ({
+                        ...prev,
+                        [field]: event.target.value,
+                        ...(field === 'representativeProvinceId'
+                          ? { representativeCityId: '' }
+                          : {}),
+                      }))
+                    }
+                    onBlur={() => handleBlur(field)}
+                    aria-invalid={touched[field] && !!errors[field]}
+                    aria-describedby={errors[field] ? `${field}-error` : undefined}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
+                    {(field === 'representativeProvinceId' ? provinces : representativeCities).map(
+                      (item) => (
+                        <option key={item.id} value={item.id}>
+                          {isRtl ? item.nameFa : item.nameEn}
+                        </option>
+                      )
+                    )}
+                  </select>
+                  {touched[field] && errors[field] && (
+                    <p id={`${field}-error`} role="alert" className="text-sm text-destructive">
+                      {errors[field]}
+                    </p>
+                  )}
+                </div>
+              ))}
               {renderField(
                 'representativeTitle',
                 isRtl ? 'عنوان/سمت نماینده' : 'Representative Title',

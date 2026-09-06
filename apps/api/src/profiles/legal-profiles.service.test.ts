@@ -63,6 +63,13 @@ describe('LegalProfilesService', () => {
       officialCityId: '22222222-2222-4222-8222-222222222222',
       officialFullAddress: 'Street',
       officialPostalCode: '1234567890',
+      representativeFirstName: 'Person',
+      representativeLastName: 'Owner',
+      representativeNationalId: '1234567891',
+      representativeProvinceId: '11111111-1111-4111-8111-111111111111',
+      representativeCityId: '22222222-2222-4222-8222-222222222222',
+      representativeFullAddress: 'Representative Street',
+      representativePostalCode: '1234567890',
       representativeTitle: 'CEO',
       representativeRelationship: 'Director',
     };
@@ -81,8 +88,11 @@ describe('LegalProfilesService', () => {
         }) // UPDATE profiles
         .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT address
+        .mockResolvedValueOnce({ rowCount: 1 }) // representative address
+        .mockResolvedValueOnce({ rowCount: 1 }) // audit
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE profiles status -> ACTIVE
         .mockResolvedValueOnce(undefined); // COMMIT
 
@@ -201,6 +211,7 @@ describe('LegalProfilesService', () => {
         })
         .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockRejectedValueOnce(Object.assign(new Error('duplicate key'), { code: '23505' })) // INSERT fails
         .mockResolvedValueOnce(undefined); // ROLLBACK
 
@@ -221,8 +232,11 @@ describe('LegalProfilesService', () => {
         })
         .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] }) // validate geography
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT addresses
+        .mockResolvedValueOnce({ rowCount: 1 }) // representative address
+        .mockResolvedValueOnce({ rowCount: 1 }) // audit
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE status -> ACTIVE
         .mockResolvedValueOnce(undefined); // COMMIT
 
@@ -260,6 +274,7 @@ describe('LegalProfilesService', () => {
         })
         .mockResolvedValueOnce({ rows: [{ id: validData.officialCityId }] })
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
+        .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockRejectedValueOnce(new Error('DB error')) // INSERT fails
         .mockResolvedValueOnce(undefined); // ROLLBACK
 

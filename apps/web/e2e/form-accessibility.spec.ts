@@ -277,6 +277,13 @@ for (const locale of ['en', 'fa']) {
     await page.locator('#nationalIdentifier').fill('12345678901');
     await page.locator('#registrationNumber').fill('123');
     await page.locator('#companyTypeId').selectOption('limited-liability');
+    await page.locator('#representativeFirstName').fill('Person');
+    await page.locator('#representativeLastName').fill('Owner');
+    await page.locator('#representativeNationalId').fill('1234567891');
+    await page.locator('#representativeProvinceId').selectOption('province-a');
+    await page.locator('#representativeCityId').selectOption('city-a');
+    await page.locator('#representativeFullAddress').fill('Representative Street');
+    await page.locator('#representativePostalCode').fill('1234567890');
     await page.locator('#representativeTitle').fill('CEO');
     await page.locator('#representativeRelationship').fill('director');
     await page.locator('button[type="submit"]').click();

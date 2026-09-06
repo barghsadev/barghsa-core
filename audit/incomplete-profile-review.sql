@@ -26,3 +26,15 @@ WHERE p.profile_type='LEGAL' AND p.status<>'DRAFT' AND NOT p.archived
   AND (c.id IS NULL OR l.official_province_id IS NULL OR l.official_city_id IS NULL
     OR NULLIF(btrim(l.official_full_address),'') IS NULL
     OR NULLIF(btrim(l.official_postal_code),'') IS NULL);
+
+-- After migration 0108: these records need representative data supplied by
+-- the owner/reviewer, not copied from unverified account contact details.
+SELECT p.id, p.status
+FROM profiles p JOIN legal_profiles l ON l.id=p.id
+WHERE NOT p.archived AND p.status<>'DRAFT'
+  AND (NULLIF(btrim(l.representative_first_name),'') IS NULL
+    OR NULLIF(btrim(l.representative_last_name),'') IS NULL
+    OR NULLIF(btrim(l.representative_national_id),'') IS NULL
+    OR l.representative_province_id IS NULL OR l.representative_city_id IS NULL
+    OR NULLIF(btrim(l.representative_full_address),'') IS NULL
+    OR NULLIF(btrim(l.representative_postal_code),'') IS NULL);

@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
-import { validateLegalNationalIdentifier, validatePostalCode } from '@barghsa/shared/validation';
+import {
+  validateLegalNationalIdentifier,
+  validatePostalCode,
+  validateNationalId,
+} from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ProfilesService, type ProfileRow } from './profiles.service.js';
 
@@ -20,6 +24,14 @@ export interface LegalProfileRow {
   officialCityId: string | null;
   officialFullAddress: string | null;
   officialPostalCode: string | null;
+  representativeHonorific: string | null;
+  representativeFirstName: string | null;
+  representativeLastName: string | null;
+  representativeNationalId: string | null;
+  representativeProvinceId: string | null;
+  representativeCityId: string | null;
+  representativeFullAddress: string | null;
+  representativePostalCode: string | null;
   representativeTitle: string;
   representativeRelationship: string;
   createdAt: Date;
@@ -41,6 +53,14 @@ function mapLegalProfileRow(row: Record<string, unknown>): LegalProfileRow {
     officialCityId: (row.official_city_id as string) ?? null,
     officialFullAddress: (row.official_full_address as string) ?? null,
     officialPostalCode: (row.official_postal_code as string) ?? null,
+    representativeHonorific: (row.representative_honorific as string) ?? null,
+    representativeFirstName: (row.representative_first_name as string) ?? null,
+    representativeLastName: (row.representative_last_name as string) ?? null,
+    representativeNationalId: (row.representative_national_id as string) ?? null,
+    representativeProvinceId: (row.representative_province_id as string) ?? null,
+    representativeCityId: (row.representative_city_id as string) ?? null,
+    representativeFullAddress: (row.representative_full_address as string) ?? null,
+    representativePostalCode: (row.representative_postal_code as string) ?? null,
     representativeTitle: row.representative_title as string,
     representativeRelationship: row.representative_relationship as string,
     createdAt: row.created_at as Date,
@@ -113,6 +133,20 @@ export class LegalProfilesService {
           .string()
           .trim()
           .refine(validatePostalCode, 'Invalid postal code format'),
+        representativeHonorific: z.string().trim().max(50).optional(),
+        representativeFirstName: z.string().trim().min(1).max(100),
+        representativeLastName: z.string().trim().min(1).max(100),
+        representativeNationalId: z
+          .string()
+          .trim()
+          .refine(validateNationalId, 'Invalid representative national ID'),
+        representativeProvinceId: z.string().uuid(),
+        representativeCityId: z.string().uuid(),
+        representativeFullAddress: z.string().trim().min(1).max(500),
+        representativePostalCode: z
+          .string()
+          .trim()
+          .refine(validatePostalCode, 'Invalid representative postal code'),
         representativeTitle: z.string().trim().min(1).max(100),
         representativeRelationship: z.string().trim().min(1).max(100),
       })
@@ -169,6 +203,12 @@ export class LegalProfilesService {
         );
       }
 
+      await requireAddressGeography(
+        client,
+        data.representativeProvinceId,
+        data.representativeCityId
+      );
+
       // Create the legal profile record
       await client.query(
         `INSERT INTO legal_profiles (
@@ -176,8 +216,9 @@ export class LegalProfilesService {
           company_type_id, registration_date, economic_code,
           official_phone, official_email,
           official_province_id, official_city_id, official_full_address, official_postal_code,
-          representative_title, representative_relationship
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+          representative_title, representative_relationship,
+          representative_honorific, representative_first_name, representative_last_name, representative_national_id, representative_province_id, representative_city_id, representative_full_address, representative_postal_code
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
         [
           profileId,
           data.legalName,
@@ -194,6 +235,14 @@ export class LegalProfilesService {
           data.officialPostalCode ?? null,
           data.representativeTitle,
           data.representativeRelationship,
+          data.representativeHonorific ?? null,
+          data.representativeFirstName ?? null,
+          data.representativeLastName ?? null,
+          data.representativeNationalId ?? null,
+          data.representativeProvinceId ?? null,
+          data.representativeCityId ?? null,
+          data.representativeFullAddress ?? null,
+          data.representativePostalCode ?? null,
         ]
       );
 
@@ -208,6 +257,23 @@ export class LegalProfilesService {
           data.officialFullAddress,
           data.officialPostalCode,
         ]
+      );
+
+      await client.query(
+        `INSERT INTO addresses (profile_id,province_id,city_id,full_address,postal_code,main_address)
+         VALUES ($1,$2,$3,$4,$5,false)`,
+        [
+          profileId,
+          data.representativeProvinceId,
+          data.representativeCityId,
+          data.representativeFullAddress,
+          data.representativePostalCode,
+        ]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,created_at)
+         VALUES(uuid_generate_v7(),$1,'legal_profile_saved',jsonb_build_object('profileId',$2::text),uuid_generate_v7(),NOW())`,
+        [userId, profileId]
       );
 
       // Transition profile from DRAFT to ACTIVE
