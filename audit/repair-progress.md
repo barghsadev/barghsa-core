@@ -1689,3 +1689,9 @@ Scope correction: the current repository has a general orders API that creates d
 Saved-address city-name lookups now update only the name cache. Form lookups use a generation counter, clear the prior city immediately and ignore obsolete responses after a province change or unmount. Background name resolution cannot overwrite the form's selected city or options.
 
 Review and validation: six ordering browser checks passed, including delayed saved-address and obsolete-province responses in both languages. Root build, types, lint, formatting and bundle checks passed; ordering measures 249.66 KB against 250 KB. This closes the city-selection race; failed address reads remain the next bounded fix.
+
+### Distinguish failed address loads from empty results (F07/F20)
+
+Ordering now clears stale address selection while loading, validates the returned address list and displays a retryable error for failed or malformed reads. The form and mutation handlers cannot proceed with an unavailable address list. Obsolete responses after profile changes or unmount are ignored. A valid retry restores the main-address selection.
+
+Review and validation: all eight ordering browser checks passed in Persian and English, including 503, malformed address entries, retry and main-address recovery. Root build, types, lint, formatting and bundle checks passed; ordering is 249.90 KB against 250 KB. Product/province/city failure feedback and complete commercial submission remain separate work.

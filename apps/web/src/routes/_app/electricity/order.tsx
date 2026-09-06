@@ -70,6 +70,8 @@ function ElectricityOrderPage() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>('');
   const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [addressError, setAddressError] = useState(false);
+  const addressGeneration = useRef(0);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const cityGeneration = useRef(0);
@@ -148,29 +150,41 @@ function ElectricityOrderPage() {
   // ── Fetch addresses ─────────────────────────────────────────────────
 
   const fetchAddresses = useCallback(async () => {
+    const current = ++addressGeneration.current;
+    setLoadingAddresses(true);
+    setAddressError(false);
+    setAddresses([]);
+    setSelectedAddressId('');
     if (!activeProfileId) {
       setLoadingAddresses(false);
       return;
     }
-
     try {
-      const res = await fetch(`/api/profiles/${activeProfileId}/addresses`);
-      if (res.ok) {
-        const data: { addresses: Address[] } = await res.json();
-        setAddresses(data.addresses);
-
-        // Auto-select main address or first address
-        const main = data.addresses.find((a) => a.mainAddress);
-        if (main) {
-          setSelectedAddressId(main.id);
-        } else if (data.addresses.length > 0) {
-          setSelectedAddressId(data.addresses[0]!.id);
-        }
-      }
+      const res = await fetch(`/api/profiles/${activeProfileId}/addresses`, {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Addresses unavailable');
+      const data = await res.json();
+      if (
+        !Array.isArray(data?.addresses) ||
+        data.addresses.some(
+          (address: unknown) =>
+            !address ||
+            typeof address !== 'object' ||
+            ['id', 'provinceId', 'cityId', 'fullAddress', 'postalCode'].some(
+              (key) => typeof (address as Record<string, unknown>)[key] !== 'string'
+            )
+        )
+      )
+        throw new Error('Invalid addresses');
+      if (current !== addressGeneration.current) return;
+      const items: Address[] = data.addresses;
+      setAddresses(items);
+      setSelectedAddressId((items.find((address) => address.mainAddress) ?? items[0])?.id ?? '');
     } catch {
-      // Silently fail
+      if (current === addressGeneration.current) setAddressError(true);
     } finally {
-      setLoadingAddresses(false);
+      if (current === addressGeneration.current) setLoadingAddresses(false);
     }
   }, [activeProfileId]);
 
@@ -227,10 +241,11 @@ function ElectricityOrderPage() {
   }, [checkVerification, fetchProducts, fetchProvinces]);
 
   useEffect(() => {
-    if (activeProfileId) {
-      fetchAddresses();
-    }
-  }, [activeProfileId, fetchAddresses]);
+    void fetchAddresses();
+    return () => {
+      ++addressGeneration.current;
+    };
+  }, [fetchAddresses]);
 
   useEffect(() => {
     if (formProvinceId) {
@@ -276,7 +291,8 @@ function ElectricityOrderPage() {
   // ── Save new address ─────────────────────────────────────────────────
 
   const handleSaveNewAddress = useCallback(async () => {
-    if (checking || blocked !== false || verificationError) return;
+    if (checking || blocked !== false || verificationError || loadingAddresses || addressError)
+      return;
     if (!formProvinceId || !formCityId || !formFullAddress.trim() || !formPostalCode.trim()) {
       toast.error(t('settings.addresses.error.create', locale));
       return;
@@ -332,12 +348,15 @@ function ElectricityOrderPage() {
     checking,
     blocked,
     verificationError,
+    loadingAddresses,
+    addressError,
   ]);
 
   // ── Submit order ────────────────────────────────────────────────────
 
   const handleSubmitOrder = useCallback(async () => {
-    if (checking || blocked !== false || verificationError) return;
+    if (checking || blocked !== false || verificationError || loadingAddresses || addressError)
+      return;
     if (!selectedProductId) {
       toast.error(t('electricity.order.error.noProduct', locale));
       return;
@@ -392,6 +411,8 @@ function ElectricityOrderPage() {
     checking,
     blocked,
     verificationError,
+    loadingAddresses,
+    addressError,
   ]);
 
   // ── Render: Loading ─────────────────────────────────────────────────
@@ -542,6 +563,13 @@ function ElectricityOrderPage() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2Icon className="h-4 w-4 animate-spin" />
               {t('electricity.order.loadingAddresses', locale)}
+            </div>
+          ) : addressError ? (
+            <div className="space-y-3" role="alert">
+              <p>{t('electricity.order.addressLoadFailed', locale)}</p>
+              <Button onClick={() => void fetchAddresses()}>
+                {t('electricity.order.retry', locale)}
+              </Button>
             </div>
           ) : addresses.length === 0 && !showNewAddressForm ? (
             <div className="text-center py-4">
@@ -780,7 +808,9 @@ function ElectricityOrderPage() {
       {/* Submit button */}
       <Button
         onClick={handleSubmitOrder}
-        disabled={submitting || !selectedProductId || !selectedAddressId}
+        disabled={
+          submitting || loadingAddresses || addressError || !selectedProductId || !selectedAddressId
+        }
         className="w-full gap-2"
         size="lg"
       >

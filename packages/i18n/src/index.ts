@@ -1217,6 +1217,8 @@ export const fa: I18nDictionary = {
 
   'electricity.order.error.noProduct': 'لطفاً یک محصول را انتخاب کنید',
   'electricity.order.error.noAddress': 'لطفاً یک آدرس را انتخاب کنید',
+  'electricity.order.addressLoadFailed':
+    'بارگذاری آدرس‌های ذخیره‌شده انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
   'electricity.order.checking': 'در حال بررسی وضعیت پروفایل…',
   'electricity.order.checkFailed':
     'بررسی وضعیت پروفایل انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
@@ -3264,6 +3266,8 @@ export const en: I18nDictionary = {
 
   'electricity.order.error.noProduct': 'Please select a product',
   'electricity.order.error.noAddress': 'Please select an address',
+  'electricity.order.addressLoadFailed':
+    'Could not load saved addresses. Try again before creating an order.',
   'electricity.order.checking': 'Checking profile eligibility…',
   'electricity.order.checkFailed':
     'Could not check profile eligibility. Try again before creating an order.',

@@ -1527,3 +1527,58 @@ for (const locale of ['en', 'fa']) {
     }
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering distinguishes failed address reads from an empty address book (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    let reads = 0;
+    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads++;
+      if (reads === 1) return route.fulfill({ status: 503, json: {} });
+      if (reads === 2) return route.fulfill({ json: { addresses: [null] } });
+      return route.fulfill({
+        json: {
+          addresses: [
+            {
+              id: 'main',
+              provinceId: 'province',
+              cityId: 'city',
+              fullAddress: 'Recovered saved address',
+              postalCode: '1234567890',
+              mainAddress: true,
+            },
+          ],
+        },
+      });
+    });
+    await page.goto('/electricity/order');
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const alert = page.getByRole('alert');
+      await expect(alert).toContainText(
+        locale === 'fa' ? 'بارگذاری آدرس‌های ذخیره‌شده انجام نشد' : 'Could not load saved addresses'
+      );
+      await expect(
+        page.getByRole('button', {
+          name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+          exact: true,
+        })
+      ).toHaveCount(0);
+      await alert
+        .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+        .click();
+    }
+    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(page.getByRole('radio', { name: /Recovered saved address/ })).toBeChecked();
+    expect(reads).toBe(3);
+  });
+}
