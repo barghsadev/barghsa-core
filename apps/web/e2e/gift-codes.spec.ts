@@ -12,6 +12,9 @@ for (const locale of ['en', 'fa'])
       denied = false;
     const attempts: unknown[] = [];
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/user/settings/timezone', (route) =>
+      route.fulfill(failed ? { status: 503, json: {} } : { json: { timezone: 'Asia/Tehran' } })
+    );
     await page.route('**/api/admin/promotions/gift-codes', (route) => {
       if (route.request().method() === 'GET')
         return route.fulfill(
@@ -68,3 +71,68 @@ for (const locale of ['en', 'fa'])
       page.getByRole('form', { name: fa ? 'تنظیمات کد تخفیف' : 'Gift-code settings' })
     ).toHaveCount(0);
   });
+
+test('gift windows display account time, preserve untouched instants and convert edits', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    new MutationObserver(() => {
+      document.documentElement.lang = 'en';
+    }).observe(document, { childList: true });
+  });
+  let row = {
+    id: 'gift-zone',
+    code: 'ACCOUNT-ZONE',
+    discountType: 'fixed_irr',
+    discountValue: '1000',
+    maxCapIrr: null,
+    eligibility: 'public',
+    profileIds: [],
+    totalLimit: null,
+    perProfileLimit: null,
+    minOrderAmount: '0',
+    categories: [],
+    status: 'active',
+    validFrom: '2026-03-21T12:34:56.789Z',
+    validUntil: '2026-10-21T12:34:56.987Z',
+    usage: { consumed: 0, released: 0, totalDiscountIrr: '0' },
+  };
+  const attempts: Array<Record<string, unknown>> = [];
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+  await page.route('**/api/user/settings/timezone', (route) =>
+    route.fulfill({ json: { timezone: 'Asia/Tehran' } })
+  );
+  await page.route('**/api/admin/promotions/gift-codes', (route) => route.fulfill({ json: [row] }));
+  await page.route('**/api/admin/promotions/gift-codes/gift-zone/stats', (route) =>
+    route.fulfill({ json: { code: row } })
+  );
+  await page.route('**/api/admin/promotions/gift-codes/gift-zone', (route) => {
+    const body = route.request().postDataJSON();
+    attempts.push(body);
+    row = { ...row, ...body };
+    return route.fulfill({ json: row });
+  });
+  await page.goto('/admin/gift-codes');
+  const edit = page.getByRole('button', { name: 'Edit ACCOUNT-ZONE', exact: true });
+  await edit.click();
+  await expect(page.locator('#gift-start-time')).toHaveValue('16:04');
+  await page.getByLabel('Discount amount (IRR)', { exact: true }).fill('1001');
+  await page.getByRole('button', { name: 'Save code', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect
+    .poll(() => attempts[0])
+    .toMatchObject({
+      validFrom: '2026-03-21T12:34:56.789Z',
+      validUntil: '2026-10-21T12:34:56.987Z',
+    });
+  await edit.click();
+  await page.locator('#gift-start-time').fill('10:15');
+  await page.getByRole('button', { name: 'Save code', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect
+    .poll(() => attempts[1])
+    .toMatchObject({
+      validFrom: '2026-03-21T06:45:00.000Z',
+      validUntil: '2026-10-21T12:34:56.987Z',
+    });
+});

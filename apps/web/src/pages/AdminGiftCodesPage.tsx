@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, DatePicker, Input, Label } from '@barghsa/ui';
+import { Button, DatePicker, datePickerAtTime, Input, Label } from '@barghsa/ui';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
+import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { GiftProfilePicker } from '../components/GiftProfilePicker.js';
@@ -25,31 +26,32 @@ type Draft = {
   start: DateField;
   end: DateField;
 };
-function dateField(value: string | null): DateField {
+function dateField(value: string | null, zone: string): DateField {
   const date = value ? new Date(value) : undefined;
   return {
     date,
     time: date
-      ? `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+      ? new Intl.DateTimeFormat('en-GB', {
+          timeZone: zone,
+          hourCycle: 'h23',
+          hour: '2-digit',
+          minute: '2-digit',
+        }).format(date)
       : '00:00',
     original: value,
     changed: false,
   };
 }
-function instant(field: DateField): string | null {
+function instant(field: DateField, zone: string): string | null {
   if (!field.date) return null;
   if (!field.changed && field.original) return field.original;
   const match = /^(\d{2}):(\d{2})$/.exec(field.time);
   if (!match) throw new Error('Invalid time');
-  const hours = Number(match[1]),
-    minutes = Number(match[2]),
-    date = new Date(field.date);
-  date.setHours(hours, minutes, 0, 0);
-  if (hours > 23 || minutes > 59 || date.getHours() !== hours || date.getMinutes() !== minutes)
-    throw new Error('Invalid time');
+  const date = datePickerAtTime(field.date, Number(match[1]), Number(match[2]), zone);
+  if (!date) throw new Error('Invalid time');
   return date.toISOString();
 }
-function draftFrom(row?: GiftCodeDto): Draft {
+function draftFrom(row: GiftCodeDto | undefined, zone: string): Draft {
   return {
     code: row?.code ?? '',
     discountType: row?.discountType ?? 'fixed_irr',
@@ -65,11 +67,12 @@ function draftFrom(row?: GiftCodeDto): Draft {
     perProfileLimit: row?.perProfileLimit?.toString() ?? '',
     minimum: row?.minOrderAmount ?? '0',
     categories: row?.categories ?? [],
-    start: dateField(row?.validFrom ?? null),
-    end: dateField(row?.validUntil ?? null),
+    start: dateField(row?.validFrom ?? null, zone),
+    end: dateField(row?.validUntil ?? null, zone),
   };
 }
 export default function AdminGiftCodesPage() {
+  const preference = useTimezone();
   const locale = useLocale(),
     label = (key: string) => tGift(`admin.gifts.${key}`, locale),
     money = (value: string) => BigInt(value).toLocaleString(locale);
@@ -85,8 +88,9 @@ export default function AdminGiftCodesPage() {
     [status, setStatus] = useState(''),
     [type, setType] = useState(''),
     [filter, setFilter] = useState('');
-  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const zone = preference.timezone;
   useEffect(() => {
+    if (preference.status !== 'ready') return;
     const abort = new AbortController();
     setState('loading');
     setRows([]);
@@ -113,7 +117,7 @@ export default function AdminGiftCodesPage() {
         setRows(data[0] as GiftCodeDto[]);
         if (editor)
           setDraft(
-            draftFrom(editor === 'new' ? undefined : (data[1] as { code: GiftCodeDto }).code)
+            draftFrom(editor === 'new' ? undefined : (data[1] as { code: GiftCodeDto }).code, zone)
           );
         setState('ready');
       } catch {
@@ -121,8 +125,9 @@ export default function AdminGiftCodesPage() {
       }
     })();
     return () => abort.abort();
-  }, [editor, revision, filter]);
+  }, [editor, revision, filter, zone, preference.status]);
   function choose(value: string | null) {
+    if (preference.status === 'error') preference.retry();
     setState('loading');
     setEditor(value);
     setRevision((current) => current + 1);
@@ -154,11 +159,11 @@ export default function AdminGiftCodesPage() {
   }
   function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || !editor) return;
+    if (!draft || !editor || preference.status !== 'ready') return;
     let start: string | null, end: string | null;
     try {
-      start = instant(draft.start);
-      end = instant(draft.end);
+      start = instant(draft.start, zone);
+      end = instant(draft.end, zone);
       if (editor !== 'new' && !start) throw new Error('Missing start');
       if (end && Date.parse(end) <= Date.parse(start ?? new Date().toISOString()))
         throw new Error('Invalid window');
@@ -211,6 +216,7 @@ export default function AdminGiftCodesPage() {
               ...(type ? { discountType: type } : {}),
             }).toString()
           );
+          if (preference.status === 'error') preference.retry();
           setRevision((value) => value + 1);
         }}
       >
@@ -254,10 +260,13 @@ export default function AdminGiftCodesPage() {
         </Button>
       </form>
       {saved && <p role="status">{label('saved')}</p>}
-      {state === 'loading' && <p role="status">{label('loading')}</p>}
-      {state === 'error' && <p role="alert">{label('error')}</p>}
+      {(preference.status === 'loading' ||
+        (preference.status === 'ready' && state === 'loading')) && (
+        <p role="status">{label('loading')}</p>
+      )}
+      {(state === 'error' || preference.status === 'error') && <p role="alert">{label('error')}</p>}
       {state === 'denied' && <p role="alert">{label('denied')}</p>}
-      {state === 'ready' && (
+      {state === 'ready' && preference.status === 'ready' && (
         <>
           <div>
             <Button onClick={() => choose('new')}>{label('add')}</Button>
@@ -423,7 +432,10 @@ export default function AdminGiftCodesPage() {
                           setDraft({
                             ...draft,
                             [field]: {
-                              ...dateField(event.target.checked ? new Date().toISOString() : null),
+                              ...dateField(
+                                event.target.checked ? new Date().toISOString() : null,
+                                zone
+                              ),
                               changed: true,
                             },
                           })
@@ -437,7 +449,8 @@ export default function AdminGiftCodesPage() {
                       <DatePicker
                         label={label(`${field}Date`)}
                         placeholder={label('chooseDate')}
-                        jalali={locale === 'fa'}
+                        locale={locale}
+                        timezone={zone}
                         value={draft[field].date}
                         onChange={(date) =>
                           setDraft({ ...draft, [field]: { ...draft[field], date, changed: true } })
@@ -548,6 +561,7 @@ export default function AdminGiftCodesPage() {
           onSuccess={async () => {
             setEditor(null);
             setSaved(true);
+            if (preference.status === 'error') preference.retry();
             setRevision((value) => value + 1);
           }}
         />

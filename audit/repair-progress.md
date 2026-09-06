@@ -1529,3 +1529,9 @@ Review and validation: three date-helper checks, four controlled VAT browser che
 Catalogue timestamps and scheduled prices now use the saved account timezone. The editor waits for a valid preference and refresh can recover a failed preference read. Scheduling uses the same validated wall-clock conversion as VAT, including rejection of skipped local times.
 
 Review and validation: four controlled catalogue checks and both production-migrated API/browser catalogue checks pass. The live checks now assert that a midnight Tehran schedule persists as 20:30 UTC on the previous day, while the current price remains unchanged. Product creation, editing, archival/restoration, exact large prices, system limits, rule warnings and keyboard tabs remain covered. Root build/types/lint and bundle checks pass.
+
+### Apply account timezone to gift-code windows (F20)
+
+Gift-code date/time inputs now display and edit the saved account timezone. Editor initialization waits for the preference, failed reads remain retryable through search, and changed fields use the validated wall-clock conversion. Unchanged start/end fields retain their original timestamp strings, including fractional seconds.
+
+Review and validation: all three controlled gift-code browser checks and both production-migrated API/browser gift-code checks pass. New coverage verifies 12:34 UTC displays as 16:04 in Tehran, changing another field preserves both original timestamps exactly, and changing the start time to 10:15 stores 06:45 UTC without changing expiry. Existing discount scope, profile selection, status changes and captured step-up retry remain covered. Root build/types/lint and bundle checks pass.
