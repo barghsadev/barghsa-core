@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { t, type Locale } from '@barghsa/i18n';
+import type { Locale } from '@barghsa/i18n';
+import { tWalletLimit as t } from '@barghsa/i18n/wallet-limit';
 import { validateWalletTopUpLimitConfig } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';

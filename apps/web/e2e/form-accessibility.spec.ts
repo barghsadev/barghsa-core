@@ -1369,3 +1369,73 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(3);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`ordering stays closed on unavailable or malformed verification and supports retry (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    let mode = 'failure';
+    let writes = 0;
+    await page.route('**/api/profiles/verification-status', (route) => {
+      if (mode === 'failure') return route.fulfill({ status: 503, json: {} });
+      if (mode === 'unauthorized') return route.fulfill({ status: 401, json: {} });
+      if (mode === 'malformed') return route.fulfill({ json: { activeProfileId: 'profile-one' } });
+      return route.fulfill({
+        json: {
+          activeProfileId: mode === 'no-profile' ? null : 'profile-one',
+          verificationRequired: mode === 'unverified',
+          isVerified: false,
+        },
+      });
+    });
+    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+      if (route.request().method() !== 'GET') writes++;
+      return route.fulfill({ json: { addresses: [] } });
+    });
+    await page.route('**/api/orders', (route) => {
+      writes++;
+      return route.fulfill({ status: 500, json: {} });
+    });
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.goto('/electricity/order');
+    const retry = page.getByRole('button', {
+      name: locale === 'fa' ? 'تلاش دوباره' : 'Try again',
+      exact: true,
+    });
+    for (const next of ['unauthorized', 'malformed', 'no-profile', 'ready']) {
+      await expect(page.getByRole('alert')).toBeVisible();
+      await expect(
+        page.getByRole('button', {
+          name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+          exact: true,
+        })
+      ).toHaveCount(0);
+      mode = next;
+      await retry.click();
+    }
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+        exact: true,
+      })
+    ).toBeVisible();
+    expect(writes).toBe(0);
+    mode = 'unverified';
+    await page.reload();
+    await expect(
+      page.getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+        exact: true,
+      })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole('heading', {
+        name: locale === 'fa' ? 'ثبت سفارش جدید امکان‌پذیر نیست' : 'New orders are not available',
+        exact: true,
+      })
+    ).toBeVisible();
+    expect(writes).toBe(0);
+  });
+}

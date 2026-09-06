@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { t } from '@barghsa/i18n';
@@ -56,7 +56,8 @@ function ElectricityOrderPage() {
 
   // Profile & verification
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
-  const [, setIsVerified] = useState(false);
+  const verificationGeneration = useRef(0);
+  const [verificationError, setVerificationError] = useState(false);
   const [checking, setChecking] = useState(true);
   const [blocked, setBlocked] = useState<boolean | null>(null);
 
@@ -89,36 +90,38 @@ function ElectricityOrderPage() {
   // ── Fetch verification status ───────────────────────────────────────
 
   const checkVerification = useCallback(async () => {
+    const current = ++verificationGeneration.current;
+    setChecking(true);
+    setBlocked(null);
+    setActiveProfileId(null);
+    setVerificationError(false);
     try {
       const response = await fetch('/api/profiles/verification-status', {
         method: 'GET',
         credentials: 'include',
         headers: { Accept: 'application/json' },
       });
-
-      if (response.status === 401) {
-        setBlocked(false);
-        return;
-      }
-
-      if (!response.ok) {
-        setBlocked(false);
-        return;
-      }
-
+      if (!response.ok) throw new Error('Verification unavailable');
       const data = await response.json();
-      setActiveProfileId(data.activeProfileId);
-
-      if (data.verificationRequired && !data.isVerified) {
-        setBlocked(true);
-      } else {
-        setBlocked(false);
-        setIsVerified(data.isVerified);
+      if (
+        !data ||
+        typeof data !== 'object' ||
+        !(
+          data.activeProfileId === null ||
+          (typeof data.activeProfileId === 'string' && data.activeProfileId.length > 0)
+        ) ||
+        typeof data.verificationRequired !== 'boolean' ||
+        typeof data.isVerified !== 'boolean'
+      ) {
+        throw new Error('Invalid verification status');
       }
+      if (current !== verificationGeneration.current) return;
+      setActiveProfileId(data.activeProfileId);
+      setBlocked(data.verificationRequired && !data.isVerified);
     } catch {
-      setBlocked(false);
+      if (current === verificationGeneration.current) setVerificationError(true);
     } finally {
-      setChecking(false);
+      if (current === verificationGeneration.current) setChecking(false);
     }
   }, []);
 
@@ -212,6 +215,9 @@ function ElectricityOrderPage() {
     checkVerification();
     fetchProducts();
     fetchProvinces();
+    return () => {
+      ++verificationGeneration.current;
+    };
   }, [checkVerification, fetchProducts, fetchProvinces]);
 
   useEffect(() => {
@@ -260,6 +266,7 @@ function ElectricityOrderPage() {
   // ── Save new address ─────────────────────────────────────────────────
 
   const handleSaveNewAddress = useCallback(async () => {
+    if (checking || blocked !== false || verificationError) return;
     if (!formProvinceId || !formCityId || !formFullAddress.trim() || !formPostalCode.trim()) {
       toast.error(t('settings.addresses.error.create', locale));
       return;
@@ -305,11 +312,22 @@ function ElectricityOrderPage() {
     } finally {
       setSavingAddress(false);
     }
-  }, [formProvinceId, formCityId, formFullAddress, formPostalCode, activeProfileId, locale]);
+  }, [
+    formProvinceId,
+    formCityId,
+    formFullAddress,
+    formPostalCode,
+    activeProfileId,
+    locale,
+    checking,
+    blocked,
+    verificationError,
+  ]);
 
   // ── Submit order ────────────────────────────────────────────────────
 
   const handleSubmitOrder = useCallback(async () => {
+    if (checking || blocked !== false || verificationError) return;
     if (!selectedProductId) {
       toast.error(t('electricity.order.error.noProduct', locale));
       return;
@@ -355,14 +373,46 @@ function ElectricityOrderPage() {
     } finally {
       setSubmitting(false);
     }
-  }, [selectedProductId, selectedAddressId, selectedAddress, activeProfileId, locale]);
+  }, [
+    selectedProductId,
+    selectedAddressId,
+    selectedAddress,
+    activeProfileId,
+    locale,
+    checking,
+    blocked,
+    verificationError,
+  ]);
 
   // ── Render: Loading ─────────────────────────────────────────────────
 
   if (checking) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <p className="text-muted-foreground">Loading…</p>
+        <p role="status" className="text-muted-foreground">
+          {t('electricity.order.checking', locale)}
+        </p>
+      </div>
+    );
+  }
+
+  if (verificationError || (blocked === false && !activeProfileId)) {
+    return (
+      <div
+        className="container mx-auto max-w-md space-y-4 p-6"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      >
+        <p role="alert">
+          {t(
+            verificationError
+              ? 'electricity.order.checkFailed'
+              : 'electricity.order.error.noProfile',
+            locale
+          )}
+        </p>
+        <Button onClick={() => void checkVerification()}>
+          {t('electricity.order.retry', locale)}
+        </Button>
       </div>
     );
   }

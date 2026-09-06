@@ -51,6 +51,11 @@
       "types": "./dist/verification-config.d.ts",
       "import": "./dist/verification-config.js",
       "default": "./dist/verification-config.js"
+    },
+    "./wallet-limit": {
+      "types": "./dist/wallet-limit.d.ts",
+      "import": "./dist/wallet-limit.js",
+      "default": "./dist/wallet-limit.js"
     }
   },
   "scripts": {
