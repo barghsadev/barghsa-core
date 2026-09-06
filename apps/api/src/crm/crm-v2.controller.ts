@@ -29,7 +29,7 @@ import { ErrorCodes } from '@barghsa/shared/errors'
  */
 export interface UpdateProfileDto {
   title?: string | null
-  /** Individual profile fields (direct edit on non-identity fields only) */
+  /** Profile contact details; never verified account sign-in destinations. */
   email?: string | null
   mobile?: string | null
 }
@@ -223,6 +223,9 @@ export class CrmV2Controller {
       )
     }
 
+    if (!z.string().uuid().safeParse(profileId).success) {
+      throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code},400)
+    }
     const parsed = z.object({
       title: z.string().max(256).nullable().optional(),
       email: z.string().max(254).nullable().optional(),

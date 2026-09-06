@@ -190,6 +190,13 @@
       "when": 1791331200009,
       "tag": "0106_username_challenge_pair",
       "breakpoints": true
+    },
+    {
+      "idx": 107,
+      "version": "7",
+      "when": 1791331200010,
+      "tag": "0107_profile_contact_details",
+      "breakpoints": true
     }
   ]
 }

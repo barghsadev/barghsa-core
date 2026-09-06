@@ -1,6 +1,6 @@
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, Button, Label } from '@barghsa/ui'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import { useParams, Link } from '@tanstack/react-router'
 import { t, type Locale } from '@barghsa/i18n'
 import { useLocale } from '../hooks/useLocale.js'
@@ -10,6 +10,8 @@ interface Profile {
   profileType: string
   status: string
   title: string | null
+  contactEmail: string | null
+  contactMobile: string | null
   firstName: string | null
   lastName: string | null
   nationalId: string | null
@@ -199,8 +201,8 @@ function CrmProfileDetailContent() {
     if (!data) return
     setEditFields({
       title: data.profile.title ?? '',
-      email: data.user.email ?? '',
-      mobile: data.user.mobile ?? '',
+      email: data.profile.contactEmail ?? '',
+      mobile: data.profile.contactMobile ?? '',
     })
     setIsEditing(true)
     setSaveError(null)
@@ -439,30 +441,36 @@ function CrmProfileDetailContent() {
           <Section title={t('crm.profile.section.userInfo', locale)}>
             <DetailRow label="User ID" value={user.userId} />
             <DetailRow label="Username" value={user.username} />
+            <DetailRow label={t('crm.profile.label.email', locale)} value={user.email ?? '—'} />
+            <DetailRow label={t('crm.profile.label.mobile', locale)} value={user.mobile ?? '—'} />
+            <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
+            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt, locale)} />
+            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} />
+          </Section>
+
+          <Section title={t('crm.profile.section.contacts', locale)}>
+            <p className="text-sm text-muted-foreground">{t('crm.profile.contacts.explanation', locale)}</p>
             {isEditing ? (
               <>
                 <EditRow
                   label={t('crm.profile.label.email', locale)}
                   value={editFields.email}
                   onChange={(v) => setEditFields((prev) => ({ ...prev, email: v }))}
-                  placeholder={user.email ?? t('crm.profile.edit.noChanges', locale)}
+                  placeholder={profile.contactEmail ?? t('crm.profile.edit.noChanges', locale)}
                 />
                 <EditRow
                   label={t('crm.profile.label.mobile', locale)}
                   value={editFields.mobile}
                   onChange={(v) => setEditFields((prev) => ({ ...prev, mobile: v }))}
-                  placeholder={user.mobile ?? t('crm.profile.edit.noChanges', locale)}
+                  placeholder={profile.contactMobile ?? t('crm.profile.edit.noChanges', locale)}
                 />
               </>
             ) : (
               <>
-                <DetailRow label={t('crm.profile.label.email', locale)} value={user.email ?? '—'} />
-                <DetailRow label={t('crm.profile.label.mobile', locale)} value={user.mobile ?? '—'} />
+                <DetailRow label={t('crm.profile.label.email', locale)} value={profile.contactEmail ?? '—'} />
+                <DetailRow label={t('crm.profile.label.mobile', locale)} value={profile.contactMobile ?? '—'} />
               </>
             )}
-            <DetailRow label={t('crm.profile.label.admin', locale)} value={user.isAdmin ? t('crm.profile.label.yes', locale) : t('crm.profile.label.no', locale)} />
-            <DetailRow label={t('crm.profile.label.created', locale)} value={formatDate(user.createdAt, locale)} />
-            <DetailRow label={t('crm.profile.summary.lastLogin', locale)} value={user.lastLogin ? formatDate(user.lastLogin, locale) : '—'} />
           </Section>
 
           <Section title={t('crm.profile.section.profile', locale)}>
@@ -768,10 +776,12 @@ function EditRow({
   onChange: (v: string) => void
   placeholder?: string
 }) {
+  const inputId = useId()
   return (
     <div className="flex flex-col">
-      <span className="text-xs text-gray-500 font-medium">{label}</span>
+      <label htmlFor={inputId} className="text-xs text-gray-500 font-medium">{label}</label>
       <input
+        id={inputId}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

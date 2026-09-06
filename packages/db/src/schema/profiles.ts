@@ -55,6 +55,10 @@ export const profiles = pgTable(
     /** Optional honorific title. */
     title: text('title'),
 
+    /** Profile contact details only; never account authentication destinations. */
+    contactEmail: text('contact_email'),
+    contactMobile: text('contact_mobile'),
+
     /** First (given) name. */
     firstName: text('first_name'),
 
