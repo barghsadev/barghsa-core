@@ -91,16 +91,16 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
+        .mockResolvedValueOnce({ rowCount: 1 }) // demote preliminary main address
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT address
         .mockResolvedValueOnce({ rowCount: 1 }) // representative address
         .mockResolvedValueOnce({ rowCount: 1 }) // audit
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE profiles status -> ACTIVE
+        .mockResolvedValueOnce({ rowCount: 1 }) // DELETE saved draft
+        .mockResolvedValueOnce({
+          rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'ACTIVE' }],
+        }) // read on transaction connection
         .mockResolvedValueOnce(undefined); // COMMIT
-
-      // Re-fetch after commit
-      mockPool.query.mockResolvedValueOnce({
-        rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'ACTIVE' }],
-      });
 
       const result = await service.saveLegalProfile('user-1', 'prof-legal-1', validData);
 
@@ -235,15 +235,16 @@ describe('LegalProfilesService', () => {
         .mockResolvedValueOnce({ rows: [{ id: validData.companyTypeId }] })
         .mockResolvedValueOnce({ rows: [{ id: validData.representativeCityId }] })
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT legal_profiles
+        .mockResolvedValueOnce({ rowCount: 1 }) // demote preliminary main address
         .mockResolvedValueOnce({ rowCount: 1 }) // INSERT addresses
         .mockResolvedValueOnce({ rowCount: 1 }) // representative address
         .mockResolvedValueOnce({ rowCount: 1 }) // audit
         .mockResolvedValueOnce({ rowCount: 1 }) // UPDATE status -> ACTIVE
+        .mockResolvedValueOnce({ rowCount: 1 }) // DELETE saved draft
+        .mockResolvedValueOnce({
+          rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'ACTIVE' }],
+        }) // read on transaction connection
         .mockResolvedValueOnce(undefined); // COMMIT
-
-      mockPool.query.mockResolvedValueOnce({
-        rows: [{ ...mockProfileRow, title: 'Barghsa LLC', status: 'ACTIVE' }],
-      });
 
       await service.saveLegalProfile('user-1', 'prof-legal-1', {
         ...validData,

@@ -194,7 +194,8 @@ export class LegalProfilesService {
       );
     }
     const data = parsed.data;
-
+    // Resolve cached settings before holding a transaction connection.
+    const verificationMode = await this.profilesService.getVerificationMode();
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
@@ -336,18 +337,15 @@ export class LegalProfilesService {
       // Transition profile from DRAFT to ACTIVE
       await client.query(`UPDATE profiles SET status = $2, updated_at = NOW() WHERE id = $1`, [
         profileId,
-        (await this.profilesService.getVerificationMode()) === 'DISABLED'
-          ? 'ACTIVE'
-          : 'PENDING_VERIFICATION',
+        verificationMode === 'DISABLED' ? 'ACTIVE' : 'PENDING_VERIFICATION',
       ]);
 
       await client.query('DELETE FROM profile_onboarding_drafts WHERE profile_id=$1', [profileId]);
+      const updatedProfile = await this.profilesService.getProfileById(profileId, client);
       await client.query('COMMIT');
 
       this.logger.log(`Legal profile ${profileId} saved for user ${userId}`);
 
-      // Re-fetch the profile to get the updated status (ACTIVE)
-      const updatedProfile = await this.profilesService.getProfileById(profileId);
       return updatedProfile ?? (mapLegalProfileRow(profileResult.rows[0]) as unknown as ProfileRow);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {

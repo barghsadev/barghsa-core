@@ -1,4 +1,5 @@
 import { readCappedBytes } from './read-capped-bytes.js';
+import { reserveStorageCopy } from './reserve-storage-copy.js';
 import {
   BadRequestException,
   Inject,
@@ -69,10 +70,29 @@ export class VerifiedAttachmentsService {
       if (!contentType) throw new BadRequestException('Unsupported attachment file content');
       const digest = createHash('sha256').update(bytes).digest('hex');
       const sealedKey = `${prefix(purpose)}${randomUUID()}/${digest}`;
+      await reserveStorageCopy(sealedKey, {
+        purpose,
+        profileId,
+        uploadedBy: actorId,
+        sourceKey: key,
+      });
+      const reservation = (
+        await client.query(
+          `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed'
+           AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true'
+           FOR UPDATE`,
+          [sealedKey]
+        )
+      ).rows[0];
+      if (!reservation)
+        throw new ServiceUnavailableException('Attachment reservation expired; retry the upload');
+      // Hold the row lock during PUT and until the caller commits. Cleanup skips
+      // it while live; rollback/crash restores the independently committed intent.
       await this.storage.putObject(sealedKey, bytes, contentType);
       await client.query(
-        `INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name,signed_at,signed_by)
-        VALUES ($1,'immutable',$2::jsonb,$3,$4,$5,$6,NOW(),$7)`,
+        `UPDATE storage_records SET status='immutable',metadata=$2::jsonb,file_size=$3,
+         content_type=$4,category=$5,file_name=$6,signed_at=NOW(),signed_by=$7,
+         removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
         [
           sealedKey,
           JSON.stringify({

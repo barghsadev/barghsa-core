@@ -162,8 +162,8 @@ export class ProfilesService {
     };
   }
 
-  async getProfileById(profileId: string): Promise<ProfileRow | null> {
-    const pool = getDbPool();
+  async getProfileById(profileId: string, client?: PoolClient): Promise<ProfileRow | null> {
+    const pool = client ?? getDbPool();
 
     const result = await pool.query(
       `SELECT id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at
