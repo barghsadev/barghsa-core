@@ -133,8 +133,9 @@ describe('S3StorageProvider.putObject', () => {
 describe('S3StorageProvider.getObject', () => {
   it('returns body, contentType, contentLength, metadata, etag', async () => {
     const [provider, send] = createMockedProvider();
+    const body = new ReadableStream();
     send.mockResolvedValue({
-      Body: 'stream-data',
+      Body: { transformToWebStream: () => body },
       ContentType: 'image/png',
       ContentLength: 42,
       Metadata: { author: 'user1' },
@@ -143,7 +144,7 @@ describe('S3StorageProvider.getObject', () => {
 
     const obj = await provider.getObject('photo.png');
 
-    expect(obj.body).toBe('stream-data');
+    expect(obj.body).toBe(body);
     expect(obj.contentType).toBe('image/png');
     expect(obj.contentLength).toBe(42);
     expect(obj.metadata).toEqual({ author: 'user1' });

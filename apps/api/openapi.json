@@ -2691,6 +2691,7 @@
             "required": false,
             "schema": {
               "enum": [
+                "storage_cleanup",
                 "auth_delivery",
                 "service_breach_scan",
                 "service_escalation_scan",

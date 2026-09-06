@@ -1,3 +1,4 @@
+import { StorageRecordAdminService } from './storage-record-admin.service.js';
 import { SessionModule } from '../session/session.module.js';
 import { Global, Logger, Module } from '@nestjs/common';
 import { createDbInstance, type DbInstance } from '@barghsa/db';
@@ -17,6 +18,7 @@ import { StorageRecordsController } from './storage-records.controller.js';
   imports: [SessionModule],
   controllers: [StorageAdminController, StorageRecordsController],
   providers: [
+    StorageRecordAdminService,
     {
       provide: STORAGE_PROVIDER,
       useFactory: (): StorageProvider | null => {

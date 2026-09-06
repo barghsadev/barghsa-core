@@ -155,7 +155,7 @@ export class S3StorageProvider implements StorageProvider {
       }
 
       return {
-        body: response.Body as unknown as ReadableStream,
+        body: response.Body.transformToWebStream(),
         contentType: response.ContentType ?? 'application/octet-stream',
         contentLength: response.ContentLength ?? undefined,
         metadata: (response.Metadata as StorageMetadata) ?? {},
@@ -166,7 +166,11 @@ export class S3StorageProvider implements StorageProvider {
       if (err instanceof StorageObjectNotFound) {
         throw err;
       }
-      if (err instanceof NoSuchKey || (err as { name?: string }).name === 'NoSuchKey') {
+      if (
+        err instanceof NoSuchKey ||
+        (err as { name?: string }).name === 'NoSuchKey' ||
+        (err as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode === 404
+      ) {
         throw new StorageObjectNotFound(key);
       }
       this.logger?.error(`[s3-storage-provider] Failed to get object "${resolvedKey}":`, err);

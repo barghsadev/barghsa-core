@@ -1,3 +1,4 @@
+import { cleanupStorageObjects, cleanupStorageProvider } from './storage/cleanup.js';
 import { SmsNotificationTransport } from './notifications/sms-transport.js';
 import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
@@ -177,6 +178,32 @@ async function main(): Promise<void> {
   process.on('unhandledRejection', (reason) => {
     logger.error(`Unhandled rejection: ${String(reason)}`);
   });
+
+  let cleanupProvider: ReturnType<typeof cleanupStorageProvider> = null;
+  try {
+    cleanupProvider = cleanupStorageProvider();
+  } catch {
+    logger.error('Storage cleanup provider configuration is invalid');
+  }
+  pollers.every(async () => {
+    try {
+      const result = await cleanupStorageObjects(getDbPool(), cleanupProvider);
+      if (result.failed)
+        await recordJobFailure({
+          jobType: 'storage_cleanup',
+          error: 'storage_cleanup_failed',
+          errorCategory: 'transient',
+          payload: result,
+        });
+      else if (result.deleted) await recordJobSuccess('storage_cleanup');
+    } catch {
+      await recordJobFailure({
+        jobType: 'storage_cleanup',
+        error: 'storage_cleanup_unavailable',
+        errorCategory: 'transient',
+      });
+    }
+  }, 60000);
 
   pollers.every(async () => {
     const outcome = await runAuthDelivery(getDbPool());
