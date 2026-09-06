@@ -1,0 +1,38 @@
+{
+  "verified_at": "2026-09-06T14:58:54.382250+00:00",
+  "product_code_through_commit": "ab96c26a30a4f9f6cd612ab6cb988de3ec67fd56",
+  "workspace_commit_at_verification": "378b5486782b40895da90e25f0b03a2c2204e260",
+  "scope": "Disposable local containers; no host ports, external providers or production deployment. Later changes before verification were test-only.",
+  "images": [
+    {
+      "tag": "barghsa-audit-api:f18",
+      "image_id": "sha256:32d6b62834c952c774f61e207e5e2b88df15438c25085c31b9d58915aa9dac36",
+      "created": "2026-09-06T14:55:53.843636889Z",
+      "runtime_user": "node"
+    },
+    {
+      "tag": "barghsa-audit-worker:f18",
+      "image_id": "sha256:c1713591f9c2059365828700cb16c325a6d5169d17a62d0372db40720c507339",
+      "created": "2026-09-06T14:56:46.912724969Z",
+      "runtime_user": "node"
+    },
+    {
+      "tag": "barghsa-audit-web:f18",
+      "image_id": "sha256:d95e1023cd5c401964674f72dad646e090635de9b566025d62f3f16dc17536b5",
+      "created": "2026-09-06T14:55:46.562332177Z",
+      "runtime_user": "node"
+    }
+  ],
+  "probe": "python3 scripts/test-production-images.py",
+  "result": "passed",
+  "checks": [
+    "PASS non-root/read-only boot, packaged migrations, optional Redis fallback",
+    "PASS database loss/recovery changes readiness but preserves liveness",
+    "PASS SIGTERM waits for concurrent notification and finance commits",
+    "PASS forced deadline leaves retryable work; restart commits once; web/API SIGTERM exit cleanly"
+  ],
+  "limitations": [
+    "Forced-deadline probe terminates sleeping disconnected test database sessions and advances the isolated lease clock.",
+    "Does not verify real provider credentials, production backups, DNS, certificates or deployment on another machine."
+  ]
+}
