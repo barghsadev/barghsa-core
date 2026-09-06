@@ -20,17 +20,14 @@
  *
  * Concurrent races belong to T-04.2.03.04
  * (`pay-invoice-with-wallet.concurrency.integration.test.ts`). Wiring: only
- * `getDbPool()` is stubbed, handing the service the schema-scoped
- * Testcontainers pool.
+ * `getDbPool()` is stubbed, handing the service the fully migrated
+ * disposable PostgreSQL pool.
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { NotFoundException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture.js';
 import {
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
   PAY_INVOICE_WITH_WALLET_ERRORS,
@@ -56,91 +53,31 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const WALLET_AVAILABLE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql'
-);
-const IDEMPOTENCY_KEYS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0073_create_idempotency_keys.sql'
-);
-
 const ACTOR_USER_ID = 'actor-pay-wallet-lock';
 const NOW = new Date('2026-09-02T08:00:00.000Z');
 const TOTAL = 1_000_000n;
 
 describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2.03.03)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let service: PayInvoiceWithWalletService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 4);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!);
     poolHolder.pool = ctx.pool;
     service = new PayInvoiceWithWalletService(
       new WalletService(),
       new InvoiceStateMachineService(new InvoiceAuditRepository())
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`CREATE TYPE invoice_state AS ENUM (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )`);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY
-      )
-    `);
-
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(WALLET_AVAILABLE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(IDEMPOTENCY_KEYS_MIGRATION, 'utf-8').trim());
-
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID]);
+    await ctx.pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')",
+      [ACTOR_USER_ID, `${ACTOR_USER_ID}@example.test`]
+    );
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   async function seedPayable(input: {
@@ -153,7 +90,10 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
     const invoiceId = uuidv7();
     const reserved = input.reserved ?? 0n;
     const paid = input.paid ?? 0n;
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id,user_id) VALUES ($1,$2)`, [
+      profileId,
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES ($1, $2::bigint, $3::bigint, 0)`,
@@ -409,7 +349,10 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
   it('returns 404 when the wallet row is missing and leaves the invoice unpaid', async () => {
     const profileId = uuidv7();
     const invoiceId = uuidv7();
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id,user_id) VALUES ($1,$2)`, [
+      profileId,
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(
       `INSERT INTO invoices
          (id, profile_id, state, total_amount, paid_amount, refunded_amount, payable_from)
@@ -485,6 +428,52 @@ describe('PayInvoiceWithWalletService — real PostgreSQL (T-04.2.03.02 / T-04.2
       [key]
     );
     expect(cached.rows[0]?.n).toBe('0');
+  });
+  it('preserves exact money above Number.MAX_SAFE_INTEGER in debit and cached replay', async () => {
+    const amount = 9007199254741017n;
+    const { profileId, invoiceId } = await seedPayable({ posted: amount + 37n });
+    await ctx.pool.query('UPDATE invoices SET total_amount=$2 WHERE id=$1', [
+      invoiceId,
+      amount.toString(),
+    ]);
+    const key = `large-wallet-${invoiceId}`;
+    const first = await pay(invoiceId, profileId, key),
+      replay = await pay(invoiceId, profileId, key);
+    expect(first.remainingPaid).toBe(amount);
+    expect(replay.remainingPaid).toBe(amount);
+    expect(replay.replayed).toBe(true);
+    expect(first.walletTransaction.amount).toBe(-amount);
+    expect((await fetchWallet(profileId)).posted_balance).toBe('37');
+    expect((await fetchInvoice(invoiceId)).paid_amount).toBe(amount.toString());
+    expect(await fetchLedger(profileId)).toEqual([
+      expect.objectContaining({ amount: (-amount).toString() }),
+    ]);
+  });
+  it('rolls debit, invoice, audit and idempotency back when final invoice auditing fails', async () => {
+    const { profileId, invoiceId } = await seedPayable({ posted: 1500000n });
+    const key = `audit-failure-${invoiceId}`;
+    await ctx.pool.query(
+      "CREATE FUNCTION reject_payment_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_payment_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='invoice.pay_from_wallet') EXECUTE FUNCTION reject_payment_audit()"
+    );
+    try {
+      await expect(pay(invoiceId, profileId, key)).rejects.toThrow();
+      expect((await fetchWallet(profileId)).posted_balance).toBe('1500000');
+      expect(await fetchInvoice(invoiceId)).toMatchObject({ state: 'Unpaid', paid_amount: '0' });
+      expect(await fetchLedger(profileId)).toHaveLength(0);
+      expect(await fetchAudit(invoiceId)).toHaveLength(0);
+      expect(
+        (
+          await ctx.pool.query(
+            'SELECT idempotency_key FROM idempotency_keys WHERE idempotency_key=$1',
+            [key]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      await ctx.pool.query('DROP TRIGGER reject_payment_audit ON audit_log');
+    }
+    expect((await pay(invoiceId, profileId, key)).replayed).toBe(false);
+    expect(await fetchLedger(profileId)).toHaveLength(1);
   });
 });
 

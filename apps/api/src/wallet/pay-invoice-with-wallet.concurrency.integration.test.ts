@@ -40,11 +40,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { BadRequestException, ConflictException } from '@nestjs/common';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { v7 as uuidv7 } from 'uuid';
-import { createIsolatedTestDb, dropTestSchema } from '@barghsa/db/test';
-import type { IsolatedTestDb } from '@barghsa/db/test';
+import { startHttpFixture } from '../test/http-fixture.js';
 import {
   PAY_INVOICE_WITH_WALLET_ERRORS,
   INVOICE_WALLET_PAYMENT_ENTITY_TYPE,
@@ -71,50 +68,17 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   };
 });
 
-const UUIDV7_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0000_init_uuidv7_function.sql'
-);
-const INVOICES_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0052_add_invoice_amount_check_constraints.sql'
-);
-const PAID_OVERDUE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0053_add_invoice_paid_overdue_timestamps.sql'
-);
-const AUDIT_LOG_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0005_create_audit_log.sql'
-);
-const ADJUSTMENT_KIND_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0067_invoice_adjustment_kind_accounting_amount.sql'
-);
-const WALLET_TX_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0068_create_wallet_transactions.sql'
-);
-const WALLET_AVAILABLE_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0069_wallet_available_balance_check.sql'
-);
-const IDEMPOTENCY_KEYS_MIGRATION = resolve(
-  __dirname,
-  '../../../../packages/db/drizzle/0073_create_idempotency_keys.sql'
-);
-
 const ACTOR_USER_ID = 'actor-pay-wallet-race';
 const NOW = new Date('2026-09-02T08:00:00.000Z');
 const TOTAL = 1_000_000n;
 
 describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)', () => {
-  let ctx: IsolatedTestDb;
+  let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   let service: PayInvoiceWithWalletService;
   let walletService: WalletService;
 
   beforeAll(async () => {
-    ctx = await createIsolatedTestDb('test_', 8);
+    ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!);
     poolHolder.pool = ctx.pool;
     walletService = new WalletService();
     service = new PayInvoiceWithWalletService(
@@ -122,48 +86,24 @@ describe('PayInvoiceWithWalletService — concurrent PostgreSQL (T-04.2.03.04)',
       new InvoiceStateMachineService(new InvoiceAuditRepository())
     );
 
-    await ctx.pool.query(readFileSync(UUIDV7_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(`CREATE TYPE invoice_state AS ENUM (
-      'Draft', 'Unpaid', 'PaymentUnderReview', 'PartiallyFunded', 'Paid',
-      'Overdue', 'Cancelled', 'PartiallyRefunded', 'Refunded'
-    )`);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS profiles (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS orders (
-        id UUID PRIMARY KEY DEFAULT uuid_generate_v7()
-      )
-    `);
-    await ctx.pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        user_id TEXT PRIMARY KEY
-      )
-    `);
-
-    await ctx.pool.query(readFileSync(INVOICES_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(PAID_OVERDUE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(AUDIT_LOG_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(ADJUSTMENT_KIND_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(WALLET_TX_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(WALLET_AVAILABLE_MIGRATION, 'utf-8').trim());
-    await ctx.pool.query(readFileSync(IDEMPOTENCY_KEYS_MIGRATION, 'utf-8').trim());
-
-    await ctx.pool.query(`INSERT INTO users (user_id) VALUES ($1)`, [ACTOR_USER_ID]);
+    await ctx.pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$2,'test-only')",
+      [ACTOR_USER_ID, `${ACTOR_USER_ID}@example.test`]
+    );
   }, 60_000);
 
   afterAll(async () => {
     poolHolder.pool = null;
-    await ctx.pool.end();
-    await dropTestSchema(ctx.schemaName);
+    await ctx.close();
   });
 
   async function seedWallet(input: { posted: bigint; reserved?: bigint }): Promise<string> {
     const profileId = uuidv7();
     const reserved = input.reserved ?? 0n;
-    await ctx.pool.query(`INSERT INTO profiles (id) VALUES ($1)`, [profileId]);
+    await ctx.pool.query(`INSERT INTO profiles (id,user_id) VALUES ($1,$2)`, [
+      profileId,
+      ACTOR_USER_ID,
+    ]);
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES ($1, $2::bigint, $3::bigint, 0)`,
