@@ -1,9 +1,13 @@
+vi.mock('../admin/staff-mutation-permission.js', () => ({
+  requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
+}));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { AiPoliciesService as ServiceType } from './ai-policies.service.js';
 
 /** Mocked pool: query() returns queued fixtures in order. */
 function mockPool() {
-  const mockQuery = vi.fn();
+  const mockQuery =
+    vi.fn<(...args: unknown[]) => Promise<{ rows: unknown[]; rowCount?: number }>>();
   const pool = { query: mockQuery };
   return { mockQuery, pool };
 }
@@ -36,8 +40,19 @@ function groupBaseRow(over: Record<string, unknown> = {}) {
 const ACTOR = 'user-admin-1';
 
 /** Load AiPoliciesService with a mocked @barghsa/db pool. */
-async function loadService(pool: { query: ReturnType<typeof vi.fn> }) {
-  vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
+async function loadService(pool: { query: ReturnType<typeof mockPool>['mockQuery'] }) {
+  vi.doMock('@barghsa/db', () => ({
+    getDbPool: () => ({
+      ...pool,
+      connect: async () => ({
+        query: (sql: string, ...args: unknown[]) =>
+          ['BEGIN', 'COMMIT', 'ROLLBACK'].includes(sql)
+            ? Promise.resolve({ rows: [] })
+            : pool.query(sql, ...args),
+        release: vi.fn(),
+      }),
+    }),
+  }));
   const { AiPoliciesService: Svc } = await import('./ai-policies.service.js');
   return new Svc() as ServiceType;
 }
@@ -140,7 +155,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       });
       expect(result).toMatchObject({ enabled: false });
       // enabled is the 6th bind parameter (index 5): [id, title, desc, type, rules, enabled, ...].
-      expect(mockQuery.mock.calls[0]![1]![5]).toBe(false);
+      expect((mockQuery.mock.calls[0]![1] as unknown[])[5]).toBe(false);
     });
 
     it('throws 404 on update of a missing policy', async () => {
@@ -465,7 +480,7 @@ describe('AiPoliciesService (T-09.11.03)', () => {
       service = await loadService({ query: mockQuery });
       mockQuery
         .mockResolvedValueOnce({ rows: [groupBaseRow()] }) // findGroup
-        .mockResolvedValueOnce({ rowCount: 1 }) // delete
+        .mockResolvedValueOnce({ rows: [], rowCount: 1 }) // delete
         .mockResolvedValueOnce({ rows: [] }); // audit
 
       await expect(
