@@ -444,7 +444,7 @@ export default function AdminEmailProvidersPage() {
           <button
             onClick={() => setError(null)}
             className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-            aria-label="dismiss error"
+            aria-label={t('admin.notifications.dismissError', uiLocale)}
           >
             ✕
           </button>
@@ -477,11 +477,15 @@ export default function AdminEmailProvidersPage() {
           </h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email-provider-label"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.providers.label', uiLocale)} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              id="email-provider-label"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2"
@@ -490,10 +494,14 @@ export default function AdminEmailProvidersPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email-provider-transport"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               {t('admin.providers.transport', uiLocale)} <span className="text-red-500">*</span>
             </label>
             <select
+              id="email-provider-transport"
               value={transport}
               onChange={(e) => handleTransportChange(e.target.value as Transport)}
               className="w-full border border-gray-300 rounded px-3 py-2"
@@ -878,6 +886,7 @@ function ResendTestRow({
         type="email"
         value={recipient}
         onChange={(e) => setRecipient(e.target.value)}
+        aria-label={t('admin.providers.test.recipient', uiLocale)}
         placeholder={t('admin.providers.test.recipient', uiLocale)}
         className="w-full border border-gray-300 rounded px-2 py-1 text-xs"
       />
@@ -910,13 +919,13 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <label className="block">
+      <span className="block text-sm font-medium text-gray-700 mb-1">
         {label}
         {required && <span className="text-red-500"> *</span>}
         {secret && <span className="ml-1 text-xs text-gray-400" />}
-      </label>
+      </span>
       {children}
-    </div>
+    </label>
   );
 }

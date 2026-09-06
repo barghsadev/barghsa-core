@@ -1118,3 +1118,36 @@ for (const locale of ['en', 'fa']) {
     });
   }
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`email-provider labels identify SMTP and Resend fields (${locale})`, async ({ page }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/email-providers', (route) => route.fulfill({ json: [] }));
+    await page.goto('/admin/providers');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',
+        exact: true,
+      })
+      .click();
+    const form = page.locator('form').filter({ has: page.locator('#email-provider-label') });
+    await expect(form.locator('input, select')).toHaveCount(10);
+    for (const control of await form.locator('input, select').all())
+      await expect(control).toHaveAccessibleName(/.+/);
+    const host = form.getByLabel(locale === 'fa' ? 'میزبان' : 'Host', { exact: false });
+    await form.getByText(locale === 'fa' ? 'میزبان' : 'Host', { exact: false }).click();
+    await expect(host).toBeFocused();
+    await host.fill('smtp.example.test');
+    const transport = form.getByLabel(locale === 'fa' ? 'نوع حمل‌ونقل' : 'Transport', {
+      exact: false,
+    });
+    await transport.selectOption('resend');
+    await expect(form.locator('input, select')).toHaveCount(7);
+    for (const control of await form.locator('input, select').all())
+      await expect(control).toHaveAccessibleName(/.+/);
+    const key = form.getByLabel(locale === 'fa' ? 'کلید API' : 'API key', { exact: false });
+    await expect(key).toHaveAttribute('type', 'password');
+    await key.fill('local-fixture-only');
+    await expect(key).toHaveValue('local-fixture-only');
+  });
+}
