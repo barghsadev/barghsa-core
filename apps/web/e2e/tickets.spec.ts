@@ -5,6 +5,7 @@ const item={id:ticketId,subject:'Delivery question',body:'Please explain deliver
 async function shell(page:Page,locale='en'){
   await page.addInitScript(value=>{new MutationObserver(()=>{if(document.documentElement)document.documentElement.lang=value}).observe(document,{childList:true})},locale)
   await page.route('**/api/**',route=>route.fulfill({status:404,json:{}}))
+  await page.route('**/api/staff/tickets/teams',route=>route.fulfill({json:[]}))
   await page.route('**/api/profiles',route=>route.fulfill({json:{profiles:[],activeProfileId:null}}))
   await page.route('**/api/invitations/pending',route=>route.fulfill({json:{invitations:[]}}))
   await page.route('**/api/profiles/ownership-transfers',route=>route.fulfill({json:{transfers:[]}}))
@@ -43,11 +44,12 @@ for(const locale of ['en','fa'])test(`customer creates attachment ticket without
 })
 test('staff assigns, writes a distinct internal note, resolves and reopens without claiming a failed reply saved',async({page})=>{
   await shell(page)
+  await page.route('**/api/staff/tickets/teams',route=>route.fulfill({json:[{id:profileId,name:'Support team',members:['staff']}]}))
   let current={...item,status:'open',assignedTo:null as string|null},notes:{id:string;body:string;visibility:string;authorId:string;createdAt:string}[]=[],fail=true
   await page.route('**/api/staff/tickets?*',route=>route.fulfill({json:{data:[current],totalPages:1,viewer:{userId:'staff',canWrite:true,canAssignOthers:true}}}))
   await page.route('**/api/staff/tickets/assignees',route=>route.fulfill({json:[{id:'staff',name:'Support colleague'}]}))
   await page.route(`**/api/staff/tickets/${ticketId}`,route=>route.fulfill({json:current}))
-  await page.route(`**/api/staff/tickets/${ticketId}/assign`,route=>{expect(route.request().postDataJSON()).toEqual({assigneeId:'staff'});current={...current,assignedTo:'staff',status:'in_progress'};return route.fulfill({json:current})})
+  await page.route(`**/api/staff/tickets/${ticketId}/assign`,route=>{expect(route.request().postDataJSON()).toEqual({assigneeId:'staff',teamId:profileId});current={...current,assignedTo:'staff',status:'in_progress'};return route.fulfill({json:current})})
   await page.route(`**/api/staff/tickets/${ticketId}/comments`,route=>{
     if(route.request().method()==='GET')return route.fulfill({json:notes})
     const body=route.request().postDataJSON();expect(body).toEqual({body:'Private reasoning',visibility:'internal'})
@@ -57,6 +59,7 @@ test('staff assigns, writes a distinct internal note, resolves and reopens witho
   await page.route(`**/api/staff/tickets/${ticketId}/status`,route=>{current={...current,status:route.request().postDataJSON().status};return route.fulfill({json:current})})
   await page.goto('/admin/tickets')
   await page.getByRole('button',{name:item.subject,exact:true}).click()
+  await page.locator('#ticket-team').selectOption(profileId)
   await page.locator('#ticket-assignee').selectOption('staff')
   await page.getByRole('button',{name:'Assign ticket',exact:true}).click()
   await page.locator('#ticket-reply').fill('Private reasoning')

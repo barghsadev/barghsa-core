@@ -502,3 +502,11 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 - Notices, ticket mutations and audit records share a transaction. A notification failure rolls back the reply and audit. Assignment account locks now allow foreign-key reads while continuing to serialize account changes, avoiding an inverted lock dependency with ticket notices.
 - Review: 38 ticket checks and API typecheck passed. New HTTP/database tests prove private recipients, localized content, no internal text, removed-access exclusion, and notification-failure rollback/retry.
 - Team/configuration consumption, response target display and final acceptance review remain open.
+
+### F16.7 — Configured teams and internal response targets
+
+- Full ticket managers can select an active configured team and an eligible member. Saving rechecks the locked team and current membership, plus the account's current eligibility. Assigned-only staff cannot change team attribution.
+- Migration 0099 persists optional team attribution, keeps the assignee/ticket when a team is removed, and indexes the team reference. Direct assignment clears previous team attribution; audits record the selected team.
+- Staff queue target times use the configured hours and last ticket update, matching the worker's open-status/time rule. Targets are labelled as internal guidance and excluded from customer data.
+- Review: 41 API ticket checks, five Chromium ticket checks, the populated production migration/rerun test and workspace typechecks passed. Concurrent membership removal prevents a stale assignment.
+- The configured round-robin/expertise/load assignment engine is still absent. That configuration consumer and its admin screen remain under F17; manual team assignment does not claim to implement automatic routing.

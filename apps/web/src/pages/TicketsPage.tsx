@@ -9,11 +9,12 @@ import { isAllowedInvoiceReceiptFile, uploadTicketAttachment } from '../lib/invo
 type Status = 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed'
 interface Ticket {
   id: string; subject: string; body: string; status: Status; priority: string; profileId: string | null
+  assignedTeamId?: string | null
   userId: string; assignedTo: string | null; updatedAt: string; relatedEntityId: string | null
   relatedEntityType: string | null; attachments: string[]; attachmentDownloadUrls?: string[]
 }
 interface Comment { id: string; authorId: string; body: string; visibility: string; createdAt: string }
-interface Queue { data: Ticket[]; totalPages: number; viewer?: { userId: string; canWrite: boolean; canAssignOthers: boolean } }
+interface Queue { responseTargetHours?: number | null; data: Ticket[]; totalPages: number; viewer?: { userId: string; canWrite: boolean; canAssignOthers: boolean } }
 interface Options { profiles: { id: string; title: string | null }[]; records: { id: string; type: string; created_at: string }[]; hasMoreRecords?: boolean }
 const statuses: Status[] = ['open','in_progress','waiting_customer','waiting_staff','resolved','closed']
 const transitions: Record<Status, Status[]> = {
@@ -33,6 +34,7 @@ function Tickets({ staff }: { staff: boolean }) {
   const [sort,setSort] = useState('desc'), [error,setError] = useState(''), [saved,setSaved] = useState(false), [busy,setBusy] = useState(false)
   const [detail,setDetail] = useState<Ticket|null>(null), [comments,setComments] = useState<Comment[]>([]), [detailLoading,setDetailLoading] = useState(false)
   const [reply,setReply] = useState(''), [internal,setInternal] = useState(false), [nextStatus,setNextStatus] = useState<Status>('open')
+  const [teams,setTeams] = useState<{id:string;name:string;members:string[]}[]>([]), [teamId,setTeamId] = useState('')
   const [assignees,setAssignees] = useState<{id:string;name:string}[]>([]), [assignee,setAssignee] = useState('')
   const [creating,setCreating] = useState(false), [subject,setSubject] = useState(''), [body,setBody] = useState(''), [priority,setPriority] = useState('normal')
   const [recordPage,setRecordPage] = useState(1)
@@ -68,8 +70,8 @@ function Tickets({ staff }: { staff: boolean }) {
   useEffect(()=>{
     if(!staff||!queue?.viewer?.canAssignOthers)return
     const controller=new AbortController()
-    void fetch(`${prefix}/assignees`,{credentials:'include',signal:controller.signal}).then(async response=>{
-      if(!response.ok)throw new Error();const data=await response.json();if(!controller.signal.aborted&&Array.isArray(data))setAssignees(data)
+    void Promise.all(['assignees','teams'].map(path=>fetch(`${prefix}/${path}`,{credentials:'include',signal:controller.signal}))).then(async responses=>{
+      if(responses.some(response=>!response.ok))throw new Error();const [people,groups]=await Promise.all(responses.map(response=>response.json()));if(!controller.signal.aborted){setAssignees(people);setTeams(groups)}
     }).catch(()=>{if(!controller.signal.aborted)setError('error')})
     return()=>controller.abort()
   },[staff,prefix,queue?.viewer?.canAssignOthers])
@@ -83,7 +85,7 @@ function Tickets({ staff }: { staff: boolean }) {
       ])
       if(!recordResponse.ok||!commentsResponse.ok)throw new Error()
       const [ticket,conversation]=await Promise.all([recordResponse.json(),commentsResponse.json()])
-      if(current===detailGeneration.current){setDetail(ticket);setComments(conversation);setNextStatus(transitions[ticket.status as Status]?.[0]??'open');setAssignee(ticket.assignedTo??'')}
+      if(current===detailGeneration.current){setDetail(ticket);setComments(conversation);setNextStatus(transitions[ticket.status as Status]?.[0]??'open');setAssignee(ticket.assignedTo??'');setTeamId(ticket.assignedTeamId??'')}
     } catch {if(current===detailGeneration.current)setError('error')}
     finally{if(current===detailGeneration.current)setDetailLoading(false)}
   }
@@ -120,6 +122,7 @@ function Tickets({ staff }: { staff: boolean }) {
   return <section className="mx-auto max-w-5xl space-y-5" dir={locale==='fa'?'rtl':'ltr'}>
     <header className="flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-semibold">{text(staff?'staffTitle':'title')}</h1>
       {!staff&&<Button disabled={busy} onClick={()=>{setCreating(value=>!value);setError('')}}>{text(creating?'cancel':'create')}</Button>}</header>
+    {staff&&<p className="text-sm text-gray-600">{text('targetNote')}</p>}
     {error&&<p role="alert">{text(['conflict','forbidden'].includes(error)?error:'error')}</p>}{saved&&<p role="status">{text('saved')}</p>}
     {creating&&<form onSubmit={event=>void create(event)} className="rounded border bg-white p-4">
       <fieldset disabled={busy} className="space-y-3">
@@ -140,7 +143,7 @@ function Tickets({ staff }: { staff: boolean }) {
       <div><Label htmlFor="ticket-sort">{text('sort')}</Label><select id="ticket-sort" className="block rounded border p-2" value={sort} onChange={event=>{setSort(event.target.value);setPage(1)}}><option value="desc">{text('newest')}</option><option value="asc">{text('oldest')}</option></select></div>
       <Button variant="outline" disabled={loading} onClick={()=>{setError('');void load()}}>{text('refresh')}</Button>
     </fieldset>
-    {loading?<p role="status">{text('loading')}</p>:queue?.data.length?<div className="overflow-x-auto"><table className="w-full text-start"><thead><tr>{['subject','status','priority','updated',...(staff?['customer','assignee']:[])].map(key=><th key={key} className="p-2 text-start">{text(key)}</th>)}</tr></thead><tbody>{queue.data.map(item=><tr key={item.id} className="border-t"><td className="p-2"><button disabled={busy} className="text-blue-700 underline text-start" onClick={()=>{setError('');void select(item.id)}}>{item.subject}</button></td><td className="p-2">{text(item.status)}</td><td className="p-2">{text(item.priority)}</td><td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>{staff&&<><td className="p-2">{item.userId}</td><td className="p-2">{assignees.find(person=>person.id===item.assignedTo)?.name??item.assignedTo??text('unassigned')}</td></>}</tr>)}</tbody></table></div>:queue&&<p>{text('empty')}</p>}
+    {loading?<p role="status">{text('loading')}</p>:queue?.data.length?<div className="overflow-x-auto"><table className="w-full text-start"><thead><tr>{['subject','status','priority','updated',...(staff?['customer','assignee','target']:[])].map(key=><th key={key} className="p-2 text-start">{text(key)}</th>)}</tr></thead><tbody>{queue.data.map(item=><tr key={item.id} className="border-t"><td className="p-2"><button disabled={busy} className="text-blue-700 underline text-start" onClick={()=>{setError('');void select(item.id)}}>{item.subject}</button></td><td className="p-2">{text(item.status)}</td><td className="p-2">{text(item.priority)}</td><td className="p-2 whitespace-nowrap">{formatDate(item.updatedAt)}</td>{staff&&<><td className="p-2">{item.userId}</td><td className="p-2">{assignees.find(person=>person.id===item.assignedTo)?.name??item.assignedTo??text('unassigned')}</td><td className="p-2 whitespace-nowrap">{queue.responseTargetHours&&['open','in_progress','waiting_staff'].includes(item.status)?formatDate(new Date(new Date(item.updatedAt).getTime()+queue.responseTargetHours*3600000).toISOString()):text('none')}</td></>}</tr>)}</tbody></table></div>:queue&&<p>{text('empty')}</p>}
     <nav aria-label={text('pages')} className="flex gap-3"><Button variant="outline" disabled={loading||busy||page===1} onClick={()=>setPage(value=>value-1)}>{text('previous')}</Button><Button variant="outline" disabled={loading||busy||!queue||page>=queue.totalPages} onClick={()=>setPage(value=>value+1)}>{text('next')}</Button></nav>
     {detailLoading&&<p role="status">{text('loading')}</p>}
     {detail&&<article className="rounded border bg-white p-4 space-y-4 break-words">
@@ -150,7 +153,7 @@ function Tickets({ staff }: { staff: boolean }) {
       {detail.relatedEntityId&&<p>{text(detail.relatedEntityType??'related')}: {detail.relatedEntityType==='invoice'?<a className="text-blue-700 underline" href={staff?'/admin/invoices':`/invoices/${encodeURIComponent(detail.relatedEntityId)}`}>{detail.relatedEntityId}</a>:detail.relatedEntityId}</p>}
       {(detail.attachmentDownloadUrls??[]).filter(url=>/^https?:\/\//.test(url)).map((url,index)=><a key={url} href={url} target="_blank" rel="noopener noreferrer" className="block text-blue-700 underline">{text('attachment')} {index+1}</a>)}
       {!!detail.attachments?.length&&!detail.attachmentDownloadUrls?.length&&<p role="status">{text('filesUnavailable')}</p>}
-      {staff&&queue?.viewer?.canAssignOthers&&<div className="flex flex-wrap items-end gap-3"><div><Label htmlFor="ticket-assignee">{text('assignee')}</Label><select id="ticket-assignee" disabled={busy} className="block rounded border p-2" value={assignee} onChange={event=>setAssignee(event.target.value)}><option value="">{text('choose')}</option>{assignees.map(person=><option key={person.id} value={person.id}>{person.name}</option>)}</select></div><Button disabled={busy||!assignee} onClick={()=>void mutate(`${prefix}/${detail.id}/assign`,'PUT',{assigneeId:assignee},detail.id)}>{text('assign')}</Button></div>}
+      {staff&&queue?.viewer?.canAssignOthers&&<div className="flex flex-wrap items-end gap-3"><div><Label htmlFor="ticket-team">{text('team')}</Label><select id="ticket-team" disabled={busy} className="block rounded border p-2" value={teamId} onChange={event=>{setTeamId(event.target.value);setAssignee('')}}><option value="">{text('directAssignment')}</option>{teams.map(team=><option key={team.id} value={team.id}>{team.name}</option>)}</select></div><div><Label htmlFor="ticket-assignee">{text('assignee')}</Label><select id="ticket-assignee" disabled={busy} className="block rounded border p-2" value={assignee} onChange={event=>setAssignee(event.target.value)}><option value="">{text('choose')}</option>{assignees.filter(person=>!teamId||teams.find(team=>team.id===teamId)?.members.includes(person.id)).map(person=><option key={person.id} value={person.id}>{person.name}</option>)}</select></div><Button disabled={busy||!assignee} onClick={()=>void mutate(`${prefix}/${detail.id}/assign`,'PUT',{assigneeId:assignee,...(teamId?{teamId}:{})},detail.id)}>{text('assign')}</Button></div>}
       {staff&&canWrite&&<div className="flex flex-wrap items-end gap-3"><div><Label htmlFor="ticket-next-status">{text('changeStatus')}</Label><select id="ticket-next-status" disabled={busy} className="block rounded border p-2" value={nextStatus} onChange={event=>setNextStatus(event.target.value as Status)}>{[...transitions[detail.status],...(detail.status!=='open'?['open']:[])].map(value=><option key={value} value={value}>{text(value)}</option>)}</select></div><Button disabled={busy||(detail.status==='open'&&!detail.assignedTo)} onClick={()=>void mutate(`${prefix}/${detail.id}/status`,'PATCH',{status:nextStatus},detail.id)}>{text('saveStatus')}</Button></div>}
       {!staff&&detail.status!=='open'&&<Button disabled={busy} onClick={()=>void mutate(`${prefix}/${detail.id}/status`,'PATCH',{status:'open'},detail.id)}>{text('reopen')}</Button>}
       <h3 className="font-semibold">{text('conversation')}</h3>

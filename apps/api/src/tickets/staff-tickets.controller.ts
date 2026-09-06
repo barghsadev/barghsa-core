@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { hasStaffPermission } from '../session/staff-permissions.js'
 import {
   Body,
@@ -85,7 +86,7 @@ export class StaffTicketsController {
 
     const scope = this.assignedScope(req, 'read')
     if (scope) options.assignedTo = scope
-    return { ...await this.ticketsService.staffListTickets(options), viewer: { userId: req.session.userId,
+    return { ...await this.ticketsService.staffListTickets(options), responseTargetHours: await this.ticketsService.responseTargetHours(), viewer: { userId: req.session.userId,
       canWrite: hasStaffPermission(req, 'tickets:write') || hasStaffPermission(req, 'tickets:*') || hasStaffPermission(req, 'tickets:assigned'),
       canAssignOthers: this.assignedScope(req, 'write') === undefined } }
   }
@@ -95,6 +96,12 @@ export class StaffTicketsController {
    *
    * Staff view any ticket detail (no user scoping).
    */
+  @Get('teams')
+  async teams(@Req() req: AuthenticatedRequest) {
+    if (this.assignedScope(req, 'write') !== undefined) throw new HttpException('Only full ticket managers can choose teams',403)
+    return this.ticketsService.assignmentTeams()
+  }
+
   @Get('assignees')
   async assignees(@Req() req: AuthenticatedRequest) {
     if (this.assignedScope(req, 'write') !== undefined) throw new HttpException('Only full ticket managers can choose other assignees',403)
@@ -134,7 +141,7 @@ export class StaffTicketsController {
   @ApiResponse({ status: 404, description: 'Ticket not found' })
   async assignTicket(
     @Param('id') id: string,
-    @Body() body: { assigneeId?: string },
+    @Body() body: { assigneeId?: string; teamId?: string },
     @Req() req: AuthenticatedRequest,
   ) {
     if (!hasStaffPermission(req, 'tickets:write') && !hasStaffPermission(req, 'tickets:*') && !hasStaffPermission(req, 'tickets:assigned')) {
@@ -144,10 +151,12 @@ export class StaffTicketsController {
       )
     }
     // Default to self-assignment if no assigneeId provided
-    const assigneeId = body?.assigneeId ?? req.session.userId
+    const parsed = z.object({ assigneeId: z.string().trim().min(1).max(512).optional(), teamId: z.uuid().optional() }).strict().safeParse(body ?? {})
+    if (!parsed.success) throw new HttpException('Invalid assignment',400)
+    const assigneeId = parsed.data.assigneeId ?? req.session.userId
     const scope = this.assignedScope(req, 'write')
-    if (scope && assigneeId !== scope) throw new HttpException('Assigned-only staff cannot reassign another user',403)
-    return this.ticketsService.staffAssignTicket(id, assigneeId, req.session.userId, scope)
+    if (scope && (assigneeId !== scope || parsed.data.teamId)) throw new HttpException('Assigned-only staff cannot reassign another user',403)
+    return this.ticketsService.staffAssignTicket(id, assigneeId, req.session.userId, scope, parsed.data.teamId)
   }
 
   /**

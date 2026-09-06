@@ -314,3 +314,47 @@ it('rolls back a reply and its audit when its private notification cannot be sav
   } finally {await http.pool.query('DROP TRIGGER fail_ticket_notice ON in_app_notifications; DROP FUNCTION fail_ticket_notice()')}
   expect((await comment(id,'Saved on retry')).status).toBe(201)
 })
+it('records team assignment, rejects non-members and disabled teams, and clears team attribution on direct assignment',async()=>{
+  const id=await ticket(),team=randomUUID()
+  await http.pool.query('INSERT INTO staff_teams(id,name) VALUES ($1,$2)',[team,`Team ${team}`])
+  await http.pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'assigned')",[team])
+  const send=(assigneeId:string)=>fetch(`${http.base}/api/staff/tickets/${id}/assign`,{method:'PUT',headers:headers.staff!,body:JSON.stringify({assigneeId,teamId:team})})
+  expect((await send('staff')).status).toBe(409)
+  expect((await send('assigned')).status).toBe(200)
+  expect((await http.pool.query('SELECT assigned_team_id,assigned_to FROM tickets WHERE id=$1',[id])).rows[0]).toEqual({assigned_team_id:team,assigned_to:'assigned'})
+  await http.pool.query('UPDATE staff_teams SET is_active=false WHERE id=$1',[team])
+  expect((await send('assigned')).status).toBe(404)
+  expect((await assign(id,'staff')).status).toBe(200)
+  expect((await http.pool.query('SELECT assigned_team_id FROM tickets WHERE id=$1',[id])).rows[0].assigned_team_id).toBeNull()
+})
+it('rechecks team membership after waiting for a team edit to commit',async()=>{
+  const id=await ticket(),team=randomUUID(),client=await http.pool.connect()
+  await http.pool.query('INSERT INTO staff_teams(id,name) VALUES ($1,$2)',[team,`Team ${team}`])
+  await http.pool.query("INSERT INTO staff_team_members(team_id,user_id) VALUES ($1,'assigned')",[team])
+  let response:Promise<Response>|undefined
+  try {
+    await client.query('BEGIN')
+    await client.query('SELECT id FROM staff_teams WHERE id=$1 FOR UPDATE',[team])
+    await client.query('DELETE FROM staff_team_members WHERE team_id=$1',[team])
+    response=fetch(`${http.base}/api/staff/tickets/${id}/assign`,{method:'PUT',headers:headers.staff!,body:JSON.stringify({assigneeId:'assigned',teamId:team})})
+    const deadline=Date.now()+5000
+    let waiting=false
+    while(Date.now()<deadline){
+      const rows=await http.pool.query("SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE 'SELECT id FROM staff_teams WHERE id=%'")
+      if(rows.rows.length){waiting=true;break}
+      await new Promise(resolve=>setTimeout(resolve,20))
+    }
+    expect(waiting).toBe(true)
+    await client.query('COMMIT')
+    expect((await response).status).toBe(409)
+    expect((await http.pool.query('SELECT assigned_to FROM tickets WHERE id=$1',[id])).rows[0].assigned_to).toBeNull()
+  } finally {await client.query('ROLLBACK');client.release();await response}
+})
+it('reads configured response targets only into the staff queue',async()=>{
+  await http.pool.query(`INSERT INTO app_config(key,value) VALUES ('admin.service_response_targets','{"ticket":2}')
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`)
+  const staff=await fetch(`${http.base}/api/staff/tickets`,{headers:headers.staff!})
+  expect((await staff.json() as {responseTargetHours:number}).responseTargetHours).toBe(2)
+  const customer=await fetch(`${http.base}/api/tickets`,{headers:headers.customer!})
+  expect(await customer.json()).not.toHaveProperty('responseTargetHours')
+})

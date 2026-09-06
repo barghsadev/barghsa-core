@@ -1,3 +1,4 @@
+import { SERVICE_RESPONSE_TARGETS_CONFIG_KEY, toServiceResponseTargets } from '@barghsa/shared/admin'
 import { t } from '@barghsa/i18n'
 import { NotificationsService } from '../notifications/notifications.service.js'
 import type { PoolClient } from 'pg'
@@ -21,6 +22,7 @@ export interface TicketRow {
   status: 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed'
   attachments: string[]
   attachmentDownloadUrls?: string[]
+  assignedTeamId: string | null
   assignedTo: string | null
   createdAt: Date
   updatedAt: Date
@@ -76,6 +78,7 @@ function mapRow(row: Record<string, unknown>): TicketRow {
     priority: (row.priority as 'normal' | 'high') ?? 'normal',
     status: (row.status as 'open' | 'in_progress' | 'waiting_customer' | 'waiting_staff' | 'resolved' | 'closed') ?? 'open',
     attachments: Array.isArray(row.attachments) ? row.attachments as string[] : [],
+    assignedTeamId: (row.assigned_team_id as string) ?? null,
     assignedTo: (row.assigned_to as string) ?? null,
     createdAt: row.created_at as Date,
     updatedAt: row.updated_at as Date,
@@ -130,6 +133,16 @@ export class TicketsService {
       await this.notifications.create({userId,type:'general',title:localizedContent.en.title,
         body:localizedContent.en.body,localizedContent,link:`${staff?'/admin':''}/tickets?ticketId=${ticket.id}`},client)
     }
+  }
+
+  async responseTargetHours(): Promise<number|null> {
+    const row = (await getDbPool().query('SELECT value FROM app_config WHERE key=$1',[SERVICE_RESPONSE_TARGETS_CONFIG_KEY])).rows[0]
+    return toServiceResponseTargets(row?.value).ticket
+  }
+
+  async assignmentTeams() {
+    return (await getDbPool().query(`SELECT t.id,t.name,ARRAY(SELECT m.user_id FROM staff_team_members m WHERE m.team_id=t.id ORDER BY m.user_id) AS members
+      FROM staff_teams t WHERE is_active ORDER BY name,id`)).rows
   }
 
   async creationOptions(userId: string, profileId?: string, recordPage = 1) {
@@ -526,13 +539,21 @@ export class TicketsService {
     assigneeUserId: string,
     actorId: string,
     assignedTo?: string,
+    teamId?: string,
   ): Promise<TicketRow> {
     if (typeof assigneeUserId !== 'string' || !assigneeUserId.trim() || assigneeUserId.length > 512) {
       throw new HttpException('Invalid assignee', 400)
     }
+    if (teamId && !z.uuid().safeParse(teamId).success) throw new HttpException('Invalid team',400)
     const client = await getDbPool().connect()
     try {
       await client.query('BEGIN')
+      if (teamId) {
+        const team = await client.query('SELECT id FROM staff_teams WHERE id=$1 AND is_active FOR SHARE',[teamId])
+        if (!team.rows.length) throw new HttpException('Active team not found',404)
+        const member = await client.query('SELECT id FROM staff_team_members WHERE team_id=$1 AND user_id=$2',[teamId,assigneeUserId])
+        if (!member.rows.length) throw new HttpException('Assignee is not a member of this team',409)
+      }
       // Lock the account before the ticket, matching staff account changes.
       const account = (await client.query(`SELECT u.is_admin, u.disabled_at, u.activation_token,
         ARRAY(SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
@@ -543,13 +564,13 @@ export class TicketsService {
           !(account.is_admin || permissions.includes('*') || permissions.includes('tickets:write') || permissions.includes('tickets:*') || permissions.includes('tickets:assigned'))) {
         throw new HttpException('Assignee must be active staff with ticket access', 400)
       }
-      const result = await client.query(`UPDATE tickets SET assigned_to=$1,
+      const result = await client.query(`UPDATE tickets SET assigned_to=$1,assigned_team_id=$4,
         status=CASE WHEN status='open' THEN 'in_progress' ELSE status END, updated_at=NOW()
-        WHERE id=$2 AND ($3::text IS NULL OR assigned_to=$3) RETURNING *`, [assigneeUserId, ticketId, assignedTo ?? null])
+        WHERE id=$2 AND ($3::text IS NULL OR assigned_to=$3) RETURNING *`, [assigneeUserId, ticketId, assignedTo ?? null, teamId ?? null])
       if (!result.rows[0]) throw new HttpException('Ticket not found', 404)
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata)
         VALUES ($1,$2,'ticket_assigned',$3::jsonb)`,
-        [randomUUID(), actorId, JSON.stringify({ ticketId, assigneeUserId, status: result.rows[0].status })])
+        [randomUUID(), actorId, JSON.stringify({ ticketId, assigneeUserId, teamId: teamId ?? null, status: result.rows[0].status })])
       await this.notifyTicket(client, mapRow(result.rows[0]), actorId, 'assigned')
       await client.query('COMMIT')
       return mapRow(result.rows[0])

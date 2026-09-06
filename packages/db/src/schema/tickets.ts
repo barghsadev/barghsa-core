@@ -1,7 +1,8 @@
 import { sql } from 'drizzle-orm'
-import { uuid, text, timestamp, pgTable, jsonb, check } from 'drizzle-orm/pg-core'
+import { uuid, text, timestamp, pgTable, jsonb, check, index } from 'drizzle-orm/pg-core'
 import { uuidv7 } from '../types'
 import { users } from './users'
+import { staffTeams } from './staff-teams'
 import { profiles } from './profiles'
 
 /**
@@ -66,6 +67,8 @@ export const tickets = pgTable(
     assignedTo: text('assigned_to')
       .references(() => users.userId, { onDelete: 'set null' }),
 
+    assignedTeamId: uuid('assigned_team_id').references(() => staffTeams.id, { onDelete: 'set null' }),
+
     /** Ticket lifecycle status. */
     status: text('status', {
       enum: ['open', 'in_progress', 'waiting_customer', 'waiting_staff', 'resolved', 'closed'],
@@ -83,7 +86,10 @@ export const tickets = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [check('tickets_attachments_array', sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`)],
+  (table) => [
+    check('tickets_attachments_array', sql`jsonb_typeof(${table.attachments})='array' AND jsonb_array_length(${table.attachments})<=5`),
+    index('tickets_assigned_team_idx').on(table.assignedTeamId).where(sql`${table.assignedTeamId} IS NOT NULL`),
+  ],
 )
 
 /**

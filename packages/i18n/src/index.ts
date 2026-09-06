@@ -4,6 +4,10 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  "tickets.team": "تیم مسئول",
+  "tickets.directAssignment": "تخصیص مستقیم به کارشناس",
+  "tickets.target": "زمان هدف پاسخ داخلی",
+  "tickets.targetNote": "زمان هدف برای پیگیری داخلی کارکنان است و تعهد زمان پاسخ به مشتری نیست.",
   "tickets.notice.created": "تیکت پشتیبانی جدید",
   "tickets.notice.reply": "پاسخ جدید به تیکت",
   "tickets.notice.internal": "یادداشت داخلی جدید در تیکت",
@@ -1449,6 +1453,10 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  "tickets.team": "Responsible team",
+  "tickets.directAssignment": "Assign staff directly",
+  "tickets.target": "Internal response target",
+  "tickets.targetNote": "Response targets guide staff follow-up and do not promise a response time to customers.",
   "tickets.notice.created": "New support ticket",
   "tickets.notice.reply": "New ticket reply",
   "tickets.notice.internal": "New internal ticket note",
