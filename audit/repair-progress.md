@@ -438,3 +438,11 @@ Review/validation: 31 API checks, 19 Chromium scenarios spanning CRM/team/financ
 Correction creation/review now locks the target profile before its case, rejects duplicate unresolved cases and self-review, compares the live identity with the recorded original before approval, and rolls identity/case/audit changes back together. Original values come from the database, never the submitted currentValue. Archived targets, invalid identity fields/identifiers and malformed payloads are refused; mutations require step-up.
 
 Review/validation: 11 checks pass, including seven retained list/detail unit checks and four production-HTTP scenarios replacing mutation mocks. HTTP exercises concurrent creation/review, forged original values, changed identity, archived targets, identifier validation, audit failure rollback and step-up. API typecheck passes. Evidence upload authorization, case queue UI and legacy case reconciliation still need review.
+
+### F15.7 Fixed identity-correction evidence
+
+Correction cases now require one to five verified evidence uploads owned by the corrector and bound to the target profile/purpose. The server reads capped bytes, checks content and size, writes a separate immutable copy outside the upload prefix, and stores its digest/provenance. Review refuses unsealed legacy evidence. Authorized detail reads supply five-minute download links to the fixed copy. Shared capped stream reading now handles both web and Node/S3 streams for invoice receipts and correction evidence.
+
+Review/validation: 23 correction/invoice-upload checks and API typecheck pass against production migrations and a controlled local S3-compatible server. Replacing the original upload cannot change the downloaded evidence; another user's upload is refused; legacy unsealed cases cannot update identity. The HTTP fixture gained an optional local storage endpoint for this proof. No real storage account was used. Failed transactions can leave unreachable snapshot objects for later cleanup; legacy cases require resubmission.
+
+Cross-step check before this evidence addition: the full API suite passed 2,496 checks in 190 files.

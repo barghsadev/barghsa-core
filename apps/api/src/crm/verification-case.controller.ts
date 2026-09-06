@@ -107,7 +107,7 @@ export class VerificationCaseController {
 
     const parsed = z.object({ fieldName:z.enum(['first_name','last_name','national_id','legal_name','national_identifier']),
       currentValue:z.string().nullable().optional(), requestedValue:z.string().trim().min(1).max(512),
-      evidenceUrls:z.array(z.string().max(2048)).max(20).optional(), reason:z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
+      evidenceUrls:z.array(z.string().max(2048)).min(1).max(5), reason:z.string().trim().min(1).max(1000) }).strict().safeParse(dto)
     if (!parsed.success) throw new HttpException({statusCode:400,error:ErrorCodes.VALIDATION_INPUT_INVALID.code,message:'Invalid correction request'},400)
 
     const result = await this.verificationCaseService.createCase(

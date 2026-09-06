@@ -1,3 +1,4 @@
+import { VerificationEvidenceService } from './verification-evidence.service.js'
 import { validateNationalId, validateLegalNationalIdentifier } from '@barghsa/shared/validation'
 import { Injectable, Logger, BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common'
 import { v7 as uuidv7 } from 'uuid'
@@ -44,6 +45,7 @@ export interface VerificationCaseDetail {
   currentValue: string | null
   requestedValue: string
   evidenceUrls: string[]
+  evidenceDownloadUrls?: string[]
   reason: string
   status: string
   createdBy: string
@@ -79,6 +81,7 @@ const FIELD_LABELS: Record<string, string> = {
 
 @Injectable()
 export class VerificationCaseService {
+  constructor(private readonly evidence: VerificationEvidenceService = new VerificationEvidenceService()) {}
   private readonly logger = new Logger(VerificationCaseService.name)
 
   /**
@@ -115,9 +118,10 @@ export class VerificationCaseService {
       const currentValue = source[dto.fieldName] ?? null
       const pending = await client.query("SELECT id FROM verification_cases WHERE profile_id=$1 AND field_name=$2 AND status IN ('Open','Under Review')", [profileId, dto.fieldName])
       if (pending.rows.length) throw new ConflictException('An unresolved correction already exists for this field')
+      const evidenceKeys = await this.evidence.seal(client, dto.evidenceUrls ?? [], actorUserId, profileId)
       const id = uuidv7(), now = new Date().toISOString()
       await client.query(`INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9)`, [id,profileId,dto.fieldName,currentValue,dto.requestedValue.trim(),JSON.stringify(dto.evidenceUrls ?? []),dto.reason.trim(),actorUserId,now])
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9)`, [id,profileId,dto.fieldName,currentValue,dto.requestedValue.trim(),JSON.stringify(evidenceKeys),dto.reason.trim(),actorUserId,now])
       await client.query(`INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at) VALUES ($1,$2,'verification_case_created',$3::jsonb,$4,$5,$6)`,
         [uuidv7(),actorUserId,JSON.stringify({caseId:id,profileId,fieldName:dto.fieldName,currentValue,requestedValue:dto.requestedValue.trim(),reason:dto.reason.trim()}),uuidv7(),ip,now])
       await client.query('COMMIT')
@@ -233,6 +237,7 @@ export class VerificationCaseService {
       currentValue: (row.current_value as string) ?? null,
       requestedValue: row.requested_value as string,
       evidenceUrls,
+      evidenceDownloadUrls: await this.evidence.downloadUrls(evidenceUrls),
       reason: row.reason as string,
       status: row.status as string,
       createdBy: row.created_by as string,
@@ -278,6 +283,9 @@ export class VerificationCaseService {
       const allowed = profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL
       if (!allowed.includes(field)) throw new BadRequestException('Invalid identity field for this profile type')
       if (dto.decision === 'Approved') {
+        const keys = typeof row.evidence_urls === 'string' ? JSON.parse(row.evidence_urls) : row.evidence_urls
+        if (!Array.isArray(keys) || !keys.every(key => typeof key === 'string')) throw new ConflictException('Correction evidence is invalid')
+        await this.evidence.validate(client, keys, profile.id)
         validateIdentityValue(field, row.requested_value)
         const table = profile.profile_type === 'LEGAL' ? 'legal_profiles' : 'profiles'
         const source = table === 'profiles' ? profile : (await client.query('SELECT * FROM legal_profiles WHERE id=$1 FOR UPDATE',[profile.id])).rows[0]

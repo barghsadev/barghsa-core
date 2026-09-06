@@ -1,3 +1,4 @@
+import { VerificationEvidenceService } from './verification-evidence.service.js'
 import { Module } from '@nestjs/common'
 import { CrmController } from './crm.controller.js'
 import { CrmV2Controller } from './crm-v2.controller.js'
@@ -11,7 +12,7 @@ import { NotificationsModule } from '../notifications/index.js'
 @Module({
   imports: [SessionModule, NotificationsModule],
   controllers: [CrmController, CrmV2Controller, VerificationCaseController],
-  providers: [CrmService, CrmV2Service, VerificationCaseService],
+  providers: [VerificationEvidenceService, CrmService, CrmV2Service, VerificationCaseService],
   exports: [CrmService, CrmV2Service, VerificationCaseService],
 })
 export class CrmModule {}

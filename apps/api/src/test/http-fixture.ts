@@ -5,7 +5,7 @@ import { Pool } from 'pg'
 import { runMigrations } from '../../../../packages/db/src/migrate'
 
 /** Each fixture owns its database and a child running the compiled AppModule. */
-export async function startHttpFixture(testDatabaseUrl: string) {
+export async function startHttpFixture(testDatabaseUrl: string, localStorageEndpoint?: string) {
   const database = `test_http_${randomUUID().replaceAll('-', '')}`
   const management = new Pool({ connectionString: testDatabaseUrl })
   let created = false
@@ -41,7 +41,8 @@ export async function startHttpFixture(testDatabaseUrl: string) {
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
       silent: true,
       env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString(),
-        NODE_ENV: 'test', APP_PUBLIC_URL: 'https://app.example.test', AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only', REDIS_URL: '', REDIS_HOST: '', S3_BUCKET: '', S3_REGION: '' },
+        NODE_ENV: 'test', APP_PUBLIC_URL: 'https://app.example.test', AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only', REDIS_URL: '', REDIS_HOST: '', S3_BUCKET: localStorageEndpoint ? 'test-evidence' : '', S3_REGION: localStorageEndpoint ? 'us-east-1' : '',
+        ...(localStorageEndpoint ? { S3_ENDPOINT: localStorageEndpoint, S3_FORCE_PATH_STYLE: 'true', S3_ACCESS_KEY_ID: 'test-only-key', S3_SECRET_ACCESS_KEY: 'test-only-secret' } : {}) },
     })
     for (const stream of [child.stdout, child.stderr]) stream?.on('data', (data) => { output = (output + String(data)).slice(-20000) })
     const base = await new Promise<string>((resolvePort, reject) => {

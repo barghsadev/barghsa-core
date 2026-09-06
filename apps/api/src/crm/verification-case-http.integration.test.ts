@@ -1,10 +1,22 @@
+import { createServer, type Server } from 'node:http'
 import { beforeAll,afterAll,it,expect } from 'vitest'
 import { randomUUID } from 'node:crypto'
 import { startHttpFixture } from '../test/http-fixture.js'
 let http: Awaited<ReturnType<typeof startHttpFixture>>
+let storageServer: Server
+const objects = new Map<string, Buffer>()
 const headers:Record<string,Record<string,string>>={}
 beforeAll(async()=>{
-  http=await startHttpFixture(process.env.TEST_DATABASE_URL!)
+  storageServer=createServer(async(req,res)=>{
+    const key=decodeURIComponent(new URL(req.url!,'http://localhost').pathname).replace('/test-evidence/','')
+    if(req.method==='PUT') { const chunks:Buffer[]=[];for await(const chunk of req)chunks.push(Buffer.from(chunk));objects.set(key,Buffer.concat(chunks));res.setHeader('ETag','"test-etag"');res.end();return }
+    const bytes=objects.get(key)
+    if(!bytes){res.statusCode=404;res.end();return}
+    res.setHeader('Content-Type','application/pdf');res.setHeader('Content-Length',bytes.length);res.end(bytes)
+  })
+  await new Promise<void>(resolve=>storageServer.listen(0,'127.0.0.1',resolve))
+  const port=(storageServer.address() as {port:number}).port
+  http=await startHttpFixture(process.env.TEST_DATABASE_URL!,`http://127.0.0.1:${port}`)
   for(const user of ['creator','reviewer']) {
     await http.pool.query("INSERT INTO users(user_id,username,password_hash,is_admin) VALUES ($1,$2,'test-only',true)",[user,`${user}@example.test`])
     const id=randomUUID(),csrf=randomUUID()
@@ -13,18 +25,24 @@ beforeAll(async()=>{
     headers[user]={Cookie:`barghsa_session=${id}`,'X-CSRF-Token':csrf,'Content-Type':'application/json'}
   }
 },40000)
-afterAll(async()=>{await http?.close()})
+afterAll(async()=>{await http?.close();await new Promise<void>(resolve=>storageServer?.close(()=>resolve()))})
 async function profile() {
   const id=randomUUID()
   await http.pool.query("INSERT INTO profiles(id,user_id,profile_type,status,first_name) VALUES ($1,'creator','INDIVIDUAL','VERIFIED','Original')",[id])
   return id
 }
-async function create(id:string,extra:Record<string,unknown>={}) {return fetch(`${http.base}/api/crm/profiles/${id}/verification-cases`,{method:'POST',headers:headers.creator!,body:JSON.stringify({fieldName:'first_name',currentValue:'Forged old value',requestedValue:'Corrected',reason:'Document checked',...extra})})}
+async function create(id:string,extra:Record<string,unknown>={}) {
+  const key=`uploads/document/${randomUUID()}.pdf`, bytes=Buffer.from('%PDF-1.7\nOriginal evidence\n%%EOF')
+  objects.set(key,bytes)
+  await http.pool.query(`INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name)
+    VALUES ($1,'active',$2::jsonb,$3,'application/pdf','document','evidence.pdf')`,[key,JSON.stringify({verified:true,uploadedBy:'creator',profileId:id,purpose:'verification_evidence'}),bytes.length])
+  return fetch(`${http.base}/api/crm/profiles/${id}/verification-cases`,{method:'POST',headers:headers.creator!,body:JSON.stringify({fieldName:'first_name',currentValue:'Forged old value',requestedValue:'Corrected',reason:'Document checked',evidenceUrls:[key],...extra})})
+}
 async function review(id:string,decision:string,user='reviewer') {return fetch(`${http.base}/api/crm/verification-cases/${id}/status`,{method:'PUT',headers:headers[user]!,body:JSON.stringify({decision,reviewerNotes:'Evidence checked'})})}
 it('serializes creation, records the actual original value and prevents creator review',async()=>{
   const target=await profile()
   const results=await Promise.all(Array.from({length:5},()=>create(target)))
-  expect(results.map(response=>response.status).sort()).toEqual([201,409,409,409,409])
+  expect(results.map(response=>response.status).sort(), http.logs()).toEqual([201,409,409,409,409])
   const row=(await http.pool.query('SELECT * FROM verification_cases WHERE profile_id=$1',[target])).rows[0]
   expect(row.current_value).toBe('Original')
   expect((await review(row.id,'Under Review','creator')).status).toBe(403)
@@ -69,4 +87,35 @@ it('requires step-up for creation and review',async()=>{
     expect((await create(target)).status).toBe(403)
     expect((await review(data.id,'Under Review')).status).toBe(403)
   } finally {await http.pool.query('UPDATE sessions SET step_up_verified_at=NOW()')}
+})
+it('seals evidence bytes and returns authorized short-lived downloads for the fixed copy',async()=>{
+  const target=await profile(), response=await create(target)
+  expect(response.status).toBe(201)
+  const {id}=await response.json() as {id:string}
+  const row=(await http.pool.query('SELECT evidence_urls FROM verification_cases WHERE id=$1',[id])).rows[0]
+  const keys=JSON.parse(row.evidence_urls) as string[]
+  expect(keys).toHaveLength(1)
+  expect(keys[0]).toMatch(/^verification-evidence\//)
+  const sealed=(await http.pool.query('SELECT metadata,status FROM storage_records WHERE storage_key=$1',[keys[0]])).rows[0]
+  expect(sealed.status).toBe('immutable')
+  objects.set(sealed.metadata.sourceKey,Buffer.from('%PDF-1.7\nReplaced source'))
+  const detail=await fetch(`${http.base}/api/crm/verification-cases/${id}`,{headers:headers.reviewer!})
+  expect(detail.status).toBe(200)
+  const data=await detail.json() as {evidenceDownloadUrls:string[]}
+  expect(data.evidenceDownloadUrls).toHaveLength(1)
+  const signed=new URL(data.evidenceDownloadUrls[0]!)
+  expect(signed.searchParams.get('X-Amz-Expires')).toBe('300')
+  expect(await (await fetch(signed)).text()).toContain('Original evidence')
+})
+it('refuses another user’s evidence and refuses approval of legacy unsealed evidence',async()=>{
+  const target=await profile(),key=`uploads/document/${randomUUID()}.pdf`
+  objects.set(key,Buffer.from('%PDF-1.7\nEvidence'))
+  await http.pool.query(`INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category)
+    VALUES ($1,'active',$2::jsonb,17,'application/pdf','document')`,[key,JSON.stringify({verified:true,uploadedBy:'reviewer',profileId:target,purpose:'verification_evidence'})])
+  expect((await create(target,{evidenceUrls:[key]})).status).toBe(400)
+  const id=randomUUID()
+  await http.pool.query(`INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by)
+    VALUES ($1,$2,'first_name','Original','Changed','[]','Legacy case','Under Review','creator')`,[id,target])
+  expect((await review(id,'Approved')).status).toBe(409)
+  expect((await http.pool.query('SELECT first_name FROM profiles WHERE id=$1',[target])).rows[0].first_name).toBe('Original')
 })
