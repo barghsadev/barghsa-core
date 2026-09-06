@@ -1,16 +1,36 @@
 import { createServer, type Server } from 'node:http';
+import { createRequire } from 'node:module';
+import { resolve } from 'node:path';
+import { createStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import type { Pool } from 'pg';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>, storage: Server;
+const requireWorker = createRequire(resolve(__dirname, '../../../worker/package.json'));
+const { cleanupStorageObjects } = requireWorker('./dist/storage/cleanup.js') as {
+  cleanupStorageObjects(
+    pool: Pool,
+    storage: StorageProvider
+  ): Promise<{ deleted: number; failed: number }>;
+};
+let cleanupProvider: StorageProvider;
+let onGet: ((key: string) => Promise<void>) | undefined;
 const objects = new Map<string, Buffer>();
 let headers: Record<string, string>;
 beforeAll(async () => {
-  storage = createServer((req, res) => {
+  storage = createServer(async (req, res) => {
     const key = decodeURIComponent(new URL(req.url!, 'http://localhost').pathname).replace(
       '/test-evidence/',
       ''
     );
+    if (req.method === 'DELETE') {
+      objects.delete(key);
+      res.statusCode = 204;
+      res.end();
+      return;
+    }
+    await onGet?.(key);
     const bytes = objects.get(key);
     if (!bytes) {
       res.statusCode = 404;
@@ -26,6 +46,15 @@ beforeAll(async () => {
     process.env.TEST_DATABASE_URL!,
     `http://127.0.0.1:${(storage.address() as { port: number }).port}`
   );
+  cleanupProvider = createStorageProvider({
+    type: 's3',
+    bucket: 'test-evidence',
+    region: 'test',
+    endpoint: `http://127.0.0.1:${(storage.address() as { port: number }).port}`,
+    accessKeyId: 'test',
+    secretAccessKey: 'test',
+    forcePathStyle: true,
+  });
   await http.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES ('storage-actor','storage-actor@example.test','test-only',true,true)"
   );
@@ -197,4 +226,178 @@ it('authenticates every upload step and requires CSRF before storage access', as
     uploadedBy: 'storage-actor',
     verified: true,
   });
+});
+
+async function issue() {
+  const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      fileName: 'owned.pdf',
+      contentType: 'application/pdf',
+      fileSize: 13,
+      category: 'document',
+    }),
+  });
+  expect(response.status).toBe(200);
+  const upload = (await response.json()) as { key: string };
+  objects.set(upload.key, Buffer.from('%PDF-1.7 test'));
+  return upload.key;
+}
+function uploadRequest(key: string, action: string, requestHeaders = headers, body: unknown = {}) {
+  return fetch(`${http.base}/api/upload/${encodeURIComponent(key)}/${action}`, {
+    method: 'POST',
+    headers: requestHeaders,
+    body: JSON.stringify(body),
+  });
+}
+it('binds keys to their issuing user, preserves authorized metadata and rejects unissued keys', async () => {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ('other-uploader','other-uploader@example.test','test-only')"
+  );
+  const session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES ($1,'other-uploader',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+    [session, csrf, randomUUID()]
+  );
+  const otherHeaders = {
+    Cookie: `barghsa_session=${session}`,
+    'X-CSRF-Token': csrf,
+    'Content-Type': 'application/json',
+  };
+  const key = await issue();
+  expect(await row(key)).toMatchObject({
+    status: 'removed',
+    metadata: { uploadedBy: 'storage-actor', provisionalUpload: true, deletionRequested: true },
+  });
+  for (const action of ['verify', 'record']) {
+    expect((await uploadRequest(key, action, otherHeaders)).status).toBe(404);
+    expect((await uploadRequest(`uploads/document/${randomUUID()}.pdf`, action)).status).toBe(404);
+  }
+  expect(
+    (
+      await uploadRequest(key, 'record', headers, {
+        fileName: 'forged.exe',
+        contentType: 'text/html',
+        category: 'general',
+        purpose: 'ticket_attachment',
+      })
+    ).status
+  ).toBe(200);
+  const recorded = await row(key);
+  expect(recorded).toMatchObject({
+    status: 'active',
+    file_name: 'owned.pdf',
+    content_type: 'application/pdf',
+    category: 'document',
+    file_size: '13',
+    metadata: { verified: true, uploadedBy: 'storage-actor', purpose: 'ticket_attachment' },
+  });
+  expect(recorded.metadata).not.toHaveProperty('deletionRequested');
+  expect((await uploadRequest(key, 'record', headers, { purpose: 'legal_document' })).status).toBe(
+    409
+  );
+  expect((await row(key)).metadata.purpose).toBe('ticket_attachment');
+});
+it('rejects different bytes or expired reservations and cleans only abandoned uploads after URL expiry', async () => {
+  const mismatched = await issue();
+  objects.set(mismatched, Buffer.from('%PDF-1.7 longer than allowed'));
+  expect((await uploadRequest(mismatched, 'record')).status).toBe(400);
+  const expired = await issue();
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata||jsonb_build_object('uploadExpiresAt',NOW()-INTERVAL '1 minute') WHERE storage_key=$1",
+    [expired]
+  );
+  expect((await uploadRequest(expired, 'verify')).status).toBe(404);
+  expect((await uploadRequest(expired, 'record')).status).toBe(404);
+  expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
+    deleted: 0,
+    failed: 0,
+  });
+  await http.pool.query(
+    "UPDATE storage_records SET removed_at=NOW()-INTERVAL '66 minutes',updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key=$1",
+    [expired]
+  );
+  expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
+    deleted: 1,
+    failed: 0,
+  });
+  expect(objects.has(expired)).toBe(false);
+  expect(objects.has(mismatched)).toBe(true);
+  expect((await row(expired)).metadata.deletionRequested).toBe(false);
+  expect((await uploadRequest(expired, 'record')).status).toBe(404);
+});
+it('cannot issue a URL without durable reservation or promote a reservation after deletion', async () => {
+  await http.pool.query(
+    "CREATE FUNCTION reject_upload_reservation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test reservation failure'; END $$; CREATE TRIGGER reject_upload_reservation BEFORE INSERT ON storage_records FOR EACH ROW WHEN (NEW.metadata->>'provisionalUpload'='true') EXECUTE FUNCTION reject_upload_reservation()"
+  );
+  try {
+    const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        fileName: 'owned.pdf',
+        contentType: 'application/pdf',
+        fileSize: 13,
+        category: 'document',
+      }),
+    });
+    expect(response.status).toBe(500);
+    expect(await response.json()).not.toHaveProperty('presignedUrl');
+  } finally {
+    await http.pool.query('DROP TRIGGER reject_upload_reservation ON storage_records');
+  }
+  const key = await issue();
+  await http.pool.query(
+    'UPDATE storage_records SET metadata=metadata||\'{"provisionalUpload":false}\'::jsonb WHERE storage_key=$1',
+    [key]
+  );
+  expect((await uploadRequest(key, 'record')).status).toBe(404);
+  expect((await row(key)).status).toBe('removed');
+});
+
+it('does not activate an upload cancelled while object verification is in flight', async () => {
+  const key = await issue();
+  let release!: () => void, observed!: () => void;
+  const blocked = new Promise<void>((done) => {
+      release = done;
+    }),
+    started = new Promise<void>((done) => {
+      observed = done;
+    });
+  onGet = async (objectKey) => {
+    if (objectKey === key) {
+      observed();
+      await blocked;
+    }
+  };
+  const pending = uploadRequest(key, 'record');
+  try {
+    await started;
+    expect((await request(key, 'DELETE')).status).toBe(204);
+  } finally {
+    onGet = undefined;
+    release();
+  }
+  expect((await pending).status).toBe(409);
+  expect(await row(key)).toMatchObject({
+    status: 'removed',
+    metadata: { deletionRequested: true },
+  });
+  expect((await row(key)).metadata).not.toHaveProperty('provisionalUpload');
+});
+
+it('validates upload record bodies without changing the reservation', async () => {
+  const key = await issue();
+  for (const body of [
+    null,
+    [],
+    { profileId: 'bad' },
+    { fileSize: -1 },
+    { purpose: '' },
+    { unexpected: true },
+  ])
+    expect((await uploadRequest(key, 'record', headers, body)).status).toBe(400);
+  expect((await row(key)).status).toBe('removed');
 });

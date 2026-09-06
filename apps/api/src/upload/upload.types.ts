@@ -39,6 +39,22 @@ export const PresignedUrlRequestSchema = z
   })
   .strict();
 
+export const RecordUploadRequestSchema = z
+  .object({
+    fileName: z.string().min(1).max(255).optional(),
+    contentType: z.string().min(1).max(128).optional(),
+    fileSize: z
+      .number()
+      .int()
+      .positive()
+      .max(50 * 1024 * 1024)
+      .optional(),
+    category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
+    purpose: z.string().trim().min(1).max(64).optional(),
+    profileId: z.string().uuid().optional(),
+  })
+  .strict();
+
 export type PresignedUrlRequest = z.infer<typeof PresignedUrlRequestSchema>;
 
 /**

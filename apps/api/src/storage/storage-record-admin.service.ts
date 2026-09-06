@@ -24,6 +24,7 @@ interface RecordRow {
   signed_at: Date | null;
   signed_by: string | null;
   removed_at: Date | null;
+  metadata: Record<string, unknown> | null;
 }
 function response(row: RecordRow) {
   return {
@@ -95,15 +96,16 @@ export class StorageRecordAdminService {
           [key, actorId]
         );
       } else {
-        if (row.status === 'removed') {
+        const pendingUpload = row.status === 'removed' && row.metadata?.provisionalUpload === true;
+        if (row.status === 'removed' && !pendingUpload) {
           await client.query('COMMIT');
           return { record: response(row), retained: !!row.signed_at, alreadyRemoved: true };
         }
         // Immutable data is retained. Active data is deleted by a worker only after this transaction commits.
-        const deletable = row.status === 'active' && !row.signed_at;
+        const deletable = (row.status === 'active' || pendingUpload) && !row.signed_at;
         await client.query(
           `UPDATE storage_records SET status='removed',removed_at=NOW(),updated_at=NOW(),
-          metadata=COALESCE(metadata,'{}'::jsonb)||jsonb_build_object('deletionRequested',$2::boolean)
+          metadata=(COALESCE(metadata,'{}'::jsonb)-'provisionalUpload')||jsonb_build_object('deletionRequested',$2::boolean)
           WHERE storage_key=$1`,
           [key, deletable]
         );

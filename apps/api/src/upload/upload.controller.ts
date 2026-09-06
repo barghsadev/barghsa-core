@@ -10,8 +10,10 @@ import {
   HttpStatus,
   ServiceUnavailableException,
   BadRequestException,
+  ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { reserveUpload, requireOwnedUpload, completeUpload } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
@@ -19,6 +21,7 @@ import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import {
   PresignedUrlRequestSchema,
+  RecordUploadRequestSchema,
   type PresignedUrlRequest,
   type PresignedUrlResponse,
   type VerifyUploadResponse,
@@ -66,7 +69,10 @@ export class UploadController {
    */
   @Post('presigned-url')
   @HttpCode(HttpStatus.OK)
-  async getPresignedUrl(@Body() raw: unknown): Promise<PresignedUrlResponse> {
+  async getPresignedUrl(
+    @Body() raw: unknown,
+    @Req() actor: AuthenticatedRequest
+  ): Promise<PresignedUrlResponse> {
     this.ensureStorageReady();
 
     // Parse and validate request
@@ -127,6 +133,15 @@ export class UploadController {
       : '';
     const uniqueKey = `${UPLOAD_PREFIX}${category}/${randomUUID()}${ext}`;
 
+    await reserveUpload({
+      key: uniqueKey,
+      userId: actor.session.userId,
+      fileName: req.fileName,
+      contentType: req.contentType,
+      fileSize: req.fileSize,
+      category,
+      expiresIn: DEFAULT_EXPIRES_IN,
+    });
     try {
       const presignedUrl = await this.storage!.presignedPutUrl(uniqueKey, DEFAULT_EXPIRES_IN);
 
@@ -163,7 +178,10 @@ export class UploadController {
    */
   @Post(':key/verify')
   @HttpCode(HttpStatus.OK)
-  async verifyUpload(@Param('key') key: string): Promise<VerifyUploadResponse> {
+  async verifyUpload(
+    @Param('key') key: string,
+    @Req() actor: AuthenticatedRequest
+  ): Promise<VerifyUploadResponse> {
     this.ensureStorageReady();
 
     // Security: reject keys that try to escape the prefix
@@ -183,6 +201,7 @@ export class UploadController {
       });
     }
 
+    await requireOwnedUpload(key, actor.session.userId);
     try {
       const inspected = await this.inspectUploadedObject(key, category);
 
@@ -226,19 +245,14 @@ export class UploadController {
   @HttpCode(HttpStatus.OK)
   async recordUpload(
     @Param('key') key: string,
-    @Body()
-    body: {
-      fileName?: string;
-      contentType?: string;
-      fileSize?: number;
-      category?: string;
-      purpose?: string;
-      profileId?: string;
-    },
+    @Body() raw: unknown,
     @Req() req: AuthenticatedRequest
   ): Promise<{ key: string; status: string }> {
     this.ensureStorageReady();
     this.ensureImmutableServiceReady();
+    const parsed = RecordUploadRequestSchema.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid upload record request');
+    const body = parsed.data;
 
     if (!key.startsWith(UPLOAD_PREFIX) || key.includes('..')) {
       throw new BadRequestException('Invalid upload key');
@@ -252,6 +266,17 @@ export class UploadController {
       });
     }
 
+    const issued = await requireOwnedUpload(key, req.session.userId);
+    if (issued.status === 'active') {
+      if (
+        (body.purpose !== undefined && body.purpose !== issued.metadata.purpose) ||
+        (body.profileId !== undefined && body.profileId !== issued.metadata.profileId)
+      )
+        throw new ConflictException(
+          'The upload is already recorded for a different purpose or profile'
+        );
+      return { key, status: 'recorded' };
+    }
     let detectedContentType: string;
     let actualFileSize: number;
     try {
@@ -282,6 +307,11 @@ export class UploadController {
           });
         }
       }
+      if (trustedSize !== Number(issued.file_size) || detectedContentType !== issued.content_type) {
+        throw new BadRequestException(
+          'Uploaded bytes do not match the authorized size and content type'
+        );
+      }
       const policy = await this.policyResolver.resolveEffective(category);
       if (!effectiveAllowsSize(policy, trustedSize)) {
         throw new BadRequestException({
@@ -302,21 +332,14 @@ export class UploadController {
       throw err;
     }
 
-    const purpose =
-      typeof body.purpose === 'string' && body.purpose.trim().length > 0
-        ? body.purpose.trim().slice(0, 64)
-        : undefined;
-    const profileId =
-      typeof body.profileId === 'string' && body.profileId.trim().length > 0
-        ? body.profileId.trim().slice(0, 64)
-        : undefined;
+    const { purpose, profileId } = body;
 
-    await this.immutableStorageService!.createRecord({
+    await completeUpload({
       storageKey: key,
       fileName: body.fileName,
-      contentType: body.contentType ?? detectedContentType,
+      contentType: detectedContentType,
       fileSize: actualFileSize,
-      category: body.category ?? category,
+      category,
       metadata: {
         verified: true,
         verifiedAt: new Date().toISOString(),
