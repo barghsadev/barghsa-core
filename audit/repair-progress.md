@@ -394,3 +394,9 @@ Review/validation: five new Chromium scenarios and all ten team-dialog regressio
 Generic request creation now enumerates current eligible staff inside its transaction, excludes disabled and unactivated accounts, and writes bilingual private notices before commit. Generic approval/rejection similarly commits the initiator notice with the decision and audit. Links now target the implemented queue directly.
 
 Review/validation: 30 service/production-HTTP checks and API typecheck pass. A database trigger failure proves a failed notice leaves the request pending with no approval audit; retry succeeds after recovery. Browser evidence from F13.7 remains applicable. Receipt-created requests still need their own notification integration; this checkpoint does not claim that coverage.
+
+### F15.1 CRM user pagination and lifecycle filters
+
+CRM user pagination now compares cursors in the requested direction, keeps database microseconds and treats user IDs as text. Invalid cursors/date ranges return 400 instead of silently restarting or failing in SQL. Pending/disabled filter aliases map to the stored PENDING_VERIFICATION/SUSPENDED states; archived profiles are excluded from active summaries. Corrected the surname full-text search parameter.
+
+Review/validation: 22 service/production-HTTP checks pass, including seven text IDs with equal/microsecond-separated timestamps in both directions, actual-state filters, surname search and invalid inputs. CRM list UI and the broader profile action matrix remain open.

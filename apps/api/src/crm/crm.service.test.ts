@@ -158,7 +158,7 @@ describe('CrmService.listUsers', () => {
     await service.listUsers(cursor, 10)
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining('WHERE (u.created_at, u.user_id) < ($2::timestamptz, $3::uuid)'),
+      expect.stringContaining('WHERE (u.created_at, u.user_id) < ($2::timestamptz, $3::text)'),
       expect.arrayContaining([11, cursorPayload.createdAt, cursorPayload.id]),
     )
   })
@@ -170,14 +170,8 @@ describe('CrmService.listUsers', () => {
     const { CrmService: CrmSvc } = await import('./crm.service.js')
     service = new CrmSvc()
 
-    // Invalid cursor — not valid JSON/not a valid composite cursor shape
-    await service.listUsers('!!!invalid!!!', 10)
-
-    // Should NOT contain WHERE clause with cursor params
-    expect(pool.query).toHaveBeenCalledWith(
-      expect.not.stringContaining('WHERE'),
-      expect.arrayContaining([11]),
-    )
+    await expect(service.listUsers('!!!invalid!!!', 10)).rejects.toThrow('Invalid CRM cursor')
+    expect(pool.query).not.toHaveBeenCalled()
   })
 
   it('returns correct results across multiple pages', async () => {
@@ -282,7 +276,7 @@ describe('CrmService.listUsers — verification status filter', () => {
     await service.listUsers(null, 10, { verification: 'PENDING' })
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining("bool_or(p.status = 'PENDING')"),
+      expect.stringContaining("bool_or(p.status = 'PENDING_VERIFICATION')"),
       expect.arrayContaining([11]),
     )
   })
@@ -297,7 +291,7 @@ describe('CrmService.listUsers — verification status filter', () => {
     await service.listUsers(null, 10, { verification: 'DISABLED' })
 
     expect(pool.query).toHaveBeenCalledWith(
-      expect.stringContaining("bool_or(p.status = 'DISABLED')"),
+      expect.stringContaining("bool_or(p.status = 'SUSPENDED')"),
       expect.arrayContaining([11]),
     )
   })

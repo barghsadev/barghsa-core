@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, BadRequestException } from '@nestjs/common'
 import { getDbPool } from '@barghsa/db'
 
 /**
@@ -69,7 +69,11 @@ export class CrmService {
     filters?: CrmListUsersFilters,
   ): Promise<CrmUsersResponse> {
     const pool = getDbPool()
-    const pageSize = Math.min(Math.max(1, limit), 100)
+    const pageSize = Math.min(Math.max(1, Number.isFinite(limit) ? Math.trunc(limit) : 20), 100)
+    for (const value of [filters?.dateFrom, filters?.dateTo]) {
+      if (value && !Number.isFinite(Date.parse(value))) throw new BadRequestException('Invalid registration date filter')
+    }
+    if (filters?.dateFrom && filters?.dateTo && Date.parse(filters.dateFrom) > Date.parse(filters.dateTo)) throw new BadRequestException('Registration date range is reversed')
 
     // Decode and validate the composite cursor { id, createdAt }
     let cursorId: string | null = null
@@ -81,16 +85,18 @@ export class CrmService {
         if (
           typeof parsed.id === 'string' &&
           typeof parsed.createdAt === 'string' &&
-          /^[a-f0-9]{8}-[a-f0-9]{4}-7[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(parsed.id) &&
+          parsed.id.length > 0 && parsed.id.length <= 512 &&
           !isNaN(Date.parse(parsed.createdAt))
         ) {
           cursorId = parsed.id
           cursorCreatedAt = parsed.createdAt
         }
       } catch {
-        // Invalid cursor — treat as no cursor
+        throw new BadRequestException('Invalid CRM cursor')
       }
     }
+
+    if (cursor && (!cursorId || !cursorCreatedAt)) throw new BadRequestException('Invalid CRM cursor')
 
     // Build WHERE clauses dynamically
     const whereClauses: string[] = []
@@ -99,7 +105,7 @@ export class CrmService {
 
     // Cursor-based pagination
     if (cursorCreatedAt && cursorId) {
-      whereClauses.push(`(u.created_at, u.user_id) < ($${paramIndex}::timestamptz, $${paramIndex + 1}::uuid)`)
+      whereClauses.push(`(u.created_at, u.user_id) ${filters?.order === 'asc' ? '>' : '<'} ($${paramIndex}::timestamptz, $${paramIndex + 1}::text)`)
       params.push(cursorCreatedAt, cursorId)
       paramIndex += 2
     }
@@ -120,13 +126,13 @@ export class CrmService {
           break
         case 'UNVERIFIED':
           // Status is not null and never VERIFIED
-          havingClause = ` HAVING EVERY(p.status IS NULL OR p.status IS NOT NULL) AND NOT bool_or(p.status = 'VERIFIED' OR p.status IS NULL)`
+          havingClause = ` HAVING NOT COALESCE(bool_or(p.status = 'VERIFIED'), false)`
           break
         case 'PENDING':
-          havingClause = ` HAVING bool_or(p.status = 'PENDING') = true AND NOT bool_or(p.status = 'VERIFIED') = true`
+          havingClause = ` HAVING bool_or(p.status = 'PENDING_VERIFICATION') = true AND NOT bool_or(p.status = 'VERIFIED') = true`
           break
         case 'DISABLED':
-          havingClause = ` HAVING bool_or(p.status = 'DISABLED') = true`
+          havingClause = ` HAVING bool_or(p.status = 'SUSPENDED') = true`
           break
       }
     }
@@ -163,7 +169,7 @@ export class CrmService {
       )`)
       const ilikePattern = `%${searchTerm}%`
       for (let i = 0; i < 7; i++) {
-        params.push(i < 4 && i % 2 === 0 ? searchTerm : ilikePattern)
+        params.push(i < 6 && i % 2 === 0 ? searchTerm : ilikePattern)
       }
       paramIndex += 7
     }
@@ -181,14 +187,14 @@ export class CrmService {
         u.username,
         u.email,
         u.mobile,
-        u.created_at AT TIME ZONE 'UTC' AS registration_date,
-        u.last_login_at AT TIME ZONE 'UTC' AS last_login,
+        to_char(u.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS registration_date,
+        to_char(u.last_login_at AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS last_login,
         COUNT(p.id)::int AS profile_count,
         bool_or(p.profile_type = 'INDIVIDUAL') AS has_individual_profile,
         bool_or(p.profile_type = 'LEGAL') AS has_legal_profile,
         bool_or(p.status = 'VERIFIED') AS has_verified_profile
       FROM users u
-      LEFT JOIN profiles p ON p.user_id = u.user_id
+      LEFT JOIN profiles p ON p.user_id = u.user_id AND p.archived = false
       ${searchJoin}
       ${whereClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
