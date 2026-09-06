@@ -1151,3 +1151,35 @@ for (const locale of ['en', 'fa']) {
     await expect(key).toHaveValue('local-fixture-only');
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  test(`order address fields have labels and label-click focus (${locale})`, async ({ page }) => {
+    await shell(page, locale);
+    await page.route('**/api/profiles/verification-status', (route) =>
+      route.fulfill({
+        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
+      })
+    );
+    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+      route.fulfill({ json: { addresses: [] } })
+    );
+    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.goto('/electricity/order');
+    await page
+      .getByRole('button', {
+        name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
+        exact: true,
+      })
+      .click();
+    for (const id of ['province', 'city', 'fullAddress', 'postalCode']) {
+      await expect(page.locator('#order-address-' + id)).toHaveAccessibleName(/.+/);
+    }
+    await page.locator('label[for="order-address-fullAddress"]').click();
+    const address = page.locator('#order-address-fullAddress');
+    await expect(address).toBeFocused();
+    await address.fill('Local fixture address');
+    await expect(address).toHaveValue('Local fixture address');
+    await expect(page.locator('#order-address-city')).toBeDisabled();
+  });
+}

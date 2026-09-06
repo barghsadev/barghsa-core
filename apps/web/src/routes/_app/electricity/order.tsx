@@ -560,10 +560,14 @@ function ElectricityOrderPage() {
 
                   {/* Province */}
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="order-address-province"
+                      className="block text-sm font-medium mb-1"
+                    >
                       {t('settings.addresses.form.province', locale)}
                     </label>
                     <select
+                      id="order-address-province"
                       value={formProvinceId}
                       onChange={(e) => setFormProvinceId(e.target.value)}
                       className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -582,10 +586,11 @@ function ElectricityOrderPage() {
 
                   {/* City */}
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label htmlFor="order-address-city" className="block text-sm font-medium mb-1">
                       {t('settings.addresses.form.city', locale)}
                     </label>
                     <select
+                      id="order-address-city"
                       value={formCityId}
                       onChange={(e) => setFormCityId(e.target.value)}
                       disabled={!formProvinceId}
@@ -605,10 +610,14 @@ function ElectricityOrderPage() {
 
                   {/* Full Address */}
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="order-address-fullAddress"
+                      className="block text-sm font-medium mb-1"
+                    >
                       {t('settings.addresses.form.fullAddress', locale)}
                     </label>
                     <textarea
+                      id="order-address-fullAddress"
                       value={formFullAddress}
                       onChange={(e) => setFormFullAddress(e.target.value)}
                       placeholder={t('settings.addresses.form.fullAddressPlaceholder', locale)}
@@ -620,11 +629,15 @@ function ElectricityOrderPage() {
 
                   {/* Postal Code */}
                   <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="order-address-postalCode"
+                      className="block text-sm font-medium mb-1"
+                    >
                       {t('settings.addresses.form.postalCode', locale)}
                     </label>
                     <input
                       type="text"
+                      id="order-address-postalCode"
                       value={formPostalCode}
                       onChange={(e) => setFormPostalCode(e.target.value)}
                       placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}

@@ -1577,3 +1577,9 @@ Review and validation: four production-browser checks pass across both preferenc
 Provider label and transport controls now have explicit label associations. The shared field wrapper encloses its input, so all SMTP and Resend configuration fields have accessible names. Named the connection-test recipient input and localized the error-dismiss button.
 
 Review and validation: both Persian/English production-browser checks pass for all ten SMTP controls and all seven Resend controls, label-click focus, transport switching and password-type API-key entry. Corrected the test's nested locator and API key capitalization before rerunning. No provider request was sent. Root build, types, lint and bundle checks pass. The changed-file scan reports zero errors/accessibility findings; remaining warnings concern component size, state grouping and formatter placement. Stored react-doctor-provider-labels.json.
+
+### Associate ordering address labels (F20)
+
+Connected province, city, full-address and postal-code labels to the existing ordering form controls.
+
+Review and validation: both Persian/English production-browser checks pass for accessible names, label-click focus, text entry and the disabled city selector before province selection. Root build, types, lint and bundle checks pass. This is a bounded accessibility correction; missing ordering backends and verification/address-loading failure behavior remain unverified or open and are not certified by these controlled UI checks.
