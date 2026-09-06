@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { toast } from 'sonner';
+import { preferencesText } from '@barghsa/i18n/preferences';
 import { t } from '@barghsa/i18n';
 import {
   BellIcon,
@@ -41,6 +41,36 @@ interface ConsentChannelState {
 
 type MarketingChannels = 'email' | 'sms';
 
+function readChannels(body: unknown): NotificationChannel[] {
+  const channels = (body as { channels?: unknown } | null)?.channels;
+  if (
+    !Array.isArray(channels) ||
+    !channels.includes('IN_APP') ||
+    channels.some((value) => !['SMS', 'EMAIL', 'IN_APP'].includes(value)) ||
+    new Set(channels).size !== channels.length
+  )
+    throw new Error('Invalid preferences');
+  return channels as NotificationChannel[];
+}
+
+function readConsent(body: unknown): Record<MarketingChannels, ConsentChannelState> {
+  const channels = (body as { channels?: Record<string, unknown> } | null)?.channels;
+  for (const key of ['email', 'sms']) {
+    const value = channels?.[key] as Partial<ConsentChannelState> | undefined;
+    if (
+      !value ||
+      typeof value.optedIn !== 'boolean' ||
+      !(
+        value.lastChangedAt === null ||
+        (typeof value.lastChangedAt === 'string' &&
+          Number.isFinite(Date.parse(value.lastChangedAt)))
+      )
+    )
+      throw new Error('Invalid consent');
+  }
+  return channels as Record<MarketingChannels, ConsentChannelState>;
+}
+
 // ─── Page Component ────────────────────────────────────────────────────
 
 function SettingsIndexPage() {
@@ -49,6 +79,10 @@ function SettingsIndexPage() {
   const [channels, setChannels] = useState<NotificationChannel[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const savingRef = useRef(false);
 
   // Marketing consent state (T-05.05.03)
   const [marketing, setMarketing] = useState<Record<MarketingChannels, ConsentChannelState>>({
@@ -57,19 +91,22 @@ function SettingsIndexPage() {
   });
   const [marketingLoading, setMarketingLoading] = useState(true);
   const [marketingSaving, setMarketingSaving] = useState(false);
+  const [marketingLoadFailed, setMarketingLoadFailed] = useState(false);
+  const [marketingSaveFailed, setMarketingSaveFailed] = useState(false);
+  const [marketingSaved, setMarketingSaved] = useState(false);
+  const marketingSavingRef = useRef(false);
 
   // ── Fetch current preferences ──────────────────────────────────────
 
   const fetchPreferences = useCallback(async () => {
     setLoading(true);
+    setLoadFailed(false);
     try {
       const response = await fetch('/api/user/settings/notifications');
-      if (response.ok) {
-        const data: { channels: NotificationChannel[] } = await response.json();
-        setChannels(data.channels);
-      }
+      if (!response.ok) throw new Error('Read failed');
+      setChannels(readChannels(await response.json()));
     } catch {
-      // Silently fail — default preferences will be assumed
+      setLoadFailed(true);
     } finally {
       setLoading(false);
     }
@@ -82,7 +119,9 @@ function SettingsIndexPage() {
   // ── Toggle handler ─────────────────────────────────────────────────
 
   const handleToggle = (channel: NotificationChannel) => {
-    if (channel === 'IN_APP') return; // In-app is always enabled
+    if (channel === 'IN_APP' || loading || loadFailed || savingRef.current) return; // In-app is always enabled
+    setSaved(false);
+    setSaveFailed(false);
     setChannels((prev) =>
       prev.includes(channel) ? prev.filter((c) => c !== channel) : [...prev, channel]
     );
@@ -91,53 +130,45 @@ function SettingsIndexPage() {
   // ── Save handler ───────────────────────────────────────────────────
 
   const handleSave = useCallback(async () => {
+    if (loading || loadFailed || savingRef.current) return;
+    savingRef.current = true;
     setSaving(true);
+    setSaveFailed(false);
+    setSaved(false);
     try {
       const response = await fetch('/api/user/settings/notifications', {
         method: 'PUT',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ channels }),
       });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const message = (body as { message?: string }).message;
-        toast.error(message || t('settings.notifications.error.save', locale));
-        // Re-fetch to reset state
-        fetchPreferences();
-        return;
-      }
-
-      const data: { channels: NotificationChannel[] } = await response.json();
-      setChannels(data.channels);
-      toast.success(t('settings.notifications.success', locale));
+      if (!response.ok) throw new Error('Save failed');
+      const confirmed = readChannels(await response.json());
+      if (
+        confirmed.length !== channels.length ||
+        channels.some((value) => !confirmed.includes(value))
+      )
+        throw new Error('Mismatched preferences');
+      setChannels(confirmed);
+      setSaved(true);
     } catch {
-      toast.error(t('settings.notifications.error.save', locale));
-      fetchPreferences();
+      setSaveFailed(true);
     } finally {
+      savingRef.current = false;
       setSaving(false);
     }
-  }, [channels, locale, fetchPreferences]);
+  }, [channels, loading, loadFailed]);
 
   // ── Marketing consent (T-05.05.03) ───────────────────────────────
 
   const fetchMarketingConsent = useCallback(async () => {
     setMarketingLoading(true);
+    setMarketingLoadFailed(false);
     try {
       const response = await fetch('/api/user/settings/marketing-consent');
-      if (response.ok) {
-        const data: {
-          channels: Record<MarketingChannels, ConsentChannelState>;
-        } = await response.json();
-        if (data.channels) {
-          setMarketing({
-            email: data.channels.email ?? { optedIn: false, lastChangedAt: null },
-            sms: data.channels.sms ?? { optedIn: false, lastChangedAt: null },
-          });
-        }
-      }
+      if (!response.ok) throw new Error('Read failed');
+      setMarketing(readConsent(await response.json()));
     } catch {
-      // Keep default (opted-out) state on failure
+      setMarketingLoadFailed(true);
     } finally {
       setMarketingLoading(false);
     }
@@ -148,6 +179,9 @@ function SettingsIndexPage() {
   }, [fetchMarketingConsent]);
 
   const handleMarketingToggle = (channel: MarketingChannels) => {
+    if (marketingLoading || marketingLoadFailed || marketingSavingRef.current) return;
+    setMarketingSaved(false);
+    setMarketingSaveFailed(false);
     setMarketing((prev) => ({
       ...prev,
       [channel]: { ...prev[channel], optedIn: !prev[channel].optedIn },
@@ -155,40 +189,33 @@ function SettingsIndexPage() {
   };
 
   const handleMarketingSave = useCallback(async () => {
+    if (marketingLoading || marketingLoadFailed || marketingSavingRef.current) return;
+    marketingSavingRef.current = true;
     setMarketingSaving(true);
+    setMarketingSaveFailed(false);
+    setMarketingSaved(false);
     try {
       const response = await fetch('/api/user/settings/marketing-consent', {
         method: 'PUT',
         headers: withCsrf({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({
-          email: marketing.email.optedIn,
-          sms: marketing.sms.optedIn,
-        }),
+        body: JSON.stringify({ email: marketing.email.optedIn, sms: marketing.sms.optedIn }),
       });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        const message = (body as { message?: string }).message;
-        toast.error(message || t('settings.marketing.error.save', locale));
-        fetchMarketingConsent();
-        return;
-      }
-
-      const data: {
-        channels: { email: ConsentChannelState; sms: ConsentChannelState };
-      } = await response.json();
-      setMarketing({
-        email: data.channels.email ?? { optedIn: false, lastChangedAt: null },
-        sms: data.channels.sms ?? { optedIn: false, lastChangedAt: null },
-      });
-      toast.success(t('settings.marketing.success', locale));
+      if (!response.ok) throw new Error('Save failed');
+      const confirmed = readConsent(await response.json());
+      if (
+        confirmed.email.optedIn !== marketing.email.optedIn ||
+        confirmed.sms.optedIn !== marketing.sms.optedIn
+      )
+        throw new Error('Mismatched consent');
+      setMarketing(confirmed);
+      setMarketingSaved(true);
     } catch {
-      toast.error(t('settings.marketing.error.save', locale));
-      fetchMarketingConsent();
+      setMarketingSaveFailed(true);
     } finally {
+      marketingSavingRef.current = false;
       setMarketingSaving(false);
     }
-  }, [marketing, locale, fetchMarketingConsent]);
+  }, [marketing, marketingLoading, marketingLoadFailed]);
 
   const formatConsentDate = (iso: string | null): string | null => {
     if (!iso) return null;
@@ -232,6 +259,7 @@ function SettingsIndexPage() {
           role="switch"
           aria-checked={state.optedIn}
           aria-label={label}
+          disabled={marketingSaving || marketingLoading || marketingLoadFailed}
           onClick={() => handleMarketingToggle(channel)}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 ${
             state.optedIn ? 'bg-primary' : 'bg-input'
@@ -345,8 +373,19 @@ function SettingsIndexPage() {
             </div>
           )}
 
+          {loadFailed && (
+            <div role="alert">
+              <p>{preferencesText('loadFailed', locale)}</p>
+              <Button onClick={fetchPreferences} disabled={loading}>
+                {preferencesText('retry', locale)}
+              </Button>
+            </div>
+          )}
+          {saveFailed && <p role="alert">{t('settings.notifications.error.save', locale)}</p>}
+          {saved && <p role="status">{t('settings.notifications.success', locale)}</p>}
+
           {/* Toggle switches */}
-          {!loading && (
+          {!loading && !loadFailed && (
             <div className="space-y-3">
               {channelToggles.map((channel) => {
                 const isEnabled = channels.includes(channel.key);
@@ -372,7 +411,8 @@ function SettingsIndexPage() {
                       type="button"
                       role="switch"
                       aria-checked={isEnabled}
-                      disabled={isAlwaysOn}
+                      aria-label={channel.label}
+                      disabled={isAlwaysOn || saving}
                       onClick={() => handleToggle(channel.key)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 ${
                         isEnabled ? 'bg-primary' : 'bg-input'
@@ -397,7 +437,11 @@ function SettingsIndexPage() {
 
           {/* Save button */}
           <div className="flex justify-end">
-            <Button onClick={handleSave} disabled={saving || loading} className="gap-2">
+            <Button
+              onClick={handleSave}
+              disabled={saving || loading || loadFailed}
+              className="gap-2"
+            >
               {saving ? (
                 <Loader2Icon className="h-4 w-4 animate-spin" />
               ) : (
@@ -430,7 +474,18 @@ function SettingsIndexPage() {
             </div>
           )}
 
-          {!marketingLoading && (
+          {marketingLoadFailed && (
+            <div role="alert">
+              <p>{preferencesText('loadFailed', locale)}</p>
+              <Button onClick={fetchMarketingConsent} disabled={marketingLoading}>
+                {preferencesText('retry', locale)}
+              </Button>
+            </div>
+          )}
+          {marketingSaveFailed && <p role="alert">{t('settings.marketing.error.save', locale)}</p>}
+          {marketingSaved && <p role="status">{t('settings.marketing.success', locale)}</p>}
+
+          {!marketingLoading && !marketingLoadFailed && (
             <div className="space-y-3">
               {renderMarketingToggle(
                 'email',
@@ -448,7 +503,7 @@ function SettingsIndexPage() {
           <div className="flex justify-end">
             <Button
               onClick={handleMarketingSave}
-              disabled={marketingSaving || marketingLoading}
+              disabled={marketingSaving || marketingLoading || marketingLoadFailed}
               className="gap-2"
             >
               {marketingSaving ? (

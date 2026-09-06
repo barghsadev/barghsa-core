@@ -36,6 +36,11 @@
       "types": "./dist/timezone.d.ts",
       "import": "./dist/timezone.js",
       "default": "./dist/timezone.js"
+    },
+    "./preferences": {
+      "types": "./dist/preferences.d.ts",
+      "import": "./dist/preferences.js",
+      "default": "./dist/preferences.js"
     }
   },
   "scripts": {

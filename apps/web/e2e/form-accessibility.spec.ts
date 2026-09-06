@@ -1017,3 +1017,104 @@ for (const locale of ['en', 'fa']) {
     expect(writes).toBe(1);
   });
 }
+
+for (const locale of ['en', 'fa']) {
+  for (const kind of ['notifications', 'marketing-consent']) {
+    test(`preferences require a valid read and preserve choices through save failures (${kind}, ${locale})`, async ({
+      page,
+    }) => {
+      await shell(page, locale);
+      const marketing = kind === 'marketing-consent';
+      const original = marketing
+        ? {
+            channels: {
+              email: { optedIn: false, lastChangedAt: null },
+              sms: { optedIn: false, lastChangedAt: null },
+            },
+          }
+        : { channels: ['IN_APP'] };
+      const confirmed = marketing
+        ? {
+            channels: {
+              email: { optedIn: true, lastChangedAt: '2026-09-01T12:00:00Z' },
+              sms: { optedIn: false, lastChangedAt: null },
+            },
+          }
+        : { channels: ['IN_APP', 'EMAIL'] };
+      let reads = 0;
+      let writes = 0;
+      let finish: (() => void) | undefined;
+      await page.route(`**/api/user/settings/${kind}`, async (route) => {
+        if (route.request().method() === 'GET') {
+          reads++;
+          return route.fulfill(
+            reads === 1 ? { status: locale === 'en' ? 503 : 200, json: null } : { json: original }
+          );
+        }
+        writes++;
+        expect(route.request().postDataJSON()).toEqual(
+          marketing ? { email: true, sms: false } : { channels: ['IN_APP', 'EMAIL'] }
+        );
+        if (writes === 1) {
+          await new Promise<void>((resolve) => {
+            finish = resolve;
+          });
+          return route.fulfill({ status: 503, json: { message: { invalid: 'message object' } } });
+        }
+        return route.fulfill({ json: writes === 2 ? original : confirmed });
+      });
+      await page.goto('/settings');
+      const title = marketing
+        ? locale === 'fa'
+          ? 'اعلان‌های بازاریابی'
+          : 'Marketing Notifications'
+        : locale === 'fa'
+          ? 'تنظیمات اعلان‌ها'
+          : 'Notification Preferences';
+      const card = page
+        .locator('[data-slot="card"]')
+        .filter({ has: page.getByRole('heading', { name: title, exact: true }) });
+      const save = card.getByRole('button', {
+        name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
+        exact: true,
+      });
+      await expect(card.getByRole('alert')).toBeVisible();
+      await expect(save).toBeDisabled();
+      await expect(card.getByRole('switch')).toHaveCount(0);
+      expect(writes).toBe(0);
+      await card
+        .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
+        .click();
+      const email = card.getByRole('switch', {
+        name: marketing
+          ? locale === 'fa'
+            ? 'دریافت اعلان‌های بازاریابی از طریق ایمیل'
+            : 'Receive marketing notifications via email'
+          : locale === 'fa'
+            ? 'ایمیل'
+            : 'Email',
+        exact: true,
+      });
+      await expect(email).toHaveAttribute('aria-checked', 'false');
+      await email.press('Space');
+      await expect(email).toHaveAttribute('aria-checked', 'true');
+      await save.click();
+      await expect.poll(() => writes).toBe(1);
+      await expect(email).toBeDisabled();
+      finish!();
+      await expect(card.getByRole('alert')).toBeVisible();
+      await expect(email).toHaveAttribute('aria-checked', 'true');
+      await expect(save).toBeEnabled();
+      await save.click();
+      await expect.poll(() => writes).toBe(2);
+      await expect(card.getByRole('alert')).toBeVisible();
+      await expect(card.getByRole('status')).toHaveCount(0);
+      await expect(email).toHaveAttribute('aria-checked', 'true');
+      await save.click();
+      await expect(card.getByRole('status')).toBeVisible();
+      await expect(card.getByRole('alert')).toHaveCount(0);
+      expect(writes).toBe(3);
+      expect(reads).toBe(2);
+    });
+  }
+}
