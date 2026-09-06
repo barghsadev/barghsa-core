@@ -1,3 +1,4 @@
+import { trustedProxyIps } from './common/proxy-trust.js';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
@@ -7,7 +8,9 @@ import { EtagInterceptor } from './common/etag.interceptor.js';
 import { Reflector } from '@nestjs/core';
 
 export async function createApplication() {
+  const proxies = trustedProxyIps();
   const app = await NestFactory.create(AppModule, { rawBody: true });
+  app.getHttpAdapter().getInstance().set('trust proxy', proxies.length ? proxies : false);
 
   // Enable shutdown hooks for graceful SIGTERM/SIGINT handling.
   // NestJS will call OnApplicationShutdown lifecycle hooks on all registered

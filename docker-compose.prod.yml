@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile.base
       target: production
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=512"
@@ -63,7 +63,7 @@ services:
       context: .
       dockerfile: Dockerfile.web
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       NODE_ENV: production
       NODE_OPTIONS: "--max-old-space-size=512"

@@ -27,6 +27,8 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm check:suppressed-errors
       - run: pnpm check:bundle
+      - name: Validate pilot TLS proxy and edge quotas
+        run: python3 scripts/test-pilot-proxy.py
       - run: pnpm check:contract
       - name: Install production browser check runtime
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
