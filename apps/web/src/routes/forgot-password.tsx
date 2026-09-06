@@ -1,3 +1,4 @@
+import { rateLimitMessage, retryAfterSeconds } from '../lib/auth-errors.js'
 import { useEffect, useState, type FormEvent } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n/auth'
@@ -102,7 +103,7 @@ function ForgotPasswordPage() {
 
   async function request(path: string, payload: unknown): Promise<Record<string, unknown> | null> {
     const response = await fetch(`/api/auth/${path}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept-Language': locale }, body: JSON.stringify(payload),
     })
     const body = await response.json().catch(() => ({})) as Record<string, unknown>
     if (response.ok) return body
@@ -118,9 +119,8 @@ function ForgotPasswordPage() {
       'AUTH:DELIVERY:UNAVAILABLE': 'auth.otp.error.deliveryUnavailable',
     }
     if (response.status === 429) {
-      const seconds = Number(response.headers.get('Retry-After'))
-      setCooldown(Number.isFinite(seconds) && seconds > 0 ? Math.ceil(seconds) : 60)
-      setError(t('auth.forgotPassword.error.rateLimited', locale))
+      setCooldown(retryAfterSeconds(response) ?? 60)
+      setError(rateLimitMessage(response, locale))
     } else {
       setError(t(messages[code ?? ''] ?? 'auth.forgotPassword.error.generic', locale))
     }

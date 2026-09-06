@@ -1,14 +1,17 @@
-import type { Locale } from '@barghsa/i18n'
+import { useSyncExternalStore } from 'react'
+import type { Locale } from '@barghsa/i18n/auth'
 
-/**
- * Returns the current application locale.
- *
- * Reads from `document.documentElement.lang` set by the server (e.g.
- * `<html lang="fa">`). Falls back to `'fa'` when the attribute is
- * empty or absent. This is a runtime read, not a constant — if the
- * lang attribute ever changes dynamically, the returned value reflects
- * the change on next render.
- */
+function readLocale(): Locale {
+  if (typeof document === 'undefined') return 'fa'
+  return document.documentElement.lang.toLowerCase().split('-')[0] === 'en' ? 'en' : 'fa'
+}
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] })
+  return () => observer.disconnect()
+}
+
+/** Subscribe to the shared document locale, including live language changes. */
 export function useLocale(): Locale {
-  return (document.documentElement.lang as Locale) || 'fa'
+  return useSyncExternalStore(subscribe, readLocale, () => 'fa')
 }

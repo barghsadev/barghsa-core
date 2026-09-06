@@ -1,3 +1,5 @@
+import { useLocale } from '../hooks/useLocale.js'
+import { rateLimitMessage, retryAfterSeconds, authErrorCode } from '../lib/auth-errors.js'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
@@ -86,7 +88,7 @@ function resolveErrorMessage(errorCode: string | undefined, locale: Locale): str
 
 function LoginPage() {
   const router = useRouter()
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const locale = useLocale()
 
   // ── Login form state ──────────────────────────────────
   const [username, setUsername] = useState('')
@@ -211,7 +213,7 @@ function LoginPage() {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({
           username: normalized.normalized,
           password,
@@ -224,7 +226,7 @@ function LoginPage() {
       if (!response.ok) {
         const rawError = body?.error
         const errorCode = typeof rawError === 'string' ? rawError : (rawError as Record<string, unknown>)?.code as string | undefined
-        const msg = resolveErrorMessage(errorCode, locale)
+        const msg = rateLimitMessage(response, locale) ?? resolveErrorMessage(errorCode, locale)
         setFormError(msg)
         toast.error(msg)
         return
@@ -303,7 +305,7 @@ function LoginPage() {
     try {
       const response = await fetch('/api/auth/force-change-password', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({
           passwordChangeToken,
           newPassword,
@@ -313,11 +315,12 @@ function LoginPage() {
       if (!response.ok) {
         const body: Record<string, unknown> =
           await response.json().catch(() => ({}))
-        const errorCode = typeof body?.error === 'string'
-          ? body.error
-          : String(body?.error ?? '')
+        const errorCode = authErrorCode(body)
 
-        if (errorCode === 'AUTH:LOGIN:PASSWORD_REUSED') {
+        const retry = rateLimitMessage(response, locale)
+        if (retry) {
+          setChangeError(retry)
+        } else if (errorCode === 'AUTH:LOGIN:PASSWORD_REUSED') {
           setChangeError(t('auth.login.error.passwordReused', locale))
         } else {
           setChangeError(t('auth.login.error.passwordChangeFailed', locale))
@@ -348,7 +351,7 @@ function LoginPage() {
       try {
         const response = await fetch('/api/auth/login/verify', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: code, trustDevice }),
         })
 
@@ -381,7 +384,7 @@ function LoginPage() {
               msg = t('auth.otp.error.generic', locale)
           }
 
-          setOtpError(msg)
+          setOtpError(rateLimitMessage(response, locale) ?? msg)
           setOtpCode('')
           if (otpRef.current?.reset) {
             otpRef.current.reset()
@@ -414,12 +417,19 @@ function LoginPage() {
     try {
       const response = await fetch('/api/auth/login/resend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ challengeId }),
       })
 
       if (!response.ok) {
-        toast.error(t('auth.otp.error.resend', locale))
+        const retry = rateLimitMessage(response, locale)
+        const message = retry ?? t('auth.otp.error.resend', locale)
+        setOtpError(message)
+        toast.error(message)
+        if (retry) {
+          setResendTimer(retryAfterSeconds(response) ?? 60)
+          setCanResend(false)
+        }
         return
       }
 
@@ -586,7 +596,7 @@ function LoginPage() {
                 </Button>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  {t('auth.otp.resendTimer', locale).replace('{seconds}', String(resendTimer))}
+                  {t('auth.otp.resendTimer', locale).replace('{seconds}', new Intl.NumberFormat(locale, { useGrouping: false }).format(resendTimer))}
                 </p>
               )}
             </div>

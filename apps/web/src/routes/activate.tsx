@@ -1,3 +1,4 @@
+import { rateLimitMessage } from '../lib/auth-errors.js'
 import { useEffect, useState, type FormEvent } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n/auth'
@@ -39,7 +40,7 @@ function ActivatePage() {
     setError(null)
     try {
       const response = await fetch('/api/auth/activate-staff', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, newPassword: password }),
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept-Language': locale }, body: JSON.stringify({ token, newPassword: password }),
       })
       if (!response.ok) {
         setError(t(response.status === 401 ? 'auth.activate.invalid' : response.status === 429 ? 'auth.forgotPassword.error.rateLimited' : 'auth.forgotPassword.error.generic', locale))

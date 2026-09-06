@@ -1,7 +1,9 @@
+import { useLocale } from '../../hooks/useLocale.js'
+import { rateLimitMessage, retryAfterSeconds } from '../../lib/auth-errors.js'
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { createFileRoute, Link, useRouter, useSearch } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { t, type Locale } from '@barghsa/i18n/auth'
+import { t } from '@barghsa/i18n/auth'
 import { Loader2Icon } from 'lucide-react'
 import { Button } from '@barghsa/ui'
 import { AuthLayout } from '../../components/AuthLayout.js'
@@ -21,7 +23,7 @@ const RESEND_COOLDOWN = 60
 function OtpVerifyPage() {
   const router = useRouter()
   const { challengeId, destination } = useSearch({ from: '/register/verify' })
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const locale = useLocale()
 
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState<string | null>(null)
@@ -65,7 +67,7 @@ function OtpVerifyPage() {
       try {
         const response = await fetch('/api/auth/register/verify', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
           body: JSON.stringify({ challengeId, otp: code }),
         })
 
@@ -97,7 +99,7 @@ function OtpVerifyPage() {
               msg = t('auth.otp.error.generic', locale)
           }
 
-          setOtpError(msg)
+          setOtpError(rateLimitMessage(response, locale) ?? msg)
           setOtp('')
           // Clear OTP input on error and shake
           if (otpRef.current?.reset) {
@@ -132,12 +134,19 @@ function OtpVerifyPage() {
     try {
       const response = await fetch('/api/auth/register/resend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({ challengeId }),
       })
 
       if (!response.ok) {
-        toast.error(t('auth.otp.error.resend', locale))
+        const retry = rateLimitMessage(response, locale)
+        const message = retry ?? t('auth.otp.error.resend', locale)
+        setOtpError(message)
+        toast.error(message)
+        if (retry) {
+          setResendTimer(retryAfterSeconds(response) ?? 60)
+          setCanResend(false)
+        }
         return
       }
 
@@ -236,7 +245,7 @@ function OtpVerifyPage() {
               </Button>
             ) : (
               <p className="text-sm text-muted-foreground">
-                {t('auth.otp.resendTimer', locale).replace('{seconds}', String(resendTimer))}
+                {t('auth.otp.resendTimer', locale).replace('{seconds}', new Intl.NumberFormat(locale, { useGrouping: false }).format(resendTimer))}
               </p>
             )}
           </div>

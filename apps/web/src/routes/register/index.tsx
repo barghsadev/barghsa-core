@@ -1,3 +1,5 @@
+import { useLocale } from '../../hooks/useLocale.js'
+import { rateLimitMessage } from '../../lib/auth-errors.js'
 import { lazy, Suspense, useRef, useState, useCallback, useEffect } from 'react'
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
@@ -96,7 +98,7 @@ function RegisterPage() {
   const [termsOpen, setTermsOpen] = useState(false)
   const termsTrigger = useRef<HTMLButtonElement>(null)
   const router = useRouter()
-  const locale: Locale = 'fa' // TODO: read from user preference / locale context
+  const locale = useLocale()
 
   const [username, setUsername] = useState('')
   const [usernameError, setUsernameError] = useState<string | null>(null)
@@ -209,7 +211,7 @@ function RegisterPage() {
 
       const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept-Language': locale },
         body: JSON.stringify({
           username: normalized.normalized,
           password,
@@ -223,7 +225,7 @@ function RegisterPage() {
       if (!response.ok) {
         const rawError = body?.error
         const errorCode = typeof rawError === 'string' ? rawError : (rawError as Record<string, unknown>)?.code as string | undefined
-        const msg = resolveErrorMessage(errorCode, locale)
+        const msg = rateLimitMessage(response, locale) ?? resolveErrorMessage(errorCode, locale)
         setFormError(msg)
         toast.error(msg)
         return
