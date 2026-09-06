@@ -79,6 +79,14 @@ export async function uploadInvoiceReceiptAttachment(
   file: File,
   profileId: string,
 ): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, BANK_RECEIPT_STORAGE_PURPOSE)
+}
+
+export async function uploadVerificationEvidence(file: File, profileId: string): Promise<string | null> {
+  return uploadVerifiedAttachment(file, profileId, 'verification_evidence')
+}
+
+async function uploadVerifiedAttachment(file: File, profileId: string, purpose: string): Promise<string | null> {
   const evaluated = evaluateInvoiceBankReceiptClientFile({
     name: file.name,
     type: file.type,
@@ -139,7 +147,7 @@ export async function uploadInvoiceReceiptAttachment(
       contentType: file.type || undefined,
       fileSize: file.size,
       category,
-      purpose: BANK_RECEIPT_STORAGE_PURPOSE,
+      purpose,
       profileId,
     }),
   })

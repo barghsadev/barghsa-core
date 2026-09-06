@@ -174,7 +174,7 @@ export class VerificationCaseService {
               updated_at AT TIME ZONE 'UTC' AS updated_at
        FROM verification_cases
        ${whereClause}
-       ORDER BY created_at DESC
+       ORDER BY created_at DESC, id DESC
        LIMIT $${paramIndex++} OFFSET $${paramIndex++}`,
       [...values, params.limit, params.offset],
     )

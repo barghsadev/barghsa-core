@@ -76,7 +76,7 @@ interface SiblingProfile {
 }
 
 interface ProfileDetail {
-  viewerPermissions?: { canEdit: boolean; canVerify: boolean; canManageUser: boolean }
+  viewerPermissions?: { canEdit: boolean; canEditIdentity?: boolean; canVerify: boolean; canManageUser: boolean }
   profile: Profile
   user: UserInfo
   legalInfo: LegalInfo | null
@@ -372,6 +372,7 @@ function CrmProfileDetailContent() {
         onCancel={() => setShowArchive(false)} cancelLabel={t('team.cancel', locale)} confirmLabel={t('crm.profile.archive.title', locale)} loading={false}
         onConfirm={() => { setShowArchive(false); queueAction({ title: t('crm.profile.archive.title', locale), description: `${t('crm.profile.archive.warning', locale)} ${profileId} · ${archiveReason.trim()}`,
           path: `/api/crm/profiles/${profileId}`, method: 'DELETE', errorMessages: { 'CRM:PROFILE:DELETION_BLOCKED': t('crm.profile.archive.warning', locale), 'CRM:PROFILE:LAST_OWNER': t('crm.profile.archive.warning', locale) }, body: { reason: archiveReason.trim() } }, 'archive') }} />}
+      {data.viewerPermissions?.canEditIdentity && <p className="mb-4"><a className="text-blue-700 underline" href={`/admin/crm/corrections?profileId=${encodeURIComponent(profileId)}`}>{t('crm.corrections.request',locale)}</a></p>}
       {/* Save success / error flash messages */}
       {saveSuccess && (
         <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-md text-sm" role="alert">

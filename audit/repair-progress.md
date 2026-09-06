@@ -446,3 +446,9 @@ Correction cases now require one to five verified evidence uploads owned by the 
 Review/validation: 23 correction/invoice-upload checks and API typecheck pass against production migrations and a controlled local S3-compatible server. Replacing the original upload cannot change the downloaded evidence; another user's upload is refused; legacy unsealed cases cannot update identity. The HTTP fixture gained an optional local storage endpoint for this proof. No real storage account was used. Failed transactions can leave unreachable snapshot objects for later cleanup; legacy cases require resubmission.
 
 Cross-step check before this evidence addition: the full API suite passed 2,496 checks in 190 files.
+
+### F15.8 Identity-correction queue and request UI
+
+Added the correction queue, profile-specific request link, evidence upload and independent review screen. Creation captures the profile, field, value, reason and uploaded keys before step-up; reviewing exposes original/new values and fixed evidence downloads. Self-review controls are hidden, rejection requires notes, and approval is disabled when sealed evidence is unavailable. Queue responses include the current viewer capabilities. Shared upload sequencing retains the invoice-receipt purpose and adds a distinct correction-evidence purpose.
+
+Review/validation: three Chromium scenarios pass in fa/en, including one upload across a password retry and blocked legacy approval. Thirteen case API checks, four invoice-upload client regression checks and all 11 workspace typechecks pass; production web build passes. CRM still has cross-cutting acceptance work, including all identity-edit/deletion races and notification completion. F16 ticket workflows are next.

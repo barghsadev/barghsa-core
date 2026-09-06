@@ -178,7 +178,7 @@ export class VerificationCaseController {
       offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
     })
 
-    return result
+    return { ...result, viewer: { userId: req.session.userId, canCreate: hasStaffPermission(req, 'crm:edit-identity'), canReview: hasStaffPermission(req, 'crm:verify') } }
   }
 
   /**
@@ -220,7 +220,7 @@ export class VerificationCaseController {
       offset: Math.max(parseInt(offset ?? '0', 10) || 0, 0),
     })
 
-    return result
+    return { ...result, viewer: { userId: req.session.userId, canCreate: hasStaffPermission(req, 'crm:edit-identity'), canReview: hasStaffPermission(req, 'crm:verify') } }
   }
 
   /**
