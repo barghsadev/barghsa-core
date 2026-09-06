@@ -15,6 +15,13 @@ async function main() {
     VALUES ($1,'team-ui-admin',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
     [session, csrf, randomUUID()]
   );
+  for (const language of ['en', 'fa']) {
+    await http.pool.query(
+      `INSERT INTO users(user_id,username,password_hash,is_staff,must_change_password,activation_token,activation_token_expires_at)
+      VALUES ($1,$2,'test-only',true,true,'test-only-expired-token',NOW()-INTERVAL '1 day')`,
+      [randomUUID(), `pending-${language}@example.test`]
+    );
+  }
   let closing = false;
   const close = async () => {
     if (closing) return;

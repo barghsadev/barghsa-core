@@ -301,3 +301,62 @@ for (const locale of ['en', 'fa'])
       result.items.find((user: { username: string }) => user.username === username)
     ).toMatchObject({ status: 'disabled', isAdmin: false, roles: [{ roleId: 'role-finance' }] });
   });
+
+for (const locale of ['en', 'fa'])
+  test(`expired staff activation can be reissued through the real API (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const fa = locale === 'fa',
+      username = `pending-${locale}@example.test`;
+    await page.goto('/admin/users');
+    const row = page.getByRole('row').filter({ hasText: username });
+    await expect(row).toContainText(fa ? 'در انتظار فعال‌سازی' : 'Awaiting activation');
+    await row
+      .getByRole('button', {
+        name: fa ? 'ارسال دوباره فعال‌سازی' : 'Resend activation',
+        exact: true,
+      })
+      .click();
+    await expect(page.getByRole('dialog')).toContainText(username);
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(
+      page.getByText(
+        fa
+          ? 'ایمیل فعال‌سازی در صف ارسال قرار گرفت.'
+          : 'The activation email is queued for delivery.',
+        { exact: true }
+      )
+    ).toBeVisible();
+    const response = await page.request.get(`${http.base}/api/admin/staff`, {
+      headers: { cookie: `barghsa_session=${http.session}` },
+    });
+    const result = await response.json();
+    const account = result.items.find((user: { username: string }) => user.username === username);
+    expect(account.activationPending).toBe(true);
+    expect(new Date(account.activationExpiresAt).getTime()).toBeGreaterThan(Date.now());
+    expect(account).not.toHaveProperty('activationToken');
+  });

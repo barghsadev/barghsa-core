@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -44,9 +44,32 @@ export function TeamActionDialog({
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  const [retryAt, setRetryAt] = useState(0),
+    [remaining, setRemaining] = useState(0);
+  useEffect(() => {
+    if (!retryAt) return;
+    const update = () => setRemaining(Math.max(0, Math.ceil((retryAt - Date.now()) / 1000)));
+    update();
+    const timer = window.setInterval(update, 1000);
+    return () => window.clearInterval(timer);
+  }, [retryAt]);
+  function rateLimited(response: Response) {
+    if (response.status !== 429) return false;
+    const header = response.headers.get('retry-after');
+    const delay =
+      header && Number.isFinite(Number(header))
+        ? Number(header) * 1000
+        : header
+          ? Date.parse(header) - Date.now()
+          : 1000;
+    const milliseconds = Number.isFinite(delay) ? Math.max(1000, delay) : 1000;
+    setRemaining(Math.ceil(milliseconds / 1000));
+    setRetryAt(Date.now() + milliseconds);
+    return true;
+  }
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (inFlight.current) return;
+    if (inFlight.current || retryAt > Date.now()) return;
     inFlight.current = true;
     setBusy(true);
     setError(null);
@@ -59,6 +82,7 @@ export function TeamActionDialog({
           body: JSON.stringify({ password }),
         });
         setPassword('');
+        if (rateLimited(verified)) return;
         if (!verified.ok) {
           setError(t('team.passwordError', locale));
           return;
@@ -79,6 +103,7 @@ export function TeamActionDialog({
         setNeedsPassword(true);
         return;
       }
+      if (rateLimited(response)) return;
       if (!response.ok) {
         setError(
           action.errorMessages?.[code] ??
@@ -132,6 +157,14 @@ export function TeamActionDialog({
               />
             </div>
           )}
+          {remaining > 0 && (
+            <p role="status">
+              {t('team.retryAfter', locale).replace(
+                '{seconds}',
+                new Intl.NumberFormat(locale).format(remaining)
+              )}
+            </p>
+          )}
           {error && (
             <p role="alert" className="text-sm text-red-700">
               {error}
@@ -141,7 +174,7 @@ export function TeamActionDialog({
             <Button type="button" variant="outline" disabled={busy} onClick={onClose}>
               {t('team.cancel', locale)}
             </Button>
-            <Button type="submit" disabled={busy || (needsPassword && !password)}>
+            <Button type="submit" disabled={busy || remaining > 0 || (needsPassword && !password)}>
               {t(busy ? 'team.working' : 'team.confirm', locale)}
             </Button>
           </DialogFooter>

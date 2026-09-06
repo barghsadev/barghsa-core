@@ -234,3 +234,87 @@ for (const locale of ['en', 'fa'] as const) {
     await expect.poll(() => queries.at(-1)?.get('to')).toBeNull();
   });
 }
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`activation resend respects server cooldown and retains its target (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.install();
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    const fa = locale === 'fa';
+    let attempts = 0;
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await page.route('**/api/admin/staff-access', (route) =>
+      route.fulfill({
+        json: {
+          userId: 'creator',
+          canView: true,
+          canCreate: true,
+          canEditRoles: false,
+          canDisable: false,
+        },
+      })
+    );
+    await page.route('**/api/admin/staff?*', (route) =>
+      route.fulfill({
+        json: {
+          items: [
+            {
+              userId: 'pending',
+              username: 'pending@example.test',
+              firstName: 'Pending',
+              lastName: 'Staff',
+              roles: [],
+              status: 'active',
+              isAdmin: false,
+              lastLoginAt: null,
+              activationPending: true,
+              activationExpiresAt: '2026-01-01T00:00:00Z',
+            },
+          ],
+          total: 1,
+        },
+      })
+    );
+    await page.route('**/api/admin/users/pending/resend-activation', (route) => {
+      attempts++;
+      return attempts === 1
+        ? route.fulfill({
+            status: 429,
+            headers: { 'retry-after': '3' },
+            json: { error: 'AUTH:OTP:RATE_LIMITED' },
+          })
+        : route.fulfill({ json: { deliveryStatus: 'queued' } });
+    });
+    await page.goto('/admin/users');
+    await page
+      .getByRole('button', {
+        name: fa ? 'ارسال دوباره فعال‌سازی' : 'Resend activation',
+        exact: true,
+      })
+      .click();
+    const dialog = page.getByRole('dialog'),
+      confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+    await confirm.click();
+    await expect(confirm).toBeDisabled();
+    await expect(dialog.getByRole('status')).toContainText(fa ? 'ثانیه' : 'seconds');
+    expect(attempts).toBe(1);
+    await page.clock.fastForward(3100);
+    await expect(confirm).toBeEnabled();
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
+    expect(attempts).toBe(2);
+    await expect(
+      page.getByText(
+        fa
+          ? 'ایمیل فعال‌سازی در صف ارسال قرار گرفت.'
+          : 'The activation email is queued for delivery.',
+        { exact: true }
+      )
+    ).toBeVisible();
+  });
+}

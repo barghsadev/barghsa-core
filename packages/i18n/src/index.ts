@@ -328,6 +328,14 @@ export const fa: I18nDictionary = {
   'settings.contact.email': 'ایمیل',
   'settings.contact.mobile': 'شماره موبایل',
   'admin.staff.title': 'کاربران کارکنان',
+  'team.retryAfter': 'لطفاً {seconds} ثانیه دیگر دوباره تلاش کنید.',
+  'admin.staff.activationPending': 'در انتظار فعال‌سازی',
+  'admin.staff.expires': 'انقضای پیوند',
+  'admin.staff.resendActivation': 'ارسال دوباره فعال‌سازی',
+  'admin.staff.resendHelp':
+    'یک پیوند فعال‌سازی جدید برای این ایمیل در صف ارسال قرار می‌گیرد. پیوند قبلی دیگر معتبر نخواهد بود.',
+  'admin.staff.activationNotPending':
+    'این حساب دیگر در انتظار فعال‌سازی نیست. اطلاعات را تازه کنید.',
   'admin.staff.audit.title': 'تاریخچه مجوزها',
   'admin.staff.audit.close': 'بستن تاریخچه',
   'admin.staff.audit.from': 'از تاریخ',
@@ -1891,6 +1899,14 @@ export const en: I18nDictionary = {
   'settings.contact.email': 'Email',
   'settings.contact.mobile': 'Mobile Number',
   'admin.staff.title': 'Staff users',
+  'team.retryAfter': 'Please try again in {seconds} seconds.',
+  'admin.staff.activationPending': 'Awaiting activation',
+  'admin.staff.expires': 'Link expires',
+  'admin.staff.resendActivation': 'Resend activation',
+  'admin.staff.resendHelp':
+    'A new activation link will be queued for this email address. The previous link will no longer work.',
+  'admin.staff.activationNotPending':
+    'This account is no longer awaiting activation. Refresh its information.',
   'admin.staff.audit.title': 'Permission history',
   'admin.staff.audit.close': 'Close history',
   'admin.staff.audit.from': 'From date',

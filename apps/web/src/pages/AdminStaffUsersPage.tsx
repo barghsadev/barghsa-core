@@ -24,6 +24,8 @@ interface Staff {
   lastName: string | null;
   roles: Role[];
   status: 'active' | 'disabled';
+  activationPending: boolean;
+  activationExpiresAt: string | null;
   lastLoginAt: string | null;
   isAdmin: boolean;
 }
@@ -56,6 +58,7 @@ export default function AdminStaffUsersPage() {
   const [action, setAction] = useState<TeamAction | null>(null);
   const [created, setCreated] = useState<{ username: string; password?: string } | null>(null);
   const [saved, setSaved] = useState(false);
+  const [activationNotice, setActivationNotice] = useState(false);
   const [history, setHistory] = useState<{ userId: string; username: string } | 'all' | null>(null);
   const generation = useRef(0);
   const load = useCallback(async () => {
@@ -158,6 +161,7 @@ export default function AdminStaffUsersPage() {
         )}
       </header>
       {saved && <p role="status">{label('saved')}</p>}
+      {activationNotice && <p role="status">{label('linkQueued')}</p>}
       {created && (
         <section className="space-y-3 rounded-lg border bg-white p-4" aria-label={label('created')}>
           <h2 className="font-semibold">{label('created')}</h2>
@@ -234,7 +238,24 @@ export default function AdminStaffUsersPage() {
                             {!staff.isAdmin && !staff.roles.length && label('noRoles')}
                           </div>
                         </td>
-                        <td className="p-3">{label(staff.status)}</td>
+                        <td className="p-3">
+                          {label(staff.status)}
+                          {staff.activationPending && (
+                            <p className="text-xs">
+                              {label('activationPending')}
+                              {staff.activationExpiresAt && (
+                                <>
+                                  {' '}
+                                  · {label('expires')}:{' '}
+                                  {new Intl.DateTimeFormat(locale, {
+                                    dateStyle: 'medium',
+                                    timeStyle: 'short',
+                                  }).format(new Date(staff.activationExpiresAt))}
+                                </>
+                              )}
+                            </p>
+                          )}
+                        </td>
                         <td className="p-3">
                           {staff.lastLoginAt
                             ? new Intl.DateTimeFormat(locale, {
@@ -254,6 +275,31 @@ export default function AdminStaffUsersPage() {
                             >
                               {label('audit.title')}
                             </Button>
+                            {access.canCreate &&
+                              staff.activationPending &&
+                              staff.status === 'active' && (
+                                <Button
+                                  variant="outline"
+                                  disabled={disabled}
+                                  onClick={() => {
+                                    setActivationNotice(false);
+                                    setSaved(false);
+                                    setAction({
+                                      title: label('resendActivation'),
+                                      description: `${staff.username}. ${label('resendHelp')}`,
+                                      path: `/api/admin/users/${encodeURIComponent(staff.userId)}/resend-activation`,
+                                      method: 'POST',
+                                      forbiddenMessage: label('forbidden'),
+                                      conflictMessage: label('activationNotPending'),
+                                      errorMessages: {
+                                        'AUTH:DELIVERY:UNAVAILABLE': label('deliveryUnavailable'),
+                                      },
+                                    });
+                                  }}
+                                >
+                                  {label('resendActivation')}
+                                </Button>
+                              )}
                             {access.canEditRoles && (
                               <Button
                                 variant="outline"
@@ -473,6 +519,7 @@ export default function AdminStaffUsersPage() {
               setDraft(blank());
               setShowCreate(false);
             }
+            if (action.path.endsWith('/resend-activation')) setActivationNotice(true);
             setEditing(null);
             setSaved(true);
             await load();

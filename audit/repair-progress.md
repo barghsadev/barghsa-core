@@ -935,3 +935,9 @@ Review/validation: three Chromium scenarios pass in fa/en, including one upload 
 
 - Staff list responses now include a pending-activation flag and link expiry, never the token/hash. Successful activation clears the displayed pending state. Resending during the one-minute cooldown now supplies a measured Retry-After value through the existing exception filter.
 - Review: 61 staff and delivery tests pass. The real controlled-mailbox test reads the pending list state, checks cooldown headers, reissues and delivers the replacement link, rejects the old link, completes the new activation and verifies cleared status plus refusal to resend afterward. API build, workspace typecheck, lint, formatting and diff review pass. Resend UI is the next bounded step.
+
+### F05/F17/F23 — Reissue pending staff activation from the admin screen
+
+- Staff rows show pending activation and the link expiry. An authorized creator can confirm reissue for the displayed email; the result reports queued delivery. Activated/disabled accounts do not offer the action.
+- The shared action dialog honors Retry-After on actions and password verification, shows a localized countdown, and prevents early resubmission while retaining the same target. No activation token reaches the screen.
+- Review: all fourteen production-browser checks pass, including actual migrated-API reissue of expired accounts in both languages, plus cooldown/retry behavior with a controlled response. All 116 web tests, workspace build/typecheck, lint, formatting, 26 route budgets and diff review pass. Backend controlled-mailbox delivery and stale-link rejection passed in the preceding 61-test checkpoint. These results establish the local workflow; production delivery credentials and operations remain unverified.
