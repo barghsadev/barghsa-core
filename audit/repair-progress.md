@@ -406,3 +406,9 @@ Review/validation: 22 service/production-HTTP checks pass, including seven text 
 Replaced the CRM placeholder with bilingual user search, profile/verification/staff/date filters, sort direction, cursor navigation, filter clearing/removal and expandable links to profile details. Profile/name matching now uses existence checks so a matching subset cannot shrink the returned profile count or hide other active profiles. Added staff-only filtering and profile references to the authorized DTO.
 
 Review/validation: 23 API checks, three Chromium scenarios and all 11 workspace typechecks pass. The browser review found and fixed an initial debounce timer that could reset a quick page change. Gregorian date inputs are explicitly labeled; replacing them with a true Jalali picker remains next. This slice does not close the remaining detail/edit/deletion acceptance work.
+
+### F20.1 True Jalali date selection, used by CRM
+
+The shared date picker now uses Jalali calendar arithmetic as well as localized labels, so its month grid, year boundaries and selected dates agree. Added an accessible trigger name/ID, RTL direction and single-selection dismissal. CRM date filters now use that picker in Persian and Gregorian mode in English, while sending Gregorian date bounds to the API.
+
+Review/validation: all five CRM Chromium scenarios pass, including Farvardin 1, 1405 → 2026-03-21, leap-day Esfand 30, 1403 → 2025-03-20, inclusive end-of-day queries and keyboard Escape/focus return. UI/web typechecks and production web build pass. Broader F20 localization/accessibility and date-range consumer checks remain open.

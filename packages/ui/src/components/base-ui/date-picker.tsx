@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import * as jalaliCalendar from "date-fns-jalali"
 import { format as dateFnsFormat } from "date-fns"
 import {
   format as jalaliFormat,
@@ -25,6 +26,8 @@ interface DatePickerBaseProps {
   jalali?: boolean
   placeholder?: string
   className?: string
+  id?: string
+  label?: string
 }
 
 interface DatePickerSingleProps extends DatePickerBaseProps {
@@ -48,6 +51,8 @@ function DatePicker({
   className,
   value,
   onChange,
+  id,
+  label,
   ...props
 }: DatePickerProps & Omit<React.ComponentProps<typeof Popover>, "children">) {
   const [open, setOpen] = React.useState(false)
@@ -84,6 +89,8 @@ function DatePicker({
       <PopoverTrigger
         render={
           <Button
+            id={id}
+            aria-label={label}
             variant="outline"
             role="combobox"
             aria-expanded={open}
@@ -108,6 +115,9 @@ function DatePicker({
             mode="range"
             selected={value as DateRange | undefined}
             onSelect={onChange as (range: DateRange | undefined) => void}
+            dateLib={jalali ? jalaliCalendar : undefined}
+            dir={jalali ? "rtl" : "ltr"}
+            numerals={jalali ? "arabext" : "latn"}
             locale={jalali ? (jalaliLocale as unknown as Locale) : undefined}
             defaultMonth={value ? (value as DateRange).from : undefined}
           />
@@ -115,7 +125,10 @@ function DatePicker({
           <Calendar
             mode="single"
             selected={value as Date | undefined}
-            onSelect={onChange as (date: Date | undefined) => void}
+            onSelect={(date) => { (onChange as (date: Date | undefined) => void)?.(date); setOpen(false) }}
+            dateLib={jalali ? jalaliCalendar : undefined}
+            dir={jalali ? "rtl" : "ltr"}
+            numerals={jalali ? "arabext" : "latn"}
             locale={jalali ? (jalaliLocale as unknown as Locale) : undefined}
             defaultMonth={value as Date | undefined}
           />

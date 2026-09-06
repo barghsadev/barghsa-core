@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import { t } from '@barghsa/i18n'
-import { Button, Input, Label } from '@barghsa/ui'
+import { Button, Input, Label, DatePicker } from '@barghsa/ui'
 import { useLocale } from '../hooks/useLocale.js'
 interface User {
   userId: string; username: string; registrationDate: string; lastLogin: string | null
@@ -53,7 +53,9 @@ export default function CrmProfileList() {
           <select id={`crm-${key}`} className="block w-full rounded border p-2" value={filters[key]} onChange={event => update(key,event.target.value)}>
             {options.map(value => <option key={value} value={value}>{t(`crm.list.${value || 'all'}`, locale)}</option>)}
           </select></div>)}
-      {(['dateFrom','dateTo'] as const).map(key => <div key={key}><Label htmlFor={`crm-${key}`}>{t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}</Label><Input id={`crm-${key}`} type="date" value={filters[key]} onChange={event => update(key,event.target.value)} /></div>)}
+      {(['dateFrom','dateTo'] as const).map(key => <div key={key}><Label htmlFor={`crm-${key}`}>{t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}</Label><DatePicker id={`crm-${key}`} label={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)} placeholder={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)} jalali={locale === 'fa'}
+        {...(filters[key] ? { value: new Date(`${filters[key]}T12:00:00`) } : {})}
+        onChange={value => update(key, value ? `${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}` : '')} /></div>)}
       <Label className="flex items-center gap-2"><input type="checkbox" checked={filters.staffOnly} onChange={event => update('staffOnly',event.target.checked)} />{t('crm.list.staffOnly', locale)}</Label>
     </div>
     <div className="flex flex-wrap gap-2">
