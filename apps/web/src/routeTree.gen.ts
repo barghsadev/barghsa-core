@@ -32,6 +32,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCrmRouteImport } from './routes/admin/crm'
+import { Route as AdminElectricityRulesRouteImport } from './routes/admin/electricity-rules'
 import { Route as AdminFailedJobsRouteImport } from './routes/admin/failed-jobs'
 import { Route as AdminFailedNotificationsRouteImport } from './routes/admin/failed-notifications'
 import { Route as AdminGeographyRouteImport } from './routes/admin/geography'
@@ -182,6 +183,11 @@ const AdminBrandingRoute = AdminBrandingRouteImport.update({
 const AdminCrmRoute = AdminCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminElectricityRulesRoute = AdminElectricityRulesRouteImport.update({
+  id: '/electricity-rules',
+  path: '/electricity-rules',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminFailedJobsRoute = AdminFailedJobsRouteImport.update({
@@ -396,6 +402,7 @@ export interface FileRoutesByFullPath {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
@@ -453,6 +460,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof AppWalletRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
@@ -516,6 +524,7 @@ export interface FileRoutesById {
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/crm': typeof AdminCrmRouteWithChildren
+  '/admin/electricity-rules': typeof AdminElectricityRulesRoute
   '/admin/failed-jobs': typeof AdminFailedJobsRoute
   '/admin/failed-notifications': typeof AdminFailedNotificationsRoute
   '/admin/geography': typeof AdminGeographyRoute
@@ -579,6 +588,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
@@ -636,6 +646,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/approval-requests'
     | '/admin/branding'
+    | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
@@ -698,6 +709,7 @@ export interface FileRouteTypes {
     | '/admin/approval-requests'
     | '/admin/branding'
     | '/admin/crm'
+    | '/admin/electricity-rules'
     | '/admin/failed-jobs'
     | '/admin/failed-notifications'
     | '/admin/geography'
@@ -912,6 +924,13 @@ declare module '@tanstack/react-router' {
       path: '/crm'
       fullPath: '/admin/crm'
       preLoaderRoute: typeof AdminCrmRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/electricity-rules': {
+      id: '/admin/electricity-rules'
+      path: '/electricity-rules'
+      fullPath: '/admin/electricity-rules'
+      preLoaderRoute: typeof AdminElectricityRulesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/failed-jobs': {
@@ -1244,6 +1263,7 @@ interface AdminRouteChildren {
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCrmRoute: typeof AdminCrmRouteWithChildren
+  AdminElectricityRulesRoute: typeof AdminElectricityRulesRoute
   AdminFailedJobsRoute: typeof AdminFailedJobsRoute
   AdminFailedNotificationsRoute: typeof AdminFailedNotificationsRoute
   AdminGeographyRoute: typeof AdminGeographyRoute
@@ -1268,6 +1288,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCrmRoute: AdminCrmRouteWithChildren,
+  AdminElectricityRulesRoute: AdminElectricityRulesRoute,
   AdminFailedJobsRoute: AdminFailedJobsRoute,
   AdminFailedNotificationsRoute: AdminFailedNotificationsRoute,
   AdminGeographyRoute: AdminGeographyRoute,

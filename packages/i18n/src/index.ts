@@ -5,6 +5,33 @@ export interface I18nDictionary {
 
 /** Persian (fa) dictionary for the Barghsa platform */
 export const fa: I18nDictionary = {
+  'admin.green.title': 'قواعد برق سبز',
+  'admin.green.description': 'سهم اجباری برق سبز را برای هر نوع سفارش تنظیم کنید.',
+  'admin.green.refresh': 'تازه‌سازی',
+  'admin.green.loading': 'در حال دریافت قواعد…',
+  'admin.green.forbidden': 'اجازه مدیریت این قواعد را ندارید.',
+  'admin.green.error':
+    'دریافت قواعد انجام نشد. ممکن است تنظیمات ذخیره‌شده به اصلاح نیاز داشته باشد.',
+  'admin.green.retry': 'تلاش مجدد',
+  'admin.green.save': 'ذخیره قواعد',
+  'admin.green.saved': 'قواعد ذخیره شد.',
+  'admin.green.confirm':
+    'این قواعد برای سفارش‌های جدید اعمال می‌شود. سفارش‌های تأییدشده قواعد ذخیره‌شده خود را نگه می‌دارند.',
+  'admin.green.snapshot':
+    'تغییرات فقط برای سفارش‌های جدید است. سفارش‌های تأییدشده قواعد ثبت‌شده خود را نگه می‌دارند.',
+  'admin.green.simpleOrder': 'سفارش ساده',
+  'admin.green.advancedOrder': 'سفارش پیشرفته',
+  'admin.green.enabled': 'سهم برق سبز اجباری باشد',
+  'admin.green.threshold': 'آستانه توان متوسط (کیلووات)',
+  'admin.green.share': 'سهم اجباری برق سبز',
+  'admin.green.blocked': 'قاعده ذخیره‌شده با وضعیت فعلی محصول برق سبز قابل اجرا نیست:',
+  'admin.green.missing': 'محصول موجود نیست',
+  'admin.green.inactive': 'محصول غیرفعال است',
+  'admin.green.archived': 'محصول بایگانی شده است',
+  'admin.green.unpriced': 'قیمت مثبت و معتبر لازم است',
+  'admin.green.activationFailed':
+    'مقادیر و محصول برق سبز را بررسی کنید. قاعده فعال به محصول فعال با قیمت مثبت و معتبر نیاز دارد. قاعده را غیرفعال یا محصول را اصلاح و سپس تازه‌سازی کنید.',
+  'admin.green.corrupt': 'قواعد ذخیره‌شده پیش از خواندن به اصلاح نیاز دارند.',
   'admin.reconciliation.title': 'مغایرت‌های مالی',
   'admin.reconciliation.description': 'مغایرت‌های گزارش‌شده را بررسی و نتیجه رسیدگی را ثبت کنید.',
   'admin.reconciliation.status': 'وضعیت',
@@ -1793,6 +1820,32 @@ export const fa: I18nDictionary = {
 
 /** English (en) dictionary for the Barghsa platform */
 export const en: I18nDictionary = {
+  'admin.green.title': 'Green-electricity rules',
+  'admin.green.description': 'Configure mandatory green shares for each ordering mode.',
+  'admin.green.refresh': 'Refresh',
+  'admin.green.loading': 'Loading rules…',
+  'admin.green.forbidden': 'You do not have permission to manage these rules.',
+  'admin.green.error': 'Rules could not be loaded. Stored configuration may need repair.',
+  'admin.green.retry': 'Retry',
+  'admin.green.save': 'Save rules',
+  'admin.green.saved': 'Rules saved.',
+  'admin.green.confirm':
+    'Apply these rules to new orders. Existing confirmed orders keep their saved rules.',
+  'admin.green.snapshot':
+    'Changes apply to new orders only. Confirmed orders retain their rule snapshot.',
+  'admin.green.simpleOrder': 'Simple orders',
+  'admin.green.advancedOrder': 'Advanced orders',
+  'admin.green.enabled': 'Require a green-electricity share',
+  'admin.green.threshold': 'Average-power threshold (kW)',
+  'admin.green.share': 'Mandatory green share',
+  'admin.green.blocked': 'The saved rule is blocked by the current green product:',
+  'admin.green.missing': 'Product is missing',
+  'admin.green.inactive': 'Product is inactive',
+  'admin.green.archived': 'Product is archived',
+  'admin.green.unpriced': 'A positive effective price is required',
+  'admin.green.activationFailed':
+    'Check the values and the green product. An enabled rule requires an active product with a positive effective price. Disable the rule or correct the product, then refresh.',
+  'admin.green.corrupt': 'Stored rules need repair before they can be read.',
   'admin.reconciliation.title': 'Reconciliation exceptions',
   'admin.reconciliation.description':
     'Review reported mismatches and record each investigation outcome.',

@@ -1960,7 +1960,7 @@ export class AdminController {
    * GET /api/admin/config/green-electricity-rules
    *
    * Returns the current admin-configurable mandatory green-electricity
-   * rules as `{ simple_order, advanced_order }` (snake_case). Falls back to
+   * rules as `{ simpleOrder, advancedOrder }` (snake_case). Falls back to
    * the T-09.10.02 defaults (simple enabled, advanced disabled, 1000 kW
    * threshold, 4% share) when no value is persisted.
    * Permission: `admin:catalogue:edit` (T-09.10.02).
@@ -1973,20 +1973,20 @@ export class AdminController {
     schema: {
       type: 'object',
       properties: {
-        simple_order: {
+        simpleOrder: {
           type: 'object',
           properties: {
-            mandatory_green_enabled: { type: 'boolean' },
-            average_power_threshold_kw: { type: 'number' },
-            mandatory_green_share_percent: { type: 'number' },
+            mandatoryGreenEnabled: { type: 'boolean' },
+            averagePowerThresholdKw: { type: 'number' },
+            mandatoryGreenSharePercent: { type: 'number' },
           },
         },
-        advanced_order: {
+        advancedOrder: {
           type: 'object',
           properties: {
-            mandatory_green_enabled: { type: 'boolean' },
-            average_power_threshold_kw: { type: 'number' },
-            mandatory_green_share_percent: { type: 'number' },
+            mandatoryGreenEnabled: { type: 'boolean' },
+            averagePowerThresholdKw: { type: 'number' },
+            mandatoryGreenSharePercent: { type: 'number' },
           },
         },
       },
@@ -2061,11 +2061,11 @@ export class AdminController {
    * T-09.10.03.
    * Permission: `admin:catalogue:edit` (T-09.10.02).
    *
-   * Step-up on this mutation is deliberately deferred, matching the other
-   * admin config panels: the web app does not implement the step-up
-   * challenge flow yet.
+   * Password step-up is required before changing ordering rules.
    */
   @Put('config/green-electricity-rules')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update the mandatory green-electricity rules configuration (admin)' })
   @ApiBody({
     schema: {

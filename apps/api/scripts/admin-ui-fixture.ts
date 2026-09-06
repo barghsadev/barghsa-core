@@ -79,6 +79,9 @@ async function main() {
       ]
     );
   }
+  await http.pool.query(
+    `INSERT INTO products(system_key,title,price,status) VALUES ('green_electricity','{"en":"Green UI","fa":"Green UI"}',1000,'active') ON CONFLICT(system_key) DO UPDATE SET status='active',price=1000`
+  );
   let closing = false;
   const close = async () => {
     if (closing) return;

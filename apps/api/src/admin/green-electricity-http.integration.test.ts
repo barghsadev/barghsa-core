@@ -171,3 +171,15 @@ it('refuses corrupt saved rules and limits while leaving their evidence intact',
     ).status
   ).toBe(503);
 });
+
+it('requires password step-up before changing rules', async () => {
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='operator'");
+  try {
+    expect((await save()).status).toBe(403);
+    expect(
+      (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [configKey])).rows
+    ).toHaveLength(0);
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='operator'");
+  }
+});

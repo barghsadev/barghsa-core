@@ -733,3 +733,127 @@ for (const locale of ['en', 'fa'])
       `Reviewed ${locale}`
     );
   });
+
+for (const locale of ['en', 'fa'])
+  test(`green rules save independent modes and explain unusable products (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => {
+      new MutationObserver(() => {
+        if (document.documentElement) document.documentElement.lang = value;
+      }).observe(document, { childList: true });
+    }, locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request(),
+        url = new URL(request.url());
+      const response = await route.fetch({
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+      await route.fulfill({ response });
+    });
+    const headers = {
+        cookie: `barghsa_session=${http.session}`,
+        'x-csrf-token': http.csrf,
+        origin: 'https://app.example.test',
+      },
+      fa = locale === 'fa';
+    const products = (await (
+      await page.request.get(`${http.base}/api/admin/catalogue/products`, { headers })
+    ).json()) as Array<{ id: string; systemKey: string }>;
+    const product = products.find((p) => p.systemKey === 'green_electricity')!;
+    expect(
+      (
+        await page.request.put(`${http.base}/api/admin/catalogue/products/${product.id}`, {
+          headers,
+          data: { status: 'active' },
+        })
+      ).status()
+    ).toBe(200);
+    await page.goto('/admin/electricity-rules');
+    const simple = page.getByRole('group', {
+        name: fa ? 'سفارش ساده' : 'Simple orders',
+        exact: true,
+      }),
+      advanced = page.getByRole('group', {
+        name: fa ? 'سفارش پیشرفته' : 'Advanced orders',
+        exact: true,
+      });
+    await simple.getByRole('checkbox').check();
+    await advanced.getByRole('checkbox').check();
+    await simple.getByRole('spinbutton').fill('1500');
+    await advanced.getByRole('spinbutton').fill('2100');
+    await simple.getByRole('slider').focus();
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowUp');
+    await advanced.getByRole('slider').focus();
+    await page.keyboard.press('End');
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await expect(simple.getByRole('spinbutton')).toHaveValue('1500');
+    await expect(advanced.getByRole('spinbutton')).toHaveValue('2100');
+    const config = await (
+      await page.request.get(`${http.base}/api/admin/config/green-electricity-rules`, { headers })
+    ).json();
+    expect(config).toMatchObject({
+      simpleOrder: {
+        mandatoryGreenEnabled: true,
+        averagePowerThresholdKw: 1500,
+        mandatoryGreenSharePercent: 0.1,
+      },
+      advancedOrder: {
+        mandatoryGreenEnabled: true,
+        averagePowerThresholdKw: 2100,
+        mandatoryGreenSharePercent: 100,
+      },
+    });
+    expect(
+      (
+        await page.request.put(`${http.base}/api/admin/catalogue/products/${product.id}`, {
+          headers,
+          data: { status: 'inactive' },
+        })
+      ).status()
+    ).toBe(200);
+    await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
+    await expect(simple.getByRole('alert')).toContainText(
+      fa ? 'محصول غیرفعال' : 'Product is inactive'
+    );
+    await page.screenshot({ path: `/tmp/green-rules-${locale}.png`, fullPage: true });
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true })
+      .click();
+    await simple.getByRole('checkbox').uncheck();
+    await advanced.getByRole('checkbox').uncheck();
+    await page
+      .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
+      .click();
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
+      .click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(simple.getByRole('alert')).toHaveCount(0);
+  });

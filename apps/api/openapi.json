@@ -1675,29 +1675,29 @@
               "application/json": {
                 "schema": {
                   "properties": {
-                    "advanced_order": {
+                    "advancedOrder": {
                       "properties": {
-                        "average_power_threshold_kw": {
+                        "averagePowerThresholdKw": {
                           "type": "number"
                         },
-                        "mandatory_green_enabled": {
+                        "mandatoryGreenEnabled": {
                           "type": "boolean"
                         },
-                        "mandatory_green_share_percent": {
+                        "mandatoryGreenSharePercent": {
                           "type": "number"
                         }
                       },
                       "type": "object"
                     },
-                    "simple_order": {
+                    "simpleOrder": {
                       "properties": {
-                        "average_power_threshold_kw": {
+                        "averagePowerThresholdKw": {
                           "type": "number"
                         },
-                        "mandatory_green_enabled": {
+                        "mandatoryGreenEnabled": {
                           "type": "boolean"
                         },
-                        "mandatory_green_share_percent": {
+                        "mandatoryGreenSharePercent": {
                           "type": "number"
                         }
                       },
