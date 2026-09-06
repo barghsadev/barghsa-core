@@ -434,6 +434,7 @@ export * from './schema/kb-groups';
 export * from './schema/ai-policies';
 export * from './schema/ai-policy-groups';
 export * from './schema/ai-agents';
+export * from './schema/ai-agent-groups';
 export * from './schema/ai-agent-slots';
 export * from './schema/vat-configurations';
 export * from './schema/upload-policies';

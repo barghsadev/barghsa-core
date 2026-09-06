@@ -1333,3 +1333,9 @@ Review and validation: 23 service checks and all 18 production-migrated agent HT
 Agent metadata now trims titles and rejects blank titles and unknown fields. Individual KB/policy links and slot assignments reject unknown payload fields while retaining existing UUID validation.
 
 Review and validation: all 83 agent/slot service/controller/production-migrated HTTP checks pass. New HTTP cases verify invalid create/edit/link/assignment requests leave records and audits unchanged, and valid titles are trimmed. Root types, lint and whitespace checks pass. Before this final validation change, the full API suite passed 2,766 tests across 219 files after all preceding repairs. Group references, the agent editor and test-chat integration remain open.
+
+### Add durable agent group references (F02/F17)
+
+Migration 0116 adds separate agent-to-KB-group and agent-to-policy-group links without changing existing direct references. Composite primary keys prevent duplicates; reverse indexes support group deletion; both foreign keys cascade only the join rows. Added matching exported schema definitions and corrected the old schema comment claiming disabled agents could not be assigned to slots.
+
+Review and validation: fresh/repeated/populated baseline migration checks and two real database schema-insert/constraint/cascade tests pass. Review aligned composite constraint names with the schema declaration before the final run. Root types, lint and whitespace checks pass. This is an additive storage step; API/editor integration follows. No production migration was applied.

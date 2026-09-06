@@ -17,8 +17,8 @@ import { aiPolicies } from './ai-policies.js';
  * - `modelId` — the AI model (T-09.11.01) this agent talks to. RESTRICT on
  *   delete: an agent must never silently lose its brain, so deleting a
  *   referenced model fails with a 409 (AI_MODEL_IN_USE) in the models API.
- * - `enabled` — active/inactive flag; disabled agents cannot be assigned to
- *   slots (slot assignment lands with T-09.11.05).
+ * - `enabled` — active/inactive configuration flag. Assigning a slot does
+ *   not change this flag.
  * - Links (`aiAgentKbs`, `aiAgentPolicies`) — the referenced knowledge
  *   bases (T-09.11.02) and usage policies (T-09.11.03). The epic's agent
  *   config contract is model_id + kb_ids[] + policy_ids[]; the link tables
